@@ -1,0 +1,140 @@
+AllCops:
+  # Exclude anything that isn't really part of our code.
+  # rails_helper is excluded because it's full of solecisms, but it's mostly
+  # generated code and copy-and-pasted snipets from READMEs.
+  Exclude:
+    - 'Guardfile'
+    - 'vendor/**/*'
+    - 'db/**/*'
+    - 'bin/**/*'
+    - '**/*.gemspec'
+    - '**/Rakefile'
+    - 'spec/rails_helper.rb'
+    - 'spec/spec_helper.rb'
+    - 'features/support/env.rb'
+
+Rails:
+  Enabled: true
+
+# Allow long lines in specs, as it's almost impossible to fit RSpec's
+# expectations into 80 characters.
+Metrics/LineLength:
+  Max: 100
+  Exclude:
+    - 'spec/**/*'
+
+# Allow expect {}.to blocks in specs
+# but not in the code
+Style/BlockDelimiters:
+  Enabled: true
+  Exclude:
+    - 'spec/**/*'
+
+# Don't worry about long methods in specs.
+Metrics/MethodLength:
+  Exclude:
+    - 'spec/**/*'
+    - 'app/models/ability.rb'
+
+# No need to check for describe class param in support files.
+RSpec/DescribeClass:
+  Exclude:
+    - spec/support/**/*
+    - spec/views/**/*
+
+RSpec/FilePath:
+  Exclude:
+    - spec/routing/**/*
+
+# private/protected/public
+Style/AccessModifierIndentation:
+  EnforcedStyle: indent
+
+# Just indent parameters by two spaces. It's less volatile if methods change,
+# and there's less busy work lining things up.
+Style/AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: nested
+
+Style/CollectionMethods:
+  PreferredMethods:
+    collect: 'map'
+    collect!: 'map!'
+    each_with_object: 'inject'
+    inject: 'inject'
+    reduce: 'inject'
+    detect: 'find'
+    find_all: 'select'
+
+# Chain methods with trailing dots.
+Style/DotPosition:
+  EnforcedStyle: trailing
+
+# No, we don't prefer each_with_object
+Style/EachWithObject:
+  Enabled: false
+
+# Prefer blank line after class/module start.
+Style/EmptyLinesAroundClassBody:
+  Enabled: false
+
+Style/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+Style/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+# We have a mixture at the moment, so don't enforce anything.
+Style/FormatString:
+  Enabled: false
+
+# It's not really clearer to replace every if with a return if.
+Style/GuardClause:
+  Enabled: false
+
+# Groups of three is not always the right thing for numeric literals
+Style/NumericLiterals:
+  Enabled: false
+
+# Percent-formatting and hash interpolation both have their place. Don't
+# enforce any particular one.
+Style/StringLiterals:
+  Enabled: false
+
+# I'm happy with raise, thanks.
+Style/SignalException:
+  Enabled: false
+
+# Let us use foo? methods
+Style/TrivialAccessors:
+  AllowPredicates: true
+
+# Prefer sensible naming to comments everywhere.
+Documentation:
+  Description: Document classes and non-namespace modules.
+  Enabled: false
+
+# Would enforce do_y if x over if x / do y / end. As with GuardClause above,
+# this enforces code organisation that doesn't necesarily make things clearer.
+IfUnlessModifier:
+  Enabled: false
+
+# Allow safe assignment in conditions.
+Lint/AssignmentInCondition:
+  AllowSafeAssignment: false
+
+# Just a preference to use %w[] over %w()
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    '%w': '[]'
+    '%W': '[]'
+    '%i': '[]'
+
+# %w doesn't always make for clearer test data
+Style/WordArray:
+  Exclude:
+    - 'spec/**/*'
+
+require: rubocop-rspec
