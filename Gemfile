@@ -16,6 +16,13 @@ gem 'coffee-rails', '~> 4.1.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
+gem 'govuk_template',         '~> 0.17.2'
+gem 'govuk_frontend_toolkit', '>= 4.12.0'
+gem 'govuk_elements_rails',   '>= 1.2.0'
+gem 'govuk_elements_form_builder', git: 'https://github.com/ministryofjustice/govuk_elements_form_builder.git'
+gem 'gov_uk_date_fields', '~> 1.1.0'
+gem 'susy', '~> 2.2', '>= 2.2.12'
+
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
