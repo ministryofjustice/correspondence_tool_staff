@@ -8,5 +8,6 @@ services:
 before_script:
 - psql -c 'create database correspondence_platform_test;' -U postgres
 script:
-- bundle exec rake rubocop
-- bundle exec rake db:create db:schema:load
+- bundle exec rubocop
+- bundle exec rails db:create db:schema:load
+- bundle exec rails spec
