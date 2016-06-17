@@ -12,7 +12,8 @@ AllCops:
     - 'spec/rails_helper.rb'
     - 'features/support/env.rb'
 
-  RunRailsCops: true
+Rails:
+  Enabled: true
 
 # Allow long lines in specs, as it's almost impossible to fit RSpec's
 # expectations into 80 characters.
