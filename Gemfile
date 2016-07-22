@@ -46,8 +46,8 @@ group :development, :test do
   gem 'faker'
   gem 'factory_girl_rails'
   gem 'rspec-rails', '~> 3.4'
-  gem 'rubocop'
-  gem 'rubocop-rspec', '~> 0.41.2'
+  gem 'rubocop', require: false
+  gem 'rubocop-rspec', require: false
 end
 
 group :development do
