@@ -261,7 +261,7 @@ DEPENDENCIES
   rails-controller-testing
   rspec-rails (~> 3.4)
   rubocop
-  rubocop-rspec
+  rubocop-rspec (>= 0.41.2)
   sass-rails (~> 5.0)
   slim-rails (~> 3.1)
   spring
