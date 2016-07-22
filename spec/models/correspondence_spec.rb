@@ -10,14 +10,6 @@ RSpec.describe Correspondence, type: :model do
     end
   end
 
-  describe 'each typus' do
-    Settings.correspondence_types.each do |typus|
-      it 'has a specific email address associated' do
-        expect(ENV["#{typus.upcase}_EMAIL"]).not_to be nil
-      end
-    end
-  end
-
   describe 'attributes' do
     context 'mandatory' do
       it 'name' do
