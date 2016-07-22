@@ -1,0 +1,10 @@
+correspondence_types:
+  - freedom_of_information_request
+  - treat_official
+
+correspondence_topics:
+  - prisons
+  - courts
+  - legal_aid
+  - probation
+  - i_don't_know/more_than_one/other
