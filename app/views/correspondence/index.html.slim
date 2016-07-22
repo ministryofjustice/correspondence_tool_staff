@@ -2,6 +2,4 @@ h1 Correspondence
 
 ul
 	- @correspondence.each do |c|
-		li = c.created_at
-		li = c.typus
-		li = c.topic
+		li = "#{c.typus.humanize} - #{c.topic.humanize} - #{c.created_at} - #{c.message}"
