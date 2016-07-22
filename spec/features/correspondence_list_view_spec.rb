@@ -10,8 +10,8 @@ feature 'a user can see all correspondence on the system' do
     visit '/'
     Correspondence.all.each do |correspondence|
       expect(page).to have_content(correspondence.created_at)
-      expect(page).to have_content(correspondence.typus)
-      expect(page).to have_content(correspondence.topic)
+      expect(page).to have_content(correspondence.typus.humanize)
+      expect(page).to have_content(correspondence.topic.humanize)
     end
   end
 
