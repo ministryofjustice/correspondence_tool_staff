@@ -14,12 +14,13 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
-
+gem 'config'
 gem 'govuk_template',         '~> 0.17.2'
 gem 'govuk_frontend_toolkit', '>= 4.12.0'
 gem 'govuk_elements_rails',   '>= 1.2.0'
 gem 'govuk_elements_form_builder', git: 'https://github.com/ministryofjustice/govuk_elements_form_builder.git'
 gem 'gov_uk_date_fields', '~> 1.1.0'
+gem 'slim-rails', '~> 3.1'
 gem 'susy', '~> 2.2', '>= 2.2.12'
 
 # Use jquery as the JavaScript library
@@ -34,12 +35,17 @@ gem 'jbuilder', '~> 2.0'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+group :test do
+  gem 'capybara'
+  gem 'rails-controller-testing'
+end
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
-
-  gem 'rspec-rails'
-
+  gem 'faker'
+  gem 'factory_girl_rails'
+  gem 'rspec-rails', '~> 3.4'
   gem 'rubocop', require: false
   gem 'rubocop-rspec', require: false
 end
