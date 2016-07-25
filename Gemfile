@@ -14,7 +14,7 @@ gem 'puma', '~> 3.0'
 gem 'rails', '~> 5.0'
 gem 'sass-rails', '~> 5.0'
 gem 'slim-rails', '~> 3.1'
-gem 'susy',  '>= 2.2.12'
+gem 'susy', '>= 2.2.12'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 gem 'uglifier', '>= 1.3.0'
