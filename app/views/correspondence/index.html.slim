@@ -1,5 +1,40 @@
-h1 Correspondence
+= render partial: 'layouts/header', locals: {page_heading: 'List of correspondence'}
 
-ul
-	- @correspondence.each do |c|
-		li = "#{c.typus.humanize} - #{c.topic.humanize} - #{c.created_at} - #{c.message}"
+
+.table-container.container
+  table.report
+    caption
+      span.table-caption
+        | Correspondence submitted through the webform
+      span.claim-count
+        /=# t('.show_count', page_count: claims.size, total: claims.total_count)
+    colgroup
+      col
+      col
+      col
+      col
+      col
+    thead
+      th scope='col'
+        | Type
+      th scope='col'
+        | Topic
+      th scope='col'
+        | Name
+      th scope='col'
+        | Message
+      th scope='col'
+        | Date
+    tbody
+      - @correspondence.each do |c|
+	    tr
+          td
+            = c.typus.humanize
+          td
+            = c.topic.humanize
+          td
+            = mail_to c.email, c.name
+          td
+            = c.message
+          td
+            = l c.created_at
