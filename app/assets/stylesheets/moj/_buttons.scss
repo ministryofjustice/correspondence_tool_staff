@@ -1,0 +1,13 @@
+.button-secondary{
+  @include button($grey-3);
+}
+
+.button-holder {
+  @include span(8 of 12);
+  @include first;
+
+  margin-top: $gutter-half;
+}
+.button-left-spacing{
+  margin-left: $gutter;
+}

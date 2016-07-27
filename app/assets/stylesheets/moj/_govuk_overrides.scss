@@ -1,0 +1,26 @@
+#global-header .header-wrapper {
+  .header-global {
+    @include span(4 of 12);
+    .header-logo {
+      width:auto;
+      .content {
+        margin-left:0;
+      }
+    }
+  }
+  .sign-out {
+    color: #ffffff !important;
+    float: right;
+  }
+  .header-proposition {
+    @include span(8 at 5 of 12 no-gutters);
+  }
+}
+
+.phase-banner {
+  @include phase-banner(beta);
+}
+
+#proposition-name{
+  float: left;
+}
