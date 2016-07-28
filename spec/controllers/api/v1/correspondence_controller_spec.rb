@@ -3,20 +3,22 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::CorrespondenceController, type: :controller do
 
+  let(:params) do
+    {
+      name: Faker::Name.name,
+      email: 'email@example.com',
+      email_confirmation: 'email@example.com',
+      typus: 'freedom_of_information_request',
+      topic: 'prisons',
+      message: Faker::Lorem.paragraph(1)
+    }
+  end
+
+  before { request.headers["HTTP_AUTHORIZATION"] = "Token token=\"#{ENV['WEB_FORM_AUTH_TOKEN']}\"" }
+
   context 'when authentication succeeds' do
 
     describe 'POST #create' do
-
-      let(:params) do
-        {
-          name: Faker::Name.name,
-          email: 'email@example.com',
-          email_confirmation: 'email@example.com',
-          typus: 'freedom_of_information_request',
-          topic: 'prisons',
-          message: Faker::Lorem.paragraph(1)
-        }
-      end
 
       context 'with valid params' do
 
@@ -56,6 +58,19 @@ RSpec.describe Api::V1::CorrespondenceController, type: :controller do
 
       end
 
+    end
+
+  end
+
+  context 'when authenticaion fails' do
+
+    before {
+      request.headers["HTTP_AUTHORIZATION"] = "Token token=\"INVALID_TOKEN\""
+      post :create, params: { correspondence: params }
+    }
+
+    it 'returns an explanatory json message' do
+      expect(response.status).to eq 401
     end
 
   end
