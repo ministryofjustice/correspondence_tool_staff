@@ -11,7 +11,6 @@ module Api
         else
           render json: { errors: @correspondence.errors }, status: 422
         end
-
       end
 
       private
@@ -26,8 +25,6 @@ module Api
           :message
         )
       end
-
     end
-
   end
 end

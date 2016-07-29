@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-
 RSpec.describe Api::V1::CorrespondenceController, type: :controller do
 
   let(:params) do
@@ -24,7 +23,7 @@ RSpec.describe Api::V1::CorrespondenceController, type: :controller do
 
         before { post :create, params: { correspondence: params } }
 
-        it 'creates a new item of correspondence' do 
+        it 'creates a new item of correspondence' do
           expect(Correspondence.count).to eq 1
         end
 
@@ -40,7 +39,10 @@ RSpec.describe Api::V1::CorrespondenceController, type: :controller do
 
       context 'with invalid params' do
 
-        before { params.delete(:name); post :create, params: { correspondence: params } }
+        before do
+          params.delete(:name)
+          post :create, params: { correspondence: params }
+        end
 
         it 'does not create a new item of correspondence' do
           expect(Correspondence.count).to eq 0
@@ -52,8 +54,8 @@ RSpec.describe Api::V1::CorrespondenceController, type: :controller do
 
         it 'returns a list of errors' do
           expect(JSON.parse(response.body)).to eq(
-            { 'errors' => { 'name' => ['can\'t be blank'] } }
-          ) 
+            'errors' => { 'name' => ['can\'t be blank'] }
+          )
         end
 
       end
