@@ -28,8 +28,8 @@ RSpec.describe Correspondence, type: :model do
         expect(correspondence.errors.full_messages).to include("Email confirmation can't be blank")
       end
 
-      it 'typus' do
-        correspondence.typus = nil
+      it 'category' do
+        correspondence.category = nil
         expect(correspondence).not_to be_valid
       end
 
@@ -38,7 +38,7 @@ RSpec.describe Correspondence, type: :model do
         expect(correspondence).not_to be_valid
       end
 
-      it 'subtypus' do
+      it 'topic' do
         correspondence.topic = nil
         expect(correspondence).not_to be_valid
       end

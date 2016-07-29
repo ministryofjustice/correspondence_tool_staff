@@ -1,6 +1,5 @@
 = render partial: 'layouts/header', locals: {page_heading: 'List of correspondence'}
 
-
 .table-container.container
   table.report
     caption
@@ -29,7 +28,7 @@
       - @correspondence.each do |c|
 	    tr
           td
-            = c.typus.humanize
+            = c.category.humanize
           td
             = c.topic.humanize
           td
