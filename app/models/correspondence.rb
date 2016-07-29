@@ -5,7 +5,6 @@ class Correspondence < ApplicationRecord
 
   attr_accessor :email_confirmation
 
-  
   def self.search(term)
     where('lower(name) LIKE ?', "%#{term.downcase}%")
   end
