@@ -25,6 +25,7 @@ gem 'uglifier', '>= 1.3.0'
 
 group :test do
   gem 'capybara'
+  gem "codeclimate-test-reporter", require: nil
   gem 'rails-controller-testing'
 end
 
