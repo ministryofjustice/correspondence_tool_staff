@@ -1,10 +1,11 @@
 class CorrespondenceController < ApplicationController
 
   def index
-    if params[:search]
-      @correspondence = Correspondence.where('lower(name) LIKE ?', "%#{params[:search].downcase}%")
-    else
-      @correspondence = Correspondence.all
-    end
+    @correspondence = Correspondence.all
+  end
+
+  def search
+    @correspondence = Correspondence.search(params[:search])
+    render :index
   end
 end
