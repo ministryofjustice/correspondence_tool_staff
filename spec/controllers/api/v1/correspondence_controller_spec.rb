@@ -8,7 +8,7 @@ RSpec.describe Api::V1::CorrespondenceController, type: :controller do
       name: Faker::Name.name,
       email: 'email@example.com',
       email_confirmation: 'email@example.com',
-      typus: 'freedom_of_information_request',
+      category: 'freedom_of_information_request',
       topic: 'prisons',
       message: Faker::Lorem.paragraph(1)
     }

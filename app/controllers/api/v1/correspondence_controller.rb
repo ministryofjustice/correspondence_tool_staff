@@ -21,7 +21,7 @@ module Api
           :name,
           :email,
           :email_confirmation,
-          :typus,
+          :category,
           :topic,
           :message
         )
