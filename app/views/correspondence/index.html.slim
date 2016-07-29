@@ -1,5 +1,10 @@
 = render partial: 'layouts/header', locals: {page_heading: 'List of correspondence'}
 
+= form_tag '/search', method: 'get'
+  = label_tag "Search for: "
+  = text_field_tag :search
+  = submit_tag "Submit"
+
 .table-container.container
   table.report
     caption
