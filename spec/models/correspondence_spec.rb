@@ -38,7 +38,7 @@ RSpec.describe Correspondence, type: :model do
         expect(correspondence).not_to be_valid
       end
 
-      it 'tpoic' do
+      it 'topic' do
         correspondence.topic = nil
         expect(correspondence).not_to be_valid
       end
