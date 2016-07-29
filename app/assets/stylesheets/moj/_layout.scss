@@ -1,0 +1,18 @@
+html {
+  background:$grey-3;
+}
+body {
+  background: #fff;
+}
+
+.container {
+  @include container;
+}
+
+#page {
+  @extend %site-width-container;
+}
+.body-content {
+  @include span(6 of 12);
+  @include first;
+}
