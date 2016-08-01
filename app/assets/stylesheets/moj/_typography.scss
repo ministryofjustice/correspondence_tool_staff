@@ -35,7 +35,6 @@ header.main-header {
   margin-right: $gutter-half;
 }
 
-
 .table-caption {
   @include bold-24;
   float: left;
@@ -56,4 +55,22 @@ header.main-header {
   @extend .error-summary;
   border-color: $button-colour;
 
+}
+
+.question {
+  h2 {
+    @include bold-24;
+  }
+
+  .form-label{
+    font-weight: bold;
+  }
+
+  select.form-control{
+    width: 80%;
+  }
+
+  p {
+    padding-right: $gutter;
+  }
 }

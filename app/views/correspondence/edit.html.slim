@@ -1,0 +1,34 @@
+= render partial: 'layouts/header', locals: {page_heading: 'Question'}
+
+
+section.question.content tabindex=0
+  h2.visually-hidden
+    = 'Details'
+
+  .column-half
+    span.form-label
+      = 'Correspondent'
+    = @correspondence.name
+
+  .column-half
+    span.form-label
+      = 'Correspondent email'
+    = mail_to @correspondence.email, @correspondence.email
+
+  .form-label
+    = "Message"
+  p
+    = @correspondence.message
+
+  = form_for @correspondence do |f|
+    .column-half
+      = f.collection_select :category, Settings.correspondence_categories, :underscore, :humanize, {selected: @correspondence.category, include_blank: "Please select an option"}
+
+    .column-half
+      = f.collection_select :topic, Settings.correspondence_topics, :underscore, :humanize, {include_blank: "Please select an option"}
+
+    = f.submit 'Save', class:'button'
+
+section.question.status
+  h2
+    = 'Status'
