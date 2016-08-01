@@ -10,7 +10,7 @@ feature 'search for specific items of correspondence' do
   scenario 'by correspondent name' do
     visit '/'
     fill_in :search, with: "Jones"
-    click_on "Submit"
+    click_on "Search"
     expect(page).to have_content("Jones")
     expect(page).not_to have_content("Smith")
   end
