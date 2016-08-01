@@ -10,8 +10,8 @@
 
     = search_field_tag :search, params[:search], class: 'form-control'
 
-    = button_tag(type: 'submit', class: 'button search', title: "#{ t('common.search') }") do
-      img src=image_path('icons/search-ico.svg') alt=('Search') class="search-icon" /
+    = button_tag(type: 'submit', class: 'button search', title: 'Search all recorded questions') do
+      img src=image_path('icons/search-ico.svg') alt='Search' class='search-icon' /
 
 .table-container.container
   table.report
