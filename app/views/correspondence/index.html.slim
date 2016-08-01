@@ -1,15 +1,23 @@
-= render partial: 'layouts/header', locals: {page_heading: 'List of correspondence'}
+= render partial: 'layouts/header', locals: {page_heading: 'List of questions'}
 
 = form_tag '/search', method: 'get'
-  = label_tag "Search for: "
-  = text_field_tag :search
-  = submit_tag "Submit"
+  .form-group
+    = label_tag :search, class:'form-label' do
+      .label-text
+        = "Search"
+        span.form-hint
+          = 'Enter correspondents name'
+
+    = search_field_tag :search, params[:search], class: 'form-control'
+
+    = button_tag(type: 'submit', class: 'button search', title: 'Search all recorded questions') do
+      img src=image_path('icons/search-ico.svg') alt='Search' class='search-icon' /
 
 .table-container.container
   table.report
     caption
       span.table-caption
-        | Correspondence submitted through the webform
+        | Questions submitted through the webform
       span.claim-count
         /=# t('.show_count', page_count: claims.size, total: claims.total_count)
     colgroup
