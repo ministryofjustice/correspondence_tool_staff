@@ -7,6 +7,7 @@ body {
 
 .container {
   @include container;
+  @include border-box-sizing;
 }
 
 #page {
@@ -15,4 +16,32 @@ body {
 .body-content {
   @include span(6 of 12);
   @include first;
+}
+
+.question {
+  .column-half{
+    padding: 0;
+    margin-bottom: $gutter;
+  }
+  @include media(tablet) {
+    .column-half {
+      @include span(6 of 12 no-gutters);
+      padding: 0;
+    }
+  }
+
+  &.content {
+    @include media(tablet) {
+      @include span(9 of 12);
+      @include first;
+      border-right: 3px solid $border-colour;
+    }
+  }
+
+  &.status {
+    @include media(tablet) {
+      @include span(3 at 10 of 12);
+      @include last;
+    }
+  }
 }

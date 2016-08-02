@@ -26,7 +26,10 @@
       col
       col
       col
+      col
     thead
+      th scope='col'
+        | Edit
       th scope='col'
         | Type
       th scope='col'
@@ -40,6 +43,8 @@
     tbody
       - @correspondence.each do |c|
 	    tr
+          td
+            = link_to 'Edit', edit_correspondence_path(c.id)
           td
             = c.category.humanize
           td
