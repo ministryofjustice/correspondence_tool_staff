@@ -21,14 +21,20 @@ section.question.content tabindex=0
     = @correspondence.message
 
   = form_for @correspondence do |f|
-    .column-half
+    .column-third
       = f.collection_select :category, Settings.correspondence_categories, :underscore, :humanize, {selected: @correspondence.category, include_blank: "Please select an option"}
 
-    .column-half
+    .column-third
       = f.collection_select :topic, Settings.correspondence_topics, :underscore, :humanize, {include_blank: "Please select an option"}
+
+    .column-third
+      = f.collection_select :user_id, User.all, :id, :email, {include_blank: "Please select a drafter" }, { class: 'drafter_select' }
 
     = f.submit 'Save', class:'button'
 
 section.question.status
   h2
     = 'Status'
+  - if @correspondence.drafter
+    p
+      = "Assigned to: #{ @correspondence.drafter.email }"

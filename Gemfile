@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'coffee-rails', '~> 4.2'
 gem 'config'
+gem 'devise'
 gem 'govuk_template',         '~> 0.18.0'
 gem 'govuk_frontend_toolkit', '>= 4.14.0'
 gem 'govuk_elements_rails',   '>= 1.2.1'

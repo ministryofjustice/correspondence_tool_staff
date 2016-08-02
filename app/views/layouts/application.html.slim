@@ -28,7 +28,7 @@
   /= render partial: 'shared/phase_banner'
   .primary-nav-bar
   main#content.container
-    /= render partial: 'layouts/flashes' unless flash.empty?
+    = render partial: 'layouts/flashes' unless flash.empty?
     = yield
 
 - content_for :body_end do
