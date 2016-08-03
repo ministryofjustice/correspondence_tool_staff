@@ -1,0 +1,17 @@
+h2.visually-hidden
+    = 'Details'
+
+.column-half
+  span.form-label
+    = 'Correspondent'
+  = @correspondence.name
+
+.column-half
+  span.form-label
+    = 'Correspondent email'
+  = mail_to @correspondence.email, @correspondence.email
+
+.form-label
+  = "Message"
+p
+  = @correspondence.message

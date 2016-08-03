@@ -1,21 +1,24 @@
 class CorrespondenceController < ApplicationController
 
+  before_action :set_correspondence, only: [:show, :edit, :update]
+
   def index
     @correspondence = Correspondence.all
   end
 
+  def show; end
+
   def edit
-    @correspondence = Correspondence.find(params[:id])
     render :edit
   end
 
   def update
-    @correspondence = Correspondence.find(params[:id])
-
     if @correspondence.update(correspondence_params)
-      flash[:notice] = "Correspondence assigned to #{@correspondence.drafter.email}" if assigning?
+      flash[:notice] = "Correspondence updated"
+      render :show
+    else
+      render :edit
     end
-    render :edit
   end
 
   def search
@@ -33,8 +36,8 @@ class CorrespondenceController < ApplicationController
     )
   end
 
-  def assigning?
-    correspondence_params[:user_id].present?
+  def set_correspondence
+    @correspondence = Correspondence.find(params[:id])
   end
 
 end

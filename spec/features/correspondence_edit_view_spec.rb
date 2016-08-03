@@ -8,8 +8,11 @@ feature 'edit a specific item of correspondence' do
 
   scenario 'by correspondent name' do
     visit '/'
+    click_on "View"
     click_on "Edit"
-    expect(page).to have_content("Sarah Smith")
+    page.find(:select, text: 'Courts').select('Courts')
+    click_on 'Save'
+    expect(page).to have_content("Correspondence updated")
   end
 
 end
