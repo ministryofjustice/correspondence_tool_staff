@@ -79,7 +79,7 @@ RSpec.describe Correspondence, type: :model do
 
       context 'when user_id is updated' do
         it 'transitions state to "assigned"' do
-          expect{ persisted_correspondence.update(user_id: user.id) }.to change{ persisted_correspondence.state }.from("submitted").to("assigned")
+          expect { persisted_correspondence.update(user_id: user.id) }.to change { persisted_correspondence.state }.from("submitted").to("assigned")
         end
 
         it 'unless state is already "assigned"' do

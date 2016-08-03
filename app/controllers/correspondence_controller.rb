@@ -13,11 +13,9 @@ class CorrespondenceController < ApplicationController
     @correspondence = Correspondence.find(params[:id])
 
     if @correspondence.update(correspondence_params)
-      flash[:notice] = "Correspondence assigned to #{@correspondence.drafter.email}" if assignation_params_present?
-      render :edit
-    else
-      render :edit
+      flash[:notice] = "Correspondence assigned to #{@correspondence.drafter.email}" if assigning?
     end
+    render :edit
   end
 
   def search
@@ -29,13 +27,13 @@ class CorrespondenceController < ApplicationController
 
   def correspondence_params
     params.require(:correspondence).permit(
-        :category,
-        :topic,
-        :user_id
-      )
+      :category,
+      :topic,
+      :user_id
+    )
   end
 
-  def assignation_params_present?
+  def assigning?
     correspondence_params[:user_id].present?
   end
 

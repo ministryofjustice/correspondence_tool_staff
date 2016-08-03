@@ -1,9 +1,11 @@
 class Correspondence < ApplicationRecord
 
-  validates :name, :email, :category, :topic, :message, :email_confirmation, presence: true, on: :create
+  validates :name, :email, :category, :topic, :message, :email_confirmation,
+    presence: true, on: :create
+
   validates :email, confirmation: { case_sensitive: false }
 
-  attr_accessor :email_confirmation
+  attr_accessor :email_confirmation, :state
 
   belongs_to :user, required: false
 
@@ -14,7 +16,7 @@ class Correspondence < ApplicationRecord
   end
 
   def drafter
-    self.user
+    user
   end
 
   private
@@ -24,7 +26,7 @@ class Correspondence < ApplicationRecord
   end
 
   def drafter_assigned?
-    self.state == "submitted" && user.present?
+    state == "submitted" && user.present?
   end
 
 end
