@@ -5,7 +5,7 @@ class Correspondence < ApplicationRecord
 
   validates :email, confirmation: { case_sensitive: false }
 
-  attr_accessor :email_confirmation, :state
+  attr_accessor :email_confirmation
 
   belongs_to :user, required: false
 
