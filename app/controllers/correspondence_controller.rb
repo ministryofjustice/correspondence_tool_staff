@@ -13,7 +13,7 @@ class CorrespondenceController < ApplicationController
     @correspondence = Correspondence.find(params[:id])
 
     if @correspondence.update(correspondence_params)
-      flash[:notice] = "Correspondence assigned to #{@correspondence.drafter.email}" if making_new_assignation?
+      flash[:notice] = "Correspondence assigned to #{@correspondence.drafter.email}" if assignation_params_present?
       render :edit
     else
       render :edit
@@ -35,16 +35,8 @@ class CorrespondenceController < ApplicationController
       )
   end
 
-  def making_new_assignation?
-    assignation_params_present? && drafter_changed?
-  end
-
   def assignation_params_present?
     correspondence_params[:user_id].present?
-  end
-
-  def drafter_changed?
-    correspondence_params[:user_id] != @correspondence.drafter.id
   end
 
 end

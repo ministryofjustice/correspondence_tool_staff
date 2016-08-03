@@ -14,5 +14,4 @@ feature 'Correspondence can be assigned to a drafter' do
     click_button 'Save'
     expect(page).to have_content("assigned to jane_doe@drafters-example.com")
   end
-
 end

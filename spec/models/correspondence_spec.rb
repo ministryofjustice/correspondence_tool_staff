@@ -66,14 +66,14 @@ RSpec.describe Correspondence, type: :model do
 
   context 'callbacks' do
 
-    context '#assign' do
+    context '#assigned_state' do
 
       let(:persisted_correspondence) { create(:correspondence)  }
       let(:user)                     { create(:user)            }
       let(:another_user)             { create(:user)            }
 
       it 'is called after_update' do
-        expect(persisted_correspondence).to receive(:assign)
+        expect(persisted_correspondence).to receive(:assigned_state)
         persisted_correspondence.update(user_id: user.id)
       end
 

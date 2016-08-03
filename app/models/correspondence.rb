@@ -7,7 +7,7 @@ class Correspondence < ApplicationRecord
 
   belongs_to :user, required: false
 
-  after_update :assign, if: :assignation_made?
+  after_update :assigned_state, if: :drafter_assigned?
 
   def self.search(term)
     where('lower(name) LIKE ?', "%#{term.downcase}%")
@@ -19,11 +19,11 @@ class Correspondence < ApplicationRecord
 
   private
 
-  def assign
+  def assigned_state
     self.state = "assigned"
   end
 
-  def assignation_made?
+  def drafter_assigned?
     self.state == "submitted" && user.present?
   end
 

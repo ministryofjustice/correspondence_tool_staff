@@ -43,7 +43,5 @@ RSpec.describe CorrespondenceController, type: :controller do
     it 'updates the correspondence record' do
       expect(all_correspondence.first.drafter).to eq User.first
     end
-
   end
-
 end
