@@ -82,7 +82,7 @@ RSpec.describe Correspondence, type: :model do
           expect{ persisted_correspondence.update(user_id: user.id) }.to change{ persisted_correspondence.state }.from("submitted").to("assigned")
         end
 
-        it 'unless satte is already "assigned"' do
+        it 'unless state is already "assigned"' do
           persisted_correspondence.update(user_id: user.id)
           expect(persisted_correspondence).not_to receive(:assign)
           persisted_correspondence.update(user_id: another_user.id)
