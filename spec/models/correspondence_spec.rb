@@ -56,5 +56,40 @@ RSpec.describe Correspondence, type: :model do
         expect(correspondence).to be_valid
       end
     end
+
+    context 'with defaults' do
+      it 'state - defaults to "submitted"' do
+        expect(correspondence.state).to eq 'submitted'
+      end
+    end
   end
+
+  context 'callbacks' do
+
+    context '#assign' do
+
+      let(:persisted_correspondence) { create(:correspondence)  }
+      let(:user)                     { create(:user)            }
+      let(:another_user)             { create(:user)            }
+
+      it 'is called after_update' do
+        expect(persisted_correspondence).to receive(:assign)
+        persisted_correspondence.update(user_id: user.id)
+      end
+
+      context 'when user_id is updated' do
+        it 'transitions state to "assigned"' do
+          expect{ persisted_correspondence.update(user_id: user.id) }.to change{ persisted_correspondence.state }.from("submitted").to("assigned")
+        end
+
+        it 'unless satte is already "assigned"' do
+          persisted_correspondence.update(user_id: user.id)
+          expect(persisted_correspondence).not_to receive(:assign)
+          persisted_correspondence.update(user_id: another_user.id)
+        end
+      end
+    end
+
+  end
+
 end

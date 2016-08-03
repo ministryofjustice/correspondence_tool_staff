@@ -35,6 +35,5 @@ section.question.content tabindex=0
 section.question.status
   h2
     = 'Status'
-  - if @correspondence.drafter
-    p
-      = "Assigned to: #{ @correspondence.drafter.email }"
+  p
+    = @correspondence.state.humanize
