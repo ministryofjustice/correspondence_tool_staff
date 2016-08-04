@@ -1,0 +1,15 @@
+- flash.each do |key, value|
+  - unless %w{hidden ga}.include? key
+    - if key == "alert"
+      .error-summary(role="group" aria-labelledby="error-summary-heading" tabindex='-1')
+        h1.heading-medium.error-summary-heading(id= 'error-summary-heading')
+          = value
+
+    - elsif key == "notice"
+      .notice-summary(role="group" aria-labelledby="notice-summary-heading" tabindex='-1')
+        h1.heading-medium.notice-summary-heading(id= "notice-summary-heading")
+          = value
+
+    - else
+      .flash(class= "#{key}" )
+        span = value
