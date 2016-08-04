@@ -26,3 +26,4 @@ en:
   time:
     formats:
       default: "%d/%m/%Y %H:%M"
+      date_received: "%d/%m/%y"
