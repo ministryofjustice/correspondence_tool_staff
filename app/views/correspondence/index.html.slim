@@ -27,6 +27,7 @@
       col
       col
       col
+      col
     thead
       th scope='col'
         | Edit
@@ -39,7 +40,9 @@
       th scope='col'
         | Message
       th scope='col'
-        | Date
+        | Received
+      th scope='col'
+        | Status
     tbody
       - @correspondence.each do |c|
 	    tr
@@ -54,4 +57,6 @@
           td
             = c.message
           td
-            = l c.created_at
+            = c.created_at.strftime("%d/%m/%y")
+          td
+            = c.state.humanize
