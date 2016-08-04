@@ -4,7 +4,7 @@
 section.question.content tabindex=0
   = render partial: 'fixed_details', locals: {correspondence: @correspondence}
 
-  .column-two-thirds
+  .column-half
     .form-label
       = "Category"
     p
@@ -17,7 +17,7 @@ section.question.content tabindex=0
     = link_to 'Edit', edit_correspondence_path(@correspondence), class:'button'
 
   = form_for @correspondence do |f|
-    .column-third
+    .column-half
       = f.collection_select :user_id, User.all, :id, :email, {include_blank: "Please select a drafter" }, { class: 'drafter_select' }
 
       = f.submit 'Assign', class:'button'
