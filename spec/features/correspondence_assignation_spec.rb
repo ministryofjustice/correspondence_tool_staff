@@ -7,11 +7,11 @@ feature 'Correspondence can be assigned to a drafter' do
     create(:user, email: 'jane_doe@drafters-example.com')
   end
 
-  scenario 'from the edit screen' do
+  scenario 'from the detail view' do
     correspondence = Correspondence.first
-    visit "correspondence/#{correspondence.id}/edit"
+    visit "correspondence/#{correspondence.id}"
     page.find(:select, text: 'jane_doe@drafters-example.com').select('jane_doe@drafters-example.com')
-    click_button 'Save'
-    expect(page).to have_content("Correspondence updated")
+    click_button 'Assign'
+    expect(page).to have_content("Correspondence assigned to #{User.first.email}")
   end
 end

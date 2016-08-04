@@ -2,7 +2,14 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-  resources :correspondence
+  resources :correspondence do
+    member do
+      patch 'assign'
+    end
+  end
+
+
+  get '/search' => 'correspondence#search'
 
   namespace :api, format: :json do
     scope module: :v1 do
@@ -11,7 +18,5 @@ Rails.application.routes.draw do
   end
 
   root to: 'correspondence#index'
-
-  get '/search' => 'correspondence#search'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

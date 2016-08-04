@@ -37,11 +37,26 @@ RSpec.describe CorrespondenceController, type: :controller do
 
     before do
       id = all_correspondence.first.id
-      patch :update, params: { id: id, correspondence: { category: 'freedom_of_information_reuqest', topic: 'prisons', drafter: 'jane_doe@example-drafter.com' } }
+      patch :update, params: { id: id, correspondence: { category: 'freedom_of_information_reuqest', topic: 'courts' } }
     end
 
     it 'updates the correspondence record' do
-      expect(all_correspondence.first.drafter).to eq User.first
+      expect(Correspondence.first.topic).to eq 'courts'
     end
   end
+
+  context 'PATCH assign' do
+
+    before do
+      id = all_correspondence.first.id
+      user_id = create(:user)
+      patch :assign, params: { id: id, correspondence: { user_id: user_id } }
+    end
+
+    it 'assigns correspondence to a user' do
+      expect(Correspondence.first.drafter).to eq User.first
+    end
+
+  end
+
 end
