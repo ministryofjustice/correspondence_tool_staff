@@ -37,7 +37,7 @@ RSpec.describe CorrespondenceController, type: :controller do
 
     before do
       id = all_correspondence.first.id
-      patch :update, params: { id: id, correspondence: { category: 'freedom_of_information_reuqest', topic: 'courts'} }
+      patch :update, params: { id: id, correspondence: { category: 'freedom_of_information_reuqest', topic: 'courts' } }
     end
 
     it 'updates the correspondence record' do
