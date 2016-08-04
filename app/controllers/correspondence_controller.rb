@@ -14,7 +14,7 @@ class CorrespondenceController < ApplicationController
 
   def update
     if @correspondence.update(edit_correspondence_params)
-      flash[:notice] = "Correspondence updated"
+      flash.now[:notice] = "Correspondence updated"
       render :show
     else
       render :edit
@@ -23,7 +23,7 @@ class CorrespondenceController < ApplicationController
 
   def assign
     if @correspondence.update(assign_correspondence_params) && @correspondence.drafter
-      flash[:notice] = "Correspondence assigned to #{@correspondence.drafter.email}"
+      flash.now[:notice] = "Correspondence assigned to #{@correspondence.drafter.email}"
     end
     render :show
   end
