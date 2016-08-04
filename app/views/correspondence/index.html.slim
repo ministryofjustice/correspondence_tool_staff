@@ -57,6 +57,6 @@
           td
             = c.message
           td
-            = c.created_at.strftime("%d/%m/%y")
+            = l c.created_at, format: :date_received
           td
             = c.state.humanize
