@@ -2,35 +2,21 @@
 
 
 section.question.content tabindex=0
-  h2.visually-hidden
-    = 'Details'
+  = render partial: 'fixed_details', locals: {correspondence: @correspondence}
 
-  .column-half
-    span.form-label
-      = 'Correspondent'
-    = @correspondence.name
-
-  .column-half
-    span.form-label
-      = 'Correspondent email'
-    = mail_to @correspondence.email, @correspondence.email
-
-  .form-label
-    = "Message"
-  p
-    = @correspondence.message
-
+  
   = form_for @correspondence do |f|
-    .column-third
+    .column-half
       = f.collection_select :category, Settings.correspondence_categories, :underscore, :humanize, {selected: @correspondence.category, include_blank: "Please select an option"}
-
-    .column-third
+      br
       = f.collection_select :topic, Settings.correspondence_topics, :underscore, :humanize, {include_blank: "Please select an option"}
+      br
+      = f.submit 'Save', class:'button'
 
-    .column-third
-      = f.collection_select :user_id, User.all, :id, :email, {include_blank: "Please select a drafter" }, { class: 'drafter_select' }
-
-    = f.submit 'Save', class:'button'
+    .column-half
+      = form_for @correspondence do |f|
+        = f.collection_select :user_id, User.all, :id, :email, {include_blank: "Please select a drafter" }, { class: 'drafter_select' }
+        = f.submit 'Assign', class:'button'
 
 section.question.status
   h2
