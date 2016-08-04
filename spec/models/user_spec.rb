@@ -4,4 +4,6 @@ RSpec.describe User, type: :model do
 
   subject { create(:user) }
 
+  it_behaves_like 'roles', described_class, User::ROLES
+
 end

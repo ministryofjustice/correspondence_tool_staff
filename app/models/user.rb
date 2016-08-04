@@ -6,4 +6,8 @@ class User < ApplicationRecord
 
   has_many :correspondence
 
+  ROLES = %w[assigner drafter approver].freeze
+
+  include Roles
+
 end
