@@ -7,6 +7,7 @@ feature 'a user can see all correspondence on the system' do
   end
 
   scenario 'in a single list' do
+    login_as create(:user)
     visit '/'
     Correspondence.all.each do |correspondence|
       expect(page).to have_content(correspondence.created_at.strftime("%d/%m/%y"))

@@ -8,6 +8,7 @@ feature 'Correspondence can be assigned to a drafter' do
   end
 
   scenario 'from the detail view' do
+    login_as create(:user)
     correspondence = Correspondence.first
     visit "correspondence/#{correspondence.id}"
     page.find(:select, text: 'jane_doe@drafters-example.com').select('jane_doe@drafters-example.com')

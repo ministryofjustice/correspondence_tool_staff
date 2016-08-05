@@ -1,0 +1,14 @@
+= GovukElementsErrorsHelper.error_summary resource, "Message to alert the user to a problem goes here", "Optional description of the errors and how to correct them"
+
+= render partial: 'layouts/header', locals: {page_heading: 'Sign in'}
+
+= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+  = f.email_field :email, autofocus: true
+
+  = f.password_field :password, autocomplete: "off"
+
+
+  = f.submit "Sign in", class: "button"
+
+= render "devise/shared/links"
+
