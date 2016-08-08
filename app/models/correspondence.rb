@@ -23,7 +23,7 @@ class Correspondence < ApplicationRecord
 
   def assigned_state
     self.state = "assigned"
-    self.save!
+    save!
   end
 
   def drafter_assigned?
