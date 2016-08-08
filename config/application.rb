@@ -21,6 +21,8 @@ module CorrespondencePlatform
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    config.ga_tracking_id = (ENV['GA_TRACKING_ID'] || '')
+
     ActionView::Base.default_form_builder = GovukElementsFormBuilder::FormBuilder
 
   end
