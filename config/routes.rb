@@ -2,14 +2,15 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+  authenticated :user  do
+    root to: 'correspondence#index', as: :authenticated_root
+  end
+
   resources :correspondence do
     member do
       patch 'assign'
     end
   end
-
-
-  get '/search' => 'correspondence#search'
 
   namespace :api, format: :json do
     scope module: :v1 do
@@ -17,6 +18,7 @@ Rails.application.routes.draw do
     end
   end
 
-  root to: 'correspondence#index'
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  get '/search' => 'correspondence#search'
+
+  root to: redirect('/users/sign_in')
 end
