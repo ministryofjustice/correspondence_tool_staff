@@ -13,7 +13,7 @@ class CorrespondenceController < ApplicationController
   end
 
   def update
-    if @correspondence.update(edit_correspondence_params)
+    if @correspondence.update(parsed_edit_params)
       flash.now[:notice] = "Correspondence updated"
       render :show
     else
@@ -34,6 +34,10 @@ class CorrespondenceController < ApplicationController
   end
 
   private
+
+  def parsed_edit_params
+    edit_correspondence_params.delete_if { |_key, value| value == "" }
+  end
 
   def edit_correspondence_params
     params.require(:correspondence).permit(

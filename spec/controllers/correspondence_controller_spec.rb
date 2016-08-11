@@ -98,6 +98,12 @@ RSpec.describe CorrespondenceController, type: :controller do
       it 'updates the correspondence record' do
         expect(Correspondence.first.topic).to eq 'courts'
       end
+
+      it 'does not overwrite entries with blanks (if the blank dropdown option is selected)' do
+        id = all_correspondence.first.id
+        patch :update, params: { id: id, correspondence: { category: '', topic: 'courts' } }
+        expect(Correspondence.first.category).to eq 'freedom_of_information_reuqest'
+      end
     end
 
     context 'PATCH assign' do
