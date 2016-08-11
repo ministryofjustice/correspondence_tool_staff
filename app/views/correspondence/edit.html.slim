@@ -7,7 +7,7 @@ section.question.content tabindex=0
   
   = form_for @correspondence do |f|
     .column-half
-      = f.collection_select :category, Settings.correspondence_categories, :underscore, :humanize, {selected: @correspondence.category, include_blank: "Please select an option"}
+      = f.collection_select :category, Category.all, :id, :name, {selected: @correspondence.category, include_blank: "Please select an option"}
       br
       = f.collection_select :topic, Settings.correspondence_topics, :underscore, :humanize, {include_blank: "Please select an option"}
       br

@@ -41,7 +41,7 @@ class CorrespondenceController < ApplicationController
 
   def edit_correspondence_params
     params.require(:correspondence).permit(
-      :category,
+      :category_id,
       :topic
     )
   end

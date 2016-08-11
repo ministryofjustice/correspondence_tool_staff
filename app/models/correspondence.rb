@@ -8,6 +8,7 @@ class Correspondence < ApplicationRecord
   attr_accessor :email_confirmation
 
   belongs_to :user, required: false
+  belongs_to :category, required: true
 
   after_update :assigned_state, if: :drafter_assigned?
 
@@ -17,6 +18,10 @@ class Correspondence < ApplicationRecord
 
   def drafter
     user
+  end
+
+  def internal_deadline
+    category.internal_time_limit
   end
 
   private

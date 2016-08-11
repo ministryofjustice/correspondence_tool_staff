@@ -28,6 +28,8 @@ group :test do
   gem 'capybara'
   gem "codeclimate-test-reporter", require: nil
   gem 'rails-controller-testing'
+  gem 'shoulda-matchers'
+  gem 'timecop'
 end
 
 group :development, :test do

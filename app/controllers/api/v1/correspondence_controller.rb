@@ -20,7 +20,7 @@ module Api
           :name,
           :email,
           :email_confirmation,
-          :category,
+          :category_id,
           :topic,
           :message
         )

@@ -11,7 +11,7 @@ feature 'a user can see all correspondence on the system' do
     visit '/'
     Correspondence.all.each do |correspondence|
       expect(page).to have_content(correspondence.created_at.strftime("%d/%m/%y"))
-      expect(page).to have_content(correspondence.category.humanize)
+      expect(page).to have_content(correspondence.category.name.humanize)
       expect(page).to have_content(correspondence.topic.humanize)
     end
   end

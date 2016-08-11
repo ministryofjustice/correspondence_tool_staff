@@ -12,46 +12,20 @@ RSpec.describe Correspondence, type: :model do
 
   describe 'attributes' do
     context 'mandatory' do
-      it 'name' do
-        correspondence.name = nil
-        expect(correspondence).not_to be_valid
-      end
 
-      it 'email' do
-        correspondence.email = nil
-        expect(correspondence).not_to be_valid
-      end
-
-      it 'email confirmation' do
-        correspondence.email_confirmation = nil
-        expect(correspondence).not_to be_valid
-        expect(correspondence.errors.full_messages).to include("Email confirmation can't be blank")
-      end
-
-      it 'category' do
-        correspondence.category = nil
-        expect(correspondence).not_to be_valid
-      end
-
-      it 'message' do
-        correspondence.message = nil
-        expect(correspondence).not_to be_valid
-      end
-
-      it 'topic' do
-        correspondence.topic = nil
-        expect(correspondence).not_to be_valid
+      it do
+        should validate_presence_of(:name)
+        should validate_presence_of(:email)
+        should validate_presence_of(:email_confirmation)
+        should validate_presence_of(:message)
+        should validate_presence_of(:topic)
       end
     end
 
     context 'requiring confirmation' do
-      it 'email' do
-        correspondence.email_confirmation = 'mis-match@email.com'
-        expect(correspondence).not_to be_valid
-        expect(correspondence.errors.full_messages).to include("Email confirmation doesn't match Email")
-      end
+      it { should validate_confirmation_of(:email) }
 
-      it 'email is case insensitive' do
+      it 'for email is case insensitive' do
         correspondence.email_confirmation = correspondence.email_confirmation.upcase
         expect(correspondence).to be_valid
       end
@@ -61,6 +35,19 @@ RSpec.describe Correspondence, type: :model do
       it 'state - defaults to "submitted"' do
         expect(correspondence.state).to eq 'submitted'
       end
+    end
+  end
+
+  describe 'associations' do
+
+    context 'category' do
+
+      it 'is mandatory' do
+        should validate_presence_of(:category)
+      end
+
+      it { should belong_to(:category) }
+
     end
   end
 
@@ -90,7 +77,32 @@ RSpec.describe Correspondence, type: :model do
         end
       end
     end
-
   end
 
+  context '#internal_deadline' do
+
+    context 'for General Enquiries' do
+
+      before do
+        Timecop.freeze('05/08/2016') { create(:correspondence, category: create(:category, name: 'general_enquiries')) }
+      end
+
+      it 'is 11 working days including the day of receipt' do
+        expect(Correspondence.first.internal_deadline).to eq '19/08/2016'
+      end
+    end
+
+    context 'Freedom of Information Requests' do
+
+      before do
+        Timecop.freeze('05/08/2016') { create(:correspondence, category: create(:category, name: 'freedom_of_information_request')) }
+      end
+
+      it 'is 11 working days including the day of receipt' do
+        expect(Correspondence.first.internal_deadline).to eq '26/08/2016'
+      end
+
+    end
+
+  end
 end
