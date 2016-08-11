@@ -36,7 +36,7 @@ class CorrespondenceController < ApplicationController
   private
 
   def parsed_edit_params
-    edit_correspondence_params.delete_if { |key, value| value == "" }
+    edit_correspondence_params.delete_if { |_key, value| value == "" }
   end
 
   def edit_correspondence_params
