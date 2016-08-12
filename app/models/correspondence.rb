@@ -21,7 +21,19 @@ class Correspondence < ApplicationRecord
   end
 
   def internal_deadline
-    category.internal_time_limit
+    category.internal_time_limit.business_days.after(start_date)
+  end
+
+  def external_deadline
+    category.external_time_limit.business_days.after(start_date)
+  end
+
+  def start_date
+    date = self.created_at.to_date + 1
+    until date.workday?
+      date += 1
+    end
+    return date
   end
 
   private

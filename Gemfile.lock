@@ -48,8 +48,13 @@ GEM
     addressable (2.4.0)
     arel (7.1.1)
     ast (2.3.0)
+    bank_holiday (0.0.24)
+      dish
     bcrypt (3.1.11)
     builder (3.2.2)
+    business_time (0.7.6)
+      activesupport (>= 3.1.0)
+      tzinfo
     byebug (9.0.5)
     capybara (2.7.1)
       addressable
@@ -81,6 +86,7 @@ GEM
       responders
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
+    dish (0.0.6)
     docile (1.1.5)
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
@@ -309,6 +315,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bank_holiday
+  business_time
   byebug
   capybara
   codeclimate-test-reporter

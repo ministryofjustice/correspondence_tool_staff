@@ -23,7 +23,10 @@ RSpec.describe Correspondence, type: :model do
     end
 
     context 'requiring confirmation' do
-      it { should validate_confirmation_of(:email) }
+      it 'email' do
+        correspondence.email_confirmation = 'does_not_match'
+        expect(correspondence).not_to be_valid
+      end
 
       it 'for email is case insensitive' do
         correspondence.email_confirmation = correspondence.email_confirmation.upcase
@@ -84,25 +87,52 @@ RSpec.describe Correspondence, type: :model do
     context 'for General Enquiries' do
 
       before do
-        Timecop.freeze('05/08/2016') { create(:correspondence, category: create(:category, name: 'general_enquiries')) }
+        Timecop.freeze(Date.parse('05/08/2016')) { create(:correspondence, category: create(:category, :gq)) }
       end
 
-      it 'is 11 working days including the day of receipt' do
-        expect(Correspondence.first.internal_deadline).to eq '19/08/2016'
+      it 'is 10 working days after the day of receipt' do
+        expect(Correspondence.first.internal_deadline).to eq '19/08/2016'.to_date
       end
     end
 
     context 'Freedom of Information Requests' do
 
       before do
-        Timecop.freeze('05/08/2016') { create(:correspondence, category: create(:category, name: 'freedom_of_information_request')) }
+        Timecop.freeze(Date.parse('05/08/2016')) { create(:correspondence, category: create(:category)) }
       end
 
-      it 'is 11 working days including the day of receipt' do
-        expect(Correspondence.first.internal_deadline).to eq '26/08/2016'
+      it 'is 10 working days after the day of receipt' do
+        expect(Correspondence.first.internal_deadline).to eq '19/08/2016'.to_date
+      end
+
+    end
+  end
+
+  context '#external_deadline' do
+
+    context 'for General Enquiries' do
+
+      before do
+        Timecop.freeze(Date.parse('05/08/2016')) { create(:correspondence, category: create(:category, :gq)) }
+      end
+
+      it 'is 15 working days after the day of receipt' do
+        expect(Correspondence.first.external_deadline).to eq '26/08/2016'.to_date
       end
 
     end
 
+    context 'Freedom of Information Requests' do
+
+      before do
+        Timecop.freeze(Date.parse('05/08/2016')) { create(:correspondence, category: create(:category)) }
+      end
+
+      it 'is 20 working days after the day of receipt' do
+        expect(Correspondence.first.external_deadline).to eq '05/09/2016'.to_date
+      end
+
+    end
   end
 end
+  

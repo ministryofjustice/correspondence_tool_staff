@@ -23,6 +23,7 @@ en:
   date:
     formats:
       default: "%d/%m/%Y"
+      deadline: "%d/%m/%y"
   time:
     formats:
       default: "%d/%m/%Y %H:%M"

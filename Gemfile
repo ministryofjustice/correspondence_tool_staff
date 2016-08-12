@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'bank_holiday'
+gem 'business_time'
 gem 'coffee-rails', '~> 4.2'
 gem 'config'
 gem 'devise', '~> 4.2'

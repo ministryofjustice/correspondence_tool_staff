@@ -28,6 +28,8 @@
       col
       col
       col
+      col
+      col
     thead
       th scope='col'
         |
@@ -41,6 +43,10 @@
         | Message
       th scope='col'
         | Received
+      th scope='col'
+        | Internal deadline
+      th scope='col'
+        | External deadline
       th scope='col'
         | Status
     tbody
@@ -58,5 +64,9 @@
             = c.message
           td
             = l c.created_at, format: :date_received
+          td
+            = l c.internal_deadline, format: :deadline
+          td
+            = l c.external_deadline, format: :deadline
           td
             = c.state.humanize
