@@ -56,6 +56,26 @@ RSpec.describe Correspondence, type: :model do
 
   context 'callbacks' do
 
+    context '#set_deadlines' do
+
+      it 'is called before_create' do
+        expect(correspondence).to receive(:set_deadlines)
+        correspondence.save!
+      end
+
+      it 'sets the internal deadlne' do
+        expect(correspondence.internal_deadline).to eq nil
+        correspondence.save!
+        expect(correspondence.internal_deadline).to be_a(Date) 
+      end
+
+      it 'sets the external deadline' do
+        expect(correspondence.external_deadline).to eq nil
+        correspondence.save!
+        expect(correspondence.external_deadline).to be_a(Date) 
+      end
+    end
+
     context '#assigned_state' do
 
       let(:persisted_correspondence) { create(:correspondence)  }
