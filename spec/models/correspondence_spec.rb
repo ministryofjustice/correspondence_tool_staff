@@ -66,13 +66,13 @@ RSpec.describe Correspondence, type: :model do
       it 'sets the internal deadline' do
         expect(correspondence.internal_deadline).to eq nil
         correspondence.save!
-        expect(correspondence.internal_deadline).to be_a(Date) 
+        expect(correspondence.internal_deadline).to be_a(Date)
       end
 
       it 'sets the external deadline' do
         expect(correspondence.external_deadline).to eq nil
         correspondence.save!
-        expect(correspondence.external_deadline).to be_a(Date) 
+        expect(correspondence.external_deadline).to be_a(Date)
       end
     end
 
@@ -102,4 +102,3 @@ RSpec.describe Correspondence, type: :model do
     end
   end
 end
-  

@@ -10,11 +10,9 @@ class DeadlineCalculator
     end
 
     def start_date
-      date = Date.today + 1
-      until date.workday?
-        date += 1
-      end
-      return date
+      date = Time.zone.today + 1
+      date += 1 until date.workday?
+      date
     end
   end
 

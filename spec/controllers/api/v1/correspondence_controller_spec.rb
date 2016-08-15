@@ -16,7 +16,7 @@ RSpec.describe Api::V1::CorrespondenceController, type: :controller do
   before do
     create(:category)
     request.headers["HTTP_AUTHORIZATION"] = "Token token=\"#{ENV['WEB_FORM_AUTH_TOKEN']}\""
- end
+  end
 
   context 'when authentication succeeds' do
 
