@@ -21,19 +21,11 @@ class Correspondence < ApplicationRecord
     user
   end
 
-  def start_date
-    date = Date.today + 1
-    until date.workday?
-      date += 1
-    end
-    return date
-  end
-
   private
 
   def set_deadlines
-    self.internal_deadline = category.internal_time_limit.business_days.after(start_date)
-    self.external_deadline = category.external_time_limit.business_days.after(start_date)
+    self.internal_deadline = DeadlineCalculator.internal_deadline(self)
+    self.external_deadline = DeadlineCalculator.external_deadline(self)
   end
 
   def assigned_state
