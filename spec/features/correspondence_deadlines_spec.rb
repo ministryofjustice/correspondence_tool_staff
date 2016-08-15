@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'The internal deadline for each item is shown in the list view' do
+feature 'Deadlines:' do
 
   background do
     Timecop.freeze('21/08/2016') do
@@ -10,39 +10,67 @@ feature 'The internal deadline for each item is shown in the list view' do
     login_as create(:user)
   end
 
-  scenario 'for General Enquiries it is 10 working days, after the day of receipt' do
-    visit '/'
-    rows = all('.report tr').select { |row| row.text.include?('General enquiry') }
-    rows.each { |row| expect(row.text.include?('05/09/16')).to be true }
-  end
+  context 'The internal deadline' do
 
-  scenario 'for Freedom of Information Requests it is 10 working days, after the day of receipt' do
-    visit '/'
-    rows = all('.report tr').select { |row| row.text.include?('Freedom of information request') }
-    rows.each { |row| expect(row.text.include?('05/09/16')).to be true }
-  end
-end
+    context 'for General Enquiries' do
+      scenario 'is shown in the list view' do
+        visit '/'
+        rows = all('.report tr').select { |row| row.text.include?('General enquiry') }
+        rows.each { |row| expect(row.text.include?('05/09/16')).to be true }
+      end
 
-feature 'The external deadline for each item is shown in the list view' do
-
-  background do
-    Timecop.freeze('21/08/2016') do
-      create(:correspondence)
-      create(:correspondence, category: create(:category, :gq))
+      scenario 'is shown in the detail view' do
+        visit "/correspondence/#{Correspondence.last.id}"
+        expect(page).to have_content('Internal deadline')
+        expect(page).to have_content('05/09/16')
+      end
     end
-    login_as create(:user)
+
+    context 'for Freedom of Information Requests' do
+
+      scenario 'is shown in the list view' do
+        visit '/'
+        rows = all('.report tr').select { |row| row.text.include?('Freedom of information request') }
+        rows.each { |row| expect(row.text.include?('05/09/16')).to be true }
+      end
+
+      scenario 'is shown in the detail view' do
+        visit "/correspondence/#{Correspondence.first.id}"
+        expect(page).to have_content('Internal deadline')
+        expect(page).to have_content('05/09/16')
+      end
+    end
   end
 
-  scenario 'for General Enquiries it is 10 working days, after the day of receipt' do
-    visit '/'
-    rows = all('.report tr').select { |row| row.text.include?('General enquiry') }
-    rows.each { |row| expect(row.text.include?('12/09/16')).to be true }
-  end
+  context 'The external deadline' do
 
-  scenario 'for Freedom of Information Requests it is 10 working days, after the day of receipt' do
-    visit '/'
-    rows = all('.report tr').select { |row| row.text.include?('Freedom of information request') }
-    rows.each { |row| expect(row.text.include?('19/09/16')).to be true }
-  end
+    context 'for General Enquiries' do
+      scenario 'is shown in the list view' do
+        visit '/'
+        rows = all('.report tr').select { |row| row.text.include?('General enquiry') }
+        rows.each { |row| expect(row.text.include?('12/09/16')).to be true }
+      end
 
+      scenario 'is shown in the detail view' do
+        visit "/correspondence/#{Correspondence.last.id}"
+        expect(page).to have_content('External deadline')
+        expect(page).to have_content('12/09/16')
+      end
+    end
+
+    context 'for Freedom of Information Requests' do
+      scenario 'is shown in the list view' do
+        visit '/'
+        rows = all('.report tr').select { |row| row.text.include?('Freedom of information request') }
+        rows.each { |row| expect(row.text.include?('19/09/16')).to be true }
+      end
+
+      scenario 'is shown in the detail view' do
+        visit "/correspondence/#{Correspondence.first.id}"
+        expect(page).to have_content('External deadline')
+        expect(page).to have_content('19/09/16')
+      end
+    end
+
+  end
 end
