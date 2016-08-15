@@ -11,9 +11,9 @@ class DeadlineCalculator
 
     def start_date
       date = Date.today + 1
-    until date.workday?
-      date += 1
-    end
+      until date.workday?
+        date += 1
+      end
       return date
     end
   end

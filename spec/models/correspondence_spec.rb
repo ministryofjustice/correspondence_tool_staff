@@ -63,7 +63,7 @@ RSpec.describe Correspondence, type: :model do
         correspondence.save!
       end
 
-      it 'sets the internal deadlne' do
+      it 'sets the internal deadline' do
         expect(correspondence.internal_deadline).to eq nil
         correspondence.save!
         expect(correspondence.internal_deadline).to be_a(Date) 
@@ -99,59 +99,6 @@ RSpec.describe Correspondence, type: :model do
           persisted_correspondence.update(user_id: another_user.id)
         end
       end
-    end
-  end
-
-  context '#internal_deadline' do
-
-    context 'for General Enquiries' do
-
-      before do
-        Timecop.freeze(Date.parse('05/08/2016')) { create(:correspondence, category: create(:category, :gq)) }
-      end
-
-      it 'is 10 working days after the day of receipt' do
-        expect(Correspondence.first.internal_deadline).to eq '19/08/2016'.to_date
-      end
-    end
-
-    context 'Freedom of Information Requests' do
-
-      before do
-        Timecop.freeze(Date.parse('05/08/2016')) { create(:correspondence, category: create(:category)) }
-      end
-
-      it 'is 10 working days after the day of receipt' do
-        expect(Correspondence.first.internal_deadline).to eq '19/08/2016'.to_date
-      end
-
-    end
-  end
-
-  context '#external_deadline' do
-
-    context 'for General Enquiries' do
-
-      before do
-        Timecop.freeze(Date.parse('05/08/2016')) { create(:correspondence, category: create(:category, :gq)) }
-      end
-
-      it 'is 15 working days after the day of receipt' do
-        expect(Correspondence.first.external_deadline).to eq '26/08/2016'.to_date
-      end
-
-    end
-
-    context 'Freedom of Information Requests' do
-
-      before do
-        Timecop.freeze(Date.parse('05/08/2016')) { create(:correspondence, category: create(:category)) }
-      end
-
-      it 'is 20 working days after the day of receipt' do
-        expect(Correspondence.first.external_deadline).to eq '05/09/2016'.to_date
-      end
-
     end
   end
 end
