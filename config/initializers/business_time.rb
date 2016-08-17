@@ -4,4 +4,3 @@
 #  BusinessTime::Config.beginning_of_workday = "10:00 am"
 #  BusinessTime::Config.end_of_workday = "11:30 am"
 BusinessTime::Config.holidays = BankHoliday.all.map(&:date).map(&:to_date)
-
