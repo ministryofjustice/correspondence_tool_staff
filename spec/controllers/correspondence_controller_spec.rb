@@ -102,7 +102,7 @@ RSpec.describe CorrespondenceController, type: :controller do
       it 'does not overwrite entries with blanks (if the blank dropdown option is selected)' do
         id = all_correspondence.first.id
         patch :update, params: { id: id, correspondence: { category: '', topic: 'courts' } }
-        expect(Correspondence.first.category.name).to eq 'freedom_of_information_request'
+        expect(Correspondence.first.category.name).to eq 'Freedom of information request'
       end
     end
 
