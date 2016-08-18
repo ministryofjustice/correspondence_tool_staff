@@ -15,7 +15,7 @@ feature 'edit a specific item of correspondence' do
     page.find('#correspondence_topic').select('Courts')
     click_on 'Save'
     expect(page).to have_content("Correspondence updated")
-    new_topic = page.find('div.form-label', text:'Topic').find('+p').text
+    new_topic = page.find('div.form-label', text: 'Topic').find('+p').text
     expect(new_topic).to eq 'Courts'
   end
 
@@ -23,7 +23,7 @@ feature 'edit a specific item of correspondence' do
     page.find('#correspondence_category_id').select('General enquiry')
     click_on 'Save'
     expect(page).to have_content("Correspondence updated")
-    new_category = page.find('div.form-label', text:'Category').find('+p').text
+    new_category = page.find('div.form-label', text: 'Category').find('+p').text
     expect(new_category).to eq 'General enquiry'
   end
 
