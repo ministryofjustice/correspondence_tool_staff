@@ -37,6 +37,8 @@ end
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
+  gem 'pry'
+  gem 'pry-byebug'
   gem 'faker'
   gem 'factory_girl_rails'
   gem 'rspec-rails', '~> 3.4'
@@ -49,6 +51,7 @@ group :development do
   gem 'web-console'
   gem 'guard-livereload', '>= 2.5.2'
   gem 'guard-rspec'
+  gem 'guard-rubocop'
   gem 'listen', '~> 3.0.5'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'

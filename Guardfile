@@ -20,3 +20,7 @@ guard :rspec, cmd: "bundle exec rspec -fd" do
   watch(%r{^app/(.+)\.rb$}) { |m| "spec/#{m[1]}_spec.rb" }
   watch(%r{^app/interfaces/api/(.+)\.rb$}) { |m| "spec/api/#{m[1]}_spec.rb" }
 end
+
+guard :rubocop, all_on_start: false, cli: ['--format', 'clang', '--rails'] do
+  watch(%r{.*\.rb$})
+end

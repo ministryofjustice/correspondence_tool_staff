@@ -133,6 +133,9 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
+    guard-rubocop (1.2.0)
+      guard (~> 2.0)
+      rubocop (~> 0.20)
     http_parser.rb (0.6.0)
     i18n (0.7.0)
     jbuilder (2.6.0)
@@ -176,6 +179,9 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    pry-byebug (3.4.0)
+      byebug (~> 9.0)
+      pry (~> 0.10)
     puma (3.6.0)
     rack (2.0.1)
     rack-test (0.6.3)
@@ -331,10 +337,13 @@ DEPENDENCIES
   govuk_template (~> 0.18.0)
   guard-livereload (>= 2.5.2)
   guard-rspec
+  guard-rubocop
   jbuilder (~> 2.0)
   jquery-rails
   listen (~> 3.0.5)
   pg (~> 0.18)
+  pry
+  pry-byebug
   puma (~> 3.0)
   rails (~> 5.0)
   rails-controller-testing
