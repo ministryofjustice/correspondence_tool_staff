@@ -28,6 +28,8 @@ gem 'uglifier', '>= 1.3.0'
 
 group :test do
   gem 'capybara'
+  gem 'selenium-webdriver'
+  gem 'site_prism'
   gem "codeclimate-test-reporter", require: nil
   gem 'rails-controller-testing'
   gem 'shoulda-matchers'

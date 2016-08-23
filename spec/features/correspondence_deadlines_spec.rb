@@ -13,12 +13,6 @@ feature 'Deadlines:' do
   context 'The internal deadline' do
 
     context 'for General Enquiries' do
-      scenario 'is shown in the list view' do
-        visit '/'
-        rows = all('.report tr').select { |row| row.text.include?('General enquiry') }
-        rows.each { |row| expect(row.text.include?('05/09/16')).to be true }
-      end
-
       scenario 'is shown in the detail view' do
         visit "/correspondence/#{Correspondence.last.id}"
         expect(page).to have_content('Internal deadline')
@@ -27,12 +21,6 @@ feature 'Deadlines:' do
     end
 
     context 'for Freedom of Information Requests' do
-
-      scenario 'is shown in the list view' do
-        visit '/'
-        rows = all('.report tr').select { |row| row.text.include?('Freedom of information request') }
-        rows.each { |row| expect(row.text.include?('05/09/16')).to be true }
-      end
 
       scenario 'is shown in the detail view' do
         visit "/correspondence/#{Correspondence.first.id}"
@@ -45,12 +33,6 @@ feature 'Deadlines:' do
   context 'The external deadline' do
 
     context 'for General Enquiries' do
-      scenario 'is shown in the list view' do
-        visit '/'
-        rows = all('.report tr').select { |row| row.text.include?('General enquiry') }
-        rows.each { |row| expect(row.text.include?('12/09/16')).to be true }
-      end
-
       scenario 'is shown in the detail view' do
         visit "/correspondence/#{Correspondence.last.id}"
         expect(page).to have_content('External deadline')
@@ -59,12 +41,6 @@ feature 'Deadlines:' do
     end
 
     context 'for Freedom of Information Requests' do
-      scenario 'is shown in the list view' do
-        visit '/'
-        rows = all('.report tr').select { |row| row.text.include?('Freedom of information request') }
-        rows.each { |row| expect(row.text.include?('19/09/16')).to be true }
-      end
-
       scenario 'is shown in the detail view' do
         visit "/correspondence/#{Correspondence.first.id}"
         expect(page).to have_content('External deadline')

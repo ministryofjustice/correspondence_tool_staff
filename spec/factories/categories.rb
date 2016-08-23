@@ -6,6 +6,8 @@ FactoryGirl.define do
     internal_time_limit 10
     external_time_limit 20
 
+    trait :foi
+
     trait :gq do
       name "General enquiry"
       abbreviation "GQ"
