@@ -8,7 +8,9 @@ class Correspondence < ApplicationRecord
   attr_accessor :email_confirmation
 
   belongs_to :user, required: false
+  belongs_to :category, required: true
 
+  before_create :set_deadlines
   after_update :assigned_state, if: :drafter_assigned?
 
   def self.search(term)
@@ -20,6 +22,11 @@ class Correspondence < ApplicationRecord
   end
 
   private
+
+  def set_deadlines
+    self.internal_deadline = DeadlineCalculator.internal_deadline(self)
+    self.external_deadline = DeadlineCalculator.external_deadline(self)
+  end
 
   def assigned_state
     self.state = "assigned"

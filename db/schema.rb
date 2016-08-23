@@ -10,21 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160804155742) do
+ActiveRecord::Schema.define(version: 20160815103852) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "categories", force: :cascade do |t|
+    t.string   "name"
+    t.string   "abbreviation"
+    t.integer  "internal_time_limit"
+    t.integer  "external_time_limit"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+  end
+
   create_table "correspondence", force: :cascade do |t|
     t.string   "name"
     t.string   "email"
-    t.string   "category"
     t.string   "topic"
     t.text     "message"
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.integer  "user_id"
-    t.string   "state",      default: "submitted"
+    t.string   "state",             default: "submitted"
+    t.integer  "category_id"
+    t.date     "internal_deadline"
+    t.date     "external_deadline"
+    t.index ["category_id"], name: "index_correspondence_on_category_id", using: :btree
     t.index ["user_id"], name: "index_correspondence_on_user_id", using: :btree
   end
 
@@ -45,5 +57,6 @@ ActiveRecord::Schema.define(version: 20160804155742) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  add_foreign_key "correspondence", "categories"
   add_foreign_key "correspondence", "users"
 end

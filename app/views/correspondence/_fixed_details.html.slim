@@ -1,18 +1,30 @@
 h2.visually-hidden
-    = 'Details'
+  = 'Details'
 
 .column-half
   span.form-label
     = 'Correspondent'
-  = @correspondence.name
+  span#correspondent_name
+    = @correspondence.name
+
+  span.form-label
+    = 'Correspondent email'
+  span#correspondent_email
+    = @correspondence.email
 
 .column-half
   span.form-label
-    = 'Correspondent email'
-  = mail_to @correspondence.email, @correspondence.email
+    = "Internal deadline"
+  span#internal_deadline
+    = l @correspondence.internal_deadline, format: :deadline
+
+  span.form-label
+    = "External deadline"
+  span#external_deadline
+    = l @correspondence.external_deadline, format: :deadline
 
 .form-label
   = "Message"
 p
-  = @correspondence.message
-  
+  span#message
+    = @correspondence.message

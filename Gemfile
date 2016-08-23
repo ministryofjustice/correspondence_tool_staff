@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'bank_holiday'
+gem 'business_time'
 gem 'coffee-rails', '~> 4.2'
 gem 'config'
 gem 'devise', '~> 4.2'
@@ -26,13 +28,19 @@ gem 'uglifier', '>= 1.3.0'
 
 group :test do
   gem 'capybara'
+  gem 'selenium-webdriver'
+  gem 'site_prism'
   gem "codeclimate-test-reporter", require: nil
   gem 'rails-controller-testing'
+  gem 'shoulda-matchers'
+  gem 'timecop'
 end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
+  gem 'pry'
+  gem 'pry-byebug'
   gem 'faker'
   gem 'factory_girl_rails'
   gem 'rspec-rails', '~> 3.4'
@@ -45,6 +53,7 @@ group :development do
   gem 'web-console'
   gem 'guard-livereload', '>= 2.5.2'
   gem 'guard-rspec'
+  gem 'guard-rubocop'
   gem 'listen', '~> 3.0.5'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'

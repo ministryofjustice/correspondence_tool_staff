@@ -7,13 +7,16 @@ RSpec.describe Api::V1::CorrespondenceController, type: :controller do
       name: Faker::Name.name,
       email: 'email@example.com',
       email_confirmation: 'email@example.com',
-      category: 'freedom_of_information_request',
+      category_id: Category.first.id,
       topic: 'prisons',
       message: Faker::Lorem.paragraph(1)
     }
   end
 
-  before { request.headers["HTTP_AUTHORIZATION"] = "Token token=\"#{ENV['WEB_FORM_AUTH_TOKEN']}\"" }
+  before do
+    create(:category)
+    request.headers["HTTP_AUTHORIZATION"] = "Token token=\"#{ENV['WEB_FORM_AUTH_TOKEN']}\""
+  end
 
   context 'when authentication succeeds' do
 

@@ -12,46 +12,23 @@ RSpec.describe Correspondence, type: :model do
 
   describe 'attributes' do
     context 'mandatory' do
-      it 'name' do
-        correspondence.name = nil
-        expect(correspondence).not_to be_valid
-      end
 
-      it 'email' do
-        correspondence.email = nil
-        expect(correspondence).not_to be_valid
-      end
-
-      it 'email confirmation' do
-        correspondence.email_confirmation = nil
-        expect(correspondence).not_to be_valid
-        expect(correspondence.errors.full_messages).to include("Email confirmation can't be blank")
-      end
-
-      it 'category' do
-        correspondence.category = nil
-        expect(correspondence).not_to be_valid
-      end
-
-      it 'message' do
-        correspondence.message = nil
-        expect(correspondence).not_to be_valid
-      end
-
-      it 'topic' do
-        correspondence.topic = nil
-        expect(correspondence).not_to be_valid
+      it do
+        should validate_presence_of(:name)
+        should validate_presence_of(:email)
+        should validate_presence_of(:email_confirmation)
+        should validate_presence_of(:message)
+        should validate_presence_of(:topic)
       end
     end
 
     context 'requiring confirmation' do
       it 'email' do
-        correspondence.email_confirmation = 'mis-match@email.com'
+        correspondence.email_confirmation = 'does_not_match'
         expect(correspondence).not_to be_valid
-        expect(correspondence.errors.full_messages).to include("Email confirmation doesn't match Email")
       end
 
-      it 'email is case insensitive' do
+      it 'for email is case insensitive' do
         correspondence.email_confirmation = correspondence.email_confirmation.upcase
         expect(correspondence).to be_valid
       end
@@ -64,7 +41,40 @@ RSpec.describe Correspondence, type: :model do
     end
   end
 
+  describe 'associations' do
+
+    context 'category' do
+
+      it 'is mandatory' do
+        should validate_presence_of(:category)
+      end
+
+      it { should belong_to(:category) }
+
+    end
+  end
+
   context 'callbacks' do
+
+    context '#set_deadlines' do
+
+      it 'is called before_create' do
+        expect(correspondence).to receive(:set_deadlines)
+        correspondence.save!
+      end
+
+      it 'sets the internal deadline' do
+        expect(correspondence.internal_deadline).to eq nil
+        correspondence.save!
+        expect(correspondence.internal_deadline).to be_a(Date)
+      end
+
+      it 'sets the external deadline' do
+        expect(correspondence.external_deadline).to eq nil
+        correspondence.save!
+        expect(correspondence.external_deadline).to be_a(Date)
+      end
+    end
 
     context '#assigned_state' do
 
@@ -90,7 +100,5 @@ RSpec.describe Correspondence, type: :model do
         end
       end
     end
-
   end
-
 end

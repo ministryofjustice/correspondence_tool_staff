@@ -25,7 +25,7 @@ RSpec.describe CorrespondenceController, type: :controller do
     context 'PATCH update' do
       it "be redirected to signin if trying to update a specific correspondence" do
         id = all_correspondence.first.id
-        patch :update, params: { id: id, correspondence: { category: 'freedom_of_information_reuqest', topic: 'courts' } }
+        patch :update, params: { id: id, correspondence: { category_id: create(:category).id, topic: 'courts' } }
         expect(response).to redirect_to(new_user_session_path)
         expect(Correspondence.first.topic).to eq 'prisons'
       end
@@ -92,7 +92,7 @@ RSpec.describe CorrespondenceController, type: :controller do
       before do
         sign_in assigner
         id = all_correspondence.first.id
-        patch :update, params: { id: id, correspondence: { category: 'freedom_of_information_reuqest', topic: 'courts' } }
+        patch :update, params: { id: id, correspondence: { category: create(:category), topic: 'courts' } }
       end
 
       it 'updates the correspondence record' do
@@ -102,7 +102,7 @@ RSpec.describe CorrespondenceController, type: :controller do
       it 'does not overwrite entries with blanks (if the blank dropdown option is selected)' do
         id = all_correspondence.first.id
         patch :update, params: { id: id, correspondence: { category: '', topic: 'courts' } }
-        expect(Correspondence.first.category).to eq 'freedom_of_information_reuqest'
+        expect(Correspondence.first.category.name).to eq 'Freedom of information request'
       end
     end
 

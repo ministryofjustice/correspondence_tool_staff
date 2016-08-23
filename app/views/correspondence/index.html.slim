@@ -28,6 +28,7 @@
       col
       col
       col
+      col
     thead
       th scope='col'
         |
@@ -38,25 +39,29 @@
       th scope='col'
         | Name
       th scope='col'
-        | Message
-      th scope='col'
         | Received
+      th scope='col'
+        | Internal deadline
+      th scope='col'
+        | External deadline
       th scope='col'
         | Status
     tbody
       - @correspondence.each do |c|
-	    tr
+	    tr.correspondence_row
           td
             = link_to 'View', correspondence_path(c.id)
-          td
-            = c.category.humanize
-          td
+          td.category
+            = c.category.name
+          td.topic
             = c.topic.humanize
-          td
-            = mail_to c.email, c.name
-          td
-            = c.message
-          td
+          td.name
+            = c.name
+          td.received
             = l c.created_at, format: :date_received
-          td
+          td.internal_deadline
+            = l c.internal_deadline, format: :deadline
+          td.external_deadline
+            = l c.external_deadline, format: :deadline
+          td.status
             = c.state.humanize
