@@ -25,7 +25,7 @@
 = content_for :content do
   = csrf_meta_tags
   #page
-  /= render partial: 'shared/phase_banner'
+    = render partial: 'layouts/phase_banner'
   .primary-nav-bar
   main#content.container
     = render partial: 'layouts/flashes' unless flash.empty?
