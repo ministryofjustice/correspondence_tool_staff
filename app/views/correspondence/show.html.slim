@@ -8,11 +8,13 @@ section.question.content tabindex=0
     .form-label
       = "Category"
     p
-      = @correspondence.category.name.humanize
+      span#category
+        = @correspondence.category.name.humanize
     .form-label
       = "Topic"
     p
-      = @correspondence.topic.humanize
+      span#topic
+        = @correspondence.topic.humanize
     
     = link_to 'Edit', edit_correspondence_path(@correspondence), class:'button'
 
@@ -26,4 +28,5 @@ section.question.status
   h2
     = 'Status'
   p
-    = @correspondence.state.humanize
+    span#status
+      = @correspondence.state.humanize
