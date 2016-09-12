@@ -1,24 +1,42 @@
-# README
+# Correspondence Tools - Staff
+[![Build Status](https://travis-ci.org/ministryofjustice/correspondence_tool_staff.svg?branch=develop)]
+(https://travis-ci.org/ministryofjustice/correspondence_tool_staff) 
+[![Code Climate](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/gpa.svg)]
+(https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff)
+[![Test Coverage](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/coverage.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/coverage) [![Issue Count](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/issue_count.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
 
-Things you may want to cover:
+A simple application to allow internal staff users to answer correspondence. 
 
-* Ruby version
+##Local development
 
-* System dependencies
+###Clone this repository change to the new directory
 
-* Configuration
+```bash
+$ git clone git@github.com:ministryofjustice/correspondence_tool_staff.git
+$ cd correspondence_tool_staff
+```
 
-* Database creation
+###Rake Tasks 
 
-* Database initialization
+Last two rake demo tasks are not required for production service.
+ 
+```
+$ rails db:create
+$ rails db:migrate
+$ rails db:seed
+$ rails users:demo_entries
+$ rails correspondence:demo_entries
+```
 
-* How to run the test suite
+Keep a note of the users generated as this is needed to login to the service.
 
-* Services (job queues, cache servers, search engines, etc.)
+###System environment Variables
 
-* Deployment instructions
+```
+#This token will be needed for the Correspondence Tool - Public 
+#to make api calls to Correspondence Tool - Staff. Data received via
+#the API will only be accepted if the token bettween the two service matches 
+WEB_FORM_AUTH_TOKEN = 'WhateverThisIsItWillBeNeededForAPIAccess'
+```
 
-* ...
