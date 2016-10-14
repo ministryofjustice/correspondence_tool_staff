@@ -1,0 +1,9 @@
+FROM ministryofjustice/ruby:2.3.1-webapp-onbuild
+
+RUN touch /etc/inittab
+
+RUN apt-get update && apt-get install -y
+
+RUN bundle install --with development
+
+CMD bundle exec puma -p $PUMA_PORT
