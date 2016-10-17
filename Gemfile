@@ -33,7 +33,7 @@ group :test do
   gem 'site_prism'
   gem "codeclimate-test-reporter", require: nil
   gem 'rails-controller-testing'
-  gem 'shoulda-matchers'
+  gem 'shoulda-matchers', '~> 3.1', '>= 3.1.1'
   gem 'timecop'
 end
 
