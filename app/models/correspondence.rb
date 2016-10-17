@@ -1,8 +1,11 @@
 class Correspondence < ApplicationRecord
 
-  validates :name, :email, :category, :topic, :message, :email_confirmation,
-    presence: true, on: :create
+  acts_as_gov_uk_date :received_date
 
+  validates :name, :category, :message, :received_date, presence: true, on: :create
+  validates :email, presence: true, on: :create, if: -> { postal_address.nil? }
+  validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
+  validates :postal_address, presence: true, on: :create, if: -> { email.nil? }
   validates :email, confirmation: { case_sensitive: false }
 
   attr_accessor :email_confirmation

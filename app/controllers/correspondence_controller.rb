@@ -6,6 +6,22 @@ class CorrespondenceController < ApplicationController
     @correspondence = Correspondence.all
   end
 
+  def new
+    @correspondence = Correspondence.new
+    render :new
+  end
+
+  def create
+    @correspondence = Correspondence.new(create_foi_params)
+
+    if @correspondence.save
+      flash[:notice] = "Case successfully created"
+      redirect_to correspondence_index_path
+    else
+      render :new
+    end
+  end
+
   def show; end
 
   def edit
@@ -22,8 +38,8 @@ class CorrespondenceController < ApplicationController
   end
 
   def assign
-    if @correspondence.update(assign_correspondence_params) && @correspondence.drafter
-      flash.now[:notice] = "Correspondence assigned to #{@correspondence.drafter.email}"
+    if @correspondence.update(assign_params) && @correspondence.drafter
+      flash.now[:notice] = "Case assigned to #{@correspondence.drafter.email}"
     end
     render :show
   end
@@ -35,18 +51,27 @@ class CorrespondenceController < ApplicationController
 
   private
 
-  def parsed_edit_params
-    edit_correspondence_params.delete_if { |_key, value| value == "" }
+  def create_foi_params
+    params.require(:correspondence).permit(
+      :name,
+      :postal_address,
+      :email, :email_confirmation,
+      :message,
+      :received_date_dd, :received_date_mm, :received_date_yyyy
+    ).merge(category_id: Category.find_by(abbreviation: 'FOI').id)
   end
 
-  def edit_correspondence_params
+  def parsed_edit_params
+    edit_params.delete_if { |_key, value| value == "" }
+  end
+
+  def edit_params
     params.require(:correspondence).permit(
-      :category_id,
-      :topic
+      :category_id
     )
   end
 
-  def assign_correspondence_params
+  def assign_params
     params.require(:correspondence).permit(
       :user_id
     )

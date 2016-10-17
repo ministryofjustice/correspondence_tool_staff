@@ -10,8 +10,7 @@ feature 'viewing details of correspondence in the system' do
       name: 'Gina GQ',
       email: 'gina.gq@testing.digital.justice.gov.uk',
       message: 'viewing gq details test message',
-      category: gq_category,
-      topic: 'prisons'
+      category: gq_category
     )
   end
   given(:internal_gq_deadline) do
@@ -31,7 +30,6 @@ feature 'viewing details of correspondence in the system' do
     expect(page.correspondent_email).to have_content('gina.gq@testing.digital.justice.gov.uk')
     expect(page.message).to have_content('viewing gq details test message')
     expect(page.category).to have_content(gq_category.name)
-    expect(page.topic).to have_content('Prisons')
     expect(page.internal_deadline).to have_content(internal_gq_deadline)
     expect(page.external_deadline).to have_content(external_gq_deadline)
     expect(page.status).to have_content(gq.state.humanize)
@@ -44,8 +42,7 @@ feature 'viewing details of correspondence in the system' do
       name: 'Freddie FOI',
       email: 'freddie.foi@testing.digital.justice.gov.uk',
       message: 'viewing foi details test message',
-      category: foi_category,
-      topic: 'prisons'
+      category: foi_category
     )
   end
   given(:internal_foi_deadline) do
@@ -61,7 +58,6 @@ feature 'viewing details of correspondence in the system' do
     expect(page.correspondent_email).to have_content('freddie.foi@testing.digital.justice.gov.uk')
     expect(page.message).to have_content('viewing foi details test message')
     expect(page.category).to have_content(foi_category.name)
-    expect(page.topic).to have_content('Prisons')
     expect(page.internal_deadline).to have_content(foi.internal_deadline.strftime('%d/%m/%y'))
     expect(page.external_deadline).to have_content(foi.external_deadline.strftime('%d/%m/%y'))
     expect(page.status).to have_content(foi.state.humanize)

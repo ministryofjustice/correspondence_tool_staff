@@ -1,0 +1,18 @@
+= render partial: 'layouts/header', locals: {page_heading: t('.new_case')}
+
+= form_for @correspondence do |f|
+
+  = f.text_field :name
+
+  = f.email_field :email
+
+  = f.email_field :email_confirmation
+
+  = f.text_area :postal_address
+
+  = f.text_area :message
+
+  .form-group
+  	= f.gov_uk_date_field :received_date, legend_text: 'Received date'
+
+  = f.submit t('button.create'), {class: 'button', onclick: "ga('send', 'event', 'Question', 'Sent')"}

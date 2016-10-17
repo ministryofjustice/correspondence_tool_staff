@@ -12,9 +12,6 @@ section.question.content tabindex=0
         = @correspondence.category.name.humanize
     .form-label
       = "Topic"
-    p
-      span#topic
-        = @correspondence.topic.humanize
     
     = link_to 'Edit', edit_correspondence_path(@correspondence), class:'button'
 
