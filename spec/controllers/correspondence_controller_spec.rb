@@ -95,7 +95,7 @@ RSpec.describe CorrespondenceController, type: :controller do
           {
             correspondence: {
               name: 'A. Member of Public',
-              postal_address: '',
+              postal_address: '102 Petty France',
               email: 'member@public.com',
               email_confirmation: 'member@public.com',
               message: 'An FOI request about prisons and probation',
@@ -106,9 +106,35 @@ RSpec.describe CorrespondenceController, type: :controller do
           }
         end
 
+        let(:correspondence) { Correspondence.first }
+
         it 'makes a DB entry' do
           expect { post :create, params: params }.
             to change { Correspondence.count }.by 1
+        end
+
+        describe 'using the information supplied  ' do
+          before { post :create, params: params }
+
+          it 'for #name' do
+            expect(correspondence.name).to eq 'A. Member of Public'
+          end
+
+          it 'for #postal_address' do
+            expect(correspondence.postal_address).to eq '102 Petty France'
+          end
+
+          it 'for #email' do
+            expect(correspondence.email).to eq 'member@public.com'
+          end
+
+          it 'for #message' do
+            expect(correspondence.message).to eq 'An FOI request about prisons and probation'
+          end
+
+          it 'for #received_date' do
+            expect(correspondence.received_date).to eq Time.zone.today
+          end
         end
       end
     end
@@ -136,7 +162,7 @@ RSpec.describe CorrespondenceController, type: :controller do
           correspondence: { category_id: create(:category, :gq).id }
         }
 
-        expect(Correspondence.find(first_correspondence).category.abbreviation).to eq 'GQ'
+        expect(Correspondence.find(first_correspondence.id).category.abbreviation).to eq 'GQ'
       end
 
       it 'does not overwrite entries with blanks (if the blank dropdown option is selected)' do
