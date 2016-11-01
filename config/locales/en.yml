@@ -43,5 +43,18 @@ en:
       message: Full request
       postal_address: Address
   correspondence:
+    index:
+      page_heading: New cases
+      requester: Requester
+      request: Request
+      date_received: Date received
+      status: Status
     new:
       new_case: New case
+      received_date: Received date
+    create:
+      case_created: Case successfully created
+    update:
+      case_updated: Correspondence updated
+    assign:
+      case_assigned: Case assigned to #email_of_assignee

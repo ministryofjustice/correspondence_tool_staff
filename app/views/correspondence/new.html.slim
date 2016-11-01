@@ -13,6 +13,6 @@
   = f.text_area :message
 
   .form-group
-  	= f.gov_uk_date_field :received_date, legend_text: 'Received date'
+  	= f.gov_uk_date_field :received_date, legend_text: t('.received_date')
 
   = f.submit t('button.create'), {class: 'button', onclick: "ga('send', 'event', 'Question', 'Sent')"}

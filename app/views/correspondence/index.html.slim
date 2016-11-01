@@ -1,4 +1,4 @@
-= render partial: 'layouts/header', locals: {page_heading: 'New cases'}
+= render partial: 'layouts/header', locals: {page_heading: t('.page_heading')}
 
 = form_tag '/search', method: 'get'
   .form-group
@@ -11,7 +11,7 @@
     = search_field_tag :search, params[:search], class: 'form-control'
 
     = button_tag(type: 'submit', class: 'button search', title: 'Search all recorded questions') do
-      img src=image_path('icons/search-ico.svg') alt='Search' class='search-icon' /
+      img src=image_path('icons/search-ico.svg') alt='Search' class='search-icon'
 
 .table-container.container
   table.report
@@ -22,13 +22,13 @@
       col
     thead
       th scope='col'
-        | Requester
+        = t('.requester')
       th scope='col'
-        | Request
+        = t('.request')
       th scope='col'
-        | Date received
+        = t('.date_received')
       th scope='col'
-        | Status
+        = t('.status')
     tbody
       - @correspondence.each do |c|
 	    tr.correspondence_row

@@ -15,7 +15,7 @@ class CorrespondenceController < ApplicationController
     @correspondence = Correspondence.new(create_foi_params)
 
     if @correspondence.save
-      flash[:notice] = "Case successfully created"
+      flash[:notice] = t('.case_created')
       redirect_to correspondence_index_path
     else
       render :new
@@ -30,7 +30,7 @@ class CorrespondenceController < ApplicationController
 
   def update
     if @correspondence.update(parsed_edit_params)
-      flash.now[:notice] = "Correspondence updated"
+      flash.now[:notice] = t('.case_updated')
       render :show
     else
       render :edit
@@ -39,7 +39,7 @@ class CorrespondenceController < ApplicationController
 
   def assign
     if @correspondence.update(assign_params) && @correspondence.drafter
-      flash.now[:notice] = "Case assigned to #{@correspondence.drafter.email}"
+      flash.now[:notice] = t('.case_assigned') + " #{@correspondence.drafter.email}"
     end
     render :show
   end
