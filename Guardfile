@@ -24,3 +24,10 @@ end
 guard :rubocop, all_on_start: false, cli: ['--format', 'clang', '--rails'] do
   watch(%r{.*\.rb$})
 end
+
+guard :brakeman, run_on_start: true, quiet: true do
+  watch(%r{^app/.+\.(erb|haml|rhtml|rb|slim|js)$})
+  watch(%r{^config/.+\.rb$})
+  watch(%r{^lib/.+\.rb$})
+  watch('Gemfile')
+end
