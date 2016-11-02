@@ -6,17 +6,8 @@ feature 'edit a specific item of correspondence' do
     create(:correspondence, name: "Sarah Smith")
     create(:category, :gq)
     login_as create(:user)
-    visit '/'
-    click_on "View"
+    visit "correspondence/#{Correspondence.first.id}"
     click_on "Edit"
-  end
-
-  scenario 'changing topic' do
-    page.find('#correspondence_topic').select('Courts')
-    click_on 'Save'
-    expect(page).to have_content("Correspondence updated")
-    new_topic = page.find('div.form-label', text: 'Topic').find('+p').text
-    expect(new_topic).to eq 'Courts'
   end
 
   scenario 'changing category' do

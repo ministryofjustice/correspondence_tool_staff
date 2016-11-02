@@ -5,6 +5,7 @@ gem 'business_time'
 gem 'coffee-rails', '~> 4.2'
 gem 'config'
 gem 'devise', '~> 4.2'
+gem 'gov_uk_date_fields', '>= 1.2'
 gem 'govuk_template',         '~> 0.18.0'
 gem 'govuk_frontend_toolkit', '>= 4.14.0'
 gem 'govuk_elements_rails',   '>= 1.2.1'
@@ -32,7 +33,7 @@ group :test do
   gem 'site_prism'
   gem "codeclimate-test-reporter", require: nil
   gem 'rails-controller-testing'
-  gem 'shoulda-matchers'
+  gem 'shoulda-matchers', '~> 3.1', '>= 3.1.1'
   gem 'timecop'
 end
 

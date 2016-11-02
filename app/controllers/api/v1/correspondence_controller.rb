@@ -18,11 +18,10 @@ module Api
       def correspondence_params
         params.require(:correspondence).permit(
           :name,
-          :email,
-          :email_confirmation,
+          :email, :email_confirmation,
           :category_id,
-          :topic,
-          :message
+          :message,
+          :received_date_dd, :received_date_mm, :received_date_yyyy
         )
       end
     end

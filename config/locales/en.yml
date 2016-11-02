@@ -28,11 +28,33 @@ en:
     formats:
       default: "%d/%m/%Y %H:%M"
       date_received: "%d/%m/%y"
+  button:
+    create: Create
   helpers:
     label:
       correspondence:
         user_id: 'Drafter'
-
+        name: Full name
+        message: Full request
   common:
       phase_banner: |
         This is a new service – your feedback will help us to improve it.
+      name: Full name
+      message: Full request
+      postal_address: Address
+  correspondence:
+    index:
+      page_heading: New cases
+      requester: Requester
+      request: Request
+      date_received: Date received
+      status: Status
+    new:
+      new_case: New case
+      received_date: Received date
+    create:
+      case_created: Case successfully created
+    update:
+      case_updated: Correspondence updated
+    assign:
+      case_assigned: Case assigned to #email_of_assignee

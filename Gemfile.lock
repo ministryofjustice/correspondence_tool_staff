@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/ministryofjustice/govuk_elements_form_builder.git
-  revision: 21c0a08a47fd9248b17204e0c3333aea80b7880d
+  revision: 728be7bcfdf9d44bb9cd46c2aca924a94b7a8903
   specs:
     govuk_elements_form_builder (0.0.1)
       rails (>= 4.2)
@@ -107,6 +107,8 @@ GEM
     formatador (0.2.5)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
+    gov_uk_date_fields (1.2.3)
+      rails (>= 4.0)
     govuk_elements_rails (1.2.1)
       govuk_frontend_toolkit (>= 4.12.0)
       rails (>= 4.1.0)
@@ -270,8 +272,8 @@ GEM
       rubyzip (~> 1.0)
       websocket (~> 1.0)
     shellany (0.0.1)
-    shoulda-matchers (2.8.0)
-      activesupport (>= 3.0.0)
+    shoulda-matchers (3.1.1)
+      activesupport (>= 4.0.0)
     simplecov (0.12.0)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -342,6 +344,7 @@ DEPENDENCIES
   devise (~> 4.2)
   factory_girl_rails
   faker
+  gov_uk_date_fields (>= 1.2)
   govuk_elements_form_builder!
   govuk_elements_rails (>= 1.2.1)
   govuk_frontend_toolkit (>= 4.14.0)
@@ -364,7 +367,7 @@ DEPENDENCIES
   rubocop-rspec
   sass-rails (~> 5.0)
   selenium-webdriver
-  shoulda-matchers
+  shoulda-matchers (~> 3.1, >= 3.1.1)
   site_prism
   slim-rails (~> 3.1)
   spring

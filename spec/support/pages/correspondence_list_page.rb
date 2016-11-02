@@ -2,7 +2,6 @@ class CorrespondenceList < SitePrism::Section
   element :name, '.name'
   element :message, '.message'
   element :category, '.category'
-  element :topic, '.topic'
   element :received, '.received'
   element :internal_deadline, '.internal_deadline'
   element :external_deadline, '.external_deadline'
