@@ -30,13 +30,3 @@ $ rails correspondence:demo_entries
 ```
 
 Keep a note of the users generated as this is needed to login to the service.
-
-###System environment Variables
-
-```
-#This token will be needed for the Correspondence Tool - Public 
-#to make api calls to Correspondence Tool - Staff. Data received via
-#the API will only be accepted if the token bettween the two service matches 
-WEB_FORM_AUTH_TOKEN = 'WhateverThisIsItWillBeNeededForAPIAccess'
-```
-
