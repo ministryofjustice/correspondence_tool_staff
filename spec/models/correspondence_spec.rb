@@ -17,6 +17,7 @@ RSpec.describe Correspondence, type: :model do
     it { should validate_presence_of(:name)               }
     it { should validate_presence_of(:message)            }
     it { should validate_presence_of(:received_date)      }
+    it { should validate_presence_of(:subject)            }
   end
 
   context 'without a postal or email address' do
@@ -60,8 +61,11 @@ RSpec.describe Correspondence, type: :model do
     end
   end
 
-  describe 'associations' do
+  describe '#subject' do
+    it { should validate_length_of(:subject).is_at_most(80) }
+  end
 
+  describe 'associations' do
     describe '#category' do
       it 'is mandatory' do
         should validate_presence_of(:category)

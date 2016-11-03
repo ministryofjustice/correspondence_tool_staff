@@ -35,6 +35,7 @@ en:
       correspondence:
         user_id: 'Drafter'
         name: Full name
+        subject: Subject of request
         message: Full request
   common:
       phase_banner: |
@@ -46,6 +47,7 @@ en:
     index:
       page_heading: New cases
       requester: Requester
+      subject: Subject
       request: Request
       date_received: Date received
       status: Status

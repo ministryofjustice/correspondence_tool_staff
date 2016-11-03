@@ -98,7 +98,8 @@ RSpec.describe CorrespondenceController, type: :controller do
               postal_address: '102 Petty France',
               email: 'member@public.com',
               email_confirmation: 'member@public.com',
-              message: 'An FOI request about prisons and probation',
+              subject: 'FOI request from controller spec',
+              message: 'FOI about prisons and probation',
               received_date_dd: Time.zone.today.day.to_s,
               received_date_mm: Time.zone.today.month.to_s,
               received_date_yyyy: Time.zone.today.year.to_s
@@ -128,8 +129,14 @@ RSpec.describe CorrespondenceController, type: :controller do
             expect(correspondence.email).to eq 'member@public.com'
           end
 
+          it 'for #subject' do
+            expect(correspondence.subject).
+              to eq 'FOI request from controller spec'
+          end
+
           it 'for #message' do
-            expect(correspondence.message).to eq 'An FOI request about prisons and probation'
+            expect(correspondence.message).
+              to eq 'FOI about prisons and probation'
           end
 
           it 'for #received_date' do

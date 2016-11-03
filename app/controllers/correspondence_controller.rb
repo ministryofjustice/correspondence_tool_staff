@@ -56,7 +56,7 @@ class CorrespondenceController < ApplicationController
       :name,
       :postal_address,
       :email, :email_confirmation,
-      :message,
+      :subject, :message,
       :received_date_dd, :received_date_mm, :received_date_yyyy
     ).merge(category_id: Category.find_by(abbreviation: 'FOI').id)
   end

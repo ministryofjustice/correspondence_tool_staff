@@ -7,9 +7,12 @@
       col
       col
       col
+      col
     thead
       th scope='col'
         = t('.requester')
+      th scope='col'
+        = t('.subject')
       th scope='col'
         = t('.request')
       th scope='col'
@@ -21,6 +24,8 @@
 	    tr.correspondence_row
           td.name
             = c.name
+          td.subject
+            = c.subject
           td.message
             = c.message
           td.received
