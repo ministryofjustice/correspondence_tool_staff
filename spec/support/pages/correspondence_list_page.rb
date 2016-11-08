@@ -1,5 +1,6 @@
 class CorrespondenceList < SitePrism::Section
   element :name, '.name'
+  element :subject, '.subject'
   element :message, '.message'
   element :category, '.category'
   element :received, '.received'
