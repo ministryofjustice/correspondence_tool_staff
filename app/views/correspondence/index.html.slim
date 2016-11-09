@@ -14,9 +14,9 @@
       th scope='col'
         = t('.subject')
       th scope='col'
-        = t('.request')
+        = t('.internal_deadline')
       th scope='col'
-        = t('.date_received')
+        = t('.external_deadline')
       th scope='col'
         = t('.status')
     tbody
@@ -26,9 +26,9 @@
             = c.name
           td.subject
             = c.subject
-          td.message
-            = c.message
-          td.received
-            = l c.created_at, format: :date_received
+          td.internal_deadline
+            = l c.internal_deadline, format: :deadline
+          td.external_deadline
+            = l c.external_deadline, format: :deadline
           td.status
             = c.state.humanize

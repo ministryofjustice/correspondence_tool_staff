@@ -14,10 +14,10 @@ feature 'viewing details of correspondence in the system' do
     )
   end
   given(:internal_gq_deadline) do
-    DeadlineCalculator.internal_deadline(gq).strftime("%d/%m/%y")
+    DeadlineCalculator.internal_deadline(gq).strftime("%d %b")
   end
   given(:external_gq_deadline) do
-    DeadlineCalculator.external_deadline(gq).strftime("%d/%m/%y")
+    DeadlineCalculator.external_deadline(gq).strftime("%d %b")
   end
 
   background do
@@ -58,8 +58,8 @@ feature 'viewing details of correspondence in the system' do
     expect(page.correspondent_email).to have_content('freddie.foi@testing.digital.justice.gov.uk')
     expect(page.message).to have_content('viewing foi details test message')
     expect(page.category).to have_content(foi_category.name)
-    expect(page.internal_deadline).to have_content(foi.internal_deadline.strftime('%d/%m/%y'))
-    expect(page.external_deadline).to have_content(foi.external_deadline.strftime('%d/%m/%y'))
+    expect(page.internal_deadline).to have_content(foi.internal_deadline.strftime('%d %b'))
+    expect(page.external_deadline).to have_content(foi.external_deadline.strftime('%d %b'))
     expect(page.status).to have_content(foi.state.humanize)
   end
 end

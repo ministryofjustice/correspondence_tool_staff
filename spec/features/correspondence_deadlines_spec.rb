@@ -16,7 +16,7 @@ feature 'Deadlines:' do
       scenario 'is shown in the detail view' do
         visit "/correspondence/#{Correspondence.last.id}"
         expect(page).to have_content('Internal deadline')
-        expect(page).to have_content('05/09/16')
+        expect(page).to have_content('05 Sep')
       end
     end
 
@@ -25,7 +25,7 @@ feature 'Deadlines:' do
       scenario 'is shown in the detail view' do
         visit "/correspondence/#{Correspondence.first.id}"
         expect(page).to have_content('Internal deadline')
-        expect(page).to have_content('05/09/16')
+        expect(page).to have_content('05 Sep')
       end
     end
   end
@@ -36,7 +36,7 @@ feature 'Deadlines:' do
       scenario 'is shown in the detail view' do
         visit "/correspondence/#{Correspondence.last.id}"
         expect(page).to have_content('External deadline')
-        expect(page).to have_content('12/09/16')
+        expect(page).to have_content('12 Sep')
       end
     end
 
@@ -44,7 +44,7 @@ feature 'Deadlines:' do
       scenario 'is shown in the detail view' do
         visit "/correspondence/#{Correspondence.first.id}"
         expect(page).to have_content('External deadline')
-        expect(page).to have_content('19/09/16')
+        expect(page).to have_content('19 Sep')
       end
     end
 

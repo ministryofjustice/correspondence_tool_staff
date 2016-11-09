@@ -39,16 +39,16 @@ feature 'a user can see all correspondence on the system' do
     visit '/'
     expect(page.correspondence_list.count).to eq 2
 
-    today = Time.zone.today.strftime("%d/%m/%y")
-
     foi_row = page.correspondence_list.first
     expect(foi_row.name.text).to     eq 'Freddie FOI'
     expect(foi_row.subject.text).to  eq 'test FOI subject'
-    expect(foi_row.received.text).to eq today
+    expect(foi_row.external_deadline.text).to eq foi.external_deadline.strftime('%d %b')
+    expect(foi_row.internal_deadline.text).to eq foi.internal_deadline.strftime('%d %b')
 
     gq_row = page.correspondence_list.last
     expect(gq_row.name.text).to     eq 'Gina GQ'
     expect(gq_row.subject.text).to  eq 'test GQ subject'
-    expect(gq_row.received.text).to eq today
+    expect(gq_row.external_deadline.text).to eq gq.external_deadline.strftime('%d %b')
+    expect(gq_row.internal_deadline.text).to eq gq.internal_deadline.strftime('%d %b')
   end
 end
