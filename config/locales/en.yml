@@ -20,6 +20,16 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  activerecord:
+    errors:
+      models:
+        correspondence:
+          attributes:
+            email: 
+              blank: and postal address can't both be blank
+            postal_address:
+              blank: and email can't both be blank
+
   date:
     formats:
       default: "%d/%m/%Y"
@@ -38,11 +48,13 @@ en:
         subject: Subject of request
         message: Full request
   common:
+      error: error
       phase_banner: |
         This is a new service – your feedback will help us to improve it.
       name: Full name
       message: Full request
       postal_address: Address
+      summary_error: 'prevented this form from being submitted:'
   correspondence:
     index:
       page_heading: New cases

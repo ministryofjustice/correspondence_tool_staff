@@ -1,5 +1,8 @@
 = render partial: 'layouts/header', locals: {page_heading: t('.new_case')}
 
+= GovukElementsErrorsHelper.error_summary @correspondence,
+  "#{pluralize(@correspondence.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
 = form_for @correspondence do |f|
 
   = f.text_field :name
