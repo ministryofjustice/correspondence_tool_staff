@@ -4,8 +4,8 @@ feature 'Deadlines:' do
 
   background do
     Timecop.freeze('21/08/2016') do
-      create(:correspondence)
-      create(:correspondence, category: create(:category, :gq))
+      create(:correspondence, received_date: Date.parse('21/08/2016'))
+      create(:correspondence, received_date: Date.parse('21/08/2016'), category: create(:category, :gq))
     end
     login_as create(:user)
   end
