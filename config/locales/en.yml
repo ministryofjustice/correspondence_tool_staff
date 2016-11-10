@@ -23,11 +23,11 @@ en:
   date:
     formats:
       default: "%d/%m/%Y"
-      deadline: "%d/%m/%y"
+      deadline: "%d %b"
   time:
     formats:
       default: "%d/%m/%Y %H:%M"
-      date_received: "%d/%m/%y"
+      external_deadline: "%d %b"
   button:
     create: Create
   helpers:
@@ -45,11 +45,11 @@ en:
       postal_address: Address
   correspondence:
     index:
-      page_heading: New cases
-      requester: Requester
+      page_heading: My cases
+      requester: Name
       subject: Subject
-      request: Request
-      date_received: Date received
+      internal_deadline: Draft due
+      external_deadline: Target
       status: Status
     new:
       new_case: New case
