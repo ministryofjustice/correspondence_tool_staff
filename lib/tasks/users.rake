@@ -1,5 +1,4 @@
 namespace :users do
-
   desc "Create dummy correspondence entries for demonstration purposes"
   task demo_entries: :environment do
     User::ROLES.each do |role|
@@ -12,4 +11,19 @@ namespace :users do
     end
   end
 
+  desc 'Create correspondence users for development.'
+  task dev_entries: :environment do
+    if Rails.env == 'production' && ENV['ENV'] == 'prod'
+      raise 'Dev users not meant for production environments.'
+    end
+
+    User::ROLES.each do |role|
+      User.new(
+        email:    "#{role}@localhost",
+        password: '12345678',
+        roles:    [role]
+      ).save!
+      puts "CREATED: #{role}@localhost"
+    end
+  end
 end
