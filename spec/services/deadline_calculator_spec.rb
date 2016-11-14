@@ -15,6 +15,16 @@ describe DeadlineCalculator do
       category: create(:category, :gq))
   end
 
+  describe '#escalation_deadline' do
+    describe 'is specific to non-trigger FOI requests' do
+      it 'is the 6th working day after the received date' do
+        expect(subject.escalation_deadline(foi_request).
+          strftime("%d/%m/%y")).
+          to eq '15/08/16'
+      end
+    end
+  end
+
   describe '#internal_deadline' do
     describe 'freedom of information requests' do
       it 'is 10 working days from day 1' do

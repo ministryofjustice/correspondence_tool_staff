@@ -45,20 +45,21 @@ feature 'viewing details of correspondence in the system' do
       category: foi_category
     )
   end
-  given(:internal_foi_deadline) do
-    DeadlineCalculator.internal_deadline(foi).strftime("%d/%m/%y")
+
+  given(:foi_escalation_deadline) do
+    DeadlineCalculator.escalation_deadline(foi).strftime("%d/%m/%y")
   end
   given(:external_foi_deadline) do
     DeadlineCalculator.external_deadline(foi).strftime("%d/%m/%y")
   end
 
-  scenario 'when the correspondence is a foi request' do
+  scenario 'when the correspondence is a non-trigger foi request' do
     page.load id: foi.id
     expect(page.correspondent_name).to have_content('Freddie FOI')
     expect(page.correspondent_email).to have_content('freddie.foi@testing.digital.justice.gov.uk')
     expect(page.message).to have_content('viewing foi details test message')
     expect(page.category).to have_content(foi_category.name)
-    expect(page.internal_deadline).to have_content(foi.internal_deadline.strftime('%d %b'))
+    expect(page.escalation_deadline).to have_content(foi.escalation_deadline.strftime('%d %b'))
     expect(page.external_deadline).to have_content(foi.external_deadline.strftime('%d %b'))
     expect(page.status).to have_content(foi.state.humanize)
   end

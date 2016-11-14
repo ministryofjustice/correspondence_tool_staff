@@ -10,6 +10,8 @@ class Correspondence < ApplicationRecord
   validates :subject, length: { maximum: 80 }
 
   attr_accessor :email_confirmation
+  jsonb_accessor :properties,
+    escalation_deadline: :datetime
 
   belongs_to :user, required: false
   belongs_to :category, required: true
@@ -28,6 +30,7 @@ class Correspondence < ApplicationRecord
   private
 
   def set_deadlines
+    self.escalation_deadline = DeadlineCalculator.escalation_deadline(self)
     self.internal_deadline = DeadlineCalculator.internal_deadline(self)
     self.external_deadline = DeadlineCalculator.external_deadline(self)
   end

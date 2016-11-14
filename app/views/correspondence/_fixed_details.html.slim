@@ -13,6 +13,13 @@ h2.visually-hidden
     = @correspondence.email
 
 .column-half
+
+  - if @correspondence.category.abbreviation == 'FOI'
+    span.form-label
+      = 'Escalation deadline'
+    span#escalation_deadline
+      = l @correspondence.escalation_deadline, format: :deadline
+
   span.form-label
     = "Internal deadline"
   span#internal_deadline

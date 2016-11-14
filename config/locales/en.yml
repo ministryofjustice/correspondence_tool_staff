@@ -38,6 +38,7 @@ en:
     formats:
       default: "%d/%m/%Y %H:%M"
       external_deadline: "%d %b"
+      deadline: "%d %b"
   button:
     create: Create
   helpers:

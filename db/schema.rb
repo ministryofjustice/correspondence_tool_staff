@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161103104520) do
+ActiveRecord::Schema.define(version: 20161116150744) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,8 +20,9 @@ ActiveRecord::Schema.define(version: 20161103104520) do
     t.string   "abbreviation"
     t.integer  "internal_time_limit"
     t.integer  "external_time_limit"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+    t.integer  "escalation_time_limit"
   end
 
   create_table "correspondence", force: :cascade do |t|
@@ -38,6 +39,7 @@ ActiveRecord::Schema.define(version: 20161103104520) do
     t.date     "received_date"
     t.string   "postal_address"
     t.string   "subject"
+    t.jsonb    "properties"
     t.index ["category_id"], name: "index_correspondence_on_category_id", using: :btree
     t.index ["user_id"], name: "index_correspondence_on_user_id", using: :btree
   end

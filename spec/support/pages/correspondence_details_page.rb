@@ -5,6 +5,7 @@ class CorrespondenceDetailsPage < SitePrism::Page
   element :correspondent_email, '#correspondent_email'
   element :message, '#message'
   element :category, '#category'
+  element :escalation_deadline, '#escalation_deadline'
   element :internal_deadline, '#internal_deadline'
   element :external_deadline, '#external_deadline'
   element :status, '#status'
