@@ -22,13 +22,13 @@
     tbody
       - @correspondence.each do |c|
 	    tr.correspondence_row
-          td.name
+          td.name aria-label="#{t('.requester')}"
             = c.name
-          td.subject
+          td.subject aria-label="#{t('.subject')}"
             = c.subject
-          td.internal_deadline
+          td.internal_deadline aria-label="#{t('.internal_deadline')}"
             = l c.internal_deadline, format: :deadline
-          td.external_deadline
+          td.external_deadline aria-label="#{t('.external_deadline')}"
             = l c.external_deadline, format: :deadline
-          td.status
+          td.status aria-label="#{t('.status')}"
             = c.state.humanize

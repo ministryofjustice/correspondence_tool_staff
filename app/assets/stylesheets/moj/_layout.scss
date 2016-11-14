@@ -45,3 +45,48 @@ body {
     }
   }
 }
+
+// Responsive tables code
+@media screen and (max-width: 1024px) {
+  table.report {
+    border: 0;
+    tr {
+      border-bottom: 3px solid #ddd;
+      display: block;
+      margin-bottom: .625em;
+      td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: .8em;
+        text-align: right;
+      }
+      td:last-child {
+        border-bottom: 0;
+      }
+      th, td {
+        br {
+          display: none;
+        }
+        padding: 15px;
+      }
+    }
+
+    tbody tr td:first-child {
+      background-color: $border-colour;
+      font-weight: 700;
+      a {
+        display: block;
+      }
+    }
+
+    thead {
+      display: none;
+    }
+
+    td:before {
+      content: attr(aria-label);
+      float: left;
+      font-weight: bold;
+    }
+  }
+}
