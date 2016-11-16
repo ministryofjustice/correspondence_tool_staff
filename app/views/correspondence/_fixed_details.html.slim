@@ -14,16 +14,17 @@ h2.visually-hidden
 
 .column-half
 
-  - if @correspondence.category.abbreviation == 'FOI'
+  - if @correspondence.triggerable?
     span.form-label
       = 'Escalation deadline'
     span#escalation_deadline
       = l @correspondence.escalation_deadline, format: :deadline
 
-  span.form-label
-    = "Internal deadline"
-  span#internal_deadline
-    = l @correspondence.internal_deadline, format: :deadline
+  - if @correspondence.requires_approval?
+    span.form-label
+      = "Internal deadline"
+    span#internal_deadline
+      = l @correspondence.internal_deadline, format: :deadline
 
   span.form-label
     = "External deadline"

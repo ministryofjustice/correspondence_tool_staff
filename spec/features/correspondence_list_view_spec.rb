@@ -4,7 +4,7 @@ feature 'a user can see all correspondence on the system' do
   given(:page) { CorrespondenceListPage.new }
 
   given(:foi_category) { create(:category) }
-  given(:foi) do
+  given(:non_trigger_foi) do
     create(
       :correspondence,
       name: 'Freddie FOI',
@@ -29,21 +29,21 @@ feature 'a user can see all correspondence on the system' do
 
   background do
     # Create our correspondences
-    foi
+    non_trigger_foi
     gq
 
     login_as create(:user)
   end
 
-  scenario 'when an FOI and a GQ have been received' do
+  scenario 'when a non-trigger FOI and a GQ have been received' do
     visit '/'
     expect(page.correspondence_list.count).to eq 2
 
-    foi_row = page.correspondence_list.first
-    expect(foi_row.name.text).to     eq 'Freddie FOI'
-    expect(foi_row.subject.text).to  eq 'test FOI subject'
-    expect(foi_row.external_deadline.text).to eq foi.external_deadline.strftime('%d %b')
-    expect(foi_row.internal_deadline.text).to eq foi.internal_deadline.strftime('%d %b')
+    non_trigger_foi_row = page.correspondence_list.first
+    expect(non_trigger_foi_row.name.text).to     eq 'Freddie FOI'
+    expect(non_trigger_foi_row.subject.text).to  eq 'test FOI subject'
+    expect(non_trigger_foi_row.external_deadline.text).to eq non_trigger_foi.external_deadline.strftime('%d %b')
+    expect(non_trigger_foi_row.internal_deadline.text).to eq ''
 
     gq_row = page.correspondence_list.last
     expect(gq_row.name.text).to     eq 'Gina GQ'
