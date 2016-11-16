@@ -11,7 +11,9 @@ class Correspondence < ApplicationRecord
 
   attr_accessor :email_confirmation
   jsonb_accessor :properties,
-    escalation_deadline: :datetime
+    escalation_deadline: :datetime,
+    internal_deadline: :datetime,
+    external_deadline: :datetime
 
   belongs_to :user, required: false
   belongs_to :category, required: true

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Correspondence, type: :model do
 
-  let(:correspondence)      { build :correspondence }
+  let(:correspondence)      { build :correspondence, received_date: Date.parse('16/11/2016') }
   let(:no_postal)           { build :correspondence, postal_address: nil }
   let(:no_postal_or_email)  { build :correspondence, postal_address: nil, email: nil }
   let(:no_email)            { build :correspondence, email: nil }
@@ -86,13 +86,13 @@ RSpec.describe Correspondence, type: :model do
       it 'sets the internal deadline' do
         expect(correspondence.internal_deadline).to eq nil
         correspondence.save!
-        expect(correspondence.internal_deadline).to be_a(Date)
+        expect(correspondence.internal_deadline.strftime("%d/%m/%y")).to eq "30/11/16"
       end
 
       it 'sets the external deadline' do
         expect(correspondence.external_deadline).to eq nil
         correspondence.save!
-        expect(correspondence.external_deadline).to be_a(Date)
+        expect(correspondence.external_deadline.strftime("%d/%m/%y")).to eq "14/12/16"
       end
     end
 
