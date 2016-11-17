@@ -13,6 +13,7 @@ gem 'govuk_elements_form_builder', git: 'https://github.com/ministryofjustice/go
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 gem 'jquery-rails'
+gem 'jsonb_accessor', '~> 1.0.0.beta.1'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.0'
 gem 'rails', '~> 5.0'

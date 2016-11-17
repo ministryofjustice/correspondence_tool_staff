@@ -2,54 +2,101 @@ require 'rails_helper'
 
 describe DeadlineCalculator do
 
-  subject                 { described_class }
-  let(:foi_request)       { build(:correspondence) }
-  let(:general_enquiry)   { build(:correspondence, category: create(:category, :gq)) }
+  subject { described_class }
 
-  context '#internal_deadline' do
+  let(:foi_request) do
+    build(:correspondence,
+      received_date: Date.parse('05/08/2016'))
+  end
 
-    context 'freedom of information requests' do
-      it 'is 10 working days from day 1' do
-        Timecop.freeze(Date.parse('05/08/2016')) { expect(subject.internal_deadline(foi_request).strftime("%d/%m/%y")).to eq '19/08/16' }
-      end
-    end
+  let(:general_enquiry) do
+    build(:correspondence,
+      received_date: Date.parse('05/08/2016'),
+      category: create(:category, :gq))
+  end
 
-    context 'general enquiries' do
-      it 'is 10 working days from day 1' do
-        Timecop.freeze(Date.parse('05/08/2016')) { expect(subject.internal_deadline(general_enquiry).strftime("%d/%m/%y")).to eq '19/08/16' }
+  describe '#escalation_deadline' do
+    describe 'is specific to non-trigger FOI requests' do
+      it 'is the 6th working day after the received date' do
+        expect(subject.escalation_deadline(foi_request).
+          strftime("%d/%m/%y")).
+          to eq '15/08/16'
       end
     end
   end
 
-  context '#external_deadline' do
+  describe '#internal_deadline' do
+    describe 'freedom of information requests' do
+      it 'is 10 working days from day 1' do
+        Timecop.freeze(Date.parse('04/08/2016')) do
+          expect(subject.internal_deadline(foi_request).
+            strftime("%d/%m/%y")).
+            to eq '19/08/16'
+        end
+      end
+    end
 
-    context 'freedom of information requests' do
+    describe 'general enquiries' do
+      it 'is 10 working days from day 1' do
+        Timecop.freeze(Date.parse('04/08/2016')) do
+          expect(subject.internal_deadline(general_enquiry).
+            strftime("%d/%m/%y")).
+            to eq '19/08/16'
+        end
+      end
+    end
+  end
+
+  describe '#external_deadline' do
+    describe 'freedom of information requests' do
       it 'is 20 working days from day 1' do
-        Timecop.freeze(Date.parse('05/08/2016')) { expect(subject.external_deadline(foi_request).strftime("%d/%m/%y")).to eq '05/09/16' }
+        Timecop.freeze(Date.parse('04/08/2016')) do
+          expect(subject.external_deadline(foi_request).
+            strftime("%d/%m/%y")).
+            to eq '05/09/16'
+        end
       end
     end
 
-    context 'general enquiries' do
+    describe 'general enquiries' do
       it 'is 15 working days from day 1' do
-        Timecop.freeze(Date.parse('05/08/2016')) { expect(subject.external_deadline(general_enquiry).strftime("%d/%m/%y")).to eq '26/08/16' }
+        Timecop.freeze(Date.parse('04/08/2016')) do
+          expect(subject.external_deadline(general_enquiry).
+            strftime("%d/%m/%y")).
+            to eq '26/08/16'
+        end
       end
     end
   end
 
-  context '#start_date' do
-    context 'is the first working day after the day of receipt (i.e. creation)' do
+  describe '#start_date' do
+    describe 'is the first working day after the received date' do
+      describe 'this is the following Monday when' do
+        it 'received date is a Saturday' do
+          expect(subject.start_date(Date.parse('13/08/2016')).
+            strftime("%d/%m/%y")).
+            to eq '15/08/16'
+        end
 
-      it 'is the following Monday if day of receipt is a Saturday or Sunday' do
-        Timecop.freeze(Date.parse('13/08/2016')) { expect(subject.start_date.strftime("%d/%m/%y")).to eq '15/08/16' }
-        Timecop.freeze(Date.parse('14/08/2016')) { expect(subject.start_date.strftime("%d/%m/%y")).to eq '15/08/16' }
+        it 'received date is a Sunday' do
+          expect(subject.start_date(Date.parse('14/08/2016')).
+            strftime("%d/%m/%y")).
+            to eq '15/08/16'
+        end
       end
 
-      it 'is the following day if day of receipt is a Bank Holiday' do
-        Timecop.freeze(Date.parse('29/08/2016')) { expect(subject.start_date.strftime("%d/%m/%y")).to eq '30/08/16' }
-      end
+      describe 'this is the following day when' do
+        it 'received date a Bank Holiday Monday' do
+          expect(subject.start_date(Date.parse('29/08/2016')).
+            strftime("%d/%m/%y")).
+            to eq '30/08/16'
+        end
 
-      it 'is the next day if day of receipt is a normal Monday' do
-        Timecop.freeze(Date.parse('15/08/2016')) { expect(subject.start_date.strftime("%d/%m/%y")).to eq '16/08/16' }
+        it 'received date is a normal Monday' do
+          expect(subject.start_date(Date.parse('15/08/2016')).
+            strftime("%d/%m/%y")).
+            to eq '16/08/16'
+        end
       end
     end
   end

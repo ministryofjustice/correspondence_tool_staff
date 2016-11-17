@@ -2,14 +2,16 @@ require 'rails_helper'
 
 RSpec.describe Correspondence, type: :model do
 
-  let(:correspondence)      { build :correspondence }
+  let(:non_trigger_foi)     { build :correspondence, received_date: Date.parse('16/11/2016') }
+  let(:trigger_foi)         { build :correspondence, received_date: Date.parse('16/11/2016'), properties: { trigger: true } }
+  let(:general_enquiry)     { build :correspondence, received_date: Date.parse('16/11/2016'), category: create(:category, :gq) }
   let(:no_postal)           { build :correspondence, postal_address: nil }
   let(:no_postal_or_email)  { build :correspondence, postal_address: nil, email: nil }
   let(:no_email)            { build :correspondence, email: nil }
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do
-      expect(correspondence).to be_valid
+      expect(non_trigger_foi).to be_valid
     end
   end
 
@@ -45,19 +47,19 @@ RSpec.describe Correspondence, type: :model do
 
   describe '#email_confirmation' do
     it 'must match #email' do
-      correspondence.email_confirmation = 'does_not_match'
-      expect(correspondence).not_to be_valid
+      non_trigger_foi.email_confirmation = 'does_not_match'
+      expect(non_trigger_foi).not_to be_valid
     end
 
     it 'is case insensitive' do
-      correspondence.email_confirmation = correspondence.email_confirmation.upcase
-      expect(correspondence).to be_valid
+      non_trigger_foi.email_confirmation = non_trigger_foi.email_confirmation.upcase
+      expect(non_trigger_foi).to be_valid
     end
   end
 
   describe '#state' do
     it 'defaults to "submitted"' do
-      expect(correspondence.state).to eq 'submitted'
+      expect(non_trigger_foi.state).to eq 'submitted'
     end
   end
 
@@ -79,20 +81,57 @@ RSpec.describe Correspondence, type: :model do
   describe 'callbacks' do
     describe '#set_deadlines' do
       it 'is called before_create' do
-        expect(correspondence).to receive(:set_deadlines)
-        correspondence.save!
+        expect(non_trigger_foi).to receive(:set_deadlines)
+        non_trigger_foi.save!
       end
 
-      it 'sets the internal deadline' do
-        expect(correspondence.internal_deadline).to eq nil
-        correspondence.save!
-        expect(correspondence.internal_deadline).to be_a(Date)
+      it 'is called after_update' do
+        expect(non_trigger_foi).to receive(:set_deadlines)
+        non_trigger_foi.update(category: Category.first)
       end
 
-      it 'sets the external deadline' do
-        expect(correspondence.external_deadline).to eq nil
-        correspondence.save!
-        expect(correspondence.external_deadline).to be_a(Date)
+      it 'sets the escalation deadline for non_trigger_foi' do
+        expect(non_trigger_foi.escalation_deadline).to eq nil
+        non_trigger_foi.save!
+        expect(non_trigger_foi.escalation_deadline.strftime("%d/%m/%y")).to eq "24/11/16"
+      end
+
+      it 'does not set the escalation deadline for trigger_foi' do
+        expect(trigger_foi.escalation_deadline).to eq nil
+        trigger_foi.save!
+        expect(trigger_foi.escalation_deadline).to eq nil
+      end
+
+      it 'does not set the escalation deadline for general_enquiry' do
+        expect(general_enquiry.escalation_deadline).to eq nil
+        general_enquiry.save!
+        expect(general_enquiry.escalation_deadline).to eq nil
+      end
+
+      it 'sets the internal deadline for trigger_foi' do
+        expect(trigger_foi.internal_deadline).to eq nil
+        trigger_foi.save!
+        expect(trigger_foi.internal_deadline.strftime("%d/%m/%y")).to eq "30/11/16"
+      end
+
+      it 'sets the internal deadline for general enquiries' do
+        expect(general_enquiry.internal_deadline).to eq nil
+        general_enquiry.save!
+        expect(general_enquiry.internal_deadline.strftime("%d/%m/%y")).to eq "30/11/16"
+      end
+
+      it 'does not set the internal_deadline for non_trigger_foi' do
+        expect(non_trigger_foi.internal_deadline).to eq nil
+        non_trigger_foi.save!
+        expect(non_trigger_foi.internal_deadline).to eq nil
+      end
+
+      it 'sets the external deadline for all correspondence' do
+        [non_trigger_foi, trigger_foi, general_enquiry].each do |correspondence|
+          expect(correspondence.external_deadline).to eq nil
+          correspondence.save!
+          expect(correspondence.external_deadline.strftime("%d/%m/%y")).not_to eq nil
+        end
       end
     end
 

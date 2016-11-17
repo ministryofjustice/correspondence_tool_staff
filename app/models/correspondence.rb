@@ -10,12 +10,26 @@ class Correspondence < ApplicationRecord
   validates :subject, length: { maximum: 80 }
 
   attr_accessor :email_confirmation
+  jsonb_accessor :properties,
+    escalation_deadline: :datetime,
+    internal_deadline: :datetime,
+    external_deadline: :datetime,
+    trigger: [:boolean, default: false]
 
   belongs_to :user, required: false
   belongs_to :category, required: true
 
   before_create :set_deadlines
   after_update :assigned_state, if: :drafter_assigned?
+  after_update :set_deadlines
+
+  def triggerable?
+    category.abbreviation == 'FOI' && !trigger?
+  end
+
+  def requires_approval?
+    category.abbreviation == 'GQ' || trigger?
+  end
 
   def self.search(term)
     where('lower(name) LIKE ?', "%#{term.downcase}%")
@@ -28,7 +42,8 @@ class Correspondence < ApplicationRecord
   private
 
   def set_deadlines
-    self.internal_deadline = DeadlineCalculator.internal_deadline(self)
+    self.escalation_deadline = DeadlineCalculator.escalation_deadline(self) if triggerable?
+    self.internal_deadline = DeadlineCalculator.internal_deadline(self) if requires_approval?
     self.external_deadline = DeadlineCalculator.external_deadline(self)
   end
 
