@@ -10,25 +10,6 @@ header.main-header {
 
 }
 
-.confirmation-header {
-  @include span(8 of 12);
-  @include first;
-
-  background-color: $turquoise;
-  color: $white;
-  text-align: center;
-  padding-top: $gutter * 2;
-  padding-bottom: $gutter * 2;
-  margin-bottom: $gutter;
-  margin-top: $gutter ;
-
-  .normal{
-    margin-bottom: $gutter-half;
-    margin-top: $gutter-half;
-  }
-}
-
-
 .confirmation-tick {
   width: 36px;
   height: 36px;
@@ -54,7 +35,6 @@ header.main-header {
 .notice-summary{
   @extend .error-summary;
   border-color: $button-colour;
-
 }
 
 .question {
