@@ -64,6 +64,14 @@ en:
       internal_deadline: Draft due
       external_deadline: Target
       status: Status
+    fixed_details:
+      requester: Requester
+      email_address: Email address
+      escalation_deadline: Escalation deadline
+      internal_deadline: Draft due
+      external_deadline: Target
+      message: Full request
+      details: Details
     new:
       new_case: New case
       received_date: Received date

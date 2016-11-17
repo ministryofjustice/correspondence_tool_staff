@@ -1,14 +1,14 @@
 h2.visually-hidden
-  = 'Details'
+  = t('.details')
 
 .column-half
   span.form-label
-    = 'Correspondent'
+    = t('.requester')
   span#correspondent_name
     = @correspondence.name
 
   span.form-label
-    = 'Correspondent email'
+    = t('.email_address')
   span#correspondent_email
     = @correspondence.email
 
@@ -16,23 +16,23 @@ h2.visually-hidden
 
   - if @correspondence.triggerable?
     span.form-label
-      = 'Escalation deadline'
+      = t('.escalation_deadline')
     span#escalation_deadline
       = l @correspondence.escalation_deadline, format: :deadline
 
   - if @correspondence.requires_approval?
     span.form-label
-      = "Internal deadline"
+      = t('.internal_deadline')
     span#internal_deadline
       = l @correspondence.internal_deadline, format: :deadline
 
   span.form-label
-    = "External deadline"
+    = t('.external_deadline')
   span#external_deadline
     = l @correspondence.external_deadline, format: :deadline
 
 .form-label
-  = "Message"
+  = t('.message')
 p
   span#message
     = @correspondence.message
