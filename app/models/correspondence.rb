@@ -3,9 +3,9 @@ class Correspondence < ApplicationRecord
   acts_as_gov_uk_date :received_date
 
   validates :name, :category, :message, :received_date, :subject, presence: true
-  validates :email, presence: true, on: :create, if: -> { postal_address.nil? }
+  validates :email, presence: true, on: :create, if: -> { postal_address.blank? }
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
-  validates :postal_address, presence: true, on: :create, if: -> { email.nil? }
+  validates :postal_address, presence: true, on: :create, if: -> { email.blank? }
   validates :email, confirmation: { case_sensitive: false }
   validates :subject, length: { maximum: 80 }
 

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Correspondence can be created ' do
+feature 'Correspondence creation' do
 
   given(:correspondence) do
     Struct.new('Correspondence', :name, :email, :subject, :message).new(
@@ -17,7 +17,7 @@ feature 'Correspondence can be created ' do
     visit new_correspondence_path
   end
 
-  scenario 'using valid inputs' do
+  scenario 'succeeds using valid inputs' do
     expect(page).to have_content('New case')
     fill_in 'Full name', with: correspondence.name
     fill_in 'Email', with: correspondence.email
@@ -38,5 +38,17 @@ feature 'Correspondence can be created ' do
     expect(new_correspondence.subject).to eq correspondence.subject
     expect(new_correspondence.message).to eq correspondence.message
     expect(new_correspondence.received_date).to eq Time.zone.today
+  end
+
+  scenario 'fails informatively without any inputs' do
+
+    click_button 'Create'
+
+    expect(page).to have_content("Full name can't be blank")
+    expect(page).to have_content("Email and postal address can't both be blank")
+    expect(page).to have_content("Postal address and email can't both be blank")
+    expect(page).to have_content("Subject of request can't be blank")
+    expect(page).to have_content("Full request can't be blank")
+    expect(page).to have_content("Received date can't be blank")
   end
 end
