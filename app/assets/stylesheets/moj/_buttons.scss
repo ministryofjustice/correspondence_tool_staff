@@ -5,8 +5,8 @@
 .button-holder {
   @include span(8 of 12);
   @include first;
-
   margin-top: $gutter-half;
+  margin-bottom: $gutter-half;
 }
 .button-left-spacing{
   margin-left: $gutter;

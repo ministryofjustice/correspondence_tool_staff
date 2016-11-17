@@ -46,6 +46,11 @@ body {
   }
 }
 
+.report {
+  margin-top: $gutter-half;
+}
+
+
 // Responsive tables code
 @media screen and (max-width: 1024px) {
   table.report {
