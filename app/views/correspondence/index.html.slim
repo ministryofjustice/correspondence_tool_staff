@@ -1,34 +1,39 @@
 = render partial: 'layouts/header', locals: {page_heading: t('.page_heading')}
 
-.table-container.container
-  table.report
-    colgroup
-      col
-      col
-      col
-      col
-      col
-    thead
-      th scope='col'
-        = t('.requester')
-      th scope='col'
-        = t('.subject')
-      th scope='col'
-        = t('.internal_deadline')
-      th scope='col'
-        = t('.external_deadline')
-      th scope='col'
-        = t('.status')
-    tbody
-      - @correspondence.each do |c|
-	    tr.correspondence_row
-          td.name aria-label="#{t('.requester')}"
-            = c.name
-          td.subject aria-label="#{t('.subject')}"
-            = c.subject
-          td.internal_deadline aria-label="#{t('.internal_deadline')}"
-            = l c.internal_deadline, format: :deadline if c.requires_approval?
-          td.external_deadline aria-label="#{t('.external_deadline')}"
-            = l c.external_deadline, format: :deadline
-          td.status aria-label="#{t('.status')}"
-            = c.state.humanize
+.grid-row
+  .column-full
+    = link_to t('common.new_case_button'), new_correspondence_path, class: 'button'
+
+.grid-row
+  .column-full.table-container.container
+    table.report
+      colgroup
+        col
+        col
+        col
+        col
+        col
+      thead
+        th scope='col'
+          = t('.requester')
+        th scope='col'
+          = t('.subject')
+        th scope='col'
+          = t('.internal_deadline')
+        th scope='col'
+          = t('.external_deadline')
+        th scope='col'
+          = t('.status')
+      tbody
+        - @correspondence.each do |c|
+          tr.correspondence_row
+            td.name aria-label="#{t('.requester')}"
+              = c.name
+            td.subject aria-label="#{t('.subject')}"
+              = c.subject
+            td.internal_deadline aria-label="#{t('.internal_deadline')}"
+              = l c.internal_deadline, format: :deadline if c.requires_approval?
+            td.external_deadline aria-label="#{t('.external_deadline')}"
+              = l c.external_deadline, format: :deadline
+            td.status aria-label="#{t('.status')}"
+              = c.state.humanize

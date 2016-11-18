@@ -14,10 +14,12 @@ feature 'Correspondence creation' do
   background do
     create(:category, :foi)
     login_as create(:user)
-    visit new_correspondence_path
+    visit correspondence_index_path
+    click_link "New case"
   end
 
   scenario 'succeeds using valid inputs' do
+    expect(current_path).to eq new_correspondence_path
     expect(page).to have_content('New case')
     fill_in 'Full name', with: correspondence.name
     fill_in 'Email', with: correspondence.email
@@ -41,6 +43,8 @@ feature 'Correspondence creation' do
   end
 
   scenario 'fails informatively without any inputs' do
+    expect(current_path).to eq new_correspondence_path
+    expect(page).to have_content('New case')
 
     click_button 'Create'
 
