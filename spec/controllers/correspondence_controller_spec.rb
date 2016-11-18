@@ -65,12 +65,24 @@ RSpec.describe CorrespondenceController, type: :controller do
 
     describe 'GET index' do
 
+      let(:unordered_correspondence) do
+        [
+          create(:correspondence, received_date: Date.parse('17/11/2016'), subject: 'newer request 2', id: 2),
+          create(:correspondence, received_date: Date.parse('17/11/2016'), subject: 'newer request 1', id: 1),
+          create(:correspondence, received_date: Date.parse('16/11/2016'), subject: 'request 2', id: 3),
+          create(:correspondence, received_date: Date.parse('16/11/2016'), subject: 'request 1', id: 4),
+          create(:correspondence, received_date: Date.parse('15/11/2016'), subject: 'older request 2', id: 5),
+          create(:correspondence, received_date: Date.parse('15/11/2016'), subject: 'older request 1', id: 6)
+        ]
+      end
+
       before {
         get :index
       }
 
-      it 'assigns @correspondence' do
-        expect(assigns(:correspondence)).to match(all_correspondence)
+      it 'assigns @correspondence, sorted by external_deadline, then ID' do
+        expect(assigns(:correspondence)).
+          to eq unordered_correspondence.sort_by { |c| [c.external_deadline, c.id] }
       end
 
       it 'renders the index template' do
@@ -169,7 +181,7 @@ RSpec.describe CorrespondenceController, type: :controller do
           correspondence: { category_id: create(:category, :gq).id }
         }
 
-        expect(Correspondence.find(first_correspondence.id).category.abbreviation).to eq 'GQ'
+        expect(Correspondence.first.category.abbreviation).to eq 'GQ'
       end
 
       it 'does not overwrite entries with blanks (if the blank dropdown option is selected)' do

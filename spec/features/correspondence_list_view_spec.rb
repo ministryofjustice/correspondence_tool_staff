@@ -39,13 +39,13 @@ feature 'a user can see all correspondence on the system' do
     visit '/'
     expect(page.correspondence_list.count).to eq 2
 
-    non_trigger_foi_row = page.correspondence_list.first
+    non_trigger_foi_row = page.correspondence_list.last
     expect(non_trigger_foi_row.name.text).to     eq 'Freddie FOI'
     expect(non_trigger_foi_row.subject.text).to  eq 'test FOI subject'
     expect(non_trigger_foi_row.external_deadline.text).to eq non_trigger_foi.external_deadline.strftime('%d %b')
     expect(non_trigger_foi_row.internal_deadline.text).to eq ''
 
-    gq_row = page.correspondence_list.last
+    gq_row = page.correspondence_list.first
     expect(gq_row.name.text).to     eq 'Gina GQ'
     expect(gq_row.subject.text).to  eq 'test GQ subject'
     expect(gq_row.external_deadline.text).to eq gq.external_deadline.strftime('%d %b')

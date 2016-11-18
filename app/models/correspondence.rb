@@ -2,6 +2,10 @@ class Correspondence < ApplicationRecord
 
   acts_as_gov_uk_date :received_date
 
+  scope :by_deadline, lambda {
+    order("(properties ->> 'external_deadline')::timestamp with time zone ASC, id")
+  }
+
   validates :name, :category, :message, :received_date, :subject, presence: true
   validates :email, presence: true, on: :create, if: -> { postal_address.blank? }
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
