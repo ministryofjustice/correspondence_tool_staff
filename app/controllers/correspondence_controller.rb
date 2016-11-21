@@ -3,7 +3,7 @@ class CorrespondenceController < ApplicationController
   before_action :set_correspondence, only: [:show, :edit, :update, :assign]
 
   def index
-    @correspondence = Correspondence.all
+    @correspondence = Correspondence.by_deadline
   end
 
   def new
