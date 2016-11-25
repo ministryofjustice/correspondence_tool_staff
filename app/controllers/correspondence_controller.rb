@@ -1,6 +1,6 @@
 class CorrespondenceController < ApplicationController
 
-  before_action :set_correspondence, only: [:show, :edit, :update, :assign]
+  before_action :set_correspondence, only: [:show, :edit, :update, :assign, :acceptance]
 
   def index
     @correspondence = Correspondence.by_deadline
@@ -48,6 +48,8 @@ class CorrespondenceController < ApplicationController
     @correspondence = Correspondence.search(params[:search])
     render :index
   end
+
+  def acceptance; end
 
   private
 

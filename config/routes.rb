@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :correspondence do
     member do
       patch 'assign'
+      get 'acceptance'
     end
   end
 
