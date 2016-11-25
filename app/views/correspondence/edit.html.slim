@@ -11,11 +11,6 @@ section.question.content tabindex=0
       br
       = f.submit 'Save', class:'button'
 
-    .column-half
-      = form_for @correspondence do |f|
-        = f.collection_select :user_id, User.all, :id, :email, {include_blank: "Please select a drafter" }, { class: 'drafter_select' }
-        = f.submit 'Assign', class:'button'
-
 section.question.status
   h2
     = 'Status'

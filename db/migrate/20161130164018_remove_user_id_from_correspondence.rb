@@ -1,0 +1,5 @@
+class RemoveUserIdFromCorrespondence < ActiveRecord::Migration[5.0]
+  def change
+    remove_column :correspondence, :user_id, :integer
+  end
+end

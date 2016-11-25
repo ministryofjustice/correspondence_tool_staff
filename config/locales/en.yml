@@ -40,7 +40,7 @@ en:
       external_deadline: "%d %b"
       deadline: "%d %b"
   button:
-    create: Create
+    continue: Continue
   helpers:
     label:
       correspondence:

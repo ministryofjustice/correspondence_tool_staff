@@ -1,0 +1,3 @@
+= form_for [ @correspondence, @assignment ] do |f|
+	= f.collection_select :assignee_id, User.drafters, :id, :email
+	= f.submit class: 'button'

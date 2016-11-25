@@ -38,17 +38,6 @@ RSpec.describe CorrespondenceController, type: :controller do
       end
     end
 
-    describe 'PATCH assign' do
-      it "be redirected to signin if trying to assign a specific correspondence" do
-
-        user = create(:user)
-        patch :assign, params: { id: first_correspondence, correspondence: { user_id: user } }
-        expect(response).to redirect_to(new_user_session_path)
-        expect(Correspondence.first.user).to eq nil
-      end
-
-    end
-
     describe 'GET search' do
       it "be redirected to signin if trying to search for a specific correspondence" do
         name = first_correspondence.name
@@ -56,14 +45,6 @@ RSpec.describe CorrespondenceController, type: :controller do
         expect(response).to redirect_to(new_user_session_path)
       end
     end
-
-    describe 'GET acceptance' do
-      it "be redirected to signin if trying to show acceptance " do
-        get :acceptance, params: { id: first_correspondence }
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
   end
 
   context "as an authenticated user" do
@@ -197,19 +178,6 @@ RSpec.describe CorrespondenceController, type: :controller do
       end
     end
 
-    describe 'PATCH assign' do
-
-      before do
-        user = create(:user)
-        patch :assign, params: { id: first_correspondence, correspondence: { user_id: user } }
-      end
-
-      it 'assigns correspondence to a user' do
-        expect(Correspondence.first.drafter).to eq User.last
-      end
-
-    end
-
     describe 'GET search' do
 
       before do
@@ -218,16 +186,6 @@ RSpec.describe CorrespondenceController, type: :controller do
 
       it 'renders the index template' do
         expect(response).to render_template(:index)
-      end
-    end
-
-    describe 'GET acceptance' do
-      before do
-        get :acceptance, params: { id: first_correspondence }
-      end
-
-      it 'renders the acceptance template' do
-        expect(response).to render_template(:acceptance)
       end
     end
   end

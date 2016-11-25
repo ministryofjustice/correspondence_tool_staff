@@ -15,12 +15,6 @@ section.question.content tabindex=0
     
     = link_to 'Edit', edit_correspondence_path(@correspondence), class:'button'
 
-  = form_for @correspondence, url: { controller: 'correspondence', action: 'assign' } do |f|
-    .column-half
-      = f.collection_select :user_id, User.drafters, :id, :email, {include_blank: "Please select a drafter" }, { class: 'drafter_select' }
-
-      = f.submit 'Assign', class:'button'
-
 section.question.status
   h2
     = 'Status'
