@@ -1,0 +1,14 @@
+= render partial: 'layouts/header', locals: {page_heading: @correspondence.name}
+
+.grid-row
+  .column-two-thirds
+    p.lede
+      span.visually-hidden = t('.subject')
+      = @correspondence.subject
+
+.grid-row
+  .column-two-thirds
+    h2.form-label-bold = t('.request')
+    .wrapper
+      = @correspondence.message
+

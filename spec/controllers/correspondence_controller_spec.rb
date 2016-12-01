@@ -57,6 +57,13 @@ RSpec.describe CorrespondenceController, type: :controller do
       end
     end
 
+    describe 'GET acceptance' do
+      it "be redirected to signin if trying to show acceptance " do
+        get :acceptance, params: { id: first_correspondence }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
   end
 
   context "as an authenticated user" do
@@ -211,6 +218,16 @@ RSpec.describe CorrespondenceController, type: :controller do
 
       it 'renders the index template' do
         expect(response).to render_template(:index)
+      end
+    end
+
+    describe 'GET acceptance' do
+      before do
+        get :acceptance, params: { id: first_correspondence }
+      end
+
+      it 'renders the acceptance template' do
+        expect(response).to render_template(:acceptance)
       end
     end
   end
