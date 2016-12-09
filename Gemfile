@@ -45,6 +45,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'faker'
   gem 'factory_girl_rails'
+  gem 'rb-readline'
   gem 'rspec-rails', '~> 3.4'
   gem 'rubocop', require: false
   gem 'rubocop-rspec', require: false

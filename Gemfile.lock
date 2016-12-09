@@ -234,6 +234,7 @@ GEM
     rb-fsevent (0.9.7)
     rb-inotify (0.9.7)
       ffi (>= 0.5.0)
+    rb-readline (0.5.3)
     responders (2.2.0)
       railties (>= 4.2.0, < 5.1)
     rspec (3.5.0)
@@ -371,6 +372,7 @@ DEPENDENCIES
   rails (~> 5.0)
   rails-controller-testing
   rails_12factor
+  rb-readline
   rspec-rails (~> 3.4)
   rubocop
   rubocop-rspec
