@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-  get 'heart_beat/ping'
-
   devise_for :users
 
   authenticated :user  do
