@@ -1,0 +1,6 @@
+$('input[type=radio][name="assignment[state]"]').change(function() {
+	if (this.value == 'accepted') {
+		$('.reasons_for_rejection').hide();
+	}
+});
+

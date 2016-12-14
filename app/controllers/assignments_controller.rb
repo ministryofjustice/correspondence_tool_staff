@@ -22,8 +22,10 @@ class AssignmentsController < ApplicationController
   def edit; end
 
   def update
-    if @assignment.update(assignment_params)
-      redirect_to 'case#show', params: { id: params[:case_id] }
+    new_state = (assignment_params[:state] + '!').to_sym
+
+    if @assignment.send(new_state)
+      redirect_to case_path @assignment.case
     else
       render :edit
     end
@@ -34,7 +36,8 @@ class AssignmentsController < ApplicationController
   def assignment_params
     params.require(:assignment).permit(
       :state,
-      :assignee_id
+      :assignee_id,
+      :reasons_for_rejection
     )
   end
 

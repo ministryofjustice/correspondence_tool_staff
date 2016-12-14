@@ -15,12 +15,21 @@ class Assignment < ApplicationRecord
   belongs_to :assigner, class_name: 'User'
   belongs_to :assignee, class_name: 'User'
 
+
   after_create :update_case
+  after_update :update_case
+
+  attr_accessor :reasons_for_rejection
 
   private
 
   def update_case
-    self.case.update(state: 'awaiting_drafter')
+    if self.pending?
+      self.case.update(state: 'awaiting_drafter')
+    elsif self.accepted?
+      self.case.update(state: 'drafting')
+    elsif self.rejected?
+      self.case.update(state: 'unassigned')
+    end
   end
-
 end

@@ -41,6 +41,7 @@ en:
       deadline: "%d %b"
   button:
     continue: Continue
+    confirm: Confirm
   helpers:
     label:
       case:
@@ -49,6 +50,10 @@ en:
         subject: Subject of request
         message: Full request
         postal_address: Address
+      assignment:
+        state:
+          accepted: Accept
+          rejected: Reject
   common:
       error: error
       phase_banner: |
