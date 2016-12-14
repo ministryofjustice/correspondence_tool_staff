@@ -1,6 +1,6 @@
 class CorrespondenceController < ApplicationController
 
-  before_action :set_correspondence, only: [:show, :edit, :update, :assign, :acceptance]
+  before_action :set_correspondence, only: [:show, :edit, :update]
 
   def index
     @correspondence = Correspondence.by_deadline
@@ -16,7 +16,7 @@ class CorrespondenceController < ApplicationController
 
     if @correspondence.save
       flash[:notice] = t('.case_created')
-      redirect_to correspondence_index_path
+      redirect_to new_correspondence_assignment_path @correspondence
     else
       render :new
     end
@@ -37,19 +37,10 @@ class CorrespondenceController < ApplicationController
     end
   end
 
-  def assign
-    if @correspondence.update(assign_params) && @correspondence.drafter
-      flash.now[:notice] = t('.case_assigned') + " #{@correspondence.drafter.email}"
-    end
-    render :show
-  end
-
   def search
     @correspondence = Correspondence.search(params[:search])
     render :index
   end
-
-  def acceptance; end
 
   private
 

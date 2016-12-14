@@ -2,12 +2,24 @@ require 'rails_helper'
 
 RSpec.describe Correspondence, type: :model do
 
-  let(:non_trigger_foi)     { build :correspondence, received_date: Date.parse('16/11/2016') }
-  let(:trigger_foi)         { build :correspondence, received_date: Date.parse('16/11/2016'), properties: { trigger: true } }
-  let(:general_enquiry)     { build :correspondence, received_date: Date.parse('16/11/2016'), category: create(:category, :gq) }
-  let(:no_postal)           { build :correspondence, postal_address: nil }
-  let(:no_postal_or_email)  { build :correspondence, postal_address: nil, email: nil }
-  let(:no_email)            { build :correspondence, email: nil }
+  let(:non_trigger_foi) { build :correspondence, received_date: Date.parse('16/11/2016') }
+
+  let(:trigger_foi) do
+    build :correspondence,
+      received_date: Date.parse('16/11/2016'),
+      properties: { trigger: true }
+  end
+
+  let(:general_enquiry) do
+    build :correspondence,
+      received_date: Date.parse('16/11/2016'),
+      category: create(:category, :gq)
+  end
+
+  let(:no_postal)           { build :correspondence, postal_address: nil              }
+  let(:no_postal_or_email)  { build :correspondence, postal_address: nil, email: nil  }
+  let(:no_email)            { build :correspondence, email: nil                       }
+  let(:drafter)             { instance_double(User, drafter?: true)                   }
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do
@@ -67,6 +79,13 @@ RSpec.describe Correspondence, type: :model do
     it { should validate_length_of(:subject).is_at_most(80) }
   end
 
+  describe '#drafter' do
+    it 'is the currently assigned drafter' do
+      allow(non_trigger_foi).to receive(:assignees).and_return [drafter]
+      expect(non_trigger_foi.drafter).to eq drafter
+    end
+  end
+
   describe 'associations' do
     describe '#category' do
       it 'is mandatory' do
@@ -74,6 +93,7 @@ RSpec.describe Correspondence, type: :model do
       end
 
       it { should belong_to(:category) }
+      it { should have_many(:assignments) }
 
     end
   end
@@ -131,31 +151,6 @@ RSpec.describe Correspondence, type: :model do
           expect(correspondence.external_deadline).to eq nil
           correspondence.save!
           expect(correspondence.external_deadline.strftime("%d/%m/%y")).not_to eq nil
-        end
-      end
-    end
-
-    describe '#assigned_state' do
-
-      let(:persisted_correspondence) { create(:correspondence)  }
-      let(:user)                     { create(:user)            }
-      let(:another_user)             { create(:user)            }
-
-      it 'is called after_update' do
-        expect(persisted_correspondence).to receive(:assigned_state)
-        persisted_correspondence.update(user_id: user.id)
-      end
-
-      context 'when user_id is updated' do
-        it 'transitions state to "assigned"' do
-          persisted_correspondence.update(user_id: user.id)
-          expect(described_class.first.state).to eq 'assigned'
-        end
-
-        it 'unless state is already "assigned"' do
-          persisted_correspondence.update(user_id: user.id)
-          expect(persisted_correspondence).not_to receive(:assign)
-          persisted_correspondence.update(user_id: another_user.id)
         end
       end
     end

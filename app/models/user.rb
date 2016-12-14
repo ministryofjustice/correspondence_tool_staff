@@ -4,7 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :timeoutable,
     :recoverable, :trackable, :validatable
 
-  has_many :correspondence
+  has_many :correspondence, through: :assignments
+  has_many :assignments, foreign_key: 'assignee_id'
 
   ROLES = %w[assigner drafter approver].freeze
 

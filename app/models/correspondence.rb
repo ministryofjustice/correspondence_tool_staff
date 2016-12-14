@@ -20,12 +20,16 @@ class Correspondence < ApplicationRecord
     external_deadline: :datetime,
     trigger: [:boolean, default: false]
 
-  belongs_to :user, required: false
+  has_many :assignees, through: :assignments
   belongs_to :category, required: true
+  has_many :assignments
 
   before_create :set_deadlines
-  after_update :assigned_state, if: :drafter_assigned?
   after_update :set_deadlines
+
+  def drafter
+    assignees.select(&:drafter?).first
+  end
 
   def triggerable?
     category.abbreviation == 'FOI' && !trigger?
@@ -39,25 +43,12 @@ class Correspondence < ApplicationRecord
     where('lower(name) LIKE ?', "%#{term.downcase}%")
   end
 
-  def drafter
-    user
-  end
-
   private
 
   def set_deadlines
     self.escalation_deadline = DeadlineCalculator.escalation_deadline(self) if triggerable?
     self.internal_deadline = DeadlineCalculator.internal_deadline(self) if requires_approval?
     self.external_deadline = DeadlineCalculator.external_deadline(self)
-  end
-
-  def assigned_state
-    self.state = "assigned"
-    save!
-  end
-
-  def drafter_assigned?
-    state == "submitted" && user.present?
   end
 
 end

@@ -7,10 +7,7 @@ Rails.application.routes.draw do
   end
 
   resources :correspondence do
-    member do
-      patch 'assign'
-      get 'acceptance'
-    end
+    resources :assignments
   end
 
   get '/search' => 'correspondence#search'

@@ -146,6 +146,7 @@ GEM
       rubocop (~> 0.20)
     http_parser.rb (0.6.0)
     i18n (0.7.0)
+    its-it (1.3.0)
     jbuilder (2.6.0)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
@@ -157,6 +158,7 @@ GEM
     jsonb_accessor (1.0.0.beta.1)
       activerecord (>= 5.0.0)
       pg (>= 0.18.1)
+    key_struct (0.4.2)
     listen (3.0.8)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -171,6 +173,8 @@ GEM
     mime-types-data (3.2016.0521)
     mini_portile2 (2.1.0)
     minitest (5.9.0)
+    modware (0.1.3)
+      key_struct (~> 0.4)
     multi_json (1.12.1)
     nenv (0.3.0)
     nio4r (1.2.1)
@@ -275,6 +279,17 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
+    schema_monkey (2.1.5)
+      activerecord (>= 4.2)
+      modware (~> 0.1)
+    schema_plus_core (2.0.1)
+      activerecord (~> 5.0)
+      its-it (~> 1.2)
+      schema_monkey (~> 2.1)
+    schema_plus_enums (0.1.5)
+      activerecord (>= 4.2, < 5.1)
+      its-it (~> 1.2)
+      schema_plus_core
     selenium-webdriver (2.53.4)
       childprocess (~> 0.5)
       rubyzip (~> 1.0)
@@ -377,6 +392,7 @@ DEPENDENCIES
   rubocop
   rubocop-rspec
   sass-rails (~> 5.0)
+  schema_plus_enums (~> 0.1)
   selenium-webdriver
   shoulda-matchers (~> 3.1, >= 3.1.1)
   site_prism
