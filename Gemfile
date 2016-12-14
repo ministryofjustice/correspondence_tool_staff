@@ -14,6 +14,7 @@ gem 'govuk_elements_form_builder', git: 'https://github.com/ministryofjustice/go
 gem 'jbuilder', '~> 2.0'
 gem 'jquery-rails'
 gem 'jsonb_accessor', '~> 1.0.0.beta.1'
+gem 'logstasher'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.0'
 gem 'rails', '~> 5.0'

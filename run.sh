@@ -7,9 +7,8 @@ create)
     bundle exec rails db:setup
     ;;
 migrate)
-    echo "running migrate and seed"
+    echo "running migrate"
     bundle exec rails db:migrate
     ;;
 esac
-bundle exec puma -d -C config/puma.rb
-tail -f /var/log/dmesg
+bundle exec puma -C config/puma.rb
