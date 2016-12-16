@@ -12,5 +12,7 @@ Rails.application.routes.draw do
 
   get '/search' => 'cases#search'
 
+  get 'ping', to: 'heartbeat#ping', format: :json
+
   root to: redirect('/users/sign_in')
 end

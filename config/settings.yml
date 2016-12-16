@@ -1,0 +1,4 @@
+# These are set in run.sh
+git_source:  Git Source Not Available
+build_date:  Build Date Not Available
+git_commit:  Git Commit Not Available
