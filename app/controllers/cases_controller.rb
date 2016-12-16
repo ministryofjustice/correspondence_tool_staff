@@ -48,7 +48,7 @@ class CasesController < ApplicationController
     params.require(:case).permit(
       :name,
       :postal_address,
-      :email, :email_confirmation,
+      :email,
       :subject, :message,
       :received_date_dd, :received_date_mm, :received_date_yyyy
     ).merge(category_id: Category.find_by(abbreviation: 'FOI').id)

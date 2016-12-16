@@ -57,18 +57,6 @@ RSpec.describe Case, type: :model do
     it { should_not allow_value('foobar.com').for :email  }
   end
 
-  describe '#email_confirmation' do
-    it 'must match #email' do
-      non_trigger_foi.email_confirmation = 'does_not_match'
-      expect(non_trigger_foi).not_to be_valid
-    end
-
-    it 'is case insensitive' do
-      non_trigger_foi.email_confirmation = non_trigger_foi.email_confirmation.upcase
-      expect(non_trigger_foi).to be_valid
-    end
-  end
-
   describe '#state' do
     it 'defaults to "submitted"' do
       expect(non_trigger_foi.state).to eq 'submitted'

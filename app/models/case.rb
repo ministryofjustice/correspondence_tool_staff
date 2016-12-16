@@ -10,10 +10,8 @@ class Case < ApplicationRecord
   validates :email, presence: true, on: :create, if: -> { postal_address.blank? }
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates :postal_address, presence: true, on: :create, if: -> { email.blank? }
-  validates :email, confirmation: { case_sensitive: false }
   validates :subject, length: { maximum: 80 }
 
-  attr_accessor :email_confirmation
   jsonb_accessor :properties,
     escalation_deadline: :datetime,
     internal_deadline: :datetime,
