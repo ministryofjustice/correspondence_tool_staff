@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-feature 'a user can see all correspondence on the system' do
-  given(:page) { CorrespondenceListPage.new }
+feature 'a user can see all case on the system' do
+  given(:page) { CaseListPage.new }
 
   given(:foi_category) { create(:category) }
   given(:non_trigger_foi) do
     create(
-      :correspondence,
+      :case,
       name: 'Freddie FOI',
       email: 'freddie.foi@testing.digital.justice.gov.uk',
       subject: 'test FOI subject',
@@ -18,7 +18,7 @@ feature 'a user can see all correspondence on the system' do
   given(:gq_category) { create(:category, :gq) }
   given(:gq) do
     create(
-      :correspondence,
+      :case,
       name: 'Gina GQ',
       email: 'gina.gq@testing.digital.justice.gov.uk',
       subject: 'test GQ subject',
@@ -28,7 +28,7 @@ feature 'a user can see all correspondence on the system' do
   end
 
   background do
-    # Create our correspondences
+    # Create our cases
     non_trigger_foi
     gq
 
@@ -37,15 +37,15 @@ feature 'a user can see all correspondence on the system' do
 
   scenario 'when a non-trigger FOI and a GQ have been received' do
     visit '/'
-    expect(page.correspondence_list.count).to eq 2
+    expect(page.case_list.count).to eq 2
 
-    non_trigger_foi_row = page.correspondence_list.last
+    non_trigger_foi_row = page.case_list.last
     expect(non_trigger_foi_row.name.text).to     eq 'Freddie FOI'
     expect(non_trigger_foi_row.subject.text).to  eq 'test FOI subject'
     expect(non_trigger_foi_row.external_deadline.text).to eq non_trigger_foi.external_deadline.strftime('%d %b')
     expect(non_trigger_foi_row.internal_deadline.text).to eq ''
 
-    gq_row = page.correspondence_list.first
+    gq_row = page.case_list.first
     expect(gq_row.name.text).to     eq 'Gina GQ'
     expect(gq_row.subject.text).to  eq 'test GQ subject'
     expect(gq_row.external_deadline.text).to eq gq.external_deadline.strftime('%d %b')

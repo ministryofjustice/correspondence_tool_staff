@@ -2,22 +2,22 @@
 
 
 section.question.content tabindex=0
-  = render partial: 'fixed_details', locals: {correspondence: @correspondence}
+  = render partial: 'fixed_details'
 
   .column-half
     .form-label
       = "Category"
     p
       span#category
-        = @correspondence.category.name.humanize
+        = @case.category.name.humanize
     .form-label
       = "Topic"
     
-    = link_to 'Edit', edit_correspondence_path(@correspondence), class:'button'
+    = link_to 'Edit', edit_case_path(@case), class:'button'
 
 section.question.status
   h2
     = 'Status'
   p
     span#status
-      = @correspondence.state.humanize
+      = @case.state.humanize

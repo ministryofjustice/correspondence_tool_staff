@@ -74,7 +74,7 @@ CREATE TABLE assignments (
     id integer NOT NULL,
     assignment_type assignment_type,
     state state DEFAULT 'pending'::state,
-    correspondence_id integer,
+    case_id integer,
     assignee_id integer,
     assigner_id integer,
     created_at timestamp without time zone NOT NULL,
@@ -102,10 +102,10 @@ ALTER SEQUENCE assignments_id_seq OWNED BY assignments.id;
 
 
 --
--- Name: correspondence; Type: TABLE; Schema: public; Owner: -
+-- Name: cases; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE correspondence (
+CREATE TABLE cases (
     id integer NOT NULL,
     name character varying,
     email character varying,
@@ -137,7 +137,7 @@ CREATE SEQUENCE case_id_seq
 -- Name: case_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE case_id_seq OWNED BY correspondence.id;
+ALTER SEQUENCE case_id_seq OWNED BY cases.id;
 
 
 --
@@ -235,14 +235,14 @@ ALTER TABLE ONLY assignments ALTER COLUMN id SET DEFAULT nextval('assignments_id
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY categories ALTER COLUMN id SET DEFAULT nextval('categories_id_seq'::regclass);
+ALTER TABLE ONLY cases ALTER COLUMN id SET DEFAULT nextval('case_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY correspondence ALTER COLUMN id SET DEFAULT nextval('case_id_seq'::regclass);
+ALTER TABLE ONLY categories ALTER COLUMN id SET DEFAULT nextval('categories_id_seq'::regclass);
 
 
 --
@@ -272,7 +272,7 @@ ALTER TABLE ONLY assignments
 -- Name: case_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY correspondence
+ALTER TABLE ONLY cases
     ADD CONSTRAINT case_pkey PRIMARY KEY (id);
 
 
@@ -322,10 +322,10 @@ CREATE INDEX index_assignments_on_assignment_type ON assignments USING btree (as
 
 
 --
--- Name: index_assignments_on_correspondence_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_assignments_on_case_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_assignments_on_correspondence_id ON assignments USING btree (correspondence_id);
+CREATE INDEX index_assignments_on_case_id ON assignments USING btree (case_id);
 
 
 --
@@ -339,7 +339,7 @@ CREATE INDEX index_assignments_on_state ON assignments USING btree (state);
 -- Name: index_case_on_category_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_case_on_category_id ON correspondence USING btree (category_id);
+CREATE INDEX index_case_on_category_id ON cases USING btree (category_id);
 
 
 --
@@ -360,7 +360,7 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 -- Name: fk_rails_56df0121af; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY correspondence
+ALTER TABLE ONLY cases
     ADD CONSTRAINT fk_rails_56df0121af FOREIGN KEY (category_id) REFERENCES categories(id);
 
 
@@ -370,6 +370,6 @@ ALTER TABLE ONLY correspondence
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160722121207'), ('20160802130203'), ('20160802134012'), ('20160803094147'), ('20160804155742'), ('20160811181245'), ('20160811182008'), ('20160811185359'), ('20160815103852'), ('20161017062721'), ('20161017120533'), ('20161031133532'), ('20161103104520'), ('20161114143107'), ('20161116150744'), ('20161116153411'), ('20161125115930'), ('20161130164018');
+INSERT INTO schema_migrations (version) VALUES ('20160722121207'), ('20160802130203'), ('20160802134012'), ('20160803094147'), ('20160804155742'), ('20160811181245'), ('20160811182008'), ('20160811185359'), ('20160815103852'), ('20161017062721'), ('20161017120533'), ('20161031133532'), ('20161103104520'), ('20161114143107'), ('20161116150744'), ('20161116153411'), ('20161125115930'), ('20161130164018'), ('20161209220224');
 
 

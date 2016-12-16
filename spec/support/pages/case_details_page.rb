@@ -1,5 +1,5 @@
-class CorrespondenceDetailsPage < SitePrism::Page
-  set_url '/correspondence/{id}'
+class CaseDetailsPage < SitePrism::Page
+  set_url '/cases/{id}'
 
   element :correspondent_name, '#correspondent_name'
   element :correspondent_email, '#correspondent_email'

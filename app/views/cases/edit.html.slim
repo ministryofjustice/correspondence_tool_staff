@@ -1,0 +1,17 @@
+= render partial: 'layouts/header', locals: {page_heading: 'Question'}
+
+
+section.question.content tabindex=0
+  = render partial: 'fixed_details'
+
+  = form_for @case do |f|
+    .column-half
+      = f.collection_select :category_id, Category.all, :id, :name, {selected: @case.category_id, include_blank: "Please select an option"}
+      br
+      = f.submit 'Save', class:'button'
+
+section.question.status
+  h2
+    = 'Status'
+  p
+    = @case.state.humanize

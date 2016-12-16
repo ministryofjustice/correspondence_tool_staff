@@ -1,19 +1,19 @@
 class AssignmentsController < ApplicationController
 
   before_action :set_assignment, only: [:edit, :update]
-  before_action :set_correspondence, only: [:new, :create, :edit]
+  before_action :set_case, only: [:new, :create, :edit]
 
   def new
-    @assignment = @correspondence.assignments.new
+    @assignment = @case.assignments.new
   end
 
   def create
-    @assignment = @correspondence.assignments.new(
+    @assignment = @case.assignments.new(
       assignment_params.merge(assignment_type: 'drafter', assigner: current_user)
     )
 
     if @assignment.save!
-      redirect_to correspondence_index_path
+      redirect_to cases_path
     else
       render :new
     end
@@ -23,7 +23,7 @@ class AssignmentsController < ApplicationController
 
   def update
     if @assignment.update(assignment_params)
-      redirect_to 'correspondence#show', params: { id: params[:correspondence_id] }
+      redirect_to 'case#show', params: { id: params[:case_id] }
     else
       render :edit
     end
@@ -42,8 +42,8 @@ class AssignmentsController < ApplicationController
     @assignment = Assignment.find(params[:id])
   end
 
-  def set_correspondence
-    @correspondence = Correspondence.find(params[:correspondence_id])
+  def set_case
+    @case = Case.find(params[:case_id])
   end
 
 end

@@ -6,7 +6,7 @@ RSpec.describe User, type: :model do
 
   it_behaves_like 'roles', described_class, User::ROLES
 
-  it { should have_many(:assignments)     }
-  it { should have_many(:correspondence)  }
+  it { should have_many(:assignments) }
+  it { should have_many(:cases)       }
 
 end

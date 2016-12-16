@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe CorrespondenceController, type: :controller do
+RSpec.describe CasesController, type: :controller do
 
-  let(:all_correspondence)    { create_list(:correspondence, 5) }
-  let(:assigner)              { create(:user) }
-  let(:first_correspondence)  { all_correspondence.first }
+  let(:all_cases)  { create_list(:case, 5) }
+  let(:assigner)   { create(:user) }
+  let(:first_case) { all_cases.first }
 
   before { create(:category, :foi) }
 
@@ -17,30 +17,30 @@ RSpec.describe CorrespondenceController, type: :controller do
     end
 
     describe 'GET new' do
-      it "be redirected to signin if trying to start a new correspondence" do
+      it "be redirected to signin if trying to start a new case" do
         get :new
         expect(response).to redirect_to(new_user_session_path)
       end
     end
 
     describe 'GET edit' do
-      it "be redirected to signin if trying to show a specific correspondence" do
-        get :edit, params: { id: first_correspondence }
+      it "be redirected to signin if trying to show a specific case" do
+        get :edit, params: { id: first_case }
         expect(response).to redirect_to(new_user_session_path)
       end
     end
 
     describe 'PATCH update' do
-      it "be redirected to signin if trying to update a specific correspondence" do
-        patch :update, params: { id: first_correspondence, correspondence: { category_id: create(:category, :gq).id } }
+      it "be redirected to signin if trying to update a specific case" do
+        patch :update, params: { id: first_case, case: { category_id: create(:category, :gq).id } }
         expect(response).to redirect_to(new_user_session_path)
-        expect(Correspondence.first.category.name).to eq 'Freedom of information request'
+        expect(Case.first.category.name).to eq 'Freedom of information request'
       end
     end
 
     describe 'GET search' do
-      it "be redirected to signin if trying to search for a specific correspondence" do
-        name = first_correspondence.name
+      it "be redirected to signin if trying to search for a specific case" do
+        name = first_case.name
         get :search, params: { search: name }
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -53,14 +53,14 @@ RSpec.describe CorrespondenceController, type: :controller do
 
     describe 'GET index' do
 
-      let(:unordered_correspondence) do
+      let(:unordered_cases) do
         [
-          create(:correspondence, received_date: Date.parse('17/11/2016'), subject: 'newer request 2', id: 2),
-          create(:correspondence, received_date: Date.parse('17/11/2016'), subject: 'newer request 1', id: 1),
-          create(:correspondence, received_date: Date.parse('16/11/2016'), subject: 'request 2', id: 3),
-          create(:correspondence, received_date: Date.parse('16/11/2016'), subject: 'request 1', id: 4),
-          create(:correspondence, received_date: Date.parse('15/11/2016'), subject: 'older request 2', id: 5),
-          create(:correspondence, received_date: Date.parse('15/11/2016'), subject: 'older request 1', id: 6)
+          create(:case, received_date: Date.parse('17/11/2016'), subject: 'newer request 2', id: 2),
+          create(:case, received_date: Date.parse('17/11/2016'), subject: 'newer request 1', id: 1),
+          create(:case, received_date: Date.parse('16/11/2016'), subject: 'request 2', id: 3),
+          create(:case, received_date: Date.parse('16/11/2016'), subject: 'request 1', id: 4),
+          create(:case, received_date: Date.parse('15/11/2016'), subject: 'older request 2', id: 5),
+          create(:case, received_date: Date.parse('15/11/2016'), subject: 'older request 1', id: 6)
         ]
       end
 
@@ -68,9 +68,9 @@ RSpec.describe CorrespondenceController, type: :controller do
         get :index
       }
 
-      it 'assigns @correspondence, sorted by external_deadline, then ID' do
-        expect(assigns(:correspondence)).
-          to eq unordered_correspondence.sort_by { |c| [c.external_deadline, c.id] }
+      it 'assigns @cases, sorted by external_deadline, then ID' do
+        expect(assigns(:cases)).
+          to eq unordered_cases.sort_by { |c| [c.external_deadline, c.id] }
       end
 
       it 'renders the index template' do
@@ -93,7 +93,7 @@ RSpec.describe CorrespondenceController, type: :controller do
 
         let(:params) do
           {
-            correspondence: {
+            case: {
               name: 'A. Member of Public',
               postal_address: '102 Petty France',
               email: 'member@public.com',
@@ -107,40 +107,40 @@ RSpec.describe CorrespondenceController, type: :controller do
           }
         end
 
-        let(:correspondence) { Correspondence.first }
+        let(:kase) { Case.first }
 
         it 'makes a DB entry' do
           expect { post :create, params: params }.
-            to change { Correspondence.count }.by 1
+            to change { Case.count }.by 1
         end
 
         describe 'using the information supplied  ' do
           before { post :create, params: params }
 
           it 'for #name' do
-            expect(correspondence.name).to eq 'A. Member of Public'
+            expect(kase.name).to eq 'A. Member of Public'
           end
 
           it 'for #postal_address' do
-            expect(correspondence.postal_address).to eq '102 Petty France'
+            expect(kase.postal_address).to eq '102 Petty France'
           end
 
           it 'for #email' do
-            expect(correspondence.email).to eq 'member@public.com'
+            expect(kase.email).to eq 'member@public.com'
           end
 
           it 'for #subject' do
-            expect(correspondence.subject).
+            expect(kase.subject).
               to eq 'FOI request from controller spec'
           end
 
           it 'for #message' do
-            expect(correspondence.message).
+            expect(kase.message).
               to eq 'FOI about prisons and probation'
           end
 
           it 'for #received_date' do
-            expect(correspondence.received_date).to eq Time.zone.today
+            expect(kase.received_date).to eq Time.zone.today
           end
         end
       end
@@ -149,11 +149,11 @@ RSpec.describe CorrespondenceController, type: :controller do
     describe 'GET edit' do
 
       before do
-        get :edit, params: { id: first_correspondence }
+        get :edit, params: { id: first_case }
       end
 
-      it 'assigns @correspondence' do
-        expect(assigns(:correspondence)).to eq(Correspondence.first)
+      it 'assigns @case' do
+        expect(assigns(:case)).to eq(Case.first)
       end
 
       it 'renders the edit template' do
@@ -163,25 +163,25 @@ RSpec.describe CorrespondenceController, type: :controller do
 
     describe 'PATCH update' do
 
-      it 'updates the correspondence record' do
+      it 'updates the case record' do
         patch :update, params: {
-          id: first_correspondence,
-          correspondence: { category_id: create(:category, :gq).id }
+          id: first_case,
+          case: { category_id: create(:category, :gq).id }
         }
 
-        expect(Correspondence.first.category.abbreviation).to eq 'GQ'
+        expect(Case.first.category.abbreviation).to eq 'GQ'
       end
 
       it 'does not overwrite entries with blanks (if the blank dropdown option is selected)' do
-        patch :update, params: { id: first_correspondence, correspondence: { category: '' } }
-        expect(Correspondence.first.category.abbreviation).to eq 'FOI'
+        patch :update, params: { id: first_case, case: { category: '' } }
+        expect(Case.first.category.abbreviation).to eq 'FOI'
       end
     end
 
     describe 'GET search' do
 
       before do
-        get :search, params: { search: first_correspondence.name }
+        get :search, params: { search: first_case.name }
       end
 
       it 'renders the index template' do

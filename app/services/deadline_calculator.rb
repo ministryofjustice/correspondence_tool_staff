@@ -2,19 +2,19 @@ class DeadlineCalculator
 
   class << self
 
-    def escalation_deadline(correspondence)
-      days_after_day_one = correspondence.category.escalation_time_limit - 1
-      days_after_day_one.business_days.after(start_date(correspondence.received_date))
+    def escalation_deadline(kase)
+      days_after_day_one = kase.category.escalation_time_limit - 1
+      days_after_day_one.business_days.after(start_date(kase.received_date))
     end
 
-    def internal_deadline(correspondence)
-      days_after_day_one = correspondence.category.internal_time_limit - 1
-      days_after_day_one.business_days.after(start_date(correspondence.received_date))
+    def internal_deadline(kase)
+      days_after_day_one = kase.category.internal_time_limit - 1
+      days_after_day_one.business_days.after(start_date(kase.received_date))
     end
 
-    def external_deadline(correspondence)
-      days_after_day_one = correspondence.category.external_time_limit - 1
-      days_after_day_one.business_days.after(start_date(correspondence.received_date))
+    def external_deadline(kase)
+      days_after_day_one = kase.category.external_time_limit - 1
+      days_after_day_one.business_days.after(start_date(kase.received_date))
     end
 
     def start_date(received_date)

@@ -23,7 +23,7 @@ en:
   activerecord:
     errors:
       models:
-        correspondence:
+        case:
           attributes:
             email:
               blank: and postal address can't both be blank
@@ -43,7 +43,7 @@ en:
     continue: Continue
   helpers:
     label:
-      correspondence:
+      case:
         user_id: 'Drafter'
         name: Full name
         subject: Subject of request
@@ -58,7 +58,7 @@ en:
       summary_error: 'prevented this form from being submitted:'
       new_case_button: New case
 
-  correspondence:
+  cases:
     acceptance:
       subject: 'Subject:'
       request: 'Request'
@@ -83,6 +83,6 @@ en:
     create:
       case_created: Case successfully created
     update:
-      case_updated: Correspondence updated
+      case_updated: Case updated
     assign:
       case_assigned: Case assigned to #email_of_assignee

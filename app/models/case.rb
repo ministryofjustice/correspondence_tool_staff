@@ -1,4 +1,4 @@
-class Correspondence < ApplicationRecord
+class Case < ApplicationRecord
 
   acts_as_gov_uk_date :received_date
 

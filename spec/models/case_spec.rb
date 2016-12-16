@@ -1,25 +1,25 @@
 require 'rails_helper'
 
-RSpec.describe Correspondence, type: :model do
+RSpec.describe Case, type: :model do
 
-  let(:non_trigger_foi) { build :correspondence, received_date: Date.parse('16/11/2016') }
+  let(:non_trigger_foi) { build :case, received_date: Date.parse('16/11/2016') }
 
   let(:trigger_foi) do
-    build :correspondence,
+    build :case,
       received_date: Date.parse('16/11/2016'),
       properties: { trigger: true }
   end
 
   let(:general_enquiry) do
-    build :correspondence,
+    build :case,
       received_date: Date.parse('16/11/2016'),
       category: create(:category, :gq)
   end
 
-  let(:no_postal)           { build :correspondence, postal_address: nil              }
-  let(:no_postal_or_email)  { build :correspondence, postal_address: nil, email: nil  }
-  let(:no_email)            { build :correspondence, email: nil                       }
-  let(:drafter)             { instance_double(User, drafter?: true)                   }
+  let(:no_postal)           { build :case, postal_address: nil             }
+  let(:no_postal_or_email)  { build :case, postal_address: nil, email: nil }
+  let(:no_email)            { build :case, email: nil                      }
+  let(:drafter)             { instance_double(User, drafter?: true)        }
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do
@@ -28,10 +28,10 @@ RSpec.describe Correspondence, type: :model do
   end
 
   describe 'mandatory attributes' do
-    it { should validate_presence_of(:name)               }
-    it { should validate_presence_of(:message)            }
-    it { should validate_presence_of(:received_date)      }
-    it { should validate_presence_of(:subject)            }
+    it { should validate_presence_of(:name)          }
+    it { should validate_presence_of(:message)       }
+    it { should validate_presence_of(:received_date) }
+    it { should validate_presence_of(:subject)       }
   end
 
   context 'without a postal or email address' do
@@ -146,11 +146,11 @@ RSpec.describe Correspondence, type: :model do
         expect(non_trigger_foi.internal_deadline).to eq nil
       end
 
-      it 'sets the external deadline for all correspondence' do
-        [non_trigger_foi, trigger_foi, general_enquiry].each do |correspondence|
-          expect(correspondence.external_deadline).to eq nil
-          correspondence.save!
-          expect(correspondence.external_deadline.strftime("%d/%m/%y")).not_to eq nil
+      it 'sets the external deadline for all cases' do
+        [non_trigger_foi, trigger_foi, general_enquiry].each do |kase|
+          expect(kase.external_deadline).to eq nil
+          kase.save!
+          expect(kase.external_deadline.strftime("%d/%m/%y")).not_to eq nil
         end
       end
     end

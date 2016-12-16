@@ -2,7 +2,7 @@
 
 .grid-row
   .column-full
-    = link_to t('common.new_case_button'), new_correspondence_path, class: 'button'
+    = link_to t('common.new_case_button'), new_case_path, class: 'button'
 
 .grid-row
   .column-full.table-container.container
@@ -25,8 +25,8 @@
         th scope='col'
           = t('.status')
       tbody
-        - @correspondence.each do |c|
-          tr.correspondence_row
+        - @cases.each do |c|
+          tr.case_row
             td.name aria-label="#{t('.requester')}"
               = c.name
             td.subject aria-label="#{t('.subject')}"

@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-feature 'viewing details of correspondence in the system' do
-  given(:page) { CorrespondenceDetailsPage.new }
+feature 'viewing details of case in the system' do
+  given(:page) { CaseDetailsPage.new }
 
   given(:gq_category) { create(:category, :gq) }
   given(:gq) do
     create(
-      :correspondence,
+      :case,
       name: 'Gina GQ',
       email: 'gina.gq@testing.digital.justice.gov.uk',
       message: 'viewing gq details test message',
@@ -24,7 +24,7 @@ feature 'viewing details of correspondence in the system' do
     login_as create(:user)
   end
 
-  scenario 'when the correspondence is a general enquiry' do
+  scenario 'when the case is a general enquiry' do
     page.load id: gq.id
     expect(page.correspondent_name).to have_content('Gina GQ')
     expect(page.correspondent_email).to have_content('gina.gq@testing.digital.justice.gov.uk')
@@ -38,7 +38,7 @@ feature 'viewing details of correspondence in the system' do
   given(:foi_category) { create(:category) }
   given(:foi) do
     create(
-      :correspondence,
+      :case,
       name: 'Freddie FOI',
       email: 'freddie.foi@testing.digital.justice.gov.uk',
       message: 'viewing foi details test message',
@@ -53,7 +53,7 @@ feature 'viewing details of correspondence in the system' do
     DeadlineCalculator.external_deadline(foi).strftime("%d/%m/%y")
   end
 
-  scenario 'when the correspondence is a non-trigger foi request' do
+  scenario 'when the case is a non-trigger foi request' do
     page.load id: foi.id
     expect(page.correspondent_name).to have_content('Freddie FOI')
     expect(page.correspondent_email).to have_content('freddie.foi@testing.digital.justice.gov.uk')

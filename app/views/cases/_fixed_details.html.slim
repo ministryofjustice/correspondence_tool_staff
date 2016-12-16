@@ -5,34 +5,34 @@ h2.visually-hidden
   span.form-label
     = t('.requester')
   span#correspondent_name
-    = @correspondence.name
+    = @case.name
 
   span.form-label
     = t('.email_address')
   span#correspondent_email
-    = @correspondence.email
+    = @case.email
 
 .column-half
 
-  - if @correspondence.triggerable?
+  - if @case.triggerable?
     span.form-label
       = t('.escalation_deadline')
     span#escalation_deadline
-      = l @correspondence.escalation_deadline, format: :deadline
+      = l @case.escalation_deadline, format: :deadline
 
-  - if @correspondence.requires_approval?
+  - if @case.requires_approval?
     span.form-label
       = t('.internal_deadline')
     span#internal_deadline
-      = l @correspondence.internal_deadline, format: :deadline
+      = l @case.internal_deadline, format: :deadline
 
   span.form-label
     = t('.external_deadline')
   span#external_deadline
-    = l @correspondence.external_deadline, format: :deadline
+    = l @case.external_deadline, format: :deadline
 
 .form-label
   = t('.message')
 p
   span#message
-    = @correspondence.message
+    = @case.message

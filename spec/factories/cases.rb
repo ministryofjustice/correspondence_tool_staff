@@ -1,6 +1,6 @@
 FactoryGirl.define do
 
-  factory :correspondence do
+  factory :case do
     name { Faker::Name.name }
     email { Faker::Internet.email }
     email_confirmation { email }

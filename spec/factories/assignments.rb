@@ -5,7 +5,7 @@ FactoryGirl.define do
     state 'pending'
     association :assigner, factory: :user, strategy: :create
     association :assignee, factory: :user, strategy: :create
-    association :correspondence, factory: :correspondence, strategy: :create
+    association :case, factory: :case, strategy: :create
   end
 
 end

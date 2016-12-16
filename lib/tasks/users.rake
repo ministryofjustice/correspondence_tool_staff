@@ -1,5 +1,5 @@
 namespace :users do
-  desc "Create dummy correspondence entries for demonstration purposes"
+  desc "Create dummy users for demonstration purposes"
   task demo_entries: :environment do
     User::ROLES.each do |role|
       new_users = FactoryGirl.create_list(:user, 5, roles: [role])
@@ -11,7 +11,7 @@ namespace :users do
     end
   end
 
-  desc 'Create correspondence users for development.'
+  desc 'Create users for development.'
   task dev_entries: :environment do
     if Rails.env == 'production' && ENV['ENV'] == 'prod'
       raise 'Dev users not meant for production environments.'

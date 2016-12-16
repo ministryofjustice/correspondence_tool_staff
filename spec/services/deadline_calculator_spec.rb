@@ -5,12 +5,12 @@ describe DeadlineCalculator do
   subject { described_class }
 
   let(:foi_request) do
-    build(:correspondence,
+    build(:case,
       received_date: Date.parse('05/08/2016'))
   end
 
   let(:general_enquiry) do
-    build(:correspondence,
+    build(:case,
       received_date: Date.parse('05/08/2016'),
       category: create(:category, :gq))
   end

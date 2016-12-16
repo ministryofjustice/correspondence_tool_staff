@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentsController, type: :controller do
-  let(:drafter_assignment)        { create(:assignment)               }
-  let(:unassigned_correspondence) { create(:correspondence)           }
-  let(:drafter)                   { create(:user, roles: ['drafter']) }
+  let(:drafter_assignment) { create(:assignment)               }
+  let(:unassigned_case)    { create(:case)                     }
+  let(:drafter)            { create(:user, roles: ['drafter']) }
   let(:create_assignment_params) do
     {
-      correspondence_id: unassigned_correspondence.id,
+      case_id: unassigned_case.id,
       assignment: { assignee_id: drafter.id }
     }
   end
@@ -15,7 +15,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
     describe 'GET new' do
       it 'redirects to sign in page' do
-        get :new, params: { correspondence_id: unassigned_correspondence.id }
+        get :new, params: { case_id: unassigned_case.id }
         expect(response).to redirect_to new_user_session_path
       end
     end
@@ -29,7 +29,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
       it 'does not create a new assignment' do
         expect { post :create, params: create_assignment_params }.
-          not_to change { unassigned_correspondence.assignments.count }
+          not_to change { unassigned_case.assignments.count }
       end
     end
 
@@ -37,7 +37,7 @@ RSpec.describe AssignmentsController, type: :controller do
       it 'redirects to sign in page' do
         get :edit, params: {
           id: drafter_assignment.id,
-          correspondence_id: drafter_assignment.correspondence.id
+          case_id: drafter_assignment.case.id
         }
 
         expect(response).to redirect_to new_user_session_path
@@ -49,7 +49,7 @@ RSpec.describe AssignmentsController, type: :controller do
         patch :update,
           params: {
             id: drafter_assignment.id,
-            correspondence_id: drafter_assignment.correspondence.id,
+            case_id: drafter_assignment.case.id,
             assignment: { state: 'accepted' }
           }
       end
@@ -70,21 +70,21 @@ RSpec.describe AssignmentsController, type: :controller do
     describe 'GET new' do
       it 'renders the page for assignment' do
         get :new, params: {
-          correspondence_id: unassigned_correspondence.id
+          case_id: unassigned_case.id
         }
         expect(response).to render_template(:new)
       end
     end
 
     describe 'POST create' do
-      it 'creates a new assignment for a specific item of correspondence' do
+      it 'creates a new assignment for a specific case' do
         expect { post :create, params: create_assignment_params }.
-          to change { unassigned_correspondence.assignments.count }.by 1
+          to change { unassigned_case.assignments.count }.by 1
       end
 
-      it 'redirects to the correspondence list view' do
+      it 'redirects to the case list view' do
         post :create, params: create_assignment_params
-        expect(response).to redirect_to correspondence_index_path
+        expect(response).to redirect_to cases_path
       end
     end
 
@@ -92,7 +92,7 @@ RSpec.describe AssignmentsController, type: :controller do
       it 'renders the page for accept / reject assignment' do
         get :edit, params: {
           id: drafter_assignment.id,
-          correspondence_id: drafter_assignment.correspondence.id
+          case_id: drafter_assignment.case.id
         }
         expect(response).to render_template(:edit)
       end
@@ -103,7 +103,7 @@ RSpec.describe AssignmentsController, type: :controller do
         patch :update,
           params: {
             id: drafter_assignment.id,
-            correspondence_id: drafter_assignment.correspondence.id,
+            case_id: drafter_assignment.case.id,
             assignment: { state: 'accepted' }
           }
       end
@@ -112,8 +112,8 @@ RSpec.describe AssignmentsController, type: :controller do
         expect(drafter_assignment.reload.state).to eq 'accepted'
       end
 
-      it 'redirects to correspondence detail page' do
-        expect(response).to redirect_to('correspondence#show')
+      it 'redirects to case detail page' do
+        expect(response).to redirect_to('case#show')
       end
     end
   end

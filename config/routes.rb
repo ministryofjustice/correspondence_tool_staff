@@ -3,14 +3,14 @@ Rails.application.routes.draw do
   devise_for :users
 
   authenticated :user  do
-    root to: 'correspondence#index', as: :authenticated_root
+    root to: 'cases#index', as: :authenticated_root
   end
 
-  resources :correspondence do
+  resources :cases do
     resources :assignments
   end
 
-  get '/search' => 'correspondence#search'
+  get '/search' => 'cases#search'
 
   root to: redirect('/users/sign_in')
 end

@@ -1,6 +1,6 @@
 class Assignment < ApplicationRecord
 
-  validates :assignment_type, :state, :correspondence, :assigner, :assignee,
+  validates :assignment_type, :state, :case, :assigner, :assignee,
     presence: true
 
   enum state: {
@@ -11,16 +11,16 @@ class Assignment < ApplicationRecord
     caseworker: 'caseworker', drafter: 'drafter'
   }
 
-  belongs_to :correspondence
+  belongs_to :case
   belongs_to :assigner, class_name: 'User'
   belongs_to :assignee, class_name: 'User'
 
-  after_create :update_correspondence
+  after_create :update_case
 
   private
 
-  def update_correspondence
-    correspondence.update(state: 'awaiting_drafter')
+  def update_case
+    self.case.update(state: 'awaiting_drafter')
   end
 
 end

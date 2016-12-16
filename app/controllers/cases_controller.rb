@@ -1,22 +1,22 @@
-class CorrespondenceController < ApplicationController
+class CasesController < ApplicationController
 
-  before_action :set_correspondence, only: [:show, :edit, :update]
+  before_action :set_case, only: [:show, :edit, :update]
 
   def index
-    @correspondence = Correspondence.by_deadline
+    @cases = Case.by_deadline
   end
 
   def new
-    @correspondence = Correspondence.new
+    @case = Case.new
     render :new
   end
 
   def create
-    @correspondence = Correspondence.new(create_foi_params)
+    @case = Case.new(create_foi_params)
 
-    if @correspondence.save
+    if @case.save
       flash[:notice] = t('.case_created')
-      redirect_to new_correspondence_assignment_path @correspondence
+      redirect_to new_case_assignment_path @case
     else
       render :new
     end
@@ -29,7 +29,7 @@ class CorrespondenceController < ApplicationController
   end
 
   def update
-    if @correspondence.update(parsed_edit_params)
+    if @case.update(parsed_edit_params)
       flash.now[:notice] = t('.case_updated')
       render :show
     else
@@ -38,14 +38,14 @@ class CorrespondenceController < ApplicationController
   end
 
   def search
-    @correspondence = Correspondence.search(params[:search])
+    @case = Case.search(params[:search])
     render :index
   end
 
   private
 
   def create_foi_params
-    params.require(:correspondence).permit(
+    params.require(:case).permit(
       :name,
       :postal_address,
       :email, :email_confirmation,
@@ -59,19 +59,19 @@ class CorrespondenceController < ApplicationController
   end
 
   def edit_params
-    params.require(:correspondence).permit(
+    params.require(:case).permit(
       :category_id
     )
   end
 
   def assign_params
-    params.require(:correspondence).permit(
+    params.require(:case).permit(
       :user_id
     )
   end
 
-  def set_correspondence
-    @correspondence = Correspondence.find(params[:id])
+  def set_case
+    @case = Case.find(params[:id])
   end
 
 end
