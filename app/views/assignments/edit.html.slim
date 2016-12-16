@@ -17,6 +17,7 @@
   .column-two-thirds
     = form_for [@case, @assignment] do |f|
       = f.radio_button_fieldset :state, choices: [:accepted, :rejected], inline: true, class: 'state'
-      .reasons_for_rejection
-      	= f.text_area :reasons_for_rejection
+
+      #assignment_state_rejected_content.panel.panel-border-narrow.js-hidden
+        = f.text_area :reasons_for_rejection
       = f.submit t('button.confirm'), class: 'button'
