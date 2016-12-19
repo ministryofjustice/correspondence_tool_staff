@@ -13,9 +13,9 @@
 
   = f.text_field :subject
 
-  = f.text_area :message
+  = f.text_area :message, {rows: 10}
 
   .form-group
-  	= f.gov_uk_date_field :received_date, legend_text: t('.received_date')
+  	= f.gov_uk_date_field :received_date, {legend_text: t('.received_date'), form_hint_text: t('.received_date_copy')}
 
   = f.submit t('button.continue'), {class: 'button', onclick: "ga('send', 'event', 'Question', 'Sent')"}
