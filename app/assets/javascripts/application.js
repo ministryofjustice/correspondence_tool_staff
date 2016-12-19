@@ -27,4 +27,4 @@
   selectionButtons.setInitialState($(buttonSelector));
 
   moj.init();
-}());
+}(GOVUK));

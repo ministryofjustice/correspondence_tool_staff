@@ -19,8 +19,8 @@ moj.Modules.ShowHideContent = {
   bindEvents: function() {
     this.radioButtonLabels.each(function (index, element) {
       var showHideTarget = element.getAttribute('for') + '_content';
-      element.setAttribute('data-target', showHideTarget)
-    })
+      element.setAttribute('data-target', showHideTarget);
+    });
   }
 
-}
+};
