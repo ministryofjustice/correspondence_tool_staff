@@ -23,3 +23,11 @@
 #proposition-name{
   float: left;
 }
+
+.form-label, .gov_uk_date legend {
+  font-weight: bold;
+}
+
+.gov_uk_date .form-hint{
+  margin-bottom: 0;
+}

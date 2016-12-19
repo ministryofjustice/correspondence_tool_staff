@@ -70,10 +70,10 @@ feature 'Case creation' do
     click_button 'Continue'
 
     expect(page).to have_content("Full name can't be blank")
-    expect(page).to have_content("Email and postal address can't both be blank")
-    expect(page).to have_content("Postal address and email can't both be blank")
+    expect(page).to have_content("Email and address can't both be blank")
+    expect(page).to have_content("Address and email can't both be blank")
     expect(page).to have_content("Subject of request can't be blank")
     expect(page).to have_content("Full request can't be blank")
-    expect(page).to have_content("Received date can't be blank")
+    expect(page).to have_content("Date received can't be blank")
   end
 end
