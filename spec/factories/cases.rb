@@ -3,7 +3,6 @@ FactoryGirl.define do
   factory :case do
     name { Faker::Name.name }
     email { Faker::Internet.email }
-    email_confirmation { email }
     association :category, factory: :category, strategy: :create
     subject "Message from FactoryGirl"
     message { Faker::Lorem.paragraph(1) }

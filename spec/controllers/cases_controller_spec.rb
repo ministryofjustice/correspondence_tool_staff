@@ -97,7 +97,6 @@ RSpec.describe CasesController, type: :controller do
               name: 'A. Member of Public',
               postal_address: '102 Petty France',
               email: 'member@public.com',
-              email_confirmation: 'member@public.com',
               subject: 'FOI request from controller spec',
               message: 'FOI about prisons and probation',
               received_date_dd: Time.zone.today.day.to_s,

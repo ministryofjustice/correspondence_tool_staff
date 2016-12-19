@@ -23,7 +23,6 @@ feature 'Case creation' do
     expect(page).to have_content('New case')
     fill_in 'Full name',          with: kase.name
     fill_in 'Email',              with: kase.email
-    fill_in 'Email confirmation', with: kase.email
     fill_in 'Subject of request', with: kase.subject
     fill_in 'Full request',       with: kase.message
     fill_in 'Day',                with: Time.zone.today.day.to_s
