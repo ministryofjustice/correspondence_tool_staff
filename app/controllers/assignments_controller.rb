@@ -13,6 +13,7 @@ class AssignmentsController < ApplicationController
     )
 
     if @assignment.save!
+      flash[:notice] = t('.case_created')
       redirect_to cases_path
     else
       render :new
