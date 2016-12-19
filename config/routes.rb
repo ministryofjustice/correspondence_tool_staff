@@ -14,5 +14,7 @@ Rails.application.routes.draw do
 
   get 'ping', to: 'heartbeat#ping', format: :json
 
+  get 'healthcheck',    to: 'heartbeat#healthcheck',  as: 'healthcheck', format: :json
+
   root to: redirect('/users/sign_in')
 end
