@@ -1,0 +1,115 @@
+.section-tabs {
+
+  a:visited {
+    color: $link-colour;
+  }
+
+  a:hover{
+    color: $link-hover-colour;
+  }
+
+  @extend %contain-floats;
+  border-bottom: 1px solid $border-colour;
+  margin: 1.5em 0;
+
+  @include media(mobile) {
+    border-bottom: none;
+    margin: $gutter 0;
+  }
+
+  ul {
+    position: relative;
+    top: 1px;
+    margin: 0;
+    padding: 0;
+
+    li {
+      margin: 0;
+      padding: 0;
+      float: left;
+      display: inline;
+      list-style: none;
+      @include media(mobile) {
+        float: none;
+        display: block;
+      }
+    }
+
+    a {
+      @include core-19;
+      font-weight: bold;
+      display: block;
+      overflow: hidden;
+      margin: 5px 5px 6px 0;
+      padding: 5px 0;
+      text-decoration: none;
+      background: $panel-colour;
+      border: 1px solid $panel-colour;
+      border-bottom: none;
+
+      &:hover,
+      &:focus {
+        .label {
+          text-decoration: underline;
+        }
+      }
+
+      @include media(mobile) {
+        @include core-16;
+        border-bottom: 1px solid $border-colour;
+        width: 98.5%;
+        @include calc(width, "100% - 10px");
+        margin: 5px 0 0 0;
+        padding: 5px 0 5px 5px;
+        text-decoration: underline;
+        font-weight: normal;
+      }
+
+      @include media(tablet) {
+        padding: 11px 14px 9px 9px;
+      }
+
+      @include ie(6) {
+        float: left;
+      }
+    }
+
+    li.active a {
+      background: $white;
+      padding: 10px 9px 10px;
+      margin: 0 5px 0 0;
+      border-color: $border-colour;
+
+      @include media(mobile) {
+        border-bottom: 1px solid $border-colour;
+        width: 98.5%;
+        @include calc(width, "100% - 10px");
+        padding: 5px 0 5px 5px;
+        margin: 5px 0 0 0;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      @include media(tablet) {
+        padding: 16px 19px 15px 14px;
+      }
+
+      .label {
+        text-decoration: none;
+      }
+    }
+
+    &.two-tabs li {
+        width: 50%;
+
+        @include media(desktop) {
+            width: auto;
+            min-width: 33.333%;
+        }
+
+        @include ie(7) {
+            min-width: 0%;
+        }
+    }
+  }
+}

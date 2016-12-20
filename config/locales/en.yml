@@ -233,6 +233,11 @@ en:
       draft_deadline: Draft deadline
       external_deadline: Final deadline
       status: Status
+      tabs:
+        close_copy_html: |
+                  <span class="visuallyhidden">View </span>Closed cases
+        open_copy_html: |
+           <span class="visuallyhidden">View </span>Open cases
       who_its_with: With
     incoming_cases:
       heading: New cases

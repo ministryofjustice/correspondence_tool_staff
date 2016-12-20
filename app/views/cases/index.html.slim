@@ -9,6 +9,15 @@
       = link_to t('common.new_case_button'), new_case_path, class: 'button'
 
 .grid-row
+  .column-full
+    .section-tabs
+      ul.two-tabs
+        li class=('active open' if params[:cases] == 'open' || params[:cases].blank?)
+          = link_to t('.tabs.open_copy_html'), cases_path( cases: 'open'), method: :get
+        li class=('active closed' if params[:cases] == 'close')
+          = link_to t('.tabs.close_copy_html'), cases_path( cases: 'close'), method: :get
+
+.grid-row
   .column-full.table-container.container
     table.report.table-font-xsmall
       colgroup
