@@ -16,4 +16,40 @@ RSpec.describe HeartbeatController, type: :controller do
       expect(ping_response['git_source']).to eq Settings.git_source
     end
   end
+
+  describe '#healthcheck' do
+
+    context 'when a problem exists' do
+      before do
+        allow(ActiveRecord::Base.connection)
+            .to receive(:active?).and_raise(PG::ConnectionBad)
+
+        get :healthcheck
+      end
+
+      it 'returns status bad gateway' do
+        expect(response.status).to eq(502)
+      end
+
+      it 'returns the expected response report' do
+        expect(response.body).to eq({checks: { database: false}}.to_json)
+      end
+    end
+
+    context 'when everything is ok' do
+      before do
+        allow(ActiveRecord::Base.connection).to receive(:active?).and_return(true)
+
+        get :healthcheck
+      end
+
+      it 'returns HTTP success' do
+        expect(response.status).to eq(200)
+      end
+
+      it 'returns the expected response report' do
+        expect(response.body).to eq({checks: { database: true}}.to_json)
+      end
+    end
+  end
 end
