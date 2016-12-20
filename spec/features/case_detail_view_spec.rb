@@ -30,7 +30,6 @@ feature 'viewing details of case in the system' do
     expect(page.correspondent_email).to have_content('gina.gq@testing.digital.justice.gov.uk')
     expect(page.message).to have_content('viewing gq details test message')
     expect(page.category).to have_content(gq_category.name)
-    expect(page.internal_deadline).to have_content(internal_gq_deadline)
     expect(page.external_deadline).to have_content(external_gq_deadline)
     expect(page.status).to have_content(gq.state.humanize)
   end

@@ -6,7 +6,6 @@ class CaseDetailsPage < SitePrism::Page
   element :message, '#message'
   element :category, '#category'
   element :escalation_deadline, '#escalation_deadline'
-  element :internal_deadline, '#internal_deadline'
   element :external_deadline, '#external_deadline'
   element :status, '#status'
 end
