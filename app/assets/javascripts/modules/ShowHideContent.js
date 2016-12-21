@@ -1,5 +1,5 @@
 moj.Modules.ShowHideContent = {
-  el: 'label:has(":radio, :checkbox")',
+  elementSelector: 'label:has(":radio, :checkbox")',
   init: function() {
     var self = this;
 
@@ -13,11 +13,11 @@ moj.Modules.ShowHideContent = {
   },
 
   cacheEls: function(){
-    this.radioButtonLabels = $(this.el);
+    this.govukLabels = $(this.elementSelector);
   },
 
   bindEvents: function() {
-    this.radioButtonLabels.each(function (index, element) {
+    this.govukLabels.each(function (index, element) {
       var showHideTarget = element.getAttribute('for') + '_content';
       element.setAttribute('data-target', showHideTarget);
     });
