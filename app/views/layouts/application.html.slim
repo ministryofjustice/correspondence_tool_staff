@@ -27,7 +27,7 @@
   #page
     = render partial: 'layouts/phase_banner'
   .primary-nav-bar
-  main#content.container
+  main#content
     = render partial: 'layouts/flashes' unless flash.empty?
     = yield
 
