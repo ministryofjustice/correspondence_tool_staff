@@ -43,6 +43,14 @@ en:
     continue: Continue
     confirm: Confirm
   helpers:
+    fieldset:
+       assignment:
+          state: Do you accept this case?
+
+    hint:
+      assignment:
+        reasons_for_rejection: |
+          Try including who you think with right division may be
     label:
       case:
         user_id: 'Drafter'
@@ -51,9 +59,12 @@ en:
         message: Full request
         postal_address: Address
       assignment:
+        reasons_for_rejection: Reason for rejecting this case
+
         state:
           accepted: Accept
           rejected: Reject
+
   common:
       error: error
       phase_banner: |

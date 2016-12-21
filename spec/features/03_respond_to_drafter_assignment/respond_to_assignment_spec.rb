@@ -43,7 +43,7 @@ feature 'respond to drafter assignment' do
 
     choose 'Reject'
     expect(page).to have_selector('#assignment_reasons_for_rejection', visible: true)
-    fill_in 'Reasons for rejection', with: 'I am not the correct KILO for this'
+    fill_in 'Reason for rejecting this case', with: 'I am not the correct KILO for this'
     click_button 'Confirm'
 
     expect(current_path).to eq case_path kase
