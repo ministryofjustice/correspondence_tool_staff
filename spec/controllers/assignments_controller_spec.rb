@@ -112,8 +112,9 @@ RSpec.describe AssignmentsController, type: :controller do
         expect(drafter_assignment.reload.state).to eq 'accepted'
       end
 
+
       it 'redirects to case detail page' do
-        expect(response).to redirect_to('case#show')
+        expect(response).to redirect_to case_path drafter_assignment.case
       end
     end
   end

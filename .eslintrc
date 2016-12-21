@@ -6,6 +6,7 @@
     "semi": [2, "always"]
   },
   "globals": {
+    "GOVUK"      : true,
     "moj"        : true,
     "MOJ"        : true,
     "App"        : true,
