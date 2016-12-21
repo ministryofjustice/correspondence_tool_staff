@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: assignments
+#
+#  id              :integer          not null, primary key
+#  assignment_type :enum
+#  state           :enum             default("pending")
+#  case_id         :integer
+#  assignee_id     :integer
+#  assigner_id     :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#
+
 require 'rails_helper'
 
 RSpec.describe Assignment, type: :model do

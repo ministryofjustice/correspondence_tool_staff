@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: assignments
+#
+#  id              :integer          not null, primary key
+#  assignment_type :enum
+#  state           :enum             default("pending")
+#  case_id         :integer
+#  assignee_id     :integer
+#  assigner_id     :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#
+
 class Assignment < ApplicationRecord
 
   validates :assignment_type, :state, :case, :assigner, :assignee,

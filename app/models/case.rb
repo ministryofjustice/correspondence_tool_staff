@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: cases
+#
+#  id             :integer          not null, primary key
+#  name           :string
+#  email          :string
+#  message        :text
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  state          :string           default("submitted")
+#  category_id    :integer
+#  received_date  :date
+#  postal_address :string
+#  subject        :string
+#  properties     :jsonb
+#
+
 class Case < ApplicationRecord
 
   acts_as_gov_uk_date :received_date
