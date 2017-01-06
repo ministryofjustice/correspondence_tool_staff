@@ -20,12 +20,6 @@ h2.visually-hidden
     span#escalation_deadline
       = l @case.escalation_deadline, format: :deadline
 
-  - if @case.requires_approval?
-    span.form-label
-      = t('.internal_deadline')
-    span#internal_deadline
-      = l @case.internal_deadline, format: :deadline
-
   span.form-label
     = t('.external_deadline')
   span#external_deadline

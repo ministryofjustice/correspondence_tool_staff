@@ -1,11 +1,8 @@
 class CaseList < SitePrism::Section
-  element :name, '.name'
-  element :subject, '.subject'
-  element :message, '.message'
-  element :category, '.category'
-  element :received, '.received'
-  element :internal_deadline, '.internal_deadline'
-  element :external_deadline, '.external_deadline'
+  element :name, 'td[aria-label="Requester name"]'
+  element :subject, 'td[aria-label="Subject"]'
+  element :external_deadline, 'td[aria-label="External deadline"]'
+  element :status, 'td[aria-label="Status"]'
 end
 
 class CaseListPage < SitePrism::Page

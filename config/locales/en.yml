@@ -79,18 +79,16 @@ en:
       subject: 'Subject:'
       request: 'Request'
     index:
-      page_heading: My cases
-      requester: Name
+      page_heading: Cases
+      requester: Requester name
       subject: Subject
-      internal_deadline: Draft due
-      external_deadline: Target
+      external_deadline: External deadline
       status: Status
     fixed_details:
       requester: Requester
       email_address: Email address
       escalation_deadline: Escalation deadline
-      internal_deadline: Draft due
-      external_deadline: Target
+      external_deadline: External deadline
       message: Full request
       details: Details
     new:
