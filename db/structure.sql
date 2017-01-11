@@ -3,10 +3,11 @@
 --
 
 -- Dumped from database version 9.5.5
--- Dumped by pg_dump version 9.5.5
+-- Dumped by pg_dump version 9.6.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
@@ -117,15 +118,16 @@ CREATE TABLE cases (
     received_date date,
     postal_address character varying,
     subject character varying,
-    properties jsonb
+    properties jsonb,
+    reference integer
 );
 
 
 --
--- Name: case_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: cases_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE case_id_seq
+CREATE SEQUENCE cases_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -134,10 +136,10 @@ CREATE SEQUENCE case_id_seq
 
 
 --
--- Name: case_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: cases_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE case_id_seq OWNED BY cases.id;
+ALTER SEQUENCE cases_id_seq OWNED BY cases.id;
 
 
 --
@@ -225,35 +227,35 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: assignments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY assignments ALTER COLUMN id SET DEFAULT nextval('assignments_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: cases id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY cases ALTER COLUMN id SET DEFAULT nextval('case_id_seq'::regclass);
+ALTER TABLE ONLY cases ALTER COLUMN id SET DEFAULT nextval('cases_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: categories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY categories ALTER COLUMN id SET DEFAULT nextval('categories_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
 
 --
--- Name: ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY ar_internal_metadata
@@ -261,7 +263,7 @@ ALTER TABLE ONLY ar_internal_metadata
 
 
 --
--- Name: assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: assignments assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY assignments
@@ -269,15 +271,15 @@ ALTER TABLE ONLY assignments
 
 
 --
--- Name: case_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: cases cases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY cases
-    ADD CONSTRAINT case_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT cases_pkey PRIMARY KEY (id);
 
 
 --
--- Name: categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY categories
@@ -285,7 +287,7 @@ ALTER TABLE ONLY categories
 
 
 --
--- Name: schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY schema_migrations
@@ -293,7 +295,7 @@ ALTER TABLE ONLY schema_migrations
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users
@@ -336,10 +338,10 @@ CREATE INDEX index_assignments_on_state ON assignments USING btree (state);
 
 
 --
--- Name: index_case_on_category_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_cases_on_category_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_case_on_category_id ON cases USING btree (category_id);
+CREATE INDEX index_cases_on_category_id ON cases USING btree (category_id);
 
 
 --
@@ -357,7 +359,7 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 
 
 --
--- Name: fk_rails_56df0121af; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: cases fk_rails_56df0121af; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY cases
@@ -370,6 +372,26 @@ ALTER TABLE ONLY cases
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160722121207'), ('20160802130203'), ('20160802134012'), ('20160803094147'), ('20160804155742'), ('20160811181245'), ('20160811182008'), ('20160811185359'), ('20160815103852'), ('20161017062721'), ('20161017120533'), ('20161031133532'), ('20161103104520'), ('20161114143107'), ('20161116150744'), ('20161116153411'), ('20161125115930'), ('20161130164018'), ('20161209220224');
+INSERT INTO schema_migrations (version) VALUES
+('20160722121207'),
+('20160802130203'),
+('20160802134012'),
+('20160803094147'),
+('20160804155742'),
+('20160811181245'),
+('20160811182008'),
+('20160811185359'),
+('20160815103852'),
+('20161017062721'),
+('20161017120533'),
+('20161031133532'),
+('20161103104520'),
+('20161114143107'),
+('20161116150744'),
+('20161116153411'),
+('20161125115930'),
+('20161130164018'),
+('20161209220224'),
+('20170111161049');
 
 
