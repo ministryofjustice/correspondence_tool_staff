@@ -13,6 +13,7 @@ feature 'viewing details of case in the system' do
       category: gq_category
     )
   end
+
   given(:internal_gq_deadline) do
     DeadlineCalculator.internal_deadline(gq).strftime("%d %b")
   end
@@ -26,6 +27,7 @@ feature 'viewing details of case in the system' do
 
   scenario 'when the case is a general enquiry' do
     page.load id: gq.id
+    expect(page).to have_no_escalation_notice
     expect(page.correspondent_name).to have_content('Gina GQ')
     expect(page.correspondent_email).to have_content('gina.gq@testing.digital.justice.gov.uk')
     expect(page.message).to have_content('viewing gq details test message')
@@ -45,6 +47,14 @@ feature 'viewing details of case in the system' do
     )
   end
 
+  given(:old_foi) do
+    create(
+      :case,
+      received_date: 31.days.ago,
+      category: foi_category
+    )
+  end
+
   given(:foi_escalation_deadline) do
     DeadlineCalculator.escalation_deadline(foi).strftime("%d/%m/%y")
   end
@@ -52,14 +62,27 @@ feature 'viewing details of case in the system' do
     DeadlineCalculator.external_deadline(foi).strftime("%d/%m/%y")
   end
 
-  scenario 'when the case is a non-trigger foi request' do
-    page.load id: foi.id
-    expect(page.correspondent_name).to have_content('Freddie FOI')
-    expect(page.correspondent_email).to have_content('freddie.foi@testing.digital.justice.gov.uk')
-    expect(page.message).to have_content('viewing foi details test message')
-    expect(page.category).to have_content(foi_category.name)
-    expect(page.escalation_deadline).to have_content(foi.escalation_deadline.strftime('%d %b'))
-    expect(page.external_deadline).to have_content(foi.external_deadline.strftime('%d %b'))
-    expect(page.status).to have_content(foi.state.humanize)
+  context 'when the case is a non-trigger foi request' do
+    scenario 'displays all case content ' do
+      page.load id: foi.id
+      expect(page.correspondent_name).to have_content('Freddie FOI')
+      expect(page.correspondent_email).to have_content('freddie.foi@testing.digital.justice.gov.uk')
+      expect(page.message).to have_content('viewing foi details test message')
+      expect(page.category).to have_content(foi_category.name)
+      expect(page.escalation_deadline).to have_content(foi.escalation_deadline.strftime('%d %b'))
+      expect(page.external_deadline).to have_content(foi.external_deadline.strftime('%d %b'))
+      expect(page.status).to have_content(foi.state.humanize)
+    end
+
+    scenario 'User views the case while its within "Day 6"' do
+      page.load id: foi.id
+      expect(page).to have_escalation_notice
+      expect(page.escalation_notice).to have_text(foi.escalation_deadline.strftime('%d %B'))
+    end
+
+    scenario 'User views the case that is outside "Day 6" ' do
+      page.load id: old_foi.id
+      expect(page).to have_no_escalation_notice
+    end
   end
 end

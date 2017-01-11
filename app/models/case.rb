@@ -55,6 +55,14 @@ class Case < ApplicationRecord
     category.abbreviation == 'GQ' || trigger?
   end
 
+  def under_review?
+    triggerable? && within_escalation_deadline?
+  end
+
+  def within_escalation_deadline?
+    escalation_deadline.future? || escalation_deadline.today?
+  end
+
   def self.search(term)
     where('lower(name) LIKE ?', "%#{term.downcase}%")
   end

@@ -1,5 +1,8 @@
-= render partial: 'layouts/header', locals: {page_heading: 'Question'}
+- if @case.under_review?
+  .alert-orange
+    = t('alerts.escalation_warning_html', escalation_deadline:  "#{l @case.escalation_deadline, format: :escalation}")
 
+= render partial: 'layouts/header', locals: {page_heading: 'Question'}
 
 section.question.content tabindex=0
   = render partial: 'fixed_details'
@@ -12,7 +15,7 @@ section.question.content tabindex=0
         = @case.category.name.humanize
     .form-label
       = "Topic"
-    
+
     = link_to 'Edit', edit_case_path(@case), class:'button'
 
 section.question.status

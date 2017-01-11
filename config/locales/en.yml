@@ -38,6 +38,7 @@ en:
     formats:
       default: "%d/%m/%Y %H:%M"
       external_deadline: "%d %b"
+      escalation: "%d %B"
       deadline: "%d %b"
   button:
     continue: Continue
@@ -64,7 +65,11 @@ en:
         state:
           accepted: Accept
           rejected: Reject
-
+  alerts:
+    escalation_warning_html: |
+      <strong>Important notice</strong><br>
+      This case is being reviewed by Press and Private office.
+      Don't send out the response until <strong>%{escalation_deadline}</strong>.
   common:
       error: error
       phase_banner: |

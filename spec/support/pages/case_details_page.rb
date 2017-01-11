@@ -8,4 +8,5 @@ class CaseDetailsPage < SitePrism::Page
   element :escalation_deadline, '#escalation_deadline'
   element :external_deadline, '#external_deadline'
   element :status, '#status'
+  element :escalation_notice, '.alert-orange'
 end
