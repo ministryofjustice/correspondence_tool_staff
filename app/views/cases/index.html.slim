@@ -13,7 +13,10 @@
         col
         col
         col
+        col
       thead
+        th scope='col'
+          = t('.number')
         th scope='col'
           = t('.requester')
         th scope='col'
@@ -25,6 +28,10 @@
       tbody
         - @cases.each do |c|
           tr.case_row
+            td aria-label="#{t('.number')}"
+              span.visually-hidden
+                = t('.view_case')
+              = link_to c.number, case_path(c.id)
             td aria-label="#{t('.requester')}"
               = c.name
             td aria-label="#{t('.subject')}"

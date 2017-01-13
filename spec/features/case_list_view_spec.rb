@@ -43,10 +43,12 @@ feature 'a user can see all case on the system' do
     expect(non_trigger_foi_row.name.text).to     eq 'Freddie FOI'
     expect(non_trigger_foi_row.subject.text).to  eq 'test FOI subject'
     expect(non_trigger_foi_row.external_deadline.text).to eq non_trigger_foi.external_deadline.strftime('%d %b')
+    expect(non_trigger_foi_row.number).to have_link("#{non_trigger_foi.number}", href: Rails.root.join("/cases/#{non_trigger_foi.id}"))
 
     gq_row = page.case_list.first
     expect(gq_row.name.text).to     eq 'Gina GQ'
     expect(gq_row.subject.text).to  eq 'test GQ subject'
     expect(gq_row.external_deadline.text).to eq gq.external_deadline.strftime('%d %b')
+    expect(gq_row.number).to have_link("#{gq.number}", href: Rails.root.join("/cases/#{gq.id}"))
   end
 end

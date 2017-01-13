@@ -101,6 +101,8 @@ en:
       request: 'Request'
     index:
       page_heading: Cases
+      view_case: Link to case
+      number: Case number
       requester: Requester name
       subject: Subject
       external_deadline: External deadline
@@ -122,4 +124,3 @@ en:
       case_updated: Case updated
     assign:
       case_assigned: Case assigned to #email_of_assignee
-

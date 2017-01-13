@@ -14,7 +14,7 @@
 #  postal_address :string
 #  subject        :string
 #  properties     :jsonb
-#  reference      :string           not null
+#  number         :string           not null
 #
 
 FactoryGirl.define do
