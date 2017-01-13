@@ -14,6 +14,7 @@
 #  postal_address :string
 #  subject        :string
 #  properties     :jsonb
+#  reference      :integer
 #
 
 class Case < ApplicationRecord
@@ -29,6 +30,7 @@ class Case < ApplicationRecord
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates :postal_address, presence: true, on: :create, if: -> { email.blank? }
   validates :subject, length: { maximum: 80 }
+  validates :reference, uniqueness: true
 
   jsonb_accessor :properties,
     escalation_deadline: :datetime,
@@ -40,8 +42,13 @@ class Case < ApplicationRecord
   belongs_to :category, required: true
   has_many :assignments
 
-  before_create :set_deadlines
+  before_save :prevent_reference_change
+  before_create :set_deadlines, :set_reference
   after_update :set_deadlines
+
+  def prevent_reference_change
+    raise StandardError.new('Reference is immutable') if reference_changed?
+  end
 
   def drafter
     assignees.select(&:drafter?).first
@@ -73,6 +80,14 @@ class Case < ApplicationRecord
     self.escalation_deadline = DeadlineCalculator.escalation_deadline(self) if triggerable?
     self.internal_deadline = DeadlineCalculator.internal_deadline(self) if requires_approval?
     self.external_deadline = DeadlineCalculator.external_deadline(self)
+  end
+
+  def set_reference
+    self.reference = received_date.strftime("%y%m%d") + next_increment
+  end
+
+  def next_increment
+    sprintf "%03d", Case.where(received_date: received_date).count + 1
   end
 
 end

@@ -14,6 +14,7 @@
 #  postal_address :string
 #  subject        :string
 #  properties     :jsonb
+#  reference      :integer
 #
 
 require 'rails_helper'
@@ -70,6 +71,40 @@ RSpec.describe Case, type: :model do
     end
   end
 
+  describe '#reference' do
+    it 'is composed of the received date and an incremented suffix' do
+      case_one = create(:case, received_date: Date.parse('11/01/2017'))
+      case_two = create(:case, received_date: Date.parse('11/01/2017'))
+      case_three = create(:case, received_date: Date.parse('12/01/2017'))
+      case_four = create(:case, received_date: Date.parse('12/01/2017'))
+
+      expect(case_one.reference).to eq    170111001
+      expect(case_two.reference).to eq    case_one.reference + 1
+      expect(case_three.reference).to eq  170112001
+      expect(case_four.reference).to eq   case_three.reference + 1
+    end
+
+    it 'cannot be modified by update' do
+      non_trigger_foi.save
+      expect { non_trigger_foi.update(reference: 1) }.
+        to raise_error StandardError, 'Reference is immutable'
+    end
+
+    it 'cannot be modified by save' do
+      non_trigger_foi.save
+      non_trigger_foi.reference = 1
+      expect { non_trigger_foi.save }.
+        to raise_error StandardError, 'Reference is immutable'
+    end
+
+    it 'must be unique' do
+      allow(trigger_foi).to receive(:set_reference).and_return(1)
+      allow(non_trigger_foi).to receive(:set_reference).and_return(1)
+      expect(trigger_foi.save).to eq true
+      expect(non_trigger_foi.save).to eq false
+    end
+  end 
+
   describe '#email' do
     it { should allow_value('foo@bar.com').for :email     }
     it { should_not allow_value('foobar.com').for :email  }
@@ -105,6 +140,14 @@ RSpec.describe Case, type: :model do
   end
 
   describe 'callbacks' do
+
+    describe '#prevent_reference_change' do
+      it 'is called before_save' do
+        expect(non_trigger_foi).to receive(:prevent_reference_change)
+        non_trigger_foi.save!
+      end
+    end
+
     describe '#set_deadlines' do
       it 'is called before_create' do
         expect(non_trigger_foi).to receive(:set_deadlines)
@@ -158,6 +201,19 @@ RSpec.describe Case, type: :model do
           kase.save!
           expect(kase.external_deadline.strftime("%d/%m/%y")).not_to eq nil
         end
+      end
+    end
+
+    describe '#set_case_number' do
+      it 'is called before_create' do
+        expect(non_trigger_foi).to receive(:set_reference)
+        non_trigger_foi.save
+      end
+
+      it 'assigns a case reference number' do
+        expect(non_trigger_foi.reference).to eq nil
+        non_trigger_foi.save
+        expect(non_trigger_foi.reference).not_to eq nil
       end
     end
   end

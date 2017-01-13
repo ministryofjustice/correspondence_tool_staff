@@ -76,4 +76,22 @@ feature 'Case creation' do
     expect(page).to have_content("Full request can't be blank")
     expect(page).to have_content("Date received can't be blank")
   end
+
+  scenario 'fails helpfully when internal error results in reference duplication' do
+    allow_any_instance_of(Case).to receive(:set_reference).and_return 1
+    create(:case)
+
+    fill_in 'Full name',          with: kase.name
+    fill_in 'Email',              with: kase.email
+    fill_in 'Subject of request', with: kase.subject
+    fill_in 'Full request',       with: kase.message
+    fill_in 'Day',                with: Time.zone.today.day.to_s
+    fill_in 'Month',              with: Time.zone.today.month.to_s
+    fill_in 'Year',               with: Time.zone.today.year.to_s
+    click_button 'Continue'
+
+    expect(Case.count).to eq 1
+    expect(page).to have_content("An error has occurred and your case could not be created.  Please try again.")
+    expect(page).not_to have_content('Reference')
+  end
 end
