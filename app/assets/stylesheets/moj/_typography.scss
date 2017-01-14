@@ -54,3 +54,11 @@ header.main-header {
     padding-right: $gutter;
   }
 }
+
+.case-heading {
+  @extend .heading-xlarge;
+}
+.case-heading--secondary {
+  @include core-27();
+  color: $secondary-text-colour;
+}

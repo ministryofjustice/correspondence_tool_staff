@@ -3,12 +3,17 @@ require 'rails_helper'
 feature 'viewing details of case in the system' do
   given(:page) { CaseDetailsPage.new }
 
+  background do
+    login_as create(:user)
+  end
+
   given(:gq_category) { create(:category, :gq) }
   given(:gq) do
     create(
       :case,
       name: 'Gina GQ',
       email: 'gina.gq@testing.digital.justice.gov.uk',
+      subject: 'this is a gq',
       message: 'viewing gq details test message',
       category: gq_category
     )
@@ -21,19 +26,26 @@ feature 'viewing details of case in the system' do
     DeadlineCalculator.external_deadline(gq).strftime("%d %b")
   end
 
-  background do
-    login_as create(:user)
-  end
-
   scenario 'when the case is a general enquiry' do
     page.load id: gq.id
+
+    expect(page).to have_case_heading
+    expect(page.case_heading.case_number).to have_content(gq.number)
+    expect(page.case_heading).to have_content(gq.subject)
+
     expect(page).to have_no_escalation_notice
-    expect(page.correspondent_name).to have_content('Gina GQ')
-    expect(page.correspondent_email).to have_content('gina.gq@testing.digital.justice.gov.uk')
+
+    expect(page).to have_sidebar
+    expect(page.sidebar).to have_external_deadline
+    expect(page.sidebar.external_deadline).to have_content(external_gq_deadline)
+    expect(page.sidebar.status).to have_content(gq.state.humanize)
+    expect(page.sidebar.name).to have_content('Gina GQ')
+    expect(page.sidebar.email).to have_content('gina.gq@testing.digital.justice.gov.uk')
+    expect(page.sidebar.postal_address).to have_content(gq.postal_address)
+
     expect(page.message).to have_content('viewing gq details test message')
-    expect(page.category).to have_content(gq_category.name)
-    expect(page.external_deadline).to have_content(external_gq_deadline)
-    expect(page.status).to have_content(gq.state.humanize)
+    expect(page.received_date).to have_content(foi_received_date)
+
   end
 
   given(:foi_category) { create(:category) }
@@ -42,6 +54,7 @@ feature 'viewing details of case in the system' do
       :case,
       name: 'Freddie FOI',
       email: 'freddie.foi@testing.digital.justice.gov.uk',
+      subject: 'this is a foi',
       message: 'viewing foi details test message',
       category: foi_category
     )
@@ -55,29 +68,42 @@ feature 'viewing details of case in the system' do
     )
   end
 
+  given(:foi_received_date) do
+    foi.received_date.strftime("%d %B %Y")
+  end
   given(:foi_escalation_deadline) do
-    DeadlineCalculator.escalation_deadline(foi).strftime("%d/%m/%y")
+    DeadlineCalculator.escalation_deadline(foi).strftime("%d %B")
   end
   given(:external_foi_deadline) do
-    DeadlineCalculator.external_deadline(foi).strftime("%d/%m/%y")
+    DeadlineCalculator.external_deadline(foi).strftime("%d %B")
   end
+
 
   context 'when the case is a non-trigger foi request' do
     scenario 'displays all case content ' do
       page.load id: foi.id
-      expect(page.correspondent_name).to have_content('Freddie FOI')
-      expect(page.correspondent_email).to have_content('freddie.foi@testing.digital.justice.gov.uk')
+
+      expect(page).to have_case_heading
+      expect(page.case_heading.case_number).to have_content(foi.number)
+      expect(page.case_heading.text).to have_content(foi.subject)
+
+      expect(page).to have_sidebar
+      expect(page.sidebar).to have_external_deadline
+      expect(page.sidebar.external_deadline).to have_content(external_foi_deadline)
+      expect(page.sidebar.status).to have_content(foi.state.humanize)
+      expect(page.sidebar.name).to have_content('Freddie FOI')
+      expect(page.sidebar.email).to have_content('freddie.foi@testing.digital.justice.gov.uk')
+      expect(page.sidebar.postal_address).to have_content(foi.postal_address)
+
       expect(page.message).to have_content('viewing foi details test message')
-      expect(page.category).to have_content(foi_category.name)
-      expect(page.escalation_deadline).to have_content(foi.escalation_deadline.strftime('%d %b'))
-      expect(page.external_deadline).to have_content(foi.external_deadline.strftime('%d %b'))
-      expect(page.status).to have_content(foi.state.humanize)
+      expect(page.received_date).to have_content(foi_received_date)
+
     end
 
     scenario 'User views the case while its within "Day 6"' do
       page.load id: foi.id
       expect(page).to have_escalation_notice
-      expect(page.escalation_notice).to have_text(foi.escalation_deadline.strftime('%d %B'))
+      expect(page.escalation_notice).to have_text(foi_escalation_deadline)
     end
 
     scenario 'User views the case that is outside "Day 6" ' do

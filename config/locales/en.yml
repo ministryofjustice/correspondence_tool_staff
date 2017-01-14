@@ -37,13 +37,16 @@ en:
   date:
     formats:
       default: "%d/%m/%Y"
+      long_date: "%d %B %Y"
       deadline: "%d %b"
   time:
     formats:
       default: "%d/%m/%Y %H:%M"
       external_deadline: "%d %b"
+      external_deadline_long: "%d %B"
       escalation: "%d %B"
       deadline: "%d %b"
+      long_date: "%d %B %Y"
   button:
     continue: Continue
     confirm: Confirm
@@ -89,6 +92,7 @@ en:
       postal_address: Address
       summary_error: 'prevented this form from being submitted:'
       new_case_button: New case
+      view_details: View details
 
   assignments:
     new:
@@ -111,13 +115,22 @@ en:
       requester: Requester
       email_address: Email address
       escalation_deadline: Escalation deadline
-      external_deadline: External deadline
       message: Full request
       details: Details
     new:
       new_case: New case
       received_date: Date received
       received_date_copy: For example. 31 01 2017
+    show:
+      header_case_number: "You are viewing case number "
+      header_subject: "Case subject, "
+      external_deadline: External deadline
+      name: Requester
+      received_date: Date received
+      request: Request
+      status: Status
+      email: "Requesters email address: "
+      postal_address: "Requesters postal address: "
     create:
       case_created: Case successfully created
     update:

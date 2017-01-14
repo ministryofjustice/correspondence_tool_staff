@@ -18,42 +18,8 @@ body {
   @include first;
 }
 
-.question {
-  .column-half{
-    padding: 0;
-    margin-bottom: $gutter;
-  }
-  @include media(tablet) {
-    .column-half {
-      @include span(6 of 12 no-gutters);
-      padding: 0;
-    }
-  }
-
-  &.content {
-    @include media(tablet) {
-      @include span(9 of 12);
-      @include first;
-      border-right: 3px solid $border-colour;
-    }
-  }
-
-  &.status {
-    @include media(tablet) {
-      @include span(3 at 10 of 12);
-      @include last;
-    }
-  }
-}
-
 .report {
   margin-top: $gutter-half;
-}
-
-.wrapper {
-  border: 1px solid $panel-colour;
-  padding: $gutter-half;
-  margin-bottom: $gutter;
 }
 
 // Responsive tables code
@@ -99,4 +65,61 @@ body {
       font-weight: bold;
     }
   }
+}
+
+.case-main {
+  @include grid-column(2/3);
+}
+
+.case-sidebar {
+  @include grid-column( 1/3 );
+}
+
+.case-sidebar__group {
+  margin-bottom: $gutter;
+}
+
+.case-sidebar__group--hr {
+  @extend .case-sidebar__group;
+  padding-bottom: $gutter-half;
+  border-bottom : 1px solid $border-colour;
+  margin-bottom : $gutter;
+}
+
+.case-sidebar__heading {
+  @include core-19();
+}
+
+.case-sidebar__data {
+  @include bold-24();
+}
+
+.case-sidebar__data--contact {
+  @include core-19();
+  margin-top   : $gutter-half;
+  margin-bottom: $gutter-half;
+  div {
+    margin-bottom: $gutter-half;
+  }
+}
+
+.request--heading {
+  @include bold-24();
+  margin-bottom: $gutter-half;
+}
+.request--message {
+  border: 1px solid $border-colour;
+  padding: 1em;
+  margin-bottom: $gutter;
+  margin-right : $gutter;
+
+  & > p {
+    @include core-19();
+    @include pre-wrap();
+  }
+}
+
+.request--date-received {
+  @include bold-19();
+  display: inline-block;
 }

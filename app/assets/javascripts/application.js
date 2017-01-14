@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require vendor/polyfills/bind
+//= require details.polyfill
 //= require govuk/selection-buttons
 //= require govuk/show-hide-content
 //= require moj
