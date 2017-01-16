@@ -1,16 +1,5 @@
-html {
-  background:$grey-3;
-}
-body {
-  background: #fff;
-}
-
-#page {
+.phase-banner {
   @extend %site-width-container;
-}
-.body-content {
-  @include grid-column( 1/2 );
-
 }
 
 .report {

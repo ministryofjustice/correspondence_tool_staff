@@ -1,5 +1,5 @@
 - content_for :logo_link_title do
-  = "Return to home page"
+  = "Return to home correspondence_tool_staff"
 
 - content_for :homepage_url do
   = root_path
@@ -24,12 +24,12 @@
 
 = content_for :content do
   = csrf_meta_tags
-  #page
-    = render partial: 'layouts/phase_banner'
-  .primary-nav-bar
-  main#content
-    = render partial: 'layouts/flashes' unless flash.empty?
-    = yield
+  = render partial: 'layouts/phase_banner'
+  .grid-row
+    .column-full
+      main#content
+        = render partial: 'layouts/flashes' unless flash.empty?
+        = yield
 
 - content_for :body_end do
   = javascript_include_tag "application"
