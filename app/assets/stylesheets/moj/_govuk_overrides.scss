@@ -1,3 +1,22 @@
+#proposition-menu{
+  color: #ffffff;
+  @include media(desktop) {
+    text-align: right;
+  }
+  a{
+    color: #ffffff;
+    margin-left: $gutter;
+    margin-right: $gutter;
+    font-weight: bold;
+    @include media(desktop) {
+      margin-left : $gutter;
+      margin-right: 0;
+    }
+    &:focus{
+      outline: 1px solid $link-hover-colour;
+    }
+  }
+}
 .form-label, .gov_uk_date legend {
   font-weight: bold;
 }

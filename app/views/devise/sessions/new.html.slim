@@ -2,15 +2,13 @@
 
 = render partial: 'layouts/header', locals: {page_heading: 'Sign in'}
 
-.grid-row
-  .column-full
-    = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
-      = f.email_field :email, autofocus: true
+= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+  = f.email_field :email, autofocus: true
 
-      = f.password_field :password, autocomplete: "off"
+  = f.password_field :password, autocomplete: "off"
 
 
-      = f.submit "Sign in", class: "button"
+  = f.submit "Sign in", class: "button"
 
 = render "devise/shared/links"
 
