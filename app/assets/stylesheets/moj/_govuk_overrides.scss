@@ -1,29 +1,3 @@
-#global-header .header-wrapper {
-  .header-global {
-    @include grid-column( 1/4 );
-    .header-logo {
-      width:auto;
-      .content {
-        margin-left:0;
-      }
-    }
-    @include media(mobile) {
-      @include grid-column( 4/4 );
-    }
-  }
-  .sign-out {
-    color: #ffffff !important;
-    float: right;
-  }
-  .header-proposition {
-    @include grid-column( 3/4 );
-  }
-}
-
-#proposition-name{
-  float: left;
-}
-
 .form-label, .gov_uk_date legend {
   font-weight: bold;
 }
