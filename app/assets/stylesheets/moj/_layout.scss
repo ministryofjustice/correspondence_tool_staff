@@ -5,17 +5,12 @@ body {
   background: #fff;
 }
 
-.container {
-  @include container;
-  @include border-box-sizing;
-}
-
 #page {
   @extend %site-width-container;
 }
 .body-content {
-  @include span(6 of 12);
-  @include first;
+  @include grid-column( 1/2 );
+
 }
 
 .report {

@@ -1,6 +1,6 @@
 #global-header .header-wrapper {
   .header-global {
-    @include span(4 of 12);
+    @include grid-column( 1/4 );
     .header-logo {
       width:auto;
       .content {
@@ -8,7 +8,7 @@
       }
     }
     @include media(mobile) {
-      @include span(12 of 12);
+      @include grid-column( 4/4 );
     }
   }
   .sign-out {
@@ -16,7 +16,7 @@
     float: right;
   }
   .header-proposition {
-    @include span(8 at 5 of 12 no-gutters);
+    @include grid-column( 3/4 );
   }
 }
 

@@ -1,9 +1,7 @@
 header.main-header {
-  @include container;
   margin-bottom:$gutter;
   h1{
-    @include span(8 of 12);
-    @include first;
+    @include grid-column( 3/4 );
     @include heading-48;
     font-weight: 700;
   }
@@ -23,9 +21,7 @@ header.main-header {
 }
 
 .error-summary,.notice-summary {
-  @include span(8 of 12);
-  @include first;
-  float: none;
+  @include grid-column( 3/4 );
   h1{
     margin-top: 0;
     margin-bottom: 0;
