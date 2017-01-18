@@ -19,6 +19,10 @@ class CasesController < ApplicationController
     else
       render :new
     end
+  rescue ActiveRecord::RecordNotUnique
+    flash[:notice] =
+      t('activerecord.errors.models.case.attributes.number.duplication')
+    render :new
   end
 
   def show; end

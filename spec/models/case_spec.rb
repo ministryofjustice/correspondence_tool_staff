@@ -14,7 +14,7 @@
 #  postal_address :string
 #  subject        :string
 #  properties     :jsonb
-#  reference      :integer
+#  set_number     :string           not null
 #
 
 require 'rails_helper'
@@ -71,39 +71,45 @@ RSpec.describe Case, type: :model do
     end
   end
 
-  describe '#reference' do
+  describe '#number' do
+    let(:case_one)   { create(:case, received_date: Date.parse('11/01/2017')) }
+    let(:case_two)   { create(:case, received_date: Date.parse('11/01/2017')) }
+    let(:case_three) { create(:case, received_date: Date.parse('12/01/2017')) }
+    let(:case_four)  { create(:case, received_date: Date.parse('12/01/2017')) }
+
     it 'is composed of the received date and an incremented suffix' do
-      case_one = create(:case, received_date: Date.parse('11/01/2017'))
-      case_two = create(:case, received_date: Date.parse('11/01/2017'))
-      case_three = create(:case, received_date: Date.parse('12/01/2017'))
-      case_four = create(:case, received_date: Date.parse('12/01/2017'))
-
-      expect(case_one.reference).to eq    170111001
-      expect(case_two.reference).to eq    case_one.reference + 1
-      expect(case_three.reference).to eq  170112001
-      expect(case_four.reference).to eq   case_three.reference + 1
+      expect(case_one.number).to eq   '170111001'
+      expect(case_two.number).to eq   '170111002'
+      expect(case_three.number).to eq '170112001'
+      expect(case_four.number).to eq  '170112002'
     end
 
-    it 'cannot be modified by update' do
-      non_trigger_foi.save
-      expect { non_trigger_foi.update(reference: 1) }.
-        to raise_error StandardError, 'Reference is immutable'
+    it 'cannot be set on create' do
+      expect { create(:case,
+                      received_date: Date.parse('13/01/2017'),
+                      number: 'f00') }.
+        to raise_error StandardError, 'number is immutable'
     end
 
-    it 'cannot be modified by save' do
-      non_trigger_foi.save
-      non_trigger_foi.reference = 1
-      expect { non_trigger_foi.save }.
-        to raise_error StandardError, 'Reference is immutable'
+    it 'cannot be modified' do
+      case_one.number = 1
+      expect { case_one.save }.
+        to raise_error StandardError, 'number is immutable'
     end
 
     it 'must be unique' do
-      allow(trigger_foi).to receive(:set_reference).and_return(1)
-      allow(non_trigger_foi).to receive(:set_reference).and_return(1)
-      expect(trigger_foi.save).to eq true
-      expect(non_trigger_foi.save).to eq false
+      allow_any_instance_of(Case).
+        to receive(:next_number).and_return(case_one.number)
+      expect { case_two }.
+        to raise_error(ActiveRecord::RecordNotUnique)
     end
-  end 
+
+    it 'does not get reused' do
+      expect(case_one.number).to eq '170111001'
+      case_one.destroy
+      expect(case_two.number).to eq '170111002'
+    end
+  end
 
   describe '#email' do
     it { should allow_value('foo@bar.com').for :email     }
@@ -141,9 +147,9 @@ RSpec.describe Case, type: :model do
 
   describe 'callbacks' do
 
-    describe '#prevent_reference_change' do
+    describe '#prevent_number_change' do
       it 'is called before_save' do
-        expect(non_trigger_foi).to receive(:prevent_reference_change)
+        expect(non_trigger_foi).to receive(:prevent_number_change)
         non_trigger_foi.save!
       end
     end
@@ -204,17 +210,19 @@ RSpec.describe Case, type: :model do
       end
     end
 
-    describe '#set_case_number' do
+    describe '#set_number' do
       it 'is called before_create' do
-        expect(non_trigger_foi).to receive(:set_reference)
-        non_trigger_foi.save
+        allow(non_trigger_foi).to receive(:set_number)
+        non_trigger_foi.save rescue nil
+        expect(non_trigger_foi).to have_received(:set_number)
       end
 
-      it 'assigns a case reference number' do
-        expect(non_trigger_foi.reference).to eq nil
+      it 'assigns a case number number' do
+        expect(non_trigger_foi.number).to eq nil
         non_trigger_foi.save
-        expect(non_trigger_foi.reference).not_to eq nil
+        expect(non_trigger_foi.number).not_to eq nil
       end
     end
+
   end
 end

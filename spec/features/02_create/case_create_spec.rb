@@ -1,9 +1,11 @@
 require 'rails_helper'
 
+UserInput = Struct.new('Case', :name, :email, :subject, :message)
+
 feature 'Case creation' do
 
-  given(:kase) do
-    Struct.new('Case', :name, :email, :subject, :message).new(
+  let(:user_input) do
+    UserInput.new(
       'A. Member of Public',
       'member@public.com',
       'FOI - foo bar foo bar',
@@ -21,10 +23,10 @@ feature 'Case creation' do
   scenario 'succeeds using valid inputs' do
     expect(current_path).to eq new_case_path
     expect(page).to have_content('New case')
-    fill_in 'Full name',          with: kase.name
-    fill_in 'Email',              with: kase.email
-    fill_in 'Subject of request', with: kase.subject
-    fill_in 'Full request',       with: kase.message
+    fill_in 'Full name',          with: user_input.name
+    fill_in 'Email',              with: user_input.email
+    fill_in 'Subject of request', with: user_input.subject
+    fill_in 'Full request',       with: user_input.message
     fill_in 'Day',                with: Time.zone.today.day.to_s
     fill_in 'Month',              with: Time.zone.today.month.to_s
     fill_in 'Year',               with: Time.zone.today.year.to_s
@@ -36,10 +38,10 @@ feature 'Case creation' do
     expect(page).to have_content('Assign case')
 
     expect(new_case).to have_attributes(
-      name:           kase.name,
-      email:          kase.email,
-      subject:        kase.subject,
-      message:        kase.message,
+      name:           user_input.name,
+      email:          user_input.email,
+      subject:        user_input.subject,
+      message:        user_input.message,
       received_date:  Time.zone.today
     )
 
@@ -78,14 +80,16 @@ feature 'Case creation' do
     expect(page).to have_content("Date received can't be blank")
   end
 
-  scenario 'fails helpfully when internal error results in reference duplication' do
-    allow_any_instance_of(Case).to receive(:set_reference).and_return 1
-    create(:case)
+  given(:existing_case) { create(:case) }
 
-    fill_in 'Full name',          with: kase.name
-    fill_in 'Email',              with: kase.email
-    fill_in 'Subject of request', with: kase.subject
-    fill_in 'Full request',       with: kase.message
+  scenario 'fails helpfully case number is duplicated in error' do
+    allow_any_instance_of(Case).
+      to receive(:next_number).and_return existing_case.number
+
+    fill_in 'Full name',          with: user_input.name
+    fill_in 'Email',              with: user_input.email
+    fill_in 'Subject of request', with: user_input.subject
+    fill_in 'Full request',       with: user_input.message
     fill_in 'Day',                with: Time.zone.today.day.to_s
     fill_in 'Month',              with: Time.zone.today.month.to_s
     fill_in 'Year',               with: Time.zone.today.year.to_s
@@ -93,6 +97,6 @@ feature 'Case creation' do
 
     expect(Case.count).to eq 1
     expect(page).to have_content("An error has occurred and your case could not be created.  Please try again.")
-    expect(page).not_to have_content('Reference')
+    expect(page).not_to have_content('Number')
   end
 end

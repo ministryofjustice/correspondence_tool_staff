@@ -29,11 +29,10 @@ en:
               blank: and address can't both be blank
             postal_address:
               blank: and email can't both be blank
-            reference:
-              taken: An error has occurred and your case could not be created.  Please try again.
-    attributes:
-      case:
-        reference: ""
+            number:
+              duplication: |
+                An error has occurred and your case could not be created.
+                Please try again.
 
   date:
     formats:
