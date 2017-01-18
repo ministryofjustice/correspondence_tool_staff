@@ -14,7 +14,7 @@
 #  postal_address :string
 #  subject        :string
 #  properties     :jsonb
-#  set_number     :string           not null
+#  number         :string           not null
 #
 
 require 'rails_helper'

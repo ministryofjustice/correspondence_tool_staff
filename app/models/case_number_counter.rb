@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: case_reference_counters
+# Table name: case_number_counters
 #
 #  id      :integer          not null, primary key
 #  date    :date             not null

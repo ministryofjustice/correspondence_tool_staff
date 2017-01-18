@@ -14,7 +14,7 @@
 #  postal_address :string
 #  subject        :string
 #  properties     :jsonb
-#  number      :string           not null
+#  number         :string           not null
 #
 
 class Case < ApplicationRecord

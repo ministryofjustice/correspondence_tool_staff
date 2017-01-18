@@ -1,4 +1,5 @@
 class CaseList < SitePrism::Section
+  element :number, 'td[aria-label="Case number"]'
   element :name, 'td[aria-label="Requester name"]'
   element :subject, 'td[aria-label="Subject"]'
   element :external_deadline, 'td[aria-label="External deadline"]'
