@@ -48,6 +48,8 @@ en:
   button:
     continue: Continue
     confirm: Confirm
+    create_and_assign: Create and assign case
+
   helpers:
     fieldset:
        assignment:
@@ -58,12 +60,15 @@ en:
         reasons_for_rejection: |
           Try including who you think with right division may be
     label:
+      assignment:
+        user_id: Business unit
       case:
         user_id: 'Drafter'
         name: Full name
         subject: Subject of request
         message: Full request
         postal_address: Address
+
       assignment:
         reasons_for_rejection: Reason for rejecting this case
 
@@ -75,6 +80,7 @@ en:
       <strong>Important notice</strong><br>
       This case is being reviewed by Press and Private office.
       Don't send out the response until <strong>%{escalation_deadline}</strong>.
+
   common:
       error: error
       phase_banner: |
@@ -84,6 +90,12 @@ en:
       postal_address: Address
       summary_error: 'prevented this form from being submitted:'
       new_case_button: New case
+
+  assignments:
+    new:
+      new_assignment: Assign case
+    create:
+      case_created: Case successfully created
   cases:
     acceptance:
       subject: 'Subject:'
@@ -111,3 +123,4 @@ en:
       case_updated: Case updated
     assign:
       case_assigned: Case assigned to #email_of_assignee
+
