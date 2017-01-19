@@ -132,6 +132,42 @@ ALTER SEQUENCE case_number_counters_id_seq OWNED BY case_number_counters.id;
 
 
 --
+-- Name: case_transitions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE case_transitions (
+    id integer NOT NULL,
+    event character varying,
+    to_state character varying NOT NULL,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    sort_key integer NOT NULL,
+    case_id integer NOT NULL,
+    most_recent boolean NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: case_transitions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE case_transitions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: case_transitions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE case_transitions_id_seq OWNED BY case_transitions.id;
+
+
+--
 -- Name: cases; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -142,7 +178,6 @@ CREATE TABLE cases (
     message text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    state character varying DEFAULT 'submitted'::character varying,
     category_id integer,
     received_date date,
     postal_address character varying,
@@ -273,6 +308,13 @@ ALTER TABLE ONLY case_number_counters ALTER COLUMN id SET DEFAULT nextval('case_
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY case_transitions ALTER COLUMN id SET DEFAULT nextval('case_transitions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY cases ALTER COLUMN id SET DEFAULT nextval('cases_id_seq'::regclass);
 
 
@@ -312,6 +354,14 @@ ALTER TABLE ONLY assignments
 
 ALTER TABLE ONLY case_number_counters
     ADD CONSTRAINT case_number_counters_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: case_transitions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY case_transitions
+    ADD CONSTRAINT case_transitions_pkey PRIMARY KEY (id);
 
 
 --
@@ -389,6 +439,20 @@ CREATE UNIQUE INDEX index_case_number_counters_on_date ON case_number_counters U
 
 
 --
+-- Name: index_case_transitions_parent_most_recent; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_case_transitions_parent_most_recent ON case_transitions USING btree (case_id, most_recent) WHERE most_recent;
+
+
+--
+-- Name: index_case_transitions_parent_sort; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_case_transitions_parent_sort ON case_transitions USING btree (case_id, sort_key);
+
+
+--
 -- Name: index_cases_on_category_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -451,6 +515,8 @@ INSERT INTO schema_migrations (version) VALUES
 ('20161130164018'),
 ('20161209220224'),
 ('20170111161049'),
-('20170116161424');
+('20170116161424'),
+('20170118154824'),
+('20170118154954');
 
 

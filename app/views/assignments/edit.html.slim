@@ -15,7 +15,7 @@
 
 .grid-row
   .column-two-thirds
-    = form_for [@case, @assignment] do |f|
+    = form_for [@case, @assignment], url: { action: :accept_or_reject } do |f|
       = f.radio_button_fieldset :state, choices: [:accepted, :rejected], inline: true, class: 'state'
 
       #assignment_state_rejected_content.panel.panel-border-narrow.js-hidden

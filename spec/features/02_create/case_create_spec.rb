@@ -53,7 +53,7 @@ feature 'Case creation' do
     new_assignment = Assignment.first
 
     expect(new_case.reload).to have_attributes(
-      state:       'awaiting_drafter',
+      current_state:       'awaiting_responder',
       assignments: [new_assignment]
     )
 

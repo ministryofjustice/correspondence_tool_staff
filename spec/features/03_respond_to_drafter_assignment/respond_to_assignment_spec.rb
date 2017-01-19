@@ -6,14 +6,14 @@ feature 'respond to drafter assignment' do
 
   given(:kase)  do
     create(
-      :case,
+      :assigned_case,
       subject: 'A message about XYZ',
       message: 'I would like to know about XYZ'
     )
   end
 
   given(:assignment) do
-    create(:assignment, assignee_id: drafter.id, case_id: kase.id)
+    kase.assignments.detect(&:drafter?)
   end
 
   background do
@@ -32,7 +32,7 @@ feature 'respond to drafter assignment' do
 
     expect(current_path).to eq case_path kase
     expect(assignment.reload.state).to eq 'accepted'
-    expect(kase.reload.state).to eq 'drafting'
+    expect(kase.reload.current_state).to eq 'drafting'
   end
 
   scenario 'kilo rejects assignment' do
@@ -45,9 +45,9 @@ feature 'respond to drafter assignment' do
     expect(page).to have_selector('#assignment_reasons_for_rejection', visible: true)
     fill_in 'Reason for rejecting this case', with: 'I am not the correct KILO for this'
     click_button 'Confirm'
-
+ 
     expect(current_path).to eq case_path kase
-    expect(assignment.reload.state).to eq 'rejected'
-    expect(kase.reload.state).to eq 'unassigned'
+    expect(Assignment.exists?(assignment.id)).to be false
+    expect(kase.reload.current_state).to eq 'unassigned'
   end
 end

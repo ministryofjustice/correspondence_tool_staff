@@ -24,24 +24,63 @@ RSpec.describe Assignment, type: :model do
   it { should belong_to(:case)                       }
   it { should belong_to(:assignee)                   }
   it { should belong_to(:assigner)                   }
-  it { should have_enum(:state).with_values(['pending', 'rejected', 'accepted']) }
+  it { should have_enum(:state).with_values(['pending', 'accepted', 'rejected']) }
   it { should have_enum(:assignment_type).with_values(['drafter', 'caseworker']) }
+
+  it 'does not allow other assignment_type values' do
+    expect do
+      build :assignment, assignment_type: 'badbadbad'
+    end.to raise_exception(ArgumentError)
+  end
+
 
   subject { build(:assignment) }
 
-  describe 'callbacks' do
-    describe '#update_case' do
-      it 'is called after create' do
-        expect(subject).to receive(:update_case)
-        subject.save
-      end
+  describe '#reject' do
+    let(:assigned_case) { create :assigned_case }
+    let(:state_machine) { assigned_case.state_machine }
+    let(:assignment)    { assigned_case.assignments.detect(&:drafter?) }
+    let(:drafter)       { assignment.assignee }
+    let(:message)       { |example| "test #{example.description}" }
 
-      it 'changes the state of case to awaiting_drafter' do
-        expect(subject.case.state).to eq 'submitted'
-        subject.save
-        expect(subject.case.state).to eq 'awaiting_drafter'
-      end
+    before do
+      allow(assigned_case).to receive(:responder_assignment_rejected)
+    end
+
+    it 'triggers the case event' do
+      assignment.reject(message)
+      expect(assigned_case).
+        to have_received(:responder_assignment_rejected).
+             with(drafter.id, message)
+    end
+
+    it 'deletes the assignment' do
+      assignment.reject(message)
+      expect(Assignment.find_by(id: assignment.id)).to be_nil
     end
   end
 
+  describe '#accept' do
+    let(:assigned_case) { create :assigned_case }
+    let(:state_machine) { assigned_case.state_machine }
+    let(:assignment)    { assigned_case.assignments.detect(&:drafter?) }
+    let(:drafter)       { assignment.assignee }
+    let(:message)       { |example| "test #{example.description}" }
+
+    before do
+      allow(assigned_case).to receive(:responder_assignment_accepted)
+    end
+
+    it 'triggers the case event' do
+      assignment.accept()
+      expect(assigned_case).
+        to have_received(:responder_assignment_accepted).
+             with(drafter.id)
+    end
+
+    it 'accepts the assignment' do
+      assignment.accept()
+      expect(assignment.state).to eq 'accepted'
+    end
+  end
 end

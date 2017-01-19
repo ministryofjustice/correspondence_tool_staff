@@ -13,4 +13,5 @@ section.question.status
   h2
     = 'Status'
   p
-    = @case.state.humanize
+    span#status
+      = t("state.#{@case.current_state}")

@@ -8,7 +8,6 @@
 #  message        :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  state          :string           default("submitted")
 #  category_id    :integer
 #  received_date  :date
 #  postal_address :string
@@ -38,7 +37,8 @@ RSpec.describe Case, type: :model do
   let(:no_postal)           { build :case, postal_address: nil             }
   let(:no_postal_or_email)  { build :case, postal_address: nil, email: nil }
   let(:no_email)            { build :case, email: nil                      }
-  let(:drafter)             { instance_double(User, drafter?: true)        }
+  let(:drafter)             { create :user, roles: ['drafter']             }
+  let(:assigner)            { create :user, roles: ['assigner']            }
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do
@@ -116,11 +116,11 @@ RSpec.describe Case, type: :model do
     it { should_not allow_value('foobar.com').for :email  }
   end
 
-  describe '#state' do
-    it 'defaults to "submitted"' do
-      expect(non_trigger_foi.state).to eq 'submitted'
-    end
-  end
+  # describe '#state' do
+  #   it 'defaults to "submitted"' do
+  #     expect(non_trigger_foi.state).to eq 'submitted'
+  #   end
+  # end
 
   describe '#subject' do
     it { should validate_length_of(:subject).is_at_most(80) }
@@ -140,8 +140,18 @@ RSpec.describe Case, type: :model do
       end
 
       it { should belong_to(:category) }
+    end
+
+    describe '#assignments' do
       it { should have_many(:assignments) }
 
+      it 'when deleted, the record is destroyed' do
+        kase = create :assigned_case
+        assignment = kase.assignments.detect(&:drafter?)
+        expect do
+          kase.assignments.delete(assignment)
+        end.to change { Assignment.count }.by(-1)
+      end
     end
   end
 
@@ -221,6 +231,110 @@ RSpec.describe Case, type: :model do
         expect(non_trigger_foi.number).to eq nil
         non_trigger_foi.save
         expect(non_trigger_foi.number).not_to eq nil
+      end
+    end
+
+  end
+
+  describe 'state machine' do
+    let(:kase) { create :case }
+
+    describe '#state_machine' do
+      subject { kase.state_machine }
+
+      it { should be_an_instance_of(CaseStateMachine) }
+      it { should have_attributes(object: kase)}
+    end
+
+    describe '#create_assignment' do
+      let(:unassigned_case) { create :case }
+      let(:assigned_case) { create :assigned_case }
+
+      before do
+        allow(unassigned_case.state_machine).to receive(:assign_responder)
+      end
+
+      it "creates no transition if the assignment isn't valid" do
+        unassigned_case.create_assignment(
+          assigner_id: assigner.id,
+          assignee_id: drafter.id,
+        )
+        expect(unassigned_case.state_machine).not_to(
+          have_received(:assign_responder).with(assigner.id, drafter.id)
+        )
+      end
+
+      it 'returns the created assignment' do
+        assignment = unassigned_case.create_assignment(
+          assigner_id: assigner.id,
+          assignee_id: drafter.id,
+          assignment_type: 'drafter'
+        )
+        expect(assignment).to eq Assignment.last
+      end
+
+      context 'responder assignment' do
+        it 'creates an assign_responder transition' do
+          unassigned_case.create_assignment(
+            assigner_id: assigner.id,
+            assignee_id: drafter.id,
+            assignment_type: 'drafter'
+          )
+          expect(unassigned_case.state_machine).to(
+            have_received(:assign_responder).with(assigner.id, drafter.id)
+          )
+        end
+
+        it 'creates a responder assignment' do
+          expect(unassigned_case.assignments.detect(&:drafter?)).to be_nil
+          unassigned_case.create_assignment(
+            assigner_id: assigner.id,
+            assignee_id: drafter.id,
+            assignment_type: 'drafter'
+          )
+          expect(unassigned_case.assignments.detect(&:drafter?)).not_to be_nil
+        end
+      end
+    end
+
+    describe '#responder_assignment_rejected' do
+      let(:assigned_case) { create :assigned_case }
+      let(:state_machine) { assigned_case.state_machine }
+      let(:assignment)    { assigned_case.assignments.detect(&:drafter?) }
+      let(:drafter)       { assignment.assignee }
+      let(:message)       { |example| "test #{example.description}" }
+
+      before do
+        allow(state_machine).to receive(:reject_responder_assignment)
+        allow(state_machine).to receive(:reject_responder_assignment!)
+      end
+
+      it 'triggers the raising version of the event' do
+        assigned_case.responder_assignment_rejected(drafter.id, message)
+        expect(state_machine).to have_received(:reject_responder_assignment!).
+                                   with(drafter.id, message)
+        expect(state_machine).
+          not_to have_received(:reject_responder_assignment)
+      end
+    end
+
+    describe '#responder_assignment_accepted' do
+      let(:assigned_case) { create :assigned_case }
+      let(:state_machine) { assigned_case.state_machine }
+      let(:assignment)    { assigned_case.assignments.detect(&:drafter?) }
+      let(:drafter)       { assignment.assignee }
+
+      before do
+        allow(state_machine).to receive(:accept_responder_assignment)
+        allow(state_machine).to receive(:accept_responder_assignment!)
+      end
+
+      it 'triggers the raising version of the event' do
+        assigned_case.responder_assignment_accepted(drafter.id)
+        expect(state_machine).to have_received(:accept_responder_assignment!).
+                                   with(drafter.id)
+        expect(state_machine).
+          not_to have_received(:accept_responder_assignment)
       end
     end
 

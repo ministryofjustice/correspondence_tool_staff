@@ -1,6 +1,6 @@
 class AssignmentsController < ApplicationController
 
-  before_action :set_assignment, only: [:edit, :update]
+  before_action :set_assignment, only: [:edit, :accept_or_reject]
   before_action :set_case, only: [:new, :create, :edit]
 
   def new
@@ -8,11 +8,11 @@ class AssignmentsController < ApplicationController
   end
 
   def create
-    @assignment = @case.assignments.new(
+    @assignment = @case.create_assignment(
       assignment_params.merge(assignment_type: 'drafter', assigner: current_user)
     )
 
-    if @assignment.save!
+    if @assignment.valid?
       flash[:notice] = t('.case_created')
       redirect_to cases_path
     else
@@ -22,10 +22,13 @@ class AssignmentsController < ApplicationController
 
   def edit; end
 
-  def update
-    new_state = (assignment_params[:state] + '!').to_sym
-
-    if @assignment.send(new_state)
+  def accept_or_reject
+    if assignment_params[:state] == 'accepted'
+      @assignment.accept
+      redirect_to case_path @assignment.case
+    elsif assignment_params[:state] == 'rejected' &&
+            assignment_params[:reasons_for_rejection].match(/\S/)
+      @assignment.reject assignment_params[:reasons_for_rejection]
       redirect_to case_path @assignment.case
     else
       render :edit

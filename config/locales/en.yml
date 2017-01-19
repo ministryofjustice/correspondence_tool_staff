@@ -33,6 +33,10 @@ en:
               duplication: |
                 An error has occurred and your case could not be created.
                 Please try again.
+  state:
+    unassigned: Waiting to be assigned
+    awaiting_responder: Waiting to be accepted
+    drafting: Waiting for draft response
 
   date:
     formats:

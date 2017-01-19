@@ -29,21 +29,21 @@ class Assignment < ApplicationRecord
   belongs_to :assigner, class_name: 'User'
   belongs_to :assignee, class_name: 'User'
 
-
-  after_create :update_case
-  after_update :update_case
-
   attr_accessor :reasons_for_rejection
 
-  private
+  def reject(message)
+    event = case assignment_type
+            when 'drafter' then :responder_assignment_rejected
+            end
+    self.case.send(event, assignee_id, message)
+    self.delete
+  end
 
-  def update_case
-    if self.pending?
-      self.case.update(state: 'awaiting_drafter')
-    elsif self.accepted?
-      self.case.update(state: 'drafting')
-    elsif self.rejected?
-      self.case.update(state: 'unassigned')
-    end
+  def accept
+    event = case assignment_type
+            when 'drafter' then :responder_assignment_accepted
+            end
+    self.case.send(event, assignee_id)
+    accepted!
   end
 end

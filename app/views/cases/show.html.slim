@@ -40,7 +40,7 @@
       .case-sidebar__heading
         = t('.status')
       .case-sidebar__data
-        = @case.state.humanize
+        = t("state.#{@case.current_state}")
 
     .case-sidebar__group.name
       .case-sidebar__heading

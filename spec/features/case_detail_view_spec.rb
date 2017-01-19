@@ -10,7 +10,7 @@ feature 'viewing details of case in the system' do
   given(:gq_category) { create(:category, :gq) }
   given(:gq) do
     create(
-      :case,
+      :assigned_case,
       name: 'Gina GQ',
       email: 'gina.gq@testing.digital.justice.gov.uk',
       subject: 'this is a gq',
@@ -38,20 +38,19 @@ feature 'viewing details of case in the system' do
     expect(page).to have_sidebar
     expect(page.sidebar).to have_external_deadline
     expect(page.sidebar.external_deadline).to have_content(external_gq_deadline)
-    expect(page.sidebar.status).to have_content(gq.state.humanize)
+    expect(page.sidebar.status).to have_content('Waiting to be accepted')
     expect(page.sidebar.name).to have_content('Gina GQ')
     expect(page.sidebar.email).to have_content('gina.gq@testing.digital.justice.gov.uk')
     expect(page.sidebar.postal_address).to have_content(gq.postal_address)
 
     expect(page.message).to have_content('viewing gq details test message')
     expect(page.received_date).to have_content(foi_received_date)
-
   end
 
   given(:foi_category) { create(:category) }
   given(:foi) do
     create(
-      :case,
+      :assigned_case,
       name: 'Freddie FOI',
       email: 'freddie.foi@testing.digital.justice.gov.uk',
       subject: 'this is a foi',
@@ -90,14 +89,13 @@ feature 'viewing details of case in the system' do
       expect(page).to have_sidebar
       expect(page.sidebar).to have_external_deadline
       expect(page.sidebar.external_deadline).to have_content(external_foi_deadline)
-      expect(page.sidebar.status).to have_content(foi.state.humanize)
+      expect(page.sidebar.status).to have_content('Waiting to be accepted')
       expect(page.sidebar.name).to have_content('Freddie FOI')
       expect(page.sidebar.email).to have_content('freddie.foi@testing.digital.justice.gov.uk')
       expect(page.sidebar.postal_address).to have_content(foi.postal_address)
 
       expect(page.message).to have_content('viewing foi details test message')
       expect(page.received_date).to have_content(foi_received_date)
-
     end
 
     scenario 'User views the case while its within "Day 6"' do

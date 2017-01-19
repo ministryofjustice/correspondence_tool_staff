@@ -8,7 +8,6 @@
 #  message        :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  state          :string           default("submitted")
 #  category_id    :integer
 #  received_date  :date
 #  postal_address :string
@@ -18,6 +17,7 @@
 #
 
 class Case < ApplicationRecord
+  include Statesman::Adapters::ActiveRecordQueries
 
   acts_as_gov_uk_date :received_date
 
@@ -39,11 +39,18 @@ class Case < ApplicationRecord
 
   has_many :assignees, through: :assignments
   belongs_to :category, required: true
-  has_many :assignments
+  has_many :assignments, dependent: :destroy
+  has_many :transitions, class_name: 'CaseTransition', autosave: false
 
   before_save :prevent_number_change
   before_create :set_deadlines, :set_number
   after_update :set_deadlines
+
+  delegate :current_state, :available_events, to: :state_machine
+
+  def self.search(term)
+    where('lower(name) LIKE ?', "%#{term.downcase}%")
+  end
 
   def prevent_number_change
     raise StandardError.new('number is immutable') if number_changed?
@@ -69,8 +76,31 @@ class Case < ApplicationRecord
     escalation_deadline.future? || escalation_deadline.today?
   end
 
-  def self.search(term)
-    where('lower(name) LIKE ?', "%#{term.downcase}%")
+  def state_machine
+    @state_machine ||= ::CaseStateMachine.new(
+      self,
+      transition_class: CaseTransition,
+      association_name: :transitions
+    )
+  end
+
+  def create_assignment(attributes)
+    assignment = self.assignments.create(attributes)
+    if assignment.valid?
+      event = case assignment.assignment_type
+              when 'drafter' then :assign_responder
+              end
+      state_machine.send(event, assignment.assigner_id, assignment.assignee.id)
+    end
+    assignment
+  end
+
+  def responder_assignment_rejected(assignee_id, message)
+    state_machine.reject_responder_assignment!(assignee_id, message)
+  end
+
+  def responder_assignment_accepted(assignee_id)
+    state_machine.accept_responder_assignment!(assignee_id)
   end
 
   private

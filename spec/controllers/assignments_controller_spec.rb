@@ -44,9 +44,9 @@ RSpec.describe AssignmentsController, type: :controller do
       end
     end
 
-    describe 'PATCH update' do
+    describe 'PATCH accept_or_reject' do
       before do
-        patch :update,
+        patch :accept_or_reject,
           params: {
             id: drafter_assignment.id,
             case_id: drafter_assignment.case.id,
@@ -98,24 +98,82 @@ RSpec.describe AssignmentsController, type: :controller do
       end
     end
 
-    describe 'PATCH update' do
+    describe 'PATCH accept_or_reject' do
+      let(:assigned_case)      { create :assigned_case }
+      let(:drafter_assignment) { assigned_case.assignments.detect(&:drafter?) }
+      let(:update_params) { {
+                              id: drafter_assignment.id,
+                              case_id: assigned_case.id,
+                            }.merge(assignment_params) }
+      let(:assignment_params) { { assignment: { state: 'unknown' } } }
+
       before do
-        patch :update,
-          params: {
-            id: drafter_assignment.id,
-            case_id: drafter_assignment.case.id,
-            assignment: { state: 'accepted' }
+        allow(Assignment).to receive(:find).
+                               with(drafter_assignment.id.to_s).
+                               and_return(drafter_assignment)
+        allow(Assignment).to receive(:find).
+                               with(drafter_assignment.id).
+                               and_return(drafter_assignment)
+      end
+
+      context 'accepting' do
+        let(:assignment_params) { { assignment: { state: 'accepted' } } }
+
+        it 'calls #accept' do
+          allow(drafter_assignment).to receive(:accept)
+          patch :accept_or_reject, params: update_params
+          expect(drafter_assignment).to have_received(:accept)
+        end
+
+        it 'updates state' do
+          patch :accept_or_reject, params: update_params
+          expect(drafter_assignment.reload.state).to eq 'accepted'
+        end
+
+        it 'redirects to case detail page' do
+          patch :accept_or_reject, params: update_params
+          expect(response).to redirect_to case_path assigned_case
+        end
+      end
+
+      context 'rejecting' do
+        let(:message) { |example| "test #{example.description}" }
+        let(:assignment_params) do
+          {
+            assignment: {
+              state: 'rejected',
+              reasons_for_rejection: message
+            }
           }
+        end
+
+        it 'calls #reject' do
+          allow(drafter_assignment).to receive(:reject)
+          patch :accept_or_reject, params: update_params
+          expect(drafter_assignment).to have_received(:reject).with(message)
+        end
+
+        it 'redirects to case detail page' do
+          patch :accept_or_reject, params: update_params
+          expect(response).to redirect_to case_path assigned_case
+        end
+
+        it 'requires a reason for rejecting' do
+          patch :accept_or_reject, params: update_params.merge(
+                  assignment: {
+                                reasons_for_rejection: '',
+                                state: 'rejected'
+                              }
+                )
+          expect(response).to render_template(:edit)
+        end
       end
 
-      it 'updates state' do
-        expect(drafter_assignment.reload.state).to eq 'accepted'
+      it 'does not allow unknown states' do
+        patch :accept_or_reject, params: update_params
+        expect(response).to render_template(:edit)
       end
 
-
-      it 'redirects to case detail page' do
-        expect(response).to redirect_to case_path drafter_assignment.case
-      end
     end
   end
 end
