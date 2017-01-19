@@ -35,6 +35,7 @@ gem 'uglifier', '>= 1.3.0'
 group :test do
   gem 'capybara'
   gem "codeclimate-test-reporter", require: nil
+  gem 'i18n-tasks', '~> 0.9.8'
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 3.1', '>= 3.1.1'
