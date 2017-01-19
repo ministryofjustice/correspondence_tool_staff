@@ -77,10 +77,10 @@ en:
 
       assignment:
         reasons_for_rejection: Reason for rejecting this case
-
         state:
           accepted: Accept
           rejected: Reject
+
   alerts:
     escalation_warning_html: |
       <strong>Important notice</strong><br>
@@ -91,9 +91,6 @@ en:
       error: error
       phase_banner: |
         This is a new service – your feedback will help us to improve it.
-      name: Full name
-      message: Full request
-      postal_address: Address
       summary_error: 'prevented this form from being submitted:'
       new_case_button: New case
       view_details: View details
@@ -103,10 +100,11 @@ en:
       new_assignment: Assign case
     create:
       case_created: Case successfully created
-  cases:
-    acceptance:
+    edit:
       subject: 'Subject:'
       request: 'Request'
+
+  cases:
     index:
       page_heading: Cases
       view_case: Link to case
@@ -119,6 +117,7 @@ en:
       requester: Requester
       email_address: Email address
       escalation_deadline: Escalation deadline
+      external_deadline: External deadline
       message: Full request
       details: Details
     new:
@@ -135,9 +134,5 @@ en:
       status: Status
       email: "Requesters email address: "
       postal_address: "Requesters postal address: "
-    create:
-      case_created: Case successfully created
     update:
       case_updated: Case updated
-    assign:
-      case_assigned: Case assigned to #email_of_assignee
