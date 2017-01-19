@@ -34,11 +34,11 @@ gem 'uglifier', '>= 1.3.0'
 
 group :test do
   gem 'capybara'
-  gem 'selenium-webdriver'
-  gem 'site_prism'
   gem "codeclimate-test-reporter", require: nil
   gem 'rails-controller-testing'
+  gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 3.1', '>= 3.1.1'
+  gem 'site_prism'
   gem 'timecop'
 end
 
@@ -46,11 +46,11 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'annotate'
   gem 'byebug', platform: :mri
+  gem 'factory_girl_rails'
+  gem 'faker'
   gem 'launchy'
   gem 'pry'
   gem 'pry-byebug'
-  gem 'faker'
-  gem 'factory_girl_rails'
   gem 'rb-readline'
   gem 'rspec-rails', '~> 3.4'
   gem 'rubocop', require: false
