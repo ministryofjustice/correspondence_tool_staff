@@ -1,6 +1,6 @@
 - if @case.under_review?
   .alert-orange
-    = t('alerts.escalation_warning_html', escalation_deadline:  "#{l @case.escalation_deadline, format: :escalation}")
+    = t('alerts.escalation_warning_html', escalation_deadline:  "#{l @case.escalation_deadline, format: :default_date}")
 
 .grid-row
   .column-full
@@ -26,7 +26,7 @@
         .request--date-received
           span.visually-hidden
             = t('.received_date')
-          = l @case.received_date, format: :long_date
+          = l @case.received_date, format: :default
 
   section.case-sidebar
 
@@ -34,7 +34,7 @@
       .case-sidebar__heading
         = t('.external_deadline')
       .case-sidebar__data
-        = l @case.external_deadline, format: :external_deadline_long
+        = l @case.external_deadline, format: :default_date
 
     .case-sidebar__group--hr.status
       .case-sidebar__heading

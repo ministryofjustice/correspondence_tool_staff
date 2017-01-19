@@ -40,17 +40,13 @@ en:
 
   date:
     formats:
-      default: "%d/%m/%Y"
-      long_date: "%d %B %Y"
-      deadline: "%d %b"
+      default: "%e %b %Y"
+
   time:
     formats:
-      default: "%d/%m/%Y %H:%M"
-      external_deadline: "%d %b"
-      external_deadline_long: "%d %B"
-      escalation: "%d %B"
-      deadline: "%d %b"
-      long_date: "%d %B %Y"
+      default: "%e %b %Y %H:%M"
+      default_date: "%e %b %Y"
+
   button:
     continue: Continue
     confirm: Confirm
