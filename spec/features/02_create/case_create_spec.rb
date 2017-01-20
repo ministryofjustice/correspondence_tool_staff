@@ -18,6 +18,7 @@ feature 'Case creation by an assigner' do
   let(:assigner)  { create(:user, roles: ['assigner'])  }
 
   background do
+    drafter
     create(:category, :foi)
     login_as assigner
     visit cases_path

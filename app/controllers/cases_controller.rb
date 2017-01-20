@@ -7,13 +7,16 @@ class CasesController < ApplicationController
   end
 
   def new
+    authorize Case, :can_add_case?
+
     @case = Case.new
     render :new
   end
 
   def create
+    authorize Case, :can_add_case?
+    
     @case = Case.new(create_foi_params)
-
     if @case.save
       redirect_to new_case_assignment_path @case
     else

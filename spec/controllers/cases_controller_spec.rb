@@ -2,9 +2,10 @@ require 'rails_helper'
 
 RSpec.describe CasesController, type: :controller do
 
-  let(:all_cases)  { create_list(:case, 5) }
-  let(:assigner)   { create(:user) }
-  let(:first_case) { all_cases.first }
+  let(:all_cases)  { create_list(:case, 5)             }
+  let(:assigner)   { create(:user)                     }
+  let(:drafter)    { create(:user, roles: ['drafter']) }
+  let(:first_case) { all_cases.first                   }
 
   before { create(:category, :foi) }
 
@@ -47,7 +48,7 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
-  context "as an authenticated user" do
+  context "as an authenticated assigner" do
 
     before { sign_in assigner }
 
@@ -190,6 +191,54 @@ RSpec.describe CasesController, type: :controller do
 
       it 'renders the index template' do
         expect(response).to render_template(:index)
+      end
+    end
+  end
+
+  context 'as an authenticated drafter' do
+    before { sign_in drafter }
+
+    describe 'GET new' do
+      before {
+        get :new
+      }
+
+      it 'does not render the new template' do
+        expect(response).not_to render_template(:new)
+      end
+
+      it 'redirects to the application root path' do
+        expect(response).to redirect_to(authenticated_root_path)
+      end
+    end
+
+    describe 'POST create' do
+      let(:kase) { build(:case, subject: 'Drafters cannot create cases') }
+
+      let(:params) do
+        {
+          case: {
+            requester_type: 'member_of_the_public',
+            name: 'A. Member of Public',
+            postal_address: '102 Petty France',
+            email: 'member@public.com',
+            subject: 'Drafters cannot create cases',
+            message: 'I am a drafter attempting to create a case',
+            received_date_dd: Time.zone.today.day.to_s,
+            received_date_mm: Time.zone.today.month.to_s,
+            received_date_yyyy: Time.zone.today.year.to_s
+          }
+        }
+      end
+
+      subject { post :create, params: params }
+
+      it 'does not create a new case' do
+        expect{ subject }.not_to change { Case.count }
+      end
+
+      it 'redirects to the application root path' do
+        expect(subject).to redirect_to(authenticated_root_path)
       end
     end
   end

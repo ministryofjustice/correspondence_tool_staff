@@ -1,8 +1,9 @@
 = render partial: 'layouts/header', locals: {page_heading: t('.page_heading')}
 
-.grid-row
-  .column-full
-    = link_to t('common.new_case_button'), new_case_path, class: 'button'
+- if policy(:case).can_add_case?
+  .grid-row
+    .column-full
+      = link_to t('common.new_case_button'), new_case_path, class: 'button'
 
 .grid-row
   .column-full.table-container.container

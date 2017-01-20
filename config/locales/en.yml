@@ -40,6 +40,10 @@ en:
             state:
               blank: You must either accept or reject this case
 
+  pundit:
+    case_policy:
+      can_add_case?: 'You are not authorised to create new cases.'
+
   state:
     unassigned: Waiting to be assigned
     awaiting_responder: Waiting to be accepted
