@@ -1,11 +1,12 @@
 require 'rails_helper'
 
-UserInput = Struct.new('Case', :name, :email, :subject, :message)
+UserInput = Struct.new('Case', :requester_type, :name, :email, :subject, :message)
 
 feature 'Case creation' do
 
   let(:user_input) do
     UserInput.new(
+      'Member of the public',
       'A. Member of Public',
       'member@public.com',
       'FOI - foo bar foo bar',
@@ -23,6 +24,8 @@ feature 'Case creation' do
   scenario 'succeeds using valid inputs' do
     expect(current_path).to eq new_case_path
     expect(page).to have_content('New case')
+
+    choose user_input.requester_type
     fill_in 'Full name',          with: user_input.name
     fill_in 'Email',              with: user_input.email
     fill_in 'Subject of request', with: user_input.subject
@@ -38,6 +41,7 @@ feature 'Case creation' do
     expect(page).to have_content('Assign case')
 
     expect(new_case).to have_attributes(
+      requester_type: 'member_of_the_public',
       name:           user_input.name,
       email:          user_input.email,
       subject:        user_input.subject,
@@ -72,6 +76,7 @@ feature 'Case creation' do
 
     click_button 'Continue'
 
+    expect(page).to have_content("Type of requester must be selected")
     expect(page).to have_content("Full name can't be blank")
     expect(page).to have_content("Email and address can't both be blank")
     expect(page).to have_content("Address and email can't both be blank")
@@ -86,6 +91,7 @@ feature 'Case creation' do
     allow_any_instance_of(Case).
       to receive(:next_number).and_return existing_case.number
 
+    choose user_input.requester_type
     fill_in 'Full name',          with: user_input.name
     fill_in 'Email',              with: user_input.email
     fill_in 'Subject of request', with: user_input.subject

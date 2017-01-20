@@ -94,6 +94,7 @@ RSpec.describe CasesController, type: :controller do
         let(:params) do
           {
             case: {
+              requester_type: 'member_of_the_public',
               name: 'A. Member of Public',
               postal_address: '102 Petty France',
               email: 'member@public.com',
@@ -115,6 +116,10 @@ RSpec.describe CasesController, type: :controller do
 
         describe 'using the information supplied  ' do
           before { post :create, params: params }
+
+          it 'for #requester_type' do
+            expect(kase.requester_type).to eq 'member_of_the_public'
+          end
 
           it 'for #name' do
             expect(kase.name).to eq 'A. Member of Public'

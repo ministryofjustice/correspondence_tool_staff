@@ -19,6 +19,7 @@
 FactoryGirl.define do
 
   factory :case do
+    requester_type 'member_of_the_public'
     name { Faker::Name.name }
     email { Faker::Internet.email }
     association :category, factory: :category, strategy: :create

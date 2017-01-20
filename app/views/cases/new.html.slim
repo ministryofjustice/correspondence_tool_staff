@@ -1,9 +1,18 @@
-= render partial: 'layouts/header', locals: {page_heading: t('.new_case')}
-
 = GovukElementsErrorsHelper.error_summary @case,
   "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
+= render partial: 'layouts/header', locals: {page_heading: t('.new_case')}
+
 = form_for @case do |f|
+
+  = f.radio_button_fieldset :requester_type,
+                              choices: [:academic_business_charity,
+                                        :journalist,
+                                        :member_of_the_public,
+                                        :offender,
+                                        :solicitor,
+                                        :staff_judiciary,
+                                        :what_do_they_know]
 
   = f.text_field :name
 

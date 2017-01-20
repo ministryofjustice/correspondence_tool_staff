@@ -47,10 +47,28 @@ RSpec.describe Case, type: :model do
   end
 
   describe 'mandatory attributes' do
-    it { should validate_presence_of(:name)          }
-    it { should validate_presence_of(:message)       }
-    it { should validate_presence_of(:received_date) }
-    it { should validate_presence_of(:subject)       }
+    it { should validate_presence_of(:name)           }
+    it { should validate_presence_of(:message)        }
+    it { should validate_presence_of(:received_date)  }
+    it { should validate_presence_of(:subject)        }
+    it { should validate_presence_of(:requester_type) }
+  end
+
+  describe 'enums' do
+    it do
+      should have_enum(:requester_type).
+        with_values(
+          [
+            'academic_business_charity',
+            'journalist',
+            'member_of_the_public',
+            'offender',
+            'solicitor',
+            'staff_judiciary',
+            'what_do_they_know'
+          ]
+        )
+    end
   end
 
   context 'without a postal or email address' do

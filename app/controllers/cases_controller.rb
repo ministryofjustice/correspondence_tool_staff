@@ -49,6 +49,7 @@ class CasesController < ApplicationController
 
   def create_foi_params
     params.require(:case).permit(
+      :requester_type,
       :name,
       :postal_address,
       :email,

@@ -33,6 +33,9 @@ en:
               duplication: |
                 An error has occurred and your case could not be created.
                 Please try again.
+            requester_type:
+              blank: Type of requester must be selected
+              
   state:
     unassigned: Waiting to be assigned
     awaiting_responder: Waiting to be accepted
@@ -58,8 +61,10 @@ en:
 
   helpers:
     fieldset:
-       assignment:
-          state: Do you accept this case?
+      case:
+        requester_type: Type of requester
+      assignment:
+        state: Do you accept this case?
 
     hint:
       assignment:
@@ -69,6 +74,10 @@ en:
       assignment:
         user_id: Business unit
       case:
+        requester_type:
+          academic_business_charity: Academic/Business/Charity
+          staff_judiciary: Staff/Judiciary
+          what_do_they_know: WhatDoTheyKnow
         user_id: 'Drafter'
         name: Full name
         subject: Subject of request

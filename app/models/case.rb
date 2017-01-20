@@ -30,6 +30,17 @@ class Case < ApplicationRecord
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates :postal_address, presence: true, on: :create, if: -> { email.blank? }
   validates :subject, length: { maximum: 80 }
+  validates :requester_type, presence: true
+
+  enum requester_type: {
+      academic_business_charity: 'academic_business_charity',
+      journalist: 'journalist',
+      member_of_the_public: 'member_of_the_public',
+      offender: 'offender',
+      solicitor: 'solicitor',
+      staff_judiciary: 'staff_judiciary',
+      what_do_they_know: 'what_do_they_know'
+    }
 
   jsonb_accessor :properties,
     escalation_deadline: :datetime,

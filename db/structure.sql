@@ -40,6 +40,21 @@ CREATE TYPE assignment_type AS ENUM (
 
 
 --
+-- Name: requester_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE requester_type AS ENUM (
+    'academic_business_charity',
+    'journalist',
+    'member_of_the_public',
+    'offender',
+    'solicitor',
+    'staff_judiciary',
+    'what_do_they_know'
+);
+
+
+--
 -- Name: state; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -183,6 +198,7 @@ CREATE TABLE cases (
     postal_address character varying,
     subject character varying,
     properties jsonb,
+    requester_type requester_type,
     number character varying NOT NULL
 );
 
@@ -514,6 +530,7 @@ INSERT INTO schema_migrations (version) VALUES
 ('20161125115930'),
 ('20161130164018'),
 ('20161209220224'),
+('20170111115617'),
 ('20170111161049'),
 ('20170116161424'),
 ('20170118154824'),
