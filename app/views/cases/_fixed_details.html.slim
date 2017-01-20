@@ -18,12 +18,12 @@ h2.visually-hidden
     span.form-label
       = t('.escalation_deadline')
     span#escalation_deadline
-      = l @case.escalation_deadline, format: :deadline
+      = l @case.escalation_deadline, format: :default_date
 
   span.form-label
     = t('.external_deadline')
   span#external_deadline
-    = l @case.external_deadline, format: :deadline
+    = l @case.external_deadline, format: :default_date
 
 .form-label
   = t('.message')

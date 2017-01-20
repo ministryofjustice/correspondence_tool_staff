@@ -37,6 +37,6 @@
             td aria-label="#{t('.subject')}"
               = c.subject
             td aria-label="#{t('.external_deadline')}"
-              = l c.external_deadline, format: :deadline
+              = l c.external_deadline, format: :default_date
             td aria-label="#{t('.status')}"
               = t("state.#{c.current_state}")
