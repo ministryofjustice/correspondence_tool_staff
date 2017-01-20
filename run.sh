@@ -10,9 +10,7 @@ create)
     echo "running create"
     bundle exec rails db:setup
     ;;
-migrate)
-    echo "running migrate"
-    bundle exec rails db:migrate
-    ;;
 esac
+
+bundle exec rails db:migrate
 bundle exec puma -C config/puma.rb
