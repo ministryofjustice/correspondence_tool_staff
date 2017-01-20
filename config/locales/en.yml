@@ -139,6 +139,7 @@ en:
       name: Requester
       received_date: Date received
       request: Request
+      requester_type: Type of requester
       status: Status
       email: "Requesters email address: "
       postal_address: "Requesters postal address: "

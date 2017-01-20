@@ -54,6 +54,12 @@
           = t('common.view_details')
 
       .case-sidebar__data--contact
+        .requester-type
+          .visually-hidden
+            = t('.requester_type')
+          div
+            = @case.requester_type.humanize
+
         - if @case.email.present?
           .email
             .visually-hidden
