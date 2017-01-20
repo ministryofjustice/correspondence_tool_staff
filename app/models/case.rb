@@ -16,6 +16,10 @@
 #  number         :string           not null
 #
 
+# Required in production with it's eager loading and cacheing of classes.
+require 'case_state_machine'
+
+
 class Case < ApplicationRecord
   include Statesman::Adapters::ActiveRecordQueries
 
