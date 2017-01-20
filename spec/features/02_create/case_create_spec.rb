@@ -2,7 +2,7 @@ require 'rails_helper'
 
 UserInput = Struct.new('Case', :requester_type, :name, :email, :subject, :message)
 
-feature 'Case creation' do
+feature 'Case creation by an assigner' do
 
   let(:user_input) do
     UserInput.new(
@@ -14,9 +14,12 @@ feature 'Case creation' do
     )
   end
 
+  let(:drafter)   { create(:user, roles: ['drafter'])   }
+  let(:assigner)  { create(:user, roles: ['assigner'])  }
+
   background do
     create(:category, :foi)
-    login_as create(:user)
+    login_as assigner
     visit cases_path
     click_link "New case"
   end
@@ -49,7 +52,7 @@ feature 'Case creation' do
       received_date:  Time.zone.today
     )
 
-    select User.drafters.first.email, from: 'assignment[assignee_id]'
+    select drafter.email, from: 'assignment[assignee_id]'
     click_button 'Create and assign case'
     expect(current_path).to eq cases_path
     expect(page).to have_content('Case successfully created')
@@ -58,13 +61,13 @@ feature 'Case creation' do
 
     expect(new_case.reload).to have_attributes(
       current_state:       'awaiting_responder',
-      assignments: [new_assignment]
+      assignments:         [new_assignment]
     )
 
     expect(new_assignment).to have_attributes(
       assignment_type: 'drafter',
-      assignee:        User.drafters.first,
-      assigner:        User.assigners.first,
+      assignee:        drafter,
+      assigner:        assigner,
       case:            new_case,
       state:           'pending'
     )
