@@ -4,7 +4,8 @@ ENV PUMA_PORT 3000
 
 RUN touch /etc/inittab
 
-RUN apt-get update && apt-get install -y
+RUN apt-get update && apt-get install -y \
+  postgresql-client
 
 EXPOSE $PUMA_PORT
 
