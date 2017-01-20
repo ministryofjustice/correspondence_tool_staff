@@ -7,7 +7,7 @@
 - content_for :header_class do
  = "with-proposition"
 - content_for :global_header_text do
-  = "Track a query"
+  = t('common.service_name')
 
 - content_for :head do
   meta name="format-detection" content="telephone=no" /
@@ -23,8 +23,8 @@
         .content
           nav#proposition-menu
             span.user-card--greetings
-              = "Hello #{@user.email}"
-            = link_to "Sign out", destroy_user_session_path, :method => :delete,  class: "user-card--signout"
+              = t('common.greeting', user: @user.email )
+            = link_to t('common.signout'), destroy_user_session_path, :method => :delete,  class: "user-card--signout"
 
 = content_for :content do
   = csrf_meta_tags

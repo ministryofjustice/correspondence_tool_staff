@@ -35,7 +35,7 @@ en:
                 Please try again.
             requester_type:
               blank: Type of requester must be selected
-              
+
   state:
     unassigned: Waiting to be assigned
     awaiting_responder: Waiting to be accepted
@@ -94,8 +94,11 @@ en:
 
   common:
       error: error
+      greeting: Hello %{user}
       phase_banner: |
         This is a new service – your feedback will help us to improve it.
+      service_name: Track a query
+      signout: Sign out
       summary_error: 'prevented this form from being submitted:'
       new_case_button: New case
       view_details: View details
