@@ -4,8 +4,10 @@
 - content_for :homepage_url do
   = root_path
 
+- content_for :header_class do
+ = "with-proposition"
 - content_for :global_header_text do
-  nbsp
+  = t('common.service_name')
 
 - content_for :head do
   meta name="format-detection" content="telephone=no" /
@@ -16,20 +18,22 @@
     = "controller-" + controller.controller_name
 
   - content_for :proposition_header do
-    .header-proposition
-      .content
-        nav#proposition-menu
-          a#proposition-name href=root_path
-            = 'Answer a question'
+    - if controller_name != 'sessions'
+      .header-proposition.user-card
+        .content
+          nav#proposition-menu
+            span.user-card--greetings
+              = t('common.greeting', user: @user.email )
+            = link_to t('common.signout'), destroy_user_session_path, :method => :delete,  class: "user-card--signout"
 
 = content_for :content do
   = csrf_meta_tags
-  #page
-    = render partial: 'layouts/phase_banner'
-  .primary-nav-bar
-  main#content
-    = render partial: 'layouts/flashes' unless flash.empty?
-    = yield
+  = render partial: 'layouts/phase_banner'
+  .grid-row
+    .column-full
+      main#content
+        = render partial: 'layouts/flashes' unless flash.empty?
+        = yield
 
 - content_for :body_end do
   = javascript_include_tag "application"

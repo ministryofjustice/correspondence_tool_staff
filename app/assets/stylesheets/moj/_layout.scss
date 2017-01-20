@@ -1,21 +1,5 @@
-html {
-  background:$grey-3;
-}
-body {
-  background: #fff;
-}
-
-.container {
-  @include container;
-  @include border-box-sizing;
-}
-
-#page {
+.phase-banner {
   @extend %site-width-container;
-}
-.body-content {
-  @include span(6 of 12);
-  @include first;
 }
 
 .report {
