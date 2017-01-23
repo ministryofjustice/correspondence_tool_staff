@@ -15,8 +15,15 @@ migrate)
     bundle exec rails db:migrate
     ;;
 reset)
-    echo "running DB reset"
-    bundle exec rails db:reset
+    if [[ "$ENV" = staging || "$ENV" = prod ]]
+    then
+        echo "cannot reset DB in staging or prod, see"
+        echo "https://dsdmoj.atlassian.net/wiki/display/CD/Resetting+the+DB+in+Deployed+Environments"
+        echo "for instructions on how to do this manually."
+    else
+        echo "running DB reset"
+        bundle exec rails db:reset
+    fi
     ;;
 esac
 
