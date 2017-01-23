@@ -35,6 +35,10 @@ en:
                 Please try again.
             requester_type:
               blank: Type of requester must be selected
+        assignment:
+          attributes:
+            state:
+              blank: You must either accept or reject this case
 
   state:
     unassigned: Waiting to be assigned
@@ -117,9 +121,6 @@ en:
       new_assignment: Assign case
     create:
       case_created: Case successfully created
-    edit:
-      subject: 'Subject:'
-      request: 'Request'
 
   cases:
     index:

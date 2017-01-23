@@ -1,7 +1,8 @@
 class AssignmentsController < ApplicationController
 
   before_action :set_assignment, only: [:edit, :accept_or_reject]
-  before_action :set_case, only: [:new, :create, :edit]
+  before_action :set_case, only: [:new, :create, :edit, :accept_or_reject]
+  before_action :validate_response, only: :accept_or_reject
 
   def new
     @assignment = @case.assignments.new
@@ -23,14 +24,14 @@ class AssignmentsController < ApplicationController
   def edit; end
 
   def accept_or_reject
-    if assignment_params[:state] == 'accepted'
+    if accept?
       @assignment.accept
       redirect_to case_path @assignment.case
-    elsif assignment_params[:state] == 'rejected' &&
-            assignment_params[:reasons_for_rejection].match(/\S/)
+    elsif valid_reject?
       @assignment.reject assignment_params[:reasons_for_rejection]
       redirect_to case_path @assignment.case
     else
+      @assignment.assign_and_validate_state(assignment_params[:state])
       render :edit
     end
   end
@@ -53,4 +54,18 @@ class AssignmentsController < ApplicationController
     @case = Case.find(params[:case_id])
   end
 
+  def validate_response
+    if assignment_params[:state].nil?
+      @assignment.errors.add(:state, :blank)
+    end
+  end
+
+  def accept?
+    assignment_params[:state] == 'accepted'
+  end
+
+  def valid_reject?
+    assignment_params[:state] == 'rejected' &&
+      assignment_params[:reasons_for_rejection].match(/\S/)
+  end
 end

@@ -16,6 +16,7 @@ class Assignment < ApplicationRecord
 
   validates :assignment_type, :state, :case, :assigner, :assignee,
     presence: true
+  validates :reasons_for_rejection, presence: true, if: -> { self.rejected? }
 
   enum state: {
     pending: 'pending', rejected: 'rejected', accepted: 'accepted'
@@ -45,5 +46,10 @@ class Assignment < ApplicationRecord
             end
     self.case.send(event, assignee_id)
     accepted!
+  end
+
+  def assign_and_validate_state(state)
+    assign_attributes(state: state)
+    valid?
   end
 end

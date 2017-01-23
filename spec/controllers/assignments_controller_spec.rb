@@ -170,8 +170,8 @@ RSpec.describe AssignmentsController, type: :controller do
       end
 
       it 'does not allow unknown states' do
-        patch :accept_or_reject, params: update_params
-        expect(response).to render_template(:edit)
+        expect { patch :accept_or_reject, params: update_params }.
+          to raise_error(ArgumentError, "'unknown' is not a valid state")
       end
 
     end

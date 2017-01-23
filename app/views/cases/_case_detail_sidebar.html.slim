@@ -1,6 +1,6 @@
 .case-sidebar__group.external_deadline
   .case-sidebar__heading
-    = t('common.service_name.external_deadline')
+    = t('common.case.external_deadline')
   .case-sidebar__data
     = l case_details.external_deadline, format: :default_date
 
@@ -38,6 +38,6 @@ details.case-sidebar__group--hr
       - if case_details.postal_address.present?
         .postal-address
           .visually-hidden
-            = t('common.cases.postal_address')
+            = t('common.case.postal_address')
           pre
             = case_details.postal_address
