@@ -10,7 +10,14 @@ create)
     echo "running create"
     bundle exec rails db:setup
     ;;
+migrate)
+    echo "running migrate"
+    bundle exec rails db:migrate
+    ;;
+reset)
+    echo "running DB reset"
+    bundle exec rails db:reset
+    ;;
 esac
 
-bundle exec rails db:migrate
 bundle exec puma -C config/puma.rb
