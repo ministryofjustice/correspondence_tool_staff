@@ -11,6 +11,7 @@ feature 'viewing details of case in the system' do
   given(:gq) do
     create(
       :assigned_case,
+      requester_type: :journalist,
       name: 'Gina GQ',
       email: 'gina.gq@testing.digital.justice.gov.uk',
       subject: 'this is a gq',
@@ -40,6 +41,7 @@ feature 'viewing details of case in the system' do
     expect(page.sidebar.external_deadline).to have_content(external_gq_deadline)
     expect(page.sidebar.status).to have_content('Waiting to be accepted')
     expect(page.sidebar.name).to have_content('Gina GQ')
+    expect(page.sidebar.requester_type).to have_content(gq.requester_type.humanize)
     expect(page.sidebar.email).to have_content('gina.gq@testing.digital.justice.gov.uk')
     expect(page.sidebar.postal_address).to have_content(gq.postal_address)
 
@@ -51,6 +53,7 @@ feature 'viewing details of case in the system' do
   given(:foi) do
     create(
       :assigned_case,
+      requester_type: :offender,
       name: 'Freddie FOI',
       email: 'freddie.foi@testing.digital.justice.gov.uk',
       subject: 'this is a foi',
@@ -91,6 +94,7 @@ feature 'viewing details of case in the system' do
       expect(page.sidebar.external_deadline).to have_content(external_foi_deadline)
       expect(page.sidebar.status).to have_content('Waiting to be accepted')
       expect(page.sidebar.name).to have_content('Freddie FOI')
+      expect(page.sidebar.requester_type).to have_content(foi.requester_type.humanize)
       expect(page.sidebar.email).to have_content('freddie.foi@testing.digital.justice.gov.uk')
       expect(page.sidebar.postal_address).to have_content(foi.postal_address)
 
