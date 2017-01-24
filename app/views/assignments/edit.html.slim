@@ -1,20 +1,8 @@
-/ As part of CT-223 controls to accept / reject requests will be added
-= render partial: 'layouts/header', locals: {page_heading: @case.name}
+
+= render partial: 'layouts/case_detail_page', locals: { case_details: @case , include_sidebar: false}
 
 .grid-row
-  .column-two-thirds
-    p.lede
-      span.visually-hidden = t('.subject')
-      = @case.subject
-
-.grid-row
-  .column-two-thirds
-    h2.form-label-bold = t('.request')
-    .wrapper
-      = @case.message
-
-.grid-row
-  .column-two-thirds
+  section.case-main
     = form_for [@case, @assignment], url: { action: :accept_or_reject } do |f|
       = f.radio_button_fieldset :state, choices: [:accepted, :rejected], inline: true, class: 'state'
 

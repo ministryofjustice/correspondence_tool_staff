@@ -89,7 +89,14 @@
 
 .request--heading {
   @include bold-24();
-  margin-bottom: $gutter-half;
+
+  margin-top: 0;
+  margin-bottom: em(10, 20);
+
+  @include media(tablet) {
+    margin-top: 0;
+    margin-bottom: em(20, 24);
+  }
 }
 .request--message {
   border: 1px solid $border-colour;

@@ -1,0 +1,20 @@
+= render partial: 'layouts/case_page_heading', locals: { case_details: case_details }
+
+.grid-row
+  section.case-main
+    .request
+      h2.request--heading
+        = t('common.case.request')
+
+      .request--message
+        p
+          = case_details.message
+
+        .request--date-received
+          span.visually-hidden
+            = t('common.case.received_date')
+          = l case_details.received_date, format: :default
+
+  - if include_sidebar.present? && include_sidebar == true
+    section.case-sidebar
+      = render partial: 'case_detail_sidebar', locals: { case_details: case_details }

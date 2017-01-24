@@ -61,7 +61,6 @@ en:
         requester_type: Type of requester
       assignment:
         state: Do you accept this case?
-
     hint:
       assignment:
         reasons_for_rejection: |
@@ -79,7 +78,6 @@ en:
         subject: Subject of request
         message: Full request
         postal_address: Address
-
       assignment:
         reasons_for_rejection: Reason for rejecting this case
         state:
@@ -95,12 +93,23 @@ en:
   common:
       error: error
       greeting: Hello %{user}
+      case:
+        header_case_number: "You are viewing case number "
+        header_subject: "Case subject, "
+        email: "Requesters email address: "
+        external_deadline: External deadline
+        name: Requester
+        postal_address: "Requesters postal address: "
+        received_date: Date received
+        request: "Request: "
+        requester_type: "Type of requester "
+        status: Status
+      new_case_button: New case
       phase_banner: |
         This is a new service – your feedback will help us to improve it.
       service_name: Track a query
       signout: Sign out
       summary_error: 'prevented this form from being submitted:'
-      new_case_button: New case
       view_details: View details
 
   assignments:
@@ -132,16 +141,5 @@ en:
       new_case: New case
       received_date: Date received
       received_date_copy: For example. 31 01 2017
-    show:
-      header_case_number: "You are viewing case number "
-      header_subject: "Case subject, "
-      external_deadline: External deadline
-      name: Requester
-      received_date: Date received
-      request: Request
-      requester_type: Type of requester
-      status: Status
-      email: "Requesters email address: "
-      postal_address: "Requesters postal address: "
     update:
       case_updated: Case updated
