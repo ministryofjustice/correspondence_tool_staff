@@ -18,11 +18,20 @@ RSpec.describe HeartbeatController, type: :controller do
   end
 
   describe '#healthcheck' do
+    before do
+      retry_set = instance_double(Sidekiq::RetrySet, size: 0)
+      allow(Sidekiq::RetrySet).to receive(:new).and_return(retry_set)
+    end
 
     context 'when a problem exists' do
       before do
+        process_set = instance_double(Sidekiq::ProcessSet, size: 0)
+        allow(Sidekiq::ProcessSet).to receive(:new).and_return(process_set)
+        dead_set = instance_double(Sidekiq::DeadSet, size: 1)
+        allow(Sidekiq::DeadSet).to receive(:new).and_return(dead_set)
+        allow(Sidekiq).to receive(:redis_info).and_raise(Errno::ECONNREFUSED)
         allow(ActiveRecord::Base.connection)
-            .to receive(:active?).and_raise(PG::ConnectionBad)
+          .to receive(:active?).and_raise(PG::ConnectionBad)
 
         get :healthcheck
       end
@@ -32,13 +41,24 @@ RSpec.describe HeartbeatController, type: :controller do
       end
 
       it 'returns the expected response report' do
-        expect(response.body).to eq({checks: { database: false}}.to_json)
+        expect(response.body).to eq({checks: {
+                                       database:      false,
+                                       redis:         false,
+                                       sidekiq:       false,
+                                       sidekiq_queue: false
+                                     }}.to_json)
       end
     end
 
     context 'when everything is ok' do
       before do
-        allow(ActiveRecord::Base.connection).to receive(:active?).and_return(true)
+        process_set = instance_double(Sidekiq::ProcessSet, size: 1)
+        allow(Sidekiq::ProcessSet).to receive(:new).and_return(process_set)
+        dead_set = instance_double(Sidekiq::DeadSet, size: 0)
+        allow(Sidekiq::DeadSet).to receive(:new).and_return(dead_set)
+        allow(Sidekiq).to receive(:redis_info).and_return({})
+        allow(ActiveRecord::Base.connection)
+          .to receive(:active?).and_return(true)
 
         get :healthcheck
       end
@@ -48,7 +68,12 @@ RSpec.describe HeartbeatController, type: :controller do
       end
 
       it 'returns the expected response report' do
-        expect(response.body).to eq({checks: { database: true}}.to_json)
+        expect(response.body).to eq({checks: {
+                                       database:      true,
+                                       redis:         true,
+                                       sidekiq:       true,
+                                       sidekiq_queue: true
+                                     }}.to_json)
       end
     end
   end

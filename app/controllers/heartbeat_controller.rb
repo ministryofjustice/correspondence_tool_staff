@@ -1,4 +1,7 @@
+require 'sidekiq/api'
+
 class HeartbeatController < ApplicationController
+
   respond_to :json
 
   def ping
@@ -13,7 +16,10 @@ class HeartbeatController < ApplicationController
 
   def healthcheck
     checks = {
-        database: database_alive?
+      database:      database_alive?,
+      redis:         redis_alive?,
+      sidekiq:       sidekiq_alive?,
+      sidekiq_queue: sidekiq_queue_healthy?,
     }
 
     status = :bad_gateway unless checks.values.all?
@@ -24,11 +30,31 @@ class HeartbeatController < ApplicationController
 
   private
 
+  def redis_alive?
+    Sidekiq.redis_info
+    true
+  rescue
+    false
+  end
+
+  def sidekiq_alive?
+    ps = Sidekiq::ProcessSet.new
+    !ps.size.zero?
+  rescue
+    false
+  end
+
+  def sidekiq_queue_healthy?
+    dead = Sidekiq::DeadSet.new
+    retries = Sidekiq::RetrySet.new
+    dead.size.zero? && retries.size.zero?
+  rescue
+    false
+  end
+
   def database_alive?
-    begin
-      ActiveRecord::Base.connection.active?
-    rescue PG::ConnectionBad
-      false
-    end
+    ActiveRecord::Base.connection.active?
+  rescue PG::ConnectionBad
+    false
   end
 end

@@ -33,12 +33,22 @@
 #                             root GET    /                                                          redirect(301, /users/sign_in)
 #
 
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
 
   devise_for :users
 
   authenticated :user  do
     root to: 'cases#index', as: :authenticated_root
+  end
+
+  # TODO: Limit this to the admin users, as soon as we figure out how we
+  #       recognize them. Here's a sample of how to do this using Devise:
+  #
+  # authenticate :user, lambda { |u| u.admin? } do
+  authenticate :user do
+    mount Sidekiq::Web => '/sidekiq'
   end
 
   resources :cases do
