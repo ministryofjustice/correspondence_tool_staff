@@ -91,7 +91,7 @@ en:
   alerts:
     escalation_warning_html: |
       <strong>Important notice</strong><br>
-      This case is being reviewed by Press and Private office.
+      This case is being reviewed for sensitivity.
       Don't send out the response until <strong>%{escalation_deadline}</strong>.
 
   common:
