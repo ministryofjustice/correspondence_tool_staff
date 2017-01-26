@@ -22,6 +22,11 @@ class AssignmentsController < ApplicationController
   end
 
   def edit
+    if @assignment
+      render :edit
+    elsif @assignment.nil? && already_rejected_by_current_user?
+      redirect_to case_assignments_rejected_path @case, rejected_now: false
+    end
   end
 
   def accept_or_reject
@@ -54,11 +59,6 @@ class AssignmentsController < ApplicationController
   def set_assignment
     @assignment = Assignment.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    if already_rejected_by_current_user?
-      redirect_to case_assignments_rejected_path
-    else
-      # do something else because the record wasnt found and we don't know why
-    end
   end
 
   def already_rejected_by_current_user?
