@@ -57,6 +57,7 @@ Rails.application.routes.draw do
     resources :assignments do
       patch 'accept_or_reject', on: :member
     end
+    get 'assignments/rejected' => 'assignments#rejected'
   end
 
   get '/search' => 'cases#search'

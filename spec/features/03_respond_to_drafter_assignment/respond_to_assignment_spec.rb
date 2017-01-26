@@ -50,7 +50,8 @@ feature 'respond to drafter assignment' do
     fill_in 'Reason for rejecting this case', with: 'This is not for me'
     click_button 'Confirm'
 
-    expect(current_path).to eq case_path kase
+    expect(current_path).to eq case_assignments_rejected_path kase
+    
     expect(page).to have_content 'Waiting to be assigned'
     expect(Assignment.exists?(assignment.id)).to be false
     expect(kase.reload.current_state).to eq 'unassigned'
@@ -67,7 +68,7 @@ feature 'respond to drafter assignment' do
     expect(page).
       to have_selector('#assignment_reasons_for_rejection', visible: true)
     click_button 'Confirm'
-    
+
     expect(current_path).
       to eq accept_or_reject_case_assignment_path kase, assignment
     expect(page.find('#assignment_state_rejected')).to be_checked
@@ -89,7 +90,7 @@ feature 'respond to drafter assignment' do
     expect(page).to have_content 'I would like to know about XYZ'
 
     click_button 'Confirm'
-    
+
     expect(current_path).
       to eq accept_or_reject_case_assignment_path kase, assignment
 

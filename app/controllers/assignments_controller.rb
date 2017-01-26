@@ -29,7 +29,7 @@ class AssignmentsController < ApplicationController
       redirect_to case_path @assignment.case
     elsif valid_reject?
       @assignment.reject assignment_params[:reasons_for_rejection]
-      redirect_to case_path @assignment.case
+      redirect_to case_assignments_rejected_path @assignment.case
     else
       @assignment.assign_and_validate_state(assignment_params[:state])
       render :edit

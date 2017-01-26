@@ -153,9 +153,9 @@ RSpec.describe AssignmentsController, type: :controller do
           expect(drafter_assignment).to have_received(:reject).with(message)
         end
 
-        it 'redirects to case detail page' do
+        it 'redirects rejected assignments page' do
           patch :accept_or_reject, params: update_params
-          expect(response).to redirect_to case_path assigned_case
+          expect(response).to redirect_to case_assignments_rejected_path assigned_case
         end
 
         it 'requires a reason for rejecting' do
