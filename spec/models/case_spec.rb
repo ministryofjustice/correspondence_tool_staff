@@ -343,9 +343,10 @@ RSpec.describe Case, type: :model do
       end
 
       it 'triggers the raising version of the event' do
-        assigned_case.responder_assignment_rejected(drafter.id, message)
+        assigned_case.
+          responder_assignment_rejected(drafter.id, message, assignment.id)
         expect(state_machine).to have_received(:reject_responder_assignment!).
-                                   with(drafter.id, message)
+                                   with(drafter.id, message, assignment.id)
         expect(state_machine).
           not_to have_received(:reject_responder_assignment)
       end

@@ -1,7 +1,7 @@
 class AssignmentsController < ApplicationController
 
+  before_action :set_case, only: [:new, :create, :edit, :accept_or_reject, :rejected]
   before_action :set_assignment, only: [:edit, :accept_or_reject]
-  before_action :set_case, only: [:new, :create, :edit, :accept_or_reject]
   before_action :validate_response, only: :accept_or_reject
 
   def new
@@ -21,7 +21,8 @@ class AssignmentsController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+  end
 
   def accept_or_reject
     if accept?
@@ -29,11 +30,15 @@ class AssignmentsController < ApplicationController
       redirect_to case_path @assignment.case
     elsif valid_reject?
       @assignment.reject assignment_params[:reasons_for_rejection]
-      redirect_to case_assignments_rejected_path @assignment.case
+      redirect_to case_assignments_rejected_path @case, rejected_now: true
     else
       @assignment.assign_and_validate_state(assignment_params[:state])
       render :edit
     end
+  end
+
+  def rejected
+    @rejected_now = params[:rejected_now]
   end
 
   private
@@ -48,6 +53,20 @@ class AssignmentsController < ApplicationController
 
   def set_assignment
     @assignment = Assignment.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    if already_rejected_by_current_user?
+      redirect_to case_assignments_rejected_path
+    else
+      # do something else because the record wasnt found and we don't know why
+    end
+  end
+
+  def already_rejected_by_current_user?
+    rejection = @case.transitions.detect do |transition|
+      transition.assignment_id == params[:id].to_i
+    end
+
+    rejection.present? && ( rejection.user_id == current_user.id )
   end
 
   def set_case

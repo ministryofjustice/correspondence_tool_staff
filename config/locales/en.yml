@@ -128,12 +128,6 @@ en:
       summary_error: 'prevented this form from being submitted:'
       view_details: View details
 
-  assignments:
-    new:
-      new_assignment: Assign case
-    create:
-      case_created: Case successfully created
-
   cases:
     index:
       page_heading: Cases
@@ -156,3 +150,16 @@ en:
       received_date_copy: For example. 31 01 2017
     update:
       case_updated: Case updated
+
+  assignments:
+      new:
+        new_assignment: Assign case
+      create:
+        case_created: Case successfully created
+      rejected:
+        rejected_now_html: |
+          <strong>Your response has been sent</strong><br>
+          This case will be reviewed and assigned the to appropriate unit.
+        already_rejected_html: |
+          <strong>You have already rejected this case</strong><br>
+          This case will be reviewed and assigned the to appropriate unit.

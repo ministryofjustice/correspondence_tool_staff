@@ -53,12 +53,13 @@ Rails.application.routes.draw do
 
   resources :cases do
     patch 'close', on: :member
-    
+    get '/assignments/rejected' => 'assignments#rejected'
+
     resources :assignments do
       patch 'accept_or_reject', on: :member
     end
-    get 'assignments/rejected' => 'assignments#rejected'
   end
+
 
   get '/search' => 'cases#search'
 

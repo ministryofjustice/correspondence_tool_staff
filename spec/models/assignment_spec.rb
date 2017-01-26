@@ -67,7 +67,7 @@ RSpec.describe Assignment, type: :model do
       assignment.reject(message)
       expect(assigned_case).
         to have_received(:responder_assignment_rejected).
-             with(drafter.id, message)
+             with(drafter.id, message, assignment.id)
     end
 
     it 'deletes the assignment' do

@@ -36,7 +36,7 @@ class Assignment < ApplicationRecord
     event = case assignment_type
             when 'drafter' then :responder_assignment_rejected
             end
-    self.case.send(event, assignee_id, message)
+    self.case.send(event, assignee_id, message, self.id)
     self.delete
   end
 

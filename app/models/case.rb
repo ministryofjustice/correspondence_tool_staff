@@ -114,8 +114,12 @@ class Case < ApplicationRecord
     assignment
   end
 
-  def responder_assignment_rejected(assignee_id, message)
-    state_machine.reject_responder_assignment!(assignee_id, message)
+  def responder_assignment_rejected(assignee_id, message, assignment_id)
+    state_machine.reject_responder_assignment!(
+      assignee_id,
+      message,
+      assignment_id
+    )
   end
 
   def responder_assignment_accepted(assignee_id)
