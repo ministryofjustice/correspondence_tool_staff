@@ -1,8 +1,8 @@
 - if @rejected_now == 'true'
-	.alert-green
-	    = t('.rejected_now_html')
+  .alert-green
+    = t('.rejected_now_html')
 - else
-	.alert-orange
-		= t('.already_rejected_html')
-    
+  .alert-orange
+    = t('.already_rejected_html')
+
 = render partial: 'layouts/case_detail_page', locals: { case_details: @case , include_sidebar: false}
