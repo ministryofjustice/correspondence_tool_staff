@@ -30,7 +30,9 @@ feature 'respond to drafter assignment' do
       to have_selector('#assignment_reasons_for_rejection', visible: false)
     click_button 'Confirm'
 
-    expect(current_path).to eq case_path kase
+    expect(page).to have_current_path(case_path kase, accepted_now: true)
+    expect(page).to have_content("You've accepted this case")
+
     expect(assignment.reload.state).to eq 'accepted'
     expect(kase.reload.current_state).to eq 'drafting'
   end
@@ -48,17 +50,18 @@ feature 'respond to drafter assignment' do
       to have_selector('#assignment_reasons_for_rejection', visible: true)
     fill_in 'Reason for rejecting this case', with: 'This is not for me'
     click_button 'Confirm'
-    
-    expect(page).to have_content(kase.number)
-    expect(page).to have_content(kase.subject)
-    expect(page).to have_content 'A message about XYZ'
-    expect(page).to have_content 'I would like to know about XYZ'
+
+    expect(page).to have_current_path(case_assignments_rejected_path kase, rejected_now: true)
     expect(page).to have_content 'Your response has been sent'
     expect(page).
       to have_content(
         'This case will be reviewed and assigned the to appropriate unit.'
       )
 
+    expect(page).to have_content(kase.number)
+    expect(page).to have_content(kase.subject)
+    expect(page).to have_content 'A message about XYZ'
+    expect(page).to have_content 'I would like to know about XYZ'
     expect(page).not_to have_content 'Do you accept this case?'
 
     expect(Assignment.exists?(assignment.id)).to be false
@@ -101,7 +104,6 @@ feature 'respond to drafter assignment' do
 
     expect(current_path).
       to eq accept_or_reject_case_assignment_path kase, assignment
-
     expect(page).
       to have_selector('#assignment_reasons_for_rejection', visible: false)
     expect(assignment.state).to eq 'pending'
@@ -115,8 +117,22 @@ feature 'respond to drafter assignment' do
   scenario 'kilo clicks on a link to an assignment that has been rejected' do
     assignment_id = assignment.id
     assignment.reject "NO thank you"
+
     visit edit_case_assignment_path kase, assignment_id
-    expect(page).to have_content('You have already rejected this case')
+
+    expect(page).to have_current_path(case_assignments_rejected_path kase, rejected_now: false)
+    expect(page).to have_content('This case has already been rejected.')
+  end
+
+  scenario 'kilo clicks on a link to an assignment that has been accepted' do
+    assignment_id = assignment.id
+    assignment.accept
+
+    visit edit_case_assignment_path kase, assignment_id
+
+    expect(page).to have_current_path(case_path(kase, accepted_now: false))
+    expect(page).to_not have_content("You've accepted this case")
+    expect(page).to_not have_content('This case has already been rejected.')
   end
 
 end

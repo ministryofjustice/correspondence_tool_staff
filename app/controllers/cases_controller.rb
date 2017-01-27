@@ -28,7 +28,9 @@ class CasesController < ApplicationController
     render :new
   end
 
-  def show; end
+  def show;
+    @accepted_now = params[:accepted_now]
+  end
 
   def edit
     render :edit

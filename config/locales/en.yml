@@ -99,6 +99,9 @@ en:
       <strong>Important notice</strong><br>
       This case is being reviewed for sensitivity.
       Don't send out the response until <strong>%{escalation_deadline}</strong>.
+    successfully_assigned_html: |
+      <strong>You've accepted this case</strong><br>
+      It will now appear in <a href="%{case_list_url}">your cases</a>.
 
   notices:
     case_closed: You've closed this case
@@ -161,5 +164,5 @@ en:
           <strong>Your response has been sent</strong><br>
           This case will be reviewed and assigned the to appropriate unit.
         already_rejected_html: |
-          <strong>You have already rejected this case</strong><br>
+          <strong>This case has already been rejected.</strong><br>
           This case will be reviewed and assigned the to appropriate unit.

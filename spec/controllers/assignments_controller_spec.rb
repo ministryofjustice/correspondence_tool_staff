@@ -89,12 +89,14 @@ RSpec.describe AssignmentsController, type: :controller do
     end
 
     describe 'GET edit' do
-      it 'renders the page for accept / reject assignment' do
-        get :edit, params: {
-          id: drafter_assignment.id,
-          case_id: drafter_assignment.case.id
-        }
-        expect(response).to render_template(:edit)
+      context 'case needs to be assigned' do
+        it 'renders the page for accept / reject assignment' do
+          get :edit, params: {
+            id: drafter_assignment.id,
+            case_id: drafter_assignment.case.id
+          }
+          expect(response).to render_template(:edit)
+        end
       end
     end
 
@@ -132,7 +134,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
         it 'redirects to case detail page' do
           patch :accept_or_reject, params: update_params
-          expect(response).to redirect_to case_path assigned_case
+          expect(response).to redirect_to case_path assigned_case, accepted_now: true
         end
       end
 
@@ -167,6 +169,7 @@ RSpec.describe AssignmentsController, type: :controller do
                 )
           expect(response).to render_template(:edit)
         end
+
       end
 
       it 'does not allow unknown states' do

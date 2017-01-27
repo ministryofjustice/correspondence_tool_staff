@@ -23,8 +23,12 @@ class AssignmentsController < ApplicationController
 
   def edit
     if @assignment
-      render :edit
-    elsif @assignment.nil? && already_rejected_by_current_user?
+      if already_accepted?
+        redirect_to case_path @case, accepted_now: false
+      else
+        render :edit
+      end
+    elsif @assignment.nil? && already_rejected?
       redirect_to case_assignments_rejected_path @case, rejected_now: false
     end
   end
@@ -32,7 +36,7 @@ class AssignmentsController < ApplicationController
   def accept_or_reject
     if accept?
       @assignment.accept
-      redirect_to case_path @assignment.case
+      redirect_to case_path @assignment.case, accepted_now: true
     elsif valid_reject?
       @assignment.reject assignment_params[:reasons_for_rejection]
       redirect_to case_assignments_rejected_path @case, rejected_now: true
@@ -61,12 +65,15 @@ class AssignmentsController < ApplicationController
   rescue ActiveRecord::RecordNotFound
   end
 
-  def already_rejected_by_current_user?
+  def already_rejected?
     rejection = @case.transitions.detect do |transition|
-      transition.assignment_id == params[:id].to_i
+      transition.assignment_id == params[:id].to_i && transition.event =='reject_responder_assignment'
     end
+    rejection.present?
+  end
 
-    rejection.present? && ( rejection.user_id == current_user.id )
+  def already_accepted?
+    Assignment.where(id: params[:id], state: 'accepted').present?
   end
 
   def set_case
