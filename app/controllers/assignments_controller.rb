@@ -61,8 +61,9 @@ class AssignmentsController < ApplicationController
   end
 
   def set_assignment
-    @assignment = Assignment.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
+    if Assignment.exists?(params[:id])
+      @assignment = Assignment.find(params[:id])
+    end
   end
 
   def already_rejected?
