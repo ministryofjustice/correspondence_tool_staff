@@ -61,7 +61,7 @@ class AssignmentsController < ApplicationController
   end
 
   def set_assignment
-    if Assignment.exists?(params[:id])
+    if Assignment.exists?(id: params[:id])
       @assignment = Assignment.find(params[:id])
     end
   end
