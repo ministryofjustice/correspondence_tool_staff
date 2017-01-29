@@ -1,0 +1,29 @@
+= render partial: 'layouts/header', locals: {page_heading: t('.new_attachment')}
+
+.grid-row
+  .column-full
+    h1.case-heading
+      .case-heading--secondary
+        span.visually-hidden
+          = t('.header_case_number')
+        = @case.number
+        = ' | '
+        span.visually-hidden
+          = t('.header_subject')
+        = @case.subject
+      = t('.upload_response')
+
+.grid-row
+  section.case-main
+    .upload_response
+      = form_for [ @case, @attachment ],
+                 html: { class: 'direct-upload',
+                         data: { 'form-data' => (@s3_direct_post.fields),
+                                 'url' => @s3_direct_post.url,
+                                 'host' => URI.parse(@s3_direct_post.url).host } } do |f|
+        = f.hidden_field :type
+        = f.label :url, 'Response:'
+        br
+        = f.file_field :url
+        .actions
+          = f.submit t('.upload_response'), class: 'button'

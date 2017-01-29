@@ -11,7 +11,10 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery-ui
 //= require jquery_ujs
+//= require jquery.fileupload
+//= require direct-upload
 //= require vendor/polyfills/bind
 //= require details.polyfill
 //= require govuk/selection-buttons

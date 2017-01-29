@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'aws-sdk'
 gem 'bank_holiday'
 gem 'business_time'
 gem 'coffee-rails', '~> 4.2'
@@ -14,6 +15,7 @@ gem 'govuk_elements_form_builder', git: 'https://github.com/ministryofjustice/go
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem 'jsonb_accessor', '~> 1.0.0.beta.1'
 gem 'logstasher'
 gem 'pg', '~> 0.18'

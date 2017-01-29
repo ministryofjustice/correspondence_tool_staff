@@ -57,6 +57,7 @@ class Case < ApplicationRecord
   belongs_to :category, required: true
   has_many :assignments, dependent: :destroy
   has_many :transitions, class_name: 'CaseTransition', autosave: false
+  has_many :attachments, class_name: 'CaseAttachment'
 
   before_save :prevent_number_change
   before_create :set_deadlines, :set_number

@@ -173,3 +173,7 @@ en:
       case_created: Case successfully created
     update:
       case_updated: Case updated
+
+  case_attachments:
+    new:
+      upload_response: 'Upload response'

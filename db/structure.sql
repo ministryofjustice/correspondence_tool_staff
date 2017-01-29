@@ -40,6 +40,15 @@ CREATE TYPE assignment_type AS ENUM (
 
 
 --
+-- Name: attachment_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE attachment_type AS ENUM (
+    'response'
+);
+
+
+--
 -- Name: requester_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -114,6 +123,39 @@ CREATE SEQUENCE assignments_id_seq
 --
 
 ALTER SEQUENCE assignments_id_seq OWNED BY assignments.id;
+
+
+--
+-- Name: case_attachments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE case_attachments (
+    id integer NOT NULL,
+    case_id integer,
+    type attachment_type,
+    url character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: case_attachments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE case_attachments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: case_attachments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE case_attachments_id_seq OWNED BY case_attachments.id;
 
 
 --
@@ -198,8 +240,8 @@ CREATE TABLE cases (
     postal_address character varying,
     subject character varying,
     properties jsonb,
-    requester_type requester_type,
-    number character varying NOT NULL
+    number character varying NOT NULL,
+    requester_type requester_type
 );
 
 
@@ -317,6 +359,13 @@ ALTER TABLE ONLY assignments ALTER COLUMN id SET DEFAULT nextval('assignments_id
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY case_attachments ALTER COLUMN id SET DEFAULT nextval('case_attachments_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY case_number_counters ALTER COLUMN id SET DEFAULT nextval('case_number_counters_id_seq'::regclass);
 
 
@@ -362,6 +411,14 @@ ALTER TABLE ONLY ar_internal_metadata
 
 ALTER TABLE ONLY assignments
     ADD CONSTRAINT assignments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: case_attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY case_attachments
+    ADD CONSTRAINT case_attachments_pkey PRIMARY KEY (id);
 
 
 --
@@ -448,6 +505,13 @@ CREATE INDEX index_assignments_on_state ON assignments USING btree (state);
 
 
 --
+-- Name: index_case_attachments_on_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_case_attachments_on_case_id ON case_attachments USING btree (case_id);
+
+
+--
 -- Name: index_case_number_counters_on_date; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -480,6 +544,13 @@ CREATE INDEX index_cases_on_category_id ON cases USING btree (category_id);
 --
 
 CREATE UNIQUE INDEX index_cases_on_number ON cases USING btree (number);
+
+
+--
+-- Name: index_cases_on_requester_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_cases_on_requester_type ON cases USING btree (requester_type);
 
 
 --
@@ -534,6 +605,7 @@ INSERT INTO schema_migrations (version) VALUES
 ('20170111161049'),
 ('20170116161424'),
 ('20170118154824'),
-('20170118154954');
+('20170118154954'),
+('20170128230814');
 
 

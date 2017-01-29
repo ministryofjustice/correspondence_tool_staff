@@ -4,11 +4,6 @@
 #                 new_user_session GET    /users/sign_in(.:format)                                   devise/sessions#new
 #                     user_session POST   /users/sign_in(.:format)                                   devise/sessions#create
 #             destroy_user_session DELETE /users/sign_out(.:format)                                  devise/sessions#destroy
-#                    user_password POST   /users/password(.:format)                                  devise/passwords#create
-#                new_user_password GET    /users/password/new(.:format)                              devise/passwords#new
-#               edit_user_password GET    /users/password/edit(.:format)                             devise/passwords#edit
-#                                  PATCH  /users/password(.:format)                                  devise/passwords#update
-#                                  PUT    /users/password(.:format)                                  devise/passwords#update
 #               authenticated_root GET    /                                                          cases#index
 # accept_or_reject_case_assignment PATCH  /cases/:case_id/assignments/:id/accept_or_reject(.:format) assignments#accept_or_reject
 #                 case_assignments GET    /cases/:case_id/assignments(.:format)                      assignments#index
@@ -19,6 +14,14 @@
 #                                  PATCH  /cases/:case_id/assignments/:id(.:format)                  assignments#update
 #                                  PUT    /cases/:case_id/assignments/:id(.:format)                  assignments#update
 #                                  DELETE /cases/:case_id/assignments/:id(.:format)                  assignments#destroy
+#            case_case_attachments GET    /cases/:case_id/attachments(.:format)                      case_attachments#index
+#                                  POST   /cases/:case_id/attachments(.:format)                      case_attachments#create
+#         new_case_case_attachment GET    /cases/:case_id/attachments/new(.:format)                  case_attachments#new
+#        edit_case_case_attachment GET    /cases/:case_id/attachments/:id/edit(.:format)             case_attachments#edit
+#             case_case_attachment GET    /cases/:case_id/attachments/:id(.:format)                  case_attachments#show
+#                                  PATCH  /cases/:case_id/attachments/:id(.:format)                  case_attachments#update
+#                                  PUT    /cases/:case_id/attachments/:id(.:format)                  case_attachments#update
+#                                  DELETE /cases/:case_id/attachments/:id(.:format)                  case_attachments#destroy
 #                            cases GET    /cases(.:format)                                           cases#index
 #                                  POST   /cases(.:format)                                           cases#create
 #                         new_case GET    /cases/new(.:format)                                       cases#new
@@ -58,6 +61,7 @@ Rails.application.routes.draw do
     resources :assignments do
       patch 'accept_or_reject', on: :member
     end
+    resources :case_attachments, path: 'attachments'
   end
 
 

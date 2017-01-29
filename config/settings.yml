@@ -1,3 +1,7 @@
+aws_access_key_id: access_key_id
+aws_secret_access_key: secret_access_key
+case_uploads_s3_bucket: "correspondence-staff-case-uploads-testing"
+
 # These are set in run.sh
 git_source:  Git Source Not Available
 build_date:  Build Date Not Available
