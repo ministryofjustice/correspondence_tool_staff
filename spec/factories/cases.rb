@@ -23,7 +23,7 @@ FactoryGirl.define do
     name { Faker::Name.name }
     email { Faker::Internet.email }
     association :category, factory: :category, strategy: :create
-    subject { Faker::Hipster.sentence(1, word_count: 4) }
+    subject { Faker::Hipster.sentence(1, word_count: 4).truncate(80) }
     message { Faker::Lorem.paragraph(1) }
     received_date Time.zone.today.to_s
     postal_address { Faker::Address.street_address }
