@@ -171,9 +171,7 @@ en:
       received_date_copy: For example. 31 01 2017
     create:
       case_created: Case successfully created
+    new_response_upload:
+      upload_response: 'Upload response'
     update:
       case_updated: Case updated
-
-  case_attachments:
-    new:
-      upload_response: 'Upload response'

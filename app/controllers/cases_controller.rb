@@ -1,6 +1,7 @@
 class CasesController < ApplicationController
 
-  before_action :set_case, only: [:show, :edit, :update, :close]
+  before_action :set_case, only: [:close, :edit, :new_response_upload, :show, :update]
+  before_action :set_s3_direct_post, only: [:new_response_upload]
 
   def index
     @cases = policy_scope(Case.by_deadline)
@@ -35,6 +36,13 @@ class CasesController < ApplicationController
 
   def edit
     render :edit
+  end
+
+  def new_response_upload
+    
+  end
+
+  def upload_responses
   end
 
   def update
@@ -90,5 +98,13 @@ class CasesController < ApplicationController
 
   def set_case
     @case = Case.find(params[:id])
+  end
+
+  def set_s3_direct_post
+    @s3_direct_post = CASE_UPLOADS_S3_BUCKET.presigned_post(
+      key:                   "#{@case.attachments_dir('responses')}/${filename}",
+      success_action_status: '201',
+      acl:                   'public-read'
+    )
   end
 end

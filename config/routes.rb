@@ -61,7 +61,9 @@ Rails.application.routes.draw do
     resources :assignments do
       patch 'accept_or_reject', on: :member
     end
-    resources :case_attachments, path: 'attachments'
+
+    get 'new_response_upload', on: :member
+    post 'upload_responses', on: :member
   end
 
 

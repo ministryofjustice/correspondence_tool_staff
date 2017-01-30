@@ -145,6 +145,10 @@ class Case < ApplicationRecord
     end
   end
 
+  def attachments_dir(attachment_type)
+    "#{Digest::SHA1.hexdigest(id.to_s)}/#{attachment_type}"
+  end
+
   private
 
   def set_deadlines
