@@ -38,11 +38,14 @@ feature 'viewing details of case in the system' do
 
     expect(page).to have_sidebar
     expect(page.sidebar).to have_external_deadline
-    expect(page.sidebar.external_deadline).to have_content(external_gq_deadline)
+    expect(page.sidebar.external_deadline).
+      to have_content(external_gq_deadline)
     expect(page.sidebar.status).to have_content('Waiting to be accepted')
     expect(page.sidebar.name).to have_content('Gina GQ')
-    expect(page.sidebar.requester_type).to have_content(gq.requester_type.humanize)
-    expect(page.sidebar.email).to have_content('gina.gq@testing.digital.justice.gov.uk')
+    expect(page.sidebar.requester_type).
+      to have_content(gq.requester_type.humanize)
+    expect(page.sidebar.email).
+      to have_content('gina.gq@testing.digital.justice.gov.uk')
     expect(page.sidebar.postal_address).to have_content(gq.postal_address)
 
     expect(page.message).to have_content('viewing gq details test message')
@@ -91,11 +94,14 @@ feature 'viewing details of case in the system' do
 
       expect(page).to have_sidebar
       expect(page.sidebar).to have_external_deadline
-      expect(page.sidebar.external_deadline).to have_content(external_foi_deadline)
+      expect(page.sidebar.external_deadline).
+        to have_content(external_foi_deadline)
       expect(page.sidebar.status).to have_content('Waiting to be accepted')
       expect(page.sidebar.name).to have_content('Freddie FOI')
-      expect(page.sidebar.requester_type).to have_content(foi.requester_type.humanize)
-      expect(page.sidebar.email).to have_content('freddie.foi@testing.digital.justice.gov.uk')
+      expect(page.sidebar.requester_type).
+        to have_content(foi.requester_type.humanize)
+      expect(page.sidebar.email).
+        to have_content('freddie.foi@testing.digital.justice.gov.uk')
       expect(page.sidebar.postal_address).to have_content(foi.postal_address)
 
       expect(page.message).to have_content('viewing foi details test message')

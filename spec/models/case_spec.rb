@@ -254,6 +254,21 @@ RSpec.describe Case, type: :model do
 
   end
 
+  describe 'querying current state' do
+    let(:kase)  { build(:case) }
+
+    it 'any defined state can be used' do
+      CaseStateMachine.states.each do |state|
+        query = state + '?'
+        expect([true, false]).to include kase.send(query)
+      end
+    end
+
+    it 'other queries raise NoMethodError' do
+      expect { kase.send('foo_bar_baz?')}.to raise_error(NoMethodError)
+    end
+  end
+
   describe 'state machine' do
     let(:kase) { create :case }
 
@@ -356,5 +371,20 @@ RSpec.describe Case, type: :model do
       end
     end
 
+    describe '#close' do
+      let(:responded_case)  { create(:responded_case)      }
+      let(:state_machine)   { responded_case.state_machine }
+
+      before do
+        allow(state_machine).to receive(:close!)
+        allow(state_machine).to receive(:close)
+      end
+
+      it 'triggers the raising version of the event' do
+        responded_case.close(User.first.id)
+        expect(state_machine).to have_received(:close!)
+        expect(state_machine).not_to have_received(:close)
+      end
+    end
   end
 end

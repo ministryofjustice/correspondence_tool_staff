@@ -10,4 +10,8 @@ class CasePolicy
   def can_add_case?
     user.assigner?
   end
+
+  def can_close_case?
+    user.assigner? && self.case.responded?
+  end
 end

@@ -52,6 +52,8 @@ Rails.application.routes.draw do
   end
 
   resources :cases do
+    patch 'close', on: :member
+    
     resources :assignments do
       patch 'accept_or_reject', on: :member
     end

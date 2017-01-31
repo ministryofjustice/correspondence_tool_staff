@@ -1,6 +1,13 @@
 require 'rails_helper'
 
-UserInput = Struct.new('Case', :requester_type, :name, :email, :subject, :message)
+UserInput = Struct.new(
+    'Case',
+    :requester_type,
+    :name,
+    :email,
+    :subject,
+     :message
+  )
 
 feature 'Case creation by an assigner' do
 

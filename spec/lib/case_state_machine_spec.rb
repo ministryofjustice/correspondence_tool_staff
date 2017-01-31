@@ -144,4 +144,35 @@ RSpec.describe CaseStateMachine, type: :model do
     end
   end
 
+  describe '#close!' do
+
+    let(:kase)          { create(:responded_case) }
+    let(:state_machine) { kase.state_machine      }
+    before { state_machine.close!(assigner.id)    }
+
+    it 'triggers a close event' do
+      expect(kase.current_state).to eq 'closed'
+    end
+
+    it 'triggers the correct event transition' do
+      allow(state_machine).to receive(:trigger!)
+      state_machine.close!(assigner.id)
+      expect(state_machine).to have_received(:trigger!).with(
+                                 :close,
+                                 user_id: assigner.id,
+                                 event: :close
+                               )
+    end
+  end
+
+  describe '#close' do
+    let(:kase)          { create(:responded_case) }
+    let(:state_machine) { kase.state_machine      }
+
+    it_behaves_like 'a case state machine event' do
+      let(:event_name) { :close      }
+      let(:args)       { [assigner.id] }
+    end
+  end
+
 end

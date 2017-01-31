@@ -5,6 +5,8 @@ class CaseStateMachine
   state :unassigned, initial: true
   state :awaiting_responder
   state :drafting
+  state :responded
+  state :closed
 
   event :assign_responder do
     transition from: :unassigned, to: :awaiting_responder
@@ -16,6 +18,10 @@ class CaseStateMachine
 
   event :accept_responder_assignment do
     transition from: :awaiting_responder, to: :drafting
+  end
+
+  event :close do
+    transition from: :responded, to: :closed
   end
 
   def assign_responder!(assigner_id, assignee_id)
@@ -56,5 +62,17 @@ class CaseStateMachine
     self.accept_responder_assignment!(assignee_id)
   rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
     false
+  end
+
+  def close(current_user_id)
+    self.close!(current_user_id)
+  rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
+    false
+  end
+
+  def close!(current_user_id)
+    trigger! :close,
+             user_id:     current_user_id,
+             event:       :close
   end
 end

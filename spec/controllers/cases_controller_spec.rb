@@ -6,6 +6,7 @@ RSpec.describe CasesController, type: :controller do
   let(:assigner)   { create(:user)                     }
   let(:drafter)    { create(:user, roles: ['drafter']) }
   let(:first_case) { all_cases.first                   }
+  let(:responded_case)  { create(:responded_case) }
 
   before { create(:category, :foi) }
 
@@ -36,6 +37,14 @@ RSpec.describe CasesController, type: :controller do
         patch :update, params: { id: first_case, case: { category_id: create(:category, :gq).id } }
         expect(response).to redirect_to(new_user_session_path)
         expect(Case.first.category.name).to eq 'Freedom of information request'
+      end
+    end
+
+    describe 'PATCH close' do
+      it "be redirected to signin if trying to close a case" do
+        patch :close, params: { id: responded_case }
+        expect(response).to redirect_to(new_user_session_path)
+        expect(Case.first.current_state).to eq 'responded'
       end
     end
 
@@ -183,6 +192,14 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
+    describe 'PATCH close' do
+
+      it "closes a case that has been responded to" do
+        patch :close, params: { id: responded_case }
+        expect(Case.first.current_state).to eq 'closed'
+      end
+    end
+
     describe 'GET search' do
 
       before do
@@ -239,6 +256,17 @@ RSpec.describe CasesController, type: :controller do
 
       it 'redirects to the application root path' do
         expect(subject).to redirect_to(authenticated_root_path)
+      end
+
+      describe 'PATCH close' do
+        it "does not close a case that has been responded to" do
+          patch :close, params: { id: responded_case }
+          expect(Case.first.current_state).not_to eq 'closed'
+        end
+
+        it 'redirects to the application root path' do
+          expect(subject).to redirect_to(authenticated_root_path)
+        end
       end
     end
   end

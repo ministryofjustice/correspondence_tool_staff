@@ -15,7 +15,7 @@
 
 class CaseTransition < ActiveRecord::Base
   belongs_to :kase,
-    inverse_of:  :case_transitions,
+    inverse_of:  :transitions,
     class_name:  'Case',
     foreign_key: :case_id
 

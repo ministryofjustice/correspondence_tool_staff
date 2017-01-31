@@ -27,19 +27,33 @@ FactoryGirl.define do
     message { Faker::Lorem.paragraph(1) }
     received_date Time.zone.today.to_s
     postal_address { Faker::Address.street_address }
-    # state 'unassigned'
 
     factory :assigned_case do
+      
       after(:create) do |kase, _evaluator|
         assignment = create(:assignment, case_id: kase.id)
-        create(:case_transition,
+        create(:case_transition_assign_responder,
                case_id: kase.id,
-               to_state: 'awaiting_responder',
                user_id: assignment.assigner.id,
-               assignee_id: assignment.assignee.id,
-               event: 'assign_responder')
+               assignee_id: assignment.assignee.id)
+      end
+
+      factory :responded_case do
+        after(:create) do |kase, _evaluator|
+
+          assignment = Assignment.find_by(case_id: kase.id)
+
+          create(:case_transition_accept_responder_assignment,               
+               case_id: kase.id,
+               user_id: assignment.assignee.id,
+               assignee_id: assignment.assignee.id)
+
+          create(:case_transition_respond,
+               case_id: kase.id,
+               user_id: assignment.assignee.id,
+               assignee_id: assignment.assignee.id)
+        end
       end
     end
   end
-
 end

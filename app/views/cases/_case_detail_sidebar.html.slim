@@ -41,3 +41,12 @@ details.case-sidebar__group--hr
             = t('common.case.postal_address')
           pre
             = case_details.postal_address
+
+.case-sidebar__group.actions
+  .case-sidebar__heading
+    = t('common.case.actions')
+  .case-sidebar__data
+    - if policy(case_details).can_close_case?
+      = link_to t('common.case.close'), close_case_path(@case), class: 'button', method: :patch
+    - else
+      = t('common.case.no_actions')

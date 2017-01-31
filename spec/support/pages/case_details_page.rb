@@ -5,6 +5,7 @@ class SideBar < SitePrism::Section
   element :requester_type, '.case-sidebar__data--contact .requester-type'
   element :email, '.case-sidebar__data--contact .email'
   element :postal_address, '.case-sidebar__data--contact .postal-address'
+  element :actions, '.actions .case-sidebar__data'
 end
 
 class CaseHeading < SitePrism::Section

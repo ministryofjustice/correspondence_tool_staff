@@ -1,6 +1,6 @@
 class CasesController < ApplicationController
 
-  before_action :set_case, only: [:show, :edit, :update]
+  before_action :set_case, only: [:show, :edit, :update, :close]
 
   def index
     @cases = Case.by_deadline
@@ -41,6 +41,14 @@ class CasesController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def close
+    authorize @case, :can_close_case?
+
+    @case.close(current_user.id)
+    flash[:notice] = t('notices.case_closed')
+    render :show
   end
 
   def search

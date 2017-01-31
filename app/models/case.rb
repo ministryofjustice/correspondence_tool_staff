@@ -63,6 +63,10 @@ class Case < ApplicationRecord
 
   delegate :current_state, :available_events, to: :state_machine
 
+  CaseStateMachine.states.each do |state|
+    define_method("#{state}?") { current_state == state }
+  end
+
   def self.search(term)
     where('lower(name) LIKE ?', "%#{term.downcase}%")
   end
@@ -116,6 +120,10 @@ class Case < ApplicationRecord
 
   def responder_assignment_accepted(assignee_id)
     state_machine.accept_responder_assignment!(assignee_id)
+  end
+
+  def close(current_user_id)
+    state_machine.close!(current_user_id)
   end
 
   private
