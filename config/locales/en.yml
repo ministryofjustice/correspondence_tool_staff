@@ -95,13 +95,19 @@ en:
           rejected: Reject
 
   alerts:
+    assignment_accepted_html: |
+      <strong>You've accepted this case</strong><br>
+      It will now appear in <a href="%{case_list_url}">your cases</a>.
+    assignment_rejected_html: |
+      <strong>Your response has been sent</strong><br>
+      This case will be reviewed and assigned the to appropriate unit.
+    assignment_already_rejected_html: |
+      <strong>This case has already been rejected.</strong><br>
+      This case will be reviewed and assigned the to appropriate unit.
     escalation_warning_html: |
       <strong>Important notice</strong><br>
       This case is being reviewed for sensitivity.
       Don't send out the response until <strong>%{escalation_deadline}</strong>.
-    successfully_assigned_html: |
-      <strong>You've accepted this case</strong><br>
-      It will now appear in <a href="%{case_list_url}">your cases</a>.
 
   notices:
     case_closed: You've closed this case
@@ -136,13 +142,6 @@ en:
       new_assignment: Assign case
     create:
       case_created: Case successfully created
-    rejected:
-      rejected_now_html: |
-        <strong>Your response has been sent</strong><br>
-        This case will be reviewed and assigned the to appropriate unit.
-      already_rejected_html: |
-        <strong>This case has already been rejected.</strong><br>
-        This case will be reviewed and assigned the to appropriate unit.
 
   cases:
     index:

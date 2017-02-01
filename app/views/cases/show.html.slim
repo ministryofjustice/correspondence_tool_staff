@@ -1,6 +1,6 @@
 - if @accepted_now == 'true'
   .alert-green
-    = t('alerts.successfully_assigned_html', case_list_url: cases_path)
+    = t('alerts.assignment_accepted_html', case_list_url: cases_path)
 
 - if @case.under_review?
   .alert-orange
