@@ -16,13 +16,18 @@ describe CasePolicy do
     end
   end
 
-  permissions :can_close_case? do
+  permissions :can_assign_case? do
     it "refuses unless current_user is an assigner" do
-      expect(subject).not_to permit(drafter, create(:responded_case))
+      expect(subject).not_to permit(drafter, create(:case))
     end
 
     it "grants if current_user is an assigner" do
-      expect(subject).to permit(assigner, create(:responded_case))
+      expect(subject).to permit(assigner, create(:case))
+    end
+
+    it "refuses if case is not in unassigned state" do
+      expect(subject).not_to permit(assigner, create(:assigned_case))
+      expect(subject).not_to permit(drafter, create(:assigned_case))
     end
   end
 
@@ -46,8 +51,17 @@ describe CasePolicy do
     end
   end
 
-  describe 'case scope policy' do
+  permissions :can_close_case? do
+    it "refuses unless current_user is an assigner" do
+      expect(subject).not_to permit(drafter, create(:responded_case))
+    end
 
+    it "grants if current_user is an assigner" do
+      expect(subject).to permit(assigner, create(:responded_case))
+    end
+  end
+
+  describe 'case scope policy' do
     let(:unassigned_case) { create(:case)                      }
     let(:assigned_case)   { create(:assigned_case)             }
     let(:drafter)         { assigned_case.drafter              }

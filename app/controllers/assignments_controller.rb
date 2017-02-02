@@ -5,16 +5,20 @@ class AssignmentsController < ApplicationController
   before_action :validate_response, only: :accept_or_reject
 
   def new
+    authorize @case, :can_assign_case?
+
     @assignment = @case.assignments.new
   end
 
   def create
+    authorize @case, :can_assign_case?
+
     @assignment = @case.create_assignment(
       assignment_params.merge(assignment_type: 'drafter', assigner: current_user)
     )
 
     if @assignment.valid?
-      flash[:notice] = t('.case_created')
+      flash[:notice] = t('.case_assigned')
       redirect_to cases_path
     else
       render :new

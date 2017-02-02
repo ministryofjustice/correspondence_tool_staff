@@ -171,9 +171,31 @@ RSpec.describe AssignmentsController, type: :controller do
                                 }.merge(assignment_params) }
     let(:assignment_params) { { assignment: { state: 'unknown' } } }
 
+    before { sign_in assigned_case.drafter }
+
+    describe 'GET new' do
+      it 'does not render the page for assignment' do
+        get :new, params: {
+          case_id: unassigned_case.id
+        }
+        expect(response).not_to render_template(:new)
+      end
+    end
+
+    describe 'POST create' do
+      it 'does not create a new assignment for a specific case' do
+        expect { post :create, params: create_assignment_params }.
+          not_to change { unassigned_case.assignments.count }
+      end
+
+      it 'redirects to the application root' do
+        post :create, params: create_assignment_params
+        expect(response).to redirect_to authenticated_root_path
+      end
+    end
+
     describe 'PATCH accept_or_reject' do
       before do
-        sign_in assigned_case.drafter
         allow(Assignment).to receive(:find).
                                with(drafter_assignment.id.to_s).
                                and_return(drafter_assignment)

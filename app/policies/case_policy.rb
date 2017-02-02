@@ -11,12 +11,16 @@ class CasePolicy
     user.assigner?
   end
 
-  def can_close_case?
-    user.assigner? && self.case.responded?
+  def can_assign_case?
+    user.assigner? && self.case.unassigned?
   end
 
   def can_accept_or_reject_case?
     self.case.awaiting_responder? && assignment.assignee == user
+  end
+
+  def can_close_case?
+    user.assigner? && self.case.responded?
   end
 
   private

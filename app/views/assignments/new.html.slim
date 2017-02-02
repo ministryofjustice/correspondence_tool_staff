@@ -3,4 +3,4 @@
 = form_for [ @case, @assignment ] do |f|
 
   = f.collection_select :assignee_id, User.drafters, :id, :email
-  = f.submit t('button.create_and_assign'),{class: 'button'}
+  = f.submit t('button.assign'), {class: 'button'}

@@ -64,7 +64,7 @@ en:
   button:
     continue: Continue
     confirm: Confirm
-    create_and_assign: Create and assign case
+    assign: Assign case
 
   helpers:
     fieldset:
@@ -131,6 +131,7 @@ en:
         accept_or_reject: Accept or reject
         close: Close case
         no_actions: No actions available
+        assign: Assign to a responder
       new_case_button: New case
       phase_banner: |
         This is a new service – your feedback will help us to improve it.
@@ -143,7 +144,7 @@ en:
     new:
       new_assignment: Assign case
     create:
-      case_created: Case successfully created
+      case_assigned: Case successfully assigned
 
   cases:
     index:
@@ -165,5 +166,7 @@ en:
       new_case: New case
       received_date: Date received
       received_date_copy: For example. 31 01 2017
+    create:
+      case_created: Case successfully created
     update:
       case_updated: Case updated

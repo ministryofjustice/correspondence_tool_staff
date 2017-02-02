@@ -49,6 +49,7 @@ feature 'Case creation by an assigner' do
     new_case = Case.first
 
     expect(current_path).to eq new_case_assignment_path new_case
+    expect(page).to have_content('Case successfully created')
     expect(page).to have_content('Assign case')
 
     expect(new_case).to have_attributes(
@@ -61,9 +62,9 @@ feature 'Case creation by an assigner' do
     )
 
     select drafter.email, from: 'assignment[assignee_id]'
-    click_button 'Create and assign case'
+    click_button 'Assign case'
     expect(current_path).to eq cases_path
-    expect(page).to have_content('Case successfully created')
+    expect(page).to have_content('Case successfully assigned')
 
     new_assignment = Assignment.first
 
