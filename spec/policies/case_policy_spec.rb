@@ -26,6 +26,26 @@ describe CasePolicy do
     end
   end
 
+  permissions :can_accept_or_reject_case? do
+    let(:assigned_case) do
+      create(:assigned_case,
+        assignments: [create(:assignment, assignee: drafter)])
+    end
+
+    it "refuses if current_user is an assigner" do
+      expect(subject).not_to permit(assigner, assigned_case)
+    end
+
+    it "grants if current_user is the assigned drafter" do
+      expect(subject).to permit(drafter, assigned_case)
+    end
+
+    it "refuses if current_user is another drafter" do
+      another_drafter = create(:user, roles: ['drafter'])
+      expect(subject).not_to permit(another_drafter, assigned_case)
+    end
+  end
+
   describe 'case scope policy' do
 
     let(:unassigned_case) { create(:case)                      }

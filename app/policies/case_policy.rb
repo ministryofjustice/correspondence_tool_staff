@@ -15,6 +15,16 @@ class CasePolicy
     user.assigner? && self.case.responded?
   end
 
+  def can_accept_or_reject_case?
+    self.case.awaiting_responder? && assignment.assignee == user
+  end
+
+  private
+
+  def assignment
+    self.case.assignments.last
+  end
+
   class Scope
     attr_reader :user, :scope
 
@@ -33,5 +43,4 @@ class CasePolicy
       end
     end
   end
-
 end

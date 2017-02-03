@@ -21,11 +21,12 @@ class AssignmentsController < ApplicationController
     end
   end
 
-  def edit
+  def edit    
     if @assignment
       if already_accepted?
         redirect_to case_path @case, accepted_now: false
       else
+        authorize @case, :can_accept_or_reject_case?
         render :edit
       end
     elsif @assignment.nil? && already_rejected?
@@ -34,6 +35,8 @@ class AssignmentsController < ApplicationController
   end
 
   def accept_or_reject
+    authorize @case, :can_accept_or_reject_case?
+
     if accept?
       @assignment.accept
       redirect_to case_path @assignment.case, accepted_now: true

@@ -84,8 +84,8 @@ feature 'viewing details of case in the system' do
   end
 
 
-  context 'when the case is a non-trigger foi request' do
-    scenario 'displays all case content ' do
+  context 'when the case is an assigned non-trigger foi request' do
+    scenario 'displays all case content' do
       page.load id: foi.id
 
       expect(page).to have_case_heading
@@ -114,9 +114,25 @@ feature 'viewing details of case in the system' do
       expect(page.escalation_notice).to have_text(foi_escalation_deadline)
     end
 
-    scenario 'User views the case that is outside "Day 6" ' do
+    scenario 'User views the case that is outside "Day 6"' do
       page.load id: old_foi.id
       expect(page).to have_no_escalation_notice
+    end
+
+    scenario 'the assigner views an assigned case' do
+      page.load id: foi.id
+      expect(page.sidebar.actions).
+        not_to have_link('Accept or reject',
+          href: edit_case_assignment_path(foi, foi.assignments.last))
+    end
+
+    scenario 'the assigned drafter views the case' do
+      login_as foi.drafter
+      page.load id: foi.id
+
+      expect(page.sidebar.actions).
+        to have_link('Accept or reject',
+          href: edit_case_assignment_path(foi, foi.assignments.last))
     end
   end
 end

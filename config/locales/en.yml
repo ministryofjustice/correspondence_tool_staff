@@ -43,6 +43,7 @@ en:
   pundit:
     case_policy:
       can_add_case?: 'You are not authorised to create new cases.'
+      can_accept_or_reject?: 'You are not able to view to this assignment.'
 
   state:
     unassigned: Waiting to be assigned
@@ -127,6 +128,7 @@ en:
         requester_type: "Type of requester "
         status: Status
         actions: Actions
+        accept_or_reject: Accept or reject
         close: Close case
         no_actions: No actions available
       new_case_button: New case

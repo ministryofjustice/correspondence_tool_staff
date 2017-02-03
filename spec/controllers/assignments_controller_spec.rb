@@ -64,7 +64,7 @@ RSpec.describe AssignmentsController, type: :controller do
     end
   end
 
-  context 'as an authenticated user' do
+  context 'as an authenticated assigner' do
     before { sign_in create(:user, roles: ['assigner']) }
 
     describe 'GET new' do
@@ -89,14 +89,12 @@ RSpec.describe AssignmentsController, type: :controller do
     end
 
     describe 'GET edit' do
-      context 'case needs to be assigned' do
-        it 'renders the page for accept / reject assignment' do
-          get :edit, params: {
-            id: drafter_assignment.id,
-            case_id: drafter_assignment.case.id
-          }
-          expect(response).to render_template(:edit)
-        end
+      it 'does not render the page for accept / reject assignment' do
+        get :edit, params: {
+          id: drafter_assignment.id,
+          case_id: drafter_assignment.case.id
+        }
+        expect(response).not_to render_template(:edit)
       end
     end
 
@@ -110,6 +108,72 @@ RSpec.describe AssignmentsController, type: :controller do
       let(:assignment_params) { { assignment: { state: 'unknown' } } }
 
       before do
+        allow(Assignment).to receive(:find).
+                               with(drafter_assignment.id.to_s).
+                               and_return(drafter_assignment)
+        allow(Assignment).to receive(:find).
+                               with(drafter_assignment.id).
+                               and_return(drafter_assignment)
+      end
+
+      context 'accepting' do
+        let(:assignment_params) { { assignment: { state: 'accepted' } } }
+
+        it 'does not call #accept' do
+          allow(drafter_assignment).to receive(:accept)
+          patch :accept_or_reject, params: update_params
+          expect(drafter_assignment).not_to have_received(:accept)
+        end
+
+        it 'does not update state' do
+          patch :accept_or_reject, params: update_params
+          expect(drafter_assignment.reload.state).to eq 'pending'
+        end
+
+        it 'redirects to application root' do
+          patch :accept_or_reject, params: update_params
+          expect(response).to redirect_to authenticated_root_path
+        end
+      end
+
+      context 'rejecting' do
+        let(:message) { |example| "test #{example.description}" }
+        let(:assignment_params) do
+          {
+            assignment: {
+              state: 'rejected',
+              reasons_for_rejection: message
+            }
+          }
+        end
+
+        it 'does not call #reject' do
+          allow(drafter_assignment).to receive(:reject)
+          patch :accept_or_reject, params: update_params
+          expect(drafter_assignment).not_to have_received(:reject).with(message)
+        end
+
+        it 'redirects to application root' do
+          patch :accept_or_reject, params: update_params
+          expect(response).to redirect_to authenticated_root_path
+        end
+      end
+    end
+  end
+
+  context 'as an authenticated drafter' do
+
+    let(:assigned_case)      { create :assigned_case }
+    let(:drafter_assignment) { assigned_case.assignments.detect(&:drafter?) }
+    let(:update_params)      { {
+                                  id: drafter_assignment.id,
+                                  case_id: assigned_case.id,
+                                }.merge(assignment_params) }
+    let(:assignment_params) { { assignment: { state: 'unknown' } } }
+
+    describe 'PATCH accept_or_reject' do
+      before do
+        sign_in assigned_case.drafter
         allow(Assignment).to receive(:find).
                                with(drafter_assignment.id.to_s).
                                and_return(drafter_assignment)
@@ -176,7 +240,6 @@ RSpec.describe AssignmentsController, type: :controller do
         expect { patch :accept_or_reject, params: update_params }.
           to raise_error(ArgumentError, "'unknown' is not a valid state")
       end
-
     end
   end
 end
