@@ -13,7 +13,7 @@ RUN apt-get update -y  && \
 
 EXPOSE $PUMA_PORT
 
-RUN bundle exec rake assets:precompile RAILS_ENV=production \
+RUN bundle exec rake assets:precompile assets:non_digested RAILS_ENV=production \
   SECRET_KEY_BASE=required_but_does_not_matter_for_assets
 
 ENTRYPOINT ["./run.sh"]

@@ -24,3 +24,5 @@ config/environments/*.local.yml
 
 # Ignore .DS_Store in all directories
 .DS_Store
+
+/public/assets
