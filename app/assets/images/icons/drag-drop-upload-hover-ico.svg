@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="90px" height="90px" viewBox="0 0 90 90" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.3 (12081) - http://www.bohemiancoding.com/sketch -->
+    <title>Oval 6 + Imported Layers</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Main-flow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="New-claim---Long-form" sketch:type="MSArtboardGroup" transform="translate(-406.000000, -4133.000000)">
+            <g id="Oval-6-+-Imported-Layers" sketch:type="MSLayerGroup" transform="translate(406.000000, 4133.000000)">
+                <circle id="Oval-6" fill="#FFBF47" sketch:type="MSShapeGroup" cx="45" cy="45" r="45"></circle>
+                <path d="M42.7952171,24.1136797 L42.7952171,59.6159104 L31.9269178,48.599282 C30.7704603,47.4271852 28.8937179,47.4271852 27.7359265,48.599282 C26.579469,49.7727307 26.579469,51.6735013 27.7372604,52.8455981 L45.7577224,71.1111111 L63.7795182,52.8455981 C64.35708,52.2602256 64.6465279,51.4923467 64.6465279,50.7217641 C64.6465279,49.9552371 64.35708,49.1846544 63.7795182,48.599282 C62.6217269,47.4271852 60.7463183,47.4271852 59.5898608,48.599282 L48.7215615,59.6159104 L48.7215615,24.1136797 C48.7215615,22.4548991 47.3943698,21.1111111 45.7577224,21.1111111 C44.1210749,21.1111111 42.7952171,22.4548991 42.7952171,24.1136797" id="Imported-Layers" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+            </g>
+        </g>
+    </g>
+</svg>

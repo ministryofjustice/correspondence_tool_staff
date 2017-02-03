@@ -116,6 +116,7 @@ en:
     case_closed: You've closed this case
 
   common:
+    choose_file: Choose a file
     error: error
     greeting: Hello %{user}
     case:
@@ -141,7 +142,6 @@ en:
     signout: Sign out
     summary_error: 'prevented this form from being submitted:'
     view_details: View details
-
 
   assignments:
     new:
@@ -172,6 +172,7 @@ en:
     create:
       case_created: Case successfully created
     new_response_upload:
+
       upload_response: 'Upload response'
     update:
       case_updated: Case updated

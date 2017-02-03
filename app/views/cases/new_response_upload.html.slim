@@ -1,31 +1,31 @@
-= render partial: 'layouts/header', locals: {page_heading: t('.new_attachment')}
-
-.grid-row
-  .column-full
-    h1.case-heading
-      .case-heading--secondary
-        span.visually-hidden
-          = t('.header_case_number')
-        = @case.number
-        = ' | '
-        span.visually-hidden
-          = t('.header_subject')
-        = @case.subject
-      = t('.upload_response')
+= render partial: 'layouts/case_page_heading', locals: { case_details: @case }
 
 .grid-row
   section.case-main
     .upload_response
       = form_tag upload_responses_case_path,
-                 class: 'direct-upload',
-                 data: { 'form-data' => (@s3_direct_post.fields),
-                         'url' => @s3_direct_post.url,
-                         'host' => URI.parse(@s3_direct_post.url).host } do
+                 class: 'direct-upload' do
+
+        .dropzone{ data-dz-template=render('shared/dropzone_js').gsub('"', '\'').html_safe
+          data-form-data=@s3_direct_post.fields.to_json
+          data-url= @s3_direct_post.url
+          data-host= URI.parse(@s3_direct_post.url).host }
+          .dz-default.dz-message.grid-row
+            .column-one-third.arrow-icon
+              p
+            .column-one-half
+            span.normal= "Drag and drop files here"
+            .bold-normal= "or"
+            .button-secondary
+              = t('common.choose_file')
+
+
         = hidden_field_tag :type, value: 'response'
-        = label_tag :attachment_url, 'Response:'
-        br
-        #attachment-dropzone
-          = 'drop stuff here'
-        = file_field_tag :attachment_url, name: 'url[]'
+        -# label_tag :attachment_url, 'Response:'
+
+
+        -# file_field_tag :attachment_url, name: 'url[]'
+
         .actions
           = submit_tag t('.upload_response'), class: 'button'
+

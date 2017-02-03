@@ -1,0 +1,15 @@
+.grid-row.dz-preview.dz-file-preview
+  .column-three-quarter
+    .dz-filename
+      span data={ dz_name: true}
+      .file-info
+        = "("
+        span.dz-size data={dz_size: true}
+        = ")"
+        span.dz-progress
+          span.dz-upload data={dz_uploadprogress: true}
+  .column-three-quarter
+    .dz-remove-link
+      span data={dz_remove: true}
+    .dz-error-message
+      span data={dz_errormessage: true}

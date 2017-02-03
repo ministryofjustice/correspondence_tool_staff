@@ -103,6 +103,8 @@ GEM
     diff-lcs (1.2.5)
     dish (0.0.6)
     docile (1.1.5)
+    dropzonejs-rails (0.7.3)
+      rails (> 3.1)
     easy_translate (0.5.0)
       json
       thread
@@ -420,6 +422,7 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   config
   devise (~> 4.2)
+  dropzonejs-rails (~> 0.7.3)
   factory_girl_rails
   faker
   foreman (~> 0.82.0)
