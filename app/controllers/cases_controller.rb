@@ -3,7 +3,7 @@ class CasesController < ApplicationController
   before_action :set_case, only: [:show, :edit, :update, :close]
 
   def index
-    @cases = Case.by_deadline
+    @cases = policy_scope(Case.by_deadline)
   end
 
   def new

@@ -1,56 +1,69 @@
 require 'rails_helper'
 
-feature 'a user can see all case on the system' do
+feature 'listing cases on the system' do
   given(:page) { CaseListPage.new }
 
   given(:foi_category) { create(:category) }
-  given(:non_trigger_foi) do
+  given(:assigned_case) do
     create(
       :assigned_case,
-      name: 'Freddie FOI',
+      name: 'Freddie FOI Assigned',
       email: 'freddie.foi@testing.digital.justice.gov.uk',
-      subject: 'test FOI subject',
-      message: 'viewing foi details test message',
+      subject: 'test assigned FOI subject',
+      message: 'viewing assigned foi details test message',
       category: foi_category
     )
   end
 
-  given(:gq_category) { create(:category, :gq) }
-  given(:gq) do
+  given(:unassigned_case) do
     create(
-      :assigned_case,
-      name: 'Gina GQ',
-      email: 'gina.gq@testing.digital.justice.gov.uk',
-      subject: 'test GQ subject',
-      message: 'viewing gq details test message',
-      category: gq_category
+      :case,
+      name: 'Freddie FOI Unassigned',
+      email: 'freddie.foi@testing.digital.justice.gov.uk',
+      subject: 'test unassigned FOI subject',
+      message: 'viewing unassigned foi details test message',
+      category: foi_category
     )
   end
 
   background do
     # Create our cases
-    non_trigger_foi
-    gq
-
-    login_as create(:user)
+    unassigned_case
+    assigned_case
   end
 
-  scenario 'when a non-trigger FOI and a GQ have been received' do
+  scenario 'for assginers - shows all cases' do
+    login_as create(:user, roles: ['assigner'])
     visit '/'
     expect(page.case_list.count).to eq 2
 
-    non_trigger_foi_row = page.case_list.last
-    expect(non_trigger_foi_row.name.text).to     eq 'Freddie FOI'
-    expect(non_trigger_foi_row.subject.text).to  eq 'test FOI subject'
-    expect(non_trigger_foi_row.external_deadline.text).to have_content(non_trigger_foi.external_deadline.strftime('%e %b %Y'))
-    expect(non_trigger_foi_row.number).to have_link("#{non_trigger_foi.number}", href: Rails.root.join("/cases/#{non_trigger_foi.id}"))
-    expect(non_trigger_foi_row.status.text).to eq 'Waiting to be accepted'
+    assigned_case_row = page.case_list.last
+    expect(assigned_case_row.name.text).to     eq 'Freddie FOI Assigned'
+    expect(assigned_case_row.subject.text).to  eq 'test assigned FOI subject'
+    expect(assigned_case_row.external_deadline.text).to have_content(assigned_case.external_deadline.strftime('%e %b %Y'))
+    expect(assigned_case_row.number).to have_link("#{assigned_case.number}", href: Rails.root.join("/cases/#{assigned_case.id}"))
+    expect(assigned_case_row.status.text).to eq 'Waiting to be accepted'
 
-    gq_row = page.case_list.first
-    expect(gq_row.name.text).to     eq 'Gina GQ'
-    expect(gq_row.subject.text).to  eq 'test GQ subject'
-    expect(gq_row.external_deadline.text).to have_content(gq.external_deadline.strftime('%e %b %Y'))
-    expect(gq_row.number).to have_link("#{gq.number}", href: Rails.root.join("/cases/#{gq.id}"))
-    expect(gq_row.status.text).to eq 'Waiting to be accepted'
+    unassigned_case_row = page.case_list.first
+    expect(unassigned_case_row.name.text).to     eq 'Freddie FOI Unassigned'
+    expect(unassigned_case_row.subject.text).to  eq 'test unassigned FOI subject'
+    expect(unassigned_case_row.external_deadline.text).to have_content(unassigned_case.external_deadline.strftime('%e %b %Y'))
+    expect(unassigned_case_row.number).to have_link("#{unassigned_case.number}", href: Rails.root.join("/cases/#{unassigned_case.id}"))
+    expect(unassigned_case_row.status.text).to eq 'Waiting to be assigned'
   end
+
+  scenario 'for drafters - shows only their (open) assigned cases' do
+    login_as assigned_case.drafter
+
+    visit '/'
+    expect(page.case_list.count).to eq 1
+
+    assigned_case_row = page.case_list.first
+    expect(assigned_case_row.name.text).to     eq 'Freddie FOI Assigned'
+    expect(assigned_case_row.subject.text).to  eq 'test assigned FOI subject'
+    expect(assigned_case_row.external_deadline.text).to have_content(assigned_case.external_deadline.strftime('%e %b %Y'))
+    expect(assigned_case_row.number).to have_link("#{assigned_case.number}", href: Rails.root.join("/cases/#{assigned_case.id}"))
+    expect(assigned_case_row.status.text).to eq 'Waiting to be accepted'
+  end
+
 end

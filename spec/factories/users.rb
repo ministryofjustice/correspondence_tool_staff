@@ -22,5 +22,17 @@ FactoryGirl.define do
     email { Faker::Internet.email }
     password '12345678'
     roles %w[assigner drafter]
+
+    factory :assigner do
+      roles %w[assigner]
+    end
+
+    factory :drafter do
+      roles %w[drafter]
+    end
+
+    factory :approver do
+      roles %w[approver]
+    end
   end
 end

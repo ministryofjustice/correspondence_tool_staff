@@ -215,6 +215,39 @@ RSpec.describe CasesController, type: :controller do
   context 'as an authenticated drafter' do
     before { sign_in drafter }
 
+    describe 'GET index' do
+
+      let(:unordered_cases) do
+        [
+          create(:case, received_date: Date.parse('17/11/2016'), subject: 'newer request 2', id: 2),
+          create(:case, received_date: Date.parse('17/11/2016'), subject: 'newer request 1', id: 1),
+          create(:case, received_date: Date.parse('16/11/2016'), subject: 'request 2', id: 3),
+          create(:case, received_date: Date.parse('16/11/2016'), subject: 'request 1', id: 4),
+          create(:case, received_date: Date.parse('15/11/2016'), subject: 'older request 2', id: 5),
+          create(:case, received_date: Date.parse('15/11/2016'), subject: 'older request 1', id: 6)
+        ]
+      end
+
+      let(:drafters_workbasket) { Case.all.select {|kase| kase.drafter == drafter} }
+
+      before {
+        unordered_cases
+        create(:assignment, assignee: drafter, case_id: 1)
+        create(:assignment, assignee: drafter, case_id: 2)
+        drafters_workbasket
+        get :index
+      }
+
+      it 'assigns @cases, sorted by external_deadline, then ID' do
+        expect(assigns(:cases)).
+          to eq drafters_workbasket.sort_by { |c| [c.external_deadline, c.id] }
+      end
+
+      it 'renders the index template' do
+        expect(response).to render_template(:index)
+      end
+    end
+
     describe 'GET new' do
       before {
         get :new
