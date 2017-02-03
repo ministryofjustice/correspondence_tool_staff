@@ -51,7 +51,7 @@ feature 'respond to drafter assignment' do
     fill_in 'Reason for rejecting this case', with: 'This is not for me'
     click_button 'Confirm'
 
-    expect(page).to have_current_path(case_assignments_rejected_path kase, rejected_now: true)
+    expect(page).to have_current_path(case_assignments_show_rejected_path kase, rejected_now: true)
     expect(page).to have_content 'Your response has been sent'
     expect(page).
       to have_content(
@@ -120,7 +120,7 @@ feature 'respond to drafter assignment' do
 
     visit edit_case_assignment_path kase, assignment_id
 
-    expect(page).to have_current_path(case_assignments_rejected_path kase, rejected_now: false)
+    expect(page).to have_current_path(case_assignments_show_rejected_path kase, rejected_now: false)
     expect(page).to have_content('This case has already been rejected.')
   end
 

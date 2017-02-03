@@ -1,6 +1,6 @@
 class AssignmentsController < ApplicationController
 
-  before_action :set_case, only: [:new, :create, :edit, :accept_or_reject, :rejected]
+  before_action :set_case, only: [:new, :create, :edit, :accept_or_reject, :show_rejected]
   before_action :set_assignment, only: [:edit, :accept_or_reject]
   before_action :validate_response, only: :accept_or_reject
 
@@ -29,7 +29,7 @@ class AssignmentsController < ApplicationController
         render :edit
       end
     elsif @assignment.nil? && already_rejected?
-      redirect_to case_assignments_rejected_path @case, rejected_now: false
+      redirect_to case_assignments_show_rejected_path @case, rejected_now: false
     end
   end
 
@@ -39,15 +39,16 @@ class AssignmentsController < ApplicationController
       redirect_to case_path @assignment.case, accepted_now: true
     elsif valid_reject?
       @assignment.reject assignment_params[:reasons_for_rejection]
-      redirect_to case_assignments_rejected_path @case, rejected_now: true
+      redirect_to case_assignments_show_rejected_path @case, rejected_now: true
     else
       @assignment.assign_and_validate_state(assignment_params[:state])
       render :edit
     end
   end
 
-  def rejected
+  def show_rejected
     @rejected_now = params[:rejected_now]
+    render
   end
 
   private
