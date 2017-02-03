@@ -149,13 +149,13 @@ RSpec.describe AssignmentsController, type: :controller do
           }
         end
 
-        it 'calls #show_rejected' do
+        it 'calls #reject' do
           allow(drafter_assignment).to receive(:reject)
           patch :accept_or_reject, params: update_params
           expect(drafter_assignment).to have_received(:reject).with(message)
         end
 
-        it 'redirects rejected assignments page' do
+        it 'redirects to show_rejected page' do
           patch :accept_or_reject, params: update_params
           expect(response).to redirect_to case_assignments_show_rejected_path assigned_case, rejected_now: true
         end
