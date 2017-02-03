@@ -1,3 +1,7 @@
+- if @accepted_now == 'true'
+  .alert-green
+    = t('alerts.assignment_accepted_html', case_list_url: cases_path)
+
 - if @case.under_review?
   .alert-orange
     = t('alerts.escalation_warning_html', escalation_deadline:  "#{l @case.escalation_deadline, format: :default_date}")

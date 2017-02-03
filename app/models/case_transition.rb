@@ -24,7 +24,8 @@ class CaseTransition < ActiveRecord::Base
   jsonb_accessor :metadata,
     user_id:     :integer,
     assignee_id: :integer,
-    message:     :text
+    message:     :text,
+    assignment_id: :integer
 
   private
 

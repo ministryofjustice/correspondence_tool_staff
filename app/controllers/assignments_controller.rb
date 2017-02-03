@@ -1,7 +1,7 @@
 class AssignmentsController < ApplicationController
 
+  before_action :set_case, only: [:new, :create, :edit, :accept_or_reject, :show_rejected]
   before_action :set_assignment, only: [:edit, :accept_or_reject]
-  before_action :set_case, only: [:new, :create, :edit, :accept_or_reject]
   before_action :validate_response, only: :accept_or_reject
 
   def new
@@ -21,19 +21,34 @@ class AssignmentsController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    if @assignment
+      if already_accepted?
+        redirect_to case_path @case, accepted_now: false
+      else
+        render :edit
+      end
+    elsif @assignment.nil? && already_rejected?
+      redirect_to case_assignments_show_rejected_path @case, rejected_now: false
+    end
+  end
 
   def accept_or_reject
     if accept?
       @assignment.accept
-      redirect_to case_path @assignment.case
+      redirect_to case_path @assignment.case, accepted_now: true
     elsif valid_reject?
       @assignment.reject assignment_params[:reasons_for_rejection]
-      redirect_to case_path @assignment.case
+      redirect_to case_assignments_show_rejected_path @case, rejected_now: true
     else
       @assignment.assign_and_validate_state(assignment_params[:state])
       render :edit
     end
+  end
+
+  def show_rejected
+    @rejected_now = params[:rejected_now]
+    render
   end
 
   private
@@ -47,7 +62,19 @@ class AssignmentsController < ApplicationController
   end
 
   def set_assignment
-    @assignment = Assignment.find(params[:id])
+    if Assignment.exists?(id: params[:id])
+      @assignment = Assignment.find(params[:id])
+    end
+  end
+
+  def already_rejected?
+    @case.transitions.any? do |transition|
+      transition.assignment_id == params[:id].to_i && transition.event =='reject_responder_assignment'
+    end
+  end
+
+  def already_accepted?
+    Assignment.where(id: params[:id], state: 'accepted').present?
   end
 
   def set_case

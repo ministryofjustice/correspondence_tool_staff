@@ -9,8 +9,9 @@ RSpec.describe CaseStateMachine, type: :model do
       association_name: :transitions
     )
   end
-  let(:assigner) { create :user, roles: ['assigner'] }
-  let(:drafter)  { create :user, roles: ['drafter'] }
+  let(:assigner)      { create :user, roles: ['assigner'] }
+  let(:drafter)       { create :user, roles: ['drafter'] }
+  let(:assignment_id) { 1 }
 
   it 'sets the initial state to "unassigned"' do
     expect(kase.current_state).to eq 'unassigned'
@@ -75,11 +76,11 @@ RSpec.describe CaseStateMachine, type: :model do
   end
 
   describe '#reject_responder_assignment!' do
-    let(:message) { |example| "test #{example.description}" }
+    let(:message)       { |example| "test #{example.description}" }
 
     before do
       state_machine.assign_responder!(assigner.id, drafter.id)
-      state_machine.reject_responder_assignment!(drafter.id, message)
+      state_machine.reject_responder_assignment!(drafter.id, message, assignment_id)
     end
 
     it 'triggers a reject_responder_assignment event' do
@@ -88,9 +89,10 @@ RSpec.describe CaseStateMachine, type: :model do
 
     it 'triggers the correct event transition' do
       allow(state_machine).to receive(:trigger!)
-      state_machine.reject_responder_assignment!(drafter.id, message)
+      state_machine.reject_responder_assignment!(drafter.id, message, assignment_id)
       expect(state_machine).to have_received(:trigger!).with(
                                  :reject_responder_assignment,
+                                 assignment_id: assignment_id,
                                  assignee_id: drafter.id,
                                  user_id:     drafter.id,
                                  message:     message,
@@ -107,7 +109,7 @@ RSpec.describe CaseStateMachine, type: :model do
     it_behaves_like 'a case state machine event' do
       let(:event_name) { :reject_responder_assignment }
       let(:message) { "#{event_name} test" }
-      let(:args) { [drafter.id, message] }
+      let(:args) { [drafter.id, message, assignment_id] }
     end
   end
 

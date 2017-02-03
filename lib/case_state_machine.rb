@@ -37,16 +37,17 @@ class CaseStateMachine
     false
   end
 
-  def reject_responder_assignment!(assignee_id, message)
+  def reject_responder_assignment!(assignee_id, message, assignment_id)
     trigger! :reject_responder_assignment,
              assignee_id: assignee_id,
              user_id:     assignee_id,
              message:     message,
+             assignment_id: assignment_id,
              event:       :reject_responder_assignment
   end
 
-  def reject_responder_assignment(assignee_id, message)
-    self.reject_responder_assignment!(assignee_id, message)
+  def reject_responder_assignment(assignee_id, message, assignment_id)
+    self.reject_responder_assignment!(assignee_id, message, assignment_id)
   rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
     false
   end
