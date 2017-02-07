@@ -23,7 +23,8 @@ require 'case_state_machine'
 class Case < ApplicationRecord
   include Statesman::Adapters::ActiveRecordQueries
 
-  acts_as_gov_uk_date :received_date
+  acts_as_gov_uk_date :received_date,
+                      validate_if: :received_not_in_the_future?
 
   scope :by_deadline, lambda {
     order("(properties ->> 'external_deadline')::timestamp with time zone ASC, id")
@@ -128,6 +129,19 @@ class Case < ApplicationRecord
 
   def close(current_user_id)
     state_machine.close!(current_user_id)
+  end
+
+  def received_not_in_the_future?
+    if received_date.present? && self.received_date > Date.today
+
+      errors.add(
+          :received_date,
+          I18n.t('activerecord.errors.models.case.attributes.received_date.not_in_future')
+      )
+      true
+    else
+      false
+    end
   end
 
   private
