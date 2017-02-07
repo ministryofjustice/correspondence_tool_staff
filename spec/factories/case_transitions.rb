@@ -21,8 +21,6 @@ FactoryGirl.define do
       last_sort_key + 10
     end
     most_recent true
-    
-    #association :kase, factory: :case, strategy: :create
 
     before(:create) do |transition|
       CaseTransition.where(case_id: transition.case_id).update(most_recent: false)

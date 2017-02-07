@@ -30,7 +30,7 @@ class CaseTransition < ActiveRecord::Base
   private
 
   def update_most_recent
-    last_transition = kase.case_transitions.order(:sort_key).last
+    last_transition = kase.transitions.order(:sort_key).last
     return unless last_transition.present?
     last_transition.update_column(:most_recent, true)
   end
