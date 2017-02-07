@@ -115,8 +115,6 @@
   display: inline-block;
 }
 
-#attachment-dropzone {
-  border: 2px dashed black;
-  width: 50%;
-  height: 10em;
+table#uploaded-files {
+  margin-bottom: $gutter;
 }

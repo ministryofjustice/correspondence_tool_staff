@@ -303,4 +303,135 @@ RSpec.describe CasesController, type: :controller do
       end
     end
   end
+
+  # An astute reader who has persevered to this point in the file may notice
+  # that the following tests are in a different structure than those above:
+  # above, the top-most grouping is a context describing authentication, with
+  # what action is being tested (GET new, POST create, etc) sub-grouped within
+  # those contexts. This breaks up the tests for, say, GET new so that to read
+  # how that action/functionality behaves becomes hard. The tests below seek to
+  # remedy this by modelling how they could be grouped by functionality
+  # primarily, with sub-grouping for different contexts.
+  describe 'GET new_response_upload' do
+    context 'as an anonymous user' do
+      describe 'GET new_response_upload' do
+        it 'redirects to signin' do
+          get :new_response_upload, params: { id: first_case }
+          expect(response).to redirect_to(new_user_session_path)
+        end
+      end
+    end
+
+    context 'as an authenticated assigner' do
+      before { sign_in assigner }
+
+      xit 'redirects to signin' do
+        get :new_response_upload, params: { id: first_case }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'as an authenticated drafter' do
+      before { sign_in drafter }
+
+      it 'assigns @case' do
+        get :new_response_upload, params: { id: first_case }
+        expect(assigns(:case)).to eq(Case.first)
+      end
+
+      it 'renders the new_response_upload view' do
+        get :new_response_upload, params: { id: first_case }
+        expect(response).to have_rendered(:new_response_upload)
+      end
+    end
+  end
+
+  describe 'POST upload_responses' do
+    let(:attachment_url) do
+      'https://correspondence-staff-uploads.s3.amazonaws.com' +
+        '/356a192b7913b04c54574d18c28d46e6395428ab/responses/test file.jpg'
+    end
+
+    let(:do_upload_responses) do
+      post :upload_responses, params: {
+             id:             first_case,
+             type:           'response',
+             attachment_url: [attachment_url]
+           }
+    end
+
+    context 'as an anonymous user' do
+      it 'redirects to signin' do
+        expect do
+          do_upload_responses
+        end.not_to change { first_case.attachments.count }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'as an authenticated assigner' do
+      before { sign_in assigner }
+
+      xit 'redirects to signin' do
+        expect do
+          do_upload_responses
+        end.not_to change { first_case.attachments.count }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'as an authenticated drafter' do
+      before { sign_in drafter }
+
+      it 'creates a new case attachment' do
+        expect { do_upload_responses }.
+          to change { first_case.reload.attachments.count }
+      end
+
+      it 'URI encodes the attachment url' do
+        do_upload_responses
+        expect(first_case.attachments.first.url).to eq URI.encode attachment_url
+      end
+
+      it 'test the type field' do
+        do_upload_responses
+        expect(first_case.attachments.first.type).to eq 'response'
+      end
+
+      it 'redirects to the case detail page' do
+        do_upload_responses
+        expect(response).to redirect_to(case_path(first_case))
+      end
+
+      context 'uploading invalid attachment type' do
+        let(:attachment_url) { 'https://correspondence-staff-case-uploads-testing.s3-eu-west-1.amazonaws.com/356a192b7913b04c54574d18c28d46e6395428ab/responses/invalid_type.exe' }
+
+        it 'renders the new_response_upload page' do
+          do_upload_responses
+          expect(response).to have_rendered(:new_response_upload)
+        end
+
+        it 'does not create a new case attachment' do
+          expect { do_upload_responses }.
+            to_not change { first_case.reload.attachments.count }
+        end
+
+        xit 'removes the attachment from S3'
+      end
+
+      context 'uploading attachment that are too large' do
+        xit 'renders the new_response_upload page' do
+          do_upload_responses
+          expect(response).to have_rendered(:new_response_upload)
+        end
+
+        xit 'does not create a new case attachment' do
+          expect { do_upload_responses }.
+            to_not change { first_case.reload.attachments.count }
+        end
+
+        xit 'removes the attachment from S3'
+      end
+    end
+  end
 end

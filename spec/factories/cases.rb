@@ -14,6 +14,7 @@
 #  subject        :string
 #  properties     :jsonb
 #  number         :string           not null
+#  requester_type :enum
 #
 
 FactoryGirl.define do
@@ -29,7 +30,10 @@ FactoryGirl.define do
     postal_address { Faker::Address.street_address }
 
     factory :assigned_case do
-      
+      transient do
+        assignee create(:drafter_user)
+      end
+
       after(:create) do |kase, _evaluator|
         assignment = create(:assignment, case_id: kase.id)
         create(:case_transition_assign_responder,
@@ -38,12 +42,27 @@ FactoryGirl.define do
                assignee_id: assignment.assignee.id)
       end
 
+      factory :accepted_case do
+        after(:create) do |kase, _evaluator|
+          assignment = kase.assignments.first
+          create(
+            :case_transition,
+            case_id: kase.id,
+            to_state: 'drafting',
+            user_id: assignment.assigner.id,
+            assignee_id: assignment.assignee.id,
+            event: 'drafting',
+            most_recent: true
+          )
+        end
+      end
+
       factory :responded_case do
         after(:create) do |kase, _evaluator|
 
           assignment = Assignment.find_by(case_id: kase.id)
 
-          create(:case_transition_accept_responder_assignment,               
+          create(:case_transition_accept_responder_assignment,
                case_id: kase.id,
                user_id: assignment.assignee.id,
                assignee_id: assignment.assignee.id)

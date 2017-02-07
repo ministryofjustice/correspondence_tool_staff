@@ -14,6 +14,7 @@
 #  subject        :string
 #  properties     :jsonb
 #  number         :string           not null
+#  requester_type :enum
 #
 
 # Required in production with it's eager loading and cacheing of classes.

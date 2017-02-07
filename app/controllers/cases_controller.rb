@@ -1,7 +1,7 @@
 class CasesController < ApplicationController
 
-  before_action :set_case, only: [:close, :edit, :new_response_upload, :show, :update]
-  before_action :set_s3_direct_post, only: [:new_response_upload]
+  before_action :set_case, only: [:close, :edit, :new_response_upload, :show, :update, :upload_responses]
+  before_action :set_s3_direct_post, only: [:new_response_upload, :upload_responses]
 
   def index
     @cases = policy_scope(Case.by_deadline)
@@ -16,7 +16,7 @@ class CasesController < ApplicationController
 
   def create
     authorize Case, :can_add_case?
-    
+
     @case = Case.new(create_foi_params)
     if @case.save
       flash[:notice] = t('.case_created')
@@ -39,10 +39,24 @@ class CasesController < ApplicationController
   end
 
   def new_response_upload
-    
   end
 
   def upload_responses
+    attachments = params[:attachment_url].reject(&:blank?).map do |url|
+      CaseAttachment.new(
+        type: params[:type],
+        url: URI.encode(url)
+      )
+    end
+
+    if attachments.all?(&:valid?)
+      @case.attachments << attachments
+      redirect_to case_path
+    else
+      flash.now[:error] = 'Errors detected with uploaded files.'
+      # @errors = attachments.reject(&:valid?).map { |a| a.errors.full_messages }.flatten
+      render :new_response_upload
+    end
   end
 
   def update

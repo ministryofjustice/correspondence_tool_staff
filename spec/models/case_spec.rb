@@ -14,6 +14,7 @@
 #  subject        :string
 #  properties     :jsonb
 #  number         :string           not null
+#  requester_type :enum
 #
 
 require 'rails_helper'

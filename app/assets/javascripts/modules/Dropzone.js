@@ -67,7 +67,7 @@ moj.Modules.Dropzone = {
         // create hidden field
         var input = $('<input />', { class: 'case-attachment-url'
                       , type:'hidden'
-                      , name: 'attactment_url[]'
+                      , name: 'attachment_url[]'
                       , value: url });
 
         $(this.element).closest('form').append(input);

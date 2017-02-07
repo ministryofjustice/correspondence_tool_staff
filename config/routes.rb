@@ -14,14 +14,8 @@
 #                                  PATCH  /cases/:case_id/assignments/:id(.:format)                  assignments#update
 #                                  PUT    /cases/:case_id/assignments/:id(.:format)                  assignments#update
 #                                  DELETE /cases/:case_id/assignments/:id(.:format)                  assignments#destroy
-#            case_case_attachments GET    /cases/:case_id/attachments(.:format)                      case_attachments#index
-#                                  POST   /cases/:case_id/attachments(.:format)                      case_attachments#create
-#         new_case_case_attachment GET    /cases/:case_id/attachments/new(.:format)                  case_attachments#new
-#        edit_case_case_attachment GET    /cases/:case_id/attachments/:id/edit(.:format)             case_attachments#edit
-#             case_case_attachment GET    /cases/:case_id/attachments/:id(.:format)                  case_attachments#show
-#                                  PATCH  /cases/:case_id/attachments/:id(.:format)                  case_attachments#update
-#                                  PUT    /cases/:case_id/attachments/:id(.:format)                  case_attachments#update
-#                                  DELETE /cases/:case_id/attachments/:id(.:format)                  case_attachments#destroy
+#         new_response_upload_case GET    /cases/:id/new_response_upload(.:format)                   cases#new_response_upload
+#            upload_responses_case POST   /cases/:id/upload_responses(.:format)                      cases#upload_responses
 #                            cases GET    /cases(.:format)                                           cases#index
 #                                  POST   /cases(.:format)                                           cases#create
 #                         new_case GET    /cases/new(.:format)                                       cases#new
