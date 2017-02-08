@@ -61,6 +61,36 @@ RSpec.describe CasesController, type: :controller do
 
     before { sign_in assigner }
 
+    describe 'GET show' do
+
+      context 'viewing an unassigned case' do
+        let(:unassigned_case)       { create(:case)            }
+        before { get :show, params: { id: unassigned_case.id } }
+
+        it 'permitted_events == [:assign_responder]' do
+          expect(assigns(:permitted_events)).to eq [:assign_responder]
+        end
+      end
+
+      context 'viewing an assigned_case' do
+        let(:assigned_case)         { create(:assigned_case) }
+        before { get :show, params: { id: assigned_case.id } }
+
+        it 'permitted_events == []' do
+          expect(assigns(:permitted_events)).to eq []
+        end
+      end
+
+      context 'viewing a responded_case' do
+        let(:responded_case)        { create(:responded_case)   }
+        before { get :show, params: { id: responded_case.id   } }
+
+        it 'permitted_events == [:close]' do
+          expect(assigns(:permitted_events)).to eq [:close]
+        end
+      end
+    end
+
     describe 'GET index' do
 
       let(:unordered_cases) do
@@ -214,6 +244,20 @@ RSpec.describe CasesController, type: :controller do
 
   context 'as an authenticated drafter' do
     before { sign_in drafter }
+
+    describe 'GET show' do
+
+      context 'viewing an assigned_case' do
+        let(:assigned_case)         { create(:assigned_case) }
+        let(:drafter)               { assigned_case.drafter  }
+        before { get :show, params: { id: assigned_case.id } }
+
+        it 'permitted_events == [:accept_responder_assignment, :reject_responder_assignment]' do
+          expect(assigns(:permitted_events)).
+            to match_array([:accept_responder_assignment, :reject_responder_assignment])
+        end
+      end
+    end
 
     describe 'GET index' do
 

@@ -30,7 +30,8 @@ class CasesController < ApplicationController
     render :new
   end
 
-  def show;
+  def show
+    set_permitted_events
     @accepted_now = params[:accepted_now]
   end
 
@@ -76,6 +77,7 @@ class CasesController < ApplicationController
     authorize @case, :can_close_case?
 
     @case.close(current_user.id)
+    set_permitted_events
     flash[:notice] = t('notices.case_closed')
     render :show
   end
@@ -86,6 +88,18 @@ class CasesController < ApplicationController
   end
 
   private
+
+  def set_permitted_events
+    @permitted_events = @case.available_events.find_all do |event|
+      case event
+      when :assign_responder            then policy(@case).can_assign_case?
+      when :accept_responder_assignment then policy(@case).can_accept_or_reject_case?
+      when :reject_responder_assignment then policy(@case).can_accept_or_reject_case?
+      when :close                       then policy(@case).can_close_case?
+      end
+    end
+    @permitted_events ||= []
+  end
 
   def create_foi_params
     params.require(:case).permit(

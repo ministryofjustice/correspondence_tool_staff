@@ -46,13 +46,10 @@ details.case-sidebar__group--hr
   .case-sidebar__heading
     = t('common.case.actions')
   .case-sidebar__data
-    - if policy(case_details).can_close_case?
-      = link_to t('common.case.close'), close_case_path(@case), class: 'button', method: :patch
-    - elsif policy(case_details).can_accept_or_reject_case?
-      = link_to t('common.case.accept_or_reject'), edit_case_assignment_path(@case, @case.assignments.last), class: 'button'
     - elsif policy(case_details).can_add_attachment?
       = link_to t('common.case.upload_response'), new_response_upload_case_path(@case), class: 'button'
-    - elsif policy(case_details).can_assign_case?
-      = link_to t('common.case.assign'), new_case_assignment_path(@case), class: 'button'
+    - if @permitted_events.any?
+      - @permitted_events.each do |event|
+        = action_button_for(event)
     - else
       = t('common.case.no_actions')
