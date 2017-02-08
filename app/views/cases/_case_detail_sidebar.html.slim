@@ -50,6 +50,8 @@ details.case-sidebar__group--hr
       = link_to t('common.case.close'), close_case_path(@case), class: 'button', method: :patch
     - elsif policy(case_details).can_accept_or_reject_case?
       = link_to t('common.case.accept_or_reject'), edit_case_assignment_path(@case, @case.assignments.last), class: 'button'
+    - elsif policy(case_details).can_add_attachment?
+      = link_to t('common.case.upload_files'), new_response_upload_case_path(@case), class: 'button'
     - elsif policy(case_details).can_assign_case?
       = link_to t('common.case.assign'), new_case_assignment_path(@case), class: 'button'
     - else
