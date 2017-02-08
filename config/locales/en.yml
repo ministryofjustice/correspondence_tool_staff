@@ -27,6 +27,8 @@ en:
           attributes:
             email:
               blank: and address can't both be blank
+            received_date:
+              not_in_future: can't be in the future.
             postal_address:
               blank: and email can't both be blank
             number:
@@ -114,31 +116,32 @@ en:
     case_closed: You've closed this case
 
   common:
-      error: error
-      greeting: Hello %{user}
-      case:
-        header_case_number: "You are viewing case number "
-        header_subject: "Case subject, "
-        email: "Requesters email address: "
-        external_deadline: External deadline
-        name: Requester
-        postal_address: "Requesters postal address: "
-        received_date: Date received
-        request: "Request: "
-        requester_type: "Type of requester "
-        status: Status
-        actions: Actions
-        accept_or_reject: Accept or reject
-        close: Close case
-        no_actions: No actions available
-        assign: Assign to a responder
-      new_case_button: New case
-      phase_banner: |
-        This is a new service – your feedback will help us to improve it.
-      service_name: Track a query
-      signout: Sign out
-      summary_error: 'prevented this form from being submitted:'
-      view_details: View details
+    error: error
+    greeting: Hello %{user}
+    case:
+      header_case_number: "You are viewing case number "
+      header_subject: "Case subject, "
+      email: "Requesters email address: "
+      external_deadline: External deadline
+      name: Requester
+      postal_address: "Requesters postal address: "
+      received_date: Date received
+      request: "Request: "
+      requester_type: "Type of requester "
+      status: Status
+      actions: Actions
+      accept_or_reject: Accept or reject
+      close: Close case
+      no_actions: No actions available
+      assign: Assign to a responder
+    new_case_button: New case
+    phase_banner: |
+      This is a new service – your feedback will help us to improve it.
+    service_name: Track a query
+    signout: Sign out
+    summary_error: 'prevented this form from being submitted:'
+    view_details: View details
+
 
   assignments:
     new:

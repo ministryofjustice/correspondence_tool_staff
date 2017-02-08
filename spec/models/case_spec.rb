@@ -144,6 +144,24 @@ RSpec.describe Case, type: :model do
     it { should validate_length_of(:subject).is_at_most(80) }
   end
 
+  describe '#received_date' do
+    let(:case_received_yesterday)   { build(:case, received_date: Date.yesterday.to_s) }
+    let(:case_received_today){ build(:case, received_date: Date.today.to_s) }
+    let(:case_received_tomorrow) { build(:case, received_date: Date.tomorrow.to_s) }
+
+    it 'can be received in the past' do
+      expect(case_received_yesterday).to be_valid
+    end
+
+    it 'can be received today' do
+      expect(case_received_today).to be_valid
+    end
+
+    it 'cannot be received in the future' do
+      expect(case_received_tomorrow).to_not be_valid
+    end
+
+  end
   describe '#drafter' do
     it 'is the currently assigned drafter' do
       allow(non_trigger_foi).to receive(:assignees).and_return [drafter]
