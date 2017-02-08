@@ -15,11 +15,13 @@ class CaseAttachment < ActiveRecord::Base
   belongs_to :case
 
   validates :type, presence: true
-  validate :check_file_type
+  validate :validate_url_file_extension
 
   enum type: { response: 'response' }
 
-  def check_file_type
+  private
+
+  def validate_url_file_extension
     filename = File.basename URI.parse(url).path
     mime_type = Rack::Mime.mime_type(File.extname filename)
     unless Settings.case_uploads_accepted_types.include? mime_type
