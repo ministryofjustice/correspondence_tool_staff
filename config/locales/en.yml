@@ -140,7 +140,7 @@ en:
       request: "Request: "
       requester_type: "Type of requester "
       status: Status
-      upload_files: Upload files
+      upload_response: Upload response
       uploaded_files: Uploaded files
     new_case_button: New case
     phase_banner: |

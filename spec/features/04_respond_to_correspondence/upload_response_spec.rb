@@ -21,7 +21,7 @@ feature 'Upload response' do
     scenario 'clicking link on case detail page goes to upload page' do
       visit case_path(kase)
 
-      click_link 'Upload files'
+      click_link 'Upload response'
 
       expect(current_path).to eq new_response_upload_case_path(kase)
     end
@@ -46,7 +46,7 @@ feature 'Upload response' do
     scenario "link to case upload page isn't visible on detail page" do
       visit case_path(kase)
 
-      expect(page).not_to have_link('Upload file')
+      expect(page).not_to have_link('Upload response')
     end
   end
 end
