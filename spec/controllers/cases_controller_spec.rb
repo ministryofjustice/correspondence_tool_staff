@@ -334,7 +334,7 @@ RSpec.describe CasesController, type: :controller do
     end
 
     context "as a drafter who isn't assigned to the case" do
-      let(:unassigned_drafter) { create(:drafter)                          }
+      let(:unassigned_drafter) { create(:drafter) }
 
       before { sign_in unassigned_drafter }
 

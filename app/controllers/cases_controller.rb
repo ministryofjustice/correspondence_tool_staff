@@ -47,8 +47,8 @@ class CasesController < ApplicationController
 
     attachments = params[:attachment_url].reject(&:blank?).map do |url|
       CaseAttachment.new(
-        type: params[:type],
-        url: URI.encode(url)
+        type: 'response',
+        url:  URI.encode(url)
       )
     end
 
