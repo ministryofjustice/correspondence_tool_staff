@@ -7,6 +7,10 @@ class CasePolicy
     @case = kase
   end
 
+  def can_add_attachment?
+    user.drafter? && self.case.drafting? && assignment.assignee == user
+  end
+
   def can_add_case?
     user.assigner?
   end

@@ -31,15 +31,17 @@ FactoryGirl.define do
 
     factory :assigned_case do
       transient do
-        assignee create(:drafter_user)
+        assignee { create(:drafter) }
       end
 
-      after(:create) do |kase, _evaluator|
-        assignment = create(:assignment, case_id: kase.id)
-        create(:case_transition_assign_responder,
+      after(:create) do |kase, evaluator|
+        assignment = create :assignment,
+                            case: kase,
+                            assignee: evaluator.assignee
+        create :case_transition_assign_responder,
                case_id: kase.id,
                user_id: assignment.assigner.id,
-               assignee_id: assignment.assignee.id)
+               assignee_id: assignment.assignee.id
       end
 
       factory :accepted_case do

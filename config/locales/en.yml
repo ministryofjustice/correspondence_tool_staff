@@ -48,6 +48,7 @@ en:
 
   pundit:
     case_policy:
+      can_add_attachment?: 'You are not authorised to upload attachments to this case.'
       can_add_case?: 'You are not authorised to create new cases.'
       can_accept_or_reject?: 'You are not able to view to this assignment.'
 

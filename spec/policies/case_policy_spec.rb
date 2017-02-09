@@ -3,8 +3,23 @@ require 'rails_helper'
 describe CasePolicy do
   subject { described_class }
 
-  let(:assigner)        { create(:user, roles: ['assigner'])                 }
-  let(:drafter)         { create(:user, roles: ['drafter'])                  }
+  let(:assigner)  { create(:assigner) }
+  let(:drafter)   { create(:drafter)  }
+
+  permissions :can_add_attachment? do
+    let(:accepted_case) { create :accepted_case }
+
+    it 'refuses if current_user is not the assigned drafter' do
+      expect(subject).not_to permit(drafter, accepted_case)
+    end
+
+    it 'grants if current_user is the assigned drafter' do
+      expect(subject).to permit(
+                           accepted_case.assignees.find(&:drafter?),
+                           accepted_case
+                         )
+    end
+  end
 
   permissions :can_add_case? do
     it "refuses unless current_user is an assigner" do

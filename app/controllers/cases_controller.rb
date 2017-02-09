@@ -39,9 +39,12 @@ class CasesController < ApplicationController
   end
 
   def new_response_upload
+    authorize @case, :can_add_attachment?
   end
 
   def upload_responses
+    authorize @case, :can_add_attachment?
+
     attachments = params[:attachment_url].reject(&:blank?).map do |url|
       CaseAttachment.new(
         type: params[:type],
@@ -53,7 +56,7 @@ class CasesController < ApplicationController
       @case.attachments << attachments
       redirect_to case_path
     else
-      flash.now[:error] = 'Errors detected with uploaded files.'
+      flash.now[:alert] = 'Errors detected with uploaded files.'
       # @errors = attachments.reject(&:valid?).map { |a| a.errors.full_messages }.flatten
       render :new_response_upload
     end
@@ -120,5 +123,14 @@ class CasesController < ApplicationController
       success_action_status: '201',
       acl:                   'public-read'
     )
+  end
+
+  def user_not_authorized(exception)
+    case exception.query
+    when :can_add_attachment?
+      super(exception, case_path(@case))
+    else
+      super
+    end
   end
 end

@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe CasesController, type: :controller do
 
   let(:all_cases)  { create_list(:case, 5)             }
-  let(:assigner)   { create(:user)                     }
-  let(:drafter)    { create(:user, roles: ['drafter']) }
+  let(:assigner)   { create(:assigner)                 }
+  let(:drafter)    { create(:drafter)                  }
   let(:first_case) { all_cases.first                   }
   let(:responded_case)  { create(:responded_case) }
 
@@ -306,17 +306,19 @@ RSpec.describe CasesController, type: :controller do
 
   # An astute reader who has persevered to this point in the file may notice
   # that the following tests are in a different structure than those above:
-  # above, the top-most grouping is a context describing authentication, with
+  # there, the top-most grouping is a context describing authentication, with
   # what action is being tested (GET new, POST create, etc) sub-grouped within
   # those contexts. This breaks up the tests for, say, GET new so that to read
   # how that action/functionality behaves becomes hard. The tests below seek to
   # remedy this by modelling how they could be grouped by functionality
   # primarily, with sub-grouping for different contexts.
   describe 'GET new_response_upload' do
+    let(:kase)               { create(:accepted_case, assignee: drafter) }
+
     context 'as an anonymous user' do
       describe 'GET new_response_upload' do
         it 'redirects to signin' do
-          get :new_response_upload, params: { id: first_case }
+          get :new_response_upload, params: { id: kase }
           expect(response).to redirect_to(new_user_session_path)
         end
       end
@@ -325,46 +327,61 @@ RSpec.describe CasesController, type: :controller do
     context 'as an authenticated assigner' do
       before { sign_in assigner }
 
-      xit 'redirects to signin' do
-        get :new_response_upload, params: { id: first_case }
-        expect(response).to redirect_to(new_user_session_path)
+      it 'redirects to case detail page' do
+        get :new_response_upload, params: { id: kase }
+        expect(response).to redirect_to(case_path(kase))
       end
     end
 
-    context 'as an authenticated drafter' do
+    context "as a drafter who isn't assigned to the case" do
+      let(:unassigned_drafter) { create(:drafter)                          }
+
+      before { sign_in unassigned_drafter }
+
+      it 'redirects to case detail page' do
+        get :new_response_upload, params: { id: kase }
+        expect(response).to redirect_to(case_path(kase))
+      end
+    end
+
+    context 'as the assigned drafter' do
       before { sign_in drafter }
 
       it 'assigns @case' do
-        get :new_response_upload, params: { id: first_case }
+        get :new_response_upload, params: { id: kase }
         expect(assigns(:case)).to eq(Case.first)
       end
 
       it 'renders the new_response_upload view' do
-        get :new_response_upload, params: { id: first_case }
+        get :new_response_upload, params: { id: kase }
         expect(response).to have_rendered(:new_response_upload)
       end
     end
   end
 
   describe 'POST upload_responses' do
+    let(:kase) { create(:accepted_case, assignee: drafter) }
     let(:attachment_url) do
       'https://correspondence-staff-uploads.s3.amazonaws.com' +
         '/356a192b7913b04c54574d18c28d46e6395428ab/responses/test file.jpg'
     end
-
     let(:do_upload_responses) do
       post :upload_responses, params: {
-             id:             first_case,
+             id:             kase,
              type:           'response',
              attachment_url: [attachment_url]
            }
     end
 
     context 'as an anonymous user' do
-      it 'redirects to signin' do
+      it "doesn't add the attachment" do
         expect do
           do_upload_responses
-        end.not_to change { first_case.attachments.count }
+        end.not_to change { kase.attachments.count }
+      end
+
+      it 'redirects to signin' do
+        do_upload_responses
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -372,35 +389,56 @@ RSpec.describe CasesController, type: :controller do
     context 'as an authenticated assigner' do
       before { sign_in assigner }
 
-      xit 'redirects to signin' do
+      it "doesn't add the attachment" do
         expect do
           do_upload_responses
-        end.not_to change { first_case.attachments.count }
-        expect(response).to redirect_to(new_user_session_path)
+        end.not_to change { kase.attachments.count }
+      end
+
+      it 'redirects to case detail page' do
+        do_upload_responses
+        expect(response).to redirect_to(case_path(kase))
       end
     end
 
-    context 'as an authenticated drafter' do
+    context "as a drafter who isn't assigned to the case" do
+      let(:unassigned_drafter) { create(:drafter)                          }
+
+      before { sign_in unassigned_drafter }
+
+      it "doesn't add the attachment" do
+        expect do
+          do_upload_responses
+        end.not_to change { kase.attachments.count }
+      end
+
+      it 'redirects to case detail page' do
+        do_upload_responses
+        expect(response).to redirect_to(case_path(kase))
+      end
+    end
+
+    context 'as the assigned drafter' do
       before { sign_in drafter }
 
       it 'creates a new case attachment' do
         expect { do_upload_responses }.
-          to change { first_case.reload.attachments.count }
+          to change { kase.reload.attachments.count }
       end
 
       it 'URI encodes the attachment url' do
         do_upload_responses
-        expect(first_case.attachments.first.url).to eq URI.encode attachment_url
+        expect(kase.attachments.first.url).to eq URI.encode attachment_url
       end
 
       it 'test the type field' do
         do_upload_responses
-        expect(first_case.attachments.first.type).to eq 'response'
+        expect(kase.attachments.first.type).to eq 'response'
       end
 
       it 'redirects to the case detail page' do
         do_upload_responses
-        expect(response).to redirect_to(case_path(first_case))
+        expect(response).to redirect_to(case_path(kase))
       end
 
       context 'uploading invalid attachment type' do
@@ -413,7 +451,7 @@ RSpec.describe CasesController, type: :controller do
 
         it 'does not create a new case attachment' do
           expect { do_upload_responses }.
-            to_not change { first_case.reload.attachments.count }
+            to_not change { kase.reload.attachments.count }
         end
 
         xit 'removes the attachment from S3'
@@ -427,7 +465,7 @@ RSpec.describe CasesController, type: :controller do
 
         xit 'does not create a new case attachment' do
           expect { do_upload_responses }.
-            to_not change { first_case.reload.attachments.count }
+            to_not change { kase.reload.attachments.count }
         end
 
         xit 'removes the attachment from S3'

@@ -16,11 +16,11 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def user_not_authorized(exception)
+  def user_not_authorized(exception, redirect_path = nil)
     policy_name = exception.policy.class.to_s.underscore
 
     flash[:alert] = t "pundit.#{policy_name}.#{exception.query}"
-    redirect_to(request.referrer || root_path)
+    redirect_to(redirect_path || request.referrer || root_path)
   end
 
 end
