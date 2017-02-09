@@ -183,6 +183,3 @@ en:
       upload_response: 'Upload response'
     update:
       case_updated: Case updated
-    upload_response:
-      file_type_not_allowed: "File type %{type} not permitted."
-      upload_response: 'Upload response'
