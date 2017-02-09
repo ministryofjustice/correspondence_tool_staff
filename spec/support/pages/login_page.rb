@@ -1,3 +1,5 @@
+require 'support/pages/feedback_section'
+
 class UserCard < SitePrism::Section
   element :greetings, '.user-card--greetings'
   element :signout_link, '.user-card--signout'
@@ -10,6 +12,7 @@ class LoginPage < SitePrism::Page
   element :signin, 'input[type="submit"][value="Sign in"]'
   element :error_message, '.error-summary'
   section :user_card, UserCard, '.user-card'
+  section :service_feedback, SitePrism::Section::ServiceFeedback, '.feedback'
 
   def log_in(username, password)
     username_field.set(username)

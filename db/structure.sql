@@ -300,6 +300,37 @@ ALTER SEQUENCE categories_id_seq OWNED BY categories.id;
 
 
 --
+-- Name: feedback; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE feedback (
+    id integer NOT NULL,
+    content jsonb,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: feedback_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE feedback_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: feedback_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE feedback_id_seq OWNED BY feedback.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -394,6 +425,13 @@ ALTER TABLE ONLY categories ALTER COLUMN id SET DEFAULT nextval('categories_id_s
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY feedback ALTER COLUMN id SET DEFAULT nextval('feedback_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
 
@@ -451,6 +489,14 @@ ALTER TABLE ONLY cases
 
 ALTER TABLE ONLY categories
     ADD CONSTRAINT categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: feedback_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY feedback
+    ADD CONSTRAINT feedback_pkey PRIMARY KEY (id);
 
 
 --
@@ -606,6 +652,7 @@ INSERT INTO schema_migrations (version) VALUES
 ('20170116161424'),
 ('20170118154824'),
 ('20170118154954'),
-('20170128230814');
+('20170128230814'),
+('20170208133053');
 
 

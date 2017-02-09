@@ -48,6 +48,8 @@ Rails.application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
+  post '/feedback' => 'feedback#create'
+
   resources :cases do
     patch 'close', on: :member
     get '/assignments/show_rejected' => 'assignments#show_rejected'

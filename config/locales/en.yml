@@ -72,6 +72,7 @@ en:
     continue: Continue
     confirm: Confirm
     assign: Assign case
+    feedback: Send feedback
 
   helpers:
     fieldset:
@@ -83,6 +84,11 @@ en:
       assignment:
         reasons_for_rejection: |
           Try including who you think with right division may be
+      feedback:
+        comment: |
+          Please tell us what you thought of this page. Make sure
+          you specify what you were trying to do in relation to your feedback.
+        #Include what you were doing in relation to your feedback
     label:
       assignment:
         user_id: Business unit
@@ -101,6 +107,8 @@ en:
         state:
           accepted: Accept
           rejected: Reject
+      feedback:
+        comment: Help us improve this service
 
   alerts:
     assignment_accepted_html: |

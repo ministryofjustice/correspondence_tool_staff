@@ -1,3 +1,5 @@
+require 'support/pages/feedback_section'
+
 class UserCard < SitePrism::Section
   element :greetings, '.user-card--greetings'
   element :signout, '.user-card--signout'
@@ -18,4 +20,6 @@ class CaseListPage < SitePrism::Page
   sections :case_list,::CaseList, '.case_row'
 
   section :user_card, UserCard, '.user-card'
+
+  section :service_feedback, SitePrism::Section::ServiceFeedback, '.feedback'
 end
