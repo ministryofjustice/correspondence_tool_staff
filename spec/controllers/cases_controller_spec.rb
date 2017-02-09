@@ -2,10 +2,10 @@ require 'rails_helper'
 
 RSpec.describe CasesController, type: :controller do
 
-  let(:all_cases)  { create_list(:case, 5)             }
-  let(:assigner)   { create(:assigner)                 }
-  let(:drafter)    { create(:drafter)                  }
-  let(:first_case) { all_cases.first                   }
+  let(:all_cases)       { create_list(:case, 5)   }
+  let(:assigner)        { create(:assigner)       }
+  let(:drafter)         { create(:drafter)        }
+  let(:first_case)      { all_cases.first         }
   let(:responded_case)  { create(:responded_case) }
 
   before { create(:category, :foi) }
@@ -232,8 +232,8 @@ RSpec.describe CasesController, type: :controller do
 
       before {
         unordered_cases
-        create(:assignment, assignee: drafter, case_id: 1)
-        create(:assignment, assignee: drafter, case_id: 2)
+        create(:drafter_assignment, assignee: drafter, case_id: 1)
+        create(:drafter_assignment, assignee: drafter, case_id: 2)
         drafters_workbasket
         get :index
       }
@@ -313,7 +313,7 @@ RSpec.describe CasesController, type: :controller do
   # remedy this by modelling how they could be grouped by functionality
   # primarily, with sub-grouping for different contexts.
   describe 'GET new_response_upload' do
-    let(:kase)               { create(:accepted_case, assignee: drafter) }
+    let(:kase) { create(:accepted_case, drafter: drafter) }
 
     context 'as an anonymous user' do
       describe 'GET new_response_upload' do
@@ -321,15 +321,6 @@ RSpec.describe CasesController, type: :controller do
           get :new_response_upload, params: { id: kase }
           expect(response).to redirect_to(new_user_session_path)
         end
-      end
-    end
-
-    context 'as an authenticated assigner' do
-      before { sign_in assigner }
-
-      it 'redirects to case detail page' do
-        get :new_response_upload, params: { id: kase }
-        expect(response).to redirect_to(case_path(kase))
       end
     end
 
@@ -344,9 +335,7 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as the assigned drafter' do
-      before { sign_in drafter }
-
+    shared_examples 'signed-in user can view attachment upload page' do
       it 'assigns @case' do
         get :new_response_upload, params: { id: kase }
         expect(assigns(:case)).to eq(Case.first)
@@ -357,10 +346,23 @@ RSpec.describe CasesController, type: :controller do
         expect(response).to have_rendered(:new_response_upload)
       end
     end
+
+    context 'as the assigned drafter' do
+      before { sign_in drafter }
+
+      it_behaves_like 'signed-in user can view attachment upload page'
+    end
+
+    context 'as an authenticated assigner' do
+      before { sign_in assigner }
+
+      it_behaves_like 'signed-in user can view attachment upload page'
+    end
+
   end
 
   describe 'POST upload_responses' do
-    let(:kase) { create(:accepted_case, assignee: drafter) }
+    let(:kase) { create(:accepted_case, drafter: drafter) }
     let(:attachment_url) do
       'https://correspondence-staff-uploads.s3.amazonaws.com' +
         '/356a192b7913b04c54574d18c28d46e6395428ab/responses/test file.jpg'
@@ -386,23 +388,8 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as an authenticated assigner' do
-      before { sign_in assigner }
-
-      it "doesn't add the attachment" do
-        expect do
-          do_upload_responses
-        end.not_to change { kase.attachments.count }
-      end
-
-      it 'redirects to case detail page' do
-        do_upload_responses
-        expect(response).to redirect_to(case_path(kase))
-      end
-    end
-
     context "as a drafter who isn't assigned to the case" do
-      let(:unassigned_drafter) { create(:drafter)                          }
+      let(:unassigned_drafter) { create(:drafter) }
 
       before { sign_in unassigned_drafter }
 
@@ -418,9 +405,7 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as the assigned drafter' do
-      before { sign_in drafter }
-
+    shared_examples 'signed-in user can add attachments' do
       it 'creates a new case attachment' do
         expect { do_upload_responses }.
           to change { kase.reload.attachments.count }
@@ -442,7 +427,10 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'uploading invalid attachment type' do
-        let(:attachment_url) { 'https://correspondence-staff-case-uploads-testing.s3-eu-west-1.amazonaws.com/356a192b7913b04c54574d18c28d46e6395428ab/responses/invalid_type.exe' }
+        let(:attachment_url) do
+          'https://correspondence-staff-uploads.s3-eu-west-1.amazonaws.com/' +
+            '/responses/invalid_type.exe'
+        end
 
         it 'renders the new_response_upload page' do
           do_upload_responses
@@ -470,6 +458,18 @@ RSpec.describe CasesController, type: :controller do
 
         xit 'removes the attachment from S3'
       end
+    end
+
+    context 'as the assigned drafter' do
+      before { sign_in drafter }
+
+      it_behaves_like 'signed-in user can add attachments'
+    end
+
+    context 'as an assigner' do
+      before { sign_in assigner }
+
+      it_behaves_like 'signed-in user can add attachments'
     end
   end
 end

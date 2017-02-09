@@ -15,11 +15,18 @@
 FactoryGirl.define do
 
   factory :assignment do
-    assignment_type 'drafter'
     state 'pending'
     association :assigner, factory: :assigner, strategy: :create
     association :assignee, factory: :drafter, strategy: :create
     association :case, factory: :case, strategy: :create
+
+    factory :drafter_assignment do
+      assignment_type 'drafter'
+
+      factory :accepted_drafter_assignment do
+        state 'accepted'
+      end
+    end
   end
 
 end

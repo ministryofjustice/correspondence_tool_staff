@@ -3,7 +3,7 @@ require 'rails_helper'
 feature 'Upload response' do
   given(:page)    { CaseUploadPage.new }
   given(:drafter) { create(:drafter) }
-  given(:kase)    { create(:accepted_case, assignee: drafter) }
+  given(:kase)    { create(:accepted_case, drafter: drafter) }
   given(:attachment_1) do
     create(:correspondence_response, case: kase)
   end

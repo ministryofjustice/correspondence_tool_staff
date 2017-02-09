@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentsController, type: :controller do
-  let(:drafter_assignment) { create(:assignment)               }
+  let(:drafter_assignment) { create(:drafter_assignment)       }
   let(:unassigned_case)    { create(:case)                     }
   let(:drafter)            { create(:user, roles: ['drafter']) }
   let(:create_assignment_params) do

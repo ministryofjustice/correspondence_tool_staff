@@ -8,7 +8,9 @@ class CasePolicy
   end
 
   def can_add_attachment?
-    user.drafter? && self.case.drafting? && assignment.assignee == user
+    self.case.drafting? &&
+      (user.drafter? && assignment.assignee == user ||
+       user.assigner?)
   end
 
   def can_add_case?

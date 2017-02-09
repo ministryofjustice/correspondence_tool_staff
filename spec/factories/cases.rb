@@ -31,13 +31,15 @@ FactoryGirl.define do
 
     factory :assigned_case do
       transient do
-        assignee { create(:drafter) }
+        assigner { create(:assigner) }
+        drafter  { create(:drafter)  }
       end
 
       after(:create) do |kase, evaluator|
-        assignment = create :assignment,
+        assignment = create :drafter_assignment,
                             case: kase,
-                            assignee: evaluator.assignee
+                            assigner: evaluator.assigner,
+                            assignee: evaluator.drafter
         create :case_transition_assign_responder,
                case_id: kase.id,
                user_id: assignment.assigner.id,
@@ -45,17 +47,12 @@ FactoryGirl.define do
       end
 
       factory :accepted_case do
-        after(:create) do |kase, _evaluator|
-          assignment = kase.assignments.first
-          create(
-            :case_transition,
-            case_id: kase.id,
-            to_state: 'drafting',
-            user_id: assignment.assigner.id,
-            assignee_id: assignment.assignee.id,
-            event: 'drafting',
-            most_recent: true
-          )
+        after(:create) do |kase, evaluator|
+          create :case_transition_accept_responder_assignment,
+                 case_id: kase.id,
+                 user_id: evaluator.assigner.id,
+                 assignee_id: evaluator.drafter.id,
+                 most_recent: true
         end
       end
 

@@ -16,7 +16,7 @@ require 'rails_helper'
 
 RSpec.describe Assignment, type: :model do
 
-  subject { build(:assignment) }
+  subject { build(:drafter_assignment) }
 
   it { should validate_presence_of(:assignment_type) }
   it { should validate_presence_of(:state)           }

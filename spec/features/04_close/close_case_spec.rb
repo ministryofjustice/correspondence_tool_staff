@@ -4,11 +4,11 @@ feature 'Closing a case' do
 
   given(:list_view)   { CaseListPage.new        }
   given(:detail_view) { CaseDetailsPage.new     }
-  given(:kase)        { create(:responded_case) }     
+  given(:kase)        { create(:responded_case) }
 
   background do
     kase
-    login_as create(:user, roles: ['assigner'])
+    login_as create(:assigner)
   end
 
   scenario 'A KILO has responded and an assigner closes the case' do
