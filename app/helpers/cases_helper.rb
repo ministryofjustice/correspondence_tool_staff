@@ -1,5 +1,5 @@
 module CasesHelper
-  def accepted_file_types
+  def accepted_case_attachment_types
     Settings.case_uploads_accepted_types.join ','
   end
 

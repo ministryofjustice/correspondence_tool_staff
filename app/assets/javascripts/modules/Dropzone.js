@@ -17,6 +17,7 @@ moj.Modules.Dropzone = {
       previewTemplate: this.$target.data('dz-template'),
       paramName: 'file',
       createImageThumbnails: false,
+      acceptedFiles: this.$target.data('accepted-files'),
       dataType: 'XML',
       headers: { formData: this.$target.data('form-data')},
       /*init: function() {
