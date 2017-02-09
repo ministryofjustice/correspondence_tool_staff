@@ -24,17 +24,22 @@ end
 RSpec.describe CaseAttachment, type: :model do
   describe 'type enum' do
     it { should have_enum(:type).with_values ['response'] }
+    it { should validate_presence_of :type }
   end
 
-  describe 'file type validation' do
-    it { should allow_url_file_extension('pdf')  }
-    it { should allow_url_file_extension('doc')  }
-    it { should allow_url_file_extension('docx') }
-    it { should allow_url_file_extension('xls')  }
-    it { should allow_url_file_extension('xlsx') }
+  describe 'url' do
+    describe 'file extension validation' do
+      it { should allow_url_file_extension('pdf')  }
+      it { should allow_url_file_extension('doc')  }
+      it { should allow_url_file_extension('docx') }
+      it { should allow_url_file_extension('xls')  }
+      it { should allow_url_file_extension('xlsx') }
 
-    it { should_not allow_url_file_extension('exe') }
-    it { should_not allow_url_file_extension('com') }
-    it { should_not allow_url_file_extension('bat') }
+      it { should_not allow_url_file_extension('exe') }
+      it { should_not allow_url_file_extension('com') }
+      it { should_not allow_url_file_extension('bat') }
+    end
+
+    it { should validate_presence_of :url }
   end
 end

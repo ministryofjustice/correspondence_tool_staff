@@ -15,7 +15,8 @@ class CaseAttachment < ActiveRecord::Base
   belongs_to :case
 
   validates :type, presence: true
-  validate :validate_url_file_extension
+  validates :url, presence: true
+  validate :validate_url_file_extension, unless: Proc.new { |a| a.url.nil? }
 
   enum type: { response: 'response' }
 
