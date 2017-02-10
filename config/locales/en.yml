@@ -116,9 +116,11 @@ en:
       <strong>Important notice</strong><br>
       This case is being reviewed for sensitivity.
       Don't send out the response until <strong>%{escalation_deadline}</strong>.
+    response_upload_error: Errors detected with uploaded files.
 
   notices:
     case_closed: You've closed this case
+    response_uploaded: Your response has been added to the case.
 
   common:
     choose_file: Choose a file

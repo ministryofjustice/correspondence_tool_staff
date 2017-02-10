@@ -54,9 +54,10 @@ class CasesController < ApplicationController
 
     if attachments.all?(&:valid?)
       @case.attachments << attachments
+      flash[:notice] = t('notices.response_uploaded')
       redirect_to case_path
     else
-      flash.now[:alert] = 'Errors detected with uploaded files.'
+      flash.now[:alert] = t('alerts.response_upload_error')
       # @errors = attachments.reject(&:valid?).map { |a| a.errors.full_messages }.flatten
       render :new_response_upload
     end
