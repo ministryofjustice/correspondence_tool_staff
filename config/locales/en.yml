@@ -86,8 +86,8 @@ en:
           Try including who you think with right division may be
       feedback:
         comment: |
-          Please tell us what you thought of this page. Make sure
-          you specify what you were trying to do in relation to your feedback.
+          Please tell us what you thought of this page.
+          Make sure you specify what you were doing in relation to your feedback.
         #Include what you were doing in relation to your feedback
     label:
       assignment:
@@ -125,6 +125,7 @@ en:
       This case is being reviewed for sensitivity.
       Don't send out the response until <strong>%{escalation_deadline}</strong>.
     response_upload_error: Errors detected with uploaded files.
+
 
   notices:
     case_closed: You've closed this case
@@ -195,3 +196,9 @@ en:
       upload_response: 'Upload response'
     update:
       case_updated: Case updated
+
+  feedback:
+    error_html: |
+      <strong>The following error(s) occurred:</strong>
+    success_html: |
+      <strong>Your feedback has been submitted.</strong>

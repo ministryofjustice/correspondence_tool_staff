@@ -1,0 +1,12 @@
+- if feedback.errors.any?
+  .alert-red
+    = t('feedback.error_html')
+
+    ul
+    - feedback.errors.full_messages.each do |msg|
+      li
+        = msg
+
+- else
+  .alert-green
+    = t('feedback.success_html')

@@ -1,0 +1,6 @@
+document.querySelector('.feedback-notification').innerHTML = "<%=j render :partial => 'alerts', locals: {feedback: @feedback} %>"
+
+<% if @feedback.errors.nil? %>
+  $(#feedback_comment').val('');
+<% end %>
+

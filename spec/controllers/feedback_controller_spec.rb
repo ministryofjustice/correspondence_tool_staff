@@ -1,47 +1,48 @@
 require 'rails_helper'
 
 RSpec.describe FeedbackController, type: :controller do
-
+  let(:user) { create(:user) }
   let(:params)do
-    { feedback: {
-        comment: "This is my feedback",
-        user_agent: 'firefox'
-    }
+    {
+      feedback: {
+        comment: "This is my feedback"
+      }
     }
   end
 
-  context "as an anonymous user" do
+  describe '#create' do
 
-    describe '#create' do
-      it "be redirected to signin if trying to submit new feedback" do
+    context "as an anonymous user" do
+
+      it "redirect to signin if trying to submit new feedback" do
         post :create, params: params
         expect(response).to redirect_to(new_user_session_path)
       end
 
-      it "returns 401 if trying to submit new feedback using AJAX" do
+      it "return 401 if trying to submit new feedback using AJAX" do
         post :create, params: params, xhr: true
         expect(response.code).to eq "401"
       end
     end
 
-  end
 
+    context "as an authenticated user" do
 
-  context "as an authenticated user" do
+      before{
+        sign_in user
+        post :create, params: params, xhr: true
+      }
 
-    before{
-      sign_in create(:user)
-      post :create, params: params, xhr: true
-    }
+      it "return 200 if using AJAX" do
+        expect(response.code).to eq "200"
+      end
 
-    it "return 200 if trying to submit new feedback using AJAX" do
-      expect(response.code).to eq "200"
+      it 'makes a DB entry' do
+        expect(Feedback.first.comment).to eq "This is my feedback"
+        expect(Feedback.first.email).to eq user.email
+      end
+
     end
-
-    it 'makes a DB entry' do
-      expect(Feedback.first.comment).to eq "This is my feedback"
-    end
-
   end
 end
 
