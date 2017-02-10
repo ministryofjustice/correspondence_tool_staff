@@ -1,6 +1,7 @@
 class SideBar < SitePrism::Section
   element :external_deadline, '.external_deadline .case-sidebar__data'
   element :status, '.status .case-sidebar__data'
+  element :who_its_with, '.who-its-with .case-sidebar__data'
   element :name, '.name .case-sidebar__data'
   element :requester_type, '.case-sidebar__data--contact .requester-type'
   element :email, '.case-sidebar__data--contact .email'

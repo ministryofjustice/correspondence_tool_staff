@@ -43,6 +43,7 @@ feature 'listing cases on the system' do
     expect(assigned_case_row.external_deadline.text).to have_content(assigned_case.external_deadline.strftime('%e %b %Y'))
     expect(assigned_case_row.number).to have_link("#{assigned_case.number}", href: Rails.root.join("/cases/#{assigned_case.id}"))
     expect(assigned_case_row.status.text).to eq 'Waiting to be accepted'
+    expect(assigned_case_row.who_its_with.text).to eq assigned_case.drafter.email
 
     unassigned_case_row = page.case_list.first
     expect(unassigned_case_row.name.text).to     eq 'Freddie FOI Unassigned'
@@ -50,6 +51,7 @@ feature 'listing cases on the system' do
     expect(unassigned_case_row.external_deadline.text).to have_content(unassigned_case.external_deadline.strftime('%e %b %Y'))
     expect(unassigned_case_row.number).to have_link("#{unassigned_case.number}", href: Rails.root.join("/cases/#{unassigned_case.id}"))
     expect(unassigned_case_row.status.text).to eq 'Waiting to be assigned'
+    expect(unassigned_case_row.who_its_with.text).to eq 'DACU'
   end
 
   scenario 'for drafters - shows only their (open) assigned cases' do
@@ -64,6 +66,7 @@ feature 'listing cases on the system' do
     expect(assigned_case_row.external_deadline.text).to have_content(assigned_case.external_deadline.strftime('%e %b %Y'))
     expect(assigned_case_row.number).to have_link("#{assigned_case.number}", href: Rails.root.join("/cases/#{assigned_case.id}"))
     expect(assigned_case_row.status.text).to eq 'Waiting to be accepted'
+    expect(assigned_case_row.who_its_with.text).to eq assigned_case.drafter.email
   end
 
 end

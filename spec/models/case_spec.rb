@@ -170,6 +170,21 @@ RSpec.describe Case, type: :model do
     end
   end
 
+  describe '#who_its_with' do
+    let(:assigned_case) { create :assigned_case }
+    let(:accepted_case) { create :accepted_case}
+    let(:unassigned_case) { create :case }
+
+    it 'is the currently assigned drafter' do
+      expect(assigned_case.who_its_with).to eq assigned_case.drafter.email
+      expect(accepted_case.who_its_with).to eq accepted_case.drafter.email
+    end
+
+    it 'is the currently assigned to DACU' do
+      expect(unassigned_case.who_its_with).to eq 'DACU'
+    end
+  end
+
   describe 'associations' do
     describe '#category' do
       it 'is mandatory' do

@@ -144,6 +144,7 @@ en:
       status: Status
       upload_response: Upload response
       uploaded_files: Uploaded files
+      who_its_with: Who it's with
     new_case_button: New case
     phase_banner: |
       This is a new service – your feedback will help us to improve it.
@@ -167,6 +168,7 @@ en:
       subject: Subject
       external_deadline: External deadline
       status: Status
+      who_its_with: Who it's with
     fixed_details:
       requester: Requester
       email_address: Email address

@@ -9,6 +9,7 @@ class CaseList < SitePrism::Section
   element :subject, 'td[aria-label="Subject"]'
   element :external_deadline, 'td[aria-label="External deadline"]'
   element :status, 'td[aria-label="Status"]'
+  element :who_its_with, 'td[aria-label="Who it\'s with"]'
 end
 
 class CaseListPage < SitePrism::Page

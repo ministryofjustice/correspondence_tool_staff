@@ -156,6 +156,14 @@ class Case < ApplicationRecord
     "#{Digest::SHA1.hexdigest(id.to_s)}/#{attachment_type}"
   end
 
+  def who_its_with
+    if self.current_state == 'unassigned' && self.drafter.nil?
+      'DACU'
+    else
+      self.drafter.email
+    end
+  end
+
   private
 
   def set_deadlines

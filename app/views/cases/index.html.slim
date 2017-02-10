@@ -15,6 +15,7 @@
         col
         col
         col
+        col
       thead
         th scope='col'
           = t('.number')
@@ -26,6 +27,8 @@
           = t('.external_deadline')
         th scope='col'
           = t('.status')
+        th scope='col'
+          = t('.who_its_with')
       tbody
         - @cases.each do |c|
           tr.case_row
@@ -41,3 +44,5 @@
               = l c.external_deadline, format: :default_date
             td aria-label="#{t('.status')}"
               = t("state.#{c.current_state}")
+            td aria-label="#{t('.who_its_with')}"
+              = c.who_its_with
