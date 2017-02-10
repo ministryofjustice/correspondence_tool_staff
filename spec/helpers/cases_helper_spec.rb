@@ -15,7 +15,6 @@ RSpec.describe CasesHelper, type: :helper do
   describe '#action_button_for(event)' do
 
     context 'when event == :assign_responder' do
-
       it 'generates HTML that links to the new assignment page' do
         @case = create(:case)
         expect(action_button_for(:assign_responder)).to eq(
@@ -58,4 +57,15 @@ href=\"/cases/#{@case.id}/close\">Close case</a>"
           )
       end
     end
+
+    context 'when event == :upload_response' do
+      it 'generates HTML that links to the upload response page' do
+        @case = create(:accepted_case)
+        expect(action_button_for(:upload_response)).to eq(
+"<a class=\"button\" \
+href=\"/cases/#{@case.id}/new_response_upload\">Upload response</a>"
+          )
+      end
+    end
+  end
 end

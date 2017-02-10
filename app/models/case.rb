@@ -129,6 +129,12 @@ class Case < ApplicationRecord
     state_machine.accept_responder_assignment!(assignee_id)
   end
 
+  def add_responses(assignee_id, responses)
+    self.attachments << responses
+    filenames = responses.map(&:filename)
+    state_machine.upload_response!(assignee_id, filenames)
+  end
+
   def close(current_user_id)
     state_machine.close!(current_user_id)
   end

@@ -20,6 +20,14 @@ class CaseAttachment < ActiveRecord::Base
 
   enum type: { response: 'response' }
 
+  def filename
+    URI.decode(
+      File.basename(
+        URI.parse(url).path
+      )
+    )
+  end
+
   private
 
   def validate_url_file_extension

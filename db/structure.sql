@@ -240,8 +240,8 @@ CREATE TABLE cases (
     postal_address character varying,
     subject character varying,
     properties jsonb,
-    number character varying NOT NULL,
-    requester_type requester_type
+    requester_type requester_type,
+    number character varying NOT NULL
 );
 
 

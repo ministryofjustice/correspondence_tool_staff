@@ -89,6 +89,15 @@ RSpec.describe CasesController, type: :controller do
           expect(assigns(:permitted_events)).to eq [:close]
         end
       end
+
+      context 'viewing a case in drafting' do
+        let(:accepted_case)         { create(:accepted_case)   }
+        before { get :show, params: { id: accepted_case.id   } }
+
+        it 'permitted_events == []' do
+          expect(assigns(:permitted_events)).to eq [:upload_response]
+        end
+      end
     end
 
     describe 'GET index' do
@@ -243,6 +252,7 @@ RSpec.describe CasesController, type: :controller do
   end
 
   context 'as an authenticated drafter' do
+
     before { sign_in drafter }
 
     describe 'GET show' do
@@ -255,6 +265,16 @@ RSpec.describe CasesController, type: :controller do
         it 'permitted_events == [:accept_responder_assignment, :reject_responder_assignment]' do
           expect(assigns(:permitted_events)).
             to match_array([:accept_responder_assignment, :reject_responder_assignment])
+        end
+      end
+
+      context 'viewing a case in drafting' do
+        let(:accepted_case)         { create(:accepted_case)   }
+        let(:drafter)               { accepted_case.drafter    }
+        before { get :show, params: { id: accepted_case.id   } }
+
+        it 'permitted_events == [:upload_response]' do
+          expect(assigns(:permitted_events)).to eq [:upload_response]
         end
       end
     end

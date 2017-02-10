@@ -391,6 +391,39 @@ RSpec.describe Case, type: :model do
       end
     end
 
+    describe '#add_responses' do
+      let(:accepted_case) { create(:accepted_case)                          }
+      let(:state_machine) { accepted_case.state_machine                     }
+      let(:drafter)       { accepted_case.drafter                           }
+      let(:responses)     do
+        [
+          build(:correspondence_response,
+            url: "https://correspondence-staff-uploads.s3.amazonaws.com/" +
+            "#{SecureRandom.hex(32)}/" +
+            "responses/new%20response.pdf"
+          )
+        ]
+      end
+
+      before do
+        allow(state_machine).to receive(:upload_response)
+        allow(state_machine).to receive(:upload_response!)
+      end
+
+      it 'triggers the raising version of the event' do
+        accepted_case.add_responses(drafter.id, responses)
+        expect(state_machine).to have_received(:upload_response!).
+                                   with(drafter.id, ['new response.pdf'])
+        expect(state_machine).
+          not_to have_received(:upload_response)
+      end
+
+      it 'adds responses to case#attachments' do
+        accepted_case.add_responses(drafter.id, responses)
+        expect(accepted_case.attachments).to match_array(responses)
+      end
+    end
+
     describe '#close' do
       let(:responded_case)  { create(:responded_case)      }
       let(:state_machine)   { responded_case.state_machine }

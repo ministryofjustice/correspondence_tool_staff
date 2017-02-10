@@ -32,7 +32,7 @@
               - @case.attachments.each do |ca|
                 tr.case_attachment_row
                   td aria-label="#{t('.filename')}"
-                    = attachment_filename(ca.url)
+                    = ca.filename
 
           .actions
             = submit_tag t('.upload_response'), class: 'button'

@@ -25,7 +25,8 @@ class CaseTransition < ActiveRecord::Base
     user_id:     :integer,
     assignee_id: :integer,
     message:     :text,
-    assignment_id: :integer
+    assignment_id: :integer,
+    filenames:   [:string, array: true, default: []]
 
   private
 

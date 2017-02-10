@@ -29,10 +29,7 @@ feature 'Upload response' do
     scenario 'viewing uploaded files' do
       visit new_response_upload_case_path kase
 
-      attachment_filename = File.basename(
-        URI.parse(attachment_1.url).path
-      )
-      expect(page.existing_files).to have_content(attachment_filename)
+      expect(page.existing_files).to have_content(attachment_1.filename)
     end
   end
 

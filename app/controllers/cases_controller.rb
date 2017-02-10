@@ -46,15 +46,15 @@ class CasesController < ApplicationController
   def upload_responses
     authorize @case, :can_add_attachment?
 
-    attachments = params[:attachment_url].reject(&:blank?).map do |url|
+    responses = params[:attachment_url].reject(&:blank?).map do |url|
       CaseAttachment.new(
         type: 'response',
         url:  URI.encode(url)
       )
     end
 
-    if attachments.all?(&:valid?)
-      @case.attachments << attachments
+    if responses.all?(&:valid?)
+      @case.add_responses(current_user.id, responses)
       flash[:notice] = t('notices.response_uploaded')
       redirect_to case_path
     else
@@ -93,6 +93,7 @@ class CasesController < ApplicationController
     @permitted_events = @case.available_events.find_all do |event|
       case event
       when :assign_responder            then policy(@case).can_assign_case?
+      when :upload_response             then policy(@case).can_add_attachment?
       when :accept_responder_assignment then policy(@case).can_accept_or_reject_case?
       when :reject_responder_assignment then policy(@case).can_accept_or_reject_case?
       when :close                       then policy(@case).can_close_case?

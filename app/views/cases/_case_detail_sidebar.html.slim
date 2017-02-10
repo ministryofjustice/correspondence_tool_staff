@@ -46,8 +46,6 @@ details.case-sidebar__group--hr
   .case-sidebar__heading
     = t('common.case.actions')
   .case-sidebar__data
-    - elsif policy(case_details).can_add_attachment?
-      = link_to t('common.case.upload_response'), new_response_upload_case_path(@case), class: 'button'
     - if @permitted_events.any?
       - @permitted_events.each do |event|
         = action_button_for(event)

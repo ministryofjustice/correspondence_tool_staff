@@ -42,4 +42,19 @@ RSpec.describe CaseAttachment, type: :model do
 
     it { should validate_presence_of :url }
   end
+
+  describe '#filename' do
+
+    subject do
+      create(:case_attachment,
+        type: 'response',
+        url: "https://correspondence-staff-uploads.s3.amazonaws.com/" +
+        "#{SecureRandom.hex(32)}/" +
+        "responses/new%20response.pdf")
+    end
+
+    it 'returns the name of the attached file' do
+      expect(subject.filename).to eq 'new response.pdf'
+    end
+  end
 end

@@ -4,16 +4,6 @@ module CasesHelper
     Settings.case_uploads_accepted_types.join ','
   end
 
-  def attachment_filename(url)
-    URI.decode(
-      File.basename(
-        URI.parse(url).path
-      )
-    )
-  rescue
-    url
-  end
-
   def action_button_for(event)
     case event
     when :assign_responder
@@ -23,6 +13,10 @@ module CasesHelper
     when :accept_responder_assignment, :reject_responder_assignment
       link_to I18n.t('common.case.accept_or_reject'),
           edit_case_assignment_path(@case, @case.assignments.last),
+          class: 'button'
+    when :upload_response
+      link_to t('common.case.upload_response'),
+          new_response_upload_case_path(@case),
           class: 'button'
     when :close
       link_to I18n.t('common.case.close'),
