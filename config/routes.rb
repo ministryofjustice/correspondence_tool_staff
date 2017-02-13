@@ -65,10 +65,12 @@ Rails.application.routes.draw do
       patch 'accept_or_reject', on: :member
     end
 
+    resources :case_attachments, path: 'attachments'
+
     get 'new_response_upload', on: :member
     post 'upload_responses', on: :member
 
-    resources :case_attachments, path: 'attachments', only: [] do
+    resources :case_attachments, path: 'attachments', only: [:destroy] do
       get 'download', on: :member
     end
   end

@@ -25,6 +25,7 @@ class CaseDetailsPage < SitePrism::Page
     sections :files, 'tr' do
       element :filename, 'td[aria-label="File name"]'
       element :download, 'td[aria-label="Actions"] a:contains("Download")'
-    end
+      element :remove,   'td[aria-label="Actions"] a:contains("Remove")'
+,    end
   end
 end
