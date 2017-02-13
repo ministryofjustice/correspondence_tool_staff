@@ -406,16 +406,16 @@ RSpec.describe Case, type: :model do
       end
 
       before do
-        allow(state_machine).to receive(:upload_response)
-        allow(state_machine).to receive(:upload_response!)
+        allow(state_machine).to receive(:add_responses)
+        allow(state_machine).to receive(:add_responses!)
       end
 
       it 'triggers the raising version of the event' do
         accepted_case.add_responses(drafter.id, responses)
-        expect(state_machine).to have_received(:upload_response!).
+        expect(state_machine).to have_received(:add_responses!).
                                    with(drafter.id, ['new response.pdf'])
         expect(state_machine).
-          not_to have_received(:upload_response)
+          not_to have_received(:add_responses)
       end
 
       it 'adds responses to case#attachments' do

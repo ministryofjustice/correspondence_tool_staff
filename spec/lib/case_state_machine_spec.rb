@@ -146,38 +146,38 @@ RSpec.describe CaseStateMachine, type: :model do
     end
   end
 
-  describe '#upload_response!' do
+  describe '#add_responses!' do
     before do
       state_machine.assign_responder!(assigner.id, drafter.id)
       state_machine.accept_responder_assignment!(drafter.id)
-      state_machine.upload_response!(drafter.id, ['file1.pdf', 'file2.pdf'])
+      state_machine.add_responses!(drafter.id, ['file1.pdf', 'file2.pdf'])
     end
 
-    it 'triggers a upload_response event, but does not change current_state' do
+    it 'triggers a add_responses event, but does not change current_state' do
       expect(kase.current_state).to eq 'drafting'
     end
 
     it 'triggers the correct event transition' do
       allow(state_machine).to receive(:trigger!)
-      state_machine.upload_response!(drafter.id, ['file1.pdf', 'file2.pdf'])
+      state_machine.add_responses!(drafter.id, ['file1.pdf', 'file2.pdf'])
       expect(state_machine).to have_received(:trigger!).with(
-                                 :upload_response,
+                                 :add_responses,
                                  assignee_id: drafter.id,
                                  user_id:     drafter.id,
                                  filenames:   ['file1.pdf', 'file2.pdf'],
-                                 event:       :upload_response
+                                 event:       :add_responses
                                )
     end
   end
 
-  describe '#upload_response' do
+  describe '#add_responses' do
     before do
       state_machine.assign_responder!(assigner.id, drafter.id)
       state_machine.accept_responder_assignment!(drafter.id)
     end
 
     it_behaves_like 'a case state machine event' do
-      let(:event_name) { :upload_response                   }
+      let(:event_name) { :add_responses                   }
       let(:args) { [drafter.id, ['file1.pdf', 'file2.pdf']] }
     end
   end

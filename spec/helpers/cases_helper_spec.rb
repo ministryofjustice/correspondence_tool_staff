@@ -58,10 +58,10 @@ href=\"/cases/#{@case.id}/close\">Close case</a>"
       end
     end
 
-    context 'when event == :upload_response' do
+    context 'when event == :add_responses' do
       it 'generates HTML that links to the upload response page' do
         @case = create(:accepted_case)
-        expect(action_button_for(:upload_response)).to eq(
+        expect(action_button_for(:add_responses)).to eq(
 "<a class=\"button\" \
 href=\"/cases/#{@case.id}/new_response_upload\">Upload response</a>"
           )

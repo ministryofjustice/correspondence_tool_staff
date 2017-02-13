@@ -95,7 +95,7 @@ RSpec.describe CasesController, type: :controller do
         before { get :show, params: { id: accepted_case.id   } }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq [:upload_response]
+          expect(assigns(:permitted_events)).to eq [:add_responses]
         end
       end
     end
@@ -273,8 +273,8 @@ RSpec.describe CasesController, type: :controller do
         let(:drafter)               { accepted_case.drafter    }
         before { get :show, params: { id: accepted_case.id   } }
 
-        it 'permitted_events == [:upload_response]' do
-          expect(assigns(:permitted_events)).to eq [:upload_response]
+        it 'permitted_events == [:add_responses]' do
+          expect(assigns(:permitted_events)).to eq [:add_responses]
         end
       end
     end

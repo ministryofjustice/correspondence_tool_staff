@@ -20,7 +20,7 @@ class CaseStateMachine
     transition from: :awaiting_responder, to: :drafting
   end
 
-  event :upload_response do
+  event :add_responses do
     transition from: :drafting, to: :drafting
   end
 
@@ -28,16 +28,16 @@ class CaseStateMachine
     transition from: :responded, to: :closed
   end
 
-  def upload_response!(assignee_id, filenames)
-    trigger! :upload_response,
+  def add_responses!(assignee_id, filenames)
+    trigger! :add_responses,
              assignee_id: assignee_id,
              user_id:     assignee_id,
              filenames:   filenames,
-             event:       :upload_response
+             event:       :add_responses
   end
 
-  def upload_response(assignee_id, filenames)
-    self.upload_response!(assignee_id, filenames)
+  def add_responses(assignee_id, filenames)
+    self.add_responses!(assignee_id, filenames)
   rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
     false
   end

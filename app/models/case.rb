@@ -132,7 +132,7 @@ class Case < ApplicationRecord
   def add_responses(assignee_id, responses)
     self.attachments << responses
     filenames = responses.map(&:filename)
-    state_machine.upload_response!(assignee_id, filenames)
+    state_machine.add_responses!(assignee_id, filenames)
   end
 
   def close(current_user_id)
