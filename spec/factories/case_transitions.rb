@@ -43,6 +43,18 @@ FactoryGirl.define do
       event 'accept_responder_assignment'
     end
 
+    factory :case_transition_add_responses do
+      transient do
+        assignee { create(:drafter) }
+        filenames ['file1.pdf', 'file2.pdf']
+      end
+
+      to_state 'drafting'
+      user_id     { assignee.id }
+      assignee_id { assignee.id }
+      event 'add_responses'
+    end
+
     factory :case_transition_respond do
       to_state 'responded'
       event 'respond'

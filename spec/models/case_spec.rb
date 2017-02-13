@@ -185,6 +185,28 @@ RSpec.describe Case, type: :model do
     end
   end
 
+  describe '#drafter_assignment' do
+
+    let(:drafter)       { create(:drafter)                              }
+    let(:assigned_case) { create(:assigned_case, drafter: drafter)      }
+    let(:assignment)    { assigned_case.assignments.detect(&:drafter?)  }
+
+    it 'returns the assignment belonging to the drafter' do
+      expect(assigned_case.drafter_assignment).to eq assignment
+    end
+  end
+
+  describe '#response_attachments' do
+    let(:case_with_response) { create(:case_with_response)   }
+    let(:responses) do
+      case_with_response.attachments.select(&:response?)
+    end
+
+    it 'returns all attachments where type == "responsee"' do
+      expect(case_with_response.response_attachments).to eq responses
+    end
+  end
+
   describe 'associations' do
     describe '#category' do
       it 'is mandatory' do
@@ -436,6 +458,22 @@ RSpec.describe Case, type: :model do
       it 'adds responses to case#attachments' do
         accepted_case.add_responses(drafter.id, responses)
         expect(accepted_case.attachments).to match_array(responses)
+      end
+    end
+
+    describe '#respond' do
+      let(:case_with_response) { create(:case_with_response)      }
+      let(:state_machine)      { case_with_response.state_machine }
+
+      before do
+        allow(state_machine).to receive(:respond!)
+        allow(state_machine).to receive(:respond)
+      end
+
+      it 'triggers the raising version of the event' do
+        case_with_response.respond(User.first.id)
+        expect(state_machine).to have_received(:respond!)
+        expect(state_machine).not_to have_received(:respond)
       end
     end
 

@@ -54,6 +54,13 @@ FactoryGirl.define do
                  assignee_id: evaluator.drafter.id,
                  most_recent: true
         end
+
+        factory :case_with_response do
+          after(:create) do |kase, _evaluator|
+            create :case_attachment, case: kase, type: 'response'
+            create :case_transition_add_responses, case_id: kase.id
+          end
+        end
       end
 
       factory :responded_case do

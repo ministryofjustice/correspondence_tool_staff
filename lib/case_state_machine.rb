@@ -24,6 +24,10 @@ class CaseStateMachine
     transition from: :drafting, to: :drafting
   end
 
+  event :respond do
+    transition from: :drafting, to: :responded
+  end
+
   event :close do
     transition from: :responded, to: :closed
   end
@@ -79,6 +83,19 @@ class CaseStateMachine
 
   def accept_responder_assignment(assignee_id)
     self.accept_responder_assignment!(assignee_id)
+  rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
+    false
+  end
+
+  def respond!(assignee_id)
+    trigger! :respond,
+             assignee_id: assignee_id,
+             user_id:     assignee_id,
+             event:       :respond
+  end
+
+  def respond(assignee_id)
+    self.respond!(assignee_id)
   rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
     false
   end

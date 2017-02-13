@@ -182,6 +182,38 @@ RSpec.describe CaseStateMachine, type: :model do
     end
   end
 
+  describe '#respond!' do
+
+    let(:kase)          { create(:case_with_response) }
+    let(:state_machine) { kase.state_machine                   }
+    before { state_machine.respond!(drafter.id)                }
+
+    it 'triggers a respond event' do
+      expect(kase.current_state).to eq 'responded'
+    end
+
+    it 'triggers the correct event transition' do
+      allow(state_machine).to receive(:trigger!)
+      state_machine.respond!(drafter.id)
+      expect(state_machine).to have_received(:trigger!).with(
+                                 :respond,
+                                 assignee_id: drafter.id,
+                                 user_id:     drafter.id,
+                                 event:       :respond
+                               )
+    end
+  end
+
+  describe '#respond' do
+    let(:kase)          { create(:case_with_response)  }
+    let(:state_machine) { kase.state_machine                    }
+
+    it_behaves_like 'a case state machine event' do
+      let(:event_name) { :respond     }
+      let(:args)       { [drafter.id] }
+    end
+  end
+
   describe '#close!' do
 
     let(:kase)          { create(:responded_case) }

@@ -61,6 +61,10 @@
 
 .case-sidebar__group {
   margin-bottom: $gutter;
+
+  a.button {
+    margin-bottom: $gutter-half;
+  }
 }
 
 .case-sidebar__group--hr {

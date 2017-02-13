@@ -73,6 +73,24 @@ describe CasePolicy do
     end
   end
 
+  permissions :can_respond? do
+    let(:case_with_response) do
+      create(:case_with_response, drafter: drafter)
+    end
+
+    it "refuses if current_user is an assigner" do
+      expect(subject).not_to permit(assigner, case_with_response)
+    end
+
+    it "grants if current_user is the assigned drafter" do
+      expect(subject).to permit(drafter, case_with_response)
+    end
+
+    it "refuses if current_user is another drafter" do
+      expect(subject).not_to permit(another_drafter, case_with_response)
+    end
+  end
+
   permissions :can_close_case? do
     it "refuses unless current_user is an assigner" do
       expect(subject).not_to permit(drafter, create(:responded_case))

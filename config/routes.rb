@@ -52,6 +52,8 @@ Rails.application.routes.draw do
 
   resources :cases do
     patch 'close', on: :member
+    get 'respond', on: :member
+    patch 'confirm_respond', on: :member
     get '/assignments/show_rejected' => 'assignments#show_rejected'
 
     resources :assignments do

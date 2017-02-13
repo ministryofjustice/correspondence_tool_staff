@@ -61,45 +61,6 @@ RSpec.describe CasesController, type: :controller do
 
     before { sign_in assigner }
 
-    describe 'GET show' do
-
-      context 'viewing an unassigned case' do
-        let(:unassigned_case)       { create(:case)            }
-        before { get :show, params: { id: unassigned_case.id } }
-
-        it 'permitted_events == [:assign_responder]' do
-          expect(assigns(:permitted_events)).to eq [:assign_responder]
-        end
-      end
-
-      context 'viewing an assigned_case' do
-        let(:assigned_case)         { create(:assigned_case) }
-        before { get :show, params: { id: assigned_case.id } }
-
-        it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq []
-        end
-      end
-
-      context 'viewing a responded_case' do
-        let(:responded_case)        { create(:responded_case)   }
-        before { get :show, params: { id: responded_case.id   } }
-
-        it 'permitted_events == [:close]' do
-          expect(assigns(:permitted_events)).to eq [:close]
-        end
-      end
-
-      context 'viewing a case in drafting' do
-        let(:accepted_case)         { create(:accepted_case)   }
-        before { get :show, params: { id: accepted_case.id   } }
-
-        it 'permitted_events == [:add_responses]' do
-          expect(assigns(:permitted_events)).to eq [:add_responses]
-        end
-      end
-    end
-
     describe 'GET index' do
 
       let(:unordered_cases) do
@@ -255,30 +216,6 @@ RSpec.describe CasesController, type: :controller do
 
     before { sign_in drafter }
 
-    describe 'GET show' do
-
-      context 'viewing an assigned_case' do
-        let(:assigned_case)         { create(:assigned_case) }
-        let(:drafter)               { assigned_case.drafter  }
-        before { get :show, params: { id: assigned_case.id } }
-
-        it 'permitted_events == [:accept_responder_assignment, :reject_responder_assignment]' do
-          expect(assigns(:permitted_events)).
-            to match_array([:accept_responder_assignment, :reject_responder_assignment])
-        end
-      end
-
-      context 'viewing a case in drafting' do
-        let(:accepted_case)         { create(:accepted_case)   }
-        let(:drafter)               { accepted_case.drafter    }
-        before { get :show, params: { id: accepted_case.id   } }
-
-        it 'permitted_events == [:add_responses]' do
-          expect(assigns(:permitted_events)).to eq [:add_responses]
-        end
-      end
-    end
-
     describe 'GET index' do
 
       let(:unordered_cases) do
@@ -376,6 +313,204 @@ RSpec.describe CasesController, type: :controller do
   # how that action/functionality behaves becomes hard. The tests below seek to
   # remedy this by modelling how they could be grouped by functionality
   # primarily, with sub-grouping for different contexts.
+
+  describe 'GET show' do
+
+    context 'viewing an unassigned case' do
+      let(:unassigned_case)       { create(:case)            }
+      before do
+        sign_in user
+        get :show, params: { id: unassigned_case.id }
+      end
+
+      context 'as an anonymous user' do
+        let(:user) { '' }
+
+        it 'permitted_events == nil' do
+          expect(assigns(:permitted_events)).to eq nil
+        end
+      end
+
+      context 'as an authenticated assigner' do
+        let(:user) { create(:assigner) }
+
+        it 'permitted_events == [:assign_responder]' do
+          expect(assigns(:permitted_events)).to eq [:assign_responder]
+        end
+      end
+
+      context 'as a drafter' do
+        let(:user) { create(:drafter) }
+
+        it 'permitted_events == []' do
+          expect(assigns(:permitted_events)).to eq []
+        end
+      end
+    end
+
+    context 'viewing an assigned_case' do
+      let(:assigned_case)         { create(:assigned_case) }
+      before do
+        sign_in user
+        get :show, params: { id: assigned_case.id }
+      end
+
+      context 'as an anonymous user' do
+        let(:user) { '' }
+
+        it 'permitted_events == nil' do
+          expect(assigns(:permitted_events)).to eq nil
+        end
+      end
+
+      context 'as an authenticated assigner' do
+        let(:user) { create(:assigner) }
+
+        it 'permitted_events == []' do
+          expect(assigns(:permitted_events)).to eq []
+        end
+      end
+
+      context 'as the assigned drafter' do
+        let(:user) { assigned_case.drafter }
+
+        it 'permitted_events == [:accept_responder_assignment, :reject_responder_assignment]' do
+          expect(assigns(:permitted_events)).to match_array [
+            :accept_responder_assignment, :reject_responder_assignment
+          ]
+        end
+      end
+
+      context 'as another drafter' do
+        let(:user) { create(:drafter) }
+
+        it 'permitted_events == []' do
+          expect(assigns(:permitted_events)).to eq []
+        end
+      end
+    end
+
+    context 'viewing a case in drafting' do
+      let(:accepted_case)         { create(:accepted_case)   }
+      before do
+        sign_in user
+        get :show, params: { id: accepted_case.id   }
+      end
+
+      context 'as an anonymous user' do
+        let(:user) { '' }
+
+        it 'permitted_events == nil' do
+          expect(assigns(:permitted_events)).to eq nil
+        end
+      end
+
+      context 'as an authenticated assigner' do
+        let(:user) { create(:assigner) }
+
+        it 'permitted_events == [:add_responses]' do
+          expect(assigns(:permitted_events)).to eq [:add_responses]
+        end
+      end
+
+      context 'as the assigned drafter' do
+        let(:user) { accepted_case.drafter }
+
+        it 'permitted_events == [:add_responses]' do
+          expect(assigns(:permitted_events)).to eq [:add_responses]
+        end
+      end
+
+      context 'as another drafter' do
+        let(:user) { create(:drafter) }
+
+        it 'permitted_events == []' do
+          expect(assigns(:permitted_events)).to eq []
+        end
+      end
+    end
+
+    context 'viewing a case_with_response' do
+      let(:case_with_response)    { create(:case_with_response) }
+      before do
+        sign_in user
+        get :show, params: { id: case_with_response.id }
+      end
+
+      context 'as an anonymous user' do
+        let(:user) { '' }
+
+        it 'permitted_events == nil' do
+          expect(assigns(:permitted_events)).to eq nil
+        end
+      end
+
+      context 'as an authenticated assigner' do
+        let(:user) { create(:assigner) }
+
+        it 'permitted_events == [:add_responses]' do
+          expect(assigns(:permitted_events)).to eq [:add_responses]
+        end
+      end
+
+      context 'as the assigned drafter' do
+        let(:user) { case_with_response.drafter }
+
+        it 'permitted_events == [:add_responses, :respond]' do
+          expect(assigns(:permitted_events)).to eq [:add_responses, :respond]
+        end
+      end
+
+      context 'as another drafter' do
+        let(:user) { create(:drafter) }
+
+        it 'permitted_events == []' do
+          expect(assigns(:permitted_events)).to eq []
+        end
+      end
+    end
+
+    context 'viewing a responded_case' do
+      let(:responded_case)        { create(:responded_case)   }
+      before do
+        sign_in user
+        get :show, params: { id: responded_case.id   }
+      end
+
+      context 'as an anonymous user' do
+        let(:user) { '' }
+
+        it 'permitted_events == nil' do
+          expect(assigns(:permitted_events)).to eq nil
+        end
+      end
+
+      context 'as an authenticated assigner' do
+        let(:user) { create(:assigner) }
+
+        it 'permitted_events == [:close]' do
+          expect(assigns(:permitted_events)).to eq [:close]
+        end
+      end
+
+      context 'as the assigned drafter' do
+        let(:user) { responded_case.drafter }
+
+        it 'permitted_events == []' do
+          expect(assigns(:permitted_events)).to eq []
+        end
+      end
+
+      context 'as another drafter' do
+        let(:user) { create(:drafter) }
+
+        it 'permitted_events == []' do
+          expect(assigns(:permitted_events)).to eq []
+        end
+      end
+    end
+  end
+
   describe 'GET new_response_upload' do
     let(:kase) { create(:accepted_case, drafter: drafter) }
 
@@ -534,6 +669,129 @@ RSpec.describe CasesController, type: :controller do
       before { sign_in assigner }
 
       it_behaves_like 'signed-in user can add attachments'
+    end
+  end
+
+  describe 'GET respond' do
+
+    let(:drafter)            { create(:drafter)                              }
+    let(:another_drafter)    { create(:drafter)                              }
+    let(:case_with_response) { create(:case_with_response, drafter: drafter) }
+
+    context 'as an anonymous user' do
+      it 'redirects to sign_in' do
+        expect(get :respond, params: { id: case_with_response.id }).
+          to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'as an authenticated assigner' do
+
+      before { sign_in assigner }
+
+      it 'redirects to the application root' do
+        expect(get :respond, params: { id: case_with_response.id }).
+            to redirect_to(authenticated_root_path)
+      end
+    end
+
+    context 'as the assigned drafter' do
+      
+      before { sign_in drafter }
+
+      it 'does not transition current_state' do
+        expect(case_with_response.current_state).to eq 'drafting'
+        get :respond, params: { id: case_with_response.id }
+        expect(case_with_response.current_state).to eq 'drafting'
+      end
+
+      it 'renders the respond template' do
+        expect(get :respond, params: { id: case_with_response.id }).
+            to render_template(:respond)
+      end
+    end
+
+    context 'as another drafter' do
+
+      before { sign_in another_drafter }
+
+      it 'redirects to the application root' do
+        expect(get :respond, params: { id: case_with_response.id }).
+              to redirect_to(authenticated_root_path)
+      end
+    end
+  end
+
+  describe 'PATCH confirm_respond' do
+
+    let(:drafter)            { create(:drafter)                              }
+    let(:another_drafter)    { create(:drafter)                              }
+    let(:case_with_response) { create(:case_with_response, drafter: drafter) }
+
+    context 'as an anonymous user' do
+      it 'redirects to sign_in' do
+        expect(patch :confirm_respond, params: { id: case_with_response.id }).
+          to redirect_to(new_user_session_path)
+      end
+
+      it 'does not transition current_state' do
+        expect(case_with_response.current_state).to eq 'drafting'
+        patch :confirm_respond, params: { id: case_with_response.id }
+        expect(case_with_response.current_state).to eq 'drafting'
+      end
+    end
+
+    context 'as an authenticated assigner' do
+
+      before { sign_in assigner }
+
+      it 'redirects to the application root' do
+        expect(patch :confirm_respond, params: { id: case_with_response.id }).
+            to redirect_to(authenticated_root_path)
+      end
+
+      it 'does not transition current_state' do
+        expect(case_with_response.current_state).to eq 'drafting'
+        patch :confirm_respond, params: { id: case_with_response.id }
+        expect(case_with_response.current_state).to eq 'drafting'
+      end
+    end
+
+    context 'as the assigned drafter' do
+      
+      before { sign_in drafter }
+
+      it 'transitions current_state to "responded"' do
+        patch :confirm_respond, params: { id: case_with_response }
+        expect(case_with_response.current_state).to eq 'responded'
+      end
+
+      it 'removes the case from the drafters workbasket' do
+        patch :confirm_respond, params: { id: case_with_response }
+        workbasket = CasePolicy::Scope.new(drafter, Case.all).resolve
+        expect(workbasket).not_to include case_with_response
+      end
+
+      it 'redirects to the case list view' do
+        expect(patch :confirm_respond, params: { id: case_with_response.id }).
+            to redirect_to(cases_path)
+      end
+    end
+
+    context 'as another drafter' do
+
+      before { sign_in another_drafter }
+
+      it 'redirects to the application root' do
+        expect(patch :confirm_respond, params: { id: case_with_response.id }).
+              to redirect_to(authenticated_root_path)
+      end
+
+      it 'does not transition current_state' do
+        expect(case_with_response.current_state).to eq 'drafting'
+        patch :confirm_respond, params: { id: case_with_response.id }
+        expect(case_with_response.current_state).to eq 'drafting'
+      end
     end
   end
 end

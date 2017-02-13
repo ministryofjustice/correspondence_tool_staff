@@ -1,6 +1,10 @@
 class CasesController < ApplicationController
 
-  before_action :set_case, only: [:close, :edit, :new_response_upload, :show, :update, :upload_responses]
+  before_action :set_case,
+    only: [
+      :close, :edit, :new_response_upload, :show, :update,
+        :upload_responses, :respond, :confirm_respond
+    ]
   before_action :set_s3_direct_post, only: [:new_response_upload, :upload_responses]
 
   def index
@@ -82,6 +86,17 @@ class CasesController < ApplicationController
     render :show
   end
 
+  def respond
+    authorize @case, :can_respond?
+  end
+
+  def confirm_respond
+    authorize @case, :can_respond?
+    @case.respond(current_user)
+    flash[:notice] = t('.success')
+    redirect_to cases_path
+  end
+
   def search
     @case = Case.search(params[:search])
     render :index
@@ -89,6 +104,7 @@ class CasesController < ApplicationController
 
   private
 
+# rubocop:disable CyclomaticComplexity
   def set_permitted_events
     @permitted_events = @case.available_events.find_all do |event|
       case event
@@ -96,11 +112,13 @@ class CasesController < ApplicationController
       when :add_responses               then policy(@case).can_add_attachment?
       when :accept_responder_assignment then policy(@case).can_accept_or_reject_case?
       when :reject_responder_assignment then policy(@case).can_accept_or_reject_case?
+      when :respond                     then policy(@case).can_respond?
       when :close                       then policy(@case).can_close_case?
       end
     end
     @permitted_events ||= []
   end
+# rubocop:enable CyclomaticComplexity
 
   def create_foi_params
     params.require(:case).permit(

@@ -9,8 +9,8 @@ class CasePolicy
 
   def can_add_attachment?
     self.case.drafting? &&
-      (user.drafter? && assignment.assignee == user ||
-       user.assigner?)
+      (user.drafter? &&
+          self.case.drafter_assignment.assignee == user || user.assigner?)
   end
 
   def can_add_case?
@@ -22,17 +22,18 @@ class CasePolicy
   end
 
   def can_accept_or_reject_case?
-    self.case.awaiting_responder? && assignment.assignee == user
+    self.case.awaiting_responder? &&
+      self.case.drafter_assignment.assignee == user
+  end
+
+  def can_respond?
+    self.case.drafting? &&
+      self.case.response_attachments.any? &&
+        self.case.drafter_assignment.assignee == user
   end
 
   def can_close_case?
     user.assigner? && self.case.responded?
-  end
-
-  private
-
-  def assignment
-    self.case.assignments.last
   end
 
   class Scope

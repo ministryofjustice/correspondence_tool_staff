@@ -82,6 +82,10 @@ class Case < ApplicationRecord
     assignees.select(&:drafter?).first
   end
 
+  def drafter_assignment
+    assignments.detect(&:drafter?)
+  end
+
   def triggerable?
     category.abbreviation == 'FOI' && !trigger?
   end
@@ -133,6 +137,15 @@ class Case < ApplicationRecord
     self.attachments << responses
     filenames = responses.map(&:filename)
     state_machine.add_responses!(assignee_id, filenames)
+  end
+
+  def response_attachments
+    attachments.select(&:response?)
+  end
+
+  def respond(current_user_id)
+    state_machine.respond!(current_user_id)
+    drafter_assignment.destroy
   end
 
   def close(current_user_id)
