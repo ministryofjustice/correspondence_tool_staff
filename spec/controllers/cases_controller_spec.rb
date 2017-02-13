@@ -94,7 +94,7 @@ RSpec.describe CasesController, type: :controller do
         let(:accepted_case)         { create(:accepted_case)   }
         before { get :show, params: { id: accepted_case.id   } }
 
-        it 'permitted_events == []' do
+        it 'permitted_events == [:add_responses]' do
           expect(assigns(:permitted_events)).to eq [:add_responses]
         end
       end
