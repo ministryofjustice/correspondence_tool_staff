@@ -18,6 +18,15 @@ require 'devise'
 require 'capybara/rspec'
 require 'pundit/rspec'
 
+require 'aws-sdk'
+
+# Required or we'll get errors when we try to pre-sign S# direct uploads.
+Aws.config.update credentials: Aws::Credentials.new(
+                    'test_access_key_id',
+                    'test_secret_access_key'
+                  )
+
+
 RSpec.configure do |config|
 # The settings below are suggested to provide a good initial experience
 # with RSpec, but feel free to customize to your heart's content.
