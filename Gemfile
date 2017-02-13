@@ -12,7 +12,7 @@ gem 'gov_uk_date_fields', '>= 1.2'
 gem 'govuk_template',         '~> 0.19.1'
 gem 'govuk_frontend_toolkit', '>= 5.0.2'
 gem 'govuk_elements_rails',   '>= 2.2.1'
-gem 'govuk_elements_form_builder', git: 'https://github.com/ministryofjustice/govuk_elements_form_builder.git'
+gem 'govuk_elements_form_builder'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 gem 'jquery-rails'
