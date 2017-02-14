@@ -148,6 +148,7 @@ en:
       close: Close case
       email: "Requesters email address: "
       external_deadline: External deadline
+      filename: File name
       header_case_number: "You are viewing case number "
       header_subject: "Case subject, "
       name: Requester
@@ -199,7 +200,6 @@ en:
     create:
       case_created: Case successfully created
     new_response_upload:
-      filename: File name
       upload_response: 'Upload response'
     respond:
       reminders_html: |

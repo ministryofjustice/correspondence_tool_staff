@@ -5,4 +5,6 @@
   .alert-orange
     = t('alerts.assignment_already_rejected_html')
 
-= render partial: 'layouts/case_detail_page', locals: { case_details: @case , include_sidebar: false}
+= render partial: 'layouts/case_detail_page', locals: { case_details: @case,
+                                                        include_sidebar: false,
+                                                        include_uploaded_files: false }

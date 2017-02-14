@@ -25,12 +25,6 @@ feature 'Upload response' do
 
       expect(current_path).to eq new_response_upload_case_path(kase)
     end
-
-    scenario 'viewing uploaded files' do
-      visit new_response_upload_case_path kase
-
-      expect(page.existing_files).to have_content(attachment_1.filename)
-    end
   end
 
   context "as a drafter that isn't assigned to the case" do

@@ -19,21 +19,6 @@
           .button-secondary
             = t('common.choose_file')
 
-      .grid-row
-        .column-full
-
-          table#uploaded-files
-            colgroup
-              col
-            thead
-              th scope='col'
-                = t('common.case.uploaded_files')
-            tbody
-              - @case.attachments.each do |ca|
-                tr.case_attachment_row
-                  td aria-label="#{t('.filename')}"
-                    = ca.filename
-
-          .actions
-            = submit_tag t('.upload_response'), class: 'button'
+      .actions
+        = submit_tag t('.upload_response'), class: 'button'
 

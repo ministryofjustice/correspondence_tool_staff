@@ -15,6 +15,21 @@
             = t('common.case.received_date')
           = l case_details.received_date, format: :default
 
+      - if include_uploaded_files
+        .request--uploaded-files
+          table#uploaded-files
+            colgroup
+              col
+            thead
+              th scope='col'
+                = t('common.case.uploaded_files')
+            tbody
+              - case_details.attachments.each do |ca|
+                tr.case_attachment_row
+                  td aria-label="#{t('common.case.filename')}"
+                    = ca.filename
+
   - if include_sidebar.present? && include_sidebar == true
     section.case-sidebar
       = render partial: 'case_detail_sidebar', locals: { case_details: case_details }
+

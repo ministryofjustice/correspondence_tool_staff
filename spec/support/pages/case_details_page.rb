@@ -21,4 +21,8 @@ class CaseDetailsPage < SitePrism::Page
   element :escalation_notice, '.alert-orange'
   section :sidebar, ::SideBar, 'section.case-sidebar'
   section :case_heading, ::CaseHeading, '.case-heading'
+
+  sections :uploaded_files, 'table#uploaded-files tr' do
+    element :filename, 'td[aria-label="File name"]'
+  end
 end
