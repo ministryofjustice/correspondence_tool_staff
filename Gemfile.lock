@@ -68,6 +68,9 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    capybara-screenshot (1.0.14)
+      capybara (>= 1.0, < 3)
+      launchy
     childprocess (0.5.9)
       ffi (~> 1.0, >= 1.0.11)
     cliver (0.3.2)
@@ -418,6 +421,7 @@ DEPENDENCIES
   business_time
   byebug
   capybara
+  capybara-screenshot
   codeclimate-test-reporter
   coffee-rails (~> 4.2)
   config

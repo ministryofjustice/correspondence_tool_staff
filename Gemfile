@@ -40,6 +40,7 @@ gem 'uglifier', '>= 1.3.0'
 
 group :test do
   gem 'capybara'
+  gem 'capybara-screenshot'
   gem "codeclimate-test-reporter", require: nil
   gem 'i18n-tasks', '~> 0.9.8'
   gem 'poltergeist'
