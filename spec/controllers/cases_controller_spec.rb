@@ -408,8 +408,8 @@ RSpec.describe CasesController, type: :controller do
       context 'as an authenticated assigner' do
         let(:user) { create(:assigner) }
 
-        it 'permitted_events == [:add_responses]' do
-          expect(assigns(:permitted_events)).to eq [:add_responses]
+        it 'permitted_events == []' do
+          expect(assigns(:permitted_events)).to eq []
         end
       end
 
@@ -448,8 +448,8 @@ RSpec.describe CasesController, type: :controller do
       context 'as an authenticated assigner' do
         let(:user) { create(:assigner) }
 
-        it 'permitted_events == [:add_responses]' do
-          expect(assigns(:permitted_events)).to eq [:add_responses]
+        it 'permitted_events == []' do
+          expect(assigns(:permitted_events)).to eq []
         end
       end
 
@@ -555,7 +555,10 @@ RSpec.describe CasesController, type: :controller do
     context 'as an authenticated assigner' do
       before { sign_in assigner }
 
-      it_behaves_like 'signed-in user can view attachment upload page'
+      it 'redirects to case detail page' do
+        get :new_response_upload, params: { id: kase }
+        expect(response).to redirect_to(case_path(kase))
+      end
     end
 
   end
@@ -668,7 +671,10 @@ RSpec.describe CasesController, type: :controller do
     context 'as an assigner' do
       before { sign_in assigner }
 
-      it_behaves_like 'signed-in user can add attachments'
+      it 'redirects to case detail page' do
+        get :new_response_upload, params: { id: kase }
+        expect(response).to redirect_to(case_path(kase))
+      end
     end
   end
 

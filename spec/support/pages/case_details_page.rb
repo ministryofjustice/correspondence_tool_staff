@@ -7,6 +7,7 @@ class SideBar < SitePrism::Section
   element :email, '.case-sidebar__data--contact .email'
   element :postal_address, '.case-sidebar__data--contact .postal-address'
   element :actions, '.actions .case-sidebar__data'
+  element :mark_as_sent_button, 'a:contains("Mark response as sent")'
 end
 
 class CaseHeading < SitePrism::Section

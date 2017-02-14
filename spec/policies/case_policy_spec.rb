@@ -21,8 +21,8 @@ describe CasePolicy do
       expect(subject).to permit(drafter, accepted_case)
     end
 
-    it 'grants if current_user is an assigner' do
-      expect(subject).to permit(assigner, accepted_case)
+    it 'refuses if current_user is an assigner' do
+      expect(subject).not_to permit(assigner, accepted_case)
     end
 
     it 'refuses if current_user is not the drafter or an assigner' do

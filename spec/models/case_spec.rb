@@ -163,6 +163,7 @@ RSpec.describe Case, type: :model do
     end
 
   end
+  
   describe '#drafter' do
     it 'is the currently assigned drafter' do
       allow(non_trigger_foi).to receive(:assignees).and_return [drafter]
