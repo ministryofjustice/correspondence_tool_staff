@@ -170,10 +170,10 @@ class Case < ApplicationRecord
   end
 
   def who_its_with
-    if self.current_state == 'unassigned' && self.drafter.nil?
-      'DACU'
-    else
+    if drafter_assignment.present?
       self.drafter.email
+    else
+      'DACU'
     end
   end
 
