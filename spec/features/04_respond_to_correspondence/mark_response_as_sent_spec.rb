@@ -37,29 +37,14 @@ version and DACU will be notified to review the case."
     response_page.mark_as_sent_button.click
 
     expect(current_path).to eq '/cases'
-    expect(kase.current_state).to eq 'responded'
-    expect(case_list_page.case_list.count).to eq 1
-
-    remaining_case_row = case_list_page.case_list.first
-    expect(remaining_case_row.number).to have_content(another_kase.number)
-    expect(remaining_case_row.status.text).to eq 'Waiting for draft response'
-
+    expect(case_list_page.case_numbers).not_to include kase.number
     expect(case_list_page).
       to have_content('Response confirmed. The case is now with DACU.')
+    expect(kase.current_state).to eq 'responded'
 
     login_as assigner
-    
     case_list_page.load
-    expect(case_list_page.case_list.count).to eq 2
-
-    responded_case_row = case_list_page.case_list.first
-    drafting_case_row = case_list_page.case_list.second
-
-    expect(responded_case_row.number).to have_content(kase.number)
-    expect(responded_case_row.status.text).to eq 'Waiting to be closed'
-
-    expect(drafting_case_row.number).to have_content(another_kase.number)
-    expect(drafting_case_row.status.text).to eq 'Waiting for draft response'
+    expect(case_list_page.case_numbers).to include kase.number
   end
 
 end
