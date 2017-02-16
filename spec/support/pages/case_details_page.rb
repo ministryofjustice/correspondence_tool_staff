@@ -24,5 +24,6 @@ class CaseDetailsPage < SitePrism::Page
 
   sections :uploaded_files, 'table#uploaded-files tr' do
     element :filename, 'td[aria-label="File name"]'
+    element :download, 'td[aria-label="Actions"] a:contains("Download")'
   end
 end

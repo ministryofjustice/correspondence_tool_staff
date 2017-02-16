@@ -41,6 +41,8 @@ RSpec.describe CaseAttachment, type: :model do
     end
 
     it { should validate_presence_of :url }
+
+    xit 'validates that the URL points to our storage bucket'
   end
 
   describe '#filename' do

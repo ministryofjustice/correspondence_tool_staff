@@ -1,0 +1,25 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "633fbd0dee344521ff0da6d58436d2543fec1fe283236a0da2045325fdbad20c",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/case_attachments_controller.rb",
+      "line": 6,
+      "link": "http://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Case.find(params[:case_id]).attachments.find(params[:id]).url)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "CaseAttachmentsController",
+        "method": "download"
+      },
+      "user_input": "Case.find(params[:case_id]).attachments.find(params[:id]).url",
+      "confidence": "High",
+      "note": "This needs a validation in the model to ensure the URL points to our storage bucket."
+    }
+  ],
+  "updated": "2017-02-17 10:41:44 +0000",
+  "brakeman_version": "3.4.0"
+}

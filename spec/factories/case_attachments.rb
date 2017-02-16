@@ -12,7 +12,7 @@
 
 FactoryGirl.define do
   factory :case_attachment do
-    association :case
+    association :case, strategy: :build
     url {
       "https://correspondence-staff-uploads.s3.amazonaws.com/" +
         "#{SecureRandom.hex(32)}/" +

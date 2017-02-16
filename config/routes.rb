@@ -5,6 +5,10 @@
 #                     user_session POST   /users/sign_in(.:format)                                   devise/sessions#create
 #             destroy_user_session DELETE /users/sign_out(.:format)                                  devise/sessions#destroy
 #               authenticated_root GET    /                                                          cases#index
+#                      sidekiq_web        /sidekiq                                                   Sidekiq::Web
+#                         feedback POST   /feedback(.:format)                                        feedback#create
+#                       close_case PATCH  /cases/:id/close(.:format)                                 cases#close
+#   case_assignments_show_rejected GET    /cases/:case_id/assignments/show_rejected(.:format)        assignments#show_rejected
 # accept_or_reject_case_assignment PATCH  /cases/:case_id/assignments/:id/accept_or_reject(.:format) assignments#accept_or_reject
 #                 case_assignments GET    /cases/:case_id/assignments(.:format)                      assignments#index
 #                                  POST   /cases/:case_id/assignments(.:format)                      assignments#create
@@ -16,6 +20,7 @@
 #                                  DELETE /cases/:case_id/assignments/:id(.:format)                  assignments#destroy
 #         new_response_upload_case GET    /cases/:id/new_response_upload(.:format)                   cases#new_response_upload
 #            upload_responses_case POST   /cases/:id/upload_responses(.:format)                      cases#upload_responses
+#    download_case_case_attachment GET    /cases/:case_id/attachments/:id/download(.:format)         case_attachments#download
 #                            cases GET    /cases(.:format)                                           cases#index
 #                                  POST   /cases(.:format)                                           cases#create
 #                         new_case GET    /cases/new(.:format)                                       cases#new
@@ -62,6 +67,10 @@ Rails.application.routes.draw do
 
     get 'new_response_upload', on: :member
     post 'upload_responses', on: :member
+
+    resources :case_attachments, path: 'attachments', only: [] do
+      get 'download', on: :member
+    end
   end
 
 

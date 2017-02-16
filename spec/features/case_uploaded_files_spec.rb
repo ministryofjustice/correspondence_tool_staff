@@ -24,5 +24,13 @@ feature 'uploaded files on case details view' do
       expect(case_details_page.uploaded_files.first.filename)
         .to have_content(attachment_1.filename)
     end
+
+    scenario 'can be downloaded' do
+      case_details_page.load(id: kase.id)
+
+      expect {
+        case_details_page.uploaded_files.first.download.click
+      }.to redirect_to_external(attachment_1.url)
+    end
   end
 end

@@ -45,39 +45,40 @@ FactoryGirl.define do
                user_id: assignment.assigner.id,
                assignee_id: assignment.assignee.id
       end
+    end
 
-      factory :accepted_case do
-        after(:create) do |kase, evaluator|
-          create :case_transition_accept_responder_assignment,
-                 case_id: kase.id,
-                 user_id: evaluator.assigner.id,
-                 assignee_id: evaluator.drafter.id,
-                 most_recent: true
-        end
+    factory :accepted_case, parent: :assigned_case do
+      after(:create) do |kase, evaluator|
+        create :case_transition_accept_responder_assignment,
+               case_id: kase.id,
+               user_id: evaluator.assigner.id,
+               assignee_id: evaluator.drafter.id,
+               most_recent: true
+      end
+    end
 
-        factory :case_with_response do
-          after(:create) do |kase, _evaluator|
-            create :case_attachment, case: kase, type: 'response'
-            create :case_transition_add_responses, case_id: kase.id
-          end
-        end
+    factory :case_with_response, parent: :accepted_case do
+      transient do
+        response { build(:correspondence_response, type: 'response') }
       end
 
-      factory :responded_case do
-        after(:create) do |kase, _evaluator|
+      after(:create) do |kase, evaluator|
+        kase.attachments << evaluator.response
 
-          assignment = Assignment.find_by(case_id: kase.id)
+        create :case_transition_add_responses,
+               case_id: kase.id
+               # filenames: [evaluator.attachment.filename]
+      end
+    end
 
-          create(:case_transition_accept_responder_assignment,
+    factory :responded_case, parent: :case_with_response do
+      after(:create) do |kase, _evaluator|
+        assignment = Assignment.find_by(case_id: kase.id)
+
+        create(:case_transition_respond,
                case_id: kase.id,
                user_id: assignment.assignee.id,
                assignee_id: assignment.assignee.id)
-
-          create(:case_transition_respond,
-               case_id: kase.id,
-               user_id: assignment.assignee.id,
-               assignee_id: assignment.assignee.id)
-        end
       end
     end
   end

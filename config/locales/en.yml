@@ -146,6 +146,7 @@ en:
       actions: Actions
       assign: Assign to a responder
       close: Close case
+      download: Download
       email: "Requesters email address: "
       external_deadline: External deadline
       filename: File name

@@ -23,11 +23,16 @@
             thead
               th scope='col'
                 = t('common.case.uploaded_files')
+              th scope='col'
+                = t('common.case.actions')
             tbody
               - case_details.attachments.each do |ca|
                 tr.case_attachment_row
                   td aria-label="#{t('common.case.filename')}"
                     = ca.filename
+                  td aria-label="#{t('common.case.actions')}"
+                    = link_to t('common.case.download'),
+                              download_case_case_attachment_path(case_details, ca)
 
   - if include_sidebar.present? && include_sidebar == true
     section.case-sidebar

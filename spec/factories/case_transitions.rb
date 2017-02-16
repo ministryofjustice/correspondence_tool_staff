@@ -15,6 +15,7 @@
 
 FactoryGirl.define do
   factory :case_transition do
+    association :case
     sort_key do
       last_sort_key =
         CaseTransition.where(case_id: case_id).order(:sort_key).last&.sort_key || 0
