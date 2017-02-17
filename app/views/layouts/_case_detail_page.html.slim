@@ -32,13 +32,14 @@
                   td aria-label="#{t('common.case.filename')}"
                     = ca.filename
                   td aria-label="#{t('common.case.actions')}"
-                    = link_to t('common.case.download'),
+                    = link_to t('common.case.download_link_html',
+                                filename: ca.filename),
                               download_case_case_attachment_path(case_details, ca)
                     = ' | '
-                    = link_to t('common.case.remove'),
-                                case_case_attachment_path(@case, ca),
-                                method: :delete,
-                                class: 'button'
+                    = link_to t('common.case.remove_link_html',
+                                filename: ca.filename),
+                              case_case_attachment_path(@case, ca),
+                              method: :delete
 
   - if include_sidebar.present? && include_sidebar == true
     section.case-sidebar
