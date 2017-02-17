@@ -17,6 +17,7 @@ class CaseAttachment < ActiveRecord::Base
   validates :type, presence: true
   validates :url, presence: true
   validate :validate_url_file_extension, unless: Proc.new { |a| a.url.nil? }
+  validate :validate_url_is_valid_host,  unless: Proc.new { |a| a.url.nil? }
 
   enum type: { response: 'response' }
 
@@ -37,7 +38,19 @@ class CaseAttachment < ActiveRecord::Base
       errors[:url] << I18n.t(
         'activerecord.errors.models.case_attachment.attributes.url.bad_file_type',
         type: mime_type,
-        name: File.basename(URI.parse(url).path)
+        filename: filename
+      )
+    end
+  end
+
+  def validate_url_is_valid_host
+    s3_bucket_url = URI.parse(CASE_UPLOADS_S3_BUCKET.url)
+    file_url = URI.parse(url)
+    unless file_url.scheme == s3_bucket_url.scheme &&
+           file_url.host   == s3_bucket_url.host
+      errors[:url] << I18n.t(
+        'activerecord.errors.models.case_attachment.attributes.url.invalid_url',
+        filename: filename
       )
     end
   end

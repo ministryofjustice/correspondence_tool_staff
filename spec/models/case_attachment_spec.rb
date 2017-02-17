@@ -15,7 +15,7 @@ require 'rspec/expectations'
 
 RSpec::Matchers.define :allow_url_file_extension do |extension|
   match do
-    subject.url = "https://s3.amazon.com/bucket/uploads/file.#{extension}"
+    subject.url = "#{CASE_UPLOADS_S3_BUCKET.url}/uploads/file.#{extension}"
     subject.type = 'response'
     subject.valid?
   end
@@ -42,17 +42,21 @@ RSpec.describe CaseAttachment, type: :model do
 
     it { should validate_presence_of :url }
 
-    xit 'validates that the URL points to our storage bucket'
+    it 'validates that the URL points to our storage bucket' do
+      attachment = build :case_response,
+                         url: 'https://fake-s3.am.zn/deadbeef/file.xls'
+      expect(attachment).not_to be_valid
+      expect(attachment.errors).to have_key(:url)
+    end
   end
 
   describe '#filename' do
-
     subject do
-      create(:case_attachment,
-        type: 'response',
-        url: "https://correspondence-staff-uploads.s3.amazonaws.com/" +
-        "#{SecureRandom.hex(32)}/" +
-        "responses/new%20response.pdf")
+      create :case_attachment,
+             type: 'response',
+             url: CASE_UPLOADS_S3_BUCKET.url +
+                    "/#{SecureRandom.hex(32)}/" +
+                    "responses/new%20response.pdf"
     end
 
     it 'returns the name of the attached file' do

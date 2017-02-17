@@ -44,7 +44,8 @@ en:
         case_attachment:
           attributes:
             url:
-              bad_file_type: "unnacceptable type"
+              bad_file_type: "unnacceptable type %{type} for file: %{filename}"
+              invalid_url: "url is invalid for file: %{filename}"
 
   pundit:
     case_policy:

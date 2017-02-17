@@ -566,8 +566,9 @@ RSpec.describe CasesController, type: :controller do
   describe 'POST upload_responses' do
     let(:kase) { create(:accepted_case, drafter: drafter) }
     let(:attachment_url) do
-      'https://correspondence-staff-uploads.s3.amazonaws.com' +
-        '/356a192b7913b04c54574d18c28d46e6395428ab/responses/test file.jpg'
+      CASE_UPLOADS_S3_BUCKET.url +
+        "/#{SecureRandom.hex(32)}/" +
+        "/responses/test file.jpg"
     end
     let(:do_upload_responses) do
       post :upload_responses, params: {
