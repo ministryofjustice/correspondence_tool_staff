@@ -15,7 +15,7 @@
             = t('common.case.received_date')
           = l case_details.received_date, format: :default
 
-      - if include_uploaded_files
+      - if include_uploaded_files && !case_details.attachments.empty?
         .request--uploaded-files
           table#uploaded-files
             colgroup

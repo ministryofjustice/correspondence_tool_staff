@@ -4,33 +4,45 @@ feature 'uploaded files on case details view' do
   given(:case_details_page) { CaseDetailsPage.new }
   given(:drafter) { create(:drafter) }
   given(:kase)    { create(:accepted_case, drafter: drafter) }
-  given(:attachment_1) do
-    create(:correspondence_response, case: kase)
+  given(:attached_response) do
+    create(:case_response, case: kase)
   end
 
   background do
     login_as user
-
-    # create(:category, :foi)
-    attachment_1
   end
 
   context 'as the assigned drafter' do
     given(:user) { drafter }
 
-    scenario 'can be listed' do
-      case_details_page.load(id: kase.id)
+    context 'with an attached response' do
+      background do
+        attached_response
+      end
 
-      expect(case_details_page.uploaded_files.first.filename)
-        .to have_content(attachment_1.filename)
+      scenario 'can be listed' do
+        case_details_page.load(id: kase.id)
+
+        expect(case_details_page).to have_uploaded_files
+        expect(case_details_page.uploaded_files.files.first.filename)
+          .to have_content(attached_response.filename)
+      end
+
+      scenario 'can be downloaded' do
+        case_details_page.load(id: kase.id)
+
+        expect {
+          case_details_page.uploaded_files.files.first.download.click
+        }.to redirect_to_external(attached_response.url)
+      end
     end
 
-    scenario 'can be downloaded' do
-      case_details_page.load(id: kase.id)
+    context 'with no attached responsed' do
+      scenario 'is not visible' do
+        case_details_page.load(id: kase.id)
 
-      expect {
-        case_details_page.uploaded_files.first.download.click
-      }.to redirect_to_external(attachment_1.url)
+        expect(case_details_page).not_to have_uploaded_files
+      end
     end
   end
 end

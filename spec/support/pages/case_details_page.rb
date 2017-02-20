@@ -21,8 +21,10 @@ class CaseDetailsPage < SitePrism::Page
     element :case_number, '.case-heading--secondary'
   end
 
-  sections :uploaded_files, 'table#uploaded-files tr' do
-    element :filename, 'td[aria-label="File name"]'
-    element :download, 'td[aria-label="Actions"] a:contains("Download")'
+  section :uploaded_files, 'table#uploaded-files' do
+    sections :files, 'tr' do
+      element :filename, 'td[aria-label="File name"]'
+      element :download, 'td[aria-label="Actions"] a:contains("Download")'
+    end
   end
 end
