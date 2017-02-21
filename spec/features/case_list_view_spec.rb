@@ -32,7 +32,7 @@ feature 'listing cases on the system' do
     assigned_case
   end
 
-  scenario 'for assginers - shows all cases' do
+  scenario 'for assigners - shows all cases' do
     login_as create(:user, roles: ['assigner'])
     visit '/'
     expect(page.case_list.count).to eq 2

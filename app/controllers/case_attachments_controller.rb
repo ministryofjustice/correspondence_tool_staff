@@ -7,7 +7,13 @@ class CaseAttachmentsController < ApplicationController
   end
 
   def destroy
+    authorize @case, :can_add_attachment?
+
     @attachment.destroy!
+    respond_to do |format|
+      format.js
+      format.html { redirect_to case_path(@case) }
+    end
   end
 
   private

@@ -28,7 +28,7 @@
                 = t('common.case.actions')
             tbody
               - case_details.attachments.each do |ca|
-                tr.case_attachment_row
+                tr.case_attachment_row id="case_attachment_#{ca.id}"
                   td aria-label="#{t('common.case.filename')}"
                     = ca.filename
                   td aria-label="#{t('common.case.actions')}"
@@ -39,7 +39,8 @@
                     = link_to t('common.case.remove_link_html',
                                 filename: ca.filename),
                               case_case_attachment_path(@case, ca),
-                              method: :delete
+                              method: :delete,
+                              remote: true
 
   - if include_sidebar.present? && include_sidebar == true
     section.case-sidebar

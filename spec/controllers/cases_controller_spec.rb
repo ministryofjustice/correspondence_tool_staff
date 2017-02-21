@@ -570,12 +570,19 @@ RSpec.describe CasesController, type: :controller do
         "/#{SecureRandom.hex(32)}/" +
         "/responses/test file.jpg"
     end
-    let(:do_upload_responses) do
+
+    def do_upload_responses
       post :upload_responses, params: {
              id:             kase,
              type:           'response',
              attachment_url: [attachment_url]
            }
+    end
+    let(:s3_object) { instance_double(Aws::S3::Object, move_to: nil) }
+
+    before do
+      allow_any_instance_of(CaseAttachment).to receive(:s3_object)
+                                                 .and_return(s3_object)
     end
 
     context 'as an anonymous user' do
@@ -608,7 +615,9 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    shared_examples 'signed-in user can add attachments' do
+    context 'as the assigned drafter' do
+      before { sign_in drafter }
+
       it 'creates a new case attachment' do
         expect { do_upload_responses }.
           to change { kase.reload.attachments.count }
@@ -617,6 +626,14 @@ RSpec.describe CasesController, type: :controller do
       it 'URI encodes the attachment url' do
         do_upload_responses
         expect(kase.attachments.first.url).to eq URI.encode attachment_url
+      end
+
+      it 'moves the file out of the uploads dir' do
+        do_upload_responses
+        destination_path = "correspondence-staff-case-uploads-testing/" +
+                           Digest::SHA1.hexdigest(kase.id.to_s) +
+                           "/responses/test file.jpg"
+        expect(s3_object).to have_received(:move_to).with(destination_path)
       end
 
       it 'test the type field' do
@@ -663,12 +680,6 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as the assigned drafter' do
-      before { sign_in drafter }
-
-      it_behaves_like 'signed-in user can add attachments'
-    end
-
     context 'as an assigner' do
       before { sign_in assigner }
 
@@ -703,7 +714,7 @@ RSpec.describe CasesController, type: :controller do
     end
 
     context 'as the assigned drafter' do
-      
+
       before { sign_in drafter }
 
       it 'does not transition current_state' do
@@ -765,7 +776,7 @@ RSpec.describe CasesController, type: :controller do
     end
 
     context 'as the assigned drafter' do
-      
+
       before { sign_in drafter }
 
       it 'transitions current_state to "responded"' do

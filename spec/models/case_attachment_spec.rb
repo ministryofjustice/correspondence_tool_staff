@@ -63,4 +63,20 @@ RSpec.describe CaseAttachment, type: :model do
       expect(subject.filename).to eq 'new response.pdf'
     end
   end
+
+  it 'removes the file from the storage bucket on destruction' do
+    attachment = create :case_response
+    attachment_path = URI.parse(attachment.url).path[1..-1]
+    attachment_object = instance_double(
+      Aws::S3::Object,
+      delete: instance_double(Aws::S3::Types::DeleteObjectOutput)
+    )
+    allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
+                                       .with(attachment_path)
+                                       .and_return(attachment_object)
+
+    attachment.destroy!
+
+    expect(attachment_object).to have_received(:delete)
+  end
 end

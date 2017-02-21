@@ -20,24 +20,6 @@ moj.Modules.Dropzone = {
       acceptedFiles: this.$target.data('accepted-files'),
       dataType: 'XML',
       headers: { formData: this.$target.data('form-data')},
-      /*init: function() {
-        var thisDropzone = this;
-
-        $.getJSON('/documents/?form_id=' + $('#claim_form_id').val()).done(function (data) {
-          if(data) {
-            $.each(data, function(index, item) {
-              var existingFile = {
-                name: item.document_file_name,
-                size: parseInt(item.document_file_size),
-                accepted: true
-              };
-              thisDropzone.emit('addedfile', existingFile);
-              thisDropzone.emit('success', existingFile, { document : item });
-              thisDropzone.emit('complete', existingFile);
-            });
-          }
-        });
-      },*/
       sending: function(file, xhr, formData) {
         var s3Data = $(this.element).data('form-data');
         for(var k in s3Data) {
@@ -56,9 +38,6 @@ moj.Modules.Dropzone = {
         var host = $(this.element).data('host');
         var url   = 'https://' + host + '/' + key;
 
-       /* var id = response.document.id;
-        $(file.previewTemplate).find('.dz-remove').attr('id', id);
-        */
         file.previewElement.classList.add('dz-success');
 
         if(file.accepted) {
@@ -70,25 +49,12 @@ moj.Modules.Dropzone = {
                       , type:'hidden'
                       , name: 'attachment_url[]'
                       , value: url });
-
-        $(this.element).closest('form').append(input);
+        $(file.previewElement).append(input);
 
       },
       removedfile: function(file) {
-        var id = $(file.previewTemplate).find('.dz-remove').attr('id');
-
-        if(id) {
-          $.ajax({
-            type: 'DELETE',
-            url: '/documents/' + id,
-            success : function(data) {
-              $(file.previewElement).remove();
-              self.removeDocumentIdInput(data.document.id);
-            }
-          });
-
-          $(file.previewElement).remove();
-        }
+        // server-side will take care of cleaning up uploads dir
+        $(file.previewElement).remove();
       }
     });
   },

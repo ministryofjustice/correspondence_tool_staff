@@ -19,17 +19,27 @@ class CaseAttachment < ActiveRecord::Base
   validate :validate_url_file_extension, unless: Proc.new { |a| a.url.nil? }
   validate :validate_url_is_valid_host,  unless: Proc.new { |a| a.url.nil? }
 
+  after_destroy :remove_from_storage_bucket
+
   enum type: { response: 'response' }
 
   def filename
-    URI.decode(
-      File.basename(
-        URI.parse(url).path
-      )
-    )
+    URI.decode(File.basename(s3_key))
+  end
+
+  def s3_object
+    CASE_UPLOADS_S3_BUCKET.object(s3_key)
+  end
+
+  def s3_key
+    URI.parse(url).path[1..-1]
   end
 
   private
+
+  def remove_from_storage_bucket
+    s3_object.delete
+  end
 
   def validate_url_file_extension
     filename = File.basename URI.parse(url).path

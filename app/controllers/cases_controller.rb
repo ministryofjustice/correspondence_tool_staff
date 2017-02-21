@@ -59,6 +59,13 @@ class CasesController < ApplicationController
 
     if responses.all?(&:valid?)
       @case.add_responses(current_user.id, responses)
+      responses.each do |response|
+        response.s3_object.move_to(File.join(
+                                     Settings.case_uploads_s3_bucket,
+                                     @case.attachments_dir('responses'),
+                                     response.filename
+                                   ))
+      end
       flash[:notice] = t('notices.response_uploaded')
       redirect_to case_path
     else
@@ -152,8 +159,9 @@ class CasesController < ApplicationController
   end
 
   def set_s3_direct_post
+    uploads_key = "uploads/#{@case.attachments_dir('responses')}/${filename}"
     @s3_direct_post = CASE_UPLOADS_S3_BUCKET.presigned_post(
-      key:                   "#{@case.attachments_dir('responses')}/${filename}",
+      key:                   uploads_key,
       success_action_status: '201',
       acl:                   'public-read'
     )

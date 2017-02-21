@@ -18,13 +18,13 @@ FactoryGirl.define do
         "/#{SecureRandom.hex(32)}/" +
         "responses/#{Faker::Internet.slug}.pdf"
     }
+  end
 
-    factory :correspondence_response, parent: :case_attachment do
-      type 'response'
-    end
-    factory :case_response, parent: :correspondence_response do
-      # Whatever was I thinking calling it :correspondence_response? Why didn't
-      # you stop me Eddie?!?!
-    end
+  factory :correspondence_response, parent: :case_attachment do
+    type 'response'
+  end
+  factory :case_response, parent: :correspondence_response do
+    # Whatever was I thinking calling it :correspondence_response? Why didn't
+    # you stop me Eddie?!?!
   end
 end
