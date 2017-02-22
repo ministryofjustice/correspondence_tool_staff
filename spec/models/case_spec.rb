@@ -177,8 +177,8 @@ RSpec.describe Case, type: :model do
     let(:unassigned_case) { create :case }
 
     it 'is the currently assigned drafter' do
-      expect(assigned_case.who_its_with).to eq assigned_case.drafter.email
-      expect(accepted_case.who_its_with).to eq accepted_case.drafter.email
+      expect(assigned_case.who_its_with).to eq assigned_case.drafter.full_name
+      expect(accepted_case.who_its_with).to eq accepted_case.drafter.full_name
     end
 
     it 'is the currently assigned to DACU' do

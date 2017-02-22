@@ -171,7 +171,7 @@ class Case < ApplicationRecord
 
   def who_its_with
     if drafter_assignment.present?
-      self.drafter.email
+      self.drafter.full_name
     else
       'DACU'
     end

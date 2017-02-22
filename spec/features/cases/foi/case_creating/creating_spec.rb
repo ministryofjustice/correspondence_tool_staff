@@ -61,7 +61,7 @@ feature 'Case creation by an assigner' do
       received_date:  Time.zone.today
     )
 
-    select drafter.email, from: 'assignment[assignee_id]'
+    select drafter.full_name, from: 'assignment[assignee_id]'
     click_button 'Assign case'
     expect(current_path).to eq cases_path
     expect(page).to have_content('Case successfully assigned')

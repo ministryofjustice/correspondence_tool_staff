@@ -15,13 +15,24 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  roles                  :string
+#  full_name              :string
 #
+
+def email_from_name(name)
+  email_name = name.gsub(' ', '.').gsub(/\.{2,9}/, '.')
+  "correspondence-staff-dev+#{email_name}@digital.justice.gov.uk"
+end
 
 FactoryGirl.define do
   factory :user do
-    email { Faker::Internet.email }
     password '12345678'
     roles %w[assigner drafter]
+    full_name { Faker::Name.name }
+    email { Faker::Internet.email(full_name) }
+
+    trait :dev do
+      email { email_from_name(full_name) }
+    end
 
     factory :assigner do
       roles %w[assigner]

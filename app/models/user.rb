@@ -15,6 +15,7 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  roles                  :string
+#  full_name              :string
 #
 
 class User < ApplicationRecord
@@ -26,6 +27,8 @@ class User < ApplicationRecord
 
   has_many :cases, through: :assignments
   has_many :assignments, foreign_key: 'assignee_id'
+
+  validates :full_name, presence: true
 
   ROLES = %w[assigner drafter approver].freeze
 
