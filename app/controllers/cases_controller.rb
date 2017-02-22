@@ -53,19 +53,16 @@ class CasesController < ApplicationController
     responses = params[:attachment_url].reject(&:blank?).map do |url|
       CaseAttachment.new(
         type: 'response',
-        url:  URI.encode(url)
+        url:  url
       )
     end
 
     if responses.all?(&:valid?)
       @case.add_responses(current_user.id, responses)
       responses.each do |response|
-        response.s3_object.move_to(File.join(
-                                     Settings.case_uploads_s3_bucket,
-                                     @case.attachments_dir('responses'),
-                                     response.filename
-                                   ))
+        response.s3_object.move_to(destination_path_for_response(response))
       end
+      remove_leftover_upload_files
       flash[:notice] = t('notices.response_uploaded')
       redirect_to case_path
     else
@@ -173,6 +170,21 @@ class CasesController < ApplicationController
       super(exception, case_path(@case))
     else
       super
+    end
+  end
+
+  def destination_path_for_response(response)
+    File.join(
+      Settings.case_uploads_s3_bucket,
+      @case.attachments_dir('responses'),
+      response.filename
+    )
+  end
+
+  def remove_leftover_upload_files
+    prefix = "uploads/#{@case.hashed_id}"
+    CASE_UPLOADS_S3_BUCKET.objects(prefix: prefix).each do |object|
+      object.delete
     end
   end
 end

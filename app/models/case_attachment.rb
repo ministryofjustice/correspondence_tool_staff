@@ -24,7 +24,7 @@ class CaseAttachment < ActiveRecord::Base
   enum type: { response: 'response' }
 
   def filename
-    URI.decode(File.basename(s3_key))
+    File.basename(s3_key)
   end
 
   def s3_object
@@ -32,7 +32,7 @@ class CaseAttachment < ActiveRecord::Base
   end
 
   def s3_key
-    URI.parse(url).path[1..-1]
+    URI.decode(URI.parse(url).path[1..-1])
   end
 
   private
@@ -42,7 +42,7 @@ class CaseAttachment < ActiveRecord::Base
   end
 
   def validate_url_file_extension
-    filename = File.basename URI.parse(url).path
+    filename = File.basename URI.parse(URI.encode(url)).path
     mime_type = Rack::Mime.mime_type(File.extname filename)
     unless Settings.case_uploads_accepted_types.include? mime_type
       errors[:url] << I18n.t(
@@ -55,7 +55,7 @@ class CaseAttachment < ActiveRecord::Base
 
   def validate_url_is_valid_host
     s3_bucket_url = URI.parse(CASE_UPLOADS_S3_BUCKET.url)
-    file_url = URI.parse(url)
+    file_url = URI.parse(URI.encode(url))
     unless file_url.scheme == s3_bucket_url.scheme &&
            file_url.host   == s3_bucket_url.host
       errors[:url] << I18n.t(

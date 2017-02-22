@@ -568,7 +568,7 @@ RSpec.describe CasesController, type: :controller do
     let(:attachment_url) do
       CASE_UPLOADS_S3_BUCKET.url +
         "/#{SecureRandom.hex(32)}/" +
-        "/responses/test file.jpg"
+        "/responses/test%20file.jpg"
     end
 
     def do_upload_responses
@@ -578,11 +578,14 @@ RSpec.describe CasesController, type: :controller do
              attachment_url: [attachment_url]
            }
     end
-    let(:s3_object) { instance_double(Aws::S3::Object, move_to: nil) }
+    let(:s3_object)      { instance_double(Aws::S3::Object, move_to: nil) }
+    let(:leftover_files) { [] }
 
     before do
       allow_any_instance_of(CaseAttachment).to receive(:s3_object)
                                                  .and_return(s3_object)
+      allow(CASE_UPLOADS_S3_BUCKET).
+        to receive(:objects).and_return(leftover_files)
     end
 
     context 'as an anonymous user' do
@@ -623,11 +626,6 @@ RSpec.describe CasesController, type: :controller do
           to change { kase.reload.attachments.count }
       end
 
-      it 'URI encodes the attachment url' do
-        do_upload_responses
-        expect(kase.attachments.first.url).to eq URI.encode attachment_url
-      end
-
       it 'moves the file out of the uploads dir' do
         do_upload_responses
         destination_path = "correspondence-staff-case-uploads-testing/" +
@@ -639,6 +637,19 @@ RSpec.describe CasesController, type: :controller do
       it 'test the type field' do
         do_upload_responses
         expect(kase.attachments.first.type).to eq 'response'
+      end
+
+      context 'files removed from dropzone upload' do
+        let(:leftover_files) do
+          [instance_double(Aws::S3::Object, delete: nil)]
+        end
+
+        it 'removes any files left behind in uploads' do
+          do_upload_responses
+          leftover_files.each do |object|
+            expect(object).to have_received(:delete)
+          end
+        end
       end
 
       it 'redirects to the case detail page' do
