@@ -50,18 +50,14 @@ class CasesController < ApplicationController
   def upload_responses
     authorize @case, :can_add_attachment?
 
-    responses = params[:attachment_url].reject(&:blank?).map do |url|
-      CaseAttachment.new(
-        type: 'response',
-        url:  url
-      )
+    responses = params[:uploaded_files].reject(&:blank?).map do |uploads_key|
+      move_uploaded_response(uploads_key)
+      CaseAttachment.new type: 'response',
+                         key: response_destination_key(uploads_key)
     end
 
     if responses.all?(&:valid?)
       @case.add_responses(current_user.id, responses)
-      responses.each do |response|
-        response.s3_object.move_to(destination_path_for_response(response))
-      end
       remove_leftover_upload_files
       flash[:notice] = t('notices.response_uploaded')
       redirect_to case_path
@@ -173,12 +169,17 @@ class CasesController < ApplicationController
     end
   end
 
-  def destination_path_for_response(response)
-    File.join(
-      Settings.case_uploads_s3_bucket,
-      @case.attachments_dir('responses'),
-      response.filename
-    )
+  def response_destination_key(uploads_key)
+    "#{@case.attachments_dir('responses')}/#{File.basename(uploads_key)}"
+  end
+
+  def response_destination_path(uploads_key)
+    "#{Settings.case_uploads_s3_bucket}/#{response_destination_key(uploads_key)}"
+  end
+
+  def move_uploaded_response(uploads_key)
+    uploads_object = CASE_UPLOADS_S3_BUCKET.object(uploads_key)
+    uploads_object.move_to(response_destination_path(uploads_key))
   end
 
   def remove_leftover_upload_files

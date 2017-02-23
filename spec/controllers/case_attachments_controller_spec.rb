@@ -43,7 +43,6 @@ RSpec.describe CaseAttachmentsController, type: :controller do
   end
 
   describe '#destroy' do
-    let(:attachment_path) { URI.parse(attachment.url).path[1..-1] }
     let(:attachment_object) do
       instance_double(
         Aws::S3::Object,
@@ -53,7 +52,7 @@ RSpec.describe CaseAttachmentsController, type: :controller do
 
     before do
       allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
-                                         .with(attachment_path)
+                                         .with(attachment.key)
                                          .and_return(attachment_object)
     end
 

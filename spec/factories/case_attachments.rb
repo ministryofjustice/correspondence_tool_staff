@@ -5,19 +5,21 @@
 #  id         :integer          not null, primary key
 #  case_id    :integer
 #  type       :enum
-#  url        :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  key        :string
 #
 
 FactoryGirl.define do
   factory :case_attachment do
     association :case, strategy: :build
-    url {
-      CASE_UPLOADS_S3_BUCKET.url +
-        "/#{SecureRandom.hex(32)}/" +
-        "responses/#{Faker::Internet.slug}.pdf"
-    }
+    # TODO: The random hex number below isn't strictly true, we should have a
+    #       hash of the case's ID ... except the default factory here doesn't
+    #       have a case with an ID since we use strategy: :build. The reason
+    #       for that is that we were getting errors in tests when using the
+    #       default strategy of :create, so we need to fix that to fix the hex
+    #       number we generate here.
+    key { "#{SecureRandom.hex(16)}/responses/#{Faker::Internet.slug}.pdf" }
   end
 
   factory :correspondence_response, parent: :case_attachment do

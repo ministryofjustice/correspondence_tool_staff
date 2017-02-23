@@ -565,27 +565,41 @@ RSpec.describe CasesController, type: :controller do
 
   describe 'POST upload_responses' do
     let(:kase) { create(:accepted_case, drafter: drafter) }
-    let(:attachment_url) do
-      CASE_UPLOADS_S3_BUCKET.url +
-        "/#{SecureRandom.hex(32)}/" +
-        "/responses/test%20file.jpg"
+    let(:uploads_key) do
+      "uploads/#{Digest::SHA1.hexdigest(kase.id.to_s)}/responses/test file.jpg"
+    end
+    let(:destination_key) { uploads_key.sub(%r{^uploads/}, '') }
+    let(:destination_path) do
+      "correspondence-staff-case-uploads-testing/#{destination_key}"
+    end
+    let(:uploads_object) { instance_double(Aws::S3::Object, 'uploads_object') }
+    let(:public_url) do
+      "#{CASE_UPLOADS_S3_BUCKET.url}/#{URI.encode(destination_key)}"
+    end
+    let(:destination_object) do
+      instance_double Aws::S3::Object, 'destination_object',
+                      public_url: public_url
+    end
+    let(:leftover_files) { [] }
+
+    before do
+      allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
+                                         .with(uploads_key)
+                                         .and_return(uploads_object)
+      allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
+                                         .with(destination_key)
+                                         .and_return(destination_object)
+      allow(CASE_UPLOADS_S3_BUCKET).to receive(:objects)
+                                         .and_return(leftover_files)
+      allow(uploads_object).to receive(:move_to).with(destination_path)
     end
 
     def do_upload_responses
       post :upload_responses, params: {
              id:             kase,
              type:           'response',
-             attachment_url: [attachment_url]
+             uploaded_files: [uploads_key]
            }
-    end
-    let(:s3_object)      { instance_double(Aws::S3::Object, move_to: nil) }
-    let(:leftover_files) { [] }
-
-    before do
-      allow_any_instance_of(CaseAttachment).to receive(:s3_object)
-                                                 .and_return(s3_object)
-      allow(CASE_UPLOADS_S3_BUCKET).
-        to receive(:objects).and_return(leftover_files)
     end
 
     context 'as an anonymous user' do
@@ -628,10 +642,12 @@ RSpec.describe CasesController, type: :controller do
 
       it 'moves the file out of the uploads dir' do
         do_upload_responses
-        destination_path = "correspondence-staff-case-uploads-testing/" +
-                           Digest::SHA1.hexdigest(kase.id.to_s) +
-                           "/responses/test file.jpg"
-        expect(s3_object).to have_received(:move_to).with(destination_path)
+        expect(uploads_object).to have_received(:move_to).with(destination_path)
+      end
+
+      it 'URI encodes the attachment url and removes uploads' do
+        do_upload_responses
+        expect(kase.attachments.first.url).to eq public_url
       end
 
       it 'test the type field' do
@@ -658,9 +674,8 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'uploading invalid attachment type' do
-        let(:attachment_url) do
-          'https://correspondence-staff-uploads.s3-eu-west-1.amazonaws.com/' +
-            '/responses/invalid_type.exe'
+        let(:uploads_key) do
+          "uploads/#{Digest::SHA1.hexdigest(kase.id.to_s)}/responses/invalid.exe"
         end
 
         it 'renders the new_response_upload page' do

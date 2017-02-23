@@ -36,7 +36,6 @@ moj.Modules.Dropzone = {
         var $response   = $(responseDoc);
         var key = $response.find('Key').text();
         var host = $(this.element).data('host');
-        var url   = 'https://' + host + '/' + key;
 
         file.previewElement.classList.add('dz-success');
 
@@ -45,10 +44,10 @@ moj.Modules.Dropzone = {
         }
 
         // create hidden field
-        var input = $('<input />', { class: 'case-attachment-url'
+        var input = $('<input />', { class: 'case-uploaded-files'
                       , type:'hidden'
-                      , name: 'attachment_url[]'
-                      , value: url });
+                      , name: 'uploaded_files[]'
+                      , value: key });
         $(file.previewElement).append(input);
 
       },

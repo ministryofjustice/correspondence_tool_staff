@@ -8,6 +8,8 @@
 #                      sidekiq_web        /sidekiq                                                   Sidekiq::Web
 #                         feedback POST   /feedback(.:format)                                        feedback#create
 #                       close_case PATCH  /cases/:id/close(.:format)                                 cases#close
+#                     respond_case GET    /cases/:id/respond(.:format)                               cases#respond
+#             confirm_respond_case PATCH  /cases/:id/confirm_respond(.:format)                       cases#confirm_respond
 #   case_assignments_show_rejected GET    /cases/:case_id/assignments/show_rejected(.:format)        assignments#show_rejected
 # accept_or_reject_case_assignment PATCH  /cases/:case_id/assignments/:id/accept_or_reject(.:format) assignments#accept_or_reject
 #                 case_assignments GET    /cases/:case_id/assignments(.:format)                      assignments#index
@@ -18,9 +20,18 @@
 #                                  PATCH  /cases/:case_id/assignments/:id(.:format)                  assignments#update
 #                                  PUT    /cases/:case_id/assignments/:id(.:format)                  assignments#update
 #                                  DELETE /cases/:case_id/assignments/:id(.:format)                  assignments#destroy
+#            case_case_attachments GET    /cases/:case_id/attachments(.:format)                      case_attachments#index
+#                                  POST   /cases/:case_id/attachments(.:format)                      case_attachments#create
+#         new_case_case_attachment GET    /cases/:case_id/attachments/new(.:format)                  case_attachments#new
+#        edit_case_case_attachment GET    /cases/:case_id/attachments/:id/edit(.:format)             case_attachments#edit
+#             case_case_attachment GET    /cases/:case_id/attachments/:id(.:format)                  case_attachments#show
+#                                  PATCH  /cases/:case_id/attachments/:id(.:format)                  case_attachments#update
+#                                  PUT    /cases/:case_id/attachments/:id(.:format)                  case_attachments#update
+#                                  DELETE /cases/:case_id/attachments/:id(.:format)                  case_attachments#destroy
 #         new_response_upload_case GET    /cases/:id/new_response_upload(.:format)                   cases#new_response_upload
 #            upload_responses_case POST   /cases/:id/upload_responses(.:format)                      cases#upload_responses
 #    download_case_case_attachment GET    /cases/:case_id/attachments/:id/download(.:format)         case_attachments#download
+#                                  DELETE /cases/:case_id/attachments/:id(.:format)                  case_attachments#destroy
 #                            cases GET    /cases(.:format)                                           cases#index
 #                                  POST   /cases(.:format)                                           cases#create
 #                         new_case GET    /cases/new(.:format)                                       cases#new

@@ -435,10 +435,9 @@ RSpec.describe Case, type: :model do
       let(:drafter)       { accepted_case.drafter                           }
       let(:responses)     do
         [
-          build(:correspondence_response,
-            url: "https://correspondence-staff-uploads.s3.amazonaws.com/" +
-            "#{SecureRandom.hex(32)}/" +
-            "responses/new%20response.pdf"
+          build(
+            :case_response,
+            key: "#{SecureRandom.hex(16)}/responses/new response.pdf"
           )
         ]
       end

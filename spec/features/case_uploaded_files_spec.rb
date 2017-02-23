@@ -15,19 +15,21 @@ feature 'uploaded files on case details view' do
       given(:attached_response) do
         create(:case_response, case: kase)
       end
-      given(:attachment_path) { URI.parse(attached_response.url).path[1..-1] }
+      given(:attachment_url) do
+        URI.encode("#{CASE_UPLOADS_S3_BUCKET.url}/#{attached_response.key}")
+      end
       given(:attachment_object) do
         instance_double(
           Aws::S3::Object,
-          delete: instance_double(Aws::S3::Types::DeleteObjectOutput)
+          delete: instance_double(Aws::S3::Types::DeleteObjectOutput),
+          public_url: attachment_url
         )
       end
 
       background do
         allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
-                                           .with(attachment_path)
+                                           .with(attached_response.key)
                                            .and_return(attachment_object)
-        attached_response
       end
 
       scenario 'can be listed' do
@@ -43,7 +45,7 @@ feature 'uploaded files on case details view' do
 
         expect {
           case_details_page.uploaded_files.files.first.download.click
-        }.to redirect_to_external(attached_response.url)
+        }.to redirect_to_external(attachment_url)
       end
 
       scenario 'can remove the response' do

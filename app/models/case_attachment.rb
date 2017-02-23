@@ -5,9 +5,9 @@
 #  id         :integer          not null, primary key
 #  case_id    :integer
 #  type       :enum
-#  url        :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  key        :string
 #
 
 class CaseAttachment < ActiveRecord::Base
@@ -15,24 +15,23 @@ class CaseAttachment < ActiveRecord::Base
   belongs_to :case
 
   validates :type, presence: true
-  validates :url, presence: true
-  validate :validate_url_file_extension, unless: Proc.new { |a| a.url.nil? }
-  validate :validate_url_is_valid_host,  unless: Proc.new { |a| a.url.nil? }
+  validates :key, presence: true
+  validate :validate_file_extension, unless: Proc.new { |a| a.key.nil? }
 
   after_destroy :remove_from_storage_bucket
 
   enum type: { response: 'response' }
 
   def filename
-    File.basename(s3_key)
+    File.basename(key)
   end
 
   def s3_object
-    CASE_UPLOADS_S3_BUCKET.object(s3_key)
+    CASE_UPLOADS_S3_BUCKET.object(key)
   end
 
-  def s3_key
-    URI.decode(URI.parse(url).path[1..-1])
+  def url
+    CASE_UPLOADS_S3_BUCKET.object(key).public_url
   end
 
   private
@@ -41,25 +40,12 @@ class CaseAttachment < ActiveRecord::Base
     s3_object.delete
   end
 
-  def validate_url_file_extension
-    filename = File.basename URI.parse(URI.encode(url)).path
+  def validate_file_extension
     mime_type = Rack::Mime.mime_type(File.extname filename)
     unless Settings.case_uploads_accepted_types.include? mime_type
       errors[:url] << I18n.t(
         'activerecord.errors.models.case_attachment.attributes.url.bad_file_type',
         type: mime_type,
-        filename: filename
-      )
-    end
-  end
-
-  def validate_url_is_valid_host
-    s3_bucket_url = URI.parse(CASE_UPLOADS_S3_BUCKET.url)
-    file_url = URI.parse(URI.encode(url))
-    unless file_url.scheme == s3_bucket_url.scheme &&
-           file_url.host   == s3_bucket_url.host
-      errors[:url] << I18n.t(
-        'activerecord.errors.models.case_attachment.attributes.url.invalid_url',
         filename: filename
       )
     end
