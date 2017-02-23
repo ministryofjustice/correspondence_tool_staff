@@ -18,9 +18,7 @@ RSpec.describe CasesHelper, type: :helper do
       it 'generates HTML that links to the new assignment page' do
         @case = create(:case)
         expect(action_button_for(:assign_responder)).to eq(
-"<a class=\"button\" rel=\"nofollow\" data-method=\"patch\" \
-href=\"/cases/#{@case.id}/assignments/new\">Assign to a responder</a>"
-          )
+          "<a class=\"button\" href=\"/cases/#{@case.id}/assignments/new\">Assign to a responder</a>")
       end
     end
 
