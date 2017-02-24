@@ -3,8 +3,6 @@ var Dropzone;
 moj.Modules.Dropzone = {
   $target: {},
   init : function() {
-    var self = this;
-
     this.$target = $('.dropzone');
 
     Dropzone.autoDiscover = false;
@@ -35,7 +33,6 @@ moj.Modules.Dropzone = {
         var responseDoc = $.parseXML(response);
         var $response   = $(responseDoc);
         var key = $response.find('Key').text();
-        var host = $(this.element).data('host');
 
         file.previewElement.classList.add('dz-success');
 
