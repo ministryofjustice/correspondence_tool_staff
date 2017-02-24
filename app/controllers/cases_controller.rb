@@ -36,6 +36,7 @@ class CasesController < ApplicationController
 
   def show
     set_permitted_events
+    @include_uploaded_files = include_uploaded_files?
     @accepted_now = params[:accepted_now]
   end
 
@@ -190,5 +191,9 @@ class CasesController < ApplicationController
     CASE_UPLOADS_S3_BUCKET.objects(prefix: prefix).each do |object|
       object.delete
     end
+  end
+
+  def include_uploaded_files?
+    policy(@case).can_add_attachment?
   end
 end

@@ -8,11 +8,17 @@ describe CasePolicy do
   let(:another_drafter) { create(:drafter) }
   let(:approver)        { create(:approver) }
 
-  permissions :can_add_attachment? do
-    let(:accepted_case) do
-      create :accepted_case, drafter: drafter, assigner: assigner
-    end
+  let(:accepted_case) do
+    create :accepted_case, drafter: drafter, assigner: assigner
+  end
+  let(:assigned_case) do
+    create(:assigned_case, drafter: drafter, assigner: assigner)
+  end
+  let(:case_with_response) do
+    create(:case_with_response, drafter: drafter)
+  end
 
+  permissions :can_add_attachment? do
     it 'refuses if current_user is not the assigned drafter' do
       expect(subject).not_to permit(another_drafter, accepted_case)
     end
@@ -56,10 +62,6 @@ describe CasePolicy do
   end
 
   permissions :can_accept_or_reject_case? do
-    let(:assigned_case) do
-      create(:assigned_case, drafter: drafter, assigner: assigner)
-    end
-
     it "refuses if current_user is an assigner" do
       expect(subject).not_to permit(assigner, assigned_case)
     end
@@ -74,10 +76,6 @@ describe CasePolicy do
   end
 
   permissions :can_respond? do
-    let(:case_with_response) do
-      create(:case_with_response, drafter: drafter)
-    end
-
     it "refuses if current_user is an assigner" do
       expect(subject).not_to permit(assigner, case_with_response)
     end
