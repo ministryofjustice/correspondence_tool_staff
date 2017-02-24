@@ -558,6 +558,13 @@ CREATE INDEX index_case_attachments_on_case_id ON case_attachments USING btree (
 
 
 --
+-- Name: index_case_attachments_on_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_case_attachments_on_key ON case_attachments USING btree (key);
+
+
+--
 -- Name: index_case_number_counters_on_date; Type: INDEX; Schema: public; Owner: -
 --
 

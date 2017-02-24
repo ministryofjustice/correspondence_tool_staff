@@ -52,11 +52,14 @@ class CasesController < ApplicationController
 
     responses = params[:uploaded_files].reject(&:blank?).map do |uploads_key|
       move_uploaded_response(uploads_key)
-      CaseAttachment.new type: 'response',
-                         key: response_destination_key(uploads_key)
+      CaseAttachment.find_or_initialize_by(
+        type: 'response',
+        key: response_destination_key(uploads_key)
+      )
     end
 
     if responses.all?(&:valid?)
+      responses.select(&:persisted?).each(&:touch)
       @case.add_responses(current_user.id, responses)
       remove_leftover_upload_files
       flash[:notice] = t('notices.response_uploaded')

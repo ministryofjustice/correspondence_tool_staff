@@ -11,6 +11,7 @@ class ChangeCaseAttachmentsUrlToKey < ActiveRecord::Migration[5.0]
           key: URI.decode(URI.parse(attachment.url).path.sub(%r{^/}, ''))
         )
       end
+      add_index :case_attachments, :key, unique: true
       remove_column :case_attachments, :url
     end
   end
@@ -24,6 +25,7 @@ class ChangeCaseAttachmentsUrlToKey < ActiveRecord::Migration[5.0]
           url: bucket.object(attachment.key).public_url
         )
       end
+      remove_index :case_attachments, :key
       remove_column :case_attachments, :key
     end
   end

@@ -566,7 +566,8 @@ RSpec.describe CasesController, type: :controller do
   describe 'POST upload_responses' do
     let(:kase) { create(:accepted_case, drafter: drafter) }
     let(:uploads_key) do
-      "uploads/#{Digest::SHA1.hexdigest(kase.id.to_s)}/responses/test file.jpg"
+      "uploads/#{Digest::SHA1.hexdigest(kase.id.to_s)}" +
+        "/responses/#{Faker::Internet.slug}.jpg"
     end
     let(:destination_key) { uploads_key.sub(%r{^uploads/}, '') }
     let(:destination_path) do
@@ -641,6 +642,32 @@ RSpec.describe CasesController, type: :controller do
       it 'creates a new case attachment' do
         expect { do_upload_responses }.
           to change { kase.reload.attachments.count }
+      end
+
+      context 'an attachment already exists with the same name' do
+        let(:attachment) { create :case_response, key: destination_key, case: kase }
+
+        before do
+          attachment
+        end
+
+        it 'does not create a new case_attachment object' do
+          expect { do_upload_responses }.
+            not_to change { kase.reload.attachments.count }
+        end
+
+        it 'updates the updated_at time of the existing attachment' do
+          expect { do_upload_responses }.
+            to change { kase.reload.attachments.first.updated_at }
+        end
+
+        it 'updates the existing attachment' do
+          do_upload_responses
+          expect(uploads_object).to have_received(:move_to).with(
+                                      destination_path,
+                                      acl: 'public-read'
+                                    )
+        end
       end
 
       it 'moves the file out of the uploads dir' do
