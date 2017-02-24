@@ -590,7 +590,9 @@ RSpec.describe CasesController, type: :controller do
       allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                          .with(destination_key)
                                          .and_return(destination_object)
+      case_id_hash = Digest::SHA1.hexdigest(kase.id.to_s)
       allow(CASE_UPLOADS_S3_BUCKET).to receive(:objects)
+                                         .with(prefix: "uploads/#{case_id_hash}")
                                          .and_return(leftover_files)
       allow(uploads_object).to receive(:move_to).with(
                                  destination_path,
@@ -644,8 +646,48 @@ RSpec.describe CasesController, type: :controller do
           to change { kase.reload.attachments.count }
       end
 
+      it 'moves the file out of the uploads dir' do
+        do_upload_responses
+        expect(uploads_object).to have_received(:move_to).with(
+                                    destination_path,
+                                    acl: 'public-read'
+                                  )
+      end
+
+      it 'URI encodes the attachment url and removes uploads' do
+        do_upload_responses
+        expect(kase.attachments.first.url).to eq public_url
+      end
+
+      it 'test the type field' do
+        do_upload_responses
+        expect(kase.attachments.first.type).to eq 'response'
+      end
+
+      it 'redirects to the case detail page' do
+        do_upload_responses
+        expect(response).to redirect_to(case_path(kase))
+      end
+
+      context 'files removed from dropzone upload' do
+        let(:leftover_files) do
+          [instance_double(Aws::S3::Object, delete: nil)]
+        end
+
+        it 'removes any files left behind in uploads' do
+          do_upload_responses
+          leftover_files.each do |object|
+            expect(object).to have_received(:delete)
+          end
+        end
+      end
+
       context 'an attachment already exists with the same name' do
-        let(:attachment) { create :case_response, key: destination_key, case: kase }
+        let(:attachment) do
+          create :case_response,
+                 key: destination_key,
+                 case: kase
+        end
 
         before do
           attachment
@@ -670,45 +712,10 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      it 'moves the file out of the uploads dir' do
-        do_upload_responses
-        expect(uploads_object).to have_received(:move_to).with(
-                                    destination_path,
-                                    acl: 'public-read'
-                                  )
-      end
-
-      it 'URI encodes the attachment url and removes uploads' do
-        do_upload_responses
-        expect(kase.attachments.first.url).to eq public_url
-      end
-
-      it 'test the type field' do
-        do_upload_responses
-        expect(kase.attachments.first.type).to eq 'response'
-      end
-
-      context 'files removed from dropzone upload' do
-        let(:leftover_files) do
-          [instance_double(Aws::S3::Object, delete: nil)]
-        end
-
-        it 'removes any files left behind in uploads' do
-          do_upload_responses
-          leftover_files.each do |object|
-            expect(object).to have_received(:delete)
-          end
-        end
-      end
-
-      it 'redirects to the case detail page' do
-        do_upload_responses
-        expect(response).to redirect_to(case_path(kase))
-      end
-
       context 'uploading invalid attachment type' do
         let(:uploads_key) do
-          "uploads/#{Digest::SHA1.hexdigest(kase.id.to_s)}/responses/invalid.exe"
+          "uploads/#{Digest::SHA1.hexdigest(kase.id.to_s)}" +
+            "/responses/invalid.exe"
         end
 
         it 'renders the new_response_upload page' do
