@@ -30,8 +30,9 @@ class CaseAttachment < ActiveRecord::Base
     CASE_UPLOADS_S3_BUCKET.object(key)
   end
 
-  def url
-    CASE_UPLOADS_S3_BUCKET.object(key).public_url
+  def temporary_url
+    CASE_UPLOADS_S3_BUCKET.object(key)
+      .presigned_url :get, expires_in: Settings.attachments_presigned_url_expiry
   end
 
   private

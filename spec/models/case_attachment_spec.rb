@@ -55,6 +55,30 @@ RSpec.describe CaseAttachment, type: :model do
     end
   end
 
+  describe '#temporary_url' do
+    subject do
+      create :case_attachment,
+             type: 'response',
+             key: "#{SecureRandom.hex(16)}/responses/new response.pdf"
+
+    end
+    let(:object)        { instance_double(Aws::S3::Object) }
+    let(:presigned_url) { instance_double(String, "presigned_url") }
+
+    before do
+      allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with(subject.key)
+                                         .and_return(object)
+      allow(object).to receive(:presigned_url)
+                         .with(:get, expires_in: 60)
+                         .and_return(presigned_url)
+
+    end
+
+    it 'creates a pre-signed url that is good for 60s' do
+      expect(subject.temporary_url).to be presigned_url
+    end
+  end
+
   it 'removes the file from the storage bucket on destruction' do
     attachment = create :case_response
     attachment_object = instance_double(

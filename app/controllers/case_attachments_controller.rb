@@ -3,7 +3,7 @@ class CaseAttachmentsController < ApplicationController
   before_action :set_attachment, only: [:destroy, :download]
 
   def download
-    redirect_to @attachment.url
+    redirect_to @attachment.temporary_url
   end
 
   def destroy

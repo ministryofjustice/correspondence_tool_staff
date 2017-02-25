@@ -19,6 +19,22 @@ RSpec.describe CaseAttachmentsController, type: :controller do
       end
     end
 
+    shared_examples 'an authorized user' do
+      let(:presigned_url) { "http://pre-signed.com/url" }
+      let(:object) { instance_double Aws::S3::Object,
+                                     presigned_url: presigned_url }
+      before do
+        allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
+                                           .with(attachment.key)
+                                           .and_return(object)
+      end
+
+      it "redirects to the attachment's url" do
+        get :download, params: { case_id: kase.id, id: attachment.id}
+        expect(response).to redirect_to presigned_url
+      end
+    end
+
     context 'as an anonymous user' do
       it_behaves_like 'unauthorized user'
     end
@@ -26,19 +42,13 @@ RSpec.describe CaseAttachmentsController, type: :controller do
     context 'as an assigner' do
       before { sign_in assigner }
 
-      it "redirects to the attachment's url" do
-        get :download, params: { case_id: kase.id, id: attachment.id}
-        expect(response).to redirect_to attachment.url
-      end
+      it_behaves_like 'an authorized user'
     end
 
     context 'as a drafter' do
       before { sign_in drafter }
 
-      it "redirects to the attachment's url" do
-        get :download, params: { case_id: kase.id, id: attachment.id}
-        expect(response).to redirect_to attachment.url
-      end
+      it_behaves_like 'an authorized user'
     end
   end
 

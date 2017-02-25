@@ -652,11 +652,6 @@ RSpec.describe CasesController, type: :controller do
                                   )
       end
 
-      it 'URI encodes the attachment url and removes uploads' do
-        do_upload_responses
-        expect(kase.attachments.first.url).to eq public_url
-      end
-
       it 'test the type field' do
         do_upload_responses
         expect(kase.attachments.first.type).to eq 'response'

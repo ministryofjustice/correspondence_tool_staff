@@ -13,14 +13,14 @@ feature 'uploaded files on case details view' do
     given(:attached_response) do
       create(:case_response, case: kase)
     end
-    given(:attachment_url) do
-      URI.encode("#{CASE_UPLOADS_S3_BUCKET.url}/#{attached_response.key}")
+    given(:presigned_url) do
+      URI.encode("#{CASE_UPLOADS_S3_BUCKET.url}/#{attached_response.key}&temporary")
     end
     given(:attachment_object) do
       instance_double(
         Aws::S3::Object,
         delete: instance_double(Aws::S3::Types::DeleteObjectOutput),
-        public_url: attachment_url
+        presigned_url: presigned_url
       )
     end
     given(:uploaded_file) do
@@ -42,10 +42,9 @@ feature 'uploaded files on case details view' do
 
     scenario 'can be downloaded' do
       cases_show_page.load(id: kase.id)
-
       expect {
         uploaded_file.download.click
-      }.to redirect_to_external(attachment_url)
+      }.to redirect_to_external(presigned_url)
     end
 
     scenario 'can remove the response' do
