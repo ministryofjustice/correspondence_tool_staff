@@ -9,7 +9,7 @@ module CasesHelper
     when :assign_responder
       link_to I18n.t('common.case.assign'),
           new_case_assignment_path(@case),
-          class: 'button', method: :patch
+          class: 'button'
     when :accept_responder_assignment, :reject_responder_assignment
       link_to I18n.t('common.case.accept_or_reject'),
           edit_case_assignment_path(@case, @case.drafter_assignment),
