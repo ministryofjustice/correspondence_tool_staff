@@ -74,7 +74,7 @@ en:
   button:
     continue: Continue
     confirm: Confirm
-    assign: Assign case
+    assign: Create and assign case
     feedback: Send feedback
 
   helpers:
@@ -95,6 +95,11 @@ en:
         #Include what you were doing in relation to your feedback
     label:
       assignment:
+        assignee_id: Business unit
+        reasons_for_rejection: Reason for rejecting this case
+        state:
+          accepted: Accept
+          rejected: Reject
         user_id: Business unit
       case:
         requester_type:
@@ -106,11 +111,6 @@ en:
         subject: Subject of request
         message: Full request
         postal_address: Address
-      assignment:
-        reasons_for_rejection: Reason for rejecting this case
-        state:
-          accepted: Accept
-          rejected: Reject
       feedback:
         comment: Help us improve this service
 
@@ -185,7 +185,7 @@ en:
 
   assignments:
     new:
-      new_assignment: Assign case
+      new_assignment: Create and assign case
     create:
       case_assigned: Case successfully assigned
 

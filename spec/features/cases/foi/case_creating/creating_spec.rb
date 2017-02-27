@@ -50,7 +50,7 @@ feature 'Case creation by an assigner' do
 
     expect(current_path).to eq new_case_assignment_path new_case
     expect(page).to have_content('Case successfully created')
-    expect(page).to have_content('Assign case')
+    expect(page).to have_content('Create and assign case')
 
     expect(new_case).to have_attributes(
       requester_type: 'member_of_the_public',
@@ -62,7 +62,7 @@ feature 'Case creation by an assigner' do
     )
 
     select drafter.full_name, from: 'assignment[assignee_id]'
-    click_button 'Assign case'
+    click_button 'Create and assign case'
     expect(current_path).to eq cases_path
     expect(page).to have_content('Case successfully assigned')
 
