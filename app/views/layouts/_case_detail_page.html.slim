@@ -37,10 +37,11 @@
                               download_case_case_attachment_path(case_details, ca)
                     = ' | '
                     = link_to t('common.case.remove_link_html',
-                                filename: ca.filename),
+                              filename: ca.filename),
                               case_case_attachment_path(@case, ca),
                               method: :delete,
-                              remote: true
+                              remote: true,
+                              data: { confirm: "Are you sure you want to remove #{ca.filename}?" }
 
   - if include_sidebar.present? && include_sidebar == true
     section.case-sidebar

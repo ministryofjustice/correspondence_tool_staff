@@ -25,6 +25,9 @@ feature 'uploaded files on case details view' do
           public_url: attachment_url
         )
       end
+      given(:uploaded_file) do
+        case_details_page.uploaded_files.files.first
+      end
 
       background do
         allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
@@ -36,7 +39,7 @@ feature 'uploaded files on case details view' do
         case_details_page.load(id: kase.id)
 
         expect(case_details_page).to have_uploaded_files
-        expect(case_details_page.uploaded_files.files.first.filename)
+        expect(uploaded_file.filename)
           .to have_content(attached_response.filename)
       end
 
@@ -44,23 +47,30 @@ feature 'uploaded files on case details view' do
         case_details_page.load(id: kase.id)
 
         expect {
-          case_details_page.uploaded_files.files.first.download.click
+          uploaded_file.download.click
         }.to redirect_to_external(attachment_url)
       end
 
       scenario 'can remove the response' do
         case_details_page.load(id: kase.id)
 
-        case_details_page.uploaded_files.files.first.remove.click
+        uploaded_file.remove.click
         expect(case_details_page).not_to have_uploaded_files
         expect(attachment_object).to have_received(:delete)
         expect(current_path).to eq case_path(kase)
       end
 
+      scenario 'remove link is configured to request confirmation' do
+        case_details_page.load(id: kase.id)
+
+        expect(uploaded_file.remove['data-confirm'])
+          .to eq "Are you sure you want to remove #{attached_response.filename}?"
+      end
+
       scenario 'removes the section from the page' do
         case_details_page.load(id: kase.id)
 
-        case_details_page.uploaded_files.files.first.remove.click
+        uploaded_file.remove.click
         case_details_page.wait_until_uploaded_files_invisible
         expect(case_details_page).not_to have_uploaded_files
       end
@@ -68,7 +78,7 @@ feature 'uploaded files on case details view' do
       scenario 'can remove the response with JS', js: true do
         case_details_page.load(id: kase.id)
 
-        case_details_page.uploaded_files.files.first.remove.click
+        uploaded_file.remove.click
         case_details_page.wait_until_uploaded_files_invisible
         expect(case_details_page).not_to have_uploaded_files
         expect(attachment_object).to have_received(:delete)
@@ -77,7 +87,7 @@ feature 'uploaded files on case details view' do
       scenario 'removes the section from the page with JS', js: true do
         case_details_page.load(id: kase.id)
 
-        case_details_page.uploaded_files.files.first.remove.click
+        uploaded_file.remove.click
         case_details_page.wait_until_uploaded_files_invisible
         expect(case_details_page).not_to have_uploaded_files
       end
@@ -90,7 +100,7 @@ feature 'uploaded files on case details view' do
         scenario 'uploaded files section is not removed' do
           case_details_page.load(id: kase.id)
 
-          case_details_page.uploaded_files.files.first.remove.click
+          uploaded_file.remove.click
           expect(case_details_page).to have_uploaded_files
           expect(case_details_page.uploaded_files.files.count).to eq 1
         end
@@ -98,7 +108,7 @@ feature 'uploaded files on case details view' do
         scenario 'uploaded files section is not removed with JS', js: true do
           case_details_page.load(id: kase.id)
 
-          case_details_page.uploaded_files.files.first.remove.click
+          uploaded_file.remove.click
           case_details_page.uploaded_files.wait_for_files count: 1
         end
       end
