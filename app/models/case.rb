@@ -165,12 +165,8 @@ class Case < ApplicationRecord
     end
   end
 
-  def hashed_id
-    Digest::SHA1.hexdigest(id.to_s)
-  end
-
   def attachments_dir(attachment_type)
-    "#{hashed_id}/#{attachment_type}"
+    "#{id}/#{attachment_type}"
   end
 
   def who_its_with

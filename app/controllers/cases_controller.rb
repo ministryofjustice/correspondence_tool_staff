@@ -186,7 +186,7 @@ class CasesController < ApplicationController
   end
 
   def remove_leftover_upload_files
-    prefix = "uploads/#{@case.hashed_id}"
+    prefix = "uploads/#{@case.id}"
     CASE_UPLOADS_S3_BUCKET.objects(prefix: prefix).each do |object|
       object.delete
     end

@@ -566,8 +566,7 @@ RSpec.describe CasesController, type: :controller do
   describe 'POST upload_responses' do
     let(:kase) { create(:accepted_case, drafter: drafter) }
     let(:uploads_key) do
-      "uploads/#{Digest::SHA1.hexdigest(kase.id.to_s)}" +
-        "/responses/#{Faker::Internet.slug}.jpg"
+      "uploads/#{kase.id}/responses/#{Faker::Internet.slug}.jpg"
     end
     let(:destination_key) { uploads_key.sub(%r{^uploads/}, '') }
     let(:destination_path) do
@@ -590,9 +589,8 @@ RSpec.describe CasesController, type: :controller do
       allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                          .with(destination_key)
                                          .and_return(destination_object)
-      case_id_hash = Digest::SHA1.hexdigest(kase.id.to_s)
       allow(CASE_UPLOADS_S3_BUCKET).to receive(:objects)
-                                         .with(prefix: "uploads/#{case_id_hash}")
+                                         .with(prefix: "uploads/#{kase.id}")
                                          .and_return(leftover_files)
       allow(uploads_object).to receive(:move_to).with(
                                  destination_path,
@@ -714,8 +712,7 @@ RSpec.describe CasesController, type: :controller do
 
       context 'uploading invalid attachment type' do
         let(:uploads_key) do
-          "uploads/#{Digest::SHA1.hexdigest(kase.id.to_s)}" +
-            "/responses/invalid.exe"
+          "uploads/#{kase.id}/responses/invalid.exe"
         end
 
         it 'renders the new_response_upload page' do

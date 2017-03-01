@@ -95,7 +95,7 @@ feature 'uploaded files on case details view' do
           expect(case_details_page.uploaded_files.files.count).to eq 1
         end
 
-        scenario 'uploaded files section is not removed', js: true do
+        scenario 'uploaded files section is not removed with JS', js: true do
           case_details_page.load(id: kase.id)
 
           case_details_page.uploaded_files.files.first.remove.click
