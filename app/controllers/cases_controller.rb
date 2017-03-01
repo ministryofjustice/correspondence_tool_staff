@@ -182,8 +182,7 @@ class CasesController < ApplicationController
 
   def move_uploaded_response(uploads_key)
     uploads_object = CASE_UPLOADS_S3_BUCKET.object(uploads_key)
-    uploads_object.move_to response_destination_path(uploads_key),
-                           acl: 'public-read'
+    uploads_object.move_to response_destination_path(uploads_key)
   end
 
   def remove_leftover_upload_files

@@ -593,8 +593,7 @@ RSpec.describe CasesController, type: :controller do
                                          .with(prefix: "uploads/#{kase.id}")
                                          .and_return(leftover_files)
       allow(uploads_object).to receive(:move_to).with(
-                                 destination_path,
-                                 acl: 'public-read'
+                                 destination_path
                                )
     end
 
@@ -647,8 +646,7 @@ RSpec.describe CasesController, type: :controller do
       it 'moves the file out of the uploads dir' do
         do_upload_responses
         expect(uploads_object).to have_received(:move_to).with(
-                                    destination_path,
-                                    acl: 'public-read'
+                                    destination_path
                                   )
       end
 
@@ -699,8 +697,7 @@ RSpec.describe CasesController, type: :controller do
         it 'updates the existing attachment' do
           do_upload_responses
           expect(uploads_object).to have_received(:move_to).with(
-                                      destination_path,
-                                      acl: 'public-read'
+                                      destination_path
                                     )
         end
       end
