@@ -1,1 +1,5 @@
-$("tr#case_attachment_<%= @attachment.id %>").remove();
+<% if @case.attachments.count == 0 %>
+  $("#uploaded-files").remove();
+<% else %>
+  $("tr#case_attachment_<%= @attachment.id %>").remove();
+<% end%>

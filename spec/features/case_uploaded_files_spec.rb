@@ -57,13 +57,50 @@ feature 'uploaded files on case details view' do
         expect(current_path).to eq case_path(kase)
       end
 
+      scenario 'removes the section from the page' do
+        case_details_page.load(id: kase.id)
+
+        case_details_page.uploaded_files.files.first.remove.click
+        case_details_page.wait_until_uploaded_files_invisible
+        expect(case_details_page).not_to have_uploaded_files
+      end
+
       scenario 'can remove the response with JS', js: true do
         case_details_page.load(id: kase.id)
 
         case_details_page.uploaded_files.files.first.remove.click
-        case_details_page.uploaded_files.wait_until_files_invisible
-        expect(case_details_page.uploaded_files).not_to have_files
+        case_details_page.wait_until_uploaded_files_invisible
+        expect(case_details_page).not_to have_uploaded_files
         expect(attachment_object).to have_received(:delete)
+      end
+
+      scenario 'removes the section from the page with JS', js: true do
+        case_details_page.load(id: kase.id)
+
+        case_details_page.uploaded_files.files.first.remove.click
+        case_details_page.wait_until_uploaded_files_invisible
+        expect(case_details_page).not_to have_uploaded_files
+      end
+
+      context 'case has multiple attachments' do
+        before do
+          create :case_response, case: kase
+        end
+
+        scenario 'uploaded files section is not removed' do
+          case_details_page.load(id: kase.id)
+
+          case_details_page.uploaded_files.files.first.remove.click
+          expect(case_details_page).to have_uploaded_files
+          expect(case_details_page.uploaded_files.files.count).to eq 1
+        end
+
+        scenario 'uploaded files section is not removed', js: true do
+          case_details_page.load(id: kase.id)
+
+          case_details_page.uploaded_files.files.first.remove.click
+          case_details_page.uploaded_files.wait_for_files count: 1
+        end
       end
     end
 

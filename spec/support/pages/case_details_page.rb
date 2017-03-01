@@ -28,11 +28,10 @@ class CaseDetailsPage < SitePrism::Page
   section :uploaded_files, 'table#uploaded-files' do
     sections :files, 'tr.case_attachment_row' do
       element :filename, 'td[aria-label="File name"]'
-      elements :actions, 'td[aria-label="Actions"] a'
       # XPath allows us to use contains(), while the CSS selector :contains()
       # breaks in tests with JS enabled (PhantomJS not supporting CSS3??)
-      element :download, :xpath, '//td[@aria-label="Actions"]//a[contains(.,"Download")]'
-      element :remove,   :xpath, '//td[@aria-label="Actions"]//a[contains(.,"Remove")]'
+      element :download, :xpath, '*/a[contains(.,"Download")]'
+      element :remove,   :xpath, '*/a[contains(.,"Remove")]'
     end
   end
 end
