@@ -36,6 +36,10 @@ class CasesController < ApplicationController
 
   def show
     set_permitted_events
+
+    if policy(@case).can_accept_or_reject_case?
+      redirect_to edit_case_assignment_path @case, @case.assignments.last.id
+    end
     @include_uploaded_files = include_uploaded_files?
     @accepted_now = params[:accepted_now]
   end
@@ -108,7 +112,6 @@ class CasesController < ApplicationController
 
   private
 
-# rubocop:disable CyclomaticComplexity
   def set_permitted_events
     @permitted_events = @case.available_events.find_all do |event|
       case event
@@ -122,7 +125,6 @@ class CasesController < ApplicationController
     end
     @permitted_events ||= []
   end
-# rubocop:enable CyclomaticComplexity
 
   def create_foi_params
     params.require(:case).permit(

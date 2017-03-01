@@ -12,6 +12,9 @@ require 'rails_helper'
 # end
 RSpec.describe CasesHelper, type: :helper do
 
+  let(:drafter)   { create(:user, roles: ['drafter'])   }
+  let(:assigner)  { create(:user, roles: ['assigner'])  }
+
   describe '#action_button_for(event)' do
 
     context 'when event == :assign_responder' do
@@ -73,6 +76,56 @@ href=\"/cases/#{@case.id}/new_response_upload\">Upload response</a>"
 "<a class=\"button\" \
 href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
           )
+      end
+    end
+  end
+
+  describe '#case_detail_link(event)' do
+
+    context 'Assigned case waiting to be accepted/rejected' do
+
+      before do
+        @case = create(:assigned_case)
+      end
+
+      it 'links to case detail page for assigners' do
+        @user = assigner
+        login_as :assigner
+
+        expect(case_detail_link(@case))
+            .to have_link( "#{@case.number}", href: case_path(@case.id))
+      end
+
+      it 'links to case assignment page for drafter' do
+        @assignment = @case.assignments.last
+        @user = drafter
+        login_as :drafter
+
+        expect(case_detail_link(@case))
+            .to have_link("#{@case.number}", href: edit_case_assignment_path(@case, @assignment.id))
+      end
+
+    end
+
+    context 'Assigned case that has been accepted' do
+      before do
+        @case = create(:accepted_case)
+      end
+
+      it 'links to case detail page for assigners' do
+        @user = assigner
+        login_as :assigner
+
+        expect(case_detail_link(@case))
+            .to have_link( "#{@case.number}", href: case_path(@case.id))
+      end
+
+      it 'links to case detail page for drafter' do
+        @user = drafter
+        login_as :drafter
+
+        expect(case_detail_link(@case))
+            .to have_link( "#{@case.number}", href: case_path(@case.id))
       end
     end
   end

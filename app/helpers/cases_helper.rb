@@ -28,4 +28,14 @@ module CasesHelper
           class: 'button', method: :patch
     end
   end
+
+  def case_detail_link(kase)
+    if kase.current_state == "awaiting_responder" && @user.drafter?
+      link_to kase.number,
+              edit_case_assignment_path(kase, kase.drafter_assignment)
+    else
+      link_to kase.number, case_path(kase.id)
+    end
+
+  end
 end

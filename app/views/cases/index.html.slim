@@ -30,19 +30,20 @@
         th scope='col'
           = t('.who_its_with')
       tbody
-        - @cases.each do |c|
+        - @cases.each do |kase|
           tr.case_row
             td aria-label="#{t('.number')}"
               span.visually-hidden
                 = t('.view_case')
-              = link_to c.number, case_path(c.id)
+              = " "
+              = case_detail_link(kase)
             td aria-label="#{t('.requester')}"
-              = c.name
+              = kase.name
             td aria-label="#{t('.subject')}"
-              = c.subject
+              = kase.subject
             td aria-label="#{t('.external_deadline')}"
-              = l c.external_deadline, format: :default_date
+              = l kase.external_deadline, format: :default_date
             td aria-label="#{t('.status')}"
-              = t("state.#{c.current_state}")
+              = t("state.#{kase.current_state}")
             td aria-label="#{t('.who_its_with')}"
-              = c.who_its_with
+              = kase.who_its_with

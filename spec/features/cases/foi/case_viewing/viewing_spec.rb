@@ -126,14 +126,5 @@ feature 'viewing details of case in the system' do
         not_to have_link('Accept or reject',
           href: edit_case_assignment_path(foi, foi.assignments.last))
     end
-
-    scenario 'the assigned drafter views the case' do
-      login_as foi.drafter
-      cases_show_page.load id: foi.id
-
-      expect(cases_show_page.sidebar.actions).
-        to have_link('Accept or reject',
-          href: edit_case_assignment_path(foi, foi.assignments.last))
-    end
   end
 end
