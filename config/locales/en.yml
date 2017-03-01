@@ -143,7 +143,6 @@ en:
     error: error
     greeting: Hello %{user}
     case:
-      accept_or_reject: Accept or reject
       actions: Actions
       assign: Assign to a responder
       close: Close case

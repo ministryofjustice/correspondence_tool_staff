@@ -117,8 +117,6 @@ class CasesController < ApplicationController
       case event
       when :assign_responder            then policy(@case).can_assign_case?
       when :add_responses               then policy(@case).can_add_attachment?
-      when :accept_responder_assignment then policy(@case).can_accept_or_reject_case?
-      when :reject_responder_assignment then policy(@case).can_accept_or_reject_case?
       when :respond                     then policy(@case).can_respond?
       when :close                       then policy(@case).can_close_case?
       end

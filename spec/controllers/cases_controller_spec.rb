@@ -371,16 +371,6 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context 'as the assigned drafter' do
-        let(:user) { assigned_case.drafter }
-
-        it 'permitted_events == [:accept_responder_assignment, :reject_responder_assignment]' do
-          expect(assigns(:permitted_events)).to match_array [
-            :accept_responder_assignment, :reject_responder_assignment
-          ]
-        end
-      end
-
       context 'as another drafter' do
         let(:user) { create(:drafter) }
 

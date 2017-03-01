@@ -120,11 +120,5 @@ feature 'viewing details of case in the system' do
       expect(cases_show_page).to have_no_escalation_notice
     end
 
-    scenario 'the assigner views an assigned case' do
-      cases_show_page.load id: foi.id
-      expect(cases_show_page.sidebar.actions).
-        not_to have_link('Accept or reject',
-          href: edit_case_assignment_path(foi, foi.assignments.last))
-    end
   end
 end

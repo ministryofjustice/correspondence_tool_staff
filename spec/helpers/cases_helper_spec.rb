@@ -25,30 +25,6 @@ RSpec.describe CasesHelper, type: :helper do
       end
     end
 
-    context 'when event == :accept_responder_assignment' do
-      it 'generates HTML that links to the accept or reject assignment page' do
-        @case = create(:assigned_case)
-        @assignment = @case.assignments.last
-        expect(action_button_for(:accept_responder_assignment)).to eq(
-"<a class=\"button\" \
-href=\"/cases/#{@case.id}/assignments/#{@assignment.id}/edit\"\
->Accept or reject</a>"
-          )
-      end
-    end
-
-    context 'when event == :reject_responder_assignment' do
-      it 'generates HTML that links to the accept or reject assignment page' do
-        @case = create(:assigned_case)
-        @assignment = @case.assignments.last
-        expect(action_button_for(:accept_responder_assignment)).to eq(
-"<a class=\"button\" \
-href=\"/cases/#{@case.id}/assignments/#{@assignment.id}/edit\"\
->Accept or reject</a>"
-          )
-      end
-    end
-
     context 'when event == :close' do
       it 'generates HTML that links to the close case action' do
         @case = create(:responded_case)
