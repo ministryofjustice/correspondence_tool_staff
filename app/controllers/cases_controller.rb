@@ -159,7 +159,6 @@ class CasesController < ApplicationController
     @s3_direct_post = CASE_UPLOADS_S3_BUCKET.presigned_post(
       key:                   uploads_key,
       success_action_status: '201',
-      acl:                   'public-read'
     )
   end
 
