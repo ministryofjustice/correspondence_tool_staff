@@ -5,7 +5,6 @@ feature 'Assigning a case from the detail view' do
   given(:drafter)     { create(:user, roles: ['drafter'])   }
   given(:assigner)    { create(:user, roles: ['assigner'])  }
   given(:approver)    { create(:user, roles: ['approver'])  }
-  given(:detail_view) { CaseDetailsPage.new                 }
 
   before do
     drafter
@@ -14,7 +13,7 @@ feature 'Assigning a case from the detail view' do
   scenario 'assigning a new case' do
     login_as assigner
     visit case_path(kase)
-    expect(detail_view).to(
+    expect(cases_show_page).to(
       have_link('Assign to a responder', href: new_case_assignment_path(kase))
     )
 
@@ -54,7 +53,7 @@ feature 'Assigning a case from the detail view' do
 
       login_as assigner
       visit case_path(kase)
-      expect(detail_view).to(
+      expect(cases_show_page).to(
         have_link('Assign to a responder', href: new_case_assignment_path(kase))
       )
 
@@ -86,13 +85,13 @@ feature 'Assigning a case from the detail view' do
 
       login_as drafter
       visit case_path(kase)
-      expect(detail_view).to_not(
+      expect(cases_show_page).to_not(
         have_link('Assign to a responder', href: new_case_assignment_path(kase))
       )
 
       login_as approver
       visit case_path(kase)
-      expect(detail_view).to_not(
+      expect(cases_show_page).to_not(
         have_link('Assign to a responder', href: new_case_assignment_path(kase))
       )
     end

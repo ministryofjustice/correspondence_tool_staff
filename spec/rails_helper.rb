@@ -20,6 +20,9 @@ Capybara.javascript_driver = :poltergeist
 # end with _spec.rb. You can configure this pattern with the --pattern
 # option on the command line or in ~/.rspec, .rspec or `.rspec-local`.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+$LOAD_PATH.unshift(File.join(File.expand_path('..', __FILE__), 'site_prism'))
+require 'site_prism/page_objects/pages/application.rb'
+Dir[Rails.root.join("spec/site_prism/page_objects/{sections,pages}/**/*.rb")].each { |f| require f }
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
@@ -29,6 +32,8 @@ RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
   config.include FactoryGirl::Syntax::Methods
+  config.include PageObjects::Pages::Application
+
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.

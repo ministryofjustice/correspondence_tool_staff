@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 feature 'Upload response' do
-  given(:case_upload_page)  { CaseUploadPage.new }
-  given(:case_details_page) { CaseDetailsPage.new }
   given(:drafter)           { create(:drafter) }
   given(:kase)              { create(:accepted_case, drafter: drafter) }
 
@@ -16,7 +14,7 @@ feature 'Upload response' do
     end
 
     scenario 'clicking link on case detail page goes to upload page' do
-      case_details_page.load(id: kase.id)
+      cases_show_page.load(id: kase.id)
 
       click_link 'Upload response'
 
@@ -32,9 +30,9 @@ feature 'Upload response' do
     end
 
     scenario "link to case upload page isn't visible on detail page" do
-      case_upload_page.load(id: kase.id)
+      cases_new_response_upload_page.load(id: kase.id)
 
-      expect(case_upload_page).not_to have_link('Upload response')
+      expect(cases_new_response_upload_page).not_to have_link('Upload response')
     end
   end
 end

@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 feature 'uploaded files on case details view' do
-  given(:case_details_page) { CaseDetailsPage.new }
-  given(:drafter) { create(:drafter) }
-  given(:kase)    { create(:accepted_case, drafter: drafter) }
+  given(:drafter)  { create(:drafter) }
+  given(:kase)     { create(:accepted_case, drafter: drafter) }
+
   background do
     login_as user
   end
@@ -26,7 +26,7 @@ feature 'uploaded files on case details view' do
         )
       end
       given(:uploaded_file) do
-        case_details_page.uploaded_files.files.first
+        cases_show_page.uploaded_files.files.first
       end
 
       background do
@@ -36,15 +36,15 @@ feature 'uploaded files on case details view' do
       end
 
       scenario 'can be listed' do
-        case_details_page.load(id: kase.id)
+        cases_show_page.load(id: kase.id)
 
-        expect(case_details_page).to have_uploaded_files
+        expect(cases_show_page).to have_uploaded_files
         expect(uploaded_file.filename)
           .to have_content(attached_response.filename)
       end
 
       scenario 'can be downloaded' do
-        case_details_page.load(id: kase.id)
+        cases_show_page.load(id: kase.id)
 
         expect {
           uploaded_file.download.click
@@ -52,44 +52,44 @@ feature 'uploaded files on case details view' do
       end
 
       scenario 'can remove the response' do
-        case_details_page.load(id: kase.id)
+        cases_show_page.load(id: kase.id)
 
         uploaded_file.remove.click
-        expect(case_details_page).not_to have_uploaded_files
+        expect(cases_show_page).not_to have_uploaded_files
         expect(attachment_object).to have_received(:delete)
         expect(current_path).to eq case_path(kase)
       end
 
       scenario 'remove link is configured to request confirmation' do
-        case_details_page.load(id: kase.id)
+        cases_show_page.load(id: kase.id)
 
         expect(uploaded_file.remove['data-confirm'])
           .to eq "Are you sure you want to remove #{attached_response.filename}?"
       end
 
       scenario 'removes the section from the page' do
-        case_details_page.load(id: kase.id)
+        cases_show_page.load(id: kase.id)
 
         uploaded_file.remove.click
-        case_details_page.wait_until_uploaded_files_invisible
-        expect(case_details_page).not_to have_uploaded_files
+        cases_show_page.wait_until_uploaded_files_invisible
+        expect(cases_show_page).not_to have_uploaded_files
       end
 
       scenario 'can remove the response with JS', js: true do
-        case_details_page.load(id: kase.id)
+        cases_show_page.load(id: kase.id)
 
         uploaded_file.remove.click
-        case_details_page.wait_until_uploaded_files_invisible
-        expect(case_details_page).not_to have_uploaded_files
+        cases_show_page.wait_until_uploaded_files_invisible
+        expect(cases_show_page).not_to have_uploaded_files
         expect(attachment_object).to have_received(:delete)
       end
 
       scenario 'removes the section from the page with JS', js: true do
-        case_details_page.load(id: kase.id)
+        cases_show_page.load(id: kase.id)
 
         uploaded_file.remove.click
-        case_details_page.wait_until_uploaded_files_invisible
-        expect(case_details_page).not_to have_uploaded_files
+        cases_show_page.wait_until_uploaded_files_invisible
+        expect(cases_show_page).not_to have_uploaded_files
       end
 
       context 'case has multiple attachments' do
@@ -98,27 +98,27 @@ feature 'uploaded files on case details view' do
         end
 
         scenario 'uploaded files section is not removed' do
-          case_details_page.load(id: kase.id)
+          cases_show_page.load(id: kase.id)
 
           uploaded_file.remove.click
-          expect(case_details_page).to have_uploaded_files
-          expect(case_details_page.uploaded_files.files.count).to eq 1
+          expect(cases_show_page).to have_uploaded_files
+          expect(cases_show_page.uploaded_files.files.count).to eq 1
         end
 
         scenario 'uploaded files section is not removed with JS', js: true do
-          case_details_page.load(id: kase.id)
+          cases_show_page.load(id: kase.id)
 
           uploaded_file.remove.click
-          case_details_page.uploaded_files.wait_for_files count: 1
+          cases_show_page.uploaded_files.wait_for_files count: 1
         end
       end
     end
 
     context 'with no attached responses' do
       scenario 'is not visible' do
-        case_details_page.load(id: kase.id)
+        cases_show_page.load(id: kase.id)
 
-        expect(case_details_page).not_to have_uploaded_files
+        expect(cases_show_page).not_to have_uploaded_files
       end
     end
   end

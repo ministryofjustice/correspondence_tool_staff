@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 feature 'listing cases on the system' do
-  given(:page) { CaseListPage.new }
-
   given(:foi_category) { create(:category) }
   given(:assigned_case) do
     create(
@@ -35,9 +33,9 @@ feature 'listing cases on the system' do
   scenario 'for assigners - shows all cases' do
     login_as create(:user, roles: ['assigner'])
     visit '/'
-    expect(page.case_list.count).to eq 2
+    expect(cases_page.case_list.count).to eq 2
 
-    assigned_case_row = page.case_list.last
+    assigned_case_row = cases_page.case_list.last
     expect(assigned_case_row.name.text).to     eq 'Freddie FOI Assigned'
     expect(assigned_case_row.subject.text).to  eq 'test assigned FOI subject'
     expect(assigned_case_row.external_deadline.text).to have_content(assigned_case.external_deadline.strftime('%e %b %Y'))
@@ -45,7 +43,7 @@ feature 'listing cases on the system' do
     expect(assigned_case_row.status.text).to eq 'Waiting to be accepted'
     expect(assigned_case_row.who_its_with.text).to eq assigned_case.drafter.email
 
-    unassigned_case_row = page.case_list.first
+    unassigned_case_row = cases_page.case_list.first
     expect(unassigned_case_row.name.text).to     eq 'Freddie FOI Unassigned'
     expect(unassigned_case_row.subject.text).to  eq 'test unassigned FOI subject'
     expect(unassigned_case_row.external_deadline.text).to have_content(unassigned_case.external_deadline.strftime('%e %b %Y'))
@@ -58,9 +56,9 @@ feature 'listing cases on the system' do
     login_as assigned_case.drafter
 
     visit '/'
-    expect(page.case_list.count).to eq 1
+    expect(cases_page.case_list.count).to eq 1
 
-    assigned_case_row = page.case_list.first
+    assigned_case_row = cases_page.case_list.first
     expect(assigned_case_row.name.text).to     eq 'Freddie FOI Assigned'
     expect(assigned_case_row.subject.text).to  eq 'test assigned FOI subject'
     expect(assigned_case_row.external_deadline.text).to have_content(assigned_case.external_deadline.strftime('%e %b %Y'))

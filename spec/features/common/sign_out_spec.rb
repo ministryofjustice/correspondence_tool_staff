@@ -1,9 +1,6 @@
 require 'rails_helper'
 
 feature "Signing Out" do
-  given(:login_page) { LoginPage.new }
-  given(:case_list_page) { CaseListPage.new }
-
   scenario "Signing out from login page" do
     login_page.load
 
@@ -14,11 +11,11 @@ feature "Signing Out" do
   scenario "Signed in and need to sign out" do
     login_as create(:user)
 
-    case_list_page.load
+    cases_page.load
 
-    expect(case_list_page).to have_user_card
+    expect(cases_page).to have_user_card
 
-    case_list_page.user_card.signout.click
+    cases_page.user_card.signout.click
 
     expect(page).to have_content('Signed out successfully.')
 
