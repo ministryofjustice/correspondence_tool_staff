@@ -163,7 +163,7 @@ RSpec.describe Case, type: :model do
     end
 
   end
-  
+
   describe '#drafter' do
     it 'is the currently assigned drafter' do
       allow(non_trigger_foi).to receive(:assignees).and_return [drafter]
@@ -487,7 +487,7 @@ RSpec.describe Case, type: :model do
       end
 
       it 'triggers the raising version of the event' do
-        responded_case.close(User.first.id)
+        responded_case.close(User.first.id, {})
         expect(state_machine).to have_received(:close!)
         expect(state_machine).not_to have_received(:close)
       end

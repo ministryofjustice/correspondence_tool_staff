@@ -50,7 +50,7 @@ href=\"/cases/#{@case.id}/assignments/#{@assignment.id}/edit\"\
       it 'generates HTML that links to the close case action' do
         @case = create(:responded_case)
         expect(action_button_for(:close)).to eq(
-"<a class=\"button\" rel=\"nofollow\" data-method=\"patch\" \
+"<a class=\"button\" data-method=\"get\" \
 href=\"/cases/#{@case.id}/close\">Close case</a>"
           )
       end

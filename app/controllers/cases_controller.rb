@@ -3,7 +3,8 @@ class CasesController < ApplicationController
   before_action :set_case,
     only: [
       :close, :edit, :new_response_upload, :show, :update,
-        :upload_responses, :respond, :confirm_respond
+        :upload_responses, :respond, :confirm_respond,
+        :process_closure
     ]
   before_action :set_s3_direct_post, only: [:new_response_upload, :upload_responses]
 
@@ -83,8 +84,12 @@ class CasesController < ApplicationController
 
   def close
     authorize @case, :can_close_case?
+    set_permitted_events
+  end
 
-    @case.close(current_user.id)
+  def process_closure
+    authorize @case, :can_close_case?
+    @case.close(current_user.id, process_closure_params)
     set_permitted_events
     flash[:notice] = t('notices.case_closed')
     render :show
@@ -123,6 +128,13 @@ class CasesController < ApplicationController
     @permitted_events ||= []
   end
 # rubocop:enable CyclomaticComplexity
+
+  def process_closure_params
+    params.require(:case).permit(
+      :date_responded_dd, :date_responded_mm, :date_responded_yyyy
+    ).merge(outcome_id: CaseClosure::Outcome.id_from_name(params['case']['outcome']))
+  end
+
 
   def create_foi_params
     params.require(:case).permit(

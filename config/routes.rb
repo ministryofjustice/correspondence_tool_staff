@@ -67,7 +67,8 @@ Rails.application.routes.draw do
   post '/feedback' => 'feedback#create'
 
   resources :cases do
-    patch 'close', on: :member
+    get 'close', on: :member
+    patch 'process_closure', on: :member
     get 'respond', on: :member
     patch 'confirm_respond', on: :member
     get '/assignments/show_rejected' => 'assignments#show_rejected'

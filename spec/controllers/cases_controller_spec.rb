@@ -192,11 +192,35 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    describe 'PATCH close' do
+    describe 'GET close' do
+      it 'displays the process close page' do
+        get :close, params: { id: responded_case }
+        expect(response).to render_template(:close)
+      end
+    end
+
+
+    describe 'PATCH process_closure' do
+      let(:outcome) { create :outcome }
 
       it "closes a case that has been responded to" do
-        patch :close, params: { id: responded_case }
+        patch :process_closure, params: case_closure_params(responded_case)
         expect(Case.first.current_state).to eq 'closed'
+        expect(Case.first.outcome_id).to eq outcome.id
+        expect(Case.first.date_responded).to eq 3.days.ago.to_date
+      end
+
+      def case_closure_params(kase)
+        date_responded = 3.days.ago
+        {
+          id: kase.id,
+          case: {
+            date_responded_dd: date_responded.day,
+            date_responded_mm: date_responded.month,
+            date_responded_yyyy: date_responded.year,
+            outcome: outcome.name
+          }
+        }
       end
     end
 

@@ -27,7 +27,7 @@ FactoryGirl.define do
   factory :user do
     password '12345678'
     roles %w[assigner drafter]
-    full_name { Faker::Name.name }
+    sequence(:full_name) { |n| "Firstname#{n} Lastname#{n}" }
     email { Faker::Internet.email(full_name) }
 
     trait :dev do
