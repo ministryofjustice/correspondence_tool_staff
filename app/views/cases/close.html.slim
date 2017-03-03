@@ -1,18 +1,25 @@
 .grid-row
   section.case-main
-    h1.case-heading
-      .case-heading--secondary
-        span.visually-hidden
-          = t('common.case.header_case_number')
-        = @case.number
-        = " | "
-        = @case.subject
-      = t('.page_heading')
+    .column-full
+      h1.case-heading
+        .case-heading--secondary
+          span.visually-hidden
+            = t('common.case.header_case_number')
+          = @case.number
+          = " | "
+          = @case.subject
 
-= form_for @case, url: process_closure_case_path do |f|
-  .form-group
-    = f.gov_uk_date_field :date_responded, { legend_text: t('.close_date'), form_hint_text: t('.date_example') }
+  .grid-row
+    .column-full
+      h1.case-heading
+        = t('.page_heading')
 
-  = f.radio_button_fieldset :outcome, choices: CaseClosure::Outcome.all.map(&:name)
+  = form_for @case, url: process_closure_case_path do |f|
+    .form-group
+      = f.gov_uk_date_field :date_responded, { legend_text: t('.close_date'), form_hint_text: t('.date_example') }
+      br
+      = f.radio_button_fieldset :outcome,
+              choices: CaseClosure::Outcome.all.map(&:name)
 
-  = f.submit t('button.continue'), {class: 'button'}
+    = f.submit t('button.continue'), {class: 'button'}
+

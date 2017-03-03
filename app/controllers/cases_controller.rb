@@ -137,6 +137,13 @@ class CasesController < ApplicationController
   end
 
 
+  def process_closure_params
+    params.require(:case).permit(
+      :date_responded_dd, :date_responded_mm, :date_responded_yyyy
+    ).merge(outcome_id: CaseClosure::Outcome.id_from_name(params['case']['outcome']))
+  end
+
+
   def create_foi_params
     params.require(:case).permit(
       :requester_type,
