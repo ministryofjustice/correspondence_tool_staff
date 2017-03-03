@@ -94,8 +94,7 @@ feature 'listing cases on the system' do
         .to have_content(assigned_case.external_deadline.strftime('%e %b %Y'))
     expect(assigned_case_row.number)
         .to have_link("#{assigned_case.number}",
-                      href: edit_case_assignment_path(assigned_case,
-                                                      assigned_case.assignments.last.id))
+                      href: case_path(assigned_case))
     expect(assigned_case_row.status.text).to eq 'Waiting to be accepted'
     expect(assigned_case_row.who_its_with.text).to eq assigned_case.drafter.full_name
 

@@ -36,7 +36,7 @@
               span.visually-hidden
                 = t('.view_case')
               = " "
-              = case_detail_link(kase)
+              = link_to kase.number, case_path(kase.id)
             td aria-label="#{t('.requester')}"
               = kase.name
             td aria-label="#{t('.subject')}"
