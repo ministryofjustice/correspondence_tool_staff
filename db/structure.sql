@@ -2,12 +2,11 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.1
--- Dumped by pg_dump version 9.6.1
+-- Dumped from database version 9.5.5
+-- Dumped by pg_dump version 9.5.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
@@ -382,63 +381,63 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
--- Name: assignments id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY assignments ALTER COLUMN id SET DEFAULT nextval('assignments_id_seq'::regclass);
 
 
 --
--- Name: case_attachments id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY case_attachments ALTER COLUMN id SET DEFAULT nextval('case_attachments_id_seq'::regclass);
 
 
 --
--- Name: case_number_counters id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY case_number_counters ALTER COLUMN id SET DEFAULT nextval('case_number_counters_id_seq'::regclass);
 
 
 --
--- Name: case_transitions id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY case_transitions ALTER COLUMN id SET DEFAULT nextval('case_transitions_id_seq'::regclass);
 
 
 --
--- Name: cases id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY cases ALTER COLUMN id SET DEFAULT nextval('cases_id_seq'::regclass);
 
 
 --
--- Name: categories id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY categories ALTER COLUMN id SET DEFAULT nextval('categories_id_seq'::regclass);
 
 
 --
--- Name: feedback id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY feedback ALTER COLUMN id SET DEFAULT nextval('feedback_id_seq'::regclass);
 
 
 --
--- Name: users id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
 
 --
--- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY ar_internal_metadata
@@ -446,7 +445,7 @@ ALTER TABLE ONLY ar_internal_metadata
 
 
 --
--- Name: assignments assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY assignments
@@ -454,7 +453,7 @@ ALTER TABLE ONLY assignments
 
 
 --
--- Name: case_attachments case_attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: case_attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY case_attachments
@@ -462,7 +461,7 @@ ALTER TABLE ONLY case_attachments
 
 
 --
--- Name: case_number_counters case_number_counters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: case_number_counters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY case_number_counters
@@ -470,7 +469,7 @@ ALTER TABLE ONLY case_number_counters
 
 
 --
--- Name: case_transitions case_transitions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: case_transitions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY case_transitions
@@ -478,7 +477,7 @@ ALTER TABLE ONLY case_transitions
 
 
 --
--- Name: cases cases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: cases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY cases
@@ -486,7 +485,7 @@ ALTER TABLE ONLY cases
 
 
 --
--- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY categories
@@ -494,7 +493,7 @@ ALTER TABLE ONLY categories
 
 
 --
--- Name: feedback feedback_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: feedback_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY feedback
@@ -502,7 +501,7 @@ ALTER TABLE ONLY feedback
 
 
 --
--- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY schema_migrations
@@ -510,7 +509,7 @@ ALTER TABLE ONLY schema_migrations
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users
@@ -623,7 +622,7 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (re
 
 
 --
--- Name: cases fk_rails_56df0121af; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: fk_rails_56df0121af; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY cases
@@ -636,7 +635,6 @@ ALTER TABLE ONLY cases
 
 SET search_path TO "$user", public;
 
--- noinspection SqlNoDataSourceInspection
 INSERT INTO schema_migrations (version) VALUES
 ('20160722121207'),
 ('20160802130203'),

@@ -19,7 +19,7 @@
 #
 
 def email_from_name(name)
-  email_name = name.tr(' ', '.').gsub(/\.{2,9}/, '.')
+  email_name = name.tr(' ', '.').gsub(/\.{2,}/, '.')
   "correspondence-staff-dev+#{email_name}@digital.justice.gov.uk"
 end
 

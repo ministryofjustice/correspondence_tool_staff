@@ -28,5 +28,6 @@ RSpec.describe User, type: :model do
 
   it { should have_many(:assignments) }
   it { should have_many(:cases)       }
+  it { should validate_presence_of(:full_name) }
 
 end
