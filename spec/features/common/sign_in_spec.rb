@@ -11,7 +11,7 @@ feature "Signing in" do
     login_page.log_in(staff.email, staff.password )
 
     expect(login_page).to have_user_card
-    expect(login_page.user_card.greetings).to have_content(staff.email)
+    expect(login_page.user_card.greetings).to have_content(staff.full_name)
 
     expect(login_page.user_card).to have_link('Sign out', href: destroy_user_session_path)
 
