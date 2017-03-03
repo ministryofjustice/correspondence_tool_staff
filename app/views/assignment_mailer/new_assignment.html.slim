@@ -2,7 +2,9 @@ p
   = "Dear #{@assignment.assignee.full_name},"
 
 p
-  = "The following case is waiting to be accepted:"
+  = "The following case is "
+  = t("state.#{@assignment.case.current_state}").downcase
+  = "."
 
 p
   ul

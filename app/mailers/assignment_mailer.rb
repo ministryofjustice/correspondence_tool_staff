@@ -11,7 +11,8 @@ class AssignmentMailer < ApplicationMailer
 
   def format_new_assignment_subject
     kase = @assignment.case
-    "#{kase.number} - #{kase.category.abbreviation} - #{kase.subject} - Waiting to be accepted"
+    translation_key = "state.#{kase.current_state}"
+    "#{kase.number} - #{kase.category.abbreviation} - #{kase.subject} - #{I18n.t(translation_key)}"
   end
 
 end
