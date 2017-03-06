@@ -1,0 +1,39 @@
+p
+  = "Dear #{@assignment.assignee.full_name},"
+
+p
+  = "The following case is "
+  = t("state.#{@assignment.case.current_state}").downcase
+  = "."
+
+p
+  ul
+    li
+      strong
+        = "Case number: "
+      = @assignment.case.number
+    li
+      strong
+        = "Case type: "
+      = @assignment.case.category.abbreviation
+    li
+      strong
+        = "Requester name: "
+      = @assignment.case.name
+    li
+      strong
+        = "Date received: "
+      = @assignment.case.received_date
+    li
+      strong
+        = "Subject: "
+      = @assignment.case.subject
+
+p
+  = link_to 'View case', edit_case_assignment_url(@assignment.case_id, @assignment.id)
+
+p
+  = "You have 24 hours to review and accept or reject the case."
+
+p
+  = "Don't reply to this email as it is automated and not monitored."

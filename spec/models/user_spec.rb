@@ -15,6 +15,7 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  roles                  :string
+#  full_name              :string
 #
 
 require 'rails_helper'
@@ -27,5 +28,6 @@ RSpec.describe User, type: :model do
 
   it { should have_many(:assignments) }
   it { should have_many(:cases)       }
+  it { should validate_presence_of(:full_name) }
 
 end

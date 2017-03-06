@@ -23,7 +23,7 @@
         .content
           nav#proposition-menu
             span.user-card--greetings
-              = t('common.greeting', user: @user.email )
+              = t('common.greeting', user: @user.full_name )
             = link_to t('common.signout'), destroy_user_session_path, :method => :delete,  class: "user-card--signout"
 
 = content_for :content do

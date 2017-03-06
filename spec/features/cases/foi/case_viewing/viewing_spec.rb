@@ -39,7 +39,7 @@ feature 'viewing details of case in the system' do
     expect(cases_show_page.sidebar.external_deadline).
       to have_content(external_gq_deadline)
     expect(cases_show_page.sidebar.status).to have_content('Waiting to be accepted')
-    expect(cases_show_page.sidebar.who_its_with).to have_content(gq.drafter.email)
+    expect(cases_show_page.sidebar.who_its_with).to have_content(gq.drafter.full_name)
 
     expect(cases_show_page.sidebar.name).to have_content('Gina GQ')
     expect(cases_show_page.sidebar.requester_type).
@@ -97,7 +97,7 @@ feature 'viewing details of case in the system' do
       expect(cases_show_page.sidebar.external_deadline).
         to have_content(external_foi_deadline)
       expect(cases_show_page.sidebar.status).to have_content('Waiting to be accepted')
-      expect(cases_show_page.sidebar.who_its_with).to have_content(foi.drafter.email)
+      expect(cases_show_page.sidebar.who_its_with).to have_content(foi.drafter.full_name)
       expect(cases_show_page.sidebar.name).to have_content('Freddie FOI')
       expect(cases_show_page.sidebar.requester_type).
         to have_content(foi.requester_type.humanize)

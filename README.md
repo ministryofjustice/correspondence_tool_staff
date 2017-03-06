@@ -29,6 +29,28 @@ $ rails users:demo_entries
 $ rails correspondence:demo_entries
 ```
 
+### Emails
+
+Emails are generated asynchronously using ActionMailer's deliver_later method, which 
+generates a job in the sidekiq queue.  In development, use Mailcatcher to preview generated 
+mails as follows:
+
+Set up mailcatcher as follows (install the gem separately; do not put it in the Gemfile):
+
+```
+    $ gem install mailcatcher
+    $ mailcatcher --smtp-port 2050
+```
+
+The urls generated in the mail use the ```cta_email_host``` and ```cta_mail_port``` configuration 
+variables from the settings.yml.  These can be overridden by setting the appropriate environment variables,
+e.g.
+
+```
+    $ export SETTINGS__CTA_EMAIL_HOST=localhost
+    $ export SETTINGS__CTA_EMAIL_PORT=5000
+```
+
 ### Uploads
 
 Responses and other case attachments are uploaded directly to S3 before being

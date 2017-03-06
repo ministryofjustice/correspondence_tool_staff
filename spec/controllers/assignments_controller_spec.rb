@@ -86,6 +86,11 @@ RSpec.describe AssignmentsController, type: :controller do
         post :create, params: create_assignment_params
         expect(response).to redirect_to cases_path
       end
+
+      it 'queues an new assignment mail for later delivery' do
+        expect(AssignmentMailer).to receive_message_chain(:new_assignment, :deliver_later)
+        post :create, params: create_assignment_params
+      end
     end
 
     describe 'GET edit' do

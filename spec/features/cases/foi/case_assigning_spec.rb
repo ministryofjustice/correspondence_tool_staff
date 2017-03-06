@@ -20,7 +20,7 @@ feature 'Assigning a case from the detail view' do
     click_link 'Assign to a responder'
     expect(page).to have_content('Assign case')
 
-    select drafter.email, from: 'assignment[assignee_id]'
+    select drafter.full_name, from: 'assignment[assignee_id]'
     click_button 'Assign case'
     expect(current_path).to eq cases_path
     expect(page).to have_content('Case successfully assigned')
@@ -60,7 +60,7 @@ feature 'Assigning a case from the detail view' do
       click_link 'Assign to a responder'
       expect(page).to have_content('Assign case')
 
-      select drafter.email, from: 'assignment[assignee_id]'
+      select drafter.full_name, from: 'assignment[assignee_id]'
       click_button 'Assign case'
       expect(current_path).to eq cases_path
       expect(page).to have_content('Case successfully assigned')

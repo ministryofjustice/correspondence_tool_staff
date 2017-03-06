@@ -53,7 +53,7 @@ en:
       can_add_case?: 'You are not authorised to create new cases.'
       can_accept_or_reject?: 'You are not able to view to this assignment.'
 
-  state:
+  state: &state_translations
     unassigned: Waiting to be assigned
     awaiting_responder: Waiting to be accepted
     drafting: Waiting for draft response
@@ -224,3 +224,4 @@ en:
       <strong>The following error(s) occurred:</strong>
     success_html: |
       <strong>Your feedback has been submitted.</strong>
+

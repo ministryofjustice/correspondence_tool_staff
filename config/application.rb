@@ -30,5 +30,7 @@ module CorrespondencePlatform
     config.active_record.schema_format = :sql
 
     config.autoload_paths += %W(#{config.root}/lib)
+
+    config.active_job.queue_adapter = :sidekiq
   end
 end
