@@ -357,7 +357,7 @@ CREATE TABLE users (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     roles character varying,
-    full_name character varying
+    full_name character varying NOT NULL
 );
 
 
