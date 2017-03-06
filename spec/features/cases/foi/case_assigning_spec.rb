@@ -81,19 +81,5 @@ feature 'Assigning a case from the detail view' do
                                 )
     end
 
-    scenario 'users without the assigner role cannot cannot reassign' do
-
-      login_as drafter
-      visit case_path(kase)
-      expect(cases_show_page).to_not(
-        have_link('Assign to a responder', href: new_case_assignment_path(kase))
-      )
-
-      login_as approver
-      visit case_path(kase)
-      expect(cases_show_page).to_not(
-        have_link('Assign to a responder', href: new_case_assignment_path(kase))
-      )
-    end
   end
 end

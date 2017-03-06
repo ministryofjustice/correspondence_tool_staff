@@ -6,6 +6,9 @@ RSpec.describe CasesController, type: :controller do
   let(:assigner)        { create(:assigner)       }
   let(:drafter)         { create(:drafter)        }
   let(:first_case)      { all_cases.first         }
+  let(:assigned_case)   { create(:assigned_case, drafter: drafter)  }
+  let(:accepted_case)   { create(:accepted_case, drafter: drafter)  }
+
   let(:responded_case)  { create(:responded_case) }
 
   before { create(:category, :foi) }
@@ -329,6 +332,11 @@ RSpec.describe CasesController, type: :controller do
         it 'permitted_events == nil' do
           expect(assigns(:permitted_events)).to eq nil
         end
+
+        it "redirects to signin" do
+          expect(response).to redirect_to(new_user_session_path)
+        end
+
       end
 
       context 'as an authenticated assigner' do
@@ -337,13 +345,22 @@ RSpec.describe CasesController, type: :controller do
         it 'permitted_events == [:assign_responder]' do
           expect(assigns(:permitted_events)).to eq [:assign_responder]
         end
+
+        it 'renders the show template' do
+          expect(response).to render_template(:show)
+        end
+
       end
 
       context 'as a drafter' do
         let(:user) { create(:drafter) }
 
-        it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq []
+        it 'permitted_events == nil' do
+          expect(assigns(:permitted_events)).to eq nil
+        end
+
+        it 'redirects to the application root path' do
+          expect(response).to redirect_to(authenticated_root_path)
         end
       end
     end
@@ -361,6 +378,10 @@ RSpec.describe CasesController, type: :controller do
         it 'permitted_events == nil' do
           expect(assigns(:permitted_events)).to eq nil
         end
+
+        it "redirects to signin" do
+          expect(response).to redirect_to(new_user_session_path)
+        end
       end
 
       context 'as an authenticated assigner' do
@@ -369,13 +390,36 @@ RSpec.describe CasesController, type: :controller do
         it 'permitted_events == []' do
           expect(assigns(:permitted_events)).to eq []
         end
+
+        it 'renders the show template' do
+          expect(response).to render_template(:show)
+        end
+      end
+
+      context 'as a drafter' do
+        let(:user) { assigned_case.drafter }
+
+        it 'permitted_events == []' do
+          expect(assigns(:permitted_events)).to be_nil
+        end
+
+        it 'renders the show template' do
+          expect(response)
+              .to redirect_to(edit_case_assignment_path(
+                                  assigned_case,
+                                  assigned_case.assignments.last.id))
+        end
       end
 
       context 'as another drafter' do
         let(:user) { create(:drafter) }
 
-        it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq []
+        it 'permitted_events == nil' do
+          expect(assigns(:permitted_events)).to eq nil
+        end
+
+        it 'redirects to the application root path' do
+          expect(response).to redirect_to(authenticated_root_path)
         end
       end
     end
@@ -393,6 +437,10 @@ RSpec.describe CasesController, type: :controller do
         it 'permitted_events == nil' do
           expect(assigns(:permitted_events)).to eq nil
         end
+
+        it "redirects to signin" do
+          expect(response).to redirect_to(new_user_session_path)
+        end
       end
 
       context 'as an authenticated assigner' do
@@ -400,6 +448,10 @@ RSpec.describe CasesController, type: :controller do
 
         it 'permitted_events == []' do
           expect(assigns(:permitted_events)).to eq []
+        end
+
+        it 'renders the show page' do
+          expect(response).to have_rendered(:show)
         end
       end
 
@@ -409,13 +461,21 @@ RSpec.describe CasesController, type: :controller do
         it 'permitted_events == [:add_responses]' do
           expect(assigns(:permitted_events)).to eq [:add_responses]
         end
+
+        it 'renders the show page' do
+          expect(response).to have_rendered(:show)
+        end
       end
 
       context 'as another drafter' do
         let(:user) { create(:drafter) }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq []
+          expect(assigns(:permitted_events)).to be_nil
+        end
+
+        it 'redirects to the application root path' do
+          expect(response).to redirect_to(authenticated_root_path)
         end
       end
     end
@@ -433,6 +493,10 @@ RSpec.describe CasesController, type: :controller do
         it 'permitted_events == nil' do
           expect(assigns(:permitted_events)).to eq nil
         end
+
+        it "redirects to signin" do
+          expect(response).to redirect_to(new_user_session_path)
+        end
       end
 
       context 'as an authenticated assigner' do
@@ -440,6 +504,10 @@ RSpec.describe CasesController, type: :controller do
 
         it 'permitted_events == []' do
           expect(assigns(:permitted_events)).to eq []
+        end
+
+        it 'renders the show page' do
+          expect(response).to have_rendered(:show)
         end
       end
 
@@ -449,13 +517,21 @@ RSpec.describe CasesController, type: :controller do
         it 'permitted_events == [:add_responses, :respond]' do
           expect(assigns(:permitted_events)).to eq [:add_responses, :respond]
         end
+
+        it 'renders the show page' do
+          expect(response).to have_rendered(:show)
+        end
       end
 
       context 'as another drafter' do
         let(:user) { create(:drafter) }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq []
+          expect(assigns(:permitted_events)).to be_nil
+        end
+
+        it 'redirects to the application root path' do
+          expect(response).to redirect_to(authenticated_root_path)
         end
       end
     end
@@ -473,6 +549,10 @@ RSpec.describe CasesController, type: :controller do
         it 'permitted_events == nil' do
           expect(assigns(:permitted_events)).to eq nil
         end
+
+        it "redirects to signin" do
+          expect(response).to redirect_to(new_user_session_path)
+        end
       end
 
       context 'as an authenticated assigner' do
@@ -480,6 +560,10 @@ RSpec.describe CasesController, type: :controller do
 
         it 'permitted_events == [:close]' do
           expect(assigns(:permitted_events)).to eq [:close]
+        end
+
+        it 'renders the show page' do
+          expect(response).to have_rendered(:show)
         end
       end
 
@@ -489,13 +573,21 @@ RSpec.describe CasesController, type: :controller do
         it 'permitted_events == []' do
           expect(assigns(:permitted_events)).to eq []
         end
+
+        it 'renders the show page' do
+          expect(response).to have_rendered(:show)
+        end
       end
 
       context 'as another drafter' do
         let(:user) { create(:drafter) }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq []
+          expect(assigns(:permitted_events)).to be_nil
+        end
+
+        it 'redirects to the application root path' do
+          expect(response).to redirect_to(authenticated_root_path)
         end
       end
     end

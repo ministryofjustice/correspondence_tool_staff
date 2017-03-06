@@ -32,6 +32,12 @@ class CasePolicy
     user.assigner? && self.case.responded?
   end
 
+  def can_view_case_details?
+
+    user.assigner? ||
+        self.case.drafter.present? && self.case.drafter == user
+  end
+
   class Scope
     attr_reader :user, :scope
 

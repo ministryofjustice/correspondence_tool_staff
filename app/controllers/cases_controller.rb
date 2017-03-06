@@ -35,13 +35,16 @@ class CasesController < ApplicationController
   end
 
   def show
-    set_permitted_events
+    authorize @case, :can_view_case_details?
 
     if policy(@case).can_accept_or_reject_case?
       redirect_to edit_case_assignment_path @case, @case.assignments.last.id
+    else
+      set_permitted_events
+      @accepted_now = params[:accepted_now]
+      @include_uploaded_files = include_uploaded_files?
+      render :show
     end
-    @include_uploaded_files = include_uploaded_files?
-    @accepted_now = params[:accepted_now]
   end
 
   def edit

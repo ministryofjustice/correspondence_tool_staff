@@ -99,6 +99,35 @@ describe CasePolicy do
     end
   end
 
+  permissions :can_view_case_details? do
+    it "refuses if current user is not involve in the case" do
+      expect(subject).not_to permit(drafter, create(:case))
+
+      expect(subject).not_to permit(another_drafter, create(:case))
+      expect(subject).not_to permit(another_drafter, create(:assigned_case, drafter: drafter))
+      expect(subject).not_to permit(another_drafter, create(:accepted_case, drafter: drafter))
+      expect(subject).not_to permit(another_drafter, create(:case_with_response, drafter: drafter))
+      expect(subject).not_to permit(another_drafter, create(:responded_case, drafter: drafter))
+    end
+
+    it "grants if current_user is an assigner" do
+      expect(subject).to permit(assigner, create(:case))
+      expect(subject).to permit(assigner, create(:assigned_case))
+      expect(subject).to permit(assigner, create(:accepted_case))
+      expect(subject).to permit(assigner, create(:case_with_response))
+      expect(subject).to permit(assigner, create(:responded_case))
+    end
+
+    it "grants if current_user is the drafter for the case" do
+      expect(subject).to permit(drafter, create(:assigned_case,drafter: drafter))
+      expect(subject).to permit(drafter, create(:accepted_case,drafter: drafter))
+      expect(subject).to permit(drafter, create(:case_with_response,drafter: drafter))
+      expect(subject).to permit(drafter, create(:responded_case,drafter: drafter))
+    end
+
+  end
+
+
   describe 'case scope policy' do
     let(:unassigned_case) { create(:case)          }
     let(:assigned_case)   { create(:assigned_case) }
@@ -115,5 +144,6 @@ describe CasePolicy do
       drafter_scope = described_class::Scope.new(drafter, Case.all).resolve
       expect(drafter_scope).to eq [assigned_case]
     end
+
   end
 end
