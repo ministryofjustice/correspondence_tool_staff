@@ -108,7 +108,7 @@ class CasesController < ApplicationController
 
   def confirm_respond
     authorize @case, :can_respond?
-    @case.respond(current_user)
+    @case.respond(current_user.id)
     flash[:notice] = t('.success')
     redirect_to cases_path
   end

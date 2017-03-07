@@ -16,9 +16,27 @@ namespace :data do
       update_development_users
     end
 
+    desc 'Fix responded transitions where assignee and user ids are the actual object'
+    task :fix_responded_transition_user_metadata => [:environment] do
+      CaseTransition.responded.each do |transition|
+        fix_transition_user_metadata(transition, 'user_id')
+        fix_transition_user_metadata(transition, 'assignee_id')
+      end
+    end
   end
+
 end
 
+def fix_transition_user_metadata(transition, field)
+  if transition.metadata[field].respond_to? :has_key?
+    if transition.metadata[field].has_key? "id"
+      puts "CaseTransition #{transition.id}: fixing #{field}"
+      transition.update_attribute field, transition.metadata[field]["id"]
+    else
+      puts "CaseTransition #{transition.id}: #{field} is a hash but could not find 'id' entry"
+    end
+  end
+end
 
 def update_development_users
   user_details = {

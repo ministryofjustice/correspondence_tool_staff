@@ -943,6 +943,17 @@ RSpec.describe CasesController, type: :controller do
       it 'transitions current_state to "responded"' do
         patch :confirm_respond, params: { id: case_with_response }
         expect(case_with_response.current_state).to eq 'responded'
+        expect(case_with_response.transitions.last.assignee_id).to eq drafter.id
+      end
+
+      it 'updates assignee id in transition' do
+        patch :confirm_respond, params: { id: case_with_response }
+        expect(case_with_response.transitions.last.assignee_id).to eq drafter.id
+      end
+
+      it 'updates user id in transition' do
+        patch :confirm_respond, params: { id: case_with_response }
+        expect(case_with_response.transitions.last.user_id).to eq drafter.id
       end
 
       it 'removes the case from the drafters workbasket' do
