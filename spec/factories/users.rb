@@ -15,7 +15,7 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  roles                  :string
-#  full_name              :string
+#  full_name              :string           not null
 #
 
 def email_from_name(name)

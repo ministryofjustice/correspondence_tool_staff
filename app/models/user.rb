@@ -15,7 +15,7 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  roles                  :string
-#  full_name              :string
+#  full_name              :string           not null
 #
 
 class User < ApplicationRecord

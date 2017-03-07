@@ -81,6 +81,7 @@ en:
     fieldset:
       case:
         requester_type: Type of requester
+        refusal_reason: What was the reason for refusal?
       assignment:
         state: Do you accept this case?
     hint:

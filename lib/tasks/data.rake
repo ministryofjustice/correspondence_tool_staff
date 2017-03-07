@@ -8,7 +8,12 @@ namespace :data do
   namespace :migrate do
 
     desc 'run all data migrations'
-    task :all => [:environment, :add_names_to_dev_users] {}
+    task :all => [:environment, :add_refusal_reasons] {}
+
+    desc 'add requires refusal reasons to non-granted outcomes'
+    task :add_refusal_reasons => :environmment do
+
+    end
 
     desc 'Add full names and real email addresses to dev users'
     task :add_names_to_dev_users do

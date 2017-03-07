@@ -2,19 +2,23 @@
 #
 # Table name: cases
 #
-#  id             :integer          not null, primary key
-#  name           :string
-#  email          :string
-#  message        :text
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  category_id    :integer
-#  received_date  :date
-#  postal_address :string
-#  subject        :string
-#  properties     :jsonb
-#  number         :string           not null
-#  requester_type :enum
+#  id                :integer          not null, primary key
+#  name              :string
+#  email             :string
+#  message           :text
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  category_id       :integer
+#  received_date     :date
+#  postal_address    :string
+#  subject           :string
+#  properties        :jsonb
+#  requester_type    :enum
+#  number            :string           not null
+#  date_responded    :date
+#  outcome_id        :integer
+#  refusal_reason_id :integer
+#  exemption_id      :integer
 #
 
 FactoryGirl.define do

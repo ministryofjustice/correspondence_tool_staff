@@ -14,14 +14,15 @@ Category.find_or_create_by!(name: 'General enquiry', abbreviation: 'GQ', escalat
 module CaseClosure
   puts "----Seeding CaseClosure::Outcomes----"
   Outcome.find_or_create_by!(subtype: nil, name: 'Granted in full', abbreviation: 'granted', sequence_id: 10)
-  Outcome.find_or_create_by!(subtype: nil, name: 'Refused in part', abbreviation: 'part', sequence_id: 20)
-  Outcome.find_or_create_by!(subtype: nil, name: 'Refused fully', abbreviation: 'refused', sequence_id: 30)
+  rec1 = Outcome.find_or_create_by!(subtype: nil, name: 'Refused in part', abbreviation: 'part', sequence_id: 20)
+  rec2 = Outcome.find_or_create_by!(subtype: nil, name: 'Refused fully', abbreviation: 'refused', sequence_id: 30)
 
+  [rec1, rec2].each { |r| r.update_attribute(:requires_refusal_reason, true) }
 
   puts "----Seeding CaseClosure::RefusalReasons----"
   RefusalReason.find_or_create_by!(
     subtype: nil,
-    name: '(s1(3)) or (s8(1)) = Advice & assistance/clarification',
+    name: '(s1(3)) or (s8(1)) - Advice & assistance/clarification',
     abbreviation: 'advice',
     sequence_id: 110)
 

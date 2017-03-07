@@ -2,19 +2,23 @@
 #
 # Table name: cases
 #
-#  id             :integer          not null, primary key
-#  name           :string
-#  email          :string
-#  message        :text
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  category_id    :integer
-#  received_date  :date
-#  postal_address :string
-#  subject        :string
-#  properties     :jsonb
-#  number         :string           not null
-#  requester_type :enum
+#  id                :integer          not null, primary key
+#  name              :string
+#  email             :string
+#  message           :text
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  category_id       :integer
+#  received_date     :date
+#  postal_address    :string
+#  subject           :string
+#  properties        :jsonb
+#  requester_type    :enum
+#  number            :string           not null
+#  date_responded    :date
+#  outcome_id        :integer
+#  refusal_reason_id :integer
+#  exemption_id      :integer
 #
 
 # Required in production with it's eager loading and cacheing of classes.
@@ -36,6 +40,8 @@ class Case < ApplicationRecord
   validates :postal_address, presence: true, on: :create, if: -> { email.blank? }
   validates :subject, length: { maximum: 80 }
   validates :requester_type, presence: true
+
+  validate :refusal_reason_validations
 
   enum requester_type: {
       academic_business_charity: 'academic_business_charity',
@@ -71,6 +77,7 @@ class Case < ApplicationRecord
   CaseStateMachine.states.each do |state|
     define_method("#{state}?") { current_state == state }
   end
+
 
   def self.search(term)
     where('lower(name) LIKE ?', "%#{term.downcase}%")
@@ -150,11 +157,8 @@ class Case < ApplicationRecord
     drafter_assignment.destroy
   end
 
-  def close(current_user_id, case_closure_params)
-    self.transaction do
-      update(case_closure_params)
-      state_machine.close!(current_user_id)
-    end
+  def close(current_user_id)
+    state_machine.close!(current_user_id)
   end
 
   def received_not_in_the_future?
@@ -182,7 +186,37 @@ class Case < ApplicationRecord
     end
   end
 
+  def outcome_name
+    outcome&.name
+  end
+
+  def outcome_name=(name)
+    self.outcome = CaseClosure::Outcome.by_name(name)
+  end
+
+  def refusal_reason_name
+    refusal_reason&.name
+  end
+
+  def refusal_reason_name=(name)
+    self.refusal_reason = CaseClosure::RefusalReason.by_name(name)
+  end
+
+
+
   private
+
+  def refusal_reason_validations
+    if outcome&.requires_refusal_reason?
+      if refusal_reason.blank?
+        errors.add(:refusal_reason, 'must be present for the specified outcome')
+      end
+    else
+      if refusal_reason.present?
+        errors.add(:refusal_reason, 'cannot be present for the specified outcome')
+      end
+    end
+  end
 
   def set_deadlines
     self.escalation_deadline = DeadlineCalculator.escalation_deadline(self) if triggerable?

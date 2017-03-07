@@ -170,7 +170,8 @@ CREATE TABLE case_closure_metadata (
     abbreviation character varying,
     sequence_id integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    requires_refusal_reason boolean DEFAULT false
 );
 
 
@@ -719,6 +720,7 @@ INSERT INTO schema_migrations (version) VALUES
 ('20170222171317'),
 ('20170223130158'),
 ('20170303140119'),
-('20170306093700');
+('20170306093700'),
+('20170307083809');
 
 

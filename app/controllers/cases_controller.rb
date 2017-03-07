@@ -94,10 +94,17 @@ class CasesController < ApplicationController
 
   def process_closure
     authorize @case, :can_close_case?
-    @case.close(current_user.id, process_closure_params)
-    set_permitted_events
-    flash[:notice] = t('notices.case_closed')
-    render :show
+    @case.update(process_closure_params)
+    if @case.valid?
+      @case.close(current_user.id)
+      set_permitted_events
+      flash[:notice] = t('notices.case_closed')
+      render :show
+    else
+      set_permitted_events
+      render :close
+    end
+
   end
 
   def respond
@@ -132,8 +139,12 @@ class CasesController < ApplicationController
 
   def process_closure_params
     params.require(:case).permit(
-      :date_responded_dd, :date_responded_mm, :date_responded_yyyy
-    ).merge(outcome_id: CaseClosure::Outcome.id_from_name(params['case']['outcome']))
+      :date_responded_dd,
+      :date_responded_mm,
+      :date_responded_yyyy,
+      :outcome_name,
+      :refusal_reason_name
+    )
   end
 
 

@@ -2,19 +2,23 @@
 #
 # Table name: cases
 #
-#  id             :integer          not null, primary key
-#  name           :string
-#  email          :string
-#  message        :text
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  category_id    :integer
-#  received_date  :date
-#  postal_address :string
-#  subject        :string
-#  properties     :jsonb
-#  number         :string           not null
-#  requester_type :enum
+#  id                :integer          not null, primary key
+#  name              :string
+#  email             :string
+#  message           :text
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  category_id       :integer
+#  received_date     :date
+#  postal_address    :string
+#  subject           :string
+#  properties        :jsonb
+#  requester_type    :enum
+#  number            :string           not null
+#  date_responded    :date
+#  outcome_id        :integer
+#  refusal_reason_id :integer
+#  exemption_id      :integer
 #
 
 require 'rails_helper'
@@ -490,6 +494,42 @@ RSpec.describe Case, type: :model do
         responded_case.close(User.first.id, {})
         expect(state_machine).to have_received(:close!)
         expect(state_machine).not_to have_received(:close)
+      end
+    end
+
+    describe 'refusal reason validations' do
+
+      before(:all) do
+        @outcome1 = create :outcome, :requires_refusal_reason
+        @outcome2 = create :outcome
+        @reason = create :refusal_reason
+      end
+
+      after(:all) { CaseClosure::Metadatum.delete_all }
+
+      context 'outcome requires refusal reason' do
+        it 'errors if refusal reason not present' do
+          kase = build :case, outcome: @outcome1
+          expect(kase).not_to be_valid
+          expect(kase.errors[:refusal_reason]).to include('must be present for the specified outcome')
+        end
+        it 'does not error if refusal reason present' do
+          kase = build :case, outcome: @outcome1, refusal_reason: @reason
+          expect(kase).to be_valid
+        end
+      end
+
+      context 'outcome does not require refusal reason' do
+        it 'errors if refusal reason present' do
+          kase = build :case, outcome: @outcome2, refusal_reason: @reason
+          expect(kase).not_to be_valid
+          expect(kase.errors[:refusal_reason]).to include('cannot be present for the specified outcome')
+        end
+
+        it 'does not error if refusal reason absent' do
+          kase = build :case, outcome: @outcome2
+          expect(kase).to be_valid
+        end
       end
     end
   end
