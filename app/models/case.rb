@@ -41,7 +41,7 @@ class Case < ApplicationRecord
   validates :subject, length: { maximum: 80 }
   validates :requester_type, presence: true
 
-  validate :refusal_reason_validations
+  validates_with ::ClosedCaseValidator
 
   enum requester_type: {
       academic_business_charity: 'academic_business_charity',
@@ -202,21 +202,15 @@ class Case < ApplicationRecord
     self.refusal_reason = CaseClosure::RefusalReason.by_name(name)
   end
 
+  def prepare_for_close
+    @preparing_for_close = true
+  end
 
+  def prepared_for_close?
+    @preparing_for_close == true
+  end
 
   private
-
-  def refusal_reason_validations
-    if outcome&.requires_refusal_reason?
-      if refusal_reason.blank?
-        errors.add(:refusal_reason, 'must be present for the specified outcome')
-      end
-    else
-      if refusal_reason.present?
-        errors.add(:refusal_reason, 'cannot be present for the specified outcome')
-      end
-    end
-  end
 
   def set_deadlines
     self.escalation_deadline = DeadlineCalculator.escalation_deadline(self) if triggerable?

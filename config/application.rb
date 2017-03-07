@@ -29,7 +29,7 @@ module CorrespondencePlatform
     # work.
     config.active_record.schema_format = :sql
 
-    config.autoload_paths += %W(#{config.root}/lib)
+    config.autoload_paths += %W(#{config.root}/lib #{config.root}/app/validators)
 
     config.active_job.queue_adapter = :sidekiq
   end
