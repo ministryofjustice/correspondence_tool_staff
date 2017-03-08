@@ -94,8 +94,8 @@ class CasesController < ApplicationController
 
   def process_closure
     authorize @case, :can_close_case?
-    @case.update(process_closure_params)
-    if @case.valid?
+    @case.prepare_for_close
+    if @case.update(process_closure_params)
       @case.close(current_user.id)
       set_permitted_events
       flash[:notice] = t('notices.case_closed')
@@ -104,7 +104,6 @@ class CasesController < ApplicationController
       set_permitted_events
       render :close
     end
-
   end
 
   def respond
