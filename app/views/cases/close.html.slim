@@ -1,8 +1,4 @@
-
-- if @case.errors.any?
-  - @case.errors.full_messages.each do |msg|
-   = msg
-
+= render partial: 'error_summary', locals: {errors: @case.errors}
 
 .grid-row
   section.case-main
@@ -19,7 +15,7 @@
   .form-group
     = f.gov_uk_date_field :date_responded, { legend_text: t('.close_date'), form_hint_text: t('.date_example') }
 
-  = f.radio_button_fieldset :outcome, choices: CaseClosure::Outcome.all.map(&:name)
+  = f.radio_button_fieldset :outcome_name, choices: CaseClosure::Outcome.all.map(&:name)
   br
   = f.radio_button_fieldset :refusal_reason_name, choices: CaseClosure::RefusalReason.all.map(&:name)
 

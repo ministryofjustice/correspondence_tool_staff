@@ -1,0 +1,15 @@
+- if errors.any?
+  div class='error-summary' role='group' aria-labelledby="error-summary-heading" tabindex="-1"
+    h1#error-summary-heading.heading-medium.error-summary-heading
+      = "#{errors.full_messages.size} errors prevented this form from being submitted:"
+    p
+    ul.error-summary-list
+      li
+        - errors.full_messages.each do |message|
+          ul
+            a href='#error_case_name'
+              = message
+
+
+
+

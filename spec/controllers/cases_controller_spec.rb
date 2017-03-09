@@ -221,7 +221,7 @@ RSpec.describe CasesController, type: :controller do
             date_responded_dd: date_responded.day,
             date_responded_mm: date_responded.month,
             date_responded_yyyy: date_responded.year,
-            outcome: outcome.name
+            outcome_name: outcome.name
           }
         }
       end
