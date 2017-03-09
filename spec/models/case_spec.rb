@@ -18,7 +18,6 @@
 #  date_responded    :date
 #  outcome_id        :integer
 #  refusal_reason_id :integer
-#  exemption_id      :integer
 #
 
 require 'rails_helper'
@@ -351,6 +350,36 @@ RSpec.describe Case, type: :model do
         expect do
           kase.assignments.delete(assignment)
         end.to change { Assignment.count }.by(-1)
+      end
+    end
+
+    describe 'exemptions' do
+
+      before(:all) do
+        @ncnd = create :exemption, :ncnd, name: 'NCND'
+        @abs_1 = create :exemption, :absolute, name: 'Abs 1'
+        @abs_2 = create :exemption, :absolute, name: 'Abs 2'
+        @qual_1 = create :exemption, :qualified, name: 'Qualified 1'
+        @qual_2 = create :exemption, :qualified, name: 'Qualified 2'
+      end
+
+      after(:all) { CaseClosure::Metadatum.delete_all }
+
+
+
+      describe '#exemption_ids=' do
+        it 'replaces exisiting exemptions with ones specified in param hash' do
+          k = create :case, exemptions: [@ncnd, @abs_1]
+          k.exemption_ids = {@ncnd.id.to_s => "1", @abs_2.id.to_s => "1", @abs_1.id.to_s => "1"}
+          expect(k.exemptions).to eq [@ncnd, @abs_1, @abs_2]
+        end
+      end
+
+      describe '#exemption_ids' do
+        it 'returns an array of exemption_ids' do
+          k = create :case, exemptions: [@ncnd, @abs_1]
+          expect(k.exemption_ids).to eq({@ncnd.id.to_s => '1', @abs_1.id.to_s => '1'})
+        end
       end
     end
   end

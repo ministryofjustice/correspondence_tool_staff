@@ -96,6 +96,9 @@ class CasesController < ApplicationController
     authorize @case, :can_close_case?
     @case.prepare_for_close
     if @case.update(process_closure_params)
+      puts ">>>>>>>>>>>>>> updatesd #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      ap @case.exemptions
+
       @case.close(current_user.id)
       set_permitted_events
       flash[:notice] = t('notices.case_closed')
@@ -142,15 +145,9 @@ class CasesController < ApplicationController
       :date_responded_mm,
       :date_responded_yyyy,
       :outcome_name,
-      :refusal_reason_name
+      :refusal_reason_name,
+      exemption_ids: params[:case][:exemption_ids].keys
     )
-  end
-
-
-  def process_closure_params
-    params.require(:case).permit(
-      :date_responded_dd, :date_responded_mm, :date_responded_yyyy
-    ).merge(outcome_id: CaseClosure::Outcome.id_from_name(params['case']['outcome']))
   end
 
 

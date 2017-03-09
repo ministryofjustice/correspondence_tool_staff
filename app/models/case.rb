@@ -18,7 +18,6 @@
 #  date_responded    :date
 #  outcome_id        :integer
 #  refusal_reason_id :integer
-#  exemption_id      :integer
 #
 
 # Required in production with it's eager loading and cacheing of classes.
@@ -43,6 +42,8 @@ class Case < ApplicationRecord
 
   validates_with ::ClosedCaseValidator
 
+  serialize :exemption_ids, Array
+
   enum requester_type: {
       academic_business_charity: 'academic_business_charity',
       journalist: 'journalist',
@@ -66,7 +67,8 @@ class Case < ApplicationRecord
   has_many :attachments, class_name: 'CaseAttachment'
   belongs_to :outcome, class_name: 'CaseClosure::Outcome'
   belongs_to :refusal_reason, class_name: 'CaseClosure::RefusalReason'
-  belongs_to :exemption, class_name: 'CaseClosure::Exemption'
+  # belongs_to :exemption, class_name: 'CaseClosure::Exemption'
+  has_and_belongs_to_many :exemptions, class_name: 'CaseClosure::Exemption', join_table: 'cases_exemptions'
 
   before_save :prevent_number_change
   before_create :set_deadlines, :set_number
@@ -200,6 +202,21 @@ class Case < ApplicationRecord
 
   def refusal_reason_name=(name)
     self.refusal_reason = CaseClosure::RefusalReason.by_name(name)
+  end
+
+  # returns a hash which can be used by for populating checkboxes
+  # e.g. {"10"=>"1", "11"=>"1", "12"=>"0", "13"=>"0", "14"=>"1"}
+  def exemption_ids
+    exemption_hash = {}
+    exemptions.map{ |ex| exemption_hash[ex.id.to_s] = '1' }
+    exemption_hash
+  end
+
+  # expects a hash of ids and values 1 or zero
+  # e.g. {"10"=>"1", "11"=>"1", "12"=>"0", "13"=>"0", "14"=>"1"}
+  def exemption_ids=(param_hash)
+    exemption_ids = param_hash.select { |_exemption_id, val| val == '1' }.keys
+    self.exemptions = CaseClosure::Exemption.find(exemption_ids)
   end
 
   def prepare_for_close

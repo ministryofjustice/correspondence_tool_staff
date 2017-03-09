@@ -19,4 +19,16 @@
   br
   = f.radio_button_fieldset :refusal_reason_name, choices: CaseClosure::RefusalReason.all.map(&:name)
 
+  br
+  span.form-label-bold
+    = "What exemptions were applied"
+  br
+
+  = render partial: 'exemption_checkbox_section', locals: { exemptions: CaseClosure::Exemption.ncnd, heading: 'Neither Confirm nor Deny', hint: 'This refusal must be used with an exemption', kase: @case }
+  br
+  = render partial: 'exemption_checkbox_section', locals: { exemptions: CaseClosure::Exemption.absolute, heading: 'Abosolute exemptions', hint: 'These have no public interest test attached', kase: @case }
+  br
+  = render partial: 'exemption_checkbox_section', locals: { exemptions: CaseClosure::Exemption.qualified, heading: 'Qualified exemptions', hint: 'These are subject to a public interest test', kase: @case }
+
   = f.submit t('button.continue'), {class: 'button'}
+

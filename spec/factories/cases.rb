@@ -18,7 +18,6 @@
 #  date_responded    :date
 #  outcome_id        :integer
 #  refusal_reason_id :integer
-#  exemption_id      :integer
 #
 
 FactoryGirl.define do

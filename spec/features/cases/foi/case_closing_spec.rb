@@ -16,7 +16,7 @@ feature 'Closing a case' do
 
   after(:all) { CaseClosure::Outcome.destroy_all }
 
-  scenario 'A KILO has responded and an assigner closes the case' do
+  scenario 'A KILO has responded and an assigner closes the case', js:true do
     visit cases_path
     expect(cases_page.case_list.last.status.text).to eq 'Waiting to be closed'
     click_link kase.number

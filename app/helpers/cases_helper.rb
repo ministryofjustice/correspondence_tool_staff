@@ -39,5 +39,11 @@ module CasesHelper
             data: {
               confirm: "Are you sure you want to remove #{attachment.filename}?"
             }
+  def exemptions_checkbox_selector(exemption, kase)
+    if kase.exemptions.map(&:id).include?(exemption.id)
+      'selected'
+    else
+      ''
+    end
   end
 end

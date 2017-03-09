@@ -11,6 +11,7 @@
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  requires_refusal_reason :boolean          default(FALSE)
+#  requires_exemption      :boolean          default(FALSE)
 #
 
 require 'rails_helper'

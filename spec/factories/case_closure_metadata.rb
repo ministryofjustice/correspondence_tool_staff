@@ -11,6 +11,7 @@
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  requires_refusal_reason :boolean          default(FALSE)
+#  requires_exemption      :boolean          default(FALSE)
 #
 
 FactoryGirl.define do
@@ -23,14 +24,17 @@ FactoryGirl.define do
 
     trait :ncnd do
       subtype 'ncnd'
+      sequence(:name) { |n| "NCND exemption #{n}" }
     end
 
     trait :absolute do
       subtype 'absolute'
+      sequence(:name) { |n| "Absolute exemption #{n}" }
     end
 
     trait :qualified do
       subtype 'qualified'
+      sequence(:name) { |n| "Qualified exemption #{n}" }
     end
 
     factory :outcome, class: CaseClosure::Outcome do

@@ -171,7 +171,8 @@ CREATE TABLE case_closure_metadata (
     sequence_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    requires_refusal_reason boolean DEFAULT false
+    requires_refusal_reason boolean DEFAULT false,
+    requires_exemption boolean DEFAULT false
 );
 
 
@@ -280,9 +281,40 @@ CREATE TABLE cases (
     number character varying NOT NULL,
     date_responded date,
     outcome_id integer,
-    refusal_reason_id integer,
-    exemption_id integer
+    refusal_reason_id integer
 );
+
+
+--
+-- Name: cases_exemptions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE cases_exemptions (
+    id integer NOT NULL,
+    case_id integer,
+    exemption_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: cases_exemptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE cases_exemptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cases_exemptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE cases_exemptions_id_seq OWNED BY cases_exemptions.id;
 
 
 --
@@ -466,6 +498,13 @@ ALTER TABLE ONLY cases ALTER COLUMN id SET DEFAULT nextval('cases_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY cases_exemptions ALTER COLUMN id SET DEFAULT nextval('cases_exemptions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY categories ALTER COLUMN id SET DEFAULT nextval('categories_id_seq'::regclass);
 
 
@@ -529,6 +568,14 @@ ALTER TABLE ONLY case_number_counters
 
 ALTER TABLE ONLY case_transitions
     ADD CONSTRAINT case_transitions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cases_exemptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY cases_exemptions
+    ADD CONSTRAINT cases_exemptions_pkey PRIMARY KEY (id);
 
 
 --
@@ -642,6 +689,20 @@ CREATE UNIQUE INDEX index_case_transitions_parent_sort ON case_transitions USING
 
 
 --
+-- Name: index_cases_exemptions_on_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_cases_exemptions_on_case_id ON cases_exemptions USING btree (case_id);
+
+
+--
+-- Name: index_cases_exemptions_on_exemption_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_cases_exemptions_on_exemption_id ON cases_exemptions USING btree (exemption_id);
+
+
+--
 -- Name: index_cases_on_category_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -721,6 +782,8 @@ INSERT INTO schema_migrations (version) VALUES
 ('20170223130158'),
 ('20170303140119'),
 ('20170306093700'),
-('20170307083809');
+('20170307083809'),
+('20170309134800'),
+('20170309153815');
 
 

@@ -50,11 +50,14 @@ module CaseClosure
     abbreviation: 'cost',
     sequence_id: 150)
 
-  RefusalReason.find_or_create_by!(
+  exemption = RefusalReason.find_or_create_by!(
     subtype: nil,
     name: 'Expemption applied',
     abbreviation: 'exempt',
     sequence_id: 160)
+
+  exemption.update_attribute(:requires_exemption, true)
+
 
   puts "----Seeding CaseClosure::Exemptions----"
   Exemption.find_or_create_by!(
