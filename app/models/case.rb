@@ -20,11 +20,10 @@
 # Required in production with it's eager loading and cacheing of classes.
 require 'case_state_machine'
 
-
 class Case < ApplicationRecord
   include Statesman::Adapters::ActiveRecordQueries
 
-  acts_as_gov_uk_date :received_date,
+  acts_as_gov_uk_date :received_date, :date_responded,
                       validate_if: :received_not_in_the_future?
 
   scope :by_deadline, lambda {
@@ -59,6 +58,9 @@ class Case < ApplicationRecord
   has_many :assignments, dependent: :destroy
   has_many :transitions, class_name: 'CaseTransition', autosave: false
   has_many :attachments, class_name: 'CaseAttachment'
+  belongs_to :outcome, class_name: 'CaseClosure::Outcome'
+  belongs_to :refusal_reason, class_name: 'CaseClosure::RefusalReason'
+  belongs_to :exemption, class_name: 'CaseClosure::Exemption'
 
   before_save :prevent_number_change
   before_create :set_deadlines, :set_number
@@ -148,8 +150,11 @@ class Case < ApplicationRecord
     drafter_assignment.destroy
   end
 
-  def close(current_user_id)
-    state_machine.close!(current_user_id)
+  def close(current_user_id, case_closure_params)
+    self.transaction do
+      update(case_closure_params)
+      state_machine.close!(current_user_id)
+    end
   end
 
   def received_not_in_the_future?

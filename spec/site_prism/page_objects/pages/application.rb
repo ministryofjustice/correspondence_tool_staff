@@ -8,6 +8,7 @@ module PageObjects
       {
         cases:                     'CasesPage',
         cases_show:                'Cases::ShowPage',
+        cases_close:               'Cases::ClosePage',
         cases_respond:             'Cases::RespondPage',
         cases_new_response_upload: 'Cases::NewResponseUploadPage',
         login:                     'LoginPage',

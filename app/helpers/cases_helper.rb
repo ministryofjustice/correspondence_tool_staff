@@ -21,7 +21,7 @@ module CasesHelper
     when :close
       link_to I18n.t('common.case.close'),
           close_case_path(@case),
-          class: 'button', method: :patch
+          class: 'button', method: :get
     end
   end
 end

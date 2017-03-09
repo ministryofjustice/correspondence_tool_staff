@@ -159,6 +159,41 @@ ALTER SEQUENCE case_attachments_id_seq OWNED BY case_attachments.id;
 
 
 --
+-- Name: case_closure_metadata; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE case_closure_metadata (
+    id integer NOT NULL,
+    type character varying,
+    subtype character varying,
+    name character varying,
+    abbreviation character varying,
+    sequence_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: case_closure_metadata_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE case_closure_metadata_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: case_closure_metadata_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE case_closure_metadata_id_seq OWNED BY case_closure_metadata.id;
+
+
+--
 -- Name: case_number_counters; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -241,7 +276,11 @@ CREATE TABLE cases (
     subject character varying,
     properties jsonb,
     requester_type requester_type,
-    number character varying NOT NULL
+    number character varying NOT NULL,
+    date_responded date,
+    outcome_id integer,
+    refusal_reason_id integer,
+    exemption_id integer
 );
 
 
@@ -398,6 +437,13 @@ ALTER TABLE ONLY case_attachments ALTER COLUMN id SET DEFAULT nextval('case_atta
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY case_closure_metadata ALTER COLUMN id SET DEFAULT nextval('case_closure_metadata_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY case_number_counters ALTER COLUMN id SET DEFAULT nextval('case_number_counters_id_seq'::regclass);
 
 
@@ -458,6 +504,14 @@ ALTER TABLE ONLY assignments
 
 ALTER TABLE ONLY case_attachments
     ADD CONSTRAINT case_attachments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: case_closure_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY case_closure_metadata
+    ADD CONSTRAINT case_closure_metadata_pkey PRIMARY KEY (id);
 
 
 --
@@ -663,6 +717,8 @@ INSERT INTO schema_migrations (version) VALUES
 ('20170128230814'),
 ('20170208133053'),
 ('20170222171317'),
-('20170223130158');
+('20170223130158'),
+('20170303140119'),
+('20170306093700');
 
 

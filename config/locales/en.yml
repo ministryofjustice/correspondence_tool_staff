@@ -218,6 +218,10 @@ en:
       success: Response confirmed. The case is now with DACU.
     update:
       case_updated: Case updated
+    close:
+      page_heading: Close case
+      close_date: Date send to requester
+      date_example: For example, 30 1 2017
 
   feedback:
     error_html: |
