@@ -20,8 +20,9 @@ module PageObjects
           element :requester_type, '.case-sidebar__data--contact .requester-type'
           element :email, '.case-sidebar__data--contact .email'
           element :postal_address, '.case-sidebar__data--contact .postal-address'
-          element :actions, '.actions .case-sidebar__data'
-          element :mark_as_sent_button, 'a:contains("Mark response as sent")'
+          section :actions, '.actions .case-sidebar__data' do
+            element :mark_as_sent, '#action--mark-response-as-sent'
+          end
         end
 
         section :case_heading, '.case-heading' do

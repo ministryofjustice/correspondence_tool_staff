@@ -2,6 +2,9 @@
 if($(".request--response-details").length) {
     $(".request--response-details").remove();
 }
+if($("#action--mark-response-as-sent").length) {
+    $("#action--mark-response-as-sent").remove();
+}
 <% else %>
 if($(".request--response-details").length) {
     $("#case_response_<%= @attachment.id %>").remove();

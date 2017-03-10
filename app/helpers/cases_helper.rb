@@ -8,20 +8,21 @@ module CasesHelper
     case event
     when :assign_responder
       link_to I18n.t('common.case.assign'),
-          new_case_assignment_path(@case),
-          class: 'button'
+              new_case_assignment_path(@case),
+              class: 'button'
     when :add_responses
       link_to t('common.case.upload_response'),
-          new_response_upload_case_path(@case),
-          class: 'button'
+              new_response_upload_case_path(@case),
+              class: 'button'
     when :respond
       link_to t('common.case.respond'),
-          respond_case_path(@case),
-          class: 'button'
+              respond_case_path(@case),
+              id: 'action--mark-response-as-sent',
+              class: 'button'
     when :close
       link_to I18n.t('common.case.close'),
-          close_case_path(@case),
-          class: 'button', method: :get
+              close_case_path(@case),
+              class: 'button', method: :get
     end
   end
 

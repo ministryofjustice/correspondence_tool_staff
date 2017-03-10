@@ -52,6 +52,7 @@ feature 'removing a response from response details' do
           cases_show_page.wait_until_response_details_invisible
           expect(cases_show_page).not_to have_response_details
           expect(attachment_object).to have_received(:delete)
+          expect(cases_show_page.sidebar.actions).not_to have_mark_as_sent
         end
       end
 

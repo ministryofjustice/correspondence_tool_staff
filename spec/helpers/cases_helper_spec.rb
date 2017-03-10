@@ -49,7 +49,7 @@ href=\"/cases/#{@case.id}/new_response_upload\">Upload response</a>"
       it 'generates HTML that links to the upload response page' do
         @case = create(:case_with_response)
         expect(action_button_for(:respond)).to eq(
-"<a class=\"button\" \
+"<a id=\"action--mark-response-as-sent\" class=\"button\" \
 href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
           )
       end
