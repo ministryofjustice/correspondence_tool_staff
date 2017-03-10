@@ -33,7 +33,7 @@ module CaseClosure
 
       RefusalReason.find_or_create_by!(
         subtype: nil,
-        name: '(s14(2)) - Reqpeated request',
+        name: '(s14(2)) - Repeated request',
         abbreviation: 'repeat',
         sequence_id: 140)
 
@@ -45,7 +45,7 @@ module CaseClosure
 
       exemption = RefusalReason.find_or_create_by!(
         subtype: nil,
-        name: 'Expemption applied',
+        name: 'Exemption applied',
         abbreviation: 'exempt',
         sequence_id: 160)
 
