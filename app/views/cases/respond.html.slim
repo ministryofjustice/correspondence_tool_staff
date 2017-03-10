@@ -13,3 +13,4 @@
 .grid-row
   .column-two-thirds
     = link_to t('common.case.respond'), confirm_respond_case_path(@case), class: 'button', method: :patch
+    = link_to "Return to case detail", case_path(@case.id), class:'button-secondary button-left-spacing'
