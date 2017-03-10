@@ -69,6 +69,8 @@ feature 'viewing response details' do
         expect(cases_show_page).to have_response_details
         expect(cases_show_page.response_details.responder)
           .to have_content(drafter.full_name)
+        expect(cases_show_page.response_details.date_responded)
+          .to have_content(closed_case.date_responded.strftime('%e %b %Y'))
       end
     end
 
@@ -93,6 +95,7 @@ feature 'viewing response details' do
         cases_show_page.load(id: accepted_case.id)
         expect(cases_show_page).to have_response_details
         expect(cases_show_page.response_details).not_to have_responder
+        expect(cases_show_page.response_details).not_to have_date_responded
       end
     end
   end

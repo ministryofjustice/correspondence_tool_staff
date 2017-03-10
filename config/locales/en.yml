@@ -149,6 +149,7 @@ en:
       actions: Actions
       assign: Assign to a responder
       close: Close case
+      date_responded: Date sent to requester
       download_link_html: |
         Download <span class="visuallyhidden">file %{filename}.</span>
       email: "Requesters email address: "

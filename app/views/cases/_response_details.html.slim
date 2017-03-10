@@ -28,6 +28,13 @@
         - if case_details.responded? || case_details.closed?
           tr
             th
-              = t('common.case.responder', count: case_details.attachments.count)
+              = t('common.case.responder')
             td#request--responder
               = case_details.transitions.responded.last.assignee.full_name
+        - if case_details.closed?
+          tr
+            th
+              = t('common.case.date_responded')
+            td#request--date-responded
+              = l case_details.date_responded
+

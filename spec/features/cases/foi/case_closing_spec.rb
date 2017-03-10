@@ -2,7 +2,7 @@ require 'rails_helper'
 require File.join(Rails.root, 'db', 'case_closure_metadata_seeder')
 
 feature 'Closing a case' do
-  given(:kase)        { create(:responded_case) }
+  given(:kase) { create(:responded_case) }
 
   background do
     kase
@@ -37,6 +37,11 @@ feature 'Closing a case' do
       expect(cases_show_page.sidebar.status.text).to eq 'Case closed'
       expect(cases_show_page.sidebar.actions).not_to have_link('Close case')
       expect(cases_show_page.sidebar.actions.text).to eq 'No actions available'
+
+      expect(cases_show_page.response_details.date_responded.text)
+        .to eq 2.days.ago.strftime('%e %b %Y').strip
+      expect(cases_show_page.response_details.outcome.text)
+        .to eq 'Granted in full'
     end
   end
 
@@ -60,6 +65,11 @@ feature 'Closing a case' do
       expect(cases_show_page.sidebar.status.text).to eq 'Case closed'
       expect(cases_show_page.sidebar.actions).not_to have_link('Close case')
       expect(cases_show_page.sidebar.actions.text).to eq 'No actions available'
+
+      expect(cases_show_page.response_details.date_responded.text)
+        .to eq 2.days.ago.strftime('%e %b %Y').strip
+      expect(cases_show_page.response_details.outcome.text)
+        .to eq 'Refused fully'
     end
   end
 

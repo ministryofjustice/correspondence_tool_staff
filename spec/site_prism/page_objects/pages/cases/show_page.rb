@@ -35,6 +35,7 @@ module PageObjects
             element :remove,   :xpath, '*/a[contains(.,"Remove")]'
           end
           element :responder, '#request--responder'
+          element :date_responded, '#request--date-responded'
         end
       end
     end
