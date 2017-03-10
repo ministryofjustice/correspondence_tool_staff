@@ -212,6 +212,20 @@ RSpec.describe Case, type: :model do
   end
 
 
+  describe '#has_ncnd_exemption?' do
+    it 'returns true if one of the exemptions is ncnd' do
+      kase = create :closed_case, :with_ncnd_exemption
+      kase.exemptions << create(:exemption)
+      expect(kase.has_ncnd_exemption?).to be true
+    end
+
+    it 'returns false if none of the exemptions are ncnd' do
+      kase = create :closed_case, :without_ncnd_exemption
+      kase.exemptions << create(:exemption)
+      expect(kase.has_ncnd_exemption?).to be false
+    end
+  end
+
 
   context 'preparing_for_close' do
     describe '#prepared_for_close?' do
@@ -234,75 +248,6 @@ RSpec.describe Case, type: :model do
       end
     end
 
-    context 'preparing for close validations' do
-
-      let(:kase) { create :case }
-
-      context 'when closed / preparing for closed' do
-
-        before(:each) { kase.prepare_for_close }
-
-        describe 'date responded validation' do
-          it 'errors if date_responded blank' do
-            expect(kase).not_to be_valid
-            expect(kase.errors[:date_responded]).to eq(["can't be blank"])
-          end
-
-          it 'errors if date_responded in the future' do
-            kase.date_responded = 3.days.from_now
-            expect(kase).not_to be_valid
-            expect(kase.errors[:date_responded]).to eq(["can't be in the future"])
-          end
-        end
-
-        describe 'outcome validations' do
-          it 'errors if not present' do
-            expect(kase).not_to be_valid
-            expect(kase.errors[:outcome]).to eq(["can't be blank"])
-          end
-        end
-
-        describe 'refusal reason validations' do
-
-          before(:all) do
-            @outcome1 = create :outcome, :requires_refusal_reason
-            @outcome2 = create :outcome
-            @reason = create :refusal_reason
-          end
-
-          after(:all) { CaseClosure::Metadatum.delete_all }
-
-          context 'outcome requires refusal reason' do
-            it 'errors if refusal reason not present' do
-              kase = build :case, outcome: @outcome1, date_responded: 3.days.ago
-              kase.prepare_for_close
-              expect(kase).not_to be_valid
-              expect(kase.errors[:refusal_reason]).to include('must be present for the specified outcome')
-            end
-
-            it 'does not error if refusal reason present' do
-              kase = build :case, outcome: @outcome1, refusal_reason: @reason, date_responded: 3.days.ago
-              kase.prepare_for_close
-              expect(kase).to be_valid
-            end
-          end
-
-          context 'outcome does not require refusal reason' do
-            it 'errors if refusal reason present' do
-              kase = build :case, outcome: @outcome2, refusal_reason: @reason, date_responded: 3.days.ago
-              kase.prepare_for_close
-              expect(kase).not_to be_valid
-              expect(kase.errors[:refusal_reason]).to include('cannot be present for the specified outcome')
-            end
-
-            it 'does not error if refusal reason absent' do
-              kase = build :case, outcome: @outcome2
-              expect(kase).to be_valid
-            end
-
-          end
-        end
-      end
 
       context 'when not closed / prepared for closed' do
         context 'date_responded' do
@@ -325,10 +270,26 @@ RSpec.describe Case, type: :model do
             expect(kase).to be_valid
           end
         end
-
-
       end
+    end
 
+  describe '#requires_exemptions' do
+    it 'returns true when there is a refusal reason that requires an exemption' do
+      kase = build :closed_case, :requires_exemption
+      expect(kase.refusal_reason.requires_exemption?).to be true
+      expect(kase.requires_exemption?).to be true
+    end
+
+    it 'returns false when there is a refusal reason that does not require an exemption' do
+      kase = build :closed_case, :without_exemption
+      expect(kase.refusal_reason.requires_exemption?).to be false
+      expect(kase.requires_exemption?).to be false
+    end
+
+    it 'returns false if there is no refusal reason' do
+      kase = build :case
+      expect(kase.refusal_reason).to be_nil
+      expect(kase.requires_exemption?).to be false
     end
   end
 

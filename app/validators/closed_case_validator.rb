@@ -5,6 +5,7 @@ class ClosedCaseValidator < ActiveModel::Validator
       validate_date_responded(rec)
       validate_outcome(rec)
       validate_refusal_reason(rec)
+      validate_exemptions(rec)
     end
   end
 
@@ -35,6 +36,29 @@ class ClosedCaseValidator < ActiveModel::Validator
       end
     end
   end
+
+  def validate_exemptions(rec)
+    validate_exemption_required(rec)
+    validate_ncnd_has_at_least_one_other_exemption(rec)
+  end
+
+  def validate_exemption_required(rec)
+    if rec.requires_exemption?
+      rec.errors.add(:exemptions, 'At least one exemption must be selected for this refusal reason') if rec.exemptions.empty?
+    else
+      rec.errors.add(:exemptions, 'You cannot specify exemptions for this refusal reason') if rec.exemptions.any?
+    end
+  end
+
+  def validate_ncnd_has_at_least_one_other_exemption(rec)
+    if rec.has_ncnd_exemption?
+      non_ncnds = rec.exemptions.where.not(subtype: 'ncnd')
+      if non_ncnds.empty?
+        rec.errors.add(:exemptions, 'You must specify at least one other exemption if you select NCND') if rec.exemptions.any?
+      end
+    end
+  end
+
 end
 
 

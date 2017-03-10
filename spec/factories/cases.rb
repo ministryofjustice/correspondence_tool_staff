@@ -75,6 +75,9 @@ FactoryGirl.define do
     end
 
     factory :responded_case, parent: :case_with_response do
+
+      date_responded Date.today
+
       after(:create) do |kase, _evaluator|
         assignment = Assignment.find_by(case_id: kase.id)
 
@@ -93,6 +96,31 @@ FactoryGirl.define do
                case_id: kase.id,
                user_id: assignment.assignee.id,
                assignee_id: assignment.assignee.id)
+
+      trait :requires_exemption do
+        outcome { create :outcome, :requires_refusal_reason }
+        refusal_reason { create(:refusal_reason, :requires_exemption) }
+      end
+
+      trait :without_exemption do
+        outcome { create :outcome, :requires_refusal_reason }
+        refusal_reason { create(:refusal_reason) }
+      end
+
+      trait :with_ncnd_exemption do
+        outcome { create :outcome, :requires_refusal_reason }
+        refusal_reason { create(:refusal_reason, :requires_exemption) }
+        exemptions { [create(:exemption, :ncnd)] }
+      end
+
+      trait :without_ncnd_exemption do
+        outcome { create :outcome, :requires_refusal_reason }
+        refusal_reason { create(:refusal_reason, :requires_exemption) }
+        exemptions { [create(:exemption), create(:exemption)] }
+      end
+
+      after(:create) do |kase, _evaluator|
+        create(:case_transition_close, case_id: kase.id)
       end
     end
   end

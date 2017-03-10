@@ -227,6 +227,15 @@ class Case < ApplicationRecord
     @preparing_for_close == true
   end
 
+  def requires_exemption?
+    refusal_reason.present? && refusal_reason.requires_exemption?
+  end
+
+  def has_ncnd_exemption?
+    exemptions.select{ |ex| ex.ncnd? }.any?
+  end
+
+
   private
 
   def set_deadlines

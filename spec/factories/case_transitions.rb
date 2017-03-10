@@ -61,7 +61,7 @@ FactoryGirl.define do
       event 'respond'
     end
 
-    trait :close do
+    factory :case_transition_close do
       to_state 'closed'
       event 'close'
     end

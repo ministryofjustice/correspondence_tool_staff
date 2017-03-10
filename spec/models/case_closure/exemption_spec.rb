@@ -53,6 +53,16 @@ module CaseClosure
           expect(Exemption.qualified).to eq([@qual_1, @qual_2])
         end
       end
+
+      describe 'ncnd?' do
+        it 'returns true for ncnds' do
+          expect(@ncnd_1.ncnd?).to be true
+        end
+
+        it 'returns false for other subtypes' do
+          expect(@qual_1.ncnd?).to be false
+        end
+      end
     end
 
   end

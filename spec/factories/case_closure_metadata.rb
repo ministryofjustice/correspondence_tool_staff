@@ -51,6 +51,10 @@ FactoryGirl.define do
       subtype nil
       sequence(:name) { |n| "RefusalReason #{n}" }
       sequence(:sequence_id) { |n| 100 + n }
+
+      trait :requires_exemption do
+        requires_exemption true
+      end
     end
   end
 

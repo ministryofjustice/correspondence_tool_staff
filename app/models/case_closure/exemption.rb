@@ -23,5 +23,9 @@ module CaseClosure
     scope :absolute, -> { where(subtype: 'absolute') }
     scope :qualified, -> { where(subtype: 'qualified') }
 
+    def ncnd?
+      subtype == 'ncnd'
+    end
+
   end
 end
