@@ -90,6 +90,7 @@ FactoryGirl.define do
 
     factory :closed_case, parent: :responded_case do
       date_responded 1.day.ago
+      outcome { create :outcome }
 
       after(:create) do |kase, _evaluator|
         assignment = Assignment.find_by(case_id: kase.id)

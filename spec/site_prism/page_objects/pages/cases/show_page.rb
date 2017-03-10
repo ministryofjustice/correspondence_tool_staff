@@ -36,6 +36,7 @@ module PageObjects
           end
           element :responder, '#request--responder'
           element :date_responded, '#request--date-responded'
+          element :outcome, '#request--outcome'
         end
       end
     end
