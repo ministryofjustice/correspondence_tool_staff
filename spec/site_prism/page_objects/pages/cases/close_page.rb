@@ -9,6 +9,8 @@ module PageObjects
         element :date_responded_year, '#case_date_responded_yyyy'
 
         element :outcome_radio_button_fully_granted, 'label[for="case_outcome_name_granted_in_full"]'
+        element :outcome_radio_button_refused_fully, 'label[for="case_outcome_name_refused_fully"]'
+        element :refusal_reason_button_info_not_held, 'label[for="case_refusal_reason_name_information_not_held"]'
         element :submit_button, '.button'
 
         def fill_in_date_responded(date)

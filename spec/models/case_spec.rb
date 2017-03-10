@@ -249,29 +249,32 @@ RSpec.describe Case, type: :model do
     end
 
 
-      context 'when not closed / prepared for closed' do
-        context 'date_responded' do
-          it 'is valid when not present' do
-            expect(kase.date_responded).to be_blank
-            expect(kase).to be_valid
-          end
-        end
+    context 'when not closed / prepared for closed' do
 
-        context 'outcome' do
-          it 'is valid when not present' do
-            expect(kase.outcome).to be_nil
-            expect(kase).to be_valid
-          end
-        end
+      let(:kase) { create :case }
 
-        context 'refusal_reason' do
-          it 'is valid when not present' do
-            expect(kase.refusal_reason).to be_blank
-            expect(kase).to be_valid
-          end
+      context 'date_responded' do
+        it 'is valid when not present' do
+          expect(kase.date_responded).to be_blank
+          expect(kase).to be_valid
+        end
+      end
+
+      context 'outcome' do
+        it 'is valid when not present' do
+          expect(kase.outcome).to be_nil
+          expect(kase).to be_valid
+        end
+      end
+
+      context 'refusal_reason' do
+        it 'is valid when not present' do
+          expect(kase.refusal_reason).to be_blank
+          expect(kase).to be_valid
         end
       end
     end
+  end
 
   describe '#requires_exemptions' do
     it 'returns true when there is a refusal reason that requires an exemption' do
