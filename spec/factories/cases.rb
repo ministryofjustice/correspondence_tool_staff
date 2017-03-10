@@ -96,6 +96,7 @@ FactoryGirl.define do
                case_id: kase.id,
                user_id: assignment.assignee.id,
                assignee_id: assignment.assignee.id)
+      end
 
       trait :requires_exemption do
         outcome { create :outcome, :requires_refusal_reason }
@@ -120,8 +121,9 @@ FactoryGirl.define do
       end
 
       after(:create) do |kase, _evaluator|
-        create(:case_transition_close, case_id: kase.id)
+        create(:case_transition, :close, case_id: kase.id)
       end
     end
   end
+
 end
