@@ -1,5 +1,4 @@
 class CasesController < ApplicationController
-
   before_action :set_case,
     only: [
       :close, :edit, :new_response_upload, :show, :update,
@@ -43,7 +42,6 @@ class CasesController < ApplicationController
     else
       set_permitted_events
       @accepted_now = params[:accepted_now]
-      @include_uploaded_files = include_uploaded_files?
       render :show
     end
   end
@@ -205,9 +203,5 @@ class CasesController < ApplicationController
     CASE_UPLOADS_S3_BUCKET.objects(prefix: prefix).each do |object|
       object.delete
     end
-  end
-
-  def include_uploaded_files?
-    policy(@case).can_add_attachment?
   end
 end

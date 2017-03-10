@@ -119,6 +119,18 @@
   display: inline-block;
 }
 
-table#uploaded-files {
+table#response-details {
   margin-bottom: $gutter;
+}
+
+table#response-details th {
+  vertical-align: top;
+}
+
+table#request--responses tr:first-child td {
+  padding-top: 0px;
+}
+
+table#request--responses td {
+  border-bottom: none;
 }

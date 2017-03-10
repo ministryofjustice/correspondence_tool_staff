@@ -1,0 +1,33 @@
+- if !case_details.attachments.response.empty? \
+     && (policy(case_details).can_add_attachment? \
+         || policy(case_details).can_close_case? \
+         || case_details.closed?)
+  .request--response-details
+    h2.request--heading
+      = t('common.case.response_details')
+    table#response-details
+      colgroup
+        col
+        col
+        col
+      tbody
+        tr
+          th
+            = t('common.case.responses', count: case_details.attachments.count)
+          td
+            table#request--responses
+              - case_details.attachments.sort_by(&:filename).each do |ca|
+                tr id="case_response_#{ca.id}"
+                  td aria-label="#{t('common.case.filename')}"
+                    = ca.filename
+                  td.request--responses--actions aria-label="#{t('common.case.actions')}"
+                    = attachment_download_link(case_details, ca)
+                    - if policy(case_details).can_remove_attachment?
+                      = ' | '
+                      = attachment_remove_link(case_details, ca)
+        - if case_details.responded? || case_details.closed?
+          tr
+            th
+              = t('common.case.responder', count: case_details.attachments.count)
+            td#request--responder
+              = case_details.transitions.responded.last.assignee.full_name

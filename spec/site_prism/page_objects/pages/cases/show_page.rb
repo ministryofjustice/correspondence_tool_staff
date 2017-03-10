@@ -28,14 +28,13 @@ module PageObjects
           element :case_number, '.case-heading--secondary'
         end
 
-        section :uploaded_files, 'table#uploaded-files' do
-          sections :files, 'tr.case_attachment_row' do
-            element :filename, 'td[aria-label="File name"]'
-            # XPath allows us to use contains(), while the CSS selector :contains()
-            # breaks in tests with JS enabled (PhantomJS not supporting CSS3??)
+        section :response_details, '.request--response-details' do
+          sections :responses, '#request--responses tr' do
+            element :filename, '[aria-label="File name"]'
             element :download, :xpath, '*/a[contains(.,"Download")]'
             element :remove,   :xpath, '*/a[contains(.,"Remove")]'
           end
+          element :responder, '#request--responder'
         end
       end
     end

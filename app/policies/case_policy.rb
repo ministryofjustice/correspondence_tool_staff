@@ -23,6 +23,13 @@ class CasePolicy
     self.case.awaiting_responder? && self.case.drafter == user
   end
 
+  def can_remove_attachment?
+    case self.case.current_state
+    when 'drafting' then self.case.drafter == user
+    else false
+    end
+  end
+
   def can_respond?
     self.case.drafting? &&
       self.case.response_attachments.any? && self.case.drafter == user
@@ -33,7 +40,6 @@ class CasePolicy
   end
 
   def can_view_case_details?
-
     user.assigner? ||
         self.case.drafter.present? && self.case.drafter == user
   end

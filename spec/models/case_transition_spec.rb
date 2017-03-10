@@ -16,18 +16,28 @@
 require 'rails_helper'
 
 RSpec.describe CaseTransition, type: :model do
+  let(:kase) { create(:case) }
+  let(:assign_responder_transition) do
+    create :case_transition_assign_responder, case_id: kase.id
+  end
+  it 'has a user association' do
+    expect(assign_responder_transition.user)
+      .to eq User.find(assign_responder_transition.user_id)
+  end
+
+  it 'has a user association' do
+    expect(assign_responder_transition.assignee)
+      .to eq User.find(assign_responder_transition.assignee_id)
+  end
 
   describe 'after_destroy' do
-
-    let(:kase)          { create(:case) }
-    
     let(:case_assigned) do
       create(
         :case_transition_assign_responder,
         case_id: kase.id
       )
     end
-    
+
     let(:assignment_accepted) do
       create(
         :case_transition_accept_responder_assignment,
@@ -46,6 +56,21 @@ RSpec.describe CaseTransition, type: :model do
       expect(assignment_accepted.reload.most_recent).to eq true
       assignment_accepted.destroy
       expect(case_assigned.reload.most_recent).to eq true
+    end
+  end
+
+  describe 'responded scope' do
+    let!(:responded_transition) do
+      create :case_transition_respond, case_id: kase.id
+    end
+    let!(:add_responses_transition) do
+      create :case_transition_add_responses, case_id: kase.id
+    end
+
+    it 'limits scope to "responded" transitions' do
+      expect(CaseTransition.all.count).to eq 2
+      expect(CaseTransition.all.responded.count).to eq 1
+      expect(CaseTransition.all.responded.last).to eq responded_transition
     end
   end
 end

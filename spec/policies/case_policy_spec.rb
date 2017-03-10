@@ -127,6 +127,47 @@ describe CasePolicy do
 
   end
 
+  permissions :can_remove_attachment? do
+    context 'case is still being drafted' do
+      let(:case_with_response) do
+        create :case_with_response, drafter: drafter, assigner: assigner
+      end
+
+      it 'grants if current_user is the assigned drafter' do
+        expect(subject).to permit(drafter, case_with_response)
+      end
+
+      it 'refuses if current_user is another drafter' do
+        expect(subject).not_to permit(another_drafter, case_with_response)
+      end
+
+      it 'refuses if current_user is an assigner' do
+        expect(subject).not_to permit(assigner, case_with_response)
+      end
+
+      it 'refuses if current_user is an approver' do
+        expect(subject).not_to permit(approver, case_with_response)
+      end
+    end
+
+    context 'case has been marked as responded' do
+      let(:responded_case) do
+        create :responded_case, drafter: drafter, assigner: assigner
+      end
+
+      it 'refuses if current_user is a drafter' do
+        expect(subject).not_to permit(another_drafter, responded_case)
+      end
+
+      it 'refuses if current_user is an assigner' do
+        expect(subject).not_to permit(assigner, responded_case)
+      end
+
+      it 'refuses if current_user is an approver' do
+        expect(subject).not_to permit(approver, responded_case)
+      end
+    end
+  end
 
   describe 'case scope policy' do
     let(:unassigned_case) { create(:case)          }

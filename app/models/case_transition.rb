@@ -28,6 +28,11 @@ class CaseTransition < ActiveRecord::Base
     assignment_id: :integer,
     filenames:   [:string, array: true, default: []]
 
+  belongs_to :user
+  belongs_to :assignee, class_name: User
+
+  scope :responded, -> { where to_state: 'responded' }
+
   private
 
   def update_most_recent

@@ -59,11 +59,11 @@ FactoryGirl.define do
 
     factory :case_with_response, parent: :accepted_case do
       transient do
-        response { build(:correspondence_response, type: 'response') }
+        responses { [build(:correspondence_response, type: 'response')] }
       end
 
       after(:create) do |kase, evaluator|
-        kase.attachments << evaluator.response
+        kase.attachments.push(*evaluator.responses)
 
         create :case_transition_add_responses,
                case_id: kase.id
@@ -76,6 +76,17 @@ FactoryGirl.define do
         assignment = Assignment.find_by(case_id: kase.id)
 
         create(:case_transition_respond,
+               case_id: kase.id,
+               user_id: assignment.assignee.id,
+               assignee_id: assignment.assignee.id)
+      end
+    end
+
+    factory :closed_case, parent: :responded_case do
+      after(:create) do |kase, _evaluator|
+        assignment = Assignment.find_by(case_id: kase.id)
+
+        create(:case_transition, :close,
                case_id: kase.id,
                user_id: assignment.assignee.id,
                assignee_id: assignment.assignee.id)

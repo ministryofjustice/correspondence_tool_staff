@@ -82,13 +82,27 @@ RSpec.describe CaseAttachmentsController, type: :controller do
       it_behaves_like 'unauthorized user'
     end
 
-    context 'as an assigner' do
+    context 'as an assigner with a case that is still open' do
       before { sign_in assigner }
 
       it_behaves_like 'unauthorized user'
     end
 
-    context 'as a drafter' do
+    context 'as an assigner with a case that is still open' do
+      before { sign_in assigner }
+
+      it_behaves_like 'unauthorized user'
+    end
+
+    context 'as an assigner with a case that has been marked as responded' do
+      let(:kase) { create(:responded_case) }
+
+      before { sign_in assigner }
+
+      it_behaves_like 'unauthorized user'
+    end
+
+    context 'as a drafter who is still responding to a case' do
       before { sign_in drafter }
 
       it 'deletes the attachment from the case' do
@@ -97,5 +111,12 @@ RSpec.describe CaseAttachmentsController, type: :controller do
       end
     end
 
+    context 'as a drafter who has marked the case as responded' do
+      let(:kase) { create(:responded_case) }
+
+      before { sign_in drafter }
+
+      it_behaves_like 'unauthorized user'
+    end
   end
 end

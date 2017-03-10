@@ -1,5 +1,9 @@
-<% if @case.attachments.count == 0 %>
-  $("#uploaded-files").remove();
+<% if @case.drafting? && @case.attachments.response.empty? %>
+if($(".request--response-details").length) {
+    $(".request--response-details").remove();
+}
 <% else %>
-  $("tr#case_attachment_<%= @attachment.id %>").remove();
-<% end%>
+if($(".request--response-details").length) {
+    $("#case_response_<%= @attachment.id %>").remove();
+}
+<% end %>

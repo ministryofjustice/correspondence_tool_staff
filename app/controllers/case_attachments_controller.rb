@@ -7,7 +7,7 @@ class CaseAttachmentsController < ApplicationController
   end
 
   def destroy
-    authorize @case, :can_add_attachment?
+    authorize @case, :can_remove_attachment?
 
     @attachment.destroy!
     respond_to do |format|

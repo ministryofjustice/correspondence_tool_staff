@@ -60,5 +60,10 @@ FactoryGirl.define do
       to_state 'responded'
       event 'respond'
     end
+
+    trait :close do
+      to_state 'closed'
+      event 'close'
+    end
   end
 end

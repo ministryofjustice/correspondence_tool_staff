@@ -24,4 +24,20 @@ module CasesHelper
           class: 'button', method: :get
     end
   end
+
+  def attachment_download_link(kase, attachment)
+    link_to t('common.case.download_link_html', filename: attachment.filename),
+            download_case_case_attachment_path(kase, attachment)
+
+  end
+
+  def attachment_remove_link(kase, attachment)
+    link_to t('common.case.remove_link_html', filename: attachment.filename),
+            case_case_attachment_path(kase, attachment),
+            method: :delete,
+            remote: true,
+            data: {
+              confirm: "Are you sure you want to remove #{attachment.filename}?"
+            }
+  end
 end
