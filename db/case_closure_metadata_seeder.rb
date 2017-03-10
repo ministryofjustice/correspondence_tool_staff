@@ -1,3 +1,5 @@
+
+#rubocop:disable Metrics/MethodLength
 module CaseClosure
   class MetadataSeeder
 
@@ -207,3 +209,4 @@ module CaseClosure
     end
   end
 end
+#rubocop:enable Metrics/MethodLength
