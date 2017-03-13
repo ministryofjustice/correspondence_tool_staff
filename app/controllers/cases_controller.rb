@@ -23,7 +23,7 @@ class CasesController < ApplicationController
 
     @case = Case.new(create_foi_params)
     if @case.save
-      flash[:notice] = t('.case_created')
+      flash[:creating_case] = true
       redirect_to new_case_assignment_path @case
     else
       render :new

@@ -72,9 +72,10 @@ en:
       default_date: "%e %b %Y"
 
   button:
+    assign: Assign case
     continue: Continue
     confirm: Confirm
-    assign: Create and assign case
+    create_and_assign: Create and assign case
     feedback: Send feedback
 
   helpers:
@@ -185,9 +186,11 @@ en:
 
   assignments:
     new:
-      new_assignment: Create and assign case
+      new_assignment: Assign case
+      new_assignment_while_creating: Create and assign case
     create:
       case_assigned: Case successfully assigned
+      case_created: Case successfully created
 
   cases:
     index:
@@ -210,8 +213,6 @@ en:
       new_case: New case
       received_date: Date received
       received_date_copy: For example. 31 01 2017
-    create:
-      case_created: Case successfully created
     new_response_upload:
       upload_response: 'Upload response'
     respond:

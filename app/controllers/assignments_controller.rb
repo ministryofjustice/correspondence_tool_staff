@@ -7,6 +7,8 @@ class AssignmentsController < ApplicationController
   def new
     authorize @case, :can_assign_case?
     @assignment = @case.assignments.new
+    @creating_case = flash[:creating_case]
+    flash.keep :creating_case
   end
 
   def create
@@ -16,7 +18,7 @@ class AssignmentsController < ApplicationController
       assignment_params.merge(assignment_type: 'drafter', assigner: current_user)
     )
     if @assignment.valid?
-      flash[:notice] = t('.case_assigned')
+      flash[:notice] = flash[:creating_case] ? t('.case_created') : t('.case_assigned')
       AssignmentMailer.new_assignment(@assignment).deliver_later
       redirect_to cases_path
     else
@@ -24,7 +26,7 @@ class AssignmentsController < ApplicationController
     end
   end
 
-  def edit    
+  def edit
     if @assignment
       if already_accepted?
         redirect_to case_path @case, accepted_now: false

@@ -1,6 +1,6 @@
-= render partial: 'layouts/header', locals: {page_heading: t('.new_assignment')}
+= render partial: 'layouts/header', locals: {page_heading: page_heading(@creating_case)}
 
 = form_for [ @case, @assignment ] do |f|
 
   = f.collection_select :assignee_id, User.drafters, :id, :full_name
-  = f.submit t('button.assign'), {class: 'button'}
+  = f.submit assign_button_text(@creating_case), {class: 'button'}
