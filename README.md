@@ -26,7 +26,7 @@ $ rails db:create
 $ rails db:migrate
 $ rails db:seed
 $ rails users:demo_entries
-$ rails correspondence:demo_entries
+$ rails cases:demo_entries
 ```
 
 ### Emails

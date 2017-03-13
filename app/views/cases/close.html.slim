@@ -1,4 +1,5 @@
-= render partial: 'error_summary', locals: {errors: @case.errors}
+= GovukElementsErrorsHelper.error_summary @case,
+  "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 .grid-row
   section.case-main

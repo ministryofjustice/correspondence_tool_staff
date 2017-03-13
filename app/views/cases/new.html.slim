@@ -1,7 +1,5 @@
-/= GovukElementsErrorsHelper.error_summary @case,
-/  "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
-
-= render partial: 'error_summary', locals: {errors: @case.errors}
+= GovukElementsErrorsHelper.error_summary @case,
+  "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 = render partial: 'layouts/header', locals: {page_heading: t('.new_case')}
 

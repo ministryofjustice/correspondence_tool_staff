@@ -128,7 +128,7 @@ GEM
       activesupport (>= 4.1.0)
     gov_uk_date_fields (1.2.3)
       rails (>= 4.0)
-    govuk_elements_form_builder (0.0.2)
+    govuk_elements_form_builder (0.0.3)
       rails (>= 4.2)
     govuk_elements_rails (2.2.1)
       govuk_frontend_toolkit (>= 5.0.2)
