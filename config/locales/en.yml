@@ -165,6 +165,7 @@ en:
       no_actions: No actions available
       postal_address: "Requesters postal address: "
       received_date: Date received
+      reason_for_refusal: Reason for refusal
       remove_link_html: |
         Remove <span class="visuallyhidden">file %{filename}</span>
       responder: Responder

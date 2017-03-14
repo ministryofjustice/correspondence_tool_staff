@@ -48,6 +48,7 @@ feature 'Closing a case' do
         .to eq '16 working days'
       expect(cases_show_page.response_details.outcome.text)
         .to eq 'Granted in full'
+      expect(cases_show_page.response_details).not_to have_reason_for_refusal
     end
 
     scenario 'the case is responded-to late', js: true do
@@ -87,14 +88,14 @@ feature 'Closing a case' do
 
       expect(cases_show_page.response_details.date_responded.text)
         .to eq 2.days.ago.strftime('%e %b %Y').strip
-      expect(cases_show_page.response_details.outcome.text)
-        .to eq 'Refused fully'
       expect(cases_show_page.response_details.timeliness.text)
         .to eq 'Answered in time'
       expect(cases_show_page.response_details.time_taken.text)
         .to eq '19 working days'
       expect(cases_show_page.response_details.outcome.text)
         .to eq 'Refused fully'
+      expect(cases_show_page.response_details.reason_for_refusal.text)
+        .to eq 'Information not held'
     end
   end
 end
