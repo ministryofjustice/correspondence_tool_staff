@@ -123,8 +123,9 @@ FactoryGirl.define do
         exemptions { [create(:exemption), create(:exemption)] }
       end
 
-      after(:create) do |kase, _evaluator|
-        create(:case_transition, :close, case_id: kase.id)
+      trait :late do
+        received_date 30.business_days.ago
+        date_responded 1.business_day.ago
       end
     end
   end

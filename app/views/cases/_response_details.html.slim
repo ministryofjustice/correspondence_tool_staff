@@ -42,3 +42,8 @@
               = t('common.case.outcome')
             td#request--outcome
               = case_details.outcome.name
+          tr
+            th
+              = t('common.case.timeliness')
+            td#request--response-timeliness
+              = timeliness(case_details)

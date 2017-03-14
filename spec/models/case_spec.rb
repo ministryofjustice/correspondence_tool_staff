@@ -610,6 +610,40 @@ RSpec.describe Case, type: :model do
         expect(state_machine).not_to have_received(:close)
       end
     end
+
+    describe '#within_external_deadline?' do
+      let(:foi) { create :category, :foi }
+      let(:responded_case) do
+        create :responded_case,
+               category: foi,
+               received_date: days_taken.business_days.ago,
+               date_responded: Time.first_business_day(Date.today)
+      end
+
+      context 'the date responded is before the external deadline' do
+        let(:days_taken) { foi.external_time_limit - 1 }
+
+        it 'returns true' do
+          expect(responded_case.within_external_deadline?).to eq true
+        end
+      end
+
+      context 'the date responded is before on external deadline' do
+        let(:days_taken) { foi.external_time_limit }
+
+        it 'returns true' do
+          expect(responded_case.within_external_deadline?).to eq true
+        end
+      end
+
+      context 'the date responded is after the external deadline' do
+        let(:days_taken) { foi.external_time_limit + 1 }
+
+        it 'returns false' do
+          expect(responded_case.within_external_deadline?).to eq false
+        end
+      end
+    end
   end
 end
 

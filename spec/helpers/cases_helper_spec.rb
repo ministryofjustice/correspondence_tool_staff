@@ -55,4 +55,14 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
       end
     end
   end
+
+  describe '#timeliness' do
+    it 'returns correct string for answered in time' do
+      expect(timeliness(create :closed_case)).to eq 'Answered in time'
+    end
+
+    it 'returns correct string for answered late' do
+      expect(timeliness(create :closed_case, :late)).to eq 'Answered late'
+    end
+  end
 end

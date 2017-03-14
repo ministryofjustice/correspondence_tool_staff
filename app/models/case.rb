@@ -113,6 +113,10 @@ class Case < ApplicationRecord
     escalation_deadline.future? || escalation_deadline.today?
   end
 
+  def within_external_deadline?
+    date_responded <= external_deadline
+  end
+
   def state_machine
     @state_machine ||= ::CaseStateMachine.new(
       self,

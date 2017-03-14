@@ -148,6 +148,8 @@ en:
     greeting: Hello %{user}
     case:
       actions: Actions
+      answered_in_time: Answered in time
+      answered_late: Answered late
       assign: Assign to a responder
       close: Close case
       date_responded: Date sent to requester
@@ -173,6 +175,7 @@ en:
       request: "Request: "
       requester_type: "Type of requester "
       status: Status
+      timeliness: Timeliness
       upload_response: Upload response
       who_its_with: Who it's with
       respond: Mark response as sent

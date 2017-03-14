@@ -49,4 +49,12 @@ module CasesHelper
       ''
     end
   end
+
+  def timeliness(kase)
+    if kase.within_external_deadline?
+      t('common.case.answered_in_time')
+    else
+      t('common.case.answered_late')
+    end
+  end
 end

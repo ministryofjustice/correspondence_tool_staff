@@ -2,7 +2,8 @@ require 'rails_helper'
 require File.join(Rails.root, 'db', 'case_closure_metadata_seeder')
 
 feature 'Closing a case' do
-  given(:kase) { create(:responded_case) }
+  given(:kase) { create(:responded_case,
+                        received_date: 21.business_days.ago) }
 
   background do
     kase
@@ -17,9 +18,8 @@ feature 'Closing a case' do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-
   context 'fully granted' do
-    scenario 'A KILO has responded and an assigner closes the case', js:true do
+    before do
       visit cases_path
       expect(cases_page.case_list.last.status.text).to eq 'Waiting to be closed'
       click_link kase.number
@@ -27,9 +27,11 @@ feature 'Closing a case' do
       expect(cases_show_page.sidebar.actions).
         to have_link('Close case', href: close_case_path(kase))
       click_link 'Close case'
+    end
 
+    scenario 'A KILO has responded and an assigner closes the case', js:true do
       expect(cases_close_page).to have_content("Close case")
-      cases_close_page.fill_in_date_responded(2.days.ago)
+      cases_close_page.fill_in_date_responded(5.days.ago)
       cases_close_page.outcome_radio_button_fully_granted.click
       cases_close_page.submit_button.click
 
@@ -39,9 +41,22 @@ feature 'Closing a case' do
       expect(cases_show_page.sidebar.actions.text).to eq 'No actions available'
 
       expect(cases_show_page.response_details.date_responded.text)
-        .to eq 2.days.ago.strftime('%e %b %Y').strip
+        .to eq 5.days.ago.strftime('%e %b %Y').strip
       expect(cases_show_page.response_details.outcome.text)
         .to eq 'Granted in full'
+      expect(cases_show_page.response_details.timeliness.text)
+        .to eq 'Answered in time'
+    end
+
+    scenario 'the case is responded-to late', js: true do
+      cases_close_page.fill_in_date_responded(
+        21.business_days.after(kase.received_date)
+      )
+      cases_close_page.outcome_radio_button_fully_granted.click
+      cases_close_page.submit_button.click
+
+      expect(cases_show_page.response_details.timeliness.text)
+        .to eq 'Answered late'
     end
   end
 
@@ -70,8 +85,8 @@ feature 'Closing a case' do
         .to eq 2.days.ago.strftime('%e %b %Y').strip
       expect(cases_show_page.response_details.outcome.text)
         .to eq 'Refused fully'
+      expect(cases_show_page.response_details.timeliness.text)
+        .to eq 'Answered in time'
     end
   end
-
-
 end
