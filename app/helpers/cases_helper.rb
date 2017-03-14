@@ -57,4 +57,9 @@ module CasesHelper
       t('common.case.answered_late')
     end
   end
+
+  def time_taken(kase)
+    business_days = kase.received_date.business_days_until kase.date_responded
+    t('common.case.time_taken_result', count: business_days)
+  end
 end

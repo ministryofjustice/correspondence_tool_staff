@@ -89,7 +89,8 @@ FactoryGirl.define do
     end
 
     factory :closed_case, parent: :responded_case do
-      date_responded 1.day.ago
+      received_date 22.business_days.ago
+      date_responded 4.business_days.ago
       outcome { create :outcome }
 
       after(:create) do |kase, _evaluator|

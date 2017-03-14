@@ -65,4 +65,17 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
       expect(timeliness(create :closed_case, :late)).to eq 'Answered late'
     end
   end
+
+  describe '#time_taken' do
+    it 'returns the number of business days taken to respond to a case' do
+      expect(time_taken(create :closed_case))
+        .to eq '18 working days'
+    end
+
+    it 'uses singular "day" for 1 day' do
+      expect(time_taken(create :closed_case,
+                               date_responded: 21.business_days.ago))
+        .to eq '1 working day'
+    end
+  end
 end

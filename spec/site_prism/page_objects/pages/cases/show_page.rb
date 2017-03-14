@@ -39,6 +39,7 @@ module PageObjects
           element :date_responded, '#request--date-responded'
           element :outcome, '#request--outcome'
           element :timeliness, '#request--response-timeliness'
+          element :time_taken, '#request--response-time-taken'
         end
       end
     end

@@ -175,6 +175,10 @@ en:
       request: "Request: "
       requester_type: "Type of requester "
       status: Status
+      time_taken: Time taken
+      time_taken_result:
+        one: "%{count} working day"
+        other: "%{count} working days"
       timeliness: Timeliness
       upload_response: Upload response
       who_its_with: Who it's with
