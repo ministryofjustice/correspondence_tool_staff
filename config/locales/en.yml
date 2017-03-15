@@ -130,6 +130,7 @@ en:
       This case is being reviewed for sensitivity.
       Don't send out the response until <strong>%{escalation_deadline}</strong>.
     response_upload_error: Errors detected with uploaded files.
+    response_upload_blank?: Please select the file(s) you used in your response.
     respond_point_of_no_return_html: |
       <strong>Important</strong>
       <p>

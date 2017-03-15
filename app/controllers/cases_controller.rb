@@ -57,25 +57,35 @@ class CasesController < ApplicationController
   def upload_responses
     authorize @case, :can_add_attachment?
 
-    responses = params[:uploaded_files].reject(&:blank?).map do |uploads_key|
-      move_uploaded_response(uploads_key)
-      CaseAttachment.find_or_initialize_by(
-        type: 'response',
-        key: response_destination_key(uploads_key)
-      )
+    if params[:uploaded_files].blank?
+      flash.now[:alert] = t('alerts.response_upload_blank?')
+      render :new_response_upload
+
+    else
+      responses = params[:uploaded_files].reject(&:blank?).map do |uploads_key|
+        move_uploaded_response(uploads_key)
+        CaseAttachment.find_or_initialize_by(
+          type: 'response',
+          key: response_destination_key(uploads_key)
+        )
+      end
+
+      if responses.all?(&:valid?)
+        responses.select(&:persisted?).each(&:touch)
+        @case.add_responses(current_user.id, responses)
+        remove_leftover_upload_files
+        flash[:notice] = t('notices.response_uploaded')
+        redirect_to case_path
+
+      else
+        flash.now[:alert] = t('alerts.response_upload_error')
+        # @errors = attachments.reject(&:valid?).map { |a| a.errors.full_messages }.flatten
+        render :new_response_upload
+
+      end
+
     end
 
-    if responses.all?(&:valid?)
-      responses.select(&:persisted?).each(&:touch)
-      @case.add_responses(current_user.id, responses)
-      remove_leftover_upload_files
-      flash[:notice] = t('notices.response_uploaded')
-      redirect_to case_path
-    else
-      flash.now[:alert] = t('alerts.response_upload_error')
-      # @errors = attachments.reject(&:valid?).map { |a| a.errors.full_messages }.flatten
-      render :new_response_upload
-    end
   end
 
   def update

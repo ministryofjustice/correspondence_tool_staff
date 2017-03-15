@@ -842,6 +842,21 @@ RSpec.describe CasesController, type: :controller do
 
         xit 'removes the attachment from S3'
       end
+
+      context 'does not upload any valid files' do
+
+        it 'Returns error message if not files uploaded' do
+          post :upload_responses, params: {
+              id:             kase,
+              type:           'response'
+          }
+          expect(flash[:alert]).to eq 'Please select the file(s) you used in your response.'
+          expect(response).to have_rendered(:new_response_upload)
+
+
+        end
+
+      end
     end
 
     context 'as an assigner' do
