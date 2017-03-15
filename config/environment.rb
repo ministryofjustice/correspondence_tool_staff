@@ -7,15 +7,5 @@ require_relative 'application'
 Rails.configuration.active_job.queue_adapter     = :sidekiq
 Rails.configuration.active_job.queue_name_prefix = "correspondence_tool_staff"
 
-Rails.configuration.action_mailer.smtp_settings = {
-  address: 'localhost',
-  port:    2050,
-  domain:  'digital.justice.gov.uk'
-}
-
-Rails.configuration.action_mailer.default_url_options = {
-  host: Settings.cts_email_url
-}
-
 # Initialize the Rails application.
 Rails.application.initialize!
