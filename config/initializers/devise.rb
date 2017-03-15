@@ -15,10 +15,10 @@ Devise.setup do |config|
   config.mailer_sender = 'noreply@digital.justice.gov.uk'
 
   # Configure the class responsible to send e-mails.
-  config.mailer = 'Devise::Mailer'
+  config.mailer = 'NotifyDeviseMailer'
 
   # Configure the parent class responsible to send e-mails.
-  config.parent_mailer = 'ApplicationMailer'
+  config.parent_mailer = 'GovukNotifyRails::Mailer'
 
   # ==> ORM configuration
   # Load and configure the ORM. Supports :active_record (default) and

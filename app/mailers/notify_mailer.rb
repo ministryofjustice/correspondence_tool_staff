@@ -1,5 +1,5 @@
 class NotifyMailer < GovukNotifyRails::Mailer
-  #rescue_from Exception, with: :log_errors
+  rescue_from Exception, with: :log_errors
 
   def notify_drafters_of_new_assignments assignment
 
@@ -9,7 +9,7 @@ class NotifyMailer < GovukNotifyRails::Mailer
     set_template('6f4d8e34-96cb-482c-9428-a5c1d5efa519')
 
     set_personalisation(
-        email_subject: format_new_assignment_subject,
+        email_subject: format_new_assignment_subject(kase),
         team_name: @assignment.team.name,
         case_current_state: I18n.t("state.#{@assignment.case.current_state}").downcase,
         case_number: @assignment.case.number,
@@ -25,8 +25,7 @@ class NotifyMailer < GovukNotifyRails::Mailer
 
   private
 
-  def format_new_assignment_subject
-    kase = @assignment.case
+  def format_new_assignment_subject kase
     translation_key = "state.#{kase.current_state}"
     "#{kase.number} - #{kase.category.abbreviation} - #{kase.subject} - #{I18n.t(translation_key)}"
   end
