@@ -157,6 +157,7 @@ en:
       download_link_html: |
         Download <span class="visuallyhidden">file %{filename}.</span>
       email: "Requesters email address: "
+      exemptions_heading: Exemptions
       external_deadline: External deadline
       filename: File name
       header_case_number: "You are viewing case number "

@@ -58,3 +58,12 @@
                 = t('common.case.reason_for_refusal')
               td#request--reason-for-refusal
                 = case_details.refusal_reason.name
+          - unless case_details.exemptions.empty?
+            tr
+              th
+                = t('common.case.exemptions_heading')
+              td#request--exemptions
+                ul
+                  - case_details.exemptions.each do |exemption|
+                    li
+                      = exemption.name

@@ -96,6 +96,16 @@ feature 'Closing a case' do
         .to eq 'Refused fully'
       expect(cases_show_page.response_details.reason_for_refusal.text)
         .to eq 'Information not held'
+      expect(cases_show_page.response_details).not_to have_exemptions
+    end
+  end
+
+  context 'case refused with an exemption' do
+    given(:kase) { create :closed_case, :with_ncnd_exemption }
+
+    scenario 'viewing the response details page' do
+      cases_show_page.load(id: kase.id)
+      expect(cases_show_page.response_details.exemptions).to have_text "NCND exemption 1"
     end
   end
 end

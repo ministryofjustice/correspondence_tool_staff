@@ -41,6 +41,7 @@ module PageObjects
           element :time_taken, '#request--response-time-taken'
           element :outcome, '#request--outcome'
           element :reason_for_refusal, '#request--reason-for-refusal'
+          element :exemptions, '#request--exemptions'
         end
       end
     end
