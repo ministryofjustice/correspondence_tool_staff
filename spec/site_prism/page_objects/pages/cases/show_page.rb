@@ -22,6 +22,7 @@ module PageObjects
           element :postal_address, '.case-sidebar__data--contact .postal-address'
           section :actions, '.actions .case-sidebar__data' do
             element :mark_as_sent, '#action--mark-response-as-sent'
+            element :close_case, '#action--close-case'
           end
         end
 

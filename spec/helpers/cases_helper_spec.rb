@@ -29,7 +29,7 @@ RSpec.describe CasesHelper, type: :helper do
       it 'generates HTML that links to the close case action' do
         @case = create(:responded_case)
         expect(action_button_for(:close)).to eq(
-"<a class=\"button\" data-method=\"get\" \
+"<a id=\"action--close-case\" class=\"button\" data-method=\"get\" \
 href=\"/cases/#{@case.id}/close\">Close case</a>"
           )
       end

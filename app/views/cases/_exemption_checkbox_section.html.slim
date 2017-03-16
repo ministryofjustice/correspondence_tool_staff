@@ -1,14 +1,14 @@
+.form-group
+  fieldset
+    legend
+      span.form-label-bold
+        = heading
+      span.form-hint
+        = hint
 
-fieldset
-  legend
-    span.form-label-bold
-      = heading
-    span.form-hint
-      = hint
-
-  - exemptions.each do |ex|
-    label class="block-label selection-button-checkbox #{exemptions_checkbox_selector(ex, kase)}" for="case_exemption_ids_#{ex.id}"
-      input name="case[exemption_ids][#{ex.id}]" type="hidden" value="0"
-      input type="checkbox" value="1" name="case[exemption_ids][#{ex.id}]" id="case[exemption_ids][#{ex.id}]"
-      = ex.name
+    - exemptions.each do |ex|
+      label class="block-label selection-button-checkbox #{exemptions_checkbox_selector(ex, kase)}" for="case_exemption_ids_#{ex.id}"
+        input name="case[exemption_ids][#{ex.id}]" type="hidden" value="0"
+        input type="checkbox" value="1" name="case[exemption_ids][#{ex.id}]" id="case_exemption_ids_#{ex.id}"
+        = ex.name
 
