@@ -2,30 +2,26 @@
 #
 # Table name: assignments
 #
-#  id              :integer          not null, primary key
-#  assignment_type :enum
-#  state           :enum             default("pending")
-#  case_id         :integer
-#  assignee_id     :integer
-#  assigner_id     :integer
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id         :integer          not null, primary key
+#  state      :enum             default("pending")
+#  case_id    :integer          not null
+#  team_id    :integer          not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  role       :enum
+#  user_id    :integer
 #
 
 FactoryGirl.define do
 
   factory :assignment do
     state 'pending'
-    association :assigner, factory: :assigner, strategy: :create
-    association :assignee, factory: :drafter, strategy: :create
+    team { create :responding_team }
+    role 'managing'
     association :case, factory: :case, strategy: :create
 
-    factory :drafter_assignment do
-      assignment_type 'drafter'
-
-      factory :accepted_drafter_assignment do
-        state 'accepted'
-      end
+    factory :accepted_assignment, parent: :cases_teams_role do
+      state 'accepted'
     end
   end
 

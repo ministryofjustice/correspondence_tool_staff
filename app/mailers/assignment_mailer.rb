@@ -2,7 +2,7 @@ class AssignmentMailer < ApplicationMailer
 
   def new_assignment(assignment)
     @assignment = assignment
-    mail to: @assignment.assignee.email,
+    mail to: @assignment.team.email,
          from: 'noreply@digital.justice.gov.uk',
          subject: format_new_assignment_subject
   end

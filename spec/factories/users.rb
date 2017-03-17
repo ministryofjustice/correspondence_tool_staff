@@ -14,7 +14,6 @@
 #  last_sign_in_ip        :inet
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  roles                  :string
 #  full_name              :string           not null
 #
 
@@ -26,7 +25,6 @@ end
 FactoryGirl.define do
   factory :user do
     password '12345678'
-    roles %w[assigner drafter]
     sequence(:full_name) { |n| "Firstname#{n} Lastname#{n}" }
     email { Faker::Internet.email(full_name) }
 
@@ -34,16 +32,16 @@ FactoryGirl.define do
       email { email_from_name(full_name) }
     end
 
-    factory :assigner do
-      roles %w[assigner]
+    factory :manager do
+      after(:create) do |user, _evaluator|
+        create :team, managers: [user]
+      end
     end
 
-    factory :drafter do
-      roles %w[drafter]
-    end
-
-    factory :approver do
-      roles %w[approver]
+    factory :responder do
+      after(:create) do |user, _evaluator|
+        create :team, responders: [user]
+      end
     end
   end
 end

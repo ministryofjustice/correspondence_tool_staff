@@ -2,5 +2,5 @@
 
 = form_for [ @case, @assignment ] do |f|
 
-  = f.collection_select :assignee_id, User.drafters, :id, :full_name
+  = f.collection_select :team_id, Team.responding, :id, :name
   = f.submit assign_button_text(@creating_case), {class: 'button'}

@@ -14,10 +14,9 @@ class AssignmentsController < ApplicationController
   def create
     authorize @case, :can_assign_case?
 
-    @assignment = @case.create_assignment(
-      assignment_params.merge(assignment_type: 'drafter', assigner: current_user)
-    )
+    @assignment = @case.assignments.create(assignment_params.merge(role: 'responding'))
     if @assignment.valid?
+      @case.assign_responder(current_user, @assignment.team)
       flash[:notice] = flash[:creating_case] ? t('.case_created') : t('.case_assigned')
       AssignmentMailer.new_assignment(@assignment).deliver_later
       redirect_to cases_path
@@ -64,7 +63,7 @@ class AssignmentsController < ApplicationController
   def assignment_params
     params.require(:assignment).permit(
       :state,
-      :assignee_id,
+      :team_id,
       :reasons_for_rejection
     )
   end
@@ -76,9 +75,7 @@ class AssignmentsController < ApplicationController
   end
 
   def already_rejected?
-    @case.transitions.any? do |transition|
-      transition.assignment_id == params[:id].to_i && transition.event =='reject_responder_assignment'
-    end
+    Assignment.where(id: params[:id], state: 'rejected').present?
   end
 
   def already_accepted?

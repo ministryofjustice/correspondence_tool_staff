@@ -26,37 +26,42 @@ FactoryGirl.define do
     requester_type 'member_of_the_public'
     name { Faker::Name.name }
     email { Faker::Internet.email }
-    association :category, factory: :category, strategy: :create
+    # association :category, factory: :category, strategy: :create
+    category
     subject { Faker::Hipster.sentence(1, word_count: 4).truncate(80) }
     message { Faker::Lorem.paragraph(1) }
     received_date Time.zone.today.to_s
     postal_address { Faker::Address.street_address }
 
-    factory :assigned_case do
+    factory :assigned_case, parent: :case do
       transient do
-        assigner { create(:assigner) }
-        drafter  { create(:drafter)  }
+        managing_team   { create :managing_team }
+        manager         { managing_team.managers.first }
+        responding_team { create :responding_team }
       end
 
       after(:create) do |kase, evaluator|
-        assignment = create :drafter_assignment,
-                            case: kase,
-                            assigner: evaluator.assigner,
-                            assignee: evaluator.drafter
+        create :assignment,
+               case: kase,
+               team: evaluator.responding_team
         create :case_transition_assign_responder,
-               case_id: kase.id,
-               user_id: assignment.assigner.id,
-               assignee_id: assignment.assignee.id
+               case: kase,
+               user: evaluator.manager,
+               managing_team: evaluator.managing_team,
+               responding_team: evaluator.responding_team
       end
     end
 
     factory :accepted_case, parent: :assigned_case do
+      transient do
+        responder { responding_team.responders.first }
+      end
+
       after(:create) do |kase, evaluator|
         create :case_transition_accept_responder_assignment,
-               case_id: kase.id,
-               user_id: evaluator.assigner.id,
-               assignee_id: evaluator.drafter.id,
-               most_recent: true
+               case: kase,
+               user: evaluator.responder,
+               responding_team: evaluator.responding_team
       end
     end
 
@@ -78,13 +83,11 @@ FactoryGirl.define do
 
       date_responded Date.today
 
-      after(:create) do |kase, _evaluator|
-        assignment = Assignment.find_by(case_id: kase.id)
-
-        create(:case_transition_respond,
-               case_id: kase.id,
-               user_id: assignment.assignee.id,
-               assignee_id: assignment.assignee.id)
+      after(:create) do |kase, evaluator|
+        create :case_transition_respond,
+               case: kase,
+               user: evaluator.responder,
+               responding_team: evaluator.responding_team
       end
     end
 
@@ -93,13 +96,12 @@ FactoryGirl.define do
       date_responded 4.business_days.ago
       outcome { create :outcome }
 
-      after(:create) do |kase, _evaluator|
-        assignment = Assignment.find_by(case_id: kase.id)
-
-        create(:case_transition, :close,
-               case_id: kase.id,
-               user_id: assignment.assignee.id,
-               assignee_id: assignment.assignee.id)
+      after(:create) do |kase, evaluator|
+        create :case_transition_close,
+               case: kase,
+               user: evaluator.manager,
+               managing_team: evaluator.managing_team,
+               responding_team: evaluator.responding_team
       end
 
       trait :requires_exemption do

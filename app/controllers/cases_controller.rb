@@ -72,7 +72,7 @@ class CasesController < ApplicationController
 
       if responses.all?(&:valid?)
         responses.select(&:persisted?).each(&:touch)
-        @case.add_responses(current_user.id, responses)
+        @case.add_responses(current_user, responses)
         remove_leftover_upload_files
         flash[:notice] = t('notices.response_uploaded')
         set_permitted_events

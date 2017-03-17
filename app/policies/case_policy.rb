@@ -12,11 +12,11 @@ class CasePolicy
   end
 
   def can_add_case?
-    user.assigner?
+    user.manager?
   end
 
   def can_assign_case?
-    user.assigner? && self.case.unassigned?
+    user.manager? && self.case.unassigned?
   end
 
   def can_accept_or_reject_case?
@@ -36,12 +36,12 @@ class CasePolicy
   end
 
   def can_close_case?
-    user.assigner? && self.case.responded?
+    user.manager? && self.case.responded?
   end
 
   def can_view_case_details?
-    user.assigner? ||
-        self.case.drafter.present? && self.case.drafter == user
+    user.manager? ||
+      self.case.team.drafters.include?(user)
   end
 
   class Scope
@@ -53,12 +53,12 @@ class CasePolicy
     end
 
     def resolve
-      if user.assigner?
+      if user.manager?
         scope.all
-      elsif user.drafter?
-        scope.select {|kase| kase.drafter == user }
+      elsif user.responder?
+        scope.select {|kase| kase.responder == user }
       else
-        nil
+        []
       end
     end
   end

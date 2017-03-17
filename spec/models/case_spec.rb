@@ -38,11 +38,11 @@ RSpec.describe Case, type: :model do
       category: create(:category, :gq)
   end
 
-  let(:no_postal)           { build :case, postal_address: nil             }
-  let(:no_postal_or_email)  { build :case, postal_address: nil, email: nil }
-  let(:no_email)            { build :case, email: nil                      }
-  let(:drafter)             { create :user, roles: ['drafter']             }
-  let(:assigner)            { create :user, roles: ['assigner']            }
+  let(:no_postal)          { build :case, postal_address: nil             }
+  let(:no_postal_or_email) { build :case, postal_address: nil, email: nil }
+  let(:no_email)           { build :case, email: nil                      }
+  let(:responder)          { create :responder                            }
+  let(:manager)            { create :manager                              }
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do
@@ -167,11 +167,10 @@ RSpec.describe Case, type: :model do
 
   end
 
-  describe '#drafter' do
-    it 'is the currently assigned drafter' do
-      allow(non_trigger_foi).to receive(:assignees).and_return [drafter]
-      expect(non_trigger_foi.drafter).to eq drafter
-    end
+  describe '#responders' do
+    it { should have_many(:responders)
+                  .through(:responding_team)
+                  .source(:responders) }
   end
 
   describe '#who_its_with' do
@@ -179,9 +178,11 @@ RSpec.describe Case, type: :model do
     let(:accepted_case) { create :accepted_case}
     let(:unassigned_case) { create :case }
 
-    it 'is the currently assigned drafter' do
-      expect(assigned_case.who_its_with).to eq assigned_case.drafter.full_name
-      expect(accepted_case.who_its_with).to eq accepted_case.drafter.full_name
+    it 'is the currently assigned responder' do
+      expect(assigned_case.who_its_with)
+        .to eq assigned_case.responding_team.name
+      expect(accepted_case.who_its_with)
+        .to eq accepted_case.responding_team.name
     end
 
     it 'is the currently assigned to DACU' do
@@ -189,15 +190,8 @@ RSpec.describe Case, type: :model do
     end
   end
 
-  describe '#drafter_assignment' do
-
-    let(:drafter)       { create(:drafter)                              }
-    let(:assigned_case) { create(:assigned_case, drafter: drafter)      }
-    let(:assignment)    { assigned_case.assignments.detect(&:drafter?)  }
-
-    it 'returns the assignment belonging to the drafter' do
-      expect(assigned_case.drafter_assignment).to eq assignment
-    end
+  describe '#responder_assignment' do
+    it { should have_one(:responder_assignment).class_name('Assignment') }
   end
 
   describe '#response_attachments' do
@@ -210,7 +204,6 @@ RSpec.describe Case, type: :model do
       expect(case_with_response.response_attachments).to eq responses
     end
   end
-
 
   describe '#has_ncnd_exemption?' do
     it 'returns true if one of the exemptions is ncnd' do
@@ -225,7 +218,6 @@ RSpec.describe Case, type: :model do
       expect(kase.has_ncnd_exemption?).to be false
     end
   end
-
 
   context 'preparing_for_close' do
     describe '#prepared_for_close?' do
@@ -310,15 +302,14 @@ RSpec.describe Case, type: :model do
 
       it 'when deleted, the record is destroyed' do
         kase = create :assigned_case
-        assignment = kase.assignments.detect(&:drafter?)
+        # assignment = kase.responder_assignment
         expect do
-          kase.assignments.delete(assignment)
+          kase.responder_assignment.delete
         end.to change { Assignment.count }.by(-1)
       end
     end
 
     describe 'exemptions' do
-
       before(:all) do
         @ncnd = create :exemption, :ncnd, name: 'NCND'
         @abs_1 = create :exemption, :absolute, name: 'Abs 1'
@@ -328,8 +319,6 @@ RSpec.describe Case, type: :model do
       end
 
       after(:all) { CaseClosure::Metadatum.delete_all }
-
-
 
       describe '#exemption_ids=' do
         it 'replaces exisiting exemptions with ones specified in param hash' do
@@ -345,6 +334,10 @@ RSpec.describe Case, type: :model do
           expect(k.exemption_ids).to eq({@ncnd.id.to_s => '1', @abs_1.id.to_s => '1'})
         end
       end
+    end
+
+    describe '#responding_team' do
+      it { should have_one(:responding_team) }
     end
   end
 
@@ -498,63 +491,33 @@ RSpec.describe Case, type: :model do
       it { should have_attributes(object: kase)}
     end
 
-    describe '#create_assignment' do
+    describe '#assign_responder' do
       let(:unassigned_case) { create :case }
-      let(:assigned_case) { create :assigned_case }
+      let(:managing_team)   { create :managing_team }
+      let(:manager)         { managing_team.managers.first }
+      let(:responding_team) { create :responding_team }
 
       before do
         allow(unassigned_case.state_machine).to receive(:assign_responder)
       end
 
-      it "creates no transition if the assignment isn't valid" do
-        unassigned_case.create_assignment(
-          assigner_id: assigner.id,
-          assignee_id: drafter.id,
-        )
-        expect(unassigned_case.state_machine).not_to(
-          have_received(:assign_responder).with(assigner.id, drafter.id)
-        )
-      end
-
-      it 'returns the created assignment' do
-        assignment = unassigned_case.create_assignment(
-          assigner_id: assigner.id,
-          assignee_id: drafter.id,
-          assignment_type: 'drafter'
-        )
-        expect(assignment).to eq Assignment.last
-      end
-
-      context 'responder assignment' do
-        it 'creates an assign_responder transition' do
-          unassigned_case.create_assignment(
-            assigner_id: assigner.id,
-            assignee_id: drafter.id,
-            assignment_type: 'drafter'
-          )
-          expect(unassigned_case.state_machine).to(
-            have_received(:assign_responder).with(assigner.id, drafter.id)
-          )
-        end
-
-        it 'creates a responder assignment' do
-          expect(unassigned_case.assignments.detect(&:drafter?)).to be_nil
-          unassigned_case.create_assignment(
-            assigner_id: assigner.id,
-            assignee_id: drafter.id,
-            assignment_type: 'drafter'
-          )
-          expect(unassigned_case.assignments.detect(&:drafter?)).not_to be_nil
-        end
+      it 'creates an assign_responder transition' do
+        unassigned_case.assign_responder manager, responding_team
+        expect(unassigned_case.state_machine)
+          .to have_received(:assign_responder)
+                .with manager,
+                      managing_team,
+                      responding_team
       end
     end
 
     describe '#responder_assignment_rejected' do
-      let(:assigned_case) { create :assigned_case }
-      let(:state_machine) { assigned_case.state_machine }
-      let(:assignment)    { assigned_case.assignments.detect(&:drafter?) }
-      let(:drafter)       { assignment.assignee }
-      let(:message)       { |example| "test #{example.description}" }
+      let(:assigned_case)   { create :assigned_case }
+      let(:state_machine)   { assigned_case.state_machine }
+      let(:assignment)      { assigned_case.responder_assignment }
+      let(:responding_team) { assignment.team }
+      let(:responder)       { assignment.team.responders.first }
+      let(:message)         { |example| "test #{example.description}" }
 
       before do
         allow(state_machine).to receive(:reject_responder_assignment)
@@ -563,19 +526,20 @@ RSpec.describe Case, type: :model do
 
       it 'triggers the raising version of the event' do
         assigned_case.
-          responder_assignment_rejected(drafter.id, message, assignment.id)
+          responder_assignment_rejected(responder, responding_team, message)
         expect(state_machine).to have_received(:reject_responder_assignment!).
-                                   with(drafter.id, message, assignment.id)
+                                   with(responder, responding_team, message)
         expect(state_machine).
           not_to have_received(:reject_responder_assignment)
       end
     end
 
     describe '#responder_assignment_accepted' do
-      let(:assigned_case) { create :assigned_case }
-      let(:state_machine) { assigned_case.state_machine }
-      let(:assignment)    { assigned_case.assignments.detect(&:drafter?) }
-      let(:drafter)       { assignment.assignee }
+      let(:assigned_case)   { create :assigned_case }
+      let(:state_machine)   { assigned_case.state_machine }
+      let(:assignment)      { assigned_case.responder_assignment }
+      let(:responding_team) { assignment.team }
+      let(:responder)       { assignment.team.responders.first }
 
       before do
         allow(state_machine).to receive(:accept_responder_assignment)
@@ -583,18 +547,20 @@ RSpec.describe Case, type: :model do
       end
 
       it 'triggers the raising version of the event' do
-        assigned_case.responder_assignment_accepted(drafter.id)
+        assigned_case.responder_assignment_accepted(responder)
         expect(state_machine).to have_received(:accept_responder_assignment!).
-                                   with(drafter.id)
+                                   with(responder)
         expect(state_machine).
           not_to have_received(:accept_responder_assignment)
       end
     end
 
     describe '#add_responses' do
-      let(:accepted_case) { create(:accepted_case)                          }
-      let(:state_machine) { accepted_case.state_machine                     }
-      let(:drafter)       { accepted_case.drafter                           }
+      let(:accepted_case)   { create(:accepted_case)                          }
+      let(:state_machine)   { accepted_case.state_machine                     }
+      let(:assignment)      { accepted_case.responder_assignment }
+      let(:responding_team) { assignment.team }
+      let(:responder)       { assignment.team.responders.first }
       let(:responses)     do
         [
           build(
@@ -612,15 +578,15 @@ RSpec.describe Case, type: :model do
         end
 
         it 'triggers the raising version of the event' do
-          accepted_case.add_responses(drafter.id, responses)
+          accepted_case.add_responses(responder.id, responses)
           expect(state_machine).to have_received(:add_responses!).
-                                     with(drafter.id, ['new response.pdf'])
+                                     with(responder.id, ['new response.pdf'])
           expect(state_machine).
             not_to have_received(:add_responses)
         end
 
         it 'adds responses to case#attachments' do
-          accepted_case.add_responses(drafter.id, responses)
+          accepted_case.add_responses(responder.id, responses)
           expect(accepted_case.attachments).to match_array(responses)
         end
       end
@@ -628,7 +594,7 @@ RSpec.describe Case, type: :model do
       context 'with real state machine calls' do
         it 'changes the state from drafting to awaiting_dispatch' do
           expect(accepted_case.current_state).to eq 'drafting'
-          accepted_case.add_responses(drafter.id, responses)
+          accepted_case.add_responses(responder.id, responses)
           expect(accepted_case.current_state).to eq 'awaiting_dispatch'
         end
       end

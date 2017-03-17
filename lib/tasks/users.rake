@@ -17,19 +17,30 @@ namespace :users do
       raise 'Dev users not meant for production environments.'
     end
 
-    roles = {
-      'assigner' => ['Ass Igner', 'correspondence-staff-dev+ass.igner@digital.justice.gov.uk'],
-      'drafter' => ['Draughty Hall', 'correspondence-staff-dev+drafty.hall@digital.justice.gov.uk'],
-      'approver' => ['App Rover', 'correspondence-staff-dev+app.rover@digital.justice.gov.uk'],
-    }
-    roles.each do |role, name_and_email|
-      User.new(
-        email:    name_and_email.last,
-        password: '12345678',
-        full_name: name_and_email.first,
-        roles:    [role]
-      ).save!
-      puts "CREATED: #{name_and_email.first} (#{name_and_email.last})"
+    managing_team =
+      Team.find_or_create_by name: 'Managing Team',
+                             email: 'managers@localhost'
+    responding_team =
+      Team.find_or_create_by name: 'Responding Team',
+                             email: 'responders@localhost'
+    [
+      {
+        full_name: 'Ass Igner',
+        email: 'correspondence-staff-dev+ass.igner@digital.justice.gov.uk',
+        managing_teams: [managing_team],
+      },
+      {
+        full_name: 'Draughty Hall',
+        email: 'correspondence-staff-dev+drafty.hall@digital.justice.gov.uk',
+        responding_teams: [responding_team],
+      }
+    ].each do |user_info|
+      if User.exists?(email: user_info[:email])
+        puts "EXISTS: #{user_info[:full_name]} #{user_info[:email]}"
+      else
+        user = User.create!(user_info.merge(password: '12345678'))
+        puts "CREATED: #{user_info[:full_name]} #{user_info[:email]}"
+      end
     end
   end
 end

@@ -6,6 +6,6 @@ class AddRequiresExemptionToCaseClosureMetadata < ActiveRecord::Migration[5.0]
   end
 
   def down
-    remove_column :case_closure_metadata, :requires_expemption
+    remove_column :case_closure_metadata, :requires_exemption
   end
 end

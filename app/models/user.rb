@@ -14,7 +14,6 @@
 #  last_sign_in_ip        :inet
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  roles                  :string
 #  full_name              :string           not null
 #
 
@@ -25,13 +24,37 @@ class User < ApplicationRecord
   devise :database_authenticatable, :timeoutable,
     :trackable, :validatable, :recoverable
 
-         has_many :cases, through: :assignments
-  has_many :assignments, foreign_key: 'assignee_id'
+  has_many :cases, through: :assignments
+  has_many :assignments
+  has_many :team_roles, class_name: 'TeamsUsersRole'
+  has_many :teams, through: :team_roles
+  has_many :managing_team_roles,
+           -> { manager_roles },
+           class_name: 'TeamsUsersRole'
+  has_many :responding_team_roles,
+           -> { responder_roles  },
+           class_name: 'TeamsUsersRole'
+  has_many :managing_teams, through: :managing_team_roles, source: :team
+  has_many :responding_teams, through: :responding_team_roles, source: :team
 
   validates :full_name, presence: true
 
-  ROLES = %w[assigner drafter approver].freeze
+  scope :responders, -> {
+    joins(:team_roles).where(teams_users_roles: { role: 'responder' })
+  }
+  scope :managers, -> {
+    joins(:team_roles).where(teams_users_roles: { role: 'manager' })
+  }
 
-  include Roles
+  # def manager?
+  #   team_roles.managing_teams.include? self
+  # end
 
+  def manager?
+    not managing_teams.empty?
+  end
+
+  def responder?
+    not responding_teams.empty?
+  end
 end

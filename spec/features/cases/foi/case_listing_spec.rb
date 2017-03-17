@@ -66,7 +66,7 @@ feature 'listing cases on the system' do
   end
 
   scenario 'for assigners - shows all cases' do
-    login_as create(:user, roles: ['assigner'])
+    login_as create(:assigner)
     visit '/'
     expect(cases_page.case_list.count).to eq 5
 

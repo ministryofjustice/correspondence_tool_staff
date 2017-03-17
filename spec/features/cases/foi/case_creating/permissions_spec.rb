@@ -2,8 +2,8 @@ require 'rails_helper'
 
 feature 'Only assigners can create cases' do
 
-  let(:drafter)   { create(:user, roles: ['drafter'])   }
-  let(:assigner)  { create(:user, roles: ['assigner'])  }
+  let(:drafter)   { create(:drafter)   }
+  let(:assigner)  { create(:assigner)  }
 
   scenario 'As an assigner I can navigate to the New Case form' do
     login_as assigner

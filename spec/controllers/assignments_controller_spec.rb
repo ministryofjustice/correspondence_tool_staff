@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentsController, type: :controller do
-  let(:drafter_assignment) { create(:drafter_assignment)       }
-  let(:unassigned_case)    { create(:case)                     }
-  let(:drafter)            { create(:user, roles: ['drafter']) }
+  let(:drafter_assignment) { create(:drafter_assignment) }
+  let(:unassigned_case)    { create(:case)               }
+  let(:drafter)            { create(:drafter)            }
   let(:create_assignment_params) do
     {
       case_id: unassigned_case.id,
@@ -65,7 +65,7 @@ RSpec.describe AssignmentsController, type: :controller do
   end
 
   context 'as an authenticated assigner' do
-    before { sign_in create(:user, roles: ['assigner']) }
+    before { sign_in create(:assigner) }
 
     describe 'GET new' do
       it 'renders the page for assignment' do
