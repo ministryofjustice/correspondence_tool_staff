@@ -76,7 +76,8 @@ feature 'Closing a case' do
       click_link 'Close case'
 
       expect(cases_close_page).to have_content("Close case")
-      cases_close_page.fill_in_date_responded(2.days.ago)
+      
+      cases_close_page.fill_in_date_responded(2.business_days.ago)
       cases_close_page.outcome_radio_button_refused_fully.click
       cases_close_page.refusal_reason_button_info_not_held.click
       cases_close_page.submit_button.click
@@ -87,7 +88,7 @@ feature 'Closing a case' do
       expect(cases_show_page.sidebar.actions.text).to eq 'No actions available'
 
       expect(cases_show_page.response_details.date_responded.text)
-        .to eq 2.days.ago.strftime('%e %b %Y').strip
+        .to eq 2.business_days.ago.strftime('%e %b %Y').strip
       expect(cases_show_page.response_details.timeliness.text)
         .to eq 'Answered in time'
       expect(cases_show_page.response_details.time_taken.text)

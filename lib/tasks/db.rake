@@ -2,9 +2,8 @@ namespace :db do
 
   desc 'Erase all tables'
   task :clear => :environment do
-    if production_environment?
-      raise "Unable to run rake db:clear in #{Rails.env} environment"
-    else
+    require File.join(Rails.root, 'lib', 'rake_task_helpers', 'host_env')
+    HostEnv.safe do
       clear_database
     end
   end
@@ -23,10 +22,6 @@ namespace :db do
     %w(assignment_type attachment_type requester_type state).each do |type|
       conn.execute("DROP TYPE IF EXISTS #{type}")
     end
-  end
-
-  def production_environment?
-    ENV['ENV'] == 'prod' || Rails.env.production?
   end
 
 end
