@@ -13,7 +13,7 @@ case_uploads_accepted_types:
 - image/tiff
 - image/bmp
 - image/x-bitmap
-attachments_presigned_url_expiry: 60
+attachments_presigned_url_expiry: 900
 
 # These are set in run.sh
 git_source:  Git Source Not Available
