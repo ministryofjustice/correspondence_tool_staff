@@ -348,6 +348,35 @@ RSpec.describe Case, type: :model do
     end
   end
 
+  describe '#destroy_attachement' do
+
+    let(:kase) { create :case_with_response }
+    let(:attachment) { kase.attachments.first }
+
+    context 'only one attachemnt' do
+      before(:each) do
+        allow(attachment).to receive(:remove_from_storage_bucket)
+      end
+
+      it 'removes the attachment' do
+        expect(kase.attachments.size).to eq 1
+        kase.destroy_attachment(attachment)
+        expect(kase.attachments.size).to eq 0
+      end
+
+      it 'changes the state to drafting' do
+        expect(kase.current_state).to eq 'awaiting_dispatch'
+        kase.destroy_attachment(attachment)
+        expect(kase.current_state).to eq 'drafting'
+      end
+    end
+
+    context 'two attachments' do
+      it 'removes one attachment'
+      it 'does not change the state'
+    end
+  end
+
   describe 'callbacks' do
 
     describe '#prevent_number_change' do
@@ -560,22 +589,33 @@ RSpec.describe Case, type: :model do
         ]
       end
 
-      before do
-        allow(state_machine).to receive(:add_responses)
-        allow(state_machine).to receive(:add_responses!)
+
+      context 'with mocked state machine calls' do
+        before do
+          allow(state_machine).to receive(:add_responses)
+          allow(state_machine).to receive(:add_responses!)
+        end
+
+        it 'triggers the raising version of the event' do
+          accepted_case.add_responses(drafter.id, responses)
+          expect(state_machine).to have_received(:add_responses!).
+                                     with(drafter.id, ['new response.pdf'])
+          expect(state_machine).
+            not_to have_received(:add_responses)
+        end
+
+        it 'adds responses to case#attachments' do
+          accepted_case.add_responses(drafter.id, responses)
+          expect(accepted_case.attachments).to match_array(responses)
+        end
       end
 
-      it 'triggers the raising version of the event' do
-        accepted_case.add_responses(drafter.id, responses)
-        expect(state_machine).to have_received(:add_responses!).
-                                   with(drafter.id, ['new response.pdf'])
-        expect(state_machine).
-          not_to have_received(:add_responses)
-      end
-
-      it 'adds responses to case#attachments' do
-        accepted_case.add_responses(drafter.id, responses)
-        expect(accepted_case.attachments).to match_array(responses)
+      context 'with real state machine calls' do
+        it 'changes the state from drafting to awaiting_dispatch' do
+          expect(accepted_case.current_state).to eq 'drafting'
+          accepted_case.add_responses(drafter.id, responses)
+          expect(accepted_case.current_state).to eq 'awaiting_dispatch'
+        end
       end
     end
 

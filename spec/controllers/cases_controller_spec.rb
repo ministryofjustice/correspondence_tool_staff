@@ -897,9 +897,9 @@ RSpec.describe CasesController, type: :controller do
       before { sign_in drafter }
 
       it 'does not transition current_state' do
-        expect(case_with_response.current_state).to eq 'drafting'
+        expect(case_with_response.current_state).to eq 'awaiting_dispatch'
         get :respond, params: { id: case_with_response.id }
-        expect(case_with_response.current_state).to eq 'drafting'
+        expect(case_with_response.current_state).to eq 'awaiting_dispatch'
       end
 
       it 'renders the respond template' do
@@ -932,9 +932,9 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'does not transition current_state' do
-        expect(case_with_response.current_state).to eq 'drafting'
+        expect(case_with_response.current_state).to eq 'awaiting_dispatch'
         patch :confirm_respond, params: { id: case_with_response.id }
-        expect(case_with_response.current_state).to eq 'drafting'
+        expect(case_with_response.current_state).to eq 'awaiting_dispatch'
       end
     end
 
@@ -948,9 +948,9 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'does not transition current_state' do
-        expect(case_with_response.current_state).to eq 'drafting'
+        expect(case_with_response.current_state).to eq 'awaiting_dispatch'
         patch :confirm_respond, params: { id: case_with_response.id }
-        expect(case_with_response.current_state).to eq 'drafting'
+        expect(case_with_response.current_state).to eq 'awaiting_dispatch'
       end
     end
 
@@ -996,9 +996,9 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'does not transition current_state' do
-        expect(case_with_response.current_state).to eq 'drafting'
+        expect(case_with_response.current_state).to eq 'awaiting_dispatch'
         patch :confirm_respond, params: { id: case_with_response.id }
-        expect(case_with_response.current_state).to eq 'drafting'
+        expect(case_with_response.current_state).to eq 'awaiting_dispatch'
       end
     end
   end

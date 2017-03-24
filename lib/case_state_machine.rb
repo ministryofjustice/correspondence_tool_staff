@@ -5,6 +5,7 @@ class CaseStateMachine
   state :unassigned, initial: true
   state :awaiting_responder
   state :drafting
+  state :awaiting_dispatch
   state :responded
   state :closed
 
@@ -21,11 +22,16 @@ class CaseStateMachine
   end
 
   event :add_responses do
-    transition from: :drafting, to: :drafting
+    transition from: :drafting, to: :awaiting_dispatch
+    transition from: :awaiting_dispatch, to: :awaiting_dispatch
+  end
+
+  event :revert_to_drafting do
+    transition from: :awaiting_dispatch, to: :drafting
   end
 
   event :respond do
-    transition from: :drafting, to: :responded
+    transition from: :awaiting_dispatch, to: :responded
   end
 
   event :close do
@@ -38,6 +44,13 @@ class CaseStateMachine
              user_id:     assignee_id,
              filenames:   filenames,
              event:       :add_responses
+  end
+
+  def revert_to_drafting!
+    trigger! :revert_to_drafting,
+             event: :revert_to_drafting
+  rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
+    false
   end
 
   def add_responses(assignee_id, filenames)

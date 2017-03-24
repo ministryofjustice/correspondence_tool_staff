@@ -110,7 +110,7 @@ feature 'listing cases on the system' do
         .to have_content(case_with_response.external_deadline.strftime('%e %b %Y'))
     expect(case_with_response_row.number)
         .to have_link("#{case_with_response.number}", href: case_path(case_with_response.id))
-    expect(case_with_response_row.status.text).to eq 'Response'
+    expect(case_with_response_row.status.text).to eq 'Awaiting Dispatch'
     expect(case_with_response_row.who_its_with.text).to eq case_with_response.drafter.full_name
 
 
@@ -162,7 +162,7 @@ feature 'listing cases on the system' do
         .to have_content(case_with_response.external_deadline.strftime('%e %b %Y'))
     expect(case_with_response_row.number)
         .to have_link("#{case_with_response.number}", href: case_path(case_with_response.id))
-    expect(case_with_response_row.status.text).to eq 'Response'
+    expect(case_with_response_row.status.text).to eq 'Awaiting Dispatch'
     expect(case_with_response_row.who_its_with.text).to eq case_with_response.drafter.full_name
   end
 
