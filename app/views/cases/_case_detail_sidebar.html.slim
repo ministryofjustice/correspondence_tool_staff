@@ -4,11 +4,18 @@
   .case-sidebar__data
     = l case_details.external_deadline, format: :default_date
 
-.case-sidebar__group.status
-  .case-sidebar__heading
-    = t('common.case.status')
-  .case-sidebar__data
-    = t("state.#{case_details.current_state}")
+- if case_details.current_state != 'closed'
+  .case-sidebar__group.status
+    .case-sidebar__heading
+      = t('common.case.status')
+    .case-sidebar__data
+      = t("state.#{case_details.current_state}")
+- else
+  .case-sidebar__group.status
+    .case-sidebar__heading
+      = t('common.case.status_closed')
+    .case-sidebar__data
+      = t("state.#{case_details.current_state}_status")
 
 .case-sidebar__group--hr.who-its-with
   .case-sidebar__heading

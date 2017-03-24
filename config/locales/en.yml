@@ -56,11 +56,13 @@ en:
       can_view_case_details?: 'You are not authorised to view this case.'
 
   state: &state_translations
-    unassigned: Waiting to be assigned
-    awaiting_responder: Waiting to be accepted
-    drafting: Waiting for draft response
-    responded: Waiting to be closed
-    closed: Case closed
+    unassigned: Allocation
+    awaiting_responder: Acceptance
+    awaiting_responder_email: Waiting to be accepted
+    drafting: Response
+    responded: Closure
+    closed: ''
+    closed_status: Case closed
 
   date:
     formats:
@@ -177,7 +179,8 @@ en:
         other: Responses
       request: "Request: "
       requester_type: "Type of requester "
-      status: Status
+      status: Waiting for
+      status_closed: Status
       time_taken: Time taken
       time_taken_result:
         one: "%{count} working day"
@@ -210,7 +213,7 @@ en:
       requester: Requester name
       subject: Subject
       external_deadline: External deadline
-      status: Status
+      status: Waiting for
       who_its_with: Who it's with
     fixed_details:
       requester: Requester

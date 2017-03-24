@@ -21,9 +21,7 @@ feature 'Closing a case' do
   context 'fully granted' do
     before do
       cases_page.load
-
-      expect(cases_page.case_list.last.status.text).to eq 'Waiting to be closed'
-
+      expect(cases_page.case_list.last.status.text).to eq 'Closure'
       click_link kase.number
 
       expect(cases_show_page.sidebar.actions).
@@ -72,8 +70,7 @@ feature 'Closing a case' do
     before do
       cases_page.load
 
-      expect(cases_page.case_list.last.status.text).to eq 'Waiting to be closed'
-
+      expect(cases_page.case_list.last.status.text).to eq 'Closure'
       click_link kase.number
 
       expect(cases_show_page.sidebar.actions).

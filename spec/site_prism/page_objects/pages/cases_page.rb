@@ -9,7 +9,7 @@ module PageObjects
         element :name, 'td[aria-label="Requester name"]'
         element :subject, 'td[aria-label="Subject"]'
         element :external_deadline, 'td[aria-label="External deadline"]'
-        element :status, 'td[aria-label="Status"]'
+        element :status, 'td[aria-label="Waiting for"]'
         element :who_its_with, 'td[aria-label="Who it\'s with"]'
       end
 
