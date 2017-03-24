@@ -1,0 +1,19 @@
+= GovukElementsErrorsHelper.error_summary resource, "Message to alert the user to a problem goes here", ""
+
+= render partial: 'layouts/header', locals: {page_heading: t('devise.users.password.new.title')}
+
+.grid-row
+  .column-full
+    = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f|
+
+      p
+        = t('devise.users.password.new.hint')
+
+      = f.email_field :email, autofocus: true
+
+      .form-group
+        = f.submit t('devise.users.password.new.button'), class: 'button'
+
+.grid-row
+  .column-full
+    = render "devise/shared/links"

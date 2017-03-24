@@ -251,3 +251,17 @@ en:
     success_html: |
       <strong>Your feedback has been submitted.</strong>
 
+  devise:
+    users:
+      password:
+        edit:
+          title: Create password
+          button: Create password
+        new:
+          hint: Enter your email address and we'll send you a link to create a new password
+          title: Reset password
+          button: Send me reset password instructions
+
+      sign_in:
+        title: Sign in
+        button: Sign in

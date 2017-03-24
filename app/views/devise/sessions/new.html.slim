@@ -1,14 +1,17 @@
-= GovukElementsErrorsHelper.error_summary resource, "Message to alert the user to a problem goes here", "Optional description of the errors and how to correct them"
+= GovukElementsErrorsHelper.error_summary resource, "Message to alert the user to a problem goes here", ""
 
-= render partial: 'layouts/header', locals: {page_heading: 'Sign in'}
+= render partial: 'layouts/header', locals: {page_heading: t('devise.users.sign_in.title')}
 
-= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
-  = f.email_field :email, autofocus: true
+.grid-row
+  .column-full
+    = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+      = f.email_field :email, autofocus: true
 
-  = f.password_field :password, autocomplete: "off"
+      = f.password_field :password, autocomplete: "off"
 
+      .form-group
+        = f.submit t('devise.users.sign_in.button'), class: "button"
 
-  = f.submit "Sign in", class: "button"
-
-= render "devise/shared/links"
-
+.grid-row
+  .column-full
+    = render "devise/shared/links"
