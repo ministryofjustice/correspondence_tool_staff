@@ -69,7 +69,7 @@ RSpec.describe CaseAttachment, type: :model do
       allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with(subject.key)
                                          .and_return(object)
       allow(object).to receive(:presigned_url)
-                         .with(:get, expires_in: 60)
+                         .with(:get, expires_in: 900)
                          .and_return(presigned_url)
 
     end
