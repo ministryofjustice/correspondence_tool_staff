@@ -50,6 +50,19 @@ class CaseStateMachine
              event:       :add_responses
   end
 
+  def add_responses(assignee_id, filenames)
+    self.add_responses!(assignee_id, filenames)
+  rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
+    false
+  end
+
+  def assign_responder!(assigner_id, assignee_id)
+    trigger! :assign_responder,
+             assignee_id: assignee_id,
+             user_id:     assigner_id,
+             event:       :assign_responder
+  end
+
   def remove_response(assignee_id, filename, num_responses)
     self.remove_response!(assignee_id, filename, num_responses)
   rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
@@ -63,19 +76,6 @@ class CaseStateMachine
             user_id: assignee_id,
             filenames: filename,
             event: event
-  end
-
-  def add_responses(assignee_id, filenames)
-    self.add_responses!(assignee_id, filenames)
-  rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
-    false
-  end
-
-  def assign_responder!(assigner_id, assignee_id)
-    trigger! :assign_responder,
-             assignee_id: assignee_id,
-             user_id:     assigner_id,
-             event:       :assign_responder
   end
 
   def assign_responder(assigner_id, assignee_id)
