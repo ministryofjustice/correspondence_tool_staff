@@ -108,6 +108,12 @@ describe CasePolicy do
     it "refuses if current_user is another drafter" do
       expect(subject).not_to permit(another_drafter, case_with_response)
     end
+
+    it 'refuses if case is not in awaiting dispatch' do
+      kase = create :accepted_case
+      expect(kase.current_state).to eq 'drafting'
+      expect(subject).not_to permit(drafter, kase)
+    end
   end
 
   permissions :can_close_case? do
