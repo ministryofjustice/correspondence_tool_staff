@@ -348,10 +348,11 @@ RSpec.describe Case, type: :model do
     end
   end
 
-  describe '#destroy_attachement' do
+  describe '#remove_response' do
 
     let(:kase) { create :case_with_response }
     let(:attachment) { kase.attachments.first }
+    let(:assigner_id)   { 666 }
 
     context 'only one attachemnt' do
       before(:each) do
@@ -360,20 +361,34 @@ RSpec.describe Case, type: :model do
 
       it 'removes the attachment' do
         expect(kase.attachments.size).to eq 1
-        kase.destroy_attachment(attachment)
+        kase.remove_response(assigner_id, attachment)
         expect(kase.attachments.size).to eq 0
       end
 
       it 'changes the state to drafting' do
         expect(kase.current_state).to eq 'awaiting_dispatch'
-        kase.destroy_attachment(attachment)
+        kase.remove_response(assigner_id, attachment)
         expect(kase.current_state).to eq 'drafting'
       end
     end
 
     context 'two attachments' do
-      it 'removes one attachment'
-      it 'does not change the state'
+      before(:each) do
+        kase.attachments << build(:correspondence_response, type: 'response')
+        allow(attachment).to receive(:remove_from_storage_bucket)
+      end
+
+      it 'removes one attachment' do
+        expect(kase.attachments.size).to eq 2
+        kase.remove_response(assigner_id, attachment)
+        expect(kase.attachments.size).to eq 1
+      end
+
+      it 'does not change the state' do
+        expect(kase.current_state).to eq 'awaiting_dispatch'
+        kase.remove_response(assigner_id, attachment)
+        expect(kase.current_state).to eq 'awaiting_dispatch'
+      end
     end
   end
 

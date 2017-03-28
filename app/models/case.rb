@@ -154,11 +154,9 @@ class Case < ApplicationRecord
     state_machine.add_responses!(assignee_id, filenames)
   end
 
-  def destroy_attachment(attachment)
+  def remove_response(assignee_id, attachment)
     attachment.destroy!
-    if self.reload.attachments.empty?
-      state_machine.revert_to_drafting!
-    end
+    state_machine.remove_response(assignee_id, attachment.filename, self.reload.attachments.size)
   end
 
   def response_attachments

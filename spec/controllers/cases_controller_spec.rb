@@ -347,7 +347,7 @@ RSpec.describe CasesController, type: :controller do
   describe 'GET show' do
 
     context 'viewing an unassigned case' do
-      let(:unassigned_case)       { create(:case)            }
+      let(:unassigned_case)       { create(:case) }
       before do
         sign_in user
         get :show, params: { id: unassigned_case.id }

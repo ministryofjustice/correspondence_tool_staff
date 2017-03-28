@@ -19,21 +19,42 @@ describe CasePolicy do
   end
 
   permissions :can_add_attachment? do
-    it 'refuses if current_user is not the assigned drafter' do
-      expect(subject).not_to permit(another_drafter, accepted_case)
+    context 'in drafting state' do
+      it 'refuses if current_user is not the assigned drafter' do
+        expect(subject).not_to permit(another_drafter, accepted_case)
+      end
+
+      it 'grants if current_user is the assigned drafter' do
+        expect(subject).to permit(drafter, accepted_case)
+      end
+
+      it 'refuses if current_user is an assigner' do
+        expect(subject).not_to permit(assigner, accepted_case)
+      end
+
+      it 'refuses if current_user is not the drafter or an assigner' do
+        expect(subject).not_to permit(approver, accepted_case)
+      end
     end
 
-    it 'grants if current_user is the assigned drafter' do
-      expect(subject).to permit(drafter, accepted_case)
+    context 'in awaiting_dispatch state' do
+      it 'refuses if current_user is not the assigned drafter' do
+        expect(subject).not_to permit(another_drafter, case_with_response)
+      end
+
+      it 'grants if current_user is the assigned drafter' do
+        expect(subject).to permit(drafter, case_with_response)
+      end
+
+      it 'refuses if current_user is an assigner' do
+        expect(subject).not_to permit(assigner, case_with_response)
+      end
+
+      it 'refuses if current_user is not the drafter or an assigner' do
+        expect(subject).not_to permit(approver, case_with_response)
+      end
     end
 
-    it 'refuses if current_user is an assigner' do
-      expect(subject).not_to permit(assigner, accepted_case)
-    end
-
-    it 'refuses if current_user is not the drafter or an assigner' do
-      expect(subject).not_to permit(approver, accepted_case)
-    end
   end
 
   permissions :can_add_case? do

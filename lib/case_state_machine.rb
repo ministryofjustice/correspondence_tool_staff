@@ -26,7 +26,11 @@ class CaseStateMachine
     transition from: :awaiting_dispatch, to: :awaiting_dispatch
   end
 
-  event :revert_to_drafting do
+  event :remove_response do
+    transition from: :awaiting_dispatch, to: :awaiting_dispatch
+  end
+
+  event :remove_last_response do
     transition from: :awaiting_dispatch, to: :drafting
   end
 
@@ -46,11 +50,19 @@ class CaseStateMachine
              event:       :add_responses
   end
 
-  def revert_to_drafting!
-    trigger! :revert_to_drafting,
-             event: :revert_to_drafting
+  def remove_response(assignee_id, filename, num_responses)
+    self.remove_response!(assignee_id, filename, num_responses)
   rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
     false
+  end
+
+  def remove_response!(assignee_id, filename, num_attachments)
+    event = num_attachments == 0 ? :remove_last_response : :remove_response
+    trigger event,
+            assignee_id: assignee_id,
+            user_id: assignee_id,
+            filenames: filename,
+            event: event
   end
 
   def add_responses(assignee_id, filenames)

@@ -25,7 +25,7 @@ class CasePolicy
 
   def can_remove_attachment?
     case self.case.current_state
-    when 'drafting', 'awaiting_dispatch' then self.case.drafter == user
+    when 'awaiting_dispatch' then self.case.drafter == user
     else false
     end
   end
