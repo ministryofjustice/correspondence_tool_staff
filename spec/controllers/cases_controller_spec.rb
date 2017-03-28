@@ -2,14 +2,21 @@ require 'rails_helper'
 
 RSpec.describe CasesController, type: :controller do
 
-  let(:all_cases)       { create_list(:case, 5)   }
-  let(:assigner)        { create(:assigner)       }
-  let(:drafter)         { create(:drafter)        }
-  let(:first_case)      { all_cases.first         }
-  let(:assigned_case)   { create(:assigned_case, drafter: drafter)  }
-  let(:accepted_case)   { create(:accepted_case, drafter: drafter)  }
-
-  let(:responded_case)  { create(:responded_case) }
+  let(:all_cases)         { create_list(:case, 5)   }
+  let(:first_case)        { all_cases.first         }
+  let(:manager)           { create :manager }
+  let(:responder)         { create :responder }
+  let(:another_responder) { create :responder }
+  let(:responding_team)   { create :responding_team,
+                                   responders: [responder] }
+  let(:assigned_case)     { create :assigned_case,
+                                   responding_team: responding_team }
+  let(:accepted_case)     { create :accepted_case,
+                                   responding_team: responding_team,
+                                   responder: responder }
+  let(:responded_case)    { create :responded_case,
+                                   responding_team: responding_team,
+                                   responder: responder }
 
   before { create(:category, :foi) }
 
@@ -60,9 +67,9 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
-  context "as an authenticated assigner" do
+  context "as an authenticated manager" do
 
-    before { sign_in assigner }
+    before { sign_in manager }
 
     describe 'GET index' do
 
@@ -242,9 +249,8 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
-  context 'as an authenticated drafter' do
-
-    before { sign_in drafter }
+  context 'as an authenticated responder' do
+    before { sign_in responder }
 
     describe 'GET index' do
 
@@ -294,7 +300,7 @@ RSpec.describe CasesController, type: :controller do
     end
 
     describe 'POST create' do
-      let(:kase) { build(:case, subject: 'Drafters cannot create cases') }
+      let(:kase) { build(:case, subject: 'Responders cannot create cases') }
 
       let(:params) do
         {
@@ -303,8 +309,8 @@ RSpec.describe CasesController, type: :controller do
             name: 'A. Member of Public',
             postal_address: '102 Petty France',
             email: 'member@public.com',
-            subject: 'Drafters cannot create cases',
-            message: 'I am a drafter attempting to create a case',
+            subject: 'Responders cannot create cases',
+            message: 'I am a responder attempting to create a case',
             received_date_dd: Time.zone.today.day.to_s,
             received_date_mm: Time.zone.today.month.to_s,
             received_date_yyyy: Time.zone.today.year.to_s
@@ -366,8 +372,8 @@ RSpec.describe CasesController, type: :controller do
 
       end
 
-      context 'as an authenticated assigner' do
-        let(:user) { create(:assigner) }
+      context 'as an authenticated manager' do
+        let(:user) { create(:manager) }
 
         it 'permitted_events == [:assign_responder]' do
           expect(assigns(:permitted_events)).to eq [:assign_responder]
@@ -379,8 +385,8 @@ RSpec.describe CasesController, type: :controller do
 
       end
 
-      context 'as a drafter' do
-        let(:user) { create(:drafter) }
+      context 'as a responder' do
+        let(:user) { create(:responder) }
 
         it 'permitted_events == nil' do
           expect(assigns(:permitted_events)).to eq nil
@@ -393,7 +399,6 @@ RSpec.describe CasesController, type: :controller do
     end
 
     context 'viewing an assigned_case' do
-      let(:assigned_case)         { create(:assigned_case) }
       before do
         sign_in user
         get :show, params: { id: assigned_case.id }
@@ -411,8 +416,8 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context 'as an authenticated assigner' do
-        let(:user) { create(:assigner) }
+      context 'as an authenticated manager' do
+        let(:user) { create(:manager) }
 
         it 'permitted_events == []' do
           expect(assigns(:permitted_events)).to eq []
@@ -423,8 +428,8 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context 'as a drafter' do
-        let(:user) { assigned_case.drafter }
+      context 'as a responder of the assigned responding team' do
+        let(:user) { responder }
 
         it 'permitted_events == []' do
           expect(assigns(:permitted_events)).to be_nil
@@ -433,13 +438,13 @@ RSpec.describe CasesController, type: :controller do
         it 'renders the show template' do
           expect(response)
               .to redirect_to(edit_case_assignment_path(
-                                  assigned_case,
-                                  assigned_case.assignments.last.id))
+                                assigned_case,
+                                assigned_case.assignments.last.id))
         end
       end
 
-      context 'as another drafter' do
-        let(:user) { create(:drafter) }
+      context 'as a responder of another responding team' do
+        let(:user) { another_responder }
 
         it 'permitted_events == nil' do
           expect(assigns(:permitted_events)).to eq nil
@@ -452,7 +457,7 @@ RSpec.describe CasesController, type: :controller do
     end
 
     context 'viewing a case in drafting' do
-      let(:accepted_case)         { create(:accepted_case)   }
+      let(:accepted_case) { create(:accepted_case)   }
       before do
         sign_in user
         get :show, params: { id: accepted_case.id   }
@@ -470,8 +475,8 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context 'as an authenticated assigner' do
-        let(:user) { create(:assigner) }
+      context 'as an authenticated manager' do
+        let(:user) { create(:manager) }
 
         it 'permitted_events == []' do
           expect(assigns(:permitted_events)).to eq []
@@ -482,8 +487,8 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context 'as the assigned drafter' do
-        let(:user) { accepted_case.drafter }
+      context 'as the assigned responder' do
+        let(:user) { accepted_case.responder }
 
         it 'permitted_events == [:add_responses]' do
           expect(assigns(:permitted_events)).to eq [:add_responses]
@@ -494,8 +499,8 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context 'as another drafter' do
-        let(:user) { create(:drafter) }
+      context 'as another responder' do
+        let(:user) { create(:responder) }
 
         it 'permitted_events == []' do
           expect(assigns(:permitted_events)).to be_nil
@@ -526,8 +531,8 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context 'as an authenticated assigner' do
-        let(:user) { create(:assigner) }
+      context 'as an authenticated manager' do
+        let(:user) { create(:manager) }
 
         it 'permitted_events == []' do
           expect(assigns(:permitted_events)).to eq []
@@ -538,8 +543,8 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context 'as the assigned drafter' do
-        let(:user) { case_with_response.drafter }
+      context 'as the assigned responder' do
+        let(:user) { case_with_response.responder }
 
         it 'permitted_events == [:add_responses, :respond]' do
           expect(assigns(:permitted_events)).to eq [:add_responses, :respond]
@@ -550,8 +555,8 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context 'as another drafter' do
-        let(:user) { create(:drafter) }
+      context 'as another responder' do
+        let(:user) { create(:responder) }
 
         it 'permitted_events == []' do
           expect(assigns(:permitted_events)).to be_nil
@@ -582,8 +587,8 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context 'as an authenticated assigner' do
-        let(:user) { create(:assigner) }
+      context 'as an authenticated manager' do
+        let(:user) { create(:manager) }
 
         it 'permitted_events == [:close]' do
           expect(assigns(:permitted_events)).to eq [:close]
@@ -594,8 +599,8 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context 'as the assigned drafter' do
-        let(:user) { responded_case.drafter }
+      context 'as the assigned responder' do
+        let(:user) { responded_case.responder }
 
         it 'permitted_events == []' do
           expect(assigns(:permitted_events)).to eq []
@@ -606,8 +611,8 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context 'as another drafter' do
-        let(:user) { create(:drafter) }
+      context 'as another responder' do
+        let(:user) { create(:responder) }
 
         it 'permitted_events == []' do
           expect(assigns(:permitted_events)).to be_nil
@@ -621,7 +626,7 @@ RSpec.describe CasesController, type: :controller do
   end
 
   describe 'GET new_response_upload' do
-    let(:kase) { create(:accepted_case, drafter: drafter) }
+    let(:kase) { create(:accepted_case, responder: responder) }
 
     context 'as an anonymous user' do
       describe 'GET new_response_upload' do
@@ -632,10 +637,10 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context "as a drafter who isn't assigned to the case" do
-      let(:unassigned_drafter) { create(:drafter) }
+    context "as a responder who isn't assigned to the case" do
+      let(:unassigned_responder) { create(:responder) }
 
-      before { sign_in unassigned_drafter }
+      before { sign_in unassigned_responder }
 
       it 'redirects to case detail page' do
         get :new_response_upload, params: { id: kase }
@@ -655,14 +660,14 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as the assigned drafter' do
-      before { sign_in drafter }
+    context 'as the assigned responder' do
+      before { sign_in responder }
 
       it_behaves_like 'signed-in user can view attachment upload page'
     end
 
-    context 'as an authenticated assigner' do
-      before { sign_in assigner }
+    context 'as an authenticated manager' do
+      before { sign_in manager }
 
       it 'redirects to case detail page' do
         get :new_response_upload, params: { id: kase }
@@ -673,7 +678,7 @@ RSpec.describe CasesController, type: :controller do
   end
 
   describe 'POST upload_responses' do
-    let(:kase) { create(:accepted_case, drafter: drafter) }
+    let(:kase) { create(:accepted_case, responder: responder) }
     let(:uploads_key) do
       "uploads/#{kase.id}/responses/#{Faker::Internet.slug}.jpg"
     end
@@ -727,10 +732,10 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context "as a drafter who isn't assigned to the case" do
-      let(:unassigned_drafter) { create(:drafter) }
+    context "as a responder who isn't assigned to the case" do
+      let(:unassigned_responder) { create(:responder) }
 
-      before { sign_in unassigned_drafter }
+      before { sign_in unassigned_responder }
 
       it "doesn't add the attachment" do
         expect do
@@ -744,8 +749,8 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as the assigned drafter' do
-      before { sign_in drafter }
+    context 'as the assigned responder' do
+      before { sign_in responder }
 
       it 'creates a new case attachment' do
         expect { do_upload_responses }.
@@ -859,8 +864,8 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as an assigner' do
-      before { sign_in assigner }
+    context 'as a manager' do
+      before { sign_in manager }
 
       it 'redirects to case detail page' do
         get :new_response_upload, params: { id: kase }
@@ -871,9 +876,9 @@ RSpec.describe CasesController, type: :controller do
 
   describe 'GET respond' do
 
-    let(:drafter)            { create(:drafter)                              }
-    let(:another_drafter)    { create(:drafter)                              }
-    let(:case_with_response) { create(:case_with_response, drafter: drafter) }
+    let(:responder)            { create(:responder)                              }
+    let(:another_responder)    { create(:responder)                              }
+    let(:case_with_response) { create(:case_with_response, responder: responder) }
 
     context 'as an anonymous user' do
       it 'redirects to sign_in' do
@@ -882,9 +887,9 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as an authenticated assigner' do
+    context 'as an authenticated manager' do
 
-      before { sign_in assigner }
+      before { sign_in manager }
 
       it 'redirects to the application root' do
         expect(get :respond, params: { id: case_with_response.id }).
@@ -892,9 +897,9 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as the assigned drafter' do
+    context 'as the assigned responder' do
 
-      before { sign_in drafter }
+      before { sign_in responder }
 
       it 'does not transition current_state' do
         expect(case_with_response.current_state).to eq 'awaiting_dispatch'
@@ -908,9 +913,9 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as another drafter' do
+    context 'as another responder' do
 
-      before { sign_in another_drafter }
+      before { sign_in another_responder }
 
       it 'redirects to the application root' do
         expect(get :respond, params: { id: case_with_response.id }).
@@ -921,9 +926,9 @@ RSpec.describe CasesController, type: :controller do
 
   describe 'PATCH confirm_respond' do
 
-    let(:drafter)            { create(:drafter)                              }
-    let(:another_drafter)    { create(:drafter)                              }
-    let(:case_with_response) { create(:case_with_response, drafter: drafter) }
+    let(:responder)            { create(:responder)                              }
+    let(:another_responder)    { create(:responder)                              }
+    let(:case_with_response) { create(:case_with_response, responder: responder) }
 
     context 'as an anonymous user' do
       it 'redirects to sign_in' do
@@ -938,9 +943,9 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as an authenticated assigner' do
+    context 'as an authenticated manager' do
 
-      before { sign_in assigner }
+      before { sign_in manager }
 
       it 'redirects to the application root' do
         expect(patch :confirm_respond, params: { id: case_with_response.id }).
@@ -954,29 +959,29 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as the assigned drafter' do
+    context 'as the assigned responder' do
 
-      before { sign_in drafter }
+      before { sign_in responder }
 
       it 'transitions current_state to "responded"' do
         patch :confirm_respond, params: { id: case_with_response }
         expect(case_with_response.current_state).to eq 'responded'
-        expect(case_with_response.transitions.last.assignee_id).to eq drafter.id
+        expect(case_with_response.transitions.last.assignee_id).to eq responder.id
       end
 
       it 'updates assignee id in transition' do
         patch :confirm_respond, params: { id: case_with_response }
-        expect(case_with_response.transitions.last.assignee_id).to eq drafter.id
+        expect(case_with_response.transitions.last.assignee_id).to eq responder.id
       end
 
       it 'updates user id in transition' do
         patch :confirm_respond, params: { id: case_with_response }
-        expect(case_with_response.transitions.last.user_id).to eq drafter.id
+        expect(case_with_response.transitions.last.user_id).to eq responder.id
       end
 
-      it 'removes the case from the drafters workbasket' do
+      it 'removes the case from the responders workbasket' do
         patch :confirm_respond, params: { id: case_with_response }
-        workbasket = CasePolicy::Scope.new(drafter, Case.all).resolve
+        workbasket = CasePolicy::Scope.new(responder, Case.all).resolve
         expect(workbasket).not_to include case_with_response
       end
 
@@ -986,9 +991,9 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as another drafter' do
+    context 'as another responder' do
 
-      before { sign_in another_drafter }
+      before { sign_in another_responder }
 
       it 'redirects to the application root' do
         expect(patch :confirm_respond, params: { id: case_with_response.id }).

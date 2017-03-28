@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe CaseAttachmentsController, type: :controller do
-  let(:drafter)  { kase.drafter }
-  let(:assigner) { create :assigner }
+  let(:responder) { kase.responder }
+  let(:manager)   { create :manager }
 
   let(:kase)       { create(:case_with_response) }
   let(:attachment) { kase.attachments.first      }
@@ -39,14 +39,14 @@ RSpec.describe CaseAttachmentsController, type: :controller do
       it_behaves_like 'unauthorized user'
     end
 
-    context 'as an assigner' do
-      before { sign_in assigner }
+    context 'as a manager' do
+      before { sign_in manager }
 
       it_behaves_like 'an authorized user'
     end
 
-    context 'as a drafter' do
-      before { sign_in drafter }
+    context 'as a responder' do
+      before { sign_in responder }
 
       it_behaves_like 'an authorized user'
     end
@@ -82,28 +82,28 @@ RSpec.describe CaseAttachmentsController, type: :controller do
       it_behaves_like 'unauthorized user'
     end
 
-    context 'as an assigner with a case that is still open' do
-      before { sign_in assigner }
+    context 'as a manager with a case that is still open' do
+      before { sign_in manager }
 
       it_behaves_like 'unauthorized user'
     end
 
-    context 'as an assigner with a case that is still open' do
-      before { sign_in assigner }
+    context 'as a manager with a case that is still open' do
+      before { sign_in manager }
 
       it_behaves_like 'unauthorized user'
     end
 
-    context 'as an assigner with a case that has been marked as responded' do
+    context 'as a manager with a case that has been marked as responded' do
       let(:kase) { create(:responded_case) }
 
-      before { sign_in assigner }
+      before { sign_in manager }
 
       it_behaves_like 'unauthorized user'
     end
 
-    context 'as a drafter who is still responding to a case' do
-      before { sign_in drafter }
+    context 'as a responder who is still responding to a case' do
+      before { sign_in responder }
 
       it 'deletes the attachment from the case' do
         delete :destroy, params: { case_id: kase.id, id: attachment.id }
@@ -111,10 +111,10 @@ RSpec.describe CaseAttachmentsController, type: :controller do
       end
     end
 
-    context 'as a drafter who has marked the case as responded' do
+    context 'as a responder who has marked the case as responded' do
       let(:kase) { create(:responded_case) }
 
-      before { sign_in drafter }
+      before { sign_in responder }
 
       it_behaves_like 'unauthorized user'
     end

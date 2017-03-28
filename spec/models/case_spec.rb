@@ -167,10 +167,10 @@ RSpec.describe Case, type: :model do
 
   end
 
-  describe '#responders' do
-    it { should have_many(:responders)
-                  .through(:responding_team)
-                  .source(:responders) }
+  describe '#responder' do
+    it { should have_one(:responder)
+                  .through(:responder_assignment)
+                  .source(:user) }
   end
 
   describe '#who_its_with' do
