@@ -20,12 +20,12 @@
 
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
-  # :recoverable, :confirmable, :lockable and :omniauthable
+  # :confirmable, :lockable and :omniauthable
 
   devise :database_authenticatable, :timeoutable,
-    :trackable, :validatable
+    :trackable, :validatable, :recoverable
 
-  has_many :cases, through: :assignments
+         has_many :cases, through: :assignments
   has_many :assignments, foreign_key: 'assignee_id'
 
   validates :full_name, presence: true

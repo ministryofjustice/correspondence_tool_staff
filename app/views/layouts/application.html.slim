@@ -18,7 +18,7 @@
     = "controller-" + controller.controller_name
 
   - content_for :proposition_header do
-    - if controller_name != 'sessions'
+    - if controller_name != 'sessions' && @user.full_name.present?
       .header-proposition.user-card
         .content
           nav#proposition-menu
