@@ -62,7 +62,7 @@ feature 'Case creation by a manager' do
       received_date:  Time.zone.today
     )
 
-    select responding_team.name, from: 'assignment[team_id]'
+    choose responding_team.name
     click_button 'Create and assign case'
     expect(current_path).to eq cases_path
     expect(page).to have_content('Case successfully created')

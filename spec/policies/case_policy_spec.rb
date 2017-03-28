@@ -5,6 +5,8 @@ describe CasePolicy do
 
   let(:assigner)        { create(:assigner) }
   let(:drafter)         { create(:drafter)  }
+  let(:manager)         { create(:manager) }
+  let(:responder)       { create(:responder) }
   let(:another_drafter) { create(:drafter) }
   let(:approver)        { create(:approver) }
 
@@ -68,17 +70,17 @@ describe CasePolicy do
   end
 
   permissions :can_assign_case? do
-    it "refuses unless current_user is an assigner" do
-      expect(subject).not_to permit(drafter, create(:case))
+    it "refuses unless current_user is an manager" do
+      expect(subject).not_to permit(responder, create(:case))
     end
 
-    it "grants if current_user is an assigner" do
-      expect(subject).to permit(assigner, create(:case))
+    it "grants if current_user is a manager" do
+      expect(subject).to permit(manager, create(:case))
     end
 
     it "refuses if case is not in unassigned state" do
-      expect(subject).not_to permit(assigner, create(:assigned_case))
-      expect(subject).not_to permit(drafter, create(:assigned_case))
+      expect(subject).not_to permit(manager, create(:assigned_case))
+      expect(subject).not_to permit(responder, create(:assigned_case))
     end
   end
 
