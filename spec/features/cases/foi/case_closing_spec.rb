@@ -1,5 +1,5 @@
 require 'rails_helper'
-require File.join(Rails.root, 'db', 'case_closure_metadata_seeder')
+require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
 feature 'Closing a case' do
   given(:kase) { create(:responded_case,
