@@ -40,10 +40,12 @@ FactoryGirl.define do
         responding_team { create :responding_team }
       end
 
+
       after(:create) do |kase, evaluator|
         create :assignment,
                case: kase,
-               team: evaluator.responding_team
+               team: evaluator.responding_team,
+               state: 'pending'
         create :case_transition_assign_responder,
                case: kase,
                user: evaluator.manager,
@@ -54,10 +56,13 @@ FactoryGirl.define do
 
     factory :accepted_case, parent: :assigned_case do
       transient do
-        responder { responding_team.responders.first }
+        responder { create :responder }
+        responding_team { responder.responding_teams.first }
       end
 
       after(:create) do |kase, evaluator|
+        kase.responder_assignment.update_attribute :user, evaluator.responder
+        kase.responder_assignment.accepted!
         create :case_transition_accept_responder_assignment,
                case: kase,
                user: evaluator.responder,

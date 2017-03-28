@@ -64,8 +64,8 @@ class Case < ApplicationRecord
 
   has_many :assignments, dependent: :destroy
   has_one :responder_assignment, class_name: 'Assignment'
+  has_one :responder, through: :responder_assignment, source: :user
   has_one :responding_team, through: :responder_assignment, source: :team
-  has_many :responders, through: :responding_team, source: :responders
   has_many :transitions, class_name: 'CaseTransition', autosave: false
   has_many :attachments, class_name: 'CaseAttachment'
   belongs_to :outcome, class_name: 'CaseClosure::Outcome'

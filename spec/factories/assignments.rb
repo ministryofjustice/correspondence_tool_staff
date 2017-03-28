@@ -17,7 +17,7 @@ FactoryGirl.define do
   factory :assignment do
     state 'pending'
     team { create :responding_team }
-    role 'managing'
+    role 'responding'
     association :case, factory: :case, strategy: :create
 
     factory :accepted_assignment, parent: :cases_teams_role do

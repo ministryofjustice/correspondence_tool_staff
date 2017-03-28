@@ -158,8 +158,8 @@ RSpec.describe CaseStateMachine, type: :model do
 
   describe '#add_responses!' do
     let(:kase)            { create :accepted_case }
-    let(:manager)         { kase.managers.first }
-    let(:responder)       { kase.responders.first }
+    let(:manager)         { create :manager }
+    let(:responder)       { kase.responders }
     let(:responding_team) { kase.responding_team }
 
     before do
