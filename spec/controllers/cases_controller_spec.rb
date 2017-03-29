@@ -253,31 +253,47 @@ RSpec.describe CasesController, type: :controller do
     before { sign_in responder }
 
     describe 'GET index' do
-
+      let(:case1) { create :accepted_case,
+                           received_date: Date.parse('17/11/2016'),
+                           subject: 'newer request 1',
+                           responder: responder }
+      let(:case2) { create :accepted_case,
+                           received_date: Date.parse('17/11/2016'),
+                           subject: 'newer request 2',
+                           responder: responder }
+      let(:case3) { create :accepted_case,
+                           received_date: Date.parse('16/11/2016'),
+                           subject: 'request 2',
+                           responder: responder }
+      let(:case4) { create :accepted_case,
+                           received_date: Date.parse('16/11/2016'),
+                           subject: 'request 1',
+                           responder: responder }
+      let(:case5) { create :accepted_case,
+                           received_date: Date.parse('15/11/2016'),
+                           subject: 'older request 2',
+                           responder: responder }
+      let(:case6) { create :accepted_case,
+                           received_date: Date.parse('15/11/2016'),
+                           subject: 'older request 1',
+                           responder: responder }
       let(:unordered_cases) do
-        [
-          create(:case, received_date: Date.parse('17/11/2016'), subject: 'newer request 2', id: 2),
-          create(:case, received_date: Date.parse('17/11/2016'), subject: 'newer request 1', id: 1),
-          create(:case, received_date: Date.parse('16/11/2016'), subject: 'request 2', id: 3),
-          create(:case, received_date: Date.parse('16/11/2016'), subject: 'request 1', id: 4),
-          create(:case, received_date: Date.parse('15/11/2016'), subject: 'older request 2', id: 5),
-          create(:case, received_date: Date.parse('15/11/2016'), subject: 'older request 1', id: 6)
-        ]
+        [ case2, case1, case4, case3, case6, case5 ]
       end
 
-      let(:drafters_workbasket) { Case.all.select {|kase| kase.drafter == drafter} }
+      let(:responders_workbasket) do
+        Case.all.select {|kase| kase.responder == responder}
+      end
 
       before {
         unordered_cases
-        create(:drafter_assignment, assignee: drafter, case_id: 1)
-        create(:drafter_assignment, assignee: drafter, case_id: 2)
-        drafters_workbasket
+        responders_workbasket
         get :index
       }
 
       it 'assigns @cases, sorted by external_deadline, then ID' do
         expect(assigns(:cases)).
-          to eq drafters_workbasket.sort_by { |c| [c.external_deadline, c.id] }
+          to eq responders_workbasket.sort_by { |c| [c.external_deadline, c.id] }
       end
 
       it 'renders the index template' do
@@ -569,7 +585,7 @@ RSpec.describe CasesController, type: :controller do
     end
 
     context 'viewing a responded_case' do
-      let(:responded_case)        { create(:responded_case)   }
+      let(:responded_case) { create(:responded_case)   }
       before do
         sign_in user
         get :show, params: { id: responded_case.id   }
@@ -599,15 +615,15 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context 'as the assigned responder' do
-        let(:user) { responded_case.responder }
+      context 'as the previously assigned responder' do
+        let(:user) { responder }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq []
+          expect(assigns(:permitted_events)).to be_nil
         end
 
-        it 'renders the show page' do
-          expect(response).to have_rendered(:show)
+        it 'redirects to the application root path' do
+          expect(response).to redirect_to(authenticated_root_path)
         end
       end
 

@@ -93,6 +93,7 @@ FactoryGirl.define do
                case: kase,
                user: evaluator.responder,
                responding_team: evaluator.responding_team
+        kase.responder_assignment.destroy
       end
     end
 
