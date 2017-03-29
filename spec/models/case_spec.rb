@@ -684,7 +684,7 @@ RSpec.describe Case, type: :model do
       end
 
       context 'the date responded is before on external deadline' do
-        let(:days_taken) { foi.external_time_limit }
+        let(:days_taken) { foi.external_time_limit - 1 }
 
         it 'returns true' do
           expect(responded_case.within_external_deadline?).to eq true
