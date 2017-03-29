@@ -50,7 +50,7 @@ FactoryGirl.define do
         filenames ['file1.pdf', 'file2.pdf']
       end
 
-      to_state 'drafting'
+      to_state 'awaiting_dispatch'
       user_id     { assignee.id }
       assignee_id { assignee.id }
       event 'add_responses'

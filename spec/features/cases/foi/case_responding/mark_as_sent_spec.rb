@@ -15,6 +15,7 @@ feature 'Mark response as sent' do
   scenario 'the assigned KILO has uploaded a response' do
     cases_show_page.load(id: kase.id)
 
+    expect(cases_show_page.sidebar.actions).to have_upload_response
     expect(cases_show_page.sidebar.actions).to have_mark_as_sent
     cases_show_page.sidebar.actions.mark_as_sent.click
 

@@ -9,10 +9,12 @@ module CasesHelper
     when :assign_responder
       link_to I18n.t('common.case.assign'),
               new_case_assignment_path(@case),
+              id: 'action--assign-to-responder',
               class: 'button'
     when :add_responses
       link_to t('common.case.upload_response'),
               new_response_upload_case_path(@case),
+              id: 'action--upload-response',
               class: 'button'
     when :respond
       link_to t('common.case.respond'),

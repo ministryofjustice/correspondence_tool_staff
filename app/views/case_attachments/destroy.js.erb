@@ -1,4 +1,4 @@
-<% if @case.drafting? && @case.attachments.response.empty? %>
+<% if (@case.drafting? || @case.awaiting_dispatch?) && @case.attachments.response.empty? %>
 if($(".request--response-details").length) {
     $(".request--response-details").remove();
 }

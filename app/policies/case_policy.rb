@@ -8,7 +8,7 @@ class CasePolicy
   end
 
   def can_add_attachment?
-    self.case.drafting? && self.case.drafter == user
+    (self.case.drafting? || self.case.awaiting_dispatch?) && self.case.drafter == user
   end
 
   def can_add_case?
@@ -25,13 +25,13 @@ class CasePolicy
 
   def can_remove_attachment?
     case self.case.current_state
-    when 'drafting' then self.case.drafter == user
+    when 'awaiting_dispatch' then self.case.drafter == user
     else false
     end
   end
 
   def can_respond?
-    self.case.drafting? &&
+    self.case.awaiting_dispatch? &&
       self.case.response_attachments.any? && self.case.drafter == user
   end
 

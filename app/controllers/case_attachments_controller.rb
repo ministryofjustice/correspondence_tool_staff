@@ -9,10 +9,16 @@ class CaseAttachmentsController < ApplicationController
   def destroy
     authorize @case, :can_remove_attachment?
 
-    @attachment.destroy!
-    respond_to do |format|
-      format.js
-      format.html { redirect_to case_path(@case) }
+    @case.remove_response(current_user.id, @attachment)
+
+    if @case.attachments.empty? && request.format == :js
+      render :js => "window.location = '#{case_path(@case)}'"
+    else
+      respond_to do |format|
+        format.js
+        format.html { redirect_to case_path(@case) }
+      end
+
     end
   end
 

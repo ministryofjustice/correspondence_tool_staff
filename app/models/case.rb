@@ -154,6 +154,11 @@ class Case < ApplicationRecord
     state_machine.add_responses!(assignee_id, filenames)
   end
 
+  def remove_response(assignee_id, attachment)
+    attachment.destroy!
+    state_machine.remove_response(assignee_id, attachment.filename, self.reload.attachments.size)
+  end
+
   def response_attachments
     attachments.select(&:response?)
   end

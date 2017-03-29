@@ -27,6 +27,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+--
+-- Name: citext; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
+
+
 SET search_path = public, pg_catalog;
 
 --
@@ -71,6 +85,27 @@ CREATE TYPE state AS ENUM (
     'pending',
     'rejected',
     'accepted'
+);
+
+
+--
+-- Name: team_roles; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE team_roles AS ENUM (
+    'managing',
+    'responding'
+);
+
+
+--
+-- Name: user_role; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE user_role AS ENUM (
+    'creator',
+    'manager',
+    'responder'
 );
 
 
@@ -751,7 +786,7 @@ ALTER TABLE ONLY cases
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES
+INSERT INTO "schema_migrations" (version) VALUES
 ('20160722121207'),
 ('20160802130203'),
 ('20160802134012'),

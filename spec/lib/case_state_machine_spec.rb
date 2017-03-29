@@ -154,7 +154,7 @@ RSpec.describe CaseStateMachine, type: :model do
     end
 
     it 'triggers a add_responses event, but does not change current_state' do
-      expect(kase.current_state).to eq 'drafting'
+      expect(kase.current_state).to eq 'awaiting_dispatch'
     end
 
     it 'triggers the correct event transition' do

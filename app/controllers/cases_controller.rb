@@ -75,17 +75,15 @@ class CasesController < ApplicationController
         @case.add_responses(current_user.id, responses)
         remove_leftover_upload_files
         flash[:notice] = t('notices.response_uploaded')
+        set_permitted_events
         redirect_to case_path
 
       else
         flash.now[:alert] = t('alerts.response_upload_error')
         # @errors = attachments.reject(&:valid?).map { |a| a.errors.full_messages }.flatten
         render :new_response_upload
-
       end
-
     end
-
   end
 
   def update
@@ -137,10 +135,14 @@ class CasesController < ApplicationController
   def set_permitted_events
     @permitted_events = @case.available_events.find_all do |event|
       case event
-      when :assign_responder            then policy(@case).can_assign_case?
-      when :add_responses               then policy(@case).can_add_attachment?
-      when :respond                     then policy(@case).can_respond?
-      when :close                       then policy(@case).can_close_case?
+      when :assign_responder
+        policy(@case).can_assign_case?
+      when :add_responses
+        policy(@case).can_add_attachment?
+      when :respond
+        policy(@case).can_respond?
+      when :close
+        policy(@case).can_close_case?
       end
     end
     @permitted_events ||= []
