@@ -59,12 +59,14 @@ group :development, :test do
   gem 'byebug', platform: :mri
   gem 'faker'
   gem 'launchy'
+  gem 'mechanize', '~> 2.7.5'
   gem 'pry'
   gem 'pry-byebug'
   gem 'rb-readline', '~> 0.5.4'
   gem 'rspec-rails', '~> 3.4'
   gem 'rubocop', require: false
   gem 'rubocop-rspec', require: false
+
 end
 
 group :development do
