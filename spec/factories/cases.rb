@@ -23,6 +23,10 @@
 FactoryGirl.define do
 
   factory :case do
+    transient do
+      managing_team { create :managing_team, name: 'DACU', email: 'dacu@localhost' }
+    end
+
     requester_type 'member_of_the_public'
     name { Faker::Name.name }
     email { Faker::Internet.email }
@@ -33,9 +37,20 @@ FactoryGirl.define do
     received_date Time.zone.today.to_s
     postal_address { Faker::Address.street_address }
 
+    after(:build) do |_kase, evaluator|
+      evaluator.managing_team
+    end
+
+    after(:create) do |kase, evaluator|
+      create :assignment,
+             case: kase,
+             team: evaluator.managing_team,
+             state: 'pending',
+             role: 'managing'
+    end
+
     factory :assigned_case, parent: :case do
       transient do
-        managing_team   { create :managing_team }
         manager         { managing_team.managers.first }
         responding_team { create :responding_team }
       end

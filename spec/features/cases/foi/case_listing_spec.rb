@@ -49,8 +49,7 @@ feature 'listing cases on the system' do
            email: 'freddie.foi@testing.digital.justice.gov.uk',
            subject: 'test responded FOI subject',
            message: 'viewing responded foi details test message',
-           category: foi_category,
-           responder: responder
+           category: foi_category
   end
 
   given(:closed_case) do
@@ -95,7 +94,8 @@ feature 'listing cases on the system' do
     expect(assigned_case_row.number)
         .to have_link("#{assigned_case.number}", href: case_path(assigned_case.id))
     expect(assigned_case_row.status.text).to eq 'Acceptance'
-    expect(assigned_case_row.who_its_with.text).to eq assigned_case.responder.full_name
+    expect(assigned_case_row.who_its_with.text)
+      .to eq assigned_case.responding_team.name
 
 
     accepted_case_row = cases_page.case_list.third
@@ -106,18 +106,20 @@ feature 'listing cases on the system' do
     expect(accepted_case_row.number)
         .to have_link("#{accepted_case.number}", href: case_path(accepted_case.id))
     expect(accepted_case_row.status.text).to eq 'Response'
-    expect(accepted_case_row.who_its_with.text).to eq accepted_case.responder.full_name
+    expect(accepted_case_row.who_its_with.text)
+      .to eq accepted_case.responding_team.name
 
 
     case_with_response_row = cases_page.case_list.fourth
-    expect(case_with_response_row.name.text).to     eq 'Freddie FOI Responded'
+    expect(case_with_response_row.name.text).to     eq 'Freddie FOI With Response'
     expect(case_with_response_row.subject.text).to  eq 'test case with response FOI subject'
     expect(case_with_response_row.external_deadline.text)
         .to have_content(case_with_response.external_deadline.strftime('%e %b %Y'))
     expect(case_with_response_row.number)
         .to have_link("#{case_with_response.number}", href: case_path(case_with_response.id))
     expect(case_with_response_row.status.text).to eq 'Awaiting Dispatch'
-    expect(case_with_response_row.who_its_with.text).to eq case_with_response.responder.full_name
+    expect(case_with_response_row.who_its_with.text)
+      .to eq case_with_response.responding_team.name
 
 
     responded_case_row = cases_page.case_list.last
@@ -128,8 +130,8 @@ feature 'listing cases on the system' do
     expect(responded_case_row.number)
         .to have_link("#{responded_case.number}", href: case_path(responded_case.id))
     expect(responded_case_row.status.text).to eq 'Closure'
-    expect(responded_case_row.who_its_with.text).to eq responded_case.responder.full_name
-
+    expect(responded_case_row.who_its_with.text)
+      .to eq responded_case.managing_team.name
   end
 
   scenario 'For responders - shows only their assigned and accepted cases' do
@@ -146,7 +148,8 @@ feature 'listing cases on the system' do
         .to have_link("#{assigned_case.number}",
                       href: case_path(assigned_case))
     expect(assigned_case_row.status.text).to eq 'Acceptance'
-    expect(assigned_case_row.who_its_with.text).to eq assigned_case.responder.full_name
+    expect(assigned_case_row.who_its_with.text)
+      .to eq assigned_case.responding_team.name
 
 
     accepted_case_row = cases_page.case_list.second
@@ -158,18 +161,20 @@ feature 'listing cases on the system' do
         .to have_link("#{accepted_case.number}",
                       href: case_path(accepted_case))
     expect(accepted_case_row.status.text).to eq 'Response'
-    expect(accepted_case_row.who_its_with.text).to eq accepted_case.responder.full_name
+    expect(accepted_case_row.who_its_with.text)
+      .to eq accepted_case.responding_team.name
 
 
     case_with_response_row = cases_page.case_list.third
-    expect(case_with_response_row.name.text).to     eq 'Freddie FOI Responded'
+    expect(case_with_response_row.name.text).to     eq 'Freddie FOI With Response'
     expect(case_with_response_row.subject.text).to  eq 'test case with response FOI subject'
     expect(case_with_response_row.external_deadline.text)
         .to have_content(case_with_response.external_deadline.strftime('%e %b %Y'))
     expect(case_with_response_row.number)
         .to have_link("#{case_with_response.number}", href: case_path(case_with_response.id))
     expect(case_with_response_row.status.text).to eq 'Awaiting Dispatch'
-    expect(case_with_response_row.who_its_with.text).to eq case_with_response.responder.full_name
+    expect(case_with_response_row.who_its_with.text)
+      .to eq case_with_response.responding_team.name
   end
 
 end

@@ -43,6 +43,7 @@ RSpec.describe Case, type: :model do
   let(:no_email)           { build :case, email: nil                      }
   let(:responder)          { create :responder                            }
   let(:manager)            { create :manager                              }
+  # let!(:dacu)              { create :dacu_team }
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do
@@ -339,6 +340,23 @@ RSpec.describe Case, type: :model do
     describe '#responding_team' do
       it { should have_one(:responding_team) }
     end
+
+    it { should have_one(:responder_assignment)
+                  .conditions(role: 'responding')
+                  .class_name('Assignment') }
+    it { should have_one(:responder)
+                  .through(:responder_assignment)
+                  .source(:user) }
+    it { should have_one(:responding_team)
+                  .through(:responder_assignment)
+                  .source(:team) }
+
+    it { should have_one(:managing_assignment)
+                  .conditions(role: 'managing')
+                  .class_name('Assignment') }
+    it { should have_one(:managing_team)
+                  .through(:managing_assignment)
+                  .source(:team) }
   end
 
   describe '#remove_response' do
@@ -464,6 +482,19 @@ RSpec.describe Case, type: :model do
       end
     end
 
+    describe '#set_managing_team' do
+      it 'is called in the before_create' do
+        allow(non_trigger_foi).to receive(:set_managing_team)
+        non_trigger_foi.save rescue nil
+        expect(non_trigger_foi).to have_received(:set_managing_team)
+      end
+
+      it 'sets it to DACU' do
+        non_trigger_foi.save!
+        expect(non_trigger_foi.managing_team)
+          .to eq Team.managing.find_by name: 'DACU'
+      end
+    end
   end
 
   describe 'querying current state' do
