@@ -30,6 +30,9 @@ class Assignment < ApplicationRecord
   belongs_to :team
   belongs_to :user
 
+  scope :managing,   -> { where(role: 'managing') }
+  scope :responding, -> { where(role: 'responding') }
+
   attr_accessor :reasons_for_rejection
 
   def reject(current_user, message)

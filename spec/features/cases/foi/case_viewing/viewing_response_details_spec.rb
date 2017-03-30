@@ -1,15 +1,15 @@
 require 'rails_helper'
 
 feature 'viewing response details' do
-  given(:assigner) { create :assigner }
-  given(:drafter)  { create :drafter }
+  given(:manager) { create :manager }
+  given(:responder)  { create :responder }
 
-  context 'as an assigner' do
+  context 'as an manager' do
     before do
-      login_as assigner
+      login_as manager
     end
 
-    context 'with a case being drafter' do
+    context 'with a case being responder' do
       given(:drafting_case)  { create :case_with_response }
 
       scenario 'when the case has a response' do
@@ -22,8 +22,8 @@ feature 'viewing response details' do
     context 'with a case marked as responded' do
       given(:responded_case) do
         create :responded_case,
-               assigner: assigner,
-               drafter: drafter
+               manager: manager,
+               responder: responder
       end
       given(:response) { responded_case.attachments.first }
 
@@ -34,14 +34,14 @@ feature 'viewing response details' do
         expect(cases_show_page.response_details.responses.first)
           .to have_content(response.filename)
         expect(cases_show_page.response_details.responder)
-          .to have_content(drafter.full_name)
+          .to have_content(responder.full_name)
       end
 
       given(:case_with_many_responses) do
         create :responded_case,
                responses: build_list(:correspondence_response, 4),
-               assigner: assigner,
-               drafter: drafter
+               manager: manager,
+               responder: responder
       end
       given(:responses) { case_with_many_responses.attachments }
 
@@ -61,14 +61,14 @@ feature 'viewing response details' do
     end
 
     context 'with a closed case' do
-      given(:closed_case)  { create :closed_case, drafter: drafter }
+      given(:closed_case)  { create :closed_case, responder: responder }
 
       scenario 'when the case has a response' do
         cases_show_page.load(id: closed_case.id)
 
         expect(cases_show_page).to have_response_details
         expect(cases_show_page.response_details.responder)
-          .to have_content(drafter.full_name)
+          .to have_content(responder.full_name)
         expect(cases_show_page.response_details.date_responded)
           .to have_content(closed_case.date_responded.strftime('%e %b %Y'))
         expect(cases_show_page.response_details.outcome)
@@ -78,13 +78,13 @@ feature 'viewing response details' do
 
   end
 
-  context 'as a drafter' do
+  context 'as a responder' do
     before do
-      login_as drafter
+      login_as responder
     end
 
     context 'with a case being drafted' do
-      given(:accepted_case) { create :accepted_case, drafter: drafter }
+      given(:accepted_case) { create :accepted_case, responder: responder }
       given(:response)      { build  :case_response }
 
       scenario 'when the case has no responses' do

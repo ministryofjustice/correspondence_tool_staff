@@ -63,9 +63,11 @@ class Case < ApplicationRecord
   belongs_to :category, required: true
 
   has_many :assignments, dependent: :destroy
-  has_one :responder_assignment, class_name: 'Assignment'
+  has_one :responder_assignment, -> { responding }, class_name: 'Assignment'
   has_one :responder, through: :responder_assignment, source: :user
   has_one :responding_team, through: :responder_assignment, source: :team
+  has_one :managing_assignment, -> { managing }, class_name: 'Assignment'
+  has_one :managing_team, through: :managing_assignment, source: :team
   has_many :transitions, class_name: 'CaseTransition', autosave: false
   has_many :attachments, class_name: 'CaseAttachment'
   belongs_to :outcome, class_name: 'CaseClosure::Outcome'
@@ -74,7 +76,7 @@ class Case < ApplicationRecord
   has_and_belongs_to_many :exemptions, class_name: 'CaseClosure::Exemption', join_table: 'cases_exemptions'
 
   before_save :prevent_number_change
-  before_create :set_deadlines, :set_number
+  before_create :set_deadlines, :set_number, :set_managing_team
   after_update :set_deadlines
 
   delegate :current_state, :available_events, to: :state_machine
@@ -184,7 +186,7 @@ class Case < ApplicationRecord
     if responder_assignment.present?
       responding_team.name
     else
-      'DACU'
+      managing_team.name
     end
   end
 
@@ -243,6 +245,11 @@ class Case < ApplicationRecord
     self.external_deadline = DeadlineCalculator.external_deadline(self)
   end
 
+  def set_managing_team
+    # For now, we just automatically assign cases to DACU.
+    self.managing_team = Team.managing.find_by!(name: 'DACU')
+  end
+
   def set_number
     self.number = next_number
   end
@@ -253,5 +260,4 @@ class Case < ApplicationRecord
       CaseNumberCounter.next_for_date(received_date)
     ]
   end
-
 end

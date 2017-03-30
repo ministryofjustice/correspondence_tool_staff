@@ -1,21 +1,21 @@
 require 'rails_helper'
 
 feature 'viewing details of case in the system' do
-  background do
-    login_as create(:user)
-  end
+
+  # TODO: Add test that DACU shows up when the case is marked as responded
+  given(:responder) { create :responder }
+  given(:responding_team) { create :responding_team, responders: [responder] }
 
   given(:gq_category) { create(:category, :gq) }
   given(:gq) do
-    create(
-      :assigned_case,
-      requester_type: :journalist,
-      name: 'Gina GQ',
-      email: 'gina.gq@testing.digital.justice.gov.uk',
-      subject: 'this is a gq',
-      message: 'viewing gq details test message',
-      category: gq_category
-    )
+    create :accepted_case,
+           requester_type: :journalist,
+           name: 'Gina GQ',
+           email: 'gina.gq@testing.digital.justice.gov.uk',
+           subject: 'this is a gq',
+           message: 'viewing gq details test message',
+           category: gq_category,
+           responding_team: responding_team
   end
 
   given(:internal_gq_deadline) do
@@ -23,6 +23,10 @@ feature 'viewing details of case in the system' do
   end
   given(:external_gq_deadline) do
     DeadlineCalculator.external_deadline(gq).strftime("%e %b %Y")
+  end
+
+  background do
+    login_as responder
   end
 
   scenario 'when the case is a general enquiry' do
@@ -38,8 +42,9 @@ feature 'viewing details of case in the system' do
     expect(cases_show_page.sidebar).to have_external_deadline
     expect(cases_show_page.sidebar.external_deadline).
       to have_content(external_gq_deadline)
-    expect(cases_show_page.sidebar.status).to have_content('Acceptance')
-    expect(cases_show_page.sidebar.who_its_with).to have_content(gq.drafter.full_name)
+    expect(cases_show_page.sidebar.status).to have_content('Response')
+    expect(cases_show_page.sidebar.who_its_with)
+      .to have_content(gq.responding_team.name)
 
     expect(cases_show_page.sidebar.name).to have_content('Gina GQ')
     expect(cases_show_page.sidebar.requester_type).
@@ -54,23 +59,21 @@ feature 'viewing details of case in the system' do
 
   given(:foi_category) { create(:category) }
   given(:foi) do
-    create(
-      :assigned_case,
-      requester_type: :offender,
-      name: 'Freddie FOI',
-      email: 'freddie.foi@testing.digital.justice.gov.uk',
-      subject: 'this is a foi',
-      message: 'viewing foi details test message',
-      category: foi_category
-    )
+    create :accepted_case,
+           requester_type: :offender,
+           name: 'Freddie FOI',
+           email: 'freddie.foi@testing.digital.justice.gov.uk',
+           subject: 'this is a foi',
+           message: 'viewing foi details test message',
+           category: foi_category,
+           responding_team: responding_team
   end
 
   given(:old_foi) do
-    create(
-      :case,
-      received_date: 31.days.ago,
-      category: foi_category
-    )
+    create :accepted_case,
+           received_date: 31.days.ago,
+           category: foi_category,
+           responding_team: responding_team
   end
 
   given(:foi_received_date) do
@@ -96,8 +99,9 @@ feature 'viewing details of case in the system' do
       expect(cases_show_page.sidebar).to have_external_deadline
       expect(cases_show_page.sidebar.external_deadline).
         to have_content(external_foi_deadline)
-      expect(cases_show_page.sidebar.status).to have_content('Acceptance')
-      expect(cases_show_page.sidebar.who_its_with).to have_content(foi.drafter.full_name)
+      expect(cases_show_page.sidebar.status).to have_content('Response')
+      expect(cases_show_page.sidebar.who_its_with)
+        .to have_content(foi.responding_team.name)
       expect(cases_show_page.sidebar.name).to have_content('Freddie FOI')
       expect(cases_show_page.sidebar.requester_type).
         to have_content(foi.requester_type.humanize)
