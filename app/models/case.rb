@@ -137,32 +137,35 @@ class Case < ApplicationRecord
                                                message
   end
 
-  def responder_assignment_accepted(assignee_id)
-    state_machine.accept_responder_assignment!(assignee_id)
+  def responder_assignment_accepted(current_user, responding_team)
+    state_machine.accept_responder_assignment!(current_user, responding_team)
   end
 
-  def add_responses(assignee, responses)
+  def add_responses(current_user, responses)
     self.attachments << responses
     filenames = responses.map(&:filename)
-    state_machine.add_responses!(assignee, filenames)
+    state_machine.add_responses!(current_user, responding_team, filenames)
   end
 
-  def remove_response(assignee_id, attachment)
+  def remove_response(current_user, attachment)
     attachment.destroy!
-    state_machine.remove_response(assignee_id, attachment.filename, self.reload.attachments.size)
+    state_machine.remove_response current_user,
+                                  responding_team,
+                                  attachment.filename,
+                                  self.reload.attachments.size
   end
 
   def response_attachments
     attachments.select(&:response?)
   end
 
-  def respond(current_user_id)
-    state_machine.respond!(current_user_id)
+  def respond(current_user)
+    state_machine.respond!(current_user, responding_team)
     responder_assignment.destroy
   end
 
-  def close(current_user_id)
-    state_machine.close!(current_user_id)
+  def close(current_user)
+    state_machine.close!(current_user, managing_team)
   end
 
   def received_not_in_the_future?

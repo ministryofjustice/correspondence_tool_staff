@@ -49,15 +49,15 @@ RSpec.describe Assignment, type: :model do
   end
 
   describe '#reject' do
-    let(:message)         { |example| "test #{example.description}" }
+    let(:message) { |example| "test #{example.description}" }
 
     before do
-      allow(assigned_case).to receive(:responder_assignment_rejected)
+      allow(assignment.case).to receive(:responder_assignment_rejected)
     end
 
     it 'triggers the case event' do
       assignment.reject(responder, message)
-      expect(assigned_case).
+      expect(assignment.case).
         to have_received(:responder_assignment_rejected).
              with(responder, responding_team, message)
     end
@@ -70,12 +70,12 @@ RSpec.describe Assignment, type: :model do
 
   describe '#accept' do
     before do
-      allow(assigned_case).to receive(:responder_assignment_accepted)
+      allow(assignment.case).to receive(:responder_assignment_accepted)
     end
 
     it 'triggers the case event' do
       assignment.accept(responder)
-      expect(assigned_case).
+      expect(assignment.case).
         to have_received(:responder_assignment_accepted).
              with(responder, responding_team)
     end

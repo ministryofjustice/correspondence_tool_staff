@@ -42,10 +42,10 @@ class AssignmentsController < ApplicationController
     authorize @case, :can_accept_or_reject_case?
 
     if accept?
-      @assignment.accept
+      @assignment.accept current_user
       redirect_to case_path @assignment.case, accepted_now: true
     elsif valid_reject?
-      @assignment.reject assignment_params[:reasons_for_rejection]
+      @assignment.reject current_user, assignment_params[:reasons_for_rejection]
       redirect_to case_assignments_show_rejected_path @case, rejected_now: true
     else
       @assignment.assign_and_validate_state(assignment_params[:state])
