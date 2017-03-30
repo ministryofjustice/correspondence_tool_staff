@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe CaseAttachmentsController, type: :controller do
-  let(:responder) { kase.responder }
+  let(:responder) { create :responder }
   let(:manager)   { create :manager }
 
-  let(:kase)       { create(:case_with_response) }
+  let(:kase)       { create(:case_with_response, responder: responder) }
   let(:attachment) { kase.attachments.first      }
 
   describe '#download' do
@@ -95,7 +95,7 @@ RSpec.describe CaseAttachmentsController, type: :controller do
     end
 
     context 'as a manager with a case that has been marked as responded' do
-      let(:kase) { create(:responded_case) }
+      let(:kase) { create(:responded_case, responder: responder) }
 
       before { sign_in manager }
 
@@ -112,7 +112,7 @@ RSpec.describe CaseAttachmentsController, type: :controller do
     end
 
     context 'as a responder who has marked the case as responded' do
-      let(:kase) { create(:responded_case) }
+      let(:kase) { create(:responded_case, responder: responder) }
 
       before { sign_in responder }
 

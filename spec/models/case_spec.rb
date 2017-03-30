@@ -43,7 +43,6 @@ RSpec.describe Case, type: :model do
   let(:no_email)           { build :case, email: nil                      }
   let(:responder)          { create :responder                            }
   let(:manager)            { create :manager                              }
-  # let!(:dacu)              { create :dacu_team }
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do
@@ -372,13 +371,13 @@ RSpec.describe Case, type: :model do
 
       it 'removes the attachment' do
         expect(kase.attachments.size).to eq 1
-        kase.remove_response(assigner_id, attachment)
+        kase.remove_response(responder, attachment)
         expect(kase.attachments.size).to eq 0
       end
 
       it 'changes the state to drafting' do
         expect(kase.current_state).to eq 'awaiting_dispatch'
-        kase.remove_response(assigner_id, attachment)
+        kase.remove_response(responder, attachment)
         expect(kase.current_state).to eq 'drafting'
       end
     end
@@ -391,13 +390,13 @@ RSpec.describe Case, type: :model do
 
       it 'removes one attachment' do
         expect(kase.attachments.size).to eq 2
-        kase.remove_response(assigner_id, attachment)
+        kase.remove_response(responder, attachment)
         expect(kase.attachments.size).to eq 1
       end
 
       it 'does not change the state' do
         expect(kase.current_state).to eq 'awaiting_dispatch'
-        kase.remove_response(assigner_id, attachment)
+        kase.remove_response(responder, attachment)
         expect(kase.current_state).to eq 'awaiting_dispatch'
       end
     end
@@ -578,9 +577,9 @@ RSpec.describe Case, type: :model do
       end
 
       it 'triggers the raising version of the event' do
-        assigned_case.responder_assignment_accepted(responder)
+        assigned_case.responder_assignment_accepted(responder, responding_team)
         expect(state_machine).to have_received(:accept_responder_assignment!).
-                                   with(responder)
+                                   with(responder, responding_team)
         expect(state_machine).
           not_to have_received(:accept_responder_assignment)
       end
@@ -609,9 +608,11 @@ RSpec.describe Case, type: :model do
         end
 
         it 'triggers the raising version of the event' do
-          accepted_case.add_responses(responder.id, responses)
+          accepted_case.add_responses(responder, responses)
           expect(state_machine).to have_received(:add_responses!).
-                                     with(responder.id, ['new response.pdf'])
+                                     with(responder,
+                                          responding_team,
+                                          ['new response.pdf'])
           expect(state_machine).
             not_to have_received(:add_responses)
         end
@@ -625,7 +626,7 @@ RSpec.describe Case, type: :model do
       context 'with real state machine calls' do
         it 'changes the state from drafting to awaiting_dispatch' do
           expect(accepted_case.current_state).to eq 'drafting'
-          accepted_case.add_responses(responder.id, responses)
+          accepted_case.add_responses(responder, responses)
           expect(accepted_case.current_state).to eq 'awaiting_dispatch'
         end
       end
@@ -641,8 +642,10 @@ RSpec.describe Case, type: :model do
       end
 
       it 'triggers the raising version of the event' do
-        case_with_response.respond(User.first.id)
+        case_with_response.respond(case_with_response.responder)
         expect(state_machine).to have_received(:respond!)
+                                   .with(case_with_response.responder,
+                                         case_with_response.responding_team)
         expect(state_machine).not_to have_received(:respond)
       end
     end
@@ -657,8 +660,10 @@ RSpec.describe Case, type: :model do
       end
 
       it 'triggers the raising version of the event' do
-        responded_case.close(User.first.id)
+        manager = responded_case.managing_team.managers.first
+        responded_case.close(manager)
         expect(state_machine).to have_received(:close!)
+                                   .with(manager, responded_case.managing_team)
         expect(state_machine).not_to have_received(:close)
       end
     end
