@@ -26,20 +26,19 @@ feature 'Assigning a case from the detail view' do
     expect(current_path).to eq cases_path
     expect(page).to have_content('Case successfully assigned')
 
-    new_assignment = Assignment.last
+    newest_assignment = Assignment.last
 
-    expect(kase.reload).to have_attributes(
-                             current_state: 'awaiting_responder',
-                             assignments:   [new_assignment]
-                           )
+    kase.reload
+    expect(kase.current_state).to eq 'awaiting_responder'
+    expect(kase.assignments).to include newest_assignment
 
-    expect(new_assignment).to have_attributes(
-                                role:    'responding',
-                                team:    responding_team,
-                                user_id: nil,
-                                case:    kase,
-                                state:   'pending'
-                              )
+    expect(newest_assignment).to have_attributes(
+                                   role:    'responding',
+                                   team:    responding_team,
+                                   user_id: nil,
+                                   case:    kase,
+                                   state:   'pending'
+                                 )
   end
 
   context 'case has been rejected' do
@@ -66,20 +65,19 @@ feature 'Assigning a case from the detail view' do
       expect(current_path).to eq cases_path
       expect(page).to have_content('Case successfully assigned')
 
-      new_assignment = Assignment.last
+      newest_assignment = Assignment.last
 
-      expect(kase.reload).to have_attributes(
-                               current_state: 'awaiting_responder',
-                               assignments:   [new_assignment]
-                             )
+      kase.reload
+      expect(kase.current_state).to eq 'awaiting_responder'
+      expect(kase.assignments).to include newest_assignment
 
-      expect(new_assignment).to have_attributes(
-                                  role:    'responding',
-                                  team:    responding_team,
-                                  user_id: nil,
-                                  case:    kase,
-                                  state:   'pending'
-                                )
+      expect(newest_assignment).to have_attributes(
+                                     role:    'responding',
+                                     team:    responding_team,
+                                     user_id: nil,
+                                     case:    kase,
+                                     state:   'pending'
+                                   )
     end
 
   end

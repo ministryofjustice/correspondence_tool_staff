@@ -7,7 +7,7 @@ feature 'Closing a case' do
 
   background do
     kase
-    login_as create(:assigner)
+    login_as create(:manager)
   end
 
   before(:all) do
@@ -29,7 +29,7 @@ feature 'Closing a case' do
       click_link 'Close case'
     end
 
-    scenario 'A KILO has responded and an assigner closes the case', js:true do
+    scenario 'A KILO has responded and an manager closes the case', js:true do
       expect(cases_close_page).to have_content("Close case")
       cases_close_page.fill_in_date_responded(5.business_days.ago)
       cases_close_page.outcome_radio_button_fully_granted.click
@@ -78,7 +78,7 @@ feature 'Closing a case' do
       click_link 'Close case'
     end
 
-    scenario 'A KILO has responded and an assigner closes the case specifying a refusal reason', js:true do
+    scenario 'A KILO has responded and an manager closes the case specifying a refusal reason', js:true do
       expect(cases_close_page).to have_content("Close case")
 
       expect(cases_close_page).to have_no_refusal
@@ -107,7 +107,7 @@ feature 'Closing a case' do
     end
 
 
-    scenario 'A KILO has responded and an assigner closes the case specifying
+    scenario 'A KILO has responded and an manager closes the case specifying
  a refusal reason and exemption', js:true do
 
       expect(cases_close_page).to have_content("Close case")

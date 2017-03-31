@@ -25,9 +25,11 @@ feature 'Case creation by a manager' do
   given(:responding_team) { create :responding_team, responders: [responder] }
   given(:manager)         { create(:manager)  }
   given(:managing_team)   { create :managing_team, managers: [manager] }
+  given(:dacu)            { create :team_dacu }
 
   background do
     responding_team
+    dacu
     create(:category, :foi)
     login_as manager
     visit cases_path
@@ -67,12 +69,10 @@ feature 'Case creation by a manager' do
     expect(current_path).to eq cases_path
     expect(page).to have_content('Case successfully created')
 
-    new_assignment = Assignment.first
+    new_assignment = new_case.responder_assignment
 
-    expect(new_case.reload).to have_attributes(
-      current_state: 'awaiting_responder',
-      assignments:   [new_assignment]
-    )
+    new_case.reload
+    expect(new_case.current_state).to eq 'awaiting_responder'
 
     expect(new_assignment).to have_attributes(
       role:    'responding',

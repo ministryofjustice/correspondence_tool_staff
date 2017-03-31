@@ -18,10 +18,10 @@ describe CasePolicy do
            responding_team: responding_team,
            manager: manager
   end
-  let(:unassigned_case) { new_case }
-  let(:case_with_response) do
-    create(:case_with_response, responder: responder)
-  end
+  let(:unassigned_case)    { new_case }
+  let(:case_with_response) { create(:case_with_response, responder: responder) }
+  let(:responded_case)     { create(:responded_case, responder: responder) }
+  let(:closed_case)        { create(:closed_case, responder: responder) }
 
   permissions :can_accept_or_reject_case? do
     it "refuses if current_user is a manager" do
@@ -156,9 +156,7 @@ describe CasePolicy do
       expect(subject).to permit(responder,
                                 create(:accepted_case, responder: responder))
       expect(subject).to permit(responder,
-                                create(:case_with_response,responder: responder))
-      expect(subject).to permit(responder,
-                                create(:responded_case,responder: responder))
+                                create(:case_with_response, responder: responder))
     end
 
   end
@@ -198,20 +196,27 @@ describe CasePolicy do
   end
 
   describe 'case scope policy' do
-    before do
-      assigned_case
-      accepted_case
+    let(:existing_cases) do
+      [
+        unassigned_case,
+        assigned_case,
+        accepted_case,
+        case_with_response,
+        responded_case,
+        closed_case,
+      ]
     end
 
     it 'for managers - returns all cases' do
+      existing_cases
       manager_scope = described_class::Scope.new(manager, Case.all).resolve
-      expect(manager_scope).to include(assigned_case, accepted_case)
-      expect(manager_scope.count).to eq 2
+      expect(manager_scope).to eq existing_cases
     end
 
     it 'for responders - returns only their cases' do
+      existing_cases
       responder_scope = described_class::Scope.new(responder, Case.all).resolve
-      expect(responder_scope).to eq [accepted_case]
+      expect(responder_scope).to eq [assigned_case, accepted_case, case_with_response]
     end
 
   end

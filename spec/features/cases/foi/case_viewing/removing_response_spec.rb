@@ -1,17 +1,17 @@
 require 'rails_helper'
 
 feature 'removing a response from response details' do
-  given(:drafter)  { create(:drafter) }
-  given(:assigner) { create(:assigner) }
+  given(:responder) { create(:responder) }
+  given(:manager)   { create(:manager) }
 
-  context 'as the assigned drafter' do
+  context 'as the assigned responder' do
     background do
-      login_as drafter
+      login_as responder
     end
 
     context 'with a case that is still in drafting' do
       given(:case_with_response) do
-        create :case_with_response, drafter: drafter
+        create :case_with_response, responder: responder
       end
       given(:attached_response) do
         case_with_response.attachments.response.first
@@ -85,7 +85,7 @@ feature 'removing a response from response details' do
 
     context 'with a case marked as sent' do
       given(:responded_case) do
-        create(:responded_case, drafter: drafter)
+        create(:responded_case, responder: responder)
       end
 
       scenario 'is not visible' do
@@ -96,14 +96,14 @@ feature 'removing a response from response details' do
     end
   end
 
-  context 'as an assigner' do
+  context 'as an manager' do
     background do
-      login_as assigner
+      login_as manager
     end
 
     context 'with a case marked as sent' do
       given(:responded_case) do
-        create(:responded_case, drafter: drafter)
+        create(:responded_case, responder: responder)
       end
 
       scenario 'does not display remove button' do

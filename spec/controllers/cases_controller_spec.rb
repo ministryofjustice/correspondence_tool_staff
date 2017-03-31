@@ -2,21 +2,17 @@ require 'rails_helper'
 
 RSpec.describe CasesController, type: :controller do
 
-  let(:all_cases)         { create_list(:case, 5)   }
-  let(:first_case)        { all_cases.first         }
-  let(:manager)           { create :manager }
-  let(:responder)         { create :responder }
-  let(:another_responder) { create :responder }
-  let(:responding_team)   { create :responding_team,
-                                   responders: [responder] }
-  let(:assigned_case)     { create :assigned_case,
-                                   responding_team: responding_team }
-  let(:accepted_case)     { create :accepted_case,
-                                   responding_team: responding_team,
-                                   responder: responder }
-  let(:responded_case)    { create :responded_case,
-                                   responding_team: responding_team,
-                                   responder: responder }
+  let(:all_cases)          { create_list(:case, 5)   }
+  let(:first_case)         { all_cases.first         }
+  let(:manager)            { create :manager }
+  let(:responder)          { create :responder }
+  let(:another_responder)  { create :responder }
+  let(:responding_team)    { responder.responding_teams.first }
+  let(:assigned_case)      { create :assigned_case,
+                                    responding_team: responding_team }
+  let(:accepted_case)      { create :accepted_case, responder: responder }
+  let(:responded_case)     { create :responded_case, responder: responder }
+  let(:case_with_response) { create :case_with_response, responder: responder }
 
   before { create(:category, :foi) }
 
@@ -47,14 +43,6 @@ RSpec.describe CasesController, type: :controller do
         patch :update, params: { id: first_case, case: { category_id: create(:category, :gq).id } }
         expect(response).to redirect_to(new_user_session_path)
         expect(Case.first.category.name).to eq 'Freedom of information request'
-      end
-    end
-
-    describe 'PATCH close' do
-      it "be redirected to signin if trying to close a case" do
-        patch :close, params: { id: responded_case }
-        expect(response).to redirect_to(new_user_session_path)
-        expect(Case.first.current_state).to eq 'responded'
       end
     end
 
@@ -108,68 +96,6 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    describe 'POST create' do
-      context 'with valid params' do
-
-        let(:params) do
-          {
-            case: {
-              requester_type: 'member_of_the_public',
-              name: 'A. Member of Public',
-              postal_address: '102 Petty France',
-              email: 'member@public.com',
-              subject: 'FOI request from controller spec',
-              message: 'FOI about prisons and probation',
-              received_date_dd: Time.zone.today.day.to_s,
-              received_date_mm: Time.zone.today.month.to_s,
-              received_date_yyyy: Time.zone.today.year.to_s
-            }
-          }
-        end
-
-        let(:kase) { Case.first }
-
-        it 'makes a DB entry' do
-          expect { post :create, params: params }.
-            to change { Case.count }.by 1
-        end
-
-        describe 'using the information supplied  ' do
-          before { post :create, params: params }
-
-          it 'for #requester_type' do
-            expect(kase.requester_type).to eq 'member_of_the_public'
-          end
-
-          it 'for #name' do
-            expect(kase.name).to eq 'A. Member of Public'
-          end
-
-          it 'for #postal_address' do
-            expect(kase.postal_address).to eq '102 Petty France'
-          end
-
-          it 'for #email' do
-            expect(kase.email).to eq 'member@public.com'
-          end
-
-          it 'for #subject' do
-            expect(kase.subject).
-              to eq 'FOI request from controller spec'
-          end
-
-          it 'for #message' do
-            expect(kase.message).
-              to eq 'FOI about prisons and probation'
-          end
-
-          it 'for #received_date' do
-            expect(kase.received_date).to eq Time.zone.today
-          end
-        end
-      end
-    end
-
     describe 'GET edit' do
 
       before do
@@ -208,7 +134,6 @@ RSpec.describe CasesController, type: :controller do
         expect(response).to render_template(:close)
       end
     end
-
 
     describe 'PATCH process_closure' do
       let(:outcome) { create :outcome, :requires_refusal_reason }
@@ -315,46 +240,6 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    describe 'POST create' do
-      let(:kase) { build(:case, subject: 'Responders cannot create cases') }
-
-      let(:params) do
-        {
-          case: {
-            requester_type: 'member_of_the_public',
-            name: 'A. Member of Public',
-            postal_address: '102 Petty France',
-            email: 'member@public.com',
-            subject: 'Responders cannot create cases',
-            message: 'I am a responder attempting to create a case',
-            received_date_dd: Time.zone.today.day.to_s,
-            received_date_mm: Time.zone.today.month.to_s,
-            received_date_yyyy: Time.zone.today.year.to_s
-          }
-        }
-      end
-
-      subject { post :create, params: params }
-
-      it 'does not create a new case' do
-        expect{ subject }.not_to change { Case.count }
-      end
-
-      it 'redirects to the application root path' do
-        expect(subject).to redirect_to(authenticated_root_path)
-      end
-
-      describe 'PATCH close' do
-        it "does not close a case that has been responded to" do
-          patch :close, params: { id: responded_case }
-          expect(Case.first.current_state).not_to eq 'closed'
-        end
-
-        it 'redirects to the application root path' do
-          expect(subject).to redirect_to(authenticated_root_path)
-        end
-      end
-    end
   end
 
   # An astute reader who has persevered to this point in the file may notice
@@ -529,7 +414,6 @@ RSpec.describe CasesController, type: :controller do
     end
 
     context 'viewing a case_with_response' do
-      let(:case_with_response)    { create(:case_with_response) }
       before do
         sign_in user
         get :show, params: { id: case_with_response.id }
@@ -636,6 +520,104 @@ RSpec.describe CasesController, type: :controller do
 
         it 'redirects to the application root path' do
           expect(response).to redirect_to(authenticated_root_path)
+        end
+      end
+    end
+  end
+
+  describe 'POST create' do
+    context 'as an authenticated responder' do
+      before { sign_in responder }
+
+      let(:params) do
+        {
+          case: {
+            requester_type: 'member_of_the_public',
+            name: 'A. Member of Public',
+            postal_address: '102 Petty France',
+            email: 'member@public.com',
+            subject: 'Responders cannot create cases',
+            message: 'I am a responder attempting to create a case',
+            received_date_dd: Time.zone.today.day.to_s,
+            received_date_mm: Time.zone.today.month.to_s,
+            received_date_yyyy: Time.zone.today.year.to_s
+          }
+        }
+      end
+
+      subject { post :create, params: params }
+
+      it 'does not create a new case' do
+        expect{ subject }.not_to change { Case.count }
+      end
+
+      it 'redirects to the application root path' do
+        expect(subject).to redirect_to(authenticated_root_path)
+      end
+    end
+
+    context "as an authenticated manager" do
+      before do
+        sign_in manager
+        create :team_dacu
+      end
+
+      context 'with valid params' do
+        let(:params) do
+          {
+            case: {
+              requester_type: 'member_of_the_public',
+              name: 'A. Member of Public',
+              postal_address: '102 Petty France',
+              email: 'member@public.com',
+              subject: 'FOI request from controller spec',
+              message: 'FOI about prisons and probation',
+              received_date_dd: Time.zone.today.day.to_s,
+              received_date_mm: Time.zone.today.month.to_s,
+              received_date_yyyy: Time.zone.today.year.to_s
+            }
+          }
+        end
+
+        let(:created_case) { Case.first }
+
+        it 'makes a DB entry' do
+          expect { post :create, params: params }.
+            to change { Case.count }.by 1
+        end
+
+        describe 'using the information supplied  ' do
+          before { post :create, params: params }
+
+          it 'for #requester_type' do
+            expect(created_case.requester_type).to eq 'member_of_the_public'
+          end
+
+          it 'for #name' do
+            expect(created_case.name).to eq 'A. Member of Public'
+          end
+
+          it 'for #postal_address' do
+            expect(created_case.postal_address).to eq '102 Petty France'
+          end
+
+          it 'for #email' do
+            expect(created_case.email).to eq 'member@public.com'
+          end
+
+          it 'for #subject' do
+            expect(created_case.subject).
+              to eq 'FOI request from controller spec'
+          end
+
+          it 'for #message' do
+            expect(created_case.message).
+              to eq 'FOI about prisons and probation'
+          end
+
+          it 'for #received_date' do
+            expect(created_case.received_date).to eq Time.zone.today
+          end
         end
       end
     end
@@ -894,7 +876,6 @@ RSpec.describe CasesController, type: :controller do
 
     let(:responder)            { create(:responder)                              }
     let(:another_responder)    { create(:responder)                              }
-    let(:case_with_response) { create(:case_with_response, responder: responder) }
 
     context 'as an anonymous user' do
       it 'redirects to sign_in' do
@@ -941,10 +922,7 @@ RSpec.describe CasesController, type: :controller do
   end
 
   describe 'PATCH confirm_respond' do
-
-    let(:responder)            { create(:responder)                              }
-    let(:another_responder)    { create(:responder)                              }
-    let(:case_with_response) { create(:case_with_response, responder: responder) }
+    let(:another_responder)  { create(:responder) }
 
     context 'as an anonymous user' do
       it 'redirects to sign_in' do
@@ -982,17 +960,17 @@ RSpec.describe CasesController, type: :controller do
       it 'transitions current_state to "responded"' do
         patch :confirm_respond, params: { id: case_with_response }
         expect(case_with_response.current_state).to eq 'responded'
-        expect(case_with_response.transitions.last.assignee_id).to eq responder.id
-      end
-
-      it 'updates assignee id in transition' do
-        patch :confirm_respond, params: { id: case_with_response }
-        expect(case_with_response.transitions.last.assignee_id).to eq responder.id
       end
 
       it 'updates user id in transition' do
         patch :confirm_respond, params: { id: case_with_response }
         expect(case_with_response.transitions.last.user_id).to eq responder.id
+      end
+
+      it 'updates responding team in transition' do
+        patch :confirm_respond, params: { id: case_with_response }
+        expect(case_with_response.transitions.last.responding_team_id)
+          .to eq responding_team.id
       end
 
       it 'removes the case from the responders workbasket' do
