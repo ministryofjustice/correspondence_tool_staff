@@ -65,7 +65,7 @@ class Case < ApplicationRecord
   has_many :assignments, dependent: :destroy
   has_one :responder_assignment, -> { responding }, class_name: 'Assignment'
   has_one :responder, through: :responder_assignment, source: :user
-  has_one :responding_team, through: :responder_assignment, source: :team
+  has_one :responding_team, -> { where("state != 'rejected'") }, through: :responder_assignment, source: :team
   has_one :managing_assignment, -> { managing }, class_name: 'Assignment'
   has_one :managing_team, through: :managing_assignment, source: :team
   has_many :transitions, class_name: 'CaseTransition', autosave: false
@@ -186,7 +186,7 @@ class Case < ApplicationRecord
   end
 
   def who_its_with
-    if responder_assignment.present?
+    if responding_team.present?
       responding_team.name
     else
       managing_team.name
@@ -251,6 +251,7 @@ class Case < ApplicationRecord
   def set_managing_team
     # For now, we just automatically assign cases to DACU.
     self.managing_team = Team.managing.find_by!(name: 'DACU')
+    self.managing_assignment.state = 'accepted'
   end
 
   def set_number

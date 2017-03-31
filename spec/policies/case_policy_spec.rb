@@ -7,17 +7,16 @@ describe CasePolicy do
   let(:responder)         { responding_team.responders.first }
   let(:another_responder) { create :responder}
   let(:managing_team)     { create :managing_team }
-  let(:manager)           { managing_team.managers.first }
+  let(:manager)           { create :manager }
 
   let(:new_case) { create :case }
   let(:accepted_case) do
     create :accepted_case, responder: responder, manager: manager
   end
-  let(:assigned_case) do
-    create :assigned_case,
-           responding_team: responding_team,
-           manager: manager
-  end
+  let(:assigned_case)      { create :assigned_case,
+                                    responding_team: responding_team }
+  let(:rejected_case)      { create :rejected_case,
+                                    responding_team: responding_team }
   let(:unassigned_case)    { new_case }
   let(:case_with_response) { create(:case_with_response, responder: responder) }
   let(:responded_case)     { create(:responded_case, responder: responder) }
@@ -201,6 +200,7 @@ describe CasePolicy do
         unassigned_case,
         assigned_case,
         accepted_case,
+        rejected_case,
         case_with_response,
         responded_case,
         closed_case,

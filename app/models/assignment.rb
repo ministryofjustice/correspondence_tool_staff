@@ -32,6 +32,9 @@ class Assignment < ApplicationRecord
 
   scope :managing,   -> { where(role: 'managing') }
   scope :responding, -> { where(role: 'responding') }
+  scope :accepted,   -> { where(state: 'accepted') }
+  scope :pending,    -> { where(state: 'pending') }
+  scope :rejected,   -> { where(state: 'rejected') }
 
   attr_accessor :reasons_for_rejection
 

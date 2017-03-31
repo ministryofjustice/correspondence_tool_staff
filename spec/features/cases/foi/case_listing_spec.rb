@@ -33,6 +33,16 @@ feature 'listing cases on the system' do
            responder: responder
   end
 
+  given(:rejected_case) do
+    create :rejected_case,
+           name: 'Freddie FOI Rejected',
+           email: 'freddie.foi@testing.digital.justice.gov.uk',
+           subject: 'test rejected FOI subject',
+           message: 'viewing rejected foi details test message',
+           category: foi_category,
+           responding_team: responding_team
+  end
+
   given(:case_with_response) do
     create :case_with_response,
            name: 'Freddie FOI With Response',
@@ -66,6 +76,7 @@ feature 'listing cases on the system' do
     unassigned_case
     assigned_case
     accepted_case
+    rejected_case
     case_with_response
     responded_case
   end
@@ -73,7 +84,7 @@ feature 'listing cases on the system' do
   scenario 'for managers - shows all cases' do
     login_as create(:manager)
     visit '/'
-    expect(cases_page.case_list.count).to eq 5
+    expect(cases_page.case_list.count).to eq 6
 
     unassigned_case_row = cases_page.case_list.first
     expect(unassigned_case_row.name.text).to     eq 'Freddie FOI Unassigned'
@@ -109,14 +120,24 @@ feature 'listing cases on the system' do
     expect(accepted_case_row.who_its_with.text)
       .to eq accepted_case.responding_team.name
 
+    rejected_case_row = cases_page.case_list.fourth
+    expect(rejected_case_row.name.text).to     eq 'Freddie FOI Rejected'
+    expect(rejected_case_row.subject.text).to  eq 'test rejected FOI subject'
+    expect(rejected_case_row.external_deadline.text)
+      .to have_content(rejected_case.external_deadline.strftime('%e %b %Y'))
+    expect(rejected_case_row.number)
+      .to have_link("#{rejected_case.number}", href: case_path(rejected_case.id))
+    expect(rejected_case_row.status.text).to eq 'Allocation'
+    expect(rejected_case_row.who_its_with.text)
+      .to eq 'DACU'
 
-    case_with_response_row = cases_page.case_list.fourth
+    case_with_response_row = cases_page.case_list.fifth
     expect(case_with_response_row.name.text).to     eq 'Freddie FOI With Response'
     expect(case_with_response_row.subject.text).to  eq 'test case with response FOI subject'
     expect(case_with_response_row.external_deadline.text)
-        .to have_content(case_with_response.external_deadline.strftime('%e %b %Y'))
+      .to have_content(case_with_response.external_deadline.strftime('%e %b %Y'))
     expect(case_with_response_row.number)
-        .to have_link("#{case_with_response.number}", href: case_path(case_with_response.id))
+      .to have_link("#{case_with_response.number}", href: case_path(case_with_response.id))
     expect(case_with_response_row.status.text).to eq 'Awaiting Dispatch'
     expect(case_with_response_row.who_its_with.text)
       .to eq case_with_response.responding_team.name

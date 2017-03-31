@@ -47,6 +47,19 @@ FactoryGirl.define do
     event 'accept_responder_assignment'
   end
 
+  factory :case_transition_reject_responder_assignment, parent: :case_transition do
+    transient do
+      user            { create :responder }
+      responding_team { user.responding_teams.first }
+    end
+
+    to_state           'unassigned'
+    event              'reject_responder_assignment'
+    user_id            { user.id }
+    responding_team_id { responding_team.id }
+    message            { Faker::Hipster.sentence }
+  end
+
   factory :case_transition_add_responses, parent: :case_transition do
     transient do
       responder       { create :responder }
