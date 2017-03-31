@@ -25,7 +25,7 @@ FactoryGirl.define do
   factory :case do
     transient do
       identifier "new case"
-      managing_team { create :managing_team, name: 'DACU', email: 'dacu@localhost' }
+      managing_team { Team.find_or_create_by(name: 'DACU', email: 'dacu@localhost') }
     end
 
     requester_type 'member_of_the_public'
