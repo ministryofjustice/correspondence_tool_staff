@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 feature 'viewing response details' do
-  given(:manager) { create :manager }
-  given(:responder)  { create :responder }
+  given(:manager)         { create :manager }
+  given(:responder)       { create :responder }
+  given(:responding_team) { responder.responding_teams.first }
 
   context 'as an manager' do
     before do
@@ -34,7 +35,7 @@ feature 'viewing response details' do
         expect(cases_show_page.response_details.responses.first)
           .to have_content(response.filename)
         expect(cases_show_page.response_details.responder)
-          .to have_content(responder.full_name)
+          .to have_content(responding_team.name)
       end
 
       given(:case_with_many_responses) do
@@ -68,7 +69,7 @@ feature 'viewing response details' do
 
         expect(cases_show_page).to have_response_details
         expect(cases_show_page.response_details.responder)
-          .to have_content(responder.full_name)
+          .to have_content(responding_team.name)
         expect(cases_show_page.response_details.date_responded)
           .to have_content(closed_case.date_responded.strftime('%e %b %Y'))
         expect(cases_show_page.response_details.outcome)
