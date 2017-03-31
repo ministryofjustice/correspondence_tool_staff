@@ -37,6 +37,7 @@ feature 'respond to responder assignment' do
 
     expect(assignment.reload.state).to eq 'accepted'
     expect(kase.reload.current_state).to eq 'drafting'
+    expect(kase.responder).to eq responder
   end
 
   scenario 'kilo rejects assignment' do

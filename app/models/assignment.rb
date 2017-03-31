@@ -35,13 +35,14 @@ class Assignment < ApplicationRecord
 
   attr_accessor :reasons_for_rejection
 
-  def reject(current_user, message)
-    self.case.responder_assignment_rejected(current_user, team, message)
+  def reject(rejecting_user, message)
+    self.case.responder_assignment_rejected(rejecting_user, team, message)
     self.delete
   end
 
-  def accept(current_user)
-    self.case.responder_assignment_accepted(current_user, team)
+  def accept(accepting_user)
+    self.case.responder_assignment_accepted(accepting_user, team)
+    self.user = accepting_user
     accepted!
   end
 
