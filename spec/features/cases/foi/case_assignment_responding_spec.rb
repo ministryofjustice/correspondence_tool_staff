@@ -67,7 +67,6 @@ feature 'respond to responder assignment' do
     expect(page).to have_content 'I would like to know about XYZ'
     expect(page).not_to have_content 'Do you accept this case?'
 
-    expect(Assignment.exists?(assignment.id)).to be false
     expect(kase.reload.current_state).to eq 'unassigned'
   end
 
@@ -118,10 +117,9 @@ feature 'respond to responder assignment' do
   end
 
   scenario 'kilo clicks on a link to an assignment that has been rejected' do
-    assignment_id = assignment.id
     assignment.reject responder, "NO thank you"
 
-    visit edit_case_assignment_path kase, assignment_id
+    visit edit_case_assignment_path kase, assignment.id
 
     expect(page).to have_current_path(
                       case_assignments_show_rejected_path kase,
