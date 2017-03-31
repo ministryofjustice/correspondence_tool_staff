@@ -27,5 +27,10 @@ FactoryGirl.define do
 
   factory :team_dacu, parent: :managing_team do
     name 'DACU'
+    email 'dacu@localhost'
+
+    initialize_with do
+      Team.find_or_create_by(name: name, email: email)
+    end
   end
 end
