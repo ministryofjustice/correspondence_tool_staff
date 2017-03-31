@@ -1,15 +1,15 @@
 require 'rails_helper'
 
 feature 'Mark response as sent' do
-  given(:drafter)        { create(:drafter)                              }
-  given(:assigner)       { create(:assigner)                             }
-  given(:kase)           { create(:case_with_response, drafter: drafter) }
-  given(:another_kase)   { create(:case_with_response, drafter: drafter) }
+  given(:responder)    { create(:responder) }
+  given(:manager)      { create(:manager) }
+  given(:kase)         { create(:case_with_response, responder: responder) }
+  given(:another_kase) { create(:case_with_response, responder: responder) }
 
   before do
     kase
     another_kase
-    login_as drafter
+    login_as responder
   end
 
   scenario 'the assigned KILO has uploaded a response' do
@@ -39,7 +39,7 @@ version and DACU will be notified to review the case."
       to have_content('Response confirmed. The case is now with DACU.')
     expect(kase.current_state).to eq 'responded'
 
-    login_as assigner
+    login_as manager
     cases_page.load
     expect(cases_page.case_numbers).to include kase.number
   end

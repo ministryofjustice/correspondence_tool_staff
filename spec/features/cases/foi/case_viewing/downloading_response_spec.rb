@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 feature 'downloading a response from response details' do
-  given(:assigner) { create :assigner }
-  given(:drafter)  { create :drafter  }
+  given(:manager)   { create :manager }
+  given(:responder) { create :responder  }
 
   given(:response) { build :case_response }
   given(:presigned_url) do
@@ -20,16 +20,16 @@ feature 'downloading a response from response details' do
     stub_s3_response_object(response, presigned_url)
   end
 
-  context 'as a drafter' do
+  context 'as a responder' do
     background do
-      login_as drafter
+      login_as responder
     end
 
     context 'with a case being drafted' do
       given(:drafting_case) do
         create :case_with_response,
-               assigner: assigner,
-               drafter: drafter,
+               manager: manager,
+               responder: responder,
                responses: [response]
       end
 
@@ -43,16 +43,16 @@ feature 'downloading a response from response details' do
     end
   end
 
-  context 'as an assigner' do
+  context 'as an manager' do
     background do
-      login_as assigner
+      login_as manager
     end
 
     context 'with a case marked as sent' do
       given(:sent_case) do
         create :responded_case,
-               assigner: assigner,
-               drafter: drafter,
+               manager: manager,
+               responder: responder,
                responses: [response]
       end
 

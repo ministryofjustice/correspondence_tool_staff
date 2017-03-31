@@ -75,7 +75,9 @@ class AssignmentsController < ApplicationController
   end
 
   def already_rejected?
-    Assignment.where(id: params[:id], state: 'rejected').present?
+    @case.transitions.any? do |transition|
+      transition.assignment_id == params[:id].to_i && transition.event =='reject_responder_assignment'
+    end
   end
 
   def already_accepted?

@@ -24,18 +24,19 @@ FactoryGirl.define do
 
   factory :case do
     transient do
+      identifier "new case"
       managing_team { create :managing_team, name: 'DACU', email: 'dacu@localhost' }
     end
 
     requester_type 'member_of_the_public'
-    name { Faker::Name.name }
-    email { Faker::Internet.email }
+    sequence(:name) { |n| "#{identifier} name #{n}" }
+    email { Faker::Internet.email(identifier) }
     # association :category, factory: :category, strategy: :create
     category
-    subject { Faker::Hipster.sentence(1, word_count: 4).truncate(80) }
-    message { Faker::Lorem.paragraph(1) }
+    sequence(:subject) { |n| "#{identifier} subject #{n}" }
+    sequence(:message) { |n| "#{identifier} message #{n}" }
     received_date Time.zone.today.to_s
-    postal_address { Faker::Address.street_address }
+    sequence(:postal_address) { |n| "#{identifier} postal address #{n}" }
 
     after(:build) do |_kase, evaluator|
       evaluator.managing_team
@@ -51,16 +52,17 @@ FactoryGirl.define do
 
     factory :assigned_case, parent: :case do
       transient do
+        identifier "assigned case"
         manager         { managing_team.managers.first }
         responding_team { create :responding_team }
       end
-
 
       after(:create) do |kase, evaluator|
         create :assignment,
                case: kase,
                team: evaluator.responding_team,
-               state: 'pending'
+               state: 'pending',
+               role: 'responding'
         create :case_transition_assign_responder,
                case: kase,
                user: evaluator.manager,
@@ -71,6 +73,7 @@ FactoryGirl.define do
 
     factory :accepted_case, parent: :assigned_case do
       transient do
+        identifier "accepted case"
         responder { create :responder }
         responding_team { responder.responding_teams.first }
       end
@@ -87,6 +90,7 @@ FactoryGirl.define do
 
     factory :case_with_response, parent: :accepted_case do
       transient do
+        identifier "case with response"
         responses { [build(:correspondence_response, type: 'response')] }
       end
 
@@ -100,6 +104,9 @@ FactoryGirl.define do
     end
 
     factory :responded_case, parent: :case_with_response do
+      transient do
+        identifier "responded case"
+      end
 
       date_responded Date.today
 
@@ -113,6 +120,10 @@ FactoryGirl.define do
     end
 
     factory :closed_case, parent: :responded_case do
+      transient do
+        identifier "closed case"
+      end
+
       received_date 22.business_days.ago
       date_responded 4.business_days.ago
       outcome { create :outcome }

@@ -1,21 +1,23 @@
 require 'rails_helper'
 
-feature 'respond to drafter assignment' do
-
-  given(:kase)  do
+feature 'respond to responder assignment' do
+  given(:responder)       { create :responder }
+  given(:responding_team) { responder.responding_teams.first }
+  given(:kase) do
     create(
       :assigned_case,
       subject: 'A message about XYZ',
-      message: 'I would like to know about XYZ'
+      message: 'I would like to know about XYZ',
+      responding_team: responding_team
     )
   end
 
   given(:assignment) do
-    kase.assignments.detect(&:drafter?)
+    kase.responder_assignment
   end
 
   background do
-    login_as assignment.assignee
+    login_as responder
   end
 
   scenario 'kilo accepts assignment' do
@@ -116,17 +118,20 @@ feature 'respond to drafter assignment' do
 
   scenario 'kilo clicks on a link to an assignment that has been rejected' do
     assignment_id = assignment.id
-    assignment.reject "NO thank you"
+    assignment.reject responder, "NO thank you"
 
     visit edit_case_assignment_path kase, assignment_id
 
-    expect(page).to have_current_path(case_assignments_show_rejected_path kase, rejected_now: false)
+    expect(page).to have_current_path(
+                      case_assignments_show_rejected_path kase,
+                                                          rejected_now: false
+                    )
     expect(page).to have_content('This case has already been rejected.')
   end
 
   scenario 'kilo clicks on a link to an assignment that has been accepted' do
     assignment_id = assignment.id
-    assignment.accept
+    assignment.accept responder
 
     visit edit_case_assignment_path kase, assignment_id
 
