@@ -84,6 +84,11 @@ RSpec.describe Assignment, type: :model do
       assignment.accept(responder)
       expect(assignment.state).to eq 'accepted'
     end
+
+    it 'assigns the user' do
+      assignment.accept(responder)
+      expect(assignment.user).to eq responder
+    end
   end
 
   describe '#assign_and_validate_state' do
