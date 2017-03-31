@@ -23,9 +23,9 @@ class Team < ApplicationRecord
   has_many :responders, through: :responder_user_roles, source: :user
 
   scope :responding, -> {
-    joins(:user_roles).where(teams_users_roles: { role: 'responder' })
+    joins(:user_roles).where(teams_users_roles: { role: 'responder' }).distinct
   }
   scope :managing, -> {
-    joins(:user_roles).where(teams_users_roles: { role: 'manager' })
+    joins(:user_roles).where(teams_users_roles: { role: 'manager' }).distinct
   }
 end
