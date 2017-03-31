@@ -24,4 +24,8 @@ FactoryGirl.define do
     sequence(:name) { |n| "Responding Team #{n}" }
     responders { [create(:user)] }
   end
+
+  factory :team_dacu, parent: :managing_team do
+    name 'DACU'
+  end
 end
