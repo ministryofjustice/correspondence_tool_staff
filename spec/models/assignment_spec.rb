@@ -62,9 +62,9 @@ RSpec.describe Assignment, type: :model do
              with(responder, responding_team, message)
     end
 
-    it 'deletes the assignment' do
+    it 'changes the state to rejected' do
       assignment.reject(responder, message)
-      expect(Assignment.find_by(id: assignment.id)).to be_nil
+      expect(assignment.state).to eq 'rejected'
     end
   end
 

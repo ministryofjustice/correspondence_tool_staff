@@ -6,6 +6,7 @@ feature 'Assigning a case from the detail view' do
   given(:responding_team) { create :responding_team, responders: [responder] }
   given(:manager)         { create(:manager)  }
   given(:managing_team)   { create :managing_team, managers: [manager] }
+  given(:assignment)      { kase.responder_assignment }
 
   before do
     responding_team
@@ -46,7 +47,7 @@ feature 'Assigning a case from the detail view' do
 
     before do
       responding_team
-      kase.assignments.last.reject(responder, 'No thanks')
+      assignment.reject responder, 'No thanks'
     end
 
     scenario 'assigner reassigns rejected case' do

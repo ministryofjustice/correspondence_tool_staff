@@ -27,14 +27,17 @@ class AssignmentsController < ApplicationController
 
   def edit
     if @assignment
-      if already_accepted?
+      if @assignment.accepted?
         redirect_to case_path @case, accepted_now: false
+      elsif @assignment.rejected?
+        redirect_to case_assignments_show_rejected_path @case, rejected_now: false
       else
         authorize @case, :can_accept_or_reject_case?
         render :edit
       end
-    elsif @assignment.nil? && already_rejected?
-      redirect_to case_assignments_show_rejected_path @case, rejected_now: false
+    else
+      flash[:notice] = 'Case assignment does not exist.'
+      redirect_to case_path @case
     end
   end
 
@@ -72,16 +75,6 @@ class AssignmentsController < ApplicationController
     if Assignment.exists?(id: params[:id])
       @assignment = Assignment.find(params[:id])
     end
-  end
-
-  def already_rejected?
-    @case.transitions.any? do |transition|
-      transition.assignment_id == params[:id].to_i && transition.event =='reject_responder_assignment'
-    end
-  end
-
-  def already_accepted?
-    Assignment.where(id: params[:id], state: 'accepted').present?
   end
 
   def set_case
