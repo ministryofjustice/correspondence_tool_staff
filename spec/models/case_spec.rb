@@ -186,7 +186,8 @@ RSpec.describe Case, type: :model do
     end
 
     it 'is the currently assigned to DACU' do
-      expect(unassigned_case.who_its_with).to eq 'DACU'
+      expect(unassigned_case.managing_assignment.team.name).to eq 'DACU'
+      expect(unassigned_case.managing_assignment.accepted?).to be true
     end
   end
 

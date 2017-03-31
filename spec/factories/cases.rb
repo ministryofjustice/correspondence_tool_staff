@@ -88,6 +88,25 @@ FactoryGirl.define do
       end
     end
 
+    factory :rejected_case, parent: :assigned_case do
+      transient do
+        rejection_message { Faker::Hipster.sentence }
+        responder         { create :responder }
+        responding_team   { responder.responding_teams.first }
+        identifier        "rejected case"
+      end
+
+      after(:create) do |kase, evaluator|
+        kase.responder_assignment.reasons_for_rejection =
+          evaluator.rejection_message
+        kase.responder_assignment.rejected!
+        create :case_transition_reject_responder_assignment,
+               case: kase,
+               user: evaluator.responder,
+               responding_team: evaluator.responding_team,
+               message: evaluator.rejection_message
+      end
+    end
     factory :case_with_response, parent: :accepted_case do
       transient do
         identifier "case with response"
