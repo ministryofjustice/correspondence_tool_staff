@@ -240,6 +240,15 @@ class Case < ApplicationRecord
     exemptions.select{ |ex| ex.ncnd? }.any?
   end
 
+  def responders
+    user_ids = transitions.responded.map(&:user_id)
+    if user_ids.any?
+      User.find(user_ids).map(&:full_name)
+    else
+      []
+    end
+  end
+
   private
 
   def set_deadlines

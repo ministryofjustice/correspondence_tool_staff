@@ -83,8 +83,8 @@ FactoryGirl.define do
         kase.responder_assignment.accepted!
         create :case_transition_accept_responder_assignment,
                case: kase,
-               user: evaluator.responder,
-               responding_team: evaluator.responding_team
+               user_id: evaluator.responder.id,
+               responding_team_id: evaluator.responding_team.id
       end
     end
 
@@ -110,6 +110,7 @@ FactoryGirl.define do
     factory :case_with_response, parent: :accepted_case do
       transient do
         identifier "case with response"
+        responder { create :responder, full_name: 'Ivor Response' }
         responses { [build(:correspondence_response, type: 'response')] }
       end
 
@@ -117,7 +118,9 @@ FactoryGirl.define do
         kase.attachments.push(*evaluator.responses)
 
         create :case_transition_add_responses,
-               case_id: kase.id
+               case_id: kase.id,
+               responding_team_id: evaluator.responding_team.id,
+               user_id: evaluator.responder.id
                # filenames: [evaluator.attachment.filename]
       end
     end
@@ -125,6 +128,7 @@ FactoryGirl.define do
     factory :responded_case, parent: :case_with_response do
       transient do
         identifier "responded case"
+        responder { User.find_by_full_name('Ivor Response') || create(:responder, full_name: 'Ivor Response') }
       end
 
       date_responded Date.today
@@ -132,8 +136,8 @@ FactoryGirl.define do
       after(:create) do |kase, evaluator|
         create :case_transition_respond,
                case: kase,
-               user: evaluator.responder,
-               responding_team: evaluator.responding_team
+               user_id: evaluator.responder.id,
+               responding_team_id: evaluator.responding_team.id
         kase.responder_assignment.destroy
       end
     end
