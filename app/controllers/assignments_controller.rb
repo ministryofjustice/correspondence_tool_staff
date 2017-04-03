@@ -64,11 +64,15 @@ class AssignmentsController < ApplicationController
   private
 
   def assignment_params
-    params.require(:assignment).permit(
-      :state,
-      :team_id,
-      :reasons_for_rejection
-    )
+    if params[:assignment]
+      params.require(:assignment).permit(
+        :state,
+        :team_id,
+        :reasons_for_rejection
+      )
+    else
+      HashWithIndifferentAccess.new
+    end
   end
 
   def set_assignment
