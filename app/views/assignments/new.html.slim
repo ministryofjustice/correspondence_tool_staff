@@ -1,5 +1,8 @@
 = render partial: 'layouts/header', locals: {page_heading: page_heading(@creating_case)}
 
+= GovukElementsErrorsHelper.error_summary @assignment,
+        "#{pluralize(@assignment.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
 = form_for [ @case, @assignment ] do |f|
 
   = f.radio_button_fieldset :team_id, choices: Team.responding, value_method: :id, text_method: :name

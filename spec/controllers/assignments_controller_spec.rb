@@ -29,8 +29,8 @@ RSpec.describe AssignmentsController, type: :controller do
       },
     }
   end
-  let(:rejection_message) do |example|
-    "rejection test #{example.description}"
+  let(:rejection_message) do |_example|
+    'rejection test #{example.description}'
   end
   let(:unknown_assignment_params) do
     {
@@ -119,6 +119,12 @@ RSpec.describe AssignmentsController, type: :controller do
       it 'queues an new assignment mail for later delivery' do
         expect(AssignmentMailer).to receive_message_chain(:new_assignment, :deliver_later)
         post :create, params: create_assignment_params
+      end
+
+      it 'errors if no team specified' do
+        post :create, params:  {'commit' => 'Create and assign case', 'case_id' => unassigned_case.id }
+        expect(assigns(:assignment).errors[:team]).to include("can't be blank")
+        expect(response).to render_template(:new)
       end
     end
 
