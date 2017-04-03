@@ -220,6 +220,37 @@ RSpec.describe Case, type: :model do
     end
   end
 
+  describe 'responders' do
+
+    context 'no responders' do
+      it 'returns an empty array' do
+        kase = Case.new
+        expect(kase.responders).to eq([])
+      end
+    end
+
+    context 'one responder' do
+      it 'returns an array of one reponder name' do
+        kase = create :responded_case
+        expect(kase.responders).to eq(['Ivor Response'])
+      end
+    end
+
+    context 'multiple responders' do
+      it 'returns an array of responder names' do
+        kase = create :responded_case
+        responder = create :responder, full_name: 'Another Responder'
+        create :case_transition_respond,
+               case_id: kase.id,
+               user_id: responder.id,
+               responding_team_id: responder.teams.first.id
+
+        expect(kase.responders).to eq(['Ivor Response', 'Another Responder'])
+      end
+    end
+
+  end
+
   context 'preparing_for_close' do
     describe '#prepared_for_close?' do
 
