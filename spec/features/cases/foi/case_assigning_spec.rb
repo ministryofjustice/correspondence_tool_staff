@@ -20,7 +20,7 @@ feature 'Assigning a case from the detail view' do
     )
 
     click_link 'Assign to a responder'
-    expect(page).to have_content('Assign case')
+    expect(assign_page).to have_content('Assign case')
 
     choose responding_team.name
     click_button 'Assign case'
