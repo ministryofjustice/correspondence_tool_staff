@@ -8,7 +8,9 @@ class CasePolicy
   end
 
   def can_add_attachment?
-  (self.case.drafting? || self.case.awaiting_dispatch?) && self.case.responder == user
+    (self.case.drafting? ||
+     self.case.awaiting_dispatch?) &&
+      user.responding_teams.include?(self.case.responding_team)
   end
 
   def can_add_case?
@@ -30,14 +32,16 @@ class CasePolicy
 
   def can_remove_attachment?
     case self.case.current_state
-    when 'awaiting_dispatch' then self.case.responder == user
+    when 'awaiting_dispatch'
+      user.responding_teams.include?(self.case.responding_team)
     else false
     end
   end
 
   def can_respond?
     self.case.awaiting_dispatch? &&
-      self.case.response_attachments.any? && self.case.responder == user
+      self.case.response_attachments.any? &&
+      user.responding_teams.include?(self.case.responding_team)
   end
 
   def can_view_case_details?

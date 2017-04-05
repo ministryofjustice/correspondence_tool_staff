@@ -83,8 +83,8 @@ FactoryGirl.define do
         kase.responder_assignment.accepted!
         create :case_transition_accept_responder_assignment,
                case: kase,
-               user_id: evaluator.responder.id,
-               responding_team_id: evaluator.responding_team.id
+               user_id: kase.responder.id,
+               responding_team_id: kase.responding_team.id
       end
     end
 
@@ -138,7 +138,8 @@ FactoryGirl.define do
                case: kase,
                user_id: evaluator.responder.id,
                responding_team_id: evaluator.responding_team.id
-        kase.responder_assignment.destroy
+        kase.responder_assignment.destroy!
+        kase.reload
       end
     end
 

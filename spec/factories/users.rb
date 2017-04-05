@@ -33,15 +33,11 @@ FactoryGirl.define do
     end
 
     factory :manager do
-      after(:create) do |user, _evaluator|
-        create :team, managers: [user]
-      end
+      managing_teams { [create(:managing_team)] }
     end
 
     factory :responder do
-      after(:create) do |user, _evaluator|
-        create :team, responders: [user]
-      end
+      responding_teams { [create(:responding_team)] }
     end
   end
 end

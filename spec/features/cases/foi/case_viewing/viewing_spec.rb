@@ -4,19 +4,19 @@ feature 'viewing details of case in the system' do
 
   # TODO: Add test that DACU shows up when the case is marked as responded
   given(:responder) { create :responder }
-  given(:responding_team) { create :responding_team, responders: [responder] }
+  given(:responding_team) { responder.responding_teams.first }
 
-  given(:gq_category) { create(:category, :gq) }
-  given(:gq) do
-    create :accepted_case,
-           requester_type: :journalist,
-           name: 'Gina GQ',
-           email: 'gina.gq@testing.digital.justice.gov.uk',
-           subject: 'this is a gq',
-           message: 'viewing gq details test message',
-           category: gq_category,
-           responding_team: responding_team
-  end
+  # given(:gq_category) { create(:category, :gq) }
+  # given(:gq) do
+  #   create :accepted_case,
+  #          requester_type: :journalist,
+  #          name: 'Gina GQ',
+  #          email: 'gina.gq@testing.digital.justice.gov.uk',
+  #          subject: 'this is a gq',
+  #          message: 'viewing gq details test message',
+  #          category: gq_category,
+  #          responding_team: responding_team
+  # end
 
   given(:internal_gq_deadline) do
     DeadlineCalculator.internal_deadline(gq).strftime("%e %b %Y")
@@ -29,33 +29,33 @@ feature 'viewing details of case in the system' do
     login_as responder
   end
 
-  scenario 'when the case is a general enquiry' do
-    cases_show_page.load id: gq.id
+  # scenario 'when the case is a general enquiry' do
+  #   cases_show_page.load id: gq.id
 
-    expect(cases_show_page).to have_case_heading
-    expect(cases_show_page.case_heading.case_number).to have_content(gq.number)
-    expect(cases_show_page.case_heading).to have_content(gq.subject)
+  #   expect(cases_show_page).to have_case_heading
+  #   expect(cases_show_page.case_heading.case_number).to have_content(gq.number)
+  #   expect(cases_show_page.case_heading).to have_content(gq.subject)
 
-    expect(cases_show_page).to have_no_escalation_notice
+  #   expect(cases_show_page).to have_no_escalation_notice
 
-    expect(cases_show_page).to have_sidebar
-    expect(cases_show_page.sidebar).to have_external_deadline
-    expect(cases_show_page.sidebar.external_deadline).
-      to have_content(external_gq_deadline)
-    expect(cases_show_page.sidebar.status).to have_content('Response')
-    expect(cases_show_page.sidebar.who_its_with)
-      .to have_content(gq.responding_team.name)
+  #   expect(cases_show_page).to have_sidebar
+  #   expect(cases_show_page.sidebar).to have_external_deadline
+  #   expect(cases_show_page.sidebar.external_deadline).
+  #     to have_content(external_gq_deadline)
+  #   expect(cases_show_page.sidebar.status).to have_content('Response')
+  #   expect(cases_show_page.sidebar.who_its_with)
+  #     .to have_content(gq.responding_team.name)
 
-    expect(cases_show_page.sidebar.name).to have_content('Gina GQ')
-    expect(cases_show_page.sidebar.requester_type).
-      to have_content(gq.requester_type.humanize)
-    expect(cases_show_page.sidebar.email).
-      to have_content('gina.gq@testing.digital.justice.gov.uk')
-    expect(cases_show_page.sidebar.postal_address).to have_content(gq.postal_address)
+  #   expect(cases_show_page.sidebar.name).to have_content('Gina GQ')
+  #   expect(cases_show_page.sidebar.requester_type).
+  #     to have_content(gq.requester_type.humanize)
+  #   expect(cases_show_page.sidebar.email).
+  #     to have_content('gina.gq@testing.digital.justice.gov.uk')
+  #   expect(cases_show_page.sidebar.postal_address).to have_content(gq.postal_address)
 
-    expect(cases_show_page.message).to have_content('viewing gq details test message')
-    expect(cases_show_page.received_date).to have_content(foi_received_date)
-  end
+  #   expect(cases_show_page.message).to have_content('viewing gq details test message')
+  #   expect(cases_show_page.received_date).to have_content(foi_received_date)
+  # end
 
   given(:foi_category) { create(:category) }
   given(:foi) do

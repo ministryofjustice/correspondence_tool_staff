@@ -5,6 +5,10 @@ feature 'Mark response as sent' do
   given(:manager)      { create(:manager) }
   given(:kase)         { create(:case_with_response, responder: responder) }
   given(:another_kase) { create(:case_with_response, responder: responder) }
+  given(:responder_teammate) do
+    create :responder,
+           responding_teams: responder.responding_teams
+  end
 
   before do
     kase
@@ -70,4 +74,19 @@ version and DACU will be notified to review the case."
 
   end
 
+  context 'as a responder on the same team' do
+    background do
+      login_as responder_teammate
+    end
+
+    scenario 'marking the case as sent' do
+      cases_show_page.load(id: kase.id)
+
+      expect(cases_show_page.sidebar.actions).to have_mark_as_sent
+
+      cases_show_page.sidebar.actions.mark_as_sent.click
+
+      expect(current_path).to eq respond_case_path(kase.id)
+    end
+  end
 end

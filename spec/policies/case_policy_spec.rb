@@ -5,9 +5,11 @@ describe CasePolicy do
 
   let(:responding_team)   { create :responding_team }
   let(:responder)         { responding_team.responders.first }
+  let(:coworker)          { create :responder,
+                                   responding_teams: [responding_team] }
   let(:another_responder) { create :responder}
-  let(:managing_team)     { create :managing_team }
-  let(:manager)           { create :manager }
+  let(:managing_team)     { create :team_dacu }
+  let(:manager)           { managing_team.managers.first }
 
   let(:new_case) { create :case }
   let(:accepted_case) do
@@ -23,174 +25,94 @@ describe CasePolicy do
   let(:closed_case)        { create(:closed_case, responder: responder) }
 
   permissions :can_accept_or_reject_case? do
-    it "refuses if current_user is a manager" do
-      expect(subject).not_to permit(manager, assigned_case)
-    end
-
-    it "grants if current_user is on the assigned responding team" do
-      expect(subject).to permit(responder, assigned_case)
-    end
-
-    it "refuses if current_user is another responder" do
-      expect(subject).not_to permit(another_responder, assigned_case)
-    end
+    it { should_not permit(manager,           assigned_case) }
+    it { should     permit(responder,         assigned_case) }
+    it { should_not permit(another_responder, assigned_case) }
   end
 
   permissions :can_add_attachment? do
     context 'in drafting state' do
-      it 'refuses if current_user is not the assigned responder' do
-        expect(subject).not_to permit(another_responder, accepted_case)
-      end
-
-      it 'grants if current_user is the assigned responder' do
-        expect(subject).to permit(responder, accepted_case)
-      end
-
-      it 'refuses if current_user is an assigner' do
-        expect(subject).not_to permit(manager, accepted_case)
-      end
+      it { should_not permit(manager,           accepted_case) }
+      it { should     permit(responder,         accepted_case) }
+      it { should     permit(coworker,          accepted_case) }
+      it { should_not permit(another_responder, accepted_case) }
     end
 
     context 'in awaiting_dispatch state' do
-      it 'refuses if current_user is not the assigned responder' do
-        expect(subject).not_to permit(another_responder, case_with_response)
-      end
-
-      it 'grants if current_user is the assigned responder' do
-        expect(subject).to permit(responder, case_with_response)
-      end
-
-      it 'refuses if current_user is an assigner' do
-        expect(subject).not_to permit(manager, case_with_response)
-      end
+      it { should_not permit(manager,           case_with_response) }
+      it { should     permit(responder,         case_with_response) }
+      it { should     permit(coworker,          case_with_response) }
+      it { should_not permit(another_responder, case_with_response) }
     end
   end
 
   permissions :can_add_case? do
-    it "refuses unless current_user is a manager" do
-      expect(subject).not_to permit(responder, Case.new)
-    end
-
-    it "grants if current_user is a manager" do
-      expect(subject).to permit(manager, Case.new)
-    end
+    it { should_not permit(responder, new_case) }
+    it { should     permit(manager,   new_case) }
   end
 
   permissions :can_assign_case? do
-    it "refuses unless current_user is a manager" do
-      expect(subject).not_to permit(responder, new_case)
-    end
-
-    it "grants if current_user is a manager" do
-      expect(subject).to permit(manager, new_case)
-    end
-
-    it "refuses if case is not in unassigned state" do
-      expect(subject).not_to permit(manager, create(:assigned_case))
-      expect(subject).not_to permit(responder, create(:assigned_case))
-    end
+    it { should_not permit(responder, new_case) }
+    it { should     permit(manager,   new_case) }
+    it { should_not permit(manager,   assigned_case) }
+    it { should_not permit(responder, assigned_case) }
   end
 
   permissions :can_close_case? do
-    it "refuses unless current_user is a manager" do
-      expect(subject).not_to permit(responder, create(:responded_case))
-    end
-
-    it "grants if current_user is a manager" do
-      expect(subject).to permit(manager, create(:responded_case))
-    end
+    it { should_not permit(responder, responded_case) }
+    it { should     permit(manager,   responded_case) }
   end
 
   permissions :can_respond? do
-    it "refuses if current_user is a manager" do
-      expect(subject).not_to permit(manager, case_with_response)
-    end
-
-    it "grants if current_user is the assigned responder" do
-      expect(subject).to permit(responder, case_with_response)
-    end
-
-    it "refuses if current_user is another responder" do
-      expect(subject).not_to permit(another_responder, case_with_response)
-    end
-
-    it 'refuses if case is not in awaiting dispatch' do
-      kase = create :accepted_case
-      expect(kase.current_state).to eq 'drafting'
-      expect(subject).not_to permit(responder, kase)
-    end
+    it { should_not permit(manager,           case_with_response) }
+    it { should     permit(responder,         case_with_response) }
+    it { should     permit(coworker,          case_with_response) }
+    it { should_not permit(another_responder, case_with_response) }
+    it { should_not permit(responder,         accepted_case) }
+    it { should_not permit(coworker,          accepted_case) }
   end
 
   permissions :can_view_case_details? do
-    it "refuses if current user is not involve in the case" do
-      expect(subject).not_to permit(responder, new_case)
-
-      expect(subject).not_to permit(another_responder, new_case)
-      expect(subject).not_to permit(another_responder,
-                                    create(:assigned_case,
-                                           responder: responder))
-      expect(subject).not_to permit(another_responder,
-                                    create(:accepted_case,
-                                           responder: responder))
-      expect(subject).not_to permit(another_responder,
-                                    create(:case_with_response,
-                                           responder: responder))
-      expect(subject).not_to permit(another_responder,
-                                    create(:responded_case,
-                                           responder: responder))
-    end
-
-    it "grants if current_user is a manager" do
-      expect(subject).to permit(manager, new_case)
-      expect(subject).to permit(manager, create(:assigned_case))
-      expect(subject).to permit(manager, create(:accepted_case))
-      expect(subject).to permit(manager, create(:case_with_response))
-      expect(subject).to permit(manager, create(:responded_case))
-    end
-
-    it "grants if current_user is the responder for the case" do
-      expect(subject).to permit(responder,
-                                create(:assigned_case,
-                                       responding_team: responding_team))
-      expect(subject).to permit(responder,
-                                create(:accepted_case, responder: responder))
-      expect(subject).to permit(responder,
-                                create(:case_with_response, responder: responder))
-    end
-
+    it { should     permit(manager,           new_case) }
+    it { should     permit(manager,           assigned_case) }
+    it { should     permit(manager,           accepted_case) }
+    it { should     permit(manager,           rejected_case) }
+    it { should     permit(manager,           case_with_response) }
+    it { should     permit(manager,           responded_case) }
+    it { should     permit(manager,           closed_case) }
+    it { should_not permit(responder,         new_case) }
+    it { should     permit(responder,         assigned_case) }
+    it { should     permit(responder,         accepted_case) }
+    it { should_not permit(responder,         rejected_case) }
+    it { should     permit(responder,         case_with_response) }
+    it { should_not permit(responder,         responded_case) }
+    it { should_not permit(responder,         closed_case) }
+    it { should_not permit(coworker,          new_case) }
+    it { should     permit(coworker,          assigned_case) }
+    it { should     permit(coworker,          accepted_case) }
+    it { should_not permit(coworker,          rejected_case) }
+    it { should     permit(coworker,          case_with_response) }
+    it { should_not permit(coworker,          responded_case) }
+    it { should_not permit(coworker,          closed_case) }
+    it { should_not permit(another_responder, new_case) }
+    it { should_not permit(another_responder, assigned_case) }
+    it { should_not permit(another_responder, rejected_case) }
+    it { should_not permit(another_responder, accepted_case) }
+    it { should_not permit(another_responder, case_with_response) }
+    it { should_not permit(another_responder, responded_case) }
+    it { should_not permit(another_responder, closed_case) }
   end
 
   permissions :can_remove_attachment? do
     context 'case is still being drafted' do
-      let(:case_with_response) do
-        create :case_with_response, responder: responder, manager: manager
-      end
-
-      it 'grants if current_user is the assigned responder' do
-        expect(subject).to permit(responder, case_with_response)
-      end
-
-      it 'refuses if current_user is another responder' do
-        expect(subject).not_to permit(another_responder, case_with_response)
-      end
-
-      it 'refuses if current_user is a manager' do
-        expect(subject).not_to permit(manager, case_with_response)
-      end
+      it { should     permit(responder,         case_with_response) }
+      it { should_not permit(another_responder, case_with_response) }
+      it { should_not permit(manager,           case_with_response) }
     end
 
     context 'case has been marked as responded' do
-      let(:responded_case) do
-        create :responded_case, responder: responder, manager: manager
-      end
-
-      it 'refuses if current_user is a responder' do
-        expect(subject).not_to permit(another_responder, responded_case)
-      end
-
-      it 'refuses if current_user is a manager' do
-        expect(subject).not_to permit(manager, responded_case)
-      end
+      it { should_not permit(another_responder, responded_case) }
+      it { should_not permit(manager,           responded_case) }
     end
   end
 
