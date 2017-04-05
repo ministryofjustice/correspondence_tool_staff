@@ -3,15 +3,15 @@ class DemoUserSeeder
   def initialize
     @teams =  [
       ['DACU', 'dacu'],
-      ['Legal Aid Authority', 'laa'],
+      ['Legal Aid Agency', 'laa'],
       ['HR', 'hr'],
       ['HMCTS North East Response Unit(RSU)', 'hmctsne']
     ]
 
     @users = [
-      ['Larry Adler', 'Legal Aid Authority'],
-      ['Louis Armstrong', 'Legal Aid Authority'],
-      ['Lilly Allen', 'Legal Aid Authority'],
+      ['Larry Adler', 'Legal Aid Agency'],
+      ['Louis Armstrong', 'Legal Aid Agency'],
+      ['Lilly Allen', 'Legal Aid Agency'],
       ['Helen Mirren', 'HMCTS North East Response Unit(RSU)'],
       ['Harvey Milk', 'HMCTS North East Response Unit(RSU)'],
       ['Hayley Mills', 'HMCTS North East Response Unit(RSU)'],
