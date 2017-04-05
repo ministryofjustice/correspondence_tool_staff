@@ -16,8 +16,19 @@ FactoryGirl.define do
   end
 
   factory :managing_team, parent: :team do
+    transient do
+      managers { [] }
+    end
+
     sequence(:name) { |n| "Managing Team #{n}" }
-    managers { [create(:user)] }
+
+    after(:create) do |team, evaluator|
+      if evaluator.managers.present?
+        team.managers << evaluator.managers
+      elsif team.managers.empty?
+        team.managers << create(:user)
+      end
+    end
   end
 
   factory :responding_team, parent: :team do
