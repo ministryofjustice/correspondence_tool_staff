@@ -11,6 +11,12 @@ RUN apt-get update -y  && \
     apt-get update && \
     apt-get install -y postgresql-client-9.5
 
+# install libreoffice (used by correspondence-staff to generate PDFs)
+RUN apt-get update && apt-get install -y libreoffice && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && rm -fr *Release* *Sources* *Packages* && \
+    truncate -s 0 /var/log/*log
+
 EXPOSE $PUMA_PORT
 
 RUN bundle exec rake assets:precompile assets:non_digested RAILS_ENV=production \
