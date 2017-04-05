@@ -44,16 +44,6 @@ COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings
 SET search_path = public, pg_catalog;
 
 --
--- Name: assignment_type; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE assignment_type AS ENUM (
-    'caseworker',
-    'drafter'
-);
-
-
---
 -- Name: attachment_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -131,13 +121,13 @@ CREATE TABLE ar_internal_metadata (
 
 CREATE TABLE assignments (
     id integer NOT NULL,
-    assignment_type assignment_type,
     state state DEFAULT 'pending'::state,
-    case_id integer,
-    assignee_id integer,
-    assigner_id integer,
+    case_id integer NOT NULL,
+    team_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    role team_roles,
+    user_id integer
 );
 
 
@@ -447,6 +437,69 @@ CREATE TABLE schema_migrations (
 
 
 --
+-- Name: teams; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE teams (
+    id integer NOT NULL,
+    name character varying NOT NULL,
+    email citext NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: teams_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE teams_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: teams_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE teams_id_seq OWNED BY teams.id;
+
+
+--
+-- Name: teams_users_roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE teams_users_roles (
+    id integer NOT NULL,
+    team_id integer,
+    user_id integer,
+    role user_role NOT NULL
+);
+
+
+--
+-- Name: teams_users_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE teams_users_roles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: teams_users_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE teams_users_roles_id_seq OWNED BY teams_users_roles.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -463,7 +516,6 @@ CREATE TABLE users (
     last_sign_in_ip inet,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    roles character varying,
     full_name character varying NOT NULL
 );
 
@@ -548,6 +600,20 @@ ALTER TABLE ONLY categories ALTER COLUMN id SET DEFAULT nextval('categories_id_s
 --
 
 ALTER TABLE ONLY feedback ALTER COLUMN id SET DEFAULT nextval('feedback_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY teams ALTER COLUMN id SET DEFAULT nextval('teams_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY teams_users_roles ALTER COLUMN id SET DEFAULT nextval('teams_users_roles_id_seq'::regclass);
 
 
 --
@@ -646,32 +712,27 @@ ALTER TABLE ONLY schema_migrations
 
 
 --
+-- Name: teams_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY teams
+    ADD CONSTRAINT teams_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: teams_users_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY teams_users_roles
+    ADD CONSTRAINT teams_users_roles_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
-
-
---
--- Name: index_assignments_on_assignee_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_assignments_on_assignee_id ON assignments USING btree (assignee_id);
-
-
---
--- Name: index_assignments_on_assigner_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_assignments_on_assigner_id ON assignments USING btree (assigner_id);
-
-
---
--- Name: index_assignments_on_assignment_type; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_assignments_on_assignment_type ON assignments USING btree (assignment_type);
 
 
 --
@@ -686,6 +747,20 @@ CREATE INDEX index_assignments_on_case_id ON assignments USING btree (case_id);
 --
 
 CREATE INDEX index_assignments_on_state ON assignments USING btree (state);
+
+
+--
+-- Name: index_assignments_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_assignments_on_team_id ON assignments USING btree (team_id);
+
+
+--
+-- Name: index_assignments_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_assignments_on_user_id ON assignments USING btree (user_id);
 
 
 --
@@ -759,6 +834,41 @@ CREATE INDEX index_cases_on_requester_type ON cases USING btree (requester_type)
 
 
 --
+-- Name: index_team_table_team_id_role_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_team_table_team_id_role_user_id ON teams_users_roles USING btree (team_id, role, user_id);
+
+
+--
+-- Name: index_teams_on_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_teams_on_email ON teams USING btree (email);
+
+
+--
+-- Name: index_teams_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_teams_on_name ON teams USING btree (name);
+
+
+--
+-- Name: index_teams_users_roles_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_teams_users_roles_on_team_id ON teams_users_roles USING btree (team_id);
+
+
+--
+-- Name: index_teams_users_roles_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_teams_users_roles_on_user_id ON teams_users_roles USING btree (user_id);
+
+
+--
 -- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -819,6 +929,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170306093700'),
 ('20170307083809'),
 ('20170309134800'),
-('20170309153815');
+('20170309153815'),
+('20170315152035'),
+('20170320112822'),
+('20170320121845');
 
 

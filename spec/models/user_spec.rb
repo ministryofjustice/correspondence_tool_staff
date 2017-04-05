@@ -14,7 +14,6 @@
 #  last_sign_in_ip        :inet
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  roles                  :string
 #  full_name              :string           not null
 #
 
@@ -24,10 +23,9 @@ RSpec.describe User, type: :model do
 
   subject { create(:user) }
 
-  it_behaves_like 'roles', described_class, User::ROLES
-
   it { should have_many(:assignments) }
   it { should have_many(:cases)       }
   it { should validate_presence_of(:full_name) }
-
+  it { should have_many(:team_roles).class_name('TeamsUsersRole') }
+  it { should have_many(:teams).through(:team_roles) }
 end

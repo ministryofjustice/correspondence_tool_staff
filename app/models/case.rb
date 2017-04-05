@@ -60,9 +60,14 @@ class Case < ApplicationRecord
     external_deadline: :datetime,
     trigger: [:boolean, default: false]
 
-  has_many :assignees, through: :assignments
   belongs_to :category, required: true
+
   has_many :assignments, dependent: :destroy
+  has_one :responder_assignment, -> { responding }, class_name: 'Assignment'
+  has_one :responder, through: :responder_assignment, source: :user
+  has_one :responding_team, -> { where("state != 'rejected'") }, through: :responder_assignment, source: :team
+  has_one :managing_assignment, -> { managing }, class_name: 'Assignment'
+  has_one :managing_team, through: :managing_assignment, source: :team
   has_many :transitions, class_name: 'CaseTransition', autosave: false
   has_many :attachments, class_name: 'CaseAttachment'
   belongs_to :outcome, class_name: 'CaseClosure::Outcome'
@@ -71,7 +76,7 @@ class Case < ApplicationRecord
   has_and_belongs_to_many :exemptions, class_name: 'CaseClosure::Exemption', join_table: 'cases_exemptions'
 
   before_save :prevent_number_change
-  before_create :set_deadlines, :set_number
+  before_create :set_deadlines, :set_number, :set_managing_team
   after_update :set_deadlines
 
   delegate :current_state, :available_events, to: :state_machine
@@ -87,14 +92,6 @@ class Case < ApplicationRecord
 
   def prevent_number_change
     raise StandardError.new('number is immutable') if number_changed?
-  end
-
-  def drafter
-    assignees.select(&:drafter?).first
-  end
-
-  def drafter_assignment
-    assignments.detect(&:drafter?)
   end
 
   def triggerable?
@@ -125,51 +122,50 @@ class Case < ApplicationRecord
     )
   end
 
-  def create_assignment(attributes)
-    assignment = self.assignments.create(attributes)
-    if assignment.valid?
-      event = case assignment.assignment_type
-              when 'drafter' then :assign_responder
-              end
-      state_machine.send(event, assignment.assigner_id, assignment.assignee.id)
-    end
-    assignment
+  def assign_responder(current_user, responding_team)
+    managing_team = current_user.managing_team_roles.first.team
+    state_machine.assign_responder current_user,
+                                   managing_team,
+                                   responding_team
   end
 
-  def responder_assignment_rejected(assignee_id, message, assignment_id)
-    state_machine.reject_responder_assignment!(
-      assignee_id,
-      message,
-      assignment_id
-    )
+  def responder_assignment_rejected(current_user,
+                                    responding_team,
+                                    message)
+    state_machine.reject_responder_assignment! current_user,
+                                               responding_team,
+                                               message
   end
 
-  def responder_assignment_accepted(assignee_id)
-    state_machine.accept_responder_assignment!(assignee_id)
+  def responder_assignment_accepted(current_user, responding_team)
+    state_machine.accept_responder_assignment!(current_user, responding_team)
   end
 
-  def add_responses(assignee_id, responses)
+  def add_responses(current_user, responses)
     self.attachments << responses
     filenames = responses.map(&:filename)
-    state_machine.add_responses!(assignee_id, filenames)
+    state_machine.add_responses!(current_user, responding_team, filenames)
   end
 
-  def remove_response(assignee_id, attachment)
+  def remove_response(current_user, attachment)
     attachment.destroy!
-    state_machine.remove_response(assignee_id, attachment.filename, self.reload.attachments.size)
+    state_machine.remove_response current_user,
+                                  responding_team,
+                                  attachment.filename,
+                                  self.reload.attachments.size
   end
 
   def response_attachments
     attachments.select(&:response?)
   end
 
-  def respond(current_user_id)
-    state_machine.respond!(current_user_id)
-    drafter_assignment.destroy
+  def respond(current_user)
+    state_machine.respond!(current_user, responding_team)
+    responder_assignment.destroy
   end
 
-  def close(current_user_id)
-    state_machine.close!(current_user_id)
+  def close(current_user)
+    state_machine.close!(current_user, managing_team)
   end
 
   def received_not_in_the_future?
@@ -190,10 +186,10 @@ class Case < ApplicationRecord
   end
 
   def who_its_with
-    if drafter_assignment.present?
-      self.drafter.full_name
+    if responding_team.present?
+      responding_team.name
     else
-      'DACU'
+      managing_team.name
     end
   end
 
@@ -244,6 +240,14 @@ class Case < ApplicationRecord
     exemptions.select{ |ex| ex.ncnd? }.any?
   end
 
+  def responders
+    user_ids = transitions.responded.map(&:user_id)
+    if user_ids.any?
+      User.find(user_ids).map(&:full_name)
+    else
+      []
+    end
+  end
 
   private
 
@@ -251,6 +255,12 @@ class Case < ApplicationRecord
     self.escalation_deadline = DeadlineCalculator.escalation_deadline(self) if triggerable?
     self.internal_deadline = DeadlineCalculator.internal_deadline(self) if requires_approval?
     self.external_deadline = DeadlineCalculator.external_deadline(self)
+  end
+
+  def set_managing_team
+    # For now, we just automatically assign cases to DACU.
+    self.managing_team = Team.managing.find_by!(name: 'DACU')
+    self.managing_assignment.state = 'accepted'
   end
 
   def set_number
@@ -263,5 +273,4 @@ class Case < ApplicationRecord
       CaseNumberCounter.next_for_date(received_date)
     ]
   end
-
 end

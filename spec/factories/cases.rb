@@ -23,45 +23,94 @@
 FactoryGirl.define do
 
   factory :case do
-    requester_type 'member_of_the_public'
-    name { Faker::Name.name }
-    email { Faker::Internet.email }
-    association :category, factory: :category, strategy: :create
-    subject { Faker::Hipster.sentence(1, word_count: 4).truncate(80) }
-    message { Faker::Lorem.paragraph(1) }
-    received_date Time.zone.today.to_s
-    postal_address { Faker::Address.street_address }
+    transient do
+      identifier "new case"
+      managing_team { create :team_dacu }
+    end
 
-    factory :assigned_case do
+    requester_type 'member_of_the_public'
+    sequence(:name) { |n| "#{identifier} name #{n}" }
+    email { Faker::Internet.email(identifier) }
+    # association :category, factory: :category, strategy: :create
+    category
+    sequence(:subject) { |n| "#{identifier} subject #{n}" }
+    sequence(:message) { |n| "#{identifier} message #{n}" }
+    received_date Time.zone.today.to_s
+    sequence(:postal_address) { |n| "#{identifier} postal address #{n}" }
+
+    after(:build) do |_kase, evaluator|
+      evaluator.managing_team
+    end
+
+    after(:create) do |kase, evaluator|
+      create :assignment,
+             case: kase,
+             team: evaluator.managing_team,
+             state: 'pending',
+             role: 'managing'
+    end
+
+    factory :assigned_case, parent: :case do
       transient do
-        assigner { create(:assigner) }
-        drafter  { create(:drafter)  }
+        identifier "assigned case"
+        manager         { managing_team.managers.first }
+        responding_team { create :responding_team }
       end
 
       after(:create) do |kase, evaluator|
-        assignment = create :drafter_assignment,
-                            case: kase,
-                            assigner: evaluator.assigner,
-                            assignee: evaluator.drafter
+        create :assignment,
+               case: kase,
+               team: evaluator.responding_team,
+               state: 'pending',
+               role: 'responding'
         create :case_transition_assign_responder,
-               case_id: kase.id,
-               user_id: assignment.assigner.id,
-               assignee_id: assignment.assignee.id
+               case: kase,
+               user: evaluator.manager,
+               managing_team: evaluator.managing_team,
+               responding_team: evaluator.responding_team
       end
     end
 
     factory :accepted_case, parent: :assigned_case do
+      transient do
+        identifier "accepted case"
+        responder { create :responder }
+        responding_team { responder.responding_teams.first }
+      end
+
       after(:create) do |kase, evaluator|
+        kase.responder_assignment.update_attribute :user, evaluator.responder
+        kase.responder_assignment.accepted!
         create :case_transition_accept_responder_assignment,
-               case_id: kase.id,
-               user_id: evaluator.assigner.id,
-               assignee_id: evaluator.drafter.id,
-               most_recent: true
+               case: kase,
+               user_id: evaluator.responder.id,
+               responding_team_id: evaluator.responding_team.id
       end
     end
 
+    factory :rejected_case, parent: :assigned_case do
+      transient do
+        rejection_message { Faker::Hipster.sentence }
+        responder         { create :responder }
+        responding_team   { responder.responding_teams.first }
+        identifier        "rejected case"
+      end
+
+      after(:create) do |kase, evaluator|
+        kase.responder_assignment.reasons_for_rejection =
+          evaluator.rejection_message
+        kase.responder_assignment.rejected!
+        create :case_transition_reject_responder_assignment,
+               case: kase,
+               user: evaluator.responder,
+               responding_team: evaluator.responding_team,
+               message: evaluator.rejection_message
+      end
+    end
     factory :case_with_response, parent: :accepted_case do
       transient do
+        identifier "case with response"
+        responder { create :responder, full_name: 'Ivor Response' }
         responses { [build(:correspondence_response, type: 'response')] }
       end
 
@@ -69,37 +118,45 @@ FactoryGirl.define do
         kase.attachments.push(*evaluator.responses)
 
         create :case_transition_add_responses,
-               case_id: kase.id
+               case_id: kase.id,
+               responding_team_id: evaluator.responding_team.id,
+               user_id: evaluator.responder.id
                # filenames: [evaluator.attachment.filename]
       end
     end
 
     factory :responded_case, parent: :case_with_response do
+      transient do
+        identifier "responded case"
+        responder { User.find_by_full_name('Ivor Response') || create(:responder, full_name: 'Ivor Response') }
+      end
 
       date_responded Date.today
 
-      after(:create) do |kase, _evaluator|
-        assignment = Assignment.find_by(case_id: kase.id)
-
-        create(:case_transition_respond,
-               case_id: kase.id,
-               user_id: assignment.assignee.id,
-               assignee_id: assignment.assignee.id)
+      after(:create) do |kase, evaluator|
+        create :case_transition_respond,
+               case: kase,
+               user_id: evaluator.responder.id,
+               responding_team_id: evaluator.responding_team.id
+        kase.responder_assignment.destroy
       end
     end
 
     factory :closed_case, parent: :responded_case do
+      transient do
+        identifier "closed case"
+      end
+
       received_date 22.business_days.ago
       date_responded 4.business_days.ago
       outcome { create :outcome }
 
-      after(:create) do |kase, _evaluator|
-        assignment = Assignment.find_by(case_id: kase.id)
-
-        create(:case_transition, :close,
-               case_id: kase.id,
-               user_id: assignment.assignee.id,
-               assignee_id: assignment.assignee.id)
+      after(:create) do |kase, evaluator|
+        create :case_transition_close,
+               case: kase,
+               user: evaluator.manager,
+               managing_team: evaluator.managing_team,
+               responding_team: evaluator.responding_team
       end
 
       trait :requires_exemption do

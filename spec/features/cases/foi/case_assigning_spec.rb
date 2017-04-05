@@ -1,57 +1,58 @@
 require 'rails_helper'
 
 feature 'Assigning a case from the detail view' do
-  given(:kase)        { create(:case)                       }
-  given(:drafter)     { create(:user, roles: ['drafter'])   }
-  given(:assigner)    { create(:user, roles: ['assigner'])  }
-  given(:approver)    { create(:user, roles: ['approver'])  }
+  given(:kase)            { create(:case) }
+  given(:responder)       { create(:responder) }
+  given(:responding_team) { create :responding_team, responders: [responder] }
+  given(:manager)         { create(:manager)  }
+  given(:managing_team)   { create :managing_team, managers: [manager] }
+  given(:assignment)      { kase.responder_assignment }
 
   before do
-    drafter
+    responding_team
   end
 
   scenario 'assigning a new case' do
-    login_as assigner
+    login_as manager
     visit case_path(kase)
     expect(cases_show_page).to(
       have_link('Assign to a responder', href: new_case_assignment_path(kase))
     )
 
     click_link 'Assign to a responder'
-    expect(page).to have_content('Assign case')
+    expect(assign_page).to have_content('Assign case')
 
-    select drafter.full_name, from: 'assignment[assignee_id]'
+    choose responding_team.name
     click_button 'Assign case'
     expect(current_path).to eq cases_path
     expect(page).to have_content('Case successfully assigned')
 
-    new_assignment = Assignment.last
+    newest_assignment = Assignment.last
 
-    expect(kase.reload).to have_attributes(
-                             current_state:       'awaiting_responder',
-                             assignments:         [new_assignment]
-                           )
+    kase.reload
+    expect(kase.current_state).to eq 'awaiting_responder'
+    expect(kase.assignments).to include newest_assignment
 
-    expect(new_assignment).to have_attributes(
-                                assignment_type: 'drafter',
-                                assignee:        drafter,
-                                assigner:        assigner,
-                                case:            kase,
-                                state:           'pending'
-                              )
+    expect(newest_assignment).to have_attributes(
+                                   role:    'responding',
+                                   team:    responding_team,
+                                   user_id: nil,
+                                   case:    kase,
+                                   state:   'pending'
+                                 )
   end
 
   context 'case has been rejected' do
     given(:kase) { create(:assigned_case) }
 
     before do
-      drafter
-      kase.assignments.last.reject('No thanks')
+      responding_team
+      assignment.reject responder, 'No thanks'
     end
 
     scenario 'assigner reassigns rejected case' do
 
-      login_as assigner
+      login_as manager
       visit case_path(kase)
       expect(cases_show_page).to(
         have_link('Assign to a responder', href: new_case_assignment_path(kase))
@@ -60,25 +61,24 @@ feature 'Assigning a case from the detail view' do
       click_link 'Assign to a responder'
       expect(page).to have_content('Assign case')
 
-      select drafter.full_name, from: 'assignment[assignee_id]'
+      choose responding_team.name
       click_button 'Assign case'
       expect(current_path).to eq cases_path
       expect(page).to have_content('Case successfully assigned')
 
-      new_assignment = Assignment.last
+      newest_assignment = Assignment.last
 
-      expect(kase.reload).to have_attributes(
-                               current_state:       'awaiting_responder',
-                               assignments:         [new_assignment]
-                             )
+      kase.reload
+      expect(kase.current_state).to eq 'awaiting_responder'
+      expect(kase.assignments).to include newest_assignment
 
-      expect(new_assignment).to have_attributes(
-                                  assignment_type: 'drafter',
-                                  assignee:        drafter,
-                                  assigner:        assigner,
-                                  case:            kase,
-                                  state:           'pending'
-                                )
+      expect(newest_assignment).to have_attributes(
+                                     role:    'responding',
+                                     team:    responding_team,
+                                     user_id: nil,
+                                     case:    kase,
+                                     state:   'pending'
+                                   )
     end
 
   end

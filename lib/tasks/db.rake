@@ -8,7 +8,7 @@ namespace :db do
     end
   end
 
-  desc 'Clear the database, run migrations and seeds'
+  desc 'Clear the database, run migrations and basic seeds (not users, teams, roles)'
   task :reseed => [:clear, 'db:migrate', 'db:seed'] {}
 
   def clear_database
@@ -19,7 +19,7 @@ namespace :db do
       conn.drop_table(table, force: :cascade)
     end
 
-    %w(assignment_type attachment_type requester_type state).each do |type|
+    %w(assignment_type attachment_type requester_type state user_role team_roles).each do |type|
       conn.execute("DROP TYPE IF EXISTS #{type}")
     end
   end

@@ -42,55 +42,68 @@ class CaseStateMachine
     transition from: :responded, to: :closed
   end
 
-  def add_responses!(assignee_id, filenames)
+  def accept_responder_assignment!(user, responding_team)
+    trigger! :accept_responder_assignment,
+             responding_team_id: responding_team.id,
+             user_id:            user.id,
+             event:              :accept_responder_assignment
+  end
+
+  def accept_responder_assignment(user, responding_team)
+    self.accept_responder_assignment!(user, responding_team)
+  rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
+    false
+  end
+
+  def add_responses!(user, responding_team, filenames)
     trigger! :add_responses,
-             assignee_id: assignee_id,
-             user_id:     assignee_id,
-             filenames:   filenames,
-             event:       :add_responses
+             responding_team_id: responding_team.id,
+             user_id:            user.id,
+             filenames:          filenames,
+             event:              :add_responses
   end
 
-  def add_responses(assignee_id, filenames)
-    self.add_responses!(assignee_id, filenames)
+  def add_responses(user, responding_team, filenames)
+    self.add_responses!(user, responding_team, filenames)
   rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
     false
   end
 
-  def assign_responder!(assigner_id, assignee_id)
+  def assign_responder!(user, managing_team, responding_team)
     trigger! :assign_responder,
-             assignee_id: assignee_id,
-             user_id:     assigner_id,
-             event:       :assign_responder
+             managing_team_id:   managing_team.id,
+             responding_team_id: responding_team.id,
+             user_id:            user.id,
+             event:              :assign_responder
   end
 
-  def remove_response(assignee_id, filename, num_responses)
-    self.remove_response!(assignee_id, filename, num_responses)
+  def remove_response(user, responding_team, filename, num_attachments)
+    self.remove_response!(user, responding_team, filename, num_attachments)
   rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
     false
   end
 
-  def remove_response!(assignee_id, filename, num_attachments)
+  def remove_response!(user, responding_team, filename, num_attachments)
     event = num_attachments == 0 ? :remove_last_response : :remove_response
     trigger event,
-            assignee_id: assignee_id,
-            user_id: assignee_id,
+            responding_team_id: responding_team.id,
+            user_id: user.id,
             filenames: filename,
             event: event
   end
 
-  def assign_responder(assigner_id, assignee_id)
-    self.assign_responder!(assigner_id, assignee_id)
+  def assign_responder(user, managing_team, responding_team)
+    self.assign_responder!(user, managing_team, responding_team)
   rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
     false
   end
 
-  def reject_responder_assignment!(assignee_id, message, assignment_id)
+  def reject_responder_assignment!(responder, responding_team, message)
     trigger! :reject_responder_assignment,
-             assignee_id: assignee_id,
-             user_id:     assignee_id,
-             message:     message,
-             assignment_id: assignment_id,
-             event:       :reject_responder_assignment
+             responding_team_id: responding_team.id,
+             user_id:            responder.id,
+             message:            message,
+             event:              :reject_responder_assignment
   end
 
   def reject_responder_assignment(assignee_id, message, assignment_id)
@@ -99,41 +112,29 @@ class CaseStateMachine
     false
   end
 
-  def accept_responder_assignment!(assignee_id)
-    trigger! :accept_responder_assignment,
-             assignee_id: assignee_id,
-             user_id:     assignee_id,
-             event:       :accept_responder_assignment
-  end
-
-  def accept_responder_assignment(assignee_id)
-    self.accept_responder_assignment!(assignee_id)
-  rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
-    false
-  end
-
-  def respond!(assignee_id)
+  def respond!(user, responding_team)
     trigger! :respond,
-             assignee_id: assignee_id,
-             user_id:     assignee_id,
-             event:       :respond
+             responding_team_id: responding_team.id,
+             user_id:            user.id,
+             event:              :respond
   end
 
-  def respond(assignee_id)
-    self.respond!(assignee_id)
+  def respond(user, responding_team)
+    self.respond!(user, responding_team)
   rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
     false
   end
 
-  def close(current_user_id)
-    self.close!(current_user_id)
+  def close(user, managing_team)
+    self.close!(user, managing_team)
   rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
     false
   end
 
-  def close!(current_user_id)
+  def close!(user, managing_team)
     trigger! :close,
-             user_id:     current_user_id,
-             event:       :close
+             managing_team_id: managing_team.id,
+             user_id:          user.id,
+             event:            :close
   end
 end

@@ -12,8 +12,8 @@ require 'rails_helper'
 # end
 RSpec.describe CasesHelper, type: :helper do
 
-  let(:drafter)   { create(:user, roles: ['drafter'])   }
-  let(:assigner)  { create(:user, roles: ['assigner'])  }
+  let(:drafter)   { create(:drafter)   }
+  let(:assigner)  { create(:assigner)  }
 
   describe '#action_button_for(event)' do
 

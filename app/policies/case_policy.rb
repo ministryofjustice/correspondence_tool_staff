@@ -8,40 +8,41 @@ class CasePolicy
   end
 
   def can_add_attachment?
-    (self.case.drafting? || self.case.awaiting_dispatch?) && self.case.drafter == user
+  (self.case.drafting? || self.case.awaiting_dispatch?) && self.case.responder == user
   end
 
   def can_add_case?
-    user.assigner?
+    user.manager?
   end
 
   def can_assign_case?
-    user.assigner? && self.case.unassigned?
+    user.manager? && self.case.unassigned?
   end
 
   def can_accept_or_reject_case?
-    self.case.awaiting_responder? && self.case.drafter == user
+    self.case.awaiting_responder? &&
+      user.responding_teams.include?(self.case.responding_team)
+  end
+
+  def can_close_case?
+    user.manager? && self.case.responded?
   end
 
   def can_remove_attachment?
     case self.case.current_state
-    when 'awaiting_dispatch' then self.case.drafter == user
+    when 'awaiting_dispatch' then self.case.responder == user
     else false
     end
   end
 
   def can_respond?
     self.case.awaiting_dispatch? &&
-      self.case.response_attachments.any? && self.case.drafter == user
-  end
-
-  def can_close_case?
-    user.assigner? && self.case.responded?
+      self.case.response_attachments.any? && self.case.responder == user
   end
 
   def can_view_case_details?
-    user.assigner? ||
-        self.case.drafter.present? && self.case.drafter == user
+    user.manager? ||
+      user.responding_teams.include?(self.case.responding_team)
   end
 
   class Scope
@@ -53,12 +54,12 @@ class CasePolicy
     end
 
     def resolve
-      if user.assigner?
+      if user.manager?
         scope.all
-      elsif user.drafter?
-        scope.select {|kase| kase.drafter == user }
+      elsif user.responder?
+        scope.select {|kase| user.responding_teams.include? kase.responding_team }
       else
-        nil
+        []
       end
     end
   end

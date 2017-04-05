@@ -14,29 +14,27 @@
 #
 
 class CaseTransition < ActiveRecord::Base
-  belongs_to :kase,
-    inverse_of:  :transitions,
-    class_name:  'Case',
-    foreign_key: :case_id
+  belongs_to :case, inverse_of: :transitions
 
   after_destroy :update_most_recent, if: :most_recent?
 
   jsonb_accessor :metadata,
-    user_id:     :integer,
-    assignee_id: :integer,
-    message:     :text,
-    assignment_id: :integer,
-    filenames:   [:string, array: true, default: []]
+    user_id:            :integer,
+    responding_team_id: :integer,
+    managing_team_id:   :integer,
+    message:            :text,
+    filenames:          [:string, array: true, default: []]
 
   belongs_to :user
-  belongs_to :assignee, class_name: User
+  belongs_to :responding_team, class_name: Team
+  belongs_to :managing_team, class_name: Team
 
   scope :responded, -> { where to_state: 'responded' }
 
   private
 
   def update_most_recent
-    last_transition = kase.transitions.order(:sort_key).last
+    last_transition = self.case.transitions.order(:sort_key).last
     return unless last_transition.present?
     last_transition.update_column(:most_recent, true)
   end

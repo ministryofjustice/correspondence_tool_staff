@@ -14,10 +14,9 @@ class AssignmentsController < ApplicationController
   def create
     authorize @case, :can_assign_case?
 
-    @assignment = @case.create_assignment(
-      assignment_params.merge(assignment_type: 'drafter', assigner: current_user)
-    )
+    @assignment = @case.assignments.create(assignment_params.merge(role: 'responding'))
     if @assignment.valid?
+      @case.assign_responder(current_user, @assignment.team)
       flash[:notice] = flash[:creating_case] ? t('.case_created') : t('.case_assigned')
       AssignmentMailer.new_assignment(@assignment).deliver_later
       redirect_to cases_path
@@ -28,14 +27,17 @@ class AssignmentsController < ApplicationController
 
   def edit
     if @assignment
-      if already_accepted?
+      if @assignment.accepted?
         redirect_to case_path @case, accepted_now: false
+      elsif @assignment.rejected?
+        redirect_to case_assignments_show_rejected_path @case, rejected_now: false
       else
         authorize @case, :can_accept_or_reject_case?
         render :edit
       end
-    elsif @assignment.nil? && already_rejected?
-      redirect_to case_assignments_show_rejected_path @case, rejected_now: false
+    else
+      flash[:notice] = 'Case assignment does not exist.'
+      redirect_to case_path @case
     end
   end
 
@@ -43,10 +45,10 @@ class AssignmentsController < ApplicationController
     authorize @case, :can_accept_or_reject_case?
 
     if accept?
-      @assignment.accept
+      @assignment.accept current_user
       redirect_to case_path @assignment.case, accepted_now: true
     elsif valid_reject?
-      @assignment.reject assignment_params[:reasons_for_rejection]
+      @assignment.reject current_user, assignment_params[:reasons_for_rejection]
       redirect_to case_assignments_show_rejected_path @case, rejected_now: true
     else
       @assignment.assign_and_validate_state(assignment_params[:state])
@@ -62,27 +64,21 @@ class AssignmentsController < ApplicationController
   private
 
   def assignment_params
-    params.require(:assignment).permit(
-      :state,
-      :assignee_id,
-      :reasons_for_rejection
-    )
+    if params[:assignment]
+      params.require(:assignment).permit(
+        :state,
+        :team_id,
+        :reasons_for_rejection
+      )
+    else
+      HashWithIndifferentAccess.new
+    end
   end
 
   def set_assignment
     if Assignment.exists?(id: params[:id])
       @assignment = Assignment.find(params[:id])
     end
-  end
-
-  def already_rejected?
-    @case.transitions.any? do |transition|
-      transition.assignment_id == params[:id].to_i && transition.event =='reject_responder_assignment'
-    end
-  end
-
-  def already_accepted?
-    Assignment.where(id: params[:id], state: 'accepted').present?
   end
 
   def set_case

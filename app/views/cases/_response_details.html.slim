@@ -30,7 +30,10 @@
             th
               = t('common.case.responder')
             td#request--responder
-              = case_details.transitions.responded.last.assignee.full_name
+              = case_details.transitions.responded.last.responding_team.name
+              - case_details.responders.each do |responder_name|
+                br
+                = responder_name
         - if case_details.closed?
           tr
             th

@@ -7,7 +7,8 @@
 #               authenticated_root GET    /                                                          cases#index
 #                      sidekiq_web        /sidekiq                                                   Sidekiq::Web
 #                         feedback POST   /feedback(.:format)                                        feedback#create
-#                       close_case PATCH  /cases/:id/close(.:format)                                 cases#close
+#                       close_case GET    /cases/:id/close(.:format)                                 cases#close
+#             process_closure_case PATCH  /cases/:id/process_closure(.:format)                       cases#process_closure
 #                     respond_case GET    /cases/:id/respond(.:format)                               cases#respond
 #             confirm_respond_case PATCH  /cases/:id/confirm_respond(.:format)                       cases#confirm_respond
 #   case_assignments_show_rejected GET    /cases/:case_id/assignments/show_rejected(.:format)        assignments#show_rejected

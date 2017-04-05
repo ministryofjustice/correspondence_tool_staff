@@ -72,7 +72,7 @@ class CasesController < ApplicationController
 
       if responses.all?(&:valid?)
         responses.select(&:persisted?).each(&:touch)
-        @case.add_responses(current_user.id, responses)
+        @case.add_responses(current_user, responses)
         remove_leftover_upload_files
         flash[:notice] = t('notices.response_uploaded')
         set_permitted_events
@@ -104,7 +104,7 @@ class CasesController < ApplicationController
     authorize @case, :can_close_case?
     @case.prepare_for_close
     if @case.update(process_closure_params)
-      @case.close(current_user.id)
+      @case.close(current_user)
       set_permitted_events
       flash[:notice] = t('notices.case_closed')
       render :show
@@ -120,7 +120,7 @@ class CasesController < ApplicationController
 
   def confirm_respond
     authorize @case, :can_respond?
-    @case.respond(current_user.id)
+    @case.respond(current_user)
     flash[:notice] = t('.success')
     redirect_to cases_path
   end

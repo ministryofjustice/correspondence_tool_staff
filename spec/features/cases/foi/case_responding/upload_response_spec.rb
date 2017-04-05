@@ -1,16 +1,16 @@
 require 'rails_helper'
 
 feature 'Upload response' do
-  given(:drafter)           { create(:drafter) }
-  given(:kase)              { create(:accepted_case, drafter: drafter) }
+  given(:responder) { create(:responder) }
+  given(:kase)      { create(:accepted_case, responder: responder) }
 
   background do
     create(:category, :foi)
   end
 
-  context 'as the assigned drafter' do
+  context 'as the assigned responder' do
     background do
-      login_as drafter
+      login_as responder
     end
 
     scenario 'clicking link on case detail page goes to upload page' do
@@ -25,11 +25,11 @@ feature 'Upload response' do
     end
   end
 
-  context "as a drafter that isn't assigned to the case" do
-    given(:unassigned_drafter) { create(:drafter) }
+  context "as a responder that isn't assigned to the case" do
+    given(:unassigned_responder) { create(:responder) }
 
     background do
-      login_as unassigned_drafter
+      login_as unassigned_responder
     end
 
     scenario "link to case upload page isn't visible on detail page" do

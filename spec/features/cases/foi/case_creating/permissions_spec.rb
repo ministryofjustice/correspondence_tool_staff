@@ -2,11 +2,11 @@ require 'rails_helper'
 
 feature 'Only assigners can create cases' do
 
-  let(:drafter)   { create(:user, roles: ['drafter'])   }
-  let(:assigner)  { create(:user, roles: ['assigner'])  }
+  let(:responder) { create(:responder) }
+  let(:manager)   { create(:manager)   }
 
   scenario 'As an assigner I can navigate to the New Case form' do
-    login_as assigner
+    login_as manager
     visit cases_path
     expect(page).
       to have_link('New case', href: Rails.root.join(new_case_path))
@@ -15,8 +15,8 @@ feature 'Only assigners can create cases' do
     expect(page).to have_button('Continue')
   end
 
-  scenario 'As a drafter I cannot navigate to the New Case form' do
-    login_as drafter
+  scenario 'As a responder I cannot navigate to the New Case form' do
+    login_as responder
     visit cases_path
     expect(page).
       not_to have_link('New case', href: Rails.root.join(new_case_path))

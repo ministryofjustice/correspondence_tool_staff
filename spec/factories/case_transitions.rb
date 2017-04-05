@@ -26,44 +26,67 @@ FactoryGirl.define do
     before(:create) do |transition|
       CaseTransition.where(case_id: transition.case_id).update(most_recent: false)
     end
+  end
 
-    factory :case_transition_assign_responder do
-      transient do
-        drafter   { create(:user, roles: ['drafter'])  }
-        assigner  { create(:user, roles: ['assigner']) }
-      end
-
-      to_state 'awaiting_responder'
-      event 'assign_responder'
-      user_id {assigner.id}
-      assignee_id {drafter.id}
+  factory :case_transition_assign_responder, parent: :case_transition do
+    transient do
+      manager         { create :manager }
+      managing_team   { manager.managing_teams.first }
+      responding_team { create :responding_team }
     end
 
-    factory :case_transition_accept_responder_assignment do
-      to_state 'drafting'
-      event 'accept_responder_assignment'
+    to_state           'awaiting_responder'
+    event              'assign_responder'
+    user_id            { manager.id }
+    managing_team_id   { managing_team.id }
+    responding_team_id { responding_team.id }
+  end
+
+  factory :case_transition_accept_responder_assignment, parent: :case_transition do
+    to_state 'drafting'
+    event 'accept_responder_assignment'
+  end
+
+  factory :case_transition_reject_responder_assignment, parent: :case_transition do
+    transient do
+      user            { create :responder }
+      responding_team { user.responding_teams.first }
     end
 
-    factory :case_transition_add_responses do
-      transient do
-        assignee { create(:drafter) }
-        filenames ['file1.pdf', 'file2.pdf']
-      end
+    to_state           'unassigned'
+    event              'reject_responder_assignment'
+    user_id            { user.id }
+    responding_team_id { responding_team.id }
+    message            { Faker::Hipster.sentence }
+  end
 
-      to_state 'awaiting_dispatch'
-      user_id     { assignee.id }
-      assignee_id { assignee.id }
-      event 'add_responses'
+  factory :case_transition_add_responses, parent: :case_transition do
+    transient do
+      responder       { create :responder }
+      responding_team { responder.responding_teams.first }
     end
 
-    factory :case_transition_respond do
-      to_state 'responded'
-      event 'respond'
+    to_state 'awaiting_dispatch'
+    user_id            { responder.id }
+    responding_team_id { responding_team.id }
+    filenames          ['file1.pdf', 'file2.pdf']
+    event 'add_responses'
+  end
+
+  factory :case_transition_respond, parent: :case_transition do
+    transient do
+      responder       { create :responder }
+      responding_team { responder.responding_teams.first }
     end
 
-    trait :close do
-      to_state 'closed'
-      event 'close'
-    end
+    to_state 'responded'
+    event 'respond'
+    user_id            { responder.id }
+    responding_team_id { responding_team.id }
+  end
+
+  factory :case_transition_close, parent: :case_transition do
+    to_state 'closed'
+    event 'close'
   end
 end
