@@ -2,12 +2,13 @@
 #
 # Table name: case_attachments
 #
-#  id         :integer          not null, primary key
-#  case_id    :integer
-#  type       :enum
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  key        :string
+#  id          :integer          not null, primary key
+#  case_id     :integer
+#  type        :enum
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  key         :string
+#  preview_key :string
 #
 
 FactoryGirl.define do
@@ -20,13 +21,23 @@ FactoryGirl.define do
     #       default strategy of :create, so we need to fix that to fix the hex
     #       number we generate here.
     key { "#{SecureRandom.hex(16)}/responses/#{Faker::Internet.slug}.pdf" }
+    preview_key { "#{SecureRandom.hex(16)}/preview_responses/#{Faker::Internet.slug}.pdf" }
   end
 
   factory :correspondence_response, parent: :case_attachment do
     type 'response'
+
+    trait :without_preview_key do
+      preview_key nil
+    end
   end
   factory :case_response, parent: :correspondence_response do
     # Whatever was I thinking calling it :correspondence_response? Why didn't
     # you stop me Eddie?!?!
+
+    trait :jpg do
+      key { "#{SecureRandom.hex(16)}/responses/#{Faker::Internet.slug}.jpg" }
+    end
+
   end
 end

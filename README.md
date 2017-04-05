@@ -68,6 +68,22 @@ $ brew install phantomjs
 
 </details>
 
+### Libreoffice
+
+Libreoffice is used to convert documents to PDF's so that they can be viewed in a browser.
+In production environments, the installation of libreoffice is taken care of during the build
+of the docker container (see the Dockerfile).
+
+In localhost dev testing environments, libreoffice needs to be installed using homebrew, and then 
+the following shell script needs to created with the name ```/usr/local/bin/soffice```:
+
+
+```
+cd /Applications/LibreOffice.app/Contents/MacOS && ./soffice $1 $2 $3 $4 $5 $6
+```
+
+The above script is needed by the libreconv gem to do the conversion.
+
 ### Rake Tasks 
 
 Last two rake demo tasks are not required for production service.

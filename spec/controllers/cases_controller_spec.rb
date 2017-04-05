@@ -675,53 +675,26 @@ RSpec.describe CasesController, type: :controller do
 
   end
 
-  describe 'POST upload_responses' do
+  describe 'POST upload responses' do
     let(:kase) { create(:accepted_case, responder: responder) }
-    let(:uploads_key) do
-      "uploads/#{kase.id}/responses/#{Faker::Internet.slug}.jpg"
-    end
-    let(:destination_key) { uploads_key.sub(%r{^uploads/}, '') }
-    let(:destination_path) do
-      "correspondence-staff-case-uploads-testing/#{destination_key}"
-    end
-    let(:uploads_object) { instance_double(Aws::S3::Object, 'uploads_object') }
-    let(:public_url) do
-      "#{CASE_UPLOADS_S3_BUCKET.url}/#{URI.encode(destination_key)}"
-    end
-    let(:destination_object) do
-      instance_double Aws::S3::Object, 'destination_object',
-                      public_url: public_url
-    end
-    let(:leftover_files) { [] }
-
-    before do
-      allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
-                                         .with(uploads_key)
-                                         .and_return(uploads_object)
-      allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
-                                         .with(destination_key)
-                                         .and_return(destination_object)
-      allow(CASE_UPLOADS_S3_BUCKET).to receive(:objects)
-                                         .with(prefix: "uploads/#{kase.id}")
-                                         .and_return(leftover_files)
-      allow(uploads_object).to receive(:move_to).with(
-                                 destination_path
-                               )
+    let(:uploads_key) { "uploads/#{kase.id}/responses/#{Faker::Internet.slug}.jpg" }
+    let(:params) do
+      {
+        id:             kase,
+        type:           'response',
+        uploaded_files: [uploads_key]
+      }
     end
 
     def do_upload_responses
-      post :upload_responses, params: {
-             id:             kase,
-             type:           'response',
-             uploaded_files: [uploads_key]
-           }
+      post :upload_responses, params: params
     end
 
+
     context 'as an anonymous user' do
-      it "doesn't add the attachment" do
-        expect do
-          do_upload_responses
-        end.not_to change { kase.attachments.count }
+
+      it 'does not call ResponseUploaderService' do
+        expect(ResponseUploaderService).not_to receive(:new)
       end
 
       it 'redirects to signin' do
@@ -735,139 +708,68 @@ RSpec.describe CasesController, type: :controller do
 
       before { sign_in unassigned_responder }
 
-      it "doesn't add the attachment" do
-        expect do
-          do_upload_responses
-        end.not_to change { kase.attachments.count }
+      it 'does not call ResponseUploaderService' do
+        expect(ResponseUploaderService).not_to receive(:new)
       end
+
 
       it 'redirects to case detail page' do
         do_upload_responses
         expect(response).to redirect_to(case_path(kase))
       end
     end
+
+    # TODO: ensure removed files are removed from params list  ???
+
+
+    #     context 'files removed from dropzone upload' do
+    #       let(:leftover_files) do
+    #         [instance_double(Aws::S3::Object, delete: nil)]
+    #       end
+    #
+    #       it 'removes any files left behind in uploads' do
+    #         do_upload_responses
+    #         leftover_files.each do |object|
+    #           expect(object).to have_received(:delete)
+    #         end
+    #       end
+    #     end
+
+
+
+
+
 
     context 'as the assigned responder' do
       before { sign_in responder }
 
-      it 'creates a new case attachment' do
-        expect { do_upload_responses }.
-          to change { kase.reload.attachments.count }
-      end
+      let(:uploader) { double ResponseUploaderService }
+      let(:expected_params) { ActionController::Parameters.new({"type"=>"response", "uploaded_files"=>[uploads_key], "id"=>kase.id.to_s, "controller"=>"cases", "action"=>"upload_responses"}) }
+      let(:response_uploader) { double ResponseUploaderService, upload!: nil, result: :ok }
 
-      it 'moves the file out of the uploads dir' do
+      it 'calls ResponseUploaderService' do
+        expect(ResponseUploaderService).to receive(:new).with(kase, responder, expected_params).and_return(response_uploader)
         do_upload_responses
-        expect(uploads_object).to have_received(:move_to).with(
-                                    destination_path
-                                  )
-      end
-
-      it 'test the type field' do
-        do_upload_responses
-        expect(kase.attachments.first.type).to eq 'response'
       end
 
       it 'redirects to the case detail page' do
+        expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
         do_upload_responses
         expect(response).to redirect_to(case_path(kase))
       end
 
-      context 'files removed from dropzone upload' do
-        let(:leftover_files) do
-          [instance_double(Aws::S3::Object, delete: nil)]
-        end
-
-        it 'removes any files left behind in uploads' do
-          do_upload_responses
-          leftover_files.each do |object|
-            expect(object).to have_received(:delete)
-          end
-        end
+      it 're-renders the page if no files specified' do
+        expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
+        expect(response_uploader).to receive(:result).and_return(:blank)
+        do_upload_responses
+        expect(response).to have_rendered(:new_response_upload)
       end
 
-      context 'an attachment already exists with the same name' do
-        let(:attachment) do
-          create :case_response,
-                 key: destination_key,
-                 case: kase
-        end
-
-        before do
-          attachment
-        end
-
-        it 'does not create a new case_attachment object' do
-          expect { do_upload_responses }.
-            not_to change { kase.reload.attachments.count }
-        end
-
-        it 'updates the updated_at time of the existing attachment' do
-          expect { do_upload_responses }.
-            to change { kase.reload.attachments.first.updated_at }
-        end
-
-        it 'updates the existing attachment' do
-          do_upload_responses
-          expect(uploads_object).to have_received(:move_to).with(
-                                      destination_path
-                                    )
-        end
-      end
-
-      context 'uploading invalid attachment type' do
-        let(:uploads_key) do
-          "uploads/#{kase.id}/responses/invalid.exe"
-        end
-
-        it 'renders the new_response_upload page' do
-          do_upload_responses
-          expect(response).to have_rendered(:new_response_upload)
-        end
-
-        it 'does not create a new case attachment' do
-          expect { do_upload_responses }.
-            to_not change { kase.reload.attachments.count }
-        end
-
-        xit 'removes the attachment from S3'
-      end
-
-      context 'uploading attachment that are too large' do
-        xit 'renders the new_response_upload page' do
-          do_upload_responses
-          expect(response).to have_rendered(:new_response_upload)
-        end
-
-        xit 'does not create a new case attachment' do
-          expect { do_upload_responses }.
-            to_not change { kase.reload.attachments.count }
-        end
-
-        xit 'removes the attachment from S3'
-      end
-
-      context 'does not upload any valid files' do
-
-        it 'Returns error message if not files uploaded' do
-          post :upload_responses, params: {
-              id:             kase,
-              type:           'response'
-          }
-          expect(flash[:alert]).to eq 'Please select the file(s) you used in your response.'
-          expect(response).to have_rendered(:new_response_upload)
-
-
-        end
-
-      end
-    end
-
-    context 'as a manager' do
-      before { sign_in manager }
-
-      it 'redirects to case detail page' do
-        get :new_response_upload, params: { id: kase }
-        expect(response).to redirect_to(case_path(kase))
+      it 're-renders the page if there is an upload error' do
+        expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
+        expect(response_uploader).to receive(:result).and_return(:error)
+        do_upload_responses
+        expect(response).to have_rendered(:new_response_upload)
       end
     end
   end

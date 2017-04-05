@@ -3,3 +3,4 @@
 :logfile: ./log/sidekiq.log
 :queues:
   - correspondence_tool_staff_mailers
+  - correspondence_tool_staff_pdf_maker

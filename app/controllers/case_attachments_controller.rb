@@ -1,9 +1,13 @@
 class CaseAttachmentsController < ApplicationController
-  before_action :set_case,       only: [:destroy, :download]
-  before_action :set_attachment, only: [:destroy, :download]
+  before_action :set_case,       only: [:destroy, :download, :show]
+  before_action :set_attachment, only: [:destroy, :download, :show]
 
   def download
     redirect_to @attachment.temporary_url
+  end
+
+  def show
+    redirect_to @attachment.temporary_preview_url
   end
 
   def destroy

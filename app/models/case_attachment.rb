@@ -2,12 +2,13 @@
 #
 # Table name: case_attachments
 #
-#  id         :integer          not null, primary key
-#  case_id    :integer
-#  type       :enum
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  key        :string
+#  id          :integer          not null, primary key
+#  case_id     :integer
+#  type        :enum
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  key         :string
+#  preview_key :string
 #
 
 class CaseAttachment < ActiveRecord::Base
@@ -31,11 +32,68 @@ class CaseAttachment < ActiveRecord::Base
   end
 
   def temporary_url
-    CASE_UPLOADS_S3_BUCKET.object(key)
-      .presigned_url :get, expires_in: Settings.attachments_presigned_url_expiry
+    make_temporary_url_for(key)
+  end
+
+  def temporary_preview_url
+    preview_key.nil? ? nil : make_temporary_url_for(preview_key)
+  end
+
+  def make_preview(retry_count)
+    if File.extname(key) == '.pdf'
+      self.preview_key = key
+    else
+      original_filepath = download_original_file
+      preview_filepath = make_preview_filename
+      begin
+        Libreconv.convert original_filepath, preview_filepath
+        self.preview_key = upload_preview(preview_filepath, retry_count)
+      rescue StandardError => err
+        Rails.logger.error "Error converting CaseAttachment #{self.id} to PDF"
+        Rails.logger.error "#{err.class} - #{err.message}"
+        Rails.logger.error err.backtrace
+        self.preview_key = nil
+      end
+    end
+    save!
   end
 
   private
+
+  def make_temporary_url_for(key)
+    CASE_UPLOADS_S3_BUCKET.object(key).presigned_url :get, expires_in: Settings.attachments_presigned_url_expiry
+  end
+
+  def download_original_file
+    extname = File.extname(key)
+    original_file_tmpfile = Tempfile.new(['orig', extname])
+    original_file_tmpfile.close
+    attachment_object = CASE_UPLOADS_S3_BUCKET.object(key)
+    attachment_object.get(response_target: original_file_tmpfile.path)
+    original_file_tmpfile.path
+  end
+
+  def make_preview_filename
+    preview_file = Tempfile.new(['preview', '.pdf'])
+    preview_file.close
+    preview_file.path
+  end
+
+
+  def upload_preview(filepath, retry_count)
+    pdf_key = "#{self.case.attachments_dir('response_previews')}/#{File.basename(key, File.extname(key))}.pdf"
+    preview_object = CASE_UPLOADS_S3_BUCKET.object(pdf_key)
+    result = preview_object.upload_file(filepath)
+    if result == false
+      if retry_count == Settings.s3_upload_max_tries
+        raise RuntimeError, "Max upload retry exceeded for CaseAttachment #{self.id}"
+      else
+        PdfMakerJob.perform_with_delay(self.id, retry_count + 1)
+        pdf_key = nil
+      end
+    end
+    pdf_key
+  end
 
   def remove_from_storage_bucket
     s3_object.delete
