@@ -55,6 +55,19 @@ $ xcode-select --install
 ```
 </details>
 
+<details>
+<summary>Installing PhantomJS</summary>
+
+We use the [Poltergeist JS driver](https://github.com/teampoltergeist/poltergeist)
+for Capybara tests, which requires PhantomJS. Install this with your favourite
+package manager, e.g.:
+
+```
+$ brew install phantomjs
+```
+
+</details>
+
 ### Rake Tasks 
 
 Last two rake demo tasks are not required for production service.
