@@ -14,7 +14,7 @@ RUN apt-get update -y  && \
 # install libreoffice (used by correspondence-staff to generate PDFs)
 RUN apt-get update && apt-get install -y libreoffice && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && rm -fr *Release* *Sources* *Packages* && \
+    cd /var/lib/apt/lists/ && rm *Release* *Sources* *Packages* && \
     truncate -s 0 /var/log/*log
 
 EXPOSE $PUMA_PORT
