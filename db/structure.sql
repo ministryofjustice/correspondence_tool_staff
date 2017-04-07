@@ -263,7 +263,8 @@ CREATE TABLE case_transitions (
     case_id integer NOT NULL,
     most_recent boolean NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    user_id integer
 );
 
 
@@ -932,6 +933,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170309153815'),
 ('20170315152035'),
 ('20170320112822'),
-('20170320121845');
+('20170320121845'),
+('20170407091658');
 
 
