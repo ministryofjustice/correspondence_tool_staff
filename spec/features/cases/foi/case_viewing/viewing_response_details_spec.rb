@@ -2,21 +2,37 @@ require 'rails_helper'
 
 feature 'viewing response details' do
   given(:manager)         { create :manager }
-  given(:responder)       { create :responder }
-  given(:responding_team) { responder.responding_teams.first }
+  given(:responder)       { responding_team.responders.first }
+  given(:responding_team) { create :responding_team }
 
   context 'as an manager' do
     before do
       login_as manager
     end
 
-    context 'with a case being responder' do
-      given(:drafting_case)  { create :case_with_response }
+    context 'with a case not yet accepted' do
+      given(:assigned_case)  { create :assigned_case,
+                                      responding_team: responding_team }
 
       scenario 'when the case has a response' do
-        cases_show_page.load(id: drafting_case.id)
+        cases_show_page.load(id: assigned_case.id)
 
         expect(cases_show_page).not_to have_response_details
+      end
+    end
+
+    context 'with a case that has been accepted' do
+      given(:accepted_case)  { create :accepted_case,
+                                      responder: responder }
+
+      scenario 'when the case has a response' do
+        cases_show_page.load(id: accepted_case.id)
+
+        expect(cases_show_page).to have_response_details
+        expect(cases_show_page.response_details.responding_team)
+          .to have_content(responding_team.name)
+        expect(cases_show_page.response_details.responders)
+          .to have_content(responder.full_name)
       end
     end
 
@@ -34,8 +50,10 @@ feature 'viewing response details' do
         expect(cases_show_page).to have_response_details
         expect(cases_show_page.response_details.responses.first)
           .to have_content(response.filename)
-        expect(cases_show_page.response_details.responder)
+        expect(cases_show_page.response_details.responding_team)
           .to have_content(responding_team.name)
+        expect(cases_show_page.response_details.responders)
+          .to have_content(responder.full_name)
       end
 
       given(:case_with_many_responses) do
@@ -68,7 +86,7 @@ feature 'viewing response details' do
         cases_show_page.load(id: closed_case.id)
 
         expect(cases_show_page).to have_response_details
-        expect(cases_show_page.response_details.responder)
+        expect(cases_show_page.response_details.responding_team)
           .to have_content(responding_team.name)
         expect(cases_show_page.response_details.date_responded)
           .to have_content(closed_case.date_responded.strftime('%e %b %Y'))
@@ -90,14 +108,19 @@ feature 'viewing response details' do
 
       scenario 'when the case has no responses' do
         cases_show_page.load(id: accepted_case.id)
-        expect(cases_show_page).not_to have_response_details
+        expect(cases_show_page).to have_response_details
+        expect(cases_show_page.response_details).to have_responding_team
+        expect(cases_show_page.response_details).to have_responders
+        expect(cases_show_page.response_details).not_to have_date_responded
+        expect(cases_show_page.response_details).not_to have_outcome
       end
 
       scenario 'when the case has a response' do
         accepted_case.attachments << response
         cases_show_page.load(id: accepted_case.id)
         expect(cases_show_page).to have_response_details
-        expect(cases_show_page.response_details).not_to have_responder
+        expect(cases_show_page.response_details).to have_responding_team
+        expect(cases_show_page.response_details).to have_responders
         expect(cases_show_page.response_details).not_to have_date_responded
         expect(cases_show_page.response_details).not_to have_outcome
       end

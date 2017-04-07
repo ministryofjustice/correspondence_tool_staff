@@ -68,7 +68,11 @@ class Case < ApplicationRecord
   has_one :responding_team, -> { where("state != 'rejected'") }, through: :responder_assignment, source: :team
   has_one :managing_assignment, -> { managing }, class_name: 'Assignment'
   has_one :managing_team, through: :managing_assignment, source: :team
+
   has_many :transitions, class_name: 'CaseTransition', autosave: false
+  has_many :responded_transitions, -> { responded }, class_name: 'CaseTransition'
+  has_many :responder_history, through: :responded_transitions, source: :user
+
   has_many :attachments, class_name: 'CaseAttachment'
   belongs_to :outcome, class_name: 'CaseClosure::Outcome'
   belongs_to :refusal_reason, class_name: 'CaseClosure::RefusalReason'
@@ -238,15 +242,6 @@ class Case < ApplicationRecord
 
   def has_ncnd_exemption?
     exemptions.select{ |ex| ex.ncnd? }.any?
-  end
-
-  def responders
-    user_ids = transitions.responded.map(&:user_id)
-    if user_ids.any?
-      User.find(user_ids).map(&:full_name)
-    else
-      []
-    end
   end
 
   private

@@ -41,7 +41,7 @@ feature 'removing a response from response details' do
           cases_show_page.load(id: case_with_response.id)
           uploaded_file.remove.click
 
-          expect(cases_show_page).not_to have_response_details
+          expect(cases_show_page.response_details).not_to have_responses
           expect(attachment_object).to have_received(:delete)
           expect(current_path).to eq case_path(case_with_response)
         end
@@ -53,8 +53,8 @@ feature 'removing a response from response details' do
             .to eq "Are you sure you want to remove #{attached_response.filename}?"
           uploaded_file.remove.click
 
-          cases_show_page.wait_until_response_details_invisible
-          expect(cases_show_page).not_to have_response_details
+          cases_show_page.response_details.wait_for_responses nil, count: 0
+          expect(cases_show_page.response_details).not_to have_responses
           expect(attachment_object).to have_received(:delete)
           expect(cases_show_page.sidebar.actions).not_to have_mark_as_sent
         end
@@ -117,7 +117,7 @@ feature 'removing a response from response details' do
           cases_show_page.load(id: case_with_response.id)
           uploaded_file.remove.click
 
-          expect(cases_show_page).not_to have_response_details
+          expect(cases_show_page.response_details).not_to have_responses
           expect(attachment_object).to have_received(:delete)
           expect(current_path).to eq case_path(case_with_response)
         end
@@ -129,8 +129,8 @@ feature 'removing a response from response details' do
             .to eq "Are you sure you want to remove #{attached_response.filename}?"
           uploaded_file.remove.click
 
-          cases_show_page.wait_until_response_details_invisible
-          expect(cases_show_page).not_to have_response_details
+          cases_show_page.response_details.wait_for_responses nil, count: 0
+          expect(cases_show_page.response_details).not_to have_responses
           expect(attachment_object).to have_received(:delete)
           expect(cases_show_page.sidebar.actions).not_to have_mark_as_sent
         end

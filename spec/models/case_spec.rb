@@ -41,7 +41,10 @@ RSpec.describe Case, type: :model do
   let(:no_postal)          { build :case, postal_address: nil             }
   let(:no_postal_or_email) { build :case, postal_address: nil, email: nil }
   let(:no_email)           { build :case, email: nil                      }
-  let(:responder)          { create :responder                            }
+  let(:responding_team)    { create :responding_team                      }
+  let(:responder)          { responding_team.responders.first             }
+  let(:coworker)           { create :responder,
+                                    responding_teams: [responding_team]   }
   let(:manager)            { create :manager                              }
 
   describe 'has a factory' do
@@ -138,12 +141,6 @@ RSpec.describe Case, type: :model do
     it { should_not allow_value('foobar.com').for :email  }
   end
 
-  # describe '#state' do
-  #   it 'defaults to "submitted"' do
-  #     expect(non_trigger_foi.state).to eq 'submitted'
-  #   end
-  # end
-
   describe '#subject' do
     it { should validate_length_of(:subject).is_at_most(80) }
   end
@@ -218,37 +215,6 @@ RSpec.describe Case, type: :model do
       kase.exemptions << create(:exemption)
       expect(kase.has_ncnd_exemption?).to be false
     end
-  end
-
-  describe 'responders' do
-
-    context 'no responders' do
-      it 'returns an empty array' do
-        kase = Case.new
-        expect(kase.responders).to eq([])
-      end
-    end
-
-    context 'one responder' do
-      it 'returns an array of one reponder name' do
-        kase = create :responded_case
-        expect(kase.responders).to eq(['Ivor Response'])
-      end
-    end
-
-    context 'multiple responders' do
-      it 'returns an array of responder names' do
-        kase = create :responded_case
-        responder = create :responder, full_name: 'Another Responder'
-        create :case_transition_respond,
-               case_id: kase.id,
-               user_id: responder.id,
-               responding_team_id: responder.teams.first.id
-
-        expect(kase.responders).to eq(['Ivor Response', 'Another Responder'])
-      end
-    end
-
   end
 
   context 'preparing_for_close' do
@@ -373,7 +339,6 @@ RSpec.describe Case, type: :model do
     end
 
     it { should have_one(:responder_assignment)
-                  .conditions(role: 'responding')
                   .class_name('Assignment') }
     it { should have_one(:responder)
                   .through(:responder_assignment)
@@ -383,11 +348,28 @@ RSpec.describe Case, type: :model do
                   .source(:team) }
 
     it { should have_one(:managing_assignment)
-                  .conditions(role: 'managing')
                   .class_name('Assignment') }
     it { should have_one(:managing_team)
                   .through(:managing_assignment)
                   .source(:team) }
+
+    it { should have_many(:transitions)
+                  .class_name('CaseTransition') }
+
+    describe 'responded_transitions' do
+      it { should have_many(:responded_transitions)
+                    .class_name('CaseTransition') }
+
+      it 'should list only responded transitions' do
+        kase = create :closed_case
+        expect(kase.responded_transitions.count).to eq 1
+        expect(kase.responded_transitions.first.event).to eq 'respond'
+      end
+    end
+
+    it { should have_many(:responder_history)
+                  .through(:responded_transitions)
+                  .source(:user) }
   end
 
   describe '#remove_response' do

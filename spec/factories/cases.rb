@@ -107,6 +107,7 @@ FactoryGirl.define do
                message: evaluator.rejection_message
       end
     end
+
     factory :case_with_response, parent: :accepted_case do
       transient do
         identifier "case with response"

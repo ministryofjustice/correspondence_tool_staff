@@ -172,7 +172,10 @@ en:
       reason_for_refusal: Reason for refusal
       remove_link_html: |
         Remove <span class="visuallyhidden">file %{filename}</span>
-      responder: Responder
+      responding_team: Business unit
+      responders:
+        one: Information Officer
+        other: Infomration Officers
       response_details: Response details
       responses:
         one: Response

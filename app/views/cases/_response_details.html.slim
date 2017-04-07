@@ -1,7 +1,4 @@
-- if !case_details.attachments.response.empty? \
-     && (policy(case_details).can_add_attachment? \
-         || policy(case_details).can_close_case? \
-         || case_details.closed?)
+- if case_details.transitions.accepted.present?
   .request--response-details
     h2.request--heading
       = t('common.case.response_details')
@@ -13,27 +10,41 @@
       tbody
         tr
           th
-            = t('common.case.responses', count: case_details.attachments.count)
-          td
-            table#request--responses
-              - case_details.attachments.sort_by(&:filename).each do |ca|
-                tr id="case_response_#{ca.id}"
-                  td aria-label="#{t('common.case.filename')}"
-                    = ca.filename
-                  td.request--responses--actions aria-label="#{t('common.case.actions')}"
-                    = attachment_download_link(case_details, ca)
-                    - if policy(case_details).can_remove_attachment?
-                      = ' | '
-                      = attachment_remove_link(case_details, ca)
-        - if case_details.responded? || case_details.closed?
-          tr
+            = t('common.case.responding_team')
+          td#request--responding-team
+            = case_details.transitions.accepted.last.responding_team.name
+        tr
+          - unless case_details.transitions.responded.present?
             th
-              = t('common.case.responder')
-            td#request--responder
-              = case_details.transitions.responded.last.responding_team.name
-              - case_details.responders.each do |responder_name|
-                br
-                = responder_name
+              = t('common.case.responders', count: 1)
+            td#request--responders
+              = case_details.responder.full_name
+          - else
+            th
+              = t('common.case.responders',
+                  count: case_details.transitions.responded.count)
+            td#request--responders
+              ul
+                - case_details.responder_history.each do |responder|
+                  li
+                    = responder.full_name
+        - if case_details.attachments.present?
+          - if case_details.transitions.responded.present? \
+               || policy(case_details).can_add_attachment?
+            tr
+              th
+                = t('common.case.responses', count: case_details.attachments.count)
+              td
+                table#request--responses
+                  - case_details.attachments.sort_by(&:filename).each do |ca|
+                    tr id="case_response_#{ca.id}"
+                      td aria-label="#{t('common.case.filename')}"
+                        = ca.filename
+                      td.request--responses--actions aria-label="#{t('common.case.actions')}"
+                        = attachment_download_link(case_details, ca)
+                        - if policy(case_details).can_remove_attachment?
+                          = ' | '
+                          = attachment_remove_link(case_details, ca)
         - if case_details.closed?
           tr
             th

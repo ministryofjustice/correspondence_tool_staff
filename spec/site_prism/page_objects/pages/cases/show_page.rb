@@ -37,7 +37,8 @@ module PageObjects
             element :download, :xpath, '*/a[contains(.,"Download")]'
             element :remove,   :xpath, '*/a[contains(.,"Remove")]'
           end
-          element :responder, '#request--responder'
+          element :responding_team, '#request--responding-team'
+          element :responders, '#request--responders'
           element :date_responded, '#request--date-responded'
           element :timeliness, '#request--response-timeliness'
           element :time_taken, '#request--response-time-taken'
