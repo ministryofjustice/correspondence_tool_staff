@@ -132,7 +132,7 @@ describe CasePolicy do
     it 'for managers - returns all cases' do
       existing_cases
       manager_scope = described_class::Scope.new(manager, Case.all).resolve
-      expect(manager_scope).to eq existing_cases.sort { |a, b| a.id <=> b.id }
+      expect(manager_scope).to match_array(existing_cases)
     end
 
     it 'for responders - returns only their cases' do
