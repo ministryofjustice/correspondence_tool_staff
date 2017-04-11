@@ -32,11 +32,9 @@ module PageObjects
         end
 
         section :response_details, '.request--response-details' do
-          sections :responses, '#request--responses tr' do
-            element :filename, '[aria-label="File name"]'
-            element :download, :xpath, '*/a[contains(.,"Download")]'
-            element :remove,   :xpath, '*/a[contains(.,"Remove")]'
-          end
+          sections :responses,
+                   PageObjects::Sections::ResponseAttachmentSection,
+                   '#request--responses tr'
           element :responding_team, '#request--responding-team'
           element :responders, '#request--responders'
           element :date_responded, '#request--date-responded'

@@ -27,10 +27,11 @@ feature 'Closing a case' do
       expect(cases_show_page.sidebar.actions).
         to have_link('Close case', href: close_case_path(kase))
       click_link 'Close case'
+      expect(cases_close_page).to have_content("Close case")
+      expect(cases_close_page).to have_responses
     end
 
     scenario 'A KILO has responded and an manager closes the case', js:true do
-      expect(cases_close_page).to have_content("Close case")
       cases_close_page.fill_in_date_responded(5.business_days.ago)
       cases_close_page.outcome_radio_button_fully_granted.click
       cases_close_page.submit_button.click
@@ -76,11 +77,11 @@ feature 'Closing a case' do
       expect(cases_show_page.sidebar.actions).
           to have_link('Close case', href: close_case_path(kase))
       click_link 'Close case'
+      expect(cases_close_page).to have_content("Close case")
+      expect(cases_close_page).to have_responses
     end
 
     scenario 'A KILO has responded and an manager closes the case specifying a refusal reason', js:true do
-      expect(cases_close_page).to have_content("Close case")
-
       expect(cases_close_page).to have_no_refusal
       cases_close_page.fill_in_date_responded(2.business_days.ago)
       cases_close_page.outcome_radio_button_refused_fully.click
@@ -109,8 +110,6 @@ feature 'Closing a case' do
 
     scenario 'A KILO has responded and an manager closes the case specifying
  a refusal reason and exemption', js:true do
-
-      expect(cases_close_page).to have_content("Close case")
       expect(cases_close_page).to have_no_refusal
       cases_close_page.fill_in_date_responded(2.business_days.ago)
 

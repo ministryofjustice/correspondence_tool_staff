@@ -4,6 +4,10 @@ module PageObjects
       class ClosePage < SitePrism::Page
         set_url '/cases/{id}'
 
+        sections :responses,
+                 PageObjects::Sections::ResponseAttachmentSection,
+                 '#request--responses tr'
+
         element :date_responded_day, '#case_date_responded_dd'
         element :date_responded_month, '#case_date_responded_mm'
         element :date_responded_year, '#case_date_responded_yyyy'

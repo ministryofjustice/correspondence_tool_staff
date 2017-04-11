@@ -43,7 +43,6 @@
                       td.request--responses--actions aria-label="#{t('common.case.actions')}"
                         = attachment_download_link(case_details, ca)
                         - if policy(case_details).can_remove_attachment?
-                          = ' | '
                           = attachment_remove_link(case_details, ca)
         - if case_details.closed?
           tr

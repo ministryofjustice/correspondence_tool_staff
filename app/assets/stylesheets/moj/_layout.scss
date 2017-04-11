@@ -129,8 +129,24 @@ table#response-details th {
 
 table#request--responses tr:first-child td {
   padding-top: 0px;
+  border-top: none;
+}
+
+table#request--responses td:nth-child(1) {
+  @include word-wrap;
+}
+
+table#request--responses td {
+  vertical-align: top;
+  border-top: 1px solid $border-colour;
 }
 
 table#request--responses td {
   border-bottom: none;
+}
+table#request--responses a {
+  display: block;
+  &:after{
+    content: " "
+  }
 }

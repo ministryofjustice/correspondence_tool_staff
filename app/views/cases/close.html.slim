@@ -12,6 +12,10 @@
         = @case.subject
       = t('.page_heading')
 
+.grid-row
+  .column-two-thirds
+    = render partial: 'cases/response_details', locals: { case_details: @case }
+
 = form_for @case, url: process_closure_case_path do |f|
   .form-group
     = f.gov_uk_date_field :date_responded, { legend_text: t('.close_date'), form_hint_text: t('.date_example') }
