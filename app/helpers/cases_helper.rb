@@ -65,4 +65,17 @@ module CasesHelper
     business_days = kase.received_date.business_days_until kase.date_responded
     t('common.case.time_taken_result', count: business_days)
   end
+
+  def who_its_with(kase)
+    if !kase.responding_team.present?
+      kase.managing_team.name
+    else
+      if kase.responder.present? &&
+          current_user.responding_teams.include?(kase.responding_team)
+        kase.responder.full_name
+      else
+        kase.responding_team.name
+      end
+    end
+  end
 end

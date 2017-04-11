@@ -19,10 +19,10 @@ FactoryGirl.define do
     team { create :responding_team }
     role 'responding'
     association :case, factory: :case, strategy: :create
-    association :user, factory: :responder
 
     factory :accepted_assignment, parent: :cases_teams_role do
       state 'accepted'
+      user { create :responder }
     end
   end
 
