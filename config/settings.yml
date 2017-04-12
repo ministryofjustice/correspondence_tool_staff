@@ -26,4 +26,4 @@ cts_email_port: 3000
 s3_upload_max_tries: 5
 s3_upload_retry_delay_minutes: 5
 
-govuk_notify_api_key: GET_FROM_NOTIFY
+govuk_notify_api_key: never-put-real-api-key-here-use-env-vars

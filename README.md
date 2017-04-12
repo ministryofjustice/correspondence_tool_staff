@@ -98,24 +98,22 @@ $ rails cases:demo_entries
 
 ### Emails
 
-Emails are generated asynchronously using ActionMailer's deliver_later method, which 
-generates a job in the sidekiq queue.  In development, use Mailcatcher to preview generated 
-mails as follows:
+Emails are sent using
+the [GOVUK Notify service](https://www.notifications.service.gov.uk).
+Configuration relies on an API key which is not stored with the project, as even
+the test API key can be used to access account information. To do local testing
+you need to have an account that is attached to the "Track a query" service, and
+a "Team and whitelist" API key generated from the GOVUK Notify service website.
+See the instructions in the `.env.example` file for how to setup the correct
+environment variable to override the `govuk_notify_api_key` setting.
 
-Set up mailcatcher as follows (install the gem separately; do not put it in the Gemfile):
-
-```
-    $ gem install mailcatcher
-    $ mailcatcher --smtp-port 2050
-```
-
-The urls generated in the mail use the ```cta_email_host``` and ```cta_mail_port``` configuration 
-variables from the settings.yml.  These can be overridden by setting the appropriate environment variables,
-e.g.
+The urls generated in the mail use the `cts_email_host` and `cts_mail_port`
+configuration variables from the `settings.yml`. These can be overridden by
+setting the appropriate environment variables, e.g.
 
 ```
-    $ export SETTINGS__CTA_EMAIL_HOST=localhost
-    $ export SETTINGS__CTA_EMAIL_PORT=5000
+$ export SETTINGS__CTS_EMAIL_HOST=localhost
+$ export SETTINGS__CTS_EMAIL_PORT=5000
 ```
 
 ### Uploads
