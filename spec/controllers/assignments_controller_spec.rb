@@ -117,7 +117,8 @@ RSpec.describe AssignmentsController, type: :controller do
       end
 
       it 'queues an new assignment mail for later delivery' do
-        expect(AssignmentMailer).to receive_message_chain(:new_assignment, :deliver_later)
+        expect(AssignmentMailer).to receive_message_chain :new_assignment,
+                                                          :deliver_later
         post :create, params: create_assignment_params
       end
 

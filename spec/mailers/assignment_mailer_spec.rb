@@ -2,25 +2,33 @@ require 'rails_helper'
 
 RSpec.describe AssignmentMailer, type: :mailer do
   describe 'new_assignment' do
+    let(:kase) { create :case,
+                        name: 'Fyodor Ognievich Ilichion',
+                        received_date: Date.new(2017, 4, 5),
+                        subject: 'The anatomy of man' }
+    let(:assignment) { create :assignment, case: kase }
+    let(:mail) { described_class.new_assignment(assignment) }
 
-    let(:assignment) { create :assignment, case: create(:case, received_date: Date.new(2017, 4, 5), subject: 'The anatomy of man') }
-    let(:mail) { described_class.new_assignment(assignment).deliver_now }
-
-    it 'renders the subject' do
+    it 'personalises the email' do
       allow(CaseNumberCounter).to receive(:next_for_date).and_return(333)
-      expect(mail.subject).to eq('170405333 - FOI - The anatomy of man - Allocation')
+      expect(mail.govuk_notify_personalisation)
+        .to eq({
+                 email_subject:
+                   '170405333 - FOI - The anatomy of man - Allocation',
+                 team_name: assignment.team.name,
+                 case_current_state: 'allocation',
+                 case_number: '170405333',
+                 case_abbr: 'FOI',
+                 case_name: 'Fyodor Ognievich Ilichion',
+                 case_received_date: Date.new(2017, 4, 5),
+                 case_subject: 'The anatomy of man',
+                 case_link: edit_case_assignment_url(kase.id, assignment.id)
+               })
     end
 
-    it 'renders the receiver email' do
-      expect(mail.to).to eq([assignment.team.email])
-    end
-
-    it 'renders the sender email' do
-      expect(mail.from).to eq(['noreply@digital.justice.gov.uk'])
-    end
-
-    it 'assigns @assignment.team.name' do
-      expect(mail.body.encoded).to match("For attention of: #{assignment.team.name} team,")
+    it 'sets the template' do
+      expect(mail.govuk_notify_template)
+        .to eq '6f4d8e34-96cb-482c-9428-a5c1d5efa519'
     end
   end
 end
