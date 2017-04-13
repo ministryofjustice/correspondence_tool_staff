@@ -67,7 +67,7 @@ feature 'Case creation by a manager' do
     expect(assign_page).not_to have_content('true')
     choose responding_team.name
     click_button 'Create and assign case'
-    expect(current_path).to eq cases_path
+    expect(current_path).to eq case_path(new_case)
     expect(page).to have_content('Case successfully created')
 
     new_assignment = new_case.responder_assignment

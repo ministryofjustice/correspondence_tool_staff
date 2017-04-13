@@ -24,7 +24,7 @@ feature 'Assigning a case from the detail view' do
 
     choose responding_team.name
     click_button 'Assign case'
-    expect(current_path).to eq cases_path
+    expect(current_path).to eq case_path(kase)
     expect(page).to have_content('Case successfully assigned')
 
     newest_assignment = Assignment.last
@@ -63,7 +63,7 @@ feature 'Assigning a case from the detail view' do
 
       choose responding_team.name
       click_button 'Assign case'
-      expect(current_path).to eq cases_path
+      expect(current_path).to eq case_path(kase)
       expect(page).to have_content('Case successfully assigned')
 
       newest_assignment = Assignment.last

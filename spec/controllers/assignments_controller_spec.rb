@@ -113,7 +113,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
       it 'redirects to the case list view' do
         post :create, params: create_assignment_params
-        expect(response).to redirect_to cases_path
+        expect(response).to redirect_to case_path(id: create_assignment_params[:case_id])
       end
 
       it 'queues an new assignment mail for later delivery' do

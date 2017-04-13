@@ -19,7 +19,7 @@ class AssignmentsController < ApplicationController
       @case.assign_responder(current_user, @assignment.team)
       flash[:notice] = flash[:creating_case] ? t('.case_created') : t('.case_assigned')
       AssignmentMailer.new_assignment(@assignment).deliver_later
-      redirect_to cases_path
+      redirect_to case_path @case.id
     else
       render :new
     end
