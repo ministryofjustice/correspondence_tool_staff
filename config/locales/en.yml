@@ -95,9 +95,7 @@ en:
           Try including who you think with right division may be
       feedback:
         comment: |
-          Please tell us what you thought of this page.
-          Make sure you specify what you were doing in relation to your feedback.
-        #Include what you were doing in relation to your feedback
+          Let us know what you were doing and what could be improved or fixed.
     label:
       assignment:
         assignee_id: Business unit
@@ -117,7 +115,7 @@ en:
         message: Full request
         postal_address: Address
       feedback:
-        comment: Help us improve this service
+        comment: Help make this service better
 
   alerts:
     assignment_accepted_html: |
@@ -163,7 +161,7 @@ en:
         Download <span class="visuallyhidden">file %{filename}.</span>
       email: "Requesters email address: "
       exemptions_heading: Exemptions
-      external_deadline: External deadline
+      external_deadline: Final deadline
       filename: File name
       header_case_number: "You are viewing case number "
       header_subject: "Case subject, "
@@ -192,11 +190,11 @@ en:
         other: "%{count} working days"
       timeliness: Timeliness
       upload_response: Upload response
-      who_its_with: Who it's with
+      who_its_with: With
       respond: Mark response as sent
     new_case_button: New case
     phase_banner: |
-      This is a new service – your feedback will help us to improve it.
+      This is a new service.
     service_name: Track a query
     signout: Sign out
     summary_error: 'prevented this form from being submitted:'
@@ -217,14 +215,14 @@ en:
       number: Case number
       requester: Requester name
       subject: Subject
-      external_deadline: External deadline
+      external_deadline: Final deadline
       status: Waiting for
-      who_its_with: Who it's with
+      who_its_with: With
     fixed_details:
       requester: Requester
       email_address: Email address
       escalation_deadline: Escalation deadline
-      external_deadline: External deadline
+      external_deadline: Final deadline
       message: Full request
       details: Details
     new:

@@ -38,7 +38,7 @@ feature 'Deadlines:' do
     context 'for non trigger FOI requests' do
       scenario 'is shown in the detail view' do
         visit "/cases/#{non_trigger_foi.id}"
-        expect(page).to have_content('External deadline')
+        expect(page).to have_content('Final deadline')
         expect(page).to have_content('19 Sep')
       end
     end

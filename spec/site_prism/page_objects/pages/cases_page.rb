@@ -8,9 +8,9 @@ module PageObjects
         element :number, 'td[aria-label="Case number"]'
         element :name, 'td[aria-label="Requester name"]'
         element :subject, 'td[aria-label="Subject"]'
-        element :external_deadline, 'td[aria-label="External deadline"]'
+        element :external_deadline, 'td[aria-label="Final deadline"]'
         element :status, 'td[aria-label="Waiting for"]'
-        element :who_its_with, 'td[aria-label="Who it\'s with"]'
+        element :who_its_with, 'td[aria-label="With"]'
       end
 
       section :service_feedback, PageObjects::Sections::ServiceFeedbackSection, '.feedback'
