@@ -8,6 +8,9 @@ feature 'downloading a response from response details' do
   given(:presigned_url) do
     URI.encode("#{CASE_UPLOADS_S3_BUCKET.url}/#{response.key}&temporary")
   end
+  given(:presigned_view_url) do
+    URI.encode("#{CASE_UPLOADS_S3_BUCKET.url}/#{response.preview_key}&temporary")
+  end
 
   def stub_s3_response_object(response, url)
     s3_object = instance_double(Aws::S3::Object, presigned_url: url)
@@ -16,8 +19,16 @@ feature 'downloading a response from response details' do
                                        .and_return(s3_object)
   end
 
+  def stub_s3_view_object(response, url)
+    s3_object = instance_double(Aws::S3::Object, presigned_url: url)
+    allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
+                                       .with(response.preview_key)
+                                       .and_return(s3_object)
+  end
+
   background do
     stub_s3_response_object(response, presigned_url)
+    stub_s3_view_object(response, presigned_view_url)
   end
 
   context 'as a responder' do
@@ -36,9 +47,18 @@ feature 'downloading a response from response details' do
       scenario 'when an uploaded response is available' do
         cases_show_page.load(id: drafting_case.id)
 
+        expect(cases_show_page.response_details.responses.first).to have_view
+
         expect {
           cases_show_page.response_details.responses.first.download.click
         }.to redirect_to_external(presigned_url)
+      end
+
+      scenario 'when a view link is available' do
+        cases_show_page.load(id: drafting_case.id)
+        expect {
+          cases_show_page.response_details.responses.first.view.click
+        }.to redirect_to_external(presigned_view_url)
       end
     end
   end

@@ -199,6 +199,8 @@ GEM
     key_struct (0.4.2)
     launchy (2.4.3)
       addressable (~> 2.3)
+    libreconv (0.9.1)
+      spoon
     listen (3.0.8)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -381,6 +383,8 @@ GEM
       railties (>= 3.1)
       slim (~> 3.0)
     slop (3.6.0)
+    spoon (0.0.6)
+      ffi
     spring (1.7.2)
     spring-watcher-listen (2.0.0)
       listen (>= 2.7, < 4.0)
@@ -467,6 +471,7 @@ DEPENDENCIES
   jquery-ui-rails
   jsonb_accessor (~> 1.0.0.beta.1)
   launchy
+  libreconv (~> 0.9.1)
   listen (~> 3.0.5)
   logstasher
   mechanize (~> 2.7.5)

@@ -35,6 +35,7 @@ module PageObjects
           sections :responses,
                    PageObjects::Sections::ResponseAttachmentSection,
                    '#request--responses tr'
+
           element :responding_team, '#request--responding-team'
           element :responders, '#request--responders'
           element :date_responded, '#request--date-responded'

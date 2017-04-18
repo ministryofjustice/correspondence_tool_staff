@@ -26,3 +26,7 @@ config/environments/*.local.yml
 /public/assets
 
 dump.rdb
+
+
+# Ignore original files left over from merge
+*.orig

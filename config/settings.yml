@@ -22,3 +22,6 @@ git_commit:  Git Commit Not Available
 
 cts_email_url: http://localhost
 cts_email_port: 3000
+
+s3_upload_max_tries: 5
+s3_upload_retry_delay_minutes: 5

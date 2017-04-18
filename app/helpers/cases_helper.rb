@@ -35,6 +35,14 @@ module CasesHelper
 
   end
 
+  def attachment_preview_link(attachment)
+    if attachment.preview_key != nil
+      "#{link_to "View", case_case_attachment_path(attachment.case, attachment),  target: '_blank'}".html_safe
+    else
+      ''
+    end
+  end
+
   def attachment_remove_link(kase, attachment)
     link_to t('common.case.remove_link_html', filename: attachment.filename),
             case_case_attachment_path(kase, attachment),

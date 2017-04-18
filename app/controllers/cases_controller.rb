@@ -56,33 +56,19 @@ class CasesController < ApplicationController
 
   def upload_responses
     authorize @case, :can_add_attachment?
-
-    if params[:uploaded_files].blank?
+    rus = ResponseUploaderService.new(@case, current_user, params)
+    rus.upload!
+    case rus.result
+    when :blank
       flash.now[:alert] = t('alerts.response_upload_blank?')
       render :new_response_upload
-
-    else
-      responses = params[:uploaded_files].reject(&:blank?).map do |uploads_key|
-        move_uploaded_response(uploads_key)
-        CaseAttachment.find_or_initialize_by(
-          type: 'response',
-          key: response_destination_key(uploads_key)
-        )
-      end
-
-      if responses.all?(&:valid?)
-        responses.select(&:persisted?).each(&:touch)
-        @case.add_responses(current_user, responses)
-        remove_leftover_upload_files
-        flash[:notice] = t('notices.response_uploaded')
-        set_permitted_events
-        redirect_to case_path
-
-      else
-        flash.now[:alert] = t('alerts.response_upload_error')
-        # @errors = attachments.reject(&:valid?).map { |a| a.errors.full_messages }.flatten
-        render :new_response_upload
-      end
+    when :error
+      flash.now[:alert] = t('alerts.response_upload_error')
+      render :new_response_upload
+    when :ok
+      flash[:notice] = t('notices.response_uploaded')
+      set_permitted_events
+      redirect_to case_path
     end
   end
 
@@ -205,26 +191,6 @@ class CasesController < ApplicationController
       super(exception, case_path(@case))
     else
       super
-    end
-  end
-
-  def response_destination_key(uploads_key)
-    "#{@case.attachments_dir('responses')}/#{File.basename(uploads_key)}"
-  end
-
-  def response_destination_path(uploads_key)
-    "#{Settings.case_uploads_s3_bucket}/#{response_destination_key(uploads_key)}"
-  end
-
-  def move_uploaded_response(uploads_key)
-    uploads_object = CASE_UPLOADS_S3_BUCKET.object(uploads_key)
-    uploads_object.move_to response_destination_path(uploads_key)
-  end
-
-  def remove_leftover_upload_files
-    prefix = "uploads/#{@case.id}"
-    CASE_UPLOADS_S3_BUCKET.objects(prefix: prefix).each do |object|
-      object.delete
     end
   end
 end

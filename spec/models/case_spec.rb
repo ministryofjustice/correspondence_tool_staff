@@ -716,5 +716,6 @@ RSpec.describe Case, type: :model do
       end
     end
   end
+
 end
 
