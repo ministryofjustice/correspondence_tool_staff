@@ -13,11 +13,14 @@ module CaseClosure
       [rec1, rec2].each { |r| r.update_attribute(:requires_refusal_reason, true) }
 
       puts "----Seeding CaseClosure::RefusalReasons----" if verbose
-      RefusalReason.find_or_create_by!(
+
+      exemption = RefusalReason.find_or_create_by!(
         subtype: nil,
-        name: '(s1(3)) or (s8(1)) - Advice & assistance/clarification',
-        abbreviation: 'advice',
+        name: 'Exemption applied',
+        abbreviation: 'exempt',
         sequence_id: 110)
+
+      exemption.update_attribute(:requires_exemption, true)
 
       RefusalReason.find_or_create_by!(
         subtype: nil,
@@ -27,30 +30,27 @@ module CaseClosure
 
       RefusalReason.find_or_create_by!(
         subtype: nil,
-        name: '(s14(1)) - Vexatious',
-        abbreviation: 'vex',
+        name: '(s1(3)) or (s8(1)) - Advice & assistance/clarification',
+        abbreviation: 'advice',
         sequence_id: 130)
-
-      RefusalReason.find_or_create_by!(
-        subtype: nil,
-        name: '(s14(2)) - Repeated request',
-        abbreviation: 'repeat',
-        sequence_id: 140)
 
       RefusalReason.find_or_create_by!(
         subtype: nil,
         name: '(s12) - Exceeded cost',
         abbreviation: 'cost',
+        sequence_id: 140)
+
+      RefusalReason.find_or_create_by!(
+        subtype: nil,
+        name: '(s14(1)) - Vexatious',
+        abbreviation: 'vex',
         sequence_id: 150)
 
-      exemption = RefusalReason.find_or_create_by!(
+      RefusalReason.find_or_create_by!(
         subtype: nil,
-        name: 'Exemption applied',
-        abbreviation: 'exempt',
-        sequence_id: 160)
-
-      exemption.update_attribute(:requires_exemption, true)
-
+        name: '(s14(2)) - Repeated request',
+        abbreviation: 'repeat',
+        sequence_id: 150)
 
       puts "----Seeding CaseClosure::Exemptions----" if verbose
       Exemption.find_or_create_by!(
