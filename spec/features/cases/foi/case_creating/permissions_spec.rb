@@ -11,8 +11,8 @@ feature 'Only assigners can create cases' do
     expect(page).
       to have_link('New case', href: Rails.root.join(new_case_path))
     click_link "New case"
-    expect(page).to have_content 'New case'
-    expect(page).to have_button('Continue')
+    expect(page).to have_content 'Create new case'
+    expect(page).to have_button('Next - Assign case')
   end
 
   scenario 'As a responder I cannot navigate to the New Case form' do

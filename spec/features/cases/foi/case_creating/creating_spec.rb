@@ -38,7 +38,7 @@ feature 'Case creation by a manager' do
 
   scenario 'succeeds using valid inputs' do
     expect(current_path).to eq new_case_path
-    expect(page).to have_content('New case')
+    expect(page).to have_content('Create new case')
 
     choose user_input.requester_type
     fill_in 'Full name',          with: user_input.name
@@ -48,7 +48,7 @@ feature 'Case creation by a manager' do
     fill_in 'Day',                with: Time.zone.today.day.to_s
     fill_in 'Month',              with: Time.zone.today.month.to_s
     fill_in 'Year',               with: Time.zone.today.year.to_s
-    click_button 'Continue'
+    click_button 'Next - Assign case'
 
     new_case = Case.first
 
@@ -86,9 +86,9 @@ feature 'Case creation by a manager' do
 
   scenario 'fails informatively without any inputs' do
     expect(current_path).to eq new_case_path
-    expect(page).to have_content('New case')
+    expect(page).to have_content('Create new case')
 
-    click_button 'Continue'
+    click_button 'Next - Assign case'
 
     expect(page).to have_content("Type of requester must be selected")
     expect(page).to have_content("Full name can't be blank")
@@ -113,7 +113,7 @@ feature 'Case creation by a manager' do
     fill_in 'Day',                with: Time.zone.today.day.to_s
     fill_in 'Month',              with: Time.zone.today.month.to_s
     fill_in 'Year',               with: Time.zone.today.year.to_s
-    click_button 'Continue'
+    click_button 'Next - Assign case'
 
     expect(Case.count).to eq 1
     expect(page).to have_content("An error has occurred and your case could not be created.  Please try again.")

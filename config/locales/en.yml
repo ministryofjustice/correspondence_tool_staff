@@ -76,6 +76,7 @@ en:
   button:
     assign: Assign case
     continue: Continue
+    next_page_assign: Next - Assign case
     confirm: Confirm
     create_and_assign: Create and assign case
     feedback: Send feedback
@@ -226,7 +227,7 @@ en:
       message: Full request
       details: Details
     new:
-      new_case: New case
+      new_case: Create new case
       received_date: Date received
       received_date_copy: For example. 31 01 2017
     new_response_upload:
