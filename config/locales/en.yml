@@ -83,13 +83,15 @@ en:
 
   helpers:
     fieldset:
+      assignment:
+        state: Do you accept this case?
+        team_id: Assign to
       case:
         requester_type: Type of requester
         refusal_reason_name: What was the reason for refusal?
         outcome_name: What was the outcome?
       assignment:
         state: Do you accept this case?
-
     hint:
       assignment:
         reasons_for_rejection: |
