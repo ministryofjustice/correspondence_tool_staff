@@ -231,6 +231,9 @@ en:
       received_date_copy: For example. 31 01 2017
     new_response_upload:
       upload_response: 'Upload response'
+      upload_hint_copy: |
+        You can upload different file types such as Word, Excel,
+        PDF and JPEG up to 20MB per file.
     respond:
       reminders_html: |
         <strong>Check the response has been:</strong>

@@ -1,6 +1,11 @@
 = render partial: 'layouts/case_page_heading', locals: { case_details: @case }
 
 .grid-row
+  .column-two-thirds
+    p.form-hint
+      = t('.upload_hint_copy')
+
+.grid-row
   section.case-main
     = form_tag upload_responses_case_path,
                class: 'direct-upload' do
