@@ -3,10 +3,31 @@
     {
       "warning_type": "Redirect",
       "warning_code": 18,
-      "fingerprint": "ff88558e745cb42c6b17e1d15289b382ce0644374be626449196e1d297a059b4",
+      "fingerprint": "8ad95cc0167b4e8b061476113be16343a03f6cf3b701d8fad3e37572bd273146",
+      "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/case_attachments_controller.rb",
-      "line": 7,
+      "line": 10,
+      "link": "http://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Case.find(params[:case_id]).attachments.find(params[:id]).temporary_preview_url)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "CaseAttachmentsController",
+        "method": "show"
+      },
+      "user_input": "Case.find(params[:case_id]).attachments.find(params[:id]).temporary_preview_url",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "ff88558e745cb42c6b17e1d15289b382ce0644374be626449196e1d297a059b4",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/case_attachments_controller.rb",
+      "line": 6,
       "link": "http://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Case.find(params[:case_id]).attachments.find(params[:id]).temporary_url)",
       "render_path": null,
@@ -20,6 +41,6 @@
       "note": ""
     }
   ],
-  "updated": "2017-02-25 00:04:54 +0000",
-  "brakeman_version": "3.4.0"
+  "updated": "2017-04-18 09:17:21 +0100",
+  "brakeman_version": "3.5.0"
 }
