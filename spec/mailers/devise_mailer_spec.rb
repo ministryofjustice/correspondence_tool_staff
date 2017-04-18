@@ -19,5 +19,9 @@ RSpec.describe DeviseMailer, type: :mailer do
                    'http://localhost:3000/users/password/edit?reset_password_token=nEAanath7ath7at8aWF'
                })
     end
+
+    it 'sets the To address of the email' do
+      expect(mail.to).to include user.email
+    end
   end
 end

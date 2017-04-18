@@ -7,7 +7,13 @@ RSpec.describe AssignmentMailer, type: :mailer do
                         received_date: Date.new(2017, 4, 5),
                         subject: 'The anatomy of man' }
     let(:assignment) { create :assignment, case: kase }
+    let(:responding_team) { assignment.team }
     let(:mail) { described_class.new_assignment(assignment) }
+
+    it 'sets the template' do
+      expect(mail.govuk_notify_template)
+        .to eq '6f4d8e34-96cb-482c-9428-a5c1d5efa519'
+    end
 
     it 'personalises the email' do
       allow(CaseNumberCounter).to receive(:next_for_date).and_return(333)
@@ -26,9 +32,8 @@ RSpec.describe AssignmentMailer, type: :mailer do
                })
     end
 
-    it 'sets the template' do
-      expect(mail.govuk_notify_template)
-        .to eq '6f4d8e34-96cb-482c-9428-a5c1d5efa519'
+    it 'sets the To address of the email' do
+      expect(mail.to).to include responding_team.email
     end
   end
 end

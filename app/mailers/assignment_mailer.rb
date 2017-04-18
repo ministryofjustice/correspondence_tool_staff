@@ -1,4 +1,3 @@
-# class AssignmentMailer < ActionMailer::Base
 class AssignmentMailer < GovukNotifyRails::Mailer
   rescue_from Exception, with: :log_errors
 
