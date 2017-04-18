@@ -15,7 +15,7 @@ Devise.setup do |config|
   config.mailer_sender = 'noreply@digital.justice.gov.uk'
 
   # Configure the class responsible to send e-mails.
-  config.mailer = 'NotifyDeviseMailer'
+  config.mailer = 'DeviseMailer'
 
   # Configure the parent class responsible to send e-mails.
   config.parent_mailer = 'GovukNotifyRails::Mailer'
