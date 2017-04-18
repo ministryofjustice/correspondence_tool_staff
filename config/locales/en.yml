@@ -84,25 +84,22 @@ en:
   helpers:
     fieldset:
       assignment:
-        state: Do you accept this case?
+        state: What do you want to do?
         team_id: Assign to
       case:
         requester_type: Type of requester
         refusal_reason_name: What was the reason for refusal?
         outcome_name: What was the outcome?
       assignment:
-        state: Do you accept this case?
+        state: What do you want to do?
     hint:
-      assignment:
-        reasons_for_rejection: |
-          Try including who you think with right division may be
       feedback:
         comment: |
           Let us know what you were doing and what could be improved or fixed.
     label:
       assignment:
         assignee_id: Business unit
-        reasons_for_rejection: Reason for rejecting this case
+        reasons_for_rejection: Why are you rejecting this case?
         state:
           accepted: Accept
           rejected: Reject

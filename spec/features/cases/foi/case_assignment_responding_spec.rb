@@ -46,12 +46,12 @@ feature 'respond to responder assignment' do
     expect(page).to have_content kase.subject
     expect(page).to have_content 'A message about XYZ'
     expect(page).to have_content 'I would like to know about XYZ'
-    expect(page).to have_content 'Do you accept this case?'
+    expect(page).to have_content 'What do you want to do?'
 
     choose 'Reject'
     expect(page).
       to have_selector('#assignment_reasons_for_rejection', visible: true)
-    fill_in 'Reason for rejecting this case', with: 'This is not for me'
+    fill_in 'Why are you rejecting this case?', with: 'This is not for me'
     click_button 'Confirm'
 
     expect(page).to have_current_path(case_assignments_show_rejected_path kase, rejected_now: true)
@@ -65,7 +65,7 @@ feature 'respond to responder assignment' do
     expect(page).to have_content(kase.subject)
     expect(page).to have_content 'A message about XYZ'
     expect(page).to have_content 'I would like to know about XYZ'
-    expect(page).not_to have_content 'Do you accept this case?'
+    expect(page).not_to have_content 'What do you want to do?'
 
     expect(kase.reload.current_state).to eq 'unassigned'
   end
@@ -92,7 +92,7 @@ feature 'respond to responder assignment' do
     expect(page).
       to have_content('1 error prevented this form from being submitted')
     expect(page).
-      to have_content("Reason for rejecting this case can't be blank")
+      to have_content("Why are you rejecting this case? can't be blank")
   end
 
   scenario 'kilo tries to submit the form without selecting accept / reject' do
