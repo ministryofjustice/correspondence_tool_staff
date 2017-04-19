@@ -249,7 +249,7 @@ en:
       case_updated: Case updated
     close:
       page_heading: Close case
-      close_date: Date send to requester
+      close_date: Date response sent
       date_example: For example, 30 1 2017
 
   feedback:
