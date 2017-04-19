@@ -28,6 +28,22 @@ namespace :data do
         fix_transition_user_metadata(transition, 'assignee_id')
       end
     end
+
+    desc 'Alter sequencing of refusal reasons'
+    task :refusal_reason_resequence => :environment do
+      {
+        'Exemption applied' => 110,
+        'Information not held' => 120,
+        '(s1(3)) or (s8(1)) - Advice & assistance/clarification' => 130,
+        '(s12) - Exceeded cost' => 140,
+        '(s14(1)) - Vexatious' => 150,
+        '(s14(2)) - Repeated request' => 160
+      }.each do |name, new_sequence|
+        rec = CaseClosure::RefusalReason.find_by_name(name)
+        raise "Record with name #{name} not found" if rec.nil?
+        rec.update(sequence_id: new_sequence)
+      end
+    end
   end
 
 end
