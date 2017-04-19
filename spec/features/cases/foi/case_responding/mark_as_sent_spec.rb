@@ -26,13 +26,13 @@ feature 'Mark response as sent' do
     expect(current_path).to eq respond_case_path(kase.id)
     expect(cases_respond_page).to have_reminders
     expect(cases_respond_page.reminders.text).to eq(
-"Check the response has been: cleared by the Deputy Director uploaded \
-with any supporting documents sent to the requester"
+"Make sure you have: cleared the response with the Deputy Director uploaded \
+the response and any supporting documents sent the response to the person who \
+made the request"
       )
     expect(cases_respond_page).to have_alert
     expect(cases_respond_page.alert.text).to eq(
-"Important After this step you'll no longer be able to upload an updated \
-version and DACU will be notified to review the case."
+"Important You can't update a response after marking it as sent."
       )
     expect(cases_respond_page).to have_mark_as_sent_button
     cases_respond_page.mark_as_sent_button.click
@@ -56,13 +56,13 @@ version and DACU will be notified to review the case."
     expect(cases_respond_page).to be_displayed
     expect(cases_respond_page).to have_reminders
     expect(cases_respond_page.reminders.text).to eq(
-"Check the response has been: cleared by the Deputy Director uploaded \
-with any supporting documents sent to the requester"
-    )
+"Make sure you have: cleared the response with the Deputy Director uploaded \
+the response and any supporting documents sent the response to the person who \
+made the request"
+      )
     expect(cases_respond_page).to have_alert
     expect(cases_respond_page.alert.text).to eq(
-"Important After this step you'll no longer be able to upload an updated \
-version and DACU will be notified to review the case."
+"Important You can't update a response after marking it as sent."
     )
     expect(cases_respond_page).to have_mark_as_sent_button
 

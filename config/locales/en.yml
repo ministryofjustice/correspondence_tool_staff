@@ -134,10 +134,11 @@ en:
     response_upload_error: Errors detected with uploaded files.
     response_upload_blank?: Please select the file(s) you used in your response.
     respond_point_of_no_return_html: |
-      <strong>Important</strong>
-      <p>
-        After this step you'll no longer be able to upload an updated<br>
-        version and DACU will be notified to review the case.
+      <p class="notice">
+        <i class="icon icon-important">
+          <span class="visually-hidden">Important</span>
+        </i>
+        <strong>You can't update a response after marking it as sent.</strong>
       </p>
 
 
@@ -236,11 +237,11 @@ en:
         PDF and JPEG up to 20MB per file.
     respond:
       reminders_html: |
-        <strong>Check the response has been:</strong>
+        <strong>Make sure you have:</strong>
         <ul class="list list-bullet">
-          <li>cleared by the Deputy Director</li>
-          <li>uploaded with any supporting documents</li>
-          <li>sent to the requester</li>
+          <li>cleared the response with the Deputy Director</li>
+          <li>uploaded the response and any supporting documents</li>
+          <li>sent the response to the person who made the request</li>
         </ul>
     confirm_respond:
       success: Response confirmed. The case is now with DACU.
