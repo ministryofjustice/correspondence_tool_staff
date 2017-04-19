@@ -44,6 +44,15 @@ namespace :data do
         rec.update(sequence_id: new_sequence)
       end
     end
+
+    desc 'Make Previews for all existing docs'
+    task make_previews: :environment do
+      atts = CaseAttachment.where(preview_key: nil)
+      atts.each do |att|
+        puts "creating PDF for attachment #{att.id}"
+        PdfMakerJob.perform_now(att.id)
+      end
+    end
   end
 
 end
