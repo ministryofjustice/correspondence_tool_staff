@@ -167,14 +167,9 @@ class CasesController < ApplicationController
     )
   end
 
-  def assign_params
-    params.require(:case).permit(
-      :user_id
-    )
-  end
-
   def set_case
     @case = Case.find(params[:id])
+    @case_transitions = @case.transitions.decorate
   end
 
   def set_s3_direct_post

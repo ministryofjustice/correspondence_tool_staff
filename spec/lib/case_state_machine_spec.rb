@@ -242,4 +242,18 @@ RSpec.describe CaseStateMachine, type: :model do
       end
     end
   end
+
+  describe '.event_name' do
+    context 'valid state machine event' do
+      it 'returns human readable format' do
+        expect(CaseStateMachine.event_name(:accept_responder_assignment)).to eq 'Accept responder assignment'
+      end
+    end
+
+    context 'invalid state machine event' do
+      it 'returns nil' do
+        expect(CaseStateMachine.event_name(:trigger_article_50)).to be_nil
+      end
+    end
+  end
 end

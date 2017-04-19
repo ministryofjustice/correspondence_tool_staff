@@ -83,6 +83,7 @@ class AssignmentsController < ApplicationController
 
   def set_case
     @case = Case.find(params[:case_id])
+    @case_transitions = @case.transitions.decorate
   end
 
   def validate_response

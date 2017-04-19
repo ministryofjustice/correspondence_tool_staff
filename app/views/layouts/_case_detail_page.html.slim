@@ -15,9 +15,13 @@
             = t('common.case.received_date')
           = l case_details.received_date, format: :default
 
+
+
       - if defined?(include_response_details_for_view) \
            && include_response_details_for_view
         = render partial: 'cases/response_details', locals: { case_details: case_details }
+
+        = render partial: 'layouts/case_history' if @case_transitions.any?
 
   - if defined?(include_sidebar) && include_sidebar == true
     section.case-sidebar
