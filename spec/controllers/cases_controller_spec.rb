@@ -16,6 +16,23 @@ RSpec.describe CasesController, type: :controller do
 
   before { create(:category, :foi) }
 
+  describe '#set_cases' do
+    before(:each) do
+      user = create :responder
+      sign_in user
+      get :show, params: {id: assigned_case.id }
+    end
+
+    it 'instantiates the case' do
+      expect(assigns(:case)).to eq assigned_case
+    end
+
+    it 'decorates the collection of case transitions' do
+      expect(assigns(:case_transitions)).to be_an_instance_of(Draper::CollectionDecorator)
+      expect(assigns(:case_transitions).map(&:class)).to eq [ CaseTransitionDecorator ]
+    end
+  end
+
   context "as an anonymous user" do
     describe 'GET index' do
       it "be redirected to signin if trying to list of questions" do
@@ -270,7 +287,6 @@ RSpec.describe CasesController, type: :controller do
         it "redirects to signin" do
           expect(response).to redirect_to(new_user_session_path)
         end
-
       end
 
       context 'as an authenticated manager' do
@@ -283,7 +299,6 @@ RSpec.describe CasesController, type: :controller do
         it 'renders the show template' do
           expect(response).to render_template(:show)
         end
-
       end
 
       context 'as a responder' do
@@ -315,6 +330,7 @@ RSpec.describe CasesController, type: :controller do
         it "redirects to signin" do
           expect(response).to redirect_to(new_user_session_path)
         end
+
       end
 
       context 'as an authenticated manager' do
@@ -327,6 +343,7 @@ RSpec.describe CasesController, type: :controller do
         it 'renders the show template' do
           expect(response).to render_template(:show)
         end
+
       end
 
       context 'as a responder of the assigned responding team' do

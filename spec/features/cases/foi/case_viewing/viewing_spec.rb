@@ -111,6 +111,10 @@ feature 'viewing details of case in the system' do
 
       expect(cases_show_page.message).to have_content('viewing foi details test message')
       expect(cases_show_page.received_date).to have_content(foi_received_date)
+
+      expect(cases_show_page).to have_case_history
+      expect(cases_show_page.case_history.entries.size).to eq 2
+
     end
 
     scenario 'User views the case while its within "Day 6"' do

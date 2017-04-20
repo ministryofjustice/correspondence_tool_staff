@@ -85,6 +85,19 @@ FactoryGirl.define do
     responding_team_id { responding_team.id }
   end
 
+  factory :case_transition_remove_response, parent: :case_transition do
+    transient do
+      responder       { create :responder }
+      responding_team { responder.responding_teams.first }
+    end
+
+    to_state 'awaiting_dispatch'
+    event 'remove_response'
+    user_id            { responder.id }
+    responding_team_id { responding_team.id }
+    filenames          { 'file1.txt' }
+  end
+
   factory :case_transition_close, parent: :case_transition do
     to_state 'closed'
     event 'close'

@@ -2,6 +2,12 @@ class CaseStateMachine
   include Statesman::Machine
   include Statesman::Events
 
+  def self.event_name(event)
+    if self.events.keys.include?(event.to_sym)
+      event.to_s.humanize
+    end
+  end
+
   state :unassigned, initial: true
   state :awaiting_responder
   state :drafting
