@@ -9,10 +9,15 @@
 #
 
 class TeamsUsersRole < ApplicationRecord
-  enum role: { manager: 'manager', responder: 'responder' }
+  enum role: {
+         manager: 'manager',
+         responder: 'responder',
+         approver: 'approver'
+       }
 
   belongs_to :user
   belongs_to :team
   scope :manager_roles,   -> { where(role: :manager)  }
   scope :responder_roles, -> { where(role: :responder) }
+  scope :approver_roles,  -> { where(role: :approver) }
 end

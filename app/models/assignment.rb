@@ -24,6 +24,7 @@ class Assignment < ApplicationRecord
   enum role: {
          managing: 'managing',
          responding: 'responding',
+         approving: 'approving',
        }
 
   belongs_to :case

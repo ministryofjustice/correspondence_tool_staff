@@ -207,10 +207,6 @@ RSpec.describe Case, type: :model do
     end
   end
 
-  describe '#responder_assignment' do
-    it { should have_one(:responder_assignment).class_name('Assignment') }
-  end
-
   describe '#response_attachments' do
     let(:case_with_response) { create(:case_with_response)   }
     let(:responses) do
@@ -357,6 +353,12 @@ RSpec.describe Case, type: :model do
       it { should have_one(:responding_team) }
     end
 
+    it { should have_one(:managing_assignment)
+                  .class_name('Assignment') }
+    it { should have_one(:managing_team)
+                  .through(:managing_assignment)
+                  .source(:team) }
+
     it { should have_one(:responder_assignment)
                   .class_name('Assignment') }
     it { should have_one(:responder)
@@ -366,10 +368,13 @@ RSpec.describe Case, type: :model do
                   .through(:responder_assignment)
                   .source(:team) }
 
-    it { should have_one(:managing_assignment)
+    it { should have_one(:approver_assignment)
                   .class_name('Assignment') }
-    it { should have_one(:managing_team)
-                  .through(:managing_assignment)
+    it { should have_one(:approver)
+                  .through(:approver_assignment)
+                  .source(:user) }
+    it { should have_one(:approving_team)
+                  .through(:approver_assignment)
                   .source(:team) }
 
     it { should have_many(:transitions)

@@ -20,12 +20,15 @@ RSpec.describe Team, type: :model do
   it { should have_many(:user_roles)
                 .class_name('TeamsUsersRole') }
   it { should have_many(:users).through(:user_roles) }
-  it { should have_many(:responder_user_roles)
-                .class_name('TeamsUsersRole') }
-  it { should have_many(:responders).through(:responder_user_roles) }
   it { should have_many(:manager_user_roles)
                 .class_name('TeamsUsersRole') }
   it { should have_many(:managers).through(:manager_user_roles) }
+  it { should have_many(:responder_user_roles)
+                .class_name('TeamsUsersRole') }
+  it { should have_many(:responders).through(:responder_user_roles) }
+  it { should have_many(:approver_user_roles)
+                .class_name('TeamsUsersRole') }
+  it { should have_many(:approvers).through(:approver_user_roles) }
 
   it 'has a working factory' do
     expect(create :team).to be_valid

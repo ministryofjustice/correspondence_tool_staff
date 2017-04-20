@@ -29,7 +29,10 @@ RSpec.describe Assignment, type: :model do
   it { should belong_to(:case)                }
   it { should belong_to(:team)                }
   it { should belong_to(:user)                }
-  it { should have_enum(:state).with_values(['pending', 'accepted', 'rejected']) }
+  it { should have_enum(:state)
+                .with_values(%w{pending accepted rejected}) }
+  it { should have_enum(:role)
+                .with_values(%w{managing responding approving}) }
 
   describe '#reasons_for_rejection' do
     it 'is required for rejection' do

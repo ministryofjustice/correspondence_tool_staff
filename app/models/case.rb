@@ -65,11 +65,32 @@ class Case < ApplicationRecord
   belongs_to :category, required: true
 
   has_many :assignments, dependent: :destroy
-  has_one :responder_assignment, -> { responding }, class_name: 'Assignment'
-  has_one :responder, through: :responder_assignment, source: :user
-  has_one :responding_team, -> { where("state != 'rejected'") }, through: :responder_assignment, source: :team
-  has_one :managing_assignment, -> { managing }, class_name: 'Assignment'
-  has_one :managing_team, through: :managing_assignment, source: :team
+  has_one :managing_assignment,
+          -> { managing },
+          class_name: 'Assignment'
+  has_one :managing_team,
+          through: :managing_assignment,
+          source: :team
+  has_one :responder_assignment,
+          -> { responding },
+          class_name: 'Assignment'
+  has_one :responder,
+          through: :responder_assignment,
+          source: :user
+  has_one :responding_team,
+          -> { where("state != 'rejected'") },
+          through: :responder_assignment,
+          source: :team
+  has_one :approver_assignment,
+          -> { approving },
+          class_name: 'Assignment'
+  has_one :approver,
+          through: :approver_assignment,
+          source: :user
+  has_one :approving_team,
+          -> { where("state != 'rejected'") },
+          through: :approver_assignment,
+          source: :team
 
   has_many :transitions, class_name: 'CaseTransition', autosave: false
   has_many :responded_transitions, -> { responded }, class_name: 'CaseTransition'

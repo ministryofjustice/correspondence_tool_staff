@@ -84,7 +84,8 @@ CREATE TYPE state AS ENUM (
 
 CREATE TYPE team_roles AS ENUM (
     'managing',
-    'responding'
+    'responding',
+    'approving'
 );
 
 
@@ -95,7 +96,8 @@ CREATE TYPE team_roles AS ENUM (
 CREATE TYPE user_role AS ENUM (
     'creator',
     'manager',
-    'responder'
+    'responder',
+    'approver'
 );
 
 
@@ -939,6 +941,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170320121845'),
 ('20170406112015'),
 ('20170407091658'),
+('20170420120713'),
+('20170420122223'),
 ('20170424133127');
+
 
 
