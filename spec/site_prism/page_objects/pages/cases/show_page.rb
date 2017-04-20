@@ -8,6 +8,9 @@ module PageObjects
         #       so we should be moving most/all of this into separate section files
         #       for inclusion into those pages.
 
+        section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
+
+
         element :message, '.request'
         element :received_date, '.request--date-received'
         element :escalation_notice, '.alert-orange'

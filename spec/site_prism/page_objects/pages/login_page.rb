@@ -8,6 +8,7 @@ module PageObjects
       element :error_message, '.error-summary'
       section :user_card, PageObjects::Sections::UserCardSection, '.user-card'
       section :service_feedback, PageObjects::Sections::ServiceFeedbackSection, '.feedback'
+      section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
       def log_in(username, password)
         username_field.set(username)

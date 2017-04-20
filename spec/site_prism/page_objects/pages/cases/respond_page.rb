@@ -4,6 +4,8 @@ module PageObjects
       class RespondPage < SitePrism::Page
         set_url '/cases/{id}/respond'
 
+        section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
+
         element :reminders,    '.reminders'
         element :alert,        '.notice'
         element :mark_as_sent_button, 'a:contains("Mark response as sent")'

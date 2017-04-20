@@ -29,6 +29,9 @@
 = content_for :content do
   = csrf_meta_tags
   = render partial: 'layouts/phase_banner'
+  - if user_signed_in?
+    = render partial: 'layouts/global_nav'
+
   .grid-row
     .column-full
       main#content

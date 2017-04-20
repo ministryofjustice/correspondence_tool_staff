@@ -258,6 +258,8 @@ en:
     success_html: |
       <strong>Your feedback has been submitted.</strong>
 
+  nav:
+    cases: Cases
   devise:
     users:
       password:
