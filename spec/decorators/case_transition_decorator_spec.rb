@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe CaseTransition, type: :model do
+RSpec.describe CaseTransitionDecorator, type: :model do
 
   let(:dacu) { create :team, name: 'DACU' }
   let(:dacu_user) { create :manager, managing_teams: [dacu], full_name: 'David Attenborough' }

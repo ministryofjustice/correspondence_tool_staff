@@ -55,12 +55,12 @@
             th
               = t('common.case.timeliness')
             td#request--response-timeliness
-              = timeliness(case_details)
+              = case_details.timeliness
           tr
             th
               = t('common.case.time_taken')
             td#request--response-time-taken
-              = time_taken(case_details)
+              = case_details.time_taken
           tr
             th
               = t('common.case.outcome')
