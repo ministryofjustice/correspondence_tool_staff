@@ -33,7 +33,7 @@ class Case < ApplicationRecord
     order("(properties ->> 'external_deadline')::timestamp with time zone ASC, id")
   }
 
-  validates :name, :category, :message, :received_date, :subject, presence: true
+  validates :received_date,:subject,:message, :name, :category,   presence: true
   validates :email, presence: true, on: :create, if: -> { postal_address.blank? }
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates :postal_address, presence: true, on: :create, if: -> { email.blank? }

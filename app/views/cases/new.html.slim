@@ -5,6 +5,20 @@
 
 = form_for @case do |f|
 
+  .form-group
+    = f.gov_uk_date_field :received_date, {legend_text: t('.received_date'),
+            form_hint_text: t('.received_date_copy')}
+
+  = f.text_field :subject
+
+  = f.text_area :message, {rows: 10}
+
+  = f.text_field :name
+
+  = f.email_field :email
+
+  = f.text_area :postal_address, {rows: 4}
+
   = f.radio_button_fieldset :requester_type,
                               choices: [:academic_business_charity,
                                         :journalist,
@@ -14,17 +28,5 @@
                                         :staff_judiciary,
                                         :what_do_they_know]
 
-  = f.text_field :name
-
-  = f.email_field :email
-
-  = f.text_area :postal_address, {rows: 4}
-
-  = f.text_field :subject
-
-  = f.text_area :message, {rows: 10}
-
-  .form-group
-  	= f.gov_uk_date_field :received_date, {legend_text: t('.received_date'), form_hint_text: t('.received_date_copy')}
 
   = f.submit t('button.next_page_assign'), {class: 'button'}
