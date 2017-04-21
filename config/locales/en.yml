@@ -90,8 +90,6 @@ en:
         requester_type: Type of requester
         refusal_reason_name: What was the reason for refusal?
         outcome_name: What was the outcome?
-      assignment:
-        state: What do you want to do?
     hint:
       feedback:
         comment: |
