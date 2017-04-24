@@ -3,6 +3,7 @@ class DemoUserSeeder
   def initialize
     @teams =  [
       ['DACU', 'dacu'],
+      ['DACU Disclosure', 'dacudis'],
       ['Legal Aid Agency', 'laa'],
       ['HR', 'hr'],
       ['HMCTS North East Response Unit(RSU)', 'hmctsne']
@@ -20,7 +21,9 @@ class DemoUserSeeder
       ['Harold Robbins', 'HR'],
       ['David Attenborough', 'DACU'],
       ['Desi Arnaz', 'DACU'],
-      ['Dave Allen', 'DACU']
+      ['Dave Allen', 'DACU'],
+      ['Dack Dispirito', 'DACU Disclosure'],
+      ['Dasha Diss', 'DACU Disclosure']
     ]
   end
 
