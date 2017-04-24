@@ -8,7 +8,7 @@ class CasesController < ApplicationController
   before_action :set_s3_direct_post, only: [:new_response_upload, :upload_responses]
 
   def index
-    @cases = policy_scope(Case.by_deadline)
+    @cases = (policy_scope(Case.by_deadline)).map(&:decorate)
   end
 
   def new
@@ -168,7 +168,7 @@ class CasesController < ApplicationController
   end
 
   def set_case
-    @case = Case.find(params[:id])
+    @case = Case.find(params[:id]).decorate
     @case_transitions = @case.transitions.decorate
   end
 

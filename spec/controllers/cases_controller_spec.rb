@@ -78,7 +78,7 @@ RSpec.describe CasesController, type: :controller do
 
     describe 'GET index' do
 
-      let(:unordered_cases) do
+      let!(:unordered_cases) do
         [
           create(:case, received_date: Date.parse('17/11/2016'), subject: 'newer request 2', id: 2),
           create(:case, received_date: Date.parse('17/11/2016'), subject: 'newer request 1', id: 1),

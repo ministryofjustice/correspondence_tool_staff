@@ -101,7 +101,7 @@ feature 'viewing details of case in the system' do
         to have_content(external_foi_deadline)
       expect(cases_show_page.sidebar.status).to have_content('Response')
       expect(cases_show_page.sidebar.who_its_with)
-        .to have_content(foi.responding_team.name)
+        .to have_content(foi.responder.full_name)
       expect(cases_show_page.sidebar.name).to have_content('Freddie FOI')
       expect(cases_show_page.sidebar.requester_type).
         to have_content(foi.requester_type.humanize)
@@ -114,7 +114,6 @@ feature 'viewing details of case in the system' do
 
       expect(cases_show_page).to have_case_history
       expect(cases_show_page.case_history.entries.size).to eq 2
-
     end
 
     scenario 'User views the case while its within "Day 6"' do
