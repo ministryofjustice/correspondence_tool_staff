@@ -54,7 +54,6 @@ namespace :data do
       end
     end
   end
-
 end
 
 def fix_transition_user_metadata(transition, field)

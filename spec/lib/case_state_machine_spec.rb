@@ -14,8 +14,21 @@ RSpec.describe CaseStateMachine, type: :model do
   let(:responding_team) { create :responding_team }
   let(:responder)       { responding_team.responders.first }
 
-  it 'sets the initial state to "unassigned"' do
-    expect(kase.current_state).to eq 'unassigned'
+  context 'after transition' do
+    let(:t1) { Time.new(2017, 4, 25, 10, 13, 55) }
+    let(:t2) { Time.new(2017, 4, 27, 23, 14, 2) }
+    it 'stores current state and time of transition on the case record' do
+      Timecop.freeze(t1) do
+        kase = create :case
+        expect(kase.current_state).to eq 'unassigned'
+        expect(kase.last_transitioned_at).to eq t1
+      end
+      Timecop.freeze(t2) do
+        kase.assign_responder(manager, responding_team)
+      end
+      expect(kase.current_state).to eq 'awaiting_responder'
+      expect(kase.last_transitioned_at).to eq t2
+    end
   end
 
   shared_examples 'a case state machine event' do
@@ -215,7 +228,7 @@ RSpec.describe CaseStateMachine, type: :model do
   end
 
   context 'case that has been responded to' do
-    let(:kase) { create(:responded_case) }
+    let(:kase) { create(:responded_case, outcome: create(:outcome)) }
 
     describe '#close!' do
       it 'triggers a close event' do

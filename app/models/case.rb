@@ -2,22 +2,24 @@
 #
 # Table name: cases
 #
-#  id                :integer          not null, primary key
-#  name              :string
-#  email             :string
-#  message           :text
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  category_id       :integer
-#  received_date     :date
-#  postal_address    :string
-#  subject           :string
-#  properties        :jsonb
-#  requester_type    :enum
-#  number            :string           not null
-#  date_responded    :date
-#  outcome_id        :integer
-#  refusal_reason_id :integer
+#  id                   :integer          not null, primary key
+#  name                 :string
+#  email                :string
+#  message              :text
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  category_id          :integer
+#  received_date        :date
+#  postal_address       :string
+#  subject              :string
+#  properties           :jsonb
+#  requester_type       :enum
+#  number               :string           not null
+#  date_responded       :date
+#  outcome_id           :integer
+#  refusal_reason_id    :integer
+#  current_state        :string
+#  last_transitioned_at :datetime
 #
 
 # Required in production with it's eager loading and cacheing of classes.
@@ -32,8 +34,8 @@ class Case < ApplicationRecord
   scope :by_deadline, lambda {
     order("(properties ->> 'external_deadline')::timestamp with time zone ASC, id")
   }
-
-  validates :received_date,:subject,:message, :name, :category,   presence: true
+  validates :current_state, presence: true, on: :update
+  validates :received_date,:subject,:message, :name, :category, presence: true
   validates :email, presence: true, on: :create, if: -> { postal_address.blank? }
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates :postal_address, presence: true, on: :create, if: -> { email.blank? }
@@ -76,19 +78,18 @@ class Case < ApplicationRecord
   has_many :attachments, class_name: 'CaseAttachment'
   belongs_to :outcome, class_name: 'CaseClosure::Outcome'
   belongs_to :refusal_reason, class_name: 'CaseClosure::RefusalReason'
-  # belongs_to :exemption, class_name: 'CaseClosure::Exemption'
   has_and_belongs_to_many :exemptions, class_name: 'CaseClosure::Exemption', join_table: 'cases_exemptions'
 
+  before_create :set_initial_state
   before_save :prevent_number_change
   before_create :set_deadlines, :set_number, :set_managing_team
   after_update :set_deadlines
 
-  delegate :current_state, :available_events, to: :state_machine
+  delegate :available_events, to: :state_machine
 
   CaseStateMachine.states.each do |state|
     define_method("#{state}?") { current_state == state }
   end
-
 
   def self.search(term)
     where('lower(name) LIKE ?', "%#{term.downcase}%")
@@ -245,6 +246,11 @@ class Case < ApplicationRecord
   end
 
   private
+
+  def set_initial_state
+    self.current_state = 'unassigned'
+    self.last_transitioned_at = Time.now
+  end
 
   def set_deadlines
     self.escalation_deadline = DeadlineCalculator.escalation_deadline(self) if triggerable?

@@ -878,7 +878,7 @@ RSpec.describe CasesController, type: :controller do
 
       it 'transitions current_state to "responded"' do
         patch :confirm_respond, params: { id: case_with_response }
-        expect(case_with_response.current_state).to eq 'responded'
+        expect(case_with_response.reload.current_state).to eq 'responded'
       end
 
       it 'updates user id in transition' do

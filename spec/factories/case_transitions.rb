@@ -11,6 +11,7 @@
 #  most_recent :boolean          not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  user_id     :integer
 #
 
 FactoryGirl.define do
@@ -25,6 +26,10 @@ FactoryGirl.define do
 
     before(:create) do |transition|
       CaseTransition.where(case_id: transition.case_id).update(most_recent: false)
+    end
+
+    after(:create) do |transition|
+      transition.record_state_change(transition.case)
     end
   end
 
