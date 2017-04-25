@@ -20,13 +20,13 @@ RSpec.describe Case, type: :model do
       let(:responding_team) { create :responding_team }
 
       before do
-        allow(unassigned_case.state_machine).to receive(:assign_responder)
+        allow(unassigned_case.state_machine).to receive(:assign_responder!)
       end
 
       it 'creates an assign_responder transition' do
         unassigned_case.assign_responder manager, responding_team
         expect(unassigned_case.state_machine)
-          .to have_received(:assign_responder)
+          .to have_received(:assign_responder!)
                 .with manager,
                       managing_team,
                       responding_team
@@ -37,7 +37,7 @@ RSpec.describe Case, type: :model do
       let(:state_machine) { assigned_case.state_machine }
 
       before do
-        allow(state_machine).to receive(:flag_for_clearance).with(manager)
+        allow(state_machine).to receive(:flag_for_clearance!).with(manager)
       end
 
       it 'sets requires_attribute to true' do
@@ -48,7 +48,7 @@ RSpec.describe Case, type: :model do
 
       it 'creates a state transition' do
         assigned_case.flag_for_clearance manager
-        expect(state_machine).to have_received(:flag_for_clearance).with(manager)
+        expect(state_machine).to have_received(:flag_for_clearance!).with(manager)
       end
     end
 

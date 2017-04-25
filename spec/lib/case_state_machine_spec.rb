@@ -41,37 +41,6 @@ RSpec::Matchers.define :have_event do |event|
 end
 
 
-RSpec::Matchers.define :use_the_unsafe_trigger do |trigger|
-  match do |code|
-    allow(@state_machine).to receive(trigger)
-    code.call
-    expect(@state_machine).to have_received(trigger).with(@args)
-
-    allow(@state_machine).to receive(trigger).
-                               and_raise(Statesman::TransitionFailedError)
-    expect(code.call).to be false
-
-    allow(@state_machine).to receive(trigger).
-                               and_raise(Statesman::GuardFailedError)
-    expect(code.call).to be false
-
-    allow(@state_machine).to receive(trigger).
-                              and_raise(Exception)
-    expect { code.call } .to raise_exception(Exception)
-  end
-
-  chain :on_state_machine do |state_machine|
-    @state_machine = state_machine
-  end
-
-  chain :with_args do |args|
-    @args = args
-  end
-
-  supports_block_expectations
-end
-
-
 RSpec.describe CaseStateMachine, type: :model do
   let(:kase)            { create :case }
   let(:state_machine) do
@@ -159,13 +128,6 @@ RSpec.describe CaseStateMachine, type: :model do
                     ) }
       end
     end
-
-    describe '#assign_responder' do
-      it_behaves_like 'a case state machine event' do
-        let(:event_name) { :assign_responder }
-        let(:args) { [manager, managing_team, responding_team] }
-      end
-    end
   end
 
   context 'assigned case awaiting responder' do
@@ -187,15 +149,6 @@ RSpec.describe CaseStateMachine, type: :model do
       end
     end
 
-    describe 'trigger flag_for_clearance' do
-      it 'uses the unsafe trigger, making it safe' do
-        expect { assigned_case.state_machine.flag_for_clearance(manager) }
-          .to use_the_unsafe_trigger(:flag_for_clearance!)
-                .on_state_machine(assigned_case.state_machine)
-                .with_args(manager)
-      end
-    end
-
     describe '#accept_responder_assignment!' do
       it 'triggers an accept_responder_assignment event' do
         state_machine.accept_responder_assignment!(responder, responding_team)
@@ -212,13 +165,6 @@ RSpec.describe CaseStateMachine, type: :model do
                 user_id:            responder.id,
                 event:              :accept_responder_assignment,
               )
-      end
-    end
-
-    describe '#accept_responder_assignment' do
-      it_behaves_like 'a case state machine event' do
-        let(:event_name) { :accept_responder_assignment }
-        let(:args) { [responder, responding_team] }
       end
     end
 
@@ -244,14 +190,6 @@ RSpec.describe CaseStateMachine, type: :model do
                                    message:            message,
                                    event:              :reject_responder_assignment
                                  )
-      end
-    end
-
-    describe '#reject_responder_assignment' do
-      it_behaves_like 'a case state machine event' do
-        let(:event_name) { :reject_responder_assignment }
-        let(:message) { "#{event_name} test" }
-        let(:args) { [responder, responding_team, message] }
       end
     end
   end
@@ -284,13 +222,6 @@ RSpec.describe CaseStateMachine, type: :model do
                                  )
       end
     end
-
-    describe '#add_responses' do
-      it_behaves_like 'a case state machine event' do
-        let(:event_name) { :add_responses }
-        let(:args) { [responder, responding_team, ['file1.pdf', 'file2.pdf']] }
-      end
-    end
   end
 
   context 'case with a response' do
@@ -315,17 +246,6 @@ RSpec.describe CaseStateMachine, type: :model do
                                  )
       end
     end
-
-    describe '#respond' do
-      let(:kase)          { create(:case_with_response)  }
-      let(:state_machine) { kase.state_machine                    }
-
-      it_behaves_like 'a case state machine event' do
-        let(:event_name) { :respond     }
-
-        let(:args)       { [responder, responding_team] }
-      end
-    end
   end
 
   context 'case that has been responded to' do
@@ -346,13 +266,6 @@ RSpec.describe CaseStateMachine, type: :model do
                                    managing_team_id: managing_team.id,
                                    event:            :close
                                  )
-      end
-    end
-
-    describe '#close' do
-      it_behaves_like 'a case state machine event' do
-        let(:event_name) { :close      }
-        let(:args)       { [manager, managing_team] }
       end
     end
   end

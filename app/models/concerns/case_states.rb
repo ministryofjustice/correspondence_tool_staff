@@ -11,14 +11,14 @@ module CaseStates
 
   def assign_responder(current_user, responding_team)
     managing_team = current_user.managing_team_roles.first.team
-    state_machine.assign_responder current_user,
-                                   managing_team,
-                                   responding_team
+    state_machine.assign_responder! current_user,
+                                    managing_team,
+                                    responding_team
   end
 
   def flag_for_clearance(current_user)
     update_attribute :requires_clearance, true
-    state_machine.flag_for_clearance current_user
+    state_machine.flag_for_clearance! current_user
   end
 
   def responder_assignment_rejected(current_user,
@@ -41,10 +41,10 @@ module CaseStates
 
   def remove_response(current_user, attachment)
     attachment.destroy!
-    state_machine.remove_response current_user,
-                                  responding_team,
-                                  attachment.filename,
-                                  self.reload.attachments.size
+    state_machine.remove_response! current_user,
+                                   responding_team,
+                                   attachment.filename,
+                                   self.reload.attachments.size
   end
 
   def response_attachments
