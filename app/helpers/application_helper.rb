@@ -1,5 +1,5 @@
 module ApplicationHelper
-  def active_link_class *urls
+  def active_link_class urls
     #home page
     if urls.any? { |url| current_page?(url)}
       'active'

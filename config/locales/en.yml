@@ -208,8 +208,13 @@ en:
       case_created: Case successfully created
 
   cases:
+    closed_cases:
+      page_heading: Closed cases
+      number: Case number
+      name-subject: Name/Subject
+      view_case: Link to case
     index:
-      page_heading: Cases
+      page_heading: Open cases
       view_case: Link to case
       number: Case number
       requester: Requester name
@@ -257,7 +262,8 @@ en:
       <strong>Your feedback has been submitted.</strong>
 
   nav:
-    cases: Cases
+    cases: Open cases
+    closed_cases: Closed cases
   devise:
     users:
       password:

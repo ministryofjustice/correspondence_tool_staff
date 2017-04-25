@@ -11,6 +11,10 @@ class CasesController < ApplicationController
     @cases = policy_scope(Case.by_deadline).map(&:decorate)
   end
 
+  def closed_cases
+    @cases = policy_scope(Case.closed).map(&:decorate)
+  end
+
   def new
     authorize Case, :can_add_case?
 
