@@ -16,6 +16,11 @@ module CaseStates
                                    responding_team
   end
 
+  def flag_for_clearance(current_user)
+    update_attribute :requires_clearance, true
+    state_machine.flag_for_clearance current_user
+  end
+
   def responder_assignment_rejected(current_user,
                                     responding_team,
                                     message)

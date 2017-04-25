@@ -31,7 +31,7 @@ RSpec.describe Case, type: :model do
   let(:trigger_foi) do
     build :case,
       received_date: Date.parse('16/11/2016'),
-      properties: { trigger: true }
+      properties: { requires_clearance: true }
   end
 
   let(:general_enquiry) do
@@ -482,11 +482,12 @@ RSpec.describe Case, type: :model do
         expect(trigger_foi.escalation_deadline).to eq nil
       end
 
-      it 'does not set the escalation deadline for general_enquiry' do
-        expect(general_enquiry.escalation_deadline).to eq nil
-        general_enquiry.save!
-        expect(general_enquiry.escalation_deadline).to eq nil
-      end
+      # NOT IN USE.
+      # it 'does not set the escalation deadline for general_enquiry' do
+      #   expect(general_enquiry.escalation_deadline).to eq nil
+      #   general_enquiry.save!
+      #   expect(general_enquiry.escalation_deadline).to eq nil
+      # end
 
       it 'sets the internal deadline for trigger_foi' do
         expect(trigger_foi.internal_deadline).to eq nil
@@ -494,11 +495,12 @@ RSpec.describe Case, type: :model do
         expect(trigger_foi.internal_deadline.strftime("%d/%m/%y")).to eq "30/11/16"
       end
 
-      it 'sets the internal deadline for general enquiries' do
-        expect(general_enquiry.internal_deadline).to eq nil
-        general_enquiry.save!
-        expect(general_enquiry.internal_deadline.strftime("%d/%m/%y")).to eq "30/11/16"
-      end
+      # NOT IN USE.
+      # it 'sets the internal deadline for general enquiries' do
+      #   expect(general_enquiry.internal_deadline).to eq nil
+      #   general_enquiry.save!
+      #   expect(general_enquiry.internal_deadline.strftime("%d/%m/%y")).to eq "30/11/16"
+      # end
 
       it 'does not set the internal_deadline for non_trigger_foi' do
         expect(non_trigger_foi.internal_deadline).to eq nil

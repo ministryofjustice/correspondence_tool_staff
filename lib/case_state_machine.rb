@@ -23,6 +23,12 @@ class CaseStateMachine
     transition from: :unassigned, to: :awaiting_responder
   end
 
+  event :flag_for_clearance do
+    transition from: :awaiting_responder,          to: :awaiting_responder
+    transition from: :drafting,                    to: :drafting
+    transition from: :awaiting_dispatch,           to: :awaiting_dispatch
+  end
+
   event :reject_responder_assignment do
     transition from: :awaiting_responder, to: :unassigned
   end
@@ -87,6 +93,24 @@ class CaseStateMachine
              event:              :assign_responder
   end
 
+  def assign_responder(user, managing_team, responding_team)
+    self.assign_responder!(user, managing_team, responding_team)
+  rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
+    false
+  end
+
+  def flag_for_clearance!(user)
+    trigger! :flag_for_clearance,
+             user_id: user.id,
+             event: :flag_for_clearance
+  end
+
+  def flag_for_clearance(user)
+    self.flag_for_clearance!(user)
+  rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
+    false
+  end
+
   def remove_response(user, responding_team, filename, num_attachments)
     self.remove_response!(user, responding_team, filename, num_attachments)
   rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
@@ -100,12 +124,6 @@ class CaseStateMachine
             user_id: user.id,
             filenames: filename,
             event: event
-  end
-
-  def assign_responder(user, managing_team, responding_team)
-    self.assign_responder!(user, managing_team, responding_team)
-  rescue Statesman::TransitionFailedError, Statesman::GuardFailedError
-    false
   end
 
   def reject_responder_assignment!(responder, responding_team, message)

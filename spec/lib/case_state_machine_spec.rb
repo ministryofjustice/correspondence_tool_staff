@@ -1,5 +1,77 @@
 require 'rails_helper'
 
+RSpec::Matchers.define :trigger_the_event do |event|
+  match do |code|
+    allow(@state_machine).to receive(:trigger!)
+    code.call
+    expect(@state_machine)
+      .to have_received(:trigger!).with(
+            event,
+            @parameters.merge({ event: event }),
+          )
+  end
+
+  chain :on_state_machine do |state_machine|
+    @state_machine = state_machine
+  end
+
+  chain :with_parameters do |params|
+    @parameters = params
+  end
+
+  supports_block_expectations
+end
+
+
+RSpec::Matchers.define :have_event do |event|
+  match do |state_machine|
+    expect(state_machine.class.events).to have_key event
+    @from_state ||= state_machine.current_state
+    expect(state_machine.class.events[event][@from_state])
+      .to include @to_state.to_s
+  end
+
+  chain :transition_from do |from_state|
+    @from_state = from_state
+  end
+
+  chain :transition_to do |to_state|
+    @to_state = to_state
+  end
+end
+
+
+RSpec::Matchers.define :use_the_unsafe_trigger do |trigger|
+  match do |code|
+    allow(@state_machine).to receive(trigger)
+    code.call
+    expect(@state_machine).to have_received(trigger).with(@args)
+
+    allow(@state_machine).to receive(trigger).
+                               and_raise(Statesman::TransitionFailedError)
+    expect(code.call).to be false
+
+    allow(@state_machine).to receive(trigger).
+                               and_raise(Statesman::GuardFailedError)
+    expect(code.call).to be false
+
+    allow(@state_machine).to receive(trigger).
+                              and_raise(Exception)
+    expect { code.call } .to raise_exception(Exception)
+  end
+
+  chain :on_state_machine do |state_machine|
+    @state_machine = state_machine
+  end
+
+  chain :with_args do |args|
+    @args = args
+  end
+
+  supports_block_expectations
+end
+
+
 RSpec.describe CaseStateMachine, type: :model do
   let(:kase)            { create :case }
   let(:state_machine) do
@@ -13,6 +85,8 @@ RSpec.describe CaseStateMachine, type: :model do
   let(:manager)         { managing_team.managers.first }
   let(:responding_team) { create :responding_team }
   let(:responder)       { responding_team.responders.first }
+  let(:assigned_case)   { create :assigned_case,
+                                 responding_team: responding_team }
 
   context 'after transition' do
     let(:t1) { Time.new(2017, 4, 25, 10, 13, 55) }
@@ -95,23 +169,49 @@ RSpec.describe CaseStateMachine, type: :model do
   end
 
   context 'assigned case awaiting responder' do
-    let(:kase) { create :assigned_case, responding_team: responding_team }
+    let(:state_machine) { assigned_case.state_machine }
+
+    describe 'event flag_for_clearance' do
+      subject { assigned_case.state_machine }
+
+      it { should have_event(:flag_for_clearance)
+                    .transition_to(:awaiting_responder) }
+    end
+
+    describe 'trigger flag_for_clearance!' do
+      it 'triggers a flag_for_clearance event' do
+        expect { assigned_case.state_machine.flag_for_clearance!(manager) }
+          .to trigger_the_event(:flag_for_clearance)
+                .on_state_machine(assigned_case.state_machine)
+                .with_parameters user_id: manager.id
+      end
+    end
+
+    describe 'trigger flag_for_clearance' do
+      it 'uses the unsafe trigger, making it safe' do
+        expect { assigned_case.state_machine.flag_for_clearance(manager) }
+          .to use_the_unsafe_trigger(:flag_for_clearance!)
+                .on_state_machine(assigned_case.state_machine)
+                .with_args(manager)
+      end
+    end
 
     describe '#accept_responder_assignment!' do
       it 'triggers an accept_responder_assignment event' do
         state_machine.accept_responder_assignment!(responder, responding_team)
-        expect(kase.current_state).to eq 'drafting'
+        expect(assigned_case.current_state).to eq 'drafting'
       end
 
       it 'triggers the correct event transition' do
         allow(state_machine).to receive(:trigger!)
         state_machine.accept_responder_assignment!(responder, responding_team)
-        expect(state_machine).to have_received(:trigger!).with(
-                                   :accept_responder_assignment,
-                                   responding_team_id: responding_team.id,
-                                   user_id:            responder.id,
-                                   event:              :accept_responder_assignment,
-                                 )
+        expect(state_machine)
+          .to have_received(:trigger!).with(
+                :accept_responder_assignment,
+                responding_team_id: responding_team.id,
+                user_id:            responder.id,
+                event:              :accept_responder_assignment,
+              )
       end
     end
 
@@ -129,7 +229,7 @@ RSpec.describe CaseStateMachine, type: :model do
         state_machine.reject_responder_assignment! responder,
                                                    responding_team,
                                                    message
-        expect(kase.current_state).to eq 'unassigned'
+        expect(assigned_case.current_state).to eq 'unassigned'
       end
 
       it 'triggers the correct event transition' do
@@ -153,7 +253,8 @@ RSpec.describe CaseStateMachine, type: :model do
         let(:message) { "#{event_name} test" }
         let(:args) { [responder, responding_team, message] }
       end
-    end  end
+    end
+  end
 
   context 'accepted case being drafted' do
     let(:kase)            { create :accepted_case }

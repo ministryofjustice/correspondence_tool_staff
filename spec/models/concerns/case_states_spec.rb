@@ -33,6 +33,25 @@ RSpec.describe Case, type: :model do
       end
     end
 
+    describe '#flag_for_clearance' do
+      let(:state_machine) { assigned_case.state_machine }
+
+      before do
+        allow(state_machine).to receive(:flag_for_clearance).with(manager)
+      end
+
+      it 'sets requires_attribute to true' do
+        expect(assigned_case.requires_clearance?).to eq false
+        assigned_case.flag_for_clearance manager
+        expect(assigned_case.requires_clearance?).to eq true
+      end
+
+      it 'creates a state transition' do
+        assigned_case.flag_for_clearance manager
+        expect(state_machine).to have_received(:flag_for_clearance).with(manager)
+      end
+    end
+
     describe '#responder_assignment_rejected' do
       let(:state_machine)   { assigned_case.state_machine }
       let(:assignment)      { assigned_case.responder_assignment }

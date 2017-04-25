@@ -63,7 +63,7 @@ class Case < ApplicationRecord
     escalation_deadline: :datetime,
     internal_deadline: :datetime,
     external_deadline: :datetime,
-    trigger: [:boolean, default: false]
+    requires_clearance: [:boolean, default: false]
 
   belongs_to :category, required: true
 
@@ -125,12 +125,10 @@ class Case < ApplicationRecord
     raise StandardError.new('number is immutable') if number_changed?
   end
 
-  def triggerable?
-    category.abbreviation == 'FOI' && !trigger?
-  end
+  def foi?; @is_foi ||= category.abbreviation == 'FOI'; end
 
-  def requires_approval?
-    category.abbreviation == 'GQ' || trigger?
+  def triggerable?
+    foi? && !requires_clearance?
   end
 
   def under_review?
@@ -226,7 +224,7 @@ class Case < ApplicationRecord
 
   def set_deadlines
     self.escalation_deadline = DeadlineCalculator.escalation_deadline(self) if triggerable?
-    self.internal_deadline = DeadlineCalculator.internal_deadline(self) if requires_approval?
+    self.internal_deadline = DeadlineCalculator.internal_deadline(self) if requires_clearance?
     self.external_deadline = DeadlineCalculator.external_deadline(self)
   end
 
