@@ -115,6 +115,8 @@ class Case < ApplicationRecord
     define_method("#{state}?") { current_state == state }
   end
 
+  include CaseStates
+
   def self.search(term)
     where('lower(name) LIKE ?', "%#{term.downcase}%")
   end
@@ -141,60 +143,6 @@ class Case < ApplicationRecord
 
   def within_external_deadline?
     date_responded <= external_deadline
-  end
-
-  def state_machine
-    @state_machine ||= ::CaseStateMachine.new(
-      self,
-      transition_class: CaseTransition,
-      association_name: :transitions
-    )
-  end
-
-  def assign_responder(current_user, responding_team)
-    managing_team = current_user.managing_team_roles.first.team
-    state_machine.assign_responder current_user,
-                                   managing_team,
-                                   responding_team
-  end
-
-  def responder_assignment_rejected(current_user,
-                                    responding_team,
-                                    message)
-    state_machine.reject_responder_assignment! current_user,
-                                               responding_team,
-                                               message
-  end
-
-  def responder_assignment_accepted(current_user, responding_team)
-    state_machine.accept_responder_assignment!(current_user, responding_team)
-  end
-
-  def add_responses(current_user, responses)
-    self.attachments << responses
-    filenames = responses.map(&:filename)
-    state_machine.add_responses!(current_user, responding_team, filenames)
-  end
-
-  def remove_response(current_user, attachment)
-    attachment.destroy!
-    state_machine.remove_response current_user,
-                                  responding_team,
-                                  attachment.filename,
-                                  self.reload.attachments.size
-  end
-
-  def response_attachments
-    attachments.select(&:response?)
-  end
-
-  def respond(current_user)
-    state_machine.respond!(current_user, responding_team)
-    responder_assignment.destroy
-  end
-
-  def close(current_user)
-    state_machine.close!(current_user, managing_team)
   end
 
   def received_not_in_the_future?
