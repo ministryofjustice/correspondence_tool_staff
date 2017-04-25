@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require dropzone
+//= require govuk_date_fields
 //= require vendor/polyfills/bind
 //= require details.polyfill
 //= require govuk/selection-buttons
