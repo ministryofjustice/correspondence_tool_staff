@@ -11,6 +11,7 @@
 #  most_recent :boolean          not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  user_id     :integer
 #
 
 class CaseTransition < ActiveRecord::Base
@@ -32,6 +33,10 @@ class CaseTransition < ActiveRecord::Base
   scope :accepted,  -> { where to_state: 'drafting'  }
   scope :drafting,  -> { where to_state: 'drafting'  }
   scope :responded, -> { where to_state: 'responded' }
+
+  def record_state_change(kase)
+    kase.update!(current_state: self.to_state, last_transitioned_at: self.created_at)
+  end
 
   private
 

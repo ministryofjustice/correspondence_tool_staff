@@ -8,6 +8,10 @@ class CaseStateMachine
     end
   end
 
+  after_transition do | kase, transition|
+    transition.record_state_change(kase)
+  end
+
   state :unassigned, initial: true
   state :awaiting_responder
   state :drafting

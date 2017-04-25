@@ -81,6 +81,8 @@ describe 'ClosedCaseValidator' do
           let(:kase) { create :closed_case, :requires_exemption }
 
           it 'errors if no exemption present' do
+            kase.exemptions.map(&:destroy)
+            kase.reload
             expect(kase.refusal_reason.requires_exemption?).to be true
             expect(kase.exemptions).to be_empty
             expect(kase).not_to be_valid
@@ -109,7 +111,8 @@ describe 'ClosedCaseValidator' do
         context 'NCND exemption present' do
           it 'errors if no other exemption present' do
             kase = create :closed_case, :with_ncnd_exemption
-            expect(kase.exemptions.size).to eq 1
+            kase.exemptions.last.destroy
+            expect(kase.reload.exemptions.size).to eq 1
             expect(kase.exemptions.first).to be_ncnd
             expect(kase).not_to be_valid
             expect(kase.errors[:exemptions]).to include('You must specify at least one other exemption if you select NCND')
@@ -117,7 +120,8 @@ describe 'ClosedCaseValidator' do
 
           it 'does not error is another exemption present' do
             kase = create :closed_case, :with_ncnd_exemption
-            kase.exemptions << create(:exemption)
+            kase.exemptions.last.destroy
+            kase.reload.exemptions << create(:exemption)
             expect(kase.exemptions.size).to eq 2
             expect(kase.exemptions.first).to be_ncnd
             expect(kase.exemptions.last).not_to be_ncnd

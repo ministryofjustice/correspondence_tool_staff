@@ -41,7 +41,7 @@ made the request"
     expect(cases_page.case_numbers).not_to include kase.number
     expect(cases_page).
       to have_content('Response confirmed. The case is now with DACU.')
-    expect(kase.current_state).to eq 'responded'
+    expect(kase.reload.current_state).to eq 'responded'
 
     login_as manager
     cases_page.load

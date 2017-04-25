@@ -2,22 +2,24 @@
 #
 # Table name: cases
 #
-#  id                :integer          not null, primary key
-#  name              :string
-#  email             :string
-#  message           :text
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  category_id       :integer
-#  received_date     :date
-#  postal_address    :string
-#  subject           :string
-#  properties        :jsonb
-#  requester_type    :enum
-#  number            :string           not null
-#  date_responded    :date
-#  outcome_id        :integer
-#  refusal_reason_id :integer
+#  id                   :integer          not null, primary key
+#  name                 :string
+#  email                :string
+#  message              :text
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  category_id          :integer
+#  received_date        :date
+#  postal_address       :string
+#  subject              :string
+#  properties           :jsonb
+#  requester_type       :enum
+#  number               :string           not null
+#  date_responded       :date
+#  outcome_id           :integer
+#  refusal_reason_id    :integer
+#  current_state        :string
+#  last_transitioned_at :datetime
 #
 
 FactoryGirl.define do
@@ -68,6 +70,7 @@ FactoryGirl.define do
                user: evaluator.manager,
                managing_team: evaluator.managing_team,
                responding_team: evaluator.responding_team
+        kase.reload
       end
     end
 
@@ -85,6 +88,7 @@ FactoryGirl.define do
                case: kase,
                user_id: kase.responder.id,
                responding_team_id: kase.responding_team.id
+        kase.reload
       end
     end
 
@@ -105,6 +109,7 @@ FactoryGirl.define do
                user: evaluator.responder,
                responding_team: evaluator.responding_team,
                message: evaluator.rejection_message
+        kase.reload
       end
     end
 
@@ -123,6 +128,7 @@ FactoryGirl.define do
                responding_team_id: evaluator.responding_team.id,
                user_id: evaluator.responder.id
                # filenames: [evaluator.attachment.filename]
+        kase.reload
       end
     end
 
@@ -159,11 +165,13 @@ FactoryGirl.define do
                user: evaluator.manager,
                managing_team: evaluator.managing_team,
                responding_team: evaluator.responding_team
+        kase.reload
       end
 
       trait :requires_exemption do
         outcome { create :outcome, :requires_refusal_reason }
         refusal_reason { create(:refusal_reason, :requires_exemption) }
+        exemptions { [ create(:exemption) ] }
       end
 
       trait :without_exemption do
@@ -174,7 +182,7 @@ FactoryGirl.define do
       trait :with_ncnd_exemption do
         outcome { create :outcome, :requires_refusal_reason }
         refusal_reason { create(:refusal_reason, :requires_exemption) }
-        exemptions { [create(:exemption, :ncnd)] }
+        exemptions { [create(:exemption, :ncnd), create(:exemption)] }
       end
 
       trait :without_ncnd_exemption do

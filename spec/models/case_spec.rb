@@ -2,22 +2,24 @@
 #
 # Table name: cases
 #
-#  id                :integer          not null, primary key
-#  name              :string
-#  email             :string
-#  message           :text
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  category_id       :integer
-#  received_date     :date
-#  postal_address    :string
-#  subject           :string
-#  properties        :jsonb
-#  requester_type    :enum
-#  number            :string           not null
-#  date_responded    :date
-#  outcome_id        :integer
-#  refusal_reason_id :integer
+#  id                   :integer          not null, primary key
+#  name                 :string
+#  email                :string
+#  message              :text
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  category_id          :integer
+#  received_date        :date
+#  postal_address       :string
+#  subject              :string
+#  properties           :jsonb
+#  requester_type       :enum
+#  number               :string           not null
+#  date_responded       :date
+#  outcome_id           :integer
+#  refusal_reason_id    :integer
+#  current_state        :string
+#  last_transitioned_at :datetime
 #
 
 require 'rails_helper'
@@ -59,6 +61,23 @@ RSpec.describe Case, type: :model do
     it { should validate_presence_of(:received_date)  }
     it { should validate_presence_of(:subject)        }
     it { should validate_presence_of(:requester_type) }
+  end
+
+  describe 'conditional validations of current state' do
+    context 'new record' do
+      it 'does not validate presence of current_state' do
+        kase = build :case
+        expect(kase.current_state).to be_nil
+        expect(kase.valid?).to be true
+      end
+
+      it 'does validate presence on update' do
+        kase = create :case
+        kase.current_state = nil
+        expect(kase).not_to be_valid
+        expect(kase.errors[:current_state]).to eq ["can't be blank"]
+      end
+    end
   end
 
   describe 'enums' do
@@ -714,6 +733,15 @@ RSpec.describe Case, type: :model do
           expect(responded_case.within_external_deadline?).to eq false
         end
       end
+    end
+  end
+
+  context 'initial state' do
+    it 'is set to unassigned' do
+      kase = build(:case)
+      expect(kase.current_state).to be_nil
+      kase.save!
+      expect(kase.current_state).to eq 'unassigned'
     end
   end
 
