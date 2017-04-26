@@ -6,8 +6,7 @@
 = form_for @case do |f|
 
   .form-group
-    = f.gov_uk_date_field :received_date, {legend_text: t('.received_date'),
-            form_hint_text: t('.received_date_copy')}
+    = f.gov_uk_date_field :received_date, {legend_text: t('.received_date'), form_hint_text: t('.received_date_copy'), today_button: {class: 'button-secondary'} }
 
   = f.text_field :subject
 
