@@ -24,6 +24,13 @@ class CaseStateMachine
   end
 
   event :flag_for_clearance do
+    guard do |object, _last_transition, options|
+      puts object
+      user = User.find(options[:user_id])
+      policy = options.fetch(:policy, Pundit.policy!(user, object))
+      policy.can_flag_for_clearance?
+    end
+
     transition from: :awaiting_responder,          to: :awaiting_responder
     transition from: :drafting,                    to: :drafting
     transition from: :awaiting_dispatch,           to: :awaiting_dispatch

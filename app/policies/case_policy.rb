@@ -30,6 +30,10 @@ class CasePolicy
     user.manager? && self.case.responded?
   end
 
+  def can_flag_for_clearance?
+    user.manager?
+  end
+
   def can_remove_attachment?
     case self.case.current_state
     when 'awaiting_dispatch'
