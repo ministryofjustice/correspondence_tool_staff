@@ -3,7 +3,7 @@ require 'rails_helper'
 feature 'Assigning a case from the detail view' do
   given(:kase)            { create(:case) }
   given(:responder)       { create(:responder) }
-  given(:responding_team) { create :responding_team, responders: [responder] }
+  given(:responding_team) { responder.responding_teams.first }
   given(:manager)         { create(:manager)  }
   given(:managing_team)   { create :managing_team, managers: [manager] }
   given(:assignment)      { kase.responder_assignment }
@@ -43,7 +43,7 @@ feature 'Assigning a case from the detail view' do
   end
 
   context 'case has been rejected' do
-    given(:kase) { create(:assigned_case) }
+    given(:kase) { create :assigned_case, responding_team: responding_team }
 
     before do
       responding_team

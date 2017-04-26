@@ -123,18 +123,7 @@ class CasesController < ApplicationController
   private
 
   def set_permitted_events
-    @permitted_events = @case.available_events.find_all do |event|
-      case event
-      when :assign_responder
-        policy(@case).can_assign_case?
-      when :add_responses
-        policy(@case).can_add_attachment?
-      when :respond
-        policy(@case).can_respond?
-      when :close
-        policy(@case).can_close_case?
-      end
-    end
+    @permitted_events = @case.state_machine.permitted_events(current_user.id)
     @permitted_events ||= []
   end
 

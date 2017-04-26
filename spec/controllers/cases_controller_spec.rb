@@ -358,7 +358,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq []
+          expect(assigns(:permitted_events)).to eq [:flag_for_clearance]
         end
 
         it 'renders the show template' do
@@ -418,7 +418,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq []
+          expect(assigns(:permitted_events)).to eq [:flag_for_clearance]
         end
 
         it 'renders the show page' do
@@ -473,7 +473,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq []
+          expect(assigns(:permitted_events)).to eq [:flag_for_clearance]
         end
 
         it 'renders the show page' do
@@ -485,7 +485,12 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { case_with_response.responder }
 
         it 'permitted_events == [:add_responses, :respond]' do
-          expect(assigns(:permitted_events)).to eq [:add_responses, :respond]
+          expect(assigns(:permitted_events)).to match_array [
+                                                  :add_responses,
+                                                  :respond,
+                                                  :remove_response,
+                                                  :remove_last_response
+                                                ]
         end
 
         it 'renders the show page' do

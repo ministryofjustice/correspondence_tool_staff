@@ -20,29 +20,51 @@ RSpec::Matchers.define :trigger_the_event do |event|
   end
 
   supports_block_expectations
-end
 
-
-RSpec::Matchers.define :have_event do |event|
-  match do |state_machine|
-    expect(state_machine.class.events).to have_key event
-    @from_state ||= state_machine.current_state
-    expect(state_machine.class.events[event][@from_state])
-      .to include @to_state.to_s
-  end
-
-  chain :transition_from do |from_state|
-    @from_state = from_state
-  end
-
-  chain :transition_to do |to_state|
-    @to_state = to_state
+  failure_message do |_code|
+    "expected #{@state_machine} to have received trigger!(#{event}, #{@parameters.merge({event: event})})"
   end
 end
 
+
+RSpec::Matchers.define :transition_from do |from_state|
+  match do |event|
+    expect(event[:transitions]).to have_key from_state.to_s
+    expect(event[:transitions][from_state.to_s]).to include @to_state
+  end
+
+  chain :to do |to_state|
+    @to_state = to_state.to_s
+  end
+end
+
+RSpec::Matchers.define :require_permission do |permission|
+  match do |event|
+    expect_any_instance_of(CasePolicy).to receive(permission).and_return(true)
+    event[:callbacks][:guards].each do |guard|
+      expect do
+        guard.call(@object, nil, @options)
+        @permission_received = true
+      end .not_to raise_error
+    end
+  end
+
+  chain :using_options do |options|
+    @options = options
+  end
+
+  chain :using_object do |object|
+    @object = object
+  end
+end
+
+# helper class to make example groups a bit more readable below
+def event(event_name)
+  CaseStateMachine.events[event_name]
+end
 
 RSpec.describe CaseStateMachine, type: :model do
-  let(:kase)            { create :case }
+  let(:kase)               { create :case }
   let(:state_machine) do
     CaseStateMachine.new(
       kase,
@@ -50,12 +72,25 @@ RSpec.describe CaseStateMachine, type: :model do
       association_name: :transitions
     )
   end
-  let(:managing_team)   { create :managing_team }
-  let(:manager)         { managing_team.managers.first }
-  let(:responding_team) { create :responding_team }
-  let(:responder)       { responding_team.responders.first }
-  let(:assigned_case)   { create :assigned_case,
+  let(:managing_team)      { create :managing_team }
+  let(:manager)            { managing_team.managers.first }
+  let(:responding_team)    { create :responding_team }
+  let(:responder)          { responding_team.responders.first }
+  let(:new_case)           { create :case }
+  let(:assigned_case)      { create :assigned_case,
                                  responding_team: responding_team }
+  let(:case_being_drafted) { create :case_being_drafted,
+                                    responder: responder,
+                                    responding_team: responding_team }
+  let(:case_with_response) { create :case_with_response,
+                                    responder: responder,
+                                    responding_team: responding_team }
+  let(:responded_case)     { create :responded_case,
+                             responder: responder,
+                             responding_team: responding_team }
+  let(:closed_case)        { create :closed_case,
+                             responder: responder,
+                             responding_team: responding_team }
 
   context 'after transition' do
     let(:t1) { Time.new(2017, 4, 25, 10, 13, 55) }
@@ -74,199 +109,196 @@ RSpec.describe CaseStateMachine, type: :model do
     end
   end
 
-  shared_examples 'a case state machine event' do
-    let(:event_name!) { "#{event_name}!".to_sym }
-    let(:exception) { Class.new Exception }
+  describe event(:assign_responder) do
+    it { should transition_from(:unassigned).to(:awaiting_responder) }
+    it { should require_permission(:can_assign_case?)
+                  .using_options(user_id: manager.id)
+                  .using_object(new_case) }
+  end
 
-    it 'uses the unsafe version of event' do
-      allow(state_machine).to receive(event_name!)
-      state_machine.send(event_name, *args)
-      expect(state_machine).to have_received(event_name!).with(*args)
-    end
+  describe event(:flag_for_clearance) do
+    it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
+    it { should transition_from(:drafting).to(:drafting) }
+    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
+    it { should require_permission(:can_flag_for_clearance?)
+                  .using_options(user_id: manager.id)
+                  .using_object(assigned_case) }
+  end
 
-    it 'protects against TransitionFailedError exceptions' do
-      allow(state_machine).to receive(event_name!).
-                                and_raise(Statesman::TransitionFailedError)
-      result = state_machine.send(event_name, *args)
-      expect(result).to be_falsey
-    end
+  describe event(:accept_responder_assignment) do
+    it { should transition_from(:awaiting_responder).to(:drafting) }
+    it { should require_permission(:can_accept_or_reject_case?)
+                  .using_options(user_id: responder.id)
+                  .using_object(assigned_case) }
+  end
 
-    it 'protects against TransitionFailedError exceptions' do
-      allow(state_machine).to receive(event_name!).
-                                and_raise(Statesman::GuardFailedError)
-      result = state_machine.send(event_name, *args)
-      expect(result).to be_falsey
-    end
+  describe event(:reject_responder_assignment) do
+    it { should transition_from(:awaiting_responder).to(:unassigned) }
+    it { should require_permission(:can_accept_or_reject_case?)
+                  .using_options(user_id: responder.id)
+                  .using_object(assigned_case) }
+  end
 
-    it 'allows other exceptions through' do
-      allow(state_machine).to receive(event_name!).
-                                and_raise(exception)
+  describe event(:add_responses) do
+    it { should transition_from(:drafting).to(:awaiting_dispatch) }
+    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
+    it { should require_permission(:can_add_attachment?)
+                  .using_options(user_id: responder.id)
+                  .using_object(case_being_drafted) }
+  end
+
+  describe event(:remove_response) do
+    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
+    it { should require_permission(:can_remove_attachment?)
+                  .using_options(user_id: responder.id)
+                  .using_object(case_with_response) }
+  end
+
+  describe event(:remove_last_response) do
+    it { should transition_from(:awaiting_dispatch).to(:drafting) }
+    it { should require_permission(:can_remove_attachment?)
+                  .using_options(user_id: responder.id)
+                  .using_object(case_with_response) }
+  end
+
+  describe event(:respond) do
+    it { should transition_from(:awaiting_dispatch).to(:responded) }
+    it { should require_permission(:can_respond?)
+                  .using_options(user_id: responder.id)
+                  .using_object(case_with_response) }
+  end
+
+  describe event(:close) do
+    it { should transition_from(:responded).to(:closed) }
+    it { should require_permission(:can_close_case?)
+                  .using_options(user_id: manager.id)
+                  .using_object(responded_case) }
+  end
+
+  describe 'trigger assign_responder!' do
+    it 'triggers an assign_responder event' do
       expect do
-        state_machine.send(event_name, *args)
-      end.to raise_exception(exception)
+        new_case.state_machine.assign_responder! manager,
+                                                 managing_team,
+                                                 responding_team
+      end.to trigger_the_event(:assign_responder)
+               .on_state_machine(new_case.state_machine)
+               .with_parameters user_id:            manager.id,
+                                managing_team_id:   managing_team.id,
+                                responding_team_id: responding_team.id
     end
   end
 
-  context 'new case' do
-    describe '#assign_responder!' do
-      before do
-        state_machine.assign_responder!(manager, managing_team, responding_team)
-      end
-
-      it 'triggers an assign_responder event' do
-        expect(kase.current_state).to eq 'awaiting_responder'
-      end
-
-      describe 'transition' do
-        subject { kase.transitions.last }
-
-        it { should have_attributes(
-                      event:           'assign_responder',
-                      managing_team:   managing_team,
-                      responding_team: responding_team,
-                      user:            manager,
-                    ) }
-      end
+  describe 'trigger flag_for_clearance!' do
+    it 'triggers a flag_for_clearance event' do
+      expect { assigned_case.state_machine.flag_for_clearance! manager }
+        .to trigger_the_event(:flag_for_clearance)
+              .on_state_machine(assigned_case.state_machine)
+              .with_parameters(user_id: manager.id)
     end
   end
 
-  context 'assigned case awaiting responder' do
-    let(:state_machine) { assigned_case.state_machine }
-
-    describe 'event flag_for_clearance' do
-      subject { assigned_case.state_machine }
-
-      it { should have_event(:flag_for_clearance)
-                    .transition_to(:awaiting_responder) }
+  describe 'trigger accept_responder_assignment!' do
+    it 'triggers an accept_responder_assignment event' do
+      expect do
+        assigned_case.state_machine.accept_responder_assignment! responder,
+                                                                 responding_team
+      end.to trigger_the_event(:accept_responder_assignment)
+               .on_state_machine(assigned_case.state_machine)
+               .with_parameters(user_id: responder.id,
+                                responding_team_id: responding_team.id)
     end
+  end
 
-    describe 'trigger flag_for_clearance!' do
-      it 'triggers a flag_for_clearance event' do
-        expect { assigned_case.state_machine.flag_for_clearance!(manager) }
-          .to trigger_the_event(:flag_for_clearance)
-                .on_state_machine(assigned_case.state_machine)
-                .with_parameters user_id: manager.id
-      end
-    end
-
-    describe '#accept_responder_assignment!' do
-      it 'triggers an accept_responder_assignment event' do
-        state_machine.accept_responder_assignment!(responder, responding_team)
-        expect(assigned_case.current_state).to eq 'drafting'
-      end
-
-      it 'triggers the correct event transition' do
-        allow(state_machine).to receive(:trigger!)
-        state_machine.accept_responder_assignment!(responder, responding_team)
-        expect(state_machine)
-          .to have_received(:trigger!).with(
-                :accept_responder_assignment,
-                responding_team_id: responding_team.id,
-                user_id:            responder.id,
-                event:              :accept_responder_assignment,
-              )
-      end
-    end
-
+  describe 'trigger reject_responder_assignment!' do
     let(:message) { |example| "test #{example.description}" }
 
-    describe '#reject_responder_assignment!' do
-      it 'triggers a reject_responder_assignment event' do
-        state_machine.reject_responder_assignment! responder,
-                                                   responding_team,
-                                                   message
-        expect(assigned_case.current_state).to eq 'unassigned'
-      end
+    it 'triggers a reject_responder_assignment event' do
+      expect do
+        assigned_case.state_machine.reject_responder_assignment! responder,
+                                                                 responding_team,
+                                                                 message
+      end.to trigger_the_event(:reject_responder_assignment)
+               .on_state_machine(assigned_case.state_machine)
+               .with_parameters(user_id: responder.id,
+                                responding_team_id: responding_team.id,
+                                message: message)
+    end
+  end
 
-      it 'triggers the correct event transition' do
-        allow(state_machine).to receive(:trigger!)
-        state_machine.reject_responder_assignment! responder,
-                                                   responding_team,
-                                                   message
-        expect(state_machine).to have_received(:trigger!).with(
-                                   :reject_responder_assignment,
-                                   responding_team_id: responding_team.id,
-                                   user_id:            responder.id,
-                                   message:            message,
-                                   event:              :reject_responder_assignment
-                                 )
+  describe 'trigger add_responses!' do
+    let(:filenames) { ['file1.pdf', 'file2.pdf'] }
+
+    it 'triggers an add_responses event' do
+      expect do
+        case_being_drafted.state_machine.add_responses! responder,
+                                                        responding_team,
+                                                        filenames
+      end.to trigger_the_event(:add_responses)
+               .on_state_machine(case_being_drafted.state_machine)
+               .with_parameters(user_id: responder.id,
+                                responding_team_id: responding_team.id,
+                                filenames: filenames)
+    end
+  end
+
+  describe 'trigger remove_response!' do
+    let(:filenames) { ['file1.pdf'] }
+
+    context 'no attachments left' do
+      it 'triggers a remove_last_response event' do
+        expect do
+          case_with_response.state_machine.remove_response! responder,
+                                                            responding_team,
+                                                            filenames,
+                                                            0
+        end.to trigger_the_event(:remove_last_response)
+                 .on_state_machine(case_with_response.state_machine)
+                 .with_parameters(user_id: responder.id,
+                                  responding_team_id: responding_team.id,
+                                  filenames: filenames)
+      end
+    end
+
+    context 'some attachments left' do
+      it 'triggers a remove_last_response event' do
+      expect do
+        case_with_response.state_machine.remove_response!(
+          responder,
+          responding_team,
+          filenames,
+          1,
+        )
+      end.to trigger_the_event(:remove_response)
+               .on_state_machine(case_with_response.state_machine)
+               .with_parameters(user_id: responder.id,
+                                responding_team_id: responding_team.id,
+                                filenames: filenames)
       end
     end
   end
 
-  context 'accepted case being drafted' do
-    let(:kase)            { create :accepted_case }
-    let(:manager)         { create :manager }
-    let(:responder)       { kase.responder }
-    let(:responding_team) { kase.responding_team }
-
-    describe '#add_responses!' do
-      it 'triggers a add_responses event, but does not change current_state' do
-        state_machine.add_responses! responder,
-                                     responding_team,
-                                     ['file1.pdf', 'file2.pdf']
-        expect(kase.current_state).to eq 'awaiting_dispatch'
-      end
-
-      it 'triggers the correct event transition' do
-        allow(state_machine).to receive(:trigger!)
-        state_machine.add_responses! responder,
-                                     responding_team,
-                                     ['file1.pdf', 'file2.pdf']
-        expect(state_machine).to have_received(:trigger!).with(
-                                   :add_responses,
-                                   responding_team_id: responding_team.id,
-                                   user_id:            responder.id,
-                                   filenames:          ['file1.pdf', 'file2.pdf'],
-                                   event:              :add_responses
-                                 )
-      end
+  describe 'trigger respond!' do
+    it 'triggers a respond event' do
+      expect do
+        case_with_response.state_machine.respond! responder,
+                                                  responding_team
+      end.to trigger_the_event(:respond)
+               .on_state_machine(case_with_response.state_machine)
+               .with_parameters(user_id: responder.id,
+                                responding_team_id: responding_team.id)
     end
   end
 
-  context 'case with a response' do
-    let(:kase) { create :case_with_response,
-                        responding_team: responding_team,
-                        responder: responder }
-
-    describe '#respond!' do
-      it 'triggers a respond event' do
-        state_machine.respond!(responder, responding_team)
-        expect(kase.current_state).to eq 'responded'
-      end
-
-      it 'triggers the correct event transition' do
-        allow(state_machine).to receive(:trigger!)
-        state_machine.respond!(responder, responding_team)
-        expect(state_machine).to have_received(:trigger!).with(
-                                   :respond,
-                                   responding_team_id: responding_team.id,
-                                   user_id:            responder.id,
-                                   event:              :respond
-                                 )
-      end
-    end
-  end
-
-  context 'case that has been responded to' do
-    let(:kase) { create(:responded_case, outcome: create(:outcome)) }
-
-    describe '#close!' do
-      it 'triggers a close event' do
-        state_machine.close!(manager, managing_team)
-        expect(kase.current_state).to eq 'closed'
-      end
-
-      it 'triggers the correct event transition' do
-        allow(state_machine).to receive(:trigger!)
-        state_machine.close!(manager, managing_team)
-        expect(state_machine).to have_received(:trigger!).with(
-                                   :close,
-                                   user_id:          manager.id,
-                                   managing_team_id: managing_team.id,
-                                   event:            :close
-                                 )
-      end
+  describe 'trigger close!' do
+    it 'triggers a close event' do
+      expect do
+        responded_case.state_machine.close! manager,
+                                            managing_team
+      end.to trigger_the_event(:close)
+               .on_state_machine(responded_case.state_machine)
+               .with_parameters(user_id: manager.id,
+                                managing_team_id: managing_team.id)
     end
   end
 

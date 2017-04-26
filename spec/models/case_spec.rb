@@ -406,50 +406,6 @@ RSpec.describe Case, type: :model do
                   .source(:user) }
   end
 
-  describe '#remove_response' do
-
-    let(:kase) { create :case_with_response }
-    let(:attachment) { kase.attachments.first }
-    let(:assigner_id)   { 666 }
-
-    context 'only one attachemnt' do
-      before(:each) do
-        allow(attachment).to receive(:remove_from_storage_bucket)
-      end
-
-      it 'removes the attachment' do
-        expect(kase.attachments.size).to eq 1
-        kase.remove_response(responder, attachment)
-        expect(kase.attachments.size).to eq 0
-      end
-
-      it 'changes the state to drafting' do
-        expect(kase.current_state).to eq 'awaiting_dispatch'
-        kase.remove_response(responder, attachment)
-        expect(kase.current_state).to eq 'drafting'
-      end
-    end
-
-    context 'two attachments' do
-      before(:each) do
-        kase.attachments << build(:correspondence_response, type: 'response')
-        allow(attachment).to receive(:remove_from_storage_bucket)
-      end
-
-      it 'removes one attachment' do
-        expect(kase.attachments.size).to eq 2
-        kase.remove_response(responder, attachment)
-        expect(kase.attachments.size).to eq 1
-      end
-
-      it 'does not change the state' do
-        expect(kase.current_state).to eq 'awaiting_dispatch'
-        kase.remove_response(responder, attachment)
-        expect(kase.current_state).to eq 'awaiting_dispatch'
-      end
-    end
-  end
-
   describe 'callbacks' do
 
     describe '#prevent_number_change' do

@@ -7,6 +7,8 @@ RSpec.describe Case, type: :model do
     let(:managing_team)   { create :managing_team }
     let(:manager)         { managing_team.managers.first }
     let(:assigned_case)   { create :assigned_case }
+    let(:responding_team) { responder.responding_teams.first }
+    let(:responder)       { create :responder }
 
     describe '#state_machine' do
       subject { kase.state_machine }
@@ -138,6 +140,50 @@ RSpec.describe Case, type: :model do
           expect(accepted_case.current_state).to eq 'drafting'
           accepted_case.add_responses(responder, responses)
           expect(accepted_case.current_state).to eq 'awaiting_dispatch'
+        end
+      end
+    end
+
+    describe '#remove_response' do
+
+      let(:kase) { create :case_with_response, responder: responder }
+      let(:attachment) { kase.attachments.first }
+      let(:assigner_id)   { 666 }
+
+      context 'only one attachemnt' do
+        before(:each) do
+          allow(attachment).to receive(:remove_from_storage_bucket)
+        end
+
+        it 'removes the attachment' do
+          expect(kase.attachments.size).to eq 1
+          kase.remove_response(responder, attachment)
+          expect(kase.attachments.size).to eq 0
+        end
+
+        it 'changes the state to drafting' do
+          expect(kase.current_state).to eq 'awaiting_dispatch'
+          kase.remove_response(responder, attachment)
+          expect(kase.current_state).to eq 'drafting'
+        end
+      end
+
+      context 'two attachments' do
+        before(:each) do
+          kase.attachments << build(:correspondence_response, type: 'response')
+          allow(attachment).to receive(:remove_from_storage_bucket)
+        end
+
+        it 'removes one attachment' do
+          expect(kase.attachments.size).to eq 2
+          kase.remove_response(responder, attachment)
+          expect(kase.attachments.size).to eq 1
+        end
+
+        it 'does not change the state' do
+          expect(kase.current_state).to eq 'awaiting_dispatch'
+          kase.remove_response(responder, attachment)
+          expect(kase.current_state).to eq 'awaiting_dispatch'
         end
       end
     end

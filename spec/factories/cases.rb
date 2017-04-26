@@ -74,7 +74,8 @@ FactoryGirl.define do
       end
     end
 
-    factory :accepted_case, parent: :assigned_case do
+    factory :accepted_case, parent: :assigned_case,
+                            aliases: [:case_being_drafted] do
       transient do
         identifier "accepted case"
         responder { create :responder }

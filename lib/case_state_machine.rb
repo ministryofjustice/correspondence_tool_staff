@@ -8,6 +8,12 @@ class CaseStateMachine
     end
   end
 
+  # Convenience method used by guards to get a policy object
+  def self.get_policy(user_id, object)
+    user = User.find(user_id)
+    Pundit.policy!(user, object)
+  end
+
   after_transition do | kase, transition|
     transition.record_state_change(kase)
   end
@@ -20,15 +26,17 @@ class CaseStateMachine
   state :closed
 
   event :assign_responder do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object).can_assign_case?
+    end
+
     transition from: :unassigned, to: :awaiting_responder
   end
 
   event :flag_for_clearance do
     guard do |object, _last_transition, options|
-      puts object
-      user = User.find(options[:user_id])
-      policy = options.fetch(:policy, Pundit.policy!(user, object))
-      policy.can_flag_for_clearance?
+      CaseStateMachine.get_policy(options[:user_id], object)
+        .can_flag_for_clearance?
     end
 
     transition from: :awaiting_responder,          to: :awaiting_responder
@@ -37,32 +45,77 @@ class CaseStateMachine
   end
 
   event :reject_responder_assignment do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object)
+        .can_accept_or_reject_case?
+    end
+
     transition from: :awaiting_responder, to: :unassigned
   end
 
   event :accept_responder_assignment do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object)
+        .can_accept_or_reject_case?
+    end
+
     transition from: :awaiting_responder, to: :drafting
   end
 
   event :add_responses do
-    transition from: :drafting, to: :awaiting_dispatch
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object).can_add_attachment?
+    end
+
+    transition from: :drafting,          to: :awaiting_dispatch
     transition from: :awaiting_dispatch, to: :awaiting_dispatch
   end
 
   event :remove_response do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object)
+        .can_remove_attachment?
+    end
+
     transition from: :awaiting_dispatch, to: :awaiting_dispatch
   end
 
   event :remove_last_response do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object)
+        .can_remove_attachment?
+    end
+
     transition from: :awaiting_dispatch, to: :drafting
   end
 
   event :respond do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object).can_respond?
+    end
+
     transition from: :awaiting_dispatch, to: :responded
   end
 
   event :close do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object).can_close_case?
+    end
+
     transition from: :responded, to: :closed
+  end
+
+  def permitted_events(user_id)
+    state = current_state
+    self.class.events.select do |event_name, event|
+      can_trigger_event?(event_name, user_id: user_id) && event[:transitions].key?(state) && event[:transitions][state].any? do |end_state|
+        can_transition_to? end_state, user_id: user_id
+      end
+    end.map(&:first)
+
+    # self.class.events.select do |_, transitions|
+    #   transitions.key?(state)
+    # end.map(&:first)
   end
 
   def accept_responder_assignment!(user, responding_team)
@@ -123,5 +176,11 @@ class CaseStateMachine
              managing_team_id: managing_team.id,
              user_id:          user.id,
              event:            :close
+  end
+
+  private
+
+  def get_policy
+    Pundit.policy!(self.object)
   end
 end
