@@ -34,6 +34,9 @@ class Case < ApplicationRecord
   scope :by_deadline, lambda {
     order("(properties ->> 'external_deadline')::timestamp with time zone ASC, id")
   }
+
+  scope :closed, -> { where(current_state: 'closed').order(last_transitioned_at: :desc) }
+
   validates :current_state, presence: true, on: :update
   validates :received_date,:subject,:message, :name, :category, presence: true
   validates :email, presence: true, on: :create, if: -> { postal_address.blank? }

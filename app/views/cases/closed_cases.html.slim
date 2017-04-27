@@ -1,0 +1,28 @@
+= render partial: 'layouts/header', locals: {page_heading: t('.page_heading')}
+
+
+.grid-row
+  .column-full.table-container.container
+    table.report.closed-case-report
+      colgroup
+        col
+        col
+      thead
+        th scope='col'
+          = t('.number')
+        th.closed-case-heading scope='col'
+          = t('.name-subject')
+      tbody
+        - @cases.each do |kase|
+          tr.case_row
+            td aria-label="#{t('.number')}"
+              span.visually-hidden
+                = t('.view_case')
+              = " "
+              = link_to kase.number, case_path(kase.id)
+            td aria-label="#{t('.name-subject')}"
+              strong
+                = kase.name
+              br
+              span
+                = kase.subject

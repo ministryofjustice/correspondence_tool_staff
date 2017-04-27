@@ -63,6 +63,16 @@ RSpec.describe Case, type: :model do
     it { should validate_presence_of(:requester_type) }
   end
 
+  describe 'closed scope' do
+    it 'returns only closed cases in most recently closed first' do
+      create :case
+      create :responded_case
+      closed_case_1 = create :closed_case, last_transitioned_at: 2.days.ago
+      closed_case_2 = create :closed_case, last_transitioned_at: 1.day.ago
+      expect(Case.closed).to eq [ closed_case_2, closed_case_1 ]
+    end
+  end
+
   describe 'conditional validations of current state' do
     context 'new record' do
       it 'does not validate presence of current_state' do

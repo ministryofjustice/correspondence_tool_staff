@@ -70,6 +70,13 @@ RSpec.describe CasesController, type: :controller do
         expect(response).to redirect_to(new_user_session_path)
       end
     end
+
+    describe 'GET closed_cases' do
+      it "be redirected to signin if trying to update a specific case" do
+        get :closed_cases
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
   end
 
   context "as an authenticated manager" do
@@ -142,6 +149,20 @@ RSpec.describe CasesController, type: :controller do
       it 'does not overwrite entries with blanks (if the blank dropdown option is selected)' do
         patch :update, params: { id: first_case, case: { category: '' } }
         expect(Case.first.category.abbreviation).to eq 'FOI'
+      end
+    end
+
+    describe 'GET closed_cases' do
+      it 'renders the closed cases page' do
+        get :closed_cases
+        expect(response).to render_template :closed_cases
+      end
+
+      it 'assigns an array of decorated closed cases' do
+        case_1 = create :closed_case, last_transitioned_at: 2.minutes.ago
+        case_2 = create :closed_case, last_transitioned_at: 2.seconds.ago
+        get :closed_cases
+        expect(assigns(:cases)).to eq [ case_2.decorate, case_1.decorate ]
       end
     end
 
