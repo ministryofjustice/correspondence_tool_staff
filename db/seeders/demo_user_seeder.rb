@@ -9,22 +9,22 @@ class DemoUserSeeder
       ['HMCTS North East Response Unit(RSU)', 'hmctsne']
     ]
 
-    @users = [
-      ['Larry Adler', 'Legal Aid Agency'],
-      ['Louis Armstrong', 'Legal Aid Agency'],
-      ['Lilly Allen', 'Legal Aid Agency'],
-      ['Helen Mirren', 'HMCTS North East Response Unit(RSU)'],
-      ['Harvey Milk', 'HMCTS North East Response Unit(RSU)'],
-      ['Hayley Mills', 'HMCTS North East Response Unit(RSU)'],
-      ['Harry Redknapp', 'HR'],
-      ['Helen Reddy', 'HR'],
-      ['Harold Robbins', 'HR'],
-      ['David Attenborough', 'DACU'],
-      ['Desi Arnaz', 'DACU'],
-      ['Dave Allen', 'DACU'],
-      ['Dack Dispirito', 'DACU Disclosure'],
-      ['Dasha Diss', 'DACU Disclosure']
-    ]
+    @users = {
+      'Larry Adler'        => { team: 'laa',     role: 'responder' },
+      'Louis Armstrong'    => { team: 'laa',     role: 'responder' },
+      'Lilly Allen'        => { team: 'laa',     role: 'responder' },
+      'Helen Mirren'       => { team: 'hmctsne', role: 'responder' },
+      'Harvey Milk'        => { team: 'hmctsne', role: 'responder' },
+      'Hayley Mills'       => { team: 'hmctsne', role: 'responder' },
+      'Harry Redknapp'     => { team: 'hr',      role: 'responder' },
+      'Helen Reddy'        => { team: 'hr',      role: 'responder' },
+      'Harold Robbins'     => { team: 'hr',      role: 'responder' },
+      'David Attenborough' => { team: 'dacu',    role: 'manager' },
+      'Desi Arnaz'         => { team: 'dacu',    role: 'manager' },
+      'Dave Allen'         => { team: 'dacu',    role: 'manager' },
+      'Dack Dispirito'     => { team: 'dacudis', role: 'approver' },
+      'Dasha Diss'         => { team: 'dacudis', role: 'approver' }
+    }
   end
 
   def seed!
@@ -50,11 +50,11 @@ class DemoUserSeeder
   end
 
   def seed_users
-    @users.each do |user_name_and_team|
-      user_name = user_name_and_team.first
-      team_name = user_name_and_team.last
+    @users.each do |user_name, user_info|
+      team_abbr = user_info[:team]
+      team_name = @teams.find { |t| t.second == team_abbr } .first
       email = email_from_name(user_name)
-      role = team_name == 'DACU' ? 'manager' : 'responder'
+      role = user_info[:role]
 
       user = User.where(email: email).first
       if user.nil?
