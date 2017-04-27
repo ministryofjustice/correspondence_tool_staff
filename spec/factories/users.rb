@@ -39,5 +39,9 @@ FactoryGirl.define do
     factory :responder do
       responding_teams { [create(:responding_team)] }
     end
+
+    factory :approver do
+      approving_teams { [create(:approving_team)] }
+    end
   end
 end

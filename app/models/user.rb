@@ -34,27 +34,35 @@ class User < ApplicationRecord
   has_many :responding_team_roles,
            -> { responder_roles  },
            class_name: 'TeamsUsersRole'
+  has_many :approving_team_roles,
+           -> { approver_roles  },
+           class_name: 'TeamsUsersRole'
   has_many :managing_teams, through: :managing_team_roles, source: :team
   has_many :responding_teams, through: :responding_team_roles, source: :team
+  has_many :approving_teams, through: :approving_team_roles, source: :team
 
   validates :full_name, presence: true
 
-  scope :responders, -> {
-    joins(:team_roles).where(teams_users_roles: { role: 'responder' })
-  }
   scope :managers, -> {
     joins(:team_roles).where(teams_users_roles: { role: 'manager' })
   }
-
-  # def manager?
-  #   team_roles.managing_teams.include? self
-  # end
+  scope :responders, -> {
+    joins(:team_roles).where(teams_users_roles: { role: 'responder' })
+  }
+  scope :approvers, -> {
+    joins(:team_roles).where(teams_users_roles: { role: 'approver' })
+  }
 
   def manager?
     not managing_teams.empty?
+    # team_roles.managing_teams.include? self
   end
 
   def responder?
     not responding_teams.empty?
+  end
+
+  def approver?
+    not approving_teams.empty?
   end
 end

@@ -28,4 +28,56 @@ RSpec.describe User, type: :model do
   it { should validate_presence_of(:full_name) }
   it { should have_many(:team_roles).class_name('TeamsUsersRole') }
   it { should have_many(:teams).through(:team_roles) }
+  it { should have_many(:managing_team_roles).class_name('TeamsUsersRole') }
+  it { should have_many(:responding_team_roles).class_name('TeamsUsersRole') }
+  it { should have_many(:approving_team_roles).class_name('TeamsUsersRole') }
+  it { should have_many(:managing_teams).through(:managing_team_roles) }
+  it { should have_many(:responding_teams).through(:responding_team_roles) }
+  it { should have_many(:approving_teams).through(:approving_team_roles) }
+
+  let(:manager)   { create :manager }
+  let(:responder) { create :responder }
+  let(:approver)  { create :approver }
+
+  describe '#manager?' do
+    it 'returns true for a manager' do
+      expect(manager.manager?).to be true
+    end
+
+    it 'returns true for a responder' do
+      expect(responder.manager?).to be false
+    end
+
+    it 'returns true for an approver' do
+      expect(approver.manager?).to be false
+    end
+  end
+
+  describe '#responder?' do
+    it 'returns true for a manager' do
+      expect(manager.responder?).to be false
+    end
+
+    it 'returns true for a responder' do
+      expect(responder.responder?).to be true
+    end
+
+    it 'returns true for an approver' do
+      expect(approver.responder?).to be false
+    end
+  end
+
+  describe '#approver?' do
+    it 'returns true for a manager' do
+      expect(manager.approver?).to be false
+    end
+
+    it 'returns true for a responder' do
+      expect(responder.approver?).to be false
+    end
+
+    it 'returns true for an approver' do
+      expect(approver.approver?).to be true
+    end
+  end
 end
