@@ -66,6 +66,8 @@ class CasePolicy
         scope.all
       elsif user.responder?
         scope.select {|kase| user.responding_teams.include? kase.responding_team }
+      elsif user.approver?
+        scope.select {|kase| user.approving_teams.include? kase.approving_team }
       else
         []
       end

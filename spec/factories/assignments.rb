@@ -20,9 +20,27 @@ FactoryGirl.define do
     role 'responding'
     association :case, factory: :case, strategy: :create
 
-    factory :accepted_assignment, parent: :cases_teams_role do
+    trait :approving do
+      transient do
+        team_user { team.approvers.first }
+      end
+
+      team { create :approving_team }
+      role 'approving'
+    end
+
+    trait :responding do
+      transient do
+        team_user { team.responders.first }
+      end
+
+      team { create :approving_team }
+      role 'approving'
+    end
+
+    trait :accepted do
       state 'accepted'
-      user { create :responder }
+      user team_user
     end
   end
 

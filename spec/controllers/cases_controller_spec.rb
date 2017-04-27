@@ -8,6 +8,8 @@ RSpec.describe CasesController, type: :controller do
   let(:responder)          { create :responder }
   let(:another_responder)  { create :responder }
   let(:responding_team)    { responder.responding_teams.first }
+  let(:approver)           { create :approver }
+  let(:approving_team)     { approver.approving_teams.first }
   let(:assigned_case)      { create :assigned_case,
                                     responding_team: responding_team }
   let(:accepted_case)      { create :accepted_case, responder: responder }
@@ -34,12 +36,6 @@ RSpec.describe CasesController, type: :controller do
   end
 
   context "as an anonymous user" do
-    describe 'GET index' do
-      it "be redirected to signin if trying to list of questions" do
-        get :index
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
 
     describe 'GET new' do
       it "be redirected to signin if trying to start a new case" do
@@ -82,33 +78,6 @@ RSpec.describe CasesController, type: :controller do
   context "as an authenticated manager" do
 
     before { sign_in manager }
-
-    describe 'GET index' do
-
-      let!(:unordered_cases) do
-        [
-          create(:case, received_date: Date.parse('17/11/2016'), subject: 'newer request 2', id: 2),
-          create(:case, received_date: Date.parse('17/11/2016'), subject: 'newer request 1', id: 1),
-          create(:case, received_date: Date.parse('16/11/2016'), subject: 'request 2', id: 3),
-          create(:case, received_date: Date.parse('16/11/2016'), subject: 'request 1', id: 4),
-          create(:case, received_date: Date.parse('15/11/2016'), subject: 'older request 2', id: 5),
-          create(:case, received_date: Date.parse('15/11/2016'), subject: 'older request 1', id: 6)
-        ]
-      end
-
-      before {
-        get :index
-      }
-
-      it 'assigns @cases, sorted by external_deadline, then ID' do
-        expect(assigns(:cases)).
-          to eq unordered_cases.sort_by { |c| [c.external_deadline, c.id] }
-      end
-
-      it 'renders the index template' do
-        expect(response).to render_template(:index)
-      end
-    end
 
     describe 'GET new' do
       before {
@@ -215,7 +184,70 @@ RSpec.describe CasesController, type: :controller do
   context 'as an authenticated responder' do
     before { sign_in responder }
 
-    describe 'GET index' do
+    describe 'GET new' do
+      before {
+        get :new
+      }
+
+      it 'does not render the new template' do
+        expect(response).not_to render_template(:new)
+      end
+
+      it 'redirects to the application root path' do
+        expect(response).to redirect_to(authenticated_root_path)
+      end
+    end
+
+  end
+
+  # An astute reader who has persevered to this point in the file may notice
+  # that the following tests are in a different structure than those above:
+  # there, the top-most grouping is a context describing authentication, with
+  # what action is being tested (GET new, POST create, etc) sub-grouped within
+  # those contexts. This breaks up the tests for, say, GET new so that to read
+  # how that action/functionality behaves becomes hard. The tests below seek to
+  # remedy this by modelling how they could be grouped by functionality
+  # primarily, with sub-grouping for different contexts.
+
+  describe 'GET index' do
+    context "as an anonymous user" do
+      it "be redirected to signin if trying to list of questions" do
+        get :index
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'as an authenticated manager' do
+      before { sign_in manager }
+
+      let!(:unordered_cases) do
+        [
+          create(:case, received_date: Date.parse('17/11/2016'), subject: 'newer request 2', id: 2),
+          create(:case, received_date: Date.parse('17/11/2016'), subject: 'newer request 1', id: 1),
+          create(:case, received_date: Date.parse('16/11/2016'), subject: 'request 2', id: 3),
+          create(:case, received_date: Date.parse('16/11/2016'), subject: 'request 1', id: 4),
+          create(:case, received_date: Date.parse('15/11/2016'), subject: 'older request 2', id: 5),
+          create(:case, received_date: Date.parse('15/11/2016'), subject: 'older request 1', id: 6)
+        ]
+      end
+
+      before {
+        get :index
+      }
+
+      it 'assigns @cases, sorted by external_deadline, then ID' do
+        expect(assigns(:cases)).
+          to eq unordered_cases.sort_by { |c| [c.external_deadline, c.id] }
+      end
+
+      it 'renders the index template' do
+        expect(response).to render_template(:index)
+      end
+    end
+
+    context 'as an authenticated responder' do
+      before { sign_in responder }
+
       let(:case1) { create :accepted_case,
                            received_date: Date.parse('17/11/2016'),
                            subject: 'newer request 1',
@@ -264,30 +296,43 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    describe 'GET new' do
-      before {
-        get :new
-      }
+    context 'as an authenticated approver' do
+      let(:flagged_case) { create :awaiting_responder_case,
+                                  :flagged,
+                                  received_date: Date.today - 7.days,
+                                  subject: 'flagged case not yet accepted',
+                                  approving_team: approving_team }
+      let(:flagged_accepted_case) { create :case_being_drafted,
+                                           :flagged_accepted,
+                                           received_date: Date.today - 10.days,
+                                           subject: 'flagged case accepted',
+                                           approver: approver }
+      let(:assigned_case) { create :awaiting_responder_case,
+                                   received_date: Date.today - 8.days,
+                                   subject: 'assigned case' }
+      let(:case_being_drafted) { create :case_being_drafted,
+                                   received_date: Date.today - 11.days,
+                                   subject: 'case being drafted' }
+      let(:incoming_cases) { [
+                               flagged_case,
+                               flagged_accepted_case,
+                             ] }
 
-      it 'does not render the new template' do
-        expect(response).not_to render_template(:new)
+      before do
+        sign_in approver
+        assigned_case
+        case_being_drafted
+        incoming_cases
+        get :index
       end
 
-      it 'redirects to the application root path' do
-        expect(response).to redirect_to(authenticated_root_path)
+      it 'assigns only cases flagged for clearence' do
+        expect(assigns(:cases).size).to eq 2
+        expect(assigns(:cases)).
+          to eq incoming_cases.sort_by { |c| [c.external_deadline, c.id] }
       end
     end
-
   end
-
-  # An astute reader who has persevered to this point in the file may notice
-  # that the following tests are in a different structure than those above:
-  # there, the top-most grouping is a context describing authentication, with
-  # what action is being tested (GET new, POST create, etc) sub-grouped within
-  # those contexts. This breaks up the tests for, say, GET new so that to read
-  # how that action/functionality behaves becomes hard. The tests below seek to
-  # remedy this by modelling how they could be grouped by functionality
-  # primarily, with sub-grouping for different contexts.
 
   describe 'GET show' do
 

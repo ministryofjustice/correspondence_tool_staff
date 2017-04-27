@@ -52,7 +52,8 @@ FactoryGirl.define do
              role: 'managing'
     end
 
-    factory :assigned_case, parent: :case do
+    factory :awaiting_responder_case, parent: :case,
+                                      aliases: [:assigned_case] do
       transient do
         identifier "assigned case"
         manager         { managing_team.managers.first }
@@ -196,6 +197,34 @@ FactoryGirl.define do
         received_date 30.business_days.ago
         date_responded 1.business_day.ago
       end
+    end
+  end
+
+  trait :flagged do
+    transient do
+      approving_team { create :approving_team }
+    end
+
+    after(:create) do |kase, evaluator|
+      create :assignment, :approving,
+             case: kase,
+             team: evaluator.approving_team,
+             state: 'pending'
+    end
+  end
+
+  trait :flagged_accepted do
+    transient do
+      approver { create :approver }
+      approving_team { approver.approving_teams.first }
+    end
+
+    after(:create) do |kase, evaluator|
+      create :assignment, :approving,
+             case: kase,
+             user: evaluator.approver,
+             team: evaluator.approving_team,
+             state: 'accepted'
     end
   end
 
