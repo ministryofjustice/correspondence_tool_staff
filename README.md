@@ -83,16 +83,15 @@ cd /Applications/LibreOffice.app/Contents/MacOS && ./soffice $1 $2 $3 $4 $5 $6
 
 The above script is needed by the libreconv gem to do the conversion.
 
-### Rake Tasks 
+### DB Setup
 
-Last two rake demo tasks are not required for production service.
+Run these rake tasks to prepare the database for local development.
  
 ```
 $ rails db:create
 $ rails db:migrate
 $ rails db:seed
-$ rails users:demo_entries
-$ rails cases:demo_entries
+$ rails db:seed:dev:users
 ```
 
 ### Emails
