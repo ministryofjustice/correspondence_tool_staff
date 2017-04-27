@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:ministryofjustice/statesman-events.git
+  remote: https://github.com/ministryofjustice/statesman-events.git
   revision: b4958d4855114e732acef5c884dfa941f3aede76
   branch: add-before-event
   specs:

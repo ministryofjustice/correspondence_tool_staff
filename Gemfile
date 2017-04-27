@@ -33,7 +33,7 @@ gem 'sidekiq'
 gem 'sidekiq-logging-json'
 gem 'statesman', '~> 2.0.1'
 # gem 'statesman-events', '~> 0.0.1'
-gem 'statesman-events', git: 'git@github.com:ministryofjustice/statesman-events.git',
+gem 'statesman-events', git: 'https://github.com/ministryofjustice/statesman-events.git',
                         branch: 'add-before-event'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
