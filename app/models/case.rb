@@ -45,9 +45,12 @@ class Case < ApplicationRecord
   validates :subject, length: { maximum: 80 }
   validates :requester_type, presence: true
 
+
   validates_with ::ClosedCaseValidator
 
   serialize :exemption_ids, Array
+
+  attr_accessor :flag_for_disclosure_specialists
 
   enum requester_type: {
       academic_business_charity: 'academic_business_charity',

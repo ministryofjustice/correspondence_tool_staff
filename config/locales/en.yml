@@ -37,6 +37,8 @@ en:
                 Please try again.
             requester_type:
               blank: Type of requester must be selected
+            flag_for_disclosure_specialists:
+              blank: can't be blank
         assignment:
           attributes:
             state:
@@ -90,6 +92,7 @@ en:
         requester_type: Type of requester
         refusal_reason_name: What was the reason for refusal?
         outcome_name: What was the outcome?
+        flag_for_disclosure_specialists: Does a disclosure specialist need to see this case?
     hint:
       feedback:
         comment: |
@@ -112,6 +115,9 @@ en:
         subject: Subject of request
         message: Full request
         postal_address: Address
+        flag_for_disclosure_specialists:
+          Does a disclosure specialist need to see this?
+
       feedback:
         comment: Help make this service better
 

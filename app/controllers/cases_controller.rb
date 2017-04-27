@@ -146,7 +146,8 @@ class CasesController < ApplicationController
       :postal_address,
       :email,
       :subject, :message,
-      :received_date_dd, :received_date_mm, :received_date_yyyy
+      :received_date_dd, :received_date_mm, :received_date_yyyy,
+      :flag_for_disclosure_specialists
     ).merge(category_id: Category.find_by(abbreviation: 'FOI').id)
   end
 
