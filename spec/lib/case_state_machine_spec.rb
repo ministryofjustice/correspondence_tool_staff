@@ -36,11 +36,11 @@ RSpec.describe CaseStateMachine, type: :model do
                              responding_team: responding_team }
 
   context 'after transition' do
-    let(:t1) { Time.new(2017, 4, 25, 10, 13, 55) }
-    let(:t2) { Time.new(2017, 4, 27, 23, 14, 2) }
+    let(:t1) { Time.now }
+    let(:t2) { Time.now + 3.days }
+
     it 'stores current state and time of transition on the case record' do
       Timecop.freeze(t1) do
-        kase = create :case, received_date: Time.now - 1.day
         expect(kase.current_state).to eq 'unassigned'
         expect(kase.last_transitioned_at).to eq t1
       end
