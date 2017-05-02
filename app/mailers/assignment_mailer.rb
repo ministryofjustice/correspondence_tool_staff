@@ -1,5 +1,4 @@
 class AssignmentMailer < GovukNotifyRails::Mailer
-  rescue_from Exception, with: :log_errors
 
   def new_assignment(assignment)
     @assignment = assignment

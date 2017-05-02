@@ -1,5 +1,4 @@
 class DeviseMailer < Devise::Mailer
-  rescue_from Exception, with: :log_errors
 
   # gives access to all helpers defined within `application_helper`.
   helper :application
