@@ -29,7 +29,9 @@ Rails.application.configure do
   config.action_controller.allow_forgery_protection = false
   config.active_job.queue_adapter = :test
   config.action_mailer.perform_caching = false
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.default_url_options = { host: Settings.cts_email_url, port: Settings.cts_email_port }
+
+  config.action_mailer.asset_host = config.action_mailer.default_url_options[:host]
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
