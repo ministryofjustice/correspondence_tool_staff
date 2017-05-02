@@ -56,6 +56,9 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
 
   config.action_mailer.perform_caching = false
+
+  config.action_mailer.asset_host = config.action_mailer.default_url_options[:host]
+
   config.action_mailer.smtp_settings = {
     address:              'smtp.sendgrid.net',
     port:                 587,
