@@ -36,9 +36,23 @@ FactoryGirl.define do
     responders { [create(:user)] }
   end
 
+  factory :approving_team, parent: :team do
+    sequence(:name) { |n| "Approving Team #{n}" }
+    approvers { [create(:user)] }
+  end
+
   factory :team_dacu, parent: :managing_team do
     name 'DACU'
     email 'dacu@localhost'
+
+    initialize_with do
+      Team.find_or_create_by(name: name, email: email)
+    end
+  end
+
+  factory :team_dacu_disclosure, parent: :approving_team do
+    name 'DACU Disclosure'
+    email 'dacu.disclosure@localhost'
 
     initialize_with do
       Team.find_or_create_by(name: name, email: email)

@@ -26,7 +26,14 @@ class CasesController < ApplicationController
     authorize Case, :can_add_case?
 
     @case = Case.new(create_foi_params)
-    if @case.save
+    if create_foi_params[:flag_for_disclosure_specialists].blank?
+      @case.valid?
+      @case.errors.add(:flag_for_disclosure_specialists, :blank)
+      render :new
+    elsif @case.save
+      if create_foi_params[:flag_for_disclosure_specialists] == 'yes'
+        @case.flag_for_clearance(current_user)
+      end
       flash[:creating_case] = true
       redirect_to new_case_assignment_path @case
     else

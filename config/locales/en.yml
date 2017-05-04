@@ -38,7 +38,7 @@ en:
             requester_type:
               blank: Type of requester must be selected
             flag_for_disclosure_specialists:
-              blank: can't be blank
+              blank: Please choose yes or no.
         assignment:
           attributes:
             state:

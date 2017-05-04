@@ -9,6 +9,7 @@ RSpec.describe Case, type: :model do
     let(:assigned_case)   { create :assigned_case }
     let(:responding_team) { responder.responding_teams.first }
     let(:responder)       { create :responder }
+    let(:dacu_disclosure) { create :team_dacu_disclosure }
 
     describe '#state_machine' do
       subject { kase.state_machine }
@@ -36,21 +37,31 @@ RSpec.describe Case, type: :model do
     end
 
     describe '#flag_for_clearance' do
-      let(:state_machine) { assigned_case.state_machine }
+      let(:state_machine)  { assigned_case.state_machine }
+      let(:approving_team) { create :approving_team }
+      let!(:team_dacu_disclosure) { create :team_dacu_disclosure }
 
       before do
-        allow(state_machine).to receive(:flag_for_clearance!).with(manager)
-      end
-
-      it 'sets requires_attribute to true' do
-        expect(assigned_case.requires_clearance?).to eq false
-        assigned_case.flag_for_clearance manager
-        expect(assigned_case.requires_clearance?).to eq true
+        allow(state_machine).to receive(:flag_for_clearance!)
       end
 
       it 'creates a state transition' do
         assigned_case.flag_for_clearance manager
-        expect(state_machine).to have_received(:flag_for_clearance!).with(manager)
+        expect(state_machine).to have_received(:flag_for_clearance!)
+                                   .with(manager, managing_team, dacu_disclosure)
+      end
+
+      it 'sets the internal deadline' do
+        allow(assigned_case).to receive(:set_internal_deadline)
+        assigned_case.flag_for_clearance manager
+        expect(assigned_case).to have_received(:set_internal_deadline)
+      end
+
+      it 'sets the approving team' do
+        allow(assigned_case).to receive(:approving_team=)
+        assigned_case.flag_for_clearance manager
+        expect(assigned_case).to have_received(:approving_team=)
+                                   .with(team_dacu_disclosure)
       end
     end
 

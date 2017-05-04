@@ -29,3 +29,7 @@ s3_upload_retry_delay_minutes: 5
 govuk_notify_api_key: 'never-put-real-api-key-here-use-env-vars'
 new_assignment_notify_template: '6f4d8e34-96cb-482c-9428-a5c1d5efa519'
 reset_password_instructions_notify_template: '705029c9-d7e4-47a6-a963-944cb6d6b09c'
+
+foi_cases:
+  default_managing_team: DACU
+  default_clearance_team: DACU Disclosure

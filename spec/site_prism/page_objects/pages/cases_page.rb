@@ -13,6 +13,7 @@ module PageObjects
         element :who_its_with, 'td[aria-label="With"]'
       end
 
+      element :new_case_button, 'a.button[href="/cases/new"]'
       section :service_feedback, PageObjects::Sections::ServiceFeedbackSection, '.feedback'
       section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 

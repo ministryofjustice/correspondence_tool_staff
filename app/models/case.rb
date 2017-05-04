@@ -65,8 +65,7 @@ class Case < ApplicationRecord
   jsonb_accessor :properties,
     escalation_deadline: :datetime,
     internal_deadline: :datetime,
-    external_deadline: :datetime,
-    requires_clearance: [:boolean, default: false]
+    external_deadline: :datetime
 
   belongs_to :category, required: true
 
@@ -107,10 +106,13 @@ class Case < ApplicationRecord
   belongs_to :refusal_reason, class_name: 'CaseClosure::RefusalReason'
   has_and_belongs_to_many :exemptions, class_name: 'CaseClosure::Exemption', join_table: 'cases_exemptions'
 
-  before_create :set_initial_state
+  before_create :set_initial_state,
+                :set_number,
+                :set_managing_team,
+                :set_escalation_deadline,
+                :set_external_deadline
   before_save :prevent_number_change
-  before_create :set_deadlines, :set_number, :set_managing_team
-  after_update :set_deadlines
+
 
   delegate :available_events, to: :state_machine
 
@@ -128,10 +130,8 @@ class Case < ApplicationRecord
     raise StandardError.new('number is immutable') if number_changed?
   end
 
-  def foi?; @is_foi ||= category.abbreviation == 'FOI'; end
-
   def triggerable?
-    foi? && !requires_clearance?
+    !requires_clearance?
   end
 
   def under_review?
@@ -218,6 +218,10 @@ class Case < ApplicationRecord
     exemptions.select{ |ex| ex.ncnd? }.any?
   end
 
+  def requires_clearance?
+    approving_team.present?
+  end
+
   private
 
   def set_initial_state
@@ -225,15 +229,22 @@ class Case < ApplicationRecord
     self.last_transitioned_at = Time.now
   end
 
-  def set_deadlines
-    self.escalation_deadline = DeadlineCalculator.escalation_deadline(self) if triggerable?
-    self.internal_deadline = DeadlineCalculator.internal_deadline(self) if requires_clearance?
-    self.external_deadline = DeadlineCalculator.external_deadline(self)
+  def set_escalation_deadline
+    self.escalation_deadline ||= DeadlineCalculator.escalation_deadline(self)
+  end
+
+  def set_internal_deadline
+    self.internal_deadline ||= DeadlineCalculator.internal_deadline(self)
+  end
+
+  def set_external_deadline
+    self.external_deadline ||= DeadlineCalculator.external_deadline(self)
   end
 
   def set_managing_team
     # For now, we just automatically assign cases to DACU.
-    self.managing_team = Team.managing.find_by!(name: 'DACU')
+    self.managing_team =
+      Team.managing.find_by!(name: Settings.foi_cases.default_managing_team)
     self.managing_assignment.state = 'accepted'
   end
 

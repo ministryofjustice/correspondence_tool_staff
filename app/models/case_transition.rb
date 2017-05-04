@@ -23,6 +23,7 @@ class CaseTransition < ActiveRecord::Base
     user_id:            :integer,
     responding_team_id: :integer,
     managing_team_id:   :integer,
+    approving_team_id:  :integer,
     message:            :text,
     filenames:          [:string, array: true, default: []]
 

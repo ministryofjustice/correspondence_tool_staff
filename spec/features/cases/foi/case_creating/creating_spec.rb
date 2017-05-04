@@ -30,14 +30,15 @@ feature 'Case creation by a manager' do
   background do
     responding_team
     dacu
+    create :team_dacu_disclosure
     create(:category, :foi)
     login_as manager
-    visit cases_path
-    click_link "New case"
+    cases_page.load
+    cases_page.new_case_button.click
   end
 
   scenario 'succeeds using valid inputs' do
-    expect(current_path).to eq new_case_path
+    expect(cases_new_page).to be_displayed
     expect(page).to have_content('Create new case')
 
     choose user_input.requester_type
@@ -48,6 +49,8 @@ feature 'Case creation by a manager' do
     fill_in 'Day',                with: Time.zone.today.day.to_s
     fill_in 'Month',              with: Time.zone.today.month.to_s
     fill_in 'Year',               with: Time.zone.today.year.to_s
+    choose 'case_flag_for_disclosure_specialists_no'
+
     click_button 'Next - Assign case'
 
     new_case = Case.first
@@ -83,6 +86,26 @@ feature 'Case creation by a manager' do
     )
   end
 
+  scenario 'creating a case that needs clearance' do
+    expect(cases_new_page).to be_displayed
+    expect(page).to have_content('Create new case')
+
+    choose user_input.requester_type
+    fill_in 'Full name',          with: user_input.name
+    fill_in 'Email',              with: user_input.email
+    fill_in 'Subject of request', with: user_input.subject
+    fill_in 'Full request',       with: user_input.message
+    fill_in 'Day',                with: Time.zone.today.day.to_s
+    fill_in 'Month',              with: Time.zone.today.month.to_s
+    fill_in 'Year',               with: Time.zone.today.year.to_s
+    choose 'case_flag_for_disclosure_specialists_yes'
+
+    click_button 'Next - Assign case'
+
+    new_case = Case.last
+    expect(new_case.requires_clearance?).to be true
+  end
+
   scenario 'fails informatively without any inputs' do
     expect(current_path).to eq new_case_path
     expect(page).to have_content('Create new case')
@@ -96,6 +119,23 @@ feature 'Case creation by a manager' do
     expect(page).to have_content("Subject of request can't be blank")
     expect(page).to have_content("Full request can't be blank")
     expect(page).to have_content("Date received can't be blank")
+  end
+
+  scenario 'requires choice whether to assign a disclosure specialist' do
+    expect(current_path).to eq new_case_path
+
+    choose user_input.requester_type
+    fill_in 'Full name',          with: user_input.name
+    fill_in 'Email',              with: user_input.email
+    fill_in 'Subject of request', with: user_input.subject
+    fill_in 'Full request',       with: user_input.message
+    fill_in 'Day',                with: Time.zone.today.day.to_s
+    fill_in 'Month',              with: Time.zone.today.month.to_s
+    fill_in 'Year',               with: Time.zone.today.year.to_s
+
+    click_button 'Next - Assign case'
+
+    expect(page).to have_content("Does a disclosure specialist need to see this? Please choose yes or no.")
   end
 
   given(:existing_case) { create(:case) }
@@ -112,6 +152,7 @@ feature 'Case creation by a manager' do
     fill_in 'Day',                with: Time.zone.today.day.to_s
     fill_in 'Month',              with: Time.zone.today.month.to_s
     fill_in 'Year',               with: Time.zone.today.year.to_s
+    choose 'case_flag_for_disclosure_specialists_no'
     click_button 'Next - Assign case'
 
     expect(Case.count).to eq 1

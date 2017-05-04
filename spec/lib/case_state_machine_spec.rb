@@ -19,6 +19,8 @@ RSpec.describe CaseStateMachine, type: :model do
   let(:manager)            { managing_team.managers.first }
   let(:responding_team)    { create :responding_team }
   let(:responder)          { responding_team.responders.first }
+  let(:approving_team)     { create :approving_team }
+  let(:approver)           { approving_team.approvers.first }
   let(:new_case)           { create :case }
   let(:assigned_case)      { create :assigned_case,
                                  responding_team: responding_team }
@@ -60,6 +62,7 @@ RSpec.describe CaseStateMachine, type: :model do
   end
 
   describe event(:flag_for_clearance) do
+    it { should transition_from(:unassigned).to(:unassigned) }
     it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
     it { should transition_from(:drafting).to(:drafting) }
     it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
@@ -134,10 +137,16 @@ RSpec.describe CaseStateMachine, type: :model do
 
   describe 'trigger flag_for_clearance!' do
     it 'triggers a flag_for_clearance event' do
-      expect { assigned_case.state_machine.flag_for_clearance! manager }
+      expect do
+        assigned_case.state_machine.flag_for_clearance! manager,
+                                                        managing_team,
+                                                        approving_team
+      end
         .to trigger_the_event(:flag_for_clearance)
               .on_state_machine(assigned_case.state_machine)
-              .with_parameters(user_id: manager.id)
+              .with_parameters user_id: manager.id,
+                               managing_team_id: managing_team.id,
+                               approving_team_id: approving_team.id
     end
   end
 

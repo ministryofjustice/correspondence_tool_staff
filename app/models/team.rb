@@ -33,6 +33,6 @@ class Team < ApplicationRecord
     joins(:user_roles).where(teams_users_roles: { role: 'responder' }).distinct
   }
   scope :approving, -> {
-    joins(:user_roles).where(teams_users_roles: { role: 'approvers' }).distinct
+    joins(:user_roles).where(teams_users_roles: { role: 'approver' }).distinct
   }
 end

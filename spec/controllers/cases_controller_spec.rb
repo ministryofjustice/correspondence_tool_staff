@@ -313,8 +313,9 @@ RSpec.describe CasesController, type: :controller do
       context 'as an authenticated manager' do
         let(:user) { create(:manager) }
 
-        it 'permitted_events == [:assign_responder]' do
-          expect(assigns(:permitted_events)).to eq [:assign_responder]
+        it 'permitted_events == [:assign_responder, :flag_for_clearence]' do
+          expect(assigns(:permitted_events)).to eq [:assign_responder,
+                                                    :flag_for_clearance]
         end
 
         it 'renders the show template' do
@@ -603,6 +604,7 @@ RSpec.describe CasesController, type: :controller do
       before do
         sign_in manager
         create :team_dacu
+        create :team_dacu_disclosure
       end
 
       context 'with valid params' do
@@ -617,7 +619,8 @@ RSpec.describe CasesController, type: :controller do
               message: 'FOI about prisons and probation',
               received_date_dd: Time.zone.today.day.to_s,
               received_date_mm: Time.zone.today.month.to_s,
-              received_date_yyyy: Time.zone.today.year.to_s
+              received_date_yyyy: Time.zone.today.year.to_s,
+              flag_for_disclosure_specialists: false,
             }
           }
         end
@@ -660,6 +663,31 @@ RSpec.describe CasesController, type: :controller do
 
           it 'for #received_date' do
             expect(created_case.received_date).to eq Time.zone.today
+          end
+        end
+
+        describe 'flag_for_clearance' do
+          let(:dummy_case) { build :case }
+          before do
+            allow(dummy_case).to receive(:flag_for_clearance)
+            allow(Case).to receive(:new).and_return(dummy_case)
+          end
+          it 'does not flag for clearance if parameter is not set' do
+            params[:case].delete(:flag_for_disclosure_specialists)
+            expect { post :create, params: params }
+              .not_to change { Case.count }
+          end
+
+          it "flags the case for clearance if parameter is true" do
+            params[:case][:flag_for_disclosure_specialists] = 'yes'
+            post :create, params: params
+            expect(dummy_case).to have_received(:flag_for_clearance)
+          end
+
+          it "does not flag the case for clearance if parameter is false" do
+            params[:case][:flag_for_disclosure_specialists] = false
+            post :create, params: params
+            expect(dummy_case).not_to have_received(:flag_for_clearance)
           end
         end
       end

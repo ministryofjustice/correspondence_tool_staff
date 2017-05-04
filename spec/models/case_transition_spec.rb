@@ -20,11 +20,18 @@ RSpec.describe CaseTransition, type: :model do
   let(:kase) { create(:case) }
   let(:managing_team)   { create :managing_team }
   let(:responding_team) { create :responding_team }
+  let(:approving_team)  { create :approving_team }
   let(:assign_responder_transition) do
     create :case_transition_assign_responder,
            case_id: kase.id,
            managing_team: managing_team,
            responding_team: responding_team
+  end
+  let(:flag_case_for_clearance_transition) do
+    create :flag_case_for_clearance_transition,
+           case_id: kase.id,
+           managing_team: managing_team,
+           approving_team: approving_team
   end
 
   it 'has a user association' do
@@ -32,7 +39,7 @@ RSpec.describe CaseTransition, type: :model do
       .to eq User.find(assign_responder_transition.user_id)
   end
 
-  it 'has an managing_team' do
+  it 'has a managing_team' do
     expect(assign_responder_transition.managing_team_id)
       .to eq managing_team.id
   end
@@ -40,6 +47,11 @@ RSpec.describe CaseTransition, type: :model do
   it 'has a responding_team' do
     bu = assign_responder_transition.responding_team
     expect(bu).to eq Team.find(bu.id)
+  end
+
+  it 'has an approving_team' do
+    expect(flag_case_for_clearance_transition.approving_team_id)
+      .to eq approving_team.id
   end
 
   describe 'after_destroy' do

@@ -26,14 +26,6 @@ require 'rails_helper'
 
 RSpec.describe Case, type: :model do
 
-  let(:non_trigger_foi) { build :case, received_date: Date.parse('16/11/2016') }
-
-  let(:trigger_foi) do
-    build :case,
-      received_date: Date.parse('16/11/2016'),
-      properties: { requires_clearance: true }
-  end
-
   let(:general_enquiry) do
     build :case,
       received_date: Date.parse('16/11/2016'),
@@ -48,6 +40,14 @@ RSpec.describe Case, type: :model do
   let(:coworker)           { create :responder,
                                     responding_teams: [responding_team]   }
   let(:manager)            { create :manager                              }
+  let(:approving_team)     { create :approving_team                       }
+  let(:non_trigger_foi) { build :case, received_date: Date.parse('16/11/2016') }
+
+  let(:trigger_foi) do
+    create :case, :flagged,
+           received_date: Date.parse('16/11/2016')
+  end
+
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do
@@ -415,61 +415,95 @@ RSpec.describe Case, type: :model do
       end
     end
 
-    describe '#set_deadlines' do
+    # NOT IN USE. -- Since we determine if the case requires clearance based
+    #                on whether it has an assignment or not, using
+    #                before_create or after_update hooks don't work ... we
+    #                nothing changes on this record when it's assigned an
+    #                approver. #flag_for_clearance should call
+    #                #set_deadlines.
+
+    describe '#set_escalation_deadline' do
+      let(:kase)                { build :case }
+      let(:escalation_deadline) { Date.today - 1.day }
+
+      before do
+        allow(DeadlineCalculator).to receive(:escalation_deadline)
+                                       .and_return(escalation_deadline)
+      end
+
       it 'is called before_create' do
-        expect(non_trigger_foi).to receive(:set_deadlines)
-        non_trigger_foi.save!
+        expect(kase).to receive(:set_escalation_deadline)
+        kase.save!
       end
 
-      it 'is called after_update' do
-        expect(non_trigger_foi).to receive(:set_deadlines)
-        non_trigger_foi.update(category: Category.first)
+      it 'sets the escalation deadline using DeadlineCalculator' do
+        kase.send :set_escalation_deadline
+        expect(DeadlineCalculator).to have_received(:escalation_deadline)
+                                        .with(kase)
+        expect(kase.escalation_deadline).to eq escalation_deadline
       end
 
-      it 'sets the escalation deadline for non_trigger_foi' do
-        expect(non_trigger_foi.escalation_deadline).to eq nil
-        non_trigger_foi.save!
-        expect(non_trigger_foi.escalation_deadline.strftime("%d/%m/%y")).to eq "24/11/16"
+      it 'calls DeadlineCalculator only once' do
+        kase.send :set_escalation_deadline
+        kase.send :set_escalation_deadline
+        expect(DeadlineCalculator).to have_received(:escalation_deadline)
+                                        .with(kase)
+                                        .once
+      end
+    end
+
+    describe '#set_external_deadline' do
+      let(:kase) { build :case }
+      let(:external_deadline) { Date.today - 2.day }
+
+      before do
+        allow(DeadlineCalculator).to receive(:external_deadline)
+                                       .and_return(external_deadline)
       end
 
-      it 'does not set the escalation deadline for trigger_foi' do
-        expect(trigger_foi.escalation_deadline).to eq nil
-        trigger_foi.save!
-        expect(trigger_foi.escalation_deadline).to eq nil
+      it 'is called before_create' do
+        expect(kase).to receive(:set_external_deadline)
+        kase.save!
       end
 
-      # NOT IN USE.
-      # it 'does not set the escalation deadline for general_enquiry' do
-      #   expect(general_enquiry.escalation_deadline).to eq nil
-      #   general_enquiry.save!
-      #   expect(general_enquiry.escalation_deadline).to eq nil
-      # end
-
-      it 'sets the internal deadline for trigger_foi' do
-        expect(trigger_foi.internal_deadline).to eq nil
-        trigger_foi.save!
-        expect(trigger_foi.internal_deadline.strftime("%d/%m/%y")).to eq "30/11/16"
+      it 'sets the external deadline using DeadlineCalculator' do
+        kase.send :set_external_deadline
+        expect(DeadlineCalculator).to have_received(:external_deadline)
+                                        .with(kase)
+        expect(kase.external_deadline).to eq external_deadline
       end
 
-      # NOT IN USE.
-      # it 'sets the internal deadline for general enquiries' do
-      #   expect(general_enquiry.internal_deadline).to eq nil
-      #   general_enquiry.save!
-      #   expect(general_enquiry.internal_deadline.strftime("%d/%m/%y")).to eq "30/11/16"
-      # end
+      it 'calls DeadlineCalculator only once' do
+        kase.send :set_external_deadline
+        kase.send :set_external_deadline
+        expect(DeadlineCalculator).to have_received(:external_deadline)
+                                        .with(kase)
+                                        .once
+      end
+    end
 
-      it 'does not set the internal_deadline for non_trigger_foi' do
-        expect(non_trigger_foi.internal_deadline).to eq nil
-        non_trigger_foi.save!
-        expect(non_trigger_foi.internal_deadline).to eq nil
+    describe '#set_internal_deadline' do
+      let(:kase) { build :case }
+      let(:internal_deadline) { Date.today - 3.day }
+
+      before do
+        allow(DeadlineCalculator).to receive(:internal_deadline)
+                                       .and_return(internal_deadline)
       end
 
-      it 'sets the external deadline for all cases' do
-        [non_trigger_foi, trigger_foi, general_enquiry].each do |kase|
-          expect(kase.external_deadline).to eq nil
-          kase.save!
-          expect(kase.external_deadline.strftime("%d/%m/%y")).not_to eq nil
-        end
+      it 'sets the internal deadline using DeadlineCalculator' do
+        kase.send :set_internal_deadline
+        expect(DeadlineCalculator).to have_received(:internal_deadline)
+                                        .with(kase)
+        expect(kase.internal_deadline).to eq internal_deadline
+      end
+
+      it 'calls DeadlineCalculator only once' do
+        kase.send :set_internal_deadline
+        kase.send :set_internal_deadline
+        expect(DeadlineCalculator).to have_received(:internal_deadline)
+                                        .with(kase)
+                                        .once
       end
     end
 
@@ -514,6 +548,28 @@ RSpec.describe Case, type: :model do
 
     it 'other queries raise NoMethodError' do
       expect { kase.send('foo_bar_baz?')}.to raise_error(NoMethodError)
+    end
+  end
+
+  describe 'requires_clearance?' do
+    let(:approving_team) { create :approving_team }
+
+    it 'returns true when there are assigned approvers' do
+      kase = create :case
+      kase.approving_team = approving_team
+      expect(kase.requires_clearance?).to eq true
+    end
+
+    it 'returns true when assigned approvers have accepted' do
+      kase = create :case
+      kase.approving_team = approving_team
+      kase.approver_assignment.accepted!
+      expect(kase.requires_clearance?).to eq true
+    end
+
+    it 'returns false when no approvers have been assigned' do
+      kase = create :case
+      expect(kase.requires_clearance?).to eq false
     end
   end
 end

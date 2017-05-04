@@ -39,6 +39,7 @@ class CaseStateMachine
         .can_flag_for_clearance?
     end
 
+    transition from: :unassigned,                  to: :unassigned
     transition from: :awaiting_responder,          to: :awaiting_responder
     transition from: :drafting,                    to: :drafting
     transition from: :awaiting_dispatch,           to: :awaiting_dispatch
@@ -141,9 +142,11 @@ class CaseStateMachine
              event:              :assign_responder
   end
 
-  def flag_for_clearance!(user)
+  def flag_for_clearance!(user, managing_team, approving_team)
     trigger! :flag_for_clearance,
              user_id: user.id,
+             managing_team_id: managing_team.id,
+             approving_team_id: approving_team.id,
              event: :flag_for_clearance
   end
 
