@@ -162,7 +162,7 @@ class CasesController < ApplicationController
 
   def set_case
     @case = Case.find(params[:id]).decorate
-    @case_transitions = @case.transitions.decorate
+    @case_transitions = @case.transitions.order(id: :desc).decorate
   end
 
   def set_s3_direct_post
