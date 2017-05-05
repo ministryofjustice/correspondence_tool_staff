@@ -22,7 +22,7 @@ class GlobalNavManager
   def initialize(user)
     @user = user
     @nav_entries = []
-    populate_nav_entries
+    add_views_for_user
   end
 
   def each
@@ -33,16 +33,21 @@ class GlobalNavManager
 
   private
 
-  def populate_nav_entries
-    view_cases
-    view_closed_cases
+  def add_views_for_user
+    return if @user&.team_roles.blank?
+    role = @user.team_roles.first.role
+    views = Settings.global_navigation.user_views[role]
+    views.each do |user_view|
+      @nav_entries << entry_for_view(user_view)
+    end
   end
 
-  def view_cases
-    @nav_entries << GlobalNavManagerEntry.new(I18n.t('nav.cases'), [cases_path, root_path])
-  end
-
-  def view_closed_cases
-    @nav_entries << GlobalNavManagerEntry.new(I18n.t('nav.closed_cases'), closed_cases_path)
+  def entry_for_view(view_name)
+    GlobalNavManagerEntry.new(
+      I18n.t("nav.#{view_name}"),
+      Settings.global_navigation.views[view_name].map do |route|
+        Rails.application.routes.path_for({}, route)
+      end
+    )
   end
 end

@@ -60,15 +60,54 @@ describe GlobalNavManager do
     end
   end
 
-  let(:user) { build :user}
-  let(:gnm) { GlobalNavManager.new(user) }
+  let(:incoming_cases_entry) do
+    GlobalNavManager::GlobalNavManagerEntry.new 'Incoming cases',
+                                                incoming_cases_path
+  end
+  let(:open_cases_entry) do
+    GlobalNavManager::GlobalNavManagerEntry.new 'Open cases',
+                                                [cases_path, root_path]
+  end
+  let(:closed_cases_entry) do
+    GlobalNavManager::GlobalNavManagerEntry.new 'Closed cases',
+                                                closed_cases_path
+  end
 
-  describe '#each' do
-    let(:entry_1) { GlobalNavManager::GlobalNavManagerEntry.new(I18n.t('nav.cases'), [cases_path, root_path]) }
-    let(:entry_2) { GlobalNavManager::GlobalNavManagerEntry.new(I18n.t('nav.closed_cases'), closed_cases_path) }
+  context 'manager user' do
+    let(:user) { create :manager }
+    let(:gnm)  { GlobalNavManager.new(user) }
 
-    it 'yeilds for every entry in the Nav Bar' do
-      expect { |block| gnm.each(&block) }.to yield_successive_args(entry_1, entry_2)
+    describe '#each' do
+      it 'yields for every entry in the Nav Bar' do
+        expect { |block| gnm.each(&block) }
+          .to yield_successive_args(open_cases_entry, closed_cases_entry)
+      end
+    end
+  end
+
+  context 'responder user' do
+    let(:user) { create :responder }
+    let(:gnm)  { GlobalNavManager.new(user) }
+
+    describe '#each' do
+      it 'yields for every entry in the Nav Bar' do
+        expect { |block| gnm.each(&block) }
+          .to yield_successive_args(open_cases_entry, closed_cases_entry)
+      end
+    end
+  end
+
+  context 'approver user' do
+    let(:user) { create :approver }
+    let(:gnm)  { GlobalNavManager.new(user) }
+
+    describe '#each' do
+      it 'yields for every entry in the Nav Bar' do
+        expect { |block| gnm.each(&block) }
+          .to yield_successive_args incoming_cases_entry,
+                                    open_cases_entry,
+                                    closed_cases_entry
+      end
     end
   end
 end

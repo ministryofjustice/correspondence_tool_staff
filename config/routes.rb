@@ -70,6 +70,7 @@ Rails.application.routes.draw do
   resources :cases do
     get 'close', on: :member
     get 'closed' => 'cases#closed_cases', on: :collection
+    get 'incoming' => 'cases#incoming_cases', on: :collection
     patch 'process_closure', on: :member
     get 'respond', on: :member
     patch 'confirm_respond', on: :member
