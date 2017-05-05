@@ -7,7 +7,8 @@ class CaseAttachmentsController < ApplicationController
   end
 
   def show
-    redirect_to @attachment.temporary_preview_url
+    tmpfile_path = download_to_tmpfile(@attachment.preview_key)
+    send_file tmpfile_path, type: 'application/pdf', disposition: 'inline'
   end
 
   def destroy
@@ -22,11 +23,19 @@ class CaseAttachmentsController < ApplicationController
         format.js
         format.html { redirect_to case_path(@case) }
       end
-
     end
   end
 
   private
+
+  def download_to_tmpfile(key)
+    extname = File.extname(key)
+    tmpfile = Tempfile.new(['orig', extname])
+    tmpfile.close
+    attachment_object = CASE_UPLOADS_S3_BUCKET.object(key)
+    attachment_object.get(response_target: tmpfile.path)
+    tmpfile.path
+  end
 
   def set_attachment
     @attachment = @case.attachments.find(params[:id])
