@@ -42,7 +42,10 @@ RSpec.describe Case, type: :model do
   let(:manager)            { create :manager                              }
   let(:approving_team)     { create :approving_team                       }
   let(:non_trigger_foi) { build :case, received_date: Date.parse('16/11/2016') }
-
+  let(:assigned_case)      { create :assigned_case,
+                                    responding_team: responding_team }
+  let(:accepted_case)      { create :accepted_case,
+                                    responding_team: responding_team }
   let(:trigger_foi) do
     create :case, :flagged,
            received_date: Date.parse('16/11/2016')
@@ -70,6 +73,43 @@ RSpec.describe Case, type: :model do
       closed_case_1 = create :closed_case, last_transitioned_at: 2.days.ago
       closed_case_2 = create :closed_case, last_transitioned_at: 1.day.ago
       expect(Case.closed).to eq [ closed_case_2, closed_case_1 ]
+    end
+  end
+
+  describe 'with_team scope' do
+    it 'returns cases that are with a given team' do
+      create :assigned_case # Just some other case
+      expect(Case.with_team(responding_team)).to match_array([assigned_case])
+    end
+
+    it 'can accept more than one team' do
+      responding_team_b = create :responding_team
+      expected_cases = [
+        assigned_case,
+        create(:assigned_case, responding_team: responding_team_b),
+      ]
+      expect(Case.with_team(responding_team, responding_team_b))
+        .to match_array expected_cases
+    end
+
+    it 'does not include rejected assignments' do
+      expected_cases = [assigned_case]
+      create(:rejected_case, responding_team: responding_team)
+      expect(Case.with_team(responding_team)).to match_array(expected_cases)
+    end
+
+    it 'includes accepted cases' do
+      created_cases = [assigned_case, accepted_case]
+      expect(Case.with_team(responding_team)).to match_array(created_cases)
+    end
+  end
+
+  describe 'without_user scope' do
+    it 'only returns assigned cases' do
+      accepted_case
+      expected_cases = [assigned_case]
+      expect(Case.without_user_for_team(responding_team))
+        .to match_array(expected_cases)
     end
   end
 
@@ -189,7 +229,7 @@ RSpec.describe Case, type: :model do
       expect(case_received_today).to be_valid
     end
 
-    fit 'cannot be received in the future' do
+    it 'cannot be received in the future' do
       expect(case_received_tomorrow).to_not be_valid
     end
 

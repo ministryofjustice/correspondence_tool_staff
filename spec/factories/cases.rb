@@ -44,14 +44,6 @@ FactoryGirl.define do
       evaluator.managing_team
     end
 
-    after(:create) do |kase, evaluator|
-      create :assignment,
-             case: kase,
-             team: evaluator.managing_team,
-             state: 'pending',
-             role: 'managing'
-    end
-
     factory :awaiting_responder_case, parent: :case,
                                       aliases: [:assigned_case] do
       transient do

@@ -32,10 +32,20 @@ class Case < ApplicationRecord
                       validate_if: :received_not_in_the_future?
 
   scope :by_deadline, lambda {
-    order("(properties ->> 'external_deadline')::timestamp with time zone ASC, id")
+    order("(properties ->> 'external_deadline')::timestamp with time zone ASC, cases.id")
   }
 
   scope :closed, -> { where(current_state: 'closed').order(last_transitioned_at: :desc) }
+  scope :with_team, ->(*teams) do
+    includes(:assignments)
+      .where(assignments: { team_id: teams.map { |t| t.id },
+                            state: ['pending', 'accepted']})
+  end
+  scope :without_user_for_team, ->(*teams) do
+    includes(:assignments)
+      .where(assignments: { team_id: teams.map { |t| t.id },
+                            user_id: nil })
+  end
 
   validates :current_state, presence: true, on: :update
   validates :received_date,:subject,:message, :name, :category, presence: true

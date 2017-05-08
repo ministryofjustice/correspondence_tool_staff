@@ -65,9 +65,9 @@ class CasePolicy
       if user.manager?
         scope.all
       elsif user.responder?
-        scope.select {|kase| user.responding_teams.include? kase.responding_team }
+        scope.with_team(*user.responding_teams)
       elsif user.approver?
-        scope.select {|kase| user.approving_teams.include? kase.approving_team }
+        scope.with_team(*user.approving_teams)
       else
         []
       end
