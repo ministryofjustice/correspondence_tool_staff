@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'cases/index.html.slim', type: :view do
+describe 'cases/incoming_cases.html.slim', type: :view do
 
   it 'displays the cases given it' do
     case1 = double CaseDecorator,
@@ -44,29 +44,4 @@ describe 'cases/index.html.slim', type: :view do
     expect(cases_page.case_list[1].who_its_with.text).to eq 'LAA'
   end
 
-  describe 'add case button' do
-    it 'is displayed when the user can add cases' do
-      assign(:cases, [])
-
-      policy = double('Pundit::Policy', can_add_case?: true)
-      allow(view).to receive(:policy).with(:case).and_return(policy)
-
-      render
-      cases_page.load(rendered)
-
-      expect(cases_page).to have_new_case_button
-    end
-
-    it 'is not displayed when the user cannot add cases' do
-      assign(:cases, [])
-
-      policy = double('Pundit::Policy', can_add_case?: false)
-      allow(view).to receive(:policy).with(:case).and_return(policy)
-
-      render
-      cases_page.load(rendered)
-
-      expect(cases_page).not_to have_new_case_button
-    end
-  end
 end

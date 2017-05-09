@@ -219,7 +219,7 @@ en:
       number: Case number
       name-subject: Name/Subject
       view_case: Link to case
-    index:
+    index: &cases_list
       page_heading: Open cases
       view_case: Link to case
       number: Case number
@@ -228,6 +228,9 @@ en:
       external_deadline: Final deadline
       status: Waiting for
       who_its_with: With
+    incoming_cases:
+      <<: *cases_list
+      page_heading: Incoming cases
     fixed_details:
       requester: Requester
       email_address: Email address

@@ -15,6 +15,12 @@ class CasesController < ApplicationController
     @cases = policy_scope(Case.closed).map(&:decorate)
   end
 
+  def incoming_cases
+    team_cases = Case.with_team(*current_user.teams)
+                   .without_user_for_team(*current_user.teams)
+    @cases = policy_scope(team_cases).map(&:decorate)
+  end
+
   def new
     authorize Case, :can_add_case?
 

@@ -1,0 +1,44 @@
+= render partial: 'layouts/header', locals: {page_heading: t('.page_heading')}
+
+.grid-row
+  .column-full.table-container.container
+    table.report
+      colgroup
+        col
+        col
+        col
+        col
+        col
+        col
+        col
+      thead
+        th scope='col'
+          = t('.number')
+        th scope='col'
+          = t('.requester')
+        th scope='col'
+          = t('.subject')
+        th scope='col'
+          = t('.external_deadline')
+        th scope='col'
+          = t('.status')
+        th scope='col'
+          = t('.who_its_with')
+      tbody
+        - @cases.each do |kase|
+          tr.case_row
+            td aria-label="#{t('.number')}"
+              span.visually-hidden
+                = t('.view_case')
+              = " "
+              = link_to kase.number, case_path(kase.id)
+            td aria-label="#{t('.requester')}"
+              = kase.name
+            td aria-label="#{t('.subject')}"
+              = kase.subject
+            td aria-label="#{t('.external_deadline')}"
+              = l kase.external_deadline, format: :default_date
+            td aria-label="#{t('.status')}"
+              = t("state.#{kase.current_state}")
+            td aria-label="#{t('.who_its_with')}"
+              = kase.who_its_with

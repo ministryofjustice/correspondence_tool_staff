@@ -43,5 +43,9 @@ FactoryGirl.define do
     factory :approver do
       approving_teams { [create(:approving_team)] }
     end
+
+    factory :disclosure_specialist do
+      approving_teams { [create(:team_dacu_disclosure)] }
+    end
   end
 end

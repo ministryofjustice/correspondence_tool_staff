@@ -15,6 +15,12 @@ RSpec.describe CasesController, type: :controller do
   let(:accepted_case)      { create :accepted_case, responder: responder }
   let(:responded_case)     { create :responded_case, responder: responder }
   let(:case_with_response) { create :case_with_response, responder: responder }
+  let(:flagged_case)       { create :assigned_case, :flagged,
+                                    responding_team: responding_team,
+                                    approving_team: approving_team }
+  let(:flagged_accepted_case) { create :assigned_case, :flagged,
+                                       responding_team: responding_team,
+                                       approver: approver }
 
   before { create(:category, :foi) }
 
@@ -330,6 +336,36 @@ RSpec.describe CasesController, type: :controller do
         expect(assigns(:cases).size).to eq 2
         expect(assigns(:cases)).
           to eq incoming_cases.sort_by { |c| [c.external_deadline, c.id] }
+      end
+    end
+  end
+
+  describe 'GET incoming_cases' do
+
+    context "as an anonymous user" do
+      it "be redirected to signin if trying to list of questions" do
+        get :incoming_cases
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'as an authenticated approver' do
+      before do
+        sign_in approver
+        assigned_case
+        flagged_case
+        flagged_accepted_case
+      end
+
+      it "lists cases assigned to the user's team but that aren't accepted" do
+        get :incoming_cases
+        expect(assigns(:cases).size).to eq 1
+        expect(assigns(:cases)).to match_array [flagged_case]
+      end
+
+      it 'renders the incoming_cases template' do
+        get :incoming_cases
+        expect(response).to render_template(:incoming_cases)
       end
     end
   end
