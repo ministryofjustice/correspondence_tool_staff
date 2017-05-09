@@ -71,6 +71,16 @@ RSpec.describe CaseStateMachine, type: :model do
                   .using_object(assigned_case) }
   end
 
+  describe event(:accept_approver_assignment) do
+    it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
+    it { should transition_from(:drafting).to(:drafting) }
+    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
+    it { should transition_from(:responded).to(:responded) }
+    it { should require_permission(:can_accept_or_reject_approver_assignment?)
+                  .using_options(user_id: approver.id)
+                  .using_object(kase) }
+  end
+
   describe event(:accept_responder_assignment) do
     it { should transition_from(:awaiting_responder).to(:drafting) }
     it { should require_permission(:can_accept_or_reject_responder_assignment?)
@@ -147,6 +157,18 @@ RSpec.describe CaseStateMachine, type: :model do
               .with_parameters user_id: manager.id,
                                managing_team_id: managing_team.id,
                                approving_team_id: approving_team.id
+    end
+  end
+
+  describe 'trigger accept_approver_assignment!' do
+    it 'triggers an accept_approver_assignment event' do
+      expect do
+        assigned_case.state_machine.accept_approver_assignment! approver,
+                                                                approving_team
+      end.to trigger_the_event(:accept_approver_assignment)
+               .on_state_machine(assigned_case.state_machine)
+               .with_parameters(user_id: approver.id,
+                                approving_team_id: approving_team.id)
     end
   end
 

@@ -54,6 +54,18 @@ class CaseStateMachine
     transition from: :awaiting_responder, to: :unassigned
   end
 
+  event :accept_approver_assignment do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object)
+        .can_accept_or_reject_approver_assignment?
+    end
+
+    transition from: :awaiting_responder, to: :awaiting_responder
+    transition from: :drafting,           to: :drafting
+    transition from: :awaiting_dispatch,  to: :awaiting_dispatch
+    transition from: :responded,          to: :responded
+  end
+
   event :accept_responder_assignment do
     guard do |object, _last_transition, options|
       CaseStateMachine.get_policy(options[:user_id], object)
@@ -117,6 +129,13 @@ class CaseStateMachine
     # self.class.events.select do |_, transitions|
     #   transitions.key?(state)
     # end.map(&:first)
+  end
+
+  def accept_approver_assignment!(user, approving_team)
+    trigger! :accept_approver_assignment,
+             approving_team_id: approving_team.id,
+             user_id:           user.id,
+             event:             :accept_approver_assignment
   end
 
   def accept_responder_assignment!(user, responding_team)
