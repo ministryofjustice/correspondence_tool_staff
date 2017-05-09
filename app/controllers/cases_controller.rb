@@ -8,7 +8,7 @@ class CasesController < ApplicationController
   before_action :set_s3_direct_post, only: [:new_response_upload, :upload_responses]
 
   def index
-    @cases = policy_scope(Case.by_deadline).map(&:decorate)
+    @cases = policy_scope(Case.open.by_deadline).map(&:decorate)
   end
 
   def closed_cases

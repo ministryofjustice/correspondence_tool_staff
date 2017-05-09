@@ -66,6 +66,16 @@ RSpec.describe Case, type: :model do
     it { should validate_presence_of(:requester_type) }
   end
 
+  describe 'open scope' do
+    it 'returns only closed cases in most recently closed first' do
+      open_case = create :case
+      responded_case = create :responded_case
+      create :closed_case, last_transitioned_at: 2.days.ago
+      create :closed_case, last_transitioned_at: 1.day.ago
+      expect(Case.open).to eq [ open_case, responded_case ]
+    end
+  end
+
   describe 'closed scope' do
     it 'returns only closed cases in most recently closed first' do
       create :case

@@ -35,7 +35,10 @@ class Case < ApplicationRecord
     order("(properties ->> 'external_deadline')::timestamp with time zone ASC, cases.id")
   }
 
+  scope :open, -> { where.not(current_state: 'closed')}
+
   scope :closed, -> { where(current_state: 'closed').order(last_transitioned_at: :desc) }
+
   scope :with_team, ->(*teams) do
     includes(:assignments)
       .where(assignments: { team_id: teams.map { |t| t.id },
