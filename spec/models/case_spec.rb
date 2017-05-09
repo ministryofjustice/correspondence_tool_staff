@@ -41,11 +41,14 @@ RSpec.describe Case, type: :model do
                                     responding_teams: [responding_team]   }
   let(:manager)            { create :manager                              }
   let(:approving_team)     { create :approving_team                       }
-  let(:non_trigger_foi) { build :case, received_date: Date.parse('16/11/2016') }
+  let(:non_trigger_foi)    { build :case, received_date: Date.parse('16/11/2016') }
   let(:assigned_case)      { create :assigned_case,
                                     responding_team: responding_team }
   let(:accepted_case)      { create :accepted_case,
                                     responding_team: responding_team }
+  let(:case_being_drafted) { create :case_being_drafted }
+  let(:case_being_drafted_flagged) { create :case_being_drafted, :flagged }
+  let(:case_being_drafted_trigger) { create :case_being_drafted, :flagged_accepted }
   let(:trigger_foi) do
     create :case, :flagged,
            received_date: Date.parse('16/11/2016')
@@ -622,6 +625,20 @@ RSpec.describe Case, type: :model do
     it 'returns false when no approvers have been assigned' do
       kase = create :case
       expect(kase.requires_clearance?).to eq false
+    end
+  end
+
+  describe 'awaiting_approver?' do
+    it 'returns false when no approving team has been assigned' do
+      expect(case_being_drafted.awaiting_approver?).to be_falsey
+    end
+
+    it 'returns true when an approving team has been assigned' do
+      expect(case_being_drafted_flagged.awaiting_approver?).to eq true
+    end
+
+    it 'returns true when an approving team has accepted' do
+      expect(case_being_drafted_trigger.awaiting_approver?).to be_falsey
     end
   end
 end

@@ -139,6 +139,10 @@ class Case < ApplicationRecord
     where('lower(name) LIKE ?', "%#{term.downcase}%")
   end
 
+  def awaiting_approver?
+    self.approver_assignment&.pending?
+  end
+
   def prevent_number_change
     raise StandardError.new('number is immutable') if number_changed?
   end

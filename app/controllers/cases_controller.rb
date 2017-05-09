@@ -53,7 +53,7 @@ class CasesController < ApplicationController
   def show
     authorize @case, :can_view_case_details?
 
-    if policy(@case).can_accept_or_reject_case?
+    if policy(@case).can_accept_or_reject_responder_assignment?
       redirect_to edit_case_assignment_path @case, @case.assignments.last.id
     else
       set_permitted_events

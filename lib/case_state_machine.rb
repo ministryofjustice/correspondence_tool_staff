@@ -48,7 +48,7 @@ class CaseStateMachine
   event :reject_responder_assignment do
     guard do |object, _last_transition, options|
       CaseStateMachine.get_policy(options[:user_id], object)
-        .can_accept_or_reject_case?
+        .can_accept_or_reject_responder_assignment?
     end
 
     transition from: :awaiting_responder, to: :unassigned
@@ -57,7 +57,7 @@ class CaseStateMachine
   event :accept_responder_assignment do
     guard do |object, _last_transition, options|
       CaseStateMachine.get_policy(options[:user_id], object)
-        .can_accept_or_reject_case?
+        .can_accept_or_reject_responder_assignment?
     end
 
     transition from: :awaiting_responder, to: :drafting

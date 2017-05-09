@@ -21,7 +21,12 @@ class CasePolicy
     user.manager? && self.case.unassigned?
   end
 
-  def can_accept_or_reject_case?
+  def can_accept_or_reject_approver_assignment?
+    self.case.awaiting_approver? &&
+      user.approving_teams.include?(self.case.approving_team)
+  end
+
+  def can_accept_or_reject_responder_assignment?
     self.case.awaiting_responder? &&
       user.responding_teams.include?(self.case.responding_team)
   end

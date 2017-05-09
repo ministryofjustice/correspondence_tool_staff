@@ -73,14 +73,14 @@ RSpec.describe CaseStateMachine, type: :model do
 
   describe event(:accept_responder_assignment) do
     it { should transition_from(:awaiting_responder).to(:drafting) }
-    it { should require_permission(:can_accept_or_reject_case?)
+    it { should require_permission(:can_accept_or_reject_responder_assignment?)
                   .using_options(user_id: responder.id)
                   .using_object(assigned_case) }
   end
 
   describe event(:reject_responder_assignment) do
     it { should transition_from(:awaiting_responder).to(:unassigned) }
-    it { should require_permission(:can_accept_or_reject_case?)
+    it { should require_permission(:can_accept_or_reject_responder_assignment?)
                   .using_options(user_id: responder.id)
                   .using_object(assigned_case) }
   end

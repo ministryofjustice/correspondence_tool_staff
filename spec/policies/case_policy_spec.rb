@@ -3,31 +3,49 @@ require 'rails_helper'
 describe CasePolicy do
   subject { described_class }
 
+  let(:managing_team)     { create :team_dacu }
+  let(:manager)           { managing_team.managers.first }
   let(:responding_team)   { create :responding_team }
   let(:responder)         { responding_team.responders.first }
   let(:coworker)          { create :responder,
                                    responding_teams: [responding_team] }
   let(:another_responder) { create :responder}
-  let(:managing_team)     { create :team_dacu }
-  let(:manager)           { managing_team.managers.first }
+  let(:approving_team)    { create :team_dacu_disclosure }
+  let(:approver)          { approving_team.approvers.first }
 
-  let(:new_case) { create :case }
-  let(:accepted_case) do
-    create :accepted_case, responder: responder, manager: manager
+  let(:new_case)                { create :case }
+  let(:accepted_case)           { create :accepted_case,
+                                         responder: responder,
+                                         manager: manager }
+  let(:assigned_case)           { create :assigned_case,
+                                    responding_team: responding_team }
+  let(:rejected_case)           { create :rejected_case,
+                                         responding_team: responding_team }
+  let(:unassigned_case)         { new_case }
+  let(:unassigned_flagged_case) { create :case, :flagged,
+                                         approving_team: approving_team }
+  let(:unassigned_trigger_case) { create :case, :flagged_accepted,
+                                         approving_team: approving_team }
+  let(:case_with_response)      { create :case_with_response,
+                                         responder: responder }
+  let(:responded_case)          { create :responded_case,
+                                         responder: responder }
+  let(:closed_case)             { create :closed_case,
+                                         responder: responder }
+
+  permissions :can_accept_or_reject_approver_assignment? do
+    it { should_not permit(manager,           unassigned_flagged_case) }
+    it { should_not permit(responder,         unassigned_flagged_case) }
+    it { should_not permit(another_responder, unassigned_flagged_case) }
+    it { should     permit(approver,          unassigned_flagged_case) }
+    it { should_not permit(approver,          unassigned_trigger_case) }
   end
-  let(:assigned_case)      { create :assigned_case,
-                                    responding_team: responding_team }
-  let(:rejected_case)      { create :rejected_case,
-                                    responding_team: responding_team }
-  let(:unassigned_case)    { new_case }
-  let(:case_with_response) { create(:case_with_response, responder: responder) }
-  let(:responded_case)     { create(:responded_case, responder: responder) }
-  let(:closed_case)        { create(:closed_case, responder: responder) }
 
-  permissions :can_accept_or_reject_case? do
+  permissions :can_accept_or_reject_responder_assignment? do
     it { should_not permit(manager,           assigned_case) }
     it { should     permit(responder,         assigned_case) }
     it { should_not permit(another_responder, assigned_case) }
+    it { should_not permit(approver,          assigned_case) }
   end
 
   permissions :can_add_attachment? do

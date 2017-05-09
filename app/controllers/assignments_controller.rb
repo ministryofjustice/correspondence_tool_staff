@@ -33,7 +33,7 @@ class AssignmentsController < ApplicationController
       elsif @assignment.rejected?
         redirect_to case_assignments_show_rejected_path @case, rejected_now: false
       else
-        authorize @case, :can_accept_or_reject_case?
+        authorize @case, :can_accept_or_reject_responder_assignment?
         render :edit
       end
     else
@@ -43,7 +43,7 @@ class AssignmentsController < ApplicationController
   end
 
   def accept_or_reject
-    authorize @case, :can_accept_or_reject_case?
+    authorize @case, :can_accept_or_reject_responder_assignment?
 
     if accept?
       @assignment.accept current_user
