@@ -44,17 +44,17 @@ RSpec.describe User, type: :model do
       expect(manager.manager?).to be true
     end
 
-    it 'returns true for a responder' do
+    it 'returns false for a responder' do
       expect(responder.manager?).to be false
     end
 
-    it 'returns true for an approver' do
+    it 'returns false for an approver' do
       expect(approver.manager?).to be false
     end
   end
 
   describe '#responder?' do
-    it 'returns true for a manager' do
+    it 'returns false for a manager' do
       expect(manager.responder?).to be false
     end
 
@@ -62,17 +62,17 @@ RSpec.describe User, type: :model do
       expect(responder.responder?).to be true
     end
 
-    it 'returns true for an approver' do
+    it 'returns false for an approver' do
       expect(approver.responder?).to be false
     end
   end
 
   describe '#approver?' do
-    it 'returns true for a manager' do
+    it 'returns false for a manager' do
       expect(manager.approver?).to be false
     end
 
-    it 'returns true for a responder' do
+    it 'returns false for a responder' do
       expect(responder.approver?).to be false
     end
 

@@ -41,10 +41,10 @@ class Case < ApplicationRecord
       .where(assignments: { team_id: teams.map { |t| t.id },
                             state: ['pending', 'accepted']})
   end
-  scope :without_user_for_team, ->(*teams) do
+  scope :waiting_to_be_accepted, ->(*teams) do
     includes(:assignments)
       .where(assignments: { team_id: teams.map { |t| t.id },
-                            user_id: nil })
+                            state: ['pending']})
   end
 
   validates :current_state, presence: true, on: :update

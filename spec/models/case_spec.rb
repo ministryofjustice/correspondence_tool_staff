@@ -104,11 +104,11 @@ RSpec.describe Case, type: :model do
     end
   end
 
-  describe 'without_user scope' do
-    it 'only returns assigned cases' do
+  describe 'waiting_to_be_accepted scope' do
+    it 'only returns cases that have not been accepted for team' do
       accepted_case
       expected_cases = [assigned_case]
-      expect(Case.without_user_for_team(responding_team))
+      expect(Case.waiting_to_be_accepted(responding_team))
         .to match_array(expected_cases)
     end
   end

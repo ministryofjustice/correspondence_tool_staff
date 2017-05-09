@@ -54,15 +54,14 @@ class User < ApplicationRecord
   }
 
   def manager?
-    not managing_teams.empty?
-    # team_roles.managing_teams.include? self
+    managing_teams.any?
   end
 
   def responder?
-    not responding_teams.empty?
+    responding_teams.any?
   end
 
   def approver?
-    not approving_teams.empty?
+    approving_teams.any?
   end
 end

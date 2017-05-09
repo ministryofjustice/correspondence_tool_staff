@@ -16,8 +16,7 @@ class CasesController < ApplicationController
   end
 
   def incoming_cases
-    team_cases = Case.with_team(*current_user.teams)
-                   .without_user_for_team(*current_user.teams)
+    team_cases = Case.waiting_to_be_accepted(*current_user.teams)
     @cases = policy_scope(team_cases).map(&:decorate)
   end
 
