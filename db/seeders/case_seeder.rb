@@ -15,7 +15,7 @@ class CaseSeeder < Thor
     Case.all.map(&:destroy)
   end
 
-  desc 'create', 'Create cases'
+  desc 'create all|<states> [-n n] [-d] [-x]', 'Create <-n> cases in the specified states'
   long_desc <<~LONGDESC
     The create command takes the following sub commands:
       \x5 - all:        Create a number of cases in all states
@@ -40,17 +40,24 @@ class CaseSeeder < Thor
       \x5./cts create unassigned drafting -n3 -d
       \x5./cts create all -x
     LONGDESC
+  option :n, type: :numeric
+  option :d, type: :boolean
+  option :x, type: :boolean
   def create(*args)
     @states = []
-    @number_to_create = 2
-    @add_dacu_disclosure = false
+    @number_to_create = options[:n] || 2
+    @add_dacu_disclosure = options[:d] || false
+    @clear_cases = options[:x] || false
     @invalid_params = false
-    @clear_cases = false
 
     check_environment
     validate_teams_and_users_populated
     parse_params(args)
+
     clear if @clear_cases
+
+    puts "Creating #{@number_to_create} cases in each of the following states: #{@states.join(', ')}"
+    puts "Flagging each for DACU disclosure" if @add_dacu_disclosure
     @states.each do |state|
       __send__("create_#{state}".to_sym)
     end
@@ -150,8 +157,6 @@ class CaseSeeder < Thor
   end
 
   def parse_params(args)
-
-
     args.each { |arg| process_arg(arg) }
 
     if @invalid_params
@@ -163,12 +168,6 @@ class CaseSeeder < Thor
   def process_arg(arg)
     if arg == 'all'
       @states = VALID_STATES
-    elsif arg == '-d'
-      @add_dacu_disclosure = true
-    elsif arg =~ /-n([1-9])/
-      @number_to_create = $1.to_i
-    elsif arg == '-x'
-      @clear_cases = true
     elsif arg.in?(VALID_STATES)
       @states << arg
     else
