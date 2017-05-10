@@ -17,6 +17,14 @@ class ResponseUploaderService
     end
   end
 
+  def seed!
+    key = "#{@case.attachments_dir('responses')}/eon.pdf"
+    uploads_object = CASE_UPLOADS_S3_BUCKET.object(key)
+    uploads_object.upload_file(File.join(Rails.root, 'spec', 'fixtures', 'eon.pdf'))
+    @case.attachments << CaseAttachment.new(type: 'response', key: key)
+    PdfMakerJob.perform_now(@case.attachments.first.id)
+  end
+
   private
 
   def response_attachments

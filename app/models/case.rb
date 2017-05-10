@@ -107,11 +107,11 @@ class Case < ApplicationRecord
           through: :approver_assignment,
           source: :team
 
-  has_many :transitions, class_name: 'CaseTransition', autosave: false
+  has_many :transitions, class_name: 'CaseTransition', autosave: false, dependent: :destroy
   has_many :responded_transitions, -> { responded }, class_name: 'CaseTransition'
   has_many :responder_history, through: :responded_transitions, source: :user
 
-  has_many :attachments, class_name: 'CaseAttachment'
+  has_many :attachments, class_name: 'CaseAttachment', dependent: :destroy
   belongs_to :outcome, class_name: 'CaseClosure::Outcome'
   belongs_to :refusal_reason, class_name: 'CaseClosure::RefusalReason'
   has_and_belongs_to_many :exemptions, class_name: 'CaseClosure::Exemption', join_table: 'cases_exemptions'
