@@ -11,15 +11,15 @@ class CaseSeeder < Thor
   desc "clear", "Delete all cases in the database"
   def clear
     check_environment
-    puts "Deleting all claims"
+    puts "Deleting all cases"
     Case.all.map(&:destroy)
   end
 
-  desc 'create', 'Creates cases'
+  desc 'create', 'Create cases'
   long_desc <<~LONGDESC
     The create command takes the following sub commands:
       \x5 - all:        Create a number of cases in all states
-      \x5 - <state>:    Create a number of cases in the specified state
+      \x5 - <states>:   Create a number of cases in the specified state(s)
 
       Multiple states can be specified.
 
@@ -34,23 +34,23 @@ class CaseSeeder < Thor
       The following switches can be specified
       \x5 -n<number>    Create <number> cases in each state (default 2)
       \x5 -d            Create cases which require DACU disclosure
-      \x5 -x            Clear all existing claims before creating
+      \x5 -x            Clear all existing cases before creating
 
       e.g.
-                    \x5./cts create unassigned drafting -n3 -d
-                    \x5./cts create all -x
+      \x5./cts create unassigned drafting -n3 -d
+      \x5./cts create all -x
     LONGDESC
   def create(*args)
     @states = []
     @number_to_create = 2
     @add_dacu_disclosure = false
     @invalid_params = false
-    @clear_claims = false
+    @clear_cases = false
 
     check_environment
     validate_teams_and_users_populated
     parse_params(args)
-    clear if @clear_claims
+    clear if @clear_cases
     @states.each do |state|
       __send__("create_#{state}".to_sym)
     end
@@ -168,7 +168,7 @@ class CaseSeeder < Thor
     elsif arg =~ /-n([1-9])/
       @number_to_create = $1.to_i
     elsif arg == '-x'
-      @clear_claims = true
+      @clear_cases = true
     elsif arg.in?(VALID_STATES)
       @states << arg
     else
