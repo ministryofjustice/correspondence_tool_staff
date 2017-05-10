@@ -15,6 +15,20 @@ class CaseSeeder < Thor
     Case.all.map(&:destroy)
   end
 
+  desc 'users', 'Lists users'
+  def users
+    users = User.order(:full_name)
+    users.each do |u|
+      puts sprintf("%10s %-30s", 'Id:', u.id)
+      puts sprintf("%10s %-30s", 'Name:', u.full_name)
+      puts sprintf("%10s %-30s", 'Email:', u.email)
+      u.team_roles.each do |tr|
+        puts sprintf("%10s %-30s", 'Team:', "#{tr.team.name} : #{tr.role}")
+      end
+      puts "  "
+    end
+  end
+
   desc 'create all|<states> [-n n] [-d] [-x]', 'Create <-n> cases in the specified states'
   long_desc <<~LONGDESC
     The create command takes the following sub commands:
@@ -125,7 +139,9 @@ class CaseSeeder < Thor
 
   def create_responded
     cases = create_awaiting_dispatch
-    cases.each { |kase| kase.respond(@hmcts_responder) }
+    cases.each do |kase|
+      kase.respond(@hmcts_responder)
+    end
   end
 
   def create_closed
@@ -140,7 +156,9 @@ class CaseSeeder < Thor
   def create_unassigned_cases(n)
     cases = []
     n.times do
-      cases << FactoryGirl.create(:case, name: Faker::Name.name, subject: Faker::Company.catch_phrase, message: Faker::Lorem.paragraph, managing_team: @dacu_team)
+      kase = FactoryGirl.create(:case, name: Faker::Name.name, subject: Faker::Company.catch_phrase, message: Faker::Lorem.paragraph, managing_team: @dacu_team)
+      flag_for_dacu_approval(kase)
+      cases << kase
     end
     cases
   end
@@ -150,6 +168,9 @@ class CaseSeeder < Thor
     kase.save!
   end
 
+  def flag_for_dacu_approval(kase)
+    kase.assignments.create!(state: 'pending', team: @disclosure_team, role: 'approving') if @add_dacu_disclosure
+  end
 
 
   def check_environment
