@@ -44,6 +44,13 @@ class Case < ApplicationRecord
       .where(assignments: { team_id: teams.map { |t| t.id },
                             state: ['pending', 'accepted']})
   end
+
+  scope :flagged_for_approval, ->(team) { joins(:assignments).where(assignments: { team: team, role: 'approving'}) }
+  scope :accepted, -> { joins(:assignments).where.not(assignments: {user: nil} ) }
+  scope :unaccepted, -> { joins(:assignments).where(assignments: {user: nil} ) }
+
+
+
   scope :waiting_to_be_accepted, ->(*teams) do
     includes(:assignments)
       .where(assignments: { team_id: teams.map { |t| t.id },
@@ -138,6 +145,10 @@ class Case < ApplicationRecord
   def self.search(term)
     where('lower(name) LIKE ?', "%#{term.downcase}%")
   end
+
+  # def self.flagged_for_approval(team)
+  #   joins(:assignments).where(assignments: { team: team, role: 'approving'} )
+  # end
 
   def awaiting_approver?
     self.approver_assignment&.pending?

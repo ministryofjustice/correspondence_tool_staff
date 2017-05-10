@@ -69,6 +69,44 @@ RSpec.describe Case, type: :model do
     it { should validate_presence_of(:requester_type) }
   end
 
+  context 'flagged for approval scopes' do
+    before(:all) do
+      Team.all.map(&:destroy)
+      TeamsUsersRole.all.map(&:destroy)
+      @team_1 = create :approving_team, name: 'DACU APPROVING 1'
+      @team_2 = create :approving_team, name: 'DACU APPROVING 2'
+      @unflagged = create :case, name: 'Unfagged'
+      @flagged_t1 = create :case, :flagged, approving_team: @team_1, name: 'Flagged team 1'
+      @flagged_t2 = create :case, :flagged, approving_team: @team_2, name: 'Flagged team 2'
+      @accepted_t1 = create :case, :flagged_accepted, approving_team: @team_1, name: 'Accepted team 1'
+      @accepted_t2 = create :case, :flagged_accepted, approving_team: @team_2, name: 'Accepted team 2'
+    end
+
+    after(:all) do
+      Case.all.map(&:destroy)
+      User.all.map(&:destroy)
+      TeamsUsersRole.all.map(&:destroy)
+    end
+
+    context '.flagged_for_approval' do
+      it 'returns all the cases flagged got approval by the specified team' do
+        expect(Case.flagged_for_approval(@team_1)).to match_array [ @flagged_t1, @accepted_t1 ]
+      end
+    end
+
+    context '.flagged_for_approval.unaccepted' do
+      it 'returns only cases flagged which HAVE NOT been accepted' do
+        expect(Case.flagged_for_approval(@team_1).unaccepted).to eq [ @flagged_t1 ]
+      end
+    end
+
+    context '.flagged_for_approval.accepted' do
+      it 'returns only cases flagged which HAVE been accepted' do
+        expect(Case.flagged_for_approval(@team_1).accepted).to eq [ @accepted_t1 ]
+      end
+    end
+  end
+
   describe 'open scope' do
     it 'returns only closed cases in most recently closed first' do
       open_case = create :case
