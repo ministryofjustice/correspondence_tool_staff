@@ -94,6 +94,19 @@ $ rails db:seed
 $ rails db:seed:dev:users
 ```
 
+
+The above commands will set up a minimal set of teams, roles and users.
+
+In order to populate the database with claims, use the cts script as follows:
+
+```
+$ ./cts clear                          # clears all claims from the database
+$ ./cts create all                     # creates 2 claims in each state
+$ ./cts create -n4 unassigned drafting # create 4 claims each in unassigned and drafting states
+$ ./cts --help create                  # display full help text for create command
+```
+
+
 ### Emails
 
 Emails are sent using
