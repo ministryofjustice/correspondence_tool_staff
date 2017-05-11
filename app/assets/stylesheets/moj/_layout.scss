@@ -156,6 +156,7 @@ table#request--responses a {
   @extend %site-width-container;
   border-bottom: 1px solid #DEE0E2;
   background: #F8F8F8;
+  margin-bottom: $gutter;
 }
 
 .global-nav a {
