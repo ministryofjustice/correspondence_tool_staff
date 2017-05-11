@@ -43,11 +43,6 @@ class GlobalNavManager
   end
 
   def entry_for_view(view_name)
-    GlobalNavManagerEntry.new(
-      I18n.t("nav.#{view_name}"),
-      Settings.global_navigation.views[view_name].map do |route|
-        Rails.application.routes.path_for({}, route)
-      end
-    )
+    GlobalNavManagerEntry.new(I18n.t("nav.#{view_name}"), Settings.global_navigation.paths[view_name])
   end
 end

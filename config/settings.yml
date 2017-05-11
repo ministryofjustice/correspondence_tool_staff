@@ -36,14 +36,14 @@ foi_cases:
   default_clearance_team: DACU Disclosure
 
 global_navigation:
-  views:
+  paths:
     open_cases:
-      - cases
-      - root
+      - /cases
+      - /
     closed_cases:
-      - closed_cases
+      - /cases/closed
     incoming_cases:
-      - incoming_cases
+      - /cases/incoming
   user_views:
     manager:
       - open_cases

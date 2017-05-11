@@ -8,16 +8,15 @@ class CasesController < ApplicationController
   before_action :set_s3_direct_post, only: [:new_response_upload, :upload_responses]
 
   def index
-    @cases = policy_scope(Case.open.by_deadline).map(&:decorate)
+    @cases = CaseFinderService.new(current_user, :index).cases
   end
 
   def closed_cases
-    @cases = policy_scope(Case.closed).map(&:decorate)
+    @cases = CaseFinderService.new(current_user, :closed_cases).cases
   end
 
   def incoming_cases
-    team_cases = Case.waiting_to_be_accepted(*current_user.teams)
-    @cases = policy_scope(team_cases).map(&:decorate)
+    @cases = CaseFinderService.new(current_user, :incoming_cases).cases
   end
 
   def new
