@@ -9,6 +9,7 @@
 // Responsive tables code
 @media screen and (max-width: 1024px) {
   table.report {
+    @include core-16();
     border: 0;
     tr {
       border-bottom: 3px solid #ddd;
@@ -17,7 +18,6 @@
       td {
         border-bottom: 1px solid #ddd;
         display: block;
-        font-size: .8em;
         text-align: right;
       }
       td:last-child {
