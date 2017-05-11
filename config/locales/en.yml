@@ -197,7 +197,7 @@ en:
       upload_response: Upload response
       who_its_with: With
       respond: Mark response as sent
-    new_case_button: New case
+    new_case_button: Create case
     phase_banner: |
       This is a new service.
     service_name: Track a query
