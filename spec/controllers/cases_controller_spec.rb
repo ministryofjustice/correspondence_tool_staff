@@ -133,11 +133,10 @@ RSpec.describe CasesController, type: :controller do
         expect(response).to render_template :closed_cases
       end
 
-      it 'assigns an array of decorated closed cases' do
-        case_1 = create :closed_case, last_transitioned_at: 2.minutes.ago
-        case_2 = create :closed_case, last_transitioned_at: 2.seconds.ago
+      it 'assigns cases returned by CaseFinderService' do
+        expect(CaseFinderService).to receive(:new).with(manager, :closed_cases).and_return(double CaseFinderService, cases: 'result set')
         get :closed_cases
-        expect(assigns(:cases)).to eq [ case_2.decorate, case_1.decorate ]
+        expect(assigns(:cases)).to eq 'result set'
       end
     end
 
@@ -226,116 +225,44 @@ RSpec.describe CasesController, type: :controller do
     context 'as an authenticated manager' do
       before { sign_in manager }
 
-      let!(:unordered_cases) do
-        [
-          create(:case, received_date: Date.parse('17/11/2016'), subject: 'newer request 2', id: 2),
-          create(:case, received_date: Date.parse('17/11/2016'), subject: 'newer request 1', id: 1),
-          create(:case, received_date: Date.parse('16/11/2016'), subject: 'request 2', id: 3),
-          create(:case, received_date: Date.parse('16/11/2016'), subject: 'request 1', id: 4),
-          create(:case, received_date: Date.parse('15/11/2016'), subject: 'older request 2', id: 5),
-          create(:case, received_date: Date.parse('15/11/2016'), subject: 'older request 1', id: 6)
-        ]
-      end
-
-      before {
+      it 'renders the index page' do
         get :index
-      }
-
-      it 'assigns @cases, sorted by external_deadline, then ID' do
-        expect(assigns(:cases)).
-          to eq unordered_cases.sort_by { |c| [c.external_deadline, c.id] }
+        expect(response).to render_template :index
       end
 
-      it 'renders the index template' do
-        expect(response).to render_template(:index)
+      it 'assigns cases returned by CaseFinderService' do
+        expect(CaseFinderService).to receive(:new).with(manager, :index).and_return(double CaseFinderService, cases: 'result set')
+        get :index
+        expect(assigns(:cases)).to eq 'result set'
       end
+
     end
 
     context 'as an authenticated responder' do
       before { sign_in responder }
 
-      let(:case1) { create :accepted_case,
-                           received_date: Date.parse('17/11/2016'),
-                           subject: 'newer request 1',
-                           responder: responder }
-      let(:case2) { create :accepted_case,
-                           received_date: Date.parse('17/11/2016'),
-                           subject: 'newer request 2',
-                           responder: responder }
-      let(:case3) { create :accepted_case,
-                           received_date: Date.parse('16/11/2016'),
-                           subject: 'request 2',
-                           responder: responder }
-      let(:case4) { create :accepted_case,
-                           received_date: Date.parse('16/11/2016'),
-                           subject: 'request 1',
-                           responder: responder }
-      let(:case5) { create :accepted_case,
-                           received_date: Date.parse('15/11/2016'),
-                           subject: 'older request 2',
-                           responder: responder }
-      let(:case6) { create :accepted_case,
-                           received_date: Date.parse('15/11/2016'),
-                           subject: 'older request 1',
-                           responder: responder }
-      let(:unordered_cases) do
-        [ case2, case1, case4, case3, case6, case5 ]
-      end
-
-      let(:responders_workbasket) do
-        Case.all.select {|kase| kase.responder == responder}
-      end
-
-      before {
-        unordered_cases
-        responders_workbasket
+      it 'assigns cases returned by CaseFinderService' do
+        expect(CaseFinderService).to receive(:new).with(responder, :index).and_return(double CaseFinderService, cases: 'result set')
         get :index
-      }
-
-      it 'assigns @cases, sorted by external_deadline, then ID' do
-        expect(assigns(:cases)).
-          to eq responders_workbasket.sort_by { |c| [c.external_deadline, c.id] }
+        expect(assigns(:cases)).to eq 'result set'
       end
 
       it 'renders the index template' do
+        get :index
         expect(response).to render_template(:index)
       end
     end
 
     context 'as an authenticated approver' do
-      let(:flagged_case) { create :awaiting_responder_case,
-                                  :flagged,
-                                  received_date: Date.today - 7.days,
-                                  subject: 'flagged case not yet accepted',
-                                  approving_team: approving_team }
-      let(:flagged_accepted_case) { create :case_being_drafted,
-                                           :flagged_accepted,
-                                           received_date: Date.today - 10.days,
-                                           subject: 'flagged case accepted',
-                                           approver: approver }
-      let(:assigned_case) { create :awaiting_responder_case,
-                                   received_date: Date.today - 8.days,
-                                   subject: 'assigned case' }
-      let(:case_being_drafted) { create :case_being_drafted,
-                                   received_date: Date.today - 11.days,
-                                   subject: 'case being drafted' }
-      let(:incoming_cases) { [
-                               flagged_case,
-                               flagged_accepted_case,
-                             ] }
 
       before do
         sign_in approver
-        assigned_case
-        case_being_drafted
-        flagged_case
-        flagged_accepted_case
-        get :index
       end
 
-      it 'assigns only cases flagged for clearence' do
-        expect(assigns(:cases).size).to eq 1
-        expect(assigns(:cases)[0]).to eq flagged_accepted_case
+      it 'assigns the result set from the CaseFinderService' do
+        expect(CaseFinderService).to receive(:new).with(approver, :index).and_return(double CaseFinderService, cases: 'result set')
+        get :index
+        expect(assigns(:cases)).to eq 'result set'
       end
     end
   end
@@ -352,15 +279,13 @@ RSpec.describe CasesController, type: :controller do
     context 'as an authenticated approver' do
       before do
         sign_in approver
-        assigned_case
-        flagged_case
-        flagged_accepted_case
       end
 
-      it "lists cases assigned to the user's team but that aren't accepted" do
+
+      it 'assigns the result set from the CaseFinderService' do
+        expect(CaseFinderService).to receive(:new).with(approver, :incoming_cases).and_return(double CaseFinderService, cases: 'result set')
         get :incoming_cases
-        expect(assigns(:cases).size).to eq 1
-        expect(assigns(:cases)).to match_array [flagged_case]
+        expect(assigns(:cases)).to eq 'result set'
       end
 
       it 'renders the incoming_cases template' do

@@ -90,3 +90,26 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+module DbHousekeeping
+  def self.clean
+    tables = %w(
+      cases
+      assignments
+      case_attachments
+      case_closure_metadata
+      case_number_counters
+      case_transitions
+      cases_exemptions
+      feedback
+      teams
+      teams_users_roles
+      users
+      categories)
+    tables.each do |table|
+      ActiveRecord::Base.connection.execute("DELETE FROM #{table}")
+    end
+
+  end
+
+end

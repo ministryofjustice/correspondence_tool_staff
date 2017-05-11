@@ -29,18 +29,20 @@ class CaseFinderService
 
   def index_cases
     if @user.approver?
-      @cases = Case.open.flagged_for_approval(*@user.approving_teams).accepted
+      @cases = Case.open.flagged_for_approval(*@user.approving_teams)
+                 .accepted.by_deadline
     else
       @cases = Case.open.by_deadline
     end
   end
 
   def closed_cases
-    @cases = Case.closed
+    @cases = Case.closed.most_recent_first
   end
 
   def incoming_cases
-    @cases = Case.flagged_for_approval(*@user.approving_teams).unaccepted
+    @cases = Case.flagged_for_approval(*@user.approving_teams)
+               .unaccepted.by_deadline
   end
 
 end

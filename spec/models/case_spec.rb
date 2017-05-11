@@ -82,11 +82,11 @@ RSpec.describe Case, type: :model do
       @accepted_t2 = create :case, :flagged_accepted, approving_team: @team_2, name: 'Accepted team 2'
     end
 
-    after(:all) do
-      Case.all.map(&:destroy)
-      User.all.map(&:destroy)
-      TeamsUsersRole.all.map(&:destroy)
-    end
+    after(:all) { DbHousekeeping.clean }
+    #   Case.all.map(&:destroy)
+    #   User.all.map(&:destroy)
+    #   TeamsUsersRole.all.map(&:destroy)
+    # end
 
     context '.flagged_for_approval' do
       context 'passed one team as a parameter' do
