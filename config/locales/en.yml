@@ -187,7 +187,7 @@ en:
         other: Responses
       request: "Request: "
       requester_type: "Type of requester "
-      status: Waiting for
+      status: Status
       status_closed: Status
       time_taken: Time taken
       time_taken_result:
@@ -226,7 +226,7 @@ en:
       requester: Requester name
       subject: Subject
       external_deadline: Final deadline
-      status: Waiting for
+      status: Status
       who_its_with: With
     incoming_cases:
       <<: *cases_list
