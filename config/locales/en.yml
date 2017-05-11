@@ -217,12 +217,14 @@ en:
     closed_cases:
       page_heading: Closed cases
       number: Case number
+      number_html: 'Case <abbr title="number">No.</abbr>'
       name-subject: Name/Subject
       view_case: Link to case
     index: &cases_list
       page_heading: Open cases
       view_case: Link to case
       number: Case number
+      number_html: 'Case <abbr title="number">No.</abbr>'
       requester: Requester name
       subject: Subject
       external_deadline: Final deadline
