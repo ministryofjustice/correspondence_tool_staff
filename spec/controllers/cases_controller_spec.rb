@@ -328,14 +328,14 @@ RSpec.describe CasesController, type: :controller do
         sign_in approver
         assigned_case
         case_being_drafted
-        incoming_cases
+        flagged_case
+        flagged_accepted_case
         get :index
       end
 
       it 'assigns only cases flagged for clearence' do
-        expect(assigns(:cases).size).to eq 2
-        expect(assigns(:cases)).
-          to eq incoming_cases.sort_by { |c| [c.external_deadline, c.id] }
+        expect(assigns(:cases).size).to eq 1
+        expect(assigns(:cases)[0]).to eq flagged_accepted_case
       end
     end
   end

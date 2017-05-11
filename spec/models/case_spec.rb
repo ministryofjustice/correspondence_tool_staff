@@ -89,20 +89,55 @@ RSpec.describe Case, type: :model do
     end
 
     context '.flagged_for_approval' do
-      it 'returns all the cases flagged got approval by the specified team' do
-        expect(Case.flagged_for_approval(@team_1)).to match_array [ @flagged_t1, @accepted_t1 ]
+      context 'passed one team as a parameter' do
+        it 'returns all the cases flagged for approval by the specified team' do
+          expect(Case.flagged_for_approval(@team_1))
+            .to match_array [ @flagged_t1, @accepted_t1 ]
+        end
+      end
+
+      context 'passed an array of teams as a parameter' do
+        it 'returns all the cases flagged for approval for all specified teams' do
+          expect(Case.flagged_for_approval(@team_1, @team_2))
+            .to match_array [
+                  @flagged_t1,
+                  @accepted_t1,
+                  @flagged_t2,
+                  @accepted_t2
+                ]
+        end
       end
     end
 
     context '.flagged_for_approval.unaccepted' do
-      it 'returns only cases flagged which HAVE NOT been accepted' do
-        expect(Case.flagged_for_approval(@team_1).unaccepted).to eq [ @flagged_t1 ]
+      context 'one team passsed as a parameter' do
+        it 'returns only cases flagged which HAVE NOT been accepted' do
+          expect(Case.flagged_for_approval(@team_1).unaccepted)
+            .to eq [ @flagged_t1 ]
+        end
+      end
+
+      context 'multiple teams passed as a parameter' do
+        it 'returns only cases flagged which HAVE NOT been accepted' do
+          expect(Case.flagged_for_approval(@team_2, @team_1).unaccepted)
+            .to eq [ @flagged_t1, @flagged_t2 ]
+        end
       end
     end
 
     context '.flagged_for_approval.accepted' do
-      it 'returns only cases flagged which HAVE been accepted' do
-        expect(Case.flagged_for_approval(@team_1).accepted).to eq [ @accepted_t1 ]
+      context 'one team passsed as a parameter' do
+        it 'returns only cases flagged which HAVE been accepted' do
+          expect(Case.flagged_for_approval(@team_1).accepted)
+            .to eq [ @accepted_t1 ]
+        end
+      end
+
+      context 'multiple teams passsed as a parameter' do
+        it 'returns only cases flagged which HAVE been accepted' do
+          expect(Case.flagged_for_approval(@team_1, @team_2).accepted)
+            .to eq [ @accepted_t1, @accepted_t2 ]
+        end
       end
     end
   end

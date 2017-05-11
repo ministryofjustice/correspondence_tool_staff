@@ -17,7 +17,7 @@ class CaseFinderService
     when :incoming_cases
       incoming_cases
     end
-    CaseDecorator.decorate_collection(@cases)
+    CaseDecorator.decorate_collection(policy_scope(@cases))
   end
 
   # We need to expose current user for Pundit (#lame)
@@ -28,17 +28,19 @@ class CaseFinderService
   private
 
   def index_cases
-    @cases = policy_scope(Case.open.by_deadline)
+    if @user.approver?
+      @cases = Case.open.flagged_for_approval(*@user.approving_teams).accepted
+    else
+      @cases = Case.open.by_deadline
+    end
   end
 
   def closed_cases
-    @cases = policy_scope(Case.closed)
+    @cases = Case.closed
   end
 
   def incoming_cases
-    team_cases = Case.waiting_to_be_accepted(*current_user.teams)
-    @cases = policy_scope(team_cases)
+    @cases = Case.flagged_for_approval(*@user.approving_teams).unaccepted
   end
-
 
 end
