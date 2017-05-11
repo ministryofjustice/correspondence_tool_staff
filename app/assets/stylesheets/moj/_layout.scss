@@ -80,6 +80,9 @@
 
 .case-sidebar__data {
   @include bold-24();
+  a{
+    @include core-19();
+  }
 }
 
 .case-sidebar__data--contact {
@@ -205,4 +208,6 @@ table#request--responses a {
 }
 
 
-
+.request--response-details {
+  margin-bottom: $gutter * 2;
+}
