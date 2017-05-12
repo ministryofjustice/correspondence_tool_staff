@@ -1,6 +1,9 @@
 = GovukElementsErrorsHelper.error_summary resource, "Message to alert the user to a problem goes here", ""
 
-= render partial: 'layouts/header', locals: {page_heading: t('devise.users.password.new.title')}
+- content_for :heading
+  = t('devise.users.password.new.title')
+
+= render partial: 'layouts/header'
 
 .grid-row
   .column-full

@@ -80,7 +80,6 @@ en:
     continue: Continue
     next_page_assign: Next - Assign case
     confirm: Confirm
-    create_and_assign: Create and assign case
     feedback: Send feedback
 
   helpers:
@@ -207,8 +206,9 @@ en:
 
   assignments:
     new:
-      new_assignment: Assign case
-      new_assignment_while_creating: Create and assign case
+      heading: Assign case
+      new_assignment: Create case
+      assignment: Existing case
     create:
       case_assigned: Case successfully assigned
       case_created: Case successfully created
@@ -218,13 +218,13 @@ en:
 
   cases:
     closed_cases:
-      page_heading: Closed cases
+      heading: Closed cases
       number: Case number
       number_html: 'Case <abbr title="number">No.</abbr>'
       name-subject: Name/Subject
       view_case: Link to case
     index: &cases_list
-      page_heading: Open cases
+      heading: Open cases
       view_case: Link to case
       number: Case number
       number_html: 'Case <abbr title="number">No.</abbr>'
@@ -234,7 +234,7 @@ en:
       status: Status
       who_its_with: With
     incoming_cases:
-      page_heading: Incoming cases
+      heading: Incoming cases
       view_case: Link to case
       number: Case number
       number_html: 'Case <abbr title="number">No.</abbr>'
@@ -248,15 +248,18 @@ en:
       message: Full request
       details: Details
     new:
-      new_case: Create new case
+      heading: Add case details
+      sub_heading: Create case
       received_date: Date received
       received_date_copy: For example. 31 01 2017
     new_response_upload:
+      heading: Upload response
       upload_response: 'Upload response'
       upload_hint_copy: |
         You can upload different file types such as Word, Excel,
         PDF and JPEG up to 20MB per file.
     respond:
+      heading: Marking it as sent
       reminders_html: |
         <strong>Make sure you have:</strong>
         <ul class="list list-bullet">
@@ -269,7 +272,7 @@ en:
     update:
       case_updated: Case updated
     close:
-      page_heading: Close case
+      heading: Close case
       close_date: Date response sent
       date_example: For example, 30 1 2017
 

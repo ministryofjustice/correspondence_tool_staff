@@ -1,4 +1,10 @@
-= render partial: 'layouts/case_page_heading', locals: { case_details: @case }
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  = @case.number
+
+= render partial: 'layouts/header'
 
 .grid-row
   .column-two-thirds

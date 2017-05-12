@@ -1,16 +1,15 @@
 = GovukElementsErrorsHelper.error_summary @case,
   "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
-.grid-row
-  section.case-main
-    h1.case-heading
-      .case-heading--secondary
-        span.visually-hidden
-          = t('common.case.header_case_number')
-        = @case.number
-        = " | "
-        = @case.subject
-      = t('.page_heading')
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
 
 .grid-row
   .column-two-thirds

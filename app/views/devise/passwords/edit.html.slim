@@ -1,6 +1,10 @@
 = GovukElementsErrorsHelper.error_summary resource, "Message to alert the user to a problem goes here", ""
 
-= render partial: 'layouts/header', locals: {page_heading: t('devise.users.password.edit.title')}
+- content_for :heading
+  = t('devise.users.password.edit.title')
+
+= render partial: 'layouts/header'
+
 
 = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f|
   = f.hidden_field :reset_password_token

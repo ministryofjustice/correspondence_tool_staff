@@ -1,5 +1,7 @@
-= render partial: 'layouts/header', locals: {page_heading: t('.page_heading')}
+- content_for :heading
+  = t('.heading')
 
+= render partial: 'layouts/header'
 
 .grid-row
   .column-full.table-container.container

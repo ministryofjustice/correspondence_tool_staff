@@ -1,4 +1,7 @@
-= render partial: 'layouts/header', locals: {page_heading: t('.page_heading')}
+- content_for :heading
+  = t('.heading')
+
+= render partial: 'layouts/header'
 
 - if policy(:case).can_add_case?
   .grid-row

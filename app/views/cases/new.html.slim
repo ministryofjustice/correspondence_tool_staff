@@ -1,7 +1,13 @@
 = GovukElementsErrorsHelper.error_summary @case,
   "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
-= render partial: 'layouts/header', locals: {page_heading: t('.new_case')}
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  = t('.sub_heading')
+
+= render partial: 'layouts/header'
 
 = form_for @case do |f|
 
