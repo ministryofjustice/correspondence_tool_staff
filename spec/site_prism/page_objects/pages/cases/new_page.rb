@@ -1,7 +1,7 @@
 module PageObjects
   module Pages
     module Cases
-      class NewPage < SitePrism::Page
+      class NewPage < PageObjects::Pages::Base
         set_url '/cases/new'
 
         section :primary_navigation,
@@ -25,6 +25,14 @@ module PageObjects
 
         element :submit_button, '.button'
 
+        def choose_type_of_requester(requester_type)
+          make_radio_button_choice("case_requester_type_#{requester_type}")
+        end
+
+        def choose_flag_for_disclosure_specialists(choice = 'yes')
+          make_radio_button_choice("case_flag_for_disclosure_specialists_#{choice}")
+        end
+
         def fill_in_case_details(params={})
           kase = FactoryGirl.build :case, params
 
@@ -38,7 +46,7 @@ module PageObjects
           email.set kase.email
           address.set kase.postal_address
 
-          type_of_requester.choose(kase.requester_type.humanize)
+          choose_type_of_requester(kase.requester_type)
 
           kase
         end

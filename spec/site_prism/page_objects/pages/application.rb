@@ -1,3 +1,5 @@
+require 'page_objects/pages/base'
+
 module PageObjects
   module Pages
     module Application
