@@ -125,54 +125,63 @@ RSpec.describe CaseAttachment, type: :model do
 
   describe '#make_preview' do
 
-    let(:pdf_case_attachment) { create :correspondence_response, :without_preview_key }
+    let(:doc_case_attachment) { create :correspondence_response, key: '6/responses/my_doc.doc' }
     let(:jpg_case_attachment) { create :correspondence_response, key: '6/responses/my_photo.jpg' }
 
-    context 'original file is pdf' do
-      it 'copies key to preview key' do
-        expect(pdf_case_attachment.preview_key).to be_nil
-        pdf_case_attachment.make_preview(0)
-        expect(pdf_case_attachment.preview_key).to eq pdf_case_attachment.key
+
+    context 'non convertible file types' do
+      it 'copies original key to preview key' do
+        CaseAttachment::UNCONVERTIBLE_EXTENSIONS.each do |ext|
+          attachment = create :correspondence_response, :without_preview_key, key: "/6/responses/my_attachment#{ext}"
+          expect(attachment.preview_key).to be_nil
+          attachment.make_preview(0)
+          expect(attachment.preview_key).to eq attachment.key
+        end
       end
 
       it 'does not call Libreconv' do
-        expect(Libreconv).not_to receive(:convert)
-        pdf_case_attachment.make_preview(0)
+        CaseAttachment::UNCONVERTIBLE_EXTENSIONS.each do |ext|
+          attachment = create :correspondence_response, :without_preview_key, key: "/6/responses/my_attachment#{ext}"
+          expect(Libreconv).not_to receive(:convert)
+          attachment.make_preview(0)
+        end
+
       end
+
     end
 
     context 'original file is not pdf' do
 
       it 'calls Libreconv.covert and uploads file' do
-        expect(jpg_case_attachment).to receive(:download_original_file).and_return('tempfile_orig.jpg')
-        expect(jpg_case_attachment).to receive(:make_preview_filename).and_return('tempfile_preview.pdf')
-        expect(Libreconv).to receive(:convert).with('tempfile_orig.jpg', 'tempfile_preview.pdf')
-        expect(jpg_case_attachment).to receive(:upload_preview)
+        expect(doc_case_attachment).to receive(:download_original_file).and_return('tempfile_orig.doc')
+        expect(doc_case_attachment).to receive(:make_preview_filename).and_return('tempfile_preview.pdf')
+        expect(Libreconv).to receive(:convert).with('tempfile_orig.doc', 'tempfile_preview.pdf')
+        expect(doc_case_attachment).to receive(:upload_preview)
 
-        jpg_case_attachment.make_preview(0)
+        doc_case_attachment.make_preview(0)
       end
 
       it 'updates the preview_key' do
-        allow(jpg_case_attachment).to receive(:download_original_file).and_return('tempfile_orig.jpg')
-        allow(jpg_case_attachment).to receive(:make_preview_filename).and_return('tempfile_preview.pdf')
-        allow(Libreconv).to receive(:convert).with('tempfile_orig.jpg', 'tempfile_preview.pdf')
-        allow(jpg_case_attachment).to receive(:upload_preview).and_return('/6/response_previews/tempfile_preview.pdf')
+        allow(doc_case_attachment).to receive(:download_original_file).and_return('tempfile_orig.doc')
+        allow(doc_case_attachment).to receive(:make_preview_filename).and_return('tempfile_preview.pdf')
+        allow(Libreconv).to receive(:convert).with('tempfile_orig.doc', 'tempfile_preview.pdf')
+        allow(doc_case_attachment).to receive(:upload_preview).and_return('/6/response_previews/tempfile_preview.pdf')
 
-        jpg_case_attachment.make_preview(0)
+        doc_case_attachment.make_preview(0)
 
-        expect(jpg_case_attachment.reload.preview_key).to eq '/6/response_previews/tempfile_preview.pdf'
+        expect(doc_case_attachment.reload.preview_key).to eq '/6/response_previews/tempfile_preview.pdf'
       end
     end
 
     context 'exception raised during conversion process' do
       it 'sets the preview_key to nil' do
-        expect(jpg_case_attachment).to receive(:download_original_file).and_return('tempfile_orig.jpg')
-        expect(jpg_case_attachment).to receive(:make_preview_filename).and_return('tempfile_preview.pdf')
-        expect(Libreconv).to receive(:convert).with('tempfile_orig.jpg', 'tempfile_preview.pdf').and_raise(RuntimeError)
-        expect(jpg_case_attachment).not_to receive(:upload_preview)
+        expect(doc_case_attachment).to receive(:download_original_file).and_return('tempfile_orig.doc')
+        expect(doc_case_attachment).to receive(:make_preview_filename).and_return('tempfile_preview.pdf')
+        expect(Libreconv).to receive(:convert).with('tempfile_orig.doc', 'tempfile_preview.pdf').and_raise(RuntimeError)
+        expect(doc_case_attachment).not_to receive(:upload_preview)
 
-        jpg_case_attachment.make_preview(0)
-        expect(jpg_case_attachment.reload.preview_key).to be_nil
+        doc_case_attachment.make_preview(0)
+        expect(doc_case_attachment.reload.preview_key).to be_nil
       end
     end
 

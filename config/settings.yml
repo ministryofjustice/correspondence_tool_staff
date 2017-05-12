@@ -12,6 +12,7 @@ case_uploads_accepted_types:
 - image/png
 - image/tiff
 - image/bmp
+- image/gif
 - image/x-bitmap
 attachments_presigned_url_expiry: 900
 

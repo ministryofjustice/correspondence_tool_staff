@@ -8,7 +8,7 @@ class CaseAttachmentsController < ApplicationController
 
   def show
     tmpfile_path = download_to_tmpfile(@attachment.preview_key)
-    send_file tmpfile_path, type: 'application/pdf', disposition: 'inline'
+    send_file tmpfile_path, type: File.mime_type?(@attachment.preview_key), disposition: 'inline'
   end
 
   def destroy

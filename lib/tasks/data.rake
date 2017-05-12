@@ -53,6 +53,22 @@ namespace :data do
         PdfMakerJob.perform_now(att.id)
       end
     end
+
+    desc 'Removes PDF conversions of image files'
+    task :image_pdf_remove => :environment do
+      image_extensions = %w( .jpg .jpeg .bmp .gif .png )
+      attachments = CaseAttachment.all
+      attachments.each do |att|
+        # puts ">>>>>>>>>>>>>> looking at att. #{att.id} #{att.key} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+        if File.extname(att.key).downcase.in?(image_extensions) && File.extname(att.preview_key).downcase == '.pdf'
+          puts "PROCESSING ATTACHMENT #{att.id} with key: #{att.preview_key} #{__FILE__}:#{__LINE__}"
+          obj = CASE_UPLOADS_S3_BUCKET.object(att.preview_key)
+          obj.delete
+          att.update(preview_key: att.key)
+        end
+      end
+    end
+
   end
 end
 
