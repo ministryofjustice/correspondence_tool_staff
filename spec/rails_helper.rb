@@ -63,6 +63,25 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :feature
   config.include Warden::Test::Helpers
+  config.include Devise::Test::ControllerHelpers, type: :view
+  config.include Capybara::DSL, type: :view
+  config.after(:example, type: :view) do |example| 
+    if example.exception
+      now = DateTime.now
+      date_string = now.strftime('%F')
+      time_string = now.strftime('%H%M%S.%3N')
+      todays_dir = Rails.root.join('tmp', 'rendered-content', date_string)
+      FileUtils.mkdir_p(todays_dir)
+
+      renderer = File.extname(subject)
+      format = File.extname(File.basename(subject, renderer)).sub(/^\./, '')
+      filename = "#{subject.gsub(%r{[/.]}, '_')}-#{time_string}.#{format}"
+      renderer.sub!(/^\./, '')
+      fullpath = todays_dir.join(filename)
+      File.open(fullpath, 'w') { |f| f.write response }
+      puts "\033[0;33mrendered #{renderer} content: #{fullpath}\033[0m"
+    end
+  end
 end
 
 Shoulda::Matchers.configure do |config|

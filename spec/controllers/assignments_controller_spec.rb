@@ -6,6 +6,8 @@ RSpec.describe AssignmentsController, type: :controller do
   let(:unassigned_case) { create :case }
   let(:responding_team) { assigned_case.responding_team }
   let(:responder)       { responding_team.responders.first }
+  let(:approver)        { create :approver }
+  let(:approving_team)  { approver.approving_teams.first }
   let(:create_assignment_params) do
     {
       case_id: unassigned_case.id,
@@ -39,6 +41,8 @@ RSpec.describe AssignmentsController, type: :controller do
       assignment: { state: 'unknown' },
     }
   end
+  let(:assigned_case_flagged) { create :assigned_case, :flagged,
+                                       approving_team: approving_team }
 
   context 'as an anonymous user' do
 
@@ -275,6 +279,90 @@ RSpec.describe AssignmentsController, type: :controller do
       it 'does not allow unknown states' do
         expect { patch :accept_or_reject, params: unknown_assignment_params }.
           to raise_error(ArgumentError, "'unknown' is not a valid state")
+      end
+    end
+  end
+
+  describe '#accept' do
+    let(:assignment) { assigned_case_flagged.approver_assignment }
+    let(:params)     { { case_id: assigned_case.id,
+                         id: assignment.id} }
+    let(:service) { double(CaseAcceptApproverAssignmentService, call: true) }
+    before do
+      allow(CaseAcceptApproverAssignmentService)
+        .to receive(:new).and_return(service)
+    end
+
+    context 'as an approver' do
+      before do
+        sign_in approver
+      end
+
+      it 'uses the service', js: true do
+        patch :accept, params: params, xhr: true
+        expect(CaseAcceptApproverAssignmentService)
+          .to have_received(:new)
+                .with(user: approver, assignment: assignment)
+      end
+
+      context 'service succeeds' do
+        before do
+          allow(service).to receive(:call).and_return(true)
+        end
+
+        it 'records success' do
+          patch :accept, params: params, xhr: true
+          expect(assigns(:success)).to be true
+        end
+
+        it 'sets the message to success' do
+          patch :accept, params: params, xhr: true
+          expect(assigns(:message)).to eq 'Moved to open cases'
+        end
+      end
+
+      context 'assignment is already accepted by user' do
+        before do
+          allow(service).to receive(:call).and_return(false)
+          allow(service).to receive(:result).and_return(:not_pending)
+          assignment.user = approver
+          assignment.accepted!
+          assignment.save!
+        end
+
+        it 'records success' do
+          patch :accept, params: params, xhr: true
+          expect(assigns(:success)).to be true
+        end
+
+        it 'sets the message to success' do
+          patch :accept, params: params, xhr: true
+          expect(assigns(:message)).to eq 'Moved to open cases'
+        end
+      end
+
+      context 'assignment is already accepted by another user' do
+        let(:another_approver) { create :approver,
+                                        approving_teams: [approving_team] }
+
+        before do
+          allow(service).to receive(:call).and_return(false)
+          allow(service).to receive(:result).and_return(:not_pending)
+          assignment.user = another_approver
+          assignment.accepted!
+          assignment.save!
+        end
+
+        it 'records failure' do
+          patch :accept, params: params, xhr: true
+          expect(assigns(:success)).to be false
+        end
+
+        it 'sets the message to already_accepted' do
+          patch :accept, params: params, xhr: true
+          expect(assigns(:message))
+            .to eq "Case already accepted by #{another_approver.full_name}"
+        end
       end
     end
   end

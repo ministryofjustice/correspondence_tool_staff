@@ -212,6 +212,9 @@ en:
     create:
       case_assigned: Case successfully assigned
       case_created: Case successfully created
+    accept:
+      success: Moved to open cases
+      already_accepted: Case already accepted by %{name}
 
   cases:
     closed_cases:
@@ -231,8 +234,12 @@ en:
       status: Status
       who_its_with: With
     incoming_cases:
-      <<: *cases_list
       page_heading: Incoming cases
+      view_case: Link to case
+      number: Case number
+      number_html: 'Case <abbr title="number">No.</abbr>'
+      request: Request
+      actions: Actions
     fixed_details:
       requester: Requester
       email_address: Email address

@@ -1,7 +1,18 @@
 class AssignmentsController < ApplicationController
 
-  before_action :set_case, only: [:new, :create, :edit, :accept_or_reject, :show_rejected]
-  before_action :set_assignment, only: [:edit, :accept_or_reject]
+  before_action :set_case, only: [
+                  :accept,
+                  :accept_or_reject,
+                  :create,
+                  :edit,
+                  :new,
+                  :show_rejected,
+                ]
+  before_action :set_assignment, only: [
+                  :accept,
+                  :accept_or_reject,
+                  :edit,
+                ]
   before_action :validate_response, only: :accept_or_reject
 
   def new
@@ -54,6 +65,30 @@ class AssignmentsController < ApplicationController
     else
       @assignment.assign_and_validate_state(assignment_params[:state])
       render :edit
+    end
+  end
+
+  def accept
+    accept_service = CaseAcceptApproverAssignmentService
+                       .new(user: current_user, assignment: @assignment)
+    if accept_service.call
+      @success = true
+      @message = t('.success')
+    else
+      if accept_service.result == :not_pending
+        if @assignment.user == current_user
+          @success = true
+          @message = t('.success')
+        else
+          @success = false
+          @message = t('.already_accepted', name: @assignment.user.full_name)
+        end
+      else
+        raise RuntimeError.new(
+                "Unknown error when accepting approver assignment: " +
+                accept_service.result.to_s
+              )
+      end
     end
   end
 

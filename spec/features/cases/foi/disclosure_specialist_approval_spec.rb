@@ -9,19 +9,19 @@ feature 'cases requiring clearance by disclosure specialist' do
   def create_case(flag_for_clearance: false)
     expect(cases_new_page).to be_displayed
     cases_new_page.fill_in_case_details
-    cases_new_page.flag_for_disclosure_specialists.choose(
-      flag_for_clearance ? 'Yes' : 'No'
+    cases_new_page.choose_flag_for_disclosure_specialists(
+      flag_for_clearance ? 'yes' : 'no'
     )
     cases_new_page.submit_button.click
   end
 
   def assign_case_to_team(team:)
     expect(assignments_new_page).to be_displayed
-    assignments_new_page.assign_to.choose team.name
+    assignments_new_page.choose_assignment_team team
     assignments_new_page.create_and_assign_case.click
   end
 
-  scenario 'flagging a case on creation' do
+  scenario 'flagging a case on creation', js: true do
     login_as manager
 
     cases_page.load
@@ -42,5 +42,12 @@ feature 'cases requiring clearance by disclosure specialist' do
     expect(incoming_cases_page.case_list.size).to eq 1
     expect(incoming_cases_page.case_list.first.number.text)
       .to have_content kase.number
+
+    case_list_item = incoming_cases_page.case_list.first
+    case_list_item.actions.take_on_case.click
+    case_list_item.actions.wait_until_success_message_visible
+    expect(case_list_item.actions.success_message.text)
+      .to include 'Moved to open cases'
+    expect(kase.approver).to eq disclosure_specialist
   end
 end

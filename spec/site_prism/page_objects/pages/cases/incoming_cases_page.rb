@@ -7,11 +7,15 @@ module PageObjects
         section :user_card, PageObjects::Sections::UserCardSection, '.user-card'
         sections :case_list, '.case_row' do
           element :number, 'td[aria-label="Case number"]'
-          element :name, 'td[aria-label="Requester name"]'
-          element :subject, 'td[aria-label="Subject"]'
-          element :external_deadline, 'td[aria-label="Final deadline"]'
-          element :status, 'td[aria-label="Waiting for"]'
-          element :who_its_with, 'td[aria-label="With"]'
+          section :request, 'td[aria-label="Request"]' do
+            element :name, '.case_name'
+            element :subject, '.case_subject'
+            element :message, '.case_message_extract'
+          end
+          section :actions, 'td[aria-label="Actions"]' do
+            element :take_on_case, '.button'
+            element :success_message, '.action-success'
+          end
         end
 
         section :service_feedback, PageObjects::Sections::ServiceFeedbackSection, '.feedback'

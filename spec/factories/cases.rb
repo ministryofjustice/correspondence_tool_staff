@@ -198,7 +198,7 @@ FactoryGirl.define do
     end
 
     after(:create) do |kase, evaluator|
-      create :assignment, :approving,
+      create :approver_assignment,
              case: kase,
              team: evaluator.approving_team,
              state: 'pending'
@@ -212,7 +212,7 @@ FactoryGirl.define do
     end
 
     after(:create) do |kase, evaluator|
-      create :assignment, :approving,
+      create :approver_assignment,
              case: kase,
              user: evaluator.approver,
              team: evaluator.approving_team,
