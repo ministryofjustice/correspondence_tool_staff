@@ -48,6 +48,10 @@ feature 'cases requiring clearance by disclosure specialist' do
     case_list_item.actions.wait_until_success_message_visible
     expect(case_list_item.actions.success_message.text)
       .to include 'Moved to open cases'
-    expect(kase.approver).to eq disclosure_specialist
+    expect(kase.reload.approver).to eq disclosure_specialist
+
+    case_list_item.actions.undo_assign_link.click
+    case_list_item.actions.wait_until_take_on_case_visible
+    expect(kase.reload.approver).to be_nil
   end
 end

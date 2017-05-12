@@ -15,6 +15,7 @@ module PageObjects
           section :actions, 'td[aria-label="Actions"]' do
             element :take_on_case, '.button'
             element :success_message, '.action-success'
+            element :undo_assign_link, '.action-success a'
           end
         end
 

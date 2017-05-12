@@ -79,6 +79,7 @@ Rails.application.routes.draw do
     resources :assignments do
       patch 'accept_or_reject', on: :member
       patch 'accept', on: :member
+      patch 'unaccept', on: :member
     end
 
     resources :case_attachments, path: 'attachments'

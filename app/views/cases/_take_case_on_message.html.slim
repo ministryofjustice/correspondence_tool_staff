@@ -2,3 +2,11 @@ div { id="take_case_on_#{kase.id}"
       aria-live="polite"
       class="action-#{success ? 'success' : 'error'}" }
   = message
+  - if success
+    = ' '
+    = link_to "Undo",
+              unaccept_case_assignment_path(@case, @case.approver_assignment),
+              remote: true,
+              method: :patch
+    span.visually-hidden
+      = " taking on of case #{kase.number}"

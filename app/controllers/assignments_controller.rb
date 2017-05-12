@@ -7,11 +7,13 @@ class AssignmentsController < ApplicationController
                   :edit,
                   :new,
                   :show_rejected,
+                  :unaccept,
                 ]
   before_action :set_assignment, only: [
                   :accept,
                   :accept_or_reject,
                   :edit,
+                  :unaccept,
                 ]
   before_action :validate_response, only: :accept_or_reject
 
@@ -90,6 +92,12 @@ class AssignmentsController < ApplicationController
               )
       end
     end
+  end
+
+  def unaccept
+    unaccept_service = CaseUnacceptApproverAssignmentService
+                         .new(assignment: @assignment)
+    unaccept_service.call
   end
 
   def show_rejected

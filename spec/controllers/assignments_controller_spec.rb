@@ -43,6 +43,8 @@ RSpec.describe AssignmentsController, type: :controller do
   end
   let(:assigned_case_flagged) { create :assigned_case, :flagged,
                                        approving_team: approving_team }
+  let(:assigned_case_trigger) { create :assigned_case, :flagged_accepted,
+                                       approver: approver }
 
   context 'as an anonymous user' do
 
@@ -285,9 +287,9 @@ RSpec.describe AssignmentsController, type: :controller do
 
   describe '#accept' do
     let(:assignment) { assigned_case_flagged.approver_assignment }
-    let(:params)     { { case_id: assigned_case.id,
-                         id: assignment.id} }
+    let(:params)     { { case_id: assigned_case.id, id: assignment.id} }
     let(:service) { double(CaseAcceptApproverAssignmentService, call: true) }
+
     before do
       allow(CaseAcceptApproverAssignmentService)
         .to receive(:new).and_return(service)
@@ -319,6 +321,11 @@ RSpec.describe AssignmentsController, type: :controller do
           patch :accept, params: params, xhr: true
           expect(assigns(:message)).to eq 'Moved to open cases'
         end
+
+        it 'renders the view' do
+          patch :accept, params: params, xhr: true
+          expect(response).to have_rendered('assignments/accept')
+        end
       end
 
       context 'assignment is already accepted by user' do
@@ -338,6 +345,11 @@ RSpec.describe AssignmentsController, type: :controller do
         it 'sets the message to success' do
           patch :accept, params: params, xhr: true
           expect(assigns(:message)).to eq 'Moved to open cases'
+        end
+
+        it 'renders the view' do
+          patch :accept, params: params, xhr: true
+          expect(response).to have_rendered('assignments/accept')
         end
       end
 
@@ -362,6 +374,45 @@ RSpec.describe AssignmentsController, type: :controller do
           patch :accept, params: params, xhr: true
           expect(assigns(:message))
             .to eq "Case already accepted by #{another_approver.full_name}"
+        end
+
+        it 'renders the view' do
+          patch :accept, params: params, xhr: true
+          expect(response).to have_rendered('assignments/accept')
+        end
+      end
+    end
+  end
+
+  describe '#unaccept' do
+    let(:assignment) { assigned_case_trigger.approver_assignment }
+    let(:params)     { { case_id: assigned_case.id, id: assignment.id} }
+    let(:service) { double(CaseUnacceptApproverAssignmentService, call: true) }
+
+    before do
+      allow(CaseUnacceptApproverAssignmentService)
+        .to receive(:new).and_return(service)
+    end
+
+    context 'as an approver' do
+      before do
+        sign_in approver
+      end
+
+      it 'uses the service', js: true do
+        patch :unaccept, params: params, xhr: true
+        expect(CaseUnacceptApproverAssignmentService)
+          .to have_received(:new).with(assignment: assignment)
+      end
+
+      context 'service succeeds' do
+        before do
+          allow(service).to receive(:call).and_return(true)
+        end
+
+        it 'renders the view' do
+          patch :unaccept, params: params, xhr: true
+          expect(response).to have_rendered('assignments/unaccept')
         end
       end
     end
