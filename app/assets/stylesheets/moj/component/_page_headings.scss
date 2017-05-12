@@ -1,0 +1,12 @@
+.page-heading {
+  @extend .heading-xlarge;
+}
+
+.page-heading--primary {
+  display: block;
+}
+
+.page-heading--secondary {
+  @include core-27();
+  color: $secondary-text-colour;
+}

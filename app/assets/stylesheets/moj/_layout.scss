@@ -154,47 +154,6 @@ table#request--responses a {
   }
 }
 
-
-.global-nav {
-  @extend %site-width-container;
-  border-bottom: 1px solid #DEE0E2;
-  background: #F8F8F8;
-  margin-bottom: $gutter;
-}
-
-.global-nav a {
-  text-decoration: none;
-  @include bold-19();
-  display: inline-block;
-  height: 100%;
-  padding: 25px 25px 15px 25px;
-  &.active {
-    border-bottom: 5px solid $link-colour;
-  }
-  @include media(mobile) {
-    float: none;
-    display: block;
-    text-align: center;
-  }
-}
-
-.global-nav ul {
-  @include clearfix;
-  position: relative;
-  top: 1px;
-  margin: 0;
-  padding: 0;
-  li {
-    float: left;
-    display: inline;
-    list-style: none;
-    @include media(mobile) {
-      float: none;
-      display: block;
-    }
-  }
-}
-
 .closed-case-report th {
   text-align: left;
 }
