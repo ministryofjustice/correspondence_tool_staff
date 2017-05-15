@@ -12,6 +12,7 @@ describe CasePolicy do
   let(:another_responder) { create :responder}
   let(:approving_team)    { create :team_dacu_disclosure }
   let(:approver)          { approving_team.approvers.first }
+  let(:co_approver)       { create :approver, approving_teams: [approving_team] }
 
   let(:new_case)                { create :case }
   let(:accepted_case)           { create :accepted_case,
@@ -19,6 +20,10 @@ describe CasePolicy do
                                          manager: manager }
   let(:assigned_case)           { create :assigned_case,
                                     responding_team: responding_team }
+  let(:assigned_flagged_case)   { create :assigned_case, :flagged,
+                                         approving_team: approving_team }
+  let(:assigned_trigger_case)   { create :assigned_case, :flagged_accepted,
+                                         approving_team: approving_team }
   let(:rejected_case)           { create :rejected_case,
                                          responding_team: responding_team }
   let(:unassigned_case)         { new_case }
@@ -119,6 +124,12 @@ describe CasePolicy do
     it { should_not permit(another_responder, case_with_response) }
     it { should_not permit(another_responder, responded_case) }
     it { should_not permit(another_responder, closed_case) }
+    it { should     permit(approver,          assigned_flagged_case) }
+    it { should     permit(approver,          assigned_trigger_case) }
+    it { should     permit(co_approver,       assigned_flagged_case) }
+    it { should     permit(co_approver,       assigned_trigger_case) }
+    it { should_not permit(approver,          assigned_case) }
+    it { should_not permit(approver,          assigned_case) }
   end
 
   permissions :can_remove_attachment? do

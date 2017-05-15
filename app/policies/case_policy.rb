@@ -54,8 +54,13 @@ class CasePolicy
   end
 
   def can_view_case_details?
-    user.manager? ||
+    if user.manager?
+      true
+    elsif user.responder?
       user.responding_teams.include?(self.case.responding_team)
+    elsif user.approver?
+      user.approving_teams.include?(self.case.approving_team)
+    end
   end
 
   class Scope
