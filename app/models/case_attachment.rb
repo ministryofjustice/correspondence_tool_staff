@@ -12,6 +12,9 @@
 #
 
 class CaseAttachment < ActiveRecord::Base
+
+  UNCONVERTIBLE_EXTENSIONS = %w( .pdf .jpg .jpeg .bmp .gif .png )
+
   self.inheritance_column = :_type_not_used
   belongs_to :case
 
@@ -40,7 +43,7 @@ class CaseAttachment < ActiveRecord::Base
   end
 
   def make_preview(retry_count)
-    if File.extname(key) == '.pdf'
+    if not_convertible_file_type?
       self.preview_key = key
     else
       original_filepath = download_original_file
@@ -59,6 +62,10 @@ class CaseAttachment < ActiveRecord::Base
   end
 
   private
+
+  def not_convertible_file_type?
+    File.extname(key).downcase.in? UNCONVERTIBLE_EXTENSIONS
+  end
 
   def make_temporary_url_for(key)
     CASE_UPLOADS_S3_BUCKET.object(key).presigned_url :get, expires_in: Settings.attachments_presigned_url_expiry
