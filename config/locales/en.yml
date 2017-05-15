@@ -58,11 +58,12 @@ en:
       can_view_case_details?: 'You are not authorised to view this case.'
 
   state: &state_translations
-    unassigned: Allocation
-    awaiting_responder: Acceptance
+    unassigned: Needs reassigning
+    awaiting_responder: To be accepted
     awaiting_responder_email: Waiting to be accepted
-    drafting: Response
-    responded: Closure
+    awaiting_dispatch: Ready to send
+    drafting: Draft in progress
+    responded: Ready to close
     closed: ''
     closed_status: Case closed
 

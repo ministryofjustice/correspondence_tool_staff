@@ -32,7 +32,7 @@ describe 'cases/index.html.slim', type: :view do
     expect(cases_page.case_list[0].subject.text).to eq 'Prison Reform'
     expect(cases_page.case_list[0].external_deadline.text)
       .to eq((DateTime.now + 10.days).strftime('%e %b %Y'))
-    expect(cases_page.case_list[0].status.text).to eq 'Response'
+    expect(cases_page.case_list[0].status.text).to eq 'Draft in progress'
     expect(cases_page.case_list[0].who_its_with.text).to eq 'HR'
 
     expect(cases_page.case_list[1].number.text).to eq 'Link to case 17-00022'
@@ -40,7 +40,7 @@ describe 'cases/index.html.slim', type: :view do
     expect(cases_page.case_list[1].subject.text).to eq 'Court Reform'
     expect(cases_page.case_list[1].external_deadline.text)
       .to eq((DateTime.now + 11.days).strftime('%e %b %Y'))
-    expect(cases_page.case_list[1].status.text).to eq 'Acceptance'
+    expect(cases_page.case_list[1].status.text).to eq 'To be accepted'
     expect(cases_page.case_list[1].who_its_with.text).to eq 'LAA'
   end
 

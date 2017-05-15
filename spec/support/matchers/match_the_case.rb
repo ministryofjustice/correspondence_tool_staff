@@ -3,13 +3,13 @@ require 'rspec/expectations'
 RSpec::Matchers.define :match_the_case do |kase|
   define_method :case_states do
     {
-      'unassigned' => 'Allocation',
-      'awaiting_dispatch' => 'Awaiting Dispatch',
-      'awaiting_responder' => 'Acceptance',
+      'unassigned' => 'Needs reassigning',
+      'awaiting_dispatch' => 'Ready to send',
+      'awaiting_responder' => 'To be accepted',
       'awaiting_responder_email' => 'Waiting to be accepted',
-      'drafting' => 'Response',
-      'responded' => 'Closure',
-      'closed' => 'Case closed',
+      'drafting' => 'Draft in progress',
+      'responded' => 'Ready to close',
+      'closed' => 'Case closed'
     }
   end
 

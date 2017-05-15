@@ -99,7 +99,7 @@ feature 'viewing details of case in the system' do
       expect(cases_show_page.sidebar).to have_external_deadline
       expect(cases_show_page.sidebar.external_deadline).
         to have_content(external_foi_deadline)
-      expect(cases_show_page.sidebar.status).to have_content('Response')
+      expect(cases_show_page.sidebar.status).to have_content('Draft in progress')
       expect(cases_show_page.sidebar.who_its_with)
         .to have_content(foi.responder.full_name)
       expect(cases_show_page.sidebar.name).to have_content('Freddie FOI')
