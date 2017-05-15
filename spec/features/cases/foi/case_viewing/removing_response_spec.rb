@@ -11,10 +11,16 @@ feature 'removing a response from response details' do
   given(:case_with_response) do
     create :case_with_response, responder: responder
   end
-  given(:attached_response) do
+  given!(:attached_response) do
     case_with_response.attachments.response.first
   end
   given(:attachment_object) do
+    instance_double(
+      Aws::S3::Object,
+      delete: instance_double(Aws::S3::Types::DeleteObjectOutput),
+    )
+  end
+  given(:preview_object) do
     instance_double(
       Aws::S3::Object,
       delete: instance_double(Aws::S3::Types::DeleteObjectOutput),
@@ -34,6 +40,9 @@ feature 'removing a response from response details' do
         allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                            .with(attached_response.key)
                                            .and_return(attachment_object)
+        allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
+                                           .with(attached_response.preview_key)
+                                           .and_return(preview_object)
       end
 
       context 'when there is only one response' do
@@ -66,6 +75,9 @@ feature 'removing a response from response details' do
           allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                              .with(other_response.key)
                                              .and_return(double(delete: nil))
+          allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
+                                             .with(other_response.preview_key)
+                                             .and_return(double(delete: nil))
         end
 
         scenario 'when removing the response' do
@@ -77,9 +89,8 @@ feature 'removing a response from response details' do
 
         scenario 'when removing the response with JS', js: true do
           cases_show_page.load(id: case_with_response.id)
-
           expect(cases_show_page.response_details.responses.count).to eq 2
-          uploaded_file.remove.click
+          cases_show_page.response_details.find_by_attachment_id(attached_response.id).click
           cases_show_page.response_details.wait_for_responses nil, count: 1
           expect(cases_show_page.response_details.responses.count)
             .to eq 1
@@ -110,6 +121,9 @@ feature 'removing a response from response details' do
         allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                            .with(attached_response.key)
                                            .and_return(attachment_object)
+        allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
+                                           .with(attached_response.preview_key)
+                                           .and_return(preview_object)
       end
 
       context 'when there is only one response' do
@@ -142,6 +156,10 @@ feature 'removing a response from response details' do
           allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                              .with(other_response.key)
                                              .and_return(double(delete: nil))
+          allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
+                                             .with(other_response.preview_key)
+                                             .and_return(double(delete: nil))
+
         end
 
         scenario 'when removing the response' do
@@ -153,9 +171,8 @@ feature 'removing a response from response details' do
 
         scenario 'when removing the response with JS', js: true do
           cases_show_page.load(id: case_with_response.id)
-
           expect(cases_show_page.response_details.responses.count).to eq 2
-          uploaded_file.remove.click
+          cases_show_page.response_details.find_by_attachment_id(attached_response.id).click
           cases_show_page.response_details.wait_for_responses nil, count: 1
           expect(cases_show_page.response_details.responses.count)
             .to eq 1
