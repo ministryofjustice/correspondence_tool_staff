@@ -5,7 +5,6 @@ class AssignmentMailer < GovukNotifyRails::Mailer
     kase = @assignment.case
 
     set_template(Settings.new_assignment_notify_template)
-
     set_personalisation(
         email_subject:      format_new_assignment_subject(kase),
         team_name:          @assignment.team.name,
