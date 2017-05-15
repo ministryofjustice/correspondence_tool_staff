@@ -19,7 +19,8 @@ module PageObjects
         login:                     'LoginPage',
         assignments_new:           'Assignments::NewPage',
         assignments_edit:          'Assignments::EditPage',
-        global_nav_partial:        'Partials::GlobalNavPartial'
+        global_nav_partial:        'Partials::GlobalNavPartial',
+        header_partial:            'Partials::HeaderPartial'
       }.each do |page_name, page_class|
         full_page_class = "PageObjects::Pages::#{page_class}"
         define_method "#{page_name}_page" do
