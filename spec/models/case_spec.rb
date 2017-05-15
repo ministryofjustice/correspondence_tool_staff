@@ -113,14 +113,14 @@ RSpec.describe Case, type: :model do
       context 'one team passsed as a parameter' do
         it 'returns only cases flagged which HAVE NOT been accepted' do
           expect(Case.flagged_for_approval(@team_1).unaccepted)
-            .to eq [ @flagged_t1 ]
+            .to match_array [ @flagged_t1 ]
         end
       end
 
       context 'multiple teams passed as a parameter' do
         it 'returns only cases flagged which HAVE NOT been accepted' do
           expect(Case.flagged_for_approval(@team_2, @team_1).unaccepted)
-            .to eq [ @flagged_t1, @flagged_t2 ]
+            .to match_array [ @flagged_t1, @flagged_t2 ]
         end
       end
     end
@@ -129,14 +129,14 @@ RSpec.describe Case, type: :model do
       context 'one team passsed as a parameter' do
         it 'returns only cases flagged which HAVE been accepted' do
           expect(Case.flagged_for_approval(@team_1).accepted)
-            .to eq [ @accepted_t1 ]
+            .to match_array [ @accepted_t1 ]
         end
       end
 
       context 'multiple teams passsed as a parameter' do
         it 'returns only cases flagged which HAVE been accepted' do
           expect(Case.flagged_for_approval(@team_1, @team_2).accepted)
-            .to eq [ @accepted_t1, @accepted_t2 ]
+            .to match_array [ @accepted_t1, @accepted_t2 ]
         end
       end
     end
