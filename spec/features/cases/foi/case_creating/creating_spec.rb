@@ -39,7 +39,6 @@ feature 'Case creation by a manager' do
 
   scenario 'succeeds using valid inputs' do
     expect(cases_new_page).to be_displayed
-    expect(page).to have_content('Create new case')
 
     choose user_input.requester_type
     fill_in 'Full name',          with: user_input.name
@@ -55,8 +54,7 @@ feature 'Case creation by a manager' do
 
     new_case = Case.first
 
-    expect(current_path).to eq new_case_assignment_path new_case
-    expect(page).to have_content('Create and assign case')
+    expect(assignments_new_page).to be_displayed
 
     expect(new_case).to have_attributes(
       requester_type: 'member_of_the_public',
@@ -68,9 +66,11 @@ feature 'Case creation by a manager' do
     )
 
     choose responding_team.name
-    click_button 'Create and assign case'
-    expect(current_path).to eq case_path(new_case)
-    expect(page).to have_content('Case successfully created')
+    click_button 'Assign case'
+
+    expect(cases_show_page).to be_displayed
+
+    expect(cases_show_page.text).to have_content('Case successfully created')
 
     new_assignment = new_case.responder_assignment
 
@@ -88,7 +88,6 @@ feature 'Case creation by a manager' do
 
   scenario 'creating a case that needs clearance' do
     expect(cases_new_page).to be_displayed
-    expect(page).to have_content('Create new case')
 
     choose user_input.requester_type
     fill_in 'Full name',          with: user_input.name
@@ -107,8 +106,7 @@ feature 'Case creation by a manager' do
   end
 
   scenario 'fails informatively without any inputs' do
-    expect(current_path).to eq new_case_path
-    expect(page).to have_content('Create new case')
+    expect(cases_new_page).to be_displayed
 
     click_button 'Next - Assign case'
 
@@ -122,7 +120,7 @@ feature 'Case creation by a manager' do
   end
 
   scenario 'requires choice whether to assign a disclosure specialist' do
-    expect(current_path).to eq new_case_path
+    expect(cases_new_page).to be_displayed
 
     choose user_input.requester_type
     fill_in 'Full name',          with: user_input.name

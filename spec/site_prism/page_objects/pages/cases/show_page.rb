@@ -8,8 +8,11 @@ module PageObjects
         #       so we should be moving most/all of this into separate section files
         #       for inclusion into those pages.
 
-        section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
+        section :primary_navigation,
+                PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
+        section :page_heading,
+                PageObjects::Sections::PageHeadingSection, '.page-heading'
 
         element :message, '.request'
         element :received_date, '.request--date-received'
@@ -30,8 +33,9 @@ module PageObjects
           end
         end
 
-        section :case_heading, '.case-heading' do
-          element :case_number, '.case-heading--secondary'
+        section :case_heading, '.page-heading' do
+          element :case_number, '.heading-secondary'
+          element :subject, ''
         end
 
         section :response_details, '.request--response-details' do

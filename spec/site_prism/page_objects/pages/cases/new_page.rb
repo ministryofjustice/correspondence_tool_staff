@@ -7,6 +7,9 @@ module PageObjects
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
+        section :page_heading,
+                PageObjects::Sections::PageHeadingSection, '.page-heading'
+
         element :date_received_day, '#case_received_date_dd'
         element :date_received_month, '#case_received_date_mm'
         element :date_received_year, '#case_received_date_yyyy'

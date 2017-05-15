@@ -12,7 +12,9 @@ describe 'cases/closed_cases.html.slim' do
     closed_cases_page.load(rendered)
     page = closed_cases_page
 
-    expect(page.heading.text).to eq 'Closed cases'
+    expect(page.page_heading.heading.text).to eq 'Closed cases'
+    expect(page.page_heading).to have_no_sub_heading
+
     expect(page.closed_case_report.table_body.closed_case_rows.size).to eq 2
 
     row = page.closed_case_report.table_body.closed_case_rows.first

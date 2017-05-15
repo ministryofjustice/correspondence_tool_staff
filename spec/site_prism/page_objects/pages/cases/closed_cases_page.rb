@@ -4,9 +4,11 @@ module PageObjects
       class ClosedCasesPage < SitePrism::Page
         set_url '/cases/closed_cases'
 
-        section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
+        section :primary_navigation,
+                PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
-        element :heading, 'h1.heading-xlarge'
+        section :page_heading,
+                PageObjects::Sections::PageHeadingSection, '.page-heading'
 
         section :closed_case_report, '.closed-case-report' do
           element :heading_row, 'thead'
