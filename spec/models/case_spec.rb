@@ -148,7 +148,7 @@ RSpec.describe Case, type: :model do
       responded_case = create :responded_case
       create :closed_case, last_transitioned_at: 2.days.ago
       create :closed_case, last_transitioned_at: 1.day.ago
-      expect(Case.open).to eq [ open_case, responded_case ]
+      expect(Case.opened).to eq [ open_case, responded_case ]
     end
   end
 
@@ -566,13 +566,6 @@ RSpec.describe Case, type: :model do
       end
     end
 
-    # NOT IN USE. -- Since we determine if the case requires clearance based
-    #                on whether it has an assignment or not, using
-    #                before_create or after_update hooks don't work ... we
-    #                nothing changes on this record when it's assigned an
-    #                approver. #flag_for_clearance should call
-    #                #set_deadlines.
-
     describe '#set_escalation_deadline' do
       let(:kase)                { build :case }
       let(:escalation_deadline) { Date.today - 1.day }
@@ -640,6 +633,11 @@ RSpec.describe Case, type: :model do
       before do
         allow(DeadlineCalculator).to receive(:internal_deadline)
                                        .and_return(internal_deadline)
+      end
+
+      it 'is called before_create' do
+        expect(kase).to receive(:set_internal_deadline)
+        kase.save!
       end
 
       it 'sets the internal deadline using DeadlineCalculator' do

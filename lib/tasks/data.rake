@@ -69,8 +69,18 @@ namespace :data do
       end
     end
 
+    desc 'Sets internal deadline on all cases'
+    task set_internal_deadline: :environment do
+      Case.all.each do |kase|
+        kase.__send__(:set_internal_deadline) if kase.internal_deadline.nil?
+      end
+    end
+
+
   end
 end
+
+
 
 def fix_transition_user_metadata(transition, field)
   if transition.metadata[field].respond_to? :has_key?

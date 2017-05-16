@@ -23,6 +23,10 @@ class CaseDecorator < Draper::Decorator
     end
   end
 
+  def internal_deadline
+    object.requires_clearance? ? object.internal_deadline : nil
+  end
+
 
   private
 

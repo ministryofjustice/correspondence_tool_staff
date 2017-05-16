@@ -37,7 +37,7 @@ FactoryGirl.define do
     category
     sequence(:subject) { |n| "#{identifier} subject #{n}" }
     sequence(:message) { |n| "#{identifier} message #{n}" }
-    received_date Time.zone.today.to_s
+    received_date { Time.zone.today.to_s }
     sequence(:postal_address) { |n| "#{identifier} postal address #{n}" }
 
     after(:build) do |_kase, evaluator|
@@ -202,6 +202,7 @@ FactoryGirl.define do
              case: kase,
              team: evaluator.approving_team,
              state: 'pending'
+      kase.reload
     end
   end
 
