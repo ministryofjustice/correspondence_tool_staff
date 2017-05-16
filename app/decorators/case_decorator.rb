@@ -3,8 +3,8 @@ class CaseDecorator < Draper::Decorator
 
   def who_its_with
     case current_state
-    when 'closed'
-      ''
+    when 'closed'    then ''
+    when 'responded' then managing_team.name
     else
       responder_or_team
     end
@@ -29,13 +29,11 @@ class CaseDecorator < Draper::Decorator
   def responder_or_team
     if !responding_team.present?
       managing_team.name
+    elsif responder.present? &&
+          h.current_user.responding_teams.include?(responding_team)
+      responder.full_name
     else
-      if responder.present? &&
-        h.current_user.responding_teams.include?(responding_team)
-        responder.full_name
-      else
-        responding_team.name
-      end
+      responding_team.name
     end
   end
 end

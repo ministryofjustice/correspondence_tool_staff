@@ -59,7 +59,6 @@ module CaseStates
 
   def respond(current_user)
     state_machine.respond!(current_user, responding_team)
-    responder_assignment.destroy
   end
 
   def close(current_user)

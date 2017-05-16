@@ -1,5 +1,21 @@
 require 'rails_helper'
 
+
+# Utility method to help us setup expectations on cases.
+#
+# Without this approach, it's messy to set expectations on @case in the
+# controller as stubbing out the return value from Case.find is frought
+# with yuckiness ... e.g. @case.transitions.order...
+def stub_find_case(id)
+  allow(Case).to receive(:find).with(id.to_s)
+                   .and_wrap_original do |original_method, *args|
+    original_method.call(*args).tap do |kase|
+      yield kase
+    end
+  end
+end
+
+
 RSpec.describe CasesController, type: :controller do
 
   let(:all_cases)          { create_list(:case, 5)   }
@@ -937,25 +953,10 @@ RSpec.describe CasesController, type: :controller do
       before { sign_in responder }
 
       it 'transitions current_state to "responded"' do
+        stub_find_case(case_with_response.id) do |kase|
+          expect(kase).to receive(:respond).with(responder)
+        end
         patch :confirm_respond, params: { id: case_with_response }
-        expect(case_with_response.reload.current_state).to eq 'responded'
-      end
-
-      it 'updates user id in transition' do
-        patch :confirm_respond, params: { id: case_with_response }
-        expect(case_with_response.transitions.last.user_id).to eq responder.id
-      end
-
-      it 'updates responding team in transition' do
-        patch :confirm_respond, params: { id: case_with_response }
-        expect(case_with_response.transitions.last.responding_team_id)
-          .to eq responding_team.id
-      end
-
-      it 'removes the case from the responders workbasket' do
-        patch :confirm_respond, params: { id: case_with_response }
-        workbasket = CasePolicy::Scope.new(responder, Case.all).resolve
-        expect(workbasket).not_to include case_with_response
       end
 
       it 'redirects to the case list view' do

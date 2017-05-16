@@ -38,7 +38,7 @@ made the request"
     cases_respond_page.mark_as_sent_button.click
 
     expect(current_path).to eq '/cases'
-    expect(cases_page.case_numbers).not_to include kase.number
+    expect(cases_page.case_numbers).to include kase.number
     expect(cases_page).
       to have_content('Response confirmed. The case is now with DACU.')
     expect(kase.reload.current_state).to eq 'responded'
