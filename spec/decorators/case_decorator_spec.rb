@@ -1,35 +1,30 @@
 require 'rails_helper'
 
 describe CaseDecorator, type: :model do
-  let(:assigned_case)  { create :assigned_case }
-  let(:responded_case) { create :responded_case }
-  let(:manager)        { create :manager, managing_teams: [managing_team] }
-  let(:managing_team)  { create :team_dacu }
-  let(:responder)      { create :responder }
-  let(:coworker)       { create :responder,
-                                responding_teams: responder.responding_teams }
+  let(:unassigned_case) { create(:case).decorate }
+  let(:assigned_case)   { create(:assigned_case).decorate }
+  let(:responded_case)  { create(:responded_case).decorate }
+  let(:closed_case)     { create(:closed_case).decorate }
+  let(:manager)         { create :manager, managing_teams: [managing_team] }
+  let(:managing_team)   { create :team_dacu }
+  let(:responder)       { create :responder }
+  let(:coworker)        { create :responder,
+                                 responding_teams: responder.responding_teams }
   let(:another_responder) { create :responder }
 
 
   describe '#who_its_with' do
     context 'case has no responding team assigned' do
-      let(:assigned_case) { (create :case).decorate }
-
-      before(:each) do
-        allow_any_instance_of(CaseDecorator)
-          .to receive(:h).and_return(double("View", current_user: manager))
-      end
-
       it 'returns the managing teams name' do
-        expect(assigned_case.who_its_with).to eq assigned_case.managing_team.name
+        expect(unassigned_case.who_its_with)
+          .to eq unassigned_case.managing_team.name
       end
     end
 
     context 'case has been assigned but not accepted yet' do
-      let(:assigned_case) { create :assigned_case }
-
       it 'returns the responding teams name' do
-        expect(assigned_case.who_its_with).to eq assigned_case.responding_team.name
+        expect(assigned_case.who_its_with)
+          .to eq assigned_case.responding_team.name
       end
     end
 
@@ -79,25 +74,24 @@ describe CaseDecorator, type: :model do
 
   describe '#time_taken' do
     it 'returns the number of business days taken to respond to a case' do
-      assigned_case = create(:closed_case).decorate
-      expect(assigned_case.time_taken).to eq '18 working days'
+      expect(closed_case.time_taken).to eq '18 working days'
     end
 
     it 'uses singular "day" for 1 day' do
-      assigned_case = create(:closed_case, date_responded: 21.business_days.ago).decorate
-      expect(assigned_case.time_taken).to eq '1 working day'
+      closed_case_21_days_old =
+        create(:closed_case, date_responded: 21.business_days.ago).decorate
+      expect(closed_case_21_days_old.time_taken).to eq '1 working day'
     end
   end
 
   describe '#timeliness' do
     it 'returns correct string for answered in time' do
-      assigned_case = create(:closed_case).decorate
-      expect(assigned_case.timeliness).to eq 'Answered in time'
+      expect(closed_case.timeliness).to eq 'Answered in time'
     end
 
     it 'returns correct string for answered late' do
-      assigned_case = create(:closed_case, :late).decorate
-      expect(assigned_case.timeliness).to eq 'Answered late'
+      closed_late_case = create(:closed_case, :late).decorate
+      expect(closed_late_case.timeliness).to eq 'Answered late'
     end
   end
 end
