@@ -3,7 +3,7 @@ class CasesController < ApplicationController
     only: [
       :close, :edit, :new_response_upload, :show, :update,
         :upload_responses, :respond, :confirm_respond,
-        :process_closure
+        :process_closure, :de_escalate
     ]
   before_action :set_s3_direct_post, only: [:new_response_upload, :upload_responses]
 
@@ -141,6 +141,13 @@ class CasesController < ApplicationController
     render :index
   end
 
+  def de_escalate
+    authorize @case, :can_unflag_for_clearance?
+    unflag_service = CaseUnflagForClearanceService
+                       .new(user: current_user, kase: @case)
+    unflag_service.call
+  end
+
   private
 
   def set_permitted_events
@@ -158,7 +165,6 @@ class CasesController < ApplicationController
       exemption_ids: params[:case][:exemption_ids].nil? ? nil : params[:case][:exemption_ids].keys
     )
   end
-
 
   def create_foi_params
     params.require(:case).permit(

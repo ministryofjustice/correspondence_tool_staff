@@ -78,6 +78,7 @@ Rails.application.routes.draw do
     get 'respond', on: :member
     patch 'confirm_respond', on: :member
     get '/assignments/show_rejected' => 'assignments#show_rejected'
+    patch 'de_escalate' => 'cases#de_escalate', on: :member
 
     resources :assignments do
       patch 'accept_or_reject', on: :member

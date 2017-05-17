@@ -39,10 +39,22 @@ class CaseStateMachine
         .can_flag_for_clearance?
     end
 
-    transition from: :unassigned,                  to: :unassigned
-    transition from: :awaiting_responder,          to: :awaiting_responder
-    transition from: :drafting,                    to: :drafting
-    transition from: :awaiting_dispatch,           to: :awaiting_dispatch
+    transition from: :unassigned,         to: :unassigned
+    transition from: :awaiting_responder, to: :awaiting_responder
+    transition from: :drafting,           to: :drafting
+    transition from: :awaiting_dispatch,  to: :awaiting_dispatch
+  end
+
+  event :unflag_for_clearance do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object)
+        .can_unflag_for_clearance?
+    end
+
+    transition from: :unassigned,         to: :unassigned
+    transition from: :awaiting_responder, to: :awaiting_responder
+    transition from: :drafting,           to: :drafting
+    transition from: :awaiting_dispatch,  to: :awaiting_dispatch
   end
 
   event :reject_responder_assignment do
@@ -167,6 +179,13 @@ class CaseStateMachine
              managing_team_id: managing_team.id,
              approving_team_id: approving_team.id,
              event: :flag_for_clearance
+  end
+
+  def unflag_for_clearance!(user, managing_team)
+    trigger! :unflag_for_clearance,
+             user_id: user.id,
+             managing_team_id: managing_team.id,
+             event: :unflag_for_clearance
   end
 
   def remove_response!(user, responding_team, filename, num_attachments)

@@ -387,7 +387,7 @@ RSpec.describe AssignmentsController, type: :controller do
   describe '#unaccept' do
     let(:assignment) { assigned_case_trigger.approver_assignment }
     let(:params)     { { case_id: assigned_case.id, id: assignment.id} }
-    let(:service) { double(CaseUnacceptApproverAssignmentService, call: true) }
+    let(:service)    { double(CaseUnacceptApproverAssignmentService, call: true) }
 
     before do
       allow(CaseUnacceptApproverAssignmentService)

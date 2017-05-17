@@ -51,12 +51,6 @@ RSpec.describe Case, type: :model do
                                    .with(manager, managing_team, dacu_disclosure)
       end
 
-      it 'sets the internal deadline' do
-        allow(assigned_case).to receive(:set_internal_deadline)
-        assigned_case.flag_for_clearance manager
-        expect(assigned_case).to have_received(:set_internal_deadline)
-      end
-
       it 'sets the approving team' do
         allow(assigned_case).to receive(:approving_team=)
         assigned_case.flag_for_clearance manager

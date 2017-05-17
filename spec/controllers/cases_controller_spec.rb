@@ -1041,4 +1041,69 @@ RSpec.describe CasesController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH de_escalate' do
+    let!(:service) do
+      double(CaseUnflagForClearanceService, call: true).tap do |svc|
+        allow(CaseUnflagForClearanceService).to receive(:new).and_return(svc)
+      end
+    end
+    let(:flagged_case_decorated) do
+      flagged_case.decorate.tap do |decorated|
+        allow(flagged_case).to receive(:decorate).and_return(decorated)
+      end
+    end
+    let(:params) { { id: flagged_case.id } }
+
+    context 'as an anonymous user' do
+      it 'redirects to sign_in' do
+        expect(patch :de_escalate, params: params)
+          .to redirect_to(new_user_session_path)
+      end
+
+      it 'does not call the service' do
+        patch :de_escalate, params: params
+        expect(CaseUnflagForClearanceService).not_to have_received(:new)
+      end
+    end
+
+    context 'as an authenticated responder' do
+      before do
+        sign_in responder
+      end
+
+      it 'redirects to the application root path' do
+        patch :de_escalate, params: params
+        expect(response).to redirect_to(authenticated_root_path)
+      end
+    end
+
+    context 'as an authenticated manager' do
+      before do
+        sign_in manager
+      end
+
+      it 'instantiates and calls the service' do
+        patch :de_escalate, params: params
+        expect(CaseUnflagForClearanceService)
+          .to have_received(:new).with(user: manager,
+                                       kase: flagged_case_decorated)
+        expect(service).to have_received(:call)
+      end
+    end
+
+    context 'as an authenticated approver' do
+      before do
+        sign_in approver
+      end
+
+      it 'instantiates and calls the service' do
+        patch :de_escalate, params: params
+        expect(CaseUnflagForClearanceService)
+          .to have_received(:new).with(user: approver,
+                                       kase: flagged_case_decorated)
+        expect(service).to have_received(:call)
+      end
+    end
+  end
 end

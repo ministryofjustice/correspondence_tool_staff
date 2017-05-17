@@ -19,12 +19,12 @@ module CaseStates
   def flag_for_clearance(current_user)
     managing_team = current_user.managing_team_roles.first.team
     disclosure_team_name = Settings.foi_cases.default_clearance_team
-    self.approving_team = Team.approving.find_by(name: disclosure_team_name)
-    set_internal_deadline
-    save!
+    approving_team = Team.approving.find_by(name: disclosure_team_name)
     state_machine.flag_for_clearance! current_user,
                                       managing_team,
                                       approving_team
+    self.approving_team = approving_team
+    save!
   end
 
   def responder_assignment_rejected(current_user,

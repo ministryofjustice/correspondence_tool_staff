@@ -86,6 +86,28 @@ describe CasePolicy do
     it { should     permit(manager,   responded_case) }
   end
 
+  permissions :can_flag_for_clearance? do
+    it { should_not permit(responder, assigned_case) }
+    it { should     permit(manager,   assigned_case) }
+    it { should     permit(approver,  assigned_case) }
+    it { should_not permit(responder, assigned_flagged_case) }
+    it { should_not permit(manager,   assigned_flagged_case) }
+    it { should_not permit(approver,  assigned_flagged_case) }
+  end
+
+  permissions :can_remove_attachment? do
+    context 'case is still being drafted' do
+      it { should     permit(responder,         case_with_response) }
+      it { should_not permit(another_responder, case_with_response) }
+      it { should_not permit(manager,           case_with_response) }
+    end
+
+    context 'case has been marked as responded' do
+      it { should_not permit(another_responder, responded_case) }
+      it { should_not permit(manager,           responded_case) }
+    end
+  end
+
   permissions :can_respond? do
     it { should_not permit(manager,           case_with_response) }
     it { should     permit(responder,         case_with_response) }
@@ -93,6 +115,15 @@ describe CasePolicy do
     it { should_not permit(another_responder, case_with_response) }
     it { should_not permit(responder,         accepted_case) }
     it { should_not permit(coworker,          accepted_case) }
+  end
+
+  permissions :can_unflag_for_clearance? do
+    it { should_not permit(responder, assigned_case) }
+    it { should_not permit(manager,   assigned_case) }
+    it { should_not permit(approver,  assigned_case) }
+    it { should_not permit(responder, assigned_flagged_case) }
+    it { should     permit(manager,   assigned_flagged_case) }
+    it { should     permit(approver,  assigned_flagged_case) }
   end
 
   permissions :can_view_case_details? do
@@ -130,19 +161,6 @@ describe CasePolicy do
     it { should     permit(co_approver,       assigned_trigger_case) }
     it { should_not permit(approver,          assigned_case) }
     it { should_not permit(approver,          assigned_case) }
-  end
-
-  permissions :can_remove_attachment? do
-    context 'case is still being drafted' do
-      it { should     permit(responder,         case_with_response) }
-      it { should_not permit(another_responder, case_with_response) }
-      it { should_not permit(manager,           case_with_response) }
-    end
-
-    context 'case has been marked as responded' do
-      it { should_not permit(another_responder, responded_case) }
-      it { should_not permit(manager,           responded_case) }
-    end
   end
 
   describe 'case scope policy' do

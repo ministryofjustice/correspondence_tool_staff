@@ -36,7 +36,13 @@ class CasePolicy
   end
 
   def can_flag_for_clearance?
-    user.manager?
+    !self.case.requires_clearance? &&
+      (user.manager? || user.approver?)
+  end
+
+  def can_unflag_for_clearance?
+    self.case.requires_clearance? &&
+      (user.manager? || user.approver?)
   end
 
   def can_remove_attachment?

@@ -24,6 +24,8 @@ RSpec.describe CaseStateMachine, type: :model do
   let(:new_case)           { create :case }
   let(:assigned_case)      { create :assigned_case,
                                  responding_team: responding_team }
+  let(:assigned_flagged_case) { create :assigned_case, :flagged,
+                                       responding_team: responding_team }
   let(:case_being_drafted) { create :case_being_drafted,
                                     responder: responder,
                                     responding_team: responding_team }
@@ -69,6 +71,16 @@ RSpec.describe CaseStateMachine, type: :model do
     it { should require_permission(:can_flag_for_clearance?)
                   .using_options(user_id: manager.id)
                   .using_object(assigned_case) }
+  end
+
+  describe event(:unflag_for_clearance) do
+    it { should transition_from(:unassigned).to(:unassigned) }
+    it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
+    it { should transition_from(:drafting).to(:drafting) }
+    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
+    it { should require_permission(:can_unflag_for_clearance?)
+                  .using_options(user_id: manager.id)
+                  .using_object(assigned_flagged_case) }
   end
 
   describe event(:accept_approver_assignment) do
