@@ -34,6 +34,13 @@
                 = kase.message
             td aria-label="#{t('.actions')}"
               - if current_user.teams.include? kase.approver_assignment&.team
-                = render partial: 'take_case_on_button', locals: { kase: kase }
+                div.escalated-container
+                  = render partial: 'take_case_on_button', locals: { kase: kase }
+                  div.de-escalate-case-link
+                    = link_to 'De-escalate',
+                              unflag_for_clearance_case_path(id: kase.id),
+                              class: 'js-de-escalate-link'
+                div.de-escalated-container style="display:none"
+                  = "Case is de-escalated "
 
 

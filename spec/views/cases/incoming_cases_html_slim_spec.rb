@@ -16,7 +16,6 @@ describe 'cases/incoming_cases.html.slim', type: :view do
                        message: 'message number 2' }
 
   it 'displays the cases given it' do
-
     assign(:cases, [case1, case2])
 
     policy = double('Pundit::Policy', can_add_case?: false)
@@ -32,14 +31,16 @@ describe 'cases/incoming_cases.html.slim', type: :view do
     expect(first_case.request.name.text).to eq 'Joe Smith'
     expect(first_case.request.subject.text).to eq 'Prison Reform'
     expect(first_case.request.message.text).to eq 'message number 1'
-    expect(first_case.actions.text).to eq 'Take case on'
+    expect(first_case.actions.take_on_case.text).to eq 'Take case on'
+    expect(first_case.actions.de_escalate_link.text).to eq 'De-escalate'
 
     second_case = incoming_cases_page.case_list[1]
     expect(second_case.number.text).to eq "Link to case #{case2.number}"
     expect(second_case.request.name.text).to eq 'Jane Doe'
     expect(second_case.request.subject.text).to eq 'Court Reform'
     expect(second_case.request.message.text).to eq 'message number 2'
-    expect(second_case.actions.text).to eq 'Take case on'
+    expect(second_case.actions.take_on_case.text).to eq 'Take case on'
+    expect(second_case.actions.de_escalate_link.text).to eq 'De-escalate'
   end
 
 end

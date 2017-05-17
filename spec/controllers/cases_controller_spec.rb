@@ -1042,7 +1042,7 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
-  describe 'PATCH de_escalate' do
+  describe 'PATCH unflag_for_clearance' do
     let!(:service) do
       double(CaseUnflagForClearanceService, call: true).tap do |svc|
         allow(CaseUnflagForClearanceService).to receive(:new).and_return(svc)
@@ -1057,13 +1057,18 @@ RSpec.describe CasesController, type: :controller do
 
     context 'as an anonymous user' do
       it 'redirects to sign_in' do
-        expect(patch :de_escalate, params: params)
+        expect(patch :unflag_for_clearance, params: params)
           .to redirect_to(new_user_session_path)
       end
 
       it 'does not call the service' do
-        patch :de_escalate, params: params
+        patch :unflag_for_clearance, params: params, xhr: true
         expect(CaseUnflagForClearanceService).not_to have_received(:new)
+      end
+
+      it 'returns an error' do
+        patch :unflag_for_clearance, params: params, xhr: true
+        expect(response).to have_http_status 401
       end
     end
 
@@ -1072,9 +1077,15 @@ RSpec.describe CasesController, type: :controller do
         sign_in responder
       end
 
+      it 'does not call the service' do
+        patch :unflag_for_clearance, params: params, xhr: true
+        expect(CaseUnflagForClearanceService).not_to have_received(:new)
+      end
+
       it 'redirects to the application root path' do
-        patch :de_escalate, params: params
-        expect(response).to redirect_to(authenticated_root_path)
+        patch :unflag_for_clearance, params: params, xhr: true
+        expect(response.body)
+          .to include 'Turbolinks.visit("http://test.host/", {"action":"replace"})'
       end
     end
 
@@ -1084,11 +1095,16 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'instantiates and calls the service' do
-        patch :de_escalate, params: params
+        patch :unflag_for_clearance, params: params, xhr: true
         expect(CaseUnflagForClearanceService)
           .to have_received(:new).with(user: manager,
                                        kase: flagged_case_decorated)
         expect(service).to have_received(:call)
+      end
+
+      it 'returns a success code' do
+        patch :unflag_for_clearance, params: params, xhr: true
+        expect(response).to have_http_status 204
       end
     end
 
@@ -1098,11 +1114,16 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'instantiates and calls the service' do
-        patch :de_escalate, params: params
+        patch :unflag_for_clearance, params: params, xhr: true
         expect(CaseUnflagForClearanceService)
           .to have_received(:new).with(user: approver,
                                        kase: flagged_case_decorated)
         expect(service).to have_received(:call)
+      end
+
+      it 'returns success' do
+        patch :unflag_for_clearance, params: params, xhr: true
+        expect(response).to have_http_status 204
       end
     end
   end

@@ -16,6 +16,7 @@ module PageObjects
             element :take_on_case, '.button'
             element :success_message, '.action-success'
             element :undo_assign_link, '.action-success a'
+            element :de_escalate_link, '.js-de-escalate-link'
           end
         end
 
