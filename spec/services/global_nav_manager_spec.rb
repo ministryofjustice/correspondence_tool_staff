@@ -66,7 +66,11 @@ describe GlobalNavManager do
   end
   let(:open_cases_entry) do
     GlobalNavManager::GlobalNavManagerEntry.new 'Open cases',
-                                                [cases_path, root_path]
+                                                [open_cases_path]
+  end
+  let(:my_open_cases_entry) do
+    GlobalNavManager::GlobalNavManagerEntry.new 'My open cases',
+                                                [my_open_cases_path]
   end
   let(:closed_cases_entry) do
     GlobalNavManager::GlobalNavManagerEntry.new 'Closed cases',
@@ -106,6 +110,7 @@ describe GlobalNavManager do
         expect { |block| gnm.each(&block) }
           .to yield_successive_args incoming_cases_entry,
                                     open_cases_entry,
+                                    my_open_cases_entry,
                                     closed_cases_entry
       end
     end

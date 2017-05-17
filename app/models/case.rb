@@ -42,6 +42,11 @@ class Case < ApplicationRecord
       .where(assignments: { team_id: teams.map { |t| t.id },
                             state: ['pending', 'accepted']})
   end
+  scope :with_user, ->(*users) do
+    includes(:assignments)
+      .where(assignments: { user_id: users.map { |u| u.id },
+                            state: ['pending', 'accepted']})
+  end
 
   scope :accepted, -> { joins(:assignments).where.not(assignments: {user: nil} ) }
   scope :unaccepted, -> { joins(:assignments).where(assignments: {user: nil} ) }

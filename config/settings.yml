@@ -37,21 +37,23 @@ foi_cases:
 
 global_navigation:
   paths:
-    open_cases:
-      - /cases
-      - /
     closed_cases:
       - /cases/closed
     incoming_cases:
       - /cases/incoming
+    my_open_cases:
+      - /cases/my_open
+    open_cases:
+      - /cases/open
   user_views:
+    approver:
+      - incoming_cases
+      - open_cases
+      - my_open_cases
+      - closed_cases
     manager:
       - open_cases
       - closed_cases
     responder:
-      - open_cases
-      - closed_cases
-    approver:
-      - incoming_cases
       - open_cases
       - closed_cases

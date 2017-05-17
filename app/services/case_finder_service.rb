@@ -16,6 +16,10 @@ class CaseFinderService
       closed_cases
     when :incoming_cases
       incoming_cases
+    when :my_open_cases
+      my_open_cases
+    when :open_cases
+      open_cases
     end
     CaseDecorator.decorate_collection(policy_scope(@cases))
   end
@@ -28,12 +32,7 @@ class CaseFinderService
   private
 
   def index_cases
-    if @user.approver?
-      @cases = Case.open.flagged_for_approval(*@user.approving_teams)
-                 .accepted.by_deadline
-    else
-      @cases = Case.open.by_deadline
-    end
+    @cases = Case.all
   end
 
   def closed_cases
@@ -45,4 +44,23 @@ class CaseFinderService
                .unaccepted.by_deadline
   end
 
+  def my_open_cases
+    if @user.approver?
+      @cases = Case.open
+                 .flagged_for_approval(*@user.approving_teams)
+                 .with_user(@user)
+                 .accepted.by_deadline
+    else
+      @cases = Case.open.with_user(@user).by_deadline
+    end
+  end
+
+  def open_cases
+    if @user.approver?
+      @cases = Case.open.flagged_for_approval(*@user.approving_teams)
+                 .accepted.by_deadline
+    else
+      @cases = Case.open.by_deadline
+    end
+  end
 end

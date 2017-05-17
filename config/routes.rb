@@ -54,7 +54,7 @@ Rails.application.routes.draw do
   devise_for :users
 
   authenticated :user  do
-    root to: 'cases#index', as: :authenticated_root
+    root to: redirect('/cases/open'), as: :authenticated_root
   end
 
   # TODO: Limit this to the admin users, as soon as we figure out how we
@@ -68,9 +68,12 @@ Rails.application.routes.draw do
   post '/feedback' => 'feedback#create'
 
   resources :cases do
+    get '/', to: redirect('/cases/open'), on: :collection
     get 'close', on: :member
     get 'closed' => 'cases#closed_cases', on: :collection
     get 'incoming' => 'cases#incoming_cases', on: :collection
+    get 'my_open' => 'cases#my_open_cases', on: :collection
+    get 'open' => 'cases#open_cases', on: :collection
     patch 'process_closure', on: :member
     get 'respond', on: :member
     patch 'confirm_respond', on: :member

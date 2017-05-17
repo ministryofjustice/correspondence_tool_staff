@@ -311,6 +311,66 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
+  describe 'GET open' do
+
+    context "as an anonymous user" do
+      it "be redirected to signin if trying to list of questions" do
+        get :open_cases
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'as an authenticated approver' do
+      before do
+        sign_in approver
+      end
+
+      it 'assigns the result set from the CaseFinderService' do
+        expect(CaseFinderService)
+          .to receive(:new)
+                .with(approver, :open_cases)
+                .and_return(double CaseFinderService, cases: 'result set')
+        get :open_cases
+        expect(assigns(:cases)).to eq 'result set'
+      end
+
+      it 'renders the incoming_cases template' do
+        get :open_cases
+        expect(response).to render_template(:index)
+      end
+    end
+  end
+
+  describe 'GET my_open' do
+
+    context "as an anonymous user" do
+      it "be redirected to signin if trying to list of questions" do
+        get :my_open_cases
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'as an authenticated approver' do
+      before do
+        sign_in approver
+      end
+
+      it 'assigns the result set from the CaseFinderService' do
+        expect(CaseFinderService)
+          .to receive(:new)
+                .with(approver, :my_open_cases)
+                .and_return(double CaseFinderService, cases: 'result set')
+        get :my_open_cases
+        expect(assigns(:cases)).to eq 'result set'
+      end
+
+      it 'renders the incoming_cases template' do
+        get :open_cases
+        expect(response).to render_template(:index)
+      end
+    end
+  end
+
   describe 'GET show' do
 
     context 'viewing an unassigned case' do

@@ -45,7 +45,7 @@ RSpec.describe Case, type: :model do
   let(:assigned_case)      { create :assigned_case,
                                     responding_team: responding_team }
   let(:accepted_case)      { create :accepted_case,
-                                    responding_team: responding_team }
+                                    responder: responder }
   let(:case_being_drafted) { create :case_being_drafted }
   let(:case_being_drafted_flagged) { create :case_being_drafted, :flagged }
   let(:case_being_drafted_trigger) { create :case_being_drafted, :flagged_accepted }
@@ -187,6 +187,29 @@ RSpec.describe Case, type: :model do
     it 'includes accepted cases' do
       created_cases = [assigned_case, accepted_case]
       expect(Case.with_team(responding_team)).to match_array(created_cases)
+    end
+  end
+
+  describe 'with_user scope' do
+    it 'returns cases that are with a given user' do
+      create :accepted_case # Just some other case
+      expect(Case.with_user(responder)).to match_array([accepted_case])
+    end
+
+    it 'can accept more than one user' do
+      responder_b = create :responder
+      expected_cases = [
+        accepted_case,
+        create(:accepted_case, responder: responder),
+      ]
+      expect(Case.with_user(responder, responder_b))
+        .to match_array expected_cases
+    end
+
+    it 'does not include rejected assignments' do
+      expected_cases = [accepted_case]
+      create(:rejected_case, responder: responder)
+      expect(Case.with_user(responder)).to match_array(expected_cases)
     end
   end
 

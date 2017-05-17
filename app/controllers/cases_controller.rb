@@ -19,6 +19,16 @@ class CasesController < ApplicationController
     @cases = CaseFinderService.new(current_user, :incoming_cases).cases
   end
 
+  def my_open_cases
+    @cases = CaseFinderService.new(current_user, :my_open_cases).cases
+    render :index
+  end
+
+  def open_cases
+    @cases = CaseFinderService.new(current_user, :open_cases).cases
+    render :index
+  end
+
   def new
     authorize Case, :can_add_case?
 
