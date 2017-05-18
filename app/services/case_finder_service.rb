@@ -32,12 +32,7 @@ class CaseFinderService
   private
 
   def index_cases
-    if @user.approver?
-      @cases = Case.opened.flagged_for_approval(*@user.approving_teams)
-                 .accepted.by_deadline
-    else
-      @cases = Case.opened.by_deadline
-    end
+    @cases = Case.all
   end
 
   def closed_cases
@@ -51,21 +46,21 @@ class CaseFinderService
 
   def my_open_cases
     if @user.approver?
-      @cases = Case.open
+      @cases = Case.opened
                  .flagged_for_approval(*@user.approving_teams)
                  .with_user(@user)
                  .accepted.by_deadline
     else
-      @cases = Case.open.with_user(@user).by_deadline
+      @cases = Case.opened.with_user(@user).by_deadline
     end
   end
 
   def open_cases
     if @user.approver?
-      @cases = Case.open.flagged_for_approval(*@user.approving_teams)
+      @cases = Case.opened.flagged_for_approval(*@user.approving_teams)
                  .accepted.by_deadline
     else
-      @cases = Case.open.by_deadline
+      @cases = Case.opened.by_deadline
     end
   end
 end
