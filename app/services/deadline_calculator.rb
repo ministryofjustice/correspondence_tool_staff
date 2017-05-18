@@ -7,7 +7,7 @@ class DeadlineCalculator
       days_after_day_one.business_days.after(start_date(kase.received_date))
     end
 
-    def internal_deadline(kase)
+    def internal_deadline(kase)      # aka draft deadline
       days_after_day_one = kase.category.internal_time_limit - 1
       days_after_day_one.business_days.after(start_date(kase.received_date))
     end
@@ -24,4 +24,5 @@ class DeadlineCalculator
     end
   end
 
+  private_class_method :start_date
 end

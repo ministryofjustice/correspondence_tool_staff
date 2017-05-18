@@ -34,7 +34,7 @@ class Case < ApplicationRecord
   scope :by_deadline, -> {order("(properties ->> 'external_deadline')::timestamp with time zone ASC, cases.id") }
   scope :most_recent_first, -> {order("(properties ->> 'external_deadline')::timestamp with time zone DESC, cases.id") }
 
-  scope :open, -> { where.not(current_state: 'closed')}
+  scope :opened, -> { where.not(current_state: 'closed')}
   scope :closed, -> { where(current_state: 'closed').order(last_transitioned_at: :desc) }
 
   scope :with_team, ->(*teams) do
@@ -134,8 +134,7 @@ class Case < ApplicationRecord
   before_create :set_initial_state,
                 :set_number,
                 :set_managing_team,
-                :set_escalation_deadline,
-                :set_external_deadline
+                :set_deadlines
   before_save :prevent_number_change
 
 
@@ -248,7 +247,7 @@ class Case < ApplicationRecord
   end
 
   def requires_clearance?
-    approving_team.present?
+    approver_assignment.present?
   end
 
   private
@@ -256,6 +255,12 @@ class Case < ApplicationRecord
   def set_initial_state
     self.current_state = 'unassigned'
     self.last_transitioned_at = Time.now
+  end
+
+  def set_deadlines
+    set_escalation_deadline
+    set_internal_deadline
+    set_external_deadline
   end
 
   def set_escalation_deadline
