@@ -149,7 +149,7 @@ GEM
       activesupport (>= 4.1.0)
     gov_uk_date_fields (2.0.3)
       rails (>= 5.0)
-    govuk_elements_form_builder (0.0.4)
+    govuk_elements_form_builder (0.0.5)
       rails (>= 4.2)
     govuk_elements_rails (2.2.1)
       govuk_frontend_toolkit (>= 5.0.2)
@@ -485,7 +485,7 @@ DEPENDENCIES
   faker
   foreman (~> 0.82.0)
   gov_uk_date_fields (>= 2.0.2)
-  govuk_elements_form_builder (~> 0.0.4)
+  govuk_elements_form_builder (~> 0.0.5)
   govuk_elements_rails (>= 2.2.1)
   govuk_frontend_toolkit (>= 5.0.2)
   govuk_notify_rails
