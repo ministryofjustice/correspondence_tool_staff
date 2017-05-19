@@ -36,29 +36,6 @@ RSpec.describe Case, type: :model do
       end
     end
 
-    describe '#flag_for_clearance' do
-      let(:state_machine)  { assigned_case.state_machine }
-      let(:approving_team) { create :approving_team }
-      let!(:team_dacu_disclosure) { create :team_dacu_disclosure }
-
-      before do
-        allow(state_machine).to receive(:flag_for_clearance!)
-      end
-
-      it 'creates a state transition' do
-        assigned_case.flag_for_clearance manager
-        expect(state_machine).to have_received(:flag_for_clearance!)
-                                   .with(manager, managing_team, dacu_disclosure)
-      end
-
-      it 'sets the approving team' do
-        allow(assigned_case).to receive(:approving_team=)
-        assigned_case.flag_for_clearance manager
-        expect(assigned_case).to have_received(:approving_team=)
-                                   .with(team_dacu_disclosure)
-      end
-    end
-
     describe '#responder_assignment_rejected' do
       let(:state_machine)   { assigned_case.state_machine }
       let(:assignment)      { assigned_case.responder_assignment }

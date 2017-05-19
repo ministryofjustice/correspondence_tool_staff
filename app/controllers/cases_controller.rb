@@ -54,7 +54,7 @@ class CasesController < ApplicationController
       render :new
     elsif @case.save
       if create_foi_params[:flag_for_disclosure_specialists] == 'yes'
-        @case.flag_for_clearance(current_user)
+        CaseFlagForClearanceService.new(user: current_user, kase: @case).call
       end
       flash[:creating_case] = true
       redirect_to new_case_assignment_path @case
