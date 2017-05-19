@@ -6,7 +6,7 @@ if($("#action--mark-response-as-sent").length) {
     $("#action--mark-response-as-sent").remove();
 }
 <% else %>
-if($(".request--response-details").length) {
+if($(".case-attachments").length) {
     $("#case_response_<%= @attachment.id %>").remove();
 }
 <% end %>

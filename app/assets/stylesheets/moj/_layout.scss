@@ -98,61 +98,28 @@
   @include bold-24();
 
   margin-top: 0;
-  margin-bottom: em(10, 20);
+  margin-bottom: 0;
 
   @include media(tablet) {
     margin-top: 0;
-    margin-bottom: em(20, 24);
+    margin-bottom: 0;
   }
 }
 .request--message {
   border: 1px solid $border-colour;
   padding: 1em;
   margin-bottom: $gutter;
-  margin-right : $gutter;
-
   & > p {
     @include core-19();
     @include pre-wrap();
   }
 }
 
-.request--date-received {
-  @include bold-19();
-  display: inline-block;
-}
 
 table#response-details {
   margin-bottom: $gutter;
 }
 
-table#response-details th {
-  vertical-align: top;
-}
-
-table#request--responses tr:first-child td {
-  padding-top: 0px;
-  border-top: none;
-}
-
-table#request--responses td:nth-child(1) {
-  @include word-wrap;
-}
-
-table#request--responses td {
-  vertical-align: top;
-  border-top: 1px solid $border-colour;
-}
-
-table#request--responses td {
-  border-bottom: none;
-}
-table#request--responses a {
-  display: block;
-  &:after{
-    content: " "
-  }
-}
 
 .closed-case-report th {
   text-align: left;
@@ -167,6 +134,13 @@ table#request--responses a {
 }
 
 
-.request--response-details {
-  margin-bottom: $gutter * 2;
+.case-info {
+  margin-bottom : $gutter * 2;
+}
+
+#request--responses{
+  margin-bottom: $gutter;
+}
+.response-actions {
+  white-space: nowrap;
 }

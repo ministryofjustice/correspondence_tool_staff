@@ -1,0 +1,27 @@
+.case-attachments
+  h2.request--heading Response
+
+  table.case-attachments-report.table-font-xsmall
+    thead
+      tr
+        th
+          | Date
+        th
+          | File
+        th
+          | Action
+    tbody
+      - case_details.attachments.sort_by(&:filename).each do |ca|
+        tr id="case_response_#{ca.id}"
+          td
+            = l ca.created_at, format: :default
+          td aria-label="#{t('common.case.filename')}"
+            = ca.filename
+          td.request--responses--actions aria-label="#{t('common.case.actions')}"
+            .response-actions
+              = attachment_preview_link(ca)
+              = " | "
+              = attachment_download_link(case_details, ca)
+              - if policy(case_details).can_remove_attachment?
+                = " | "
+                = attachment_remove_link(case_details, ca)

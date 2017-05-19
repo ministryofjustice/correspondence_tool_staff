@@ -1,0 +1,27 @@
+.grid-row.case-status
+  .case-status--intime
+    .case-status__group.status
+      .case-status__heading
+        = t('common.case.status')
+      .case-status__data---large
+        = case_details.status
+
+    - if case_details.current_state != 'closed'
+      .case-status__group--last.who_its_with
+        .case-status__heading
+          = t('common.case.who_its_with')
+        .case-status__data
+          = case_details.who_its_with
+
+  .case-status__deadline
+    - if case_details.internal_deadline.present?
+      .case-status__group.draft
+        .case-status__heading
+          = t('common.case.internal_deadline')
+        .case-status__data
+          = l case_details.internal_deadline, format: :default_date
+    .case-status__group.external
+      .case-status__heading
+        = t('common.case.external_deadline')
+      .case-status__data
+        = l case_details.external_deadline, format: :default_date

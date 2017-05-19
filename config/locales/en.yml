@@ -164,15 +164,16 @@ en:
       outcome: Outcome
       download_link_html: |
         Download <span class="visuallyhidden">file %{filename}.</span>
-      email: "Requesters email address: "
+      email: "Requesters email"
       exemptions_heading: Exemptions
       external_deadline: Final deadline
+      internal_deadline: Draft deadline
       filename: File name
       header_case_number: "You are viewing case number "
       header_subject: "Case subject, "
       name: Requester
       no_actions: No actions available
-      postal_address: "Requesters postal address: "
+      postal_address: "Requesters postal address"
       received_date: Date received
       reason_for_refusal: Reason for refusal
       remove_link_html: |
@@ -185,10 +186,9 @@ en:
       responses:
         one: Response
         other: Responses
-      request: "Request: "
-      requester_type: "Type of requester "
+      request: "Request"
+      requester_type: "Type of requester"
       status: Status
-      status_closed: Status
       time_taken: Time taken
       time_taken_result:
         one: "%{count} working day"

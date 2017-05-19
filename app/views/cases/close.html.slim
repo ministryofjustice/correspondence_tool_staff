@@ -13,8 +13,8 @@
 = render partial: 'layouts/header'
 
 .grid-row
-  .column-two-thirds
-    = render partial: 'cases/response_details', locals: { case_details: @case }
+  .column-full
+    = render partial: 'cases/case_attachments', locals: { case_details: @case }
 
 = form_for @case, url: process_closure_case_path do |f|
   .form-group

@@ -1,9 +1,15 @@
 = GovukElementsErrorsHelper.error_summary @assignment,
   "#{pluralize(@assignment.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
-= render partial: 'layouts/case_detail_page', locals: { case_details: @case,
-                                                        include_sidebar: false,
-                                                        include_response_details_for_view: false, }
+
+section.case-info
+  .request
+    h2.request--heading
+      = t('common.case.request')
+
+    .request--message
+      p
+        = @case.message
 
 
 .grid-row

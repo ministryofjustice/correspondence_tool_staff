@@ -4,11 +4,62 @@
 
 - if @case.under_review?
   .alert-orange
-    = t('alerts.escalation_warning_html', escalation_deadline:  "#{l @case.escalation_deadline, format: :default_date}")
+    = t('alerts.escalation_warning_html', escalation_deadline: "#{l @case.escalation_deadline, format: :default_date}")
+
+- content_for :heading
+  span.visually-hidden
+    = t('common.case.header_subject')
+  = @case.subject
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
 
 div id="case-#{@case.id}"
-  = render partial: 'layouts/case_detail_page',
-           locals: { case_details: @case,
-                     include_sidebar: true,
-                     include_response_details_for_view: true, }
+  - if @permitted_events.any?
+    section.case-info
+      .button-holder
+        - @permitted_events.each do |event|
+          = action_button_for(event)
 
+  section.case-info
+    = render partial: 'cases/case_status', locals: {case_details: @case}
+
+
+  section.case-info
+    = render partial: 'cases/case_details', locals: {case_details: @case}
+
+  section.case-info
+    .request
+      h2.request--heading
+        = t('common.case.request')
+
+      .request--message
+        p
+          = @case.message
+
+  - if @case.attachments.present?
+    - if @case.transitions.responded.present? \
+                     || policy(@case).can_add_attachment?
+
+      = render partial: 'cases/case_attachments', locals: {case_details: @case}
+
+  - if @case_transitions.any?
+    section.case-info
+      h2.request--heading Case history
+
+      table#case-history.table-font-xsmall
+        thead
+          tr#case-history-table-headers
+            th Date
+            th Who
+            th Action
+        tbody
+          - @case_transitions.each do |ct|
+            tr.
+              td = ct.action_date
+              td = ct.user_name
+              td = ct.event_and_detail

@@ -1,0 +1,82 @@
+.grid-row
+  .column-full.case-details
+    h2.request--heading
+      = "Case details"
+
+    table.table-font-xsmall
+      tbody.basic-details
+        tr
+          th Case Type
+          td FOI
+
+        tr.date-received
+          th = t('common.case.received_date')
+          td = l case_details.received_date, format: :default
+
+        tr.requester-name
+          th = t('common.case.name')
+          td = case_details.name
+
+        - if case_details.email.present?
+          tr.requester-email
+            th = t('common.case.email')
+            td = case_details.email
+
+        - if case_details.postal_address.present?
+          tr.requester-address
+            th = t('common.case.postal_address')
+            td
+              pre
+                = case_details.postal_address
+        tr.requester-type
+          th = t('common.case.requester_type')
+          td = case_details.requester_type.humanize
+
+      - if case_details.transitions.accepted.present?
+        tbody.responder-details
+          tr.team
+            th = t('common.case.responding_team')
+            td = case_details.transitions.accepted.last.responding_team.name
+
+          - unless case_details.transitions.responded.present?
+            tr.responder-name
+              th = t('common.case.responders', count: 1)
+              td = case_details.responder.full_name
+          - else
+            tr.responder-name
+              th = t('common.case.responders',
+                        count: case_details.transitions.responded.count)
+              td
+                ul
+                  - case_details.responder_history.each do |responder|
+                    li = responder.full_name
+
+      - if case_details.closed?
+        tbody.response-details
+          tr.date-responded
+            th = t('common.case.date_responded')
+            td = l case_details.date_responded
+
+          tr.timeliness
+            th = t('common.case.timeliness')
+            td = case_details.timeliness
+
+          tr.time-taken
+            th = t('common.case.time_taken')
+            td = case_details.time_taken
+          tr.outcome
+            th = t('common.case.outcome')
+            td = case_details.outcome.name
+
+          - if case_details.refusal_reason.present?
+            tr.refusal-reason
+              th = t('common.case.reason_for_refusal')
+              td = case_details.refusal_reason.name
+
+          - unless case_details.exemptions.empty?
+            tr.exemptions
+              th = t('common.case.exemptions_heading')
+              td
+                ul
+                  - case_details.exemptions.each do |exemption|
+                    li = exemption.name

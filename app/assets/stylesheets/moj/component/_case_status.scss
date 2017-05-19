@@ -1,0 +1,46 @@
+.case-status.grid-row {
+  @include flexbox();
+  align-items: stretch;
+  margin: 0px;
+}
+
+
+.case-status__deadline, .case-status--intime {
+  @include flex(1);
+
+  padding-top: $gutter;
+  padding-bottom: $gutter;
+  padding-left: $gutter-half;
+}
+
+.case-status--intime {
+  background-color: $govuk-blue;
+  color: #ffffff;
+  margin-right: $gutter-half;
+
+}
+
+.case-status__deadline {
+  border: 1px solid $border-colour;
+
+}
+
+.case-status__group {
+  margin-bottom: $gutter;
+}
+.case-status__group--last {
+  margin-bottom: 0;
+}
+
+
+.case-status__heading {
+  @include core-19();
+}
+
+
+.case-status__data {
+  @include bold-24();
+}
+.case-status__data---large {
+  @include bold-36();
+}
