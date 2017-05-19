@@ -47,6 +47,14 @@ class CaseDecorator < Draper::Decorator
     end
   end
 
+  def status
+    if current_state != 'closed'
+      I18n.t("state.#{current_state}")
+    else
+      I18n.t("state.#{current_state}_status")
+    end
+  end
+
 
   private
 

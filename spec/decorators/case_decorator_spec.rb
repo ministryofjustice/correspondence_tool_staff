@@ -3,6 +3,7 @@ require 'rails_helper'
 describe CaseDecorator, type: :model do
   let(:unassigned_case) { create(:case).decorate }
   let(:assigned_case)   { create(:assigned_case).decorate }
+  let(:accepted_case)   { create(:accepted_case).decorate }
   let(:responded_case)  { create(:responded_case).decorate }
   let(:closed_case)     { create(:closed_case).decorate }
   let(:manager)         { create :manager, managing_teams: [managing_team] }
@@ -151,6 +152,28 @@ describe CaseDecorator, type: :model do
         kase = create(:case, message: long_message).decorate
         expect(kase.message_extract).to eq short_message
       end
+    end
+  end
+
+  describe '#status' do
+    it 'returns a closed status' do
+      expect(closed_case.status).to eq 'Case closed'
+    end
+
+    it 'returns a unassigned status' do
+      expect(unassigned_case.status).to eq 'Needs reassigning'
+    end
+
+    it 'returns a assigned status' do
+      expect(assigned_case.status).to eq 'To be accepted'
+    end
+
+    it 'returns a responded status' do
+      expect(accepted_case.status).to eq 'Draft in progress'
+    end
+
+    it 'returns a responded status' do
+      expect(responded_case.status).to eq 'Ready to close'
     end
   end
 end
