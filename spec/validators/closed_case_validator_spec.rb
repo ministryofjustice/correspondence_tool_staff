@@ -11,6 +11,11 @@ describe 'ClosedCaseValidator' do
       before(:each) { kase.prepare_for_close }
 
       describe 'date responded validation' do
+
+        before(:each) do
+          kase.outcome = create :outcome
+        end
+
         it 'errors if date_responded blank' do
           expect(kase).not_to be_valid
           expect(kase.errors[:date_responded]).to eq(["can't be blank"])
@@ -20,6 +25,17 @@ describe 'ClosedCaseValidator' do
           kase.date_responded = 3.days.from_now
           expect(kase).not_to be_valid
           expect(kase.errors[:date_responded]).to eq(["can't be in the future"])
+        end
+
+        it 'errors if date before received date' do
+          kase.date_responded = kase.received_date - 1.day
+          expect(kase).not_to be_valid
+          expect(kase.errors[:date_responded]).to eq(["can't be before date received"])
+        end
+
+        it 'does not error if between received date and today' do
+          kase.date_responded = kase.received_date
+          expect(kase).to be_valid
         end
       end
 
@@ -49,7 +65,7 @@ describe 'ClosedCaseValidator' do
           end
 
           it 'does not error if refusal reason present' do
-            kase = build :case, outcome: @outcome1, refusal_reason: @reason, date_responded: 3.days.ago
+            kase = build :case, outcome: @outcome1, refusal_reason: @reason, received_date: 10.days.ago, date_responded: 3.days.ago
             kase.prepare_for_close
             expect(kase).to be_valid
           end
@@ -57,7 +73,7 @@ describe 'ClosedCaseValidator' do
 
         context 'outcome does not require refusal reason' do
           it 'errors if refusal reason present' do
-            kase = build :case, outcome: @outcome2, refusal_reason: @reason, date_responded: 3.days.ago
+            kase = build :case, outcome: @outcome2, refusal_reason: @reason, received_date: 10.days.ago, date_responded: 3.days.ago
             kase.prepare_for_close
             expect(kase).not_to be_valid
             expect(kase.errors[:refusal_reason]).to include('cannot be present for the specified outcome')

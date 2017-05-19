@@ -27,6 +27,10 @@ class CaseDecorator < Draper::Decorator
     object.requires_clearance? ? object.internal_deadline : nil
   end
 
+  def error_summary_message
+    "#{h.pluralize(errors.count, I18n.t('common.error'))} #{ I18n.t('common.summary_error')}"
+  end
+
 
   private
 

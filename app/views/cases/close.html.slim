@@ -1,5 +1,6 @@
-= GovukElementsErrorsHelper.error_summary @case,
-  "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+= GovukElementsErrorsHelper.error_summary @case.object, @case.error_summary_message, ''
+
+
 
 - content_for :heading
   = t('.heading')

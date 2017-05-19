@@ -15,7 +15,9 @@ class ClosedCaseValidator < ActiveModel::Validator
     if rec.date_responded.blank?
       rec.errors.add(:date_responded, "can't be blank")
     else
-      if rec.date_responded > Date.today
+      if rec.date_responded < rec.received_date
+        rec.errors.add(:date_responded, "can't be before date received")
+      elsif rec.date_responded > Date.today
         rec.errors.add(:date_responded, "can't be in the future")
       end
     end

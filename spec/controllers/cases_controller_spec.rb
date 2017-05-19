@@ -29,7 +29,7 @@ RSpec.describe CasesController, type: :controller do
   let(:assigned_case)      { create :assigned_case,
                                     responding_team: responding_team }
   let(:accepted_case)      { create :accepted_case, responder: responder }
-  let(:responded_case)     { create :responded_case, responder: responder }
+  let(:responded_case)     { create :responded_case, responder: responder, received_date: 5.days.ago }
   let(:case_with_response) { create :case_with_response, responder: responder }
   let(:flagged_case)       { create :assigned_case, :flagged,
                                     responding_team: responding_team,
@@ -595,7 +595,7 @@ RSpec.describe CasesController, type: :controller do
     end
 
     context 'viewing a responded_case' do
-      let(:responded_case) { create(:responded_case)   }
+      let(:responded_case) { create(:responded_case, received_date: 5.days.ago )   }
       before do
         sign_in user
         get :show, params: { id: responded_case.id   }
