@@ -1,9 +1,17 @@
 class CasesController < ApplicationController
   before_action :set_case,
     only: [
-      :close, :edit, :new_response_upload, :show, :update,
-        :upload_responses, :respond, :confirm_respond,
-        :process_closure, :unflag_for_clearance
+      :close,
+      :confirm_respond,
+      :edit,
+      :flag_for_clearance,
+      :new_response_upload,
+      :process_closure,
+      :respond,
+      :show,
+      :unflag_for_clearance,
+      :update,
+      :upload_responses,
     ]
   before_action :set_s3_direct_post, only: [:new_response_upload, :upload_responses]
 
@@ -144,6 +152,12 @@ class CasesController < ApplicationController
   def unflag_for_clearance
     authorize @case, :can_unflag_for_clearance?
     CaseUnflagForClearanceService.new(user: current_user, kase: @case).call
+    head :no_content
+  end
+
+  def flag_for_clearance
+    authorize @case, :can_flag_for_clearance?
+    CaseFlagForClearanceService.new(user: current_user, kase: @case).call
     head :no_content
   end
 

@@ -43,6 +43,7 @@ feature 'cases requiring clearance by disclosure specialist' do
     expect(incoming_cases_page.case_list.first.number.text)
       .to have_content kase.number
 
+    ## TAKE CASE ON ##################################################
     case_list_item = incoming_cases_page.case_list.first
     case_list_item.actions.take_on_case.click
     case_list_item.actions.wait_until_success_message_visible
@@ -50,8 +51,24 @@ feature 'cases requiring clearance by disclosure specialist' do
       .to include 'Moved to open cases'
     expect(kase.reload.approver).to eq disclosure_specialist
 
+    ## UNDO TAKE CASE ON ############################################
     case_list_item.actions.undo_assign_link.click
     case_list_item.actions.wait_until_take_on_case_visible
     expect(kase.reload.approver).to be_nil
+
+    ## DE-ESCALATE CASE #############################################
+    # Not currently working, it behaves as if our functions in
+    # DeSecalateCase.js never get bound to the de-escalate link: the click
+    # action below generates a GET /cases/:id/unflag_for_clearance request
+    # instead of a PATCH.
+    # case_list_item.actions.de_escalate_link.click
+    # case_list_item.actions.wait_until_undo_de_escalate_visible
+    # expect(kase.reload.approver_assignment).to be_empty
+
+    ## UNDO DE-ESCALATE CASE ########################################
+    # Not currently working, as above.
+    # case_list_item.actions.undo_de_escalate_link.click
+    # case_list_item.actions.wait_until_de_escalate_link_visible
+    # expect(kase.reload.approving_team).to eq team_dacu_disclosure
   end
 end

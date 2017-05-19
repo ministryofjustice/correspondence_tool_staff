@@ -15,5 +15,21 @@ moj.Modules.CaseClosure = {
             });
             return false;
         });
+
+        $('.js-undo-de-escalate-link').on('click', function(e) {
+            var $link = $(this)[0];
+            $.ajax({
+                url: $link.href,
+                method: 'patch',
+                statusCode: {
+                    204: function() {
+                        $td = $($link.closest('td'));
+                        $td.find('.de-escalated-container').hide();
+                        $td.find('.escalated-container').show();
+                    }
+                }
+            });
+            return false;
+        });
    }
 };

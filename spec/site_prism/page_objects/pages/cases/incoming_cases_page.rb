@@ -17,6 +17,8 @@ module PageObjects
             element :success_message, '.action-success'
             element :undo_assign_link, '.action-success a'
             element :de_escalate_link, '.js-de-escalate-link'
+            element :undo_de_escalate, '.de-escalated-container'
+            element :undo_de_escalate_link, '.js-undo-de-escalate-link'
           end
         end
 

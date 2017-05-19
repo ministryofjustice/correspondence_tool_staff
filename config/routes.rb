@@ -79,6 +79,7 @@ Rails.application.routes.draw do
     patch 'confirm_respond', on: :member
     get '/assignments/show_rejected' => 'assignments#show_rejected'
     patch 'unflag_for_clearance' => 'cases#unflag_for_clearance', on: :member
+    patch 'flag_for_clearance' => 'cases#flag_for_clearance', on: :member
 
     resources :assignments do
       patch 'accept_or_reject', on: :member

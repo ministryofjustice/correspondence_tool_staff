@@ -42,5 +42,9 @@
                               class: 'js-de-escalate-link'
                 div.de-escalated-container style="display:none"
                   = "Case is de-escalated "
+                  = link_to 'Undo',
+                            flag_for_clearance_case_path(id: kase.id),
+                            class: 'js-undo-de-escalate-link'
+
 
 
