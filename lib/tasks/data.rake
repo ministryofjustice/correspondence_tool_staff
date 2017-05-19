@@ -59,7 +59,6 @@ namespace :data do
       image_extensions = %w( .jpg .jpeg .bmp .gif .png )
       attachments = CaseAttachment.all
       attachments.each do |att|
-        # puts ">>>>>>>>>>>>>> looking at att. #{att.id} #{att.key} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
         if File.extname(att.key).downcase.in?(image_extensions) && File.extname(att.preview_key).downcase == '.pdf'
           puts "PROCESSING ATTACHMENT #{att.id} with key: #{att.preview_key} #{__FILE__}:#{__LINE__}"
           obj = CASE_UPLOADS_S3_BUCKET.object(att.preview_key)
@@ -77,10 +76,21 @@ namespace :data do
     end
 
 
+    desc 'Remove orphan PDFs from S3'
+    task delete_orphan_pdf: :environment do
+      required_pdfs = CaseAttachment.all.map(&:preview_key).compact
+
+      actual_pdfs = CASE_UPLOADS_S3_BUCKET.objects.map(&:key)
+      actual_pdfs.delete_if { |key| key !~ /\/response_previews\// }
+      pdfs_to_delete = actual_pdfs - required_pdfs
+      pdfs_to_delete.each do |key|
+        puts "Deleting orphan preview #{key}"
+        obj = CASE_UPLOADS_S3_BUCKET.object(key)
+        obj.delete
+      end
+    end
   end
 end
-
-
 
 def fix_transition_user_metadata(transition, field)
   if transition.metadata[field].respond_to? :has_key?

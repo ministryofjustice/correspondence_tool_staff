@@ -107,16 +107,61 @@ RSpec.describe CaseAttachment, type: :model do
     end
   end
 
+  describe '#destroy' do
+    context 'when no preview_key is nil' do
+      it 'deletes the object but not the preview object' do
+        attachment = create :case_response, preview_key: nil
+        attachment_object = instance_double(Aws::S3::Object, delete: nil)
+        allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with(attachment.key).and_return(attachment_object)
+
+        attachment.destroy!
+
+        expect(attachment_object).to have_received(:delete)
+        expect(CASE_UPLOADS_S3_BUCKET).not_to have_received(:object).with(nil)
+      end
+    end
+
+    context 'when preview key is not nil' do
+      it 'deletes both the object and the preview object' do
+        attachment = create :case_response
+        attachment_object = instance_double(Aws::S3::Object, delete: nil)
+        preview_object = instance_double(Aws::S3::Object, delete: nil)
+        allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with(attachment.key).and_return(attachment_object)
+        allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with(attachment.preview_key).and_return(preview_object)
+
+        attachment.destroy!
+
+        expect(attachment_object).to have_received(:delete)
+        expect(preview_object).to have_received(:delete)
+      end
+    end
+
+    context 'when preiew key is same as key' do
+      it 'does not delete the preview' do
+        attachment = create :case_response, key: 'abcd.pdf', preview_key: 'abcd.pdf'
+        attachment_object = instance_double(Aws::S3::Object, delete: nil)
+        allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with(attachment.key).and_return(attachment_object)
+
+        attachment.destroy!
+
+        expect(attachment_object).to have_received(:delete).exactly(1)
+      end
+
+
+    end
+  end
 
   it 'removes the file from the storage bucket on destruction' do
     attachment = create :case_response
-    attachment_object = instance_double(
-      Aws::S3::Object,
-      delete: instance_double(Aws::S3::Types::DeleteObjectOutput)
-    )
+    attachment_object = instance_double(Aws::S3::Object, delete: nil)
+    preview_object = instance_double(Aws::S3::Object, delete: nil)
     allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                        .with(attachment.key)
                                        .and_return(attachment_object)
+    allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
+                                       .with(attachment.preview_key)
+                                       .and_return(preview_object)
+
 
     attachment.destroy!
 
@@ -238,6 +283,19 @@ RSpec.describe CaseAttachment, type: :model do
           jpg_case_attachment.__send__(:upload_preview, 'xxx', 2)
         end
       end
+    end
+  end
+
+  describe 's3_preview_object' do
+    it 'returns nil for attachments without previews' do
+      att = create :correspondence_response, :without_preview_key
+      expect(att.s3_preview_object).to be_nil
+    end
+
+    it 'retuns s3 object if preview key exists' do
+      att = create :correspondence_response, preview_key: '2/responses/eon.pdf'
+      expect(att.s3_preview_object).to be_instance_of(Aws::S3::Object)
+      expect(att.s3_preview_object.key).to eq '2/responses/eon.pdf'
     end
   end
 

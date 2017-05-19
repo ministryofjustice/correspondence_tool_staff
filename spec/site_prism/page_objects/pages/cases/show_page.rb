@@ -50,6 +50,10 @@ module PageObjects
           element :outcome, '#request--outcome'
           element :reason_for_refusal, '#request--reason-for-refusal'
           element :exemptions, '#request--exemptions'
+
+          def find_by_attachment_id(attachment_id)
+            find("#case_response_#{attachment_id} a[data-method='delete']")
+          end
         end
 
         section :case_history, '#case-history' do
