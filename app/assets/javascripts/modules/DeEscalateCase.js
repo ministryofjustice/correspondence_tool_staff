@@ -1,35 +1,23 @@
 moj.Modules.CaseClosure = {
-    init: function () {
-        $('.js-de-escalate-link').on('click', function(e) {
-            var $link = $(this)[0];
-            $.ajax({
-                url: $link.href,
-                method: 'patch',
-                statusCode: {
-                    204: function() {
-                        $td = $($link.closest('td'));
-                        $td.find('.escalated-container').hide();
-                        $td.find('.de-escalated-container').show();
-                    }
-                }
-            });
-            return false;
-        });
+  init: function () {
+    function toggleEscalatedContainers() {
+      var $link = $(this);
+      $.ajax({
+        url: $link.attr('href'),
+        method: 'patch',
+        statusCode: {
+          204: function() {
+            var $td = $link.closest('td');
+            $td.find('.escalated-container').toggle();
+            $td.find('.de-escalated-container').toggle();
+          }
+        }
+      });
+      return false;
+    }
 
-        $('.js-undo-de-escalate-link').on('click', function(e) {
-            var $link = $(this)[0];
-            $.ajax({
-                url: $link.href,
-                method: 'patch',
-                statusCode: {
-                    204: function() {
-                        $td = $($link.closest('td'));
-                        $td.find('.de-escalated-container').hide();
-                        $td.find('.escalated-container').show();
-                    }
-                }
-            });
-            return false;
-        });
-   }
+    $('.js-de-escalate-link, .js-undo-de-escalate-link').on(
+      'click', toggleEscalatedContainers
+    );
+  }
 };
