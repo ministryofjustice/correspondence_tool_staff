@@ -17,22 +17,7 @@ feature 'viewing response details' do
       scenario 'when the case has a response' do
         cases_show_page.load(id: assigned_case.id)
 
-        expect(cases_show_page).not_to have_response_details
-      end
-    end
-
-    context 'with a case that has been accepted' do
-      given(:accepted_case)  { create :accepted_case,
-                                      responder: responder }
-
-      scenario 'when the case has a response' do
-        cases_show_page.load(id: accepted_case.id)
-
-        expect(cases_show_page).to have_response_details
-        expect(cases_show_page.response_details.responding_team)
-          .to have_content(responding_team.name)
-        expect(cases_show_page.response_details.responders)
-          .to have_content(responder.full_name)
+        expect(cases_show_page).not_to have_case_attachments
       end
     end
 
@@ -47,13 +32,13 @@ feature 'viewing response details' do
       scenario 'when the case has a response' do
         cases_show_page.load(id: responded_case.id)
 
-        expect(cases_show_page).to have_response_details
-        expect(cases_show_page.response_details.responses.first)
-          .to have_content(response.filename)
-        expect(cases_show_page.response_details.responding_team)
-          .to have_content(responding_team.name)
-        expect(cases_show_page.response_details.responders)
-          .to have_content(responder.full_name)
+        expect(cases_show_page).to have_case_attachments
+        expect(cases_show_page.case_attachments.first.filename.text)
+          .to eq(response.filename)
+        expect(cases_show_page.case_details.responders_details.team.data.text)
+          .to eq(responding_team.name)
+        expect(cases_show_page.case_details.responders_details.name.data.text)
+          .to eq(responder.full_name)
       end
 
       given(:case_with_many_responses) do
@@ -68,7 +53,7 @@ feature 'viewing response details' do
         responded_case.attachments << build(:case_attachment)
         cases_show_page.load(id: responded_case.id)
 
-        rendered_filenames = cases_show_page.response_details.responses
+        rendered_filenames = cases_show_page.case_attachments
                                .map do |response|
           response.filename.text
         end
@@ -85,13 +70,18 @@ feature 'viewing response details' do
       scenario 'when the case has a response' do
         cases_show_page.load(id: closed_case.id)
 
-        expect(cases_show_page).to have_response_details
-        expect(cases_show_page.response_details.responding_team)
-          .to have_content(responding_team.name)
-        expect(cases_show_page.response_details.date_responded)
-          .to have_content(closed_case.date_responded.strftime('%e %b %Y'))
-        expect(cases_show_page.response_details.outcome)
-            .to have_content(closed_case.outcome.name)
+        response_details = cases_show_page.case_details.response_details
+
+        expect(cases_show_page.case_details).to have_response_details
+
+        expect(cases_show_page.case_details.responders_details.team.data.text)
+          .to eq(responding_team.name)
+
+        expect(response_details.date_responded.data.text)
+          .to eq(closed_case.date_responded.strftime('%e %b %Y'))
+
+        expect(response_details.outcome.data.text)
+            .to eq(closed_case.outcome.name)
       end
     end
 
@@ -104,25 +94,18 @@ feature 'viewing response details' do
 
     context 'with a case being drafted' do
       given(:accepted_case) { create :accepted_case, responder: responder }
-      given(:response)      { build  :case_response }
+      given(:response)      { create  :case_response }
 
       scenario 'when the case has no responses' do
         cases_show_page.load(id: accepted_case.id)
-        expect(cases_show_page).to have_response_details
-        expect(cases_show_page.response_details).to have_responding_team
-        expect(cases_show_page.response_details).to have_responders
-        expect(cases_show_page.response_details).not_to have_date_responded
-        expect(cases_show_page.response_details).not_to have_outcome
+        expect(cases_show_page.case_details).to have_no_response_details
+        expect(cases_show_page).to have_no_case_attachments
       end
 
       scenario 'when the case has a response' do
         accepted_case.attachments << response
         cases_show_page.load(id: accepted_case.id)
-        expect(cases_show_page).to have_response_details
-        expect(cases_show_page.response_details).to have_responding_team
-        expect(cases_show_page.response_details).to have_responders
-        expect(cases_show_page.response_details).not_to have_date_responded
-        expect(cases_show_page.response_details).not_to have_outcome
+        expect(cases_show_page).to have_case_attachments
       end
     end
   end

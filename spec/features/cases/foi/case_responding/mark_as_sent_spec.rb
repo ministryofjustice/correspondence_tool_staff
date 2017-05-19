@@ -19,11 +19,11 @@ feature 'Mark response as sent' do
   scenario 'the assigned KILO has uploaded a response' do
     cases_show_page.load(id: kase.id)
 
-    expect(cases_show_page.sidebar.actions).to have_upload_response
-    expect(cases_show_page.sidebar.actions).to have_mark_as_sent
-    cases_show_page.sidebar.actions.mark_as_sent.click
+    expect(cases_show_page.actions).to have_upload_response
+    expect(cases_show_page.actions).to have_mark_as_sent
+    cases_show_page.actions.mark_as_sent.click
 
-    expect(current_path).to eq respond_case_path(kase.id)
+    expect(cases_respond_page).to be_displayed
     expect(cases_respond_page).to have_reminders
     expect(cases_respond_page.reminders.text).to eq(
 "Make sure you have: cleared the response with the Deputy Director uploaded \
@@ -51,7 +51,7 @@ made the request"
   scenario 'the assigned KILO has uploaded a response but decides not to mark as sent' do
     cases_show_page.load(id: kase.id)
 
-    cases_show_page.sidebar.actions.mark_as_sent.click
+    cases_show_page.actions.mark_as_sent.click
 
     expect(cases_respond_page).to be_displayed
     expect(cases_respond_page).to have_reminders
@@ -70,7 +70,7 @@ made the request"
 
     cases_respond_page.back_link.click
 
-    expect(current_path).to eq case_path(kase.id)
+    expect(cases_show_page).to be_displayed(kase.id)
 
   end
 
@@ -82,11 +82,11 @@ made the request"
     scenario 'marking the case as sent' do
       cases_show_page.load(id: kase.id)
 
-      expect(cases_show_page.sidebar.actions).to have_mark_as_sent
+      expect(cases_show_page.actions).to have_mark_as_sent
 
-      cases_show_page.sidebar.actions.mark_as_sent.click
+      cases_show_page.actions.mark_as_sent.click
 
-      expect(current_path).to eq respond_case_path(kase.id)
+      expect(cases_respond_page).to be_displayed(kase.id)
     end
   end
 end

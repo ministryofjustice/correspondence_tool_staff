@@ -19,9 +19,9 @@ feature 'Upload response' do
 
     scenario 'clicking link on case detail page goes to upload page' do
       cases_show_page.load(id: kase.id)
-      expect(cases_show_page.sidebar.actions).to have_upload_response
-      expect(cases_show_page.sidebar.actions).not_to have_mark_as_sent
-      expect(cases_show_page.sidebar.actions).not_to have_close_case
+      expect(cases_show_page.actions).to have_upload_response
+      expect(cases_show_page.actions).not_to have_mark_as_sent
+      expect(cases_show_page.actions).not_to have_close_case
 
       click_link 'Upload response'
 
@@ -36,9 +36,9 @@ feature 'Upload response' do
 
     scenario 'clicking link on case detail page goes to upload page' do
       cases_show_page.load(id: kase.id)
-      expect(cases_show_page.sidebar.actions).to have_upload_response
-      expect(cases_show_page.sidebar.actions).not_to have_mark_as_sent
-      expect(cases_show_page.sidebar.actions).not_to have_close_case
+      expect(cases_show_page.actions).to have_upload_response
+      expect(cases_show_page.actions).not_to have_mark_as_sent
+      expect(cases_show_page.actions).not_to have_close_case
 
       click_link 'Upload response'
 

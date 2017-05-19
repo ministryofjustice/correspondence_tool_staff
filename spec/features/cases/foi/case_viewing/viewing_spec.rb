@@ -95,22 +95,7 @@ feature 'viewing details of case in the system' do
       expect(cases_show_page.page_heading.sub_heading).to have_content(foi.number)
       expect(cases_show_page.page_heading.heading.text).to have_content(foi.subject)
 
-      expect(cases_show_page).to have_sidebar
-      expect(cases_show_page.sidebar).to have_external_deadline
-      expect(cases_show_page.sidebar.external_deadline).
-        to have_content(external_foi_deadline)
-      expect(cases_show_page.sidebar.status).to have_content('Draft in progress')
-      expect(cases_show_page.sidebar.who_its_with)
-        .to have_content(foi.responder.full_name)
-      expect(cases_show_page.sidebar.name).to have_content('Freddie FOI')
-      expect(cases_show_page.sidebar.requester_type).
-        to have_content(foi.requester_type.humanize)
-      expect(cases_show_page.sidebar.email).
-        to have_content('freddie.foi@testing.digital.justice.gov.uk')
-      expect(cases_show_page.sidebar.postal_address).to have_content(foi.postal_address)
-
       expect(cases_show_page.message).to have_content('viewing foi details test message')
-      expect(cases_show_page.received_date).to have_content(foi_received_date)
 
       expect(cases_show_page).to have_case_history
       expect(cases_show_page.case_history.entries.size).to eq 2

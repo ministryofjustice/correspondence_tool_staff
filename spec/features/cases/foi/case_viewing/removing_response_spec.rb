@@ -27,7 +27,7 @@ feature 'removing a response from response details' do
     )
   end
   given(:uploaded_file) do
-    cases_show_page.response_details.responses.first
+    cases_show_page.case_attachments.first
   end
 
   context 'as the assigned responder' do
@@ -48,9 +48,10 @@ feature 'removing a response from response details' do
       context 'when there is only one response' do
         scenario 'when removing the response' do
           cases_show_page.load(id: case_with_response.id)
-          uploaded_file.remove.click
 
-          expect(cases_show_page.response_details).not_to have_responses
+          uploaded_file.actions.remove.click
+
+          expect(cases_show_page).to have_no_case_attachments
           expect(attachment_object).to have_received(:delete)
           expect(current_path).to eq case_path(case_with_response)
         end
@@ -58,14 +59,14 @@ feature 'removing a response from response details' do
         scenario 'when removing the response with JS', js: true do
           cases_show_page.load(id: case_with_response.id)
 
-          expect(uploaded_file.remove['data-confirm'])
+          expect(uploaded_file.actions.remove['data-confirm'])
             .to eq "Are you sure you want to remove #{attached_response.filename}?"
-          uploaded_file.remove.click
+          uploaded_file.actions.remove.click
 
-          cases_show_page.response_details.wait_for_responses nil, count: 0
-          expect(cases_show_page.response_details).not_to have_responses
+          cases_show_page.wait_for_case_attachments nil, count: 0
+          expect(cases_show_page).to have_no_case_attachments
           expect(attachment_object).to have_received(:delete)
-          expect(cases_show_page.sidebar.actions).not_to have_mark_as_sent
+          expect(cases_show_page.actions).to have_no_mark_as_sent
         end
       end
 
@@ -83,17 +84,18 @@ feature 'removing a response from response details' do
         scenario 'when removing the response' do
           cases_show_page.load(id: case_with_response.id)
 
-          cases_show_page.response_details.responses.first.remove.click
-          expect(cases_show_page).to have_response_details
+          cases_show_page.case_attachments.first.actions.remove.click
+          expect(cases_show_page).to have_case_attachments
         end
 
         scenario 'when removing the response with JS', js: true do
           cases_show_page.load(id: case_with_response.id)
-          expect(cases_show_page.response_details.responses.count).to eq 2
-          cases_show_page.response_details.find_by_attachment_id(attached_response.id).click
-          cases_show_page.response_details.wait_for_responses nil, count: 1
-          expect(cases_show_page.response_details.responses.count)
-            .to eq 1
+
+          expect(cases_show_page.case_attachments.count).to eq 2
+          uploaded_file.actions.remove.click
+          cases_show_page.wait_for_case_attachments nil, count: 1
+
+          expect(cases_show_page.case_attachments.count).to eq 1
         end
       end
     end
@@ -106,7 +108,7 @@ feature 'removing a response from response details' do
       scenario 'is not visible' do
         cases_show_page.load(id: responded_case.id)
 
-        expect(cases_show_page).not_to have_response_details
+        expect(cases_show_page).to have_no_case_attachments
       end
     end
   end
@@ -129,9 +131,9 @@ feature 'removing a response from response details' do
       context 'when there is only one response' do
         scenario 'when removing the response' do
           cases_show_page.load(id: case_with_response.id)
-          uploaded_file.remove.click
+          uploaded_file.actions.remove.click
 
-          expect(cases_show_page.response_details).not_to have_responses
+          expect(cases_show_page).to have_no_case_attachments
           expect(attachment_object).to have_received(:delete)
           expect(current_path).to eq case_path(case_with_response)
         end
@@ -139,14 +141,14 @@ feature 'removing a response from response details' do
         scenario 'when removing the response with JS', js: true do
           cases_show_page.load(id: case_with_response.id)
 
-          expect(uploaded_file.remove['data-confirm'])
+          expect(uploaded_file.actions.remove['data-confirm'])
             .to eq "Are you sure you want to remove #{attached_response.filename}?"
-          uploaded_file.remove.click
+          uploaded_file.actions.remove.click
 
-          cases_show_page.response_details.wait_for_responses nil, count: 0
-          expect(cases_show_page.response_details).not_to have_responses
+          cases_show_page.wait_for_case_attachments nil, count: 0
+          expect(cases_show_page).to have_no_case_attachments
           expect(attachment_object).to have_received(:delete)
-          expect(cases_show_page.sidebar.actions).not_to have_mark_as_sent
+          expect(cases_show_page.actions).to have_no_mark_as_sent
         end
       end
 
@@ -165,16 +167,17 @@ feature 'removing a response from response details' do
         scenario 'when removing the response' do
           cases_show_page.load(id: case_with_response.id)
 
-          cases_show_page.response_details.responses.first.remove.click
-          expect(cases_show_page).to have_response_details
+          cases_show_page.case_attachments.first.actions.remove.click
+          expect(cases_show_page).to have_case_attachments
         end
 
         scenario 'when removing the response with JS', js: true do
           cases_show_page.load(id: case_with_response.id)
-          expect(cases_show_page.response_details.responses.count).to eq 2
-          cases_show_page.response_details.find_by_attachment_id(attached_response.id).click
-          cases_show_page.response_details.wait_for_responses nil, count: 1
-          expect(cases_show_page.response_details.responses.count)
+
+          expect(cases_show_page.case_attachments.count).to eq 2
+          uploaded_file.actions.remove.click
+          cases_show_page.wait_for_case_attachments nil, count: 1
+          expect(cases_show_page.case_attachments.count)
             .to eq 1
         end
       end
@@ -188,7 +191,7 @@ feature 'removing a response from response details' do
       scenario 'is not visible' do
         cases_show_page.load(id: responded_case.id)
 
-        expect(cases_show_page).not_to have_response_details
+        expect(cases_show_page).to have_no_case_attachments
       end
     end
   end
@@ -206,8 +209,8 @@ feature 'removing a response from response details' do
       scenario 'does not display remove button' do
         cases_show_page.load(id: responded_case.id)
 
-        expect(cases_show_page.response_details.responses.first)
-          .not_to have_remove
+        expect(cases_show_page.case_attachments.first.actions)
+          .to have_no_remove
       end
     end
 

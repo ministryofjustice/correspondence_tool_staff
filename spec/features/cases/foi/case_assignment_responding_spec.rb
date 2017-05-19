@@ -3,7 +3,7 @@ require 'rails_helper'
 feature 'respond to responder assignment' do
   given(:responder)       { create :responder }
   given(:responding_team) { responder.responding_teams.first }
-  given(:kase) do
+  given(:assigned_case) do
     create(
       :assigned_case,
       subject: 'A message about XYZ',
@@ -13,40 +13,33 @@ feature 'respond to responder assignment' do
   end
 
   given(:assignment) do
-    kase.responder_assignment
+    assigned_case.responder_assignment
   end
 
   background do
     login_as responder
+    assigned_case
+    assignment
   end
 
   scenario 'kilo accepts assignment' do
-    visit edit_case_assignment_path kase, assignment
-    expect(page).to have_content kase.number
-    expect(page).to have_content kase.subject
-    expect(page).to have_content 'A message about XYZ'
-    expect(page).to have_content 'I would like to know about XYZ'
+    assignments_edit_page.load(case_id: assigned_case.id, id: assignment.id)
 
     choose 'Accept'
-    expect(page).
+    expect(assignments_edit_page).
       to have_selector('#assignment_reasons_for_rejection', visible: false)
     click_button 'Confirm'
 
-    expect(page).to have_current_path(case_path kase, accepted_now: true)
-    expect(page).to have_content("You've accepted this case")
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content("You've accepted this case")
 
     expect(assignment.reload.state).to eq 'accepted'
-    expect(kase.reload.current_state).to eq 'drafting'
-    expect(kase.responder).to eq responder
+    expect(assigned_case.reload.current_state).to eq 'drafting'
+    expect(assigned_case.responder).to eq responder
   end
 
   scenario 'kilo rejects assignment' do
-    visit edit_case_assignment_path kase, assignment
-    expect(page).to have_content kase.number
-    expect(page).to have_content kase.subject
-    expect(page).to have_content 'A message about XYZ'
-    expect(page).to have_content 'I would like to know about XYZ'
-    expect(page).to have_content 'What do you want to do?'
+    assignments_edit_page.load(case_id: assigned_case.id, id: assignment.id)
 
     choose 'Reject'
     expect(page).
@@ -54,28 +47,18 @@ feature 'respond to responder assignment' do
     fill_in 'Why are you rejecting this case?', with: 'This is not for me'
     click_button 'Confirm'
 
-    expect(page).to have_current_path(case_assignments_show_rejected_path kase, rejected_now: true)
+    expect(page).to have_current_path(case_assignments_show_rejected_path assigned_case, rejected_now: true)
     expect(page).to have_content 'Your response has been sent'
     expect(page).
       to have_content(
         'This case will be reviewed and assigned the to appropriate unit.'
       )
 
-    expect(page).to have_content(kase.number)
-    expect(page).to have_content(kase.subject)
-    expect(page).to have_content 'A message about XYZ'
-    expect(page).to have_content 'I would like to know about XYZ'
-    expect(page).not_to have_content 'What do you want to do?'
-
-    expect(kase.reload.current_state).to eq 'unassigned'
+    expect(assigned_case.reload.current_state).to eq 'unassigned'
   end
 
   scenario 'kilo rejects assignment but provides no reasons for rejection' do
-    visit edit_case_assignment_path kase, assignment
-    expect(page).to have_content kase.number
-    expect(page).to have_content kase.subject
-    expect(page).to have_content 'A message about XYZ'
-    expect(page).to have_content 'I would like to know about XYZ'
+    assignments_edit_page.load(case_id: assigned_case.id, id: assignment.id)
 
     choose 'Reject'
     expect(page).
@@ -83,12 +66,13 @@ feature 'respond to responder assignment' do
     click_button 'Confirm'
 
     expect(current_path).
-      to eq accept_or_reject_case_assignment_path kase, assignment
+      to eq accept_or_reject_case_assignment_path assigned_case, assignment
     expect(page.find('#assignment_state_rejected')).to be_checked
     expect(page).
       to have_selector('#assignment_reasons_for_rejection', visible: true)
+
     expect(Assignment.find(assignment.id).state).to eq 'pending'
-    expect(kase.reload.current_state).to eq 'awaiting_responder'
+    expect(assigned_case.reload.current_state).to eq 'awaiting_responder'
     expect(page).
       to have_content('1 error prevented this form from being submitted')
     expect(page).
@@ -96,22 +80,18 @@ feature 'respond to responder assignment' do
   end
 
   scenario 'kilo tries to submit the form without selecting accept / reject' do
-    visit edit_case_assignment_path kase, assignment
-    expect(page).to have_content kase.number
-    expect(page).to have_content kase.subject
-    expect(page).to have_content 'A message about XYZ'
-    expect(page).to have_content 'I would like to know about XYZ'
+    assignments_edit_page.load(case_id: assigned_case.id, id: assignment.id)
 
     click_button 'Confirm'
 
     expect(current_path).
-      to eq accept_or_reject_case_assignment_path kase, assignment
+      to eq accept_or_reject_case_assignment_path assigned_case, assignment
     expect(page).
       to have_selector('#assignment_reasons_for_rejection', visible: false)
     expect(assignment.state).to eq 'pending'
-    expect(kase.reload.current_state).to eq 'awaiting_responder'
-    expect(page).
-      to have_content('1 error prevented this form from being submitted')
+    expect(assigned_case.reload.current_state).to eq 'awaiting_responder'
+    expect(page)
+        .to have_content('1 error prevented this form from being submitted')
     expect(page).
       to have_content("You must either accept or reject this case")
   end
@@ -119,10 +99,10 @@ feature 'respond to responder assignment' do
   scenario 'kilo clicks on a link to an assignment that has been rejected' do
     assignment.reject responder, "NO thank you"
 
-    visit edit_case_assignment_path kase, assignment.id
+    assignments_edit_page.load(case_id: assigned_case.id, id: assignment.id)
 
     expect(page).to have_current_path(
-                      case_assignments_show_rejected_path kase,
+                      case_assignments_show_rejected_path assigned_case,
                                                           rejected_now: false
                     )
     expect(page).to have_content('This case has already been rejected.')
@@ -132,9 +112,9 @@ feature 'respond to responder assignment' do
     assignment_id = assignment.id
     assignment.accept responder
 
-    visit edit_case_assignment_path kase, assignment_id
+    visit edit_case_assignment_path assigned_case, assignment_id
 
-    expect(page).to have_current_path(case_path(kase, accepted_now: false))
+    expect(page).to have_current_path(case_path(assigned_case, accepted_now: false))
     expect(page).to_not have_content("You've accepted this case")
     expect(page).to_not have_content('This case has already been rejected.')
   end

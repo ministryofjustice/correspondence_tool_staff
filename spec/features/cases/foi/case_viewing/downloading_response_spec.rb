@@ -47,10 +47,10 @@ feature 'downloading a response from response details' do
       scenario 'when an uploaded response is available' do
         cases_show_page.load(id: drafting_case.id)
 
-        expect(cases_show_page.response_details.responses.first).to have_view
+        expect(cases_show_page.case_attachments.first.actions).to have_view
 
         expect {
-          cases_show_page.response_details.responses.first.download.click
+          cases_show_page.case_attachments.first.actions.download.click
         }.to redirect_to_external(presigned_url)
       end
 
@@ -65,7 +65,7 @@ feature 'downloading a response from response details' do
           and_call_original
 
         cases_show_page.load(id: drafting_case.id)
-        cases_show_page.response_details.responses.first.view.click
+        cases_show_page.case_attachments.first.actions.view.click
       end
     end
   end
@@ -87,7 +87,7 @@ feature 'downloading a response from response details' do
         cases_show_page.load(id: sent_case.id)
 
         expect {
-          cases_show_page.response_details.responses.first.download.click
+          cases_show_page.case_attachments.first.actions.download.click
         }.to redirect_to_external(presigned_url)
       end
     end

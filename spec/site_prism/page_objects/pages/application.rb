@@ -24,7 +24,9 @@ module PageObjects
         assignments_new:           'Assignments::NewPage',
         assignments_edit:          'Assignments::EditPage',
         global_nav_partial:        'Partials::GlobalNavPartial',
-        header_partial:            'Partials::HeaderPartial'
+        header_partial:            'Partials::HeaderPartial',
+        case_status_partial:       'Partials::CaseStatusPartial',
+        case_details_partial:      'Partials::CaseDetailsPartial',
       }.each do |page_name, page_class|
         full_page_class = "PageObjects::Pages::#{page_class}"
         define_method "#{page_name}_page" do

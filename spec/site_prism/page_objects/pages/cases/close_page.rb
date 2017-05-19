@@ -7,9 +7,9 @@ module PageObjects
         section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
 
-        sections :responses,
-                 PageObjects::Sections::ResponseAttachmentSection,
-                 '#request--responses tr'
+        sections :case_attachments,
+                 PageObjects::Sections::CaseAttachmentSection,
+                 '.case-attachments tbody tr'
 
         element :date_responded_day, '#case_date_responded_dd'
         element :date_responded_month, '#case_date_responded_mm'

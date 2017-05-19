@@ -1,0 +1,108 @@
+require 'rails_helper'
+
+describe 'cases/case_details.html.slim', type: :view do
+  let(:unassigned_case) { create(:case).decorate }
+  let(:accepted_case)   { create(:accepted_case).decorate }
+  let(:responded_case)  { create(:responded_case).decorate }
+  let(:closed_case)     { create(:closed_case).decorate }
+
+
+  describe 'basic_details' do
+    it 'displays the initial case details' do
+      render partial: 'cases/case_details.html.slim',
+             locals:{ case_details: unassigned_case}
+
+      cases_show_page.load(rendered)
+
+
+      partial = cases_show_page.case_details.basic_details
+
+      expect(partial).to be_all_there
+
+      expect(partial.date_received.data.text)
+          .to eq unassigned_case.received_date.strftime("%e %b %Y")
+
+      expect(partial.name.data.text)
+          .to eq unassigned_case.name
+
+      expect(partial.email.data.text)
+          .to eq unassigned_case.email
+
+      expect(partial.address.data.text)
+          .to eq unassigned_case.postal_address
+
+      expect(partial.requester_type.data.text)
+          .to eq unassigned_case.requester_type.humanize
+
+    end
+
+    it 'does not display the email address if one is not provided' do
+      unassigned_case.email = nil
+
+      render partial: 'cases/case_details.html.slim',
+            locals:{ case_details: unassigned_case}
+
+      cases_show_page.load(rendered)
+
+
+      partial = cases_show_page.case_details.basic_details
+
+      expect(partial).to have_no_email
+      expect(partial).to have_address
+    end
+
+    it 'does not display the postal address if one is not provided' do
+      unassigned_case.postal_address = nil
+
+      render partial: 'cases/case_details.html.slim',
+             locals:{ case_details: unassigned_case}
+
+      cases_show_page.load(rendered)
+
+
+      partial = cases_show_page.case_details.basic_details
+
+      expect(partial).to have_no_address
+      expect(partial).to have_email
+    end
+  end
+
+  describe 'responders details' do
+    xit 'does not display responder details if its unaccepted' do
+
+    end
+    it 'displays the responders team name' do
+      render partial: 'cases/case_details.html.slim',
+             locals:{ case_details: accepted_case}
+
+      cases_show_page.load(rendered)
+
+      partial = cases_show_page.case_details.responders_details
+
+      expect(partial).to be_all_there
+      expect(partial.team.data.text).to eq accepted_case.responding_team.name
+      expect(partial.name.data.text).to eq accepted_case.responder.full_name
+    end
+  end
+
+  describe 'Final response details' do
+
+    xit 'displays all the case closure details' do
+      render partial: 'cases/case_details.html.slim',
+             locals:{ case_details: closed_case}
+
+      cases_show_page.load(rendered)
+
+      partial = cases_show_page.case_details.final_response
+
+      expect(partial).to be_all_there
+      expect(partial.date_responded.data.text).to eq closed_case.responding_team.name
+      expect(partial.timeliness.data.text).to eq closed_case.responder.full_name
+      expect(partial.time_taken.data.text).to eq closed_case.responder.full_name
+      expect(partial.outcome.data.text).to eq closed_case.responder.full_name
+    end
+
+  end
+
+
+end

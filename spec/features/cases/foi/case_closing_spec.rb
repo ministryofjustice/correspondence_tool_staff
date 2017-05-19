@@ -23,12 +23,11 @@ feature 'Closing a case' do
       cases_page.load
       expect(cases_page.case_list.last.status.text).to eq 'Ready to close'
       click_link kase.number
-
-      expect(cases_show_page.sidebar.actions).
+      expect(cases_show_page.actions).
         to have_link('Close case', href: close_case_path(kase))
       click_link 'Close case'
-      expect(cases_close_page).to have_content("Close case")
-      expect(cases_close_page).to have_responses
+
+      expect(cases_close_page).to have_case_attachments
     end
 
     scenario 'A KILO has responded and an manager closes the case', js:true do
@@ -36,20 +35,19 @@ feature 'Closing a case' do
       cases_close_page.outcome_radio_button_fully_granted.click
       cases_close_page.submit_button.click
 
-      expect(cases_show_page).to have_content("You've closed this case")
-      expect(cases_show_page.sidebar.status.text).to eq 'Case closed'
-      expect(cases_show_page.sidebar.actions).to_not have_close_case
-      expect(cases_show_page.sidebar.actions.text).to eq 'No actions available'
+      expect(cases_show_page).to have_no_actions
 
-      expect(cases_show_page.response_details.date_responded.text)
+      show_page = cases_show_page.case_details
+
+      expect(show_page.response_details.date_responded.data.text)
         .to eq 5.business_days.ago.strftime('%e %b %Y').strip
-      expect(cases_show_page.response_details.timeliness.text)
+      expect(show_page.response_details.timeliness.data.text)
         .to eq 'Answered in time'
-      expect(cases_show_page.response_details.time_taken.text)
+      expect(show_page.response_details.time_taken.data.text)
         .to eq '16 working days'
-      expect(cases_show_page.response_details.outcome.text)
+      expect(show_page.response_details.outcome.data.text)
         .to eq 'Granted in full'
-      expect(cases_show_page.response_details).not_to have_reason_for_refusal
+      expect(show_page.response_details).to have_no_refusal_reason
     end
 
     scenario 'the case is responded-to late', js: true do
@@ -59,9 +57,10 @@ feature 'Closing a case' do
       cases_close_page.outcome_radio_button_fully_granted.click
       cases_close_page.submit_button.click
 
-      expect(cases_show_page.response_details.timeliness.text)
+      show_page = cases_show_page.case_details
+      expect(show_page.response_details.timeliness.data.text)
         .to eq 'Answered late'
-      expect(cases_show_page.response_details.time_taken.text)
+      expect(show_page.response_details.time_taken.data.text)
         .to eq '21 working days'
     end
   end
@@ -74,11 +73,11 @@ feature 'Closing a case' do
       expect(cases_page.case_list.last.status.text).to eq 'Ready to close'
       click_link kase.number
 
-      expect(cases_show_page.sidebar.actions).
+      expect(cases_show_page.actions).
           to have_link('Close case', href: close_case_path(kase))
       click_link 'Close case'
-      expect(cases_close_page).to have_content("Close case")
-      expect(cases_close_page).to have_responses
+
+      expect(cases_close_page).to have_case_attachments
     end
 
     scenario 'A KILO has responded and an manager closes the case specifying a refusal reason', js:true do
@@ -90,21 +89,21 @@ feature 'Closing a case' do
       cases_close_page.submit_button.click
 
       expect(cases_show_page).to have_content("You've closed this case")
-      expect(cases_show_page.sidebar.status.text).to eq 'Case closed'
-      expect(cases_show_page.sidebar.actions).to_not have_close_case
-      expect(cases_show_page.sidebar.actions.text).to eq 'No actions available'
+      expect(cases_show_page).to_not have_actions
 
-      expect(cases_show_page.response_details.date_responded.text)
+      show_page = cases_show_page.case_details.response_details
+
+      expect(show_page.date_responded.data.text)
         .to eq 2.business_days.ago.strftime('%e %b %Y').strip
-      expect(cases_show_page.response_details.timeliness.text)
+      expect(show_page.timeliness.data.text)
         .to eq 'Answered in time'
-      expect(cases_show_page.response_details.time_taken.text)
+      expect(show_page.time_taken.data.text)
         .to eq '19 working days'
-      expect(cases_show_page.response_details.outcome.text)
+      expect(show_page.outcome.data.text)
         .to eq 'Refused fully'
-      expect(cases_show_page.response_details.reason_for_refusal.text)
+      expect(show_page.refusal_reason.data.text)
         .to eq 'Information not held'
-      expect(cases_show_page.response_details).not_to have_exemptions
+      expect(show_page).to have_no_exemptions
     end
 
 
@@ -128,23 +127,25 @@ feature 'Closing a case' do
       cases_close_page.submit_button.click
 
       expect(cases_show_page).to have_content("You've closed this case")
-      expect(cases_show_page.sidebar.status.text).to eq 'Case closed'
-      expect(cases_show_page.sidebar.actions).to_not have_close_case
-      expect(cases_show_page.sidebar.actions.text).to eq 'No actions available'
+      expect(cases_show_page).to have_no_actions
 
-      expect(cases_show_page.response_details.date_responded.text)
+
+      show_page = cases_show_page.case_details.response_details
+
+      expect(show_page.date_responded.data.text)
           .to eq 2.business_days.ago.strftime('%e %b %Y').strip
-      expect(cases_show_page.response_details.timeliness.text)
+      expect(show_page.timeliness.data.text)
           .to eq 'Answered in time'
-      expect(cases_show_page.response_details.time_taken.text)
+      expect(show_page.time_taken.data.text)
           .to eq '19 working days'
-      expect(cases_show_page.response_details.outcome.text)
+      expect(show_page.outcome.data.text)
           .to eq 'Refused fully'
-      expect(cases_show_page.response_details.reason_for_refusal.text)
+      expect(show_page.refusal_reason.data.text)
           .to eq 'Exemption applied'
-      expect(cases_show_page.response_details.exemptions)
+
+      expect(show_page.exemptions)
           .to have_text "Neither confirm nor deny (NCND)"
-      expect(cases_show_page.response_details.exemptions)
+      expect(show_page.exemptions)
           .to have_text "(s23) - Information supplied by, or relating to, bodies dealing with security matters"
     end
   end
@@ -154,7 +155,8 @@ feature 'Closing a case' do
 
     scenario 'viewing the response details page' do
       cases_show_page.load(id: kase.id)
-      expect(cases_show_page.response_details.exemptions).to have_text "NCND exemption 1"
+      show_page = cases_show_page.case_details.response_details
+      expect(show_page.exemptions).to have_text "NCND exemption 1"
     end
   end
 end
