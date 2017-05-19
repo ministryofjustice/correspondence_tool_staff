@@ -34,6 +34,10 @@ class CaseAttachment < ActiveRecord::Base
     CASE_UPLOADS_S3_BUCKET.object(key)
   end
 
+  def s3_preview_object
+    preview_key.nil? ? nil : CASE_UPLOADS_S3_BUCKET.object(preview_key)
+  end
+
   def temporary_url
     make_temporary_url_for(key)
   end
@@ -104,6 +108,9 @@ class CaseAttachment < ActiveRecord::Base
 
   def remove_from_storage_bucket
     s3_object.delete
+    unless preview_key.nil?
+      s3_preview_object.delete unless preview_key == key
+    end
   end
 
   def validate_file_extension

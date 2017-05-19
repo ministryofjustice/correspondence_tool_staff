@@ -59,11 +59,20 @@ RSpec.describe CaseAttachmentsController, type: :controller do
         delete: instance_double(Aws::S3::Types::DeleteObjectOutput)
       )
     end
+    let(:preview_object) do
+      instance_double(
+        Aws::S3::Object,
+        delete: instance_double(Aws::S3::Types::DeleteObjectOutput)
+      )
+    end
 
     before do
       allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                          .with(attachment.key)
                                          .and_return(attachment_object)
+      allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
+                                         .with(attachment.preview_key)
+                                         .and_return(preview_object)
     end
 
     shared_examples 'unauthorized user' do
