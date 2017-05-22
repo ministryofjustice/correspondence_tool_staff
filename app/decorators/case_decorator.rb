@@ -31,6 +31,14 @@ class CaseDecorator < Draper::Decorator
     "#{h.pluralize(errors.count, I18n.t('common.error'))} #{ I18n.t('common.summary_error')}"
   end
 
+  def requester_type
+    object.requester_type.humanize
+  end
+
+  def requester_name_and_type
+    "#{object.name} | #{requester_type}"
+  end
+
 
   private
 

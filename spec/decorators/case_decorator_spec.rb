@@ -111,6 +111,12 @@ describe CaseDecorator, type: :model do
         end
       end
     end
+  end
 
+  describe '#requester_name_and_type' do
+    it 'returns name and requestor type' do
+      kase = create(:case, name: 'Stepriponikas Bonstart', requester_type: 'member_of_the_public').decorate
+      expect(kase.requester_name_and_type).to eq 'Stepriponikas Bonstart | Member of the public'
+    end
   end
 end
