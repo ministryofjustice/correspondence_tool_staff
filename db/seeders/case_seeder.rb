@@ -156,7 +156,11 @@ class CaseSeeder < Thor
   def create_unassigned_cases(n)
     cases = []
     n.times do
-      kase = FactoryGirl.create(:case, name: Faker::Name.name, subject: Faker::Company.catch_phrase, message: Faker::Lorem.paragraph, managing_team: @dacu_team)
+      kase = FactoryGirl.create(:case,
+                                name: Faker::Name.name,
+                                subject: Faker::Company.catch_phrase,
+                                message: Faker::Lorem.paragraph(10, true, 10),
+                                managing_team: @dacu_team)
       flag_for_dacu_approval(kase)
       cases << kase
     end
