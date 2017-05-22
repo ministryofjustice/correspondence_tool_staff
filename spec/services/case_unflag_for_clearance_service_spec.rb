@@ -33,6 +33,11 @@ describe CaseUnflagForClearanceService do
           .to have_received :unflag_for_clearance!
       end
 
+      it 'removes the approving team assignment' do
+        service.call
+        expect(assigned_flagged_case.approving_team).to be_blank
+      end
+
       it 'sets the result to ok and returns true' do
         expect(service.call).to eq :ok
         expect(service.result).to eq :ok

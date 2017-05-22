@@ -33,6 +33,11 @@ describe CaseFlagForClearanceService do
           .to have_received :flag_for_clearance!
       end
 
+      it 'assigns DACU disclosure as the approving team to the case' do
+        service.call
+        expect(assigned_case.approving_team).to eq approving_team
+      end
+
       it 'sets the result to ok and returns true' do
         expect(service.call).to eq :ok
         expect(service.result).to eq :ok
