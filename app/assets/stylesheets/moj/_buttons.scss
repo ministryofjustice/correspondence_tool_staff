@@ -19,3 +19,14 @@
 .button-left-spacing{
   margin-left: $gutter;
 }
+
+.secondard-action-link {
+  margin-left: $gutter;
+  line-height: 2.0em;
+  .report & {
+    display: block;
+    margin-left: 0;
+    margin-top: $gutter-half;
+  }
+
+}

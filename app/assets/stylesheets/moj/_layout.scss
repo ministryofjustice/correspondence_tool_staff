@@ -98,11 +98,11 @@
   @include bold-24();
 
   margin-top: 0;
-  margin-bottom: 0;
+  margin-bottom: $gutter-half;
 
   @include media(tablet) {
     margin-top: 0;
-    margin-bottom: 0;
+
   }
 }
 .request--message {
@@ -135,7 +135,7 @@ table#response-details {
 
 
 .case-info {
-  margin-bottom : $gutter * 2;
+  margin-bottom : $gutter * 2.5;
 }
 
 #request--responses{

@@ -47,6 +47,11 @@ div id="case-#{@case.id}"
 
       = render partial: 'cases/case_attachments', locals: {case_details: @case}
 
+  - if policy(@case).can_accept_or_reject_approver_assignment?
+    section.case-info
+      = render partial: 'what_do_you_want_to_do', locals: { case_details: @case }
+
+
   - if @case_transitions.any?
     section.case-info
       h2.request--heading Case history
