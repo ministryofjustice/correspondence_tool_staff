@@ -1,8 +1,11 @@
-$('#take_case_on_<%= @case.id %>').replaceWith(
-    '<%= render partial: "cases/take_case_on_message",
-                locals: {
-                          kase: @case,
-                          success: @success,
-                          message: @message,
-                        } %>'
+$('#case-<%= @case.id %> .js-take-case-on-container').html(
+    "<%= escape_javascript(
+           render partial: "cases/take_case_on_message",
+                  locals: {
+                            kase: @case,
+                            success: @success,
+                            message: @message,
+                          }
+         ) %>"
 );
+

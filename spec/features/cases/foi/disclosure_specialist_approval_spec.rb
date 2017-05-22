@@ -57,18 +57,13 @@ feature 'cases requiring clearance by disclosure specialist' do
     expect(kase.reload.approver).to be_nil
 
     ## DE-ESCALATE CASE #############################################
-    # Not currently working, it behaves as if our functions in
-    # DeSecalateCase.js never get bound to the de-escalate link: the click
-    # action below generates a GET /cases/:id/unflag_for_clearance request
-    # instead of a PATCH.
-    # case_list_item.actions.de_escalate_link.click
-    # case_list_item.actions.wait_until_undo_de_escalate_visible
-    # expect(kase.reload.approver_assignment).to be_empty
+    case_list_item.actions.de_escalate_link.click
+    case_list_item.actions.wait_until_undo_de_escalate_link_visible
+    expect(kase.reload.approver_assignment).to be_blank
 
     ## UNDO DE-ESCALATE CASE ########################################
-    # Not currently working, as above.
-    # case_list_item.actions.undo_de_escalate_link.click
-    # case_list_item.actions.wait_until_de_escalate_link_visible
-    # expect(kase.reload.approving_team).to eq team_dacu_disclosure
+    case_list_item.actions.undo_de_escalate_link.click
+    case_list_item.actions.wait_until_de_escalate_link_visible
+    expect(kase.reload.approving_team).to eq team_dacu_disclosure
   end
 end

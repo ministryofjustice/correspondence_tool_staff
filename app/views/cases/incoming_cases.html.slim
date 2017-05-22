@@ -19,7 +19,7 @@
           = t('.actions')
       tbody
         - @cases.each do |kase|
-          tr.case_row
+          tr.case_row id="case-#{kase.id}"
             td aria-label="#{t('.number')}"
               span.visually-hidden
                 = t('.view_case')
@@ -32,19 +32,9 @@
                 = kase.subject
               div.case_message_extract
                 = kase.message
-            td aria-label="#{t('.actions')}"
+            td.js-take-case-on-container aria-label="#{t('.actions')}"
               - if current_user.teams.include? kase.approver_assignment&.team
-                div.escalated-container
-                  = render partial: 'take_case_on_button', locals: { kase: kase }
-                  div.de-escalate-case-link
-                    = link_to 'De-escalate',
-                              unflag_for_clearance_case_path(id: kase.id),
-                              class: 'js-de-escalate-link'
-                div.de-escalated-container style="display:none"
-                  = "Case is de-escalated "
-                  = link_to 'Undo',
-                            flag_for_clearance_case_path(id: kase.id),
-                            class: 'js-undo-de-escalate-link'
-
+                = render partial: 'take_case_on_or_de_escalate',
+                         locals: { kase: kase }
 
 

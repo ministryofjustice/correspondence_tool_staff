@@ -152,13 +152,11 @@ class CasesController < ApplicationController
   def unflag_for_clearance
     authorize @case, :can_unflag_for_clearance?
     CaseUnflagForClearanceService.new(user: current_user, kase: @case).call
-    head :no_content
   end
 
   def flag_for_clearance
     authorize @case, :can_flag_for_clearance?
     CaseFlagForClearanceService.new(user: current_user, kase: @case).call
-    head :no_content
   end
 
   private

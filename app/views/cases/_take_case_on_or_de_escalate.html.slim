@@ -1,0 +1,11 @@
+= link_to 'Take case on',
+          accept_case_assignment_path(kase, kase.approver_assignment),
+          id: "take_case_on_#{kase.id}",
+          class: 'button',
+          remote: true,
+          method: :patch
+= link_to 'De-escalate',
+          unflag_for_clearance_case_path(id: kase.id),
+          remote: true,
+          class: 'js-de-escalate-link',
+          method: :patch

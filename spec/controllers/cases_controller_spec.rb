@@ -1106,9 +1106,14 @@ RSpec.describe CasesController, type: :controller do
         expect(service).to have_received(:call)
       end
 
+      it 'renders the view' do
+        patch :unflag_for_clearance, params: params, xhr: true
+        expect(response).to have_rendered(:unflag_for_clearance)
+      end
+
       it 'returns a success code' do
         patch :unflag_for_clearance, params: params, xhr: true
-        expect(response).to have_http_status 204
+        expect(response).to have_http_status 200
       end
     end
 
@@ -1125,9 +1130,15 @@ RSpec.describe CasesController, type: :controller do
         expect(service).to have_received(:call)
       end
 
+      it 'renders the view' do
+        patch :unflag_for_clearance, params: params, xhr: true
+        expect(response).to have_rendered(:unflag_for_clearance)
+      end
+
       it 'returns success' do
         patch :unflag_for_clearance, params: params, xhr: true
-        expect(response).to have_http_status 204
+        expect(response).to have_http_status 200
+        expect(response).to have_rendered(:unflag_for_clearance)
       end
     end
   end
@@ -1194,9 +1205,14 @@ RSpec.describe CasesController, type: :controller do
         expect(service).to have_received(:call)
       end
 
+      it 'renders the view' do
+        patch :flag_for_clearance, params: params, xhr: true
+        expect(response).to have_rendered(:flag_for_clearance)
+      end
+
       it 'returns a success code' do
         patch :flag_for_clearance, params: params, xhr: true
-        expect(response).to have_http_status 204
+        expect(response).to have_http_status 200
       end
     end
 
@@ -1213,9 +1229,14 @@ RSpec.describe CasesController, type: :controller do
         expect(service).to have_received(:call)
       end
 
+      it 'renders the view' do
+        patch :flag_for_clearance, params: params, xhr: true
+        expect(response).to have_rendered(:flag_for_clearance)
+      end
+
       it 'returns success' do
         patch :flag_for_clearance, params: params, xhr: true
-        expect(response).to have_http_status 204
+        expect(response).to have_http_status 200
       end
     end
   end
