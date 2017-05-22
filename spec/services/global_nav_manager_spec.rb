@@ -61,7 +61,7 @@ describe GlobalNavManager do
   end
 
   let(:incoming_cases_entry) do
-    GlobalNavManager::GlobalNavManagerEntry.new 'Incoming cases',
+    GlobalNavManager::GlobalNavManagerEntry.new 'New cases',
                                                 incoming_cases_path
   end
   let(:open_cases_entry) do

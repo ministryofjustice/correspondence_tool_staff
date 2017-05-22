@@ -31,6 +31,22 @@ class CaseDecorator < Draper::Decorator
     "#{h.pluralize(errors.count, I18n.t('common.error'))} #{ I18n.t('common.summary_error')}"
   end
 
+  def requester_type
+    object.requester_type.humanize
+  end
+
+  def requester_name_and_type
+    "#{object.name} | #{requester_type}"
+  end
+
+  def message_extract(num_chars = 200)
+    if object.message.size < 200
+      object.message
+    else
+      object.message[0..num_chars-1] + '...'
+    end
+  end
+
 
   private
 

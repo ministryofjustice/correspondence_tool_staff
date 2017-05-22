@@ -235,7 +235,7 @@ en:
       status: Status
       who_its_with: With
     incoming_cases:
-      heading: Incoming cases
+      heading: New cases
       view_case: Link to case
       number: Case number
       number_html: 'Case <abbr title="number">No.</abbr>'
@@ -285,7 +285,7 @@ en:
 
   nav:
     closed_cases: Closed cases
-    incoming_cases: Incoming cases
+    new_cases: New cases
     my_open_cases: My open cases
     open_cases: Open cases
   devise:

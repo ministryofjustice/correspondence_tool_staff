@@ -39,7 +39,7 @@ global_navigation:
   paths:
     closed_cases:
       - /cases/closed
-    incoming_cases:
+    new_cases:
       - /cases/incoming
     my_open_cases:
       - /cases/my_open
@@ -47,7 +47,7 @@ global_navigation:
       - /cases/open
   user_views:
     approver:
-      - incoming_cases
+      - new_cases
       - open_cases
       - my_open_cases
       - closed_cases

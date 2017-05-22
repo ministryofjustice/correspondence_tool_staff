@@ -26,12 +26,13 @@
               = " "
               = link_to kase.number, case_path(kase.id)
             td aria-label="#{t('.request')}"
-              div.case_name
-                = kase.name
-              div.case_subject
-                = kase.subject
-              div.case_message_extract
-                = kase.message
+              .case_subject
+                strong
+                 = kase.subject
+              .case_name
+                = kase.requester_name_and_type
+              .case_message_extract
+                = kase.message_extract
             td.js-take-case-on-container aria-label="#{t('.actions')}"
               - if current_user.teams.include? kase.approver_assignment&.team
                 = render partial: 'take_case_on_or_de_escalate',
