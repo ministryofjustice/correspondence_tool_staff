@@ -1,7 +1,7 @@
 $('#case-<%= @case.id %> .js-take-case-on-container').html(
     "<%= escape_javascript(
            render partial: 'cases/take_case_on_or_de_escalate',
-                  locals: { kase: @case }
+                  locals: { case_details: @case }
          ) %>"
 );
 

@@ -6,8 +6,9 @@
   .alert-orange
     = t('alerts.escalation_warning_html', escalation_deadline:  "#{l @case.escalation_deadline, format: :default_date}")
 
-= render partial: 'layouts/case_detail_page',
-         locals: { case_details: @case,
-                   include_sidebar: true,
-                   include_response_details_for_view: true, }
+div id="case-#{@case.id}"
+  = render partial: 'layouts/case_detail_page',
+           locals: { case_details: @case,
+                     include_sidebar: true,
+                     include_response_details_for_view: true, }
 

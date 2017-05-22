@@ -56,6 +56,10 @@ module PageObjects
           end
         end
 
+        section :what_do_you_want_to_do,
+                PageObjects::Sections::Cases::WhatDoYouWantToDoSection,
+                '.what-do-you-want-to-do'
+
         section :case_history, '#case-history' do
           element :heading, 'thead tr'
           elements :entries, 'tbody tr'

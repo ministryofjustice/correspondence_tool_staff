@@ -31,7 +31,11 @@
            && include_response_details_for_view
         = render partial: 'cases/response_details', locals: { case_details: case_details }
 
-        = render partial: 'layouts/case_history' if @case_transitions.any?
+      - if policy(case_details).can_accept_or_reject_approver_assignment?
+        = render partial: 'what_do_you_want_to_do',
+                 locals: { case_details: case_details }
+
+      = render partial: 'layouts/case_history' if @case_transitions.any?
 
   - if defined?(include_sidebar) && include_sidebar == true
     section.case-sidebar
