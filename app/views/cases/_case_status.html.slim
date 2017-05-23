@@ -19,9 +19,9 @@
         .case-status__heading
           = t('common.case.internal_deadline')
         .case-status__data
-          = l case_details.internal_deadline, format: :default_date
+          = case_details.internal_deadline
     .case-status__group.external
       .case-status__heading
         = t('common.case.external_deadline')
       .case-status__data
-        = l case_details.external_deadline, format: :default_date
+        = case_details.external_deadline

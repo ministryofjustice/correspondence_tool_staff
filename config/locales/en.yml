@@ -223,8 +223,9 @@ en:
       view_case: Link to case
       number: Case number
       number_html: 'Case <abbr title="number">No.</abbr>'
-      requester: Requester name
-      subject: Subject
+      request: Request
+      request_detail: Request detail
+      draft_deadline: Draft deadline
       external_deadline: Final deadline
       status: Status
       who_its_with: With

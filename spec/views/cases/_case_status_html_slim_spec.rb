@@ -5,8 +5,8 @@ describe 'cases/case_status.html.slim', type: :view do
   it 'displays the all 4 key information ' do
     unassigned_case = double CaseDecorator,
                    status: "Needs reassigning",
-                   internal_deadline: DateTime.now ,
-                   external_deadline: DateTime.now + 10.days,
+                   internal_deadline: DateTime.now.strftime("%e %b %Y"),
+                   external_deadline: (DateTime.now + 10.days).strftime("%e %b %Y"),
                    current_state: 'drafting',
                    who_its_with: 'DACU'
 
@@ -24,18 +24,18 @@ describe 'cases/case_status.html.slim', type: :view do
 
     expect(partial.deadlines.draft_label.text).to eq 'Draft deadline'
     expect(partial.deadlines.draft.text)
-        .to eq unassigned_case.internal_deadline.strftime("%e %b %Y")
+        .to eq unassigned_case.internal_deadline
     expect(partial.deadlines.final_label.text).to eq 'Final deadline'
     expect(partial.deadlines.final.text)
-        .to eq unassigned_case.external_deadline.strftime("%e %b %Y")
+        .to eq unassigned_case.external_deadline
   end
 
 
   it 'does not display "Who its with" for closed cases' do
     closed_case = double CaseDecorator,
                              status: "Case closed",
-                             internal_deadline: DateTime.now ,
-                             external_deadline: DateTime.now + 10.days,
+                             internal_deadline: DateTime.now.strftime("%e %b %Y") ,
+                             external_deadline: (DateTime.now + 10.days).strftime("%e %b %Y"),
                              current_state: 'closed',
                              who_its_with: ''
 
@@ -48,15 +48,15 @@ describe 'cases/case_status.html.slim', type: :view do
     expect(partial.details).to have_no_who_its_with
 
     expect(partial.deadlines.draft.text)
-        .to eq closed_case.internal_deadline.strftime("%e %b %Y")
+        .to eq closed_case.internal_deadline
     expect(partial.deadlines.final.text)
-        .to eq closed_case.external_deadline.strftime("%e %b %Y")
+        .to eq closed_case.external_deadline
   end
 
   it 'does not display Draft deadline for non-trigger cases' do
     non_trigger_case = double CaseDecorator,
                              status: "Needs reassigning",
-                             external_deadline: DateTime.now + 10.days,
+                             external_deadline: (DateTime.now + 10.days).strftime("%e %b %Y"),
                              internal_deadline: nil,
                              current_state: 'drafting',
                              who_its_with: 'DACU'
@@ -72,6 +72,6 @@ describe 'cases/case_status.html.slim', type: :view do
 
     expect(partial.deadlines).to have_no_draft
     expect(partial.deadlines.final.text)
-        .to eq non_trigger_case.external_deadline.strftime("%e %b %Y")
+        .to eq non_trigger_case.external_deadline
   end
 end

@@ -23,9 +23,9 @@
         th scope='col'
           = t('.number_html')
         th scope='col'
-          = t('.requester')
+          = t('.request')
         th scope='col'
-          = t('.subject')
+          = t('.draft_deadline')
         th scope='col'
           = t('.external_deadline')
         th scope='col'
@@ -40,12 +40,16 @@
                 = t('.view_case')
               = " "
               = link_to kase.number, case_path(kase.id)
-            td aria-label="#{t('.requester')}"
-              = kase.name
-            td aria-label="#{t('.subject')}"
-              = kase.subject
+            td aria-label="#{t('.request_detail')}"
+              strong
+                = kase.subject
+              br
+              .case-name-detail
+                = kase.name
+            td aria-label="#{t('.draft_deadline')}"
+              = kase.internal_deadline
             td aria-label="#{t('.external_deadline')}"
-              = l kase.external_deadline, format: :default_date
+              = kase.external_deadline
             td aria-label="#{t('.status')}"
               = t("state.#{kase.current_state}")
             td aria-label="#{t('.who_its_with')}"

@@ -96,23 +96,33 @@ describe CaseDecorator, type: :model do
     end
   end
 
-  describe '#internal deadline' do
+  describe '#internal_deadline' do
     context 'unflagged case' do
-      it 'returns nil' do
+      it 'returns space' do
         unflagged_case = create(:case).decorate
-        expect(unflagged_case.internal_deadline).to be_nil
+        expect(unflagged_case.internal_deadline).to eq ' '
       end
     end
 
     context 'flagged case' do
       it 'returns the internal deadline' do
         Timecop.freeze(Time.new(2017, 5, 2, 9, 45, 33 )) do
-          flagged_case = create :case, :flagged
-          expect(flagged_case.internal_deadline).to eq DateTime.new(2017, 5, 16)
+          flagged_case = create(:case, :flagged).decorate
+          expect(flagged_case.internal_deadline).to eq '16 May 2017'
         end
       end
     end
   end
+
+  describe '#external_deadline' do
+    it 'returns the external deadline' do
+      Timecop.freeze(Time.new(2017, 5, 2, 9, 45, 33 )) do
+        flagged_case = create(:case, :flagged).decorate
+        expect(flagged_case.external_deadline).to eq '31 May 2017'
+      end
+    end
+  end
+
 
   describe '#requester_name_and_type' do
     it 'returns name and requestor type' do

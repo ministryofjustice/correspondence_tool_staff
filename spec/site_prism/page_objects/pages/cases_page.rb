@@ -6,8 +6,8 @@ module PageObjects
       section :user_card, PageObjects::Sections::UserCardSection, '.user-card'
       sections :case_list, '.case_row' do
         element :number, 'td[aria-label="Case number"]'
-        element :name, 'td[aria-label="Requester name"]'
-        element :subject, 'td[aria-label="Subject"]'
+        element :request_detail, 'td[aria-label="Request detail"]'
+        element :draft_deadline, 'td[aria-label="Draft deadline"]'
         element :external_deadline, 'td[aria-label="Final deadline"]'
         element :status, 'td[aria-label="Status"]'
         element :who_its_with, 'td[aria-label="With"]'
