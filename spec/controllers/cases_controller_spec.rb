@@ -42,6 +42,7 @@ RSpec.describe CasesController, type: :controller do
 
   let(:assigned_trigger_case)   { create :assigned_case, :flagged_accepted,
                                          approver: approver }
+  let(:pending_dacu_clearance_case) { create :pending_dacu_clearance_case }
 
   before { create(:category, :foi) }
 
@@ -420,7 +421,6 @@ RSpec.describe CasesController, type: :controller do
         it 'permitted_events == nil' do
           expect(assigns(:permitted_events)).to eq nil
         end
-
         it "redirects to signin" do
           expect(response).to redirect_to(new_user_session_path)
         end
@@ -1324,11 +1324,11 @@ RSpec.describe CasesController, type: :controller do
 
     context 'as an authenticated approver' do
       before do
-        sign_in approver
+        sign_in pending_dacu_clearance_case.approver
       end
 
       it 'renders the view' do
-        get :approve_response, params: { id: assigned_trigger_case.id }
+        get :approve_response, params: { id: pending_dacu_clearance_case.id }
         expect(response).to have_rendered(:approve_response)
       end
     end

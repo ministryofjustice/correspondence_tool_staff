@@ -19,9 +19,9 @@
                   team: @case.responding_team.name,
                   action: 'clearing'}
 
-
-.button-holder
-  =  link_to "Clear response" , '#', {class: "button", role:"button"}
+= form_for @case, url: execute_response_approval_case_path(@case) do |f|
+  .button-holder
+    =  f.submit "Clear response" ,  {class: "button", role:"button"}
 
 
 

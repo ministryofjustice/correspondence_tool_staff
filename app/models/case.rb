@@ -265,7 +265,7 @@ class Case < ApplicationRecord
   end
 
   def requires_clearance?
-    approver_assignment.present?
+    approver_assignment.present?  && approver_assignment.approved == false
   end
 
   def does_not_require_clearance?

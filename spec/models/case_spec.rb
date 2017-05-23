@@ -728,6 +728,14 @@ RSpec.describe Case, type: :model do
       expect(kase.requires_clearance?).to eq true
     end
 
+    it 'returns false when assigned approvers have approved' do
+      kase = create :case
+      kase.approving_team = approving_team
+      kase.approver_assignment.accepted!
+      kase.approver_assignment.approved = true
+      expect(kase.requires_clearance?).to eq false
+    end
+
     it 'returns false when no approvers have been assigned' do
       kase = create :case
       expect(kase.requires_clearance?).to eq false

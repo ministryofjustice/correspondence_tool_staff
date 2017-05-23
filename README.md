@@ -157,6 +157,32 @@ testing:
 2. [Use environment variables to configure the AWS SDK](http://docs.aws.amazon.com/sdk-for-ruby/v2/developer-guide/setup-config.html#aws-ruby-sdk-credentials-environment)
    locally.
 
+# Case Journey
+1. **unassigned**  
+   A new case entered by a DACU user is created in this state.  It is in this state very 
+   briefly before it the user assigns it to a team on the next screen.
+
+1. **awaiting_responder**  
+   The new case has been assigned to a business unit for response.
+
+1. **drafting**  
+   A kilo in the responding business unit has accepted the case.
+   
+1. **pending_dacu_clearance**
+   For cases that have an approver assignment with Dacu Disclosure, as soon as a 
+   response file is uploaded, the case will transition to pending_dacu disclosure.
+   The DACU disclosure team can either clear the case, in which case it goes forward to 
+   awaiting dispatch, or requrest changes, in which case it goes back to drafting.
+
+1. **awaiting_dispatch**  
+   The Kilo has uploaded at least one response document.
+
+1. **responded**  
+   The kilo has marked the response as sent.
+
+1. **closed**  
+   The kilo has marked the case as closed.
+  
 
 
 # Footnotes

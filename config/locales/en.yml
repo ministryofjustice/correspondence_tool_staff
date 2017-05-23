@@ -44,6 +44,8 @@ en:
           attributes:
             state:
               blank: You must either accept or reject this case
+            approved:
+              true: Cannot be true for non-approving roles
         case_attachment:
           attributes:
             url:
@@ -195,6 +197,7 @@ en:
       upload_response: Upload response
       who_its_with: With
       respond: Mark response as sent
+      clear_response: Clear response
     new_case_button: Create case
     phase_banner: |
       This is a new service.

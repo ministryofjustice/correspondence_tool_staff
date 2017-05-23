@@ -28,6 +28,10 @@ FactoryGirl.define do
 
       team { create :approving_team }
       role 'approving'
+
+      factory :approved_assignment do
+        approved true
+      end
     end
 
     trait :responding do

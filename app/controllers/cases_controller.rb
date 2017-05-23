@@ -5,6 +5,7 @@ class CasesController < ApplicationController
       :close,
       :confirm_respond,
       :edit,
+      :execute_response_approval,
       :flag_for_clearance,
       :new_response_upload,
       :process_closure,
@@ -167,6 +168,14 @@ class CasesController < ApplicationController
   def approve_response
     authorize @case, :can_approve?
     render :approve_response
+  end
+
+  def execute_response_approval
+    authorize @case, :can_approve?
+    result = CaseApprovalService.new(user: current_user, kase: @case).call
+    raise Pundit::NotAuthorizedError if result == :unauthorised
+    flash[:notice] = "You have cleared case #{@case.number} - #{@case.subject}."
+    redirect_to cases_path
   end
 
   private

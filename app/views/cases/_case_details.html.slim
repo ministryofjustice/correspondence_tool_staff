@@ -36,7 +36,7 @@
         tbody.responder-details
           tr.team
             th = t('common.case.responding_team')
-            td = case_details.transitions.accepted.last.responding_team.name
+            td = case_details.transitions.accepted.last.responding_team&.name
 
           - unless case_details.transitions.responded.present?
             tr.responder-name

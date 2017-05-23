@@ -16,6 +16,7 @@
 class Assignment < ApplicationRecord
   validates :case, :role, :state, :team, presence: true
   validates :reasons_for_rejection, presence: true, if: -> { self.rejected? }
+  validate :approved_only_for_approvals
 
   enum state: {
          pending: 'pending',
@@ -49,5 +50,13 @@ class Assignment < ApplicationRecord
   def assign_and_validate_state(state)
     assign_attributes(state: state)
     valid?
+  end
+
+  private
+
+  def approved_only_for_approvals
+    if approved? && role != 'approving'
+      errors.add(:approved, 'true')
+    end
   end
 end

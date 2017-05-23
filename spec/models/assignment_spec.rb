@@ -110,4 +110,36 @@ RSpec.describe Assignment, type: :model do
       expect(subject).to have_received(:valid?)
     end
   end
+
+  context 'approved validation' do
+    context 'approving roles' do
+      it 'is valid when true' do
+        assignment =  create :approved_assignment
+        expect(assignment.approved?).to be true
+        expect(assignment).to be_valid
+      end
+
+      it 'is valid when false' do
+        assignment = create :approver_assignment
+        expect(assignment.approved?).to be false
+        expect(assignment).to be_valid
+      end
+    end
+
+    context 'non-approving_role' do
+      it 'is valid when false' do
+        assignment =  create :assignment
+        expect(assignment.approved?).to be false
+        expect(assignment).to be_valid
+      end
+
+      it 'is invalid when true' do
+        assignment =  create :assignment
+        assignment.approved = true
+        expect(assignment.approved?).to be true
+        expect(assignment).not_to be_valid
+        expect(assignment.errors[:approved]).to eq ['true']
+      end
+    end
+  end
 end

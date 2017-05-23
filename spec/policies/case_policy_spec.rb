@@ -40,6 +40,7 @@ describe CasePolicy do
                                          responder: responder }
   let(:closed_case)             { create :closed_case,
                                          responder: responder }
+  let(:pending_dacu_clearance_case) { create :pending_dacu_clearance_case }
 
   permissions :can_accept_or_reject_approver_assignment? do
     it { should_not permit(manager,           unassigned_flagged_case) }
@@ -158,7 +159,7 @@ describe CasePolicy do
   end
 
   permissions :can_approve? do
-    it { should     permit(approver,   assigned_trigger_case) }
+    it { should     permit(pending_dacu_clearance_case.approver,   pending_dacu_clearance_case) }
     it { should_not permit(approver,   new_case) }
     it { should_not permit(approver,   accepted_case) }
     it { should_not permit(approver,   assigned_case) }
