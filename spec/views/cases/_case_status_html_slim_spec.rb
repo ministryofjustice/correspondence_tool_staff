@@ -14,9 +14,7 @@ describe 'cases/case_status.html.slim', type: :view do
     render partial: 'cases/case_status.html.slim',
            locals:{ case_details: unassigned_case}
 
-    cases_show_page.load(rendered)
-
-    partial = cases_show_page.case_status
+    partial = case_status_section(rendered)
 
     expect(partial.details.copy_label.text).to eq "Status"
     expect(partial.details.copy.text).to eq unassigned_case.status
@@ -44,9 +42,7 @@ describe 'cases/case_status.html.slim', type: :view do
     render partial: 'cases/case_status.html.slim',
            locals:{ case_details: closed_case}
 
-    cases_show_page.load(rendered)
-
-    partial = cases_show_page.case_status
+    partial = case_status_section(rendered)
 
     expect(partial.details.copy.text).to eq closed_case.status
     expect(partial.details).to have_no_who_its_with
@@ -68,9 +64,7 @@ describe 'cases/case_status.html.slim', type: :view do
     render partial: 'cases/case_status.html.slim',
            locals:{ case_details: non_trigger_case}
 
-    cases_show_page.load(rendered)
-
-    partial = cases_show_page.case_status
+    partial = case_status_section(rendered)
 
     expect(partial.details.copy.text).to eq non_trigger_case.status
     expect(partial.details.who_its_with.text)

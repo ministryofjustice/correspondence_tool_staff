@@ -12,10 +12,7 @@ describe 'cases/case_details.html.slim', type: :view do
       render partial: 'cases/case_details.html.slim',
              locals:{ case_details: unassigned_case}
 
-      cases_show_page.load(rendered)
-
-
-      partial = cases_show_page.case_details.basic_details
+      partial = case_details_section(rendered).basic_details
 
       expect(partial).to be_all_there
 
@@ -42,10 +39,7 @@ describe 'cases/case_details.html.slim', type: :view do
       render partial: 'cases/case_details.html.slim',
             locals:{ case_details: unassigned_case}
 
-      cases_show_page.load(rendered)
-
-
-      partial = cases_show_page.case_details.basic_details
+      partial = case_details_section(rendered).basic_details
 
       expect(partial).to have_no_email
       expect(partial).to have_address
@@ -57,10 +51,7 @@ describe 'cases/case_details.html.slim', type: :view do
       render partial: 'cases/case_details.html.slim',
              locals:{ case_details: unassigned_case}
 
-      cases_show_page.load(rendered)
-
-
-      partial = cases_show_page.case_details.basic_details
+      partial = case_details_section(rendered).basic_details
 
       expect(partial).to have_no_address
       expect(partial).to have_email
@@ -68,16 +59,11 @@ describe 'cases/case_details.html.slim', type: :view do
   end
 
   describe 'responders details' do
-    xit 'does not display responder details if its unaccepted' do
-
-    end
     it 'displays the responders team name' do
       render partial: 'cases/case_details.html.slim',
              locals:{ case_details: accepted_case}
 
-      cases_show_page.load(rendered)
-
-      partial = cases_show_page.case_details.responders_details
+      partial = case_details_section(rendered).responders_details
 
       expect(partial).to be_all_there
       expect(partial.team.data.text).to eq accepted_case.responding_team.name
@@ -91,9 +77,7 @@ describe 'cases/case_details.html.slim', type: :view do
       render partial: 'cases/case_details.html.slim',
              locals:{ case_details: closed_case}
 
-      cases_show_page.load(rendered)
-
-      partial = cases_show_page.case_details.final_response
+      partial = case_details_section(rendered).final_response
 
       expect(partial).to be_all_there
       expect(partial.date_responded.data.text).to eq closed_case.responding_team.name

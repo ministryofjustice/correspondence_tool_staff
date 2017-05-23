@@ -19,10 +19,10 @@ module PageObjects
         end
 
         section :case_status,
-                PageObjects::Sections::CaseStatusSection, '.case-status'
+                PageObjects::Sections::Cases::CaseStatusSection, '.case-status'
 
         section :case_details,
-                PageObjects::Sections::CaseDetailsSection, '.case-details'
+                PageObjects::Sections::Cases::CaseDetailsSection, '.case-details'
 
         element :message, '.request'
 
