@@ -6,7 +6,8 @@ div { id="take_case_on_#{kase.id}"
     = ' '
     = link_to "Undo",
               unaccept_case_assignment_path(@case, @case.approver_assignment),
-              remote: true,
-              method: :patch
+            {remote: true,
+              method: :patch,
+              class: "js-undo-take-on-link"}
     span.visually-hidden
       = " taking on of case #{kase.number}"

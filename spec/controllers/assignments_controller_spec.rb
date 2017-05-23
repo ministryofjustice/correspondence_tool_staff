@@ -319,7 +319,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
         it 'sets the message to success' do
           patch :accept, params: params, xhr: true
-          expect(assigns(:message)).to eq 'Moved to open cases'
+          expect(assigns(:message)).to eq 'Case taken on'
         end
 
         it 'renders the view' do
@@ -344,7 +344,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
         it 'sets the message to success' do
           patch :accept, params: params, xhr: true
-          expect(assigns(:message)).to eq 'Moved to open cases'
+          expect(assigns(:message)).to eq 'Case taken on'
         end
 
         it 'renders the view' do

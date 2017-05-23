@@ -208,7 +208,7 @@ en:
       case_assigned: Case successfully assigned
       case_created: Case successfully created
     accept:
-      success: Moved to open cases
+      success: Case taken on
       already_accepted: Case already accepted by %{name}
 
   cases:

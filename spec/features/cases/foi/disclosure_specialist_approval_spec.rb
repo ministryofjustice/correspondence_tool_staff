@@ -49,7 +49,7 @@ feature 'cases requiring clearance by disclosure specialist' do
     case_list_item.actions.take_on_case.click
     case_list_item.actions.wait_until_success_message_visible
     expect(case_list_item.actions.success_message.text)
-      .to include 'Moved to open cases'
+      .to include 'Case taken on'
     expect(case_list_item.highlight_row.size).to eq 3
     expect(kase.reload.approver).to eq disclosure_specialist
 

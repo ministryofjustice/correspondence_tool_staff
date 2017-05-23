@@ -46,3 +46,16 @@
 .case-name-detail {
   color: $grey-1;
 }
+
+.ajax-success--de-escalate {
+  background-color: $grey-3;
+}
+
+.ajax-success--de-escalate .case_name, .ajax-success .case_name  {
+  color: #000000;
+}
+
+.js-undo-de-escalate-link, .js-undo-take-on-link {
+  display: block;
+  margin-top: $gutter-half;
+}
