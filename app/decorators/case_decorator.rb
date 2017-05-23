@@ -39,8 +39,8 @@ class CaseDecorator < Draper::Decorator
     "#{object.name} | #{requester_type}"
   end
 
-  def message_extract(num_chars = 200)
-    if object.message.size < 200
+  def message_extract(num_chars = 350)
+    if object.message.size < num_chars
       object.message
     else
       object.message[0..num_chars-1] + '...'
