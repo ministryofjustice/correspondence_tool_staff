@@ -24,7 +24,8 @@ module PageObjects
         section :case_details,
                 PageObjects::Sections::Cases::CaseDetailsSection, '.case-details'
 
-        element :message, '.request'
+        section :request,
+                PageObjects::Sections::Cases::CaseRequestSection, '.request'
 
         sections :case_attachments,
                 PageObjects::Sections::CaseAttachmentSection,

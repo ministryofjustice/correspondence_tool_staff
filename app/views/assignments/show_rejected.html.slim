@@ -6,10 +6,4 @@
     = t('alerts.assignment_already_rejected_html')
 
 section.case-info
-  .request
-    h2.request--heading
-      = t('common.case.request')
-
-    .request--message
-      p
-        = @case.message
+  = render partial: 'cases/case_request', locals: {case_details: @case}

@@ -74,7 +74,4 @@ describe 'cases/case_status.html.slim', type: :view do
     expect(partial.deadlines.final.text)
         .to eq non_trigger_case.external_deadline.strftime("%e %b %Y")
   end
-
-
-
 end

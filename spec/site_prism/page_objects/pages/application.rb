@@ -35,6 +35,7 @@ module PageObjects
       {
         cases_what_do_you_want_to_do: 'Cases::WhatDoYouWantToDoSection',
         case_status:                  'Cases::CaseStatusSection',
+        case_request:                 'Cases::CaseRequestSection',
         case_details:                 'Cases::CaseDetailsSection',
       }.each do |section_name, section_class|
         full_section_class = "PageObjects::Sections::#{section_class}"

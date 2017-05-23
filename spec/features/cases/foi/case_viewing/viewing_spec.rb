@@ -95,7 +95,7 @@ feature 'viewing details of case in the system' do
       expect(cases_show_page.page_heading.sub_heading).to have_content(foi.number)
       expect(cases_show_page.page_heading.heading.text).to have_content(foi.subject)
 
-      expect(cases_show_page.message).to have_content('viewing foi details test message')
+      expect(cases_show_page.request.message).to have_content('viewing foi details test message')
 
       expect(cases_show_page).to have_case_history
       expect(cases_show_page.case_history.entries.size).to eq 2
