@@ -6,6 +6,8 @@ module PageObjects
 
         section :user_card, PageObjects::Sections::UserCardSection, '.user-card'
         sections :case_list, '.case_row' do
+          elements :highlight_row, 'td.ajax-success'
+
           element :number, 'td[aria-label="Case number"]'
           section :request, 'td[aria-label="Request"]' do
             element :name, '.case_name'

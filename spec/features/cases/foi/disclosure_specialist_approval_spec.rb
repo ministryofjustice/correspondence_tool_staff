@@ -45,25 +45,33 @@ feature 'cases requiring clearance by disclosure specialist' do
 
     ## TAKE CASE ON ##################################################
     case_list_item = incoming_cases_page.case_list.first
+    expect(case_list_item).to have_no_highlight_row
     case_list_item.actions.take_on_case.click
     case_list_item.actions.wait_until_success_message_visible
     expect(case_list_item.actions.success_message.text)
       .to include 'Moved to open cases'
+    expect(case_list_item.highlight_row.size).to eq 3
     expect(kase.reload.approver).to eq disclosure_specialist
 
     ## UNDO TAKE CASE ON ############################################
+    expect(case_list_item.highlight_row.size).to eq 3
     case_list_item.actions.undo_assign_link.click
     case_list_item.actions.wait_until_take_on_case_visible
+    expect(case_list_item).to have_no_highlight_row
     expect(kase.reload.approver).to be_nil
 
     ## DE-ESCALATE CASE #############################################
+    expect(case_list_item).to have_no_highlight_row
     case_list_item.actions.de_escalate_link.click
     case_list_item.actions.wait_until_undo_de_escalate_link_visible
+    expect(case_list_item.highlight_row.size).to eq 3
     expect(kase.reload.approver_assignment).to be_blank
 
     ## UNDO DE-ESCALATE CASE ########################################
+    expect(case_list_item.highlight_row.size).to eq 3
     case_list_item.actions.undo_de_escalate_link.click
     case_list_item.actions.wait_until_de_escalate_link_visible
+    expect(case_list_item).to have_no_highlight_row
     expect(kase.reload.approving_team).to eq team_dacu_disclosure
   end
 end

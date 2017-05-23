@@ -1,7 +1,11 @@
-$('#case-<%= @case.id %> .js-take-case-on-container').html(
+$('#case-<%= @case.id %>')
+  .find('.js-take-case-on-container').html(
     "<%= escape_javascript(
            render partial: 'de_escalated',
                   locals: { kase: @case }
-         ) %>"
-);
+         ) %>")
+  .end()
+  .filter('tr')
+  .children()
+  .toggleClass('ajax-success');
 
