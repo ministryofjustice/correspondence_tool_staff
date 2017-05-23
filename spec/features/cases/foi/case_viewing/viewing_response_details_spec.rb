@@ -94,7 +94,7 @@ feature 'viewing response details' do
 
     context 'with a case being drafted' do
       given(:accepted_case) { create :accepted_case, responder: responder }
-      given(:response)      { create  :case_response }
+      given(:response)      { create :case_response }
 
       scenario 'when the case has no responses' do
         cases_show_page.load(id: accepted_case.id)
