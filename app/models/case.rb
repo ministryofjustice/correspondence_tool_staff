@@ -258,21 +258,9 @@ class Case < ApplicationRecord
   end
 
   def set_deadlines
-    set_escalation_deadline
-    set_internal_deadline
-    set_external_deadline
-  end
-
-  def set_escalation_deadline
-    self.escalation_deadline ||= DeadlineCalculator.escalation_deadline(self)
-  end
-
-  def set_internal_deadline
-    self.internal_deadline ||= DeadlineCalculator.internal_deadline(self)
-  end
-
-  def set_external_deadline
-    self.external_deadline ||= DeadlineCalculator.external_deadline(self)
+    self.escalation_deadline = DeadlineCalculator.escalation_deadline(self)
+    self.internal_deadline = DeadlineCalculator.internal_deadline(self)
+    self.external_deadline = DeadlineCalculator.external_deadline(self)
   end
 
   def set_managing_team

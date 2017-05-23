@@ -566,93 +566,32 @@ RSpec.describe Case, type: :model do
       end
     end
 
-    describe '#set_escalation_deadline' do
+    describe '#set_deadlines' do
       let(:kase)                { build :case }
       let(:escalation_deadline) { Date.today - 1.day }
+      let(:internal_deadline) { Date.today - 2.day }
+      let(:external_deadline) { Date.today - 3.day }
 
       before do
-        allow(DeadlineCalculator).to receive(:escalation_deadline)
-                                       .and_return(escalation_deadline)
+        allow(DeadlineCalculator).to receive(:escalation_deadline).and_return(escalation_deadline)
+        allow(DeadlineCalculator).to receive(:internal_deadline).and_return(internal_deadline)
+        allow(DeadlineCalculator).to receive(:external_deadline).and_return(external_deadline)
       end
 
       it 'is called before_create' do
-        expect(kase).to receive(:set_escalation_deadline)
+        expect(kase).to receive(:set_deadlines)
         kase.save!
       end
 
-      it 'sets the escalation deadline using DeadlineCalculator' do
-        kase.send :set_escalation_deadline
-        expect(DeadlineCalculator).to have_received(:escalation_deadline)
-                                        .with(kase)
+      it 'sets the deadlines deadline using DeadlineCalculator' do
+        kase.__send__(:set_deadlines)
+        expect(DeadlineCalculator).to have_received(:escalation_deadline).with(kase)
+        expect(DeadlineCalculator).to have_received(:external_deadline).with(kase)
+        expect(DeadlineCalculator).to have_received(:internal_deadline).with(kase)
         expect(kase.escalation_deadline).to eq escalation_deadline
-      end
-
-      it 'calls DeadlineCalculator only once' do
-        kase.send :set_escalation_deadline
-        kase.send :set_escalation_deadline
-        expect(DeadlineCalculator).to have_received(:escalation_deadline)
-                                        .with(kase)
-                                        .once
-      end
-    end
-
-    describe '#set_external_deadline' do
-      let(:kase) { build :case }
-      let(:external_deadline) { Date.today - 2.day }
-
-      before do
-        allow(DeadlineCalculator).to receive(:external_deadline)
-                                       .and_return(external_deadline)
-      end
-
-      it 'is called before_create' do
-        expect(kase).to receive(:set_external_deadline)
-        kase.save!
-      end
-
-      it 'sets the external deadline using DeadlineCalculator' do
-        kase.send :set_external_deadline
-        expect(DeadlineCalculator).to have_received(:external_deadline)
-                                        .with(kase)
         expect(kase.external_deadline).to eq external_deadline
-      end
-
-      it 'calls DeadlineCalculator only once' do
-        kase.send :set_external_deadline
-        kase.send :set_external_deadline
-        expect(DeadlineCalculator).to have_received(:external_deadline)
-                                        .with(kase)
-                                        .once
-      end
-    end
-
-    describe '#set_internal_deadline' do
-      let(:kase) { build :case }
-      let(:internal_deadline) { Date.today - 3.day }
-
-      before do
-        allow(DeadlineCalculator).to receive(:internal_deadline)
-                                       .and_return(internal_deadline)
-      end
-
-      it 'is called before_create' do
-        expect(kase).to receive(:set_internal_deadline)
-        kase.save!
-      end
-
-      it 'sets the internal deadline using DeadlineCalculator' do
-        kase.send :set_internal_deadline
-        expect(DeadlineCalculator).to have_received(:internal_deadline)
-                                        .with(kase)
         expect(kase.internal_deadline).to eq internal_deadline
-      end
 
-      it 'calls DeadlineCalculator only once' do
-        kase.send :set_internal_deadline
-        kase.send :set_internal_deadline
-        expect(DeadlineCalculator).to have_received(:internal_deadline)
-                                        .with(kase)
-                                        .once
       end
     end
 
