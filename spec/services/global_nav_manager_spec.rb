@@ -1,117 +1,151 @@
 require 'rails_helper'
 
-
-
-describe GlobalNavManager::GlobalNavManagerEntry do
-
-  context 'initialized with an array of urls' do
-    let(:entry) { GlobalNavManager::GlobalNavManagerEntry.new('Cases', ['cases_path', 'root_path', 'other_path']) }
-
-    describe '#text' do
-      it 'returns the text' do
-        expect(entry.text).to eq 'Cases'
-      end
-    end
-
-    describe '#urls' do
-      it 'returns an array of urls' do
-        expect(entry.urls).to eq ['cases_path', 'root_path', 'other_path']
-      end
-    end
-
-    describe '#url' do
-      it 'returns the first url' do
-        expect(entry.url).to eq 'cases_path'
-      end
-    end
-  end
-
-  context 'intialized with just one url' do
-    let(:entry) { GlobalNavManager::GlobalNavManagerEntry.new('Cases', 'cases_path') }
-
-    describe '#text' do
-      it 'returns the text' do
-        expect(entry.text).to eq 'Cases'
-      end
-    end
-
-    describe '#urls' do
-      it 'returns an array of one url' do
-        expect(entry.urls).to eq ['cases_path']
-      end
-    end
-
-    describe '#url' do
-      it 'returns the  url' do
-        expect(entry.url).to eq 'cases_path'
-      end
-    end
-  end
-end
-
+# Require these so that class GlobalNavManager is created before our
+# monkey-patch to define == below.
+require 'global_nav_manager'
+require 'global_nav_manager/page'
 
 describe GlobalNavManager do
   include Rails.application.routes.url_helpers
 
-  # we need to add in equality matcher for GlobalNavManagerEntry here just for testing
-  class GlobalNavManager::GlobalNavManagerEntry
+  # we need to add in equality matcher for Page here just for testing
+  class GlobalNavManager::Page
     def ==(other)
       @text == other.text && @urls == other.urls
     end
   end
 
-  let(:incoming_cases_entry) do
-    GlobalNavManager::GlobalNavManagerEntry.new 'New cases',
-                                                incoming_cases_path
+  let(:incoming_cases_page) do
+    GlobalNavManager::Page.new :new_cases,
+                               'New cases',
+                               incoming_cases_path,
+                               {},
+                               double('User')
   end
-  let(:open_cases_entry) do
-    GlobalNavManager::GlobalNavManagerEntry.new 'Open cases',
-                                                [open_cases_path]
+  let(:open_cases_page) do
+    GlobalNavManager::Page.new :open_cases,
+                               'Open cases',
+                               [open_cases_path],
+                               {},
+                               double('User')
   end
-  let(:my_open_cases_entry) do
-    GlobalNavManager::GlobalNavManagerEntry.new 'My open cases',
-                                                [my_open_cases_path]
+  let(:my_open_cases_page) do
+    GlobalNavManager::Page.new :my_open_cases,
+                               'My open cases',
+                               [my_open_cases_path],
+                               {},
+                               double('User')
   end
-  let(:closed_cases_entry) do
-    GlobalNavManager::GlobalNavManagerEntry.new 'Closed cases',
-                                                closed_cases_path
+  let(:closed_cases_page) do
+    GlobalNavManager::Page.new :closed_cases,
+                               'Closed cases',
+                               closed_cases_path,
+                               {},
+                               double('User')
   end
+  let(:request) { instance_double ActionDispatch::Request,
+                                  path: '/cases/open',
+                                  fullpath: '/cases/open?timeliness=in_time' }
+  let(:manager)   { create :manager }
+  let(:responder) { create :responder }
+  let(:approver)  { create :approver }
 
-  context 'manager user' do
-    let(:user) { create :manager }
-    let(:gnm)  { GlobalNavManager.new(user) }
+  describe 'instantiation' do
+    context 'manager user' do
+      it 'instantiates with the manager pages' do
+        gnm = GlobalNavManager.new(manager, request)
+        expect(gnm.nav_pages).to eq [open_cases_page, closed_cases_page]
+      end
+    end
 
-    describe '#each' do
-      it 'yields for every entry in the Nav Bar' do
-        expect { |block| gnm.each(&block) }
-          .to yield_successive_args(open_cases_entry, closed_cases_entry)
+    context 'responder user' do
+      it 'instantiates with the responder pages' do
+        gnm = GlobalNavManager.new(responder, request)
+        expect(gnm.nav_pages).to eq [open_cases_page, closed_cases_page]
+      end
+
+
+    end
+
+    context 'approver user' do
+      it 'instantiates with the responder pages' do
+        gnm = GlobalNavManager.new(approver, request)
+        expect(gnm.nav_pages).to eq [incoming_cases_page,
+                                     open_cases_page,
+                                     my_open_cases_page,
+                                     closed_cases_page]
       end
     end
   end
 
-  context 'responder user' do
-    let(:user) { create :responder }
-    let(:gnm)  { GlobalNavManager.new(user) }
+  describe '#each' do
+    let(:gnm) { GlobalNavManager.new(responder, request) }
 
-    describe '#each' do
-      it 'yields for every entry in the Nav Bar' do
-        expect { |block| gnm.each(&block) }
-          .to yield_successive_args(open_cases_entry, closed_cases_entry)
-      end
+    it 'yields each page' do
+      page1 = double GlobalNavManager::Page
+      page2 = double GlobalNavManager::Page
+      gnm.instance_eval { @nav_pages = [page1, page2] }
+      expect { |block| gnm.each(&block) }
+        .to yield_successive_args page1, page2
     end
   end
 
-  context 'approver user' do
-    let(:user) { create :approver }
-    let(:gnm)  { GlobalNavManager.new(user) }
+  describe '#current_page' do
+    let(:gnm) { GlobalNavManager.new(responder, request) }
 
-    describe '#each' do
-      it 'yields for every entry in the Nav Bar' do
-        expect { |block| gnm.each(&block) }
-          .to yield_successive_args incoming_cases_entry,
-                                    open_cases_entry,
-                                    my_open_cases_entry,
-                                    closed_cases_entry
+    it 'returns the current page' do
+      page = double GlobalNavManager::Page
+      allow(GlobalNavManager::Page).to receive(:new).and_return(page)
+
+      expect(gnm.current_page).to eq page
+      expect(GlobalNavManager::Page)
+        .to have_received(:new)
+              .with(:open_cases,
+                    'Open cases',
+                    '/cases/open',
+                    Settings.global_navigation.pages[:open_cases][:tabs],
+                    responder)
+    end
+  end
+
+  describe '#current_tab' do
+    let!(:gnm) { GlobalNavManager.new(responder, request) }
+
+    it 'returns the current tab' do
+      tab = double GlobalNavManager::Tab, url: '/cases/open?timeliness=in_time'
+      page = double GlobalNavManager::Page, tabs: [tab]
+      allow(gnm).to receive(:current_page).and_return(page)
+
+      expect(gnm.current_tab).to eq tab
+    end
+  end
+
+  describe '#current_cases_finder' do
+    let(:gnm)    { GlobalNavManager.new(responder, request) }
+    let(:finder) { double CaseFinderService }
+
+    context 'page with no tabs' do
+      let(:page) { double GlobalNavManager::Page, finder: finder }
+
+      before do
+        allow(gnm).to receive(:current_page).and_return(page)
+        allow(gnm).to receive(:current_tab).and_return(nil)
+      end
+
+      it 'returns the current page finder' do
+        expect(gnm.current_cases_finder).to eq finder
+      end
+    end
+
+    context 'page with tabs' do
+      let(:tab) { double GlobalNavManager::Tab, finder: finder }
+
+      before do
+        allow(gnm).to receive(:current_tab).and_return(tab)
+      end
+
+      it 'returns the current tab finder' do
+        expect(gnm.current_cases_finder).to eq finder
       end
     end
   end

@@ -25,6 +25,6 @@ class ApplicationController < ActionController::Base
   end
 
   def set_global_nav
-    @global_nav_manager = GlobalNavManager.new(current_user)
+    @global_nav_manager = GlobalNavManager.new(current_user, request)
   end
 end

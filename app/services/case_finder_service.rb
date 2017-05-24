@@ -1,11 +1,12 @@
 class CaseFinderService
 
-  include Pundit
+  # include Pundit
 
-  def initialize(user, action)
+  def initialize(user, action, params = {})
     @user = user
     @action = action
     @cases = []
+    @params = params
   end
 
   def cases
@@ -21,12 +22,7 @@ class CaseFinderService
     when :open_cases
       open_cases
     end
-    CaseDecorator.decorate_collection(policy_scope(@cases))
-  end
-
-  # We need to expose current user for Pundit (#lame)
-  def current_user
-    @user
+    CaseDecorator.decorate_collection(Pundit.policy_scope(@user, @cases))
   end
 
   private

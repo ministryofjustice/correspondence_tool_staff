@@ -1,48 +1,58 @@
 class GlobalNavManager
 
   include Rails.application.routes.url_helpers
+  include ActionView::Helpers::UrlHelper
 
-  class GlobalNavManagerEntry
+  attr_reader :nav_pages, :request
 
-    attr_reader :text, :urls
-
-    def initialize(text, urls)
-      @text = text
-      @urls = urls.is_a?(Array) ? urls : [urls]
-    end
-
-    def url
-      @urls.first
-    end
-
-  end
-
-  attr_reader :nav_entries
-
-  def initialize(user)
+  def initialize(user, request)
     @user = user
-    @nav_entries = []
-    add_views_for_user
+    @request = request
+    @nav_pages = []
+    add_pages_for_user
   end
 
   def each
-    @nav_entries.each do |nav_entry|
-      yield(nav_entry)
+    @nav_pages.each do |nav_page|
+      yield(nav_page)
     end
+  end
+
+  def current_page
+    @current_page ||= Settings.global_navigation.pages.find do |name, attrs|
+      url_for(attrs.path) == request.path
+    end&.tap { |name, _settings| break build_page name }
+  end
+
+  def current_tab
+    @current_tab ||= current_page&.tabs&.detect do |tab|
+      url_for(tab.url) == request.fullpath
+    end
+  end
+
+  def current_cases_finder
+    current_tab&.finder || current_page&.finder
   end
 
   private
 
-  def add_views_for_user
+  def add_pages_for_user
     return if @user&.team_roles.blank?
     role = @user.team_roles.first.role
-    views = Settings.global_navigation.user_views[role]
-    views.each do |user_view|
-      @nav_entries << entry_for_view(user_view)
+    user_pages = Settings.global_navigation.user_roles[role]
+    user_pages.each do |user_page|
+      @nav_pages << build_page(user_page)
     end
   end
 
-  def entry_for_view(view_name)
-    GlobalNavManagerEntry.new(I18n.t("nav.#{view_name}"), Settings.global_navigation.paths[view_name])
+  def build_page(page_name)
+    settings = Settings.global_navigation.pages[page_name]
+    Page.new(
+      page_name,
+      I18n.t("nav.#{page_name}"),
+      settings.path,
+      settings.tabs,
+      @user,
+    )
   end
 end

@@ -36,16 +36,21 @@ foi_cases:
   default_clearance_team: DACU Disclosure
 
 global_navigation:
-  paths:
+  pages:
     closed_cases:
-      - /cases/closed
+      path: /cases/closed
     new_cases:
-      - /cases/incoming
+      path: /cases/incoming
     my_open_cases:
-      - /cases/my_open
+      path: /cases/my_open
     open_cases:
-      - /cases/open
-  user_views:
+      path: /cases/open
+      tabs:
+        in_time:
+          timeliness: in_time
+        late:
+          timeliness: late
+  user_roles:
     approver:
       - new_cases
       - open_cases
