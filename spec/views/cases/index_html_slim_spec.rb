@@ -1,5 +1,15 @@
 require 'rails_helper'
 
+def allow_case_policy(policy_name)
+  policy = double('Pundit::Policy', policy_name => true)
+  allow(view).to receive(:policy).with(:case).and_return(policy)
+end
+
+def disallow_case_policy(policy_name)
+  policy = double('Pundit::Policy', policy_name => false)
+  allow(view).to receive(:policy).with(:case).and_return(policy)
+end
+
 describe 'cases/index.html.slim', type: :view do
 
   it 'displays the cases given it' do
@@ -24,8 +34,7 @@ describe 'cases/index.html.slim', type: :view do
                    who_its_with: 'LAA'
     assign(:cases, [case1, case2])
 
-    policy = double('Pundit::Policy', can_add_case?: false)
-    allow(view).to receive(:policy).with(:case).and_return(policy)
+    disallow_case_policy :can_add_case?
 
     render
     cases_page.load(rendered)
@@ -49,8 +58,7 @@ describe 'cases/index.html.slim', type: :view do
     it 'is displayed when the user can add cases' do
       assign(:cases, [])
 
-      policy = double('Pundit::Policy', can_add_case?: true)
-      allow(view).to receive(:policy).with(:case).and_return(policy)
+      allow_case_policy :can_add_case?
 
       render
       cases_page.load(rendered)
@@ -61,8 +69,7 @@ describe 'cases/index.html.slim', type: :view do
     it 'is not displayed when the user cannot add cases' do
       assign(:cases, [])
 
-      policy = double('Pundit::Policy', can_add_case?: false)
-      allow(view).to receive(:policy).with(:case).and_return(policy)
+      disallow_case_policy :can_add_case?
 
       render
       cases_page.load(rendered)
