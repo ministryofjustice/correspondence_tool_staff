@@ -57,7 +57,9 @@ RSpec.describe Case, type: :model do
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do
-      expect(non_trigger_foi).to be_valid
+      Timecop.freeze non_trigger_foi.received_date + 1.day do
+        expect(non_trigger_foi).to be_valid
+      end
     end
   end
 
@@ -281,36 +283,46 @@ RSpec.describe Case, type: :model do
     let(:case_four)  { create(:case, received_date: Date.parse('12/01/2017')) }
 
     it 'is composed of the received date and an incremented suffix' do
-      expect(case_one.number).to eq   '170111001'
-      expect(case_two.number).to eq   '170111002'
-      expect(case_three.number).to eq '170112001'
-      expect(case_four.number).to eq  '170112002'
+      Timecop.freeze Date.new(2017, 1, 15) do
+        expect(case_one.number).to eq   '170111001'
+        expect(case_two.number).to eq   '170111002'
+        expect(case_three.number).to eq '170112001'
+        expect(case_four.number).to eq  '170112002'
+      end
     end
 
     it 'cannot be set on create' do
+      Timecop.freeze Date.new(2017, 1, 20) do
       expect { create(:case,
-                      received_date: Date.parse('13/01/2017'),
-                      number: 'f00') }.
-        to raise_error StandardError, 'number is immutable'
+                        received_date: Date.parse('13/01/2017'),
+                        number: 'f00') }.
+          to raise_error StandardError, 'number is immutable'
+      end
     end
 
     it 'cannot be modified' do
-      case_one.number = 1
-      expect { case_one.save }.
-        to raise_error StandardError, 'number is immutable'
+      Timecop.freeze(Date.new(2017, 1, 20)) do
+        case_one.number = 1
+        expect { case_one.save }.
+          to raise_error StandardError, 'number is immutable'
+      end
     end
 
     it 'must be unique' do
-      allow_any_instance_of(Case).
-        to receive(:next_number).and_return(case_one.number)
-      expect { case_two }.
-        to raise_error(ActiveRecord::RecordNotUnique)
+      Timecop.freeze(Date.new(2017, 1, 20)) do
+        allow_any_instance_of(Case).
+          to receive(:next_number).and_return(case_one.number)
+        expect { case_two }.
+          to raise_error(ActiveRecord::RecordNotUnique)
+      end
     end
 
     it 'does not get reused' do
-      expect(case_one.number).to eq '170111001'
-      case_one.destroy
-      expect(case_two.number).to eq '170111002'
+      Timecop.freeze(Date.new(2017, 1, 20)) do
+        expect(case_one.number).to eq '170111001'
+        case_one.destroy
+        expect(case_two.number).to eq '170111002'
+      end
     end
   end
 
@@ -325,10 +337,9 @@ RSpec.describe Case, type: :model do
 
   describe '#received_date' do
     let(:case_received_yesterday)   { build(:case, received_date: Date.yesterday.to_s) }
+    let(:case_received_long_ago)   { build(:case, received_date: 65.days.ago) }
     let(:case_received_today){ build(:case, received_date: Date.today.to_s) }
-    let(:case_received_tomorrow) do
-      build(:case, received_date: (Date.today + 1.day).to_s)
-    end
+    let(:case_received_tomorrow) { build(:case, received_date: (Date.today + 1.day).to_s) }
 
     it 'can be received in the past' do
       expect(case_received_yesterday).to be_valid
@@ -340,6 +351,11 @@ RSpec.describe Case, type: :model do
 
     it 'cannot be received in the future' do
       expect(case_received_tomorrow).to_not be_valid
+    end
+
+    it 'cannot be received too far in the past' do
+      expect(case_received_long_ago).to_not be_valid
+      expect(case_received_long_ago.errors[:received_date]).to eq ['too far in past.']
     end
 
   end
@@ -561,8 +577,10 @@ RSpec.describe Case, type: :model do
 
     describe '#prevent_number_change' do
       it 'is called before_save' do
-        expect(non_trigger_foi).to receive(:prevent_number_change)
-        non_trigger_foi.save!
+        Timecop.freeze(non_trigger_foi.received_date + 1 .day) do
+          expect(non_trigger_foi).to receive(:prevent_number_change)
+          non_trigger_foi.save!
+        end
       end
     end
 
@@ -597,29 +615,37 @@ RSpec.describe Case, type: :model do
 
     describe '#set_number' do
       it 'is called before_create' do
-        allow(non_trigger_foi).to receive(:set_number)
-        non_trigger_foi.save rescue nil
-        expect(non_trigger_foi).to have_received(:set_number)
+        Timecop.freeze(non_trigger_foi.received_date + 1 .day) do
+          allow(non_trigger_foi).to receive(:set_number)
+          non_trigger_foi.save rescue nil
+          expect(non_trigger_foi).to have_received(:set_number)
+        end
       end
 
       it 'assigns a case number number' do
-        expect(non_trigger_foi.number).to eq nil
-        non_trigger_foi.save
-        expect(non_trigger_foi.number).not_to eq nil
+        Timecop.freeze(non_trigger_foi.received_date + 1 .day) do
+          expect(non_trigger_foi.number).to eq nil
+          non_trigger_foi.save
+          expect(non_trigger_foi.number).not_to eq nil
+        end
       end
     end
 
     describe '#set_managing_team' do
       it 'is called in the before_create' do
-        allow(non_trigger_foi).to receive(:set_managing_team)
-        non_trigger_foi.save rescue nil
-        expect(non_trigger_foi).to have_received(:set_managing_team)
+        Timecop.freeze(non_trigger_foi.received_date + 1 .day) do
+          allow(non_trigger_foi).to receive(:set_managing_team)
+          non_trigger_foi.save rescue nil
+          expect(non_trigger_foi).to have_received(:set_managing_team)
+        end
       end
 
       it 'sets it to DACU' do
-        non_trigger_foi.save!
-        expect(non_trigger_foi.managing_team)
-          .to eq Team.managing.find_by name: 'DACU'
+        Timecop.freeze(non_trigger_foi.received_date + 1.day) do
+          non_trigger_foi.save!
+          expect(non_trigger_foi.managing_team)
+            .to eq Team.managing.find_by name: 'DACU'
+        end
       end
     end
   end
