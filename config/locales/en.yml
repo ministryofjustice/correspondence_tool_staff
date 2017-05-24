@@ -64,6 +64,7 @@ en:
     awaiting_responder_email: Waiting to be accepted
     awaiting_dispatch: Ready to send
     drafting: Draft in progress
+    pending_dacu_clearance: Pending clearance
     responded: Ready to close
     closed: ''
     closed_status: Case closed
@@ -149,7 +150,7 @@ en:
 
   notices:
     case_closed: You've closed this case
-    response_uploaded: Your response has been added to the case.
+    response_uploaded: You have uploaded the response for this case.
 
   common:
     choose_file: Choose a file

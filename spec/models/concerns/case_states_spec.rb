@@ -126,6 +126,46 @@ RSpec.describe Case, type: :model do
       end
     end
 
+
+    describe '#add_response_to_flagged_case' do
+      let(:flagged_accepted_case)   { create :accepted_case, :flagged }
+      let(:state_machine)           { flagged_accepted_case.state_machine }
+      let(:assignment)              { flagged_accepted_case.responder_assignment }
+      let(:responding_team)         { assignment.team }
+      let(:responder)               { assignment.team.responders.first }
+      let(:responses)               { [ build(:case_response, key: "#{SecureRandom.hex(16)}/responses/new response.pdf") ] }
+
+      context 'with mocked state machine calls' do
+        before do
+          allow(state_machine).to receive(:add_response_to_flagged_case)
+          allow(state_machine).to receive(:add_response_to_flagged_case!)
+        end
+
+        it 'triggers the raising version of the event' do
+          flagged_accepted_case.add_response_to_flagged_case(responder, responses)
+          expect(state_machine).to have_received(:add_response_to_flagged_case!).
+            with(responder,
+                 responding_team,
+                 ['new response.pdf'])
+          expect(state_machine).
+            not_to have_received(:add_response_to_flagged_case)
+        end
+
+        it 'adds responses to case#attachments' do
+          flagged_accepted_case.add_response_to_flagged_case(responder.id, responses)
+          expect(flagged_accepted_case.attachments).to match_array(responses)
+        end
+      end
+
+      context 'with real state machine calls' do
+        it 'changes the state from drafting to awaiting_dispatch' do
+          expect(flagged_accepted_case.current_state).to eq 'drafting'
+          flagged_accepted_case.add_response_to_flagged_case(responder, responses)
+          expect(flagged_accepted_case.current_state).to eq 'pending_dacu_clearance'
+        end
+      end
+    end
+
     describe '#remove_response' do
 
       let(:kase) { create :case_with_response, responder: responder }

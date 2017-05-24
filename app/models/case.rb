@@ -255,6 +255,10 @@ class Case < ApplicationRecord
     approver_assignment.present?
   end
 
+  def does_not_require_clearance?
+    !requires_clearance?
+  end
+
   private
 
   def set_initial_state

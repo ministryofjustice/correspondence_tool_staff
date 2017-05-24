@@ -11,6 +11,7 @@ describe CaseDecorator, type: :model do
   let(:responder)       { create :responder }
   let(:coworker)        { create :responder,
                                  responding_teams: responder.responding_teams }
+  let(:pending_dacu_clearance_case) { create(:pending_dacu_clearance_case).decorate }
   let(:another_responder) { create :responder }
 
 
@@ -62,6 +63,13 @@ describe CaseDecorator, type: :model do
                   .and_return(double("View", current_user: another_responder))
           expect(assigned_case.who_its_with)
             .to eq assigned_case.responding_team.name
+        end
+      end
+
+      context 'flagged case in pending_dacu_clearance state' do
+        it 'returns dacu disclosure' do
+          allow_any_instance_of(CaseDecorator).to receive(:h).and_return(double("View", current_user: another_responder))
+          expect(pending_dacu_clearance_case.who_its_with).to eq 'DACU - Disclosure'
         end
       end
     end

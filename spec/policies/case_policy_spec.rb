@@ -18,6 +18,9 @@ describe CasePolicy do
   let(:accepted_case)           { create :accepted_case,
                                          responder: responder,
                                          manager: manager }
+  let(:flagged_accepted_case)           { create :accepted_case, :flagged,
+                                          responder: responder,
+                                          manager: manager }
   let(:assigned_case)           { create :assigned_case,
                                     responding_team: responding_team }
   let(:assigned_flagged_case)   { create :assigned_case, :flagged,
@@ -62,10 +65,38 @@ describe CasePolicy do
     end
 
     context 'in awaiting_dispatch state' do
-      it { should_not permit(manager,           case_with_response) }
-      it { should     permit(responder,         case_with_response) }
-      it { should     permit(coworker,          case_with_response) }
-      it { should_not permit(another_responder, case_with_response) }
+      context 'flagged case' do
+        it { should_not permit(manager,           flagged_accepted_case) }
+        it { should_not permit(responder,         flagged_accepted_case) }
+        it { should_not permit(coworker,          flagged_accepted_case) }
+        it { should_not permit(another_responder, flagged_accepted_case) }
+      end
+
+      context 'unflagged_case' do
+
+        it { should_not permit(manager,           case_with_response) }
+        it { should     permit(responder,         case_with_response) }
+        it { should     permit(coworker,          case_with_response) }
+        it { should_not permit(another_responder, case_with_response) }
+      end
+    end
+  end
+
+  permissions :can_add_attachment_to_flagged_case? do
+    context 'in awiting dispatch_state' do
+      context 'flagged case' do
+        it { should_not permit(manager,           flagged_accepted_case) }
+        it { should     permit(responder,         flagged_accepted_case) }
+        it { should     permit(coworker,          flagged_accepted_case) }
+        it { should_not permit(another_responder, flagged_accepted_case) }
+      end
+
+      context 'unflagged case' do
+        it { should_not permit(manager,           accepted_case) }
+        it { should_not permit(responder,         accepted_case) }
+        it { should_not permit(coworker,          accepted_case) }
+        it { should_not permit(another_responder, accepted_case) }
+      end
     end
   end
 

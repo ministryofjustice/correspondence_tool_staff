@@ -126,6 +126,24 @@ FactoryGirl.define do
       end
     end
 
+    factory :pending_dacu_clearance_case, parent: :case_with_response do
+      transient do
+        approving_team { create :approving_team }
+      end
+
+      after(:create) do |kase, evaluator|
+        create :approver_assignment,
+                 case: kase,
+                 team: evaluator.approving_team,
+                 state: 'pending'
+        create :case_transition_pending_dacu_clearance,
+               case_id: kase.id,
+               user_id: evaluator.responder.id
+        kase.reload
+      end
+
+    end
+
     factory :responded_case, parent: :case_with_response do
       transient do
         identifier "responded case"

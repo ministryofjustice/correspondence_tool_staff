@@ -34,9 +34,11 @@ RSpec.describe CasesController, type: :controller do
   let(:flagged_case)       { create :assigned_case, :flagged,
                                     responding_team: responding_team,
                                     approving_team: approving_team }
-  let(:flagged_accepted_case) { create :assigned_case, :flagged,
+  let(:flagged_accepted_case) { create :accepted_case, :flagged,
                                        responding_team: responding_team,
-                                       approver: approver }
+                                       approver: approver,
+                                       responder: responder}
+
 
   before { create(:category, :foi) }
 
@@ -418,6 +420,25 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
+    context 'viewing a flagged accepted case' do
+
+      let(:user) { flagged_accepted_case.responder }
+
+      before do
+        sign_in user
+        get :show, params: { id: flagged_accepted_case.id   }
+      end
+
+      it 'permitted_events == [:add_responses]' do
+        expect(assigns(:permitted_events)).to eq [:add_response_to_flagged_case]
+      end
+
+      it 'renders the show page' do
+        expect(response).to have_rendered(:show)
+      end
+    end
+
+
     context 'viewing an assigned_case' do
       before do
         sign_in user
@@ -510,14 +531,16 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'as the assigned responder' do
-        let(:user) { accepted_case.responder }
+        context 'unflagged case' do
+          let(:user) { accepted_case.responder }
 
-        it 'permitted_events == [:add_responses]' do
-          expect(assigns(:permitted_events)).to eq [:add_responses]
-        end
+          it 'permitted_events == [:add_responses]' do
+            expect(assigns(:permitted_events)).to eq [:add_responses]
+          end
 
-        it 'renders the show page' do
-          expect(response).to have_rendered(:show)
+          it 'renders the show page' do
+            expect(response).to have_rendered(:show)
+          end
         end
       end
 

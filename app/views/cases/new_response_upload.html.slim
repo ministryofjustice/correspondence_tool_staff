@@ -8,12 +8,28 @@
 
 .grid-row
   .column-two-thirds
+    p
+      | You are uploading the response to:
+      br
+      strong = "#{@case.subject}"
+
+    - if @case.requires_clearance?
+      | It will then be with &nbsp;
+      strong
+        | DACU Disclosure &nbsp;
+      | with status &nbsp;
+      strong
+        | Pending clearance
+    p
+
+.grid-row
+  .column-two-thirds
     p.form-hint
       = t('.upload_hint_copy')
 
 .grid-row
   section.case-main
-    = form_tag upload_responses_case_path,
+    = form_tag upload_responses_case_path(@case),
                class: 'direct-upload' do
       .dropzone{ data-dz-template=render('shared/dropzone_js').gsub('"', '\'').html_safe
                  data-form-data=@s3_direct_post.fields.to_json

@@ -81,6 +81,13 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
+    context 'pending_dacu_clearance' do
+      it 'returns number of files and description of who its with' do
+        ct = create(:case_transition_pending_dacu_clearance).decorate
+        expect(ct.event_and_detail).to eq '<strong>Add response to flagged case</strong><br>2 files added<br/>Case is now Pending clearance with DACU disclosure team'
+      end
+    end
+
     def response(e, d)
       "<strong>#{e}</strong><br>#{d}"
     end

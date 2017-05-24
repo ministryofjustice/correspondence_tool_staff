@@ -40,7 +40,11 @@ class ResponseUploaderService
   def process_files
     if response_attachments.all?(&:valid?)
       response_attachments.select(&:persisted?).each(&:touch)
-      @case.add_responses(@current_user, response_attachments)
+      if @case.requires_clearance?
+        @case.add_response_to_flagged_case(@current_user, response_attachments)
+      else
+        @case.add_responses(@current_user, response_attachments)
+      end
       remove_leftover_upload_files
       Rails.logger.warn "QUEUEING PDF MAKER JOB"
       response_attachments.each { |ra| PdfMakerJob.perform_later(ra.id) }
