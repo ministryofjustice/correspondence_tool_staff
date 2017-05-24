@@ -65,7 +65,7 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers
   config.include Devise::Test::ControllerHelpers, type: :view
   config.include Capybara::DSL, type: :view
-  config.after(:example, type: :view) do |example| 
+  config.after(:example, type: :view) do |example|
     if example.exception
       now = DateTime.now
       date_string = now.strftime('%F')
@@ -73,9 +73,10 @@ RSpec.configure do |config|
       todays_dir = Rails.root.join('tmp', 'rendered-content', date_string)
       FileUtils.mkdir_p(todays_dir)
 
-      renderer = File.extname(subject)
-      format = File.extname(File.basename(subject, renderer)).sub(/^\./, '')
-      filename = "#{subject.gsub(%r{[/.]}, '_')}-#{time_string}.#{format}"
+      template = example.example_group.top_level_description
+      renderer = File.extname(template)
+      format = File.extname(File.basename(template, renderer)).sub(/^\./, '')
+      filename = "#{template.gsub(%r{[/.]}, '_')}-#{time_string}.#{format}"
       renderer.sub!(/^\./, '')
       fullpath = todays_dir.join(filename)
       File.open(fullpath, 'w') { |f| f.write response }
