@@ -29,7 +29,7 @@ class Case < ApplicationRecord
   include Statesman::Adapters::ActiveRecordQueries
 
   acts_as_gov_uk_date :received_date, :date_responded,
-                      validate_if: :received_not_in_the_future?
+                      validate_if: :received_in_acceptable_range?
 
   scope :by_deadline, -> {order("(properties ->> 'external_deadline')::timestamp with time zone ASC, cases.id") }
   scope :most_recent_first, -> {order("(properties ->> 'external_deadline')::timestamp with time zone DESC, cases.id") }
@@ -174,12 +174,17 @@ class Case < ApplicationRecord
     date_responded <= external_deadline
   end
 
-  def received_not_in_the_future?
+  def received_in_acceptable_range?
     if received_date.present? && self.received_date > Date.today
-
       errors.add(
           :received_date,
           I18n.t('activerecord.errors.models.case.attributes.received_date.not_in_future')
+      )
+      true
+    elsif received_date.present? && self.received_date < Date.today - 60.days
+      errors.add(
+        :received_date,
+        I18n.t('activerecord.errors.models.case.attributes.received_date.past')
       )
       true
     else

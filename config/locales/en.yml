@@ -29,6 +29,7 @@ en:
               blank: and address can't both be blank
             received_date:
               not_in_future: can't be in the future.
+              past: too far in past.
             postal_address:
               blank: and email can't both be blank
             number:

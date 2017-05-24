@@ -8,32 +8,35 @@ describe CaseFinderService do
   let(:empty_collection) { CaseDecorator.decorate_collection(Array.new)}
 
   before(:all) do
-    @manager              = create :manager
-    @responder            = create :responder
-    @approver             = create :approver
+    Timecop.freeze Date.new(2016, 11, 25) do
+      @manager              = create :manager
+      @responder            = create :responder
+      @approver             = create :approver
 
-    @responding_team      = @responder.responding_teams.first
-    @approving_team       = @approver.approving_teams.first
+      @responding_team      = @responder.responding_teams.first
+      @approving_team       = @approver.approving_teams.first
 
-    @closed_case_1        = create(:closed_case, received_date: dd(17), identifier: 'closed case 1')
-    @older_case_1         = create(:case, received_date: dd(15), identifier: 'older request 1')
-    @newer_case_1         = create(:case, received_date: dd(17), identifier: 'newer request 1')
-    @case_1               = create(:case, received_date: dd(16), identifier: 'request 1')
-    @case_2               = create(:case, received_date: dd(16), identifier: 'request 2')
-    @newer_case_2         = create(:case, received_date: dd(17), identifier: 'newer request 2')
-    @older_case_2         = create(:case, received_date: dd(15), identifier: 'older request 2')
-    @closed_case_2        = create(:closed_case, identifier: 'closed case 2')
+      @closed_case_1        = create(:closed_case, received_date: dd(17), date_responded: dd(22), identifier: 'closed case 1')
+      @older_case_1         = create(:case, received_date: dd(15), identifier: 'older request 1')
+      @newer_case_1         = create(:case, received_date: dd(17), identifier: 'newer request 1')
+      @case_1               = create(:case, received_date: dd(16), identifier: 'request 1')
+      @case_2               = create(:case, received_date: dd(16), identifier: 'request 2')
+      @newer_case_2         = create(:case, received_date: dd(17), identifier: 'newer request 2')
+      @older_case_2         = create(:case, received_date: dd(15), identifier: 'older request 2')
+      @closed_case_2        = create(:closed_case, received_date: dd(15), date_responded: dd(23), identifier: 'closed case 2')
 
-    @assigned_newer_case  = create(:awaiting_responder_case, received_date: dd(17), responding_team: @responding_team, identifier: 'new assigned case')
-    @assigned_older_case  = create(:awaiting_responder_case, received_date: dd(15), responding_team: @responding_team, identifier: 'old assigned case')
-    @assigned_other_team  = create(:awaiting_responder_case, received_date: dd(17), identifier: 'assigned other team')
+      @assigned_newer_case  = create(:awaiting_responder_case, received_date: dd(17), responding_team: @responding_team, identifier: 'new assigned case')
+      @assigned_older_case  = create(:awaiting_responder_case, received_date: dd(15), responding_team: @responding_team, identifier: 'old assigned case')
+      @assigned_other_team  = create(:awaiting_responder_case, received_date: dd(17), identifier: 'assigned other team')
 
-    @newer_flagged_case   = create(:case, :flagged, approving_team: @approving_team, received_date: dd(17), identifier: 'newer flagged case')
-    @older_flagged_case   = create(:case, :flagged, approving_team: @approving_team, received_date: dd(15), identifier: 'older flagged case')
-    @newer_flagged_accept = create(:case, :flagged_accepted, received_date: dd(17), approving_team: @approving_team, approver: @approver, identifier: 'newer flagged accepted')
-    @older_flagged_accept = create(:case, :flagged_accepted, received_date: dd(15), approving_team: @approving_team, approver: @approver, identifier: 'older flagged accepted')
-    @other_flagged_case   = create(:case, :flagged, received_date: dd(16), identifier: 'other flagged case')
+      @newer_flagged_case   = create(:case, :flagged, approving_team: @approving_team, received_date: dd(17), identifier: 'newer flagged case')
+      @older_flagged_case   = create(:case, :flagged, approving_team: @approving_team, received_date: dd(15), identifier: 'older flagged case')
+      @newer_flagged_accept = create(:case, :flagged_accepted, received_date: dd(17), approving_team: @approving_team, approver: @approver, identifier: 'newer flagged accepted')
+      @older_flagged_accept = create(:case, :flagged_accepted, received_date: dd(15), approving_team: @approving_team, approver: @approver, identifier: 'older flagged accepted')
+      @other_flagged_case   = create(:case, :flagged, received_date: dd(16), identifier: 'other flagged case')
+    end
   end
+
 
   after(:all) { DbHousekeeping.clean }
 
@@ -147,7 +150,7 @@ describe CaseFinderService do
     context 'as a manager' do
       it 'returns all closed cases most recent first' do
         cases = CaseFinderService.new(@manager, :closed_cases).cases
-        expect(cases).to eq CaseDecorator.decorate_collection([ @closed_case_2, @closed_case_1 ])
+        expect(cases).to eq CaseDecorator.decorate_collection([ @closed_case_1, @closed_case_2 ])
       end
     end
 
