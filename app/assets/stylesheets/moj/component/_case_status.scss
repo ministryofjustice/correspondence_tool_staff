@@ -1,46 +1,70 @@
 .case-status.grid-row {
-  @include flexbox();
-  align-items: stretch;
-  margin: 0px;
+  @include media(tablet) {
+    @include flexbox();
+    align-items: stretch;
+    margin: 0px;
+  }
 }
 
 
 .case-status__deadline, .case-status--intime {
-  @include flex(1);
+  /* Mobile first */
+  margin-left: $gutter-half;
+  margin-right: $gutter-half;
+  margin-bottom: $gutter-half;
+  padding: $gutter-half;
 
-  padding-top: $gutter;
-  padding-bottom: $gutter;
-  padding-left: $gutter-half;
+
+  @include media(tablet) {
+    @include flex(1);
+    margin-left: 0;
+    margin-bottom: $gutter-half;
+    padding-bottom: $gutter-half;
+  }
 }
 
 .case-status--intime {
   background-color: $govuk-blue;
   color: #ffffff;
-  margin-right: $gutter-half;
-
 }
 
 .case-status__deadline {
   border: 1px solid $border-colour;
 
+  @include media(tablet) {
+    margin-right: 0;
+  }
 }
 
 .case-status__group {
   margin-bottom: $gutter;
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
-.case-status__group--last {
-  margin-bottom: 0;
-}
-
 
 .case-status__heading {
   @include core-19();
 }
-
 
 .case-status__data {
   @include bold-24();
 }
 .case-status__data---large {
   @include bold-36();
+}
+
+.external.case-status__group{
+  &:last-child {
+    @include media(tablet) {
+      bottom: -7px;
+      position: relative;
+    }
+  }
+
+  &:first-child {
+    @include media(tablet) {
+      position: static;
+    }
+  }
 }
