@@ -285,7 +285,7 @@ en:
 
   nav:
     closed_cases: Closed cases
-    new_cases: New cases
+    incoming_cases: New cases
     my_open_cases: My open cases
     open_cases: Open cases
   devise:
