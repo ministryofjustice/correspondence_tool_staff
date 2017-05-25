@@ -1,0 +1,11 @@
+.clearance-copy
+  p
+    = "You are #{action} the response to: "
+    strong.strong-block
+      = case_details.subject
+
+  p
+    = "It will then be "
+    strong = team
+    = " with the status "
+    strong = status
