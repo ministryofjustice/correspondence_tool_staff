@@ -12,6 +12,7 @@ module PageObjects
       end
 
       {
+        approve_response:          'Cases::ApproveResponsePage',
         cases:                     'CasesPage',
         closed_cases:              'Cases::ClosedCasesPage',
         incoming_cases:            'Cases::IncomingCasesPage',

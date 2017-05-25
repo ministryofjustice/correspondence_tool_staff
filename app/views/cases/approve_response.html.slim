@@ -1,4 +1,5 @@
-= GovukElementsErrorsHelper.error_summary @case.object, @case.error_summary_message, ''
+= GovukElementsErrorsHelper.error_summary @case,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 - content_for :heading
   = t('.heading')
@@ -9,3 +10,18 @@
   = @case.number
 
 = render partial: 'layouts/header'
+
+.form-group
+
+  = render partial: 'cases/clearance_copy',
+          locals: {case_details: @case,
+                  status: "Ready to send",
+                  team: @case.responding_team.name,
+                  action: 'clearing'}
+
+
+.button-holder
+  =  link_to "Clear response" , '#', {class: "button", role:"button"}
+
+
+
