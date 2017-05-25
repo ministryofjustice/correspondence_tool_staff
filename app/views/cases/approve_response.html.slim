@@ -1,0 +1,11 @@
+= GovukElementsErrorsHelper.error_summary @case.object, @case.error_summary_message, ''
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'

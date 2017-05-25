@@ -55,6 +55,7 @@ en:
       can_add_attachment?: 'You are not authorised to upload attachments to this case.'
       can_add_case?: 'You are not authorised to create new cases.'
       can_accept_or_reject_case?: 'You are not authorised to view to this assignment.'
+      can_approve?: 'You are not authorised to approve this cases response.'
       can_remove_attachment?: 'You are not authorised to remove attachments from this case.'
       can_view_case_details?: 'You are not authorised to view this case.'
 
@@ -214,6 +215,8 @@ en:
       already_accepted: Case already accepted by %{name}
 
   cases:
+    approve_response:
+      heading: Clear response
     closed_cases:
       heading: Closed cases
       number: Case number

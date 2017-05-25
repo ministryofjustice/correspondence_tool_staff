@@ -1,6 +1,7 @@
 class CasesController < ApplicationController
   before_action :set_case,
     only: [
+      :approve_response,
       :close,
       :confirm_respond,
       :edit,
@@ -157,6 +158,11 @@ class CasesController < ApplicationController
   def flag_for_clearance
     authorize @case, :can_flag_for_clearance?
     CaseFlagForClearanceService.new(user: current_user, kase: @case).call
+  end
+
+  def approve_response
+    authorize @case, :can_approve?
+    render :approve_response
   end
 
   private

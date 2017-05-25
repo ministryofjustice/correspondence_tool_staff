@@ -40,6 +40,9 @@ RSpec.describe CasesController, type: :controller do
                                        responder: responder}
 
 
+  let(:assigned_trigger_case)   { create :assigned_case, :flagged_accepted,
+                                         approver: approver }
+
   before { create(:category, :foi) }
 
   describe '#set_cases' do
@@ -1262,5 +1265,44 @@ RSpec.describe CasesController, type: :controller do
         expect(response).to have_http_status 200
       end
     end
+  end
+
+  describe 'GET approve_response' do
+    context "as an anonymous user" do
+      it "be redirected to signin if trying to approve a case" do
+        get :approve_response, params: { id: assigned_trigger_case.id }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'as an authenticated manager' do
+      before { sign_in manager }
+
+      it 'redirects to the root' do
+        get :approve_response, params: { id: assigned_trigger_case.id }
+        expect(response).to redirect_to(root_path)
+      end
+    end
+
+    context 'as an authenticated responder' do
+      before { sign_in responder }
+
+      it 'redirects to the root' do
+        get :approve_response, params: { id: assigned_trigger_case.id }
+        expect(response).to redirect_to(root_path)
+      end
+    end
+
+    context 'as an authenticated approver' do
+      before do
+        sign_in approver
+      end
+
+      it 'renders the view' do
+        get :approve_response, params: { id: assigned_trigger_case.id }
+        expect(response).to have_rendered(:approve_response)
+      end
+    end
+
   end
 end
