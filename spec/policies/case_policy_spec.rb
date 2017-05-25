@@ -24,9 +24,9 @@ describe CasePolicy do
   let(:assigned_case)           { create :assigned_case,
                                     responding_team: responding_team }
   let(:assigned_flagged_case)   { create :assigned_case, :flagged,
-                                         approving_team: approving_team }
+                                         approving_team: approving_team}
   let(:assigned_trigger_case)   { create :assigned_case, :flagged_accepted,
-                                         approving_team: approving_team }
+                                         approver: approver }
   let(:rejected_case)           { create :rejected_case,
                                          responding_team: responding_team }
   let(:unassigned_case)         { new_case }
@@ -155,6 +155,57 @@ describe CasePolicy do
     it { should_not permit(responder, assigned_flagged_case) }
     it { should     permit(manager,   assigned_flagged_case) }
     it { should     permit(approver,  assigned_flagged_case) }
+  end
+
+  permissions :can_approve? do
+    it { should     permit(approver,   assigned_trigger_case) }
+    it { should_not permit(approver,   new_case) }
+    it { should_not permit(approver,   accepted_case) }
+    it { should_not permit(approver,   assigned_case) }
+    it { should_not permit(approver,   rejected_case) }
+    it { should_not permit(approver,   unassigned_case) }
+    it { should_not permit(approver,   unassigned_flagged_case) }
+    it { should_not permit(approver,   unassigned_trigger_case) }
+    it { should_not permit(approver,   case_with_response) }
+    it { should_not permit(approver,   responded_case) }
+    it { should_not permit(approver,   closed_case) }
+
+    it { should_not permit(co_approver,   assigned_trigger_case) }
+    it { should_not permit(co_approver,   new_case) }
+    it { should_not permit(co_approver,   accepted_case) }
+    it { should_not permit(co_approver,   assigned_case) }
+    it { should_not permit(co_approver,   rejected_case) }
+    it { should_not permit(co_approver,   unassigned_case) }
+    it { should_not permit(co_approver,   unassigned_flagged_case) }
+    it { should_not permit(co_approver,   unassigned_trigger_case) }
+    it { should_not permit(co_approver,   case_with_response) }
+    it { should_not permit(co_approver,   responded_case) }
+    it { should_not permit(co_approver,   closed_case) }
+
+
+    it { should_not permit(manager,   assigned_trigger_case) }
+    it { should_not permit(manager,   new_case) }
+    it { should_not permit(manager,   accepted_case) }
+    it { should_not permit(manager,   assigned_case) }
+    it { should_not permit(manager,   rejected_case) }
+    it { should_not permit(manager,   unassigned_case) }
+    it { should_not permit(manager,   unassigned_flagged_case) }
+    it { should_not permit(manager,   unassigned_trigger_case) }
+    it { should_not permit(manager,   case_with_response) }
+    it { should_not permit(manager,   responded_case) }
+    it { should_not permit(manager,   closed_case) }
+
+    it { should_not permit(responder,   assigned_trigger_case) }
+    it { should_not permit(responder,   new_case) }
+    it { should_not permit(responder,   accepted_case) }
+    it { should_not permit(responder,   assigned_case) }
+    it { should_not permit(responder,   rejected_case) }
+    it { should_not permit(responder,   unassigned_case) }
+    it { should_not permit(responder,   unassigned_flagged_case) }
+    it { should_not permit(responder,   unassigned_trigger_case) }
+    it { should_not permit(responder,   case_with_response) }
+    it { should_not permit(responder,   responded_case) }
+    it { should_not permit(responder,   closed_case) }
   end
 
   permissions :can_view_case_details? do
