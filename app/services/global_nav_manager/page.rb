@@ -26,7 +26,7 @@ class GlobalNavManager
     end
 
     def finder
-      @finder ||= CaseFinderService.new(user, name)
+      @finder ||= CaseFinderService.new.for_user(user).for_action(name)
     end
   end
 end

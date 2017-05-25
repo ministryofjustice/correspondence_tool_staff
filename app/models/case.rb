@@ -62,6 +62,19 @@ class Case < ApplicationRecord
       .where(assignments: { team_id: teams.map(&:id), role: 'approving' })
   end
 
+  scope :in_time, -> {
+    where(
+      "CASE WHEN current_state IN ('responded', 'closed') THEN date_responded <= (properties->>'external_deadline')::date ELSE ? <= properties->>'external_deadline' END",
+      Date.today
+    )
+  }
+  scope :late,    -> {
+    where(
+      "CASE WHEN current_state IN ('responded', 'closed') THEN date_responded > (properties->>'external_deadline')::date ELSE ? > properties->>'external_deadline' END",
+      Date.today
+    )
+  }
+
   validates :current_state, presence: true, on: :update
   validates :received_date,:subject,:message, :name, :category, presence: true
   validates :email, presence: true, on: :create, if: -> { postal_address.blank? }

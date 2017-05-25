@@ -155,9 +155,11 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'assigns cases returned by CaseFinderService' do
-        expect(CaseFinderService).to receive(:new).with(manager, :closed_cases).and_return(double CaseFinderService, cases: 'result set')
+        csf = instance_double CaseFinderService, cases: [:cases]
+        gnm = instance_double GlobalNavManager, current_cases_finder: csf
+        allow(GlobalNavManager).to receive(:new).and_return gnm
         get :closed_cases
-        expect(assigns(:cases)).to eq 'result set'
+        expect(assigns(:cases)).to eq [:cases]
       end
     end
 
@@ -236,6 +238,15 @@ RSpec.describe CasesController, type: :controller do
   # primarily, with sub-grouping for different contexts.
 
   describe 'GET index' do
+    let(:finder) { instance_double(CaseFinderService) }
+
+    before do
+      allow(finder).to receive_message_chain(:for_user,
+                                             :for_action,
+                                             filter_for_params: 'result set')
+      allow(CaseFinderService).to receive(:new).and_return(finder)
+    end
+
     context "as an anonymous user" do
       it "be redirected to signin if trying to list of questions" do
         get :index
@@ -252,9 +263,9 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'assigns cases returned by CaseFinderService' do
-        expect(CaseFinderService).to receive(:new).with(manager, :index).and_return(double CaseFinderService, cases: 'result set')
         get :index
         expect(assigns(:cases)).to eq 'result set'
+        expect(finder).to have_received(:for_user).with(manager)
       end
 
     end
@@ -263,9 +274,12 @@ RSpec.describe CasesController, type: :controller do
       before { sign_in responder }
 
       it 'assigns cases returned by CaseFinderService' do
-        expect(CaseFinderService).to receive(:new).with(responder, :index).and_return(double CaseFinderService, cases: 'result set')
+        allow(finder).to receive_message_chain(:for_user,
+                                               :for_action,
+                                               filter_for_params: 'result set')
         get :index
         expect(assigns(:cases)).to eq 'result set'
+        expect(finder).to have_received(:for_user).with(responder)
       end
 
       it 'renders the index template' do
@@ -281,9 +295,12 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'assigns the result set from the CaseFinderService' do
-        expect(CaseFinderService).to receive(:new).with(approver, :index).and_return(double CaseFinderService, cases: 'result set')
+        allow(finder).to receive_message_chain(:for_user,
+                                               :for_action,
+                                               filter_for_params: 'result set')
         get :index
         expect(assigns(:cases)).to eq 'result set'
+        expect(finder).to have_received(:for_user).with(approver)
       end
     end
   end
@@ -302,9 +319,14 @@ RSpec.describe CasesController, type: :controller do
         sign_in approver
       end
 
-
-      it 'assigns the result set from the CaseFinderService' do
-        expect(CaseFinderService).to receive(:new).with(approver, :incoming_cases).and_return(double CaseFinderService, cases: 'result set')
+      it 'assigns the result set from the finder provided by GlobalNavManager' do
+        expect(GlobalNavManager)
+          .to receive(:new)
+                .and_return(
+                  instance_double(
+                    GlobalNavManager,
+                    current_cases_finder: instance_double(CaseFinderService,
+                                                          cases: 'result set')))
         get :incoming_cases
         expect(assigns(:cases)).to eq 'result set'
       end
@@ -331,10 +353,13 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'assigns the result set from the CaseFinderService' do
-        expect(CaseFinderService)
+        expect(GlobalNavManager)
           .to receive(:new)
-                .with(approver, :open_cases)
-                .and_return(double CaseFinderService, cases: 'result set')
+                .and_return(
+                  instance_double(
+                    GlobalNavManager,
+                    current_cases_finder: instance_double(CaseFinderService,
+                                                          cases: 'result set')))
         get :open_cases
         expect(assigns(:cases)).to eq 'result set'
       end
@@ -360,11 +385,15 @@ RSpec.describe CasesController, type: :controller do
         sign_in approver
       end
 
-      it 'assigns the result set from the CaseFinderService' do
-        expect(CaseFinderService)
+      it 'assigns the result set from the finder provided by GlobalNavManager' do
+        expect(GlobalNavManager)
           .to receive(:new)
-                .with(approver, :my_open_cases)
-                .and_return(double CaseFinderService, cases: 'result set')
+                .and_return(
+                  instance_double(
+                    GlobalNavManager,
+                    current_cases_finder: instance_double(CaseFinderService,
+                                                          cases: 'result set')))
+
         get :my_open_cases
         expect(assigns(:cases)).to eq 'result set'
       end

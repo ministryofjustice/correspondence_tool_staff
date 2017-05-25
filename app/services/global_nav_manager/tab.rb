@@ -5,7 +5,7 @@ class GlobalNavManager
     def initialize(name, base_url, finder, params)
       @name = name
       @base_url = base_url
-      @finder = finder
+      @finder = finder.filter_for_params(params)
       @params = params
     end
 

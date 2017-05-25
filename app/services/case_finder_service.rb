@@ -1,62 +1,91 @@
 class CaseFinderService
+  attr_reader :user
 
-  # include Pundit
-
-  def initialize(user, action, params = {})
+  def initialize(user = nil, cases=nil)
     @user = user
-    @action = action
-    @cases = []
-    @params = params
+    @cases = cases || Case.all
   end
 
   def cases
-    case @action
-    when :index
-      index_cases
-    when :closed_cases
-      closed_cases
-    when :incoming_cases
-      incoming_cases
-    when :my_open_cases
-      my_open_cases
-    when :open_cases
-      open_cases
-    end
-    CaseDecorator.decorate_collection(Pundit.policy_scope(@user, @cases))
+    scoped_cases = @user ? Pundit.policy_scope(user, @cases) : @cases
+    decorate(scoped_cases)
   end
 
-  private
+  def for_user(user)
+    chain @cases, user
+  end
+
+  def for_action(action)
+    case action.to_s
+    when 'index'
+      index_cases
+    when 'closed_cases'
+      closed_cases
+    when 'incoming_cases'
+      incoming_cases
+    when 'my_open_cases'
+      my_open_cases
+    when 'open_cases'
+      open_cases
+    end
+  end
+
+  def filter_for_params(params)
+    if params[:timeliness]
+      timeliness(params[:timeliness])
+    end
+  end
 
   def index_cases
-    @cases = Case.all
+    self
   end
 
   def closed_cases
-    @cases = Case.closed.most_recent_first
+    chain @cases.closed.most_recent_first
   end
 
   def incoming_cases
-    @cases = Case.flagged_for_approval(*@user.approving_teams)
-               .unaccepted.by_deadline
+    chain @cases
+      .flagged_for_approval(*@user.approving_teams)
+      .unaccepted.by_deadline
   end
 
   def my_open_cases
     if @user.approver?
-      @cases = Case.opened
-                 .flagged_for_approval(*@user.approving_teams)
-                 .with_user(@user)
-                 .accepted.by_deadline
+      chain @cases.opened
+        .flagged_for_approval(*@user.approving_teams)
+        .with_user(@user)
+        .accepted.by_deadline
     else
-      @cases = Case.opened.with_user(@user).by_deadline
+      chain @cases.opened.with_user(@user).by_deadline
     end
   end
 
   def open_cases
     if @user.approver?
-      @cases = Case.opened.flagged_for_approval(*@user.approving_teams)
-                 .accepted.by_deadline
+      chain @cases.opened
+        .flagged_for_approval(*@user.approving_teams)
+        .accepted
+        .by_deadline
     else
-      @cases = Case.opened.by_deadline
+      chain @cases.opened.by_deadline
     end
+  end
+
+  def timeliness(timeliness)
+    case timeliness
+    when 'in_time' then chain @cases.in_time
+    when 'late'    then chain @cases.late
+    end
+  end
+
+  private
+
+  def chain(cases, user = @user)
+    self.class.new(user, cases)
+  end
+
+  def decorate(cases)
+    CaseDecorator.decorate_collection(cases)
   end
 end

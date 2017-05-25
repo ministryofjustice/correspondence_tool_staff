@@ -102,9 +102,14 @@ describe GlobalNavManager::Page do
                                      user) }
 
     it 'returns the correct CaseFinderService object' do
-      allow(CaseFinderService).to receive(:new).and_return(finder)
-      expect(page.finder).to eq finder
-      expect(CaseFinderService).to have_received(:new).with(user, :cases)
+      allow(CaseFinderService)
+        .to receive_message_chain :new,
+                                  :for_user,
+                                  for_action: :user_action_finder
+      expect(page.finder).to eq :user_action_finder
+      expect(CaseFinderService.new).to have_received(:for_user).with(user)
+      expect(CaseFinderService.new.for_user)
+        .to have_received(:for_action).with(:cases)
     end
   end
 end

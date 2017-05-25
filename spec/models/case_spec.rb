@@ -224,6 +224,53 @@ RSpec.describe Case, type: :model do
     end
   end
 
+  context 'with open, responded and closed cases in time and late' do
+    before do
+      Timecop.freeze Date.new(2017, 2, 2) do
+        @open_in_time_case = create :accepted_case, received_date: Date.new(2017, 1, 5)
+        @open_late_case = create :accepted_case, received_date: Date.new(2017, 1, 4)
+        @responded_in_time_case = create :responded_case,
+                                         received_date: Date.new(2017, 1, 3),
+                                         date_responded: Date.new(2017, 1, 31)
+        @responded_late_case = create :responded_case,
+                                      received_date: Date.new(2017, 1, 3),
+                                      date_responded: Date.new(2017, 2, 1)
+        @closed_in_time_case = create :closed_case,
+                                      received_date: Date.new(2017, 1, 3),
+                                      date_responded: Date.new(2017, 1, 31)
+        @closed_late_case = create :closed_case,
+                                   received_date: Date.new(2017, 1, 3),
+                                   date_responded: Date.new(2017, 2, 1)
+
+      end
+    end
+
+    describe 'in_time scope' do
+      it 'only returns cases that are not past their deadline' do
+        Timecop.freeze Date.new(2017, 2, 2) do
+          expect(Case.in_time).to match_array([
+                                                @open_in_time_case,
+                                                @responded_in_time_case,
+                                                @closed_in_time_case
+                                              ])
+        end
+      end
+    end
+
+    describe 'late scope' do
+      it 'only returns cases that are past their deadline' do
+        Timecop.freeze Date.new(2017, 2, 2) do
+          expect(Case.late).to match_array([
+                                             @open_late_case,
+                                             @responded_late_case,
+                                             @closed_late_case
+                                           ])
+        end
+      end
+    end
+  end
+
+
   describe 'conditional validations of current state' do
     context 'new record' do
       it 'does not validate presence of current_state' do

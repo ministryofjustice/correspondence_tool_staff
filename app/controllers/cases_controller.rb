@@ -17,24 +17,28 @@ class CasesController < ApplicationController
   before_action :set_s3_direct_post, only: [:new_response_upload, :upload_responses]
 
   def index
-    @cases = CaseFinderService.new(current_user, :index).cases
+    # index doesn't have a nav page defined so cannot use the GlobalNavManager
+    # to provide it with a finder
+    @cases = CaseFinderService.new.for_user(current_user)
+               .for_action(:index)
+               .filter_for_params(params)
   end
 
   def closed_cases
-    @cases = CaseFinderService.new(current_user, :closed_cases).cases
+    @cases = @global_nav_manager.current_cases_finder.cases
   end
 
   def incoming_cases
-    @cases = CaseFinderService.new(current_user, :incoming_cases).cases
+    @cases = @global_nav_manager.current_cases_finder.cases
   end
 
   def my_open_cases
-    @cases = CaseFinderService.new(current_user, :my_open_cases).cases
+    @cases = @global_nav_manager.current_cases_finder.cases
     render :index
   end
 
   def open_cases
-    @cases = CaseFinderService.new(current_user, :open_cases).cases
+    @cases = @global_nav_manager.current_cases_finder.cases
     render :index
   end
 

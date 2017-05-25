@@ -61,7 +61,7 @@ feature 'listing cases on the system' do
 
   scenario 'For responders - shows only their assigned and accepted cases' do
     login_as responder_a
-    visit '/'
+    visit '/cases/open'
 
     cases = cases_page.case_list
     expect(cases.count).to eq 3
