@@ -85,13 +85,19 @@ class CaseSeeder < Thor
   end
 
   def validate_teams_populated
-    teams = Team.where(name: ['DACU', 'DACU Disclosure', 'Legal Aid Agency', 'HR', 'HMCTS North East Response Unit(RSU)']).order(:name)
-    if teams.size != 5
-      puts "ERROR: Not all teams have been populated!"
-      puts "Run 'rake db:seed:dev:users' to populate teams and users"
-      exit 2
+    @dacu_team, @disclosure_team, @hmcts_team, @hr_team, @laa_team = ['DACU', 'DACU Disclosure', 'Legal Aid Agency', 'HR', 'HMCTS North East Response Unit(RSU)'].map do |team_name|
+      teams = Team.where(name: team_name)
+      if teams.count > 1
+        log_error "ERROR: multiple entries found for team: #{team_name}"
+        exit 2
+      elsif teams.count == 0
+        log_error "ERROR: team missing: #{team_name}"
+        log_error "Run 'rake db:seed:dev:users' to populate teams and users"
+        exit 2
+      else
+        teams.first
+      end
     end
-    @dacu_team, @disclosure_team, @hmcts_team, @hr_team, @laa_team  = teams
   end
 
   def validate_users_populated
@@ -201,4 +207,7 @@ class CaseSeeder < Thor
     end
   end
 
+  def log_error(msg)
+    puts "!!! #{msg}"
+  end
 end
