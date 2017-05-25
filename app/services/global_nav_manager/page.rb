@@ -12,12 +12,16 @@ class GlobalNavManager
     end
 
     def url
-      @urls.first
+      if @tab_settings.empty?
+        @urls.first
+      else
+        tabs.first.url
+      end
     end
 
     def tabs
-      @tabs ||= @tab_settings.map do |name, params|
-        Tab.new(name, url, finder, params)
+      @tabs ||= @tab_settings.map do |tab_name, params|
+        Tab.new(name, tab_name, @urls.first, finder, params)
       end
     end
 
