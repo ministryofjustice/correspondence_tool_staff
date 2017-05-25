@@ -183,9 +183,13 @@ class CaseSeeder < Thor
   end
 
   def flag_for_dacu_approval(kase)
-    kase.assignments.create!(state: 'pending', team: @disclosure_team, role: 'approving') if @add_dacu_disclosure
+    if @add_dacu_disclosure
+      result = CaseFlagForClearanceService.new(user:@dacu_manager, kase:kase).call
+      if result != :ok
+        log_error "Could not flag case for clearance: #{kase}"
+      end
+    end
   end
-
 
   def check_environment
     raise "Run cts in development rails environement only!" unless ::Rails.env.development?
