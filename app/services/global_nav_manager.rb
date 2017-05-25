@@ -19,7 +19,7 @@ class GlobalNavManager
   end
 
   def current_page
-    @current_page ||= Settings.global_navigation.pages.find do |name, attrs|
+    @current_page ||= Settings.global_navigation.pages.find do |_name, attrs|
       url_for(attrs.path) == request.path
     end&.tap { |name, _settings| break build_page name }
   end
