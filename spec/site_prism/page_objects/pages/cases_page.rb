@@ -3,6 +3,11 @@ module PageObjects
     class CasesPage < SitePrism::Page
       set_url '/'
 
+      sections :tabs, '.section-tabs .tab' do
+        element :tab_link, 'a'
+        element :count, '.in-time-count'
+      end
+
       section :user_card, PageObjects::Sections::UserCardSection, '.user-card'
       sections :case_list, '.case_row' do
         element :number, 'td[aria-label="Case number"]'

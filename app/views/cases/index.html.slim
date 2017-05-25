@@ -10,12 +10,11 @@
 
 .grid-row
   .column-full
-    .section-tabs
-      ul.two-tabs
-        li class=('active open' if params[:cases] == 'open' || params[:cases].blank?)
-          = link_to t('.tabs.open_copy_html'), cases_path( cases: 'open'), method: :get
-        li class=('active closed' if params[:cases] == 'close')
-          = link_to t('.tabs.close_copy_html'), cases_path( cases: 'close'), method: :get
+    nav.section-tabs
+      ul
+        - @global_nav_manager.current_page.tabs.each do |tab|
+          li class="tab #{@global_nav_manager.current_tab == tab ? 'active' : ''}"
+            = link_to t("tabs.#{tab.name}_html", count: tab.finder.cases.count), tab.url
 
 .grid-row
   .column-full.table-container.container

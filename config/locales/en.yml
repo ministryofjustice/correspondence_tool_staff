@@ -233,11 +233,6 @@ en:
       draft_deadline: Draft deadline
       external_deadline: Final deadline
       status: Status
-      tabs:
-        close_copy_html: |
-                  <span class="visuallyhidden">View </span>Closed cases
-        open_copy_html: |
-           <span class="visuallyhidden">View </span>Open cases
       who_its_with: With
     incoming_cases:
       heading: New cases
@@ -307,3 +302,8 @@ en:
       sign_in:
         title: Sign in
         button: Sign in
+  tabs:
+    in_time_html: |
+      <span class="visuallyhidden">View tab </span>In time (%{count})
+    late_html: |
+      <span class="visuallyhidden">View tab </span>Late (%{count})

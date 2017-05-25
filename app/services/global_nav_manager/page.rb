@@ -21,7 +21,7 @@ class GlobalNavManager
 
     def tabs
       @tabs ||= @tab_settings.map do |tab_name, params|
-        Tab.new(name, tab_name, @urls.first, finder, params)
+        Tab.new(tab_name, @urls.first, finder, params)
       end
     end
 

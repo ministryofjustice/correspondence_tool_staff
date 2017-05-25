@@ -26,7 +26,7 @@ feature "Top level global navigation" do
     scenario "Home page should have navigation" do
       cases_page.load
       expect(cases_page).to have_primary_navigation
-      expect(cases_page.primary_navigation.active_link[:href]).to eq open_cases_path
+      expect(cases_page.primary_navigation.active_link[:href]).to eq '/cases/open?timeliness=in_time'
     end
 
   end
