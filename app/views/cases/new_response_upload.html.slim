@@ -6,21 +6,15 @@
 
 = render partial: 'layouts/header'
 
-.grid-row
-  .column-two-thirds
-    p
-      | You are uploading the response to:
-      br
-      strong = "#{@case.subject}"
+- if @case.requires_clearance?
+  .form-group
 
-    - if @case.requires_clearance?
-      | It will then be with &nbsp;
-      strong
-        | DACU Disclosure &nbsp;
-      | with status &nbsp;
-      strong
-        | Pending clearance
-    p
+    = render partial: 'cases/clearance_copy',
+            locals: {case_details: @case,
+                    status: "Pending clearance",
+                    team: @case.approving_team.name,
+                    action: "uploading"}
+
 
 .grid-row
   .column-two-thirds
