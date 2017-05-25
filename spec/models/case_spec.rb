@@ -687,6 +687,21 @@ RSpec.describe Case, type: :model do
     end
   end
 
+  describe 'does not require clearance' do
+
+    let(:kase) { create :case }
+
+    it 'returns false when requires clearance is true' do
+      expect(kase).to receive(:requires_clearance?).and_return(true)
+      expect(kase.does_not_require_clearance?).to be false
+    end
+
+    it 'returns true when requires clearance is false' do
+      expect(kase).to receive(:requires_clearance?).and_return(false)
+      expect(kase.does_not_require_clearance?).to be true
+    end
+  end
+
   describe 'awaiting_approver?' do
     it 'returns false when no approving team has been assigned' do
       expect(case_being_drafted.awaiting_approver?).to be_falsey

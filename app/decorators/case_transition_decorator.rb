@@ -18,6 +18,7 @@ class CaseTransitionDecorator < Draper::Decorator
     CaseStateMachine.event_name(object.event)
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def details
     case object.event
     when 'assign_responder'
@@ -28,8 +29,11 @@ class CaseTransitionDecorator < Draper::Decorator
       "Accepted for response"
     when 'add_responses'
       "#{h.pluralize(object.filenames.size, 'file')} added"
+    when 'add_response_to_flagged_case'
+      "#{h.pluralize(object.filenames.size, 'file')} added<br/>Case is now Pending clearance with DACU disclosure team"
     when 'respond'
       'Marked as responded'
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 end

@@ -73,6 +73,20 @@ describe ResponseUploaderService do
       expect(rus.result).to eq :ok
     end
 
+    it 'calls add_responsees for non flagged cases' do
+      expect(kase).to receive(:requires_clearance?).and_return(false)
+      expect(kase).to receive(:add_responses)
+      expect(kase).not_to receive(:add_response_to_flagged_case)
+      rus.upload!
+    end
+
+    it 'calls add_responsee_to_flagged_case for flagged cases' do
+      expect(kase).to receive(:requires_clearance?).and_return(true)
+      expect(kase).not_to receive(:add_responses)
+      expect(kase).to receive(:add_response_to_flagged_case)
+      rus.upload!
+    end
+
     context 'pdf job queueing' do
 
       it 'queues a job for each file' do

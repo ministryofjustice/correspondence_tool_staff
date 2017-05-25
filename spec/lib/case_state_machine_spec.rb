@@ -115,6 +115,13 @@ RSpec.describe CaseStateMachine, type: :model do
                   .using_object(case_being_drafted) }
   end
 
+  describe event(:add_response_to_flagged_case) do
+    it { should transition_from(:drafting).to(:pending_dacu_clearance) }
+    it { should require_permission(:can_add_attachment_to_flagged_case?)
+                  .using_options(user_id: responder.id)
+                  .using_object(case_being_drafted) }
+  end
+
   describe event(:remove_response) do
     it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
     it { should require_permission(:can_remove_attachment?)

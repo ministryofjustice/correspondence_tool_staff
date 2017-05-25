@@ -7,10 +7,16 @@ class CasePolicy
     @case = kase
   end
 
+  def can_add_attachment_to_flagged_and_unflagged_cases?
+    attachable_state? && user.responding_teams.include?(self.case.responding_team)
+  end
+
   def can_add_attachment?
-    (self.case.drafting? ||
-     self.case.awaiting_dispatch?) &&
-      user.responding_teams.include?(self.case.responding_team)
+    self.case.does_not_require_clearance? && attachable_state? && user.responding_teams.include?(self.case.responding_team)
+  end
+
+  def can_add_attachment_to_flagged_case?
+    self.case.requires_clearance? && self.case.drafting? && user.responding_teams.include?(self.case.responding_team)
   end
 
   def can_add_case?
@@ -88,5 +94,11 @@ class CasePolicy
         []
       end
     end
+  end
+
+  private
+
+  def attachable_state?
+    self.case.drafting? || self.case.awaiting_dispatch?
   end
 end

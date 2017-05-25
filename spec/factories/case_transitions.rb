@@ -92,6 +92,19 @@ FactoryGirl.define do
     event 'add_responses'
   end
 
+  factory :case_transition_pending_dacu_clearance, parent: :case_transition do
+    transient do
+      responder       { create :responder }
+      responding_team { responder.responding_teams.first }
+    end
+
+    to_state 'pending_dacu_clearance'
+    user_id            { responder.id }
+    responding_team_id { responding_team.id }
+    filenames          ['file1.pdf', 'file2.pdf']
+    event 'add_response_to_flagged_case'
+  end
+
   factory :case_transition_respond, parent: :case_transition do
     transient do
       responder       { create :responder }

@@ -84,11 +84,11 @@ class CasesController < ApplicationController
   end
 
   def new_response_upload
-    authorize @case, :can_add_attachment?
+    authorize @case, :can_add_attachment_to_flagged_and_unflagged_cases?
   end
 
   def upload_responses
-    authorize @case, :can_add_attachment?
+    authorize @case, :can_add_attachment_to_flagged_and_unflagged_cases?
     rus = ResponseUploaderService.new(@case, current_user, params)
     rus.upload!
     case rus.result
@@ -214,7 +214,7 @@ class CasesController < ApplicationController
 
   def user_not_authorized(exception)
     case exception.query
-    when :can_add_attachment?
+    when :can_add_attachment?, :can_add_attachment_to_flagged_case?, :can_add_attachment_to_flagged_and_unflagged_cases?
       super(exception, case_path(@case))
     else
       super

@@ -22,6 +22,7 @@ class CaseStateMachine
   state :awaiting_responder
   state :drafting
   state :awaiting_dispatch
+  state :pending_dacu_clearance
   state :responded
   state :closed
 
@@ -96,6 +97,14 @@ class CaseStateMachine
     transition from: :awaiting_dispatch, to: :awaiting_dispatch
   end
 
+  event :add_response_to_flagged_case do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object).can_add_attachment_to_flagged_case?
+    end
+
+    transition from: :drafting, to: :pending_dacu_clearance
+  end
+
   event :remove_response do
     guard do |object, _last_transition, options|
       CaseStateMachine.get_policy(options[:user_id], object)
@@ -163,6 +172,14 @@ class CaseStateMachine
              user_id:            user.id,
              filenames:          filenames,
              event:              :add_responses
+  end
+
+  def add_response_to_flagged_case!(user, responding_team, filenames)
+    trigger! :add_response_to_flagged_case,
+             responding_team_id: responding_team.id,
+             user_id:            user.id,
+             filenames:          filenames,
+             event:              :add_response_to_flagged_case
   end
 
   def assign_responder!(user, managing_team, responding_team)

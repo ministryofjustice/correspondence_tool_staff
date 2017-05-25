@@ -3,8 +3,9 @@ class CaseDecorator < Draper::Decorator
 
   def who_its_with
     case current_state
-    when 'closed'    then ''
-    when 'responded' then managing_team.name
+    when 'closed'                 then ''
+    when 'responded'              then managing_team.name
+    when 'pending_dacu_clearance' then 'DACU - Disclosure'
     else
       responder_or_team
     end
