@@ -101,13 +101,17 @@ class CaseSeeder < Thor
   end
 
   def validate_users_populated
-    @dacu_manager = @dacu_team.manager_user_roles.first.user
-    @disclosure_approver = @disclosure_team.approver_user_roles.first.user
-    @hmcts_responder = @hmcts_team.responder_user_roles.first.user
-
-    if [@dacu_manager, @disclosure_approver, @hmcts_responder].any? { |u| u.nil? }
-      puts "ERROR: Not all users have been populated!"
-      puts "Run 'rake db:seed:dev:users' to populate teams and users"
+    begin
+      @dacu_manager = @dacu_team.managers.first ||
+                      raise("DACU BMT missing users")
+      @disclosure_approver = @disclosure_team.approvers.first ||
+                             raise("DACU Disclosure missing users")
+      @hmcts_responder = @hmcts_team.responders.first ||
+                         raise("HMCTS missing users")
+    rescue => ex
+      log_error "Error validating users:"
+      log_error ex.message
+      log_error "Run 'rake db:seed:dev:users' to populate teams and users"
       exit 3
     end
   end
