@@ -8,25 +8,25 @@ class CaseSeeder < Thor
 
   VALID_STATES = %w( unassigned awaiting_responder drafting awaiting_dispatch responded closed )
 
+  default_command :list
+
+  desc 'list', 'List cases in the system.'
+  def list
+    columns = [
+      :id,
+      :number,
+      :subject,
+      :current_state,
+      :requires_clearance?
+    ]
+    tp Case.all, columns
+  end
+
   desc "clear", "Delete all cases in the database"
   def clear
     check_environment
     puts "Deleting all cases"
     Case.all.map(&:destroy)
-  end
-
-  desc 'users', 'Lists users'
-  def users
-    users = User.order(:full_name)
-    users.each do |u|
-      puts sprintf("%10s %-30s", 'Id:', u.id)
-      puts sprintf("%10s %-30s", 'Name:', u.full_name)
-      puts sprintf("%10s %-30s", 'Email:', u.email)
-      u.team_roles.each do |tr|
-        puts sprintf("%10s %-30s", 'Team:', "#{tr.team.name} : #{tr.role}")
-      end
-      puts "  "
-    end
   end
 
   desc 'create all|<states> [-n n] [-d] [-x]', 'Create <-n> cases in the specified states'
