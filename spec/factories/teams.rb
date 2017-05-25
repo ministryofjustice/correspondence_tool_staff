@@ -46,7 +46,7 @@ FactoryGirl.define do
     email 'dacu@localhost'
 
     initialize_with do
-      Team.find_or_create_by(name: name, email: email)
+      Team.find_or_create_by(name: 'DACU', email: 'dacu@localhost')
     end
   end
 

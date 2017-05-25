@@ -129,7 +129,8 @@ CREATE TABLE assignments (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     role team_roles,
-    user_id integer
+    user_id integer,
+    approved boolean DEFAULT false
 );
 
 
@@ -943,6 +944,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170407091658'),
 ('20170420120713'),
 ('20170420122223'),
-('20170424133127');
+('20170424133127'),
+('20170523131602');
 
 

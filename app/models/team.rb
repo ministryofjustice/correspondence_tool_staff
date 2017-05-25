@@ -10,6 +10,9 @@
 #
 
 class Team < ApplicationRecord
+
+  validates :name, uniqueness: true
+
   has_many :user_roles, class_name: 'TeamsUsersRole'
   has_many :users, through: :user_roles
   has_many :manager_user_roles,

@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: teams_users_roles
+#
+#  id      :integer          not null, primary key
+#  team_id :integer
+#  user_id :integer
+#  role    :enum             not null
+#
+
 require 'rails_helper'
 
 RSpec.describe TeamsUsersRole, type: :model do

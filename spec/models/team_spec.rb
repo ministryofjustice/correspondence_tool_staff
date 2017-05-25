@@ -30,6 +30,15 @@ RSpec.describe Team, type: :model do
                 .class_name('TeamsUsersRole') }
   it { should have_many(:approvers).through(:approver_user_roles) }
 
+  context 'validate uniqueness of name' do
+    it 'errors if not unique' do
+      create :team, name: 'abc'
+      t2 = build :team, name: 'abc'
+      expect(t2).not_to be_valid
+      expect(t2.errors[:name]).to eq ['has already been taken']
+    end
+  end
+
   context 'multiple teams created' do
     let!(:managing_team)   { create :managing_team }
     let!(:responding_team) { create :responding_team }

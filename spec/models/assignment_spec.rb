@@ -10,6 +10,7 @@
 #  updated_at :datetime         not null
 #  role       :enum
 #  user_id    :integer
+#  approved   :boolean          default(FALSE)
 #
 
 require 'rails_helper'
