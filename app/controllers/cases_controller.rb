@@ -171,7 +171,7 @@ class CasesController < ApplicationController
   end
 
   def execute_response_approval
-    authorize @case, :can_approve?
+    authorize @case, :can_approve_case?
     result = CaseApprovalService.new(user: current_user, kase: @case).call
     raise Pundit::NotAuthorizedError if result == :unauthorised
     flash[:notice] = "You have cleared case #{@case.number} - #{@case.subject}."
