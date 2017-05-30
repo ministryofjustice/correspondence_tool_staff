@@ -34,11 +34,9 @@ div id="case-#{@case.id}"
   section.case-info
     = render partial: 'cases/case_details', locals: {case_details: @case}
 
-  - if @case.attachments.present?
-    - if @case.transitions.responded.present? \
-                     || policy(@case).can_add_attachment?
-      section.case-info
-        = render partial: 'cases/case_attachments', locals: {case_details: @case}
+  - if case_attachments_visible_for_case? @case
+    section.case-info
+      = render partial: 'cases/case_attachments', locals: {case_details: @case}
 
   - if policy(@case).can_accept_or_reject_approver_assignment?
     section.case-info
