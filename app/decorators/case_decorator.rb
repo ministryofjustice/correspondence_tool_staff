@@ -26,14 +26,14 @@ class CaseDecorator < Draper::Decorator
 
   def internal_deadline
     if object.requires_clearance?
-      I18n.l(object.internal_deadline, format: :default_date)
+      I18n.l(object.internal_deadline, format: :default)
     else
       ' '
     end
   end
 
   def external_deadline
-    I18n.l(object.external_deadline, format: :default_date)
+    I18n.l(object.external_deadline, format: :default)
   end
 
   def error_summary_message
