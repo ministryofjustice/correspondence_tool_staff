@@ -223,7 +223,7 @@ describe CaseFinderService do
     end
   end
 
-  fdescribe '#timeliness' do
+  describe '#timeliness' do
     describe 'in_time' do
       it 'returns all the cases that are in time' do
         Timecop.freeze(@case_1.external_deadline) do

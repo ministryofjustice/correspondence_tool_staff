@@ -52,10 +52,11 @@ class CaseStateMachine
         .can_unflag_for_clearance?
     end
 
-    transition from: :unassigned,         to: :unassigned
-    transition from: :awaiting_responder, to: :awaiting_responder
-    transition from: :drafting,           to: :drafting
-    transition from: :awaiting_dispatch,  to: :awaiting_dispatch
+    transition from: :unassigned,             to: :unassigned
+    transition from: :awaiting_responder,     to: :awaiting_responder
+    transition from: :drafting,               to: :drafting
+    transition from: :awaiting_dispatch,      to: :awaiting_dispatch
+    transition from: :pending_dacu_clearance, to: :awaiting_dispatch
   end
 
   event :reject_responder_assignment do
@@ -73,10 +74,11 @@ class CaseStateMachine
         .can_accept_or_reject_approver_assignment?
     end
 
-    transition from: :awaiting_responder, to: :awaiting_responder
-    transition from: :drafting,           to: :drafting
-    transition from: :awaiting_dispatch,  to: :awaiting_dispatch
-    transition from: :responded,          to: :responded
+    transition from: :awaiting_responder,     to: :awaiting_responder
+    transition from: :drafting,               to: :drafting
+    transition from: :awaiting_dispatch,      to: :awaiting_dispatch
+    transition from: :responded,              to: :responded
+    transition from: :pending_dacu_clearance, to: :pending_dacu_clearance
   end
 
   event :accept_responder_assignment do
@@ -103,6 +105,14 @@ class CaseStateMachine
     end
 
     transition from: :drafting, to: :pending_dacu_clearance
+  end
+
+  event :approve do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object).can_approve_case?
+    end
+
+    transition from: :pending_dacu_clearance, to: :awaiting_dispatch
   end
 
   event :remove_response do
@@ -203,6 +213,13 @@ class CaseStateMachine
              user_id: user.id,
              managing_team_id: managing_team.id,
              event: :unflag_for_clearance
+  end
+
+  def approve!(kase, user)
+    trigger! :approve,
+             user_id: user.id,
+             event: :approve,
+             approving_team_id: kase.approving_team.id
   end
 
   def remove_response!(user, responding_team, filename, num_attachments)

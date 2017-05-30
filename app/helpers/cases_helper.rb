@@ -21,6 +21,14 @@ module CasesHelper
               respond_case_path(@case),
               id: 'action--mark-response-as-sent',
               class: 'button'
+    when :approve
+
+
+
+      link_to t('common.case.clear_response'),
+              approve_response_case_path(@case),
+              id: 'action--approve',
+              class: 'button'
     when :close
       link_to I18n.t('common.case.close'),
               close_case_path(@case),

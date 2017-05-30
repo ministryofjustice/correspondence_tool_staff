@@ -38,6 +38,8 @@ RSpec.describe CaseStateMachine, type: :model do
   let(:closed_case)        { create :closed_case,
                              responder: responder,
                              responding_team: responding_team }
+  let(:pending_dacu_clearance_case) { create :pending_dacu_clearance_case }
+
 
   context 'after transition' do
     let(:t1) { Time.now }
@@ -141,6 +143,14 @@ RSpec.describe CaseStateMachine, type: :model do
     it { should require_permission(:can_respond?)
                   .using_options(user_id: responder.id)
                   .using_object(case_with_response) }
+  end
+
+  describe event(:approve) do
+    it { should transition_from(:pending_dacu_clearance).to :awaiting_dispatch}
+    it { should require_permission(:can_approve_case?)
+                  .using_options(user_id: approver.id)
+                  .using_object(pending_dacu_clearance_case)
+    }
   end
 
   describe event(:close) do

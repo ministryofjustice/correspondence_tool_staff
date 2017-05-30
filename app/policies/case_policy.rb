@@ -65,10 +65,8 @@ class CasePolicy
       user.responding_teams.include?(self.case.responding_team)
   end
 
-  def can_approve?
-    self.case.requires_clearance? &&
-        user.approving_teams.include?(self.case.approving_team) &&
-        self.case.approver == user
+  def can_approve_case?
+    self.case.pending_dacu_clearance? && user.approving_teams.include?(self.case.approving_team)
   end
 
   def can_view_case_details?

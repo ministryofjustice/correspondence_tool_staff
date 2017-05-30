@@ -135,7 +135,9 @@ FactoryGirl.define do
         create :approver_assignment,
                  case: kase,
                  team: evaluator.approving_team,
-                 state: 'pending'
+                 state: 'accepted',
+                 user_id: evaluator.approving_team.users.first.id
+
         create :case_transition_pending_dacu_clearance,
                case_id: kase.id,
                user_id: evaluator.responder.id
