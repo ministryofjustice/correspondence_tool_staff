@@ -158,7 +158,7 @@ describe CasePolicy do
     it { should     permit(approver,  assigned_flagged_case) }
   end
 
-  permissions :can_approve? do
+  permissions :can_approve_case? do
     it { should     permit(pending_dacu_clearance_case.approver,   pending_dacu_clearance_case) }
     it { should_not permit(approver,   new_case) }
     it { should_not permit(approver,   accepted_case) }

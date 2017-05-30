@@ -166,7 +166,7 @@ class CasesController < ApplicationController
   end
 
   def approve_response
-    authorize @case, :can_approve?
+    authorize @case, :can_approve_case?
     render :approve_response
   end
 

@@ -23,10 +23,6 @@ class CasePolicy
     user.manager?
   end
 
-  def can_approve_case?
-
-  end
-
   def can_assign_case?
     user.manager? && self.case.unassigned?
   end
@@ -69,7 +65,7 @@ class CasePolicy
       user.responding_teams.include?(self.case.responding_team)
   end
 
-  def can_approve?
+  def can_approve_case?
     self.case.pending_dacu_clearance? && user.approving_teams.include?(self.case.approving_team)
   end
 

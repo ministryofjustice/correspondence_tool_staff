@@ -22,7 +22,7 @@ class CaseApprovalService
 
   def able_to_approve?
     policy = CasePolicy.new(@user, @kase)
-    policy.can_approve?
+    policy.can_approve_case?
   end
 
   def mark_as_approved

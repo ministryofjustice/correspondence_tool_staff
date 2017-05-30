@@ -109,7 +109,7 @@ class CaseStateMachine
 
   event :approve do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object).can_approve?
+      CaseStateMachine.get_policy(options[:user_id], object).can_approve_case?
     end
 
     transition from: :pending_dacu_clearance, to: :awaiting_dispatch

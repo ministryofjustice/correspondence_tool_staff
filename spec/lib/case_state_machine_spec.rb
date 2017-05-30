@@ -147,7 +147,7 @@ RSpec.describe CaseStateMachine, type: :model do
 
   describe event(:approve) do
     it { should transition_from(:pending_dacu_clearance).to :awaiting_dispatch}
-    it { should require_permission(:can_approve?)
+    it { should require_permission(:can_approve_case?)
                   .using_options(user_id: approver.id)
                   .using_object(pending_dacu_clearance_case)
     }
