@@ -2,7 +2,27 @@ module CTS
   class Cases < Thor
     include Thor::Rails
 
-    VALID_STATES = %w( unassigned awaiting_responder drafting awaiting_dispatch responded closed )
+    CASE_JOURNEYS = {
+      unflagged: [
+        :unassigned,
+        :awaiting_responder,
+        :drafting,
+        :awaiting_dispatch,
+        :responded,
+        :closed,
+      ],
+      flagged_for_dacu_approval: [
+        :unassigned,
+        :flagged_for_dacu_clearance,
+        :awaiting_responder,
+        :approver_assignment_accepted,
+        :drafting,
+        :pending_dacu_clearance,
+        :awaiting_dispatch,
+        :responded,
+        :closed,
+      ]
+    }
 
     default_command :list
 
@@ -35,8 +55,11 @@ module CTS
 
       Valid states are as follows:
            \x5 unassigned
+           \x5 flagged_for_dacu_clearance
            \x5 awaiting_responder
+           \x5 approver_assignment_accepted
            \x5 drafting
+           \x5 pending_dacu_clearance
            \x5 awaiting_dispatch
            \x5 responded
            \x5 closed
@@ -53,11 +76,14 @@ module CTS
     option :n, type: :numeric
     option :d, type: :boolean
     option :x, type: :boolean
+    option :dry_run, type: :boolean
+    # rubocop:disable Metrics/CyclomaticComplexity
     def create(*args)
-      @states = []
+      @end_states = []
       @number_to_create = options[:n] || 2
       @add_dacu_disclosure = options[:d] || false
       @clear_cases = options[:x] || false
+      @dry_run = options.fetch(:dry_run, false)
       @invalid_params = false
 
       CTS::check_environment
@@ -66,12 +92,25 @@ module CTS
 
       clear if @clear_cases
 
-      puts "Creating #{@number_to_create} cases in each of the following states: #{@states.join(', ')}"
+      puts "Creating #{@number_to_create} cases in each of the following states: #{@end_states.join(', ')}"
       puts "Flagging each for DACU disclosure" if @add_dacu_disclosure
-      @states.each do |state|
-        __send__("create_#{state}".to_sym)
+      cases = @end_states.map do |target_state|
+        journey = find_case_journey_for_state target_state.to_sym
+        kase = nil
+        journey.each do |state|
+          if @dry_run
+            puts "transition to '#{state}"
+          else
+            kase = __send__("transition_to_#{state}", kase)
+          end
+        end
+        kase
+      end
+      unless @dry_run
+        tp cases, [:id, :number, :current_state, :requires_clearance?]
       end
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     private
 
@@ -112,46 +151,83 @@ module CTS
       end
     end
 
-    def create_unassigned
-      create_unassigned_cases(@number_to_create)
+    def transition_to_unassigned(_cases)
+      cases = []
+      @number_to_create.times do
+        kase = FactoryGirl.create(:case,
+                                  name: Faker::Name.name,
+                                  subject: Faker::Company.catch_phrase,
+                                  message: Faker::Lorem.paragraph(10, true, 10),
+                                  managing_team: @dacu_team)
+        cases << kase
+      end
+      cases
     end
 
-    def create_awaiting_responder
-      cases = create_unassigned_cases(@number_to_create)
+    def transition_to_flagged_for_dacu_clearance(cases)
+      cases.each do |kase|
+        result = CaseFlagForClearanceService.new(user:@dacu_manager, kase:kase).call
+        unless result == :ok
+          raise "Could not flag case for clearance, case id: #{kase.id}, user id: #{@dacu_manager.id}, result: #{service.result}"
+        end
+      end
+    end
+
+    def transition_to_awaiting_responder(cases)
       cases.each do |kase|
         kase.responding_team = @hmcts_team
         kase.assign_responder(@dacu_manager, @hmcts_team)
       end
-      cases
     end
 
-    def create_drafting
-      cases = create_awaiting_responder
+    def transition_to_drafting(cases)
       cases.each do |kase|
         kase.responder_assignment.update_attribute(:user, @hmcts_responder)
         kase.responder_assignment_accepted(@hmcts_responder, @hmcts_team)
       end
-      cases
     end
 
-    def create_awaiting_dispatch
-      cases = create_drafting
+    def transition_to_approver_assignment_accepted(cases)
       cases.each do |kase|
-        ResponseUploaderService.new(kase, @hmcts_responder, nil).seed!
-        kase.add_responses(@hmcts_responder, kase.attachments)
+        service = CaseAcceptApproverAssignmentService.new(
+          assignment: kase.approver_assignment,
+          user: @disclosure_approver,
+        )
+        unless service.call
+          raise "Could not accept approver assignment, case id: #{kase.id}, user id: #{@disclosure_approver.id}, result: #{service.result}"
+        end
       end
-      cases
     end
 
-    def create_responded
-      cases = create_awaiting_dispatch
+    def transition_to_awaiting_dispatch(cases)
+      cases.each do |kase|
+        if kase.approver_assignment
+          result = CaseApprovalService
+                     .new(user: @disclosure_approver, kase: kase).call
+          unless result == :ok
+            raise "Could not approve case response , case id: #{kase.id}, user id: #{@disclosure_approver.id}, result: #{result}"
+          end
+        else
+          ResponseUploaderService.new(kase, @hmcts_responder, nil).seed!
+          kase.add_responses(@hmcts_responder, kase.attachments)
+        end
+      end
+    end
+
+    def transition_to_responded(cases)
       cases.each do |kase|
         kase.respond(@hmcts_responder)
       end
     end
 
-    def create_closed
-      cases = create_responded
+    def transition_to_pending_dacu_clearance(cases)
+      cases.each do |kase|
+        ResponseUploaderService.new(kase, @hmcts_responder, nil).seed!
+        kase.add_response_to_flagged_case(@hmcts_responder, kase.attachments)
+      end
+    end
+
+    def transition_to_closed(cases)
       cases.each do |kase|
         kase.prepare_for_close
         kase.update(date_responded: Date.today, outcome_name: 'Granted in full')
@@ -159,27 +235,14 @@ module CTS
       end
     end
 
-    def create_unassigned_cases(n)
-      cases = []
-      n.times do
-        kase = FactoryGirl.create(:case,
-                                  name: Faker::Name.name,
-                                  subject: Faker::Company.catch_phrase,
-                                  message: Faker::Lorem.paragraph(10, true, 10),
-                                  managing_team: @dacu_team)
-        flag_for_dacu_approval(kase)
-        cases << kase
-      end
-      cases
-    end
-
-    def flag_for_dacu_approval(kase)
-      if @add_dacu_disclosure
-        result = CaseFlagForClearanceService.new(user:@dacu_manager, kase:kase).call
-        if result != :ok
-          error "Could not flag case for clearance: #{kase}"
+    def find_case_journey_for_state(state)
+      CASE_JOURNEYS.each do |name, states|
+        unless @add_dacu_disclosure && name != :flagged_for_dacu_approval
+          pos = states.find_index(state)
+          return states.take(pos + 1) if pos
         end
       end
+      return []
     end
 
     def parse_params(args)
@@ -188,7 +251,7 @@ module CTS
       if @invalid_params
         error 'Program terminating'
         exit 1
-      elsif @states.empty?
+      elsif @end_states.empty?
         error 'No states provided, please see help for what states are available.'
         exit 1
       end
@@ -196,9 +259,13 @@ module CTS
 
     def process_arg(arg)
       if arg == 'all'
-        @states = VALID_STATES
-      elsif arg.in?(VALID_STATES)
-        @states << arg
+        @end_states += if @add_dacu_disclosure
+                         CASE_JOURNEYS[:flagged_for_dacu_approval]
+                       else
+                         CASE_JOURNEYS[:unflagged]
+                       end
+      elsif find_case_journey_for_state(arg.to_sym).any?
+        @end_states << arg
       else
         error "Unrecognised parameter: #{arg}"
         @invalid_params = true
