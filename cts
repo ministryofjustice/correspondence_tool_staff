@@ -8,8 +8,21 @@ require 'cts/cases'
 require 'cts/teams'
 require 'cts/users'
 
-
 module CTS
+  class << self
+    def check_environment
+      environment = if ::Rails.env.production?
+                      ENV.fetch('ENV', Rails.env)
+                    else
+                      Rails.env
+                    end
+      if environment == 'prod' || environment == 'production'
+        STDERR.puts "Environment '#{environment}' detected. Run cts in non-prod environments only!"
+        exit 1
+      end
+    end
+  end
+
   class Commands < Thor
     include Thor::Rails
 

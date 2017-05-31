@@ -20,7 +20,7 @@ module CTS
 
     desc "clear", "Delete all cases in the database"
     def clear
-      check_environment
+      CTS::check_environment
       puts "Deleting all cases"
       Case.all.map(&:destroy)
     end
@@ -60,7 +60,7 @@ module CTS
       @clear_cases = options[:x] || false
       @invalid_params = false
 
-      check_environment
+      CTS::check_environment
       validate_teams_and_users_populated
       parse_params(args)
 
@@ -185,10 +185,6 @@ module CTS
           error "Could not flag case for clearance: #{kase}"
         end
       end
-    end
-
-    def check_environment
-      raise "Run cts in development rails environement only!" unless ::Rails.env.development?
     end
 
     def parse_params(args)
