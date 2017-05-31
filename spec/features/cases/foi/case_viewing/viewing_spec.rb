@@ -115,4 +115,50 @@ feature 'viewing details of case in the system' do
     end
 
   end
+
+
+  context 'viewing case request with a long message' do
+
+    given(:long_message) {
+      "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin " +
+          "literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney "+
+          "College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage,  " +
+          "and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum " +
+          "College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, " +
+          "and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum " +
+          "College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, " +
+          "and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum " +
+          "comes from sections 1.10.32 and 1.10.33 of 'de Finibus Bonorum et Malorum' (The Extremes of Good and Evil) by " +
+          "Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. " +
+          "The first line of Lorem Ipsum, 'Lorem ipsum dolor sit amet', comes from a line in section 1.10.32."
+    }
+
+    given(:short_message) {
+      "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin " +
+          "literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney " +
+          "College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage,  " +
+          "and going through th"
+    }
+
+
+    given(:accepted_case) {
+      create :accepted_case, message:long_message,responding_team: responding_team
+    }
+
+    scenario 'Clicking "Show more/Less more" link under a long request', js:true do
+      cases_show_page.load id: accepted_case.id
+
+      request = cases_show_page.request
+
+      request.show_more_link.click
+      expect(request.show_more_link.text).to eq 'Show less'
+      expect(request).to have_collapsed_text
+      expect(request).to have_no_ellipsis
+
+      request.show_more_link.click
+      expect(request.show_more_link.text).to eq 'Show more'
+      expect(request).to have_ellipsis
+      expect(request).to have_no_collapsed_text
+    end
+  end
 end

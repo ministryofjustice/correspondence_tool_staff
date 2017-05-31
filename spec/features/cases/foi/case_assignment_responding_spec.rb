@@ -9,7 +9,7 @@ feature 'respond to responder assignment' do
       subject: 'A message about XYZ',
       message: 'I would like to know about XYZ',
       responding_team: responding_team
-    )
+    ).decorate
   end
 
   given(:assignment) do

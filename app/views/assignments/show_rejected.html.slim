@@ -6,4 +6,5 @@
     = t('alerts.assignment_already_rejected_html')
 
 section.case-info
-  = render partial: 'cases/case_request', locals: {case_details: @case}
+  = render partial: 'cases/case_request',
+          locals: {case_details: @case.decorate, full_message: true}

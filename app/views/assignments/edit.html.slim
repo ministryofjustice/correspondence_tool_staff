@@ -3,7 +3,8 @@
 
 
 section.case-info
-  = render partial: 'cases/case_request', locals: {case_details: @case}
+  = render partial: 'cases/case_request',
+          locals: {case_details: @case.decorate, full_message: true}
 
 
 .grid-row

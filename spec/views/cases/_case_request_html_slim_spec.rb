@@ -1,19 +1,115 @@
 require 'rails_helper'
 
 describe 'cases/case_request.html.slim', type: :view do
+  let(:long_message) {
+    "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin " +
+        "literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney "+
+        "College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage,  " +
+        "and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum " +
+        "College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, " +
+        "and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum " +
+        "College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, " +
+        "and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum " +
+        "comes from sections 1.10.32 and 1.10.33 of 'de Finibus Bonorum et Malorum' (The Extremes of Good and Evil) by " +
+        "Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. " +
+        "The first line of Lorem Ipsum, 'Lorem ipsum dolor sit amet', comes from a line in section 1.10.32."
+  }
 
-  it 'displays the all 4 key information ' do
-    unassigned_case = double CaseDecorator,
-                   message: "This is a request for information"
+  let(:short_message) {
+    "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin " +
+        "literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney " +
+        "College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage,  " +
+        "and going through th"
+  }
+
+  let(:last_part){
+    "e cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum " +
+        "College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, " +
+        "and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum " +
+        "College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, " +
+        "and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum " +
+        "comes from sections 1.10.32 and 1.10.33 of 'de Finibus Bonorum et Malorum' (The Extremes of Good and Evil) by " +
+        "Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. " +
+        "The first line of Lorem Ipsum, 'Lorem ipsum dolor sit amet', comes from a line in section 1.10.32."
+  }
 
 
-    render partial: 'cases/case_request.html.slim',
-           locals:{ case_details: unassigned_case}
+  describe 'Displaying a short request' do
+    let(:kase) { double CaseDecorator,
+                        message: "This is a request for information",
+                        message_extract: ["This is a request for information"]
+    }
 
-    partial = case_request_section(rendered)
+    let(:partial) do
+      render partial: 'cases/case_request.html.slim',
+             locals:{ case_details: kase}
 
-    expect(partial.message.text).to eq unassigned_case.message
+      case_request_section(rendered)
+    end
+
+    it 'displays the full request for a short request ' do
+      expect(partial.message.text)
+          .to eq kase.message
+    end
+
+    it 'does not have a collapsed request' do
+      expect(partial).to have_no_show_more_link
+      expect(partial).to have_no_preview
+      expect(partial).to have_no_ellipsis
+      expect(partial).to have_no_collapsed_text
+    end
+  end
+
+  describe 'displays the full request without "show more" link' do
+
+    let(:kase) { double CaseDecorator,
+                        message:  long_message,
+                        message_extract: [short_message,last_part]
+    }
+
+    let(:partial) do
+      render partial: 'cases/case_request.html.slim',
+             locals:{ case_details: kase, full_message: true}
+
+      case_request_section(rendered)
+    end
+
+    it 'displays the full request ' do
+      expect(partial.message.text)
+          .to eq kase.message
+    end
+
+    it 'does not have a collapsed request' do
+      expect(partial).to have_no_show_more_link
+      expect(partial).to have_no_preview
+      expect(partial).to have_no_ellipsis
+      expect(partial).to have_no_collapsed_text
+    end
+  end
+
+  describe 'displaying a long request and collapsing content' do
+    let(:kase) { double CaseDecorator,
+                        message:  long_message,
+                        message_extract: [short_message,last_part]
+    }
+
+    let(:partial) do
+      render partial: 'cases/case_request.html.slim',
+             locals:{ case_details: kase}
+
+      case_request_section(rendered)
+    end
+
+    it 'displays a preview of the full request ' do
+      expect(partial.message.text)
+          .to_not eq kase.message
+
+      expect(partial).to have_show_more_link
+      expect(partial).to have_preview
+      expect(partial).to have_ellipsis
+    end
 
   end
+
 
 end

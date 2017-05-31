@@ -4,4 +4,8 @@
 
   .request--message
     p
-      = case_details.message
+      - if defined?(full_message) && full_message
+        = case_details.message
+      - else
+        = show_hide_message(case_details)
+

@@ -32,7 +32,7 @@
               .case_name
                 = kase.requester_name_and_type
               .case_message_extract
-                = kase.message_extract
+                = kase.shortened_message
             td.js-take-case-on-container aria-label="#{t('.actions')}"
               - if current_user.teams.include? kase.approver_assignment&.team
                 = render partial: 'take_case_on_or_de_escalate',
