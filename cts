@@ -1,7 +1,11 @@
 #!/usr/bin/env ruby
 
+unless defined? Rails
+  root_dir = File.dirname($0)
+  exec(File.join(root_dir, 'bin', 'rails'), 'runner', $0, *ARGV)
+end
+
 require 'thor'
-require 'thor/rails'
 
 $: << 'lib'
 require 'cts/cases'
