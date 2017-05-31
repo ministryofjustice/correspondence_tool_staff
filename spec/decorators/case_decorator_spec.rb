@@ -161,12 +161,13 @@ describe CaseDecorator, type: :model do
     context 'message fewer than 360 chars' do
       it 'returns the entire message' do
         kase = create(:case, message: 'One fine day.').decorate
-        expect(kase.message_extract).to eq kase.message
+        expect(kase.message_extract.size).to eq 1
+        expect(kase.message_extract.first).to eq kase.message
       end
     end
 
     context 'message more than 360 characters' do
-      it 'truncates and adds elipses' do
+      it 'returns an array with two entries' do
         long_message =
           "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin " +
           "literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney "+
@@ -179,16 +180,68 @@ describe CaseDecorator, type: :model do
           "comes from sections 1.10.32 and 1.10.33 of 'de Finibus Bonorum et Malorum' (The Extremes of Good and Evil) by " +
           "Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. " +
           "The first line of Lorem Ipsum, 'Lorem ipsum dolor sit amet', comes from a line in section 1.10.32."
-        short_message =
+
+        first_part =
           "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin " +
           "literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney " +
           "College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage,  " +
-          "and going through th..."
+          "and going through th"
 
+        second_part =
+          "e cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum " +
+          "College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, " +
+          "and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum " +
+          "College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, " +
+          "and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum " +
+          "comes from sections 1.10.32 and 1.10.33 of 'de Finibus Bonorum et Malorum' (The Extremes of Good and Evil) by " +
+          "Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. " +
+          "The first line of Lorem Ipsum, 'Lorem ipsum dolor sit amet', comes from a line in section 1.10.32."
         kase = create(:case, message: long_message).decorate
-        expect(kase.message_extract).to eq short_message
+
+        expect(kase.message_extract.size).to eq 2
+        expect(kase.message_extract.first).to eq first_part
+        expect(kase.message_extract.second).to eq second_part
+
       end
     end
+  end
+
+  describe '#shortened_message' do
+    context 'message fewer than 360 chars' do
+      it 'returns the entire message' do
+        kase = create(:case, message: 'One fine day.').decorate
+        expect(kase.shortened_message).to eq kase.message
+      end
+    end
+
+    context 'message more than 360 characters' do
+      it 'returns shortened message with ellipse' do
+        long_message =
+            "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin " +
+                "literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney "+
+                "College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage,  " +
+                "and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum " +
+                "College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, " +
+                "and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum " +
+                "College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, " +
+                "and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum " +
+                "comes from sections 1.10.32 and 1.10.33 of 'de Finibus Bonorum et Malorum' (The Extremes of Good and Evil) by " +
+                "Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. " +
+                "The first line of Lorem Ipsum, 'Lorem ipsum dolor sit amet', comes from a line in section 1.10.32."
+
+        short_message =
+            "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin " +
+                "literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney " +
+                "College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage,  " +
+                "and going through th..."
+
+        kase = create(:case, message: long_message).decorate
+
+        expect(kase.shortened_message).to eq short_message
+      end
+    end
+
+
   end
 
   describe '#status' do

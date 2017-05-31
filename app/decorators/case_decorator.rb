@@ -50,9 +50,19 @@ class CaseDecorator < Draper::Decorator
 
   def message_extract(num_chars = 350)
     if object.message.size < num_chars
+      [object.message]
+    else
+      [object.message[0..num_chars-1] ,  object.message[num_chars..-1]]
+    end
+  end
+
+  def shortened_message
+    (part1,part2) = self.message_extract
+
+    if part2.nil?
       object.message
     else
-      object.message[0..num_chars-1] + '...'
+      "#{part1}..."
     end
   end
 

@@ -37,6 +37,20 @@ module CasesHelper
     end
   end
 
+  def show_hide_message(kase)
+
+    (preview_copy, remaining_copy) = kase.message_extract
+
+    if remaining_copy.nil?
+      kase.message
+    else
+      content_tag(:span, preview_copy, class: 'ellipsis-preview') +
+          content_tag(:span,'...', class:'ellipsis-delimiter js-hidden') +
+          content_tag(:span, remaining_copy,  class: 'ellipsis-complete js-hidden' ) +
+          link_to('Show more', '#', class: 'ellipsis-button js-hidden')
+    end
+  end
+
   def attachment_download_link(kase, attachment)
     link_to t('common.case.download_link_html', filename: attachment.filename),
             download_case_case_attachment_path(kase, attachment),
