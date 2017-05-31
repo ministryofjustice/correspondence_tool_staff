@@ -173,11 +173,6 @@ module CTS
       cases
     end
 
-    def assign_case_to_responding_team(kase, responding_team)
-      kase.responding_team = responding_team
-      kase.save!
-    end
-
     def flag_for_dacu_approval(kase)
       if @add_dacu_disclosure
         result = CaseFlagForClearanceService.new(user:@dacu_manager, kase:kase).call
