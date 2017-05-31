@@ -4,9 +4,9 @@ require 'thor'
 require 'thor/rails'
 
 $: << 'lib'
+require 'cts/cases'
 require 'cts/teams'
 require 'cts/users'
-require File.join(File.dirname(__FILE__), 'db', 'seeders', 'case_seeder')
 
 
 module CTS
@@ -14,7 +14,7 @@ module CTS
     include Thor::Rails
 
     desc 'cases', 'Case commands'
-    subcommand 'cases', CaseSeeder
+    subcommand 'cases', Cases
 
     desc 'teams', 'Team commands'
     subcommand 'teams', Teams
