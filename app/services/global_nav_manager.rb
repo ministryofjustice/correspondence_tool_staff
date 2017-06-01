@@ -39,7 +39,7 @@ class GlobalNavManager
   def add_pages_for_user
     return if @user&.team_roles.blank?
     role = @user.team_roles.first.role
-    user_pages = Settings.global_navigation.user_roles[role]
+    user_pages = Settings.global_navigation.user_roles[role].pages
     user_pages.each do |user_page|
       @nav_pages << build_page(user_page)
     end

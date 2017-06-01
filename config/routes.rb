@@ -53,8 +53,19 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-  authenticated :user  do
-    root to: redirect('/cases/open'), as: :authenticated_root
+  authenticated :user, -> (u) { u.manager? }  do
+    root to: redirect(Settings.global_navigation.user_roles.manager.default_url),
+         as: :manager_root
+  end
+
+  authenticated :user, -> (u) { u.responder?}  do
+    root to: redirect(Settings.global_navigation.user_roles.responder.default_url),
+         as: :responder_root
+  end
+
+  authenticated :user, -> (u) { u.approver?}  do
+    root to: redirect(Settings.global_navigation.user_roles.approver.default_url),
+         as: :approver_root
   end
 
   # TODO: Limit this to the admin users, as soon as we figure out how we

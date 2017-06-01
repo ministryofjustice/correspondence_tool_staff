@@ -56,13 +56,19 @@ global_navigation:
           timeliness: late
   user_roles:
     approver:
-      - incoming_cases
-      - open_cases
-      - my_open_cases
-      - closed_cases
+      default_url: /cases/open?timeliness=in_time
+      pages:
+        - incoming_cases
+        - open_cases
+        - my_open_cases
+        - closed_cases
     manager:
-      - open_cases
-      - closed_cases
+      default_url: /cases/open?timeliness=in_time
+      pages:
+        - open_cases
+        - closed_cases
     responder:
-      - open_cases
-      - closed_cases
+      default_url: /cases/open?timeliness=in_time
+      pages:
+        - open_cases
+        - closed_cases
