@@ -18,6 +18,7 @@
 
 .grid-row
   .column-full.table-container.container
+    = paginate @cases
     table.report.table-font-xsmall
       colgroup
         col
@@ -62,3 +63,4 @@
               = t("state.#{kase.current_state}")
             td aria-label="#{t('.who_its_with')}"
               = kase.who_its_with
+    = paginate @cases

@@ -309,3 +309,7 @@ en:
       <span class="visuallyhidden">View tab </span>In time (%{count})
     late_html: |
       <span class="visuallyhidden">View tab </span>Late (%{count})
+
+  pagination:
+    next: Next
+    previous: Previous

@@ -77,6 +77,10 @@ class CaseDecorator < Draper::Decorator
 
   private
 
+  def self.collection_decorator_class
+    PaginatingDecorator
+  end
+
   def responder_or_team
     if !responding_team.present?
       managing_team.name

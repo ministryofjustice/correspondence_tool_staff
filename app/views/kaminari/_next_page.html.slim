@@ -1,0 +1,15 @@
+/ Link to the "Next" page
+  - available local variables
+    url          : url to the next page
+    current_page : a page object for the currently displayed page
+    total_pages  : total number of pages
+    per_page     : number of items to fetch per page
+    remote       : data-remote
+div.next
+  - unless current_page.last?
+    == link_to url, rel: 'next'
+      .pagination-next-prev
+        = t('pagination.next').html_safe
+      .pagination_pages
+        = "#{current_page.number + 1} of #{total_pages}"
+

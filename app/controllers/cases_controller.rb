@@ -24,23 +24,26 @@ class CasesController < ApplicationController
     @cases = CaseFinderService.new.for_user(current_user)
                .for_action(:index)
                .filter_for_params(params)
+               .cases
+               .page params[:page]
   end
 
   def closed_cases
-    @cases = @global_nav_manager.current_cases_finder.cases
+    @cases = @global_nav_manager.current_cases_finder.cases.page params[:page]
   end
 
   def incoming_cases
-    @cases = @global_nav_manager.current_cases_finder.cases
+    @cases = @global_nav_manager.current_cases_finder.cases.page params[:page]
   end
 
   def my_open_cases
-    @cases = @global_nav_manager.current_cases_finder.cases
+    @cases = @global_nav_manager.current_cases_finder.cases.page params[:page]
     render :index
   end
 
   def open_cases
-    @cases = @global_nav_manager.current_cases_finder.cases
+    # Case.all.opened.page params[:page]
+    @cases = @global_nav_manager.current_cases_finder.cases.page params[:page]
     render :index
   end
 

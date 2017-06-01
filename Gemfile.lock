@@ -219,6 +219,18 @@ GEM
       activerecord (>= 5.0.0)
       pg (>= 0.18.1)
     jwt (1.5.6)
+    kaminari (1.0.1)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.0.1)
+      kaminari-activerecord (= 1.0.1)
+      kaminari-core (= 1.0.1)
+    kaminari-actionview (1.0.1)
+      actionview
+      kaminari-core (= 1.0.1)
+    kaminari-activerecord (1.0.1)
+      activerecord
+      kaminari-core (= 1.0.1)
+    kaminari-core (1.0.1)
     key_struct (0.4.2)
     launchy (2.4.3)
       addressable (~> 2.3)
@@ -500,6 +512,7 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails
   jsonb_accessor (~> 1.0.0.beta.1)
+  kaminari
   launchy
   libreconv (~> 0.9.1)
   listen (~> 3.0.5)
