@@ -79,7 +79,6 @@ en:
   time:
     formats:
       default: "%e %b %Y %H:%M"
-#      default_date: "%e %b %Y"
 
   button:
     assign: Assign case
