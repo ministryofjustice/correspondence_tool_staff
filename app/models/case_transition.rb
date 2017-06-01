@@ -21,6 +21,7 @@ class CaseTransition < ActiveRecord::Base
 
   jsonb_accessor :metadata,
     user_id:            :integer,
+    original_user_id:   :integer,
     responding_team_id: :integer,
     managing_team_id:   :integer,
     approving_team_id:  :integer,
