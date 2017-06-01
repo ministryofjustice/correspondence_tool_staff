@@ -236,7 +236,7 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'redirects to the application root path' do
-        expect(response).to redirect_to(authenticated_root_path)
+        expect(response).to redirect_to(responder_root_path)
       end
     end
 
@@ -456,7 +456,7 @@ RSpec.describe CasesController, type: :controller do
         end
 
         it 'redirects to the application root path' do
-          expect(response).to redirect_to(authenticated_root_path)
+          expect(response).to redirect_to(responder_root_path)
         end
       end
     end
@@ -535,7 +535,7 @@ RSpec.describe CasesController, type: :controller do
         end
 
         it 'redirects to the application root path' do
-          expect(response).to redirect_to(authenticated_root_path)
+          expect(response).to redirect_to(responder_root_path)
         end
       end
     end
@@ -594,7 +594,7 @@ RSpec.describe CasesController, type: :controller do
         end
 
         it 'redirects to the application root path' do
-          expect(response).to redirect_to(authenticated_root_path)
+          expect(response).to redirect_to(responder_root_path)
         end
       end
     end
@@ -654,7 +654,7 @@ RSpec.describe CasesController, type: :controller do
         end
 
         it 'redirects to the application root path' do
-          expect(response).to redirect_to(authenticated_root_path)
+          expect(response).to redirect_to(responder_root_path)
         end
       end
     end
@@ -698,7 +698,7 @@ RSpec.describe CasesController, type: :controller do
         end
 
         it 'redirects to the application root path' do
-          expect(response).to redirect_to(authenticated_root_path)
+          expect(response).to redirect_to(responder_root_path)
         end
       end
 
@@ -710,7 +710,7 @@ RSpec.describe CasesController, type: :controller do
         end
 
         it 'redirects to the application root path' do
-          expect(response).to redirect_to(authenticated_root_path)
+          expect(response).to redirect_to(responder_root_path)
         end
       end
     end
@@ -743,7 +743,7 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'redirects to the application root path' do
-        expect(subject).to redirect_to(authenticated_root_path)
+        expect(subject).to redirect_to(responder_root_path)
       end
     end
 
@@ -1013,7 +1013,7 @@ RSpec.describe CasesController, type: :controller do
 
       it 'redirects to the application root' do
         expect(get :respond, params: { id: case_with_response.id }).
-            to redirect_to(authenticated_root_path)
+            to redirect_to(manager_root_path)
       end
     end
 
@@ -1039,7 +1039,7 @@ RSpec.describe CasesController, type: :controller do
 
       it 'redirects to the application root' do
         expect(get :respond, params: { id: case_with_response.id }).
-              to redirect_to(authenticated_root_path)
+              to redirect_to(responder_root_path)
       end
     end
   end
@@ -1066,7 +1066,7 @@ RSpec.describe CasesController, type: :controller do
 
       it 'redirects to the application root' do
         expect(patch :confirm_respond, params: { id: case_with_response.id }).
-            to redirect_to(authenticated_root_path)
+            to redirect_to(manager_root_path)
       end
 
       it 'does not transition current_state' do
@@ -1099,7 +1099,7 @@ RSpec.describe CasesController, type: :controller do
 
       it 'redirects to the application root' do
         expect(patch :confirm_respond, params: { id: case_with_response.id }).
-              to redirect_to(authenticated_root_path)
+              to redirect_to(responder_root_path)
       end
 
       it 'does not transition current_state' do

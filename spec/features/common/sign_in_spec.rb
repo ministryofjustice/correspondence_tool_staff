@@ -1,17 +1,17 @@
 require 'rails_helper'
 
 feature "Signing in" do
-  let(:staff) { create(:user) }
+  let(:responder) { create(:responder) }
 
   scenario "Signing in with correct credentials" do
     login_page.load
 
     expect(login_page).to have_no_user_card
 
-    login_page.log_in(staff.email, staff.password )
+    login_page.log_in(responder.email, responder.password )
 
     expect(login_page).to have_user_card
-    expect(login_page.user_card.greetings).to have_content(staff.full_name)
+    expect(login_page.user_card.greetings).to have_content(responder.full_name)
 
     expect(login_page.user_card).to have_link('Sign out', href: destroy_user_session_path)
 
@@ -21,7 +21,7 @@ feature "Signing in" do
   scenario "Signing in using invalid email" do
     login_page.load
 
-    login_page.log_in(Faker::Internet.email, staff.password )
+    login_page.log_in(Faker::Internet.email, responder.password )
 
     expect(login_page.error_message).to have_content 'Invalid email or password'
   end
@@ -29,7 +29,7 @@ feature "Signing in" do
   scenario "Signing in using invalid password" do
     login_page.load
 
-    login_page.log_in(staff.email, Faker::Lorem.characters(8) )
+    login_page.log_in(responder.email, Faker::Lorem.characters(8) )
 
     expect(login_page.error_message).to have_content 'Invalid email or password'
   end

@@ -12,7 +12,11 @@ RSpec.describe CaseAttachmentsController, type: :controller do
       it 'redirect to the login or root page' do
         get :download, params: { case_id: kase.id, id: attachment.id }
         if subject.current_user
-          expect(response).to redirect_to authenticated_root_path
+          if subject.current_user.manager?
+            expect(response).to redirect_to manager_root_path
+          elsif subject.current_user.responder?
+             expect(response).to redirect_to manager_root_path
+          end
         else
           expect(response).to redirect_to new_user_session_path
         end
@@ -79,7 +83,11 @@ RSpec.describe CaseAttachmentsController, type: :controller do
       it 'redirect to the login or root page' do
         delete :destroy, params: { case_id: kase.id, id: attachment.id }
         if subject.current_user
-          expect(response).to redirect_to authenticated_root_path
+          if subject.current_user.manager?
+            expect(response).to redirect_to manager_root_path
+          elsif subject.current_user.responder?
+            expect(response).to redirect_to manager_root_path
+          end
         else
           expect(response).to redirect_to new_user_session_path
         end

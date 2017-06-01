@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature "Submitting feedback" do
-  let(:user) { create(:user) }
+  let(:responder) { create(:responder) }
 
   scenario "Cannot submit feedback from login page" do
     login_page.load
@@ -10,7 +10,7 @@ feature "Submitting feedback" do
 
   scenario "user signed in and wants to submit feedback without comment", js: true do
 
-    login_as user
+    login_as responder
     cases_page.load
     expect(cases_page).to have_service_feedback
     expect(cases_page.service_feedback).to have_feedback_form
@@ -25,8 +25,7 @@ feature "Submitting feedback" do
 
   scenario "user signed in and wants to submit feedback", js: true do
 
-
-    login_as user
+    login_as responder
     cases_page.load
 
     expect(cases_page).to have_service_feedback
@@ -40,7 +39,7 @@ feature "Submitting feedback" do
     expect(cases_page.service_feedback).to have_success_notice
     expect(cases_page.service_feedback.feedback_textarea.text).to eq ""
     expect(Feedback.first.comment).to eq "Very good service"
-    expect(Feedback.first.email).to eq user.email
+    expect(Feedback.first.email).to eq responder.email
 
   end
 end

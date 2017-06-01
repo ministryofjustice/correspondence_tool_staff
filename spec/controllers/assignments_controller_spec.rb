@@ -169,7 +169,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
         it 'redirects to application root' do
           patch :accept_or_reject, params: accept_assignment_params
-          expect(response).to redirect_to authenticated_root_path
+          expect(response).to redirect_to manager_root_path
         end
       end
 
@@ -183,7 +183,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
         it 'redirects to application root' do
           patch :accept_or_reject, params: reject_assignment_params
-          expect(response).to redirect_to authenticated_root_path
+          expect(response).to redirect_to manager_root_path
         end
       end
     end
@@ -211,7 +211,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
       it 'redirects to the application root' do
         post :create, params: create_assignment_params
-        expect(response).to redirect_to authenticated_root_path
+        expect(response).to redirect_to manager_root_path
       end
     end
 

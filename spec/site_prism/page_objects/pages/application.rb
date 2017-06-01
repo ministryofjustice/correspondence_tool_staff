@@ -16,6 +16,7 @@ module PageObjects
         cases:                     'CasesPage',
         closed_cases:              'Cases::ClosedCasesPage',
         incoming_cases:            'Cases::IncomingCasesPage',
+        open_cases:                'Cases::OpenCasesPage',
         cases_new:                 'Cases::NewPage',
         cases_show:                'Cases::ShowPage',
         cases_close:               'Cases::ClosePage',

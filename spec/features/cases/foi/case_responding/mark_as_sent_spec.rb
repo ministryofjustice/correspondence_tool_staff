@@ -3,8 +3,12 @@ require 'rails_helper'
 feature 'Mark response as sent' do
   given(:responder)    { create(:responder) }
   given(:manager)      { create(:manager) }
-  given(:kase)         { create(:case_with_response, responder: responder) }
-  given(:another_kase) { create(:case_with_response, responder: responder) }
+  given(:kase)         { create(:case_with_response,
+                                responder: responder,
+                                received_date: 10.business_days.ago) }
+  given(:another_kase) { create(:case_with_response,
+                                responder: responder,
+                                received_date: 10.business_days.ago) }
   given(:responder_teammate) do
     create :responder,
            responding_teams: responder.responding_teams
@@ -38,14 +42,14 @@ made the request"
     cases_respond_page.mark_as_sent_button.click
 
     expect(current_path).to eq '/cases/open'
-    expect(cases_page.case_numbers).to include kase.number
-    expect(cases_page).
+    expect(open_cases_page.case_numbers).to include kase.number
+    expect(open_cases_page).
       to have_content('Response confirmed. The case is now with DACU.')
     expect(kase.reload.current_state).to eq 'responded'
 
     login_as manager
-    cases_page.load
-    expect(cases_page.case_numbers).to include kase.number
+    open_cases_page.load(timeliness: 'in-time')
+    expect(open_cases_page.case_numbers).to include kase.number
   end
 
   scenario 'the assigned KILO has uploaded a response but decides not to mark as sent' do
