@@ -4,7 +4,7 @@
 
 - if @case.under_review?
   .alert-orange
-    = t('alerts.escalation_warning_html', escalation_deadline: "#{l @case.escalation_deadline, format: :default_date}")
+    = t('alerts.escalation_warning_html', escalation_deadline: "#{l @case.escalation_deadline, format: :default}")
 
 - content_for :heading
   span.visually-hidden

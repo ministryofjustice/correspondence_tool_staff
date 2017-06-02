@@ -101,9 +101,9 @@ class Case < ApplicationRecord
     }
 
   jsonb_accessor :properties,
-    escalation_deadline: :datetime,
-    internal_deadline: :datetime,
-    external_deadline: :datetime
+    escalation_deadline: :date,
+    internal_deadline: :date,
+    external_deadline: :date
 
   belongs_to :category, required: true
 
