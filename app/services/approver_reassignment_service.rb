@@ -3,7 +3,7 @@ class ApproverReassignmentService
   def initialize(user:, kase:)
     @kase  = kase
     @user = user
-    @policy = CasePolicy.new(user, kase)
+    @policy = Pundit.policy!(user, kase)
   end
 
   def call
