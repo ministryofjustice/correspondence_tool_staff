@@ -115,6 +115,16 @@ class CaseStateMachine
     transition from: :pending_dacu_clearance, to: :awaiting_dispatch
   end
 
+  event :reassign_approver do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object).can_reassign_approver?
+    end
+
+    transition from: :awaiting_responder,     to: :awaiting_responder
+    transition from: :drafting,               to: :drafting
+    transition from: :pending_dacu_clearance, to: :pending_dacu_clearance
+  end
+
   event :remove_response do
     guard do |object, _last_transition, options|
       CaseStateMachine.get_policy(options[:user_id], object)
@@ -167,6 +177,14 @@ class CaseStateMachine
              approving_team_id: approving_team.id,
              user_id:           user.id,
              event:             :accept_approver_assignment
+  end
+
+  def reassign_approver!(user, original_user, approving_team)
+    trigger! :reassign_approver,
+             approving_team_id: approving_team.id,
+             original_user_id:  original_user.id,
+             user_id:           user.id,
+             event:             :reassign_approver
   end
 
   def accept_responder_assignment!(user, responding_team)

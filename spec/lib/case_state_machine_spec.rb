@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 
+
 # helper class to make example groups a bit more readable below
 def event(event_name)
   CaseStateMachine.events[event_name]
@@ -21,6 +22,9 @@ RSpec.describe CaseStateMachine, type: :model do
   let(:responder)          { responding_team.responders.first }
   let(:approving_team)     { create :approving_team }
   let(:approver)           { approving_team.approvers.first }
+  let(:other_approver)     {
+    create :approver, approving_teams: [ approving_team ]
+  }
   let(:new_case)           { create :case }
   let(:assigned_case)      { create :assigned_case,
                                  responding_team: responding_team }
@@ -93,6 +97,16 @@ RSpec.describe CaseStateMachine, type: :model do
     it { should require_permission(:can_accept_or_reject_approver_assignment?)
                   .using_options(user_id: approver.id)
                   .using_object(kase) }
+  end
+
+  describe event(:reassign_approver) do
+    it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
+    it { should transition_from(:drafting).to(:drafting) }
+    it { should transition_from(:pending_dacu_clearance).to(:pending_dacu_clearance) }
+    it { should require_permission(:can_reassign_approver?)
+                  .using_options(user_id: other_approver.id)
+                  .using_object(pending_dacu_clearance_case) }
+
   end
 
   describe event(:accept_responder_assignment) do
@@ -210,6 +224,32 @@ RSpec.describe CaseStateMachine, type: :model do
                .on_state_machine(assigned_case.state_machine)
                .with_parameters(user_id: responder.id,
                                 responding_team_id: responding_team.id)
+    end
+  end
+
+  describe 'trigger a reassign_approver' do
+    let(:kase) { pending_dacu_clearance_case }
+
+    it 'triggers a reassign_approver'do
+      kase = pending_dacu_clearance_case
+      expect {
+        kase.state_machine.reassign_approver!(approver, kase.approver, kase.approving_team)
+      }.to trigger_the_event(:reassign_approver)
+                .on_state_machine(kase.state_machine)
+                .with_parameters(user_id: approver.id,
+                                 original_user_id: kase.approver.id,
+                                 approving_team_id: kase.approving_team.id)
+    end
+
+    it 'adds a transition history record' do
+      old_approver_id = kase.approver.id
+      kase.state_machine.reassign_approver!(approver, kase.approver, kase.approving_team)
+      transition = kase.reload.transitions.last
+      expect(transition.event).to eq 'reassign_approver'
+      expect(transition.to_state).to eq 'pending_dacu_clearance'
+      expect(transition.user_id).to eq approver.id
+      expect(transition.original_user_id).to eq old_approver_id
+      expect(transition.approving_team_id).to eq kase.approving_team.id
     end
   end
 

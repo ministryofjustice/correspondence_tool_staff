@@ -4,6 +4,7 @@ module CasesHelper
     Settings.case_uploads_accepted_types.join ','
   end
 
+  #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
   def action_button_for(event)
     case event
     when :assign_responder
@@ -21,10 +22,13 @@ module CasesHelper
               respond_case_path(@case),
               id: 'action--mark-response-as-sent',
               class: 'button'
+    when :reassign_approver
+      link_to 'Re-assign to me',
+              reassign_approver_case_path(@case),
+              it: 'action--reassign-approver',
+              class: 'button',
+              method: 'patch'
     when :approve
-
-
-
       link_to t('common.case.clear_response'),
               approve_response_case_path(@case),
               id: 'action--approve',
@@ -36,6 +40,7 @@ module CasesHelper
               class: 'button', method: :get
     end
   end
+  #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 
   def show_hide_message(kase)
 

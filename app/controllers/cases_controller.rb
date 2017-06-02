@@ -9,6 +9,7 @@ class CasesController < ApplicationController
       :flag_for_clearance,
       :new_response_upload,
       :process_closure,
+      :reassign_approver,
       :respond,
       :show,
       :unflag_for_clearance,
@@ -118,6 +119,18 @@ class CasesController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def reassign_approver
+    ars = ApproverReassignmentService.new(user: current_user, kase: @case)
+    if ars.call == :ok
+      flash[:notice] = 'Case re-assigned to you'
+      redirect_to case_path(@case)
+    else
+      flash[:error] = 'You do not have rights to re-assign this case to you'
+      redirect_to case_path(@case)
+    end
+
   end
 
   def close

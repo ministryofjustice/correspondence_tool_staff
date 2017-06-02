@@ -82,6 +82,7 @@ Rails.application.routes.draw do
     patch 'flag_for_clearance' => 'cases#flag_for_clearance', on: :member
     get 'approve_response' => 'cases#approve_response', on: :member
     patch 'execute_response_approval' => 'cases#execute_response_approval', on: :member
+    patch 'reassign_approver' => 'cases#reassign_approver', on: :member
 
     resources :assignments do
       patch 'accept_or_reject', on: :member

@@ -12,6 +12,7 @@ describe CasePolicy do
   let(:another_responder) { create :responder}
   let(:approving_team)    { create :team_dacu_disclosure }
   let(:approver)          { approving_team.approvers.first }
+  let(:other_approver_in_same_team) { approving_team.approvers.last }
   let(:co_approver)       { create :approver, approving_teams: [approving_team] }
 
   let(:new_case)                { create :case }
@@ -156,6 +157,37 @@ describe CasePolicy do
     it { should_not permit(responder, assigned_flagged_case) }
     it { should     permit(manager,   assigned_flagged_case) }
     it { should     permit(approver,  assigned_flagged_case) }
+  end
+
+  permissions :can_reassign_approver? do
+    context 'unflagged case' do
+      it { should_not permit(approver, accepted_case) }
+    end
+
+    context 'flagged by not yet taken by approver' do
+      it 'does not permit' do
+        expect(flagged_accepted_case.requires_clearance?).to be true
+        expect(flagged_accepted_case.approver).to be_nil
+        should_not permit(approver, flagged_accepted_case)
+      end
+    end
+
+    context 'flagged case taken on by the current approver' do
+      it 'does not permit' do
+        expect(pending_dacu_clearance_case.requires_clearance?).to be true
+        expect(pending_dacu_clearance_case.approver).to be_instance_of(User)
+        should_not permit(pending_dacu_clearance_case.approver, pending_dacu_clearance_case)
+      end
+    end
+
+    context 'flagged case taken on by a different approver' do
+      it 'permits' do
+        expect(pending_dacu_clearance_case.requires_clearance?).to be true
+        expect(pending_dacu_clearance_case.approver).to be_instance_of(User)
+        expect(other_approver_in_same_team).not_to eq pending_dacu_clearance_case.approver
+        should permit(other_approver_in_same_team, pending_dacu_clearance_case)
+      end
+    end
   end
 
   permissions :can_approve_case? do

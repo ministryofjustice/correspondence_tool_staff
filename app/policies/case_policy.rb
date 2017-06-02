@@ -37,6 +37,12 @@ class CasePolicy
       user.responding_teams.include?(self.case.responding_team)
   end
 
+  def can_reassign_approver?
+    self.case.requires_clearance? &&
+      self.case.approver.present? &&
+      self.case.approver != @user
+  end
+
   def can_close_case?
     user.manager? && self.case.responded?
   end

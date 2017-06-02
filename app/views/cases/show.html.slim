@@ -23,6 +23,7 @@ div id="case-#{@case.id}"
     section.case-info
       .button-holder
         - @permitted_events.each do |event|
+          - next if event == :reassign_approver
           = action_button_for(event)
 
   section.case-info
@@ -59,3 +60,7 @@ div id="case-#{@case.id}"
               td = ct.action_date
               td = ct.user_name
               td = ct.event_and_detail
+
+
+  - if :reassign_approver.in?(@permitted_events)
+    = action_button_for(:reassign_approver)
