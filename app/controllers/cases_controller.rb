@@ -95,11 +95,12 @@ class CasesController < ApplicationController
 
   def new_response_upload
     authorize @case, :can_add_attachment_to_flagged_and_unflagged_cases?
+    flash[:action_params] = request.query_parameters['action']
   end
 
   def upload_responses
     authorize @case, :can_add_attachment_to_flagged_and_unflagged_cases?
-    rus = ResponseUploaderService.new(@case, current_user, params)
+    rus = ResponseUploaderService.new(@case, current_user, params, flash[:action_params])
     rus.upload!
     case rus.result
     when :blank
@@ -107,6 +108,7 @@ class CasesController < ApplicationController
       render :new_response_upload
     when :error
       flash.now[:alert] = t('alerts.response_upload_error')
+      flash.keep(:action_params)
       render :new_response_upload
     when :ok
       flash[:notice] = t('notices.response_uploaded')

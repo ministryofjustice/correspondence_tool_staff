@@ -179,6 +179,7 @@ en:
       postal_address: "Requesters postal address"
       received_date: Date received
       reason_for_refusal: Reason for refusal
+      reassign_to_me: Re-assign to me
       remove_link_html: |
         Remove <span class="visuallyhidden">file %{filename}</span>
       responding_team: Business unit
@@ -197,12 +198,14 @@ en:
       who_its_with: With
       respond: Mark response as sent
       clear_response: Clear response
+      upload_approve: 'Upload response and approve'
     new_case_button: Create case
     phase_banner: |
       This is a new service.
     service_name: Track a query
     signout: Sign out
     summary_error: 'prevented this form from being submitted:'
+
 
   assignments:
     new:

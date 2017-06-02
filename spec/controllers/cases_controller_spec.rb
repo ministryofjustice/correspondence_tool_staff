@@ -967,7 +967,8 @@ RSpec.describe CasesController, type: :controller do
       let(:response_uploader) { double ResponseUploaderService, upload!: nil, result: :ok }
 
       it 'calls ResponseUploaderService' do
-        expect(ResponseUploaderService).to receive(:new).with(kase, responder, expected_params).and_return(response_uploader)
+        allow_any_instance_of(CasesController).to receive(:flash).and_return( { action_params: 'upload' } )
+        expect(ResponseUploaderService).to receive(:new).with(kase.decorate, responder, expected_params, 'upload').and_return(response_uploader)
         do_upload_responses
       end
 

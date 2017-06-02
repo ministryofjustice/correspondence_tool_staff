@@ -14,7 +14,7 @@ module CasesHelper
               class: 'button'
     when :add_responses, :add_response_to_flagged_case
       link_to t('common.case.upload_response'),
-              new_response_upload_case_path(@case),
+              new_response_upload_case_path(@case, 'action' => determine_action),
               id: 'action--upload-response',
               class: 'button'
     when :respond
@@ -23,7 +23,7 @@ module CasesHelper
               id: 'action--mark-response-as-sent',
               class: 'button'
     when :reassign_approver
-      link_to 'Re-assign to me',
+      link_to t('common.case.reassign_to_me'),
               reassign_approver_case_path(@case),
               it: 'action--reassign-approver',
               class: 'button',
@@ -33,6 +33,11 @@ module CasesHelper
               approve_response_case_path(@case),
               id: 'action--approve',
               class: 'button'
+    when :upload_response_and_approve
+      link_to t('common.case.upload_approve'),
+              new_response_upload_case_path(@case, 'action' => 'upload-approve'),      # upload and clear
+              id: 'action--upload-approve',
+              class: 'button'
     when :close
       link_to I18n.t('common.case.close'),
               close_case_path(@case),
@@ -41,6 +46,10 @@ module CasesHelper
     end
   end
   #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
+
+  def determine_action
+    @case.requires_clearance? ? 'upload-flagged' : 'upload'
+  end
 
   def show_hide_message(kase)
 
