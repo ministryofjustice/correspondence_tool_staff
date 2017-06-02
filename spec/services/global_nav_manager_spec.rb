@@ -112,11 +112,28 @@ describe GlobalNavManager do
     let!(:gnm) { GlobalNavManager.new(responder, request) }
 
     it 'returns the current tab' do
-      tab = double GlobalNavManager::Tab, url: '/cases/open?timeliness=in_time'
+      tab = double GlobalNavManager::Tab, matches_url?: true
       page = double GlobalNavManager::Page, tabs: [tab]
       allow(gnm).to receive(:current_page).and_return(page)
 
       expect(gnm.current_tab).to eq tab
+    end
+
+    it 'calls matches_url? on the tab' do
+      tab = double GlobalNavManager::Tab, matches_url?: true
+      page = double GlobalNavManager::Page, tabs: [tab]
+      allow(gnm).to receive(:current_page).and_return(page)
+
+      gnm.current_tab
+      expect(tab).to have_received(:matches_url?).with(request.fullpath)
+    end
+
+    it 'returns nil if no tab matches' do
+      tab = double GlobalNavManager::Tab, matches_url?: false
+      page = double GlobalNavManager::Page, tabs: [tab]
+      allow(gnm).to receive(:current_page).and_return(page)
+
+      expect(gnm.current_tab).to be_nil
     end
   end
 

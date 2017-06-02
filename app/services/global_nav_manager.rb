@@ -26,7 +26,7 @@ class GlobalNavManager
 
   def current_tab
     @current_tab ||= current_page&.tabs&.detect do |tab|
-      url_for(tab.url) == request.fullpath
+      tab.matches_url?(request.fullpath)
     end
   end
 
