@@ -11,65 +11,65 @@ def disallow_case_policy(policy_name)
 end
 
 describe 'cases/index.html.slim', type: :view do
-  let(:responder)     { create :responder }
-  let(:assigned_case) { create(:assigned_case,
-                               responding_team: responder.teams.first)
-                          .decorate }
-  let(:accepted_case) { create(:accepted_case, responder: responder).decorate }
-  let(:request) { instance_double ActionDispatch::Request,
-                                  path: '/cases/open',
-                                  fullpath: '/cases/open' }
+  let(:responder)       { create :responder }
+  let(:responding_team) { responder.responding_teams.first }
+  let(:assigned_case)   { create(:assigned_case, :flagged_accepted,
+                                 responding_team: responding_team)
+                            .decorate }
+  let(:accepted_case)   { create(:accepted_case, :flagged_accepted,
+                                 responder: responder)
+                            .decorate }
+  let(:request)         { instance_double ActionDispatch::Request,
+                                          path: '/cases/open',
+                                          fullpath: '/cases/open' }
 
+  let(:awaiting_responder_case) { create(:awaiting_responder_case,
+                                         responding_team: responding_team)
+                                    .decorate }
 
   before do
     assign(:global_nav_manager, GlobalNavManager.new(responder, request))
   end
 
-  it 'displays the cases given it' do
+  def login_as(user)
+    allow(view).to receive(:current_user).and_return(user)
+  end
 
-    case1 = double CaseDecorator,
-                   id: 123,
-                   name: 'Joe Smith',
-                   subject: 'Prison Reform',
-                   number: '16-12345',
-                   internal_deadline: (DateTime.now + 5.days).strftime('%e %b %Y'),
-                   external_deadline: (DateTime.now + 10.days).strftime('%e %b %Y'),
-                   current_state: 'drafting',
-                   who_its_with: 'HR'
-    case2 = double CaseDecorator,
-                   id: 567,
-                   name: 'Jane Doe',
-                   subject: 'Court Reform',
-                   number: '17-00022',
-                   internal_deadline: (DateTime.now + 5.days).strftime('%e %b %Y'),
-                   external_deadline: (DateTime.now + 11.days).strftime('%e %b %Y'),
-                   current_state: 'awaiting_responder',
-                   who_its_with: 'LAA'
-    assign(:cases, [case1, case2])
+  it 'displays the cases given it' do
+    login_as responder
+    assigned_case
+    accepted_case
+    assign(:cases, PaginatingDecorator.new(Case.all.page))
 
     disallow_case_policy :can_add_case?
 
     render
     cases_page.load(rendered)
 
-    expect(cases_page.case_list[0].number.text).to eq 'Link to case 16-12345'
-    expect(cases_page.case_list[0].request_detail.text).to eq 'Prison ReformJoe Smith'
-    expect(cases_page.case_list[0].draft_deadline.text).to eq((Date.today + 5.days).strftime('%e %b %Y'))
-    expect(cases_page.case_list[0].external_deadline.text).to eq((Date.today + 10.days).strftime('%e %b %Y'))
-    expect(cases_page.case_list[0].status.text).to eq 'Draft in progress'
-    expect(cases_page.case_list[0].who_its_with.text).to eq 'HR'
+    first_case = cases_page.case_list[0]
+    expect(first_case.number.text).to eq "Link to case #{assigned_case.number}"
+    expect(first_case.request_detail.text)
+      .to eq assigned_case.subject + assigned_case.name
+    expect(first_case.draft_deadline.text).to eq assigned_case.internal_deadline
+    expect(first_case.external_deadline.text)
+      .to eq assigned_case.external_deadline
+    expect(first_case.status.text).to eq assigned_case.status
+    expect(first_case.who_its_with.text).to eq assigned_case.who_its_with
 
-    expect(cases_page.case_list[1].number.text).to eq 'Link to case 17-00022'
-    expect(cases_page.case_list[1].request_detail.text).to eq 'Court ReformJane Doe'
-    expect(cases_page.case_list[1].draft_deadline.text).to eq((Date.today + 5.days).strftime('%e %b %Y'))
-    expect(cases_page.case_list[1].external_deadline.text).to eq((Date.today + 11.days).strftime('%e %b %Y'))
-    expect(cases_page.case_list[1].status.text).to eq 'To be accepted'
-    expect(cases_page.case_list[1].who_its_with.text).to eq 'LAA'
+    second_case = cases_page.case_list[1]
+    expect(second_case.number.text).to eq "Link to case #{accepted_case.number}"
+    expect(second_case.request_detail.text)
+      .to eq accepted_case.subject + accepted_case.name
+    expect(second_case.draft_deadline.text).to eq accepted_case.internal_deadline
+    expect(second_case.external_deadline.text)
+      .to eq accepted_case.external_deadline
+    expect(second_case.status.text).to eq accepted_case.status
+    expect(second_case.who_its_with.text).to eq accepted_case.who_its_with
   end
 
   describe 'add case button' do
     it 'is displayed when the user can add cases' do
-      assign(:cases, [])
+      assign(:cases, PaginatingDecorator.new(Case.all.page))
 
       allow_case_policy :can_add_case?
 
@@ -80,7 +80,7 @@ describe 'cases/index.html.slim', type: :view do
     end
 
     it 'is not displayed when the user cannot add cases' do
-      assign(:cases, [])
+      assign(:cases, PaginatingDecorator.new(Case.all.page))
 
       disallow_case_policy :can_add_case?
 
@@ -97,7 +97,7 @@ describe 'cases/index.html.slim', type: :view do
     end
 
     it 'has a link to in-time open cases' do
-      assign(:cases, [])
+      assign(:cases, PaginatingDecorator.new(Case.all.page))
       render
       cases_page.load(rendered)
 
@@ -107,7 +107,8 @@ describe 'cases/index.html.slim', type: :view do
     end
 
     it 'has a count of how many in-time open cases there are' do
-      assign(:cases, [assigned_case])
+      assigned_case
+      assign(:cases, PaginatingDecorator.new(Case.all.page))
       render
       cases_page.load(rendered)
 

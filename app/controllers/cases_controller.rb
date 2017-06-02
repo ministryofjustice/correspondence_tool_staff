@@ -25,25 +25,25 @@ class CasesController < ApplicationController
                .for_action(:index)
                .filter_for_params(params)
                .cases
-               .page params[:page]
+               .page(params[:page])
+               .decorate
   end
 
   def closed_cases
-    @cases = @global_nav_manager.current_cases_finder.cases.page params[:page]
+    @cases = @global_nav_manager.current_cases_finder.cases.page(params[:page]).decorate
   end
 
   def incoming_cases
-    @cases = @global_nav_manager.current_cases_finder.cases.page params[:page]
+    @cases = @global_nav_manager.current_cases_finder.cases.page(params[:page]).decorate
   end
 
   def my_open_cases
-    @cases = @global_nav_manager.current_cases_finder.cases.page params[:page]
+    @cases = @global_nav_manager.current_cases_finder.cases.page(params[:page]).decorate
     render :index
   end
 
   def open_cases
-    # Case.all.opened.page params[:page]
-    @cases = @global_nav_manager.current_cases_finder.cases.page params[:page]
+    @cases = @global_nav_manager.current_cases_finder.cases.page(params[:page]).decorate
     render :index
   end
 

@@ -7,8 +7,7 @@ class CaseFinderService
   end
 
   def cases
-    scoped_cases = @user ? Pundit.policy_scope(user, @cases) : @cases
-    decorate(scoped_cases)
+    @user ? Pundit.policy_scope(user, @cases) : @cases
   end
 
   def for_user(user)
@@ -83,9 +82,5 @@ class CaseFinderService
 
   def chain(cases, user = @user)
     self.class.new(user, cases)
-  end
-
-  def decorate(cases)
-    CaseDecorator.decorate_collection(cases)
   end
 end

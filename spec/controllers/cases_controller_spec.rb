@@ -16,6 +16,15 @@ def stub_find_case(id)
 end
 
 
+def stub_current_case_finder_cases_with(result)
+  pager = double 'Kaminari Pager', decorate: result
+  cases = double 'ActiveRecord Cases', page: pager
+  csf = instance_double CaseFinderService, cases: cases
+  gnm = instance_double GlobalNavManager, current_cases_finder: csf
+  allow(GlobalNavManager).to receive(:new).and_return gnm
+  gnm
+end
+
 RSpec.describe CasesController, type: :controller do
 
   let(:all_cases)          { create_list(:case, 5)   }
@@ -156,11 +165,15 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'assigns cases returned by CaseFinderService' do
-        csf = instance_double CaseFinderService, cases: [:cases]
-        gnm = instance_double GlobalNavManager, current_cases_finder: csf
-        allow(GlobalNavManager).to receive(:new).and_return gnm
+        stub_current_case_finder_cases_with(:closed_cases_result)
         get :closed_cases
-        expect(assigns(:cases)).to eq [:cases]
+        expect(assigns(:cases)).to eq :closed_cases_result
+      end
+
+      it 'passes page param to the paginator' do
+        gnm = stub_current_case_finder_cases_with(:closed_cases_result)
+        get :closed_cases, params: { page: 'our_page' }
+        expect(gnm.current_cases_finder.cases).to have_received(:page).with('our_page')
       end
     end
 
@@ -242,9 +255,12 @@ RSpec.describe CasesController, type: :controller do
     let(:finder) { instance_double(CaseFinderService) }
 
     before do
-      allow(finder).to receive_message_chain(:for_user,
+      pager = double 'Kaminari Pager', decorate: :index_cases_result
+      cases = double 'ActiveRecord Cases', page: pager
+      allow(finder).to receive_message_chain :for_user,
                                              :for_action,
-                                             filter_for_params: 'result set')
+                                             :filter_for_params,
+                                             cases: cases
       allow(CaseFinderService).to receive(:new).and_return(finder)
     end
 
@@ -265,7 +281,7 @@ RSpec.describe CasesController, type: :controller do
 
       it 'assigns cases returned by CaseFinderService' do
         get :index
-        expect(assigns(:cases)).to eq 'result set'
+        expect(assigns(:cases)).to eq :index_cases_result
         expect(finder).to have_received(:for_user).with(manager)
       end
 
@@ -275,11 +291,8 @@ RSpec.describe CasesController, type: :controller do
       before { sign_in responder }
 
       it 'assigns cases returned by CaseFinderService' do
-        allow(finder).to receive_message_chain(:for_user,
-                                               :for_action,
-                                               filter_for_params: 'result set')
         get :index
-        expect(assigns(:cases)).to eq 'result set'
+        expect(assigns(:cases)).to eq :index_cases_result
         expect(finder).to have_received(:for_user).with(responder)
       end
 
@@ -296,11 +309,8 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'assigns the result set from the CaseFinderService' do
-        allow(finder).to receive_message_chain(:for_user,
-                                               :for_action,
-                                               filter_for_params: 'result set')
         get :index
-        expect(assigns(:cases)).to eq 'result set'
+        expect(assigns(:cases)).to eq :index_cases_result
         expect(finder).to have_received(:for_user).with(approver)
       end
     end
@@ -321,20 +331,20 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'assigns the result set from the finder provided by GlobalNavManager' do
-        expect(GlobalNavManager)
-          .to receive(:new)
-                .and_return(
-                  instance_double(
-                    GlobalNavManager,
-                    current_cases_finder: instance_double(CaseFinderService,
-                                                          cases: 'result set')))
+        stub_current_case_finder_cases_with(:incoming_cases_result)
         get :incoming_cases
-        expect(assigns(:cases)).to eq 'result set'
+        expect(assigns(:cases)).to eq :incoming_cases_result
       end
 
       it 'renders the incoming_cases template' do
         get :incoming_cases
         expect(response).to render_template(:incoming_cases)
+      end
+
+      it 'passes page param to the paginator' do
+        gnm = stub_current_case_finder_cases_with(:incoming_cases_result)
+        get :incoming_cases, params: { page: 'our_page' }
+        expect(gnm.current_cases_finder.cases).to have_received(:page).with('our_page')
       end
     end
   end
@@ -354,15 +364,15 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'assigns the result set from the CaseFinderService' do
-        expect(GlobalNavManager)
-          .to receive(:new)
-                .and_return(
-                  instance_double(
-                    GlobalNavManager,
-                    current_cases_finder: instance_double(CaseFinderService,
-                                                          cases: 'result set')))
+        stub_current_case_finder_cases_with(:open_cases_result)
         get :open_cases
-        expect(assigns(:cases)).to eq 'result set'
+        expect(assigns(:cases)).to eq :open_cases_result
+      end
+
+      it 'passes page param to the paginator' do
+        gnm = stub_current_case_finder_cases_with(:open_cases_result)
+        get :open_cases, params: { page: 'our_page' }
+        expect(gnm.current_cases_finder.cases).to have_received(:page).with('our_page')
       end
 
       it 'renders the incoming_cases template' do
@@ -387,16 +397,15 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'assigns the result set from the finder provided by GlobalNavManager' do
-        expect(GlobalNavManager)
-          .to receive(:new)
-                .and_return(
-                  instance_double(
-                    GlobalNavManager,
-                    current_cases_finder: instance_double(CaseFinderService,
-                                                          cases: 'result set')))
-
+        stub_current_case_finder_cases_with(:my_open_cases_result)
         get :my_open_cases
-        expect(assigns(:cases)).to eq 'result set'
+        expect(assigns(:cases)).to eq :my_open_cases_result
+      end
+
+      it 'passes page param to the paginator' do
+        gnm = stub_current_case_finder_cases_with(:my_open_cases_result)
+        get :my_open_cases, params: { page: 'our_page' }
+        expect(gnm.current_cases_finder.cases).to have_received(:page).with('our_page')
       end
 
       it 'renders the incoming_cases template' do

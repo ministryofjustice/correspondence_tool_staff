@@ -101,7 +101,7 @@ class CasePolicy
       elsif user.approver?
         scope.with_team(*user.approving_teams)
       else
-        []
+        Case.none
       end
     end
   end
