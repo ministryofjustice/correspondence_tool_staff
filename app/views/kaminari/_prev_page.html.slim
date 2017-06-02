@@ -5,11 +5,13 @@
     total_pages  : total number of pages
     per_page     : number of items to fetch per page
     remote       : data-remote
-.prev
+li.pagination-prev
   - unless current_page.first?
     == link_to url, rel: 'prev'
       .pagination-next-prev
         = t('pagination.previous').html_safe
-      .pagination_pages
+        .visually-hidden
+          = " page"
+      .pagination-pages
         = "#{current_page.number - 1} of #{total_pages}"
 

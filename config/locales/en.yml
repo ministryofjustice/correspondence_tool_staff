@@ -311,5 +311,5 @@ en:
       <span class="visuallyhidden">View tab </span>Late (%{count})
 
   pagination:
-    next: Next
-    previous: Previous
+    next: "Next "
+    previous: "Previous "
