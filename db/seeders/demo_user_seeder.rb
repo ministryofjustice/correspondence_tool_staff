@@ -4,26 +4,29 @@ class DemoUserSeeder
     @teams =  [
       ['DACU', 'dacu'],
       ['DACU Disclosure', 'dacudis'],
+      ['Press Office', 'pressoffice'],
       ['Legal Aid Agency', 'laa'],
       ['HR', 'hr'],
       ['HMCTS North East Response Unit(RSU)', 'hmctsne']
     ]
 
     @users = {
-      'Larry Adler'        => { team: 'laa',     role: 'responder' },
-      'Louis Armstrong'    => { team: 'laa',     role: 'responder' },
-      'Lilly Allen'        => { team: 'laa',     role: 'responder' },
-      'Helen Mirren'       => { team: 'hmctsne', role: 'responder' },
-      'Harvey Milk'        => { team: 'hmctsne', role: 'responder' },
-      'Hayley Mills'       => { team: 'hmctsne', role: 'responder' },
-      'Harry Redknapp'     => { team: 'hr',      role: 'responder' },
-      'Helen Reddy'        => { team: 'hr',      role: 'responder' },
-      'Harold Robbins'     => { team: 'hr',      role: 'responder' },
-      'David Attenborough' => { team: 'dacu',    role: 'manager' },
-      'Desi Arnaz'         => { team: 'dacu',    role: 'manager' },
-      'Dave Allen'         => { team: 'dacu',    role: 'manager' },
-      'Dack Dispirito'     => { team: 'dacudis', role: 'approver' },
-      'Dasha Diss'         => { team: 'dacudis', role: 'approver' }
+      'Larry Adler'        => { team: 'laa',         role: 'responder' },
+      'Louis Armstrong'    => { team: 'laa',         role: 'responder' },
+      'Lilly Allen'        => { team: 'laa',         role: 'responder' },
+      'Helen Mirren'       => { team: 'hmctsne',     role: 'responder' },
+      'Harvey Milk'        => { team: 'hmctsne',     role: 'responder' },
+      'Hayley Mills'       => { team: 'hmctsne',     role: 'responder' },
+      'Harry Redknapp'     => { team: 'hr',          role: 'responder' },
+      'Helen Reddy'        => { team: 'hr',          role: 'responder' },
+      'Harold Robbins'     => { team: 'hr',          role: 'responder' },
+      'David Attenborough' => { team: 'dacu',        role: 'manager' },
+      'Desi Arnaz'         => { team: 'dacu',        role: 'manager' },
+      'Dave Allen'         => { team: 'dacu',        role: 'manager' },
+      'Dack Dispirito'     => { team: 'dacudis',     role: 'approver' },
+      'Dasha Diss'         => { team: 'dacudis',     role: 'approver' },
+      'Preston Offman'     => { team: 'pressoffice', role: 'approver' },
+      'Prescilla Offenberg'=> { team: 'pressoffice', role: 'approver' },
     }
   end
 
