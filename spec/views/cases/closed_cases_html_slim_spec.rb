@@ -7,7 +7,7 @@ describe 'cases/closed_cases.html.slim' do
   it 'displays all the cases' do
     case_1
     case_2
-    cases = Case.most_recent_first.page.decorate
+    cases = Case.closed.most_recent_first.page.decorate
     assign(:cases, cases)
 
     render

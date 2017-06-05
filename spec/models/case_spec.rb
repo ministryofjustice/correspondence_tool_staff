@@ -224,6 +224,19 @@ RSpec.describe Case, type: :model do
     end
   end
 
+  describe 'most_recent_first scope' do
+    let!(:case_oldest) { create :case, received_date: 11.business_days.ago }
+    let!(:case_recent) { create :case, received_date: 10.business_days.ago }
+
+    it 'orders cases by their external deadline' do
+      expect(Case.most_recent_first).to eq [case_recent, case_oldest]
+    end
+
+    it 're-orders any previous ordering' do
+      expect(Case.by_deadline.most_recent_first).to eq [case_recent, case_oldest]
+    end
+  end
+
   context 'with open, responded and closed cases in time and late' do
     before do
       Timecop.freeze Date.new(2017, 2, 2) do

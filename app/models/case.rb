@@ -32,7 +32,7 @@ class Case < ApplicationRecord
                       validate_if: :received_in_acceptable_range?
 
   scope :by_deadline, -> {order("(properties ->> 'external_deadline')::timestamp with time zone ASC, cases.id") }
-  scope :most_recent_first, -> {order("(properties ->> 'external_deadline')::timestamp with time zone DESC, cases.id") }
+  scope :most_recent_first, -> {reorder("(properties ->> 'external_deadline')::timestamp with time zone DESC, cases.id") }
 
   scope :opened, -> { where.not(current_state: 'closed')}
   scope :closed, -> { where(current_state: 'closed').order(last_transitioned_at: :desc) }
