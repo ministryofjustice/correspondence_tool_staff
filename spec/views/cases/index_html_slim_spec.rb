@@ -39,7 +39,7 @@ describe 'cases/index.html.slim', type: :view do
     login_as responder
     assigned_case
     accepted_case
-    assign(:cases, PaginatingDecorator.new(Case.all.page))
+    assign(:cases, PaginatingDecorator.new(Case.all.page.order(:number)))
 
     disallow_case_policy :can_add_case?
 
@@ -113,6 +113,119 @@ describe 'cases/index.html.slim', type: :view do
       cases_page.load(rendered)
 
       expect(cases_page.tabs[0].tab_link).to have_text 'In time (1)'
+    end
+  end
+
+  describe 'pagination' do
+    before do
+      allow(view).to receive(:policy).and_return(spy('Pundit::Policy'))
+    end
+
+    it 'renders the paginator' do
+      assign(:cases, Case.none.page.decorate)
+      render
+      expect(response).to have_rendered('kaminari/_paginator')
+    end
+
+    # The following tests should ideally be in a separate spec in
+    # kaminari/_paginator_html_slim_spec.rb, however when we do that, the test
+    # framework tries to create links for a controller called 'kaminari'. Until
+    # we have a way to override that, we test here and test that other views
+    # include pagination.
+    context 'one pages worth of cases' do
+      before :all do
+        create_list(:case, 20)
+        @cases = Case.all.page.decorate
+      end
+      after(:all) { Case.delete_all }
+
+      before do
+        assign(:cases, @cases)
+        @partial = pagination_section(view.paginate @cases)
+      end
+
+      it 'has no pagination section' do
+        expect(@partial.html).to be_blank
+      end
+    end
+
+    context 'on page one of two of cases' do
+      before :all do
+        create_list(:case, 21)
+        @cases = Case.all.page(1).decorate
+      end
+      after(:all) { Case.delete_all }
+
+      before do
+        assign(:cases, @cases)
+        @partial = pagination_section(view.paginate @cases)
+      end
+
+      it 'has no link to the prev page' do
+        expect(@partial).not_to have_prev_page_link
+      end
+
+      it 'has a link to the next page' do
+        expect(@partial).to have_next_page_link
+      end
+
+      it 'tells us what page is next' do
+        expect(@partial.next_page_link.text).to include '2 of 2'
+      end
+    end
+
+    context 'on page two of two of cases' do
+      before :all do
+        create_list(:case, 21)
+        @cases = Case.all.page(2).decorate
+      end
+      after(:all) { Case.delete_all }
+
+      before do
+        assign(:cases, @cases)
+        @partial = pagination_section(view.paginate @cases)
+      end
+
+      it 'has a link to the prev page' do
+        expect(@partial).to have_prev_page_link
+      end
+
+      it 'has no link to the next page' do
+        expect(@partial).not_to have_next_page_link
+      end
+
+      it 'tells us what page is previous' do
+        expect(@partial.prev_page_link.text).to include '1 of 2'
+      end
+    end
+
+    context 'on page two of three of cases' do
+      before :all do
+        create_list(:case, 41)
+        @cases = Case.all.page(2).decorate
+      end
+      after(:all) { Case.delete_all }
+
+      before do
+        assign(:cases, @cases)
+        @partial = pagination_section(view.paginate @cases)
+      end
+
+      it 'has a link to the prev page' do
+        expect(@partial).to have_prev_page_link
+      end
+
+      it 'tells us what page is previous' do
+        expect(@partial.prev_page_link.text).to include '1 of 3'
+      end
+
+      it 'has a link to the next page' do
+        expect(@partial).to have_next_page_link
+      end
+
+      it 'tells us what page is next' do
+        expect(@partial.next_page_link.text).to include '3 of 3'
+      end
     end
   end
 end

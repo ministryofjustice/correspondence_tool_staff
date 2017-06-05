@@ -39,6 +39,7 @@ module PageObjects
         case_request:                 'Cases::CaseRequestSection',
         case_details:                 'Cases::CaseDetailsSection',
         clearance_copy:               'Cases::ClearanceCopySection',
+        pagination:                   'PaginationSection',
       }.each do |section_name, section_class|
         full_section_class = "PageObjects::Sections::#{section_class}"
         define_method "#{section_name}_section" do |rendered|

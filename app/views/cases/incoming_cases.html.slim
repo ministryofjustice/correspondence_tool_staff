@@ -37,5 +37,6 @@
               - if current_user.teams.include? kase.approver_assignment&.team
                 = render partial: 'take_case_on_or_de_escalate',
                          locals: { case_details: kase }
+    = paginate @cases
 
 

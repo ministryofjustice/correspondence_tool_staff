@@ -16,7 +16,9 @@ describe 'cases/incoming_cases.html.slim', type: :view do
                        message: 'message number 2').decorate }
 
   it 'displays the cases given it' do
-    assign(:cases, [case1, case2])
+    case1
+    case2
+    assign(:cases, PaginatingDecorator.new(Case.all.page.order(:received_date)))
 
     policy = double('Pundit::Policy', can_add_case?: false)
     allow(view).to receive(:policy).with(:case).and_return(policy)
@@ -43,4 +45,15 @@ describe 'cases/incoming_cases.html.slim', type: :view do
     expect(second_case.actions.de_escalate_link.text).to eq 'De-escalate'
   end
 
+  describe 'pagination' do
+    before do
+      allow(view).to receive(:policy).and_return(spy('Pundit::Policy'))
+    end
+
+    it 'renders the paginator' do
+      assign(:cases, Case.none.page.decorate)
+      render
+      expect(response).to have_rendered('kaminari/_paginator')
+    end
+  end
 end
