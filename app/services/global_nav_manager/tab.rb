@@ -19,27 +19,35 @@ class GlobalNavManager
     end
 
     def matches_url?(match_url)
-      if url == match_url
-        return true
-      else
-        url_parsed = URI.parse(url)
-        match_url_parsed = URI.parse(match_url)
+      return true if url == match_url
+      tab_url_parsed = URI.parse(url)
+      match_url_parsed = URI.parse(match_url)
 
-        # We don't match hosts yet, will we ever need to?
-        if url_parsed.path != match_url_parsed.path
-          return false
-        elsif url_parsed.query.nil? && match_url_parsed.query.nil?
-          return true
-        elsif url_parsed.query && match_url_parsed.query.nil?
-          return false
-        else
-          our_params = CGI.parse(url_parsed.query)
-          match_params = CGI.parse(match_url_parsed.query)
-          pagination_params = ['page']
-          match_params.reject! { |k,_v| pagination_params.include? k }
-          our_params == match_params
-        end
+      # We don't match hosts yet, will we ever need to?
+      if tab_url_parsed.path != match_url_parsed.path
+        return false
+      else
+        tab_params = parse_query(tab_url_parsed.query)
+        match_url_params = remove_pagination_params(
+          parse_query(match_url_parsed.query)
+        )
+
+        tab_params == match_url_params
       end
+    end
+
+    private
+
+    PAGINATION_PARAMS = ['page']
+
+    def parse_query(query)
+      return if query.nil?
+      CGI.parse(query)
+    end
+
+    def remove_pagination_params(params)
+      return if params.nil?
+      params.reject! { |k,_v| PAGINATION_PARAMS.include? k }
     end
   end
 end
