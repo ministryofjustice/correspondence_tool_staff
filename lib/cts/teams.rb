@@ -1,6 +1,6 @@
 module CTS
   class Teams < Thor
-    include Thor::Rails
+    include Thor::Rails unless SKIP_RAILS
 
     desc 'list', 'List teams in the system.'
     option :all, aliases: :a

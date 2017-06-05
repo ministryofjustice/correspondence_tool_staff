@@ -1,6 +1,6 @@
 module CTS
   class Users < Thor
-    include Thor::Rails
+    include Thor::Rails unless SKIP_RAILS
 
     desc 'list', 'List users in the system.'
     option :all, aliases: :a

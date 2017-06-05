@@ -1,6 +1,6 @@
 module CTS
   class Cases < Thor
-    include Thor::Rails
+    include Thor::Rails unless SKIP_RAILS
 
     CASE_JOURNEYS = {
       unflagged: [

@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 
-unless defined? Rails
+if defined?(Rails) || ARGV.include?('-h') || ARGV.include?('--help')
+  SKIP_RAILS=true
+else
   root_dir = File.dirname($0)
   exec(File.join(root_dir, 'bin', 'rails'), 'runner', $0, *ARGV)
 end
@@ -28,7 +30,7 @@ module CTS
   end
 
   class Commands < Thor
-    include Thor::Rails
+    include Thor::Rails unless SKIP_RAILS
 
     desc 'cases', 'Case commands'
     subcommand 'cases', Cases
