@@ -35,8 +35,6 @@ class DemoUserSeeder
     seed_users
   end
 
-  private
-
   def seed_teams
     @teams.each do |team|
       name = team.first
@@ -75,6 +73,8 @@ class DemoUserSeeder
       puts "Role #{role} added for User #{user.full_name} in team #{team_name}"
     end
   end
+
+  private
 
   def email_from_name(name)
     email_name = name.downcase.tr(' ', '.').gsub(/\.{2,}/, '.')

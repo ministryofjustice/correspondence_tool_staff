@@ -20,5 +20,13 @@ module CTS
     end
 
     default_command :list
-  end
+
+    desc 'seed', 'Seed users for dev/demo.'
+    def seed
+      CTS::validate_teams_populated
+
+      require "#{CTS_ROOT_DIR}/db/seeders/demo_user_seeder"
+      seeder = DemoUserSeeder.new
+      seeder.seed_users
+    end  end
 end

@@ -47,47 +47,54 @@ module CTS
 
     desc 'create all|<states> [-n n] [-d] [-x]', 'Create <-n> cases in the specified states'
     long_desc <<~LONGDESC
+
     The create command takes the following sub commands:
-      \x5 - all:        Create a number of cases in all states
-      \x5 - <states>:   Create a number of cases in the specified state(s)
+     - all:        Create a number of cases in all states
+     - <states>:   Create a number of cases in the specified state(s)
 
-      Multiple states can be specified.
+     Multiple states can be specified.
 
-      Valid states are as follows:
-           \x5 unassigned
-           \x5 flagged_for_dacu_clearance
-           \x5 awaiting_responder
-           \x5 approver_assignment_accepted
-           \x5 drafting
-           \x5 pending_dacu_clearance
-           \x5 awaiting_dispatch
-           \x5 responded
-           \x5 closed
-
-      The following switches can be specified
-      \x5 -n<number>    Create <number> cases in each state (default 2)
-      \x5 -d            Create cases which require DACU disclosure
-      \x5 -x            Clear all existing cases before creating
-
-      e.g.
-      \x5./cts create unassigned drafting -n3 -d
-      \x5./cts create all -x
+     Valid states are as follows:
+        unassigned
+        flagged_for_dacu_clearance
+        awaiting_responder
+        approver_assignment_accepted
+        drafting
+        pending_dacu_clearance
+        awaiting_dispatch
+        responded
+        closed
     LONGDESC
-    option :n, type: :numeric
-    option :d, type: :boolean
-    option :x, type: :boolean
-    option :dry_run, type: :boolean
+
+    option :number, aliases: 'n', type: :numeric,
+           desc: 'Number of cases to create (per state). [2]'
+    option :dacu_disclosure, aliases: 'd', type: :boolean,
+           desc: 'Flag cases for clearance by DACU Disclosure.'
+    option :press_office, aliases: 'p', type: :boolean,
+           desc: 'Flag cases for clearance by Press Office.'
+    option :clear, aliases: :x, type: :boolean,
+           desc: 'Clear existing cases before creating.'
+    option :dry_run, type: :boolean,
+           desc: 'Print out what states cases will be created in.'
+    option :responder, aliases: :r, type: :string,
+           desc: 'ID or name of responder to use for case assignments.'
+    option :responding_team, aliases: :t, type: :string,
+           desc: 'ID or name of responding team to use for case assignments.'
+    # option :dacu_manager, type: :string
+    # option :dacu_approver, type: :string
+
     # rubocop:disable Metrics/CyclomaticComplexity
     def create(*args)
       @end_states = []
       @number_to_create = options[:n] || 2
       @add_dacu_disclosure = options[:d] || false
+      @add_press_office = options[:press_office] || false
       @clear_cases = options[:x] || false
       @dry_run = options.fetch(:dry_run, false)
-      @invalid_params = false
 
       CTS::check_environment
-      validate_teams_and_users_populated
+
+      @invalid_params = false
       parse_params(args)
 
       clear if @clear_cases
@@ -112,137 +119,77 @@ module CTS
     end
     # rubocop:enable Metrics/CyclomaticComplexity
 
+    desc 'show', 'Show case details.'
+    def show(*args)
+      args.each do |case_identifier|
+        kase = if case_identifier.match(/^\d+$/)
+                 Case.where(['id = ? or number = ?',
+                             case_identifier,
+                             case_identifier]).first
+               end
+        ap kase
+
+        puts "\nAssignments:"
+        tp kase.assignments, [:id, :state, :role, :team_id, :user_id]
+
+        puts "\nTransitions:"
+        tp kase.transitions, [:id, :event, :to_state, :user_id, :metadata]
+
+        puts "\nAttachments:"
+        tp kase.attachments, [:id, :type, :key, :preview_key]
+      end
+    end
+
     private
 
-    def validate_teams_and_users_populated
-      validate_teams_populated
-      validate_users_populated
+    def responder
+      @responder ||= if !options.has_key?(:responder)
+                       if responding_team.responders.empty?
+                         raise "Responding team '#{responding_team.name}' has no responders."
+                       else
+                         responding_team.responders.first
+                       end
+                     else
+                       CTS::find_user(options[:responder])
+                     end
     end
 
-    def validate_teams_populated
-      @dacu_team, @disclosure_team, @hmcts_team, @hr_team, @laa_team = ['DACU', 'DACU Disclosure', 'Legal Aid Agency', 'HR', 'HMCTS North East Response Unit(RSU)'].map do |team_name|
-        teams = Team.where(name: team_name)
-        if teams.count > 1
-          error "ERROR: multiple entries found for team: #{team_name}"
-          exit 2
-        elsif teams.count == 0
-          error "ERROR: team missing: #{team_name}"
-          error "Run 'rake db:seed:dev:users' to populate teams and users"
-          exit 2
-        else
-          teams.first
-        end
-      end
-    end
-
-    def validate_users_populated
-      begin
-        @dacu_manager = @dacu_team.managers.first ||
-                        raise("DACU BMT missing users")
-        @disclosure_approver = @disclosure_team.approvers.first ||
-                               raise("DACU Disclosure missing users")
-        @hmcts_responder = @hmcts_team.responders.first ||
-                           raise("HMCTS missing users")
-      rescue => ex
-        error "Error validating users:"
-        error ex.message
-        error "Run 'rake db:seed:dev:users' to populate teams and users"
-        exit 3
-      end
-    end
-
-    def transition_to_unassigned(_cases)
-      cases = []
-      @number_to_create.times do
-        kase = FactoryGirl.create(:case,
-                                  name: Faker::Name.name,
-                                  subject: Faker::Company.catch_phrase,
-                                  message: Faker::Lorem.paragraph(10, true, 10),
-                                  managing_team: @dacu_team)
-        cases << kase
-      end
-      cases
-    end
-
-    def transition_to_flagged_for_dacu_clearance(cases)
-      cases.each do |kase|
-        result = CaseFlagForClearanceService.new(user:@dacu_manager, kase:kase).call
-        unless result == :ok
-          raise "Could not flag case for clearance, case id: #{kase.id}, user id: #{@dacu_manager.id}, result: #{service.result}"
-        end
-      end
-    end
-
-    def transition_to_awaiting_responder(cases)
-      cases.each do |kase|
-        kase.responding_team = @hmcts_team
-        kase.assign_responder(@dacu_manager, @hmcts_team)
-      end
-    end
-
-    def transition_to_drafting(cases)
-      cases.each do |kase|
-        kase.responder_assignment.update_attribute(:user, @hmcts_responder)
-        kase.responder_assignment_accepted(@hmcts_responder, @hmcts_team)
-      end
-    end
-
-    def transition_to_approver_assignment_accepted(cases)
-      cases.each do |kase|
-        service = CaseAcceptApproverAssignmentService.new(
-          assignment: kase.approver_assignment,
-          user: @disclosure_approver,
+    def responding_team
+      if !options.has_key?(:responding_team) && options.has_key?(:responder)
+        @responding_team ||= responder.responding_teams.first
+      else
+        @responding_team ||= CTS::find_team(
+          options.fetch(:responding_team, 'HMCTS North East Response Unit(RSU)')
         )
-        unless service.call
-          raise "Could not accept approver assignment, case id: #{kase.id}, user id: #{@disclosure_approver.id}, result: #{service.result}"
-        end
       end
     end
 
-    def transition_to_awaiting_dispatch(cases)
-      cases.each do |kase|
-        if kase.approver_assignment
-          result = CaseApprovalService
-                     .new(user: @disclosure_approver, kase: kase).call
-          unless result == :ok
-            raise "Could not approve case response , case id: #{kase.id}, user id: #{@disclosure_approver.id}, result: #{result}"
-          end
-        else
-          ResponseUploaderService.new(kase, @hmcts_responder, nil, nil).seed!
-          kase.state_machine.add_responses!(@hmcts_responder, @hmcts_team, kase.attachments)
-        end
-      end
+    def dacu_manager
+      @dacu_manager ||= if dacu_team.managers.blank?
+                          raise 'DACU team has no managers assigned.'
+                        else
+                          dacu_team.managers.first
+                        end
     end
 
-    def transition_to_responded(cases)
-      cases.each do |kase|
-        kase.respond(@hmcts_responder)
-      end
+    def dacu_approver
+      @dacu_approver ||= if dacu_disclosure_team.approvers.blank?
+                           raise 'DACU Disclosure team has no approvers assigned.'
+                         else
+                           dacu_disclosure_team.approvers.first
+                         end
     end
 
-    def transition_to_pending_dacu_clearance(cases)
-      cases.each do |kase|
-        ResponseUploaderService.new(kase, @hmcts_responder, nil).seed!
-        kase.add_response_to_flagged_case(@hmcts_responder, kase.attachments)
-      end
+    def dacu_team
+      @dacu_team ||= CTS::find_team('DACU')
     end
 
-    def transition_to_closed(cases)
-      cases.each do |kase|
-        kase.prepare_for_close
-        kase.update(date_responded: Date.today, outcome_name: 'Granted in full')
-        kase.close(@dacu_manager)
-      end
+    def dacu_disclosure_team
+      @dacu_disclosure_team ||= CTS::find_team('DACU Disclosure')
     end
 
-    def find_case_journey_for_state(state)
-      CASE_JOURNEYS.each do |name, states|
-        unless @add_dacu_disclosure && name != :flagged_for_dacu_approval
-          pos = states.find_index(state)
-          return states.take(pos + 1) if pos
-        end
-      end
-      return []
+    def press_office_team
+      @dacu_team ||= CTS::find_team('Press Office')
     end
 
     def parse_params(args)
@@ -270,6 +217,100 @@ module CTS
         error "Unrecognised parameter: #{arg}"
         @invalid_params = true
       end
+    end
+
+    def transition_to_unassigned(_cases)
+      cases = []
+      @number_to_create.times do
+        kase = FactoryGirl.create(:case,
+                                  name: Faker::Name.name,
+                                  subject: Faker::Company.catch_phrase,
+                                  message: Faker::Lorem.paragraph(10, true, 10),
+                                  managing_team: CTS::dacu_team)
+        cases << kase
+      end
+      cases
+    end
+
+    def transition_to_flagged_for_dacu_clearance(cases)
+      cases.each do |kase|
+        result = CaseFlagForClearanceService.new(user:dacu_manager, kase:kase).call
+        unless result == :ok
+          raise "Could not flag case for clearance, case id: #{kase.id}, user id: #{dacu_manager.id}, result: #{service.result}"
+        end
+      end
+    end
+
+    def transition_to_awaiting_responder(cases)
+      cases.each do |kase|
+        kase.responding_team = responding_team
+        kase.assign_responder(dacu_manager, responding_team)
+      end
+    end
+
+    def transition_to_drafting(cases)
+      cases.each do |kase|
+        kase.responder_assignment.update_attribute(:user, responder)
+        kase.responder_assignment_accepted(responder, responding_team)
+      end
+    end
+
+    def transition_to_approver_assignment_accepted(cases)
+      cases.each do |kase|
+        service = CaseAcceptApproverAssignmentService.new(
+          assignment: kase.approver_assignment,
+          user: dacu_approver,
+        )
+        unless service.call
+          raise "Could not accept approver assignment, case id: #{kase.id}, user id: #{dacu_disclosure.id}, result: #{service.result}"
+        end
+      end
+    end
+
+    def transition_to_awaiting_dispatch(cases)
+      cases.each do |kase|
+        if kase.approver_assignment
+          result = CaseApprovalService
+                     .new(user: dacu_disclosure, kase: kase).call
+          unless result == :ok
+            raise "Could not approve case response , case id: #{kase.id}, user id: #{dacu_disclosure.id}, result: #{result}"
+          end
+        else
+          ResponseUploaderService.new(kase, responder, nil, nil).seed!
+          kase.state_machine.add_responses!(responder, responding_team, kase.attachments)
+        end
+      end
+    end
+
+    def transition_to_responded(cases)
+      cases.each do |kase|
+        kase.respond(responder)
+      end
+    end
+
+    def transition_to_pending_dacu_clearance(cases)
+      cases.each do |kase|
+        ResponseUploaderService.new(kase, responder, nil).seed!
+        kase.add_response_to_flagged_case(responder, kase.attachments)
+      end
+    end
+
+    def transition_to_closed(cases)
+      cases.each do |kase|
+        kase.prepare_for_close
+        kase.update(date_responded: Date.today, outcome_name: 'Granted in full')
+        kase.close(dacu_manager)
+      end
+    end
+
+    def find_case_journey_for_state(state)
+      CASE_JOURNEYS.each do |name, states|
+        unless @add_dacu_disclosure && name != :flagged_for_dacu_approval
+          pos = states.find_index(state)
+          return states.take(pos + 1) if pos
+        end
+      end
+      return []
     end
   end
 end
