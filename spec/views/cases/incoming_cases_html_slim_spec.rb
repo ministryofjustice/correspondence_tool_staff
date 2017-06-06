@@ -18,7 +18,7 @@ describe 'cases/incoming_cases.html.slim', type: :view do
   it 'displays the cases given it' do
     case1
     case2
-    assign(:cases, PaginatingDecorator.new(Case.all.page.order(:received_date)))
+    assign(:cases, PaginatingDecorator.new(Case.all.page.order(:id)))
 
     policy = double('Pundit::Policy', can_add_case?: false)
     allow(view).to receive(:policy).with(:case).and_return(policy)
