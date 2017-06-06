@@ -28,22 +28,6 @@ module CaseStates
     state_machine.accept_responder_assignment!(current_user, responding_team)
   end
 
-  # def add_responses(current_user, filenames)
-  #   # self.attachments << responses
-  #   # filenames = responses.map(&:filename)
-  #   state_machine.add_responses!(current_user, responding_team, filenames)
-  # end
-
-  # def add_response_to_flagged_case(current_user, filenames)
-  #   # self.attachments << responses
-  #   # filenames = responses.map(&:filename)
-  #   state_machine.add_response_to_flagged_case!(current_user, responding_team, filenames)
-  # end
-
-  # def upload_response_and_approve(current_user, approving_team, filenames)
-  #   state_machine.upload_response_and_approve!(current_user, approving_team, filenames)
-  # end
-
   def remove_response(current_user, attachment)
     attachment.destroy!
     state_machine.remove_response! current_user,
