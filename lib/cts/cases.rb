@@ -245,13 +245,13 @@ module CTS
       cases.each do |kase|
         kase.responding_team = responding_team
         kase.assign_responder(dacu_manager, responding_team)
+        kase.reload
       end
     end
 
     def transition_to_drafting(cases)
       cases.each do |kase|
-        kase.responder_assignment.update_attribute(:user, responder)
-        kase.responder_assignment_accepted(responder, responding_team)
+        kase.responder_assignment.accept(responder)
       end
     end
 
