@@ -9,6 +9,9 @@ module PageObjects
         element :message_label, '.request--heading'
         element :message, '.request--message'
 
+        element :accept_radio, 'label[for="assignment_state_accepted"]'
+        element :confirm_button, '.button'
+
 
       end
     end

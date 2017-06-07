@@ -16,6 +16,8 @@ module PageObjects
           element :upload_response, '#action--upload-response'
           element :mark_as_sent, '#action--mark-response-as-sent'
           element :close_case, '#action--close-case'
+          element :clear_case, '#action--approve'
+          element :upload_approve, '#action--upload-approve'
         end
 
         section :case_status,

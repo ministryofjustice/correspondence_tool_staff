@@ -19,10 +19,10 @@ feature 'viewing details of case in the system' do
   # end
 
   given(:internal_gq_deadline) do
-    DeadlineCalculator.internal_deadline(gq).strftime("%e %b %Y")
+    DeadlineCalculator.internal_deadline(gq).strftime(Settings.default_date_format)
   end
   given(:external_gq_deadline) do
-    DeadlineCalculator.external_deadline(gq).strftime("%e %b %Y")
+    DeadlineCalculator.external_deadline(gq).strftime(Settings.default_date_format)
   end
 
   background do
@@ -77,13 +77,13 @@ feature 'viewing details of case in the system' do
   end
 
   given(:foi_received_date) do
-    foi.received_date.strftime("%e %b %Y")
+    foi.received_date.strftime(Settings.default_date_format)
   end
   given(:foi_escalation_deadline) do
-    DeadlineCalculator.escalation_deadline(foi).strftime("%e %b %Y")
+    DeadlineCalculator.escalation_deadline(foi).strftime(Settings.default_date_format)
   end
   given(:external_foi_deadline) do
-    DeadlineCalculator.external_deadline(foi).strftime("%e %b %Y")
+    DeadlineCalculator.external_deadline(foi).strftime(Settings.default_date_format)
   end
 
 

@@ -40,7 +40,7 @@ feature 'Closing a case' do
       show_page = cases_show_page.case_details
 
       expect(show_page.response_details.date_responded.data.text)
-        .to eq 5.business_days.ago.strftime('%e %b %Y').strip
+        .to eq 5.business_days.ago.strftime(Settings.default_date_format)
       expect(show_page.response_details.timeliness.data.text)
         .to eq 'Answered in time'
       expect(show_page.response_details.time_taken.data.text)
@@ -94,7 +94,7 @@ feature 'Closing a case' do
       show_page = cases_show_page.case_details.response_details
 
       expect(show_page.date_responded.data.text)
-        .to eq 2.business_days.ago.strftime('%e %b %Y').strip
+        .to eq 2.business_days.ago.strftime(Settings.default_date_format)
       expect(show_page.timeliness.data.text)
         .to eq 'Answered in time'
       expect(show_page.time_taken.data.text)
@@ -133,7 +133,7 @@ feature 'Closing a case' do
       show_page = cases_show_page.case_details.response_details
 
       expect(show_page.date_responded.data.text)
-          .to eq 2.business_days.ago.strftime('%e %b %Y').strip
+          .to eq 2.business_days.ago.strftime(Settings.default_date_format)
       expect(show_page.timeliness.data.text)
           .to eq 'Answered in time'
       expect(show_page.time_taken.data.text)

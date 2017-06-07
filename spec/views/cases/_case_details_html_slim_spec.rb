@@ -17,7 +17,7 @@ describe 'cases/case_details.html.slim', type: :view do
       expect(partial).to be_all_there
 
       expect(partial.date_received.data.text)
-          .to eq unassigned_case.received_date.strftime("%e %b %Y")
+          .to eq unassigned_case.received_date.strftime(Settings.default_date_format)
 
       expect(partial.name.data.text)
           .to eq unassigned_case.name

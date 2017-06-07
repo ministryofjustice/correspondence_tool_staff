@@ -74,11 +74,11 @@ en:
 
   date:
     formats:
-      default: "%e %b %Y"
+      default: "%-d %b %Y"
 
   time:
     formats:
-      default: "%e %b %Y %H:%M"
+      default: "%-d %b %Y %H:%M"
 
   button:
     assign: Assign case
