@@ -86,7 +86,15 @@ feature 'cases requiring clearance by disclosure specialist' do
     assignments_edit_page.confirm_button.click
   end
 
-  def upload_response_as_kilo(kase)
+  def upload_response_as_kilo(kase, kilo)
+    upload_response_with_action_param(kase, kilo, 'upload-flagged')
+  end
+
+  def upload_and_approve_response_as_dacu_disclosure_specialist(kase, dd_specialist)
+    upload_response_with_action_param(kase, dd_specialist, 'upload-approve')
+  end
+
+  def upload_response_with_action_param(kase, user, action)
     uploads_key = "uploads/#{kase.id}/responses/#{Faker::Internet.slug}.jpg"
     params = ActionController::Parameters.new(
       {
@@ -96,8 +104,7 @@ feature 'cases requiring clearance by disclosure specialist' do
         "controller"=>"cases",
         "action"=>"upload_responses"}
     )
-    action = 'upload-flagged'
-    rus = ResponseUploaderService.new(kase, responder, params, action)
+    rus = ResponseUploaderService.new(kase, user, params, action)
     allow(rus).to receive(:move_uploaded_response)
     allow(rus).to receive(:remove_leftover_upload_files)
     rus.upload!
@@ -117,7 +124,7 @@ feature 'cases requiring clearance by disclosure specialist' do
   scenario 'approving a case as a disclosure specialist', js: true do
     kase = create_flagged_case_and_assign_to_team
     accept_case_as_kilo(kase)
-    upload_response_as_kilo(kase.reload)
+    upload_response_as_kilo(kase.reload, responder)
 
     login_as disclosure_specialist
     take_case_on_as_discosure_specialist(kase)
@@ -133,16 +140,22 @@ feature 'cases requiring clearance by disclosure specialist' do
   scenario 'upload a response and approve case as a disclosure specialist', js: true do
     kase = create_flagged_case_and_assign_to_team
     accept_case_as_kilo(kase)
-    upload_response_as_kilo(kase.reload)
+    upload_response_as_kilo(kase.reload, responder)
 
     login_as disclosure_specialist
     take_case_on_as_discosure_specialist(kase)
     cases_show_page.load(id: kase.id)
-    expect(cases_show_page.actions).to have_clear_case
+    expect(cases_show_page.actions).to have_upload_approve
     cases_show_page.actions.upload_approve.click
 
     expect(cases_new_response_upload_page).to be_displayed
-    save_and_open_page
-    flunk
+
+    expect_any_instance_of(CasesController).to receive(:upload_responses)
+    cases_new_response_upload_page.upload_response_button.click
+    upload_and_approve_response_as_dacu_disclosure_specialist(kase.reload, disclosure_specialist)
+
+    cases_show_page.load(id: kase.id)
+    expect(cases_show_page.case_status.details.copy.text).to eq 'Ready to send'
+    expect(cases_show_page.case_status.details.who_its_with.text).to eq responding_team.name
   end
 end
