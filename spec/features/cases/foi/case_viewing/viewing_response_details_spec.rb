@@ -78,7 +78,7 @@ feature 'viewing response details' do
           .to eq(responding_team.name)
 
         expect(response_details.date_responded.data.text)
-          .to eq(closed_case.date_responded.strftime('%e %b %Y'))
+          .to eq(closed_case.date_responded.strftime(Settings.default_date_format))
 
         expect(response_details.outcome.data.text)
             .to eq(closed_case.outcome.name)

@@ -167,6 +167,14 @@ RSpec.describe CaseStateMachine, type: :model do
     }
   end
 
+  describe event(:upload_response_and_approve) do
+    it { should transition_from(:pending_dacu_clearance).to :awaiting_dispatch}
+    it { should require_permission(:can_upload_response_and_approve?)
+                  .using_options(user_id: approver.id)
+                  .using_object(pending_dacu_clearance_case)
+    }
+  end
+
   describe event(:close) do
     it { should transition_from(:responded).to(:closed) }
     it { should require_permission(:can_close_case?)
@@ -330,6 +338,39 @@ RSpec.describe CaseStateMachine, type: :model do
                .on_state_machine(case_with_response.state_machine)
                .with_parameters(user_id: responder.id,
                                 responding_team_id: responding_team.id)
+    end
+  end
+
+
+  context 'approvals' do
+
+    let(:kase) { pending_dacu_clearance_case }
+    let(:approver) { pending_dacu_clearance_case.approver }
+    let(:state_machine) { kase.state_machine }
+    let(:team_id) { kase.approving_team.id }
+    let(:filenames) { %w(file1.pdf file2.pdf) }
+
+    describe 'trigger approve!' do
+      it 'triggers an approve event' do
+        expect {
+          state_machine.approve!(kase, approver)
+        }.to trigger_the_event(:approve).on_state_machine(state_machine).with_parameters(
+          user_id: approver.id,
+          approving_team_id: team_id
+        )
+      end
+    end
+
+    describe 'trigger upload_response_and_approve!' do
+      it 'triggers an upload_response_and_approve_event' do
+        expect {
+          state_machine.upload_response_and_approve!(approver, kase.approving_team, filenames)
+        }.to trigger_the_event(:upload_response_and_approve).on_state_machine(state_machine).with_parameters(
+          user_id: approver.id,
+          approving_team_id: team_id,
+          filenames: filenames
+        )
+      end
     end
   end
 

@@ -39,12 +39,26 @@ href=\"/cases/#{@case.id}/close\">Close case</a>"
     end
 
     context 'when event == :add_responses' do
-      it 'generates HTML that links to the upload response page' do
-        @case = create(:accepted_case)
-        expect(action_button_for(:add_responses)).to eq(
-           "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/new_response_upload\">Upload response</a>"
-          )
+      context 'case does not require clearance' do
+        it 'generates HTML that links to the upload response page' do
+          @case = create(:accepted_case)
+          expect(@case).to receive(:requires_clearance?).and_return(false)
+          expect(action_button_for(:add_responses)).to eq(
+             "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/new_response_upload?action=upload\">Upload response</a>"
+            )
+        end
       end
+
+      context 'case requires clearance' do
+        it 'generates HTML that links to the upload response page' do
+          @case = create(:accepted_case)
+          expect(@case).to receive(:requires_clearance?).and_return(true)
+          expect(action_button_for(:add_responses)).to eq(
+           "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/new_response_upload?action=upload-flagged\">Upload response</a>"
+         )
+        end
+      end
+
     end
 
     context 'when event = ":respond' do

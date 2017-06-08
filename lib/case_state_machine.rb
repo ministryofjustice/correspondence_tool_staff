@@ -107,6 +107,14 @@ class CaseStateMachine
     transition from: :drafting, to: :pending_dacu_clearance
   end
 
+  event :add_response_to_flagged_case_and_approve do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object).can_add_attachment_to_flagged_case?
+    end
+
+    transition from: :pending_dacu_clearance, to: :awaiting_dispatch
+  end
+
   event :approve do
     guard do |object, _last_transition, options|
       CaseStateMachine.get_policy(options[:user_id], object).can_approve_case?
@@ -114,6 +122,15 @@ class CaseStateMachine
 
     transition from: :pending_dacu_clearance, to: :awaiting_dispatch
   end
+
+  event :upload_response_and_approve do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object).can_upload_response_and_approve?
+    end
+
+    transition from: :pending_dacu_clearance, to: :awaiting_dispatch
+  end
+
 
   event :reassign_approver do
     guard do |object, _last_transition, options|
@@ -238,6 +255,14 @@ class CaseStateMachine
              user_id: user.id,
              event: :approve,
              approving_team_id: kase.approving_team.id
+  end
+
+  def upload_response_and_approve!(user, approving_team, filenames)
+    trigger! :upload_response_and_approve,
+             user_id: user.id,
+             event: :upload_response_and_approve,
+             approving_team_id: approving_team.id,
+             filenames: filenames
   end
 
   def remove_response!(user, responding_team, filename, num_attachments)

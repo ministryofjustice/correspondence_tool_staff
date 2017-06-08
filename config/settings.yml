@@ -35,6 +35,8 @@ foi_cases:
   default_managing_team: DACU
   default_clearance_team: DACU Disclosure
 
+default_date_format: '%-d %b %Y'
+
 global_navigation:
   pages:
     closed_cases:

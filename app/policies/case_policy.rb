@@ -8,15 +8,19 @@ class CasePolicy
   end
 
   def can_add_attachment_to_flagged_and_unflagged_cases?
-    attachable_state? && user.responding_teams.include?(self.case.responding_team)
+    responder_attachable? || approver_attachable?
   end
 
   def can_add_attachment?
-    self.case.does_not_require_clearance? && attachable_state? && user.responding_teams.include?(self.case.responding_team)
+    self.case.does_not_require_clearance? && responder_attachable?
   end
 
   def can_add_attachment_to_flagged_case?
-    self.case.requires_clearance? && self.case.drafting? && user.responding_teams.include?(self.case.responding_team)
+    self.case.requires_clearance? && responder_attachable?
+  end
+
+  def can_upload_response_and_approve?
+    self.case.requires_clearance? && approver_attachable?
   end
 
   def can_add_case?
@@ -72,7 +76,7 @@ class CasePolicy
   end
 
   def can_approve_case?
-    self.case.pending_dacu_clearance? && user.approving_teams.include?(self.case.approving_team)
+    self.case.pending_dacu_clearance? && self.case.approver == user
   end
 
   def can_view_case_details?
@@ -108,7 +112,15 @@ class CasePolicy
 
   private
 
-  def attachable_state?
+  def approver_attachable?
+    self.case.pending_dacu_clearance? && self.case.approver == user
+  end
+
+  def responder_attachable?
+    responder_attachable_state? && user.responding_teams.include?(self.case.responding_team)
+  end
+
+  def responder_attachable_state?
     self.case.drafting? || self.case.awaiting_dispatch?
   end
 end

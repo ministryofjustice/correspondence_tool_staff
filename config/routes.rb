@@ -83,6 +83,7 @@ Rails.application.routes.draw do
     get 'approve_response' => 'cases#approve_response', on: :member
     patch 'execute_response_approval' => 'cases#execute_response_approval', on: :member
     patch 'reassign_approver' => 'cases#reassign_approver', on: :member
+    # get 'upload_response_approve' => 'cases#upload_response_approve', on: :member
 
     resources :assignments do
       patch 'accept_or_reject', on: :member
