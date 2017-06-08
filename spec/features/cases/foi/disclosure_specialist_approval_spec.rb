@@ -129,4 +129,20 @@ feature 'cases requiring clearance by disclosure specialist' do
     approve_response_page.submit_button.click
     expect(kase.reload.current_state).to eq 'awaiting_dispatch'
   end
+
+  scenario 'upload a response and approve case as a disclosure specialist', js: true do
+    kase = create_flagged_case_and_assign_to_team
+    accept_case_as_kilo(kase)
+    upload_response_as_kilo(kase.reload)
+
+    login_as disclosure_specialist
+    take_case_on_as_discosure_specialist(kase)
+    cases_show_page.load(id: kase.id)
+    expect(cases_show_page.actions).to have_clear_case
+    cases_show_page.actions.upload_approve.click
+
+    expect(cases_new_response_upload_page).to be_displayed
+    save_and_open_page
+    flunk
+  end
 end
