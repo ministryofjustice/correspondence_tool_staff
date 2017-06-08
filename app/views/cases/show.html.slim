@@ -35,7 +35,7 @@ div id="case-#{@case.id}"
   section.case-info
     = render partial: 'cases/case_details', locals: {case_details: @case}
 
-  - if case_attachments_visible_for_case? @case
+  - if case_attachments_visible_for_case?
     section.case-info
       = render partial: 'cases/case_attachments', locals: {case_details: @case}
 

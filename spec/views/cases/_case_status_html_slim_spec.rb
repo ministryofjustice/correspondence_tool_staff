@@ -5,8 +5,8 @@ describe 'cases/case_status.html.slim', type: :view do
   it 'displays the all 4 key information ' do
     unassigned_case = double CaseDecorator,
                    status: "Needs reassigning",
-                   internal_deadline: DateTime.now.strftime("%-d %b %Y"),
-                   external_deadline: (DateTime.now + 10.days).strftime("%-d %b %Y"),
+                   internal_deadline: DateTime.now.strftime(Settings.default_date_format),
+                   external_deadline: (DateTime.now + 10.days).strftime(Settings.default_date_format),
                    current_state: 'drafting',
                    who_its_with: 'DACU'
 
@@ -34,8 +34,8 @@ describe 'cases/case_status.html.slim', type: :view do
   it 'does not display "Who its with" for closed cases' do
     closed_case = double CaseDecorator,
                              status: "Case closed",
-                             internal_deadline: DateTime.now.strftime("%-d %b %Y") ,
-                             external_deadline: (DateTime.now + 10.days).strftime("%-d %b %Y"),
+                             internal_deadline: DateTime.now.strftime(Settings.default_date_format) ,
+                             external_deadline: (DateTime.now + 10.days).strftime(Settings.default_date_format),
                              current_state: 'closed',
                              who_its_with: ''
 
@@ -56,7 +56,7 @@ describe 'cases/case_status.html.slim', type: :view do
   it 'does not display Draft deadline for non-trigger cases' do
     non_trigger_case = double CaseDecorator,
                              status: "Needs reassigning",
-                             external_deadline: (DateTime.now + 10.days).strftime("%-d %b %Y"),
+                             external_deadline: (DateTime.now + 10.days).strftime(Settings.default_date_format),
                              internal_deadline: nil,
                              current_state: 'drafting',
                              who_its_with: 'DACU'

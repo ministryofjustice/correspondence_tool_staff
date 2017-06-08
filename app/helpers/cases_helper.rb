@@ -100,13 +100,8 @@ module CasesHelper
     end
   end
 
-  def case_attachments_visible_for_case?(kase)
+  def case_attachments_visible_for_case?
     return false if @case.attachments.blank?
-    case kase.current_state
-    when 'drafting', 'awaiting_dispatch'
-      policy(@case).can_add_attachment?
-    else
-      true
-    end
+    policy(@case).can_view_attachments?
   end
 end

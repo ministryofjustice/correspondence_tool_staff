@@ -139,7 +139,7 @@ class Case < ApplicationRecord
   has_many :responded_transitions, -> { responded }, class_name: 'CaseTransition'
   has_many :responder_history, through: :responded_transitions, source: :user
 
-  has_many :attachments, class_name: 'CaseAttachment', dependent: :destroy
+  has_many :attachments, -> { order(id: :desc) }, class_name: 'CaseAttachment', dependent: :destroy
   belongs_to :outcome, class_name: 'CaseClosure::Outcome'
   belongs_to :refusal_reason, class_name: 'CaseClosure::RefusalReason'
   has_and_belongs_to_many :exemptions, class_name: 'CaseClosure::Exemption', join_table: 'cases_exemptions'

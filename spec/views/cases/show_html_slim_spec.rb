@@ -15,6 +15,9 @@ describe 'cases/show.html.slim', type: :view do
     allow(policy)
       .to receive(:can_accept_or_reject_approver_assignment?)
             .and_return policies[:can_accept_or_reject_approver_assignment?]
+    allow(policy)
+      .to receive(:can_view_attachments?)
+        .and_return policies[:can_view_attachments?]
   end
 
   let(:case_pending_dacu_clearance) { create(:pending_dacu_clearance_case)
@@ -92,7 +95,8 @@ describe 'cases/show.html.slim', type: :view do
         login_as manager
         setup_policies can_remove_attachment?: false,
                        can_add_attachment?: false,
-                       can_accept_or_reject_approver_assignment?: false
+                       can_accept_or_reject_approver_assignment?: false,
+                       can_view_attachments?: false
       end
 
       it { should_not have_rendered 'cases/_case_attachments'}
@@ -103,7 +107,8 @@ describe 'cases/show.html.slim', type: :view do
         login_as approver
         setup_policies can_remove_attachment?: false,
                        can_add_attachment?: false,
-                       can_accept_or_reject_approver_assignment?: false
+                       can_accept_or_reject_approver_assignment?: false,
+                       can_view_attachments?: false
       end
 
       it { should_not have_rendered 'cases/_case_attachments'}
@@ -114,7 +119,8 @@ describe 'cases/show.html.slim', type: :view do
         login_as responder
         setup_policies can_remove_attachment?: true,
                        can_add_attachment?: true,
-                       can_accept_or_reject_approver_assignment?: false
+                       can_accept_or_reject_approver_assignment?: false,
+                       can_view_attachments?: true
       end
 
       it { should have_rendered 'cases/_case_attachments'}
@@ -131,7 +137,8 @@ describe 'cases/show.html.slim', type: :view do
         login_as manager
         setup_policies can_remove_attachment?: false,
                        can_add_attachment?: false,
-                       can_accept_or_reject_approver_assignment?: false
+                       can_accept_or_reject_approver_assignment?: false,
+                       can_view_attachments?: true
       end
 
       it { should_not have_rendered 'cases/_case_attachments'}
@@ -142,7 +149,8 @@ describe 'cases/show.html.slim', type: :view do
         login_as responder
         setup_policies can_remove_attachment?: false,
                        can_add_attachment?: false,
-                       can_accept_or_reject_approver_assignment?: false
+                       can_accept_or_reject_approver_assignment?: false,
+                       can_view_attachments?: true
       end
 
       it { should_not have_rendered 'cases/_case_attachments'}
@@ -153,7 +161,8 @@ describe 'cases/show.html.slim', type: :view do
         login_as approver
         setup_policies can_remove_attachment?: false,
                        can_add_attachment?: false,
-                       can_accept_or_reject_approver_assignment?: false
+                       can_accept_or_reject_approver_assignment?: false,
+                       can_view_attachments?: true
       end
 
       it { should_not have_rendered 'cases/_case_attachments'}
@@ -170,7 +179,8 @@ describe 'cases/show.html.slim', type: :view do
         login_as manager
         setup_policies can_remove_attachment?: false,
                        can_add_attachment?: false,
-                       can_accept_or_reject_approver_assignment?: false
+                       can_accept_or_reject_approver_assignment?: false,
+                       can_view_attachments?: true
       end
 
       it { should have_rendered 'cases/_case_attachments'}
@@ -181,7 +191,8 @@ describe 'cases/show.html.slim', type: :view do
         login_as responder
         setup_policies can_remove_attachment?: false,
                        can_add_attachment?: false,
-                       can_accept_or_reject_approver_assignment?: false
+                       can_accept_or_reject_approver_assignment?: false,
+                       can_view_attachments?: true
       end
 
       it { should have_rendered 'cases/_case_attachments'}
@@ -192,7 +203,8 @@ describe 'cases/show.html.slim', type: :view do
         login_as approver
         setup_policies can_remove_attachment?: false,
                        can_add_attachment?: false,
-                       can_accept_or_reject_approver_assignment?: false
+                       can_accept_or_reject_approver_assignment?: false,
+                       can_view_attachments?: true
       end
 
       it { should have_rendered 'cases/_case_attachments'}

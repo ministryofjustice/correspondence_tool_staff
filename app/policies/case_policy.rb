@@ -7,6 +7,21 @@ class CasePolicy
     @case = kase
   end
 
+  def can_view_attachments?
+    # for flagged cases, the state changes to pending_dacu_clearance as soon as a response is
+    # added, and comes back to awaiting dacu dispatch if the dd specialist uploads a response
+    # and clears, so we want the response always to be visible.
+    #
+    # for unflagged cases, we don't want the response to be visible when it's in awaiting dispatch
+    # because the kilo is still workin gon it.
+    #
+    if self.case.does_not_require_clearance?
+      self.case.awaiting_dispatch?  && user_not_in_responding_team? ? false : true
+    else
+      true
+    end
+  end
+
   def can_add_attachment_to_flagged_and_unflagged_cases?
     responder_attachable? || approver_attachable?
   end
@@ -111,6 +126,15 @@ class CasePolicy
   end
 
   private
+
+  def user_in_responding_team?
+    @user.in?(self.case.responding_team.users)
+  end
+
+  def user_not_in_responding_team?
+    !user_in_responding_team?
+  end
+
 
   def approver_attachable?
     self.case.pending_dacu_clearance? && self.case.approver == user
