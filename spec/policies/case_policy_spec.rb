@@ -42,6 +42,36 @@ describe CasePolicy do
   let(:closed_case)             { create :closed_case,
                                          responder: responder }
   let(:pending_dacu_clearance_case) { create :pending_dacu_clearance_case }
+  let(:awaiting_dispatch_case)  { create :case_with_response, responding_team: responding_team, responder: responder }
+  let(:awaiting_dispatch_flagged_case)  { create :case_with_response, :flagged, responding_team: responding_team, responder: responder }
+
+
+  permissions :can_view_attachments? do
+    context 'flagged cases' do
+      it { should permit(manager,            awaiting_dispatch_flagged_case)  }
+      it { should permit(responder,          awaiting_dispatch_flagged_case)  }
+      it { should permit(another_responder,  awaiting_dispatch_flagged_case)  }
+      it { should permit(approver,           awaiting_dispatch_flagged_case)  }
+      it { should permit(co_approver,        awaiting_dispatch_flagged_case)  }
+    end
+
+    context 'unflagged cases' do
+      context 'in awaiting_dispatch state' do
+        it { should     permit(responder,         awaiting_dispatch_case) }
+        it { should     permit(coworker,          awaiting_dispatch_case) }
+        it { should_not permit(manager,           awaiting_dispatch_case) }
+        it { should_not permit(approver,          awaiting_dispatch_case) }
+      end
+
+      context 'in other states' do
+        it { should permit(manager,            responded_case) }
+        it { should permit(responder,          responded_case)  }
+        it { should permit(another_responder,  responded_case)  }
+        it { should permit(approver,           responded_case)  }
+        it { should permit(co_approver,        responded_case)  }
+      end
+    end
+  end
 
   permissions :can_accept_or_reject_approver_assignment? do
     it { should_not permit(manager,           unassigned_flagged_case) }
