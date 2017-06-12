@@ -741,14 +741,14 @@ RSpec.describe Case, type: :model do
     it 'returns true when assigned approvers have accepted' do
       kase = create :case
       kase.approving_teams = [approving_team]
-      kase.approver_assignments.each &:accepted!
+      kase.approver_assignments.each(&:accepted!)
       expect(kase.requires_clearance?).to eq true
     end
 
     it 'returns false when assigned approvers have approved' do
       kase = create :case
       kase.approving_teams = [approving_team]
-      kase.approver_assignments.each &:accepted!
+      kase.approver_assignments.each(&:accepted!)
       kase.approver_assignments.each { |a| a.update approved: true }
       expect(kase.requires_clearance?).to eq false
     end

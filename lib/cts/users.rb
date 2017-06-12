@@ -28,5 +28,6 @@ module CTS
       require "#{CTS_ROOT_DIR}/db/seeders/demo_user_seeder"
       seeder = DemoUserSeeder.new
       seeder.seed_users
-    end  end
+    end
+  end
 end

@@ -37,7 +37,7 @@ class Case < ApplicationRecord
   scope :opened, -> { where.not(current_state: 'closed')}
   scope :closed, -> { where(current_state: 'closed').order(last_transitioned_at: :desc) }
 
-  scope :with_teams, ->(teams) do
+  scope :with_teams, -> (teams) do
     includes(:assignments)
       .where(assignments: { team: teams,
                             state: ['pending', 'accepted']})

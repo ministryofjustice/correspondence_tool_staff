@@ -11,6 +11,12 @@ require 'capybara/poltergeist'
 require 'rails-controller-testing'
 
 Capybara.javascript_driver = :poltergeist
+# Capybara.register_driver :poltergeist do |app|
+#   Capybara::Poltergeist::Driver.new(app,
+#                                     js_errors: true,
+#                                     phantomjs_logger: STDERR,
+#                                     inspector: true)
+# end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are

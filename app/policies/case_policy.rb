@@ -176,8 +176,7 @@ class CasePolicy
 
 
   def approver_attachable?
-    self.case.pending_dacu_clearance? && self.case.approver == user
-
+    self.case.pending_dacu_clearance? && self.case.approvers.first == user
   end
 
   def responder_attachable?

@@ -82,4 +82,16 @@ RSpec.describe Team, type: :model do
       expect(Team.press_office).to eq press_office
     end
   end
+
+  describe 'scope with_user' do
+    it 'lists teams with a given user' do
+      t1 = create :team
+      t2 = create :team
+      u1 = create :user
+      u2 = create :user
+      t1.responders << u1
+      t2.responders << u2
+      expect(Team.with_user(u1)).to eq [t1]
+    end
+  end
 end

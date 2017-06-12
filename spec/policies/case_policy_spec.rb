@@ -40,7 +40,7 @@ describe CasePolicy do
                                          responder: responder }
   let(:closed_case)             { create :closed_case,
                                          responder: responder }
-  let(:pending_dacu_clearance_case) { create :pending_dacu_clearance_case }
+  let(:pending_dacu_clearance_case) { create :pending_dacu_clearance_case, approver: approver }
   let(:awaiting_dispatch_case)  { create :case_with_response, responding_team: responding_team, responder: responder }
   let(:awaiting_dispatch_flagged_case)  { create :case_with_response, :flagged, responding_team: responding_team, responder: responder }
 
@@ -134,6 +134,34 @@ describe CasePolicy do
         it { should_not permit(responder,         accepted_case) }
         it { should_not permit(coworker,          accepted_case) }
         it { should_not permit(another_responder, accepted_case) }
+      end
+    end
+  end
+
+  permissions :can_add_attachment_to_flagged_and_unflagged_cases? do
+    context 'in awaiting dispatch_state' do
+      context 'flagged case' do
+        it { should_not permit(manager,           flagged_accepted_case) }
+        it { should     permit(responder,         flagged_accepted_case) }
+        it { should     permit(coworker,          flagged_accepted_case) }
+        it { should_not permit(another_responder, flagged_accepted_case) }
+        it { should_not permit(approver,          flagged_accepted_case) }
+      end
+
+      context 'unflagged case' do
+        it { should_not permit(manager,           accepted_case) }
+        it { should     permit(responder,         accepted_case) }
+        it { should     permit(coworker,          accepted_case) }
+        it { should_not permit(another_responder, accepted_case) }
+        it { should_not permit(approver,          accepted_case) }
+      end
+
+      context 'pending clearance case' do
+        it { should_not permit(manager,           pending_dacu_clearance_case) }
+        it { should_not permit(responder,         pending_dacu_clearance_case) }
+        it { should_not permit(coworker,          pending_dacu_clearance_case) }
+        it { should_not permit(another_responder, pending_dacu_clearance_case) }
+        it { should     permit(approver,          pending_dacu_clearance_case) }
       end
     end
   end

@@ -147,7 +147,7 @@ FactoryGirl.define do
 
     end
 
-    factory :approved_case, parent: :awaiting_dispatch_case do
+    factory :approved_case, parent: :pending_dacu_clearance_case do
       transient do
         approving_team { find_or_create :team_dacu_disclosure }
         approver { create :disclosure_specialist }

@@ -1,4 +1,5 @@
 module CTS
+  # rubocop:disable Metrics/ClassLength
   class Cases < Thor
     include Thor::Rails unless SKIP_RAILS
 
@@ -88,18 +89,8 @@ module CTS
     # option :dacu_manager, type: :string
     # option :dacu_approver, type: :string
 
-    # rubocop:disable Metrics/CyclomaticComplexity
     def create(*args)
-      @end_states = []
-      @number_to_create = options[:number] || 2
-      @add_dacu_disclosure = options[:dacu_disclosure] || false
-      @add_press_office = options[:press_office] || false
-      @clear_cases = options[:clear] || false
-      @dry_run = options.fetch(:dry_run, false)
-
-      if @add_dacu_disclosure && @add_press_office
-        raise "cannot handle flagging for dacu disclosure and press office yet"
-      end
+      parse_options
 
       CTS::check_environment
 
@@ -108,9 +99,6 @@ module CTS
 
       clear if @clear_cases
 
-      puts "Creating #{@number_to_create} cases in each of the following states: #{@end_states.join(', ')}"
-      puts "Flagging each for DACU Disclosure clearance" if @add_dacu_disclosure
-      puts "Flagging each for Press Office clearance" if @add_press_office
       cases = @end_states.map do |target_state|
         journey = find_case_journey_for_state target_state.to_sym
         cases = nil
@@ -119,7 +107,7 @@ module CTS
             puts "transition to '#{state}"
           else
             cases = __send__("transition_to_#{state}", cases)
-            cases.each &:reload
+            cases.each(&:reload)
           end
         end
         cases
@@ -212,6 +200,22 @@ module CTS
 
     def press_office_team
       @press_office_team ||= Team.press_office
+    end
+
+    def parse_options
+      @end_states = []
+      @number_to_create = options.fetch(:number, 2)
+      @add_dacu_disclosure = options.fetch(:dacu_disclosure, false)
+      @add_press_office = options.fetch(:press_office, false)
+      @clear_cases = options.fetch(:clear, false)
+      @dry_run = options.fetch(:dry_run, false)
+
+      if @add_dacu_disclosure && @add_press_office
+        raise "cannot handle flagging for dacu disclosure and press office yet"
+      end
+      puts "Creating #{@number_to_create} cases in each of the following states: #{@end_states.join(', ')}"
+      puts "Flagging each for DACU Disclosure clearance" if @add_dacu_disclosure
+      puts "Flagging each for Press Office clearance" if @add_press_office
     end
 
     def parse_params(args)
@@ -354,6 +358,7 @@ module CTS
       end
     end
 
+    # rubocop:disable Metrics/CyclomaticComplexity
     def find_case_journey_for_state(state)
       CASE_JOURNEYS.each do |name, states|
         if (!@add_dacu_disclosure && !@add_press_office) ||

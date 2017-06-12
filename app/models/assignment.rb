@@ -35,8 +35,8 @@ class Assignment < ApplicationRecord
 
   scope :approved, -> { where(approved: true) }
   scope :unapproved, -> { where(approved: false) }
-  scope :for_user, ->(user) { where(user: user) }
-  scope :with_teams, ->(teams) do
+  scope :for_user, -> (user) { where(user: user) }
+  scope :with_teams, -> (teams) do
     where(team: teams, state: ['pending', 'accepted'])
   end
 

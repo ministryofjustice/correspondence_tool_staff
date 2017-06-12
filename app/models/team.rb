@@ -38,6 +38,10 @@ class Team < ApplicationRecord
   scope :approving, -> {
     joins(:user_roles).where(teams_users_roles: { role: 'approver' }).distinct
   }
+  scope :with_user, ->(user) {
+    includes(:user_roles)
+      .where(teams_users_roles: { user_id: user.id })
+  }
 
   def self.dacu_disclosure
     find_by name: Settings.foi_cases.default_clearance_team

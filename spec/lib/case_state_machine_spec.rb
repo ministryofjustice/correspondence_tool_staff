@@ -350,15 +350,15 @@ RSpec.describe CaseStateMachine, type: :model do
   context 'approvals' do
 
     let(:kase) { pending_dacu_clearance_case }
-    let(:approver) { pending_dacu_clearance_case.approver }
+    let(:approver) { pending_dacu_clearance_case.approvers.first }
     let(:state_machine) { kase.state_machine }
-    let(:team_id) { kase.approving_team.id }
+    let(:team_id) { kase.approving_teams.first.id }
     let(:filenames) { %w(file1.pdf file2.pdf) }
 
     describe 'trigger approve!' do
       it 'triggers an approve event' do
         expect {
-          state_machine.approve!(kase, approver)
+          state_machine.approve!(approver, kase.approver_assignments.first)
         }.to trigger_the_event(:approve).on_state_machine(state_machine).with_parameters(
           user_id: approver.id,
           approving_team_id: team_id
@@ -369,7 +369,9 @@ RSpec.describe CaseStateMachine, type: :model do
     describe 'trigger upload_response_and_approve!' do
       it 'triggers an upload_response_and_approve_event' do
         expect {
-          state_machine.upload_response_and_approve!(approver, kase.approving_team, filenames)
+          state_machine.upload_response_and_approve!(approver,
+                                                     kase.approving_teams.first,
+                                                     filenames)
         }.to trigger_the_event(:upload_response_and_approve).on_state_machine(state_machine).with_parameters(
           user_id: approver.id,
           approving_team_id: team_id,

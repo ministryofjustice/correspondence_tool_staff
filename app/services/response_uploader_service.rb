@@ -72,7 +72,11 @@ class ResponseUploaderService
     when 'upload-flagged'
       @case.state_machine.add_response_to_flagged_case!(@current_user, @case.responding_team, filenames)
     when 'upload-approve'
-      @case.state_machine.upload_response_and_approve!(@current_user, @case.approving_team, filenames)
+      @case.state_machine.upload_response_and_approve!(
+        @current_user,
+        @case.approving_teams.with_user(@current_user).first,
+        filenames
+      )
     when 'upload-revert'
       raise 'Not yet implemented'
     else

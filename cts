@@ -18,7 +18,7 @@ require 'cts/users'
 class Thor
   module Shell
     class Basic
-      def print_wrapped(message, options = {})
+      def print_wrapped(message, _options = {})
         stdout.puts message
       end
     end
