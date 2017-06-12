@@ -9,7 +9,7 @@ describe CaseApprovalService do
     context 'case not in pending_dacu_clearance state' do
 
       let(:kase) { create :accepted_case, :flagged }
-      let(:user) { kase.approver }
+      let(:user) { kase.approvers.first }
 
       it 'returns :unauthorised' do
         expect(kase.current_state).to eq 'drafting'
@@ -31,7 +31,7 @@ describe CaseApprovalService do
 
     context 'valid state and user' do
       let(:kase) { create :pending_dacu_clearance_case }
-      let(:user) { kase.approver }
+      let(:user) { kase.approvers.first }
 
       it 'returns :ok' do
         service.call
@@ -39,9 +39,9 @@ describe CaseApprovalService do
       end
 
       it 'sets the assignment approved flag' do
-        expect(kase.approver_assignment.approved?).to be false
+        expect(kase.approver_assignments.first.approved?).to be false
         service.call
-        expect(kase.approver_assignment.approved?).to be true
+        expect(kase.approver_assignments.first.approved?).to be true
       end
 
       it 'sets the state to awaiting_dispatch' do
@@ -57,7 +57,7 @@ describe CaseApprovalService do
         transition = kase.transitions.last
         expect(transition.event).to eq 'approve'
         expect(transition.user_id).to eq user.id
-        expect(transition.approving_team_id).to eq kase.approving_team.id
+        expect(transition.approving_team_id).to eq kase.approving_teams.first.id
       end
     end
   end

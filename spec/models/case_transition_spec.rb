@@ -50,8 +50,8 @@ RSpec.describe CaseTransition, type: :model do
   end
 
   it 'has an approving_team' do
-    expect(flag_case_for_clearance_transition.approving_team_id)
-      .to eq approving_team.id
+    expect(flag_case_for_clearance_transition.approving_team)
+      .to eq approving_team
   end
 
   describe 'after_destroy' do

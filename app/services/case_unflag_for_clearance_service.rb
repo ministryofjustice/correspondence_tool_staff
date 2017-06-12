@@ -1,9 +1,10 @@
 class CaseUnflagForClearanceService
   attr_accessor :result
 
-  def initialize(user:, kase:)
+  def initialize(user:, kase:, team:)
     @case = kase
     @user = user
+    @team = team
     @result = :incomplete
   end
 
@@ -11,7 +12,7 @@ class CaseUnflagForClearanceService
     return @result unless validate_case_is_flagged
 
     @case.state_machine.unflag_for_clearance!(@user, @case.managing_team)
-    @case.approver_assignment.destroy
+    @case.approver_assignments.with_teams(@team).destroy_all
     @result = :ok
   end
 

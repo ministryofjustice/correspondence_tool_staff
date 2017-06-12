@@ -5,9 +5,10 @@ describe ApproverReassignmentService do
 
   describe '#call' do
 
-    let(:kase) { create :pending_dacu_clearance_case }
-    let(:approver) { create :approver }
-    let(:service) { ApproverReassignmentService.new(user: approver, kase: kase) }
+    let(:kase) { find_or_create :pending_dacu_clearance_case }
+    let(:disclosure_specialist) { create :disclosure_specialist }
+    let(:service) { ApproverReassignmentService.new(user: disclosure_specialist,
+                                                    kase: kase) }
     let(:policy) { service.instance_variable_get(:@policy) }
 
     context 'unauthorised' do
@@ -25,9 +26,9 @@ describe ApproverReassignmentService do
       end
 
       it 'does not update the approver assignment record' do
-        assignment = kase.approver_assignment
+        assignment = kase.approver_assignments.first
         service.call
-        expect(kase.approver_assignment).to eq assignment
+        expect(kase.approver_assignments).to include assignment
       end
     end
 
@@ -44,9 +45,9 @@ describe ApproverReassignmentService do
       end
 
       it 'updates the assignment record' do
-        assignment = kase.approver_assignment
+        assignment = kase.approver_assignments.first
         service.call
-        expect(kase.approver_assignment).to eq assignment
+        expect(kase.approver_assignments).to include assignment
       end
 
     end

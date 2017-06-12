@@ -66,4 +66,20 @@ RSpec.describe Team, type: :model do
   it 'has a working factory' do
     expect(create :team).to be_valid
   end
+
+  describe '#dacu_disclosure' do
+    let!(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
+
+    it 'finds the DACU Disclosure team' do
+      expect(Team.dacu_disclosure).to eq dacu_disclosure
+    end
+  end
+
+  describe '#press_office' do
+    let!(:press_office) { find_or_create :team_press_office }
+
+    it 'finds the Press Office team' do
+      expect(Team.press_office).to eq press_office
+    end
+  end
 end

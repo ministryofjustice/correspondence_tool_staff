@@ -43,7 +43,7 @@ RSpec.describe CasesController, type: :controller do
   let(:flagged_case)       { create :assigned_case, :flagged,
                                     responding_team: responding_team,
                                     approving_team: approving_team }
-  let(:flagged_accepted_case) { create :accepted_case, :flagged,
+  let(:flagged_accepted_case) { create :accepted_case, :flagged_accepted,
                                        responding_team: responding_team,
                                        approver: approver,
                                        responder: responder}
@@ -577,6 +577,7 @@ RSpec.describe CasesController, type: :controller do
 
           it 'permitted_events == [:add_responses]' do
             expect(assigns(:permitted_events)).to eq [:add_responses]
+            nil
           end
 
           it 'renders the show page' do
@@ -1167,7 +1168,8 @@ RSpec.describe CasesController, type: :controller do
         patch :unflag_for_clearance, params: params, xhr: true
         expect(CaseUnflagForClearanceService)
           .to have_received(:new).with(user: manager,
-                                       kase: flagged_case_decorated)
+                                       kase: flagged_case_decorated,
+                                       team: Team.dacu_disclosure)
         expect(service).to have_received(:call)
       end
 
@@ -1191,7 +1193,8 @@ RSpec.describe CasesController, type: :controller do
         patch :unflag_for_clearance, params: params, xhr: true
         expect(CaseUnflagForClearanceService)
           .to have_received(:new).with(user: approver,
-                                       kase: flagged_case_decorated)
+                                       kase: flagged_case_decorated,
+                                       team: Team.dacu_disclosure)
         expect(service).to have_received(:call)
       end
 
@@ -1266,7 +1269,8 @@ RSpec.describe CasesController, type: :controller do
         patch :flag_for_clearance, params: params, xhr: true
         expect(CaseFlagForClearanceService)
           .to have_received(:new).with(user: manager,
-                                       kase: unflagged_case_decorated)
+                                       kase: unflagged_case_decorated,
+                                       team: Team.dacu_disclosure)
         expect(service).to have_received(:call)
       end
 
@@ -1290,7 +1294,8 @@ RSpec.describe CasesController, type: :controller do
         patch :flag_for_clearance, params: params, xhr: true
         expect(CaseFlagForClearanceService)
           .to have_received(:new).with(user: approver,
-                                       kase: unflagged_case_decorated)
+                                       kase: unflagged_case_decorated,
+                                       team: Team.dacu_disclosure)
         expect(service).to have_received(:call)
       end
 
@@ -1334,7 +1339,7 @@ RSpec.describe CasesController, type: :controller do
 
     context 'as an authenticated approver' do
       before do
-        sign_in pending_dacu_clearance_case.approver
+        sign_in pending_dacu_clearance_case.approvers.first
       end
 
       it 'renders the view' do

@@ -33,6 +33,13 @@ class Assignment < ApplicationRecord
   belongs_to :team
   belongs_to :user
 
+  scope :approved, -> { where(approved: true) }
+  scope :unapproved, -> { where(approved: false) }
+  scope :for_user, ->(user) { where(user: user) }
+  scope :with_teams, ->(teams) do
+    where(team: teams, state: ['pending', 'accepted'])
+  end
+
   attr_accessor :reasons_for_rejection
 
   def reject(rejecting_user, message)

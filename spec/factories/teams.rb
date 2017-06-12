@@ -53,9 +53,10 @@ FactoryGirl.define do
   factory :team_dacu_disclosure, parent: :approving_team do
     name 'DACU Disclosure'
     email 'dacu.disclosure@localhost'
+  end
 
-    initialize_with do
-      Team.find_or_create_by(name: name, email: email)
-    end
+  factory :team_press_office, parent: :approving_team do
+    name 'Press Office'
+    email 'press.office@localhost'
   end
 end

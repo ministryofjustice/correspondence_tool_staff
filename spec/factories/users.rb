@@ -45,7 +45,7 @@ FactoryGirl.define do
     end
 
     factory :disclosure_specialist do
-      approving_teams { [create(:team_dacu_disclosure)] }
+      approving_teams { [find_or_create(:team_dacu_disclosure)] }
     end
   end
 end

@@ -10,10 +10,9 @@ describe CasePolicy do
   let(:coworker)          { create :responder,
                                    responding_teams: [responding_team] }
   let(:another_responder) { create :responder}
-  let(:approving_team)    { create :team_dacu_disclosure }
-  let(:approver)          { approving_team.approvers.first }
-  let(:other_approver_in_same_team) { approving_team.approvers.last }
-  let(:co_approver)       { create :approver, approving_teams: [approving_team] }
+  let(:dacu_disclosure)   { find_or_create :team_dacu_disclosure }
+  let(:approver)          { dacu_disclosure.approvers.first }
+  let(:co_approver)       { create :approver, approving_teams: [dacu_disclosure] }
 
   let(:new_case)                { create :case }
   let(:accepted_case)           { create :accepted_case,
@@ -25,16 +24,16 @@ describe CasePolicy do
   let(:assigned_case)           { create :assigned_case,
                                     responding_team: responding_team }
   let(:assigned_flagged_case)   { create :assigned_case, :flagged,
-                                         approving_team: approving_team}
+                                         approving_team: dacu_disclosure}
   let(:assigned_trigger_case)   { create :assigned_case, :flagged_accepted,
                                          approver: approver }
   let(:rejected_case)           { create :rejected_case,
                                          responding_team: responding_team }
   let(:unassigned_case)         { new_case }
   let(:unassigned_flagged_case) { create :case, :flagged,
-                                         approving_team: approving_team }
+                                         approving_team: dacu_disclosure }
   let(:unassigned_trigger_case) { create :case, :flagged_accepted,
-                                         approving_team: approving_team }
+                                         approving_team: dacu_disclosure }
   let(:case_with_response)      { create :case_with_response,
                                          responder: responder }
   let(:responded_case)          { create :responded_case,
@@ -70,6 +69,13 @@ describe CasePolicy do
         it { should permit(approver,           responded_case)  }
         it { should permit(co_approver,        responded_case)  }
       end
+    end
+  end
+
+  after(:each) do |example|
+    if example.exception
+      failed_checks = CasePolicy.failed_checks rescue []
+      puts "Failed CasePolicy checks: #{failed_checks.map(&:to_s).join(', ')}"
     end
   end
 
@@ -197,7 +203,7 @@ describe CasePolicy do
     context 'flagged by not yet taken by approver' do
       it 'does not permit' do
         expect(flagged_accepted_case.requires_clearance?).to be true
-        expect(flagged_accepted_case.approver).to be_nil
+        expect(flagged_accepted_case.approvers).to be_empty
         should_not permit(approver, flagged_accepted_case)
       end
     end
@@ -205,23 +211,27 @@ describe CasePolicy do
     context 'flagged case taken on by the current approver' do
       it 'does not permit' do
         expect(pending_dacu_clearance_case.requires_clearance?).to be true
-        expect(pending_dacu_clearance_case.approver).to be_instance_of(User)
-        should_not permit(pending_dacu_clearance_case.approver, pending_dacu_clearance_case)
+        expect(pending_dacu_clearance_case.approvers.first)
+          .to be_instance_of(User)
+        should_not permit(pending_dacu_clearance_case.approvers.first,
+                          pending_dacu_clearance_case)
       end
     end
 
     context 'flagged case taken on by a different approver' do
       it 'permits' do
         expect(pending_dacu_clearance_case.requires_clearance?).to be true
-        expect(pending_dacu_clearance_case.approver).to be_instance_of(User)
-        expect(other_approver_in_same_team).not_to eq pending_dacu_clearance_case.approver
-        should permit(other_approver_in_same_team, pending_dacu_clearance_case)
+        expect(pending_dacu_clearance_case.approvers.first)
+          .to be_instance_of(User)
+        expect(co_approver).not_to eq pending_dacu_clearance_case.approvers.first
+        should permit(co_approver, pending_dacu_clearance_case)
       end
     end
   end
 
   permissions :can_approve_case? do
-    it { should     permit(pending_dacu_clearance_case.approver,   pending_dacu_clearance_case) }
+    it { should     permit(pending_dacu_clearance_case.approvers.first,
+                           pending_dacu_clearance_case) }
     it { should_not permit(approver,   new_case) }
     it { should_not permit(approver,   accepted_case) }
     it { should_not permit(approver,   assigned_case) }

@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 describe CaseAcceptApproverAssignmentService do
-  let(:assigned_case)  { create :assigned_case, :flagged,
-                                approving_team: approving_team }
-  let(:approver)       { approving_team.approvers.first }
-  let(:approving_team) { create :team_dacu_disclosure }
-  let(:assignment)     { assigned_case.approver_assignment}
+  let(:assigned_case)   { create :assigned_case, :flagged,
+                                 approving_team: dacu_disclosure }
+  let(:approver)        { dacu_disclosure.approvers.first }
+  let(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
+  let(:assignment)      { assigned_case.approver_assignments.first }
   let(:accepted_assignment) { create :approver_assignment, :accepted }
 
   describe 'call' do
@@ -35,7 +35,7 @@ describe CaseAcceptApproverAssignmentService do
         service.call
         expect(assignment.case.state_machine)
           .to have_received(:accept_approver_assignment!)
-                .with(approver, approving_team)
+                .with(approver, dacu_disclosure)
       end
 
       it 'adds the user to the assignment' do

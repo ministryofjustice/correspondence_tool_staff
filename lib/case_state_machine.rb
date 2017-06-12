@@ -250,11 +250,11 @@ class CaseStateMachine
              event: :unflag_for_clearance
   end
 
-  def approve!(kase, user)
+  def approve!(user, assignment)
     trigger! :approve,
              user_id: user.id,
              event: :approve,
-             approving_team_id: kase.approving_team.id
+             approving_team_id: assignment.team_id
   end
 
   def upload_response_and_approve!(user, approving_team, filenames)

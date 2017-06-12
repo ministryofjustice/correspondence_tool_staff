@@ -42,8 +42,10 @@ RSpec.describe CaseStateMachine, type: :model do
   let(:closed_case)        { create :closed_case,
                              responder: responder,
                              responding_team: responding_team }
-  let(:pending_dacu_clearance_case) { create :pending_dacu_clearance_case }
 
+  let(:pending_dacu_clearance_case) { create :pending_dacu_clearance_case }
+  let(:disclosure_specialist)       { create :disclosure_specialist }
+  let(:team_dacu_disclosure)        { find_or_create :team_dacu_disclosure }
 
   context 'after transition' do
     let(:t1) { Time.now }
@@ -237,27 +239,30 @@ RSpec.describe CaseStateMachine, type: :model do
 
   describe 'trigger a reassign_approver' do
     let(:kase) { pending_dacu_clearance_case }
+    let(:new_disclosure_specialist) { create :disclosure_specialist }
 
     it 'triggers a reassign_approver'do
-      kase = pending_dacu_clearance_case
       expect {
-        kase.state_machine.reassign_approver!(approver, kase.approver, kase.approving_team)
+        kase.state_machine.reassign_approver!(new_disclosure_specialist,
+                                              disclosure_specialist,
+                                              team_dacu_disclosure)
       }.to trigger_the_event(:reassign_approver)
                 .on_state_machine(kase.state_machine)
-                .with_parameters(user_id: approver.id,
-                                 original_user_id: kase.approver.id,
-                                 approving_team_id: kase.approving_team.id)
+                .with_parameters(user_id: new_disclosure_specialist.id,
+                                 original_user_id: disclosure_specialist.id,
+                                 approving_team_id: team_dacu_disclosure.id)
     end
 
     it 'adds a transition history record' do
-      old_approver_id = kase.approver.id
-      kase.state_machine.reassign_approver!(approver, kase.approver, kase.approving_team)
+      kase.state_machine.reassign_approver!(new_disclosure_specialist,
+                                            disclosure_specialist,
+                                            team_dacu_disclosure)
       transition = kase.reload.transitions.last
       expect(transition.event).to eq 'reassign_approver'
       expect(transition.to_state).to eq 'pending_dacu_clearance'
-      expect(transition.user_id).to eq approver.id
-      expect(transition.original_user_id).to eq old_approver_id
-      expect(transition.approving_team_id).to eq kase.approving_team.id
+      expect(transition.user_id).to eq new_disclosure_specialist.id
+      expect(transition.original_user_id).to eq disclosure_specialist.id
+      expect(transition.approving_team_id).to eq team_dacu_disclosure.id
     end
   end
 

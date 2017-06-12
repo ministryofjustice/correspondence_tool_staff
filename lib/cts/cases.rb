@@ -13,14 +13,19 @@ module CTS
       ],
       flagged_for_dacu_approval: [
         :unassigned,
-        :flagged_for_dacu_clearance,
         :awaiting_responder,
         :approver_assignment_accepted,
         :drafting,
-        :pending_dacu_clearance,
+        :pending_dacu_disclosure_clearance,
         :awaiting_dispatch,
         :responded,
         :closed,
+      ],
+      flagged_for_press_office: [
+        :unassigned,
+        :awaiting_responder,
+        :approver_assignment_accepted,
+        :drafting,
       ]
     }
 
@@ -86,11 +91,15 @@ module CTS
     # rubocop:disable Metrics/CyclomaticComplexity
     def create(*args)
       @end_states = []
-      @number_to_create = options[:n] || 2
-      @add_dacu_disclosure = options[:d] || false
+      @number_to_create = options[:number] || 2
+      @add_dacu_disclosure = options[:dacu_disclosure] || false
       @add_press_office = options[:press_office] || false
-      @clear_cases = options[:x] || false
+      @clear_cases = options[:clear] || false
       @dry_run = options.fetch(:dry_run, false)
+
+      if @add_dacu_disclosure && @add_press_office
+        raise "cannot handle flagging for dacu disclosure and press office yet"
+      end
 
       CTS::check_environment
 
@@ -100,18 +109,20 @@ module CTS
       clear if @clear_cases
 
       puts "Creating #{@number_to_create} cases in each of the following states: #{@end_states.join(', ')}"
-      puts "Flagging each for DACU disclosure" if @add_dacu_disclosure
+      puts "Flagging each for DACU Disclosure clearance" if @add_dacu_disclosure
+      puts "Flagging each for Press Office clearance" if @add_press_office
       cases = @end_states.map do |target_state|
         journey = find_case_journey_for_state target_state.to_sym
-        kase = nil
+        cases = nil
         journey.each do |state|
           if @dry_run
             puts "transition to '#{state}"
           else
-            kase = __send__("transition_to_#{state}", kase)
+            cases = __send__("transition_to_#{state}", cases)
+            cases.each &:reload
           end
         end
-        kase
+        cases
       end
       unless @dry_run
         tp cases, [:id, :number, :current_state, :requires_clearance?]
@@ -133,7 +144,8 @@ module CTS
         tp kase.assignments, [:id, :state, :role, :team_id, :user_id]
 
         puts "\nTransitions:"
-        tp kase.transitions, [:id, :event, :to_state, :user_id, :metadata]
+        tp kase.transitions, :id, :event, :to_state, :user_id,
+           metadata: { width: 40 }
 
         puts "\nAttachments:"
         tp kase.attachments, [:id, :type, :key, :preview_key]
@@ -172,12 +184,22 @@ module CTS
                         end
     end
 
-    def dacu_approver
-      @dacu_approver ||= if dacu_disclosure_team.approvers.blank?
-                           raise 'DACU Disclosure team has no approvers assigned.'
-                         else
-                           dacu_disclosure_team.approvers.first
-                         end
+    def dacu_disclosure_approver
+      @dacu_disclosure_approver ||=
+        if dacu_disclosure_team.approvers.blank?
+          raise 'DACU Disclosure team has no approvers assigned.'
+        else
+          dacu_disclosure_team.approvers.first
+        end
+    end
+
+    def press_office_approver
+      @press_office_approver ||=
+        if press_office_team.approvers.blank?
+          raise 'Press Office team has no approvers assigned.'
+        else
+          press_office_team.approvers.first
+        end
     end
 
     def dacu_team
@@ -185,11 +207,11 @@ module CTS
     end
 
     def dacu_disclosure_team
-      @dacu_disclosure_team ||= CTS::find_team('DACU Disclosure')
+      @dacu_disclosure_team ||= Team.dacu_disclosure
     end
 
     def press_office_team
-      @dacu_team ||= CTS::find_team('Press Office')
+      @press_office_team ||= Team.press_office
     end
 
     def parse_params(args)
@@ -219,6 +241,32 @@ module CTS
       end
     end
 
+    def flag_for_dacu_disclosure(*cases)
+      cases.each do |kase|
+        result = CaseFlagForClearanceService.new(
+          user: dacu_manager,
+          kase: kase,
+          team: Team.dacu_disclosure
+        ).call
+        unless result == :ok
+          raise "Could not flag case for clearance by DACU Disclosure, case id: #{kase.id}, user id: #{dacu_manager.id}, result: #{result}"
+        end
+      end
+    end
+
+    def flag_for_press_office(*cases)
+      cases.each do |kase|
+        result = CaseFlagForClearanceService.new(
+          user: dacu_manager,
+          kase: kase,
+          team: Team.press_office
+        ).call
+        unless result == :ok
+          raise "Could not flag case for clearance by press office, case id: #{kase.id}, user id: #{dacu_manager.id}, result: #{result}"
+        end
+      end
+    end
+
     def transition_to_unassigned(_cases)
       cases = []
       @number_to_create.times do
@@ -226,26 +274,18 @@ module CTS
                                   name: Faker::Name.name,
                                   subject: Faker::Company.catch_phrase,
                                   message: Faker::Lorem.paragraph(10, true, 10),
-                                  managing_team: CTS::dacu_team)
+                                  managing_team: dacu_team)
+        flag_for_dacu_disclosure(kase) if @add_dacu_disclosure
+        flag_for_press_office(kase) if @add_press_office
         cases << kase
       end
       cases
-    end
-
-    def transition_to_flagged_for_dacu_clearance(cases)
-      cases.each do |kase|
-        result = CaseFlagForClearanceService.new(user:dacu_manager, kase:kase).call
-        unless result == :ok
-          raise "Could not flag case for clearance, case id: #{kase.id}, user id: #{dacu_manager.id}, result: #{service.result}"
-        end
-      end
     end
 
     def transition_to_awaiting_responder(cases)
       cases.each do |kase|
         kase.responding_team = responding_team
         kase.assign_responder(dacu_manager, responding_team)
-        kase.reload
       end
     end
 
@@ -257,10 +297,21 @@ module CTS
 
     def transition_to_approver_assignment_accepted(cases)
       cases.each do |kase|
+        if @add_dacu_disclosure
+          assignment = kase.approver_assignments
+                         .where(team: dacu_disclosure_team).first
+          user = dacu_disclosure_approver
+        elsif @add_press_office
+          assignment = kase.approver_assignments
+                         .where(team: press_office_team).first
+          user = press_office_approver
+        end
+
         service = CaseAcceptApproverAssignmentService.new(
-          assignment: kase.approver_assignment,
-          user: dacu_approver,
+          assignment: assignment,
+          user: user
         )
+
         unless service.call
           raise "Could not accept approver assignment, case id: #{kase.id}, user id: #{dacu_disclosure.id}, result: #{service.result}"
         end
@@ -269,11 +320,11 @@ module CTS
 
     def transition_to_awaiting_dispatch(cases)
       cases.each do |kase|
-        if kase.approver_assignment
+        if kase.approver_assignments.for_user(dacu_disclosure_approver).any?
           result = CaseApprovalService
-                     .new(user: dacu_disclosure, kase: kase).call
+                     .new(user: dacu_disclosure_approver, kase: kase).call
           unless result == :ok
-            raise "Could not approve case response , case id: #{kase.id}, user id: #{dacu_disclosure.id}, result: #{result}"
+            raise "Could not approve case response , case id: #{kase.id}, user id: #{dacu_disclosure_approver.id}, result: #{result}"
           end
         else
           ResponseUploaderService.new(kase, responder, nil, nil).seed!
@@ -288,7 +339,7 @@ module CTS
       end
     end
 
-    def transition_to_pending_dacu_clearance(cases)
+    def transition_to_pending_dacu_disclosure_clearance(cases)
       cases.each do |kase|
         ResponseUploaderService.new(kase, responder, nil).seed!
         kase.add_response_to_flagged_case(responder, kase.attachments)
@@ -305,7 +356,9 @@ module CTS
 
     def find_case_journey_for_state(state)
       CASE_JOURNEYS.each do |name, states|
-        unless @add_dacu_disclosure && name != :flagged_for_dacu_approval
+        if (!@add_dacu_disclosure && !@add_press_office) ||
+           (@add_dacu_disclosure && name == :flagged_for_dacu_approval) ||
+           (@add_press_office && name == :flagged_for_press_office)
           pos = states.find_index(state)
           return states.take(pos + 1) if pos
         end

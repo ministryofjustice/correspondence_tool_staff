@@ -37,9 +37,9 @@ class Case < ApplicationRecord
   scope :opened, -> { where.not(current_state: 'closed')}
   scope :closed, -> { where(current_state: 'closed').order(last_transitioned_at: :desc) }
 
-  scope :with_team, ->(*teams) do
+  scope :with_teams, ->(teams) do
     includes(:assignments)
-      .where(assignments: { team_id: teams.map { |t| t.id },
+      .where(assignments: { team: teams,
                             state: ['pending', 'accepted']})
   end
   scope :with_user, ->(*users) do
@@ -83,7 +83,6 @@ class Case < ApplicationRecord
   validates :subject, length: { maximum: 80 }
   validates :requester_type, presence: true
 
-
   validates_with ::ClosedCaseValidator
 
   serialize :exemption_ids, Array
@@ -124,16 +123,19 @@ class Case < ApplicationRecord
           -> { where("state != 'rejected'") },
           through: :responder_assignment,
           source: :team
-  has_one :approver_assignment,
+  has_many :approver_assignments,
           -> { approving },
           class_name: 'Assignment'
-  has_one :approver,
-          through: :approver_assignment,
-          source: :user
-  has_one :approving_team,
-          -> { where("state != 'rejected'") },
-          through: :approver_assignment,
-          source: :team
+  has_many :approvers,
+           through: :approver_assignments,
+           source: :user
+  has_many :approving_teams,
+           -> { where("state != 'rejected'") },
+           through: :approver_assignments,
+           source: :team
+  has_many :approving_team_users,
+           through: :approving_teams,
+           source: :users
 
   has_many :transitions, class_name: 'CaseTransition', autosave: false, dependent: :destroy
   has_many :responded_transitions, -> { responded }, class_name: 'CaseTransition'
@@ -163,9 +165,13 @@ class Case < ApplicationRecord
     where('lower(name) LIKE ?', "%#{term.downcase}%")
   end
 
-  def awaiting_approver?
-    self.approver_assignment&.pending?
-  end
+  # Commented out as this is not being used and we don't know how to re-write
+  # this yet, we can wait until we actually need this method, and if we never
+  # do we should just delete it.
+  #
+  # def awaiting_approver?
+  #   self.approver_assignments.any? &:pending?
+  # end
 
   def prevent_number_change
     raise StandardError.new('number is immutable') if number_changed?
@@ -265,11 +271,15 @@ class Case < ApplicationRecord
   end
 
   def requires_clearance?
-    approver_assignment.present?  && approver_assignment.approved == false
+    approver_assignments.any? && approver_assignments.unapproved.any?
   end
 
   def does_not_require_clearance?
     !requires_clearance?
+  end
+
+  def with_teams?(teams)
+    assignments.with_teams(teams).any?
   end
 
   private

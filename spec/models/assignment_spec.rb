@@ -17,6 +17,9 @@ require 'rails_helper'
 
 RSpec.describe Assignment, type: :model do
   let(:assigned_case)   { create :assigned_case }
+  let(:assigned_flagged_case) { create :assigned_case, :flagged }
+  let(:responded_trigger_case) { create :responded_case, :flagged_accepted }
+  let(:approved_trigger_case) { create :approved_case }
   let(:state_machine)   { assigned_case.state_machine }
   let(:assignment)      { assigned_case.responder_assignment }
   let(:responder)       { responding_team.responders.first }
@@ -34,6 +37,47 @@ RSpec.describe Assignment, type: :model do
                 .with_values(%w{pending accepted rejected}) }
   it { should have_enum(:role)
                 .with_values(%w{managing responding approving}) }
+
+  describe 'scope approved' do
+    it 'returns assignments that have been approved' do
+      assigned_flagged_case
+      responded_trigger_case
+      approved_trigger_case
+      expect(Assignment.approved)
+        .to match_array approved_trigger_case.approver_assignments
+    end
+  end
+
+  describe 'scope unapproved' do
+    it 'returns assignments that have not been approved' do
+      assigned_flagged_case
+      responded_trigger_case
+      approved_trigger_case
+      expect(Assignment.unapproved)
+        .to match_array assigned_flagged_case.assignments +
+                        responded_trigger_case.assignments +
+                        [approved_trigger_case.responder_assignment,
+                         approved_trigger_case.managing_assignment]
+    end
+  end
+
+  describe 'scope for_user' do
+    it 'returns the assignments for a given user' do
+      expect(
+        approved_trigger_case.assignments
+          .for_user(approved_trigger_case.approvers.first)
+      ).to match_array approved_trigger_case.approver_assignments
+    end
+  end
+
+  describe 'scope with_teams' do
+    it 'returns assignments that have not been rejected by the given teams' do
+      expect(
+        approved_trigger_case.assignments
+          .with_teams(approved_trigger_case.approving_teams)
+      ).to match_array approved_trigger_case.approver_assignments
+    end
+  end
 
   describe '#reasons_for_rejection' do
     it 'is required for rejection' do

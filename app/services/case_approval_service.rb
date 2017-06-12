@@ -27,10 +27,10 @@ class CaseApprovalService
 
   def mark_as_approved
     ActiveRecord::Base.transaction do
-      assignment = @kase.approver_assignment
+      assignment = @kase.approver_assignments.for_user(@user).first
       assignment.update!(approved: true)
       @state_machine.methods
-      @state_machine.approve!(@kase, @user)
+      @state_machine.approve!(@user, assignment)
     end
   end
 

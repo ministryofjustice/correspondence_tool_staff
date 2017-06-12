@@ -37,6 +37,8 @@ foi_cases:
 
 default_date_format: '%-d %b %Y'
 
+press_office_team_name: Press Office
+
 global_navigation:
   pages:
     closed_cases:

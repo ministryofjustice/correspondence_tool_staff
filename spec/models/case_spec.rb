@@ -47,7 +47,8 @@ RSpec.describe Case, type: :model do
   let(:accepted_case)      { create :accepted_case,
                                     responder: responder }
   let(:case_being_drafted) { create :case_being_drafted }
-  let(:case_being_drafted_flagged) { create :case_being_drafted, :flagged }
+  let(:case_being_drafted_flagged) { create :case_being_drafted, :flagged,
+                                            approving_team: approving_team }
   let(:case_being_drafted_trigger) { create :case_being_drafted, :flagged_accepted }
   let(:trigger_foi) do
     create :case, :flagged,
@@ -170,7 +171,7 @@ RSpec.describe Case, type: :model do
   describe 'with_team scope' do
     it 'returns cases that are with a given team' do
       create :assigned_case # Just some other case
-      expect(Case.with_team(responding_team)).to match_array([assigned_case])
+      expect(Case.with_teams(responding_team)).to match_array([assigned_case])
     end
 
     it 'can accept more than one team' do
@@ -179,19 +180,19 @@ RSpec.describe Case, type: :model do
         assigned_case,
         create(:assigned_case, responding_team: responding_team_b),
       ]
-      expect(Case.with_team(responding_team, responding_team_b))
+      expect(Case.with_teams([responding_team, responding_team_b]))
         .to match_array expected_cases
     end
 
     it 'does not include rejected assignments' do
       expected_cases = [assigned_case]
       create(:rejected_case, responding_team: responding_team)
-      expect(Case.with_team(responding_team)).to match_array(expected_cases)
+      expect(Case.with_teams(responding_team)).to match_array(expected_cases)
     end
 
     it 'includes accepted cases' do
       created_cases = [assigned_case, accepted_case]
-      expect(Case.with_team(responding_team)).to match_array(created_cases)
+      expect(Case.with_teams(responding_team)).to match_array(created_cases)
     end
   end
 
@@ -608,13 +609,13 @@ RSpec.describe Case, type: :model do
                   .through(:responder_assignment)
                   .source(:team) }
 
-    it { should have_one(:approver_assignment)
+    it { should have_many(:approver_assignments)
                   .class_name('Assignment') }
-    it { should have_one(:approver)
-                  .through(:approver_assignment)
+    it { should have_many(:approvers)
+                  .through(:approver_assignments)
                   .source(:user) }
-    it { should have_one(:approving_team)
-                  .through(:approver_assignment)
+    it { should have_many(:approving_teams)
+                  .through(:approver_assignments)
                   .source(:team) }
 
     it { should have_many(:transitions)
@@ -733,28 +734,38 @@ RSpec.describe Case, type: :model do
 
     it 'returns true when there are assigned approvers' do
       kase = create :case
-      kase.approving_team = approving_team
+      kase.approving_teams = [approving_team]
       expect(kase.requires_clearance?).to eq true
     end
 
     it 'returns true when assigned approvers have accepted' do
       kase = create :case
-      kase.approving_team = approving_team
-      kase.approver_assignment.accepted!
+      kase.approving_teams = [approving_team]
+      kase.approver_assignments.each &:accepted!
       expect(kase.requires_clearance?).to eq true
     end
 
     it 'returns false when assigned approvers have approved' do
       kase = create :case
-      kase.approving_team = approving_team
-      kase.approver_assignment.accepted!
-      kase.approver_assignment.approved = true
+      kase.approving_teams = [approving_team]
+      kase.approver_assignments.each &:accepted!
+      kase.approver_assignments.each { |a| a.update approved: true }
       expect(kase.requires_clearance?).to eq false
     end
 
     it 'returns false when no approvers have been assigned' do
       kase = create :case
       expect(kase.requires_clearance?).to eq false
+    end
+  end
+
+  describe 'with_teams?' do
+    it 'returns true if a case is assigned to any of the given teams' do
+      expect(case_being_drafted_flagged.with_teams?(approving_team)).to be_truthy
+    end
+
+    it 'returns false if a case is assigned to any of the given teams' do
+      expect(case_being_drafted.with_teams?(approving_team)).to be_falsey
     end
   end
 
@@ -773,18 +784,20 @@ RSpec.describe Case, type: :model do
     end
   end
 
-  describe 'awaiting_approver?' do
-    it 'returns false when no approving team has been assigned' do
-      expect(case_being_drafted.awaiting_approver?).to be_falsey
-    end
+  # See note in case.rb about why this is commented out.
+  #
+  # describe 'awaiting_approver?' do
+  #   it 'returns false when no approving team has been assigned' do
+  #     expect(case_being_drafted.awaiting_approver?).to be_falsey
+  #   end
 
-    it 'returns true when an approving team has been assigned' do
-      expect(case_being_drafted_flagged.awaiting_approver?).to eq true
-    end
+  #   it 'returns true when an approving team has been assigned' do
+  #     expect(case_being_drafted_flagged.awaiting_approver?).to eq true
+  #   end
 
-    it 'returns true when an approving team has accepted' do
-      expect(case_being_drafted_trigger.awaiting_approver?).to be_falsey
-    end
-  end
+  #   it 'returns true when an approving team has accepted' do
+  #     expect(case_being_drafted_trigger.awaiting_approver?).to be_falsey
+  #   end
+  # end
 end
 

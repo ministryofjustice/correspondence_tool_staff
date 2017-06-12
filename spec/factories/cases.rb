@@ -128,7 +128,8 @@ FactoryGirl.define do
 
     factory :pending_dacu_clearance_case, parent: :case_with_response do
       transient do
-        approving_team { create :approving_team }
+        approving_team { find_or_create :team_dacu_disclosure }
+        approver { create :disclosure_specialist }
       end
 
       after(:create) do |kase, evaluator|
@@ -136,8 +137,33 @@ FactoryGirl.define do
                  case: kase,
                  team: evaluator.approving_team,
                  state: 'accepted',
-                 user_id: evaluator.approving_team.users.first.id
+                 user_id: evaluator.approver.id
 
+        create :case_transition_pending_dacu_clearance,
+               case_id: kase.id,
+               user_id: evaluator.responder.id
+        kase.reload
+      end
+
+    end
+
+    factory :approved_case, parent: :awaiting_dispatch_case do
+      transient do
+        approving_team { find_or_create :team_dacu_disclosure }
+        approver { create :disclosure_specialist }
+      end
+
+      after(:create) do |kase, evaluator|
+        create :case_transition_approve,
+               case: kase,
+               approving_team: evaluator.approving_team,
+               user: evaluator.approver
+
+        kase.approver_assignments.each { |a| a.update approved: true }
+        kase.reload
+      end
+
+      after(:create) do |kase, evaluator|
         create :case_transition_pending_dacu_clearance,
                case_id: kase.id,
                user_id: evaluator.responder.id

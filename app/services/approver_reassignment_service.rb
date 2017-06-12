@@ -9,8 +9,10 @@ class ApproverReassignmentService
   def call
     if @policy.can_reassign_approver?
       ActiveRecord::Base.transaction do
-        assignment = @kase.approver_assignment
-        @kase.state_machine.reassign_approver!(@user, @kase.approver, @kase.approving_team)
+        assignment = @kase.approver_assignments.first
+        @kase.state_machine.reassign_approver!(@user,
+                                               @kase.approvers.first,
+                                               @kase.approving_teams.first)
         assignment.update(user_id: @user.id)
         @kase.reload
         :ok

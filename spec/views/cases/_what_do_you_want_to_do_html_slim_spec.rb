@@ -1,8 +1,16 @@
 require 'rails_helper'
 
 describe 'cases/_what_do_you_want_to_do.html.slim', type: :view do
-  let(:approver)      { create :approver }
-  let(:assigned_case) { create :assigned_case, :flagged }
+  def login_as(user)
+    allow(view).to receive(:current_user).and_return(user)
+    super(user)
+  end
+
+  let(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
+  let(:approver)        { create :approver,
+                                 approving_teams: [dacu_disclosure] }
+  let(:assigned_case)   { create :assigned_case, :flagged_accepted,
+                                 approver: approver }
   let(:partial) do
     render partial: 'cases/what_do_you_want_to_do',
            locals: { case_details: assigned_case }

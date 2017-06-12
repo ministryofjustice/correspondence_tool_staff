@@ -105,6 +105,16 @@ FactoryGirl.define do
     event 'add_response_to_flagged_case'
   end
 
+  factory :case_transition_approve, parent: :case_transition do
+    transient do
+      approver       { self.case.approvers.first }
+    end
+
+    to_state       'awaiting_dispatch'
+    user           { approver }
+    event          'approve'
+  end
+
   factory :case_transition_respond, parent: :case_transition do
     transient do
       responder       { create :responder }

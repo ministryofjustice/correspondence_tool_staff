@@ -12,7 +12,7 @@
     = render partial: 'cases/clearance_copy',
             locals: {case_details: @case,
                     status: "Pending clearance",
-                    team: @case.approving_team.name,
+                    team: @case.approving_teams.first.name,
                     action: "uploading"}
 
 .grid-row

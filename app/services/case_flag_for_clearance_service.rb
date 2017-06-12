@@ -1,9 +1,10 @@
 class CaseFlagForClearanceService
   attr_accessor :result
 
-  def initialize(user:, kase:)
+  def initialize(user:, kase:, team: nil)
     @case = kase
     @user = user
+    @team = team
     @result = :incomplete
   end
 
@@ -12,12 +13,8 @@ class CaseFlagForClearanceService
 
     managing_team_name = Settings.foi_cases.default_managing_team
     managing_team = Team.managing.find_by(name: managing_team_name)
-    disclosure_team_name = Settings.foi_cases.default_clearance_team
-    approving_team = Team.approving.find_by(name: disclosure_team_name)
-    @case.state_machine.flag_for_clearance! @user,
-                                            managing_team,
-                                            approving_team
-    @case.approving_team = approving_team
+    @case.state_machine.flag_for_clearance! @user, managing_team, @team
+    @case.approving_teams << @team
 
     @result = :ok
   end
@@ -25,7 +22,7 @@ class CaseFlagForClearanceService
   private
 
   def validate_case_is_unflagged
-    if !@case.requires_clearance?
+    if !@case.approving_teams.include? @team
       true
     else
       @result = :already_flagged

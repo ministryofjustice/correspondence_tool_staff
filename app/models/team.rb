@@ -38,4 +38,12 @@ class Team < ApplicationRecord
   scope :approving, -> {
     joins(:user_roles).where(teams_users_roles: { role: 'approver' }).distinct
   }
+
+  def self.dacu_disclosure
+    find_by name: Settings.foi_cases.default_clearance_team
+  end
+
+  def self.press_office
+    find_by name: Settings.press_office_team_name
+  end
 end

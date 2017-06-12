@@ -22,5 +22,23 @@ module CTS
       seeder = DemoUserSeeder.new
       seeder.seed_teams
     end
+
+    desc 'show', 'Show team details.'
+    def show(*args)
+      args.each do |team_identifier|
+        team = if team_identifier.match(/^\d+$/)
+                 Team.where(id: team_identifier).first
+               else
+                 Team.where(name: team_identifier).first
+               end
+        ap team
+
+        puts "\nUsers:"
+        tp team.user_roles,
+           {user_id: { display_name: :id}},
+           {'user.full_name' => { display_name: :full_name}},
+           :role
+      end
+    end
   end
 end

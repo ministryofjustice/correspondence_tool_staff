@@ -31,6 +31,7 @@ class CaseTransition < ActiveRecord::Base
   belongs_to :user
   belongs_to :responding_team, class_name: Team
   belongs_to :managing_team, class_name: Team
+  belongs_to :approving_team, class_name: Team
 
   scope :accepted,  -> { where to_state: 'drafting'  }
   scope :drafting,  -> { where to_state: 'drafting'  }

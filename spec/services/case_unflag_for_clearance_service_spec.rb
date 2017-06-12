@@ -3,14 +3,15 @@ require 'rails_helper'
 describe CaseUnflagForClearanceService do
   let(:assigned_case)         { create :assigned_case }
   let(:assigned_flagged_case) { create :assigned_case, :flagged,
-                                       approving_team: approving_team }
-  let(:approver)       { approving_team.approvers.first }
-  let(:approving_team) { create :team_dacu_disclosure }
+                                       approving_team: dacu_disclosure }
+  let(:approver)        { dacu_disclosure.approvers.first }
+  let(:dacu_disclosure) { create :team_dacu_disclosure }
 
   describe 'call' do
     context 'case is not already flagged' do
       let(:service) { described_class.new user: approver,
-                                          kase: assigned_case }
+                                          kase: assigned_case,
+                                          team: dacu_disclosure }
 
       it 'validates that the case is flagged' do
         expect(service.call).to eq :not_flagged
@@ -20,7 +21,8 @@ describe CaseUnflagForClearanceService do
 
     context 'case is already flagged' do
       let(:service) { described_class.new user: approver,
-                                          kase: assigned_flagged_case }
+                                          kase: assigned_flagged_case,
+                                          team: dacu_disclosure }
 
       before do
         allow(assigned_flagged_case.state_machine)
@@ -35,7 +37,7 @@ describe CaseUnflagForClearanceService do
 
       it 'removes the approving team assignment' do
         service.call
-        expect(assigned_flagged_case.approving_team).to be_blank
+        expect(assigned_flagged_case.approving_teams).to be_blank
       end
 
       it 'sets the result to ok and returns true' do

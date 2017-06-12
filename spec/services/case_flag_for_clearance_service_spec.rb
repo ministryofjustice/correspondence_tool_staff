@@ -3,14 +3,15 @@ require 'rails_helper'
 describe CaseFlagForClearanceService do
   let(:assigned_case)         { create :assigned_case }
   let(:assigned_flagged_case) { create :assigned_case, :flagged,
-                                       approving_team: approving_team }
-  let(:approver)       { approving_team.approvers.first }
-  let(:approving_team) { create :team_dacu_disclosure }
+                                       approving_team: dacu_disclosure }
+  let(:approver)        { dacu_disclosure.approvers.first }
+  let(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
 
   describe 'call' do
     context 'case is already flagged' do
       let(:service) { described_class.new user: approver,
-                                          kase: assigned_flagged_case }
+                                          kase: assigned_flagged_case,
+                                          team: dacu_disclosure }
 
       it 'validates whether the case is not flagged' do
         expect(service.call).to eq :already_flagged
@@ -20,7 +21,8 @@ describe CaseFlagForClearanceService do
 
     context 'case is not flagged already' do
       let(:service) { described_class.new user: approver,
-                                          kase: assigned_case }
+                                          kase: assigned_case,
+                                          team: dacu_disclosure }
 
       before do
         allow(assigned_case.state_machine)
@@ -35,7 +37,7 @@ describe CaseFlagForClearanceService do
 
       it 'assigns DACU disclosure as the approving team to the case' do
         service.call
-        expect(assigned_case.approving_team).to eq approving_team
+        expect(assigned_case.approving_teams).to include dacu_disclosure
       end
 
       it 'sets the result to ok and returns true' do

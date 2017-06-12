@@ -3,9 +3,9 @@ require 'rails_helper'
 describe CaseUnacceptApproverAssignmentService do
   let(:assigned_case)  { create :assigned_case, :flagged_accepted,
                                 approver: approver }
-  let(:approver)       { approving_team.approvers.first }
-  let(:approving_team) { create :team_dacu_disclosure }
-  let(:assignment)     { assigned_case.approver_assignment}
+  let(:approver)       { dacu_disclosure.approvers.first }
+  let(:dacu_disclosure) { create :team_dacu_disclosure }
+  let(:assignment)     { assigned_case.approver_assignments.first }
   let(:unaccepted_assignment) { create :approver_assignment }
 
   describe 'call' do
@@ -33,7 +33,7 @@ describe CaseUnacceptApproverAssignmentService do
         service.call
         expect(assignment.case.state_machine)
           .to have_received(:accept_approver_assignment!)
-                .with(approver, approving_team)
+                .with(approver, dacu_disclosure)
       end
 
       it 'removes the user from the assignment' do

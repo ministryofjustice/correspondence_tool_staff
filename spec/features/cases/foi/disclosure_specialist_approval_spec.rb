@@ -36,7 +36,7 @@ feature 'cases requiring clearance by disclosure specialist' do
     expect(case_list_item.actions.success_message.text)
       .to include 'Case taken on'
     expect(case_list_item.highlight_row.size).to eq 3
-    expect(kase.reload.approver).to eq disclosure_specialist
+    expect(kase.reload.approvers).to include disclosure_specialist
     case_list_item
   end
 
@@ -45,7 +45,7 @@ feature 'cases requiring clearance by disclosure specialist' do
     case_list_item.actions.undo_assign_link.click
     case_list_item.actions.wait_until_take_on_case_visible
     expect(case_list_item).to have_no_highlight_row
-    expect(kase.reload.approver).to be_nil
+    expect(kase.reload.approvers).to be_blank
   end
 
   def de_escalate_case_as_disclosure_specialist(kase, case_list_item)
@@ -53,7 +53,7 @@ feature 'cases requiring clearance by disclosure specialist' do
     case_list_item.actions.de_escalate_link.click
     case_list_item.actions.wait_until_undo_de_escalate_link_visible
     expect(case_list_item.highlight_row.size).to eq 3
-    expect(kase.reload.approver_assignment).to be_blank
+    expect(kase.reload.approver_assignments).to be_blank
   end
 
   def undo_de_escalate_case_as_disclosure_specialist(kase, case_list_item)
@@ -61,7 +61,7 @@ feature 'cases requiring clearance by disclosure specialist' do
     case_list_item.actions.undo_de_escalate_link.click
     case_list_item.actions.wait_until_de_escalate_link_visible
     expect(case_list_item).to have_no_highlight_row
-    expect(kase.reload.approving_team).to eq team_dacu_disclosure
+    expect(kase.reload.approving_teams).to include team_dacu_disclosure
   end
 
   def create_flagged_case_and_assign_to_team
