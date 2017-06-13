@@ -27,7 +27,7 @@ feature 'removing a response from response details' do
     )
   end
   given(:uploaded_file) do
-    cases_show_page.case_attachments.first
+    cases_show_page.case_attachments.first.collection
   end
 
   context 'as the assigned responder' do
@@ -49,7 +49,7 @@ feature 'removing a response from response details' do
         scenario 'when removing the response' do
           cases_show_page.load(id: case_with_response.id)
 
-          uploaded_file.actions.remove.click
+          uploaded_file.first.actions.remove.click
 
           expect(cases_show_page).to have_no_case_attachments
           expect(attachment_object).to have_received(:delete)
@@ -59,9 +59,9 @@ feature 'removing a response from response details' do
         scenario 'when removing the response with JS', js: true do
           cases_show_page.load(id: case_with_response.id)
 
-          expect(uploaded_file.actions.remove['data-confirm'])
+          expect(uploaded_file.first.actions.remove['data-confirm'])
             .to eq "Are you sure you want to remove #{attached_response.filename}?"
-          uploaded_file.actions.remove.click
+          uploaded_file.first.actions.remove.click
 
           cases_show_page.wait_for_case_attachments nil, count: 0
           expect(cases_show_page).to have_no_case_attachments
@@ -70,8 +70,8 @@ feature 'removing a response from response details' do
       end
 
       context 'when there are multiple responses' do
-        background do
-          other_response = create :case_response, case: case_with_response
+        before do
+          other_response = create :case_response, case: case_with_response, user_id: responder.id
           allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                              .with(other_response.key)
                                              .and_return(double(delete: nil))
@@ -83,15 +83,15 @@ feature 'removing a response from response details' do
         scenario 'when removing the response' do
           cases_show_page.load(id: case_with_response.id)
 
-          cases_show_page.case_attachments.first.actions.remove.click
+          cases_show_page.case_attachments.first.collection.first.actions.remove.click
           expect(cases_show_page).to have_case_attachments
         end
 
         scenario 'when removing the response with JS', js: true do
           cases_show_page.load(id: case_with_response.id)
 
-          expect(cases_show_page.case_attachments.count).to eq 2
-          uploaded_file.actions.remove.click
+          expect(cases_show_page.case_attachments.first.collection.count).to eq 2
+          uploaded_file.first.actions.remove.click
           cases_show_page.wait_for_case_attachments nil, count: 1
 
           expect(cases_show_page.case_attachments.count).to eq 1
@@ -130,7 +130,7 @@ feature 'removing a response from response details' do
       context 'when there is only one response' do
         scenario 'when removing the response' do
           cases_show_page.load(id: case_with_response.id)
-          uploaded_file.actions.remove.click
+          uploaded_file.first.actions.remove.click
 
           expect(cases_show_page).to have_no_case_attachments
           expect(attachment_object).to have_received(:delete)
@@ -140,9 +140,9 @@ feature 'removing a response from response details' do
         scenario 'when removing the response with JS', js: true do
           cases_show_page.load(id: case_with_response.id)
 
-          expect(uploaded_file.actions.remove['data-confirm'])
+          expect(uploaded_file.first.actions.remove['data-confirm'])
             .to eq "Are you sure you want to remove #{attached_response.filename}?"
-          uploaded_file.actions.remove.click
+          uploaded_file.first.actions.remove.click
 
           cases_show_page.wait_for_case_attachments nil, count: 0
           expect(cases_show_page).to have_no_case_attachments
@@ -152,8 +152,8 @@ feature 'removing a response from response details' do
       end
 
       context 'when there are multiple responses' do
-        background do
-          other_response = create :case_response, case: case_with_response
+        before do
+          other_response = create :case_response, case: case_with_response, user_id: responder.id
           allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                              .with(other_response.key)
                                              .and_return(double(delete: nil))
@@ -166,15 +166,15 @@ feature 'removing a response from response details' do
         scenario 'when removing the response' do
           cases_show_page.load(id: case_with_response.id)
 
-          cases_show_page.case_attachments.first.actions.remove.click
+          cases_show_page.case_attachments.first.collection.first.actions.remove.click
           expect(cases_show_page).to have_case_attachments
         end
 
         scenario 'when removing the response with JS', js: true do
           cases_show_page.load(id: case_with_response.id)
 
-          expect(cases_show_page.case_attachments.count).to eq 2
-          uploaded_file.actions.remove.click
+          expect(cases_show_page.case_attachments.first.collection.count).to eq 2
+          uploaded_file.first.actions.remove.click
           cases_show_page.wait_for_case_attachments nil, count: 1
           expect(cases_show_page.case_attachments.count)
             .to eq 1
@@ -208,7 +208,7 @@ feature 'removing a response from response details' do
       scenario 'does not display remove button' do
         cases_show_page.load(id: responded_case.id)
 
-        expect(cases_show_page.case_attachments.first.actions)
+        expect(cases_show_page.case_attachments.first.collection.first.actions)
           .to have_no_remove
       end
     end

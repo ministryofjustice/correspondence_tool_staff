@@ -1,27 +1,32 @@
 .case-attachments
   h2.request--heading Response
+  .request--message
+    - case_details.upload_groups.each do |ug|
+      .case-attachments-group
+        h3.case-attachments--primary
+          = ug.date_time
+          span.case-attachments--secondary
+            = " #{ug.user.full_name} "
+          span.case-attachments--secondary
+            = " #{ ug.team_name }"
 
-  table.case-attachments-report
-    thead
-      tr
-        th
-          | Date
-        th
-          | File
-        th
-          | Action
-    tbody
-      - case_details.attachments.sort_by(&:filename).each do |ca|
-        tr id="case_response_#{ca.id}"
-          td
-            = l ca.created_at, format: :default
-          td aria-label="#{t('common.case.filename')}"
-            = ca.filename
-          td.request--responses--actions aria-label="#{t('common.case.actions')}"
-            .response-actions
-              = attachment_preview_link(ca)
-              = " | "
-              = attachment_download_link(case_details, ca)
-              - if policy(case_details).can_remove_attachment?
-                = " | "
-                = attachment_remove_link(case_details, ca)
+        table.case-attachments-report
+          thead.visually-hidden
+            tr
+              th
+                | File
+              th
+                | Action
+          tbody
+            - ug.collection.each do |ca|
+              tr id="case_response_#{ca.id}"
+                td aria-label="#{t('common.case.filename')}"
+                  = ca.filename
+                td.request--responses--actions aria-label="#{t('common.case.actions')}"
+                  .response-actions
+                    = attachment_preview_link(ca)
+                    = " | "
+                    = attachment_download_link(case_details, ca)
+                    - if policy(case_details).can_remove_attachment?
+                      = " | "
+                      = attachment_remove_link(case_details, ca)

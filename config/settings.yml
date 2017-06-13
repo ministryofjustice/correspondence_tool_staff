@@ -36,6 +36,7 @@ foi_cases:
   default_clearance_team: DACU Disclosure
 
 default_date_format: '%-d %b %Y'
+default_time_format: '%d %b %Y %H:%M'
 
 press_office_team_name: Press Office
 

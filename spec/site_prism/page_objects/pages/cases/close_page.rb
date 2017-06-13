@@ -8,8 +8,8 @@ module PageObjects
 
 
         sections :case_attachments,
-                 PageObjects::Sections::CaseAttachmentSection,
-                 '.case-attachments tbody tr'
+                 PageObjects::Sections::Cases::CaseAttachmentSection,
+                 '.case-attachments-group'
 
         element :date_responded_day, '#case_date_responded_dd'
         element :date_responded_month, '#case_date_responded_mm'

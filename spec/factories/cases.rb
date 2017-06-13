@@ -111,7 +111,7 @@ FactoryGirl.define do
       transient do
         identifier "case with response"
         responder { create :responder, full_name: 'Ivor Response' }
-        responses { [build(:correspondence_response, type: 'response')] }
+        responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
       end
 
       after(:create) do |kase, evaluator|

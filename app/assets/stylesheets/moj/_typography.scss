@@ -63,3 +63,44 @@
 .strong-block{
   display: block;
 }
+
+
+/*********** Case Attachments ***********/
+
+.case-attachments-group {
+  margin-bottom: $gutter;
+}
+
+.case-attachments--primary {
+  @include bold-24();
+
+  margin-top: 0;
+  margin-bottom: 0;
+
+  @include media(tablet) {
+    margin-top: 0;
+  }
+
+}
+
+.case-attachments--secondary {
+  @include core-19();
+  display: block
+}
+
+.case-attachments-report {
+  @extend .table-font-xsmall;
+  margin-top: $gutter-half;
+
+  tbody {
+    border-top: 1px solid $border-colour;
+  }
+
+  th {
+    width: 60%;
+  }
+  .request--responses--actions {
+    text-align: right;
+  }
+
+}

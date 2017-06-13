@@ -164,7 +164,9 @@ CREATE TABLE case_attachments (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     key character varying,
-    preview_key character varying
+    preview_key character varying,
+    upload_group character varying,
+    user_id integer
 );
 
 
@@ -945,6 +947,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170420120713'),
 ('20170420122223'),
 ('20170424133127'),
-('20170523131602');
+('20170523131602'),
+('20170609094110');
 
 

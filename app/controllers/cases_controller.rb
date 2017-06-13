@@ -252,7 +252,7 @@ class CasesController < ApplicationController
   end
 
   def set_s3_direct_post
-    uploads_key = "uploads/#{@case.attachments_dir('responses')}/${filename}"
+    uploads_key = "uploads/#{@case.uploads_dir}/${filename}"
     @s3_direct_post = CASE_UPLOADS_S3_BUCKET.presigned_post(
       key:                   uploads_key,
       success_action_status: '201',
