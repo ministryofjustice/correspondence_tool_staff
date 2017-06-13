@@ -68,6 +68,7 @@ group :development, :test do
   gem 'faker'
   gem 'launchy'
   gem 'mechanize', '~> 2.7.5'
+  gem 'parallel_tests'
   gem 'pry'
   gem 'pry-byebug'
   gem 'rb-readline', '~> 0.5.4'

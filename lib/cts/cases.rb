@@ -208,8 +208,8 @@ module CTS
             raise "Could not approve case response , case id: #{kase.id}, user id: #{@disclosure_approver.id}, result: #{result}"
           end
         else
-          ResponseUploaderService.new(kase, @hmcts_responder, nil).seed!
-          kase.add_responses(@hmcts_responder, kase.attachments)
+          ResponseUploaderService.new(kase, @hmcts_responder, nil, nil).seed!
+          kase.state_machine.add_responses!(@hmcts_responder, @hmcts_team, kase.attachments)
         end
       end
     end

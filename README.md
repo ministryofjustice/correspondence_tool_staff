@@ -106,6 +106,29 @@ $ ./cts create -n4 unassigned drafting # create 4 cases each in unassigned and d
 $ ./cts --help create                  # display full help text for create command
 ```
 
+### Testing in Parallel
+
+This project includes the ```parallel_tests``` gem which enables multiple CPUs to be used during testing
+in order to speed up execution.  
+
+#### To set up parallel testing
+
+1. Create the required number of extra test databases:
+
+    ```bundle exec rake parallel:create```
+    
+2. Load the schema into all of the extra test databases:
+
+    ```bundle exec rake parallel:load_structure```
+    
+    
+#### To run the tests in parallel
+
+    bundle exec rake parallel:spec
+
+
+    
+
 
 ### Emails
 
