@@ -116,7 +116,6 @@ module CTS
         tp cases, [:id, :number, :current_state, :requires_clearance?]
       end
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     desc 'show', 'Show case details.'
     def show(*args)
@@ -159,47 +158,9 @@ module CTS
         @responding_team ||= responder.responding_teams.first
       else
         @responding_team ||= CTS::find_team(
-          options.fetch(:responding_team, 'HMCTS North East Response Unit(RSU)')
+          options.fetch(:responding_team, CTS::hmcts_team)
         )
       end
-    end
-
-    def dacu_manager
-      @dacu_manager ||= if dacu_team.managers.blank?
-                          raise 'DACU team has no managers assigned.'
-                        else
-                          dacu_team.managers.first
-                        end
-    end
-
-    def dacu_disclosure_approver
-      @dacu_disclosure_approver ||=
-        if dacu_disclosure_team.approvers.blank?
-          raise 'DACU Disclosure team has no approvers assigned.'
-        else
-          dacu_disclosure_team.approvers.first
-        end
-    end
-
-    def press_office_approver
-      @press_office_approver ||=
-        if press_office_team.approvers.blank?
-          raise 'Press Office team has no approvers assigned.'
-        else
-          press_office_team.approvers.first
-        end
-    end
-
-    def dacu_team
-      @dacu_team ||= CTS::find_team('DACU')
-    end
-
-    def dacu_disclosure_team
-      @dacu_disclosure_team ||= Team.dacu_disclosure
-    end
-
-    def press_office_team
-      @press_office_team ||= Team.press_office
     end
 
     def parse_options
@@ -248,12 +209,12 @@ module CTS
     def flag_for_dacu_disclosure(*cases)
       cases.each do |kase|
         result = CaseFlagForClearanceService.new(
-          user: dacu_manager,
+          user: CTS::dacu_manager,
           kase: kase,
           team: Team.dacu_disclosure
         ).call
         unless result == :ok
-          raise "Could not flag case for clearance by DACU Disclosure, case id: #{kase.id}, user id: #{dacu_manager.id}, result: #{result}"
+          raise "Could not flag case for clearance by DACU Disclosure, case id: #{kase.id}, user id: #{CTS::dacu_manager.id}, result: #{result}"
         end
       end
     end
@@ -261,12 +222,12 @@ module CTS
     def flag_for_press_office(*cases)
       cases.each do |kase|
         result = CaseFlagForClearanceService.new(
-          user: dacu_manager,
+          user: CTS::dacu_manager,
           kase: kase,
           team: Team.press_office
         ).call
         unless result == :ok
-          raise "Could not flag case for clearance by press office, case id: #{kase.id}, user id: #{dacu_manager.id}, result: #{result}"
+          raise "Could not flag case for clearance by press office, case id: #{kase.id}, user id: #{CTS::dacu_manager.id}, result: #{result}"
         end
       end
     end
@@ -278,7 +239,7 @@ module CTS
                                   name: Faker::Name.name,
                                   subject: Faker::Company.catch_phrase,
                                   message: Faker::Lorem.paragraph(10, true, 10),
-                                  managing_team: dacu_team)
+                                  managing_team: CTS::dacu_team)
         flag_for_dacu_disclosure(kase) if @add_dacu_disclosure
         flag_for_press_office(kase) if @add_press_office
         cases << kase
@@ -289,7 +250,7 @@ module CTS
     def transition_to_awaiting_responder(cases)
       cases.each do |kase|
         kase.responding_team = responding_team
-        kase.assign_responder(dacu_manager, responding_team)
+        kase.assign_responder(CTS::dacu_manager, responding_team)
       end
     end
 
@@ -303,11 +264,11 @@ module CTS
       cases.each do |kase|
         if @add_dacu_disclosure
           assignment = kase.approver_assignments
-                         .where(team: dacu_disclosure_team).first
-          user = dacu_disclosure_approver
+                         .where(team: CTS::dacu_disclosure_team).first
+          user = CTS::dacu_disclosure_approver
         elsif @add_press_office
           assignment = kase.approver_assignments
-                         .where(team: press_office_team).first
+                         .where(team: CTS::press_office_team).first
           user = press_office_approver
         end
 
@@ -324,11 +285,11 @@ module CTS
 
     def transition_to_awaiting_dispatch(cases)
       cases.each do |kase|
-        if kase.approver_assignments.for_user(dacu_disclosure_approver).any?
+        if kase.approver_assignments.for_user(CTS::dacu_disclosure_approver).any?
           result = CaseApprovalService
-                     .new(user: dacu_disclosure_approver, kase: kase).call
+                     .new(user: CTS::dacu_disclosure_approver, kase: kase).call
           unless result == :ok
-            raise "Could not approve case response , case id: #{kase.id}, user id: #{dacu_disclosure_approver.id}, result: #{result}"
+            raise "Could not approve case response , case id: #{kase.id}, user id: #{CTS::dacu_disclosure_approver.id}, result: #{result}"
           end
         else
           ResponseUploaderService.new(kase, responder, nil, nil).seed!
@@ -354,7 +315,7 @@ module CTS
       cases.each do |kase|
         kase.prepare_for_close
         kase.update(date_responded: Date.today, outcome_name: 'Granted in full')
-        kase.close(dacu_manager)
+        kase.close(CTS::dacu_manager)
       end
     end
 
@@ -370,5 +331,7 @@ module CTS
       end
       return []
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
   end
+  # rubocop:enable Metrics/ClassLength
 end

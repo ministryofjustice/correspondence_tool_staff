@@ -51,7 +51,6 @@ module CTS
       end
     end
 
-
     def find_user(id_or_name)
       if id_or_name.match %r{^\d+$}
         User.find id_or_name
@@ -64,6 +63,90 @@ module CTS
       end
     end
 
+    def validate_teams_populated
+      dacu_team
+      dacu_disclosure_team
+      press_office_team
+      hmcts_team
+      hr_team
+      laa_team
+    rescue => err
+      error err.message
+      error "Run 'cts teams seed' to populate teams, or use 'rake db:seed:dev:users' for the whole shebang"
+      error err.backtrace.join("\n\t")
+      exit 2
+    end
+
+    # rubocop:disable Metrics/CyclomaticComplexity
+    def validate_users_populated
+      begin
+        dacu_team.managers.first || raise("DACU BMT missing users")
+        dacu_disclosure_team.approvers.first || raise("DACU Disclosure missing users")
+        hmcts_team.responders.first || raise("HMCTS missing users")
+        hr_team.responders.first || raise("HR missing users")
+        press_office_team.approvers.first || raise("Press Office missing users")
+      rescue => ex
+        error "Error validating users:"
+        error ex.message
+        error "Run 'cts users seed' to populate users, or use 'rake db:seed:dev:users' for the whole shebang"
+        error ex.backtrace.join("\n\t")
+
+        exit 3
+      end
+    end
+    # rubocop:enable Metrics/CyclomaticComplexity
+
+    def dacu_manager
+      @dacu_manager ||= if dacu_team.managers.blank?
+                          raise 'DACU team has no managers assigned.'
+                        else
+                          dacu_team.managers.first
+                        end
+    end
+
+    def dacu_disclosure_approver
+      @dacu_disclosure_approver ||=
+        if dacu_disclosure_team.approvers.blank?
+          raise 'DACU Disclosure team has no approvers assigned.'
+        else
+          dacu_disclosure_team.approvers.first
+        end
+    end
+
+    def press_office_approver
+      @press_office_approver ||=
+        if press_office_team.approvers.blank?
+          raise 'Press Office team has no approvers assigned.'
+        else
+          press_office_team.approvers.first
+        end
+    end
+
+    def dacu_team
+      @dacu_team ||= CTS::find_team 'DACU'
+    end
+
+    def dacu_disclosure_team
+      @dacu_disclosure_team ||=
+        CTS::find_team Settings.foi_cases.default_clearance_team
+    end
+
+    def press_office_team
+      @press_office_team ||= CTS::find_team Settings.press_office_team_name
+    end
+
+    def hmcts_team
+      @hmcts_team ||=
+        CTS::find_team 'HMCTS North East Response Unit(RSU)'
+    end
+
+    def laa_team
+      @laa_team ||= CTS::find_team 'Legal Aid Agency'
+    end
+
+    def hr_team
+      @hr_team ||= CTS::find_team 'HR'
+    end
   end
 
   class Commands < Thor
@@ -80,45 +163,10 @@ module CTS
 
     desc 'validate_data', 'Validate team and user data in DB.'
     def validate_data
-      validate_teams_populated
-      validate_users_populated
+      CTS::validate_teams_populated
+      CTS::validate_users_populated
       puts "Looks good."
     end
-
-    private
-
-    def validate_teams_populated
-      @dacu_team, @disclosure_team, @hmcts_team, @hr_team, @laa_team = ['DACU', 'DACU Disclosure', 'Legal Aid Agency', 'HR', 'HMCTS North East Response Unit(RSU)'].map do |team_name|
-        teams = Team.where(name: team_name)
-        if teams.count > 1
-          error "ERROR: multiple entries found for team: #{team_name}"
-          exit 2
-        elsif teams.count == 0
-          error "ERROR: team missing: #{team_name}"
-          error "Run 'cts teams seed' to populate teams, or use 'rake db:seed:dev:users' for the whole shebang"
-          exit 2
-        else
-          teams.first
-        end
-      end
-    end
-
-    def validate_users_populated
-      begin
-        @dacu_manager = @dacu_team.managers.first ||
-                        raise("DACU BMT missing users")
-        @disclosure_approver = @disclosure_team.approvers.first ||
-                               raise("DACU Disclosure missing users")
-        @hmcts_responder = @hmcts_team.responders.first ||
-                           raise("HMCTS missing users")
-      rescue => ex
-        error "Error validating users:"
-        error ex.message
-        error "Run 'cts users seed' to populate users, or use 'rake db:seed:dev:users' for the whole shebang"
-        exit 3
-      end
-    end
-
   end
 end
 
