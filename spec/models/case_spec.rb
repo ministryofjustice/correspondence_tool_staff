@@ -247,11 +247,9 @@ RSpec.describe Case, type: :model do
         @open_in_time_case = create :accepted_case, received_date: Date.new(2017, 1, 5)
         @open_late_case = create :accepted_case, received_date: Date.new(2017, 1, 4)
         @responded_in_time_case = create :responded_case,
-                                         received_date: Date.new(2017, 1, 3),
-                                         date_responded: Date.new(2017, 1, 31)
+                                         received_date: Date.new(2017, 1, 5)
         @responded_late_case = create :responded_case,
-                                      received_date: Date.new(2017, 1, 3),
-                                      date_responded: Date.new(2017, 2, 1)
+                                      received_date: Date.new(2017, 1, 4)
         @closed_in_time_case = create :closed_case,
                                       received_date: Date.new(2017, 1, 3),
                                       date_responded: Date.new(2017, 1, 31)

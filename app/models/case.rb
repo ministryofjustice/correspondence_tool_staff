@@ -64,13 +64,13 @@ class Case < ApplicationRecord
 
   scope :in_time, -> {
     where(
-      "CASE WHEN current_state IN ('responded', 'closed') THEN date_responded <= (properties->>'external_deadline')::date ELSE ? <= properties->>'external_deadline' END",
+      "CASE WHEN current_state = 'closed' THEN date_responded <= (properties->>'external_deadline')::date ELSE ? <= properties->>'external_deadline' END",
       Date.today
     )
   }
   scope :late,    -> {
     where(
-      "CASE WHEN current_state IN ('responded', 'closed') THEN date_responded > (properties->>'external_deadline')::date ELSE ? > properties->>'external_deadline' END",
+      "CASE WHEN current_state = 'closed' THEN date_responded > (properties->>'external_deadline')::date ELSE ? > properties->>'external_deadline' END",
       Date.today
     )
   }
