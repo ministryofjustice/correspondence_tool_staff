@@ -137,7 +137,7 @@ describe 'cases/index.html.slim', type: :view do
         create_list(:case, 20)
         @cases = Case.all.page.decorate
       end
-      after(:all) { Case.delete_all }
+      after(:all) { DbHousekeeping.clean }
 
       before do
         assign(:cases, @cases)
@@ -154,7 +154,7 @@ describe 'cases/index.html.slim', type: :view do
         create_list(:case, 21)
         @cases = Case.all.page(1).decorate
       end
-      after(:all) { Case.delete_all }
+      after(:all) { DbHousekeeping.clean }
 
       before do
         assign(:cases, @cases)
@@ -179,7 +179,7 @@ describe 'cases/index.html.slim', type: :view do
         create_list(:case, 21)
         @cases = Case.all.page(2).decorate
       end
-      after(:all) { Case.delete_all }
+      after(:all) { DbHousekeeping.clean }
 
       before do
         assign(:cases, @cases)
@@ -204,7 +204,7 @@ describe 'cases/index.html.slim', type: :view do
         create_list(:case, 41)
         @cases = Case.all.page(2).decorate
       end
-      after(:all) { Case.delete_all }
+      after(:all) { DbHousekeeping.clean }
 
       before do
         assign(:cases, @cases)
