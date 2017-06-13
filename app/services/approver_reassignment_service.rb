@@ -9,6 +9,7 @@ class ApproverReassignmentService
   def call
     if @policy.can_reassign_approver?
       ActiveRecord::Base.transaction do
+        # TODO: ensure we get the correct assignment, not just the first one
         assignment = @kase.approver_assignments.first
         @kase.state_machine.reassign_approver!(@user,
                                                @kase.approvers.first,

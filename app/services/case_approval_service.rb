@@ -27,6 +27,7 @@ class CaseApprovalService
 
   def mark_as_approved
     ActiveRecord::Base.transaction do
+      # TODO: ensure we get the correct user, not just the first one
       assignment = @kase.approver_assignments.for_user(@user).first
       assignment.update!(approved: true)
       @state_machine.methods
