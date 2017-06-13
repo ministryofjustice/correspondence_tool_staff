@@ -47,7 +47,7 @@ RSpec.describe CasesController, type: :controller do
                                        responding_team: responding_team,
                                        approver: approver,
                                        responder: responder}
-
+  let!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure}
 
   let(:assigned_trigger_case)   { create :assigned_case, :flagged_accepted,
                                          approver: approver }
@@ -750,8 +750,8 @@ RSpec.describe CasesController, type: :controller do
     context "as an authenticated manager" do
       before do
         sign_in manager
-        create :team_dacu
-        create :team_dacu_disclosure
+        find_or_create :team_dacu
+        find_or_create :team_dacu_disclosure
       end
 
       context 'with valid params' do
