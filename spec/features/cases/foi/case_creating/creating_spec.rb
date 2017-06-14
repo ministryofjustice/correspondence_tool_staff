@@ -1,35 +1,15 @@
 require 'rails_helper'
 
-UserInput = Struct.new(
-    'Case',
-    :requester_type,
-    :name,
-    :email,
-    :subject,
-    :message
-  )
-
 feature 'Case creation by a manager' do
-
-  let(:user_input) do
-    UserInput.new(
-      'Member of the public',
-      'A. Member of Public',
-      'member@public.com',
-      'FOI - foo bar foo bar',
-      'An FOI request from a member of public'
-    )
-  end
 
   given(:responder)       { create(:responder) }
   given(:responding_team) { create :responding_team, responders: [responder] }
   given(:manager)         { create(:manager)  }
   given(:managing_team)   { create :managing_team, managers: [manager] }
-  given(:dacu)            { create :team_dacu }
+
 
   background do
     responding_team
-    dacu
     create :team_dacu_disclosure
     create(:category, :foi)
     login_as manager
