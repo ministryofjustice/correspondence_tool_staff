@@ -17,7 +17,7 @@ feature 'Case creation by a manager' do
     cases_page.new_case_button.click
   end
 
-  scenario 'succeeds using valid inputs' do
+  scenario 'creating a case that does not need clearance' do
     expect(cases_new_page).to be_displayed
 
     user_input = cases_new_page.fill_in_case_details
