@@ -25,27 +25,18 @@ feature 'Mark response as sent' do
 
     expect(cases_show_page.actions).to have_upload_response
     expect(cases_show_page.actions).to have_mark_as_sent
+
     cases_show_page.actions.mark_as_sent.click
 
     expect(cases_respond_page).to be_displayed
-    expect(cases_respond_page).to have_reminders
-    expect(cases_respond_page.reminders.text).to eq(
-"Make sure you have: cleared the response with the Deputy Director uploaded \
-the response and any supporting documents sent the response to the person who \
-made the request"
-      )
-    expect(cases_respond_page).to have_alert
-    expect(cases_respond_page.alert.text).to eq(
-"Important You can't update a response after marking it as sent."
-      )
-    expect(cases_respond_page).to have_mark_as_sent_button
     cases_respond_page.mark_as_sent_button.click
 
-    expect(current_path).to eq '/cases/open'
     expect(open_cases_page.case_numbers).to include kase.number
     expect(open_cases_page).
-      to have_content('Response confirmed. The case is now with DACU.')
-    expect(kase.reload.current_state).to eq 'responded'
+
+    expect(cases_page.case_numbers).to include kase.number
+    expect(cases_page).
+        to have_content('Response confirmed. The case is now with DACU.')
 
     login_as manager
     open_cases_page.load(timeliness: 'in-time')
@@ -58,19 +49,6 @@ made the request"
     cases_show_page.actions.mark_as_sent.click
 
     expect(cases_respond_page).to be_displayed
-    expect(cases_respond_page).to have_reminders
-    expect(cases_respond_page.reminders.text).to eq(
-"Make sure you have: cleared the response with the Deputy Director uploaded \
-the response and any supporting documents sent the response to the person who \
-made the request"
-      )
-    expect(cases_respond_page).to have_alert
-    expect(cases_respond_page.alert.text).to eq(
-"Important You can't update a response after marking it as sent."
-    )
-    expect(cases_respond_page).to have_mark_as_sent_button
-
-    expect(cases_respond_page).to have_back_link
 
     cases_respond_page.back_link.click
 
