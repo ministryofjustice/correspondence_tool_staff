@@ -40,15 +40,9 @@ feature 'Case creation by a manager' do
   scenario 'succeeds using valid inputs' do
     expect(cases_new_page).to be_displayed
 
-    choose user_input.requester_type
-    fill_in 'Full name',          with: user_input.name
-    fill_in 'Email',              with: user_input.email
-    fill_in 'Subject of request', with: user_input.subject
-    fill_in 'Full request',       with: user_input.message
-    fill_in 'Day',                with: Time.zone.today.day.to_s
-    fill_in 'Month',              with: Time.zone.today.month.to_s
-    fill_in 'Year',               with: Time.zone.today.year.to_s
-    choose 'case_flag_for_disclosure_specialists_no'
+    user_input = cases_new_page.fill_in_case_details
+
+    cases_new_page.choose_flag_for_disclosure_specialists 'no'
 
     click_button 'Next - Assign case'
 
@@ -89,15 +83,9 @@ feature 'Case creation by a manager' do
   scenario 'creating a case that needs clearance' do
     expect(cases_new_page).to be_displayed
 
-    choose user_input.requester_type
-    fill_in 'Full name',          with: user_input.name
-    fill_in 'Email',              with: user_input.email
-    fill_in 'Subject of request', with: user_input.subject
-    fill_in 'Full request',       with: user_input.message
-    fill_in 'Day',                with: Time.zone.today.day.to_s
-    fill_in 'Month',              with: Time.zone.today.month.to_s
-    fill_in 'Year',               with: Time.zone.today.year.to_s
-    choose 'case_flag_for_disclosure_specialists_yes'
+    user_input = cases_new_page.fill_in_case_details
+
+    cases_new_page.choose_flag_for_disclosure_specialists 'yes'
 
     click_button 'Next - Assign case'
 
