@@ -119,23 +119,6 @@ feature 'Case creation by a manager' do
     expect(page).to have_content("Date received can't be blank")
   end
 
-  scenario 'requires choice whether to assign a disclosure specialist' do
-    expect(cases_new_page).to be_displayed
-
-    choose user_input.requester_type
-    fill_in 'Full name',          with: user_input.name
-    fill_in 'Email',              with: user_input.email
-    fill_in 'Subject of request', with: user_input.subject
-    fill_in 'Full request',       with: user_input.message
-    fill_in 'Day',                with: Time.zone.today.day.to_s
-    fill_in 'Month',              with: Time.zone.today.month.to_s
-    fill_in 'Year',               with: Time.zone.today.year.to_s
-
-    click_button 'Next - Assign case'
-
-    expect(page).to have_content("Does a disclosure specialist need to see this? Please choose yes or no.")
-  end
-
   given(:existing_case) { create(:case) }
 
   scenario 'fails helpfully case number is duplicated in error' do

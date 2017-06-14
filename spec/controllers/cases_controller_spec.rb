@@ -827,6 +827,13 @@ RSpec.describe CasesController, type: :controller do
             expect(service).not_to have_received(:call)
           end
 
+          it "returns an error message if parameter is not set" do
+            params[:case].delete(:flag_for_disclosure_specialists)
+            post :create, params: params
+            expect(assigns(:case).errors).to have_key(:flag_for_disclosure_specialists)
+            expect(response).to have_rendered(:new)
+          end
+
           it "flags the case for clearance if parameter is true" do
             params[:case][:flag_for_disclosure_specialists] = 'yes'
             post :create, params: params
