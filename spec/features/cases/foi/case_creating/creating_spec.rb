@@ -30,15 +30,6 @@ feature 'Case creation by a manager' do
 
     expect(assignments_new_page).to be_displayed
 
-    expect(new_case).to have_attributes(
-      requester_type: 'member_of_the_public',
-      name:           user_input.name,
-      email:          user_input.email,
-      subject:        user_input.subject,
-      message:        user_input.message,
-      received_date:  Time.zone.today
-    )
-
     choose responding_team.name
     click_button 'Assign case'
 
@@ -46,18 +37,6 @@ feature 'Case creation by a manager' do
 
     expect(cases_show_page.text).to have_content('Case successfully created')
 
-    new_assignment = new_case.responder_assignment
-
-    new_case.reload
-    expect(new_case.current_state).to eq 'awaiting_responder'
-
-    expect(new_assignment).to have_attributes(
-      role:    'responding',
-      team:    responding_team,
-      user_id: nil,
-      case:    new_case,
-      state:   'pending'
-    )
   end
 
   scenario 'creating a case that needs clearance' do
