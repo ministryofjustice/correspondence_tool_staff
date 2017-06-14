@@ -282,6 +282,9 @@ GEM
       jwt (~> 1.5)
     ntlm-http (0.1.1)
     orm_adapter (0.5.0)
+    parallel (1.11.2)
+    parallel_tests (2.14.1)
+      parallel
     parser (2.3.1.2)
       ast (~> 2.2)
     pg (0.18.4)
@@ -519,6 +522,7 @@ DEPENDENCIES
   logstasher
   mechanize (~> 2.7.5)
   mimetype-fu (~> 0.1.2)
+  parallel_tests
   pg (~> 0.18)
   poltergeist
   pry
