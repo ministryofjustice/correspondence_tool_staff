@@ -89,6 +89,13 @@ RSpec.configure do |config|
       puts "\033[0;33mrendered #{renderer} content: #{fullpath}\033[0m"
     end
   end
+
+  config.include DeviseRoutingHelpers, type: :routing
+
+  config.before(:each, type: :routing) do
+    mock_warden_for_route_tests!
+  end
+
 end
 
 Shoulda::Matchers.configure do |config|
