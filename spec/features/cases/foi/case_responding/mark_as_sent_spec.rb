@@ -23,16 +23,11 @@ feature 'Mark response as sent' do
   scenario 'the assigned KILO has uploaded a response' do
     cases_show_page.load(id: kase.id)
 
-    expect(cases_show_page.actions).to have_upload_response
-    expect(cases_show_page.actions).to have_mark_as_sent
-
     cases_show_page.actions.mark_as_sent.click
 
-    expect(cases_respond_page).to be_displayed
     cases_respond_page.mark_as_sent_button.click
 
     expect(open_cases_page.case_numbers).to include kase.number
-    expect(open_cases_page).
 
     expect(cases_page.case_numbers).to include kase.number
     expect(cases_page).
@@ -48,8 +43,6 @@ feature 'Mark response as sent' do
 
     cases_show_page.actions.mark_as_sent.click
 
-    expect(cases_respond_page).to be_displayed
-
     cases_respond_page.back_link.click
 
     expect(cases_show_page).to be_displayed(kase.id)
@@ -63,8 +56,6 @@ feature 'Mark response as sent' do
 
     scenario 'marking the case as sent' do
       cases_show_page.load(id: kase.id)
-
-      expect(cases_show_page.actions).to have_mark_as_sent
 
       cases_show_page.actions.mark_as_sent.click
 

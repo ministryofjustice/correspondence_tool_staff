@@ -66,7 +66,6 @@ feature 'removing a response from response details' do
           cases_show_page.wait_for_case_attachments nil, count: 0
           expect(cases_show_page).to have_no_case_attachments
           expect(attachment_object).to have_received(:delete)
-          expect(cases_show_page.actions).to have_no_mark_as_sent
         end
       end
 

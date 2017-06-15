@@ -27,8 +27,6 @@ feature 'Closing a case' do
         cases_close_page.outcome_radio_button_fully_granted.click
         cases_close_page.submit_button.click
 
-        expect(cases_show_page).to have_no_actions
-
         show_page = cases_show_page.case_details
 
         expect(show_page.response_details.date_responded.data.text)
@@ -93,7 +91,6 @@ feature 'Closing a case' do
       cases_close_page.submit_button.click
 
       expect(cases_show_page).to have_content("You've closed this case")
-      expect(cases_show_page).to_not have_actions
 
       show_page = cases_show_page.case_details.response_details
 

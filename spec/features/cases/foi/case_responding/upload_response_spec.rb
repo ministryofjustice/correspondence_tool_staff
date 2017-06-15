@@ -19,13 +19,10 @@ feature 'Upload response' do
 
     scenario 'clicking link on case detail page goes to upload page' do
       cases_show_page.load(id: kase.id)
-      expect(cases_show_page.actions).to have_upload_response
-      expect(cases_show_page.actions).not_to have_mark_as_sent
-      expect(cases_show_page.actions).not_to have_close_case
 
-      click_link 'Upload response'
+      cases_show_page.actions.upload_response.click
 
-      expect(current_path).to eq new_response_upload_case_path(kase)
+      expect(cases_new_response_upload_page).to be_displayed
     end
   end
 
@@ -36,13 +33,10 @@ feature 'Upload response' do
 
     scenario 'clicking link on case detail page goes to upload page' do
       cases_show_page.load(id: kase.id)
-      expect(cases_show_page.actions).to have_upload_response
-      expect(cases_show_page.actions).not_to have_mark_as_sent
-      expect(cases_show_page.actions).not_to have_close_case
 
-      click_link 'Upload response'
+      cases_show_page.actions.upload_response.click
 
-      expect(current_path).to eq new_response_upload_case_path(kase)
+      expect(cases_new_response_upload_page).to be_displayed
     end
   end
 
@@ -54,9 +48,9 @@ feature 'Upload response' do
     end
 
     scenario "link to case upload page isn't visible on detail page" do
-      cases_new_response_upload_page.load(id: kase.id)
+      cases_show_page.load(id: kase.id)
 
-      expect(cases_new_response_upload_page).not_to have_link('Upload response')
+      expect(cases_show_page).not_to have_link('Upload response')
     end
   end
 end

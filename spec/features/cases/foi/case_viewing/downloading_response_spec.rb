@@ -47,8 +47,6 @@ feature 'downloading a response from response details' do
       scenario 'when an uploaded response is available' do
         cases_show_page.load(id: drafting_case.id)
 
-        expect(cases_show_page.case_attachments.first.actions).to have_view
-
         expect {
           cases_show_page.case_attachments.first.actions.download.click
         }.to redirect_to_external(presigned_url)
