@@ -18,6 +18,7 @@ module PageObjects
           element :close_case, '#action--close-case'
           element :clear_case, '#action--approve'
           element :upload_approve, '#action--upload-approve'
+          element :upload_redraft, '#action--upload-redraft'
         end
 
         section :case_status,

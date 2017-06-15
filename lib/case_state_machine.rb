@@ -1,3 +1,4 @@
+# rubocop:disable ClassLength
 class CaseStateMachine
   include Statesman::Machine
   include Statesman::Events
@@ -109,10 +110,18 @@ class CaseStateMachine
 
   event :add_response_to_flagged_case_and_approve do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object).can_add_attachment_to_flagged_case?
+      CaseStateMachine.get_policy(options[:user_id], object).can_upload_response_and_approve?
     end
 
     transition from: :pending_dacu_clearance, to: :awaiting_dispatch
+  end
+
+  event :upload_response_and_return_for_redraft do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object).can_upload_response_and_approve?
+    end
+
+    transition from: :pending_dacu_clearance, to: :drafting
   end
 
   event :approve do
@@ -178,15 +187,12 @@ class CaseStateMachine
 
   def permitted_events(user_id)
     state = current_state
-    self.class.events.select do |event_name, event|
+    events = self.class.events.select do |event_name, event|
       can_trigger_event?(event_name, user_id: user_id) && event[:transitions].key?(state) && event[:transitions][state].any? do |end_state|
         can_transition_to? end_state, user_id: user_id
       end
     end.map(&:first)
-
-    # self.class.events.select do |_, transitions|
-    #   transitions.key?(state)
-    # end.map(&:first)
+    events.sort! { |a, b| a.to_s <=> b.to_s }
   end
 
   def accept_approver_assignment!(user, approving_team)
@@ -265,6 +271,14 @@ class CaseStateMachine
              filenames: filenames
   end
 
+  def upload_response_and_return_for_redraft!(user, approving_team, filenames)
+    trigger! :upload_response_and_return_for_redraft,
+             user_id: user.id,
+             event: :upload_response_and_return_for_redraft,
+             approving_team_id: approving_team.id,
+             filenames: filenames
+  end
+
   def remove_response!(user, responding_team, filename, num_attachments)
     event = num_attachments == 0 ? :remove_last_response : :remove_response
     trigger event,
@@ -302,3 +316,4 @@ class CaseStateMachine
     Pundit.policy!(self.object)
   end
 end
+# rubocop:enable ClassLength
