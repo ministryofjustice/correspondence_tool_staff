@@ -4,15 +4,36 @@
 #                 new_user_session GET    /users/sign_in(.:format)                                   devise/sessions#new
 #                     user_session POST   /users/sign_in(.:format)                                   devise/sessions#create
 #             destroy_user_session DELETE /users/sign_out(.:format)                                  devise/sessions#destroy
-#               authenticated_root GET    /                                                          cases#index
+#                new_user_password GET    /users/password/new(.:format)                              devise/passwords#new
+#               edit_user_password GET    /users/password/edit(.:format)                             devise/passwords#edit
+#                    user_password PATCH  /users/password(.:format)                                  devise/passwords#update
+#                                  PUT    /users/password(.:format)                                  devise/passwords#update
+#                                  POST   /users/password(.:format)                                  devise/passwords#create
+#                     manager_root GET    /                                                          redirect(301, /cases/open?timeliness=in_time)
+#                   responder_root GET    /                                                          redirect(301, /cases/open?timeliness=in_time)
+#                    approver_root GET    /                                                          redirect(301, /cases/open?timeliness=in_time)
 #                      sidekiq_web        /sidekiq                                                   Sidekiq::Web
 #                         feedback POST   /feedback(.:format)                                        feedback#create
+#               cases_manager_root GET    /cases(.:format)                                           redirect(301, /cases/open?timeliness=in_time)
+#             cases_responder_root GET    /cases(.:format)                                           redirect(301, /cases/open?timeliness=in_time)
+#              cases_approver_root GET    /cases(.:format)                                           redirect(301, /cases/open?timeliness=in_time)
 #                       close_case GET    /cases/:id/close(.:format)                                 cases#close
+#                     closed_cases GET    /cases/closed(.:format)                                    cases#closed_cases
+#                   incoming_cases GET    /cases/incoming(.:format)                                  cases#incoming_cases
+#                    my_open_cases GET    /cases/my_open(.:format)                                   cases#my_open_cases
+#                       open_cases GET    /cases/open(.:format)                                      cases#open_cases
 #             process_closure_case PATCH  /cases/:id/process_closure(.:format)                       cases#process_closure
 #                     respond_case GET    /cases/:id/respond(.:format)                               cases#respond
 #             confirm_respond_case PATCH  /cases/:id/confirm_respond(.:format)                       cases#confirm_respond
 #   case_assignments_show_rejected GET    /cases/:case_id/assignments/show_rejected(.:format)        assignments#show_rejected
+#        unflag_for_clearance_case PATCH  /cases/:id/unflag_for_clearance(.:format)                  cases#unflag_for_clearance
+#          flag_for_clearance_case PATCH  /cases/:id/flag_for_clearance(.:format)                    cases#flag_for_clearance
+#            approve_response_case GET    /cases/:id/approve_response(.:format)                      cases#approve_response
+#   execute_response_approval_case PATCH  /cases/:id/execute_response_approval(.:format)             cases#execute_response_approval
+#           reassign_approver_case PATCH  /cases/:id/reassign_approver(.:format)                     cases#reassign_approver
 # accept_or_reject_case_assignment PATCH  /cases/:case_id/assignments/:id/accept_or_reject(.:format) assignments#accept_or_reject
+#           accept_case_assignment PATCH  /cases/:case_id/assignments/:id/accept(.:format)           assignments#accept
+#         unaccept_case_assignment PATCH  /cases/:case_id/assignments/:id/unaccept(.:format)         assignments#unaccept
 #                 case_assignments GET    /cases/:case_id/assignments(.:format)                      assignments#index
 #                                  POST   /cases/:case_id/assignments(.:format)                      assignments#create
 #              new_case_assignment GET    /cases/:case_id/assignments/new(.:format)                  assignments#new
@@ -53,19 +74,18 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+  gnav = Settings.global_navigation
+
   authenticated :user, -> (u) { u.manager? }  do
-    root to: redirect(Settings.global_navigation.user_roles.manager.default_url),
-         as: :manager_root
+    root to: redirect(gnav.user_roles.manager.default_url), as: :manager_root
   end
 
   authenticated :user, -> (u) { u.responder?}  do
-    root to: redirect(Settings.global_navigation.user_roles.responder.default_url),
-         as: :responder_root
+    root to: redirect(gnav.user_roles.responder.default_url), as: :responder_root
   end
 
   authenticated :user, -> (u) { u.approver?}  do
-    root to: redirect(Settings.global_navigation.user_roles.approver.default_url),
-         as: :approver_root
+    root to: redirect(gnav.user_roles.approver.default_url), as: :approver_root
   end
 
   # TODO: Limit this to the admin users, as soon as we figure out how we
@@ -79,7 +99,18 @@ Rails.application.routes.draw do
   post '/feedback' => 'feedback#create'
 
   resources :cases do
-    get '/', to: redirect('/cases/open'), on: :collection
+    authenticated :user, -> (u) { u.manager? }  do
+      root to: redirect(gnav.user_roles.manager.default_url), as: :manager_root
+    end
+
+    authenticated :user, -> (u) { u.responder?}  do
+      root to: redirect(gnav.user_roles.responder.default_url), as: :responder_root
+    end
+
+    authenticated :user, -> (u) { u.approver?}  do
+      root to: redirect(gnav.user_roles.approver.default_url), as: :approver_root
+    end
+
     get 'close', on: :member
     get 'closed' => 'cases#closed_cases', on: :collection
     get 'incoming' => 'cases#incoming_cases', on: :collection
