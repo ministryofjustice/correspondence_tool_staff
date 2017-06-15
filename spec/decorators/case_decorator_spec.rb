@@ -149,6 +149,15 @@ describe CaseDecorator, type: :model do
     end
   end
 
+  describe '#date_sent_to_requester' do
+    it 'returns formatted version of date responded ' do
+      Timecop.freeze(Time.new(2017, 5, 2, 9, 45, 33 )) do
+        closed_case = create(:closed_case).decorate
+        expect(closed_case.date_sent_to_requester).to eq '25 Apr 2017'
+      end
+    end
+  end
+
 
   describe '#requester_name_and_type' do
     it 'returns name and requestor type' do

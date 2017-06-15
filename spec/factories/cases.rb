@@ -195,8 +195,8 @@ FactoryGirl.define do
         identifier "closed case"
       end
 
-      received_date 22.business_days.ago
-      date_responded 4.business_days.ago
+      received_date { 22.business_days.ago }
+      date_responded { 4.business_days.ago }
       outcome { CaseClosure::Outcome.first || create(:outcome) }
 
       after(:create) do |kase, evaluator|

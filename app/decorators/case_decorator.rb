@@ -74,6 +74,9 @@ class CaseDecorator < Draper::Decorator
     end
   end
 
+  def date_sent_to_requester
+    I18n.l(object.date_responded, format: :default)
+  end
 
   private
 
