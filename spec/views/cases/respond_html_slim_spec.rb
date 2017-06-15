@@ -6,7 +6,7 @@ describe 'cases/respond.html.slim', type: :view do
   let(:responder)    { create(:responder) }
   let(:kase)         { create(:case_with_response, responder: responder) }
 
-  fit 'displays the new case page' do
+  it 'displays the new case page' do
 
     assign(:case, kase)
 
@@ -17,7 +17,7 @@ describe 'cases/respond.html.slim', type: :view do
     page = cases_respond_page
 
     expect(page.page_heading.heading.text).to eq "Marking it as sent"
-    expect(page.page_heading.sub_heading.text).to eq "170614001 "
+    expect(page.page_heading.sub_heading.text).to eq "#{ kase.number} "
 
     expect(page).to have_reminders
 

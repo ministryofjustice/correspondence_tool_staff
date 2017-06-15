@@ -73,17 +73,15 @@ describe 'cases/case_details.html.slim', type: :view do
 
   describe 'Final response details' do
 
-    xit 'displays all the case closure details' do
+    it 'displays all the case closure details' do
       render partial: 'cases/case_details.html.slim',
              locals:{ case_details: closed_case}
 
-      partial = case_details_section(rendered).final_response
-
-      expect(partial).to be_all_there
-      expect(partial.date_responded.data.text).to eq closed_case.responding_team.name
-      expect(partial.timeliness.data.text).to eq closed_case.responder.full_name
-      expect(partial.time_taken.data.text).to eq closed_case.responder.full_name
-      expect(partial.outcome.data.text).to eq closed_case.responder.full_name
+      partial = case_details_section(rendered).response_details
+      expect(partial.date_responded.data.text).to eq closed_case.date_sent_to_requester
+      expect(partial.timeliness.data.text).to eq closed_case.timeliness
+      expect(partial.time_taken.data.text).to eq closed_case.time_taken
+      expect(partial.outcome.data.text).to eq closed_case.outcome.name
     end
 
   end
