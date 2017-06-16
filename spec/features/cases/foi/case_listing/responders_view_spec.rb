@@ -37,9 +37,9 @@ feature 'listing cases on the system' do
                                          responder: responder_a }
   given(:responded_case_team_b) { create :responded_case,
                                          responder: responder_b }
-  given(:closed_case_team_a) { create :responded_case,
+  given(:closed_case_team_a) { create :closed_case,
                                       responder: responder_a }
-  given(:closed_case_team_b) { create :responded_case,
+  given(:closed_case_team_b) { create :closed_case,
                                       responder: responder_b }
 
   background do
@@ -61,10 +61,12 @@ feature 'listing cases on the system' do
 
   scenario 'For responders - shows only their assigned and accepted cases' do
     login_as responder_a
+
+
     visit '/cases/open'
 
     cases = cases_page.case_list
-    expect(cases.count).to eq 5
+    expect(cases.count).to eq 4
 
     expect(cases.first).to match_the_case(assigned_case_team_a)
                              .and_be_with('Responding Team A')
@@ -79,7 +81,7 @@ feature 'listing cases on the system' do
     visit '/'
 
     cases = cases_page.case_list
-    expect(cases.count).to eq 5
+    expect(cases.count).to eq 4
 
     expect(cases.first).to match_the_case(assigned_case_team_a)
                              .and_be_with('Responding Team A')
@@ -94,7 +96,7 @@ feature 'listing cases on the system' do
     visit '/'
 
     cases = cases_page.case_list
-    expect(cases.count).to eq 5
+    expect(cases.count).to eq 4
 
     expect(cases.first).to match_the_case(assigned_case_team_b)
                              .and_be_with('Responding Team B')
