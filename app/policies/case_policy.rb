@@ -155,7 +155,7 @@ class CasePolicy
       if user.manager?
         scope.all
       elsif user.responder?
-        scope.with_teams(user.responding_teams)
+        scope.with_teams(user.responding_teams).where.not(current_state: ['closed', 'responded'])
       elsif user.approver?
         scope.with_teams(user.approving_teams)
       else
@@ -193,7 +193,7 @@ class CasePolicy
   end
 
   check :user_is_a_responder_for_case do
-    user.responding_teams.include?(self.case.responding_team)
+    user.responding_teams.include?(self.case.responding_team) && !self.case.current_state.in?(['closed', 'responded'])
   end
 
   check :user_is_an_approver_for_case do

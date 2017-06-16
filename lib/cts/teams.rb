@@ -31,8 +31,6 @@ module CTS
                else
                  Team.where(name: team_identifier).first
                end
-        ap team
-
         puts "\nUsers:"
         tp team.user_roles,
            {user_id: { display_name: :id}},

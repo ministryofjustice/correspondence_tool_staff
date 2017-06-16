@@ -32,24 +32,16 @@
           th = t('common.case.requester_type')
           td = case_details.requester_type.humanize
 
-      - if case_details.transitions.accepted.present?
+      - if case_details.responding_team.present?
         tbody.responder-details
           tr.team
             th = t('common.case.responding_team')
-            td = case_details.transitions.accepted.last.responding_team&.name
+            td = case_details.responding_team.name
 
-          - unless case_details.transitions.responded.present?
+          - if case_details.responder.present?
             tr.responder-name
               th = t('common.case.responders', count: 1)
               td = case_details.responder.full_name
-          - else
-            tr.responder-name
-              th = t('common.case.responders',
-                        count: case_details.transitions.responded.count)
-              td
-                ul
-                  - case_details.responder_history.each do |responder|
-                    li = responder.full_name
 
       - if case_details.closed?
         tbody.response-details
@@ -80,3 +72,4 @@
                 ul
                   - case_details.exemptions.each do |exemption|
                     li = exemption.name
+
