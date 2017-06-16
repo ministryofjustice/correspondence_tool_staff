@@ -177,6 +177,14 @@ RSpec.describe CaseStateMachine, type: :model do
     }
   end
 
+  describe event(:upload_response_and_return_for_redraft) do
+    it { should transition_from(:pending_dacu_clearance).to :drafting }
+    it { should require_permission(:can_upload_response_and_approve?)
+                  .using_options(user_id: approver.id)
+                  .using_object(pending_dacu_clearance_case)
+    }
+  end
+
   describe event(:close) do
     it { should transition_from(:responded).to(:closed) }
     it { should require_permission(:can_close_case?)
@@ -373,6 +381,20 @@ RSpec.describe CaseStateMachine, type: :model do
                                                      kase.approving_teams.first,
                                                      filenames)
         }.to trigger_the_event(:upload_response_and_approve).on_state_machine(state_machine).with_parameters(
+          user_id: approver.id,
+          approving_team_id: team_id,
+          filenames: filenames
+        )
+      end
+    end
+
+    describe 'trigger upload_response_and_return_for_redraft!' do
+      it 'triggers an upload_response_and_return_for_redraft event' do
+        expect {
+          state_machine.upload_response_and_return_for_redraft!(approver,
+                                                     kase.approving_teams.first,
+                                                     filenames)
+        }.to trigger_the_event(:upload_response_and_return_for_redraft).on_state_machine(state_machine).with_parameters(
           user_id: approver.id,
           approving_team_id: team_id,
           filenames: filenames

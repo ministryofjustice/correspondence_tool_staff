@@ -35,8 +35,13 @@ module CasesHelper
               class: 'button'
     when :upload_response_and_approve
       link_to t('common.case.upload_approve'),
-              new_response_upload_case_path(@case, 'action' => 'upload-approve'),      # upload and clear
+              new_response_upload_case_path(@case, 'action' => 'upload-approve'),
               id: 'action--upload-approve',
+              class: 'button'
+    when :upload_response_and_return_for_redraft
+      link_to t('common.case.upload_and_redraft'),
+              new_response_upload_case_path(@case, 'action' => 'upload-revert'),
+              id: 'action--upload-redraft',
               class: 'button'
     when :close
       link_to I18n.t('common.case.close'),

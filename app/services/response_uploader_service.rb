@@ -78,7 +78,11 @@ class ResponseUploaderService
         filenames
       )
     when 'upload-revert'
-      raise 'Not yet implemented'
+      @case.state_machine.upload_response_and_return_for_redraft!(
+                           @current_user,
+                           @case.approving_teams.with_user(@current_user).first,
+                           filenames
+      )
     else
       raise 'Unexpected action parameter'
     end

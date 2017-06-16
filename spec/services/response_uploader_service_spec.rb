@@ -202,5 +202,15 @@ describe ResponseUploaderService do
     end
   end
 
+  context 'action upload-revert' do
+    let(:action)  { 'upload-revert' }
+
+    it 'calls upload_response_and_return_for_redraft! on state_machine' do
+      expect(kase).to receive(:state_machine).and_return(state_machine)
+      expect(state_machine).to receive(:upload_response_and_return_for_redraft!)
+      rus.upload!
+    end
+  end
+
 end
 

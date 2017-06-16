@@ -129,7 +129,7 @@ class CasePolicy
   def can_approve_case?
     clear_failed_checks
     self.case.pending_dacu_clearance? &&
-      self.case.with_teams?(user.approving_teams)
+      check_user_is_assigned_approver_for_case
   end
 
   def can_view_case_details?
@@ -198,6 +198,10 @@ class CasePolicy
 
   check :user_is_an_approver_for_case do
     user.in?(self.case.approving_team_users)
+  end
+
+  check :user_is_assigned_approver_for_case do
+    user.in?(self.case.approvers)
   end
 
   check :case_requires_clearance do

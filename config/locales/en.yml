@@ -194,6 +194,7 @@ en:
         other: "%{count} working days"
       timeliness: Timeliness
       upload_response: Upload response
+      upload_and_redraft: Upload changes for redraft
       who_its_with: With
       respond: Mark response as sent
       clear_response: Clear response

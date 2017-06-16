@@ -94,6 +94,10 @@ feature 'cases requiring clearance by disclosure specialist' do
     upload_response_with_action_param(kase, dd_specialist, 'upload-approve')
   end
 
+  def upload_response_and_send_for_redraft_as_disclosure_specialist(kase, dd_specialist)
+    upload_response_with_action_param(kase, dd_specialist, 'upload-revert')
+  end
+
   def upload_response_with_action_param(kase, user, action)
     uploads_key = "uploads/#{kase.id}/responses/#{Faker::Internet.slug}.jpg"
     params = ActionController::Parameters.new(
@@ -157,5 +161,22 @@ feature 'cases requiring clearance by disclosure specialist' do
     cases_show_page.load(id: kase.id)
     expect(cases_show_page.case_status.details.copy.text).to eq 'Ready to send'
     expect(cases_show_page.case_status.details.who_its_with.text).to eq responding_team.name
+  end
+
+  scenario 'upload a response and return for redraft', js: true do
+    kase = create :pending_dacu_clearance_case, approver: disclosure_specialist
+
+    login_as disclosure_specialist
+    cases_show_page.load(id: kase.id)
+    cases_show_page.actions.upload_redraft.click
+
+    expect(cases_new_response_upload_page).to be_displayed
+    expect_any_instance_of(CasesController).to receive(:upload_responses)
+    cases_new_response_upload_page.upload_response_button.click
+    upload_response_and_send_for_redraft_as_disclosure_specialist(kase.reload, disclosure_specialist)
+
+    cases_show_page.load(id: kase.id)
+    expect(cases_show_page.case_status.details.copy.text).to eq 'Draft in progress'
+    expect(cases_show_page.case_status.details.who_its_with.text).to eq kase.responding_team.name
   end
 end
