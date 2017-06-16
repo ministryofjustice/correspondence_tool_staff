@@ -64,7 +64,7 @@ feature 'listing cases on the system' do
     visit '/cases/open'
 
     cases = cases_page.case_list
-    expect(cases.count).to eq 3
+    expect(cases.count).to eq 5
 
     expect(cases.first).to match_the_case(assigned_case_team_a)
                              .and_be_with('Responding Team A')
@@ -79,7 +79,7 @@ feature 'listing cases on the system' do
     visit '/'
 
     cases = cases_page.case_list
-    expect(cases.count).to eq 3
+    expect(cases.count).to eq 5
 
     expect(cases.first).to match_the_case(assigned_case_team_a)
                              .and_be_with('Responding Team A')
@@ -94,7 +94,7 @@ feature 'listing cases on the system' do
     visit '/'
 
     cases = cases_page.case_list
-    expect(cases.count).to eq 3
+    expect(cases.count).to eq 5
 
     expect(cases.first).to match_the_case(assigned_case_team_b)
                              .and_be_with('Responding Team B')
