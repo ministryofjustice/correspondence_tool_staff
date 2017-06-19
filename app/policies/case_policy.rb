@@ -193,7 +193,7 @@ class CasePolicy
   end
 
   check :user_is_a_responder_for_case do
-    user.responding_teams.include?(self.case.responding_team)
+    user.responding_teams.include?(self.case.responding_team) && !self.case.current_state.in?(['closed', 'responded'])
   end
 
   check :user_is_an_approver_for_case do

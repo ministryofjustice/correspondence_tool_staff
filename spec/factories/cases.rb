@@ -185,7 +185,6 @@ FactoryGirl.define do
                case: kase,
                user_id: evaluator.responder.id,
                responding_team_id: evaluator.responding_team.id
-        kase.responder_assignment.destroy!
         kase.reload
       end
     end

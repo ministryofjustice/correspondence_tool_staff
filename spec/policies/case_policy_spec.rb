@@ -368,7 +368,7 @@ describe CasePolicy do
     it 'for responders - returns only their cases' do
       existing_cases
       responder_scope = described_class::Scope.new(responder, Case.all).resolve
-      expect(responder_scope).to match_array([assigned_case, accepted_case, case_with_response])
+      expect(responder_scope).to match_array([assigned_case, accepted_case, case_with_response, responded_case, closed_case])
     end
 
   end
