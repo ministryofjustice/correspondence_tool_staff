@@ -144,11 +144,6 @@ describe 'ClosedCaseValidator' do
             expect(kase).to be_valid
           end
         end
-
-
-        context 'NCND not present' do
-          it 'does not error if '
-        end
       end
     end
   end

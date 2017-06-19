@@ -152,8 +152,6 @@ describe ResponseUploaderService do
         it 'does not create a new case attachment' do
           expect { rus.upload! }.to_not change { kase.reload.attachments.count }
         end
-
-        xit 'removes the attachment from S3'
       end
 
       context 'uploading attachment that are too large' do
@@ -163,7 +161,7 @@ describe ResponseUploaderService do
         end
 
         xit 'does not create a new case attachment' do
-          expect { do_upload_responses }.to_not change { kase.reload.attachments.count }
+          expect { rus.upload! }.to_not change { kase.reload.attachments.count }
         end
 
         xit 'removes the attachment from S3'
