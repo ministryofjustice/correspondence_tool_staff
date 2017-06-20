@@ -22,12 +22,13 @@ class CasesController < ApplicationController
     # index doesn't have a nav page defined so cannot use the GlobalNavManager
     # to provide it with a finder
     @cases = CaseFinderService.new.for_user(current_user)
-               .for_action(:index)
-               .filter_for_params(params)
-               .cases
-               .page(params[:page])
-               .decorate
+                .for_action(:index)
+                .filter_for_params(params)
+                .cases
+                .page(params[:page])
+                .decorate
   end
+
 
   def closed_cases
     finder = @global_nav_manager.current_cases_finder

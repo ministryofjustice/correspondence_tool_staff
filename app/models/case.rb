@@ -113,43 +113,68 @@ class Case < ApplicationRecord
   belongs_to :category, required: true
 
   has_many :assignments, dependent: :destroy
+
   has_one :managing_assignment,
           -> { managing },
           class_name: 'Assignment'
+
   has_one :managing_team,
           through: :managing_assignment,
           source: :team
+
   has_one :responder_assignment,
           -> { responding },
           class_name: 'Assignment'
+
   has_one :responder,
           through: :responder_assignment,
           source: :user
+
   has_one :responding_team,
           -> { where("state != 'rejected'") },
           through: :responder_assignment,
           source: :team
+
   has_many :approver_assignments,
           -> { approving },
-          class_name: 'Assignment'
+          class_name: 'Assignment' do
+            def for_team(team)
+              self.select { |ass| ass.team_id = team.id }
+            end
+          end
+
   has_many :approvers,
            through: :approver_assignments,
            source: :user
+
   has_many :approving_teams,
            -> { where("state != 'rejected'") },
            through: :approver_assignments,
            source: :team
+
   has_many :approving_team_users,
            through: :approving_teams,
            source: :users
 
-  has_many :transitions, class_name: 'CaseTransition', autosave: false, dependent: :destroy
+  has_many :transitions,
+           class_name: 'CaseTransition',
+           autosave: false,
+           dependent: :destroy do
+            def most_recent
+              where(most_recent: true).first
+            end
+           end
+
   has_many :responded_transitions, -> { responded }, class_name: 'CaseTransition'
+
   has_many :responder_history, through: :responded_transitions, source: :user
 
-  has_many :attachments, class_name: 'CaseAttachment', dependent: :destroy
+  has_many :attachments, -> { order(id: :desc) }, class_name: 'CaseAttachment', dependent: :destroy
+
   belongs_to :outcome, class_name: 'CaseClosure::Outcome'
+
   belongs_to :refusal_reason, class_name: 'CaseClosure::RefusalReason'
+
   has_and_belongs_to_many :exemptions, class_name: 'CaseClosure::Exemption', join_table: 'cases_exemptions'
 
   before_create :set_initial_state,
@@ -299,6 +324,10 @@ class Case < ApplicationRecord
 
   def with_teams?(teams)
     assignments.with_teams(teams).any?
+  end
+
+  def flagged_for_press_office_clearance?
+    approving_teams.include?(Team.press_office)
   end
 
   private

@@ -23,7 +23,7 @@ RSpec.describe CaseStateMachine, type: :model do
   let(:approving_team)     { create :approving_team }
   let(:approver)           { approving_team.approvers.first }
   let(:other_approver)     {
-    create :approver, approving_teams: [ approving_team ]
+    create :approver, approving_team: approving_team
   }
   let(:new_case)           { create :case }
   let(:assigned_case)      { create :assigned_case,

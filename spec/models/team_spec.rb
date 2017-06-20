@@ -67,19 +67,47 @@ RSpec.describe Team, type: :model do
     expect(create :team).to be_valid
   end
 
-  describe '#dacu_disclosure' do
-    let!(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
+  context 'specific team finding and querying' do
 
-    it 'finds the DACU Disclosure team' do
-      expect(Team.dacu_disclosure).to eq dacu_disclosure
+    before(:all) do
+      @press_office_team =  find_or_create :team_press_office
+      @dacu_disclosure_team =  find_or_create :team_dacu_disclosure
     end
-  end
 
-  describe '#press_office' do
-    let!(:press_office) { find_or_create :team_press_office }
+    after(:all) do
+      DbHousekeeping.clean
+    end
 
-    it 'finds the Press Office team' do
-      expect(Team.press_office).to eq press_office
+    describe '.dacu_disclosure' do
+      it 'finds the DACU Disclosure team' do
+        expect(Team.dacu_disclosure).to eq @dacu_disclosure_team
+      end
+    end
+
+    describe '#dacu_disclosure?' do
+      it 'returns true if dacu disclosure' do
+        expect(@dacu_disclosure_team.dacu_disclosure?).to be true
+      end
+
+      it 'returns false if not dacu disclosure' do
+        expect(@press_office_team.dacu_disclosure?).to be false
+      end
+    end
+
+    describe '.press_office' do
+      it 'finds the Press Office team' do
+        expect(Team.press_office).to eq @press_office_team
+      end
+    end
+
+    describe '#press_office?' do
+      it 'returns true if press office team' do
+        expect(@press_office_team.press_office?).to be true
+      end
+
+      it 'returns false if not press office team' do
+        expect(@dacu_disclosure_team.press_office?).to be false
+      end
     end
   end
 

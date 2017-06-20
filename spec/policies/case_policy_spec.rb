@@ -12,7 +12,7 @@ describe CasePolicy do
   let(:another_responder) { create :responder}
   let(:dacu_disclosure)   { find_or_create :team_dacu_disclosure }
   let(:approver)          { dacu_disclosure.approvers.first }
-  let(:co_approver)       { create :approver, approving_teams: [dacu_disclosure] }
+  let(:co_approver)       { create :approver, approving_team: dacu_disclosure }
 
   let(:new_case)                { create :case }
   let(:accepted_case)           { create :accepted_case,

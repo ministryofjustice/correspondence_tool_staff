@@ -7,7 +7,9 @@ RSpec.describe AssignmentsController, type: :controller do
   let(:responding_team) { assigned_case.responding_team }
   let(:responder)       { responding_team.responders.first }
   let(:approver)        { create :approver }
-  let(:approving_team)  { approver.approving_teams.first }
+  let(:approving_team)  { approver.approving_team }
+  let(:press_officer)   { create :press_officer }
+  let(:press_office)    { press_officer.approving_team }
   let(:create_assignment_params) do
     {
       case_id: unassigned_case.id,
@@ -78,6 +80,8 @@ RSpec.describe AssignmentsController, type: :controller do
         expect(response).to redirect_to new_user_session_path
       end
     end
+
+
 
     describe 'PATCH accept_or_reject' do
       before do
@@ -355,7 +359,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
       context 'assignment is already accepted by another user' do
         let(:another_approver) { create :approver,
-                                        approving_teams: [approving_team] }
+                                        approving_team: approving_team }
 
         before do
           allow(service).to receive(:call).and_return(false)
@@ -413,6 +417,64 @@ RSpec.describe AssignmentsController, type: :controller do
         it 'renders the view' do
           patch :unaccept, params: params, xhr: true
           expect(response).to have_rendered('assignments/unaccept')
+        end
+      end
+    end
+  end
+
+  describe '#take_case_on' do
+    context 'as an anonymous user' do
+      it 'redirects to login page' do
+        patch :take_case_on, params: { id: assignment.id, case_id: assigned_case.id }
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+
+    context 'as a press office approver' do
+
+      let(:press_officer)  { create :press_officer }
+      let(:service) { double CaseFlagForClearanceService }
+
+
+      before(:each) { sign_in press_officer }
+
+      it 'calls CaseFlagForClearanceService', js: true do
+        expect(CaseFlagForClearanceService).to receive(:new).with(user: press_officer, kase: assigned_case, team: press_office ).and_return(service)
+        expect(service).to receive(:call).and_return(:ok)
+
+        patch :take_case_on, params: { id: assignment.id, case_id: assigned_case.id }
+      end
+
+      context 'flag for clearance service returns ok' do
+        it 'it has success message' do
+          expect(CaseFlagForClearanceService).to receive(:new).with(user: press_officer, kase: assigned_case, team: press_office ).and_return(service)
+          expect(service).to receive(:call).and_return(:ok)
+
+          patch :take_case_on, params: { id: assignment.id, case_id: assigned_case.id }
+          expect(assigns(:success)).to eq true
+          expect(assigns(:message)).to eq I18n.t('assignments.take_case_on.success')
+        end
+      end
+
+      context 'flag for clearance service returns ok' do
+        it 'it has already flagged message' do
+          expect(CaseFlagForClearanceService).to receive(:new).with(user: press_officer, kase: assigned_case, team: press_office ).and_return(service)
+          expect(service).to receive(:call).and_return(:already_flagged)
+
+          patch :take_case_on, params: { id: assignment.id, case_id: assigned_case.id }
+          expect(assigns(:success)).to eq false
+          expect(assigns(:message)).to eq I18n.t('assignments.take_case_on.already_accepted')
+        end
+      end
+
+      context 'something else happened' do
+        it 'raises an exception' do
+          expect(CaseFlagForClearanceService).to receive(:new).with(user: press_officer, kase: assigned_case, team: press_office ).and_return(service)
+          expect(service).to receive(:call).and_return(:foo)
+
+          expect {
+            patch :take_case_on, params: { id: assignment.id, case_id: assigned_case.id }
+          }.to raise_error RuntimeError, 'Unknown error when accepting approver assignment: foo'
         end
       end
     end

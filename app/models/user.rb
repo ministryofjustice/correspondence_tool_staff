@@ -34,12 +34,12 @@ class User < ApplicationRecord
   has_many :responding_team_roles,
            -> { responder_roles  },
            class_name: 'TeamsUsersRole'
-  has_many :approving_team_roles,
+  has_one :approving_team_roles,
            -> { approver_roles  },
            class_name: 'TeamsUsersRole'
   has_many :managing_teams, through: :managing_team_roles, source: :team
   has_many :responding_teams, through: :responding_team_roles, source: :team
-  has_many :approving_teams, through: :approving_team_roles, source: :team
+  has_one  :approving_team, through: :approving_team_roles, source: :team
 
   validates :full_name, presence: true
 
@@ -62,7 +62,11 @@ class User < ApplicationRecord
   end
 
   def approver?
-    approving_teams.any?
+    approving_team.present?
+  end
+
+  def press_officer?
+    approving_team == Team.press_office
   end
 
   def roles

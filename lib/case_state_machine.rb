@@ -60,6 +60,18 @@ class CaseStateMachine
     transition from: :pending_dacu_clearance, to: :awaiting_dispatch
   end
 
+  event :take_on_for_approval do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object).can_take_on_for_approval?(options[:approving_team_id])
+    end
+
+    transition from: :unassigned,             to: :unassigned
+    transition from: :awaiting_responder,     to: :awaiting_responder
+    transition from: :drafting,               to: :drafting
+    transition from: :awaiting_dispatch,      to: :awaiting_dispatch
+    transition from: :pending_dacu_clearance, to: :awaiting_dispatch
+  end
+
   event :reject_responder_assignment do
     guard do |object, _last_transition, options|
       CaseStateMachine.get_policy(options[:user_id], object)
@@ -254,6 +266,13 @@ class CaseStateMachine
              user_id: user.id,
              managing_team_id: managing_team.id,
              event: :unflag_for_clearance
+  end
+
+  def take_on_for_approval!(user, approving_team)
+    trigger! :take_on_for_approval,
+             user_id: user.id,
+             approving_team_id: approving_team.id,
+             event: :take_on_for_approval
   end
 
   def approve!(user, assignment)

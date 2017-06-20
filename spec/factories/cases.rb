@@ -254,7 +254,7 @@ FactoryGirl.define do
   trait :flagged_accepted do
     transient do
       approver { create :approver }
-      approving_team { approver.approving_teams.first }
+      approving_team { approver.approving_team }
     end
 
     after(:create) do |kase, evaluator|

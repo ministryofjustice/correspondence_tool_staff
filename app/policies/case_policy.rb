@@ -26,6 +26,7 @@ class CasePolicy
 
   def clear_failed_checks
     @@failed_checks = []
+    @options = {}
   end
 
   def can_view_attachments?
@@ -102,6 +103,12 @@ class CasePolicy
     clear_failed_checks
     !self.case.requires_clearance? &&
       (user.manager? || user.approver?)
+  end
+
+  def can_take_on_for_approval?(team_id)
+    clear_failed_checks
+    @options[:team_id] = team_id
+    team_id.present? && check_case_not_already_taken_on_for_approval_by && check_user_is_approver_for
   end
 
   def can_unflag_for_clearance?
@@ -224,11 +231,19 @@ class CasePolicy
   end
 
   check :no_user_case_approving_assignments_are_accepted do
-    !self.case.approver_assignments.with_teams(user.approving_teams)
+    !self.case.approver_assignments.with_teams(user.approving_team)
       .any?(&:accepted?)
   end
 
   check :case_is_responded_to_or_closed do
     self.case.responded? || self.case.closed?
+  end
+
+  check :case_not_already_taken_on_for_approval_by do
+    !self.case.approver_assignments.map(&:team_id).include?(@options[:team_id])
+  end
+
+  check :user_is_approver_for do
+    @user.approving_team.present? && @user.approving_team.id == @options[:team_id]
   end
 end

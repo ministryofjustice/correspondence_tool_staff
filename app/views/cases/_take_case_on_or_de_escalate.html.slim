@@ -1,4 +1,4 @@
- - if current_user.approving_teams.first.name == 'DACU Disclosure'
+- if current_user.approving_team.name == 'DACU Disclosure'
   = link_to 'Take case on',
             accept_case_assignment_path(case_details, case_details.approver_assignments.with_teams(current_user.teams).first),
             id: "take_case_on_#{case_details.id}",

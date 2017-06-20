@@ -9,7 +9,7 @@ namespace :db do
   end
 
   desc 'Clear the database, run migrations and basic seeds (not users, teams, roles)'
-  task :reseed => [:clear, 'db:migrate', 'db:seed'] {}
+  task :reseed => [:clear, 'db:migrate', 'db:seed', 'db:seed:dev:users'] {}
 
   def clear_database
     conn = ActiveRecord::Base.connection

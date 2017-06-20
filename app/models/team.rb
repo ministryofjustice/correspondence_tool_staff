@@ -47,7 +47,15 @@ class Team < ApplicationRecord
     find_by! name: Settings.foi_cases.default_clearance_team
   end
 
+  def dacu_disclosure?
+    name == Settings.foi_cases.default_clearance_team
+  end
+
   def self.press_office
-    find_by! name: Settings.press_office_team_name
+    where(name: Settings.press_office_team_name).first
+  end
+
+  def press_office?
+    name == Settings.press_office_team_name
   end
 end
