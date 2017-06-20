@@ -3,6 +3,9 @@ module PageObjects
     class CasesPage < SitePrism::Page
       set_url '/'
 
+      section :primary_navigation,
+              PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
+
       sections :tabs, '.section-tabs .tab' do
         element :tab_link, 'a'
         element :count, '.in-time-count'
