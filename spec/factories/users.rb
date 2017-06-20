@@ -33,19 +33,28 @@ FactoryGirl.define do
     end
 
     factory :manager do
+      sequence(:full_name) { |n| "Ms Manager #{n}" }
       managing_teams { [create(:managing_team)] }
     end
 
     factory :responder do
+      sequence(:full_name) { |n| "Mr Responder #{n}" }
       responding_teams { [create(:responding_team)] }
     end
 
     factory :approver do
+      sequence(:full_name) { |n| "Ms Approver #{n}" }
       approving_teams { [create(:approving_team)] }
     end
 
     factory :disclosure_specialist do
+      sequence(:full_name) { |n| "Disclosure Specialist #{n}" }
       approving_teams { [find_or_create(:team_dacu_disclosure)] }
+    end
+
+    factory :press_officer do
+      sequence(:full_name) { |n| "Press Officer #{n}" }
+      approving_teams { [find_or_create(:team_press_office)] }
     end
   end
 end

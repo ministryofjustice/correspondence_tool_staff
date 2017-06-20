@@ -157,7 +157,7 @@ class CasePolicy
       elsif user.responder?
         scope.with_teams(user.responding_teams)
       elsif user.approver?
-        scope.with_teams(user.approving_teams)
+        scope.all
       else
         Case.none
       end

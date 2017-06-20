@@ -266,4 +266,19 @@ FactoryGirl.define do
     end
   end
 
+  trait :dacu_disclosure do
+    # Use with :flagged or :flagged_accepted trait
+    transient do
+      approver { create :disclosure_specialist }
+      approving_team { find_or_create :team_dacu_disclosure }
+    end
+  end
+
+  trait :press_office do
+    # Use with :flagged or :flagged_accepted trait
+    transient do
+      approver { create :press_officer }
+      approving_team { find_or_create :team_press_office }
+    end
+  end
 end

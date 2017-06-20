@@ -196,6 +196,13 @@ RSpec.describe Case, type: :model do
     end
   end
 
+  describe 'not_with_team scope' do
+    it 'returns cases that are not with a given team' do
+      other_assigned_case = create :assigned_case
+      expect(Case.not_with_teams(responding_team)).to match_array([other_assigned_case])
+    end
+  end
+
   describe 'with_user scope' do
     it 'returns cases that are with a given user' do
       create :accepted_case # Just some other case

@@ -1,11 +1,12 @@
-= link_to 'Take case on',
-          accept_case_assignment_path(case_details, case_details.approver_assignments.with_teams(current_user.teams).first),
-          id: "take_case_on_#{case_details.id}",
-          class: 'button take-case-on-link',
-          remote: true,
-          method: :patch
-= link_to 'De-escalate',
-          unflag_for_clearance_case_path(id: case_details.id),
-          remote: true,
-          class: 'js-de-escalate-link secondard-action-link',
-          method: :patch
+ - if current_user.approving_teams.first.name == 'DACU Disclosure'
+  = link_to 'Take case on',
+            accept_case_assignment_path(case_details, case_details.approver_assignments.with_teams(current_user.teams).first),
+            id: "take_case_on_#{case_details.id}",
+            class: 'button take-case-on-link',
+            remote: true,
+            method: :patch
+  = link_to 'De-escalate',
+            unflag_for_clearance_case_path(id: case_details.id),
+            remote: true,
+            class: 'js-de-escalate-link secondard-action-link',
+            method: :patch

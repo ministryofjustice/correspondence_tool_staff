@@ -20,6 +20,12 @@ describe GlobalNavManager::Page do
           params:
             timeliness: 'late'
       structure:
+        'DACU Disclosure':
+          incoming_cases:
+          open_cases:
+            in_time: 'default'
+            late:
+          closed_cases:
         '*':
           open_cases:
             in_time: 'default'

@@ -50,8 +50,9 @@ class GlobalNavManager
   end
 
   def get_nav_structure_for_user(user, settings)
-    settings.structure.find do |matcher, structure|
+    settings.structure.find do |matcher, _structure|
       matcher.to_s == '*' ||
+        matcher.to_s.in?(user.teams.pluck :name) ||
         matcher.to_s.in?(user.roles)
     end .last
   end
@@ -66,7 +67,7 @@ class GlobalNavManager
       if default_page
         @default = page
       else
-        @default ||= tabs_structure.find { |t,d| d.to_s == 'default' }
+        @default ||= tabs_structure.find { |_,d| d.to_s == 'default' }
       end
 
       page

@@ -291,7 +291,7 @@ en:
   nav:
     pages:
       closed_cases: Closed cases
-      incoming_cases: New cases
+      incoming_cases_dacu_disclosure: New cases
       incoming_cases_press_office: New cases
       my_open_cases: My open cases
       open_cases: Open cases

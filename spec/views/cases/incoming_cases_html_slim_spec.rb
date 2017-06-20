@@ -2,15 +2,15 @@ require 'rails_helper'
 require 'capybara/dsl'
 
 describe 'cases/incoming_cases.html.slim', type: :view do
-  let(:approver) { create :approver }
-  let(:approving_team) { approver.approving_teams.first }
+  let(:disclosure_specialist) { create :disclosure_specialist }
+  let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
   let(:case1) { create(:assigned_case, :flagged,
-                       approving_team: approving_team,
+                       approving_team: team_dacu_disclosure,
                        name: 'Joe Smith',
                        subject: 'Prison Reform',
                        message: 'message number 1').decorate }
   let(:case2) { create(:assigned_case, :flagged,
-                       approving_team: approving_team,
+                       approving_team: team_dacu_disclosure,
                        name: 'Jane Doe',
                        subject: 'Court Reform',
                        message: 'message number 2').decorate }
@@ -23,7 +23,7 @@ describe 'cases/incoming_cases.html.slim', type: :view do
     policy = double('Pundit::Policy', can_add_case?: false)
     allow(view).to receive(:policy).with(:case).and_return(policy)
 
-    sign_in approver
+    sign_in disclosure_specialist
 
     render
     incoming_cases_page.load(rendered)

@@ -47,7 +47,7 @@ global_navigation:
   pages:
     closed_cases:
       path: /cases/closed
-    incoming_cases:
+    incoming_cases_dacu_disclosure:
       path: /cases/incoming
     incoming_cases_press_office:
       path: /cases/incoming
@@ -65,8 +65,19 @@ global_navigation:
         timeliness: late
 
   structure:
-    approver:
-      incoming_cases: default
+    'DACU Disclosure':
+      incoming_cases_dacu_disclosure: default
+      open_cases:
+        in_time:
+        late:
+      my_open_cases:
+      closed_cases:
+
+    'Press Office':
+      incoming_cases_press_office: default
+        # expires_today:
+        # expires_tomorrow:
+        # expires_in_two_days:
       open_cases:
         in_time:
         late:

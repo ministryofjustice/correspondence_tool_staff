@@ -33,8 +33,8 @@ RSpec.describe CasesController, type: :controller do
   let(:responder)          { create :responder }
   let(:another_responder)  { create :responder }
   let(:responding_team)    { responder.responding_teams.first }
-  let(:approver)           { create :approver }
-  let(:approving_team)     { approver.approving_teams.first }
+  let(:disclosure_specialist) { create :disclosure_specialist }
+  let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
   let(:assigned_case)      { create :assigned_case,
                                     responding_team: responding_team }
   let(:accepted_case)      { create :accepted_case, responder: responder }
@@ -42,15 +42,15 @@ RSpec.describe CasesController, type: :controller do
   let(:case_with_response) { create :case_with_response, responder: responder }
   let(:flagged_case)       { create :assigned_case, :flagged,
                                     responding_team: responding_team,
-                                    approving_team: approving_team }
+                                    approving_team: team_dacu_disclosure }
   let(:flagged_accepted_case) { create :accepted_case, :flagged_accepted,
                                        responding_team: responding_team,
-                                       approver: approver,
+                                       approver: disclosure_specialist,
                                        responder: responder}
   let!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure}
 
   let(:assigned_trigger_case)   { create :assigned_case, :flagged_accepted,
-                                         approver: approver }
+                                         approver: disclosure_specialist }
   let(:pending_dacu_clearance_case) { create :pending_dacu_clearance_case }
 
   before { create(:category, :foi) }
@@ -302,16 +302,18 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as an authenticated approver' do
+    context 'as an authenticated disclosure_specialist' do
 
       before do
-        sign_in approver
+        sign_in disclosure_specialist
       end
 
       it 'assigns the result set from the CaseFinderService' do
         get :index
         expect(assigns(:cases)).to eq :index_cases_result
-        expect(finder).to have_received(:for_user).with(approver).at_least(1).times
+        expect(finder).to have_received(:for_user)
+                            .with(disclosure_specialist)
+                            .at_least(1).times
       end
     end
   end
@@ -325,9 +327,9 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as an authenticated approver' do
+    context 'as an authenticated disclosure_specialist' do
       before do
-        sign_in approver
+        sign_in disclosure_specialist
       end
 
       it 'assigns the result set from the finder provided by GlobalNavManager' do
@@ -358,9 +360,9 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as an authenticated approver' do
+    context 'as an authenticated disclosure_specialist' do
       before do
-        sign_in approver
+        sign_in disclosure_specialist
       end
 
       it 'assigns the result set from the CaseFinderService' do
@@ -391,9 +393,9 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as an authenticated approver' do
+    context 'as an authenticated disclosure_specialist' do
       before do
-        sign_in approver
+        sign_in disclosure_specialist
       end
 
       it 'assigns the result set from the finder provided by GlobalNavManager' do
@@ -1191,15 +1193,15 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as an authenticated approver' do
+    context 'as an authenticated disclosure_specialist' do
       before do
-        sign_in approver
+        sign_in disclosure_specialist
       end
 
       it 'instantiates and calls the service' do
         patch :unflag_for_clearance, params: params, xhr: true
         expect(CaseUnflagForClearanceService)
-          .to have_received(:new).with(user: approver,
+          .to have_received(:new).with(user: disclosure_specialist,
                                        kase: flagged_case_decorated,
                                        team: Team.dacu_disclosure)
         expect(service).to have_received(:call)
@@ -1292,15 +1294,15 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as an authenticated approver' do
+    context 'as an authenticated disclosure_specialist' do
       before do
-        sign_in approver
+        sign_in disclosure_specialist
       end
 
       it 'instantiates and calls the service' do
         patch :flag_for_clearance, params: params, xhr: true
         expect(CaseFlagForClearanceService)
-          .to have_received(:new).with(user: approver,
+          .to have_received(:new).with(user: disclosure_specialist,
                                        kase: unflagged_case_decorated,
                                        team: Team.dacu_disclosure)
         expect(service).to have_received(:call)
@@ -1344,7 +1346,7 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as an authenticated approver' do
+    context 'as an authenticated disclosure_specialist' do
       before do
         sign_in pending_dacu_clearance_case.approvers.first
       end

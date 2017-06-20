@@ -371,5 +371,10 @@ describe CasePolicy do
       expect(responder_scope).to match_array([assigned_case, accepted_case, case_with_response, responded_case, closed_case])
     end
 
+    it 'for approvers - returns all cases' do
+      existing_cases
+      approver_scope = described_class::Scope.new(approver, Case.all).resolve
+      expect(approver_scope).to match_array(existing_cases)
+    end
   end
 end

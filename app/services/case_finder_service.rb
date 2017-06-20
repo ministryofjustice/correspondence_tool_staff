@@ -14,20 +14,24 @@ class CaseFinderService
     chain @cases, user
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def for_action(action)
     case action.to_s
     when 'index'
       index_cases
     when 'closed_cases'
       closed_cases
-    when 'incoming_cases'
-      incoming_cases
+    when 'incoming_cases_dacu_disclosure'
+      incoming_cases_dacu_disclosure
+    when 'incoming_cases_press_office'
+      incoming_cases_press_office
     when 'my_open_cases'
       my_open_cases
     when 'open_cases'
       open_cases
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def filter_for_params(params)
     if params[:timeliness]
@@ -43,10 +47,19 @@ class CaseFinderService
     chain @cases.closed.most_recent_first
   end
 
-  def incoming_cases
+  def incoming_cases_dacu_disclosure
     chain @cases
       .flagged_for_approval(*@user.approving_teams)
       .unaccepted.by_deadline
+  end
+
+  def incoming_cases_press_office
+    chain @cases
+      .where(created_at: (3.business_day.ago.beginning_of_day..
+                          1.business_days.ago.end_of_day))
+      .not_with_teams([Team.press_office])
+      .order(id: :desc)
+
   end
 
   def my_open_cases

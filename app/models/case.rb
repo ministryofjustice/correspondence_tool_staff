@@ -42,6 +42,10 @@ class Case < ApplicationRecord
       .where(assignments: { team: teams,
                             state: ['pending', 'accepted']})
   end
+  scope :not_with_teams, -> (teams) do
+    where.not(id: Case.with_teams(teams).pluck(:id))
+  end
+
   scope :with_user, ->(*users) do
     includes(:assignments)
       .where(assignments: { user_id: users.map { |u| u.id },

@@ -30,20 +30,24 @@ class CasesController < ApplicationController
   end
 
   def closed_cases
-    @cases = @global_nav_manager.current_cases_finder.cases.page(params[:page]).decorate
+    finder = @global_nav_manager.current_cases_finder
+    @cases = finder.cases.page(params[:page]).decorate
   end
 
   def incoming_cases
-    @cases = @global_nav_manager.current_cases_finder.cases.page(params[:page]).decorate
+    finder = @global_nav_manager.current_cases_finder
+    @cases = finder.cases.page(params[:page]).decorate
   end
 
   def my_open_cases
-    @cases = @global_nav_manager.current_cases_finder.cases.page(params[:page]).decorate
+    finder = @global_nav_manager.current_cases_finder
+    @cases = finder.cases.page(params[:page]).decorate
     render :index
   end
 
   def open_cases
-    @cases = @global_nav_manager.current_cases_finder.cases.page(params[:page]).decorate
+    finder = @global_nav_manager.current_cases_finder
+    @cases = finder.cases.page(params[:page]).decorate
     render :index
   end
 
