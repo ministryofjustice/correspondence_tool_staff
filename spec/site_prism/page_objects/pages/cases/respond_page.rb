@@ -11,7 +11,7 @@ module PageObjects
 
         element :reminders,    '.reminders'
         element :alert,        '.notice'
-        element :mark_as_sent_button, 'a:contains("Mark response as sent")'
+        element :mark_as_sent_button, 'a.button'
         element :back_link,  'a.button-secondary'
 
 
