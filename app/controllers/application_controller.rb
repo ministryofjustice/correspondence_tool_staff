@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   before_action :authenticate_user!, :set_user, except: [:ping, :healthcheck]
-  before_action :set_global_nav
+  before_action :set_global_nav, if: -> { !current_user.nil? }
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
@@ -25,6 +25,10 @@ class ApplicationController < ActionController::Base
   end
 
   def set_global_nav
-    @global_nav_manager = GlobalNavManager.new(current_user, request)
+    @global_nav_manager = GlobalNavManager.new(
+      current_user,
+      request,
+      Settings.global_navigation,
+    )
   end
 end

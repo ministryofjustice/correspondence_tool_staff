@@ -3,13 +3,14 @@ class GlobalNavManager
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
 
-  attr_reader :nav_pages, :request
+  attr_reader :nav_pages, :request, :user, :settings
 
-  def initialize(user, request)
+  def initialize(user, request, settings)
     @user = user
     @request = request
     @nav_pages = []
-    add_pages_for_user
+    @settings = settings
+    add_pages_for_user(user, settings)
   end
 
   def each
@@ -19,14 +20,14 @@ class GlobalNavManager
   end
 
   def current_page
-    @current_page ||= Settings.global_navigation.pages.find do |_name, attrs|
-      url_for(attrs.path) == request.path
-    end&.tap { |name, _settings| break build_page name }
+    @current_page ||= @nav_pages.find do |page|
+      page.matches_path? request.path
+    end
   end
 
   def current_tab
-    @current_tab ||= current_page&.tabs&.detect do |tab|
-      tab.matches_url?(request.fullpath)
+    @current_tab ||= current_page&.tabs&.find do |tab|
+      tab.matches_fullpath? request.fullpath
     end
   end
 
@@ -36,23 +37,39 @@ class GlobalNavManager
 
   private
 
-  def add_pages_for_user
-    return if @user&.team_roles.blank?
-    role = @user.team_roles.first.role
-    user_pages = Settings.global_navigation.user_roles[role].pages
-    user_pages.each do |user_page|
-      @nav_pages << build_page(user_page)
+  def parse_tabs_list_from_setting(tabs_or_default)
+    tabs_or_default.respond_to?(:keys) ? tabs_or_default : {}
+  end
+
+  def parse_default_from_setting(tabs_or_default)
+    if tabs_or_default.respond_to? :keys
+      false
+    else
+      tabs_or_default.to_s == 'default'
     end
   end
 
-  def build_page(page_name)
-    settings = Settings.global_navigation.pages[page_name]
-    Page.new(
-      page_name,
-      I18n.t("nav.#{page_name}"),
-      settings.path,
-      settings.tabs,
-      @user,
-    )
+  def get_nav_structure_for_user(user, settings)
+    settings.structure.find do |matcher, structure|
+      matcher.to_s == '*' ||
+        matcher.to_s.in?(user.roles)
+    end .last
+  end
+
+  def add_pages_for_user(user, settings)
+    structure = get_nav_structure_for_user(user, settings)
+    @nav_pages = structure.map do |page_name, tabs_or_default|
+      tabs_structure = parse_tabs_list_from_setting(tabs_or_default)
+      default_page = parse_default_from_setting(tabs_or_default)
+      page = Page.new(page_name, user, tabs_structure.keys, settings)
+
+      if default_page
+        @default = page
+      else
+        @default ||= tabs_structure.find { |t,d| d.to_s == 'default' }
+      end
+
+      page
+    end
   end
 end

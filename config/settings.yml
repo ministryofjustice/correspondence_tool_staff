@@ -40,35 +40,43 @@ default_date_format: '%-d %b %Y'
 press_office_team_name: Press Office
 
 global_navigation:
+  default_urls:
+    approver: /cases/open?timeliness=in_time
+    manager: /cases/open?timeliness=in_time
+    responder: /cases/open?timeliness=in_time
   pages:
     closed_cases:
       path: /cases/closed
     incoming_cases:
       path: /cases/incoming
+    incoming_cases_press_office:
+      path: /cases/incoming
     my_open_cases:
       path: /cases/my_open
     open_cases:
       path: /cases/open
-      tabs:
-        in_time:
-          timeliness: in_time
-        late:
-          timeliness: late
-  user_roles:
+
+  tabs:
+    in_time:
+      params:
+        timeliness: in_time
+    late:
+      params:
+        timeliness: late
+
+  structure:
     approver:
-      default_url: /cases/open?timeliness=in_time
-      pages:
-        - incoming_cases
-        - open_cases
-        - my_open_cases
-        - closed_cases
-    manager:
-      default_url: /cases/open?timeliness=in_time
-      pages:
-        - open_cases
-        - closed_cases
-    responder:
-      default_url: /cases/open?timeliness=in_time
-      pages:
-        - open_cases
-        - closed_cases
+      incoming_cases: default
+      open_cases:
+        in_time:
+        late:
+      my_open_cases:
+      closed_cases:
+
+    '*':
+      open_cases:
+        in_time: default
+        late:
+      my_open_cases:
+      closed_cases:
+

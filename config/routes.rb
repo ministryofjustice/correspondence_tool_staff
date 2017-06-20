@@ -77,15 +77,15 @@ Rails.application.routes.draw do
   gnav = Settings.global_navigation
 
   authenticated :user, -> (u) { u.manager? }  do
-    root to: redirect(gnav.user_roles.manager.default_url), as: :manager_root
+    root to: redirect(gnav.default_urls.manager), as: :manager_root
   end
 
   authenticated :user, -> (u) { u.responder?}  do
-    root to: redirect(gnav.user_roles.responder.default_url), as: :responder_root
+    root to: redirect(gnav.default_urls.responder), as: :responder_root
   end
 
   authenticated :user, -> (u) { u.approver?}  do
-    root to: redirect(gnav.user_roles.approver.default_url), as: :approver_root
+    root to: redirect(gnav.default_urls.approver), as: :approver_root
   end
 
   # TODO: Limit this to the admin users, as soon as we figure out how we
@@ -100,15 +100,15 @@ Rails.application.routes.draw do
 
   resources :cases do
     authenticated :user, -> (u) { u.manager? }  do
-      root to: redirect(gnav.user_roles.manager.default_url), as: :manager_root
+      root to: redirect(gnav.default_urls.manager), as: :manager_root
     end
 
     authenticated :user, -> (u) { u.responder?}  do
-      root to: redirect(gnav.user_roles.responder.default_url), as: :responder_root
+      root to: redirect(gnav.default_urls.responder), as: :responder_root
     end
 
     authenticated :user, -> (u) { u.approver?}  do
-      root to: redirect(gnav.user_roles.approver.default_url), as: :approver_root
+      root to: redirect(gnav.default_urls.approver), as: :approver_root
     end
 
     get 'close', on: :member

@@ -64,4 +64,8 @@ class User < ApplicationRecord
   def approver?
     approving_teams.any?
   end
+
+  def roles
+    team_roles.pluck(:role).uniq
+  end
 end

@@ -282,7 +282,7 @@ RSpec.describe CasesController, type: :controller do
       it 'assigns cases returned by CaseFinderService' do
         get :index
         expect(assigns(:cases)).to eq :index_cases_result
-        expect(finder).to have_received(:for_user).with(manager)
+        expect(finder).to have_received(:for_user).with(manager).at_least(1).times
       end
 
     end
@@ -293,7 +293,7 @@ RSpec.describe CasesController, type: :controller do
       it 'assigns cases returned by CaseFinderService' do
         get :index
         expect(assigns(:cases)).to eq :index_cases_result
-        expect(finder).to have_received(:for_user).with(responder)
+        expect(finder).to have_received(:for_user).with(responder).at_least(1).times
       end
 
       it 'renders the index template' do
@@ -311,7 +311,7 @@ RSpec.describe CasesController, type: :controller do
       it 'assigns the result set from the CaseFinderService' do
         get :index
         expect(assigns(:cases)).to eq :index_cases_result
-        expect(finder).to have_received(:for_user).with(approver)
+        expect(finder).to have_received(:for_user).with(approver).at_least(1).times
       end
     end
   end

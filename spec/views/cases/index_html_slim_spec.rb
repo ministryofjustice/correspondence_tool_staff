@@ -28,7 +28,9 @@ describe 'cases/index.html.slim', type: :view do
                                     .decorate }
 
   before do
-    assign(:global_nav_manager, GlobalNavManager.new(responder, request))
+    assign(:global_nav_manager, GlobalNavManager.new(responder,
+                                                     request,
+                                                     Settings.global_navigation))
   end
 
   def login_as(user)

@@ -1,32 +1,39 @@
 class GlobalNavManager
   class Page
 
-    attr_reader :name, :text, :urls, :user
+    attr_reader :name, :text, :tabs, :settings, :path
 
-    def initialize(name, text, urls, tab_settings, user)
+    def initialize(name, user, tab_names, settings)
       @name = name
-      @text = text
-      @urls = urls.is_a?(Array) ? urls : [urls]
-      @tab_settings = tab_settings || {}
+      @text = I18n.t("nav.pages.#{name}")
       @user = user
+      @path = settings.pages[name].path
+      @settings = settings
+      @tabs = build_tabs(tab_names, settings)
     end
 
     def url
-      if @tab_settings.empty?
-        @urls.first
+      if @tabs.empty?
+        @path
       else
         tabs.first.url
       end
     end
 
-    def tabs
-      @tabs ||= @tab_settings.map do |tab_name, params|
-        Tab.new(tab_name, @urls.first, finder, params)
-      end
+    def finder
+      @finder ||= CaseFinderService.new.for_user(@user).for_action(name)
     end
 
-    def finder
-      @finder ||= CaseFinderService.new.for_user(user).for_action(name)
+    def matches_path?(match_path)
+      @path == match_path
+    end
+
+    private
+
+    def build_tabs(tab_names, settings)
+      tab_names.map do |tab_name|
+        Tab.new(tab_name, @path, finder, settings)
+      end
     end
   end
 end

@@ -80,4 +80,10 @@ RSpec.describe User, type: :model do
       expect(approver.approver?).to be true
     end
   end
+
+  describe '#roles' do
+    it 'returns the roles given users' do
+      expect(manager.roles).to eq ['manager']
+    end
+  end
 end

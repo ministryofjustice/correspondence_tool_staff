@@ -289,10 +289,12 @@ en:
       <strong>Your feedback has been submitted.</strong>
 
   nav:
-    closed_cases: Closed cases
-    incoming_cases: New cases
-    my_open_cases: My open cases
-    open_cases: Open cases
+    pages:
+      closed_cases: Closed cases
+      incoming_cases: New cases
+      incoming_cases_press_office: New cases
+      my_open_cases: My open cases
+      open_cases: Open cases
   devise:
     users:
       password:

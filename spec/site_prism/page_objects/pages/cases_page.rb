@@ -7,6 +7,9 @@ module PageObjects
         element :tab_link, 'a'
         element :count, '.in-time-count'
       end
+      section :active_tab, '.section-tabs .tab.active' do
+        element :link, 'a'
+      end
 
       section :user_card, PageObjects::Sections::UserCardSection, '.user-card'
       sections :case_list, '.case_row' do
@@ -21,6 +24,7 @@ module PageObjects
       element :new_case_button, 'a.button[href="/cases/new"]'
       section :service_feedback, PageObjects::Sections::ServiceFeedbackSection, '.feedback'
       section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
+
       section :pagination, PageObjects::Sections::PaginationSection, '.pagination'
 
       def case_numbers

@@ -1,6 +1,6 @@
 nav.global-nav
   ul
-    - @global_nav_manager.each do |e|
+    - @global_nav_manager.each do |page|
       li class="global-nav-item"
-        = link_to e.text, e.url, {class: active_link_class(e.urls)}
+        = link_to page.text, page.url, {class: active_link_class(page.url)}
 

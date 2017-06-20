@@ -5,14 +5,12 @@ describe 'layouts/_global_nav.html.slim' do
   def render_page
     nav_man = instance_double(GlobalNavManager)
     allow(nav_man).to receive(:each)
-                        .and_yield(double 'GlobalNavManagerEntry',
-                                          text: 'nav1',
-                                          urls: ['http://localhost/nav1'],
-                                          url: 'http://localhost/nav1')
-                        .and_yield(double 'GlobalNavManagerEntry',
-                                          text: 'nav2',
-                                          urls: ['http://localhost/nav2'],
-                                          url: 'http://localhost/nav2')
+                        .and_yield(instance_double GlobalNavManager::Page,
+                                                   text: 'nav1',
+                                                   url: 'http://localhost/nav1')
+                        .and_yield(instance_double GlobalNavManager::Page,
+                                                   text: 'nav2',
+                                                   url: 'http://localhost/nav2')
     assign(:global_nav_manager, nav_man)
     render
     global_nav_partial_page.load(rendered)
