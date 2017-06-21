@@ -73,7 +73,7 @@ module CTS
     LONGDESC
 
     option :number, aliases: 'n', type: :numeric,
-           desc: 'Number of cases to create (per state). [2]'
+           desc: 'Number of cases to create (per state). [1]'
     option :dacu_disclosure, aliases: 'd', type: :boolean,
            desc: 'Flag cases for clearance by DACU Disclosure.'
     option :press_office, aliases: 'p', type: :boolean,
@@ -86,6 +86,7 @@ module CTS
            desc: 'ID or name of responder to use for case assignments.'
     option :responding_team, aliases: :t, type: :string,
            desc: 'ID or name of responding team to use for case assignments.'
+    option :created_at, type: :string
     # option :dacu_manager, type: :string
     # option :dacu_approver, type: :string
 
@@ -154,22 +155,25 @@ module CTS
     end
 
     def responding_team
-      if !options.has_key?(:responding_team) && options.has_key?(:responder)
-        @responding_team ||= responder.responding_teams.first
-      else
-        @responding_team ||= CTS::find_team(
-          options.fetch(:responding_team, CTS::hmcts_team)
-        )
-      end
+      @responding_team ||= if !options.has_key?(:responding_team)
+                             if options.has_key?(:responder)
+                               responder.responding_teams.first
+                             else
+                               CTS::hmcts_team
+                             end
+                           else
+                             CTS::find_team(options[:responding_team])
+                           end
     end
 
     def parse_options
       @end_states = []
-      @number_to_create = options.fetch(:number, 2)
+      @number_to_create = options.fetch(:number, 1)
       @add_dacu_disclosure = options.fetch(:dacu_disclosure, false)
       @add_press_office = options.fetch(:press_office, false)
       @clear_cases = options.fetch(:clear, false)
       @dry_run = options.fetch(:dry_run, false)
+      @created_at = options[:created_at]
 
       if @add_dacu_disclosure && @add_press_office
         raise "cannot handle flagging for dacu disclosure and press office yet"
@@ -239,7 +243,8 @@ module CTS
                                   name: Faker::Name.name,
                                   subject: Faker::Company.catch_phrase,
                                   message: Faker::Lorem.paragraph(10, true, 10),
-                                  managing_team: CTS::dacu_team)
+                                  managing_team: CTS::dacu_team,
+                                  created_at: @created_at)
         flag_for_dacu_disclosure(kase) if @add_dacu_disclosure
         flag_for_press_office(kase) if @add_press_office
         cases << kase
@@ -269,7 +274,7 @@ module CTS
         elsif @add_press_office
           assignment = kase.approver_assignments
                          .where(team: CTS::press_office_team).first
-          user = press_office_approver
+          user = CTS::press_office_approver
         end
 
         service = CaseAcceptApproverAssignmentService.new(
