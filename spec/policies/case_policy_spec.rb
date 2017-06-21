@@ -340,10 +340,8 @@ describe CasePolicy do
     it { should_not permit(another_responder, closed_case) }
     it { should     permit(approver,          assigned_flagged_case) }
     it { should     permit(approver,          assigned_trigger_case) }
-    it { should     permit(co_approver,       assigned_flagged_case) }
-    it { should     permit(co_approver,       assigned_trigger_case) }
-    it { should_not permit(approver,          assigned_case) }
-    it { should_not permit(approver,          assigned_case) }
+    it { should     permit(approver,          assigned_case) }
+    it { should     permit(approver,          assigned_case) }
   end
 
   describe 'case scope policy' do

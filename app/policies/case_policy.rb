@@ -134,12 +134,10 @@ class CasePolicy
 
   def can_view_case_details?
     clear_failed_checks
-    if user.manager?
+    if user.manager? || user.approver?
       true
     elsif user.responder?
       check_user_is_a_responder_for_case
-    elsif user.approver?
-      check_user_is_an_approver_for_case
     end
   end
 
