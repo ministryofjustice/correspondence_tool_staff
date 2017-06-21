@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-describe 'assignments/edit.html.slim', type: :view do
+xdescribe 'assignments/edit.html.slim', type: :view do
   let(:assigned_case)   { create :assigned_case }
   let(:assignment)      { assigned_case.responder_assignment }
 
-  it 'displays the edit assignment page', pending: 'Need help with route matches' do
+  it 'displays the edit assignment page' do
 
     assign(:case, assigned_case)
     assign(:assignment, assignment)
