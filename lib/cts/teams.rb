@@ -26,11 +26,8 @@ module CTS
     desc 'show', 'Show team details.'
     def show(*args)
       args.each do |team_identifier|
-        team = if team_identifier.match(/^\d+$/)
-                 Team.where(id: team_identifier).first
-               else
-                 Team.where(name: team_identifier).first
-               end
+        team = CTS::find_team(team_identifier)
+        ap team
         puts "\nUsers:"
         tp team.user_roles,
            {user_id: { display_name: :id}},
