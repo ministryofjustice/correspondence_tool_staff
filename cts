@@ -14,6 +14,7 @@ $: << 'lib'
 require 'cts/cases'
 require 'cts/teams'
 require 'cts/users'
+require 'cts/policies'
 
 class Thor
   module Shell
@@ -44,8 +45,15 @@ module CTS
         Team.find id_or_name
       elsif id_or_name.match %r{^/(.*)/$}
         team_name_regex = Reger.new(Regex.last_match)
-        Team.all.detect { |t| t.name.match(team_name_regex) } or
+        teams = Team.all.detect { |t| t.name.match(team_name_regex) }
+        if teams.empty?
           raise "No team matching name #{id_or_name} found."
+        elsif teams.count > 1
+          error "Multiple teams found matching #{id_or_name}"
+          teams.each { |t| error "  #{t.name}" }
+          raise "Multiple teams found matching #{id_or_name}"
+        end
+        teams.first
       else
         Team.find_by! name: id_or_name
       end
@@ -55,12 +63,24 @@ module CTS
       if id_or_name.match %r{^\d+$}
         User.find id_or_name
       elsif id_or_name.match %r{^/(.*)/$}
-        user_name_regex = Reger.new(Regex.last_match)
-        User.all.detect { |t| t.full_name.match(user_name_regex) } 
+        user_name_regex = Reger.new(Regex.last_match, Regex::IGNORECASE)
+        users = User.all.detect { |t| t.full_name.match(user_name_regex) }
+        if users.empty?
           raise "No user matching name #{id_or_name} found."
+        elsif users.count > 1
+          error "Multiple users found matching #{id_or_name}."
+          users.each { |u| error "  #{u.name}" }
+          raise "Multiple users found matching #{id_or_name}."
+        end
+        users.first
       else
         User.find_by! full_name: id_or_name
       end
+    end
+
+    def find_case(id_or_number)
+      Case.where(['id = ? or number = ?', id_or_number, id_or_number]).first or
+        raise "No case found matching id or number '#{id_or_number}'."
     end
 
     def validate_teams_populated
@@ -154,6 +174,9 @@ module CTS
 
     desc 'cases', 'Case commands'
     subcommand 'cases', Cases
+
+    desc 'policies', 'Policy related commands'
+    subcommand 'policies', Policies
 
     desc 'teams', 'Team commands'
     subcommand 'teams', Teams

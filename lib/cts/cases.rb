@@ -121,11 +121,7 @@ module CTS
     desc 'show', 'Show case details.'
     def show(*args)
       args.each do |case_identifier|
-        kase = if case_identifier.match(/^\d+$/)
-                 Case.where(['id = ? or number = ?',
-                             case_identifier,
-                             case_identifier]).first
-               end
+        kase = CTS::find_case(case_identifier)
         ap kase
 
         puts "\nAssignments:"

@@ -12,7 +12,9 @@ module CTS
           :id,
           :full_name,
           :email,
-          teams: -> (u) { u.team_roles.map { |tr| "#{tr.team.name}:#{tr.role}" }.join ' ' }
+          teams: -> (u) do
+            u.team_roles.map { |tr| "#{tr.team&.name}:#{tr.role}" }.join ' '
+          end
         ]
       end
       tp.set :max_width, 80
