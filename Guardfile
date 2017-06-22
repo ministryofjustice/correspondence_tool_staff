@@ -1,3 +1,15 @@
+sysctl_ncpu = `sysctl -n hw.ncpu`.to_i
+ncpu = sysctl_ncpu <= 1 ? sysctl_ncpu : sysctl_ncpu - 1
+
+rspec_options = {
+  cmd: "bundle exec rspec",
+  run_all: {
+    cmd: "bundle exec parallel_rspec -n #{ncpu} -o '",
+    cmd_additional_args: "'"
+  },
+  failed_mode: :focus,
+}
+
 guard 'livereload' do
   watch(%r{app/views/.+\.(erb|haml|slim)})
   watch(%r{app/helpers/.+\.rb})
@@ -14,7 +26,7 @@ end
 # end
 # end
 
-guard :rspec, cmd: "bundle exec rspec -fd", failed_mode: :focus do
+guard :rspec, rspec_options do
   watch(%r{^spec/.+_spec\.rb$})
   watch(%r{^app/(.+)\.rb$}) { |m| "spec/#{m[1]}_spec.rb" }
   watch(%r{^app/interfaces/api/(.+)\.rb$}) { |m| "spec/api/#{m[1]}_spec.rb" }
