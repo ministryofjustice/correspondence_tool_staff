@@ -5,7 +5,7 @@ class AddGroupAndUserToCaseAttachments < ActiveRecord::Migration[5.0]
     add_column :case_attachments, :user_id, :integer
 
     require File.join(Rails.root, 'db', 'seeders', 'case_attachment_upload_group_seeder')
-    CaseAttchmentUploadGroupSeeder.new.run
+    CaseAttachmentUploadGroupSeeder.new.run
   end
 
   def down

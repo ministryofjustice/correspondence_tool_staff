@@ -152,7 +152,7 @@ feature 'removing a response from response details' do
       end
 
       context 'when there are multiple responses' do
-        before do
+        background do
           other_response = create :case_response, case: case_with_response, user_id: responder.id
           allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                              .with(other_response.key)

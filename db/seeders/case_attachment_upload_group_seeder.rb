@@ -1,4 +1,4 @@
-class CaseAttchmentUploadGroupSeeder
+class CaseAttachmentUploadGroupSeeder
 
   RESPONSE_EVENTS = %W(
     add_responses
