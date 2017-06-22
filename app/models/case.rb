@@ -52,8 +52,10 @@ class Case < ApplicationRecord
                             state: ['pending', 'accepted']})
   end
 
-  scope :accepted, -> { joins(:assignments).where.not(assignments: {user: nil} ) }
-  scope :unaccepted, -> { joins(:assignments).where(assignments: {user: nil} ) }
+  scope :accepted, -> { joins(:assignments)
+                          .where(assignments: {state: 'accepted'} ) }
+  scope :unaccepted, -> { joins(:assignments)
+                            .where.not(assignments: {state: 'accepted'} ) }
 
   scope :waiting_to_be_accepted, ->(*teams) do
     includes(:assignments)

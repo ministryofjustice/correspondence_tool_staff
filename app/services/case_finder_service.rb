@@ -50,7 +50,8 @@ class CaseFinderService
   def incoming_cases_dacu_disclosure
     chain @cases
       .flagged_for_approval(*@user.approving_teams)
-      .unaccepted.by_deadline
+      .unaccepted
+      .by_deadline
   end
 
   def incoming_cases_press_office

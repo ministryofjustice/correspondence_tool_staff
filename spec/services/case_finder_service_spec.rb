@@ -112,12 +112,12 @@ describe CaseFinderService do
           create(:case, :flagged_accepted, :dacu_disclosure,
                  received_date: dd(17),
                  approver: @disclosure_specialist,
-                 identifier: 'newer flagged accepted')
+                 identifier: 'newer dacu flagged accept')
         @older_dacu_flagged_accept =
           create(:case, :flagged_accepted, :dacu_disclosure,
                  received_date: dd(15),
                  approver: @disclosure_specialist,
-                 identifier: 'older flagged accepted')
+                 identifier: 'older dacu flagged accept')
         @accepted_case        = create(:accepted_case,
                                        responder: @responder)
       end
@@ -316,16 +316,24 @@ describe CaseFinderService do
                                        created_at: 1.business_days.ago,
                                        identifier: 'new case') }
     let!(:too_new_case)       { create(:case, identifier: 'fresh case') }
-    let!(:press_flagged_case) { create(:case, :flagged, :press_office,
+    let!(:press_flagged_case) { create(:case, :flagged_accepted, :press_office,
                                        identifier: 'fresh press flagged case') }
 
-    describe '#incoming_cases_press_office' do
-      context 'as a press officer' do
-        let(:finder) { CaseFinderService.new.for_user(@press_officer) }
+    let(:press_officer) { create :press_officer }
 
+    context 'as a press officer' do
+      let(:finder) { CaseFinderService.new.for_user(press_officer) }
+
+      describe '#incoming_cases_press_office' do
         it 'returns incoming cases ordered by creation date' do
           expect(finder.incoming_cases_press_office.cases)
             .to eq [new_case, old_case]
+        end
+      end
+
+      describe '#open_cases' do
+        it 'returns incoming cases ordered by creation date' do
+          expect(finder.open_cases.cases).to eq [press_flagged_case]
         end
       end
     end

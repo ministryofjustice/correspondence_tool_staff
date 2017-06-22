@@ -32,9 +32,8 @@ feature 'listing open cases on the system' do
   end
   given(:assigned_case_team_b) { create :assigned_case,
                                         responding_team: responding_team_b }
-  given(:case_with_response) { create :case_with_response,
-                                      responder: responder_a }
-  given(:responded_case) { create :responded_case, responder: responder_a }
+  given(:assigned_case_late) { create :assigned_case,
+                                      received_date: 22.business_days.ago }
   given(:closed_case) { create :closed_case, responder: responder_a }
 
   background do
@@ -44,8 +43,7 @@ feature 'listing open cases on the system' do
     assigned_case_coresponder_team_a
     assigned_case_dd_flagged
     assigned_case_team_b
-    case_with_response
-    responded_case
+    assigned_case_late
     closed_case
   end
 
@@ -54,15 +52,13 @@ feature 'listing open cases on the system' do
       login_as create(:manager)
       visit '/cases/open?timeliness=in_time'
       cases = cases_page.case_list
-      expect(cases.count).to eq 7
+      expect(cases.count).to eq 5
 
       expect(cases[0].number).to have_text unassigned_case.number
       expect(cases[1].number).to have_text assigned_case_team_a.number
       expect(cases[2].number).to have_text assigned_case_coresponder_team_a.number
       expect(cases[3].number).to have_text assigned_case_dd_flagged.number
       expect(cases[4].number).to have_text assigned_case_team_b.number
-      expect(cases[5].number).to have_text case_with_response.number
-      expect(cases[6].number).to have_text responded_case.number
     end
   end
 
@@ -71,15 +67,13 @@ feature 'listing open cases on the system' do
     visit '/cases/open?timeliness=in_time'
 
     cases = cases_page.case_list
-    expect(cases.count).to eq 5
+    expect(cases.count).to eq 3
     expect(cases[0].number).to have_text assigned_case_team_a.number
     expect(cases[1].number).to have_text assigned_case_coresponder_team_a.number
     expect(cases[2].number).to have_text assigned_case_dd_flagged.number
-    expect(cases[3].number).to have_text case_with_response.number
-    expect(cases[4].number).to have_text responded_case.number
   end
 
-  context 'for dacu disclosure' do
+  context 'approvers' do
     scenario 'only shows their cases' do
       login_as disclosure_specialist
 
