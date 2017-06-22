@@ -789,6 +789,19 @@ RSpec.describe Case, type: :model do
     end
   end
 
+  describe '#team_for_user' do
+    it 'returns the team that the user is assigned to the case from' do
+      my_responder = case_being_drafted_trigger.responder
+      my_responding_team = case_being_drafted_trigger.responding_team
+      expect(case_being_drafted_trigger.team_for_user(my_responder)).to eq my_responding_team
+    end
+
+    it 'returns nil if there is no assignment for that user' do
+      user = create :user
+      expect(case_being_drafted_trigger.team_for_user(user)).to be_nil
+    end
+  end
+
   # See note in case.rb about why this is commented out.
   #
   # describe 'awaiting_approver?' do

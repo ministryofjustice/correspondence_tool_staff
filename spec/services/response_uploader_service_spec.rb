@@ -2,28 +2,19 @@ require 'rails_helper'
 
 describe ResponseUploaderService do
 
-  let(:responder) { create :responder }
-  let(:kase) { create(:accepted_case, responder: responder) }
-  let(:uploads_key) do
-    "uploads/#{kase.id}/responses/#{Faker::Internet.slug}.jpg"
-  end
-  let(:destination_key) { uploads_key.sub(%r{^uploads/}, '') }
-  let(:destination_path) do
-    "correspondence-staff-case-uploads-testing/#{destination_key}"
-  end
-  let(:uploads_object) { instance_double(Aws::S3::Object, 'uploads_object') }
-  let(:public_url) do
-    "#{CASE_UPLOADS_S3_BUCKET.url}/#{URI.encode(destination_key)}"
-  end
-  let(:destination_object) do
-    instance_double Aws::S3::Object, 'destination_object',
-                    public_url: public_url
-  end
-  let(:leftover_files) { [] }
-
-  let(:rus) { ResponseUploaderService.new(kase, kase.responder, params, action) }
-
-  let(:state_machine) { double CaseStateMachine }
+  let(:upload_group)          { '20170615102233' }
+  let(:responder)             { create :responder }
+  let(:kase)                  { create(:accepted_case, responder: responder) }
+  let(:filename)              { "#{Faker::Internet.slug}.jpg" }
+  let(:uploads_key)           { "uploads/#{kase.id}/responses/#{filename}" }
+  let(:destination_key)       { "#{kase.id}/responses/#{upload_group}/#{filename}" }
+  let(:destination_path)      { "correspondence-staff-case-uploads-testing/#{destination_key}" }
+  let(:uploads_object)        { instance_double(Aws::S3::Object, 'uploads_object') }
+  let(:public_url)            { "#{CASE_UPLOADS_S3_BUCKET.url}/#{URI.encode(destination_key)}" }
+  let(:destination_object)    { instance_double Aws::S3::Object, 'destination_object', public_url: public_url }
+  let(:leftover_files)        { [] }
+  let(:rus)                   { ResponseUploaderService.new(kase, kase.responder, params, action) }
+  let(:state_machine)         { double CaseStateMachine }
 
   let(:params) do
     ActionController::Parameters.new(
@@ -36,7 +27,8 @@ describe ResponseUploaderService do
     )
   end
 
-  before do
+  before(:each) do
+    Timecop.freeze Time.new(2017, 6, 15, 10, 22, 33)
     allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                        .with(uploads_key)
                                        .and_return(uploads_object)
@@ -46,10 +38,10 @@ describe ResponseUploaderService do
     allow(CASE_UPLOADS_S3_BUCKET).to receive(:objects)
                                        .with(prefix: "uploads/#{kase.id}")
                                        .and_return(leftover_files)
-    allow(uploads_object).to receive(:move_to).with(
-                               destination_path
-                             )
+    allow(uploads_object).to receive(:move_to).with(destination_path)
   end
+
+  after(:each) { Timecop.return }
 
 
   describe '#upload!' do
@@ -62,7 +54,7 @@ describe ResponseUploaderService do
 
 
       it 'creates a new case attachment' do
-        expect{ rus.upload! }.to change { kase.reload.attachments.count }.by(1)
+          expect{ rus.upload! }.to change { kase.reload.attachments.count }.by(1)
       end
 
       it 'moves uploaded object to destination path' do
@@ -126,22 +118,21 @@ describe ResponseUploaderService do
         end
 
         it 'does not create a new case_attachment object' do
-          expect { rus.upload! }.not_to change { kase.reload.attachments.count }
+          expect{
+            rus.upload!
+          }.not_to change{ CaseAttachment.count }
         end
 
-        it 'updates the updated_at time of the existing attachment' do
-          expect { rus.upload! }.to change { kase.reload.attachments.first.updated_at }
-        end
-
-        it 'updates the existing attachment' do
-          rus.upload!
-          expect(uploads_object).to have_received(:move_to).with(destination_path)
+        it 'returns :error' do
+          expect(rus.upload!).to eq :error
         end
       end
 
       context 'uploading invalid attachment type' do
+        before { allow(uploads_object).to receive(:move_to).with("correspondence-staff-case-uploads-testing/#{kase.id}/responses/20170615102233/invalid.exe") }
+
         let(:uploads_key) do
-          "uploads/#{kase.id}/responses/invalid.exe"
+          "uploads/#{kase.id}/responses/20170615102233/invalid.exe"
         end
 
         it 'renders the new_response_upload page' do

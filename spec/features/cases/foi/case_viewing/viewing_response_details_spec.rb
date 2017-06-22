@@ -33,7 +33,7 @@ feature 'viewing response details' do
         cases_show_page.load(id: responded_case.id)
 
         expect(cases_show_page).to have_case_attachments
-        expect(cases_show_page.case_attachments.first.filename.text)
+        expect(cases_show_page.case_attachments.first.collection.first.filename.text)
           .to eq(response.filename)
         expect(cases_show_page.case_details.responders_details.team.data.text)
           .to eq(responding_team.name)
@@ -53,7 +53,7 @@ feature 'viewing response details' do
         responded_case.attachments << build(:case_attachment)
         cases_show_page.load(id: responded_case.id)
 
-        rendered_filenames = cases_show_page.case_attachments
+        rendered_filenames = cases_show_page.case_attachments.first.collection
                                .map do |response|
           response.filename.text
         end
@@ -94,7 +94,7 @@ feature 'viewing response details' do
 
     context 'with a case being drafted' do
       given(:accepted_case) { create :accepted_case, responder: responder }
-      given(:response)      { create :case_response }
+      given(:response)      { create :case_response, user_id: responder.id }
 
       scenario 'when the case has no responses' do
         cases_show_page.load(id: accepted_case.id)

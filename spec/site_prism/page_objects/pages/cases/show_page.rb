@@ -31,8 +31,8 @@ module PageObjects
                 PageObjects::Sections::Cases::CaseRequestSection, '.request'
 
         sections :case_attachments,
-                PageObjects::Sections::CaseAttachmentSection,
-                '.case-attachments-report tbody tr'
+                PageObjects::Sections::Cases::CaseAttachmentSection,
+                '.case-attachments-group'
 
         section :what_do_you_want_to_do,
                 PageObjects::Sections::Cases::WhatDoYouWantToDoSection,

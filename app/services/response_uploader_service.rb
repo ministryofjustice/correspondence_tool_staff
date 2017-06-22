@@ -14,6 +14,7 @@ class ResponseUploaderService
     @params = params
     @result = nil
     @action = action_params
+    @upload_group = Time.now.strftime('%Y%m%d%H%M%S')
   end
 
   def upload!
@@ -37,16 +38,21 @@ class ResponseUploaderService
   def response_attachments
     @response_attachments ||= @params[:uploaded_files].reject(&:blank?).map do |uploads_key|
       move_uploaded_response(uploads_key)
-      CaseAttachment.find_or_initialize_by(
+      CaseAttachment.create!(
         type: 'response',
-        key: response_destination_key(uploads_key)
-      )
+        key: response_destination_key(uploads_key),
+        upload_group: @upload_group,
+        user_id: @current_user.id)
     end
   end
 
   def process_files
-    ActiveRecord::Base.transaction do
-      @result = add_attachment_and_transition_state
+    begin
+      ActiveRecord::Base.transaction do
+        @result = add_attachment_and_transition_state
+      end
+    rescue
+      @result = :error
     end
   end
 
@@ -98,8 +104,9 @@ class ResponseUploaderService
   end
 
   def response_destination_key(uploads_key)
-    "#{@case.attachments_dir('responses')}/#{File.basename(uploads_key)}"
+    "#{@case.attachments_dir('responses', @upload_group)}/#{File.basename(uploads_key)}"
   end
+
 
   def remove_leftover_upload_files
     prefix = "uploads/#{@case.id}"

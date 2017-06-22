@@ -1,12 +1,21 @@
-<% if (@case.drafting? || @case.awaiting_dispatch?) && @case.attachments.response.empty? %>
-if($(".request--responses").length) {
-    $(".request--responses").remove();
-}
-if($("#action--mark-response-as-sent").length) {
-    $("#action--mark-response-as-sent").remove();
-}
-<% else %>
 if($(".case-attachments").length) {
-    $("#case_response_<%= @attachment.id %>").remove();
+  var deletedRecord = <%= @attachment.id %>;
+  var $deletedAttachment = $("#case_response_<%= @attachment.id %>");
+  var $group = $deletedAttachment.closest('.case-attachments-group');
+  var $groupAttachments = $group.find('.case-attachments-report tbody tr');
+
+  $("#case_response_<%= @attachment.id %>").remove();
+
+  //If no more attachments remove the group
+  if($group.find('.case-attachments-report tbody tr').length === 0){
+    $group.remove();
+  }
+
+  if($('.case-attachments .case-attachments-group').length === 0) {
+    $('.case-attachments').closest('.case-info').remove();
+
+    if($("#action--mark-response-as-sent").length) {
+      $("#action--mark-response-as-sent").remove();
+    }
+  }
 }
-<% end %>

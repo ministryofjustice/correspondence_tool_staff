@@ -2,13 +2,15 @@
 #
 # Table name: case_attachments
 #
-#  id          :integer          not null, primary key
-#  case_id     :integer
-#  type        :enum
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  key         :string
-#  preview_key :string
+#  id           :integer          not null, primary key
+#  case_id      :integer
+#  type         :enum
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  key          :string
+#  preview_key  :string
+#  upload_group :string
+#  user_id      :integer
 #
 
 class CaseAttachment < ActiveRecord::Base
@@ -92,7 +94,7 @@ class CaseAttachment < ActiveRecord::Base
 
 
   def upload_preview(filepath, retry_count)
-    pdf_key = "#{self.case.attachments_dir('response_previews')}/#{File.basename(key, File.extname(key))}.pdf"
+    pdf_key = "#{self.case.attachments_dir('response_previews', upload_group)}/#{File.basename(key, File.extname(key))}.pdf"
     preview_object = CASE_UPLOADS_S3_BUCKET.object(pdf_key)
     result = preview_object.upload_file(filepath)
     if result == false

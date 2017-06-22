@@ -39,6 +39,7 @@ module PageObjects
         case_status:                  'Cases::CaseStatusSection',
         case_request:                 'Cases::CaseRequestSection',
         case_details:                 'Cases::CaseDetailsSection',
+        case_attachments:             'Cases::CaseAttachmentSection',
         clearance_copy:               'Cases::ClearanceCopySection',
         pagination:                   'PaginationSection',
       }.each do |section_name, section_class|

@@ -34,7 +34,7 @@ class Case < ApplicationRecord
   scope :by_deadline, -> {order("(properties ->> 'external_deadline')::timestamp with time zone ASC, cases.id") }
   scope :most_recent_first, -> {reorder("(properties ->> 'external_deadline')::timestamp with time zone DESC, cases.id") }
 
-  scope :opened, -> { where.not(current_state: 'closed')}
+  scope :opened, -> { where.not(current_state: 'closed') }
   scope :closed, -> { where(current_state: 'closed').order(last_transitioned_at: :desc) }
 
   scope :with_teams, -> (teams) do
@@ -147,7 +147,7 @@ class Case < ApplicationRecord
   has_many :responded_transitions, -> { responded }, class_name: 'CaseTransition'
   has_many :responder_history, through: :responded_transitions, source: :user
 
-  has_many :attachments, -> { order(id: :desc) }, class_name: 'CaseAttachment', dependent: :destroy
+  has_many :attachments, class_name: 'CaseAttachment', dependent: :destroy
   belongs_to :outcome, class_name: 'CaseClosure::Outcome'
   belongs_to :refusal_reason, class_name: 'CaseClosure::RefusalReason'
   has_and_belongs_to_many :exemptions, class_name: 'CaseClosure::Exemption', join_table: 'cases_exemptions'
@@ -171,6 +171,11 @@ class Case < ApplicationRecord
     where('lower(name) LIKE ?', "%#{term.downcase}%")
   end
 
+
+  def upload_groups
+    CaseAttachmentUploadGroupCollection.new(self, attachments)
+  end
+
   # Commented out as this is not being used and we don't know how to re-write
   # this yet, we can wait until we actually need this method, and if we never
   # do we should just delete it.
@@ -178,6 +183,10 @@ class Case < ApplicationRecord
   # def awaiting_approver?
   #   self.approver_assignments.any? &:pending?
   # end
+
+  def team_for_user(user)
+    assignments.where(user_id: user.id).first&.team
+  end
 
   def prevent_number_change
     raise StandardError.new('number is immutable') if number_changed?
@@ -217,8 +226,12 @@ class Case < ApplicationRecord
     end
   end
 
-  def attachments_dir(attachment_type)
-    "#{id}/#{attachment_type}"
+  def attachments_dir(attachment_type, upload_group)
+    "#{id}/#{attachment_type}/#{upload_group}"
+  end
+
+  def uploads_dir
+    "#{id}/responses"
   end
 
   def who_its_with

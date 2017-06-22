@@ -2,13 +2,15 @@
 #
 # Table name: case_attachments
 #
-#  id          :integer          not null, primary key
-#  case_id     :integer
-#  type        :enum
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  key         :string
-#  preview_key :string
+#  id           :integer          not null, primary key
+#  case_id      :integer
+#  type         :enum
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  key          :string
+#  preview_key  :string
+#  upload_group :string
+#  user_id      :integer
 #
 
 FactoryGirl.define do
@@ -22,6 +24,7 @@ FactoryGirl.define do
     #       number we generate here.
     key { "#{SecureRandom.hex(16)}/responses/#{Faker::Internet.slug}.pdf" }
     preview_key { "#{SecureRandom.hex(16)}/preview_responses/#{Faker::Internet.slug}.pdf" }
+    upload_group { Time.now.strftime('%Y%m%d%H%M%S') }
   end
 
   factory :correspondence_response, parent: :case_attachment do
