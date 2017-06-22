@@ -1,7 +1,7 @@
 language: ruby
 sudo: false
 dist: trusty
-cache: bundler
+#cache: bundler
 addons:
   postgresql: 9.5
 services:
@@ -9,6 +9,9 @@ services:
 before_script:
 - psql -c 'create database correspondence_platform_test;' -U postgres
 script:
-- bundle exec rubocop
-- bundle exec rails db:create db:structure:load
-- bundle exec rails spec
+- bundle _1.14.4_ install
+- bundle _1.14.4_ exec rubocop
+- bundle _1.14.4_ exec rails db:create db:structure:load
+- bundle _1.14.4_ exec rails spec
+before_install:
+- gem install bundler -v 1.14.4
