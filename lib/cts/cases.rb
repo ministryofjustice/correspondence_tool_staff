@@ -98,6 +98,12 @@ module CTS
       @invalid_params = false
       parse_params(args)
 
+      puts "Creating #{@number_to_create} cases in each of the following states:"
+      puts "\t" + @end_states.join("\n\t")
+      puts "Flagging each for DACU Disclosure clearance" if @add_dacu_disclosure
+      puts "Flagging each for Press Office clearance" if @add_press_office
+      puts "\n"
+
       clear if @clear_cases
 
       cases = @end_states.map do |target_state|
@@ -174,9 +180,6 @@ module CTS
       if @add_dacu_disclosure && @add_press_office
         raise "cannot handle flagging for dacu disclosure and press office yet"
       end
-      puts "Creating #{@number_to_create} cases in each of the following states: #{@end_states.join(', ')}"
-      puts "Flagging each for DACU Disclosure clearance" if @add_dacu_disclosure
-      puts "Flagging each for Press Office clearance" if @add_press_office
     end
 
     def parse_params(args)

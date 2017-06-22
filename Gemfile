@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'awesome_print'
 gem 'aws-sdk'
 gem 'bank_holiday'
 gem 'business_time'
@@ -10,6 +11,7 @@ gem 'draper', '3.0.0.pre1'
 gem 'dropzonejs-rails', '~> 0.7.3'
 gem 'foreman', '~> 0.82.0'
 gem 'factory_girl_rails', '~> 4.7.0'
+gem 'faker'
 gem 'gov_uk_date_fields', '>= 2.0.2'
 gem 'govuk_template',         '~> 0.19.1'
 gem 'govuk_frontend_toolkit', '>= 5.0.2'
@@ -38,6 +40,7 @@ gem 'statesman', '~> 2.0.1'
 # gem 'statesman-events', '~> 0.0.1'
 gem 'statesman-events', git: 'https://github.com/ministryofjustice/statesman-events.git',
                         branch: 'add-before-event'
+gem 'table_print'
 gem 'thor-rails'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
@@ -63,9 +66,7 @@ end
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'annotate'
-  gem 'awesome_print'
   gem 'byebug', platform: :mri
-  gem 'faker'
   gem 'launchy'
   gem 'mechanize', '~> 2.7.5'
   gem 'parallel_tests'
@@ -88,7 +89,6 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
-  gem 'table_print'
   gem 'web-console'
 end
 
