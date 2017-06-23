@@ -5,7 +5,7 @@ class CaseAttachmentUploadGroup
   attr_reader :user, :collection, :timestamp, :team_name
 
   def initialize(array_of_time_and_user_id, kase, collection)
-    @timestamp = Time.parse(array_of_time_and_user_id.first)
+    @timestamp = get_time(array_of_time_and_user_id.first)
     @user = User.find(array_of_time_and_user_id.last)
     @collection = collection.to_a
     team = kase.team_for_user(@user)
@@ -36,5 +36,14 @@ class CaseAttachmentUploadGroup
 
   def <=>(other)
     other.timestamp <=> @timestamp
+  end
+
+  private
+  def get_time(upload_group)
+    current_timezone = Time.zone
+    Time.zone = 'Etc/UTC'
+    t =  Time.zone.parse(upload_group)
+    Time.zone = current_timezone
+    t.in_time_zone
   end
 end

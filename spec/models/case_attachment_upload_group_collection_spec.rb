@@ -3,9 +3,9 @@ require 'rails_helper'
 describe CaseAttachmentUploadGroupCollection do
   before(:all) do
     @upload_group_1 = '20170608101112'
-    @upload_group_2 = '20170612114201'
-    @timestamp_1 = '08 Jun 2017 10:11'
-    @timestamp_2 = '12 Jun 2017 11:42'
+    @upload_group_2 = '20171212114201'
+    @timestamp_1 = '08 Jun 2017 11:11'      # notice how times in summer are converted to BST
+    @timestamp_2 = '12 Dec 2017 11:42'
     @kase = create :case_with_response
     @responder_1 = @kase.responding_team.users.first
     @responder_2 = @kase.responding_team.users.last
@@ -30,7 +30,7 @@ describe CaseAttachmentUploadGroupCollection do
       expect(@upload_group_1).not_to eq @upload_group_2
       expect(@responder_1).not_to eq @responder_2
       expect(@kase.attachments.size).to eq 5
-      expect(@kase.attachments.order(:upload_group, :id).map(&:upload_group)).to eq %w(20170608101112 20170608101112 20170608101112 20170612114201 20170612114201 )
+      expect(@kase.attachments.order(:upload_group, :id).map(&:upload_group)).to eq %w(20170608101112 20170608101112 20170608101112 20171212114201 20171212114201 )
       expect(@kase.attachments.order(:upload_group, :id).map(&:user_id)).to eq [ @responder_1.id, @responder_1.id, @responder_1.id, @responder_2.id, @responder_2.id ]
     end
 
@@ -81,6 +81,7 @@ describe CaseAttachmentUploadGroupCollection do
       }.to raise_error ArgumentError, "No upload group contains a case attachment with id #{ca_id}"
     end
   end
+
 
 
 end
