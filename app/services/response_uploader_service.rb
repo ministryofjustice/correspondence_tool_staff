@@ -90,7 +90,7 @@ class ResponseUploaderService
                            filenames
       )
     else
-      raise 'Unexpected action parameter'
+      raise "Unexpected action parameter: '#{@action}'"
     end
   end
 
