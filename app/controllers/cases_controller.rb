@@ -16,7 +16,7 @@ class CasesController < ApplicationController
       :update,
       :upload_responses,
     ]
-  before_action :set_s3_direct_post, only: [:new_response_upload, :upload_responses]
+  before_action :set_s3_direct_post, only: [:new, :new_response_upload, :upload_responses]
 
   def index
     # index doesn't have a nav page defined so cannot use the GlobalNavManager
@@ -257,6 +257,9 @@ class CasesController < ApplicationController
   end
 
   def set_s3_direct_post
+    @case = Case.new if @case.nil?
+    @case.uploads_dir = 'request' if @case.uploads_dir.blank?
+
     uploads_key = "uploads/#{@case.uploads_dir}/${filename}"
     @s3_direct_post = CASE_UPLOADS_S3_BUCKET.presigned_post(
       key:                   uploads_key,

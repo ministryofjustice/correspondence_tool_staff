@@ -95,6 +95,7 @@ class Case < ApplicationRecord
   serialize :exemption_ids, Array
 
   attr_accessor :flag_for_disclosure_specialists
+  attr_accessor :received_by
 
   enum requester_type: {
       academic_business_charity: 'academic_business_charity',

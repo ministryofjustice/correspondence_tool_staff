@@ -1,0 +1,16 @@
+.dropzone{ data-dz-template=render('shared/dropzone_js').gsub('"', '\'').html_safe
+
+  data-form-data=s3_direct_post.fields.to_json
+  data-url= s3_direct_post.url
+  data-host= URI.parse(s3_direct_post.url).host
+  data-accepted-files=accepted_case_attachment_types}
+
+  .dz-default.dz-message.grid-row
+    .column-one-third.arrow-icon
+      p
+    .column-one-half
+    span.normal= "Drag and drop files here"
+    .bold-normal= "or"
+    .button-secondary
+      = t('common.choose_file')
+
