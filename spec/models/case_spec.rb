@@ -806,15 +806,25 @@ RSpec.describe Case, type: :model do
 
 
   describe '#approver_assignments.for_team' do
-    before(:each) { CaseFlagForClearanceService.new(user: press_officer, kase: case_being_drafted_trigger, team: press_office).call }
 
     it 'returns the correct team given the user' do
-      expect(case_being_drafted_trigger.team_for_user(press_officer)).to eq press_office
+      press_officer
+      press_office
+      po_assignments = case_being_drafted_trigger.approver_assignments.for_team(press_office)
+      expect(po_assignments.size).to eq 1
+      expect(po_assignments.first.team_id).to eq press_office.id
     end
 
     it 'returns nil if there is no such user in the assignments' do
-      new_approver = create  :approver
-      expect(case_being_drafted_trigger.team_for_user(new_approver)).to be_nil
+      case_being_drafted_trigger
+      ap case_being_drafted_trigger.assignments
+      new_approving_team = create :approving_team
+      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      ap new_approving_team
+      new_approver = create  :approver, approving_team: new_approving_team
+      xx = case_being_drafted_trigger.approver_assignments.for_team(new_approving_team)
+      ap xx
+      expect(case_being_drafted_trigger.approver_assignments.for_team(new_approving_team)).to be_nil
     end
   end
 
