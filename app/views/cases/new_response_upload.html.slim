@@ -1,6 +1,5 @@
 - content_for :heading
   = t('.heading')
-
 - content_for :sub_heading
   = @case.number
 
@@ -8,12 +7,7 @@
 
 - if @case.requires_clearance?
   .form-group
-
-    = render partial: 'cases/clearance_copy',
-            locals: {case_details: @case,
-                    status: "Pending clearance",
-                    team: @case.approving_teams.first.name,
-                    action: "uploading"}
+    = render partial: 'cases/clearance_copy', locals: { nsi: @next_step_info }
 
 .grid-row
   .column-two-thirds

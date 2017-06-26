@@ -883,12 +883,20 @@ RSpec.describe CasesController, type: :controller do
 
     shared_examples 'signed-in user can view attachment upload page' do
       it 'assigns @case' do
-        get :new_response_upload, params: { id: kase }
+        get :new_response_upload, params: { id: kase, action: 'upload' }
         expect(assigns(:case)).to eq(Case.first)
       end
 
+      it 'assigns NextStepInfo' do
+        nsi = double NextStepInfo
+        expect(NextStepInfo).to receive(:new).with(kase, 'upload').and_return(nsi)
+
+        get :new_response_upload, params: { id: kase, action: 'upload' }
+        expect(assigns(:next_step_info)).to eq nsi
+      end
+
       it 'renders the new_response_upload view' do
-        get :new_response_upload, params: { id: kase }
+        get :new_response_upload, params: { id: kase, action: 'upload'  }
         expect(response).to have_rendered(:new_response_upload)
       end
     end

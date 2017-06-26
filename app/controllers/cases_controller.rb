@@ -102,6 +102,7 @@ class CasesController < ApplicationController
 
   def new_response_upload
     authorize @case, :can_add_attachment_to_flagged_and_unflagged_cases?
+    @next_step_info = NextStepInfo.new(@case, request.query_parameters['action'])
     flash[:action_params] = request.query_parameters['action']
   end
 
@@ -196,6 +197,7 @@ class CasesController < ApplicationController
 
   def approve_response
     authorize @case, :can_approve_case?
+    @next_step_info = NextStepInfo.new(@case, 'approve')
     render :approve_response
   end
 

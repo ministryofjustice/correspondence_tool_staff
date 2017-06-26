@@ -1,11 +1,11 @@
 .clearance-copy
   p
-    = "You are #{action} the response to: "
+    = "You are #{nsi.action_verb}: "
     strong.strong-block
-      = case_details.subject
+      = nsi.kase.subject
 
   p
     = "It will then be with "
-    strong = team
+    strong = nsi.next_team.name
     = " with the status "
-    strong = status
+    strong = nsi.next_state.humanize.downcase

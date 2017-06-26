@@ -1,11 +1,12 @@
 require 'rails_helper'
 
 describe 'cases/approve_response.html.slim' do
-  let(:assigned_trigger_case)   { create :assigned_case, :flagged_accepted}
+  let(:assigned_trigger_case)   { create :pending_dacu_clearance_case, :flagged_accepted}
+  let(:nsi)                     { NextStepInfo.new(assigned_trigger_case, 'approve') }
 
   it 'displays all the cases' do
     assign(:case, assigned_trigger_case)
-
+    assign(:next_step_info, nsi)
     render
 
     approve_response_page.load(rendered)
