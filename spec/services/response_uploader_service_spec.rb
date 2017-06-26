@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe ResponseUploaderService do
 
-  let(:upload_group)          { '20170615092233' }
+  let(:upload_group)          { '20170615102233' }
   let(:responder)             { create :responder }
   let(:kase)                  { create(:accepted_case, responder: responder) }
   let(:filename)              { "#{Faker::Internet.slug}.jpg" }
@@ -27,7 +27,10 @@ describe ResponseUploaderService do
     )
   end
 
+
+
   before(:each) do
+    ENV['TZ'] = 'UTC'
     Timecop.freeze Time.new(2017, 6, 15, 10, 22, 33)
     allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                        .with(uploads_key)
@@ -41,7 +44,10 @@ describe ResponseUploaderService do
     allow(uploads_object).to receive(:move_to).with(destination_path)
   end
 
-  after(:each) { Timecop.return }
+  after(:each) do
+    Timecop.return
+    ENV['TZ'] = nil
+  end
 
 
   describe '#upload!' do
@@ -129,10 +135,10 @@ describe ResponseUploaderService do
       end
 
       context 'uploading invalid attachment type' do
-        before { allow(uploads_object).to receive(:move_to).with("correspondence-staff-case-uploads-testing/#{kase.id}/responses/20170615092233/invalid.exe") }
+        before { allow(uploads_object).to receive(:move_to).with("correspondence-staff-case-uploads-testing/#{kase.id}/responses/20170615102233/invalid.exe") }
 
         let(:uploads_key) do
-          "uploads/#{kase.id}/responses/20170615092233/invalid.exe"
+          "uploads/#{kase.id}/responses/20170615102233/invalid.exe"
         end
 
         it 'renders the new_response_upload page' do
