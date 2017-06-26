@@ -44,7 +44,7 @@ class Team < ApplicationRecord
   }
 
   def self.dacu_disclosure
-    find_by! name: Settings.foi_cases.default_clearance_team
+    where(name: Settings.foi_cases.default_clearance_team).first
   end
 
   def dacu_disclosure?

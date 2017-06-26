@@ -137,11 +137,7 @@ class Case < ApplicationRecord
 
   has_many :approver_assignments,
           -> { approving },
-          class_name: 'Assignment' do
-            def for_team(team)
-              self.select { |ass| ass.team_id = team.id }
-            end
-          end
+          class_name: 'Assignment'
 
   has_many :approvers,
            through: :approver_assignments,
@@ -160,10 +156,11 @@ class Case < ApplicationRecord
            class_name: 'CaseTransition',
            autosave: false,
            dependent: :destroy do
-            def most_recent
-              where(most_recent: true).first
-            end
+              def most_recent
+                where(most_recent: true).first
+              end
            end
+
 
   has_many :responded_transitions, -> { responded }, class_name: 'CaseTransition'
 

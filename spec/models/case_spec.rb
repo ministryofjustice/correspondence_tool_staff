@@ -807,24 +807,24 @@ RSpec.describe Case, type: :model do
 
   describe '#approver_assignments.for_team' do
 
-    it 'returns the correct team given the user' do
-      press_officer
-      press_office
-      po_assignments = case_being_drafted_trigger.approver_assignments.for_team(press_office)
-      expect(po_assignments.size).to eq 1
-      expect(po_assignments.first.team_id).to eq press_office.id
+    it 'returns the correct assignments given the team' do
+      case_being_drafted_trigger.assignments << Assignment.new(
+        state: 'accepted',
+        team_id: press_office.id,
+        role: 'approving',
+        user_id: press_officer.id,
+        approved: false
+      )
+      expect(case_being_drafted_trigger.reload.approver_assignments.size).to eq 2
+      presss_office_assignments = case_being_drafted_trigger.approver_assignments.for_team(press_office)
+      expect(presss_office_assignments.first.team_id).to eq press_office.id
     end
 
     it 'returns nil if there is no such user in the assignments' do
       case_being_drafted_trigger
-      ap case_being_drafted_trigger.assignments
       new_approving_team = create :approving_team
-      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-      ap new_approving_team
-      new_approver = create  :approver, approving_team: new_approving_team
-      xx = case_being_drafted_trigger.approver_assignments.for_team(new_approving_team)
-      ap xx
-      expect(case_being_drafted_trigger.approver_assignments.for_team(new_approving_team)).to be_nil
+      team_assignments = case_being_drafted_trigger.approver_assignments.for_team(new_approving_team)
+      expect(team_assignments).to be_empty
     end
   end
 
