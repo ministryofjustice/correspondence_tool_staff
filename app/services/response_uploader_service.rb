@@ -14,7 +14,7 @@ class ResponseUploaderService
     @params = params
     @result = nil
     @action = action_params
-    @upload_group = Time.now.strftime('%Y%m%d%H%M%S')
+    @upload_group = Time.now.utc.strftime('%Y%m%d%H%M%S')   # save upload group in utc
   end
 
   def upload!
