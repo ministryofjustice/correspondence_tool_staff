@@ -51,7 +51,7 @@ module CTS
       Case.all.map(&:destroy)
     end
 
-    desc 'create all|<states> [-n n] [-d] [-x]', 'Create <-n> cases in the specified states'
+    desc 'create OPTIONS all|<states>', 'Create cases in the specified states'
     long_desc <<~LONGDESC
 
     The create command takes the following sub commands:
@@ -70,6 +70,11 @@ module CTS
         awaiting_dispatch
         responded
         closed
+
+    Examples:
+      ./cts cases create --created-at='2017-06-20 09:36:00' drafting
+      ./cts cases create -x -n2 all
+      ./cts cases create --dry-run -p awaiting_responder
     LONGDESC
 
     option :number, aliases: 'n', type: :numeric,
@@ -111,7 +116,7 @@ module CTS
         cases = nil
         journey.each do |state|
           if @dry_run
-            puts "transition to '#{state}"
+            puts "transition to '#{state}'"
           else
             cases = __send__("transition_to_#{state}", cases)
             cases.each(&:reload)
@@ -205,6 +210,10 @@ module CTS
         @end_states << arg
       else
         error "Unrecognised parameter: #{arg}"
+        error "Journeys checked:"
+        journeys_to_check.each do |name, states|
+          error "  #{name}: #{states.join(', ')}"
+        end
         @invalid_params = true
       end
     end
@@ -323,19 +332,21 @@ module CTS
       end
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
+    def journeys_to_check
+      CASE_JOURNEYS.find_all do |name, _states|
+        !(@add_dacu_disclosure || @add_press_office) ||
+          (@add_dacu_disclosure && name == :flagged_for_dacu_approval) ||
+          (@add_press_office && name == :flagged_for_press_office)
+      end
+    end
+
     def find_case_journey_for_state(state)
-      CASE_JOURNEYS.each do |name, states|
-        if (!@add_dacu_disclosure && !@add_press_office) ||
-           (@add_dacu_disclosure && name == :flagged_for_dacu_approval) ||
-           (@add_press_office && name == :flagged_for_press_office)
-          pos = states.find_index(state)
-          return states.take(pos + 1) if pos
-        end
+      journeys_to_check.each do |_name, states|
+        pos = states.find_index(state)
+        return states.take(pos + 1) if pos
       end
       return []
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
   end
   # rubocop:enable Metrics/ClassLength
 end

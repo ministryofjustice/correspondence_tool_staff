@@ -10,7 +10,6 @@ module CTS
       something with a particular case.
 
       Command-Line Args:
-
         USER: ID or full name for a user
         CASE: ID or case number for a case
 
