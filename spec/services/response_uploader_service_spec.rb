@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe ResponseUploaderService do
 
-  let(:upload_group)          { '20170615102233' }
+  let(:upload_group)          { '20170615092233' }
   let(:responder)             { create :responder }
   let(:kase)                  { create(:accepted_case, responder: responder) }
   let(:filename)              { "#{Faker::Internet.slug}.jpg" }
@@ -129,10 +129,10 @@ describe ResponseUploaderService do
       end
 
       context 'uploading invalid attachment type' do
-        before { allow(uploads_object).to receive(:move_to).with("correspondence-staff-case-uploads-testing/#{kase.id}/responses/20170615102233/invalid.exe") }
+        before { allow(uploads_object).to receive(:move_to).with("correspondence-staff-case-uploads-testing/#{kase.id}/responses/20170615092233/invalid.exe") }
 
         let(:uploads_key) do
-          "uploads/#{kase.id}/responses/20170615102233/invalid.exe"
+          "uploads/#{kase.id}/responses/20170615092233/invalid.exe"
         end
 
         it 'renders the new_response_upload page' do
