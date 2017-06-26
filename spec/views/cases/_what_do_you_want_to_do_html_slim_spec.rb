@@ -8,7 +8,7 @@ describe 'cases/_what_do_you_want_to_do.html.slim', type: :view do
 
   let(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
   let(:approver)        { create :approver,
-                                 approving_teams: [dacu_disclosure] }
+                                 approving_team: dacu_disclosure }
   let(:assigned_case)   { create :assigned_case, :flagged_accepted,
                                  approver: approver }
   let(:partial) do

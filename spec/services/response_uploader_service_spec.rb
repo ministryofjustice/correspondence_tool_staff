@@ -27,7 +27,10 @@ describe ResponseUploaderService do
     )
   end
 
+
+
   before(:each) do
+    ENV['TZ'] = 'UTC'
     Timecop.freeze Time.new(2017, 6, 15, 10, 22, 33)
     allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                        .with(uploads_key)
@@ -41,7 +44,10 @@ describe ResponseUploaderService do
     allow(uploads_object).to receive(:move_to).with(destination_path)
   end
 
-  after(:each) { Timecop.return }
+  after(:each) do
+    Timecop.return
+    ENV['TZ'] = nil
+  end
 
 
   describe '#upload!' do

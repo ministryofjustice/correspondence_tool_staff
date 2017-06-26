@@ -34,7 +34,10 @@
               .case_message_extract
                 = kase.shortened_message
             td.js-take-case-on-container aria-label="#{t('.actions')}"
-              - if kase.approver_assignments.with_teams(current_user.teams)
+              - if current_user.press_officer?
+                = render partial: 'take_case_on_for_press_office',
+                        locals: { case_details: kase }
+              - elsif kase.approver_assignments.with_teams(current_user.teams)
                 = render partial: 'take_case_on_or_de_escalate',
                          locals: { case_details: kase }
     = paginate @cases

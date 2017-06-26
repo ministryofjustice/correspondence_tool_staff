@@ -39,6 +39,7 @@ class Assignment < ApplicationRecord
   scope :with_teams, -> (teams) do
     where(team: teams, state: ['pending', 'accepted'])
   end
+  scope :for_team, -> (team) { where(team: team) }
 
   attr_accessor :reasons_for_rejection
 

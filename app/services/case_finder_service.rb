@@ -49,9 +49,8 @@ class CaseFinderService
 
   def incoming_cases_dacu_disclosure
     chain @cases
-      .flagged_for_approval(*@user.approving_teams)
-      .unaccepted
-      .by_deadline
+      .flagged_for_approval(*@user.approving_team)
+      .unaccepted.by_deadline
   end
 
   def incoming_cases_press_office
@@ -66,7 +65,7 @@ class CaseFinderService
   def my_open_cases
     if @user.approver?
       chain @cases.opened
-        .flagged_for_approval(*@user.approving_teams)
+        .flagged_for_approval(*@user.approving_team)
         .with_user(@user)
         .accepted.by_deadline
     else
@@ -77,7 +76,7 @@ class CaseFinderService
   def open_cases
     if @user.approver?
       chain @cases.opened
-        .flagged_for_approval(*@user.approving_teams)
+        .flagged_for_approval(*@user.approving_team)
         .accepted
         .by_deadline
     else

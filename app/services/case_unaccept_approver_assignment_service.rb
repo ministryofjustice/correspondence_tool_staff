@@ -10,12 +10,15 @@ class CaseUnacceptApproverAssignmentService
 
   def call
     return false unless validate_accepted
-
-    @assignment.user = nil
-    @assignment.pending!
-    @assignment.save!
-    @result = :ok
-    true
+    if @team.dacu_disclosure?
+      @assignment.user = nil
+      @assignment.pending!
+      @assignment.save!
+      @result = :ok
+      true
+    else
+      @assignment.destroy
+    end
   end
 
   private

@@ -41,6 +41,8 @@ RSpec.describe Case, type: :model do
                                     responding_teams: [responding_team]   }
   let(:manager)            { create :manager                              }
   let(:approving_team)     { create :approving_team                       }
+  let(:press_officer)      { create :press_officer }
+  let(:press_office)       { press_officer.approving_team }
   let(:non_trigger_foi)    { build :case, received_date: Date.parse('16/11/2016') }
   let(:assigned_case)      { create :assigned_case,
                                     responding_team: responding_team }
@@ -799,6 +801,51 @@ RSpec.describe Case, type: :model do
     it 'returns nil if there is no assignment for that user' do
       user = create :user
       expect(case_being_drafted_trigger.team_for_user(user)).to be_nil
+    end
+  end
+
+
+  describe '#approver_assignments.for_team' do
+
+    it 'returns the correct assignments given the team' do
+      case_being_drafted_trigger.assignments << Assignment.new(
+        state: 'accepted',
+        team_id: press_office.id,
+        role: 'approving',
+        user_id: press_officer.id,
+        approved: false
+      )
+      expect(case_being_drafted_trigger.reload.approver_assignments.size).to eq 2
+      presss_office_assignments = case_being_drafted_trigger.approver_assignments.for_team(press_office)
+      expect(presss_office_assignments.first.team_id).to eq press_office.id
+    end
+
+    it 'returns nil if there is no such user in the assignments' do
+      case_being_drafted_trigger
+      new_approving_team = create :approving_team
+      team_assignments = case_being_drafted_trigger.approver_assignments.for_team(new_approving_team)
+      expect(team_assignments).to be_empty
+    end
+  end
+
+
+  describe '#transitions.most_recent' do
+    it 'returns the one transition that has the most recent flag set to true' do
+      expect(case_being_drafted_trigger.transitions.size).to eq 2
+      expect(case_being_drafted_trigger.transitions[0].most_recent).to be false
+      expect(case_being_drafted_trigger.transitions[1].most_recent).to be true
+      expect(case_being_drafted_trigger.transitions.most_recent).to eq case_being_drafted_trigger.transitions[1]
+    end
+  end
+
+  describe '#flagged_for_press_office_clearance' do
+    it 'returns false when not flagged by press office' do
+      expect(case_being_drafted_flagged.flagged_for_press_office_clearance?).to be false
+    end
+
+    it 'returns true when flagged by press office' do
+      CaseFlagForClearanceService.new(user: press_officer, kase: case_being_drafted_flagged, team: press_office).call
+      expect(case_being_drafted_flagged.flagged_for_press_office_clearance?).to be true
     end
   end
 

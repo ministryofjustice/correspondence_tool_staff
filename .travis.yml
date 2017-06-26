@@ -1,7 +1,7 @@
 language: ruby
 sudo: false
 dist: trusty
-#cache: bundler
+cache: bundler
 addons:
   postgresql: 9.5
 services:

@@ -30,14 +30,15 @@ RSpec.describe User, type: :model do
   it { should have_many(:teams).through(:team_roles) }
   it { should have_many(:managing_team_roles).class_name('TeamsUsersRole') }
   it { should have_many(:responding_team_roles).class_name('TeamsUsersRole') }
-  it { should have_many(:approving_team_roles).class_name('TeamsUsersRole') }
+  it { should have_one(:approving_team_roles).class_name('TeamsUsersRole') }
   it { should have_many(:managing_teams).through(:managing_team_roles) }
   it { should have_many(:responding_teams).through(:responding_team_roles) }
-  it { should have_many(:approving_teams).through(:approving_team_roles) }
+  it { should have_one(:approving_team).through(:approving_team_roles) }
 
-  let(:manager)   { create :manager }
-  let(:responder) { create :responder }
-  let(:approver)  { create :approver }
+  let(:manager)         { create :manager }
+  let(:responder)       { create :responder }
+  let(:approver)        { create :approver }
+  let(:press_officer)   { create :press_officer }
 
   describe '#manager?' do
     it 'returns true for a manager' do
@@ -84,6 +85,17 @@ RSpec.describe User, type: :model do
   describe '#roles' do
     it 'returns the roles given users' do
       expect(manager.roles).to eq ['manager']
+    end
+  end
+
+  describe 'press_officer?' do
+    it 'returns true if user is in press office team' do
+      expect(press_officer.press_officer?).to be true
+    end
+
+    it 'returns false if the user is not in the press office' do
+      create :team_press_office
+      expect(approver.press_officer?).not_to be true
     end
   end
 end

@@ -218,6 +218,9 @@ en:
     accept:
       success: Case taken on
       already_accepted: Case already accepted by %{name}
+    take_case_on:
+      success: Case taken on
+      already_accepted: Case already accepted by %{name}
 
   cases:
     approve_response:

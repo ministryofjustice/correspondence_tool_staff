@@ -1,0 +1,6 @@
+= link_to 'Take case on',
+        take_case_on_case_assignment_path(case_details.id, current_user.id),
+        id: "take_case_on_#{case_details.id}",
+        class: 'button take-case-on-link',
+        remote: true,
+        method: :patch

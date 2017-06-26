@@ -131,6 +131,7 @@ Rails.application.routes.draw do
       patch 'accept_or_reject', on: :member
       patch 'accept', on: :member
       patch 'unaccept', on: :member
+      patch 'take_case_on', on: :member
     end
 
     resources :case_attachments, path: 'attachments'

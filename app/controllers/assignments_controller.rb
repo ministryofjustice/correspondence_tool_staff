@@ -7,6 +7,7 @@ class AssignmentsController < ApplicationController
                   :edit,
                   :new,
                   :show_rejected,
+                  :take_case_on,
                   :unaccept,
                 ]
   before_action :set_assignment, only: [
@@ -91,6 +92,23 @@ class AssignmentsController < ApplicationController
               )
       end
     end
+  end
+
+  def take_case_on
+    result = CaseFlagForClearanceService.new(user: current_user,
+                                    kase: @case,
+                                    team: current_user.approving_team).call
+    if result == :ok
+      @success = true
+      @message = t('.success')
+    elsif result == :already_flagged
+      @success = false
+      @message = t('.already_accepted')
+    else
+      raise RuntimeError.new("Unknown error when accepting approver assignment: " + result.to_s)
+    end
+
+    render 'assignments/accept.js.erb'
   end
 
   def unaccept
