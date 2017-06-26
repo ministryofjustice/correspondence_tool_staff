@@ -460,6 +460,8 @@ RSpec.describe CasesController, type: :controller do
         it 'redirects to the application root path' do
           expect(response).to redirect_to(responder_root_path)
         end
+
+
       end
     end
 
@@ -516,16 +518,20 @@ RSpec.describe CasesController, type: :controller do
 
       context 'as a responder of the assigned responding team' do
         let(:user) { responder }
+        let(:press_office) { find_or_create :team_press_office }
+        let(:press_officer) { find_or_create :press_officer }
 
         it 'permitted_events == []' do
           expect(assigns(:permitted_events)).to be_nil
         end
 
-        it 'renders the show template' do
+        it 'renders the show template for the responder assignment' do
+          responder_assignment = assigned_case.assignments.last
+          CaseFlagForClearanceService.new(user: press_officer, kase: assigned_case, team: press_office).call
           expect(response)
               .to redirect_to(edit_case_assignment_path(
                                 assigned_case,
-                                assigned_case.assignments.last.id))
+                                responder_assignment.id))
         end
       end
 
