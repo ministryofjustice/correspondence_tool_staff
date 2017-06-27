@@ -804,7 +804,6 @@ RSpec.describe Case, type: :model do
     end
   end
 
-
   describe '#approver_assignments.for_team' do
 
     it 'returns the correct assignments given the team' do
@@ -886,6 +885,38 @@ RSpec.describe Case, type: :model do
       responded_case.external_deadline = Date.yesterday
       expect(responded_case.date_responded).to eq Date.today
       expect(responded_case.responded_in_time?).to be false
+    end
+  end
+
+  describe '#attachments_dir' do
+    let(:upload_group) { Time.now.strftime('%Y%m%d%H%M%S') }
+
+    it 'returns a path generated from case attributes' do
+      expect(case_being_drafted.attachments_dir('responses', upload_group))
+        .to eq "#{case_being_drafted.id}/responses/#{upload_group}"
+    end
+
+    it 'uses random string for the id when case is not persisted' do
+      allow(SecureRandom).to receive(:urlsafe_base64)
+                               .and_return('this_is_not_random')
+
+      expect(Case.new.attachments_dir('responses', upload_group))
+        .to eq "this_is_not_random/responses/#{upload_group}"
+    end
+  end
+
+  describe '#uploads_dir' do
+    it 'returns a path generated from case attributes' do
+      expect(case_being_drafted.uploads_dir('responses'))
+        .to eq "#{case_being_drafted.id}/responses"
+    end
+
+    it 'uses random string for the id when case is not persisted' do
+      allow(SecureRandom).to receive(:urlsafe_base64)
+                               .and_return('this_is_not_random')
+
+      expect(Case.new.uploads_dir('responses'))
+        .to eq "this_is_not_random/responses"
     end
   end
 

@@ -1,6 +1,7 @@
 class ResponseUploaderService
+  include UploaderService
 
-  attr_reader :result
+  attr_reader :kase, :current_user, :upload_group, :attachment_type
 
   # action_params is passed through from the flash on the upload page and can be:
   # * 'upload' - upload response but don't change state
@@ -12,17 +13,11 @@ class ResponseUploaderService
     @case = kase
     @current_user = current_user
     @params = params
+    @uploaded_files = params[:uploaded_files]
     @result = nil
     @action = action_params
-    @upload_group = Time.now.utc.strftime('%Y%m%d%H%M%S')   # save upload group in utc
-  end
-
-  def upload!
-    if @params[:uploaded_files].blank?
-      @result = :blank
-    else
-      process_files
-    end
+    @upload_group = create_upload_group
+    @type = :response
   end
 
   def seed!
@@ -33,42 +28,21 @@ class ResponseUploaderService
     PdfMakerJob.perform_now(@case.attachments.first.id)
   end
 
-  private
-
-  def response_attachments
-    @response_attachments ||= @params[:uploaded_files].reject(&:blank?).map do |uploads_key|
-      move_uploaded_response(uploads_key)
-      CaseAttachment.create!(
-        type: 'response',
-        key: response_destination_key(uploads_key),
-        upload_group: @upload_group,
-        user_id: @current_user.id)
-    end
-  end
-
-  def process_files
-    begin
-      ActiveRecord::Base.transaction do
-        @result = add_attachment_and_transition_state
-      end
-    rescue
-      @result = :error
-    end
-  end
-
-  def add_attachment_and_transition_state
-    if response_attachments.all?(&:valid?)
-      response_attachments.select(&:persisted?).each(&:touch)
-      @case.attachments << response_attachments
-      transition_state(response_attachments)
-      remove_leftover_upload_files
-      Rails.logger.warn "QUEUEING PDF MAKER JOB"
-      response_attachments.each { |ra| PdfMakerJob.perform_later(ra.id) }
-      :ok
+  def upload!
+    if @uploaded_files.blank?
+      @result = :blank
     else
-      :error
+      attachments = process_files(@uploaded_files, @type)
+      transition_state(attachments)
+      @result = :ok
+      attachments
     end
+  rescue => err
+    Rails.logger.error("Error processing uploaded files: #{err.message}")
+    @result = :error
   end
+
+  private
 
   def transition_state(response_attachments)
     filenames = response_attachments.map(&:filename)
@@ -91,27 +65,6 @@ class ResponseUploaderService
       )
     else
       raise "Unexpected action parameter: '#{@action}'"
-    end
-  end
-
-  def move_uploaded_response(uploads_key)
-    uploads_object = CASE_UPLOADS_S3_BUCKET.object(uploads_key)
-    uploads_object.move_to response_destination_path(uploads_key)
-  end
-
-  def response_destination_path(uploads_key)
-    "#{Settings.case_uploads_s3_bucket}/#{response_destination_key(uploads_key)}"
-  end
-
-  def response_destination_key(uploads_key)
-    "#{@case.attachments_dir('responses', @upload_group)}/#{File.basename(uploads_key)}"
-  end
-
-
-  def remove_leftover_upload_files
-    prefix = "uploads/#{@case.id}"
-    CASE_UPLOADS_S3_BUCKET.objects(prefix: prefix).each do |object|
-      object.delete
     end
   end
 end

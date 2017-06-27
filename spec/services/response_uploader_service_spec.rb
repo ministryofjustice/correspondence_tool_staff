@@ -92,7 +92,7 @@ describe ResponseUploaderService do
             create(:correspondence_response, case_id: kase.id),
             create(:correspondence_response, case_id: kase.id)
           ]
-          allow(rus).to receive(:response_attachments).and_return(response_attachments)
+          allow(rus).to receive(:create_attachments).and_return(response_attachments)
           expect(PdfMakerJob).to receive(:perform_later).with(response_attachments.first.id)
           expect(PdfMakerJob).to receive(:perform_later).with(response_attachments.last.id)
           rus.upload!
@@ -149,19 +149,6 @@ describe ResponseUploaderService do
         it 'does not create a new case attachment' do
           expect { rus.upload! }.to_not change { kase.reload.attachments.count }
         end
-      end
-
-      context 'uploading attachment that are too large' do
-        xit 'renders the new_response_upload page' do
-          rus.upload!
-          expect(rus.result).to eq :error
-        end
-
-        xit 'does not create a new case attachment' do
-          expect { rus.upload! }.to_not change { kase.reload.attachments.count }
-        end
-
-        xit 'removes the attachment from S3'
       end
 
       context 'No valid files to upload' do

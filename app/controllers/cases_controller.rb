@@ -16,7 +16,6 @@ class CasesController < ApplicationController
       :update,
       :upload_responses,
     ]
-  before_action :set_s3_direct_post, only: [:new, :new_response_upload, :upload_responses]
 
   def index
     # index doesn't have a nav page defined so cannot use the GlobalNavManager
@@ -56,6 +55,7 @@ class CasesController < ApplicationController
     authorize Case, :can_add_case?
 
     @case = Case.new
+    @s3_direct_post = UploaderService.s3_direct_post_for_case(@case, 'requests')
     render :new
   end
 
@@ -66,8 +66,25 @@ class CasesController < ApplicationController
     if create_foi_params[:flag_for_disclosure_specialists].blank?
       @case.valid?
       @case.errors.add(:flag_for_disclosure_specialists, :blank)
+      @s3_direct_post = UploaderService.s3_direct_post_for_case(@case, 'requests')
       render :new
     elsif @case.save
+      rus = RequestUploaderService.new(
+        @case, current_user, params[:uploaded_files]
+      )
+      rus.upload!
+      case rus.result
+      when :blank
+        @s3_direct_post = UploaderService.s3_direct_post_for_case(@case, 'requests')
+        render :new
+        return
+      when :error
+        flash.keep(:action_params)
+        @s3_direct_post = UploaderService.s3_direct_post_for_case(@case, 'requests')
+        render :new
+        return
+      end
+
       if create_foi_params[:flag_for_disclosure_specialists] == 'yes'
         CaseFlagForClearanceService.new(user: current_user,
                                         kase: @case,
@@ -76,6 +93,7 @@ class CasesController < ApplicationController
       flash[:creating_case] = true
       redirect_to new_case_assignment_path @case
     else
+      @s3_direct_post = UploaderService.s3_direct_post_for_case(@case, 'requests')
       render :new
     end
   rescue ActiveRecord::RecordNotUnique
@@ -104,14 +122,17 @@ class CasesController < ApplicationController
     authorize @case, :can_add_attachment_to_flagged_and_unflagged_cases?
     @next_step_info = NextStepInfo.new(@case, request.query_parameters['action'])
     flash[:action_params] = request.query_parameters['action']
+    @s3_direct_post = UploaderService.s3_direct_post_for_case(@case, 'responses')
   end
 
   def upload_responses
     authorize @case, :can_add_attachment_to_flagged_and_unflagged_cases?
-
     @next_step_info = NextStepInfo.new(@case, flash[:action_params])
-    rus = ResponseUploaderService.new(@case, current_user, params, flash[:action_params])
+    rus = ResponseUploaderService.new(
+      @case, current_user, params, flash[:action_params]
+    )
     rus.upload!
+    @s3_direct_post = UploaderService.s3_direct_post_for_case(@case, 'responses')
     case rus.result
     when :blank
       flash.now[:alert] = t('alerts.response_upload_blank?')
@@ -237,7 +258,8 @@ class CasesController < ApplicationController
       :email,
       :subject, :message,
       :received_date_dd, :received_date_mm, :received_date_yyyy,
-      :flag_for_disclosure_specialists
+      :flag_for_disclosure_specialists,
+      :received_by,
     ).merge(category_id: Category.find_by(abbreviation: 'FOI').id)
   end
 
@@ -254,17 +276,6 @@ class CasesController < ApplicationController
   def set_case
     @case = Case.find(params[:id]).decorate
     @case_transitions = @case.transitions.order(id: :desc).decorate
-  end
-
-  def set_s3_direct_post
-    @case = Case.new if @case.nil?
-    @case.uploads_dir = 'request' if @case.uploads_dir.blank?
-
-    uploads_key = "uploads/#{@case.uploads_dir}/${filename}"
-    @s3_direct_post = CASE_UPLOADS_S3_BUCKET.presigned_post(
-      key:                   uploads_key,
-      success_action_status: '201',
-    )
   end
 
   def user_not_authorized(exception)

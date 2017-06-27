@@ -29,6 +29,26 @@ require 'case_state_machine'
 class Case < ApplicationRecord
   include Statesman::Adapters::ActiveRecordQueries
 
+  enum requester_type: {
+         academic_business_charity: 'academic_business_charity',
+         journalist: 'journalist',
+         member_of_the_public: 'member_of_the_public',
+         offender: 'offender',
+         solicitor: 'solicitor',
+         staff_judiciary: 'staff_judiciary',
+         what_do_they_know: 'what_do_they_know'
+       }
+
+  enum received_by: {
+         post: 'post',
+         email: 'email'
+       }
+
+  jsonb_accessor :properties,
+                 escalation_deadline: :date,
+                 internal_deadline: :date,
+                 external_deadline: :date
+
   acts_as_gov_uk_date :received_date, :date_responded,
                       validate_if: :received_in_acceptable_range?
 
@@ -83,7 +103,8 @@ class Case < ApplicationRecord
   }
 
   validates :current_state, presence: true, on: :update
-  validates :received_date,:subject,:message, :name, :category, presence: true
+  validates :received_date,:subject, :name, :category, presence: true
+  validates :message, if: -> { received_by == :email }
   validates :email, presence: true, on: :create, if: -> { postal_address.blank? }
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates :postal_address, presence: true, on: :create, if: -> { email.blank? }
@@ -95,22 +116,6 @@ class Case < ApplicationRecord
   serialize :exemption_ids, Array
 
   attr_accessor :flag_for_disclosure_specialists
-  attr_accessor :received_by
-
-  enum requester_type: {
-      academic_business_charity: 'academic_business_charity',
-      journalist: 'journalist',
-      member_of_the_public: 'member_of_the_public',
-      offender: 'offender',
-      solicitor: 'solicitor',
-      staff_judiciary: 'staff_judiciary',
-      what_do_they_know: 'what_do_they_know'
-    }
-
-  jsonb_accessor :properties,
-    escalation_deadline: :date,
-    internal_deadline: :date,
-    external_deadline: :date
 
   belongs_to :category, required: true
 
@@ -251,11 +256,11 @@ class Case < ApplicationRecord
   end
 
   def attachments_dir(attachment_type, upload_group)
-    "#{id}/#{attachment_type}/#{upload_group}"
+    "#{id_for_s3}/#{attachment_type}/#{upload_group}"
   end
 
-  def uploads_dir
-    "#{id}/responses"
+  def uploads_dir(attachment_type)
+    "#{id_for_s3}/#{attachment_type}"
   end
 
   def who_its_with
@@ -367,6 +372,14 @@ class Case < ApplicationRecord
       received_date.strftime("%y%m%d"),
       CaseNumberCounter.next_for_date(received_date)
     ]
+  end
+
+  def id_for_s3
+    if persisted?
+      id
+    else
+      SecureRandom.urlsafe_base64
+    end
   end
 end
 #rubocop:enable Metrics/ClassLength

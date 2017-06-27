@@ -27,6 +27,14 @@ class CaseStateMachine
   state :responded
   state :closed
 
+  event :add_request_attachments do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object).can_add_case?
+    end
+
+    transition from: :unassigned, to: :unassigned
+  end
+
   event :assign_responder do
     guard do |object, _last_transition, options|
       CaseStateMachine.get_policy(options[:user_id], object).can_assign_case?
@@ -164,7 +172,6 @@ class CaseStateMachine
     transition from: :pending_dacu_clearance, to: :awaiting_dispatch
   end
 
-
   event :reassign_approver do
     guard do |object, _last_transition, options|
       CaseStateMachine.get_policy(options[:user_id], object).can_reassign_approver?
@@ -245,6 +252,14 @@ class CaseStateMachine
              approving_team_id: approving_team.id,
              user_id:           user.id,
              event:             :unaccept_approver_assignment
+  end
+
+  def add_request_attachments!(user, managing_team, filenames)
+    trigger! :add_request_attachments,
+             user_id:          user.id,
+             managing_team_id: managing_team.id,
+             filenames:        filenames,
+             event:            :add_request_attachments
   end
 
   def reassign_approver!(user, original_user, approving_team)

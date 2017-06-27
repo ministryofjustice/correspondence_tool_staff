@@ -778,6 +778,7 @@ RSpec.describe CasesController, type: :controller do
               received_date_mm: Time.zone.today.month.to_s,
               received_date_yyyy: Time.zone.today.year.to_s,
               flag_for_disclosure_specialists: false,
+              uploaded_files: ['uploads/71/requests/request.pdf'],
             }
           }
         end
@@ -789,38 +790,16 @@ RSpec.describe CasesController, type: :controller do
             to change { Case.count }.by 1
         end
 
-        describe 'using the information supplied  ' do
-          before { post :create, params: params }
+        it 'uses the params provided' do
+          post :create, params: params
 
-          it 'for #requester_type' do
-            expect(created_case.requester_type).to eq 'member_of_the_public'
-          end
-
-          it 'for #name' do
-            expect(created_case.name).to eq 'A. Member of Public'
-          end
-
-          it 'for #postal_address' do
-            expect(created_case.postal_address).to eq '102 Petty France'
-          end
-
-          it 'for #email' do
-            expect(created_case.email).to eq 'member@public.com'
-          end
-
-          it 'for #subject' do
-            expect(created_case.subject).
-              to eq 'FOI request from controller spec'
-          end
-
-          it 'for #message' do
-            expect(created_case.message).
-              to eq 'FOI about prisons and probation'
-          end
-
-          it 'for #received_date' do
-            expect(created_case.received_date).to eq Time.zone.today
-          end
+          expect(created_case.requester_type).to eq 'member_of_the_public'
+          expect(created_case.name).to eq 'A. Member of Public'
+          expect(created_case.postal_address).to eq '102 Petty France'
+          expect(created_case.email).to eq 'member@public.com'
+          expect(created_case.subject).to eq 'FOI request from controller spec'
+          expect(created_case.message).to eq 'FOI about prisons and probation'
+          expect(created_case.received_date).to eq Time.zone.today
         end
 
         describe 'flag_for_clearance' do
@@ -854,6 +833,37 @@ RSpec.describe CasesController, type: :controller do
             params[:case][:flag_for_disclosure_specialists] = false
             post :create, params: params
             expect(service).not_to have_received(:call)
+          end
+        end
+
+        fdescribe 'uploaded files' do
+          it 'instantiates the upload service' do
+            rus = instance_double(RequestUploaderService,
+                                  upload!: nil,
+                                  result: :ok)
+            allow(RequestUploaderService).to receive(:new).and_return(rus)
+            kase = instance_double(Case, save: true)
+            allow(Case).to receive(:new).and_return(kase)
+            post :create, params: params
+            expect(RequestUploaderService)
+              .to have_received(:new).with kase,
+                                           manager,
+                                           ['uploads/71/requests/request.pdf']
+          end
+
+          it 'processes the uploaded files with the service' do
+            rus = instance_double(RequestUploaderService,
+                                  upload!: nil,
+                                  result: :ok)
+            allow(RequestUploaderService).to receive(:new).and_return(rus)
+            # kase = instance_double(Case)
+            # allow(Case).to receive(:new).and_return(kase)
+            post :create, params: params
+            # expect(RequestUploaderService)
+            #   .to have_received(:new).with kase,
+            #                                manager,
+            #                                ['uploads/71/requests/request.pdf']
+            expect(rus).to have_received(:upload!)
           end
         end
       end

@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.1
--- Dumped by pg_dump version 9.5.1
+-- Dumped from database version 9.5.5
+-- Dumped by pg_dump version 9.5.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -48,7 +48,8 @@ SET search_path = public, pg_catalog;
 --
 
 CREATE TYPE attachment_type AS ENUM (
-    'response'
+    'response',
+    'request'
 );
 
 
@@ -948,6 +949,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170420122223'),
 ('20170424133127'),
 ('20170523131602'),
-('20170609094110');
+('20170609094110'),
+('20170626153411');
 
 
