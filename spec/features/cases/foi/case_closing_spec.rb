@@ -23,14 +23,14 @@ feature 'Closing a case' do
         open_cases_page.load(timeliness: 'in-time')
         close_case(fully_granted_case)
 
-        cases_close_page.fill_in_date_responded(Date.today)
+        cases_close_page.fill_in_date_responded(0.business_days.ago)
         cases_close_page.outcome_radio_button_fully_granted.click
         cases_close_page.submit_button.click
 
         show_page = cases_show_page.case_details
 
         expect(show_page.response_details.date_responded.data.text)
-          .to eq Date.today.strftime(Settings.default_date_format)
+          .to eq 0.business_days.ago.strftime(Settings.default_date_format)
         expect(show_page.response_details.timeliness.data.text)
           .to eq 'Answered in time'
         expect(show_page.response_details.time_taken.data.text)
@@ -49,7 +49,7 @@ feature 'Closing a case' do
         open_cases_page.load(timeliness: 'late')
         close_case(fully_granted_case)
 
-        cases_close_page.fill_in_date_responded(Date.today)
+        cases_close_page.fill_in_date_responded(0.business_days.ago)
         cases_close_page.outcome_radio_button_fully_granted.click
         cases_close_page.submit_button.click
 
