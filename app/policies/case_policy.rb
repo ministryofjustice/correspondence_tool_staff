@@ -111,6 +111,13 @@ class CasePolicy
     team_id.present? && check_case_not_already_taken_on_for_approval_by && check_user_is_approver_for
   end
 
+  def can_unaccept_approval_assignment?(user_id, team_id)
+    clear_failed_checks
+    @options[:user_id] = user_id
+    @options[:team_id] = team_id
+    team_id.present? && user_id.present? && check_case_was_accepted_for_approval_by_user
+  end
+
   def can_unflag_for_clearance?
     clear_failed_checks
     check_user_is_an_approver_for_case ||
@@ -245,5 +252,9 @@ class CasePolicy
 
   check :user_is_approver_for do
     @user.approving_team.present? && @user.approving_team.id == @options[:team_id]
+  end
+
+  check :case_was_accepted_for_approval_by_user do
+    self.case.approver_assignments.where(team_id: @options[:team_id], user_id: @options[:user_id]).any?
   end
 end
