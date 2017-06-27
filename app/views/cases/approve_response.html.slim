@@ -14,10 +14,7 @@
 .form-group
 
   = render partial: 'cases/clearance_copy',
-          locals: {case_details: @case,
-                  status: "Ready to send",
-                  team: @case.responding_team.name,
-                  action: 'clearing'}
+          locals: { nsi: @next_step_info }
 
 = form_for @case, url: execute_response_approval_case_path(@case) do |f|
   .button-holder
