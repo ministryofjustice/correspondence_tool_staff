@@ -88,7 +88,7 @@ class CasesController < ApplicationController
     authorize @case, :can_view_case_details?
 
     if policy(@case).can_accept_or_reject_responder_assignment?
-      redirect_to edit_case_assignment_path @case, @case.assignments.last.id
+      redirect_to edit_case_assignment_path @case, @case.responder_assignment.id
     else
       set_permitted_events
       @accepted_now = params[:accepted_now]
