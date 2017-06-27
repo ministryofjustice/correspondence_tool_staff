@@ -54,6 +54,16 @@ CREATE TYPE attachment_type AS ENUM (
 
 
 --
+-- Name: received_by; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE received_by AS ENUM (
+    'email',
+    'post'
+);
+
+
+--
 -- Name: requester_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -316,7 +326,8 @@ CREATE TABLE cases (
     outcome_id integer,
     refusal_reason_id integer,
     current_state character varying,
-    last_transitioned_at timestamp without time zone
+    last_transitioned_at timestamp without time zone,
+    received_by received_by
 );
 
 
@@ -837,6 +848,13 @@ CREATE UNIQUE INDEX index_cases_on_number ON cases USING btree (number);
 
 
 --
+-- Name: index_cases_on_received_by; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_cases_on_received_by ON cases USING btree (received_by);
+
+
+--
 -- Name: index_cases_on_requester_type; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -950,6 +968,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170424133127'),
 ('20170523131602'),
 ('20170609094110'),
-('20170626153411');
+('20170626153411'),
+('20170627112545');
 
 
