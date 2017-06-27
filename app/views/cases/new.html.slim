@@ -40,7 +40,7 @@
       = f.text_area :message, {rows: 10}
 
       .grid-row
-        .column-two-thirds
+        .column-two-thirds class="#{case_request_attachments_class}" id="#{case_request_attachments_id}"
           = render partial: 'shared/dropzone_form',
                   locals: {s3_direct_post: @s3_direct_post }
 

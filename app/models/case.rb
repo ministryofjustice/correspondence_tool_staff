@@ -20,6 +20,7 @@
 #  refusal_reason_id    :integer
 #  current_state        :string
 #  last_transitioned_at :datetime
+#  received_by          :enum
 #
 
 # Required in production with it's eager loading and cacheing of classes.
@@ -104,12 +105,25 @@ class Case < ApplicationRecord
 
   validates :current_state, presence: true, on: :update
   validates :received_date,:subject, :name, :category, presence: true
-  validates :message, if: -> { received_by == :email }
+  validates :message, presence: true, if: -> { received_by == :email }
   validates :email, presence: true, on: :create, if: -> { postal_address.blank? }
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates :postal_address, presence: true, on: :create, if: -> { email.blank? }
   validates :subject, length: { maximum: 80 }
   validates :requester_type, presence: true
+  validate :request_message_or_attachment
+
+  def request_message_or_attachment
+    if received_by == 'email'
+      unless message.present?
+        errors.add(:message, 'must be present for cases received by email')
+      end
+    else
+      unless attachments.request.present?
+        errors.add(:request_attachments, 'must be present for cases received by post')
+      end
+    end
+  end
 
   validates_with ::ClosedCaseValidator
 

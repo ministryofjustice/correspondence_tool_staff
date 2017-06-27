@@ -109,4 +109,14 @@ module CasesHelper
     return false if @case.attachments.blank?
     policy(@case).can_view_attachments?
   end
+
+  def case_request_attachments_class
+    "error" if @case.errors.include? :request_attachments
+  end
+
+  def case_request_attachments_id
+    if @case.errors.include? :request_attachments
+      "error_case_request_attachments"
+    end
+  end
 end

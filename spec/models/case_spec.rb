@@ -20,6 +20,7 @@
 #  refusal_reason_id    :integer
 #  current_state        :string
 #  last_transitioned_at :datetime
+#  received_by          :enum
 #
 
 require 'rails_helper'
