@@ -104,14 +104,16 @@ class Case < ApplicationRecord
   }
 
   validates :current_state, presence: true, on: :update
-  validates :received_date,:subject, :name, :category, presence: true
-  validates :message, presence: true, if: -> { received_by == :email }
+
+  validates :name,presence: true
+
   validates :email, presence: true, on: :create, if: -> { postal_address.blank? }
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates :postal_address, presence: true, on: :create, if: -> { email.blank? }
-  validates :subject, length: { maximum: 80 }
-  validates :requester_type, presence: true
+  validates :requester_type, :received_date, :received_by , presence: true
   validate :request_message_or_attachment
+  validates :subject,  :category, presence: true
+  validates :subject, length: { maximum: 80 }
 
   def request_message_or_attachment
     if received_by == 'email'
