@@ -198,7 +198,7 @@ en:
       who_its_with: With
       respond: Mark response as sent
       clear_response: Clear response
-      upload_approve: 'Upload response and approve'
+      upload_approve: 'Upload response and clear'
     new_case_button: Create case
     phase_banner: |
       This is a new service.

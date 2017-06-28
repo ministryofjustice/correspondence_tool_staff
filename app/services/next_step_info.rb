@@ -40,19 +40,19 @@ class NextStepInfo
     case action_param
     when 'approve'
       @state_machine_event = :approve
-      @action_verb = 'approving the case'
+      @action_verb = 'clearing the response to'
     when 'upload'
       @state_machine_event = :add_responses
-      @action_verb = 'uploading responses to the case'
+      @action_verb = 'uploading changes to'
     when 'upload-flagged'
       @state_machine_event = :add_response_to_flagged_case
-      @action_verb = 'uploading responses to the flagged case'
+      @action_verb = 'uploading changes to'
     when 'upload-approve'
       @state_machine_event = :upload_response_and_approve
-      @action_verb = 'uploading responses and clearing the case'
+      @action_verb = 'uploading the responses and clearing'
     when 'upload-revert'
       @state_machine_event = :upload_response_and_return_for_redraft
-      @action_verb = 'uploading responses and returning to KILO for redraft for the case'
+      @action_verb = 'uploading changes to'
     else
       raise "Unexpected action parameter: '#{@action}'"
     end

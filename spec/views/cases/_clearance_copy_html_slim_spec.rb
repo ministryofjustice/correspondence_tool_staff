@@ -10,7 +10,7 @@ describe 'cases/clearance_copy.html.slim', type: :view do
 
   it 'displays the current action and case status' do
     expect(partial.action.text)
-        .to eq "You are uploading responses to the case: Optimism – is a lack of information."
+        .to eq "You are uploading changes to: Optimism – is a lack of information."
   end
 
   it 'displays the team' do
@@ -20,6 +20,6 @@ describe 'cases/clearance_copy.html.slim', type: :view do
 
   it 'displays the status' do
     expect(partial.expectations.status.text)
-        .to eq "awaiting dispatch"
+        .to eq I18n.t("state.awaiting_dispatch")
   end
 end
