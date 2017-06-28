@@ -118,9 +118,12 @@ class Case < ApplicationRecord
       unless message.present?
         errors.add(:message, 'must be present for cases received by email')
       end
-    else
+    elsif received_by == 'post'
       unless attachments.request.present?
-        errors.add(:request_attachments, 'must be present for cases received by post')
+        errors.add(
+          :request_attachments,
+          'must be present for cases received by post'
+        )
       end
     end
   end
