@@ -99,6 +99,10 @@ class CasePolicy
     user.manager? && self.case.responded?
   end
 
+  def can_download_stats?
+    user.manager?
+  end
+
   def can_flag_for_clearance?
     clear_failed_checks
     !self.case.requires_clearance? &&

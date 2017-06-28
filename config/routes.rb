@@ -145,6 +145,9 @@ Rails.application.routes.draw do
   end
 
 
+  get '/stats' => 'stats#index'
+  get '/stats/download' => 'stats#download'
+
   get '/search' => 'cases#search'
 
   get 'ping', to: 'heartbeat#ping', format: :json

@@ -60,6 +60,7 @@ en:
       can_approve_case?: 'You are not authorised to approve this cases response.'
       can_remove_attachment?: 'You are not authorised to remove attachments from this case.'
       can_view_case_details?: 'You are not authorised to view this case.'
+      can_download_stats?: You are not authorised to view or download statistics.
 
   state: &state_translations
     unassigned: Needs reassigning
@@ -298,6 +299,7 @@ en:
       incoming_cases_press_office: New cases
       my_open_cases: My open cases
       open_cases: Open cases
+      stats: Statistics
   devise:
     users:
       password:

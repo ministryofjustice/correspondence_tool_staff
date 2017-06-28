@@ -849,6 +849,46 @@ RSpec.describe Case, type: :model do
     end
   end
 
+
+  describe 'responded?' do
+    it 'returns false if there are no transitions to repsonded' do
+      kase = create :case
+      expect(kase.responded?).to be false
+    end
+
+    it 'returns true if there are transitions to responded' do
+      kase = create :responded_case
+      expect(kase.responded?).to be true
+    end
+  end
+
+
+  describe 'responded_in_time?' do
+    let(:responded_case)  { create :responded_case }
+    it 'returns false if responded_date is nil' do
+      kase = create :case
+      expect(kase.date_responded).to be_nil
+      expect(kase.responded_in_time?).to be false
+    end
+
+    it 'returns true if the responded date is before external deadline' do
+      responded_case.external_deadline = Date.tomorrow
+      expect(responded_case.date_responded).to eq Date.today
+      expect(responded_case.responded_in_time?).to be true
+    end
+
+    it 'returns true if the responded date is same as external deadline' do
+      responded_case.external_deadline = Date.today
+      expect(responded_case.date_responded).to eq Date.today
+      expect(responded_case.responded_in_time?).to be true
+    end
+    it 'return false if the responded date is after the external deadline' do
+      responded_case.external_deadline = Date.yesterday
+      expect(responded_case.date_responded).to eq Date.today
+      expect(responded_case.responded_in_time?).to be false
+    end
+  end
+
   # See note in case.rb about why this is commented out.
   #
   # describe 'awaiting_approver?' do
