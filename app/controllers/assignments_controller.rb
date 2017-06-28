@@ -95,15 +95,16 @@ class AssignmentsController < ApplicationController
   end
 
   def take_case_on
-    result = CaseFlagForClearanceService.new(user: current_user,
+    service = CaseFlagForClearanceService.new(user: current_user,
                                     kase: @case,
-                                    team: current_user.approving_team).call
+                                    team: current_user.approving_team)
+    result = service.call
     if result == :ok
       @success = true
       @message = t('.success')
     elsif result == :already_flagged
       @success = false
-      @message = t('.already_accepted')
+      @message = t('.already_accepted', name: service.other_user.full_name)
     else
       raise RuntimeError.new("Unknown error when accepting approver assignment: " + result.to_s)
     end

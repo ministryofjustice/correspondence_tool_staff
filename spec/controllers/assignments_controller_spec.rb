@@ -458,12 +458,14 @@ RSpec.describe AssignmentsController, type: :controller do
 
       context 'flag for clearance service returns ok' do
         it 'it has already flagged message' do
+          other_user = double User, full_name: 'Joe Bloggs'
           expect(CaseFlagForClearanceService).to receive(:new).with(user: press_officer, kase: assigned_case, team: press_office ).and_return(service)
+          expect(service).to receive(:other_user).and_return(other_user)
           expect(service).to receive(:call).and_return(:already_flagged)
 
           patch :take_case_on, params: { id: assignment.id, case_id: assigned_case.id }
           expect(assigns(:success)).to eq false
-          expect(assigns(:message)).to eq I18n.t('assignments.take_case_on.already_accepted')
+          expect(assigns(:message)).to eq I18n.t('assignments.take_case_on.already_accepted', name: other_user.full_name)
         end
       end
 
