@@ -836,7 +836,7 @@ RSpec.describe CasesController, type: :controller do
           end
         end
 
-        fdescribe 'uploaded files' do
+        describe 'uploaded files' do
           it 'instantiates the upload service' do
             rus = instance_double(RequestUploaderService,
                                   upload!: nil,

@@ -36,6 +36,7 @@ FactoryGirl.define do
     email { Faker::Internet.email(identifier) }
     # association :category, factory: :category, strategy: :create
     category
+    received_by 'email' #TODO Need to switch this between email or postal
     sequence(:subject) { |n| "#{identifier} subject #{n}" }
     sequence(:message) { |n| "#{identifier} message #{n}" }
     received_date { Time.zone.today.to_s }

@@ -69,10 +69,10 @@ RSpec.describe Case, type: :model do
 
   describe 'mandatory attributes' do
     it { should validate_presence_of(:name)           }
-    it { should validate_presence_of(:message)        }
     it { should validate_presence_of(:received_date)  }
     it { should validate_presence_of(:subject)        }
     it { should validate_presence_of(:requester_type) }
+    it { should validate_presence_of(:received_by)    }
   end
 
   context 'flagged for approval scopes' do
@@ -313,6 +313,23 @@ RSpec.describe Case, type: :model do
     end
   end
 
+  describe 'conditional validations of message' do
+    xit 'does not validate presence of message for postal foi' do
+      postal_foi = build :case
+      postal_foi.received_by = 'post'
+      # need to stub out request attachment
+      expect(postal_foi).to be_valid
+    end
+
+    it 'does validate presence of message for email foi' do
+      email_foi = build :case
+      email_foi.received_by = 'email'
+      expect(email_foi).to be_valid
+      email_foi.message = nil
+      expect(email_foi).not_to be_valid
+    end
+  end
+
   describe 'enums' do
     it do
       should have_enum(:requester_type).
@@ -327,6 +344,14 @@ RSpec.describe Case, type: :model do
             'what_do_they_know'
           ]
         )
+
+      should have_enum(:received_by).
+          with_values(
+              [
+                  'email',
+                  'post'
+              ]
+          )
     end
   end
 

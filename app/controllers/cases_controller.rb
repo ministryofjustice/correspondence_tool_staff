@@ -256,6 +256,7 @@ class CasesController < ApplicationController
       :name,
       :postal_address,
       :email,
+      :received_by,
       :subject, :message,
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :flag_for_disclosure_specialists,

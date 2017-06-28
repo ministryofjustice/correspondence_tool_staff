@@ -67,6 +67,14 @@
   }
 }
 
+.dropzone:focus {
+  outline: 3px solid $focus-colour;
+  outline-offset: 0;
+}
+.error .dropzone {
+  border-color: $error-colour;
+  border-width: 4px;
+}
 .dz-success.dz-complete{
   .dz-progress{
     display: none;

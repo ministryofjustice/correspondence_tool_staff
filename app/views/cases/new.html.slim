@@ -40,9 +40,10 @@
       = f.text_area :message, {rows: 10}
 
       .grid-row
-        .column-two-thirds class="#{case_request_attachments_class}" id="#{case_request_attachments_id}"
-          = render partial: 'shared/dropzone_form',
-                  locals: {s3_direct_post: @s3_direct_post }
+        .column-two-thirds
+          div class="#{case_request_attachments_class}" id="#{case_request_attachments_id}"
+            = render partial: 'shared/dropzone_form',
+                    locals: {s3_direct_post: @s3_direct_post }
 
   = f.radio_button_fieldset :flag_for_disclosure_specialists, inline: true
 

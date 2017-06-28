@@ -36,6 +36,10 @@ module PageObjects
           make_radio_button_choice("case_flag_for_disclosure_specialists_#{choice}")
         end
 
+        def choose_received_by(choice = 'email')
+          make_radio_button_choice("case_received_by_#{choice}")
+        end
+
         def fill_in_case_details(params={})
           kase = FactoryGirl.build :case, params
 
@@ -43,7 +47,8 @@ module PageObjects
           date_received_month.set(kase.received_date.month)
           date_received_year.set(kase.received_date.year)
 
-          subject.set kase.subject
+          choose_received_by kase.received_by
+          subject.set kase.subject if kase.received_by == 'email'
           full_request.set kase.message
           full_name.set kase.name
           email.set kase.email
