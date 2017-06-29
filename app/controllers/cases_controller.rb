@@ -110,6 +110,7 @@ class CasesController < ApplicationController
     authorize @case, :can_add_attachment_to_flagged_and_unflagged_cases?
     rus = ResponseUploaderService.new(@case, current_user, params, flash[:action_params])
     rus.upload!
+    @next_step_info = NextStepInfo.new(@case, flash[:action_params])
     case rus.result
     when :blank
       flash.now[:alert] = t('alerts.response_upload_blank?')

@@ -978,31 +978,29 @@ RSpec.describe CasesController, type: :controller do
     #       end
     #     end
 
-
-
-
-
-
     context 'as the assigned responder' do
       before { sign_in responder }
 
       let(:uploader) { double ResponseUploaderService }
       let(:expected_params) { ActionController::Parameters.new({"type"=>"response", "uploaded_files"=>[uploads_key], "id"=>kase.id.to_s, "controller"=>"cases", "action"=>"upload_responses"}) }
       let(:response_uploader) { double ResponseUploaderService, upload!: nil, result: :ok }
+      let(:flash) { MockFlash.new(action_params: 'upload')}
 
       it 'calls ResponseUploaderService' do
-        allow_any_instance_of(CasesController).to receive(:flash).and_return( { action_params: 'upload' } )
+        allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
         expect(ResponseUploaderService).to receive(:new).with(kase.decorate, responder, expected_params, 'upload').and_return(response_uploader)
         do_upload_responses
       end
 
       it 'redirects to the case detail page' do
+        allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
         expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
         do_upload_responses
         expect(response).to redirect_to(case_path(kase))
       end
 
       it 're-renders the page if no files specified' do
+        allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
         expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
         expect(response_uploader).to receive(:result).and_return(:blank)
         do_upload_responses
@@ -1010,6 +1008,7 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 're-renders the page if there is an upload error' do
+        allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
         expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
         expect(response_uploader).to receive(:result).and_return(:error)
         do_upload_responses
