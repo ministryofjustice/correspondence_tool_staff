@@ -62,7 +62,7 @@ class CaseStateMachine
 
   event :take_on_for_approval do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object).can_take_on_for_approval?(options[:approving_team_id])
+      CaseStateMachine.get_policy(options[:user_id], object).can_take_on_for_approval?
     end
 
     transition from: :unassigned,             to: :unassigned
@@ -97,7 +97,7 @@ class CaseStateMachine
   event :unaccept_approver_assignment do
     guard do |object, _last_transition, options|
       CaseStateMachine.get_policy(options[:user_id], object)
-        .can_unaccept_approval_assignment?(options[:user_id], options[:approving_team_id])
+        .can_unaccept_approval_assignment?
     end
     transition from: :unassigned,             to: :unassigned
     transition from: :awaiting_responder,     to: :awaiting_responder

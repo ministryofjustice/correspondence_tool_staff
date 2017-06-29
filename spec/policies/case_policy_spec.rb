@@ -87,6 +87,21 @@ describe CasePolicy do
     it { should_not permit(approver,          unassigned_trigger_case) }
   end
 
+  permissions :can_unaccept_approval_assignment? do
+    it { should     permit(approver,          pending_dacu_clearance_case) }
+    it { should_not permit(manager,           pending_dacu_clearance_case) }
+    it { should_not permit(responder,         pending_dacu_clearance_case) }
+  end
+
+  describe  do
+    permissions :can_take_on_for_approval? do
+      it { should_not   permit(approver,          pending_dacu_clearance_case) }
+      it { should       permit(approver,          flagged_accepted_case) }
+      it { should_not   permit(manager,           pending_dacu_clearance_case) }
+      it { should_not   permit(responder,         pending_dacu_clearance_case) }
+    end
+  end
+
   permissions :can_accept_or_reject_responder_assignment? do
     it { should_not permit(manager,           assigned_case) }
     it { should     permit(responder,         assigned_case) }
