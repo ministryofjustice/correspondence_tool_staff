@@ -54,12 +54,12 @@ CREATE TYPE attachment_type AS ENUM (
 
 
 --
--- Name: cases_received_by; Type: TYPE; Schema: public; Owner: -
+-- Name: cases_delivery_methods; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE cases_received_by AS ENUM (
-    'email',
-    'post'
+CREATE TYPE cases_delivery_methods AS ENUM (
+    'sent_by_email',
+    'sent_by_post'
 );
 
 
@@ -327,7 +327,7 @@ CREATE TABLE cases (
     refusal_reason_id integer,
     current_state character varying,
     last_transitioned_at timestamp without time zone,
-    received_by cases_received_by
+    delivery_method cases_delivery_methods
 );
 
 

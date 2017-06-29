@@ -777,8 +777,9 @@ RSpec.describe CasesController, type: :controller do
               received_date_dd: Time.zone.today.day.to_s,
               received_date_mm: Time.zone.today.month.to_s,
               received_date_yyyy: Time.zone.today.year.to_s,
+              delivery_method: :sent_by_email,
               flag_for_disclosure_specialists: false,
-              uploaded_files: ['uploads/71/requests/request.pdf'],
+              uploaded_request_files: ['uploads/71/request/request.pdf'],
             }
           }
         end
@@ -833,37 +834,6 @@ RSpec.describe CasesController, type: :controller do
             params[:case][:flag_for_disclosure_specialists] = false
             post :create, params: params
             expect(service).not_to have_received(:call)
-          end
-        end
-
-        describe 'uploaded files' do
-          it 'instantiates the upload service' do
-            rus = instance_double(RequestUploaderService,
-                                  upload!: nil,
-                                  result: :ok)
-            allow(RequestUploaderService).to receive(:new).and_return(rus)
-            kase = instance_double(Case, save: true)
-            allow(Case).to receive(:new).and_return(kase)
-            post :create, params: params
-            expect(RequestUploaderService)
-              .to have_received(:new).with kase,
-                                           manager,
-                                           ['uploads/71/requests/request.pdf']
-          end
-
-          it 'processes the uploaded files with the service' do
-            rus = instance_double(RequestUploaderService,
-                                  upload!: nil,
-                                  result: :ok)
-            allow(RequestUploaderService).to receive(:new).and_return(rus)
-            # kase = instance_double(Case)
-            # allow(Case).to receive(:new).and_return(kase)
-            post :create, params: params
-            # expect(RequestUploaderService)
-            #   .to have_received(:new).with kase,
-            #                                manager,
-            #                                ['uploads/71/requests/request.pdf']
-            expect(rus).to have_received(:upload!)
           end
         end
       end
@@ -966,7 +936,6 @@ RSpec.describe CasesController, type: :controller do
       it 'does not call ResponseUploaderService' do
         expect(ResponseUploaderService).not_to receive(:new)
       end
-
 
       it 'redirects to case detail page' do
         do_upload_responses

@@ -27,14 +27,6 @@ class CaseStateMachine
   state :responded
   state :closed
 
-  event :add_request_attachments do
-    guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object).can_add_case?
-    end
-
-    transition from: :unassigned, to: :unassigned
-  end
-
   event :assign_responder do
     guard do |object, _last_transition, options|
       CaseStateMachine.get_policy(options[:user_id], object).can_assign_case?

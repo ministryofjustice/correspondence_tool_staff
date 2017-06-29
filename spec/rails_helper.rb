@@ -96,6 +96,16 @@ RSpec.configure do |config|
     mock_warden_for_route_tests!
   end
 
+  config.before(:each) do
+    allow(CASE_UPLOADS_S3_BUCKET)
+      .to receive(:object).and_raise(
+            "This test requires stubbing of S3Uploader or CASE_UPLOADS_S3_BUCKET methods."
+          )
+    allow(CASE_UPLOADS_S3_BUCKET)
+      .to receive(:objects).and_raise(
+            "This test requires stubbing of S3Uploader or CASE_UPLOADS_S3_BUCKET methods."
+          )
+  end
 end
 
 Shoulda::Matchers.configure do |config|

@@ -110,13 +110,13 @@ module CasesHelper
     policy(@case).can_view_attachments?
   end
 
-  def case_request_attachments_class
-    "error" if @case.errors.include? :request_attachments
+  def case_uploaded_request_files_class
+    "error" if @case.errors.include? :uploaded_request_files
   end
 
-  def case_request_attachments_id
-    if @case.errors.include? :request_attachments
-      "error_case_request_attachments"
+  def case_uploaded_request_files_id
+    if @case.errors.include? :uploaded_request_files
+      "error_case_uploaded_request_files"
     end
   end
 end

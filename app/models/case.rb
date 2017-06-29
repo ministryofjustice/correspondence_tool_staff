@@ -20,7 +20,7 @@
 #  refusal_reason_id    :integer
 #  current_state        :string
 #  last_transitioned_at :datetime
-#  received_by          :enum
+#  delivery_method      :enum
 #
 
 # Required in production with it's eager loading and cacheing of classes.
@@ -40,15 +40,19 @@ class Case < ApplicationRecord
          what_do_they_know: 'what_do_they_know'
        }
 
-  enum received_by: {
-         post: 'post',
-         email: 'email'
+  enum delivery_method: {
+         sent_by_post: 'sent_by_post',
+         sent_by_email: 'sent_by_email',
        }
 
   jsonb_accessor :properties,
                  escalation_deadline: :date,
                  internal_deadline: :date,
                  external_deadline: :date
+
+  attr_accessor :flag_for_disclosure_specialists,
+                :uploaded_request_files,
+                :uploading_user # Used when creating case sent by post.
 
   acts_as_gov_uk_date :received_date, :date_responded,
                       validate_if: :received_in_acceptable_range?
@@ -96,7 +100,7 @@ class Case < ApplicationRecord
       Date.today
     )
   }
-  scope :late,    -> {
+  scope :late, -> {
     where(
       "CASE WHEN current_state = 'closed' THEN date_responded > (properties->>'external_deadline')::date ELSE ? > properties->>'external_deadline' END",
       Date.today
@@ -110,31 +114,18 @@ class Case < ApplicationRecord
   validates :email, presence: true, on: :create, if: -> { postal_address.blank? }
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates :postal_address, presence: true, on: :create, if: -> { email.blank? }
-  validates :requester_type, :received_date, :received_by , presence: true
-  validate :request_message_or_attachment
+  validates :requester_type, :received_date, :delivery_method , presence: true
+  validates :message, presence: true, if: -> { sent_by_email? }
+  validates :uploaded_request_files,
+            presence: true,
+            on: :create,
+            if: -> { sent_by_post? }
   validates :subject,  :category, presence: true
   validates :subject, length: { maximum: 80 }
-
-  def request_message_or_attachment
-    if received_by == 'email'
-      unless message.present?
-        errors.add(:message, 'must be present for cases received by email')
-      end
-    elsif received_by == 'post'
-      unless attachments.request.present?
-        errors.add(
-          :request_attachments,
-          'must be present for cases received by post'
-        )
-      end
-    end
-  end
 
   validates_with ::ClosedCaseValidator
 
   serialize :exemption_ids, Array
-
-  attr_accessor :flag_for_disclosure_specialists
 
   belongs_to :category, required: true
 
@@ -205,7 +196,7 @@ class Case < ApplicationRecord
                 :set_managing_team,
                 :set_deadlines
   before_save :prevent_number_change
-
+  after_create :process_uploaded_request_files, if: :sent_by_post?
 
   delegate :available_events, to: :state_machine
 
@@ -275,11 +266,11 @@ class Case < ApplicationRecord
   end
 
   def attachments_dir(attachment_type, upload_group)
-    "#{id_for_s3}/#{attachment_type}/#{upload_group}"
+    "#{S3Uploader.id_for_case(self)}/#{attachment_type}/#{upload_group}"
   end
 
   def uploads_dir(attachment_type)
-    "#{id_for_s3}/#{attachment_type}"
+    "#{S3Uploader.id_for_case(self)}/#{attachment_type}"
   end
 
   def who_its_with
@@ -393,12 +384,19 @@ class Case < ApplicationRecord
     ]
   end
 
-  def id_for_s3
-    if persisted?
-      id
-    else
-      SecureRandom.urlsafe_base64
+  def uploaded_request_files_exist
+    # TODO: Check that the files exist in S3
+  end
+
+  def process_uploaded_request_files
+    if uploading_user.nil?
+      # I really don't feel comfortable with having this special snowflake of a
+      # attribute that only ever needs to be populated when creating a new case
+      # that was sent by post.
+      raise "Uploading user required for processing uploaded request files"
     end
+    uploader = S3Uploader.new(self, uploading_user)
+    uploader.process_files(uploaded_request_files, :request)
   end
 end
 #rubocop:enable Metrics/ClassLength

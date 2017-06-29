@@ -20,7 +20,7 @@
 #  refusal_reason_id    :integer
 #  current_state        :string
 #  last_transitioned_at :datetime
-#  received_by          :enum
+#  delivery_method      :enum
 #
 
 FactoryGirl.define do
@@ -36,7 +36,7 @@ FactoryGirl.define do
     email { Faker::Internet.email(identifier) }
     # association :category, factory: :category, strategy: :create
     category
-    received_by 'email' #TODO Need to switch this between email or postal
+    delivery_method 'sent_by_email'
     sequence(:subject) { |n| "#{identifier} subject #{n}" }
     sequence(:message) { |n| "#{identifier} message #{n}" }
     received_date { Time.zone.today.to_s }

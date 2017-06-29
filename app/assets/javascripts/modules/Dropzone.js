@@ -4,6 +4,7 @@ moj.Modules.Dropzone = {
   $target: {},
   init : function() {
     this.$target = $('.dropzone');
+    var fileInputName = this.$target.data('file-input-name');
 
     Dropzone.autoDiscover = false;
 
@@ -43,7 +44,7 @@ moj.Modules.Dropzone = {
         // create hidden field
         var input = $('<input />', { class: 'case-uploaded-files'
                       , type:'hidden'
-                      , name: 'uploaded_files[]'
+                      , name: fileInputName
                       , value: key });
         $(file.previewElement).append(input);
 
@@ -53,13 +54,6 @@ moj.Modules.Dropzone = {
         $(file.previewElement).remove();
       }
     });
-  },
-  createDocumentIdInput : function(id) {
-    var input = '<input id="claim_document_ids_' + id + '" name="claim[document_ids][]" type="hidden" value="' + id + '">';
-    this.$document_ids.append(input);
-  },
-  removeDocumentIdInput : function(id) {
-    $('#claim_document_ids_' + id).remove();
   }
 };
 

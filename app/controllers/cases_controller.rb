@@ -62,29 +62,14 @@ class CasesController < ApplicationController
   def create
     authorize Case, :can_add_case?
 
-    @case = Case.new(create_foi_params)
+    @case = Case.new(create_foi_params.merge(uploading_user: current_user))
+    @s3_direct_post = UploaderService.s3_direct_post_for_case(@case, 'requests')
+
     if create_foi_params[:flag_for_disclosure_specialists].blank?
       @case.valid?
       @case.errors.add(:flag_for_disclosure_specialists, :blank)
-      @s3_direct_post = UploaderService.s3_direct_post_for_case(@case, 'requests')
       render :new
     elsif @case.save
-      rus = RequestUploaderService.new(
-        @case, current_user, params[:uploaded_files]
-      )
-      rus.upload!
-      case rus.result
-      when :blank
-        @s3_direct_post = UploaderService.s3_direct_post_for_case(@case, 'requests')
-        render :new
-        return
-      when :error
-        flash.keep(:action_params)
-        @s3_direct_post = UploaderService.s3_direct_post_for_case(@case, 'requests')
-        render :new
-        return
-      end
-
       if create_foi_params[:flag_for_disclosure_specialists] == 'yes'
         CaseFlagForClearanceService.new(user: current_user,
                                         kase: @case,
@@ -93,7 +78,6 @@ class CasesController < ApplicationController
       flash[:creating_case] = true
       redirect_to new_case_assignment_path @case
     else
-      @s3_direct_post = UploaderService.s3_direct_post_for_case(@case, 'requests')
       render :new
     end
   rescue ActiveRecord::RecordNotUnique
@@ -256,11 +240,12 @@ class CasesController < ApplicationController
       :name,
       :postal_address,
       :email,
-      :received_by,
-      :subject, :message,
+      :subject,
+      :message,
       :received_date_dd, :received_date_mm, :received_date_yyyy,
+      :delivery_method,
       :flag_for_disclosure_specialists,
-      :received_by,
+      uploaded_request_files: [],
     ).merge(category_id: Category.find_by(abbreviation: 'FOI').id)
   end
 

@@ -1,8 +1,13 @@
-module UploaderService
-  attr_reader :result
+class S3Uploader
+  def initialize(kase, user)
+    @case = kase
+    @user = user
+    @upload_group = create_upload_group
+  end
 
   def self.s3_direct_post_for_case(kase, type)
     uploads_key = "uploads/#{kase.uploads_dir(type)}/${filename}"
+    binding.pry
     CASE_UPLOADS_S3_BUCKET.presigned_post(
       key:                   uploads_key,
       success_action_status: '201',
@@ -10,20 +15,20 @@ module UploaderService
   end
 
   def self.id_for_case(kase)
-    if persisted?
-      id
+    if kase.persisted?
+      kase.id
     else
       SecureRandom.urlsafe_base64
     end
   end
-
-  private
 
   def process_files(uploaded_files, type)
     ActiveRecord::Base.transaction do
       add_attachments(uploaded_files, type)
     end
   end
+
+  private
 
   def add_attachments(uploaded_files, type)
     attachments = create_attachments(uploaded_files, type)
@@ -55,7 +60,7 @@ module UploaderService
         type: type.to_s,
         key: destination_key(uploads_key, type),
         upload_group: @upload_group,
-        user_id: @current_user.id)
+        user_id: @user.id)
     end
   end
 
@@ -70,7 +75,8 @@ module UploaderService
 
   def move_uploaded_file(uploads_key, type)
     uploads_object = CASE_UPLOADS_S3_BUCKET.object(uploads_key)
-    uploads_object.move_to destination_path(uploads_key, type)
+    path = destination_path(uploads_key, type)
+    uploads_object.move_to path
   end
 
   def destination_path(uploads_key, type)
@@ -91,6 +97,6 @@ module UploaderService
   end
 
   def create_upload_group()
-    Time.now.utc.strftime('%Y%m%d%H%M%S')   # save upload group in utc
+    Time.now.strftime('%Y%m%d%H%M%S')
   end
 end

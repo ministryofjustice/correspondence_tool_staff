@@ -92,7 +92,6 @@ class CaseAttachment < ActiveRecord::Base
     preview_file.path
   end
 
-
   def upload_preview(filepath, retry_count)
     pdf_key = "#{self.case.attachments_dir('response_previews', upload_group)}/#{File.basename(key, File.extname(key))}.pdf"
     preview_object = CASE_UPLOADS_S3_BUCKET.object(pdf_key)

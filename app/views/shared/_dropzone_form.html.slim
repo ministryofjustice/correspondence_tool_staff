@@ -1,9 +1,10 @@
 .dropzone{ tabindex="0"
-  data-dz-template=render('shared/dropzone_js').gsub('"', '\'').html_safe
-  data-form-data=s3_direct_post.fields.to_json
-  data-url= s3_direct_post.url
-  data-host= URI.parse(s3_direct_post.url).host
-  data-accepted-files=accepted_case_attachment_types}
+           data-dz-template=render('shared/dropzone_js').gsub('"', '\'').html_safe
+           data-form-data=s3_direct_post.fields.to_json
+           data-url= s3_direct_post.url
+           data-host= URI.parse(s3_direct_post.url).host
+           data-accepted-files=accepted_case_attachment_types
+           data-file-input-name=file_input_name }
 
   .dz-default.dz-message.grid-row
     .column-one-third.arrow-icon

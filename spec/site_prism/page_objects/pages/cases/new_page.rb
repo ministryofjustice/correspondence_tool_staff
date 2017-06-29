@@ -36,8 +36,8 @@ module PageObjects
           make_radio_button_choice("case_flag_for_disclosure_specialists_#{choice}")
         end
 
-        def choose_received_by(choice = 'email')
-          make_radio_button_choice("case_received_by_#{choice}")
+        def choose_delivery_method(choice = 'sent_by_email')
+          make_radio_button_choice("case_delivery_method_#{choice}")
         end
 
         def fill_in_case_details(params={})
@@ -47,9 +47,9 @@ module PageObjects
           date_received_month.set(kase.received_date.month)
           date_received_year.set(kase.received_date.year)
 
-          choose_received_by kase.received_by
-          subject.set kase.subject if kase.received_by == 'email'
-          full_request.set kase.message
+          choose_delivery_method kase.delivery_method
+          subject.set kase.subject
+          full_request.set kase.message if kase.delivery_method == 'sent_by_email'
           full_name.set kase.name
           email.set kase.email
           address.set kase.postal_address

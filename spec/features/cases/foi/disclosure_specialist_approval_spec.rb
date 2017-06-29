@@ -109,8 +109,9 @@ feature 'cases requiring clearance by disclosure specialist' do
         "action"=>"upload_responses"}
     )
     rus = ResponseUploaderService.new(kase, user, params, action)
-    allow(rus).to receive(:move_uploaded_response)
-    allow(rus).to receive(:remove_leftover_upload_files)
+    uploader = rus.instance_variable_get :@uploader
+    allow(uploader).to receive(:move_uploaded_file)
+    allow(uploader).to receive(:remove_leftover_upload_files)
     rus.upload!
   end
 

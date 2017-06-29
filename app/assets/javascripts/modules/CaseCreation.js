@@ -1,36 +1,36 @@
 moj.Modules.CaseCreation = {
-  $receivedBy          : $('#received-by'),
+  $deliveryMethod       : $('#delivery_method'),
 
-  $receivedByEmail  : $('#case_received_by_email'),
-  $receivedByPost   : $('#case_received_by_post'),
+  $deliveryMethodEmail  : $('#case_delivery_method_sent_by_email'),
+  $deliveryMethodPost   : $('#case_delivery_method_sent_by_post'),
 
-  $receivedByFields : $('#received-by-fields'),
+  $deliveryMethodFields : $('#delivery-method-fields'),
 
   init: function () {
     var self = this;
 
-    self.showHideRefusalReceiveByFields();
+    self.showHideDeliveryMethodFields();
 
     //Bind events
-    self.$receivedBy.on('change', ':radio', function(){
+    self.$deliveryMethod.on('change', ':radio', function(){
 
-      self.showHideRefusalReceiveByFields();
+      self.showHideDeliveryMethodFields();
 
     });
   },
 
-  showHideRefusalReceiveByFields: function (){
-    if (this.$receivedBy.find(':radio').is(':checked')){
+  showHideDeliveryMethodFields: function (){
+    if (this.$deliveryMethod.find(':radio').is(':checked')){
 
-      this.$receivedByFields.show();
+      this.$deliveryMethodFields.show();
 
-      $('#case_message').closest('.form-group').toggle(this.$receivedByEmail.is(':checked'))
+      $('#case_message').closest('.form-group').toggle(this.$deliveryMethodEmail.is(':checked'))
 
-      $('.dropzone').closest('.grid-row').toggle(this.$receivedByPost.is(':checked'))
+      $('.dropzone').closest('.grid-row').toggle(this.$deliveryMethodPost.is(':checked'))
 
     } else {
 
-      this.$receivedByFields.hide();
+      this.$deliveryMethodFields.hide();
 
     }
   }

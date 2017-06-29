@@ -20,7 +20,7 @@
 #  refusal_reason_id    :integer
 #  current_state        :string
 #  last_transitioned_at :datetime
-#  received_by          :enum
+#  delivery_method      :enum
 #
 
 require 'rails_helper'
@@ -68,11 +68,11 @@ RSpec.describe Case, type: :model do
   end
 
   describe 'mandatory attributes' do
-    it { should validate_presence_of(:name)           }
-    it { should validate_presence_of(:received_date)  }
-    it { should validate_presence_of(:subject)        }
-    it { should validate_presence_of(:requester_type) }
-    it { should validate_presence_of(:received_by)    }
+    it { should validate_presence_of(:name)            }
+    it { should validate_presence_of(:received_date)   }
+    it { should validate_presence_of(:subject)         }
+    it { should validate_presence_of(:requester_type)  }
+    it { should validate_presence_of(:delivery_method) }
   end
 
   context 'flagged for approval scopes' do
@@ -316,14 +316,14 @@ RSpec.describe Case, type: :model do
   describe 'conditional validations of message' do
     xit 'does not validate presence of message for postal foi' do
       postal_foi = build :case
-      postal_foi.received_by = 'post'
+      postal_foi.delivery_method = 'sent_by_post'
       # need to stub out request attachment
       expect(postal_foi).to be_valid
     end
 
     it 'does validate presence of message for email foi' do
       email_foi = build :case
-      email_foi.received_by = 'email'
+      email_foi.delivery_method = 'sent_by_email'
       expect(email_foi).to be_valid
       email_foi.message = nil
       expect(email_foi).not_to be_valid
@@ -345,11 +345,11 @@ RSpec.describe Case, type: :model do
           ]
         )
 
-      should have_enum(:received_by).
+      should have_enum(:delivery_method).
           with_values(
               [
-                  'email',
-                  'post'
+                  'sent_by_email',
+                  'sent_by_post'
               ]
           )
     end

@@ -72,9 +72,34 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
     end
   end
 
+  describe '#case_uploaded_request_files_class' do
+    before do
+      @case = create(:case)
+    end
 
+    it 'returns nil when case has no errors on uploaded_request_files' do
+      expect(case_uploaded_request_files_class).to be_nil
+    end
 
+    it 'returns error class when case has errors on uploaded_request_files' do
+      @case.errors.add(:uploaded_request_files, :blank)
+      expect(case_uploaded_request_files_class).to eq 'error'
+    end
+  end
 
+  describe '#case_uploaded_request_files_id' do
+    before do
+      @case = create(:case)
+    end
 
+    it 'returns nil when case has no errors on uploaded_request_files' do
+      expect(case_uploaded_request_files_id).to be_nil
+    end
 
+    it 'returns error id when case has errors on uploaded_request_files' do
+      @case.errors.add(:uploaded_request_files, :blank)
+      expect(case_uploaded_request_files_id)
+        .to eq 'error_case_uploaded_request_files'
+    end
+  end
 end

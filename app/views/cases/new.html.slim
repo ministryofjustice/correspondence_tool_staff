@@ -31,7 +31,7 @@
     = f.gov_uk_date_field :received_date, {legend_text: t('.received_date'), form_hint_text: t('.received_date_copy'), today_button: {class: 'button-secondary'} }
 
   #received-by
-    = f.radio_button_fieldset :received_by, choices: [:email, :post]
+    = f.radio_button_fieldset :delivery_method, choices: [:sent_by_email, :sent_by_post]
 
   #received-by-fields
     .panel.panel-border-thin
@@ -41,9 +41,10 @@
 
       .grid-row
         .column-two-thirds
-          div class="#{case_request_attachments_class}" id="#{case_request_attachments_id}"
+          div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
             = render partial: 'shared/dropzone_form',
-                    locals: {s3_direct_post: @s3_direct_post }
+                     locals: {s3_direct_post: @s3_direct_post,
+                              file_input_name: 'case[uploaded_request_files][]' }
 
   = f.radio_button_fieldset :flag_for_disclosure_specialists, inline: true
 

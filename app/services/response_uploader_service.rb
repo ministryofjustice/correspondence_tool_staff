@@ -1,7 +1,5 @@
 class ResponseUploaderService
-  include UploaderService
-
-  attr_reader :kase, :current_user, :upload_group, :attachment_type
+  attr_reader :kase, :current_user, :attachment_type, :result
 
   # action_params is passed through from the flash on the upload page and can be:
   # * 'upload' - upload response but don't change state
@@ -16,8 +14,8 @@ class ResponseUploaderService
     @uploaded_files = params[:uploaded_files]
     @result = nil
     @action = action_params
-    @upload_group = create_upload_group
     @type = :response
+    @uploader = S3Uploader.new(@case, @current_user)
   end
 
   def seed!
@@ -32,12 +30,14 @@ class ResponseUploaderService
     if @uploaded_files.blank?
       @result = :blank
     else
-      attachments = process_files(@uploaded_files, @type)
+      attachments = @uploader.process_files(@uploaded_files, @type)
       transition_state(attachments)
       @result = :ok
       attachments
     end
-  rescue => err
+  rescue Aws::S3::Errors::ServiceError,
+         ActiveRecord::RecordInvalid,
+         ActiveRecord::RecordNotUnique => err
     Rails.logger.error("Error processing uploaded files: #{err.message}")
     @result = :error
   end
