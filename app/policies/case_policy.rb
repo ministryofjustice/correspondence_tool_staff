@@ -125,7 +125,8 @@ class CasePolicy
     clear_failed_checks
     case self.case.current_state
     when 'awaiting_dispatch'
-      user.responding_teams.include?(self.case.responding_team)
+      user.responding_teams.include?(self.case.responding_team) &&
+          self.case.assignments.approving.approved.none?
     else false
     end
   end
@@ -231,7 +232,8 @@ class CasePolicy
 
   # check case_is_in_responder_attachable_state
   check :case_is_in_attachable_state do
-    self.case.drafting? || self.case.awaiting_dispatch?
+    (self.case.drafting? || self.case.awaiting_dispatch?) &&
+        self.case.assignments.approving.approved.none?
   end
 
   check :no_user_case_approving_assignments_are_accepted do

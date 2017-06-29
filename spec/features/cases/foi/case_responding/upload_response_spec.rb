@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 feature 'Upload response' do
-  given(:responder)  { create(:responder) }
-  given(:kase)       { create(:accepted_case, responder: responder) }
+  given(:responder)      { create(:responder) }
+  given(:kase)           { create(:accepted_case, responder: responder) }
+  given(:approved_case ) { create(:approved_case, responder: responder) }
   given(:responder_teammate) do
     create :responder,
            responding_teams: responder.responding_teams
@@ -24,6 +25,13 @@ feature 'Upload response' do
 
       expect(cases_new_response_upload_page).to be_displayed
     end
+
+    scenario 'restrict upload more responses to an approved case' do
+      cases_show_page.load(id: approved_case.id)
+
+      expect(cases_show_page.actions).to have_no_upload_response
+    end
+
   end
 
   context 'as a responder on the same team' do
@@ -53,4 +61,5 @@ feature 'Upload response' do
       expect(cases_show_page).not_to have_link('Upload response')
     end
   end
+
 end

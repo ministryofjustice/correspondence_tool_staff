@@ -30,6 +30,8 @@ feature 'removing a response from response details' do
     cases_show_page.case_attachments.first.collection
   end
 
+  given(:approved_case ) { create(:approved_case, responder: responder) }
+
   context 'as the assigned responder' do
     background do
       login_as responder
@@ -108,6 +110,14 @@ feature 'removing a response from response details' do
         cases_show_page.load(id: responded_case.id)
 
         expect(cases_show_page).to have_no_case_attachments
+      end
+    end
+
+    context 'approved case' do
+      scenario 'viewing case should not show remove upload link' do
+        cases_show_page.load(id: approved_case.id)
+        expect(cases_show_page.case_attachments.first.collection.first.actions)
+            .to have_no_remove
       end
     end
   end
