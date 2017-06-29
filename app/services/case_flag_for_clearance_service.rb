@@ -1,5 +1,5 @@
 class CaseFlagForClearanceService
-  attr_accessor :result
+  attr_accessor :result, :other_user
 
   def initialize(user:, kase:, team: nil)
     @case = kase
@@ -31,6 +31,7 @@ class CaseFlagForClearanceService
       true
     else
       @result = :already_flagged
+      @other_user = @case.approver_assignments.for_team(@team).first.user
       false
     end
   end
