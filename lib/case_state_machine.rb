@@ -62,7 +62,7 @@ class CaseStateMachine
 
   event :take_on_for_approval do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object).can_take_on_for_approval?(options[:approving_team_id])
+      CaseStateMachine.get_policy(options[:user_id], object).can_take_on_for_approval?
     end
 
     transition from: :unassigned,             to: :unassigned
@@ -91,6 +91,18 @@ class CaseStateMachine
     transition from: :drafting,               to: :drafting
     transition from: :awaiting_dispatch,      to: :awaiting_dispatch
     transition from: :responded,              to: :responded
+    transition from: :pending_dacu_clearance, to: :pending_dacu_clearance
+  end
+
+  event :unaccept_approver_assignment do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object)
+        .can_unaccept_approval_assignment?
+    end
+    transition from: :unassigned,             to: :unassigned
+    transition from: :awaiting_responder,     to: :awaiting_responder
+    transition from: :drafting,               to: :drafting
+    transition from: :awaiting_dispatch,      to: :awaiting_dispatch
     transition from: :pending_dacu_clearance, to: :pending_dacu_clearance
   end
 
@@ -212,6 +224,13 @@ class CaseStateMachine
              approving_team_id: approving_team.id,
              user_id:           user.id,
              event:             :accept_approver_assignment
+  end
+
+  def unaccept_approver_assignment!(user, approving_team)
+    trigger! :unaccept_approver_assignment,
+             approving_team_id: approving_team.id,
+             user_id:           user.id,
+             event:             :unaccept_approver_assignment
   end
 
   def reassign_approver!(user, original_user, approving_team)

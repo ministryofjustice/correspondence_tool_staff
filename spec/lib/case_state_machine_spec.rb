@@ -101,6 +101,18 @@ RSpec.describe CaseStateMachine, type: :model do
                   .using_object(kase) }
   end
 
+
+  describe event(:unaccept_approver_assignment) do
+    it { should transition_from(:unassigned).to(:unassigned) }
+    it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
+    it { should transition_from(:drafting).to(:drafting) }
+    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
+    it { should transition_from(:pending_dacu_clearance).to(:pending_dacu_clearance) }
+    it { should require_permission(:can_unaccept_approval_assignment?)
+            .using_options(user_id: approver.id)
+            .using_object(kase) }
+  end
+
   describe event(:reassign_approver) do
     it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
     it { should transition_from(:drafting).to(:drafting) }
@@ -230,6 +242,17 @@ RSpec.describe CaseStateMachine, type: :model do
                .on_state_machine(assigned_case.state_machine)
                .with_parameters(user_id: approver.id,
                                 approving_team_id: approving_team.id)
+    end
+  end
+
+
+  describe 'trigger unaccept_approver_assignment!' do
+    it 'triggers unaccept_approver_assignment event' do
+      expect {
+        assigned_case.state_machine.unaccept_approver_assignment! approver, approving_team
+      }.to trigger_the_event(:unaccept_approver_assignment)
+              .on_state_machine(assigned_case.state_machine)
+              .with_parameters(user_id: approver.id, approving_team_id: approving_team.id)
     end
   end
 

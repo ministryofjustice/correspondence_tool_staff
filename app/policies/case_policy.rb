@@ -105,10 +105,14 @@ class CasePolicy
       (user.manager? || user.approver?)
   end
 
-  def can_take_on_for_approval?(team_id)
+  def can_take_on_for_approval?
     clear_failed_checks
-    @options[:team_id] = team_id
-    team_id.present? && check_case_not_already_taken_on_for_approval_by && check_user_is_approver_for
+    check_case_not_already_taken_on_for_approval_by
+  end
+
+  def can_unaccept_approval_assignment?
+    clear_failed_checks
+    check_case_was_accepted_for_approval_by_user
   end
 
   def can_unflag_for_clearance?
@@ -240,10 +244,11 @@ class CasePolicy
   end
 
   check :case_not_already_taken_on_for_approval_by do
-    !self.case.approver_assignments.map(&:team_id).include?(@options[:team_id])
+    team = @user.approving_team
+    team.present? && !self.case.approver_assignments.map(&:team_id).include?(team.id)
   end
 
-  check :user_is_approver_for do
-    @user.approving_team.present? && @user.approving_team.id == @options[:team_id]
+  check :case_was_accepted_for_approval_by_user do
+    self.case.approver_assignments.where(user_id: @user.id).any?
   end
 end
