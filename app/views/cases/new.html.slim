@@ -30,10 +30,10 @@
   .form-group
     = f.gov_uk_date_field :received_date, {legend_text: t('.received_date'), form_hint_text: t('.received_date_copy'), today_button: {class: 'button-secondary'} }
 
-  #received-by
+  #delivery-method
     = f.radio_button_fieldset :delivery_method, choices: [:sent_by_email, :sent_by_post]
 
-  #received-by-fields
+  #delivery-method-fields
     .panel.panel-border-thin
       = f.text_field :subject
 

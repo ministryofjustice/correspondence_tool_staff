@@ -1,5 +1,5 @@
 moj.Modules.CaseCreation = {
-  $deliveryMethod       : $('#delivery_method'),
+  $deliveryMethod       : $('#delivery-method'),
 
   $deliveryMethodEmail  : $('#case_delivery_method_sent_by_email'),
   $deliveryMethodPost   : $('#case_delivery_method_sent_by_post'),

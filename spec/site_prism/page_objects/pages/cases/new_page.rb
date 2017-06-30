@@ -47,16 +47,62 @@ module PageObjects
           date_received_month.set(kase.received_date.month)
           date_received_year.set(kase.received_date.year)
 
-          choose_delivery_method kase.delivery_method
-          subject.set kase.subject
-          full_request.set kase.message if kase.delivery_method == 'sent_by_email'
           full_name.set kase.name
           email.set kase.email
           address.set kase.postal_address
+          choose_delivery_method kase.delivery_method
+          subject.set kase.subject
+          full_request.set kase.message if kase.delivery_method == 'sent_by_email'
 
           choose_type_of_requester(kase.requester_type)
 
+          if kase.approving_teams.present?
+            dacu_disclosure_team_name = Settings.foi_cases.default_clearance_team
+            requires_disclosure_clearance = dacu_disclosure_team_name.in?(
+              kase.approving_teams.pluck(:name)
+            )
+            if requires_disclosure_clearance
+              choose_flag_for_disclosure_specialists 'yes'
+            else
+              choose_flag_for_disclosure_specialists 'no'
+            end
+          else
+            choose_flag_for_disclosure_specialists 'no'
+          end
+
+          if kase.sent_by_post?
+            kase.uploaded_request_files.each do |file|
+              drop_in_dropzone(file)
+            end
+          end
+
           kase
+        end
+
+        # Upload a file to Dropzone.js
+        def drop_in_dropzone(file_path)
+          # Generate a uploaded request file input selector
+          execute_script <<~JS
+            uploadedRequestFileInput = window.$('<input/>').attr(
+              { id: 'uploadedRequestFileInput',
+                name: 'case[uploaded_request_files][]',
+                type:'file' }
+            ).appendTo($('#delivery-method-fields'));
+          JS
+
+          # Attach the file to the uploaded request file input selector
+          attach_file("uploadedRequestFileInput", file_path)
+
+          # Add the file to a fileList array
+          execute_script <<~JS
+            var fileList = [uploadedRequestFileInput.get(0).files[0]];
+          JS
+
+          # Trigger the fake drop event
+          execute_script <<~JS
+            var e = jQuery.Event('drop', { dataTransfer : { files : [uploadedRequestFileInput.get(0).files[0]] } });
+            $('.dropzone')[0].dropzone.listeners[0].events.drop(e);
+          JS
         end
       end
     end

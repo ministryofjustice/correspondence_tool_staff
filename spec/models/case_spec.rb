@@ -407,8 +407,8 @@ RSpec.describe Case, type: :model do
 
     it 'must be unique' do
       Timecop.freeze(Date.new(2017, 1, 20)) do
-        allow_any_instance_of(Case).
-          to receive(:next_number).and_return(case_one.number)
+        case_one
+        allow(CaseNumberCounter).to receive(:next_for_date).and_return(1)
         expect { case_two }.
           to raise_error(ActiveRecord::RecordNotUnique)
       end

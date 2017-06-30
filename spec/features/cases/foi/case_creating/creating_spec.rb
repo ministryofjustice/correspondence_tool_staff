@@ -50,19 +50,21 @@ feature 'Case creation by a manager' do
     expect(new_case.requires_clearance?).to be true
   end
 
-  scanario 'creating a case with request attachments' do
-    before do
-      allow_any_instance_of(S3Uploader).to receive
-    end
+  scenario 'creating a case with request attachments', js: true do
+    stub_s3_uploader_for_all_files!
+    request_attachment = Rails.root.join('spec', 'fixtures', 'request-1.pdf')
+
     expect(cases_new_page).to be_displayed
 
-    cases_new_page.fill_in_case_details
-
-    cases_new_page.choose_flag_for_disclosure_specialists 'yes'
+    cases_new_page.fill_in_case_details(
+      delivery_method: :sent_by_post,
+      uploaded_request_files: [request_attachment]
+    )
 
     click_button 'Next - Assign case'
 
     new_case = Case.last
-    expect(new_case.requires_clearance?).to be true
+    request_attachment = new_case.attachments.request.first
+    expect(request_attachment.key).to match %{/request-1.pdf$}
   end
 end

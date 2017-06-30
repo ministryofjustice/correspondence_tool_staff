@@ -23,7 +23,7 @@ FactoryGirl.define do
     #       default strategy of :create, so we need to fix that to fix the hex
     #       number we generate here.
     key { "#{SecureRandom.hex(16)}/responses/#{Faker::Internet.slug}.pdf" }
-    preview_key { "#{SecureRandom.hex(16)}/preview_responses/#{Faker::Internet.slug}.pdf" }
+    preview_key { "#{SecureRandom.hex(16)}/response_previews/#{Faker::Internet.slug}.pdf" }
     upload_group { Time.now.strftime('%Y%m%d%H%M%S') }
   end
 
@@ -34,6 +34,7 @@ FactoryGirl.define do
       preview_key nil
     end
   end
+
   factory :case_response, parent: :correspondence_response do
     # Whatever was I thinking calling it :correspondence_response? Why didn't
     # you stop me Eddie?!?!
@@ -42,5 +43,13 @@ FactoryGirl.define do
       key { "#{SecureRandom.hex(16)}/responses/#{Faker::Internet.slug}.jpg" }
     end
 
+  end
+
+  factory :case_postal_request, parent: :case_attachment do
+    type 'response'
+    key { "#{SecureRandom.hex(16)}/requests/" +
+          "#{upload_group}/#{Faker::Internet.slug}.pdf" }
+    preview_key { "#{SecureRandom.hex(16)}/request_previews/" +
+                  "#{upload_group}/#{Faker::Internet.slug}.pdf" }
   end
 end

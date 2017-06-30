@@ -303,8 +303,11 @@ RSpec.describe CaseAttachment, type: :model do
 
     it 'retuns s3 object if preview key exists' do
       att = create :correspondence_response, preview_key: '2/responses/eon.pdf'
-      expect(att.s3_preview_object).to be_instance_of(Aws::S3::Object)
-      expect(att.s3_preview_object.key).to eq '2/responses/eon.pdf'
+      s3_object = instance_double(Aws::S3::Object)
+      allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
+                                         .with('2/responses/eon.pdf')
+                                         .and_return(s3_object)
+      expect(att.s3_preview_object).to eq s3_object
     end
   end
 

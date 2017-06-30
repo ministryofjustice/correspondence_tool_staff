@@ -113,7 +113,10 @@ class Case < ApplicationRecord
 
   validates :email, presence: true, on: :create, if: -> { postal_address.blank? }
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
-  validates :postal_address, presence: true, on: :create, if: -> { email.blank? }
+  validates :postal_address,
+            presence: true,
+            on: :create,
+            if: -> { email.blank? || sent_by_post? }
   validates :requester_type, :received_date, :delivery_method , presence: true
   validates :message, presence: true, if: -> { sent_by_email? }
   validates :uploaded_request_files,

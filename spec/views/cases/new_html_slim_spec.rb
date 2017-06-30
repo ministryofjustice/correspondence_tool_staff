@@ -4,7 +4,9 @@ describe 'cases/new.html.slim', type: :view do
 
   it 'displays the new case page' do
 
+    kase = Case.new
     assign(:case, Case.new)
+    assign(:s3_direct_post, S3Uploader.s3_direct_post_for_case(kase, :request))
 
     render
 

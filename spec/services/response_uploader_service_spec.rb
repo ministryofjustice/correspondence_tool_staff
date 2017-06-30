@@ -72,9 +72,51 @@ describe ResponseUploaderService do
         end
       end
 
-      describe 'uploader raises an error' do
+      describe 'uploader raises an S3 service error' do
         before do
-          allow(uploader).to receive(:process_files).and_raise(RuntimeError)
+          allow(uploader)
+            .to receive(:process_files)
+                  .with([uploads_key], :response)
+                  .and_raise(Aws::S3::Errors::ServiceError.new(:foo, :bar))
+        end
+
+        it 'returns :error' do
+          expect(rus.upload!).to eq :error
+        end
+      end
+
+      describe 'uploader raises a record invalid error' do
+        before do
+          allow(uploader)
+            .to receive(:process_files)
+                  .with([uploads_key], :response)
+                  .and_raise(ActiveRecord::RecordInvalid)
+        end
+
+        it 'returns :error' do
+          expect(rus.upload!).to eq :error
+        end
+      end
+
+      describe 'uploader raises an record not unique' do
+        before do
+          allow(uploader)
+            .to receive(:process_files)
+                  .with([uploads_key], :response)
+                  .and_raise(ActiveRecord::RecordNotUnique)
+        end
+
+        it 'returns :error' do
+          expect(rus.upload!).to eq :error
+        end
+      end
+
+      describe 'uploader raises an S3 service error' do
+        before do
+          allow(uploader)
+            .to receive(:process_files)
+                  .with([uploads_key], :response)
+                  .and_raise(Aws::S3::Errors::ServiceError.new(:foo, :bar))
         end
 
         it 'returns :error' do

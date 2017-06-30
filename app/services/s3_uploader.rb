@@ -7,7 +7,6 @@ class S3Uploader
 
   def self.s3_direct_post_for_case(kase, type)
     uploads_key = "uploads/#{kase.uploads_dir(type)}/${filename}"
-    binding.pry
     CASE_UPLOADS_S3_BUCKET.presigned_post(
       key:                   uploads_key,
       success_action_status: '201',

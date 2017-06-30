@@ -97,6 +97,22 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do
+    # This mock appears to get triggered if you try to do:
+    #
+    #    allow_any_instance_of(Case).to receive(...)
+    #
+    # because somewhow this triggers a call os object on
+    # CASE_UPLOADS_S3_BUCKET. If we can't resolve this then we may have to
+    # change/remove the safeguard below.
+    #
+    # The relevant bits of the backtrace:
+    #
+    # #0  block (3 levels) in block (3 levels) in <top (required)> at /Users/michaelgorodnitzky/Code/cts/spec/rails_helper.rb:106
+    # ... rspec stuff ...
+    #  #7  block (2 levels) in #<Class:#<Aws::S3::Bucket:0x007fe706aa96d8>>.block (2 levels) in define_proxy_method(*args#Array, &block#NilClass) at /Users/michaelgorodnitzky/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/rspec-mocks-3.5.0/lib/rspec/mocks/method_double.rb:64
+    #  #8  Draper::Decoratable::ClassMethods.===(other#Aws::S3::Bucket) at /Users/michaelgorodnitzky/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/draper-3.0.0.pre1/lib/draper/decoratable.rb:89
+    #  #9  block in RSpec::Mocks::Space.block in proxies_of(klass#Class) at /Users/michaelgorodnitzky/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/rspec-mocks-3.5.0/lib/rspec/mocks/space.rb:108
+    # ... rspec stuff ...
     allow(CASE_UPLOADS_S3_BUCKET)
       .to receive(:object).and_raise(
             "This test requires stubbing of S3Uploader or CASE_UPLOADS_S3_BUCKET methods."
