@@ -25,8 +25,7 @@
 # Required in production with it's eager loading and cacheing of classes.
 require 'case_state_machine'
 
-
-#rubocop:disable Metrics/MethodLength
+#rubocop:disable Metrics/ClassLength
 class Case < ApplicationRecord
   include Statesman::Adapters::ActiveRecordQueries
 
@@ -369,4 +368,4 @@ class Case < ApplicationRecord
     ]
   end
 end
-#rubocop:enable Metrics/MethodLength
+#rubocop:enable Metrics/ClassLength
