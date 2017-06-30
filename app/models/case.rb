@@ -25,6 +25,7 @@
 # Required in production with it's eager loading and cacheing of classes.
 require 'case_state_machine'
 
+#rubocop:disable Metrics/ClassLength
 class Case < ApplicationRecord
   include Statesman::Adapters::ActiveRecordQueries
 
@@ -327,6 +328,15 @@ class Case < ApplicationRecord
     approving_teams.include?(Team.press_office)
   end
 
+  def responded?
+    transitions.where(event: 'respond').any?
+  end
+
+  def responded_in_time?
+    return false if date_responded.nil?
+    date_responded <= external_deadline
+  end
+
   private
 
   def set_initial_state
@@ -358,3 +368,4 @@ class Case < ApplicationRecord
     ]
   end
 end
+#rubocop:enable Metrics/ClassLength

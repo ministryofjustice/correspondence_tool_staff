@@ -109,6 +109,13 @@ describe CasePolicy do
     it { should_not permit(approver,          assigned_case) }
   end
 
+  permissions :can_download_stats? do
+    it { should     permit(manager,           assigned_case) }
+    it { should_not permit(responder,         assigned_case) }
+    it { should_not permit(another_responder, assigned_case) }
+    it { should_not permit(approver,          assigned_case) }
+  end
+
   permissions :can_add_attachment? do
     context 'in drafting state' do
       it { should_not permit(manager,           accepted_case) }

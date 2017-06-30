@@ -55,6 +55,8 @@ global_navigation:
       path: /cases/my_open
     open_cases:
       path: /cases/open
+    stats:
+      path: /stats
 
   tabs:
     in_time:
@@ -83,6 +85,14 @@ global_navigation:
         late:
       my_open_cases:
       closed_cases:
+
+    'manager':
+      open_cases:
+        in_time: default
+        late:
+      my_open_cases:
+      closed_cases:
+      stats:
 
     '*':
       open_cases:
