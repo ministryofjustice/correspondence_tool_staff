@@ -4,6 +4,7 @@ module Stats
   describe R001RespondedCaseTimelinessReport do
 
     before(:all) do
+      Timecop.freeze(Date.new(2017, 6, 30))
       @team_1 = create :team, name: 'RTA'
       @team_2 = create :team, name: 'RTB'
       create_case(received: '20170531', responded: '20170629', deadline: '20170625', team: @team_1)   # received last month - not included
