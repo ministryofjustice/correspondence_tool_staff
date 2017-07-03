@@ -279,6 +279,7 @@ FactoryGirl.define do
   trait :sent_by_post do
     delivery_method :sent_by_post
     uploaded_request_files { ["#{Faker::Internet.slug}.pdf"] }
+    uploading_user { create :manager }
   end
 
   trait :sent_by_email do
