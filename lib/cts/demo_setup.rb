@@ -8,7 +8,7 @@ module CTS
     def initialize(number)
       @number = number
       @cases = Case.order(id: :desc).limit(number).to_a
-      @managing_team = Team.where(name: 'DACU').first
+      @managing_team = CTS::dacu_team
       @responding_teams = Team.where(name: ['Legal Aid Agency', 'HR', 'HMCTS North East Response Unit(RSU)'])
       @dacu_disclosure = Team.dacu_disclosure
       @press_office = Team.press_office
