@@ -12,9 +12,13 @@ module Stats
       create_case(received: '20170604', responded: nil, deadline: '20170625', team: @team_1)          # team 1 - not responded
       create_case(received: '20170604', responded: '20170629', deadline: '20170630', team: @team_1)   # team 1 - in time
       create_case(received: '20170601', responded: '20170620', deadline: '20170625', team: @team_2)   # team 2 - in time
+      Timecop.freeze Time.new(2017, 6, 30, 12, 1, 2)
     end
 
-    after(:all)  { DbHousekeeping.clean }
+    after(:all)  do
+      Timecop.return
+      DbHousekeeping.clean
+    end
 
     describe '#results' do
       it 'generates_stats as a hash of hashes' do
