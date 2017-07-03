@@ -32,16 +32,41 @@ module CTS
 
     default_command :list
 
-    desc 'list', 'List cases in the system.'
-    def list
-      columns = [
-        :id,
-        :number,
-        :subject,
-        :current_state,
-        :requires_clearance?
-      ]
-      tp Case.all, columns
+    desc 'assign CASE TEAM [USER]', 'Assign a case a user'
+    option :state, type: :string, enum: %w{pending rejected accepted},
+           default: 'accepted', desc: 'Create assignment in the given state.'
+    def assign(*args)
+      state = options[:state]
+
+      case_id_or_number = args.shift
+      if case_id_or_number.blank?
+        error 'case not provided'
+        help
+        exit 1
+      end
+      team_id_or_name = args.shift
+      if team_id_or_name.blank?
+          error 'team not provided'
+          help
+          exit 1
+      end
+      user_id_or_name = args.shift
+
+      kase = CTS::find_case(case_id_or_number)
+      team = CTS::find_team(team_id_or_name)
+      if user_id_or_name.present?
+        user = CTS::find_user(user_id_or_name)
+        role = team.user_roles.find_by(user: user).role
+      else
+        user = team.users.first
+        role = { 'responder' => 'responding',
+                 'manager'   => 'managing',
+                 'approver'  => 'approving' }[team.user_roles.first.role]
+      end
+
+
+      assign_command = Cases::Assign.new(kase, user, team, role)
+      assign_command.call
     end
 
     desc "clear", "Delete all cases in the database"
@@ -136,6 +161,18 @@ module CTS
       unless @dry_run
         tp cases, [:id, :number, :current_state, :requires_clearance?]
       end
+    end
+
+    desc 'list', 'List cases in the system.'
+    def list
+      columns = [
+        :id,
+        :number,
+        :subject,
+        :current_state,
+        :requires_clearance?
+      ]
+      tp Case.all, columns
     end
 
     desc 'show', 'Show case details.'
