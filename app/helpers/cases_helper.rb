@@ -106,7 +106,7 @@ module CasesHelper
   end
 
   def case_attachments_visible_for_case?
-    return false if @case.attachments.blank?
+    return false if @case.attachments.response.blank?
     policy(@case).can_view_attachments?
   end
 

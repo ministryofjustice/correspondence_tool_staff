@@ -58,6 +58,8 @@ RSpec.describe Case, type: :model do
            received_date: Date.parse('16/11/2016')
   end
 
+  let(:kase) { create :case }
+
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do
@@ -943,6 +945,28 @@ RSpec.describe Case, type: :model do
 
       expect(Case.new.uploads_dir('responses'))
         .to eq "this_is_not_random/responses"
+    end
+  end
+
+  describe '#upload_response_groups' do
+    it 'instantiates CaseUploadGroupCollection with response attachments' do
+      attachments = double 'CaseAttachments for Case'
+      response_attachments = double 'Response attachments'
+      expect(attachments).to receive(:response).and_return(response_attachments)
+      expect(kase).to receive(:attachments).and_return(attachments)
+      expect(CaseAttachmentUploadGroupCollection).to receive(:new).with(kase, response_attachments)
+      kase.upload_response_groups
+    end
+  end
+
+  describe '#upload_request_groups' do
+    it 'instantiates CaseUploadGroupCollection with request attachments' do
+      attachments = double 'CaseAttachments for Case'
+      request_attachments = double 'Request attachments'
+      expect(attachments).to receive(:request).and_return(request_attachments)
+      expect(kase).to receive(:attachments).and_return(attachments)
+      expect(CaseAttachmentUploadGroupCollection).to receive(:new).with(kase, request_attachments)
+      kase.upload_request_groups
     end
   end
 

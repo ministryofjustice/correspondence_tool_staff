@@ -31,6 +31,9 @@ describe 'cases/case_details.html.slim', type: :view do
       expect(partial.requester_type.data.text)
           .to eq unassigned_case.requester_type.humanize
 
+      expect(partial.delivery_method.data.text)
+          .to eq unassigned_case.delivery_method.humanize
+
     end
 
     it 'does not display the email address if one is not provided' do

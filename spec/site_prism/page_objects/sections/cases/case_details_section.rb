@@ -23,6 +23,10 @@ module PageObjects
           section :requester_type, 'tr.requester-type' do
             element :data, 'td'
           end
+
+          section :delivery_method, 'tr.delivery-method' do
+            element :data, 'td'
+          end
         end
 
 

@@ -37,7 +37,9 @@ describe 'cases/case_request.html.slim', type: :view do
   describe 'Displaying a short request' do
     let(:kase) { double CaseDecorator,
                         message: "This is a request for information",
-                        message_extract: ["This is a request for information"]
+                        message_extract: ["This is a request for information"],
+                        delivery_method: "sent_by_email",
+                        sent_by_email?: true
     }
 
     let(:partial) do
@@ -64,7 +66,9 @@ describe 'cases/case_request.html.slim', type: :view do
 
     let(:kase) { double CaseDecorator,
                         message:  long_message,
-                        message_extract: [short_message,last_part]
+                        message_extract: [short_message,last_part],
+                        delivery_method: "sent_by_email",
+                        sent_by_email?: true
     }
 
     let(:partial) do
@@ -90,7 +94,10 @@ describe 'cases/case_request.html.slim', type: :view do
   describe 'displaying a long request and collapsing content' do
     let(:kase) { double CaseDecorator,
                         message:  long_message,
-                        message_extract: [short_message,last_part]
+                        message_extract: [short_message,last_part],
+                        delivery_method: "sent_by_email",
+                        sent_by_email?: true
+
     }
 
     let(:partial) do
@@ -111,5 +118,23 @@ describe 'cases/case_request.html.slim', type: :view do
 
   end
 
+  describe 'displays request attachments for postal FOI' do
+    let(:sent_by_post) { create :case, :sent_by_post }
 
+    let(:partial) do
+      stub_s3_uploader_for_all_files!
+      render partial: 'cases/case_request.html.slim',
+             locals:{ case_details: sent_by_post}
+
+      case_request_section(rendered)
+    end
+
+    it 'should display a download link' do
+      expect(partial.attachments.first.collection.first.actions).to have_download
+    end
+
+    it 'should not have a delete option' do
+      expect(partial.attachments.first.collection.first.actions).to have_no_remove
+    end
+  end
 end

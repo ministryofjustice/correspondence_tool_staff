@@ -37,26 +37,26 @@ describe CaseAttachmentUploadGroupCollection do
 
     it 'returns date_time once for each group in reverse time order' do
       yielded_timestamps = []
-      @kase.upload_groups.each { |ug| yielded_timestamps << ug.date_time }
+      @kase.upload_response_groups.each { |ug| yielded_timestamps << ug.date_time }
       expect(yielded_timestamps).to eq [ @timestamp_2, @timestamp_1 ]
     end
 
     it 'returns a user object for each group' do
       users = []
-      @kase.upload_groups.each { |ug| users << ug.user }
+      @kase.upload_response_groups.each { |ug| users << ug.user }
       expect(users).to eq [ @responder_2, @responder_1 ]
     end
 
     it 'returns a team name for each group' do
       team_names = []
       expect(@kase).to receive(:team_for_user).exactly(2).and_return(create(:team, name: 'Team 1'), create(:team, name: 'Team 2'))
-      @kase.upload_groups.each { |ug| team_names << ug.team_name }
+      @kase.upload_response_groups.each { |ug| team_names << ug.team_name }
       expect(team_names).to match_array [ 'Team 1', 'Team 2']
     end
 
     it 'returns a collection of CaseAttachments for each group' do
       collections = []
-      @kase.upload_groups.each { |ug| collections << ug.collection }
+      @kase.upload_response_groups.each { |ug| collections << ug.collection }
       expect(collections.size).to eq 2
       expect(collections.first).to be_instance_of(Array)
       expect(collections.first.map(&:class)).to eq [CaseAttachment, CaseAttachment]
@@ -70,14 +70,14 @@ describe CaseAttachmentUploadGroupCollection do
 
     it 'returns the upload group containing the case attachment identified by the given id' do
       ca = @kase.attachments[3]
-      returned_upload_group = @kase.upload_groups.for_case_attachment_id(ca.id)
+      returned_upload_group = @kase.upload_response_groups.for_case_attachment_id(ca.id)
       expect(returned_upload_group.collection).to include(ca)
     end
 
     it 'raises if the case_attachment id is not in any of the upload groups' do
       ca_id = @kase.attachments.map(&:id).max + 20
       expect {
-        @kase.upload_groups.for_case_attachment_id(ca_id)
+        @kase.upload_response_groups.for_case_attachment_id(ca_id)
       }.to raise_error ArgumentError, "No upload group contains a case attachment with id #{ca_id}"
     end
   end

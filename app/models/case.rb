@@ -213,9 +213,12 @@ class Case < ApplicationRecord
     where('lower(name) LIKE ?', "%#{term.downcase}%")
   end
 
+  def upload_response_groups
+    CaseAttachmentUploadGroupCollection.new(self, attachments.response)
+  end
 
-  def upload_groups
-    CaseAttachmentUploadGroupCollection.new(self, attachments)
+  def upload_request_groups
+    CaseAttachmentUploadGroupCollection.new(self, attachments.request)
   end
 
   # Commented out as this is not being used and we don't know how to re-write

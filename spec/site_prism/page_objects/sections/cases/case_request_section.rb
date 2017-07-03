@@ -7,6 +7,10 @@ module PageObjects
         element :ellipsis, '.ellipsis-delimiter'
         element :collapsed_text, '.ellipsis-complete'
         element :preview, '.ellipsis-preview'
+
+        sections :attachments,
+                 PageObjects::Sections::Cases::CaseAttachmentSection,
+                 '.case-attachments-group'
       end
     end
   end
