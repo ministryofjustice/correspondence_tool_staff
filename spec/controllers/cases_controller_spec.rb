@@ -440,8 +440,9 @@ RSpec.describe CasesController, type: :controller do
       context 'as an authenticated manager' do
         let(:user) { create(:manager) }
 
-        it 'permitted_events == [:assign_responder, :flag_for_clearence]' do
-          expect(assigns(:permitted_events)).to eq [:assign_responder,
+        it 'permitted_events == [:add_messsage_to_case, :assign_responder, :flag_for_clearence]' do
+          expect(assigns(:permitted_events)).to eq [:add_message_to_case,
+                                                    :assign_responder,
                                                     :flag_for_clearance]
         end
 
@@ -475,7 +476,7 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'permitted_events == [:add_responses]' do
-        expect(assigns(:permitted_events)).to eq [:add_response_to_flagged_case]
+        expect(assigns(:permitted_events)).to eq [:add_message_to_case, :add_response_to_flagged_case]
       end
 
       it 'renders the show page' do
@@ -507,7 +508,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq [:flag_for_clearance]
+          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :flag_for_clearance]
         end
 
         it 'renders the show template' do
@@ -571,7 +572,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq [:flag_for_clearance]
+          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :flag_for_clearance]
         end
 
         it 'renders the show page' do
@@ -584,7 +585,7 @@ RSpec.describe CasesController, type: :controller do
           let(:user) { accepted_case.responder }
 
           it 'permitted_events == [:add_responses]' do
-            expect(assigns(:permitted_events)).to eq [:add_responses]
+            expect(assigns(:permitted_events)).to eq [:add_message_to_case, :add_responses]
             nil
           end
 
@@ -629,7 +630,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq [:flag_for_clearance]
+          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :flag_for_clearance]
         end
 
         it 'renders the show page' do
@@ -642,6 +643,7 @@ RSpec.describe CasesController, type: :controller do
 
         it 'permitted_events == [:add_responses, :respond]' do
           expect(assigns(:permitted_events)).to match_array [
+                                                  :add_message_to_case,
                                                   :add_responses,
                                                   :respond,
                                                   :remove_response,
@@ -690,7 +692,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it 'permitted_events == [:close]' do
-          expect(assigns(:permitted_events)).to eq [:close]
+          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :close]
         end
 
         it 'renders the show page' do

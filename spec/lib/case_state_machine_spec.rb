@@ -204,6 +204,18 @@ RSpec.describe CaseStateMachine, type: :model do
                   .using_object(responded_case) }
   end
 
+  describe event(:add_message_to_case) do
+    it { should transition_from(:unassigned).to(:unassigned) }
+    it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
+    it { should transition_from(:drafting).to(:drafting) }
+    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
+    it { should transition_from(:pending_dacu_clearance).to(:pending_dacu_clearance) }
+    it { should transition_from(:responded).to(:responded) }
+    it { should require_permission(:can_add_message_to_case?)
+                  .using_options(user_id: manager.id)
+                  .using_object(responded_case) }
+  end
+
   describe 'trigger assign_responder!' do
     it 'triggers an assign_responder event' do
       expect do
@@ -374,6 +386,34 @@ RSpec.describe CaseStateMachine, type: :model do
                .on_state_machine(case_with_response.state_machine)
                .with_parameters(user_id: responder.id,
                                 responding_team_id: responding_team.id)
+    end
+  end
+
+
+  describe 'trigger add_message_to_case!' do
+
+    it 'triggers the event' do
+      expect{
+        responded_case.state_machine.add_message_to_case!(responded_case.responder, 'This is the message')
+      }.to trigger_the_event(:add_message_to_case)
+            .on_state_machine(responded_case.state_machine)
+            .with_parameters(user_id: responded_case.responder.id, message: 'This is the message')
+    end
+
+    it 'creates a message transition record' do
+      expect {
+        case_being_drafted.state_machine.add_message_to_case!(
+          case_being_drafted.responder, 'This is my message to you all')
+      }.to change{case_being_drafted.transitions.size}.by(1)
+    end
+
+    it 'transition record is set up correctly' do
+      case_being_drafted.state_machine.add_message_to_case!(
+        case_being_drafted.responder, 'This is my message to you all')
+      transition = case_being_drafted.transitions.last
+      expect(transition.event).to eq 'add_message_to_case'
+      expect(transition.user_id).to eq case_being_drafted.responder.id
+      expect(transition.message).to eq 'This is my message to you all'
     end
   end
 

@@ -366,6 +366,24 @@ describe CasePolicy do
     it { should     permit(approver,          assigned_case) }
   end
 
+  permissions :can_add_message_to_case? do
+    let(:flagged_case_responder)  { pending_dacu_clearance_case.responder }
+    let(:other_responder) { create :responder }
+
+    context 'closed case' do
+      it { should_not permit(manager,     closed_case) }
+      it { should_not permit(approver,    closed_case) }
+      it { should_not permit(responder,   closed_case) }
+    end
+
+    context 'open case' do
+      it { should     permit(manager,                   pending_dacu_clearance_case) }
+      it { should     permit(approver,                  pending_dacu_clearance_case) }
+      it { should     permit(flagged_case_responder,    pending_dacu_clearance_case) }
+      it { should_not permit(other_responder,           pending_dacu_clearance_case) }
+    end
+  end
+
   describe 'case scope policy' do
     let(:existing_cases) do
       [
