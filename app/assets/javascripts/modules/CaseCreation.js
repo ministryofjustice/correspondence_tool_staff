@@ -24,9 +24,9 @@ moj.Modules.CaseCreation = {
 
       this.$deliveryMethodFields.show();
 
-      $('#case_message').closest('.form-group').toggle(this.$deliveryMethodEmail.is(':checked'))
+      $('#case_message').closest('.form-group').toggle(this.$deliveryMethodEmail.is(':checked'));
 
-      $('.dropzone').closest('.grid-row').toggle(this.$deliveryMethodPost.is(':checked'))
+      $('.dropzone').closest('.grid-row').toggle(this.$deliveryMethodPost.is(':checked'));
 
     } else {
 

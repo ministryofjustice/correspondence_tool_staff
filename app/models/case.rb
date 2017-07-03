@@ -387,10 +387,6 @@ class Case < ApplicationRecord
     ]
   end
 
-  def uploaded_request_files_exist
-    # TODO: Check that the files exist in S3
-  end
-
   def process_uploaded_request_files
     if uploading_user.nil?
       # I really don't feel comfortable with having this special snowflake of a
