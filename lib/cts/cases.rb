@@ -51,6 +51,16 @@ module CTS
       Case.all.map(&:destroy)
     end
 
+    desc 'demo', 'Create a demo set of cases for stats reporting purposes'
+    option :number, aliases: 'n', type: :numeric,
+           desc: 'Number of cases to create (per state). [1]'
+    def demo
+      parse_options
+      CTS::check_environment
+      require File.join(File.dirname(__FILE__), '/demo_setup')
+      CTS::DemoSetup.new(@number_to_create).run
+    end
+
     desc 'create OPTIONS all|<states>', 'Create cases in the specified states'
     long_desc <<~LONGDESC
 
@@ -97,7 +107,6 @@ module CTS
 
     def create(*args)
       parse_options
-
       CTS::check_environment
 
       @invalid_params = false

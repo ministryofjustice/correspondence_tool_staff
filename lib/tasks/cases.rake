@@ -11,4 +11,10 @@ namespace :cases do
       puts "Total cases is now: #{Case.count}"
     end
   end
+
+  desc 'Create mass demo'
+  task :massdemo => :environment do
+    require File.join(Rails.root, 'lib', 'cts', 'demo_setup')
+    CTS::DemoSetup.new(1).run
+  end
 end

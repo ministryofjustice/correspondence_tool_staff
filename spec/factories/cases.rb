@@ -27,7 +27,7 @@ FactoryGirl.define do
   factory :case do
     transient do
       identifier "new case"
-      managing_team { create :team_dacu }
+      managing_team { find_or_create :team_dacu }
     end
 
     requester_type 'member_of_the_public'

@@ -42,6 +42,7 @@ gem 'statesman-events', git: 'https://github.com/ministryofjustice/statesman-eve
                         branch: 'add-before-event'
 gem 'table_print'
 gem 'thor-rails'
+gem 'timecop'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 gem 'uglifier', '>= 1.3.0'
@@ -60,7 +61,6 @@ group :test do
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 3.1', '>= 3.1.1'
   gem 'site_prism'
-  gem 'timecop'
 end
 
 group :development, :test do
