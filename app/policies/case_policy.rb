@@ -157,6 +157,11 @@ class CasePolicy
     end
   end
 
+  def can_add_message_to_case?
+    clear_failed_checks
+    check_case_is_not_closed && (check_user_is_a_manager || check_user_is_an_approver_for_case || check_user_is_a_responder_for_case)
+  end
+
   class Scope
     attr_reader :user, :scope
 
@@ -256,5 +261,9 @@ class CasePolicy
 
   check :case_was_accepted_for_approval_by_user do
     self.case.approver_assignments.where(user_id: @user.id).any?
+  end
+
+  check :case_is_not_closed do
+    !self.case.closed?
   end
 end

@@ -209,6 +209,20 @@ class CaseStateMachine
     transition from: :responded, to: :closed
   end
 
+  event :add_message_to_case do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object).can_add_message_to_case?
+    end
+
+    transition from: :unassigned,             to: :unassigned
+    transition from: :awaiting_responder,     to: :awaiting_responder
+    transition from: :drafting,               to: :drafting
+    transition from: :awaiting_dispatch,      to: :awaiting_dispatch
+    transition from: :pending_dacu_clearance, to: :pending_dacu_clearance
+    transition from: :responded,              to: :responded
+  end
+
+
   def permitted_events(user_id)
     state = current_state
     events = self.class.events.select do |event_name, event|
@@ -346,6 +360,14 @@ class CaseStateMachine
              managing_team_id: managing_team.id,
              user_id:          user.id,
              event:            :close
+  end
+
+
+  def add_message_to_case!(user, message)
+    trigger! :add_message_to_case,
+             user_id:         user.id,
+             message:         message,
+             event:           :add_message_to_case
   end
 
   private

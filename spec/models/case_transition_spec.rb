@@ -97,4 +97,26 @@ RSpec.describe CaseTransition, type: :model do
       expect(CaseTransition.all.responded.last).to eq responded_transition
     end
   end
+
+  describe 'messages scope' do
+    it 'only returns messages for the case' do
+      kase = create :pending_dacu_clearance_case
+      responder = kase.responder
+      approver = kase.approvers.first
+
+      kase.state_machine.add_message_to_case! responder, 'Message #1 - from responder'
+      kase.state_machine.add_message_to_case! approver, 'Message #2 - from approver'
+      kase.state_machine.add_message_to_case! responder, 'Message #3 - from responder'
+
+      expect(kase.transitions.messages.size).to eq 3
+      expect(kase.transitions.size > 3).to be true
+      expect(kase.transitions.messages.map(&:message)).to eq(
+        [
+          'Message #1 - from responder',
+          'Message #2 - from approver',
+          'Message #3 - from responder'
+        ])
+
+    end
+  end
 end
