@@ -114,13 +114,9 @@ RSpec.configure do |config|
     #  #9  block in RSpec::Mocks::Space.block in proxies_of(klass#Class) at /Users/michaelgorodnitzky/.rbenv/versions/2.3.1/lib/ruby/gems/2.3.0/gems/rspec-mocks-3.5.0/lib/rspec/mocks/space.rb:108
     # ... rspec stuff ...
     allow(CASE_UPLOADS_S3_BUCKET)
-      .to receive(:object).and_raise(
-            "This test requires stubbing of S3Uploader or CASE_UPLOADS_S3_BUCKET methods."
-          )
+      .to receive(:object).and_raise("This test requires stubbing of S3Uploader or CASE_UPLOADS_S3_BUCKET methods. Don't actually care what S3 responses you get? Use 'stub_s3_uploader_for_all_files!' in your test(s).")
     allow(CASE_UPLOADS_S3_BUCKET)
-      .to receive(:objects).and_raise(
-            "This test requires stubbing of S3Uploader or CASE_UPLOADS_S3_BUCKET methods."
-          )
+      .to receive(:objects).and_raise("This test requires stubbing of S3Uploader or CASE_UPLOADS_S3_BUCKET methods. Don't actually care what S3 responses you get? Use 'stub_s3_uploader_for_all_files!' in your test(s).")
   end
 end
 

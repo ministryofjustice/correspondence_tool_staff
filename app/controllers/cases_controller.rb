@@ -55,7 +55,7 @@ class CasesController < ApplicationController
     authorize Case, :can_add_case?
 
     @case = Case.new
-    @s3_direct_post = UploaderService.s3_direct_post_for_case(@case, 'requests')
+    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
     render :new
   end
 
@@ -63,7 +63,7 @@ class CasesController < ApplicationController
     authorize Case, :can_add_case?
 
     @case = Case.new(create_foi_params.merge(uploading_user: current_user))
-    @s3_direct_post = UploaderService.s3_direct_post_for_case(@case, 'requests')
+    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
 
     if create_foi_params[:flag_for_disclosure_specialists].blank?
       @case.valid?
@@ -106,7 +106,7 @@ class CasesController < ApplicationController
     authorize @case, :can_add_attachment_to_flagged_and_unflagged_cases?
     @next_step_info = NextStepInfo.new(@case, request.query_parameters['action'])
     flash[:action_params] = request.query_parameters['action']
-    @s3_direct_post = UploaderService.s3_direct_post_for_case(@case, 'responses')
+    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
   end
 
   def upload_responses
@@ -116,7 +116,7 @@ class CasesController < ApplicationController
       @case, current_user, params, flash[:action_params]
     )
     rus.upload!
-    @s3_direct_post = UploaderService.s3_direct_post_for_case(@case, 'responses')
+    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
     case rus.result
     when :blank
       flash.now[:alert] = t('alerts.response_upload_blank?')

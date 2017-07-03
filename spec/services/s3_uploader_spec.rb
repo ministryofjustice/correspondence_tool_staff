@@ -34,6 +34,34 @@ describe S3Uploader do
 
   after(:each) { Timecop.return }
 
+  describe '.s3_direct_post_for_case' do
+    it 'retrieves an s3 presigned post' do
+      allow(CASE_UPLOADS_S3_BUCKET).to receive(:presigned_post)
+                                         .and_return(:a_presigned_post)
+      kase = instance_spy(Case, uploads_dir: ':id/:type')
+      result = S3Uploader.s3_direct_post_for_case(kase, ':type')
+      expect(result).to eq :a_presigned_post
+      expect(kase).to have_received(:uploads_dir).with(':type')
+      expect(CASE_UPLOADS_S3_BUCKET)
+        .to have_received(:presigned_post)
+              .with(key: 'uploads/:id/:type/${filename}',
+                    success_action_status: '201')
+    end
+  end
+
+  describe '.id_for_case' do
+    it 'returns the case id if persisted' do
+      kase = instance_double(Case, persisted?: true, id: :case_id)
+      expect(S3Uploader.id_for_case(kase)).to eq :case_id
+    end
+
+    it 'returns a random string if case not persisted' do
+      kase = instance_double(Case, persisted?: false, id: :case_id)
+      allow(SecureRandom).to receive(:urlsafe_base64)
+                               .and_return('ran-dom string')
+      expect(S3Uploader.id_for_case(kase)).to eq 'ran-dom string'
+    end
+  end
 
   describe '#process_files' do
 
