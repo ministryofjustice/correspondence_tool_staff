@@ -16,7 +16,7 @@ module Stats
             'Horses' => {'White' => 0, 'Brown' => 0, 'Black' => 0},
             'Ducks' => {'White' => 0, 'Brown' => 0, 'Black' => 0},
           })
-        end
+      end
     end
 
     describe 'record_stats' do
@@ -57,10 +57,10 @@ module Stats
 
 
     describe '#categories' do
-    it 'returns an array of all the categories' do
-      expect(collector.categories).to eq cats.sort
+      it 'returns an array of all the categories' do
+        expect(collector.categories).to eq cats.sort
+      end
     end
-  end
 
 
     describe '#subcategories' do

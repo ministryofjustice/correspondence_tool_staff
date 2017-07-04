@@ -1,5 +1,5 @@
 require File.join(Rails.root, 'spec', 'support', 'find_or_create_strategy')
-require  'timecop'
+require 'timecop'
 
 module CTS
   class DemoSetup
