@@ -893,6 +893,10 @@ RSpec.describe Case, type: :model do
   describe 'responded_in_time?' do
     let(:responded_case)  { create :responded_case }
 
+    before(:each) do
+      responded_case.update!(external_deadline: Date.today)
+    end
+
     it 'returns false if there is no respond transition event' do
       kase = create :case
       expect(kase.transitions.responded).to be_empty
@@ -900,19 +904,16 @@ RSpec.describe Case, type: :model do
     end
 
     it 'returns true if the response event is dated before external deadline' do
-      responded_case.transitions.responded.last.update!(created_at: Date.tomorrow)
-      expect(responded_case.date_responded).to eq Date.today
+      responded_case.transitions.responded.last.update!(created_at: Date.yesterday)
       expect(responded_case.responded_in_time?).to be true
     end
 
     it 'returns true if the responded date is same as external deadline' do
       responded_case.transitions.responded.last.update!(created_at: Date.today)
-      expect(responded_case.date_responded).to eq Date.today
       expect(responded_case.responded_in_time?).to be true
     end
     it 'return false if the responded date is after the external deadline' do
-      responded_case.transitions.responded.last.update!(created_at: Date.yesterday)
-      expect(responded_case.date_responded).to eq Date.today
+      responded_case.transitions.responded.last.update!(created_at: Date.tomorrow)
       expect(responded_case.responded_in_time?).to be false
     end
   end

@@ -9,7 +9,7 @@ module Stats
     def initialize
       @period_start = Time.now.beginning_of_month
       @period_end = Time.now
-      @teams = StatsCollector.new(Team.all.map(&:name).sort, SUBCATEGORIES)
+      @teams = StatsCollector.new(Team.responding.map(&:name).sort, SUBCATEGORIES)
     end
 
     def run
