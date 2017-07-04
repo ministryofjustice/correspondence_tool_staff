@@ -1,0 +1,279 @@
+@mixin normalize-bubble($direction:left) {
+  @if $direction == "left" {
+    @media print {
+      margin-right: 95px;
+    }
+    .message-audit{
+      text-align: left;
+      color: $text-colour;
+    }
+  }
+
+  @if $direction == "right" {
+    @media print {
+      margin-left: 95px;
+    }
+    .message-audit{
+      text-align: right;
+    }
+  }
+
+  @media print {
+    .message-audit{
+      font-weight: 700;
+      color: black;
+    }
+
+    .message-body{
+      background: none;
+      border:1px solid black;
+      &::after{
+        border: none;
+      }
+    }
+  }
+}
+
+.messages-container {
+  border: 1px solid $border-colour;
+  margin-top: 1em;
+  overflow: hidden;
+  .messages-list {
+    min-height: 200px;
+    max-height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 5px;
+    margin-bottom: 1em;
+
+    .history {
+      .event {
+        color: $link-visited-colour;
+        padding: 5px 10px;
+        margin-bottom: 5px;
+        margin-right: 1em;
+        text-align: right;
+        strong {
+          font-weight: bold;
+        }
+        .message-container,
+        .message-body{
+          margin-right: 0;
+          padding-right: 0;
+          border: 0px solid black;
+        }
+        table {
+          margin-left: auto;
+          width: 50%;
+          .visuallyhidden{
+            display: none;
+          }
+          td {
+            border-top: 1px solid $border-colour;
+          }
+        }
+      }
+      .message-right{
+        .message-body{
+          background: none;
+          border:0px solid black;
+          color: $text-colour;
+          text-align: right !important;
+          &::after {
+            border-left: 0em solid #28A197 !important;
+          }
+          .message-audit{
+            color: $text-colour;
+            margin-top: 0;
+            margin-bottom: 0;
+          }
+          p{
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+    .single-date {
+      text-align: center;
+      legend {
+        text-align: center;
+        border: 1px solid $border-colour;
+        padding-left: $gutter;
+        padding-right: $gutter;
+        padding-top: 5px;
+        color: $secondary-text-colour;
+        font-weight: bold;
+        margin-bottom: $gutter-half;
+      }
+    }
+
+    .event-date {
+      color: $green;
+      border: 2px solid $green;
+      border-radius: 0.5em;
+      display: inline-block;
+      margin-top: $gutter-half;
+      margin-bottom: $gutter-half;
+      padding: 5px 10px;
+      font-weight: bold;
+    }
+
+    .message-container {
+      margin-bottom: 1em;
+      margin-left: 1em;
+      margin-right: 1em;
+      .message-body{
+        padding: 10px 20px;
+      }
+    }
+
+    .message-audit {
+      font-size: 80%;
+      color: $page-colour;
+      font-weight: bold;
+      text-align: left;
+      .sent {
+        padding-right: 1.6em;
+        text-align: right;
+      }
+    }
+
+    .message-right {
+      @include normalize-bubble('right');
+      // display: inline-block;
+      // float: right;
+
+      .message-body {
+        background-color: $link-hover-colour;
+        position: relative;
+        text-align: left;
+        color: $page-colour;
+        border-radius: 0.5em 0.5em 0.75em 0.5em;
+        &::after {
+          content: "";
+          position: absolute;
+          right: -1.5em;
+          bottom: 0;
+          width: 1.5em;
+          height: 1.5em;
+          border-left: 1em solid $link-hover-colour;
+          border-bottom-left-radius: 1.75em 1.5em;
+        }
+        a{
+          &:link { /* Essentially means a[href], or that the link actually goes somewhere */
+            color: $page-colour;
+          }
+          &:hover {
+            color: $border-colour;
+          }
+          &:active {
+            color: $page-colour;
+          }
+        }
+      }
+    }
+
+    .message-left {
+      @include normalize-bubble('left');
+      .message-body {
+        background-color: $panel-colour;
+        position: relative;
+        text-align: left;
+        border-radius: 0.5em 0.5em 0.5em 0.75em;
+        &::after {
+          content: "";
+          position: absolute;
+          left: -1.5em;
+          bottom: 0;
+          width: 1.5em;
+          height: 1.5em;
+          border-right: 1em solid $panel-colour;
+          border-bottom-right-radius: 1.75em 1.5em;
+        }
+      }
+    }
+  }
+
+  .message-controls {
+    padding: $gutter-half;
+    border-top: 1px solid $border-colour;
+    .upload-column {
+      .upload-button {
+        cursor: pointer;
+        overflow: hidden;
+        text-align: center;
+        margin: 0;
+      }
+    }
+
+    .message-column {
+      margin: $gutter-half 0;
+      input[type="text"] {
+        width: 50%;
+        padding: 2px 5px;
+        @include core-19();
+      }
+      textarea {
+        resize: vertical;
+      }
+    }
+
+    .submit-column {
+      .button-secondary {
+        margin: 0;
+        padding-left: $gutter;
+        padding-right: $gutter;
+        background-color: $link-hover-colour;
+        color: $page-colour;
+        box-shadow: 0 2px 0 $link-colour;
+        &:hover {
+          background-color: $link-colour;
+        }
+      }
+    }
+
+    .file-to-be-uploaded {
+      border-top: 1px solid $border-colour;
+      padding-top: 15px;
+      display: none;
+      .filename {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .messages-print-link {
+    text-align: right;
+    padding-right: 1em;
+  }
+
+  .message-status {
+    position: relative;
+    left: -9999px;
+
+    .message-success {
+      color: $green;
+      font-weight: bold;
+    }
+
+    .message-error {
+      color: $error-colour;
+      font-weight: bold;
+    }
+  }
+}
+
+.message-form {
+  padding-left: $gutter-half;
+  padding-right: $gutter-half;
+  padding-bottom: $gutter;
+  padding-top: $gutter-half;
+  background-color: $grey-3;
+  label {
+    @include visually-hidden();
+  }
+  textarea {
+    width: 100%;
+    background-color: #FFFFFF;
+  }
+}
