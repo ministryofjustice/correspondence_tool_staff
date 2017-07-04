@@ -1,8 +1,8 @@
 moj.Modules.Ellipsis = {
-  init: function(){
+  init: function() {
 
     $('.ellipsis-delimiter, .ellipsis-button').removeClass('js-hidden');
-    $('.ellipsis-button').on('click', function (e){
+    $('.ellipsis-button').on('click', function(e) {
       var $button = $(this);
       var $parent = $button.parent();
       var $delimiter = $parent.find('.ellipsis-delimiter');
@@ -11,9 +11,9 @@ moj.Modules.Ellipsis = {
       $longMessage.toggleClass('js-hidden');
       $delimiter.toggleClass('js-hidden');
 
-      if($button.text() == 'Show more'){
+      if ($button.text() == 'Show more') {
         $button.text('Show less');
-      }else{
+      } else {
         $button.text('Show more');
       }
 

@@ -12,15 +12,14 @@ moj.Modules.ShowHideContent = {
     showHideContent.init();
   },
 
-  cacheEls: function(){
+  cacheEls: function() {
     this.govukLabels = $(this.elementSelector);
   },
 
-  bindEvents: function() {
+  bindEventsgit : function() {
     this.govukLabels.each(function (index, element) {
       var showHideTarget = element.getAttribute('for') + '_content';
       element.setAttribute('data-target', showHideTarget);
     });
   }
-
 };

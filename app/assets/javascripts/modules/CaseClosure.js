@@ -8,7 +8,7 @@ moj.Modules.CaseClosure = {
 
   $refusalExemptions: $('#refusal_exemptions'),
 
-  init: function () {
+  init: function() {
     var self = this;
 
     self.showHideRefusalReasons();
@@ -16,43 +16,29 @@ moj.Modules.CaseClosure = {
     self.showHideExemptions();
 
     //Bind events
-    $('#outcome').on('change', ':radio', function(){
-
+    $('#outcome').on('change', ':radio', function() {
       self.showHideRefusalReasons();
-
     });
 
-    $('#refusal_reasons').on('change', ':radio', function(){
-
+    $('#refusal_reasons').on('change', ':radio', function() {
       self.showHideExemptions();
-
     });
-
   },
 
-  showHideRefusalReasons: function (){
-    if (this.$refusedOutcomes.is(':checked')){
-
+  showHideRefusalReasons: function() {
+    if (this.$refusedOutcomes.is(':checked')) {
       this.$refusal.show();
-
       moj.Modules.CaseClosure.showHideExemptions();
-
     } else {
-
       this.$refusal.hide();
-
     }
   },
 
-  showHideExemptions: function (){
-    if (this.$exemptionApplied.is(':checked')){
-
+  showHideExemptions: function() {
+    if (this.$exemptionApplied.is(':checked')) {
       this.$refusalExemptions.show();
-
-    }else{
-
+    } else {
       this.$refusalExemptions.hide();
-
     }
   }
 };
