@@ -35,8 +35,8 @@ class CaseTransition < ActiveRecord::Base
 
   scope :accepted,  -> { where to_state: 'drafting'  }
   scope :drafting,  -> { where to_state: 'drafting'  }
-  scope :responded, -> { where to_state: 'responded' }
   scope :messages,  -> { where event: 'add_message_to_case' }
+  scope :responded, -> { where event: 'respond' }
 
 
 
