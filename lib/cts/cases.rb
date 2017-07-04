@@ -25,7 +25,7 @@ module CTS
       flagged_for_press_office: [
         :unassigned,
         :awaiting_responder,
-        :approver_assignment_accepted,
+        :taken_on_by_press_office,
         :drafting,
       ]
     }
@@ -145,18 +145,34 @@ module CTS
 
       clear if @clear_cases
 
-      cases = @end_states.map do |target_state|
+      cases = []
+      @end_states.map do |target_state|
         journey = find_case_journey_for_state target_state.to_sym
-        cases = nil
-        journey.each do |state|
-          if @dry_run
-            puts "transition to '#{state}'"
-          else
-            cases = __send__("transition_to_#{state}", cases)
-            cases.each(&:reload)
+        kase = nil
+        @number_to_create.times do |n|
+          puts "creating case #{target_state} ##{n}"
+          begin
+            journey.each do |state|
+              if @dry_run
+                puts "  transition to '#{state}'"
+              else
+                kase = __send__("transition_to_#{state}", kase)
+                kase.each(&:reload)
+              end
+            end
+          rescue => exx
+            error "Error occured on case #{target_state} ##{n}"
+            puts "Cases successfully created:"
+            puts "---------------------------"
+            tp cases, [:id, :number, :current_state, :requires_clearance?]
+            puts ""
+            puts "Case unsuccessfully being transitioned:"
+            puts "---------------------------------------"
+            ap kase
+            raise
           end
+          cases << kase
         end
-        cases
       end
       unless @dry_run
         tp cases, [:id, :number, :current_state, :requires_clearance?]
@@ -219,6 +235,10 @@ module CTS
                            end
     end
 
+    def press_officer
+      Team.press_office.approvers.first
+    end
+
     def parse_options
       @end_states = []
       @number_to_create = options.fetch(:number, 1)
@@ -277,19 +297,6 @@ module CTS
       end
     end
 
-    def flag_for_press_office(*cases)
-      cases.each do |kase|
-        result = CaseFlagForClearanceService.new(
-          user: CTS::dacu_manager,
-          kase: kase,
-          team: Team.press_office
-        ).call
-        unless result == :ok
-          raise "Could not flag case for clearance by press office, case id: #{kase.id}, user id: #{CTS::dacu_manager.id}, result: #{result}"
-        end
-      end
-    end
-
     def transition_to_unassigned(_cases)
       cases = []
       @number_to_create.times do
@@ -300,7 +307,6 @@ module CTS
                                   managing_team: CTS::dacu_team,
                                   created_at: @created_at)
         flag_for_dacu_disclosure(kase) if @add_dacu_disclosure
-        flag_for_press_office(kase) if @add_press_office
         cases << kase
       end
       cases
@@ -337,7 +343,21 @@ module CTS
         )
 
         unless service.call
-          raise "Could not accept approver assignment, case id: #{kase.id}, user id: #{dacu_disclosure.id}, result: #{service.result}"
+          raise "Could not accept approver assignment, case id: #{kase.id}, user id: #{user.id}, result: #{service.result}"
+        end
+      end
+    end
+
+    def transition_to_taken_on_by_press_office(cases)
+      cases.each do |kase|
+        binding.pry
+        result = CaseFlagForClearanceService.new(
+          user: press_officer,
+          kase: kase,
+          team: Team.press_office
+        ).call
+        unless result == :ok
+          raise "Could not flag case for clearance by press office, case id: #{kase.id}, user id: #{CTS::dacu_manager.id}, result: #{result}"
         end
       end
     end
