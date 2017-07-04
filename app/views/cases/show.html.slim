@@ -54,7 +54,7 @@ div id="case-#{@case.id}"
             = render partial: 'messages/message', locals: {conversation: chat, user: current_user}
 
     - if policy(@case).can_add_message_to_case?
-      = form_for @case, class: "message-form" do |f|
+      = form_for @case, url: case_messages_path(@case), method: :post, class: "message-form" do |f|
         .message-form data-ws-case-id="#{@case.id}" data-ws-user="#{ws_user}"
           = f.text_area :message
 

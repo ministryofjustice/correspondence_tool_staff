@@ -377,6 +377,9 @@ class CaseStateMachine
 
 
   def add_message_to_case!(user, message)
+    puts ">>>>>>>>>>>>>> ADDING MESSAGE TO CASE #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+    ap user
+    ap message
     trigger! :add_message_to_case,
              user_id:         user.id,
              message:         message,

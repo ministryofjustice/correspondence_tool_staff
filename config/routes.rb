@@ -136,6 +136,8 @@ Rails.application.routes.draw do
 
     resources :case_attachments, path: 'attachments'
 
+    resources :messages, only: :create
+
     get 'new_response_upload', on: :member
     post 'upload_responses', on: :member
 
