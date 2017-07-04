@@ -37,8 +37,13 @@ class CaseStateMachine
 
   event :flag_for_clearance do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object)
-        .can_flag_for_clearance?
+      case_policy = CaseStateMachine.get_policy options[:user_id], object
+      assignment = Assignment.new case: object, team_id: options[:team_id]
+      assignment_policy = CaseStateMachine.get_policy options[:user_id],
+                                                      assignment
+
+      case_policy.can_flag_for_clearance? &&
+        assignment_policy.can_create_for_team?
     end
 
     transition from: :unassigned,         to: :unassigned

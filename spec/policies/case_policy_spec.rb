@@ -209,9 +209,6 @@ describe CasePolicy do
     it { should_not permit(responder, assigned_case) }
     it { should     permit(manager,   assigned_case) }
     it { should     permit(approver,  assigned_case) }
-    it { should_not permit(responder, assigned_flagged_case) }
-    it { should_not permit(manager,   assigned_flagged_case) }
-    it { should_not permit(approver,  assigned_flagged_case) }
   end
 
   permissions :can_remove_attachment? do

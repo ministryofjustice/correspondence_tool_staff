@@ -853,8 +853,8 @@ RSpec.describe Case, type: :model do
     end
 
     it 'returns true when flagged by press office' do
-      CaseFlagForClearanceService.new(user: press_officer, kase: case_being_drafted_flagged, team: press_office).call
-      expect(case_being_drafted_flagged.flagged_for_press_office_clearance?).to be true
+      kase = create :case_being_drafted, :flagged_accepted, :press_office
+      expect(kase.flagged_for_press_office_clearance?).to be true
     end
   end
 

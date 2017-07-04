@@ -46,9 +46,11 @@ feature 'listing incoming on the system' do
 
       cases = incoming_cases_page.case_list
 
-      expect(cases.count).to eq 1
+      expect(cases.count).to eq 2
       expect(cases.first.number)
         .to have_text assigned_case_flagged_for_dacu_disclosure.number
+      expect(cases.second.number)
+        .to have_text assigned_case_flagged_for_press_office_accepted.number
     end
   end
 

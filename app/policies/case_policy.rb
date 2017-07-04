@@ -1,32 +1,10 @@
-class CasePolicy
-
-  class << self
-    def failed_checks
-      @@failed_checks
-    end
-
-    def check(name, &block)
-      define_method "check_#{name}" do
-        if instance_eval(&block)
-          true
-        else
-          @@failed_checks << name
-          false
-        end
-      end
-    end
-  end
+class CasePolicy < ApplicationPolicy
 
   attr_reader :user, :case, :failed_checks
 
   def initialize(user, kase)
-    @user = user
     @case = kase
-  end
-
-  def clear_failed_checks
-    @@failed_checks = []
-    @options = {}
+    super(user, kase)
   end
 
   def can_view_attachments?
@@ -105,8 +83,7 @@ class CasePolicy
 
   def can_flag_for_clearance?
     clear_failed_checks
-    !self.case.requires_clearance? &&
-      (user.manager? || user.approver?)
+    check_user_is_a_manager || check_user_is_an_approver
   end
 
   def can_take_on_for_approval?

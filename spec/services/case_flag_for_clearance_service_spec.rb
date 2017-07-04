@@ -28,8 +28,7 @@ describe CaseFlagForClearanceService do
                                             team: dacu_disclosure }
 
         before do
-          allow(assigned_case.state_machine)
-            .to receive(:flag_for_clearance!)
+          allow(assigned_case.state_machine).to receive(:flag_for_clearance!)
         end
 
         it 'triggers an event on the case state machine' do
@@ -50,9 +49,12 @@ describe CaseFlagForClearanceService do
       end
     end
 
-    context 'taking on by another approving team' do
+    context 'flagging for press office' do
+      context 'case is not already taken on by press office' do
+        before do
+          allow(assigned_flagged_case.state_machine).to receive(:flag_for_clearance!)
+        end
 
-      context 'case is already taken on by press office' do
         let(:service) { described_class.new user: press_officer,
                                             kase: assigned_flagged_case,
                                             team: press_office }
@@ -61,13 +63,28 @@ describe CaseFlagForClearanceService do
           expect(service.call).to eq :ok
         end
 
-        it 'adds an assignment in state accepted for press office and press officer' do
+        it 'adds an accepted assignment for press office and press officer' do
           service.call
-          assignment = assigned_flagged_case.approver_assignments.last
+          assignment = assigned_flagged_case.approver_assignments
+                         .for_team(press_office).first
           expect(assignment.state).to eq 'accepted'
-          expect(assignment.team_id).to eq press_office.id
           expect(assignment.user_id).to eq press_officer.id
           expect(assignment.approved?).to be false
+        end
+
+        it 'adds a pending assignment for DACU disclosure' do
+          service.call
+          assignment = assigned_flagged_case.approver_assignments
+                         .for_team(dacu_disclosure).first
+          expect(assignment.state).to eq 'pending'
+          expect(assignment.user_id).to be_nil
+          expect(assignment.approved?).to be false
+        end
+
+        it 'triggers a flag_for_clearance event on the case state machine' do
+          service.call
+          expect(assigned_flagged_case.state_machine)
+            .to have_received :flag_for_clearance!
         end
 
         it 'returns :already_flagged if already taken on by the same team' do
@@ -75,9 +92,9 @@ describe CaseFlagForClearanceService do
           expect(service.call).to eq :already_flagged
         end
 
-        it 'adds a transition record' do
+        it 'adds a transition record for press office assignment' do
           service.call
-          tx = assigned_flagged_case.transitions.most_recent
+          tx = assigned_flagged_case.transitions.second
           expect(tx.event).to eq 'take_on_for_approval'
           expect(tx.to_state).to eq 'awaiting_responder'
           expect(tx.message).to be_nil

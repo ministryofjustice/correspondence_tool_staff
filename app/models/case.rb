@@ -334,7 +334,7 @@ class Case < ApplicationRecord
     !requires_clearance?
   end
 
-  def with_teams?(teams)
+  def with_teams?(*teams)
     assignments.with_teams(teams).any?
   end
 
