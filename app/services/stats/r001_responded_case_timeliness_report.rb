@@ -4,15 +4,17 @@ require 'csv'
 module Stats
   class R001RespondedCaseTimelinessReport
 
+    SUBCATEGORIES = ['In time', 'Overdue']
+
     def initialize
       @period_start = Time.now.beginning_of_month
       @period_end = Time.now
-      @teams = StatsCollector.new
+      @teams = StatsCollector.new(Team.responding.map(&:name).sort, SUBCATEGORIES)
     end
 
     def run
-      cases = Case.where(received_date: [@period_start..@period_end])
-      cases.each { |k| analyse(k) }
+      respond_events = CaseTransition.responded.where(created_at: [@period_start..@period_end])
+      respond_events.each { |re| analyse_respond_event(re) }
     end
 
     def results
@@ -20,7 +22,7 @@ module Stats
     end
 
     def to_csv
-      subcats = @teams.all_subcategories
+      subcats = @teams.subcategories
       column_names = ['Team'] + subcats
       CSV.generate(headers: true) do |csv|
         csv << column_names
@@ -34,12 +36,11 @@ module Stats
 
     private
 
-    def analyse(kase)
-      if kase.responded?
-        state = get_completion_state(kase)
-        team = kase.responding_team.name
-        @teams.record_stats(team, state)
-      end
+    def analyse_respond_event(event)
+      kase = event.case
+      state = get_completion_state(kase)
+      team = kase.responding_team.name
+      @teams.record_stats(team, state)
     end
 
     def get_completion_state(kase)

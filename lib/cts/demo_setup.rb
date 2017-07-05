@@ -1,4 +1,5 @@
 require File.join(Rails.root, 'spec', 'support', 'find_or_create_strategy')
+require 'timecop'
 
 module CTS
   class DemoSetup
@@ -6,14 +7,15 @@ module CTS
     include FactoryGirl::Syntax::Methods
 
     def initialize(number)
+      @real_time = Time.now
       @number = number
       @cases = Case.order(id: :desc).limit(number).to_a
       @managing_team = CTS::dacu_team
       @responding_teams = Team.where(name: ['Legal Aid Agency', 'HR', 'HMCTS North East Response Unit(RSU)'])
       @dacu_disclosure = Team.dacu_disclosure
       @press_office = Team.press_office
-      @oldest_received_date = 55.days.ago
-      @newest_received_date = 10.days.ago
+      @oldest_received_date = 35.days.ago
+      @newest_received_date = 3.days.ago
       @min_days_to_add_response = 3
       @max_days_to_add_response = 35
       @min_days_to_approve = 2
@@ -24,23 +26,42 @@ module CTS
     def run
       @number.times do |iternum|
         Timecop.freeze(random_date_received) do
-          kase = create_case(flagged: random_flagged)
-          Timecop.freeze Time.now + random_days_to_response.days do
-            add_responses(kase)
-            unless iternum % 5 == 0
-              n = random_days_to_approve
-              approve_case(kase, n) if kase.requires_clearance?
-              x = random_days_to_approve + n
-              close_case(kase, x) unless iternum % 10 == 0
+          puts "\n>>>>>> Time frozen to #{Time.now} for case creation"
+          begin
+            kase = create_case(flagged: random_flagged)
+            Timecop.freeze random_response_time do
+              puts ">>>>>> Time frozen to #{Time.now} for response"
+              add_responses(kase)
+              unless iternum % 5 == 0
+                n = random_days_to_approve
+                approve_case(kase, n) if kase.requires_clearance?
+                x = random_days_to_approve + n
+                close_case(kase, x) unless iternum % 10 == 0
+              end
             end
+          rescue => err
+            puts ">>>>>> ERROR #{err.class} #{err.message} <<<< "
+            puts "Unable to create that case"
+            puts err.backtrace
           end
-
           # print_case(kase)
         end
       end
     end
 
     private
+
+    def least_of(a, b)
+      a < b ? a : b
+    end
+
+    def random_response_time
+      least_of(@real_time, Time.now + random_days_to_response.days)
+    end
+
+    def random_approval_time(delay_days)
+      least_of(@real_time, Time.now + delay_days.days)
+    end
 
     def random_date_received
       rand(@oldest_received_date..@newest_received_date)
@@ -64,6 +85,7 @@ module CTS
     end
 
     def create_case(flagged:)
+      puts ">>>>>>>>>>>>>> creating case received #{Date.today} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
       responding_team = @responding_teams.sample
       responder = responding_team.users.sample
       if flagged
@@ -71,12 +93,12 @@ module CTS
       else
         kase = create :accepted_case, managing_team: @managing_team, responding_team: responding_team, responder: responder
       end
-      puts ">>>>>>>>>>>>>> created case #{kase.id} flagged: #{flagged} received: #{kase.received_date} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      puts ">>>>>> created case #{kase.id} flagged: #{flagged} received: #{kase.received_date} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
       kase
     end
 
     def add_responses(kase)
-      puts ">>>>>>>>>>>>>> adding responses to case #{kase.id} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      puts ">>>>>> adding responses to case #{kase.id} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
       upload_group = Time.now.strftime('%Y%m%d%H%M%S')
       kase.attachments << [ build_response(kase, upload_group, 1),  build_response(kase, upload_group, 2) ]
       if kase.requires_clearance?
@@ -97,7 +119,7 @@ module CTS
 
     def approve_case(kase, delay_days)
       Timecop.freeze Time.now + delay_days.days do
-        puts ">>>>>>>>>>>>>> approving case #{kase.id} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+        puts ">>>>>> Time frozen to #{Time.now} for approval"
         dacu_approver= random_dacu_disclosure_team_member
         assig = kase.approver_assignments.for_team(@dacu_disclosure).first
         kase.state_machine.accept_approver_assignment!(dacu_approver, @dacu_disclosure)
@@ -108,8 +130,8 @@ module CTS
     end
 
     def close_case(kase, delay_days)
-      Timecop.freeze Time.now + delay_days.days do
-        puts ">>>>>>>>>>>>>> closing case #{kase.id} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      Timecop.freeze random_approval_time(delay_days) do
+        puts ">>>>>> closing case #{kase.id} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
         kase.state_machine.respond!(kase.responder, kase.responding_team)
         granted = CaseClosure::Outcome.where(abbreviation: 'granted').first
         kase.update!(date_responded: Date.today, outcome_id: granted.id)
