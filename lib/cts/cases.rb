@@ -121,14 +121,44 @@ module CTS
         ap kase
 
         puts "\nAssignments:"
-        tp kase.assignments, [:id, :state, :role, :team_id, :user_id]
+        team_display = team_display_method { |a| a.team }
+        team_width = kase.assignments.map(&team_display).map(&:length).max
+        user_display = user_display_method { |a| a.user }
+        user_width = kase.assignments.map(&user_display).map(&:length).max
+        tp kase.assignments, :id, :state, :role,
+           { user: { display_method: user_display, width: user_width } },
+           { team: { display_method: team_display, width: team_width } }
 
         puts "\nTransitions:"
         tp kase.transitions, :id, :event, :to_state, :user_id,
-           metadata: { width: 40 }
+           metadata: { width: 60 }
 
         puts "\nAttachments:"
         tp kase.attachments, [:id, :type, :key, :preview_key]
+      end
+    end
+
+    private
+
+    def user_display_method(&get_user)
+      lambda do |o|
+        user = get_user.call o
+        if user
+          "#{user&.full_name}:#{user&.id}"
+        else
+          ''
+        end
+      end
+    end
+
+    def team_display_method(&get_team)
+      lambda do |object|
+        team = get_team.call object
+        if team
+          "#{team&.name}:#{team&.id}"
+        else
+          ''
+        end
       end
     end
   end

@@ -8,7 +8,7 @@ describe CaseApprovalService do
 
     context 'case not in pending_dacu_clearance state' do
 
-      let(:kase) { create :accepted_case, :flagged }
+      let(:kase) { create :accepted_case, :flagged_accepted }
       let(:user) { kase.approvers.first }
 
       it 'returns :unauthorised' do

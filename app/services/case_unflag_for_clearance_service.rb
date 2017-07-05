@@ -11,8 +11,15 @@ class CaseUnflagForClearanceService
   def call
     return @result unless validate_case_is_flagged
 
-    @case.state_machine.unflag_for_clearance!(@user, @case.managing_team)
+    @case.state_machine.unflag_for_clearance!(@user, @case.managing_team, @team)
     @case.approver_assignments.with_teams(@team).destroy_all
+
+    if @team.press_office?
+      dacu_disclosure = Team.dacu_disclosure
+      @case.state_machine.unflag_for_clearance!(@user, @case.managing_team, dacu_disclosure)
+      @case.approver_assignments.with_teams(dacu_disclosure).destroy_all
+    end
+
     @result = :ok
   end
 

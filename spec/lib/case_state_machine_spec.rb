@@ -245,6 +245,21 @@ RSpec.describe CaseStateMachine, type: :model do
     end
   end
 
+  describe 'trigger unflag_for_clearance!' do
+    it 'triggers an unflag_for_clearance event' do
+      expect do
+        assigned_case.state_machine.unflag_for_clearance! manager,
+                                                          managing_team,
+                                                          approving_team
+      end
+        .to trigger_the_event(:unflag_for_clearance)
+              .on_state_machine(assigned_case.state_machine)
+              .with_parameters user_id: manager.id,
+                               managing_team_id: managing_team.id,
+                               approving_team_id: approving_team.id
+    end
+  end
+
   describe 'trigger accept_approver_assignment!' do
     it 'triggers an accept_approver_assignment event' do
       expect do

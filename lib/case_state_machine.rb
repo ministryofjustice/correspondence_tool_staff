@@ -306,10 +306,11 @@ class CaseStateMachine
              event: :flag_for_clearance
   end
 
-  def unflag_for_clearance!(user, managing_team)
+  def unflag_for_clearance!(user, managing_team, approving_team)
     trigger! :unflag_for_clearance,
              user_id: user.id,
              managing_team_id: managing_team.id,
+             approving_team_id: approving_team.id,
              event: :unflag_for_clearance
   end
 

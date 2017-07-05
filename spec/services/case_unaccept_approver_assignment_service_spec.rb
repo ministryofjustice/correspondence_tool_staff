@@ -53,22 +53,46 @@ describe CaseUnacceptApproverAssignmentService do
     end
 
     context 'press office assignment' do
-      before(:each) do
-        CaseFlagForClearanceService.new(user: press_officer, team: press_office, kase: assigned_case).call
+      let(:assigned_to_press_office_case) { create :assigned_case,
+                                                   :flagged_accepted,
+                                                   :press_office,
+                                                   approver: press_officer }
+      let(:press_office_assignment) do
+        assigned_to_press_office_case
+          .approver_assignments
+          .where(team_id: press_office.id,
+                 user_id: press_officer.id)
+          .first
       end
-
-      let(:press_office_assignment) { assigned_case.approver_assignments.where(team_id: press_office.id, user_id: press_officer.id).first }
+      let(:dacu_disclosure_assignment) do
+        assigned_to_press_office_case
+          .approver_assignments
+          .where(team_id: dacu_disclosure.id)
+          .first
+      end
       let(:service) { CaseUnacceptApproverAssignmentService.new(assignment: press_office_assignment) }
 
-      it 'deletes the assignment' do
-        _press_office_assignment = assigned_case.approver_assignments.where(team_id: press_office.id, user_id: press_officer.id).first
+      it 'deletes approver assignments' do
         service.call
-        expect(assigned_case.approver_assignments.where(team_id: press_office.id, user_id: press_officer.id)).to be_empty
+        expect(assigned_to_press_office_case.approver_assignments).to be_empty
       end
 
-      it 'triggers an event on the case' do
-        expect(press_office_assignment.case.state_machine).to receive(:unaccept_approver_assignment!).with(press_office_assignment.user, press_office_assignment.team)
+      it 'triggers an unflag event on the case for press office' do
+        state_machine = press_office_assignment.case.state_machine
+        allow(state_machine).to receive(:unflag_for_clearance!).with(any_args)
         service.call
+        expect(state_machine)
+          .to have_received(:unflag_for_clearance!)
+                .with(press_officer, press_office, press_office)
+      end
+
+      it 'triggers an unflag event on the case for dacu disclosure' do
+        state_machine = press_office_assignment.case.state_machine
+        allow(state_machine).to receive(:unflag_for_clearance!).with(any_args)
+        service.call
+        expect(state_machine)
+          .to have_received(:unflag_for_clearance!)
+                .with(press_officer, press_office, dacu_disclosure)
       end
 
       it 'sets the result to ok and returns true' do

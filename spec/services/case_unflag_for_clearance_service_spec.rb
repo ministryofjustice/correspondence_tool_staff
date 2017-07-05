@@ -2,10 +2,13 @@ require 'rails_helper'
 
 describe CaseUnflagForClearanceService do
   let(:assigned_case)         { create :assigned_case }
-  let(:assigned_flagged_case) { create :assigned_case, :flagged,
-                                       approving_team: dacu_disclosure }
-  let(:approver)        { dacu_disclosure.approvers.first }
-  let(:dacu_disclosure) { create :team_dacu_disclosure }
+  let(:assigned_flagged_case) { create :assigned_case,
+                                       :flagged_accepted,
+                                       :dacu_disclosure }
+  let(:approver)              { dacu_disclosure.approvers.first }
+  let(:team_dacu)             { find_or_create :team_dacu }
+  let(:dacu_disclosure)       { find_or_create :team_dacu_disclosure }
+  let(:press_office)          { find_or_create :team_press_office }
 
   describe 'call' do
     context 'case is not already flagged' do
@@ -19,7 +22,7 @@ describe CaseUnflagForClearanceService do
       end
     end
 
-    context 'case is already flagged' do
+    context 'case is flagged' do
       let(:service) { described_class.new user: approver,
                                           kase: assigned_flagged_case,
                                           team: dacu_disclosure }
@@ -32,7 +35,8 @@ describe CaseUnflagForClearanceService do
       it 'triggers an event on the case state machine' do
         service.call
         expect(assigned_flagged_case.state_machine)
-          .to have_received :unflag_for_clearance!
+          .to have_received(:unflag_for_clearance!)
+                .with(approver, team_dacu, dacu_disclosure)
       end
 
       it 'removes the approving team assignment' do
@@ -43,6 +47,39 @@ describe CaseUnflagForClearanceService do
       it 'sets the result to ok and returns true' do
         expect(service.call).to eq :ok
         expect(service.result).to eq :ok
+      end
+
+      context 'unflagging for press office' do
+        let(:assigned_to_press_office_case) { create :assigned_case,
+                                                     :flagged_accepted,
+                                                     :press_office }
+        let(:service) { described_class.new user: approver,
+                                            kase: assigned_to_press_office_case,
+                                            team: press_office }
+
+        before do
+          allow(assigned_to_press_office_case.state_machine)
+            .to receive(:unflag_for_clearance!)
+        end
+
+        it 'triggers an unflag state machine event for press office' do
+          service.call
+          expect(assigned_to_press_office_case.state_machine)
+            .to have_received(:unflag_for_clearance!)
+                  .with(approver, team_dacu, press_office)
+        end
+
+        it 'triggers an unflag state machine event for dacu disclosure' do
+          service.call
+          expect(assigned_to_press_office_case.state_machine)
+            .to have_received(:unflag_for_clearance!)
+                  .with(approver, team_dacu, dacu_disclosure)
+        end
+
+        it 'also removes disclosure approving team assignment' do
+          service.call
+          expect(assigned_to_press_office_case.approving_teams).to be_blank
+        end
       end
     end
   end

@@ -269,10 +269,19 @@ FactoryGirl.define do
   end
 
   trait :press_office do
-    # Use with :flagged or :flagged_accepted trait
+    # Use after :flagged or :flagged_accepted trait when creating case
     transient do
-      approver { create :press_officer }
-      approving_team { find_or_create :team_press_office }
+      approver                    { create :press_officer }
+      approving_team              { find_or_create :team_press_office }
+      disclosure_team             { find_or_create :team_dacu_disclosure }
+      disclosure_assignment_state { 'pending' }
+    end
+
+    after(:create) do |kase, evaluator|
+      create :approver_assignment,
+             case: kase,
+             team: evaluator.disclosure_team,
+             state: evaluator.disclosure_assignment_state
     end
   end
 
