@@ -134,6 +134,8 @@ class Case < ApplicationRecord
 
   has_many :assignments, dependent: :destroy
 
+  has_many :teams, through: :assignments
+
   has_one :managing_assignment,
           -> { managing },
           class_name: 'Assignment'

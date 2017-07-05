@@ -407,24 +407,27 @@ RSpec.describe CaseStateMachine, type: :model do
 
   describe 'trigger add_message_to_case!' do
 
+    let(:user) { responded_case.responder }
+    let(:team)      { responded_case.responding_team }
+
     it 'triggers the event' do
       expect{
-        responded_case.state_machine.add_message_to_case!(responded_case.responder, 'This is the message')
+        responded_case.state_machine.add_message_to_case!(user, team, 'This is the message')
       }.to trigger_the_event(:add_message_to_case)
             .on_state_machine(responded_case.state_machine)
-            .with_parameters(user_id: responded_case.responder.id, message: 'This is the message')
+            .with_parameters(user_id: responded_case.responder.id, messaging_team_id: team.id, message: 'This is the message')
     end
 
     it 'creates a message transition record' do
       expect {
         case_being_drafted.state_machine.add_message_to_case!(
-          case_being_drafted.responder, 'This is my message to you all')
+          user, team, 'This is my message to you all')
       }.to change{case_being_drafted.transitions.size}.by(1)
     end
 
     it 'transition record is set up correctly' do
       case_being_drafted.state_machine.add_message_to_case!(
-        case_being_drafted.responder, 'This is my message to you all')
+        user, team, 'This is my message to you all')
       transition = case_being_drafted.transitions.last
       expect(transition.event).to eq 'add_message_to_case'
       expect(transition.user_id).to eq case_being_drafted.responder.id

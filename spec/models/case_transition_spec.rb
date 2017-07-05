@@ -102,11 +102,12 @@ RSpec.describe CaseTransition, type: :model do
     it 'only returns messages for the case' do
       kase = create :pending_dacu_clearance_case
       responder = kase.responder
+      team = kase.responding_team
       approver = kase.approvers.first
 
-      kase.state_machine.add_message_to_case! responder, 'Message #1 - from responder'
-      kase.state_machine.add_message_to_case! approver, 'Message #2 - from approver'
-      kase.state_machine.add_message_to_case! responder, 'Message #3 - from responder'
+      kase.state_machine.add_message_to_case! responder, team, 'Message #1 - from responder'
+      kase.state_machine.add_message_to_case! approver, team,  'Message #2 - from approver'
+      kase.state_machine.add_message_to_case! responder, team,  'Message #3 - from responder'
 
       expect(kase.transitions.messages.size).to eq 3
       expect(kase.transitions.size > 3).to be true

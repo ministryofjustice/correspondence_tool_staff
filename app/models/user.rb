@@ -72,4 +72,8 @@ class User < ApplicationRecord
   def roles
     team_roles.pluck(:role).uniq
   end
+
+  def teams_for_case(kase)
+    kase.teams & teams
+  end
 end

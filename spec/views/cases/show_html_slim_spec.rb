@@ -18,6 +18,9 @@ describe 'cases/show.html.slim', type: :view do
     allow(policy)
       .to receive(:can_view_attachments?)
         .and_return policies[:can_view_attachments?]
+    allow(policy)
+      .to receive(:can_add_message_to_case?)
+        .and_return policies[:can_add_message_to_case?]
   end
 
   let(:case_pending_dacu_clearance) { create(:pending_dacu_clearance_case)

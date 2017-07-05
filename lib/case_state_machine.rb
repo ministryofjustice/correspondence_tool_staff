@@ -376,14 +376,12 @@ class CaseStateMachine
   end
 
 
-  def add_message_to_case!(user, message)
-    puts ">>>>>>>>>>>>>> ADDING MESSAGE TO CASE #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-    ap user
-    ap message
+  def add_message_to_case!(user, team, message)
     trigger! :add_message_to_case,
-             user_id:         user.id,
-             message:         message,
-             event:           :add_message_to_case
+             user_id:           user.id,
+             messaging_team_id: team.id,
+             message:           message,
+             event:             :add_message_to_case
   end
 
   private

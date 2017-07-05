@@ -16,7 +16,7 @@ moj.Modules.ShowHideContent = {
     this.govukLabels = $(this.elementSelector);
   },
 
-  bindEventsgit : function() {
+  bindEvents : function() {
     this.govukLabels.each(function (index, element) {
       var showHideTarget = element.getAttribute('for') + '_content';
       element.setAttribute('data-target', showHideTarget);

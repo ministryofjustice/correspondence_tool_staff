@@ -98,4 +98,14 @@ RSpec.describe User, type: :model do
       expect(approver.press_officer?).not_to be true
     end
   end
+
+  describe '#team_for_case' do
+    context 'user is in one of the teams associated with the case' do
+      it 'returns that user' do
+        kase = create :pending_dacu_clearance_case
+        responder = kase.responder
+        expect(responder.teams_for_case(kase)).to eq [ kase.responding_team ]
+      end
+    end
+  end
 end
