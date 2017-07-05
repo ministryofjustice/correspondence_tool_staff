@@ -279,14 +279,6 @@ class Case < ApplicationRecord
     "#{S3Uploader.id_for_case(self)}/#{attachment_type}"
   end
 
-  def who_its_with
-    if responding_team.present?
-      responding_team.name
-    else
-      managing_team.name
-    end
-  end
-
   def outcome_name
     outcome&.name
   end
@@ -358,6 +350,10 @@ class Case < ApplicationRecord
     response_event = transitions.responded.last
     return false if response_event.nil?
     response_event.created_at <= external_deadline
+  end
+
+  def current_team_and_user
+    CurrentTeamAndUserService.new(self)
   end
 
   private

@@ -3,9 +3,9 @@ require 'rails_helper'
 module Stats
   describe StatsCollector do
 
-    let(:cats) { %w(Cats Dogs Horses Ducks) }
-    let(:subcats) {%w(White Brown Black) }
-    let(:collector)  { StatsCollector.new(cats, subcats) }
+    let(:rows) { %w(Cats Dogs Horses Ducks) }
+    let(:cols) {%w(White Brown Black) }
+    let(:collector)  { StatsCollector.new(rows, cols) }
 
     describe '.new' do
       it 'instantiates an empty result set' do
@@ -45,36 +45,63 @@ module Stats
       it 'raises if a non-existent category is specified' do
         expect{
           collector.record_stats('Mice', 'Brown')
-        }.to raise_error ArgumentError, "No such category: 'Mice'"
+        }.to raise_error ArgumentError, "No such row name: 'Mice'"
       end
 
       it 'raises if a non-existent sub category is specified' do
         expect{
           collector.record_stats('Dogs', 'Purple')
-        }.to raise_error ArgumentError, "No such sub-category: 'Purple'"
+        }.to raise_error ArgumentError, "No such column name: 'Purple'"
       end
     end
 
 
-    describe '#categories' do
+    describe '#row_names' do
       it 'returns an array of all the categories' do
-        expect(collector.categories).to eq cats.sort
+        expect(collector.row_names).to eq rows.sort
       end
     end
 
 
-    describe '#subcategories' do
+    describe '#column_names' do
       it 'returns all the subcategories for the named category' do
-        expect(collector.subcategories).to eq subcats.sort
+        expect(collector.column_names).to eq cols.sort
       end
     end
 
 
     describe '#value' do
-      it 'returns the value for the named category and subcategory' do
+      it 'returns the value for the named row and column' do
         collector.record_stats('Dogs', 'Black', 2)
         collector.record_stats('Dogs', 'Black')
         expect(collector.value('Dogs', 'Black')).to eq 3
+      end
+    end
+
+
+    describe '#to_csv' do
+      it 'returns CSV string with column header for first column' do
+        collector.record_stats('Cats', 'Brown', 4)
+        collector.record_stats('Dogs', 'White', 1)
+        collector.record_stats('Dogs', 'Black', 2)
+        expect(collector.to_csv('Animal')).to eq(
+            "Animal,Black,Brown,White\n" +
+            "Cats,0,4,0\n" +
+            "Dogs,2,0,1\n" +
+            "Ducks,0,0,0\n" +
+            "Horses,0,0,0\n")
+      end
+
+      it 'returns CSV string without column header for first column' do
+        collector.record_stats('Cats', 'Brown', 4)
+        collector.record_stats('Dogs', 'White', 1)
+        collector.record_stats('Dogs', 'Black', 2)
+        expect(collector.to_csv).to eq(
+            "\"\",Black,Brown,White\n" +
+            "Cats,0,4,0\n" +
+            "Dogs,2,0,1\n" +
+            "Ducks,0,0,0\n" +
+            "Horses,0,0,0\n")
       end
     end
   end

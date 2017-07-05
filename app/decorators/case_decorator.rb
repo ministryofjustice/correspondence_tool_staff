@@ -1,13 +1,15 @@
 class CaseDecorator < Draper::Decorator
   delegate_all
+  #
+  # if the current user is in the same team as the team name, display the user
+# else display team name
 
   def who_its_with
-    case current_state
-    when 'closed'                 then ''
-    when 'responded'              then managing_team.name
-    when 'pending_dacu_clearance' then 'DACU - Disclosure'
+    tandu = object.current_team_and_user
+    if tandu.user.present? && h.current_user.responding_teams.include?(tandu.team)
+      tandu.user.full_name
     else
-      responder_or_team
+      tandu.team.name
     end
   end
 
@@ -78,21 +80,11 @@ class CaseDecorator < Draper::Decorator
     I18n.l(object.date_responded, format: :default)
   end
 
-  private
-
   def self.collection_decorator_class
     PaginatingDecorator
   end
 
-  def responder_or_team
-    if !responding_team.present?
-      managing_team.name
-    elsif responder.present? &&
-          h.current_user.responding_teams.include?(responding_team)
-      responder.full_name
-    else
-      responding_team.name
-    end
-  end
 end
+
+
 

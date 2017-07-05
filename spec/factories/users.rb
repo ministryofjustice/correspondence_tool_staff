@@ -39,7 +39,7 @@ FactoryGirl.define do
 
     factory :responder do
       sequence(:full_name) { |n| "Mr Responder #{n}" }
-      responding_teams { [create(:responding_team)] }
+      responding_teams { [find_or_create(:responding_team)] }
     end
 
     factory :approver do
