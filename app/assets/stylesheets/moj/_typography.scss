@@ -101,6 +101,10 @@
   }
   .request--responses--actions {
     text-align: right;
+
+    @media print {
+      display: none;
+    }
   }
 
 }

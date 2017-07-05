@@ -3,6 +3,9 @@
   margin-bottom: $gutter;
   border-bottom: 1px solid #DEE0E2;
   background: #F8F8F8;
+  @media print {
+    display: none;
+  }
 }
 
 .global-nav a {

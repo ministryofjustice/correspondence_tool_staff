@@ -136,6 +136,19 @@ table#response-details {
 
 .case-info {
   margin-bottom : $gutter * 2.5;
+  &.has-actions {
+    @media print {
+      display: none;
+    }
+  }
+
+  &.has-page-break {
+    @include page-break;
+  }
+
+  @media print {
+    margin-bottom: $gutter;
+  }
 }
 
 #request--responses{

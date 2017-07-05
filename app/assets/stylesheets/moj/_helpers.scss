@@ -67,3 +67,8 @@
   -webkit-order: $val;
   order: $val;
 }
+
+@mixin page-break() {
+  page-break-before: always;
+  break-before: always
+}

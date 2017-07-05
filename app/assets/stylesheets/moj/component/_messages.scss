@@ -46,6 +46,12 @@
     padding: 5px;
     margin-bottom: 1em;
 
+    @media print {
+      min-height: 0;
+      max-height: none;
+      overflow-y: visible;
+      overflow-x: visible;
+    }
     .history {
       .event {
         color: $link-visited-colour;
@@ -81,6 +87,12 @@
           text-align: right !important;
           &::after {
             border-left: 0em solid #28A197 !important;
+          }
+
+          @media print {
+            &::after {
+              border-left: none;
+            }
           }
           .message-audit{
             color: $text-colour;
@@ -159,6 +171,15 @@
           border-left: 1em solid $link-hover-colour;
           border-bottom-left-radius: 1.75em 1.5em;
         }
+
+        /* Hide speech bubble */
+        @media print {
+          border-radius: 0.5em;
+          &::after {
+            border-left: none;
+            border-bottom-left-radius: none;
+          }
+        }
         a{
           &:link { /* Essentially means a[href], or that the link actually goes somewhere */
             color: $page-colour;
@@ -189,6 +210,16 @@
           height: 1.5em;
           border-right: 1em solid $panel-colour;
           border-bottom-right-radius: 1.75em 1.5em;
+        }
+
+
+        /* Hide speech bubble */
+        @media print {
+          border-radius: 0.5em;
+          &::after {
+            border-right: none;
+            border-bottom-right-radius: none;
+          }
         }
       }
     }
@@ -276,4 +307,11 @@
     width: 100%;
     background-color: #FFFFFF;
   }
+}
+
+@media print {
+  .message-form {
+    display: none;
+  }
+
 }

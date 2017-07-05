@@ -20,7 +20,7 @@
 
 div id="case-#{@case.id}"
   - if @permitted_events.any?
-    section.case-info
+    section.case-info.has-actions
       .button-holder
         - @permitted_events.each do |event|
           - next if event == :reassign_approver
@@ -61,7 +61,7 @@ div id="case-#{@case.id}"
           = f.submit "Send", class: 'button'
 
   - if @case_transitions.any?
-    section.case-info
+    section.case-info.has-page-break
       h2.request--heading Case history
 
       table#case-history
