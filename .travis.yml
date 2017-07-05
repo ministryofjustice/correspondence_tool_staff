@@ -11,6 +11,7 @@ before_script:
 script:
 - bundle _1.14.4_ install
 - bundle _1.14.4_ exec rubocop
+- bundle _1.14.4_ exec rails jasmine:ci
 - bundle _1.14.4_ exec rails db:create db:structure:load
 - bundle _1.14.4_ exec rails spec
 before_install:

@@ -67,6 +67,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'annotate'
   gem 'byebug', platform: :mri
+  gem 'guard-jasmine'
   gem 'launchy'
   gem 'mechanize', '~> 2.7.5'
   gem 'parallel_tests'
