@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe MessagesController, type: :controller do
-  let!(:manager)                     { create :manager }
+  let!(:team_dacu)                   { create :team_dacu }
+  let!(:manager)                     { team_dacu.users.first }
   let!(:responder)                   { create :responder }
   let!(:another_responder)           { create :responder }
   let!(:responding_team)             { responder.responding_teams.first }
@@ -53,8 +54,7 @@ RSpec.describe MessagesController, type: :controller do
     context "as a manager" do
       before { sign_in manager }
 
-      # TODO Issue with team id and team being null
-      xit "redirects to case detail page and contains a hash" do
+      it "redirects to case detail page and contains a hash" do
         post :create , params: params
         expect(response).to redirect_to(case_path(accepted_case, anchor: 'messages-section'))
       end
