@@ -12,9 +12,9 @@ module CTS
           :responded,
           :closed,
         ],
-        flagged_for_dacu_approval: [
+        flagged_for_dacu_disclosure: [
           :awaiting_responder,
-          :approver_assignment_accepted,
+          :accepted_by_dacu_disclosure,
           :drafting,
           :pending_dacu_disclosure_clearance,
           :awaiting_dispatch,
@@ -24,6 +24,7 @@ module CTS
         flagged_for_press_office: [
           :awaiting_responder,
           :taken_on_by_press_office,
+          :accepted_by_dacu_disclosure,
           :drafting,
         ]
       }
@@ -43,8 +44,8 @@ module CTS
       def call
         puts "Creating #{@number_to_create} cases in each of the following states:"
         puts "\t" + @end_states.join("\n\t")
-        puts "Flagging each for DACU Disclosure clearance" if @add_dacu_disclosure
-        puts "Flagging each for Press Office clearance" if @add_press_office
+        puts "Flagging each for DACU Disclosure clearance" if @flag.present?
+        puts "Flagging each for Press Office clearance" if @flag == 'press'
         puts "\n"
 
         clear if @clear_cases
@@ -72,15 +73,11 @@ module CTS
       def parse_options(options)
         @end_states = []
         @number_to_create = options.fetch(:number, 1)
-        @add_dacu_disclosure = options.fetch(:dacu_disclosure, false)
-        @add_press_office = options.fetch(:press_office, false)
+        @flag = options.fetch(:flag_for_team,
+                              options.fetch(:flag_for_disclosure, nil))
         @clear_cases = options.fetch(:clear, false)
         @dry_run = options.fetch(:dry_run, false)
         @created_at = options[:created_at]
-
-        if @add_dacu_disclosure && @add_press_office
-          raise "cannot handle flagging for dacu disclosure and press office yet"
-        end
       end
 
       def parse_params(args)
@@ -97,11 +94,7 @@ module CTS
 
       def process_arg(arg)
         if arg == 'all'
-          @end_states += if @add_dacu_disclosure
-                           CASE_JOURNEYS[:flagged_for_dacu_approval]
-                         else
-                           CASE_JOURNEYS[:unflagged]
-                         end
+          @end_states += get_journey_for_flagged_state(@flag)
         elsif find_case_journey_for_state(arg.to_sym).any?
           @end_states << arg
         else
@@ -121,7 +114,7 @@ module CTS
                                   message: Faker::Lorem.paragraph(10, true, 10),
                                   managing_team: CTS::dacu_team,
                                   created_at: @created_at)
-        flag_for_dacu_disclosure(kase) if @add_dacu_disclosure
+        flag_for_dacu_disclosure(kase) if @flag.present?
         kase
       end
 
@@ -167,17 +160,10 @@ module CTS
         kase.responder_assignment.accept(responder)
       end
 
-      def transition_to_approver_assignment_accepted(kase)
-        if @add_dacu_disclosure
-          assignment = kase.approver_assignments
-                         .where(team: CTS::dacu_disclosure_team).first
-          user = CTS::dacu_disclosure_approver
-        elsif @add_press_office
-          assignment = kase.approver_assignments
-                         .where(team: CTS::press_office_team).first
-          user = CTS::press_office_approver
-        end
-
+      def transition_to_accepted_by_dacu_disclosure(kase)
+        assignment = kase.approver_assignments
+                       .where(team: CTS::dacu_disclosure_team).first
+        user = CTS::dacu_disclosure_approver
         service = CaseAcceptApproverAssignmentService.new(
           assignment: assignment,
           user: user
@@ -231,9 +217,9 @@ module CTS
 
       def journeys_to_check
         CASE_JOURNEYS.find_all do |name, _states|
-          !(@add_dacu_disclosure || @add_press_office) ||
-            (@add_dacu_disclosure && name == :flagged_for_dacu_approval) ||
-            (@add_press_office && name == :flagged_for_press_office)
+          @flag.blank? ||
+            name == :flagged_for_dacu_disclosure ||
+            (@flag == 'press' && name == :flagged_for_press_office)
         end
       end
 
@@ -243,6 +229,17 @@ module CTS
           return states.take(pos + 1) if pos
         end
         return []
+      end
+
+      def get_journey_for_flagged_state(flag)
+        case @flag
+        when 'disclosure'
+          CASE_JOURNEYS[:flagged_for_dacu_displosure]
+        when 'press'
+          CASE_JOURNEYS[:flagged_for_press_office]
+        else
+          CASE_JOURNEYS[:unflagged]
+        end
       end
 
       def responder

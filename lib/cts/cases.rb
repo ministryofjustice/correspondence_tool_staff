@@ -82,10 +82,11 @@ module CTS
 
     option :number, aliases: 'n', type: :numeric,
            desc: 'Number of cases to create (per state). [1]'
-    option :dacu_disclosure, aliases: 'd', type: :boolean,
-           desc: 'Flag cases for clearance by DACU Disclosure.'
-    option :press_office, aliases: 'p', type: :boolean,
-           desc: 'Flag cases for clearance by Press Office.'
+    option :flag_for_disclosure, aliases: :f, type: :boolean,
+           desc: 'Flag case for DACU disclosure clearance.'
+    option :flag_for_team, aliases: :F, type: :string,
+           enum: %w{disclosure press private},
+           desc: 'Flag case for specific clearance team.'
     option :clear, aliases: :x, type: :boolean,
            desc: 'Clear existing cases before creating.'
     option :dry_run, type: :boolean,
@@ -95,8 +96,6 @@ module CTS
     option :responding_team, aliases: :t, type: :string,
            desc: 'ID or name of responding team to use for case assignments.'
     option :created_at, type: :string
-    # option :dacu_manager, type: :string
-    # option :dacu_approver, type: :string
     def create(*args)
       cmd = CTS::Cases::Create.new(self, options, args)
       cmd.call
