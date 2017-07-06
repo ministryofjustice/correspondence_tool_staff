@@ -6,7 +6,6 @@ module CTS
 
       CASE_JOURNEYS = {
         unflagged: [
-          :unassigned,
           :awaiting_responder,
           :drafting,
           :awaiting_dispatch,
@@ -14,7 +13,6 @@ module CTS
           :closed,
         ],
         flagged_for_dacu_approval: [
-          :unassigned,
           :awaiting_responder,
           :approver_assignment_accepted,
           :drafting,
@@ -24,7 +22,6 @@ module CTS
           :closed,
         ],
         flagged_for_press_office: [
-          :unassigned,
           :awaiting_responder,
           :taken_on_by_press_office,
           :drafting,
@@ -57,7 +54,10 @@ module CTS
           @end_states.map do |target_state|
             journey = find_case_journey_for_state target_state.to_sym
             @number_to_create.times do |n|
-              cases << create_case(n, target_state, journey)
+              puts "creating case #{target_state} ##{n}"
+              kase = create_case()
+              run_transitions(kase, target_state, journey, n)
+              cases << kase
             end
           end
         ensure
@@ -114,15 +114,25 @@ module CTS
         end
       end
 
-      def create_case(n, target_state, journey)
-        puts "creating case #{target_state} ##{n}"
+      def create_case()
+        kase = FactoryGirl.create(:case,
+                                  name: Faker::Name.name,
+                                  subject: Faker::Company.catch_phrase,
+                                  message: Faker::Lorem.paragraph(10, true, 10),
+                                  managing_team: CTS::dacu_team,
+                                  created_at: @created_at)
+        flag_for_dacu_disclosure(kase) if @add_dacu_disclosure
+        kase
+      end
+
+      def run_transitions(kase, target_state, journey, n)
         journey.each do |state|
           begin
             if @dry_run
               puts "  transition to '#{state}'"
             else
-              kase = __send__("transition_to_#{state}", kase)
-              kase.each(&:reload)
+              __send__("transition_to_#{state}", kase)
+              kase.reload
             end
           rescue => exx
             command.error "Error occured on case #{target_state} id:#{n}: #{exx.message}"
@@ -148,106 +158,75 @@ module CTS
         end
       end
 
-      def transition_to_unassigned(_cases)
-        cases = []
-        @number_to_create.times do
-          kase = FactoryGirl.create(:case,
-                                    name: Faker::Name.name,
-                                    subject: Faker::Company.catch_phrase,
-                                    message: Faker::Lorem.paragraph(10, true, 10),
-                                    managing_team: CTS::dacu_team,
-                                    created_at: @created_at)
-          flag_for_dacu_disclosure(kase) if @add_dacu_disclosure
-          cases << kase
-        end
-        cases
+      def transition_to_awaiting_responder(kase)
+        kase.responding_team = responding_team
+        kase.assign_responder(CTS::dacu_manager, responding_team)
       end
 
-      def transition_to_awaiting_responder(cases)
-        cases.each do |kase|
-          kase.responding_team = responding_team
-          kase.assign_responder(CTS::dacu_manager, responding_team)
-        end
+      def transition_to_drafting(kase)
+        kase.responder_assignment.accept(responder)
       end
 
-      def transition_to_drafting(cases)
-        cases.each do |kase|
-          kase.responder_assignment.accept(responder)
+      def transition_to_approver_assignment_accepted(kase)
+        if @add_dacu_disclosure
+          assignment = kase.approver_assignments
+                         .where(team: CTS::dacu_disclosure_team).first
+          user = CTS::dacu_disclosure_approver
+        elsif @add_press_office
+          assignment = kase.approver_assignments
+                         .where(team: CTS::press_office_team).first
+          user = CTS::press_office_approver
         end
-      end
 
-      def transition_to_approver_assignment_accepted(cases)
-        cases.each do |kase|
-          if @add_dacu_disclosure
-            assignment = kase.approver_assignments
-                           .where(team: CTS::dacu_disclosure_team).first
-            user = CTS::dacu_disclosure_approver
-          elsif @add_press_office
-            assignment = kase.approver_assignments
-                           .where(team: CTS::press_office_team).first
-            user = CTS::press_office_approver
-          end
+        service = CaseAcceptApproverAssignmentService.new(
+          assignment: assignment,
+          user: user
+        )
 
-          service = CaseAcceptApproverAssignmentService.new(
-            assignment: assignment,
-            user: user
-          )
-
-          unless service.call
-            raise "Could not accept approver assignment, case id: #{kase.id}, user id: #{user.id}, result: #{service.result}"
-          end
+        unless service.call
+          raise "Could not accept approver assignment, case id: #{kase.id}, user id: #{user.id}, result: #{service.result}"
         end
       end
 
-      def transition_to_taken_on_by_press_office(cases)
-        cases.each do |kase|
-          result = CaseFlagForClearanceService.new(
-            user: press_officer,
-            kase: kase,
-            team: Team.press_office
-          ).call
+      def transition_to_taken_on_by_press_office(kase)
+        result = CaseFlagForClearanceService.new(
+          user: press_officer,
+          kase: kase,
+          team: Team.press_office
+        ).call
+        unless result == :ok
+          raise "Could not flag case for clearance by press office, case id: #{kase.id}, user id: #{CTS::dacu_manager.id}, result: #{result}"
+        end
+      end
+
+      def transition_to_awaiting_dispatch(kase)
+        if kase.approver_assignments.for_user(CTS::dacu_disclosure_approver).any?
+          result = CaseApprovalService
+                     .new(user: CTS::dacu_disclosure_approver, kase: kase).call
           unless result == :ok
-            raise "Could not flag case for clearance by press office, case id: #{kase.id}, user id: #{CTS::dacu_manager.id}, result: #{result}"
+            raise "Could not approve case response , case id: #{kase.id}, user id: #{CTS::dacu_disclosure_approver.id}, result: #{result}"
           end
+        else
+          ResponseUploaderService.new(kase, responder, nil, nil).seed!
+          kase.state_machine.add_responses!(responder,
+                                            responding_team,
+                                            kase.attachments)
         end
       end
 
-      def transition_to_awaiting_dispatch(cases)
-        cases.each do |kase|
-          if kase.approver_assignments.for_user(CTS::dacu_disclosure_approver).any?
-            result = CaseApprovalService
-                       .new(user: CTS::dacu_disclosure_approver, kase: kase).call
-            unless result == :ok
-              raise "Could not approve case response , case id: #{kase.id}, user id: #{CTS::dacu_disclosure_approver.id}, result: #{result}"
-            end
-          else
-            ResponseUploaderService.new(kase, responder, nil, nil).seed!
-            kase.state_machine.add_responses!(responder,
-                                              responding_team,
-                                              kase.attachments)
-          end
-        end
+      def transition_to_responded(kase)
+        kase.respond(responder)
       end
 
-      def transition_to_responded(cases)
-        cases.each do |kase|
-          kase.respond(responder)
-        end
+      def transition_to_pending_dacu_disclosure_clearance(kase)
+        ResponseUploaderService.new(kase, responder, nil).seed!
+        kase.add_response_to_flagged_case(responder, kase.attachments)
       end
 
-      def transition_to_pending_dacu_disclosure_clearance(cases)
-        cases.each do |kase|
-          ResponseUploaderService.new(kase, responder, nil).seed!
-          kase.add_response_to_flagged_case(responder, kase.attachments)
-        end
-      end
-
-      def transition_to_closed(cases)
-        cases.each do |kase|
-          kase.prepare_for_close
-          kase.update(date_responded: Date.today, outcome_name: 'Granted in full')
-          kase.close(CTS::dacu_manager)
-        end
+      def transition_to_closed(kase)
+        kase.prepare_for_close
+        kase.update(date_responded: Date.today, outcome_name: 'Granted in full')
+        kase.close(CTS::dacu_manager)
       end
 
       def journeys_to_check
