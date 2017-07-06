@@ -1,0 +1,14 @@
+h2.request--heading Conversation
+- ws_user = Digest::SHA1.hexdigest([current_user.id, Rails.application.secrets.secret_key_base].to_s)
+.messages-container
+  .messages-list
+
+    - if case_details.transitions.messages.any?
+      - case_details.transitions.messages.order(:id).each do |chat|
+        = render partial: 'messages/message', locals: {conversation: chat, user: current_user}
+
+- if policy(case_details).can_add_message_to_case?
+  = form_for case_details, url: case_messages_path(case_details), method: :post, class: "message-form" do |f|
+    .message-form data-ws-case-id="#{case_details.id}" data-ws-user="#{ws_user}"
+      = f.text_area :message_text
+      = f.submit "Send", class: 'button'

@@ -54,6 +54,8 @@ class Case < ApplicationRecord
                 :uploaded_request_files,
                 :uploading_user # Used when creating case sent by post.
 
+  attr_accessor :message_text
+
   acts_as_gov_uk_date :received_date, :date_responded,
                       validate_if: :received_in_acceptable_range?
 

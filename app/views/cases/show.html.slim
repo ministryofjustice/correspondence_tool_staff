@@ -43,22 +43,8 @@ div id="case-#{@case.id}"
     section.case-info
       = render partial: 'what_do_you_want_to_do', locals: { case_details: @case }
 
-  section.case-info
-    h2.request--heading Conversation
-    - ws_user = Digest::SHA1.hexdigest([current_user.id, Rails.application.secrets.secret_key_base].to_s)
-    .messages-container
-      .messages-list
-
-        - if @case.transitions.messages.any?
-          - @case.transitions.messages.each do |chat|
-            = render partial: 'messages/message', locals: {conversation: chat, user: current_user}
-
-    - if policy(@case).can_add_message_to_case?
-      = form_for @case, url: case_messages_path(@case), method: :post, class: "message-form" do |f|
-        .message-form data-ws-case-id="#{@case.id}" data-ws-user="#{ws_user}"
-          = f.text_area :message
-
-          = f.submit "Send", class: 'button'
+  section#messages-section.case-info
+    = render partial: 'cases/case_messages', locals: { case_details: @case }
 
   - if @case_transitions.any?
     section.case-info.has-page-break
