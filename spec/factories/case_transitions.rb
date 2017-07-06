@@ -144,4 +144,12 @@ FactoryGirl.define do
     to_state 'closed'
     event 'close'
   end
+
+  factory :case_transition_add_message_to_case, parent: :case_transition do
+    event               'add_message_to_case'
+    to_state            { self.case.current_state }
+    message             'This is my message'
+    user_id             { self.case.responder.id }
+    messaging_team_id   { self.case.responding_team.id }
+  end
 end

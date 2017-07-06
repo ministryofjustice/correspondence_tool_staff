@@ -45,6 +45,51 @@ FactoryGirl.define do
     after(:build) do |_kase, evaluator|
       evaluator.managing_team
     end
+
+    # state :unassigned, initial: true
+    # state :awaiting_responder
+    # state :drafting
+    # state :awaiting_dispatch
+    # state :pending_dacu_clearance
+    # state :responded
+    # state :closed
+
+
+
+    trait :with_messages do
+      after(:create) do |kase|
+        if kase.current_state.in?(%w( drafting awaiting_dispatch pending_dacu_clearance responded closed ))
+          Timecop.freeze(20.seconds.ago) do
+            create(:case_transition_add_message_to_case,
+                   case_id: kase.id,
+                   user_id: kase.responder.id,
+                   messaging_team_id: kase.responding_team.id,
+                   message: "I've accepted this case as a KILO")
+          end
+        end
+
+        if kase.current_state.in?(%w( awaiting_dispatch pending_dacu_clearance responded closed ))
+          Timecop.freeze(15.seconds.ago) do
+            create(:case_transition_add_message_to_case,
+                   case_id: kase.id,
+                   user_id: kase.responder.id,
+                   messaging_team_id: kase.responding_team.id,
+                   message: "I've uploaded a response")
+          end
+        end
+
+        if kase.current_state.in?(%w(  pending_dacu_clearance ))
+          Timecop.freeze(10.seconds.ago) do
+            create(:case_transition_add_message_to_case,
+                   case_id: kase.id,
+                   user_id: kase.responder.id,
+                   messaging_team_id: kase.responding_team.id,
+                   message: "I'm the approver for this case")
+          end
+        end
+      end
+
+    end
   end
 
   factory :awaiting_responder_case, parent: :case,
@@ -87,6 +132,8 @@ FactoryGirl.define do
              responding_team_id: kase.responding_team.id
       kase.reload
     end
+
+
   end
 
   factory :rejected_case, parent: :assigned_case do
