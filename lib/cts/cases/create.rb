@@ -1,33 +1,7 @@
 module CTS
   class Cases
-    # rubocop:disable Metrics/ClassLength
     class Create
       attr_accessor :command, :args, :options
-
-      CASE_JOURNEYS = {
-        unflagged: [
-          :awaiting_responder,
-          :drafting,
-          :awaiting_dispatch,
-          :responded,
-          :closed,
-        ],
-        flagged_for_dacu_disclosure: [
-          :awaiting_responder,
-          :accepted_by_dacu_disclosure,
-          :drafting,
-          :pending_dacu_disclosure_clearance,
-          :awaiting_dispatch,
-          :responded,
-          :closed,
-        ],
-        flagged_for_press_office: [
-          :awaiting_responder,
-          :taken_on_by_press_office,
-          :accepted_by_dacu_disclosure,
-          :drafting,
-        ]
-      }
 
       def initialize(command, options, args)
         @command = command
@@ -98,10 +72,10 @@ module CTS
         elsif find_case_journey_for_state(arg.to_sym).any?
           @end_states << arg
         else
-          error "Unrecognised parameter: #{arg}"
-          error "Journeys checked:"
+          command.error "Unrecognised parameter: #{arg}"
+          command.error "Journeys checked:"
           journeys_to_check.each do |name, states|
-            error "  #{name}: #{states.join(', ')}"
+            command.error "  #{name}: #{states.join(', ')}"
           end
           @invalid_params = true
         end
@@ -232,7 +206,7 @@ module CTS
       end
 
       def get_journey_for_flagged_state(flag)
-        case @flag
+        case flag
         when 'disclosure'
           CASE_JOURNEYS[:flagged_for_dacu_displosure]
         when 'press'
@@ -270,6 +244,5 @@ module CTS
         Team.press_office.approvers.first
       end
     end
-    # rubocop:enable Metrics/ClassLength
   end
 end

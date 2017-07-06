@@ -2,6 +2,31 @@ module CTS
   class Cases < Thor
     include Thor::Rails unless SKIP_RAILS
 
+    CASE_JOURNEYS = {
+      unflagged: [
+        :awaiting_responder,
+        :drafting,
+        :awaiting_dispatch,
+        :responded,
+        :closed,
+      ],
+      flagged_for_dacu_disclosure: [
+        :awaiting_responder,
+        :accepted_by_dacu_disclosure,
+        :drafting,
+        :pending_dacu_disclosure_clearance,
+        :awaiting_dispatch,
+        :responded,
+        :closed,
+      ],
+      flagged_for_press_office: [
+        :awaiting_responder,
+        :taken_on_by_press_office,
+        :accepted_by_dacu_disclosure,
+        :drafting,
+      ]
+    }
+
     default_command :list
 
     desc 'assign CASE TEAM [USER]', 'Assign a case a user'
@@ -61,23 +86,29 @@ module CTS
      - all:        Create a number of cases in all states
      - <states>:   Create a number of cases in the specified state(s)
 
-     Multiple states can be specified.
+    Multiple states can be specified.
 
-     Valid states are as follows:
-        unassigned
-        flagged_for_dacu_clearance
-        awaiting_responder
-        approver_assignment_accepted
-        drafting
-        pending_dacu_clearance
-        awaiting_dispatch
-        responded
-        closed
+    Valid case journeys and their states:
+    #{CASE_JOURNEYS.map do |j, states|
+      ["    #{j}:\n",
+       states.map { |s| "      #{s}\n" }]
+    end .flatten.join}
 
     Examples:
+      # Create a case in the drafting state with the given created-at time.
       ./cts cases create --created-at='2017-06-20 09:36:00' drafting
+
+      # Create 2 cases in all states for the unflagged journey, clearing
+      # existing cases from the DB first.
       ./cts cases create -x -n2 all
-      ./cts cases create --dry-run -p awaiting_responder
+
+      # Display steps that would be taken to create a case flagged for DACU
+      # Disclosure and in the "awaiting_responder" state.
+      ./cts cases create --dry-run -f awaiting_responder
+
+      # Create a case in the "awaiting_responder" state and flagged form
+      # Press Office.
+      ./cts cases create --flag-for-team=press drafting
     LONGDESC
 
     option :number, aliases: 'n', type: :numeric,
