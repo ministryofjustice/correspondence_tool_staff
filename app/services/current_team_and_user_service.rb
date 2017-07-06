@@ -10,6 +10,7 @@ class CurrentTeamAndUserService
 
   private
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def analyse_case
     case @case.current_state
     when 'unassigned'
@@ -34,6 +35,7 @@ class CurrentTeamAndUserService
       raise "State #{@case.current_state} unknown to CurrentTeamAndUserService"
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 end
 
 
