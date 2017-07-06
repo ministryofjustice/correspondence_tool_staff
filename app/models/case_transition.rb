@@ -19,6 +19,8 @@ class CaseTransition < ActiveRecord::Base
 
   after_destroy :update_most_recent, if: :most_recent?
 
+  validates :message, presence: true, if: -> { event == 'add_message_to_case' }
+
   jsonb_accessor :metadata,
     user_id:            :integer,
     original_user_id:   :integer,

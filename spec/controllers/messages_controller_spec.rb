@@ -21,7 +21,7 @@ RSpec.describe MessagesController, type: :controller do
     let(:params) do
       {
         case: {
-          message: 'This is a new message'
+          message_text: 'This is a new message'
         },
         case_id: accepted_case.id
       }
