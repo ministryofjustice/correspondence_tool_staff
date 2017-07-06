@@ -47,7 +47,6 @@ RSpec.describe CasesController, type: :controller do
                                        responding_team: responding_team,
                                        approver: disclosure_specialist,
                                        responder: responder}
-  let!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure}
 
   let(:assigned_trigger_case)   { create :assigned_case, :flagged_accepted,
                                          approver: disclosure_specialist }
