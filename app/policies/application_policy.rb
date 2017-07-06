@@ -13,6 +13,8 @@ class ApplicationPolicy
           false
         end
       end
+
+      private "check_#{name}"
     end
   end
 

@@ -11,8 +11,6 @@ class AssignmentPolicy < ApplicationPolicy
     check_team_is_not_already_assigned
   end
 
-  private
-
   check :team_is_not_already_assigned do
     !assignment.case.with_teams?(assignment.team)
   end
