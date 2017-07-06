@@ -11,13 +11,13 @@ class CaseFlagForClearanceService
   def call
     return @result unless validate_case_is_unflagged
 
-    managing_team_name = Settings.foi_cases.default_managing_team
-    managing_team = Team.managing.find_by(name: managing_team_name)
     if @team.dacu_disclosure?
-      assign_approver(@user, managing_team, @team)
+      assign_approver(@user, @team, @team)
     elsif @team.press_office?
       assign_and_accept_approver(@user, @team)
-      assign_approver(@user, managing_team, Team.dacu_disclosure)
+      if @case.approver_assignments.where(team: Team.dacu_disclosure).blank?
+        assign_approver(@user, @team, Team.dacu_disclosure)
+      end
     end
     @result = :ok
   end
@@ -44,6 +44,8 @@ class CaseFlagForClearanceService
   def assign_and_accept_approver(user, team)
     @case.state_machine.take_on_for_approval!(user, team)
     @case.approving_teams << team
-    @case.reload.approver_assignments.for_team(team).last.update!(state: 'accepted', user_id: user.id)
+    @case.reload
+    team_assignment = @case.approver_assignments.for_team(team).last
+    team_assignment.update!(state: 'accepted', user_id: user.id)
   end
 end

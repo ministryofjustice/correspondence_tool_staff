@@ -4,10 +4,10 @@ describe CaseFlagForClearanceService do
   let(:assigned_case)         { create :assigned_case }
   let(:assigned_flagged_case) { create :assigned_case, :flagged,
                                        approving_team: dacu_disclosure }
-  let(:approver)        { dacu_disclosure.approvers.first }
-  let(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
-  let(:press_office)  { find_or_create :team_press_office }
-  let(:press_officer) { create :press_officer }
+  let(:approver)              { dacu_disclosure.approvers.first }
+  let!(:dacu_disclosure)      { find_or_create :team_dacu_disclosure }
+  let(:press_office)          { find_or_create :team_press_office }
+  let(:press_officer)         { create :press_officer }
 
   describe 'call' do
     context 'flagging by dacu disclosure' do
@@ -50,13 +50,13 @@ describe CaseFlagForClearanceService do
     end
 
     context 'flagging for press office' do
-      context 'case is not already taken on by press office' do
+      context 'case is not already taken on by DACU Disclosure' do
         before do
-          allow(assigned_flagged_case.state_machine).to receive(:flag_for_clearance!)
+          allow(assigned_case.state_machine).to receive(:flag_for_clearance!)
         end
 
         let(:service) { described_class.new user: press_officer,
-                                            kase: assigned_flagged_case,
+                                            kase: assigned_case,
                                             team: press_office }
 
         it 'returns ok when successful' do
@@ -65,7 +65,7 @@ describe CaseFlagForClearanceService do
 
         it 'adds an accepted assignment for press office and press officer' do
           service.call
-          assignment = assigned_flagged_case.approver_assignments
+          assignment = assigned_case.approver_assignments
                          .for_team(press_office).first
           expect(assignment.state).to eq 'accepted'
           expect(assignment.user_id).to eq press_officer.id
@@ -74,7 +74,7 @@ describe CaseFlagForClearanceService do
 
         it 'adds a pending assignment for DACU disclosure' do
           service.call
-          assignment = assigned_flagged_case.approver_assignments
+          assignment = assigned_case.approver_assignments
                          .for_team(dacu_disclosure).first
           expect(assignment.state).to eq 'pending'
           expect(assignment.user_id).to be_nil
@@ -83,7 +83,7 @@ describe CaseFlagForClearanceService do
 
         it 'triggers a flag_for_clearance event on the case state machine' do
           service.call
-          expect(assigned_flagged_case.state_machine)
+          expect(assigned_case.state_machine)
             .to have_received :flag_for_clearance!
         end
 
@@ -94,7 +94,7 @@ describe CaseFlagForClearanceService do
 
         it 'adds a transition record for press office assignment' do
           service.call
-          tx = assigned_flagged_case.transitions.second
+          tx = assigned_case.transitions.second
           expect(tx.event).to eq 'take_on_for_approval'
           expect(tx.to_state).to eq 'awaiting_responder'
           expect(tx.message).to be_nil
@@ -107,7 +107,38 @@ describe CaseFlagForClearanceService do
           service.call
         end
       end
+
+      context 'case is already taken on by DACU Disclosure' do
+        before do
+          allow(assigned_flagged_case.state_machine)
+            .to receive(:flag_for_clearance!)
+        end
+
+        let(:service) { described_class.new user: press_officer,
+                                            kase: assigned_flagged_case,
+                                            team: press_office }
+
+        it 'returns ok when successful' do
+          expect(service.call).to eq :ok
+        end
+
+        it 'adds an accepted assignment for press office and press officer' do
+          service.call
+          expect(assigned_flagged_case
+                   .approver_assignments
+                   .for_team(press_office)
+                   .count).to eq 1
+        end
+
+        it 'does not add an assignment for DACU disclosure' do
+          service.call
+          expect(assigned_flagged_case
+                   .approver_assignments
+                   .for_team(dacu_disclosure)
+                   .count).to eq 1
+        end
+
+      end
     end
   end
-
 end

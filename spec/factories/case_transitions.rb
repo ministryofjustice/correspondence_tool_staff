@@ -37,7 +37,7 @@ FactoryGirl.define do
     transient do
       manager        { create :manager }
       managing_team  { manager.managing_teams.first }
-      approving_team { create :team_dacu_disclosure }
+      approving_team { find_or_create :team_dacu_disclosure }
     end
 
     to_state          'unassigned'

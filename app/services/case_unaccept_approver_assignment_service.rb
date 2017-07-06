@@ -14,10 +14,12 @@ class CaseUnacceptApproverAssignmentService
     ActiveRecord::Base.transaction do
       if @team.press_office?
         kase = @assignment.case
-        disclosure_assignment = kase.assignments
-                                  .with_teams(Team.dacu_disclosure)
-                                  .first
-        unassign_approver_assignment disclosure_assignment
+        if last_flagged_for_team(kase, @team, Team.dacu_disclosure)
+          disclosure_assignment = kase.assignments
+                                    .with_teams(Team.dacu_disclosure)
+                                    .first
+          unassign_approver_assignment disclosure_assignment
+        end
         unassign_approver_assignment @assignment
       else
         unaccept_approver_assignment @assignment
@@ -36,6 +38,16 @@ class CaseUnacceptApproverAssignmentService
       @result = :not_accepted
       false
     end
+  end
+
+  def last_flagged_for_team(kase, by_team, for_team)
+    last_flag_unflag_transition = kase.transitions.where(
+      event: ['flag_for_clearance', 'unflag_for_clearance']
+    ).metadata_where(
+      managing_team_id: by_team.id,
+      approving_team_id: for_team.id,
+    ).last
+    last_flag_unflag_transition&.event == 'flag_for_clearance'
   end
 
   def unaccept_approver_assignment(assignment)
