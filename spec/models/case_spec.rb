@@ -465,24 +465,6 @@ RSpec.describe Case, type: :model do
                   .source(:user) }
   end
 
-  describe '#who_its_with' do
-    let(:assigned_case) { create :assigned_case }
-    let(:accepted_case) { create :accepted_case}
-    let(:unassigned_case) { create :case }
-
-    it 'is the currently assigned responder' do
-      expect(assigned_case.who_its_with)
-        .to eq assigned_case.responding_team.name
-      expect(accepted_case.who_its_with)
-        .to eq accepted_case.responding_team.name
-    end
-
-    it 'is the currently assigned to DACU' do
-      expect(unassigned_case.managing_assignment.team.name).to eq 'DACU'
-      expect(unassigned_case.managing_assignment.accepted?).to be true
-    end
-  end
-
   describe '#response_attachments' do
     let(:case_with_response) { create(:case_with_response)   }
     let(:responses) do
@@ -969,6 +951,14 @@ RSpec.describe Case, type: :model do
       expect(kase).to receive(:attachments).and_return(attachments)
       expect(CaseAttachmentUploadGroupCollection).to receive(:new).with(kase, request_attachments)
       kase.upload_request_groups
+    end
+  end
+
+  describe '#current_team_and_user' do
+    it 'calls the CurrentTeamAndUserService' do
+      ctaus = double CurrentTeamAndUserService
+      expect(CurrentTeamAndUserService).to receive(:new).with(accepted_case).and_return(ctaus)
+      expect(accepted_case.current_team_and_user).to eq ctaus
     end
   end
 

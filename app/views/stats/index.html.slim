@@ -3,6 +3,13 @@
 
 = render partial: 'layouts/header'
 
-= link_to 'R001 Responded Case Timeliness Report', stats_download_path, class: 'button', target: "_blank"
-
+table
+  - @report_manager.reports.each do |report_id, report_class|
+    tr
+      td
+        strong
+          = report_class.title
+        br
+        = report_class.description
+      td = link_to 'Generate and Download', stats_download_path(report_id: report_id), class: 'button', target: '_blank'
 

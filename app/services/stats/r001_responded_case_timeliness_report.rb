@@ -1,15 +1,22 @@
 require 'tempfile'
-require 'csv'
 
 module Stats
   class R001RespondedCaseTimelinessReport
 
-    SUBCATEGORIES = ['In time', 'Overdue']
+    COLUMNS = ['In time', 'Overdue']
 
     def initialize
       @period_start = Time.now.beginning_of_month
       @period_end = Time.now
-      @teams = StatsCollector.new(Team.responding.map(&:name).sort, SUBCATEGORIES)
+      @teams = StatsCollector.new(Team.responding.map(&:name).sort, COLUMNS)
+    end
+
+    def self.title
+      'Responded Cases Timeliness Report'
+    end
+
+    def self.description
+      'Count of all cases where the responder has marked the reponse has sent this month, in time or overdue, by team'
     end
 
     def run
@@ -22,17 +29,9 @@ module Stats
     end
 
     def to_csv
-      subcats = @teams.subcategories
-      column_names = ['Team'] + subcats
-      CSV.generate(headers: true) do |csv|
-        csv << column_names
-        @teams.categories.each do |cat|
-          row = [cat]
-          subcats.each { |subcat| row << @teams.value(cat, subcat) }
-          csv << row
-        end
-      end
+      @teams.to_csv('Team')
     end
+
 
     private
 
