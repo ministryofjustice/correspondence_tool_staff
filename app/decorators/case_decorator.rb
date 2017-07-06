@@ -1,9 +1,10 @@
 class CaseDecorator < Draper::Decorator
   delegate_all
-  #
-  # if the current user is in the same team as the team name, display the user
-# else display team name
 
+  # if the case is with a responding team and the current user is a responder
+  # in that team, display the name of the specific user it's with instead of
+  # the team name
+  #
   def who_its_with
     tandu = object.current_team_and_user
     if tandu.user.present? && h.current_user.responding_teams.include?(tandu.team)
