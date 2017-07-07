@@ -47,8 +47,13 @@ module CTS
       def parse_options(options)
         @end_states = []
         @number_to_create = options.fetch(:number, 1)
-        @flag = options.fetch(:flag_for_team,
-                              options.fetch(:flag_for_disclosure, nil))
+        @flag = if options.key?(:flag_for_disclosure)
+                  options[:flag_for_disclosure] ? 'disclosure' : nil
+                elsif options.key?(:flag_for_team)
+                  options[:flag_for_team]
+                else
+                  nil
+                end
         @clear_cases = options.fetch(:clear, false)
         @dry_run = options.fetch(:dry_run, false)
         @created_at = options[:created_at]
@@ -58,10 +63,10 @@ module CTS
         args.each { |arg| process_arg(arg) }
 
         if @invalid_params
-          error 'Program terminating'
+          command.error 'Program terminating'
           exit 1
         elsif @end_states.empty?
-          error 'No states provided, please see help for what states are available.'
+          command.error 'No states provided, please see help for what states are available.'
           exit 1
         end
       end
@@ -116,7 +121,7 @@ module CTS
         cases.each do |kase|
           dts = DefaultTeamService.new(kase)
           result = CaseFlagForClearanceService.new(
-            user: dts.managing_team,
+            user: CTS::dacu_manager,
             kase: kase,
             team: dts.approving_team,
           ).call
@@ -193,7 +198,7 @@ module CTS
       def journeys_to_check
         CASE_JOURNEYS.find_all do |name, _states|
           @flag.blank? ||
-            name == :flagged_for_dacu_disclosure ||
+            (@flag == 'disclosure' && name == :flagged_for_dacu_disclosure) ||
             (@flag == 'press' && name == :flagged_for_press_office)
         end
       end

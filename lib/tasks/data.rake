@@ -75,7 +75,6 @@ namespace :data do
       end
     end
 
-
     desc 'Remove orphan PDFs from S3'
     task delete_orphan_pdf: :environment do
       required_pdfs = CaseAttachment.all.map(&:preview_key).compact
@@ -87,6 +86,42 @@ namespace :data do
         puts "Deleting orphan preview #{key}"
         obj = CASE_UPLOADS_S3_BUCKET.object(key)
         obj.delete
+      end
+    end
+
+    desc 'Add disclosure team assignments to cases taken on by press office.'
+    task add_disclosure_team: :environment do
+      press_office = Team.press_office
+      dacu_disclosure = Team.dacu_disclosure
+      Case.with_teams(press_office)
+        .find_all { |c| c.assignments.with_teams(dacu_disclosure).blank? }
+        .each do |kase|
+
+        puts "Assigning DACU Disclosure to case #{kase.id}"
+        press_office_transition = kase.transitions.where(
+          event: ['take_on_for_approval']
+        ).metadata_where(
+          approving_team_id: press_office.id,
+        ).last
+        press_officer = if press_office_transition.present?
+                          puts 'using press officer from take_on_for_approval transition'
+                          press_office_transition.user
+                        else
+                          puts 'no previous take_on_for_approval transition found, using first press officer on team'
+                          press_office.users.first
+                        end
+        puts "Assigning DACU Disclosure to case id: #{kase.id}"
+        kase.approving_teams << dacu_disclosure
+        begin
+          puts "Creating 'flag_for_clearance' transition for case id: #{kase.id}"
+          kase.state_machine.flag_for_clearance! press_officer,
+                                                 press_office,
+                                                 dacu_disclosure
+        rescue Statesman::TransitionFailedError => err
+          puts "!!! transition error received: #{err.message}"
+          puts "!!! BUT THAT'S OK because we've already done the assignment,"
+          puts "!!! there just won't be an transition for it."
+        end
       end
     end
   end
