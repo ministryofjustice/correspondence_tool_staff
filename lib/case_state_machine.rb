@@ -24,6 +24,7 @@ class CaseStateMachine
   state :drafting
   state :awaiting_dispatch
   state :pending_dacu_clearance
+  state :pending_press_office_clearance
   state :responded
   state :closed
 
@@ -159,6 +160,24 @@ class CaseStateMachine
     end
 
     transition from: :pending_dacu_clearance, to: :awaiting_dispatch
+  end
+
+  # event :escalate_to_press_office do
+  #   guard do |object, _last_transition, options|
+  #     CaseStateMachine.get_policy(options[:user_id], object)
+  #       .can_escalate_to_next_approval_level?
+  #   end
+
+  #   transition from: :pending_dacu_clearance, to: :pending_press_office_clearance
+  # end
+
+  event :escalate_to_next_approval_level do
+    guard do |object, _last_transition, options|
+      CaseStateMachine.get_policy(options[:user_id], object)
+        .can_escalate_to_next_approval_level?
+    end
+
+    transition from: :pending_dacu_clearance, to: :pending_press_office_clearance
   end
 
   event :upload_response_and_approve do

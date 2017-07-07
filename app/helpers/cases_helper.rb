@@ -33,6 +33,11 @@ module CasesHelper
               approve_response_case_path(@case),
               id: 'action--approve',
               class: 'button'
+    when :escalate_to_next_approval_level
+      link_to t('common.case.clear_response'),
+              approve_response_case_path(@case),
+              id: 'action--approve',
+              class: 'button'
     when :upload_response_and_approve
       link_to t('common.case.upload_approve'),
               new_response_upload_case_path(@case, 'action' => 'upload-approve'),

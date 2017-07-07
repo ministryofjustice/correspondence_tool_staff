@@ -25,6 +25,10 @@ class CurrentTeamAndUserService
     when 'pending_dacu_clearance'
       @team = @dts.approving_team
       @user = @case.approver_assignments.for_team(@team).first.user
+    when 'pending_press_office_clearance'
+      @team = Team.press_office
+      # @user = @case.approver_assignments.for_team(@team).first.user
+      @user = @case.approver_team_users.for_team(@team).first
     when 'responded'
       @team = @case.managing_team
       @user = nil

@@ -320,14 +320,21 @@ FactoryGirl.define do
     transient do
       approver                    { create :press_officer }
       approving_team              { find_or_create :team_press_office }
+      disclosure_specialist       { create :disclosure_specialist }
       disclosure_team             { find_or_create :team_dacu_disclosure }
       disclosure_assignment_state { 'pending' }
     end
 
     after(:create) do |kase, evaluator|
+      disclosure_specialist = if evaluator.disclosure_assignment_state == 'accepted'
+                                evaluator.disclosure_specialist
+                              else
+                                nil
+                              end
       create :approver_assignment,
              case: kase,
              team: evaluator.disclosure_team,
+             user: disclosure_specialist,
              state: evaluator.disclosure_assignment_state
     end
   end

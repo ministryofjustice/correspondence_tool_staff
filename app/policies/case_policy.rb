@@ -121,8 +121,16 @@ class CasePolicy < ApplicationPolicy
 
   def can_approve_case?
     clear_failed_checks
-    self.case.pending_dacu_clearance? &&
-      check_user_is_assigned_approver_for_case
+    check_case_requires_clearance &&
+      check_user_is_current_approver &&
+      check_case_on_last_step_of_approvals
+  end
+
+  def can_escalate_to_next_approval_level?
+    clear_failed_checks
+    check_case_requires_clearance &&
+      check_user_is_current_approver &&
+      !check_case_on_last_step_of_approvals
   end
 
   def can_view_case_details?
@@ -243,4 +251,27 @@ class CasePolicy < ApplicationPolicy
   check :case_is_not_closed do
     !self.case.closed?
   end
+
+  check :case_on_last_step_of_approvals do
+    # Order is important here, highest level of approval should go first.
+    #
+    # This could be busted out into a service but I'm not sure it's worth the
+    # extra machinery until we either A) find another place that needs to know
+    # about the order of approvals or B) decide we want to make
+    # CaseStateMachine use the ordering here to dynamically generate states and
+    # events.
+    if Team.press_office.in?(@case.approving_teams)
+      @case.current_state == :pending_press_office_clearance
+    elsif Team.dacu_disclosure.in?(@case.approving_teams)
+      @case.current_state == :pending_dacu_clearance
+    else
+      false
+    end
+  end
+
+  check :user_is_current_approver do
+    current_info = CurrentTeamAndUserService.new(@case)
+    @user.in? current_info.team.users
+  end
+
 end
