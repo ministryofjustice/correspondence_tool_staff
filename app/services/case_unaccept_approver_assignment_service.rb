@@ -7,6 +7,7 @@ class CaseUnacceptApproverAssignmentService
     @user = @assignment.user
     @team = @assignment.team
     @result = :incomplete
+    @dts = DefaultTeamService.new(assignment.case)
   end
 
   def call
@@ -14,9 +15,9 @@ class CaseUnacceptApproverAssignmentService
     ActiveRecord::Base.transaction do
       if @team.press_office?
         kase = @assignment.case
-        if last_flagged_for_team(kase, @team, Team.dacu_disclosure)
+        if last_flagged_for_team(kase, @team, @dts.approving_team)
           disclosure_assignment = kase.assignments
-                                    .with_teams(Team.dacu_disclosure)
+                                    .with_teams(@dts.approving_team)
                                     .first
           unassign_approver_assignment disclosure_assignment
         end

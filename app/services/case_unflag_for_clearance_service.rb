@@ -6,6 +6,7 @@ class CaseUnflagForClearanceService
     @user = user
     @team = team
     @result = :incomplete
+    @dts = DefaultTeamService.new(kase)
   end
 
   def call
@@ -15,9 +16,10 @@ class CaseUnflagForClearanceService
     @case.approver_assignments.with_teams(@team).destroy_all
 
     if @team.press_office?
-      dacu_disclosure = Team.dacu_disclosure
-      @case.state_machine.unflag_for_clearance!(@user, @case.managing_team, dacu_disclosure)
-      @case.approver_assignments.with_teams(dacu_disclosure).destroy_all
+      @case.state_machine.unflag_for_clearance!(@user,
+                                                @case.managing_team,
+                                                @dts.approving_team)
+      @case.approver_assignments.with_teams(@dts.approving_team).destroy_all
     end
 
     @result = :ok

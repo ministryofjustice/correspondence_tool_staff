@@ -6,6 +6,7 @@ class CaseFlagForClearanceService
     @user = user
     @team = team
     @result = :incomplete
+    @dts = DefaultTeamService.new(kase)
   end
 
   def call
@@ -15,8 +16,8 @@ class CaseFlagForClearanceService
       assign_approver(@user, @team, @team)
     elsif @team.press_office?
       assign_and_accept_approver(@user, @team)
-      if @case.approver_assignments.where(team: Team.dacu_disclosure).blank?
-        assign_approver(@user, @team, Team.dacu_disclosure)
+      if @case.approver_assignments.where(team: @dts.approving_team).blank?
+        assign_approver(@user, @team, @dts.approving_team)
       end
     end
     @result = :ok

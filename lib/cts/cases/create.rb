@@ -114,10 +114,11 @@ module CTS
 
       def flag_for_dacu_disclosure(*cases)
         cases.each do |kase|
+          dts = DefaultTeamService.new(kase)
           result = CaseFlagForClearanceService.new(
-            user: CTS::dacu_manager,
+            user: dts.managing_team,
             kase: kase,
-            team: Team.dacu_disclosure
+            team: dts.approving_team,
           ).call
           unless result == :ok
             raise "Could not flag case for clearance by DACU Disclosure, case id: #{kase.id}, user id: #{CTS::dacu_manager.id}, result: #{result}"
