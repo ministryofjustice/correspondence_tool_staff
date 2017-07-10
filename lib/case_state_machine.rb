@@ -74,7 +74,7 @@ class CaseStateMachine
     transition from: :awaiting_responder,     to: :awaiting_responder
     transition from: :drafting,               to: :drafting
     transition from: :awaiting_dispatch,      to: :awaiting_dispatch
-    transition from: :pending_dacu_clearance, to: :awaiting_dispatch
+    transition from: :pending_dacu_clearance, to: :pending_dacu_clearance
   end
 
   event :reject_responder_assignment do
