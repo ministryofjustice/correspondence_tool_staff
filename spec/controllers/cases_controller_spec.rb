@@ -1,21 +1,6 @@
 require 'rails_helper'
 
 
-# Utility method to help us setup expectations on cases.
-#
-# Without this approach, it's messy to set expectations on @case in the
-# controller as stubbing out the return value from Case.find is frought
-# with yuckiness ... e.g. @case.transitions.order...
-def stub_find_case(id)
-  allow(Case).to receive(:find).with(id.to_s)
-                   .and_wrap_original do |original_method, *args|
-    original_method.call(*args).tap do |kase|
-      yield kase
-    end
-  end
-end
-
-
 def stub_current_case_finder_cases_with(result)
   pager = double 'Kaminari Pager', decorate: result
   cases = double 'ActiveRecord Cases', page: pager
@@ -417,6 +402,17 @@ RSpec.describe CasesController, type: :controller do
   end
 
   describe 'GET show' do
+
+    it 'retrieves message_text error from the flash' do
+      sign_in responder
+
+      get :show, params: { id: accepted_case.id },
+          flash:{"case_errors"=>{"message_text"=>["can't be blank"]}}
+
+      expect(assigns(:case).errors.messages[:message_text].first)
+          .to eq("can't be blank")
+
+    end
 
     context 'viewing an unassigned case' do
       let(:unassigned_case)       { create(:case) }

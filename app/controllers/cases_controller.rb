@@ -92,6 +92,7 @@ class CasesController < ApplicationController
     if policy(@case).can_accept_or_reject_responder_assignment?
       redirect_to edit_case_assignment_path @case, @case.responder_assignment.id
     else
+      get_flash_errors_for_case(@case)
       set_permitted_events
       @accepted_now = params[:accepted_now]
       render :show
@@ -270,6 +271,14 @@ class CasesController < ApplicationController
       super(exception, case_path(@case))
     else
       super
+    end
+  end
+
+  def get_flash_errors_for_case(kase)
+    if flash.key?(:case_errors)
+      flash[:case_errors]['message_text'].each do |error|
+        kase.errors.add(:message_text, error)
+      end
     end
   end
 end
