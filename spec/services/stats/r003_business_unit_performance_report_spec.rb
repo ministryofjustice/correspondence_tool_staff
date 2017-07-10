@@ -14,23 +14,27 @@ module Stats
 
       @outcome = find_or_create :outcome, :granted
 
-      # create cases based on today's date of 30/6/2017
-      create_case(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_1, responder: @responder_1)   # team 1 - responded late
-      create_case(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_1, responder: @responder_1)   # team 1 - responded late
-      create_case(received: '20170605', responded: nil, deadline: '20170625', team: @team_1, responder: @responder_1)          # team 1 - open late
-      create_case(received: '20170605', responded: nil, deadline: '20170625', team: @team_1, responder: @responder_1)          # team 1 - open late
-      create_case(received: '20170605', responded: nil, deadline: '20170702', team: @team_1, responder: @responder_1)          # team 1 - open in time
-      create_case(received: '20170605', responded: nil, deadline: '20170625', team: @team_2, responder: @responder_1)          # team 2 - open late
-      create_case(received: '20170605', responded: nil, deadline: '20170702', team: @team_2, responder: @responder_1)          # team 2 - open in time
-      create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_1, responder: @responder_1)   # team 1 - responded in time
-      create_case(received: '20170607', responded: '20170620', deadline: '20170625', team: @team_2, responder: @responder_2)   # team 2 - responded in time
+      Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
+        # create cases based on today's date of 30/6/2017
+        create_case(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_1, responder: @responder_1)   # team 1 - responded late
+        create_case(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_1, responder: @responder_1)   # team 1 - responded late
+        create_case(received: '20170605', responded: nil, deadline: '20170625', team: @team_1, responder: @responder_1)          # team 1 - open late
+        create_case(received: '20170605', responded: nil, deadline: '20170625', team: @team_1, responder: @responder_1)          # team 1 - open late
+        create_case(received: '20170605', responded: nil, deadline: '20170702', team: @team_1, responder: @responder_1)          # team 1 - open in time
+        create_case(received: '20170605', responded: nil, deadline: '20170625', team: @team_2, responder: @responder_1)          # team 2 - open late
+        create_case(received: '20170605', responded: nil, deadline: '20170702', team: @team_2, responder: @responder_1)          # team 2 - open in time
+        create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_1, responder: @responder_1)   # team 1 - responded in time
+        create_case(received: '20170607', responded: '20170620', deadline: '20170625', team: @team_2, responder: @responder_2)   # team 2 - responded in time
 
-      #flagged cases
-      create_case(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_1, responder: @responder_1, flagged: true)   # team 1 - responded late
-      create_case(received: '20170605', responded: nil, deadline: '20170702', team: @team_1, responder: @responder_1, flagged: true)          # team 1 - open in time
-      create_case(received: '20170605', responded: nil, deadline: '20170625', team: @team_2, responder: @responder_1, flagged: true)          # team 2 - open late
-      create_case(received: '20170605', responded: nil, deadline: '20170702', team: @team_2, responder: @responder_1, flagged: true)          # team 2 - open in time
-      create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_1, responder: @responder_1, flagged: true)   # team 1 - responded in time
+        #flagged cases
+        create_case(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_1, responder: @responder_1, flagged: true)   # team 1 - responded late
+        create_case(received: '20170605', responded: nil, deadline: '20170702', team: @team_1, responder: @responder_1, flagged: true)          # team 1 - open in time
+        create_case(received: '20170605', responded: nil, deadline: '20170625', team: @team_2, responder: @responder_1, flagged: true)          # team 2 - open late
+        create_case(received: '20170605', responded: nil, deadline: '20170702', team: @team_2, responder: @responder_1, flagged: true)          # team 2 - open in time
+        create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_1, responder: @responder_1, flagged: true)   # team 1 - responded in time
+      end
+
+      Team.where.not(id: [@team_1.id, @team_2.id]).map(&:destroy)
     end
 
     after(:all)  { DbHousekeeping.clean }

@@ -489,6 +489,7 @@ RSpec.describe CasesController, type: :controller do
             .to eq [:add_message_to_case,
                     :add_response_to_flagged_case,
                     :reassign_user]
+        expect(assigns(:permitted_events)).to eq [:add_message_to_case, :add_response_to_flagged_case, :reassign_user]
       end
 
       it 'renders the show page' do
