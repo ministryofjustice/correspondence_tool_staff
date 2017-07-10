@@ -1,15 +1,3 @@
-.grid-row.message id="#{conversation.id}"
-
-  - if conversation.user_id == current_user.id
-    .column-third
-      | &nbsp;
-    .column-two-thirds
-      .message-right
-        = render partial: 'messages/speech_bubble', locals: {conversation: conversation}
-
-  - else
-    .column-two-thirds
-      .message-left
-        = render partial: 'messages/speech_bubble', locals: {conversation: conversation}
-    .column-third
-      | &nbsp;
+.grid-row.message id="#{message_event.id}"
+  = render partial: 'messages/message_notification',
+          locals: { message_event: message_event }

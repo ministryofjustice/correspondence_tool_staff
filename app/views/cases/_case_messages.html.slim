@@ -5,10 +5,8 @@ h2.request--heading Conversation
 
 .messages-container
   .messages-list
-
-    - if case_details.transitions.messages.any?
-      - case_details.transitions.messages.order(:id).each do |chat|
-        = render partial: 'messages/message', locals: {conversation: chat, user: current_user}
+    - case_details.transitions.messages.order(:id).each do |chat|
+      = render partial: 'messages/message', locals: {message_event: chat, user: current_user}
 
 - if policy(case_details).can_add_message_to_case?
   = form_for case_details, url: case_messages_path(case_details), method: :post, class: "message-form" do |f|

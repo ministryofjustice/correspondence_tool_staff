@@ -2,8 +2,8 @@
   .message-body
     div
       p
-        = conversation.message
+        = message_event.message
     .message-audit
-      = conversation.user.full_name
+      = message_event.user.full_name
       = " "
-      = conversation.created_at.strftime("%d/%m/%Y %H:%M")
+      = message_event.created_at.strftime("%d/%m/%Y %H:%M")
