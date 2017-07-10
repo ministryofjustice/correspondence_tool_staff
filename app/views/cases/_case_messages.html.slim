@@ -1,5 +1,8 @@
 h2.request--heading Conversation
-- ws_user = Digest::SHA1.hexdigest([current_user.id, Rails.application.secrets.secret_key_base].to_s)
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
 .messages-container
   .messages-list
 
@@ -9,6 +12,6 @@ h2.request--heading Conversation
 
 - if policy(case_details).can_add_message_to_case?
   = form_for case_details, url: case_messages_path(case_details), method: :post, class: "message-form" do |f|
-    .message-form data-ws-case-id="#{case_details.id}" data-ws-user="#{ws_user}"
+    .message-form data-ws-case-id="#{case_details.id}"
       = f.text_area :message_text
-      = f.submit "Send", class: 'button'
+      = f.submit "Add message", class: 'button'
