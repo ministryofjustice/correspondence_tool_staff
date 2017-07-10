@@ -12,7 +12,7 @@ module Stats
       super
       @period_start = Time.now.beginning_of_month
       @period_end = Time.now
-      @stats = StatsCollector.new(Team.all.map(&:name).sort, COLUMNS.values)
+      @stats = StatsCollector.new(Team.responding.map(&:name).sort, COLUMNS.values)
     end
 
     def self.title
@@ -20,7 +20,7 @@ module Stats
     end
 
     def self.description
-      'Shows all open cases and cases responded this month, in-time or late, by team'
+      'Shows all open cases and cases responded this month, in-time or late, by responding team'
     end
 
     def run
@@ -41,14 +41,11 @@ module Stats
 
     def analyse_case(case_id)
       kase = Case.find case_id
-      if kase.responded?
-        status = analyse_responded_case(kase)
+      unless kase.current_state == 'unassigned'
         team = kase.responding_team.name
-      else
-        status = analyse_open_case(kase)
-        team = kase.current_team_and_user.team.name
+        status = kase.responded? ? analyse_responded_case(kase) : analyse_open_case(kase)
+        @stats.record_stats(team, COLUMNS[status])
       end
-      @stats.record_stats(team, COLUMNS[status])
     end
 
     def analyse_responded_case(kase)

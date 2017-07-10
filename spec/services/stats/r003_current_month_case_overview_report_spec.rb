@@ -33,7 +33,7 @@ module Stats
 
     describe '#description' do
       it 'returns the report description' do
-        expect(R003CurrentMonthCaseOverviewReport.description).to eq 'Shows all open cases and cases responded this month, in-time or late, by team'
+        expect(R003CurrentMonthCaseOverviewReport.description).to eq 'Shows all open cases and cases responded this month, in-time or late, by responding team'
       end
     end
 
