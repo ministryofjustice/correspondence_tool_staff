@@ -352,6 +352,10 @@ class Case < ApplicationRecord
     response_event.created_at <= external_deadline
   end
 
+  def already_late?
+    Date.today > external_deadline
+  end
+
   def current_team_and_user
     CurrentTeamAndUserService.new(self)
   end

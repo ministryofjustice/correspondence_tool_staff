@@ -4,8 +4,7 @@ module Stats
     include ActiveSupport::Inflector
 
     REPORTS = {
-      'R001' => R001RespondedCaseTimelinessReport,
-      'R002' => R002OpenFoiCasesByTeamReport
+      'R003' => R003CurrentMonthCaseOverviewReport
     }.freeze
 
     def reports
