@@ -517,6 +517,10 @@ RSpec.describe CasesController, type: :controller do
         let(:press_office) { find_or_create :team_press_office }
         let(:press_officer) { find_or_create :press_officer }
 
+        before do
+          team_dacu_disclosure
+        end
+
         it 'permitted_events == []' do
           expect(assigns(:permitted_events)).to be_nil
         end
