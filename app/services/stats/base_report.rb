@@ -24,5 +24,10 @@ module Stats
     def to_csv
       @stats.to_csv(@first_column_heading, @superheadings)
     end
+
+    def reporting_period
+      raise "Period start/end not specified" if @period_start.nil? || @period_end.nil?
+      "#{@period_start.strftime(Settings.default_date_format)} to #{@period_end.strftime(Settings.default_date_format)}"
+    end
   end
 end
