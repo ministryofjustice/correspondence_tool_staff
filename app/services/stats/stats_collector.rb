@@ -29,16 +29,17 @@ module Stats
     end
 
     def column_names
-      @stats[@stats.keys.first].keys.sort
+      @stats[@stats.keys.first].keys
     end
 
     def value(row, col)
       @stats[row][col]
     end
 
-    def to_csv(first_column_header = '')
+    def to_csv(first_column_header = '', superheadings = [])
       cols = [first_column_header] + column_names
       CSV.generate(headers: true) do |csv|
+        superheadings.each { |superheading| csv << superheading }
         csv << cols
         row_names.each do |row_name|
           row = [row_name]

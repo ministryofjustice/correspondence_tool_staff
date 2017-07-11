@@ -65,7 +65,7 @@ module Stats
 
     describe '#column_names' do
       it 'returns all the subcategories for the named category' do
-        expect(collector.column_names).to eq cols.sort
+        expect(collector.column_names).to eq cols
       end
     end
 
@@ -85,9 +85,9 @@ module Stats
         collector.record_stats('Dogs', 'White', 1)
         collector.record_stats('Dogs', 'Black', 2)
         expect(collector.to_csv('Animal')).to eq(
-            "Animal,Black,Brown,White\n" +
+            "Animal,White,Brown,Black\n" +
             "Cats,0,4,0\n" +
-            "Dogs,2,0,1\n" +
+            "Dogs,1,0,2\n" +
             "Ducks,0,0,0\n" +
             "Horses,0,0,0\n")
       end
@@ -97,9 +97,9 @@ module Stats
         collector.record_stats('Dogs', 'White', 1)
         collector.record_stats('Dogs', 'Black', 2)
         expect(collector.to_csv).to eq(
-            "\"\",Black,Brown,White\n" +
+            "\"\",White,Brown,Black\n" +
             "Cats,0,4,0\n" +
-            "Dogs,2,0,1\n" +
+            "Dogs,1,0,2\n" +
             "Ducks,0,0,0\n" +
             "Horses,0,0,0\n")
       end

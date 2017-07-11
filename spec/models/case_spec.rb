@@ -900,6 +900,25 @@ RSpec.describe Case, type: :model do
     end
   end
 
+  describe 'already_late?' do
+
+    let(:kase) { create :case_with_response }
+    it 'returns true is escalation date is in the past' do
+      kase.update!(external_deadline: 1.day.ago)
+      expect(kase.already_late?).to be true
+    end
+
+    it 'returns false if escalation date is today' do
+      kase.update!(external_deadline: Date.today)
+      expect(kase.already_late?).to be false
+    end
+    it 'returns false if escalation date in in the future' do
+      kase.update!(external_deadline: 1.day.from_now)
+      expect(kase.already_late?).to be false
+    end
+
+  end
+
   describe '#attachments_dir' do
     let(:upload_group) { Time.now.strftime('%Y%m%d%H%M%S') }
 
