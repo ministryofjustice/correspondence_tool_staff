@@ -62,7 +62,8 @@ module Stats
     describe '#to_csv' do
       it 'outputs results as a csv lines' do
         Timecop.freeze Date.new(2017, 6, 30) do
-          expected_text = "Teams,Responded - in time,Responded - late,Open - in time,Open - late\n" +
+          expected_text = "Current Month Case Overview Report - 1 Jun 2017 to 30 Jun 2017\n" +
+                          "Teams,Responded - in time,Responded - late,Open - in time,Open - late\n" +
                           "RTA,1,2,1,2\n" +
                           "RTB,1,0,1,1\n"
           report = R003CurrentMonthCaseOverviewReport.new

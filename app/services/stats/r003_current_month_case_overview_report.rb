@@ -13,6 +13,7 @@ module Stats
       @period_start = Time.now.beginning_of_month
       @period_end = Time.now
       @stats = StatsCollector.new(Team.responding.map(&:name).sort, COLUMNS.values)
+      @superheadings = ["#{self.class.title} - #{reporting_period}"]
     end
 
     def self.title
@@ -42,7 +43,7 @@ module Stats
     def analyse_case(case_id)
       kase = Case.find case_id
       unless kase.current_state == 'unassigned'
-        team = kase.responding_team.name
+        team = kase.responding_team&.name || 'Unassigned'
         status = kase.responded? ? analyse_responded_case(kase) : analyse_open_case(kase)
         @stats.record_stats(team, COLUMNS[status])
       end
