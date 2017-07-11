@@ -74,31 +74,6 @@ RSpec.describe MessagesController, type: :controller do
         expect(response).to redirect_to(case_path(pending_dacu_clearance_case, anchor: 'messages-section'))
       end
 
-      context "message is blank" do
-
-        before do
-          params[:case_id] = pending_dacu_clearance_case.id
-          case_transition = build :case_transition_add_message_to_case,
-                                  case: pending_dacu_clearance_case
-          case_transition.errors.add(:message, :blank)
-          stub_find_case(pending_dacu_clearance_case.id) do |kase|
-            allow(kase.state_machine)
-                .to receive(:add_message_to_case!)
-                        .and_raise(ActiveRecord::RecordInvalid, case_transition)
-          end
-          post :create, params: params
-        end
-
-        it "copies the error to the flash" do
-          expect(flash[:case_errors][:message_text]).to eq ["can't be blank"]
-        end
-
-        it 'redirects to case detail page and contains a anchor' do
-          expect(response)
-              .to redirect_to(case_path(pending_dacu_clearance_case,
-                                        anchor: 'messages-section'))
-        end
-      end
     end
 
     context "as Press Office" do
@@ -113,6 +88,33 @@ RSpec.describe MessagesController, type: :controller do
         params[:case_id] = press_flagged_case.id
         post :create , params: params
         expect(response).to redirect_to(case_path(press_flagged_case, anchor: 'messages-section'))
+      end
+    end
+
+    context "message is blank, (user type doesn't matter)" do
+
+      before do
+        sign_in responder
+        params[:case_id] = pending_dacu_clearance_case.id
+        case_transition = build :case_transition_add_message_to_case,
+                                case: pending_dacu_clearance_case
+        case_transition.errors.add(:message, :blank)
+        stub_find_case(pending_dacu_clearance_case.id) do |kase|
+          allow(kase.state_machine)
+              .to receive(:add_message_to_case!)
+                      .and_raise(ActiveRecord::RecordInvalid, case_transition)
+        end
+        post :create, params: params
+      end
+
+      it "copies the error to the flash" do
+        expect(flash[:case_errors][:message_text]).to eq ["can't be blank"]
+      end
+
+      it 'redirects to case detail page and contains a anchor' do
+        expect(response)
+            .to redirect_to(case_path(pending_dacu_clearance_case,
+                                      anchor: 'messages-section'))
       end
     end
   end
