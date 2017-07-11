@@ -204,15 +204,14 @@ class CasesController < ApplicationController
   end
 
   def approve_response
-    authorize @case, :can_approve_case?
+    authorize @case, :can_approve_or_escalate_case?
     @next_step_info = NextStepInfo.new(@case, 'approve')
     render :approve_response
   end
 
   def execute_response_approval
-    authorize @case, :can_approve_case?
-    result = CaseApprovalService.new(user: current_user, kase: @case).call
-    raise Pundit::NotAuthorizedError if result == :unauthorised
+    authorize @case, :can_approve_or_escalate_case?
+    CaseApprovalService.new(user: current_user, kase: @case).call
     flash[:notice] = "You have cleared case #{@case.number} - #{@case.subject}."
     redirect_to cases_path
   end

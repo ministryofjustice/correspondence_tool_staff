@@ -10,9 +10,9 @@ module PageObjects
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-
         section :clearance,
                 PageObjects::Sections::Cases::ClearanceCopySection, '.clearance-copy'
+
 
         element :submit_button, '.button'
 

@@ -162,7 +162,17 @@ class CaseStateMachine
     transition from: :pending_dacu_clearance, to: :awaiting_dispatch
   end
 
-  # event :escalate_to_press_office do
+  event :escalate_to_press_office do
+    guard do |object, _last_transition, options|
+      object.current_state == 'pending_dacu_clearance' &&
+        CaseStateMachine.get_policy(options[:user_id], object)
+          .can_escalate_to_next_approval_level?
+    end
+
+    transition from: :pending_dacu_clearance, to: :pending_press_office_clearance
+  end
+
+  # event :escalate_to_next_approval_level do
   #   guard do |object, _last_transition, options|
   #     CaseStateMachine.get_policy(options[:user_id], object)
   #       .can_escalate_to_next_approval_level?
@@ -170,15 +180,6 @@ class CaseStateMachine
 
   #   transition from: :pending_dacu_clearance, to: :pending_press_office_clearance
   # end
-
-  event :escalate_to_next_approval_level do
-    guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object)
-        .can_escalate_to_next_approval_level?
-    end
-
-    transition from: :pending_dacu_clearance, to: :pending_press_office_clearance
-  end
 
   event :upload_response_and_approve do
     guard do |object, _last_transition, options|
@@ -347,6 +348,13 @@ class CaseStateMachine
              approving_team_id: assignment.team_id
   end
 
+  def escalate_to_press_office!(user, assignment)
+    trigger! :escalate_to_press_office,
+             user_id: user.id,
+             event: :escalate_to_press_office,
+             approving_team_id: assignment.team_id
+  end
+
   def upload_response_and_approve!(user, approving_team, filenames)
     trigger! :upload_response_and_approve,
              user_id: user.id,
@@ -394,7 +402,6 @@ class CaseStateMachine
              event:            :close
   end
 
-
   def add_message_to_case!(user, team, message)
     trigger! :add_message_to_case,
              user_id:           user.id,
@@ -403,10 +410,34 @@ class CaseStateMachine
              event:             :add_message_to_case
   end
 
+  def next_approval_event
+    case object.current_state
+    when 'drafting'
+      approve_or_escalate_case_for_team Team.dacu_disclosure,
+                                        :escalate_to_dacu_disclosure
+    when 'pending_dacu_clearance'
+      approve_or_escalate_case_for_team Team.press_office,
+                                        :escalate_to_press_office
+    when 'pending_press_office_clearance'
+      :approve
+    else
+      raise "case #{kase.id} in state '#{kase.current_state}' isn't ready for approval"
+    end
+
+  end
+
   private
 
   def get_policy
     Pundit.policy!(self.object)
+  end
+
+  def approve_or_escalate_case_for_team(team, next_state)
+    if team.in? object.approving_teams
+      next_state
+    else
+      :approve
+    end
   end
 end
 # rubocop:enable ClassLength

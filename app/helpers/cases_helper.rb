@@ -28,12 +28,7 @@ module CasesHelper
               it: 'action--reassign-approver',
               class: 'button',
               method: 'patch'
-    when :approve
-      link_to t('common.case.clear_response'),
-              approve_response_case_path(@case),
-              id: 'action--approve',
-              class: 'button'
-    when :escalate_to_next_approval_level
+    when :approve, :escalate_to_press_office
       link_to t('common.case.clear_response'),
               approve_response_case_path(@case),
               id: 'action--approve',

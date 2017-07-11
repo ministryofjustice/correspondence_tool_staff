@@ -3,6 +3,10 @@ module PageObjects
     class CasesPage < SitePrism::Page
       set_url '/'
 
+      sections :notices, '.notice-summary' do
+        element :heading, '.notice-summary-heading'
+      end
+
       section :primary_navigation,
               PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 

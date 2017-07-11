@@ -61,6 +61,7 @@ en:
       can_remove_attachment?: 'You are not authorised to remove attachments from this case.'
       can_view_case_details?: 'You are not authorised to view this case.'
       can_download_stats?: You are not authorised to view or download statistics.
+    nil_class: 'Authorisation failed due to internal error.'
 
   state: &state_translations
     unassigned: Needs reassigning
@@ -69,6 +70,7 @@ en:
     awaiting_dispatch: Ready to send
     drafting: Draft in progress
     pending_dacu_clearance: Pending clearance
+    pending_press_office_clearance: Pending clearance
     responded: Ready to close
     closed: ''
     closed_status: Case closed

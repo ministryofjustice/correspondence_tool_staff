@@ -31,6 +31,8 @@ class NextStepInfo
       @kase.responding_team
     when 'pending_dacu_clearance'
       Team.dacu_disclosure
+    when 'pending_press_office_clearance'
+      Team.press_office
     else
       raise "Unexpected next state: #{@next_state}"
     end
@@ -39,7 +41,7 @@ class NextStepInfo
   def translate_action_param(action_param)
     case action_param
     when 'approve'
-      @state_machine_event = :approve
+      @state_machine_event = @state_machine.next_approval_event
       @action_verb = 'clearing the response to'
     when 'upload'
       @state_machine_event = :add_responses
@@ -56,5 +58,8 @@ class NextStepInfo
     else
       raise "Unexpected action parameter: '#{@action}'"
     end
+  end
+
+  def event_for_case_approval(approval)
   end
 end
