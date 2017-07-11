@@ -39,7 +39,7 @@ module Stats
 
     describe '#results' do
       it 'generates_stats as a hash of hashes' do
-        Timecop.freeze Date.new(2017, 6, 30) do
+        Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
           report = R003CurrentMonthCaseOverviewReport.new
           report.run
           expect(report.results).to eq(
@@ -61,7 +61,7 @@ module Stats
 
     describe '#to_csv' do
       it 'outputs results as a csv lines' do
-        Timecop.freeze Date.new(2017, 6, 30) do
+        Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
           expected_text = "Current Month Case Overview Report - 1 Jun 2017 to 30 Jun 2017\n" +
                           "Teams,Responded - in time,Responded - late,Open - in time,Open - late\n" +
                           "RTA,1,2,1,2\n" +
