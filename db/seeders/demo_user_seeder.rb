@@ -5,6 +5,7 @@ class DemoUserSeeder
       ['DACU', 'dacu'],
       ['DACU Disclosure', 'dacudis'],
       ['Press Office', 'pressoffice'],
+      ['Private Office', 'privateoffice'],
       ['Legal Aid Agency', 'laa'],
       ['HR', 'hr'],
       ['HMCTS North East Response Unit(RSU)', 'hmctsne']
@@ -27,6 +28,8 @@ class DemoUserSeeder
       'Dasha Diss'         => { team: 'dacudis',     role: 'approver' },
       'Preston Offman'     => { team: 'pressoffice', role: 'approver' },
       'Prescilla Offenberg'=> { team: 'pressoffice', role: 'approver' },
+      'Primrose Offord'    => { team: 'privateoffice', role: 'approver' },
+      'Princeton Office'   => { team: 'privateoffice', role: 'approver' },
     }
   end
 
