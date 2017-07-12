@@ -8,7 +8,7 @@ class DemoUserSeeder
       ['Private Office', 'privateoffice'],
       ['Legal Aid Agency', 'laa'],
       ['HR', 'hr'],
-      ['HMCTS North East Response Unit(RSU)', 'hmctsne']
+      ['HMCTS North East Regional Support Unit (RSU)', 'hmctsne']
     ]
 
     @users = {
