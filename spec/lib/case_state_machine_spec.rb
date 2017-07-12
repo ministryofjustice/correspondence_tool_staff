@@ -101,7 +101,6 @@ RSpec.describe CaseStateMachine, type: :model do
                   .using_object(kase) }
   end
 
-
   describe event(:unaccept_approver_assignment) do
     it { should transition_from(:unassigned).to(:unassigned) }
     it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
@@ -171,6 +170,16 @@ RSpec.describe CaseStateMachine, type: :model do
     it { should require_permission(:can_respond?)
                   .using_options(user_id: responder.id)
                   .using_object(case_with_response) }
+  end
+
+  describe event(:escalate_to_press_office) do
+    let(:kase) { create :pending_dacu_clearance_case, :press_office }
+
+    it { should transition_from(:pending_dacu_clearance)
+                  .to :pending_press_office_clearance }
+    it { should require_permission(:can_escalate_to_next_approval_level?)
+                  .using_options(user_id: approver.id)
+                  .using_object(kase) }
   end
 
   describe event(:approve) do
@@ -271,7 +280,6 @@ RSpec.describe CaseStateMachine, type: :model do
                                 approving_team_id: approving_team.id)
     end
   end
-
 
   describe 'trigger unaccept_approver_assignment!' do
     it 'triggers unaccept_approver_assignment event' do
@@ -404,7 +412,6 @@ RSpec.describe CaseStateMachine, type: :model do
     end
   end
 
-
   describe 'trigger add_message_to_case!' do
 
     let(:user) { responded_case.responder }
@@ -435,9 +442,7 @@ RSpec.describe CaseStateMachine, type: :model do
     end
   end
 
-
-  context 'approvals' do
-
+  context 'dacu disclosure approvals' do
     let(:kase) { pending_dacu_clearance_case }
     let(:approver) { pending_dacu_clearance_case.approvers.first }
     let(:state_machine) { kase.state_machine }
@@ -484,6 +489,30 @@ RSpec.describe CaseStateMachine, type: :model do
     end
   end
 
+  context 'case flagged with press and pending dacu approval' do
+    let(:kase) { create :pending_dacu_clearance_case, :press_office }
+    let(:approver) { pending_dacu_clearance_case.approvers.first }
+    let(:state_machine) { kase.state_machine }
+    let(:team_id) { kase.approving_teams.first.id }
+
+    describe 'trigger escalate_to_press_office!' do
+      it 'triggers an escalate_to_press_office event' do
+        expect {
+          state_machine.escalate_to_press_office!(
+            approver,
+            kase.approver_assignments.first
+          )
+        }.to trigger_the_event(:escalate_to_press_office)
+               .on_state_machine(state_machine)
+               .with_parameters(
+                 user_id: approver.id,
+                 approving_team_id: team_id
+               )
+      end
+
+    end
+  end
+
   describe 'trigger close!' do
     it 'triggers a close event' do
       expect do
@@ -507,6 +536,48 @@ RSpec.describe CaseStateMachine, type: :model do
       it 'returns nil' do
         expect(CaseStateMachine.event_name(:trigger_article_50)).to be_nil
       end
+    end
+  end
+
+  describe '#next_approval_event' do
+    RSpec::Matchers.define :have_next_approval_event do |next_event|
+      match do |kase|
+        @got_next_event = kase.state_machine.next_approval_event
+        expect(@got_next_event).to eq next_event
+      end
+
+      failure_message do |kase|
+        <<~EOM
+      expected case #{kase} to have next approval event
+      expected event: #{next_event}
+           got state: #{@got_next_event}
+    EOM
+      end
+    end
+
+    context 'case in drafting and not flagged for approval' do
+      subject { case_being_drafted }
+      it { should have_next_approval_event :approve}
+    end
+
+    context 'case in drafting and requiring dacu approval' do
+      subject { create :case_being_drafted, :flagged_accepted, :dacu_disclosure }
+      it { should have_next_approval_event :escalate_to_dacu_disclosure }
+    end
+
+    context 'case in pending_dacu_clearance and only requiring dacu approval' do
+      subject { create :pending_dacu_clearance_case }
+      it { should have_next_approval_event :approve }
+    end
+
+    context 'case in pending_dacu_clearance and requiring press approval' do
+      subject { create :pending_dacu_clearance_case, :press_office }
+      it { should have_next_approval_event :escalate_to_press_office }
+    end
+
+    context 'case in pending_press_office_clearance and only requiring press approval' do
+      subject { create :pending_press_clearance_case }
+      it { should have_next_approval_event :approve }
     end
   end
 end

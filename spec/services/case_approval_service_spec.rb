@@ -11,21 +11,10 @@ describe CaseApprovalService do
       let(:kase) { create :accepted_case, :flagged_accepted }
       let(:user) { kase.approvers.first }
 
-      it 'returns :unauthorised' do
+      it 'raises state machine transition error' do
         expect(kase.current_state).to eq 'drafting'
-        service.call
-        expect(service.result).to eq :unauthorised
-      end
-    end
-
-    context 'user is not approver' do
-      let(:kase) { create :pending_dacu_clearance_case }
-      let(:user) { kase.responder }
-
-      it 'returns :unauthorised' do
-        expect(kase.current_state).to eq 'pending_dacu_clearance'
-        service.call
-        expect(service.result).to eq :unauthorised
+        expect { service.call }
+          .to raise_error(Statesman::TransitionFailedError)
       end
     end
 

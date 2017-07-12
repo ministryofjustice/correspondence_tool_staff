@@ -210,7 +210,7 @@ class CasesController < ApplicationController
   end
 
   def execute_response_approval
-    authorize @case, :can_approve_or_escalate_case?
+    authorize @case
     CaseApprovalService.new(user: current_user, kase: @case).call
     flash[:notice] = "You have cleared case #{@case.number} - #{@case.subject}."
     redirect_to cases_path

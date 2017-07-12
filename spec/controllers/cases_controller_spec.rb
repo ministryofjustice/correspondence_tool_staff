@@ -1348,7 +1348,21 @@ RSpec.describe CasesController, type: :controller do
         get :approve_response, params: { id: pending_dacu_clearance_case.id }
         expect(response).to have_rendered(:approve_response)
       end
-    end
 
+      it 'requires the correct permission' do
+        expect {
+          get :approve_response, params: { id: pending_dacu_clearance_case.id }
+        } .to require_permission(:can_approve_or_escalate_case?)
+      end
+
+      it 'gets the next step info' do
+        allow(NextStepInfo).to receive(:new).and_return(:new_next_step_info)
+        get :approve_response, params: { id: pending_dacu_clearance_case.id }
+        expect(NextStepInfo).to have_received(:new)
+                                  .with(pending_dacu_clearance_case,
+                                        'approve')
+        expect(assigns[:next_step_info]).to eq :new_next_step_info
+      end
+    end
   end
 end

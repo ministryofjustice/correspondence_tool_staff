@@ -1,4 +1,6 @@
 class ApplicationPolicy
+  @@failed_checks = []
+
   class << self
     def failed_checks
       @@failed_checks
@@ -9,7 +11,7 @@ class ApplicationPolicy
         if instance_eval(&block)
           true
         else
-          @@failed_checks << name
+          @@failed_checks << [name, @user, @record]
           false
         end
       end

@@ -172,15 +172,6 @@ class CaseStateMachine
     transition from: :pending_dacu_clearance, to: :pending_press_office_clearance
   end
 
-  # event :escalate_to_next_approval_level do
-  #   guard do |object, _last_transition, options|
-  #     CaseStateMachine.get_policy(options[:user_id], object)
-  #       .can_escalate_to_next_approval_level?
-  #   end
-
-  #   transition from: :pending_dacu_clearance, to: :pending_press_office_clearance
-  # end
-
   event :upload_response_and_approve do
     guard do |object, _last_transition, options|
       CaseStateMachine.get_policy(options[:user_id], object).can_upload_response_and_approve?
@@ -421,7 +412,7 @@ class CaseStateMachine
     when 'pending_press_office_clearance'
       :approve
     else
-      raise "case #{kase.id} in state '#{kase.current_state}' isn't ready for approval"
+      raise Statesman::InvalidStateError, "case #{object.id} in state '#{object.current_state}' isn't ready for approval"
     end
 
   end
@@ -432,9 +423,9 @@ class CaseStateMachine
     Pundit.policy!(self.object)
   end
 
-  def approve_or_escalate_case_for_team(team, next_state)
+  def approve_or_escalate_case_for_team(team, next_event)
     if team.in? object.approving_teams
-      next_state
+      next_event
     else
       :approve
     end

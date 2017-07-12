@@ -179,7 +179,7 @@ FactoryGirl.define do
   factory :pending_dacu_clearance_case, parent: :case_with_response do
     transient do
       approving_team { find_or_create :team_dacu_disclosure }
-      approver { create :disclosure_specialist }
+      approver       { create :disclosure_specialist }
     end
 
     after(:create) do |kase, evaluator|
@@ -194,7 +194,26 @@ FactoryGirl.define do
              user_id: evaluator.responder.id
       kase.reload
     end
+  end
 
+  factory :pending_press_clearance_case, parent: :pending_dacu_clearance_case do
+    transient do
+      press_office  { find_or_create :team_press_office }
+      press_officer { find_or_create :press_officer }
+    end
+
+    after(:create) do |kase, evaluator|
+      create :approver_assignment,
+             case: kase,
+             team: evaluator.press_office,
+             state: 'accepted',
+             user: evaluator.press_officer
+
+      create :case_transition_escalate_to_press_office,
+             case: kase,
+             user: evaluator.approver
+      kase.reload
+    end
   end
 
   factory :approved_case, parent: :pending_dacu_clearance_case do

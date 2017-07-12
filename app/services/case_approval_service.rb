@@ -26,19 +26,17 @@ class CaseApprovalService
 
   def mark_as_approved
     ActiveRecord::Base.transaction do
-      # TODO: ensure we get the correct user, not just the first one
       assignment = @kase.approver_assignments.for_user(@user).first
-      assignment.update!(approved: true)
       @state_machine.approve!(@user, assignment)
+      assignment.update!(approved: true)
     end
   end
 
   def escalate_to_press_office
     ActiveRecord::Base.transaction do
-      # TODO: ensure we get the correct user, not just the first one
       assignment = @kase.approver_assignments.for_user(@user).first
-      assignment.update!(approved: true)
       @state_machine.escalate_to_press_office!(@user, assignment)
+      assignment.update!(approved: true)
     end
   end
 end

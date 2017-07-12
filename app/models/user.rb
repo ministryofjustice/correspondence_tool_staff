@@ -52,7 +52,6 @@ class User < ApplicationRecord
   scope :approvers, -> {
     joins(:team_roles).where(teams_users_roles: { role: 'approver' })
   }
-  scope :for_teams, -> (*teams) { where(team: teams) }
 
   def manager?
     managing_teams.any?

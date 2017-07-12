@@ -93,6 +93,7 @@ ignore_unused:
   # ActiveRecord Model error messages
   - 'activerecord.errors.models.*'
   - 'tabs.{in_time,late}_html'
+  - 'pundit.nil_class'
 
 
 ## Consider these keys used:

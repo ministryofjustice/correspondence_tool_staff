@@ -59,7 +59,4 @@ class NextStepInfo
       raise "Unexpected action parameter: '#{@action}'"
     end
   end
-
-  def event_for_case_approval(approval)
-  end
 end
