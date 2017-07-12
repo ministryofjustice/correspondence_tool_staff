@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 module Stats
-  describe R003CurrentMonthCaseOverviewReport do
+  describe R003BusinessUnitPerformanceReport do
 
     before(:all) do
       Team.all.map(&:destroy)
@@ -9,6 +9,8 @@ module Stats
       @team_2 = create :team, name: 'RTB'
       @responder_1 = create :responder, responding_teams: [@team_1]
       @responder_2 = create :responder, responding_teams: [@team_2]
+
+      @outcome = find_or_create :outcome, :granted
 
       # create cases based on today's date of 30/6/2017
       create_case(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_1, responder: @responder_1)   # team 1 - responded late
@@ -27,20 +29,20 @@ module Stats
 
     describe '#title' do
       it 'returns the report title' do
-        expect(R003CurrentMonthCaseOverviewReport.title).to eq 'Current Month Case Overview Report'
+        expect(R003BusinessUnitPerformanceReport.title).to eq 'Business Unit Performance Report'
       end
     end
 
     describe '#description' do
       it 'returns the report description' do
-        expect(R003CurrentMonthCaseOverviewReport.description).to eq 'Shows all open cases and cases responded this month, in-time or late, by responding team'
+        expect(R003BusinessUnitPerformanceReport.description).to eq 'Shows all open cases and cases closed this month, in-time or late, by responding team'
       end
     end
 
     describe '#results' do
       it 'generates_stats as a hash of hashes' do
         Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
-          report = R003CurrentMonthCaseOverviewReport.new
+          report = R003BusinessUnitPerformanceReport.new
           report.run
           expect(report.results).to eq(
                                       {'RTA' => {
@@ -62,11 +64,11 @@ module Stats
     describe '#to_csv' do
       it 'outputs results as a csv lines' do
         Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
-          expected_text = "Current Month Case Overview Report - 1 Jun 2017 to 30 Jun 2017\n" +
+          expected_text = "Business Unit Performance Report - 1 Jun 2017 to 30 Jun 2017\n" +
                           "Teams,Responded - in time,Responded - late,Open - in time,Open - late\n" +
                           "RTA,1,2,1,2\n" +
                           "RTB,1,0,1,1\n"
-          report = R003CurrentMonthCaseOverviewReport.new
+          report = R003BusinessUnitPerformanceReport.new
           report.run
           expect(report.to_csv).to eq expected_text
         end
@@ -84,6 +86,8 @@ module Stats
         unless responded_date.nil?
           Timecop.freeze responded_date + 14.hours do
             kase.state_machine.respond!(responder, team)
+            kase.update!(date_responded: Time.now, outcome_id: @outcome.id)
+            kase.state_machine.close!(kase.managing_team.users.first, kase.managing_team)
           end
         end
       end

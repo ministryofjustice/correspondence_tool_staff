@@ -351,9 +351,8 @@ class Case < ApplicationRecord
   end
 
   def responded_in_time?
-    response_event = transitions.responded.last
-    return false if response_event.nil?
-    response_event.created_at <= external_deadline
+    return false unless closed?
+    date_responded <= external_deadline
   end
 
   def already_late?

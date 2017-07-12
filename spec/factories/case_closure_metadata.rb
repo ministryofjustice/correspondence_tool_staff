@@ -45,6 +45,23 @@ FactoryGirl.define do
       trait :requires_refusal_reason do
         requires_refusal_reason true
       end
+
+      trait :granted do
+        name 'Granted in full'
+        abbreviation 'granted'
+      end
+
+      trait :part_refused do
+        name 'Refused in part'
+        abbreviation 'part'
+        requires_refusal_reason true
+      end
+
+      trait :refused do
+        name 'Refused fully'
+        abbreviation 'refused'
+        requires_refusal_reason true
+      end
     end
 
     factory :refusal_reason, class: CaseClosure::RefusalReason do
