@@ -28,6 +28,11 @@ end
 
 module CTS
   class << self
+
+    def error(statement)
+      $stderr.puts statement
+    end
+
     def check_environment
       environment = if ::Rails.env.production?
                       ENV.fetch('ENV', Rails.env)
@@ -87,6 +92,7 @@ module CTS
       dacu_team
       dacu_disclosure_team
       press_office_team
+      private_office_team
       hmcts_team
       hr_team
       laa_team
@@ -105,6 +111,7 @@ module CTS
         hmcts_team.responders.first || raise("HMCTS missing users")
         hr_team.responders.first || raise("HR missing users")
         press_office_team.approvers.first || raise("Press Office missing users")
+        private_office_team.approvers.first || raise("Private Office missing users")
       rescue => ex
         error "Error validating users:"
         error ex.message
@@ -142,6 +149,15 @@ module CTS
         end
     end
 
+    def private_office_approver
+      @private_office_approver ||=
+          if private_office_team.approvers.blank?
+            raise 'Private Office team has no approvers assigned.'
+          else
+            private_office_team.approvers.first
+          end
+    end
+
     def dacu_team
       @dacu_team ||= CTS::find_team 'DACU'
     end
@@ -153,6 +169,10 @@ module CTS
 
     def press_office_team
       @press_office_team ||= CTS::find_team Settings.press_office_team_name
+    end
+
+    def private_office_team
+      @private_office_team ||= CTS::find_team Settings.private_office_team_name
     end
 
     def hmcts_team
