@@ -49,18 +49,27 @@ FactoryGirl.define do
       trait :granted do
         name 'Granted in full'
         abbreviation 'granted'
+        sequence_id 10
       end
 
       trait :part_refused do
         name 'Refused in part'
         abbreviation 'part'
+        sequence_id 20
         requires_refusal_reason true
       end
 
       trait :refused do
         name 'Refused fully'
         abbreviation 'refused'
+        sequence_id 30
         requires_refusal_reason true
+      end
+
+      trait :clarify do
+        name 'Clarification needed - Section 1(3)'
+        abbreviation 'clarify'
+        sequence_id 15
       end
     end
 
@@ -71,6 +80,48 @@ FactoryGirl.define do
 
       trait :requires_exemption do
         requires_exemption true
+      end
+
+      trait :exempt do
+        name                'Exemption applied'
+        abbreviation        'exempt'
+        sequence_id         110
+        requires_exemption  true
+      end
+
+      trait :noinfo do
+        name                'Information not held'
+        abbreviation        'noinfo'
+        sequence_id         120
+        requires_exemption  false
+      end
+
+      trait :advice do
+        name                '(s1(3)) or (s8(1)) - Advice & assistance/clarification'
+        abbreviation        'advice'
+        sequence_id         130
+        requires_exemption  false
+      end
+
+      trait :cost do
+        name                '(s12) - Exceeded cost'
+        abbreviation        'cost'
+        sequence_id         140
+        requires_exemption  false
+      end
+
+      trait :vex do
+        name                '(s14(1)) - Vexatious'
+        abbreviation        'vex'
+        sequence_id         150
+        requires_exemption  false
+      end
+
+      trait :repeat do
+        name                '(s14(2)) - Repeated request'
+        abbreviation        'repeat'
+        sequence_id         160
+        requires_exemption  false
       end
     end
   end

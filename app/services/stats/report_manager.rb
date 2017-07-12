@@ -4,7 +4,8 @@ module Stats
     include ActiveSupport::Inflector
 
     REPORTS = {
-      'R003' => R003BusinessUnitPerformanceReport
+      'R003' => R003BusinessUnitPerformanceReport,
+      'R004' => R004CabinetOfficeReport
     }.freeze
 
     def reports

@@ -17,5 +17,36 @@
 module CaseClosure
   class RefusalReason < Metadatum
 
+    def self.exempt
+      abbrev('exempt')
+    end
+
+    def self.noinfo
+      abbrev('noinfo')
+    end
+
+    def self.advice
+      abbrev('advice')
+    end
+
+    def self.cost
+      abbrev('cost')
+    end
+
+    def self.vex
+      abbrev('vex')
+    end
+
+    def self.repeat
+      abbrev('repeat')
+    end
+
+
+    def self.abbrev(abbreviation)
+      where(abbreviation: abbreviation).first
+    end
+
+    private_class_method :abbrev
+
   end
 end

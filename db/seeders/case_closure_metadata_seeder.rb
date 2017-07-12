@@ -51,7 +51,7 @@ module CaseClosure
         subtype: nil,
         name: '(s14(2)) - Repeated request',
         abbreviation: 'repeat',
-        sequence_id: 150)
+        sequence_id: 160)
 
       puts "----Seeding CaseClosure::Exemptions----" if verbose
       Exemption.find_or_create_by!(

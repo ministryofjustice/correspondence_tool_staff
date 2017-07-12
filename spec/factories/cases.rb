@@ -295,6 +295,52 @@ FactoryGirl.define do
       received_date 30.business_days.ago
       date_responded 1.business_day.ago
     end
+
+    trait :granted_in_full do
+      outcome { find_or_create :outcome, :granted }
+    end
+
+    trait :clarification_required do
+      outcome { find_or_create :outcome, :clarify }
+    end
+
+    trait :refused_fully_info_not_held do
+      outcome { find_or_create :outcome, :refused }
+      refusal_reason { find_or_create :refusal_reason, :noinfo }
+    end
+
+    trait :fully_refused_vexatious do
+      outcome { find_or_create :outcome, :refused }
+      refusal_reason { find_or_create :refusal_reason, :vex }
+    end
+
+    trait :part_refused_vexatious do
+      outcome { find_or_create :outcome, :part_refused }
+      refusal_reason { find_or_create :refusal_reason, :vex }
+    end
+
+    trait :part_refused_repeat do
+      outcome { find_or_create :outcome, :part_refused }
+      refusal_reason { find_or_create :refusal_reason, :repeat }
+    end
+
+    trait :fully_refused_cost do
+      outcome { find_or_create :outcome, :refused }
+      refusal_reason { find_or_create :refusal_reason, :cost }
+    end
+
+    trait :part_refused_exempt do
+      outcome { find_or_create :outcome, :part_refused }
+      refusal_reason { find_or_create :refusal_reason, :exempt }
+      exemptions { [ CaseClosure::Exemption.all.sample] }
+    end
+
+    trait :fully_refused_exempt do
+      outcome { find_or_create :outcome, :refused }
+      refusal_reason { find_or_create :refusal_reason, :exempt }
+      exemptions { [ CaseClosure::Exemption.all.sample] }
+    end
+
   end
 
   trait :flagged do

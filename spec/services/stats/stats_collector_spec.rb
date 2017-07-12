@@ -3,18 +3,22 @@ require 'rails_helper'
 module Stats
   describe StatsCollector do
 
-    let(:rows) { %w(Cats Dogs Horses Ducks) }
+    let(:rows) { %w( _DOMESTIC Cats Dogs _SPACER _FARMYARD Horses Ducks ) }
     let(:cols) { { white: 'White', brown: 'Brown', black: 'Black' } }
     let(:collector)  { StatsCollector.new(rows, cols) }
 
     describe '.new' do
       it 'instantiates an empty result set' do
+
         expect(collector.stats).to eq(
           {
-            'Cats' =>   {:white => 0, :brown => 0, :black => 0},
-            'Dogs' =>   {:white => 0, :brown => 0, :black => 0},
-            'Horses' => {:white => 0, :brown => 0, :black => 0},
-            'Ducks' =>  {:white => 0, :brown => 0, :black => 0},
+            '_DOMESTIC' => '',
+            'Cats'      => {:white => 0, :brown => 0, :black => 0},
+            'Dogs'      => {:white => 0, :brown => 0, :black => 0},
+            '_SPACER'   => '',
+            '_FARMYARD' => '',
+            'Horses'    => {:white => 0, :brown => 0, :black => 0},
+            'Ducks'     => {:white => 0, :brown => 0, :black => 0},
           })
       end
     end
@@ -24,10 +28,13 @@ module Stats
         collector.record_stats('Cats', :white)
         expect(collector.stats).to eq(
          {
-           'Cats' =>    { :white => 1, :brown => 0, :black => 0},
-           'Dogs' =>    { :white => 0, :brown => 0, :black => 0},
-           'Horses' =>  { :white => 0, :brown => 0, :black => 0},
-           'Ducks' =>   { :white => 0, :brown => 0, :black => 0},
+           '_DOMESTIC'  => '',
+           'Cats'       => { :white => 1, :brown => 0, :black => 0},
+           'Dogs'       => { :white => 0, :brown => 0, :black => 0},
+           '_SPACER'    => '',
+           '_FARMYARD'  => '',
+           'Horses'     => { :white => 0, :brown => 0, :black => 0},
+           'Ducks'      => { :white => 0, :brown => 0, :black => 0},
          })
       end
 
@@ -35,10 +42,13 @@ module Stats
         collector.record_stats('Horses', :brown, 33)
         expect(collector.stats).to eq(
          {
-           'Cats' =>    {:white => 0, :brown => 0, :black => 0},
-           'Dogs' =>    {:white => 0, :brown => 0, :black => 0},
-           'Horses' =>  {:white => 0, :brown => 33, :black => 0},
-           'Ducks' =>   {:white => 0, :brown => 0, :black => 0},
+           '_DOMESTIC'  => '',
+           'Cats'       => {:white => 0, :brown => 0, :black => 0},
+           'Dogs'       => {:white => 0, :brown => 0, :black => 0},
+           '_SPACER'    => '',
+           '_FARMYARD'  => '',
+           'Horses'     => {:white => 0, :brown => 33, :black => 0},
+           'Ducks'      => {:white => 0, :brown => 0, :black => 0},
          })
       end
 
@@ -48,17 +58,51 @@ module Stats
         }.to raise_error ArgumentError, "No such row name: 'Mice'"
       end
 
-      it 'raises if a non-existent sub category is specified' do
+      it 'raises if a non-existent column is specified' do
         expect{
-          collector.record_stats('Dogs', 'Purple')
-        }.to raise_error ArgumentError, "No such column name: 'Purple'"
+          collector.record_stats('Dogs', :purple)
+        }.to raise_error ArgumentError, "No such column name: ':purple'"
+      end
+    end
+
+
+    describe 'record_text' do
+      it 'overwrites the column with the given text' do
+        collector.record_text 'Dogs', :brown, 'None'
+        expect(collector.stats).to eq(
+           {
+             '_DOMESTIC' => '',
+             'Cats' => {
+               :white => 0,
+               :brown => 0,
+               :black => 0
+             },
+             'Dogs' => {
+               :white => 0,
+               :brown => 'None',
+               :black => 0
+             },
+             '_SPACER'    => '',
+             '_FARMYARD'  => '',
+             'Horses' => {
+               :white => 0,
+               :brown => 0,
+               :black => 0
+             },
+             'Ducks' => {
+               :white => 0,
+               :brown => 0,
+               :black => 0
+             }
+           }
+         )
       end
     end
 
 
     describe '#row_names' do
       it 'returns an array of all the categories' do
-        expect(collector.row_names).to eq rows.sort
+        expect(collector.row_names).to eq rows
       end
     end
 
@@ -86,10 +130,13 @@ module Stats
         collector.record_stats('Dogs', :black, 2)
         expect(collector.to_csv('Animal')).to eq(
             "\nAnimal,White,Brown,Black\n" +
+            "DOMESTIC\n" +
             "Cats,0,4,0\n" +
             "Dogs,1,0,2\n" +
-            "Ducks,0,0,0\n" +
-            "Horses,0,0,0\n")
+            "\"\"\n" +
+            "FARMYARD\n" +
+            "Horses,0,0,0\n" +
+            "Ducks,0,0,0\n")
       end
 
       it 'returns CSV string without column header for first column' do
@@ -98,10 +145,13 @@ module Stats
         collector.record_stats('Dogs', :black, 2)
         expect(collector.to_csv).to eq(
             "\n\"\",White,Brown,Black\n" +
+            "DOMESTIC\n" +
             "Cats,0,4,0\n" +
             "Dogs,1,0,2\n" +
-            "Ducks,0,0,0\n" +
-            "Horses,0,0,0\n")
+            "\"\"\n" +
+            "FARMYARD\n" +
+            "Horses,0,0,0\n" +
+            "Ducks,0,0,0\n")
       end
     end
   end
