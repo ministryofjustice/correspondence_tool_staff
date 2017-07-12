@@ -17,7 +17,17 @@
 module CaseClosure
   class Outcome < Metadatum
 
+    def self.granted
+      where(abbreviation: 'granted').first
+    end
 
+    def self.part_refused
+      where(abbreviation: 'part').first
+    end
+
+    def self.fully_refused
+      where(abbreviation: 'refused').first
+    end
 
   end
 end
