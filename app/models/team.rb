@@ -58,4 +58,12 @@ class Team < ApplicationRecord
   def press_office?
     name == Settings.press_office_team_name
   end
+
+  def self.private_office
+    where(name: Settings.private_office_team_name).first
+  end
+
+  def private_office?
+    name == Settings.private_office_team_name
+  end
 end

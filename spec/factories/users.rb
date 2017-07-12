@@ -56,5 +56,10 @@ FactoryGirl.define do
       sequence(:full_name) { |n| "Press Officer #{n}" }
       approving_team { find_or_create(:team_press_office) }
     end
+
+    factory :private_officer do
+      sequence(:full_name) { |n| "Private Officer #{n}" }
+      approving_team { find_or_create(:team_private_office) }
+    end
   end
 end

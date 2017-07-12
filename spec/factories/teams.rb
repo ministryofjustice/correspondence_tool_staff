@@ -59,4 +59,9 @@ FactoryGirl.define do
     name 'Press Office'
     email 'press.office@localhost'
   end
+
+  factory :team_private_office, parent: :approving_team do
+    name 'Private Office'
+    email 'private.office@localhost'
+  end
 end

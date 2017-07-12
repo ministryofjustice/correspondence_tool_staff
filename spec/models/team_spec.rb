@@ -71,6 +71,7 @@ RSpec.describe Team, type: :model do
 
     before(:all) do
       @press_office_team =  find_or_create :team_press_office
+      @private_office_team =  find_or_create :team_private_office
       @dacu_disclosure_team =  find_or_create :team_dacu_disclosure
     end
 
@@ -107,6 +108,22 @@ RSpec.describe Team, type: :model do
 
       it 'returns false if not press office team' do
         expect(@dacu_disclosure_team.press_office?).to be false
+      end
+    end
+
+    describe '.private_office' do
+      it 'finds the Private Office team' do
+        expect(Team.private_office).to eq @private_office_team
+      end
+    end
+
+    describe '#private_office?' do
+      it 'returns true if private office team' do
+        expect(@private_office_team.private_office?).to be true
+      end
+
+      it 'returns false if not private office team' do
+        expect(@dacu_disclosure_team.private_office?).to be false
       end
     end
   end
