@@ -173,7 +173,7 @@ module CTS
             raise "Could not approve case response , case id: #{kase.id}, user id: #{CTS::dacu_disclosure_approver.id}, result: #{result}"
           end
         else
-          ResponseUploaderService.new(kase, responder, nil, nil).seed!
+          ResponseUploaderService.new(kase, responder, { uploaded_files: nil }, nil).seed!
           kase.state_machine.add_responses!(responder,
                                             responding_team,
                                             kase.attachments)
@@ -185,8 +185,10 @@ module CTS
       end
 
       def transition_to_pending_dacu_disclosure_clearance(kase)
-        ResponseUploaderService.new(kase, responder, nil).seed!
-        kase.add_response_to_flagged_case(responder, kase.attachments)
+        ResponseUploaderService.new(kase, responder, { uploaded_files: nil }, nil).seed!
+        kase.state_machine.add_response_to_flagged_case!(responder,
+                                                         responding_team,
+                                                         kase.attachments)
       end
 
       def transition_to_closed(kase)
