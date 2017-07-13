@@ -52,7 +52,8 @@ module Stats
 
     def analyse_case(case_id)
       kase = Case.find case_id
-      team = kase.responding_team&.name || 'Unassigned'
+      return if kase.unassigned?
+      team = kase.responding_team.name
       timeliness = kase.closed? ? analyse_closed_case(kase) : analyse_open_case(kase)
       column_key = add_trigger_state(kase, timeliness)
       @stats.record_stats(team, column_key)
