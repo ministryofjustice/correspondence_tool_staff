@@ -160,6 +160,7 @@ class CaseStateMachine
     end
 
     transition from: :pending_dacu_clearance, to: :awaiting_dispatch
+    transition from: :pending_press_office_clearance, to: :awaiting_dispatch
   end
 
   event :escalate_to_press_office do
