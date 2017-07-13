@@ -40,17 +40,15 @@ module Stats
 
     def to_csv(first_column_header = '', superheadings = [Array.new])
       cols = [first_column_header] + column_names
-      x = CSV.generate(headers: true) do |csv|
+      CSV.generate(headers: true) do |csv|
         superheadings.each { |superheading| csv << superheading }
         csv << cols
         row_names.each do |row_name|
           row = [row_name]
-          # @column_hash.each { | col_key, col_hdg| row << value(row_name, col_key) }
           @column_hash.keys.each { |col_key| row << value(row_name, col_key) }
           csv << row
         end
       end
-      x
     end
 
   end
