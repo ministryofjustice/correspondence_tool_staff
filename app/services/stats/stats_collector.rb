@@ -8,20 +8,22 @@ module Stats
 
     attr_reader :stats
 
+    # intitialize with an array of row names, and a hash of column headings keyed by unique identifier
     def initialize(rows, columns)
+      @column_hash = columns
       @stats = {}
       rows.each do |row|
         @stats[row] = {}
-        columns.each do |col|
-          @stats[row][col] = 0
+        @column_hash.keys.each do |col_key|
+          @stats[row][col_key] = 0
         end
       end
     end
 
-    def record_stats(row, col, count = 1)
+    def record_stats(row, col_key, count = 1)
       raise ArgumentError.new("No such row name: '#{row}'") unless @stats.key?(row)
-      raise ArgumentError.new("No such column name: '#{col}'") unless @stats[row].key?(col)
-      @stats[row][col] += count
+      raise ArgumentError.new("No such column name: '#{col_key}'") unless @stats[row].key?(col_key)
+      @stats[row][col_key] += count
     end
 
     def row_names
@@ -29,21 +31,21 @@ module Stats
     end
 
     def column_names
-      @stats[@stats.keys.first].keys
+      @column_hash.values
     end
 
     def value(row, col)
       @stats[row][col]
     end
 
-    def to_csv(first_column_header = '', superheadings = [])
+    def to_csv(first_column_header = '', superheadings = [Array.new])
       cols = [first_column_header] + column_names
-      CSV.generate do |csv|
-        superheadings.each { |superheading| csv << [ superheading ] }
+      CSV.generate(headers: true) do |csv|
+        superheadings.each { |superheading| csv << superheading }
         csv << cols
         row_names.each do |row_name|
           row = [row_name]
-          column_names.each { |column_name| row << value(row_name, column_name) }
+          @column_hash.keys.each { |col_key| row << value(row_name, col_key) }
           csv << row
         end
       end

@@ -2,18 +2,22 @@ module Stats
   class R003BusinessUnitPerformanceReport < BaseReport
 
     COLUMNS = {
-      responded_in_time: 'Responded - in time',
-      responded_late: 'Responded - late',
-      open_in_time: 'Open - in time',
-      open_late: 'Open - late'
+      non_trigger_responded_in_time:  'Responded - in time',
+      non_trigger_responded_late:     'Responded - late',
+      non_trigger_open_in_time:       'Open - in time',
+      non_trigger_open_late:          'Open - late',
+      trigger_responded_in_time:      'Responded - in time',
+      trigger_responded_late:         'Responded - late',
+      trigger_open_in_time:           'Open - in time',
+      trigger_open_late:              'Open - late'
     }
 
     def initialize
       super
       @period_start = Time.now.beginning_of_month
       @period_end = Time.now
-      @stats = StatsCollector.new(Team.responding.map(&:name).sort, COLUMNS.values)
-      @superheadings = ["#{self.class.title} - #{reporting_period}"]
+      @stats = StatsCollector.new(Team.responding.map(&:name).sort, COLUMNS)
+      @superheadings = superheadings
     end
 
     def self.title
@@ -31,6 +35,13 @@ module Stats
 
     private
 
+    def superheadings
+      [
+        ["#{self.class.title} - #{reporting_period}"],
+        ['', 'Non-trigger FOIs', 'Non-trigger FOIs', 'Non-trigger FOIs', 'Non-trigger FOIs', 'Trigger FOIs', 'Trigger FOIs', 'Trigger FOIs', 'Trigger FOIs', 'Trigger FOIs']
+      ]
+    end
+
     def closed_case_ids
       Case.closed.where(date_responded: [@period_start..@period_end]).pluck(:id)
     end
@@ -42,16 +53,22 @@ module Stats
     def analyse_case(case_id)
       kase = Case.find case_id
       team = kase.responding_team&.name || 'Unassigned'
-      status = kase.closed? ? analyse_closed_case(kase) : analyse_open_case(kase)
-      @stats.record_stats(team, COLUMNS[status])
+      timeliness = kase.closed? ? analyse_closed_case(kase) : analyse_open_case(kase)
+      column_key = add_trigger_state(kase, timeliness)
+      @stats.record_stats(team, column_key)
+    end
+
+    def add_trigger_state(kase, timeliness)
+      status = kase.flagged? ? 'trigger_' + timeliness : 'non_trigger_' + timeliness
+      status.to_sym
     end
 
     def analyse_closed_case(kase)
-      kase.responded_in_time? ? :responded_in_time : :responded_late
+      kase.responded_in_time? ? 'responded_in_time' : 'responded_late'
     end
 
     def analyse_open_case(kase)
-      kase.already_late? ? :open_late : :open_in_time
+      kase.already_late? ? 'open_late' : 'open_in_time'
     end
   end
 end
