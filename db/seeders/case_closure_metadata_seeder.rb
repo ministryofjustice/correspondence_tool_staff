@@ -9,6 +9,7 @@ module CaseClosure
       Outcome.find_or_create_by!(subtype: nil, name: 'Granted in full', abbreviation: 'granted', sequence_id: 10)
       rec1 = Outcome.find_or_create_by!(subtype: nil, name: 'Refused in part', abbreviation: 'part', sequence_id: 20)
       rec2 = Outcome.find_or_create_by!(subtype: nil, name: 'Refused fully', abbreviation: 'refused', sequence_id: 30)
+      Outcome.find_or_create_by!(subtype: nil, name: 'Clarification requested', abbreviation: 'clarify', sequence_id: 40)
 
       [rec1, rec2].each { |r| r.update_attribute(:requires_refusal_reason, true) }
 
