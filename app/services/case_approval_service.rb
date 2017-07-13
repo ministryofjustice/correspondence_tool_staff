@@ -26,7 +26,9 @@ class CaseApprovalService
 
   def mark_as_approved
     ActiveRecord::Base.transaction do
-      assignment = @kase.approver_assignments.for_user(@user).first
+      assignment = @kase.approver_assignments
+                     .with_teams(@user.approving_team)
+                     .first
       @state_machine.approve!(@user, assignment)
       assignment.update!(approved: true)
     end
@@ -34,7 +36,9 @@ class CaseApprovalService
 
   def escalate_to_press_office
     ActiveRecord::Base.transaction do
-      assignment = @kase.approver_assignments.for_user(@user).first
+      assignment = @kase.approver_assignments
+                     .with_teams(@user.approving_team)
+                     .first
       @state_machine.escalate_to_press_office!(@user, assignment)
       assignment.update!(approved: true)
     end

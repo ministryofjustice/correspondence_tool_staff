@@ -1,11 +1,12 @@
 require 'rails_helper'
 
 feature 'cases requiring clearance by disclosure specialist' do
-  given(:manager) { create :manager }
-  given(:disclosure_specialist) { create :disclosure_specialist }
-  given!(:responding_team) { create :responding_team }
-  given!(:team_dacu_disclosure) { create :team_dacu_disclosure }
-  given(:responder) { responding_team.users.first }
+  given(:manager)                     { create :manager }
+  given(:disclosure_specialist)       { create :disclosure_specialist }
+  given(:other_disclosure_specialist) { create :disclosure_specialist }
+  given!(:responding_team)            { create :responding_team }
+  given!(:team_dacu_disclosure)       { create :team_dacu_disclosure }
+  given(:responder)                   { responding_team.users.first }
 
   def create_case(flag_for_clearance: false)
     expect(cases_new_page).to be_displayed
@@ -22,7 +23,7 @@ feature 'cases requiring clearance by disclosure specialist' do
     assignments_new_page.create_and_assign_case.click
   end
 
-  def take_case_on_as_discosure_specialist(kase)
+  def take_case_on_as_discosure_specialist(kase:, expected_approver:)
     incoming_cases_page.load
 
     expect(incoming_cases_page.case_list.size).to eq 1
@@ -36,7 +37,7 @@ feature 'cases requiring clearance by disclosure specialist' do
     expect(case_list_item.actions.success_message.text)
       .to include 'Case taken on'
     expect(case_list_item.highlight_row.size).to eq 3
-    expect(kase.reload.approvers).to include disclosure_specialist
+    expect(kase.reload.approvers).to include expected_approver
     case_list_item
   end
 
@@ -120,7 +121,10 @@ feature 'cases requiring clearance by disclosure specialist' do
 
     login_as disclosure_specialist
 
-    case_list_item = take_case_on_as_discosure_specialist(kase)
+    case_list_item = take_case_on_as_discosure_specialist(
+      kase: kase,
+      expected_approver: disclosure_specialist
+    )
     undo_take_case_on_as_disclosure_specialist(kase, case_list_item)
     de_escalate_case_as_disclosure_specialist(kase, case_list_item)
     undo_de_escalate_case_as_disclosure_specialist(kase, case_list_item)
@@ -132,7 +136,29 @@ feature 'cases requiring clearance by disclosure specialist' do
     upload_response_as_kilo(kase.reload, responder)
 
     login_as disclosure_specialist
-    take_case_on_as_discosure_specialist(kase)
+    take_case_on_as_discosure_specialist(
+      kase: kase,
+      expected_approver: disclosure_specialist
+    )
+    cases_show_page.load(id: kase.id)
+    expect(cases_show_page.actions).to have_clear_case
+    cases_show_page.actions.clear_case.click
+
+    expect(approve_response_page).to be_displayed
+    approve_response_page.submit_button.click
+    expect(kase.reload.current_state).to eq 'awaiting_dispatch'
+  end
+
+  scenario 'approving a case as a disclosure specialist not assigned directly to the case', js: true do
+    kase = create_flagged_case_and_assign_to_team
+    accept_case_as_kilo(kase)
+    upload_response_as_kilo(kase.reload, responder)
+
+    login_as other_disclosure_specialist
+    take_case_on_as_discosure_specialist(
+      kase: kase,
+      expected_approver: other_disclosure_specialist
+    )
     cases_show_page.load(id: kase.id)
     expect(cases_show_page.actions).to have_clear_case
     cases_show_page.actions.clear_case.click
@@ -148,7 +174,10 @@ feature 'cases requiring clearance by disclosure specialist' do
     upload_response_as_kilo(kase.reload, responder)
 
     login_as disclosure_specialist
-    take_case_on_as_discosure_specialist(kase)
+    take_case_on_as_discosure_specialist(
+      kase: kase,
+      expected_approver: disclosure_specialist
+    )
     cases_show_page.load(id: kase.id)
     expect(cases_show_page.actions).to have_upload_approve
     cases_show_page.actions.upload_approve.click
