@@ -25,6 +25,8 @@ class CaseFinderService
       incoming_cases_dacu_disclosure
     when 'incoming_cases_press_office'
       incoming_cases_press_office
+    when 'incoming_cases_private_office'
+      incoming_cases_private_office
     when 'my_open_cases'
       my_open_cases
     when 'open_cases'
@@ -54,12 +56,11 @@ class CaseFinderService
   end
 
   def incoming_cases_press_office
-    chain @cases
-      .where(created_at: (3.business_day.ago.beginning_of_day..
-                          1.business_days.ago.end_of_day))
-      .not_with_teams([Team.press_office])
-      .order(id: :desc)
+    new_cases_from_last_3_days([Team.press_office])
+  end
 
+  def incoming_cases_private_office
+    new_cases_from_last_3_days([Team.private_office])
   end
 
   def my_open_cases
@@ -95,5 +96,13 @@ class CaseFinderService
 
   def chain(cases, user = @user)
     self.class.new(user, cases)
+  end
+
+  def new_cases_from_last_3_days(team)
+    chain @cases
+      .where(created_at: (3.business_day.ago.beginning_of_day..
+          1.business_days.ago.end_of_day))
+              .not_with_teams(team)
+              .order(id: :desc)
   end
 end

@@ -3,6 +3,7 @@ require 'rails_helper'
 feature 'listing incoming on the system' do
   given(:disclosure_specialist) { create :disclosure_specialist }
   given(:press_officer) { create :press_officer }
+  given(:private_officer) { create :private_officer }
 
   given(:assigned_case) { create :assigned_case,
                                  created_at: 1.business_days.ago,
@@ -31,6 +32,14 @@ feature 'listing incoming on the system' do
            identifier: 'assigned_case_flagged_for_press_office_accepted'
   end
 
+  given(:assigned_case_flagged_for_private_office_accepted) do
+    create :assigned_case,
+           :flagged_accepted,
+           :private_office,
+           created_at: 2.business_days.ago,
+           identifier: 'assigned_case_flagged_for_private_office_accepted'
+  end
+
   context 'with cases setup for dacu disclosure' do
     background do
       assigned_case
@@ -54,7 +63,7 @@ feature 'listing incoming on the system' do
     end
   end
 
-  context 'with cases setup for dacu disclosure' do
+  context 'with cases setup for press office' do
     given(:too_old_assigned_case) { create :assigned_case,
                                            created_at: 4.business_days.ago,
                                            identifier: 'too_old_assigned_case' }
@@ -78,6 +87,33 @@ feature 'listing incoming on the system' do
       expect(cases.first.number).to have_text assigned_case.number
       expect(cases.second.number)
         .to have_text assigned_case_flagged_for_dacu_disclosure.number
+    end
+  end
+
+  context 'with cases setup for private office' do
+    given(:too_old_assigned_case) { create :assigned_case,
+                                           created_at: 4.business_days.ago,
+                                           identifier: 'too_old_assigned_case' }
+
+    background do
+      too_old_assigned_case
+      assigned_case_flagged_for_dacu_disclosure
+      assigned_case_flagged_for_private_office_accepted
+      assigned_case
+      fresh_assigned_case
+    end
+
+    scenario 'for press office' do
+      login_as private_officer
+
+      visit '/cases/incoming'
+
+      cases = incoming_cases_page.case_list
+
+      expect(cases.count).to eq 2
+      expect(cases.first.number).to have_text assigned_case.number
+      expect(cases.second.number)
+          .to have_text assigned_case_flagged_for_dacu_disclosure.number
     end
   end
 end

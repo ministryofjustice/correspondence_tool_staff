@@ -332,6 +332,23 @@ FactoryGirl.define do
     end
   end
 
+  trait :private_office do
+    # Use after :flagged or :flagged_accepted trait when creating case
+    transient do
+      approver                    { create :private_officer }
+      approving_team              { find_or_create :team_private_office }
+      disclosure_team             { find_or_create :team_dacu_disclosure }
+      disclosure_assignment_state { 'pending' }
+    end
+
+    after(:create) do |kase, evaluator|
+      create :approver_assignment,
+             case: kase,
+             team: evaluator.disclosure_team,
+             state: evaluator.disclosure_assignment_state
+    end
+  end
+
   trait :sent_by_post do
     delivery_method :sent_by_post
     uploaded_request_files { ["#{Faker::Internet.slug}.pdf"] }

@@ -52,6 +52,8 @@ global_navigation:
       path: /cases/incoming
     incoming_cases_press_office:
       path: /cases/incoming
+    incoming_cases_private_office:
+      path: /cases/incoming
     my_open_cases:
       path: /cases/my_open
     open_cases:
@@ -78,6 +80,17 @@ global_navigation:
 
     'Press Office':
       incoming_cases_press_office: default
+        # expires_today:
+        # expires_tomorrow:
+        # expires_in_two_days:
+      open_cases:
+        in_time:
+        late:
+      my_open_cases:
+      closed_cases:
+
+    'Private Office':
+      incoming_cases_private_office: default
         # expires_today:
         # expires_tomorrow:
         # expires_in_two_days:
