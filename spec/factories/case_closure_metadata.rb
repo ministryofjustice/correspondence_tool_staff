@@ -37,6 +37,13 @@ FactoryGirl.define do
       sequence(:name) { |n| "Qualified exemption #{n}" }
     end
 
+    trait :s22 do
+      subtype       'qualified'
+      name          '(s22) - Information intended for future publication'
+      abbreviation  'future'
+      sequence_id   605
+    end
+
     factory :outcome, class: CaseClosure::Outcome do
       subtype nil
       sequence(:name) { |n| "Outcome #{n}" }
