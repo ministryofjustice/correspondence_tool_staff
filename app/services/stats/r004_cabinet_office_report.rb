@@ -36,6 +36,7 @@ module Stats
 
     private
 
+    # rubocop:disable Metrics/MethodLength
     def report_lines
       {
         '_TIMELINESS' => "",
@@ -88,6 +89,7 @@ module Stats
 
       }
     end
+    # rubocop:enable Metrics/MethodLength
 
     def populate_category(category)
       value = __send__("get_value_#{category.sub('.', '_')}")

@@ -88,7 +88,7 @@ module Stats
 
     context '1.Bii' do
       it 'is zero' do
-        expect(@results['1.Bii'][:desc]).to match /Number of requests still outstanding where a fee .* request has not been processed/
+        expect(@results['1.Bii'][:desc]).to match(/Number of requests still outstanding where a fee .* request has not been processed/)
         expect(@results['1.Bii'][:value]).to eq 0
       end
     end
@@ -137,28 +137,28 @@ module Stats
 
     context '2.B' do
       it 'records the stat' do
-        expect(@results['2.B'][:desc]).to match /Number of cases created and closed in this quarter .*Granted in full/
+        expect(@results['2.B'][:desc]).to match(/Number of cases created and closed in this quarter .*Granted in full/)
         expect(@results['2.B'][:value]).to eq 7
       end
     end
 
     context '2.C' do
       it 'records the stat' do
-        expect(@results['2.C'][:desc]).to match /Clarification required - S1\(3\)/
+        expect(@results['2.C'][:desc]).to match(/Clarification required - S1\(3\)/)
         expect(@results['2.C'][:value]).to eq 2
       end
     end
 
     context '2.D' do
       it 'records the stat' do
-        expect(@results['2.D'][:desc]).to match /Number of cases created and closed in this quarter .*Refused fully.*Information not held/
+        expect(@results['2.D'][:desc]).to match(/Number of cases created and closed in this quarter .*Refused fully.*Information not held/)
         expect(@results['2.D'][:value]).to eq 3
       end
     end
 
     context '2.E' do
       it 'records the stat' do
-        expect(@results['2.E'][:desc]).to match /Number of cases created and closed in this quarter .*Refused fully.*Refused in part.* vexatious/
+        expect(@results['2.E'][:desc]).to match(/Number of cases created and closed in this quarter .*Refused fully.*Refused in part.* vexatious/)
         expect(@results['2.E'][:value]).to eq 3
       end
     end
@@ -200,70 +200,70 @@ module Stats
 
     context '3.S22' do
       it 'records the stat' do
-        expect(@results['3.S22'][:desc]).to match /Refused fully.*Exemption applied.*Information intended for future publication/
+        expect(@results['3.S22'][:desc]).to match(/Refused fully.*Exemption applied.*Information intended for future publication/)
         expect(@results['3.S22'][:value]).to eq 4
       end
     end
 
     context '3.S22A' do
       it 'records the stat' do
-        expect(@results['3.S22A'][:desc]).to match /Refused fully.*reason for refusal.*Research intended for future publication/
+        expect(@results['3.S22A'][:desc]).to match(/Refused fully.*reason for refusal.*Research intended for future publication/)
         expect(@results['3.S22A'][:value]).to eq 1
       end
     end
 
     context '3.S23' do
       it 'records the stat' do
-        expect(@results['3.S23'][:desc]).to match /Refused fully.*Exemption applied.*Information supplied by, or relating to, bodies dealing with security matters/
+        expect(@results['3.S23'][:desc]).to match(/Refused fully.*Exemption applied.*Information supplied by, or relating to, bodies dealing with security matters/)
         expect(@results['3.S23'][:value]).to eq 2
       end
     end
 
     context '3.S24' do
       it 'records the stat' do
-        expect(@results['3.S24'][:desc]).to match /Refused fully.*Exemption applied.*National security/
+        expect(@results['3.S24'][:desc]).to match(/Refused fully.*Exemption applied.*National security/)
         expect(@results['3.S24'][:value]).to eq 1
       end
     end
 
     context '3.S26' do
       it 'records the stat' do
-        expect(@results['3.S26'][:desc]).to match /Refused fully.*Exemption applied.*Defence/
+        expect(@results['3.S26'][:desc]).to match(/Refused fully.*Exemption applied.*Defence/)
         expect(@results['3.S26'][:value]).to eq 4
       end
     end
 
     context '3.S27' do
       it 'records the stat' do
-        expect(@results['3.S27'][:desc]).to match /Refused fully.*Exemption applied.*International relations/
+        expect(@results['3.S27'][:desc]).to match(/Refused fully.*Exemption applied.*International relations/)
         expect(@results['3.S27'][:value]).to eq 3
       end
     end
 
     context '3.S28' do
       it 'records the stat' do
-        expect(@results['3.S28'][:desc]).to match /Refused fully.*Exemption applied.*Relations within the United Kingdom/
+        expect(@results['3.S28'][:desc]).to match(/Refused fully.*Exemption applied.*Relations within the United Kingdom/)
         expect(@results['3.S28'][:value]).to eq 2
       end
     end
 
     context '3.S29' do
       it 'records the stat' do
-        expect(@results['3.S29'][:desc]).to match /Refused fully.*Exemption applied.*economy/
+        expect(@results['3.S29'][:desc]).to match(/Refused fully.*Exemption applied.*economy/)
         expect(@results['3.S29'][:value]).to eq 1
       end
     end
 
     context '3.S30' do
       it 'records the stat' do
-        expect(@results['3.S30'][:desc]).to match /Refused fully.*Exemption applied.*public authorities/
+        expect(@results['3.S30'][:desc]).to match(/Refused fully.*Exemption applied.*public authorities/)
         expect(@results['3.S30'][:value]).to eq 2
       end
     end
 
     context '3.S31' do
       it 'records the stat' do
-        expect(@results['3.S31'][:desc]).to match /Refused fully.*Exemption applied.*Law enforcement/
+        expect(@results['3.S31'][:desc]).to match(/Refused fully.*Exemption applied.*Law enforcement/)
         expect(@results['3.S31'][:value]).to eq 3
       end
     end
