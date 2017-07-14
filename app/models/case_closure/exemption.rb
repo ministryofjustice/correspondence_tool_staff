@@ -1,4 +1,4 @@
-# == Schema Information
+# == Schema Inforails rmation
 #
 # Table name: case_closure_metadata
 #
@@ -22,6 +22,27 @@ module CaseClosure
     scope :ncnd, -> { where(subtype: 'ncnd') }
     scope :absolute, -> { where(subtype: 'absolute') }
     scope :qualified, -> { where(subtype: 'qualified') }
+
+    def self.othermeans
+      abbrev('othermeans')
+    end
+
+    def self.security
+      abbrev('security')
+    end
+
+    def self.court
+      abbrev('court')
+    end
+
+
+    def self.abbrev(abbreviation)
+      where(abbreviation: abbreviation).first
+    end
+
+
+    private_class_method :abbrev
+
 
     def ncnd?
       subtype == 'ncnd'

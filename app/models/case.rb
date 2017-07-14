@@ -332,7 +332,7 @@ class Case < ApplicationRecord
 
   # case is flagged, and still requires at least one response from an approver
   def requires_clearance?
-    approver_assignments.any? && approver_assignments.unapproved.any?
+    flagged? && approver_assignments.unapproved.any?
   end
 
   # def case is flagged

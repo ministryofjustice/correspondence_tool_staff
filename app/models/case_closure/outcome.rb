@@ -29,7 +29,7 @@ module CaseClosure
       where(abbreviation: 'refused').first
     end
 
-    def self.clarification_requested
+    def self.clarify
       where(abbreviation: 'clarify').first
     end
 
