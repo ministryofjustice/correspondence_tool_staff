@@ -5,7 +5,7 @@ class ResponseUploaderService
   # * 'upload' - upload response but don't change state
   # * 'upload-flagged' - upload response to flagged case and transition to pending_dacu_clearance
   # * 'upload-approve' - approver uploads a response and approves
-  # * 'upload-revert' - approer uploads a response and reverts to kilo for amendments
+  # * 'upload-redraft' - approver uploads a response for redrafting to kilo for amendments
   #
   def initialize(kase, current_user, params, action_params)
     @case = kase
@@ -57,7 +57,7 @@ class ResponseUploaderService
         @case.approving_teams.with_user(@current_user).first,
         filenames
       )
-    when 'upload-revert'
+    when 'upload-redraft'
       @case.state_machine.upload_response_and_return_for_redraft!(
                            @current_user,
                            @case.approving_teams.with_user(@current_user).first,

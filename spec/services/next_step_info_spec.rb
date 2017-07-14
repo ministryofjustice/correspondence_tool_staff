@@ -70,11 +70,11 @@ describe 'NextStepInfo' do
       end
     end
 
-    context 'upload-revert' do
+    context 'upload-redraft' do
       xit 'raises' do
         expect {
-          NextStepInfo.new(unassigned_case, 'upload-revert')
-        }.to raise_error RuntimeError, 'Unexpected action upload-revert for case in unassigned state'
+          NextStepInfo.new(unassigned_case, 'upload-redraft')
+        }.to raise_error RuntimeError, 'Unexpected action upload-redraft for case in unassigned state'
       end
     end
   end
@@ -104,11 +104,11 @@ describe 'NextStepInfo' do
       end
     end
 
-    context 'upload-revert' do
+    context 'upload-redraft' do
       xit 'raises' do
         expect {
-          NextStepInfo.new(awaiting_responder_case, 'upload-revert')
-        }.to raise_error RuntimeError, 'Unexpected action upload-revert for case in awaiting_responder state'
+          NextStepInfo.new(awaiting_responder_case, 'upload-redraft')
+        }.to raise_error RuntimeError, 'Unexpected action upload-redraft for case in awaiting_responder state'
       end
     end
   end
@@ -138,11 +138,11 @@ describe 'NextStepInfo' do
       end
     end
 
-    context 'upload-revert' do
+    context 'upload-redraft' do
       xit 'raises' do
         expect {
-          NextStepInfo.new(accepted_case, 'upload-revert')
-        }.to raise_error RuntimeError, 'Unexpected action upload-revert for case in drafting state'
+          NextStepInfo.new(accepted_case, 'upload-redraft')
+        }.to raise_error RuntimeError, 'Unexpected action upload-redraft for case in drafting state'
       end
     end
   end
@@ -172,11 +172,11 @@ describe 'NextStepInfo' do
       end
     end
 
-    context 'upload-revert' do
+    context 'upload-redraft' do
       xit 'raises' do
         expect {
-          NextStepInfo.new(case_with_response, 'upload-revert')
-        }.to raise_error RuntimeError, 'Unexpected action upload-revert for case in awaiting_dispatch state'
+          NextStepInfo.new(case_with_response, 'upload-redraft')
+        }.to raise_error RuntimeError, 'Unexpected action upload-redraft for case in awaiting_dispatch state'
       end
     end
   end
@@ -206,9 +206,9 @@ describe 'NextStepInfo' do
       end
     end
 
-    context 'upload-revert' do
+    context 'upload-redraft' do
       it 'raises' do
-        nsi = NextStepInfo.new(pending_dacu_clearance_case, 'upload-revert')
+        nsi = NextStepInfo.new(pending_dacu_clearance_case, 'upload-redraft')
         expect(nsi.next_state).to eq 'drafting'
         expect(nsi.next_team).to eq pending_dacu_clearance_case.responding_team
       end

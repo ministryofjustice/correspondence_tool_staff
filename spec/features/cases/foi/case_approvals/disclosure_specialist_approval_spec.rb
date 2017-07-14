@@ -96,7 +96,7 @@ feature 'cases requiring clearance by disclosure specialist' do
   end
 
   def upload_response_and_send_for_redraft_as_disclosure_specialist(kase, dd_specialist)
-    upload_response_with_action_param(kase, dd_specialist, 'upload-revert')
+    upload_response_with_action_param(kase, dd_specialist, 'upload-redraft')
   end
 
   def upload_response_with_action_param(kase, user, action)

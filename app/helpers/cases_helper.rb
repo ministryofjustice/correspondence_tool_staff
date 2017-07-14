@@ -40,7 +40,7 @@ module CasesHelper
               class: 'button'
     when :upload_response_and_return_for_redraft
       link_to t('common.case.upload_and_redraft'),
-              new_response_upload_case_path(@case, 'action' => 'upload-revert'),
+              new_response_upload_case_path(@case, 'action' => 'upload-redraft'),
               id: 'action--upload-redraft',
               class: 'button'
     when :close

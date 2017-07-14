@@ -50,7 +50,7 @@ class NextStepInfo
     when 'upload-approve'
       @state_machine_event = :upload_response_and_approve
       @action_verb = 'uploading the responses and clearing'
-    when 'upload-revert'
+    when 'upload-redraft'
       @state_machine_event = :upload_response_and_return_for_redraft
       @action_verb = 'uploading changes to'
     else
