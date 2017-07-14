@@ -11,7 +11,7 @@ describe CaseApprovalService do
       let(:kase) { create :accepted_case, :flagged_accepted }
       let(:user) { kase.approvers.first }
 
-      it 'raises state machine transition error' do
+      it 'raises state machine guard error' do
         expect(kase.current_state).to eq 'drafting'
         expect { service.call }
           .to raise_error(Statesman::TransitionFailedError)

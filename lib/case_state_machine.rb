@@ -1,7 +1,7 @@
 # rubocop:disable ClassLength
 class CaseStateMachine
   include Statesman::Machine
-  include Statesman::Events
+  include Events
 
   def self.event_name(event)
     if self.events.keys.include?(event.to_sym)
@@ -155,22 +155,25 @@ class CaseStateMachine
   end
 
   event :approve do
-    guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object).can_approve_case?
-    end
+    # guard do |object, _last_transition, options|
+    #   CaseStateMachine.get_policy(options[:user_id], object).can_approve_case?
+    # end
 
-    transition from: :pending_dacu_clearance, to: :awaiting_dispatch
-    transition from: :pending_press_office_clearance, to: :awaiting_dispatch
+    transition from: :pending_dacu_clearance, to: :awaiting_dispatch,
+               guard: lambda { |object,_,options| CaseStateMachine.get_policy(options[:user_id], object).can_approve_case? }
+    transition from: :pending_press_office_clearance, to: :awaiting_dispatch,
+               guard: lambda { |object,_,options| CaseStateMachine.get_policy(options[:user_id], object).can_approve_case? }
   end
 
   event :escalate_to_press_office do
-    guard do |object, _last_transition, options|
-      object.current_state == 'pending_dacu_clearance' &&
-        CaseStateMachine.get_policy(options[:user_id], object)
-          .can_escalate_to_next_approval_level?
-    end
+    # guard do |object, _last_transition, options|
+    #   object.current_state == 'pending_dacu_clearance' &&
+    #     CaseStateMachine.get_policy(options[:user_id], object)
+    #       .can_escalate_to_next_approval_level?
+    # end
 
-    transition from: :pending_dacu_clearance, to: :pending_press_office_clearance
+    transition from: :pending_dacu_clearance, to: :pending_press_office_clearance,
+               guard: lambda { |object,_,options| CaseStateMachine.get_policy(options[:user_id], object).can_escalate_to_next_approval_level? }
   end
 
   event :upload_response_and_approve do
@@ -240,11 +243,9 @@ class CaseStateMachine
 
 
   def permitted_events(user_id)
-    state = current_state
-    events = self.class.events.select do |event_name, event|
-      can_trigger_event?(event_name, user_id: user_id) && event[:transitions].key?(state) && event[:transitions][state].any? do |end_state|
-        can_transition_to? end_state, user_id: user_id
-      end
+    events = self.class.events.select do |event_name, _event|
+      can_trigger_event?(event_name: event_name,
+                         metadata: { user_id: user_id })
     end.map(&:first)
     events.sort! { |a, b| a.to_s <=> b.to_s }
   end

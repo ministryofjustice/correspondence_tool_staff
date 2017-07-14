@@ -15,12 +15,10 @@ class NextStepInfo
   private
 
   def get_next_state
-    transitions = @state_machine.class.events[@state_machine_event][:transitions]
-    target_states = transitions[@kase.current_state]
-    if target_states.nil?
-      raise "Unexpected action #{@action} for case in #{@kase.current_state} state"
-    end
-    target_states.first
+    @state_machine.next_state_for_event(@state_machine_event)
+  rescue
+    Rails.logger.error "Unexpected action #{@action} for case in #{@kase.current_state} state"
+    raise
   end
 
   def get_next_team
