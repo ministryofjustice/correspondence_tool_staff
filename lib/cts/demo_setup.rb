@@ -11,7 +11,7 @@ module CTS
       @number = number
       @cases = Case.order(id: :desc).limit(number).to_a
       @managing_team = CTS::dacu_team
-      @responding_teams = Team.where(name: ['Legal Aid Agency', 'HR', 'HMCTS North East Response Unit(RSU)'])
+      @responding_teams = Team.where(name: ['Legal Aid Agency', 'HR', 'HMCTS North East Regional Support Unit (RSU)'])
       @dacu_disclosure = Team.dacu_disclosure
       @press_office = Team.press_office
       @oldest_received_date = 35.days.ago

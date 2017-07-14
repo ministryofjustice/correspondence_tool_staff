@@ -185,7 +185,7 @@ module CTS
 
     def hmcts_team
       @hmcts_team ||=
-        CTS::find_team 'HMCTS North East Response Unit(RSU)'
+        CTS::find_team 'HMCTS North East Regional Support Unit (RSU)'
     end
 
     def laa_team
