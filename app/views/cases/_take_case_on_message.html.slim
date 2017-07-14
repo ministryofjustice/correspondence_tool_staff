@@ -5,7 +5,7 @@ div { id="take_case_on_#{kase.id}"
   - if success
     = ' '
     = link_to "Undo",
-              unaccept_case_assignment_path(@case, @case.approver_assignments.with_teams(current_user.teams).first),
+              unaccept_case_assignment_path(kase, kase.approver_assignments.with_teams(current_user.teams).first),
               {remote: true,
                method: :patch,
                class: "js-undo-take-on-link"}

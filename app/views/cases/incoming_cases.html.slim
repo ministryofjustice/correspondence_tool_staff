@@ -34,8 +34,8 @@
               .case_message_extract
                 = kase.shortened_message
             td.js-take-case-on-container aria-label="#{t('.actions')}"
-              - if current_user.press_officer?
-                = render partial: 'take_case_on_for_press_office',
+              - if current_user.press_officer? || current_user.private_officer?
+                = render partial: 'take_case_on_for_approver',
                         locals: { case_details: kase }
               - elsif kase.approver_assignments.with_teams(current_user.teams)
                 = render partial: 'take_case_on_or_de_escalate',

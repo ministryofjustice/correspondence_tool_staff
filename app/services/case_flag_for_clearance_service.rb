@@ -19,6 +19,11 @@ class CaseFlagForClearanceService
       if @case.approver_assignments.where(team: @dts.approving_team).blank?
         assign_approver(@user, @team, @dts.approving_team)
       end
+    elsif @team.private_office?
+      assign_and_accept_approver(@user, @team)
+      if @case.approver_assignments.where(team: @dts.approving_team).blank?
+        assign_approver(@user, @team, @dts.approving_team)
+      end
     end
     @result = :ok
   end

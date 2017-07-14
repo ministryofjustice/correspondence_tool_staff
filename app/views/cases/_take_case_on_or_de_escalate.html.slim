@@ -11,8 +11,8 @@
             class: 'js-de-escalate-link secondard-action-link',
             method: :patch
 
-- elsif current_user.approving_team.press_office?
-  = link_to 'Take case on',
+- elsif current_user.approving_team.press_office? || current_user.approving_team.private_office?
+    = link_to 'Take case on',
         take_case_on_case_assignment_path(case_details.id, current_user.id),
         id: "take_case_on_#{case_details.id}",
         class: 'button take-case-on-link',

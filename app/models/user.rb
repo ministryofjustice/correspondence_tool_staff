@@ -69,6 +69,10 @@ class User < ApplicationRecord
     approving_team == Team.press_office
   end
 
+  def private_officer?
+    approving_team == Team.private_office
+  end
+
   def roles
     team_roles.pluck(:role).uniq
   end
