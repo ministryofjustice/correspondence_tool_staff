@@ -332,13 +332,13 @@ FactoryGirl.define do
     trait :part_refused_exempt do
       outcome { find_or_create :outcome, :part_refused }
       refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.all.sample] }
+      exemptions { [ CaseClosure::Exemption.security ] }
     end
 
     trait :fully_refused_exempt do
       outcome { find_or_create :outcome, :refused }
       refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.all.sample] }
+      exemptions { [ CaseClosure::Exemption.othermeans ] }
     end
 
   end
