@@ -10,34 +10,33 @@ module CTS
       something with a particular case.
 
       Command-Line Args:
-        USER: ID or full name for a user
-        CASE: ID or case number for a case
+        USER:     ID or full name for a user
+        CASE:     ID or case number for a case
+        POLICIES: list of patterns to use to generate list of policies to check
+                  (default is "can_.*")
 
       Examples:
         ./cts policies check 19 239
         ./cts policies check 'Preston Offman' 239
         ./cts policies check 'Preston Offman' 170621004
-        ./cts policies check -p can_view_case_details\? 19 239
-        ./cts policies check -p can_view_case_details\?,can_approve_case\? 19 239
+        ./cts policies check 19 239 can_view_case_details
+        ./cts policies check 19 239 can_view_case_details can_approve_case
     EOD
-    option :policy, aliases: 'p', type: :string,
-           desc: 'Only check given policy/policies.'
     def check(*args)
-      check_policies = options.fetch(:policy, '').split(/, */).map(&:to_sym)
-
       raise("No user provided.") if args.length == 0
       raise("No case provided.") if args.length == 1
       user = CTS::find_user(args.shift)
       puts "Found User: id:#{user.id} name:#{user.full_name}"
       kase = CTS::find_case(args.shift)
       puts "Found Case: id:#{kase.id} number:#{kase.number}"
+      check_policies = args.present? ? args : ['^can_.*\?$']
+      puts "Checking policies: #{check_policies}"
 
       policy = Pundit.policy!(user, kase)
-      policy_methods = policy.public_methods.grep(/^can_.*\?$/)
-      unless check_policies.empty?
-        puts "Checking policies: #{options[:policy]}"
-        policy_methods.reject! { |m| !m.in? check_policies }
-      end
+      all_policy_methods = policy.public_methods
+      policy_patterns = check_policies.map { |p| Regexp.new p }
+      policies_pattern = Regexp.union(policy_patterns)
+      policy_methods = all_policy_methods.grep(policies_pattern)
       policy_method_padding = policy_methods.max_by(&:length).length
       policy_methods.each do |policy_method|
         result = policy.__send__(policy_method)
