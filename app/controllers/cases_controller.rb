@@ -19,6 +19,7 @@ class CasesController < ApplicationController
       :update,
       :upload_responses,
     ]
+  before_action :set_assignment, only: [:show]
 
   def index
     # index doesn't have a nav page defined so cannot use the GlobalNavManager
@@ -152,18 +153,6 @@ class CasesController < ApplicationController
     end
   end
 
-  def reassign_approver
-    ars = ApproverReassignmentService.new(user: current_user, kase: @case)
-    if ars.call == :ok
-      flash[:notice] = 'Case re-assigned to you'
-      redirect_to case_path(@case)
-    else
-      flash[:error] = 'You do not have rights to re-assign this case to you'
-      redirect_to case_path(@case)
-    end
-
-  end
-
   def close
     authorize @case, :can_close_case?
     set_permitted_events
@@ -284,6 +273,14 @@ class CasesController < ApplicationController
   def set_case
     @case = Case.find(params[:id]).decorate
     @case_transitions = @case.transitions.order(id: :desc).decorate
+  end
+
+  def set_assignment
+    if current_user.responder?
+      @assignment = @case.assignments.for_team(current_user.responding_teams.first.id).last
+    elsif current_user.approver?
+      @assignment = @case.assignments.for_team(current_user.approving_team.id).last
+    end
   end
 
   def user_not_authorized(exception)

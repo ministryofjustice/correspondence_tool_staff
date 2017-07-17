@@ -33,8 +33,10 @@ class CaseTransitionDecorator < Draper::Decorator
       "#{h.pluralize(object.filenames.size, 'file')} added<br/>Case is now Pending clearance with DACU disclosure team"
     when 'respond'
       'Marked as responded'
-    when 'reassign_approver'
-      "#{object.user.full_name} has taken over the case"
+    when 'reassign_user'
+      target_user = User.find(object.target_user_id)
+      acting_user = User.find(object.acting_user_id)
+      "#{ acting_user.full_name } re-assigned this case to <strong>#{ target_user.full_name }</strong>"
     end
   end
   # rubocop:enable Metrics/CyclomaticComplexity

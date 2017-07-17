@@ -66,11 +66,19 @@ class CasePolicy < ApplicationPolicy
       user.responding_teams.include?(self.case.responding_team)
   end
 
-  def can_reassign_approver?
+  def assignments_reassign_user?
     clear_failed_checks
-    check_case_requires_clearance &&
-      check_user_is_an_approver_for_case &&
-      check_user_is_not_case_approver
+    check_user_is_in_current_team ||
+        check_user_is_an_approver_for_case
+
+  end
+
+  def assignments_execute_reassign_user?
+    assignments_reassign_user?
+  end
+
+  def reassign_user?
+    assignments_execute_reassign_user?
   end
 
   def can_close_case?
@@ -280,7 +288,8 @@ class CasePolicy < ApplicationPolicy
   end
 
   check :user_is_a_responder_for_case do
-    user.responding_teams.include?(self.case.responding_team) && !self.case.current_state.in?(['closed', 'responded'])
+    user.responding_teams.include?(self.case.responding_team) &&
+        !self.case.current_state.in?(['closed', 'responded'])
   end
 
   check :user_is_an_approver_for_case do
@@ -385,7 +394,10 @@ class CasePolicy < ApplicationPolicy
 
   check :user_is_in_current_team do
     current_info = CurrentTeamAndUserService.new(@case)
-    @user.in? current_info.team.users
+    #team will not be present for closed cases
+    current_info.team.present? && @user.in?(current_info.team.users)
   end
+
+
 end
 # rubocop:enable ClassLength

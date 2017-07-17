@@ -22,12 +22,11 @@ module CasesHelper
               respond_case_path(@case),
               id: 'action--mark-response-as-sent',
               class: 'button'
-    when :reassign_approver
-      link_to t('common.case.reassign_to_me'),
-              reassign_approver_case_path(@case),
-              it: 'action--reassign-approver',
-              class: 'button',
-              method: 'patch'
+    when :reassign_user
+      link_to t('common.case.reassign_case'),
+              reassign_user_case_assignment_path(@case, @assignment),
+              id: 'action--reassign-case',
+              class: 'button'
     when :approve
       link_to t('common.case.clear_response'),
               approve_response_case_path(@case),

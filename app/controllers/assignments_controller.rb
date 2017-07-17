@@ -3,9 +3,11 @@ class AssignmentsController < ApplicationController
   before_action :set_case, only: [
                   :accept,
                   :accept_or_reject,
+                  :reassign_user,
                   :create,
                   :edit,
                   :new,
+                  :execute_reassign_user,
                   :show_rejected,
                   :take_case_on,
                   :unaccept,
@@ -13,7 +15,9 @@ class AssignmentsController < ApplicationController
   before_action :set_assignment, only: [
                   :accept,
                   :accept_or_reject,
+                  :reassign_user,
                   :edit,
+                  :execute_reassign_user,
                   :unaccept,
                 ]
   before_action :validate_response, only: :accept_or_reject
@@ -123,6 +127,28 @@ class AssignmentsController < ApplicationController
     render
   end
 
+  def reassign_user
+    authorize @case, :assignments_reassign_user?
+    @team_users = set_team_users
+  end
+
+  def execute_reassign_user
+    authorize @case, :assignments_execute_reassign_user?
+
+    target_user = User.find(reassign_user_params[:user_id])
+    urs = UserReassignmentService
+              .new(target_user: target_user,
+                   acting_user: current_user,
+                   kase: @case,
+                   target_assignment: @assignment)
+
+    if urs.call == :ok
+      flash[:notice] = "Case re-assigned to #{ @assignment.user.full_name }"
+      redirect_to case_path(@case)
+    end
+
+  end
+
   private
 
   def assignment_params
@@ -137,6 +163,13 @@ class AssignmentsController < ApplicationController
     end
   end
 
+  def reassign_user_params
+    params.require(:assignment).permit(
+      :user_id
+    )
+
+  end
+
   def set_assignment
     if Assignment.exists?(id: params[:id])
       @assignment = Assignment.find(params[:id])
@@ -146,6 +179,14 @@ class AssignmentsController < ApplicationController
   def set_case
     @case = Case.find(params[:case_id])
     @case_transitions = @case.transitions.decorate
+  end
+
+  def set_team_users
+    if current_user.responder?
+      @case.responding_team_users.order(:full_name)
+    elsif current_user.approver?
+      current_user.approving_team.users.order(:full_name)
+    end
   end
 
   def validate_response

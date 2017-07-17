@@ -30,7 +30,6 @@
 #          flag_for_clearance_case PATCH  /cases/:id/flag_for_clearance(.:format)                    cases#flag_for_clearance
 #            approve_response_case GET    /cases/:id/approve_response(.:format)                      cases#approve_response
 #   execute_response_approval_case PATCH  /cases/:id/execute_response_approval(.:format)             cases#execute_response_approval
-#           reassign_approver_case PATCH  /cases/:id/reassign_approver(.:format)                     cases#reassign_approver
 # accept_or_reject_case_assignment PATCH  /cases/:case_id/assignments/:id/accept_or_reject(.:format) assignments#accept_or_reject
 #           accept_case_assignment PATCH  /cases/:case_id/assignments/:id/accept(.:format)           assignments#accept
 #         unaccept_case_assignment PATCH  /cases/:case_id/assignments/:id/unaccept(.:format)         assignments#unaccept
@@ -134,6 +133,8 @@ Rails.application.routes.draw do
       patch 'accept', on: :member
       patch 'unaccept', on: :member
       patch 'take_case_on', on: :member
+      get :reassign_user , on: :member
+      patch :execute_reassign_user, on: :member
     end
 
     resources :case_attachments, path: 'attachments'

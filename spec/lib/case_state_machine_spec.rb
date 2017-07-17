@@ -42,11 +42,17 @@ RSpec.describe CaseStateMachine, type: :model do
   let(:manager)            { managing_team.managers.first }
   let(:responding_team)    { create :responding_team }
   let(:responder)          { responding_team.responders.first }
+  let(:another_responder)  { responding_team.responders.first }
   let(:approving_team)     { create :approving_team }
   let(:approver)           { approving_team.approvers.first }
   let(:other_approver)     {
     create :approver, approving_team: approving_team
   }
+
+  let(:flagged_accepted_case){
+    create :accepted_case, :flagged_accepted, approver: approver
+  }
+
   let(:new_case)           { create :case }
   let(:assigned_case)      { create :assigned_case,
                                  responding_team: responding_team }
@@ -136,13 +142,16 @@ RSpec.describe CaseStateMachine, type: :model do
             .using_object(kase) }
   end
 
-  events :reassign_approver do
-    it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
-    it { should transition_from(:drafting).to(:drafting) }
-    it { should transition_from(:pending_dacu_clearance).to(:pending_dacu_clearance) }
-    it { should require_permission(:can_reassign_approver?)
-                  .using_options(user_id: other_approver.id)
-                  .using_object(pending_dacu_clearance_case) }
+  events :reassign_user do
+    it { should transition_from(:drafting)
+                    .to(:drafting)
+                    .checking_policy(:reassign_user?, CasePolicy)  }
+    it { should transition_from(:pending_dacu_clearance)
+                    .to(:pending_dacu_clearance)
+                    .checking_policy(:reassign_user?, CasePolicy) }
+    it { should transition_from(:pending_press_office_clearance)
+                    .to(:pending_press_office_clearance)
+                    .checking_policy(:reassign_user?, CasePolicy) }
 
   end
 
@@ -334,33 +343,81 @@ RSpec.describe CaseStateMachine, type: :model do
     end
   end
 
-  describe 'trigger a reassign_approver' do
-    let(:kase) { pending_dacu_clearance_case }
-    let(:new_disclosure_specialist) { create :disclosure_specialist }
+  describe 'trigger a reassign_user' do
 
-    it 'triggers a reassign_approver'do
-      expect {
-        kase.state_machine.reassign_approver!(new_disclosure_specialist,
-                                              disclosure_specialist,
-                                              team_dacu_disclosure)
-      }.to trigger_the_event(:reassign_approver)
-                .on_state_machine(kase.state_machine)
-                .with_parameters(user_id: new_disclosure_specialist.id,
-                                 original_user_id: disclosure_specialist.id,
-                                 approving_team_id: team_dacu_disclosure.id)
+    describe 'unflagged cases' do
+      let(:kase) { case_being_drafted }
+
+      it 'triggers a reassign_user'do
+        expect {
+          kase.state_machine.reassign_user!(
+              target_user: another_responder,
+              target_team: responding_team,
+              acting_user: responder,
+              acting_team: responding_team )
+        }.to trigger_the_event(:reassign_user)
+                 .on_state_machine(kase.state_machine)
+                 .with_parameters( target_user_id: another_responder.id,
+                                   target_team_id: responding_team.id,
+                                   acting_user_id: responder.id,
+                                   acting_team_id: responding_team.id,
+                                   user_id:        responder.id)
+      end
+
+      it 'adds a transition history record' do
+        kase.state_machine.reassign_user!(
+            target_user: another_responder,
+            target_team: responding_team,
+            acting_user: responder,
+            acting_team: responding_team )
+
+        transition = kase.reload.transitions.last
+        expect(transition.event).to eq 'reassign_user'
+        expect(transition.to_state).to eq 'drafting'
+        expect(transition.user_id).to eq responder.id
+        expect(transition.target_user_id).to eq another_responder.id
+        expect(transition.acting_user_id).to eq responder.id
+        expect(transition.target_team_id).to eq responding_team.id
+        expect(transition.acting_team_id).to eq responding_team.id
+      end
     end
 
-    it 'adds a transition history record' do
-      kase.state_machine.reassign_approver!(new_disclosure_specialist,
-                                            disclosure_specialist,
-                                            team_dacu_disclosure)
-      transition = kase.reload.transitions.last
-      expect(transition.event).to eq 'reassign_approver'
-      expect(transition.to_state).to eq 'pending_dacu_clearance'
-      expect(transition.user_id).to eq new_disclosure_specialist.id
-      expect(transition.original_user_id).to eq disclosure_specialist.id
-      expect(transition.approving_team_id).to eq team_dacu_disclosure.id
+    describe 'flagged cases' do
+      let(:kase) { flagged_accepted_case }
+      it 'triggers a reassign_user'do
+        expect {
+          kase.state_machine.reassign_user!(
+              target_user: other_approver,
+              target_team: approving_team,
+              acting_user: approver,
+              acting_team: approving_team )
+        }.to trigger_the_event(:reassign_user)
+                 .on_state_machine(kase.state_machine)
+                 .with_parameters( target_user_id: other_approver.id,
+                                   target_team_id: approving_team.id,
+                                   acting_user_id: approver.id,
+                                   acting_team_id: approving_team.id,
+                                   user_id:        approver.id)
+      end
+
+      it 'adds a transition history record' do
+        kase.state_machine.reassign_user!(
+            target_user: other_approver,
+            target_team: approving_team,
+            acting_user: approver,
+            acting_team: approving_team )
+
+        transition = kase.reload.transitions.last
+        expect(transition.event).to eq 'reassign_user'
+        expect(transition.to_state).to eq 'drafting'
+        expect(transition.user_id).to eq approver.id
+        expect(transition.target_user_id).to eq other_approver.id
+        expect(transition.acting_user_id).to eq approver.id
+        expect(transition.target_team_id).to eq approving_team.id
+        expect(transition.acting_team_id).to eq approving_team.id
+      end
     end
+
   end
 
   describe 'trigger reject_responder_assignment!' do

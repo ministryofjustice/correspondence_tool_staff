@@ -159,6 +159,10 @@ class Case < ApplicationRecord
           through: :responder_assignment,
           source: :team
 
+  has_many :responding_team_users,
+           through: :responding_team,
+           source: :users
+
   has_many :approver_assignments,
           -> { approving },
           class_name: 'Assignment'

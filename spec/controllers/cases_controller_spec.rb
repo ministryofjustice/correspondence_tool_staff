@@ -56,6 +56,20 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
+  describe '#set_assignment' do
+    it 'instantiates the assignments for responders' do
+      sign_in responder
+      get :show, params: {id: accepted_case.id}
+      expect(assigns(:assignment)).to eq accepted_case.responder_assignment
+    end
+
+    it 'instantiates the assignments for approvers' do
+      sign_in disclosure_specialist
+      get :show, params: {id: pending_dacu_clearance_case.id}
+      expect(assigns(:assignment)).to eq pending_dacu_clearance_case.approver_assignments.first
+    end
+  end
+
   context "as an anonymous user" do
 
     describe 'GET new' do
@@ -471,7 +485,10 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'permitted_events == [:add_responses]' do
-        expect(assigns(:permitted_events)).to eq [:add_message_to_case, :add_response_to_flagged_case]
+        expect(assigns(:permitted_events))
+            .to eq [:add_message_to_case,
+                    :add_response_to_flagged_case,
+                    :reassign_user]
       end
 
       it 'renders the show page' do
@@ -586,7 +603,10 @@ RSpec.describe CasesController, type: :controller do
           let(:user) { accepted_case.responder }
 
           it 'permitted_events == [:add_responses]' do
-            expect(assigns(:permitted_events)).to eq [:add_message_to_case, :add_responses]
+            expect(assigns(:permitted_events))
+                .to eq [:add_message_to_case,
+                        :add_responses,
+                        :reassign_user]
             nil
           end
 

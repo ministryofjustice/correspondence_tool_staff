@@ -21,6 +21,7 @@ module PageObjects
           element :request_amends, '#action--request-amends'
           element :upload_approve, '#action--upload-approve'
           element :upload_redraft, '#action--upload-redraft'
+          element :reassign_user, '#action--reassign-case'
         end
 
         section :case_status,

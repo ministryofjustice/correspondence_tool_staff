@@ -28,6 +28,8 @@ module PageObjects
         login:                     'LoginPage',
         open_cases:                'Cases::OpenCasesPage',
         request_amends:            'Cases::RequestAmendsPage',
+        reassign_user:             'Assignments::ReassignUserPage',
+
       }.each do |page_name, page_class|
         full_page_class = "PageObjects::Pages::#{page_class}"
         define_method "#{page_name}_page" do

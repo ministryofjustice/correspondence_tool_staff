@@ -6,6 +6,9 @@ module PageObjects
 
         section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
+        section :page_heading,
+                PageObjects::Sections::PageHeadingSection, '.page-heading'
+
         element :message_label, '.request--heading'
         element :message, '.request--message'
 

@@ -175,4 +175,20 @@ FactoryGirl.define do
     user_id             { self.case.responder.id }
     messaging_team_id   { self.case.responding_team.id }
   end
+
+  factory :case_transition_reassign_user, parent: :case_transition do
+    transient do
+      responder         { create :responder }
+      responding_team   { responder.responding_teams.first }
+      another_responder { create :responder, responding_teams: [responding_team]}
+    end
+
+    event          'reassign_user'
+    to_state       { self.case.current_state }
+    target_user_id { another_responder.id }
+    target_team_id { responding_team.id }
+    acting_user_id { responder.id }
+    acting_team_id { responding_team.id }
+  end
+
 end

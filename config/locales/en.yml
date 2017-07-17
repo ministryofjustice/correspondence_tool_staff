@@ -95,6 +95,7 @@ en:
       assignment:
         state: What do you want to do?
         team_id: Assign to
+        user_id: Re-assign to
       case:
         requester_type: Type of requester
         refusal_reason_name: What was the reason for refusal?
@@ -182,7 +183,7 @@ en:
       postal_address: "Requesters postal address"
       received_date: Date received
       reason_for_refusal: Reason for refusal
-      reassign_to_me: Re-assign to me
+      reassign_case: "Re-assign this case"
       remove_link_html: |
         Remove <span class="visuallyhidden">file %{filename}</span>
       responding_team: Business unit
@@ -213,16 +214,20 @@ en:
 
 
   assignments:
+    edit:
+      heading: Accept/reject case
     new:
       heading: Assign case
       new_assignment: Create case
       assignment: Existing case
-    create:
-      case_assigned: Case successfully assigned
-      case_created: Case successfully created
     accept:
       success: Case taken on
       already_accepted: Case already accepted by %{name}
+    create:
+      case_assigned: Case successfully assigned
+      case_created: Case successfully created
+    reassign_user:
+      heading: Reassign this case to another person
     take_case_on:
       success: Case taken on
       already_accepted: Case already accepted by %{name}

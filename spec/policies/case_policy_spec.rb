@@ -28,6 +28,7 @@ describe CasePolicy do
   let(:dacu_disclosure)   { find_or_create :team_dacu_disclosure }
   let(:approver)          { dacu_disclosure.approvers.first }
   let(:disclosure_specialist) { approver }
+  let(:another_disclosure_specialist) { create :disclosure_specialist }
   let(:press_officer)     { find_or_create :press_officer }
   let(:private_officer)   { find_or_create :private_officer }
   let(:co_approver)       { create :approver, approving_team: dacu_disclosure }
@@ -268,12 +269,14 @@ describe CasePolicy do
     it { should     permit(approver,  assigned_flagged_case) }
   end
 
-  permissions :can_reassign_approver? do
+  permissions :assignments_reassign_user? do
     context 'unflagged case' do
+      it { should     permit(responder, accepted_case) }
       it { should_not permit(approver, accepted_case) }
     end
 
     context 'flagged by not yet taken by approver' do
+      it { should  permit(responder, flagged_accepted_case) }
       it 'does not permit' do
         expect(flagged_accepted_case.requires_clearance?).to be true
         expect(flagged_accepted_case.approvers).to be_empty
@@ -281,25 +284,41 @@ describe CasePolicy do
       end
     end
 
-    context 'flagged case taken on by the current approver' do
+    context 'flagged case taken on' do
       it 'does not permit' do
+        should_not permit(responder , pending_dacu_clearance_case)
+      end
+
+      it 'does permit' do
         expect(pending_dacu_clearance_case.requires_clearance?).to be true
         expect(pending_dacu_clearance_case.approvers.first)
           .to be_instance_of(User)
-        should_not permit(pending_dacu_clearance_case.approvers.first,
+        should permit(pending_dacu_clearance_case.approvers.first,
                           pending_dacu_clearance_case)
       end
     end
 
-    context 'flagged case taken on by a different approver' do
-      it 'permits' do
-        expect(pending_dacu_clearance_case.requires_clearance?).to be true
-        expect(pending_dacu_clearance_case.approvers.first)
-          .to be_instance_of(User)
-        expect(co_approver).not_to eq pending_dacu_clearance_case.approvers.first
-        should permit(co_approver, pending_dacu_clearance_case)
-      end
+    context 'case is being finalised' do
+      it { should_not permit(responder, responded_case)}
+      it { should_not permit(coworker , responded_case)}
+      it { should_not permit(approver , responded_case)}
+      it { should_not permit(approver , awaiting_dispatch_flagged_case)}
     end
+
+    context 'case is closed' do
+      it {should_not permit(responder,         closed_case)}
+      it {should_not permit(coworker,          closed_case)}
+      it {should_not permit(another_responder, closed_case)}
+      it {should_not permit(approver,          closed_case)}
+      it {should_not permit(co_approver,       closed_case)}
+    end
+
+    context 'managers should not need to assign to another team member' do
+      it { should_not permit(manager, assigned_case )}
+      it { should_not permit(manager, assigned_trigger_case )}
+      it { should_not permit(manager, closed_case )}
+    end
+
   end
 
   permissions :can_approve_or_escalate_case? do

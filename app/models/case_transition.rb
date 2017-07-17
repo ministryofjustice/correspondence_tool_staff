@@ -29,6 +29,10 @@ class CaseTransition < ActiveRecord::Base
     approving_team_id:  :integer,
     messaging_team_id:  :integer,
     message:            :text,
+    target_user_id:     :integer,
+    target_team_id:     :integer,
+    acting_user_id:     :integer,
+    acting_team_id:     :integer,
     filenames:          [:string, array: true, default: []]
 
   belongs_to :user
@@ -40,9 +44,6 @@ class CaseTransition < ActiveRecord::Base
   scope :drafting,  -> { where to_state: 'drafting'  }
   scope :messages,  -> { where event: 'add_message_to_case' }
   scope :responded, -> { where event: 'respond' }
-
-
-
 
 
   def record_state_change(kase)

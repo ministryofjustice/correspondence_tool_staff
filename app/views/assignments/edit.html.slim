@@ -1,6 +1,15 @@
 = GovukElementsErrorsHelper.error_summary @assignment,
   "#{pluralize(@assignment.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
 
 section.case-info
   = render partial: 'cases/case_request',
@@ -9,7 +18,7 @@ section.case-info
 
 .grid-row
   section.case-main
-    = form_for [@case, @assignment], url: { action: :accept_or_reject } do |f|
+    = form_for [@case, @assignment], url: accept_or_reject_case_assignment_path(@case, @assignment) do |f|
       = f.radio_button_fieldset :state, choices: [:accepted, :rejected], inline: true, class: 'state'
 
       #assignment_state_rejected_content.panel.panel-border-narrow.js-hidden

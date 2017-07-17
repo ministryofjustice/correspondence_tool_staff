@@ -14,10 +14,8 @@ require 'rails_helper'
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
 feature "#non-trigger cases" do
-  given(:responder)       { create(:responder) }
-  given(:responding_team) { create :responding_team, responders: [responder] }
-  given(:manager)         { create(:manager)  }
-  given(:managing_team)   { create :managing_team, managers: [manager] }
+  given(:responder)       { create :responder }
+  given(:manager)         { create :manager }
 
   before(:all) do
     CaseClosure::MetadataSeeder.seed!
@@ -28,8 +26,8 @@ feature "#non-trigger cases" do
   end
 
   background do
-    managing_team
-    responding_team
+    manager
+    responder
     create(:category, :foi)
   end
 
@@ -77,7 +75,7 @@ feature "#non-trigger cases" do
 
     cases_new_page.submit_button.click
 
-    assignments_new_page.choose_assignment_team responding_team
+    assignments_new_page.choose_assignment_team responder.teams.first
 
     assignments_new_page.create_and_assign_case.click
 

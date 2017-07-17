@@ -1,25 +1,26 @@
 require 'rails_helper'
 
-describe 'assignments/edit.html.slim', type: :view do
+describe 'assignments/reassign_user.html.slim', type: :view do
   let(:assigned_case)   { create :assigned_case }
   let(:assignment)      { assigned_case.responder_assignment }
 
   it 'displays the edit assignment page' do
-
     assign(:case, assigned_case)
     assign(:assignment, assignment)
+    assign(:team_users, assigned_case.responding_team_users)
 
     render
 
-    assignments_edit_page.load(rendered)
+    reassign_user_page.load(rendered)
 
-    page = assignments_edit_page
+    page = reassign_user_page
 
-    expect(page.page_heading.heading.text).to eq "Accept/reject case"
+    expect(page.page_heading.heading.text)
+        .to eq "Reassign this case to another person"
     expect(page.page_heading.sub_heading.text)
         .to eq "You are viewing case number #{assigned_case.number} "
 
-    expect(page.message.text).to eq assigned_case.message
+    expect(page.reassign_to.users.count).to eq 1
 
     expect(page.confirm_button.value).to eq "Confirm"
 

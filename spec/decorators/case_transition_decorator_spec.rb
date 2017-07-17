@@ -106,6 +106,18 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
+    context 'reassign_user' do
+      it 'returns name of event' do
+        ct = create(:case_transition_reassign_user).decorate
+        action_user = User.find(ct.acting_user_id)
+        target_user = User.find(ct.target_user_id)
+        event = "Reassign user"
+        details = "#{action_user.full_name} re-assigned this case to <strong>#{target_user.full_name}</strong>"
+        expect(ct.event_and_detail).to eq response(event, details)
+      end
+
+    end
+
     def response(e, d)
       "<strong>#{e}</strong><br>#{d}"
     end

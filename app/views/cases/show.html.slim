@@ -23,8 +23,11 @@ div id="case-#{@case.id}"
     section.case-info.has-actions
       .button-holder
         - @permitted_events.each do |event|
-          - next if event == :reassign_approver
+          - next if event == :reassign_user
           = action_button_for(event)
+
+        - if :reassign_user.in?(@permitted_events)
+          = action_button_for(:reassign_user)
 
   section.case-info
     = render partial: 'cases/case_status', locals: {case_details: @case}
@@ -64,5 +67,3 @@ div id="case-#{@case.id}"
               td = ct.event_and_detail
 
 
-  - if :reassign_approver.in?(@permitted_events)
-    = action_button_for(:reassign_approver)

@@ -180,14 +180,23 @@ class CaseStateMachine
     transition from: :pending_dacu_clearance, to: :awaiting_dispatch
   end
 
-  event :reassign_approver do
-    guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object).can_reassign_approver?
-    end
+  event :reassign_user do
 
-    transition from: :awaiting_responder,     to: :awaiting_responder
-    transition from: :drafting,               to: :drafting
-    transition from: :pending_dacu_clearance, to: :pending_dacu_clearance
+    transition from:   :drafting,
+               to:     :drafting,
+               policy: :reassign_user?
+
+    transition from:   :pending_dacu_clearance,
+               to:     :pending_dacu_clearance,
+               policy: :reassign_user?
+
+    transition from:   :pending_press_office_clearance,
+               to:     :pending_press_office_clearance,
+               policy: :reassign_user?
+
+    transition from:   :pending_private_office_clearance,
+               to:     :pending_private_office_clearance,
+               policy: :reassign_user?
   end
 
   event :remove_response do
@@ -259,12 +268,15 @@ class CaseStateMachine
              event:            :add_request_attachments
   end
 
-  def reassign_approver!(user, original_user, approving_team)
-    trigger! :reassign_approver,
-             approving_team_id: approving_team.id,
-             original_user_id:  original_user.id,
-             user_id:           user.id,
-             event:             :reassign_approver
+  def reassign_user!(target_user:, target_team:, acting_user:, acting_team:)
+
+    trigger! :reassign_user,
+             target_user_id:    target_user.id,
+             target_team_id:    target_team.id,
+             acting_user_id:    acting_user.id,
+             acting_team_id:    acting_team.id,
+             user_id:           acting_user.id,
+             event:             :reassign_user
   end
 
   def accept_responder_assignment!(user, responding_team)
