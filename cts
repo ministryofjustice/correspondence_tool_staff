@@ -46,40 +46,48 @@ module CTS
     end
 
     def find_team(id_or_name)
+      teams = find_teams(id_or_name)
+      if teams.empty?
+        raise "No team matching name #{id_or_name} found."
+      elsif teams.count > 1
+        error "Multiple teams found matching #{id_or_name}"
+        teams.each { |t| error "  #{t.name}" }
+        raise "Multiple teams found matching #{id_or_name}"
+      end
+      teams.first
+    end
+
+    def find_teams(id_or_name)
       if id_or_name.match %r{^\d+$}
-        Team.find id_or_name
+        [Team.find(id_or_name)]
       elsif id_or_name.match %r{^/(.*)/$}
-        team_name_regex = Reger.new(Regex.last_match)
-        teams = Team.all.detect { |t| t.name.match(team_name_regex) }
-        if teams.empty?
-          raise "No team matching name #{id_or_name} found."
-        elsif teams.count > 1
-          error "Multiple teams found matching #{id_or_name}"
-          teams.each { |t| error "  #{t.name}" }
-          raise "Multiple teams found matching #{id_or_name}"
-        end
-        teams.first
+        team_name_regex = Regexp.new(Regexp.last_match(1), Regexp::IGNORECASE)
+        Team.all.find_all { |t| t.name.match(team_name_regex) }
       else
-        Team.find_by! name: id_or_name
+        [Team.find_by(name: id_or_name)]
       end
     end
 
     def find_user(id_or_name)
+      users = find_users(id_or_name)
+      if users.empty?
+        raise "No user matching name #{id_or_name} found."
+      elsif users.count > 1
+        error "Multiple users found matching #{id_or_name}."
+        users.each { |u| error "  #{u.name}" }
+        raise "Multiple users found matching #{id_or_name}."
+      end
+      users.first
+    end
+
+    def find_users(id_or_name)
       if id_or_name.match %r{^\d+$}
-        User.find id_or_name
+        [User.find(id_or_name)]
       elsif id_or_name.match %r{^/(.*)/$}
-        user_name_regex = Reger.new(Regex.last_match, Regex::IGNORECASE)
-        users = User.all.detect { |t| t.full_name.match(user_name_regex) }
-        if users.empty?
-          raise "No user matching name #{id_or_name} found."
-        elsif users.count > 1
-          error "Multiple users found matching #{id_or_name}."
-          users.each { |u| error "  #{u.name}" }
-          raise "Multiple users found matching #{id_or_name}."
-        end
-        users.first
+        user_name_regex = Regexp.new(Regexp.last_match(1), Regexp::IGNORECASE)
+        User.all.find_all { |t| t.full_name.match(user_name_regex) }
       else
-        User.find_by! full_name: id_or_name
+        [User.find_by!(full_name: id_or_name)]
       end
     end
 

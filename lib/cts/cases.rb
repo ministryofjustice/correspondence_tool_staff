@@ -133,15 +133,54 @@ module CTS
     end
 
     desc 'list', 'List cases in the system.'
+    long_desc <<~LONGDESC
+
+    Examples:
+      # List cases assigned to Dasha Diss
+      ./cts cases list --assigned-user='Dasha Diss'
+
+      # List cases assigned to Press Office
+      ./cts cases list --assigned-team=/press/
+
+      # List cases assigned to HR
+      ./cts cases list -t /hr/
+
+    LONGDESC
+    option :assigned_user, aliases: :u, type: :array,
+           desc: 'List cases assigned to user, identified by name or id.'
+    option :assigned_team, aliases: :t, type: :array,
+           desc: 'List cases assigned to team, identified by name or id.'
     def list
+      cases = Case.all
+      if options[:assigned_user]
+        users = options[:assigned_user].map { |u| CTS::find_user(u) }
+        cases = cases.includes(:assignments)
+                  .where(assignments: { user: users })
+      end
+      options.fetch(:assigned_team, []).each do |team_name|
+        cases = cases.includes(:assignments)
+                  .where(assignments: { team: CTS::find_teams(team_name) })
+      end
+
       columns = [
         :id,
         :number,
-        :subject,
-        :current_state,
-        :requires_clearance?
+        { subject: { width: 40 } },
+        { current_state: {} },
+        { responding_team: {
+            display_method: ->(c) { c.responding_team&.name }
+        } },
+        { flagged?: {
+            display_method: lambda do |kase|
+              flags = []
+              flags << 'dacu' if kase.with_teams?(CTS::dacu_disclosure_team)
+              flags << 'press' if kase.with_teams?(CTS::press_office_team)
+              flags.join(',')
+            end
+          }
+        }
       ]
-      tp Case.all, columns
+      tp cases.order(:id), columns
     end
 
     desc 'show', 'Show case details.'
