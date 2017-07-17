@@ -31,8 +31,8 @@ module CaseClosure
 
       RefusalReason.find_or_create_by!(
         subtype: nil,
-        name: '(s1(3)) or (s8(1)) - Advice & assistance/clarification',
-        abbreviation: 'advice',
+        name: 's8(1) - Conditions for submitting request not met',
+        abbreviation: 'notmet',
         sequence_id: 130)
 
       RefusalReason.find_or_create_by!(

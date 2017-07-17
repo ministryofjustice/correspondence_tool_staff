@@ -96,9 +96,9 @@ FactoryGirl.define do
         requires_exemption  false
       end
 
-      trait :advice do
-        name                '(s1(3)) or (s8(1)) - Advice & assistance/clarification'
-        abbreviation        'advice'
+      trait :notmet do
+        name                's8(1) - Conditions for submitting request not met'
+        abbreviation        'notmet'
         sequence_id         130
         requires_exemption  false
       end

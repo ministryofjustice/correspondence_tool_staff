@@ -25,8 +25,8 @@ module CaseClosure
       abbrev('noinfo')
     end
 
-    def self.advice
-      abbrev('advice')
+    def self.notmet
+      abbrev('notmet')
     end
 
     def self.cost

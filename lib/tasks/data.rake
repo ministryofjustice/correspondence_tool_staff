@@ -34,7 +34,7 @@ namespace :data do
       {
         'Exemption applied' => 110,
         'Information not held' => 120,
-        '(s1(3)) or (s8(1)) - Advice & assistance/clarification' => 130,
+        's8(1) - Conditions for submitting request not met' => 130,
         '(s12) - Exceeded cost' => 140,
         '(s14(1)) - Vexatious' => 150,
         '(s14(2)) - Repeated request' => 160
@@ -43,6 +43,15 @@ namespace :data do
         raise "Record with name #{name} not found" if rec.nil?
         rec.update(sequence_id: new_sequence)
       end
+    end
+
+    desc 'Alter refusal reasons - clarifications to not met'
+    task :rename_clarifications_reason => :environment do
+      rec = CaseClosure::RefusalReason.find_by_name('(s1(3)) or (s8(1)) - Advice & assistance/clarification')
+
+      raise "Record with name (s1(3)) or (s8(1)) - Advice & assistance/clarification not found" if rec.nil?
+      rec.update(name: 's8(1) - Conditions for submitting request not met', abbreviation: 'notmet')
+
     end
 
     desc 'Make Previews for all existing docs'
