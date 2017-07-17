@@ -24,6 +24,8 @@ module CTS
         :taken_on_by_press_office,
         :accepted_by_dacu_disclosure,
         :drafting,
+        :pending_dacu_disclosure_clearance,
+        :pending_press_office_clearance,
       ]
     }
 

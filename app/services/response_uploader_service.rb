@@ -18,11 +18,8 @@ class ResponseUploaderService
     @uploader = S3Uploader.new(@case, @current_user)
   end
 
-  def seed!
-    key = "#{@case.attachments_dir('responses', @upload_group)}/eon.pdf"
-    uploads_object = CASE_UPLOADS_S3_BUCKET.object(key)
-    uploads_object.upload_file(File.join(Rails.root, 'spec', 'fixtures', 'eon.pdf'))
-    @case.attachments << CaseAttachment.new(type: 'response', key: key)
+  def seed!(filepath)
+    @uploader.add_file_to_case(filepath, @type)
     PdfMakerJob.perform_now(@case.attachments.first.id)
   end
 

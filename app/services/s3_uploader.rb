@@ -27,6 +27,22 @@ class S3Uploader
     end
   end
 
+  def add_file_to_case(filepath, type)
+    # This method is being used by the cts script which only wants to upload
+    # the file to S3, but not to run PdfMakerJob job, it'll run it itself now.
+    filename = File.basename(filepath)
+    key = "#{@case.attachments_dir(type.to_s, @upload_group)}/#{filename}"
+    attachment = CaseAttachment.create!(
+      type: type.to_s,
+      key: destination_key(filepath, type),
+      upload_group: @upload_group,
+      user_id: @user.id
+    )
+    uploads_object = CASE_UPLOADS_S3_BUCKET.object(key)
+    uploads_object.upload_file(filepath)
+    @case.attachments << attachment
+  end
+
   private
 
   def add_attachments(uploaded_files, type)

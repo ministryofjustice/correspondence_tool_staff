@@ -185,10 +185,24 @@ module CTS
       end
 
       def transition_to_pending_dacu_disclosure_clearance(kase)
-        ResponseUploaderService.new(kase, responder, { uploaded_files: nil }, nil).seed!
+        rus = ResponseUploaderService.new(kase,
+                                          responder,
+                                          { uploaded_files: nil },
+                                          nil)
+        rus.seed!('spec/fixtures/eon.pdf')
         kase.state_machine.add_response_to_flagged_case!(responder,
                                                          responding_team,
                                                          kase.attachments)
+      end
+
+      def transition_to_pending_press_office_clearance(kase)
+        if kase.approver_assignments.for_user(CTS::dacu_disclosure_approver).any?
+          result = CaseApprovalService
+                     .new(user: CTS::dacu_disclosure_approver, kase: kase).call
+          unless result == :ok
+            raise "Could not approve case response , case id: #{kase.id}, user id: #{CTS::dacu_disclosure_approver.id}, result: #{result}"
+          end
+        end
       end
 
       def transition_to_closed(kase)
