@@ -193,6 +193,16 @@ module CTS
       tp cases.order(:id), columns
     end
 
+    desc 'permitted_events CASE USER',
+         'Show permitted events on case for a user.'
+    def permitted_events(case_id_or_number, user_id_or_name)
+      kase = CTS::find_case(case_id_or_number)
+      user = CTS::find_user(user_id_or_name)
+      permitted_events = kase.state_machine.permitted_events(user.id)
+      puts "Permitted events:"
+      permitted_events.each { |p| puts "  #{p}" }
+    end
+
     desc 'show', 'Show case details.'
     def show(*args)
       args.each do |case_identifier|
