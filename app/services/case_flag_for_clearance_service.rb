@@ -14,12 +14,7 @@ class CaseFlagForClearanceService
 
     if @team.dacu_disclosure?
       assign_approver(@user, @team, @team)
-    elsif @team.press_office?
-      assign_and_accept_approver(@user, @team)
-      if @case.approver_assignments.where(team: @dts.approving_team).blank?
-        assign_approver(@user, @team, @dts.approving_team)
-      end
-    elsif @team.private_office?
+    elsif @team.press_office? || @team.private_office?
       assign_and_accept_approver(@user, @team)
       if @case.approver_assignments.where(team: @dts.approving_team).blank?
         assign_approver(@user, @team, @dts.approving_team)

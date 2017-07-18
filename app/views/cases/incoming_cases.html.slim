@@ -34,7 +34,7 @@
               .case_message_extract
                 = kase.shortened_message
             td.js-take-case-on-container aria-label="#{t('.actions')}"
-              - if current_user.press_officer? || current_user.private_officer?
+              - if kase.state_machine.permitted_events(current_user.id).include? :take_on_for_approval
                 = render partial: 'take_case_on_for_approver',
                         locals: { case_details: kase }
               - elsif kase.approver_assignments.with_teams(current_user.teams)
