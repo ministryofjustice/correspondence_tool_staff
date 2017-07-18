@@ -287,6 +287,9 @@ describe CasePolicy do
   permissions :can_approve_case? do
     it { should     permit(pending_dacu_clearance_case.approvers.first,
                            pending_dacu_clearance_case) }
+    it { should     permit(disclosure_specialist, pending_dacu_clearance_case) }
+    it { should_not permit(press_officer, pending_dacu_clearance_case) }
+
     it { should_not permit(approver,   new_case) }
     it { should_not permit(approver,   accepted_case) }
     it { should_not permit(approver,   assigned_case) }
@@ -450,6 +453,50 @@ describe CasePolicy do
     it { should_not permit(manager,   pending_dacu_clearance_case) }
     it { should     permit(approver,  pending_dacu_clearance_case) }
     it { should_not permit(responder, pending_dacu_clearance_case) }
+  end
+
+  permissions :new_response_upload? do
+    it { should_not permit(manager,                accepted_case) }
+    it { should     permit(responder,              accepted_case) }
+    it { should_not permit(disclosure_specialist,  accepted_case) }
+    it { should_not permit(press_officer,          accepted_case) }
+    it { should_not permit(manager,                pending_dacu_clearance_case) }
+    it { should_not permit(responder,              pending_dacu_clearance_case) }
+    it { should     permit(disclosure_specialist,  pending_dacu_clearance_case) }
+    it { should_not permit(press_officer,          pending_dacu_clearance_case) }
+    it { should_not permit(manager,                pending_press_clearance_case) }
+    it { should_not permit(responder,              pending_press_clearance_case) }
+    it { should_not permit(disclosure_specialist,  pending_press_clearance_case) }
+    it { should     permit(press_officer,          pending_press_clearance_case) }
+  end
+
+  permissions :upload_responses? do
+    it { should_not permit(manager,                accepted_case) }
+    it { should     permit(responder,              accepted_case) }
+    it { should_not permit(disclosure_specialist,  accepted_case) }
+    it { should_not permit(press_officer,          accepted_case) }
+    it { should_not permit(manager,                pending_dacu_clearance_case) }
+    it { should_not permit(responder,              pending_dacu_clearance_case) }
+    it { should     permit(disclosure_specialist,  pending_dacu_clearance_case) }
+    it { should_not permit(press_officer,          pending_dacu_clearance_case) }
+    it { should_not permit(manager,                pending_press_clearance_case) }
+    it { should_not permit(responder,              pending_press_clearance_case) }
+    it { should_not permit(disclosure_specialist,  pending_press_clearance_case) }
+    it { should     permit(press_officer,          pending_press_clearance_case) }
+  end
+
+  permissions :upload_response_and_return_for_redraft_from_pending_dacu_clearance? do
+    it { should_not permit(manager,                pending_dacu_clearance_case) }
+    it { should_not permit(responder,              pending_dacu_clearance_case) }
+    it { should     permit(disclosure_specialist,  pending_dacu_clearance_case) }
+    it { should_not permit(press_officer,          pending_dacu_clearance_case) }
+  end
+
+  permissions :upload_response_and_return_for_redraft_from_pending_press_office_clearance? do
+    it { should_not permit(manager,                pending_press_clearance_case) }
+    it { should_not permit(responder,              pending_press_clearance_case) }
+    it { should_not permit(disclosure_specialist,  pending_press_clearance_case) }
+    it { should     permit(press_officer,          pending_press_clearance_case) }
   end
 
   describe 'case scope policy' do

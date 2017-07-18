@@ -122,21 +122,21 @@ class CasePolicy < ApplicationPolicy
   def can_approve_case?
     clear_failed_checks
     check_case_requires_clearance &&
-      check_user_is_current_approver &&
+      check_user_is_in_current_team &&
       check_case_on_last_step_of_approvals
   end
 
   def can_escalate_to_next_approval_level?
     clear_failed_checks
     check_case_requires_clearance &&
-      check_user_is_current_approver &&
+      check_user_is_in_current_team &&
       !check_case_on_last_step_of_approvals
   end
 
   def can_approve_or_escalate_case?
     clear_failed_checks
     check_case_requires_clearance &&
-      check_user_is_current_approver
+      check_user_is_in_current_team
   end
 
   def can_view_case_details?
@@ -156,6 +156,24 @@ class CasePolicy < ApplicationPolicy
   def execute_response_approval?
     clear_failed_checks
     check_user_is_an_approver_for_case
+  end
+
+  def new_response_upload?
+    check_user_is_in_current_team
+  end
+
+  def upload_responses?
+    check_user_is_in_current_team
+  end
+
+  def upload_response_and_return_for_redraft_from_pending_dacu_clearance?
+    check_case_is_assigned_to_dacu_disclosure &&
+      check_user_is_dacu_disclosure_approver
+  end
+
+  def upload_response_and_return_for_redraft_from_pending_press_office_clearance?
+    check_case_is_assigned_to_press_office &&
+      check_user_is_press_office_approver
   end
 
   class Scope
@@ -195,7 +213,6 @@ class CasePolicy < ApplicationPolicy
   end
 
   def responder_attachable?
-    # responder_attachable_state? && user.responding_teams.include?(self.case.responding_team)
     check_case_is_in_attachable_state && check_user_is_a_responder_for_case
   end
 
@@ -235,6 +252,14 @@ class CasePolicy < ApplicationPolicy
     !@user.in? self.case.approvers
   end
 
+  check :user_is_dacu_disclosure_approver do
+    @user.in? Team.dacu_disclosure.approvers
+  end
+
+  check :user_is_press_office_approver do
+    @user.in? Team.press_office.approvers
+  end
+
   # check case_is_in_responder_attachable_state
   check :case_is_in_attachable_state do
     (self.case.drafting? || self.case.awaiting_dispatch?) &&
@@ -271,7 +296,15 @@ class CasePolicy < ApplicationPolicy
     end
   end
 
-  check :user_is_current_approver do
+  check :case_is_assigned_to_dacu_disclosure do
+    Team.dacu_disclosure.in? @case.approving_teams
+  end
+
+  check :case_is_assigned_to_press_office do
+    Team.press_office.in? @case.approving_teams
+  end
+
+  check :user_is_in_current_team do
     current_info = CurrentTeamAndUserService.new(@case)
     @user.in? current_info.team.users
   end

@@ -147,18 +147,13 @@ class CaseStateMachine
   end
 
   event :upload_response_and_return_for_redraft do
-    guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object).can_upload_response_and_approve?
-    end
-
-    transition from: :pending_dacu_clearance, to: :drafting
+    transition from: :pending_dacu_clearance, to: :drafting,
+               policy: :upload_response_and_return_for_redraft_from_pending_dacu_clearance?
+    transition from: :pending_press_office_clearance, to: :pending_dacu_clearance,
+               policy: :upload_response_and_return_for_redraft_from_pending_press_office_clearance?
   end
 
   event :approve do
-    # guard do |object, _last_transition, options|
-    #   CaseStateMachine.get_policy(options[:user_id], object).can_approve_case?
-    # end
-
     transition from: :pending_dacu_clearance, to: :awaiting_dispatch,
                guard: lambda { |object,_,options| CaseStateMachine.get_policy(options[:user_id], object).can_approve_case? }
     transition from: :pending_press_office_clearance, to: :awaiting_dispatch,
@@ -166,12 +161,6 @@ class CaseStateMachine
   end
 
   event :escalate_to_press_office do
-    # guard do |object, _last_transition, options|
-    #   object.current_state == 'pending_dacu_clearance' &&
-    #     CaseStateMachine.get_policy(options[:user_id], object)
-    #       .can_escalate_to_next_approval_level?
-    # end
-
     transition from: :pending_dacu_clearance, to: :pending_press_office_clearance,
                guard: lambda { |object,_,options| CaseStateMachine.get_policy(options[:user_id], object).can_escalate_to_next_approval_level? }
   end
@@ -407,7 +396,6 @@ class CaseStateMachine
     else
       raise Statesman::InvalidStateError, "case #{object.id} in state '#{object.current_state}' isn't ready for approval"
     end
-
   end
 
   private

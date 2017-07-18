@@ -60,7 +60,6 @@ feature 'Case creation by a manager' do
       delivery_method: :sent_by_post,
       uploaded_request_files: [request_attachment]
     )
-
     click_button 'Next - Assign case'
 
     new_case = Case.last

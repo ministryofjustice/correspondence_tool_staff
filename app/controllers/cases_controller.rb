@@ -104,14 +104,16 @@ class CasesController < ApplicationController
   end
 
   def new_response_upload
-    authorize @case, :can_add_attachment_to_flagged_and_unflagged_cases?
+    authorize @case
+
     @next_step_info = NextStepInfo.new(@case, request.query_parameters['action'])
     flash[:action_params] = request.query_parameters['action']
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
   end
 
   def upload_responses
-    authorize @case, :can_add_attachment_to_flagged_and_unflagged_cases?
+    authorize @case
+
     @next_step_info = NextStepInfo.new(@case, flash[:action_params])
     rus = ResponseUploaderService.new(
       @case, current_user, params, flash[:action_params]
@@ -266,7 +268,10 @@ class CasesController < ApplicationController
 
   def user_not_authorized(exception)
     case exception.query
-    when :can_add_attachment?, :can_add_attachment_to_flagged_case?, :can_add_attachment_to_flagged_and_unflagged_cases?
+    when 'can_add_attachment?',
+         'can_add_attachment_to_flagged_case?',
+         'upload_responses?',
+         'new_response_upload?'
       super(exception, case_path(@case))
     else
       super
