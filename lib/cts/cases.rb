@@ -84,6 +84,8 @@ module CTS
     desc 'check', 'Check cases for common development issues.'
     option :full_trace, aliases: 'T', type: :boolean,
            desc: 'Include full trace on error, not just project files.'
+    option :trace, aliases: 't', type: :boolean,
+           desc: 'Include trace exert on error, only including project files.'
     def check(*args)
       args.each do |kase_id_or_number|
         CTS::Cases::Check.new(kase_id_or_number, options).call
