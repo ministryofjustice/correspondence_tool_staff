@@ -12,9 +12,9 @@ RSpec::Matchers.define :transition_from do |from_state|
       kase    = case_with_stubbed_out_policy(@case_policy, user)
 
       state_info = target_states.find { |si| si[:state] == @to_state }
-      guard      = state_info[:guard]
+      guards     = state_info[:guards]
       options    = { user_id: user_id}
-      guard.call(kase, spy('last_transition'), options)
+      guards.each { |g| g.call(kase, spy('last_transition'), options) }
     else
       true
     end

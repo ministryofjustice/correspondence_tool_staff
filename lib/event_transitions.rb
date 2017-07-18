@@ -7,14 +7,21 @@ class EventTransitions
     instance_eval(&block)
   end
 
-  def transition(from: nil, to: nil, guard: nil)
+  def transition(from: nil, to: nil, guard: nil, policy: nil)
     @from = to_s_or_nil(from)
     @to = to_s_or_nil(to)
 
     machine.transition(from: @from, to: @to)
 
+    guards = []
+    guards << guard if guard
+    guards << lambda do |kase, _last_transition, options|
+      user = User.find(options[:user_id])
+      case_policies = Pundit.policy!(user, kase)
+      case_policies.__send__(policy)
+    end if policy
     machine.events[event_name][:transitions][@from] << { state: @to,
-                                                         guard: guard }
+                                                         guards: guards }
   end
 
   def guard(&block)

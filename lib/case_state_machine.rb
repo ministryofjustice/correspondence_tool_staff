@@ -241,15 +241,6 @@ class CaseStateMachine
     transition from: :responded,              to: :responded
   end
 
-
-  def permitted_events(user_id)
-    events = self.class.events.select do |event_name, _event|
-      can_trigger_event?(event_name: event_name,
-                         metadata: { user_id: user_id })
-    end.map(&:first)
-    events.sort! { |a, b| a.to_s <=> b.to_s }
-  end
-
   def accept_approver_assignment!(user, approving_team)
     trigger! :accept_approver_assignment,
              approving_team_id: approving_team.id,

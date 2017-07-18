@@ -49,11 +49,12 @@ module Events
     # time being we just take the first one. We could, in theory, test the
     # guard for each one and choose the first one that succeeds.
     state_info = transitions.first
-    if state_info[:guard] &&
-       !state_info[:guard].call(@object, last_transition, metadata)
-      raise Statesman::GuardFailedError,
-            "Guard on event: #{event_name} with object: #{@object}" \
-            + " metadata: #{metadata} returned false"
+    state_info[:guards].each do |guard|
+      unless guard.call @object, last_transition, metadata
+        raise Statesman::GuardFailedError,
+              "Guard on event: #{event_name} with object: #{@object}" \
+              + " metadata: #{metadata} returned false"
+      end
     end
     new_state = state_info.fetch(:state)
 
@@ -74,6 +75,21 @@ module Events
     end.map(&:first)
   end
 
+  def permitted_events(user_id)
+    events = self.class.events.select do |event_name, _event|
+      can_trigger_event?(event_name: event_name,
+                         metadata: { user_id: user_id })
+    end.map(&:first)
+    events.sort! { |a, b| a.to_s <=> b.to_s }
+  end
+
+  def next_state_for_event(event_name)
+    target_states = get_event_target_states!(event_name)
+    target_states.first.fetch(:state)
+  end
+
+  private
+
   def get_event!(event_name)
     self.class.events.fetch(event_name) do
       raise Statesman::TransitionFailedError,
@@ -89,11 +105,6 @@ module Events
     end
   end
 
-  def next_state_for_event(event_name)
-    target_states = get_event_target_states!(event_name)
-    target_states.first.fetch(:state)
-  end
-
   def check_guards_for_event(event_name, metadata)
     event = get_event!(event_name)
     event.fetch(:callbacks).fetch(:guards).all? do |guard|
@@ -101,19 +112,19 @@ module Events
     end
   end
 
+  def have_transition_for_event?(event_name)
+    event = get_event!(event_name)
+    event.fetch(:transitions).key?(current_state)
+  end
+
   def check_guards_for_event_transitions(event_name, metadata)
     target_states = get_event_target_states!(event_name)
     target_states.any? do |state_info|
       new_state = state_info.fetch(:state)
-      guard = state_info.fetch(:guard)
+      guards = state_info.fetch(:guards)
       can_transition_to?(new_state, metadata) &&
-        (!guard || guard.call(@object, last_transition, metadata))
+        guards.all? { |g| g.call(@object, last_transition, metadata) }
     end
-  end
-
-  def have_transition_for_event?(event_name)
-    event = get_event!(event_name)
-    event.fetch(:transitions).key?(current_state)
   end
 
   def can_trigger_event?(event_name:, metadata: {})
