@@ -81,6 +81,15 @@ module CTS
       CTS::DemoSetup.new(@number_to_create).run
     end
 
+    desc 'check', 'Check cases for common development issues.'
+    option :full_trace, aliases: 'T', type: :boolean,
+           desc: 'Include full trace on error, not just project files.'
+    def check(*args)
+      args.each do |kase_id_or_number|
+        CTS::Cases::Check.new(kase_id_or_number, options).call
+      end
+    end
+
     desc 'create OPTIONS all|<states>', 'Create cases in the specified states'
     long_desc <<~LONGDESC
 
@@ -112,7 +121,6 @@ module CTS
       # Press Office.
       ./cts cases create --flag-for-team=press drafting
     LONGDESC
-
     option :number, aliases: 'n', type: :numeric,
            desc: 'Number of cases to create (per state). [1]'
     option :flag_for_disclosure, aliases: :f, type: :boolean,
