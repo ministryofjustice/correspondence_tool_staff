@@ -162,7 +162,7 @@ class CaseStateMachine
 
   event :escalate_to_press_office do
     transition from: :pending_dacu_clearance, to: :pending_press_office_clearance,
-               guard: lambda { |object,_,options| CaseStateMachine.get_policy(options[:user_id], object).can_escalate_to_next_approval_level? }
+               policy: :can_escalate_to_next_approval_level?
   end
 
   event :upload_response_and_approve do

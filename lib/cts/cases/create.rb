@@ -167,11 +167,7 @@ module CTS
 
       def transition_to_awaiting_dispatch(kase)
         if kase.approver_assignments.for_user(CTS::dacu_disclosure_approver).any?
-          result = CaseApprovalService
-                     .new(user: CTS::dacu_disclosure_approver, kase: kase).call
-          unless result == :ok
-            raise "Could not approve case response , case id: #{kase.id}, user id: #{CTS::dacu_disclosure_approver.id}, result: #{result}"
-          end
+          call_case_approval_service(CTS::dacu_disclosure_approver, kase)
         else
           ResponseUploaderService.new(kase, responder, { uploaded_files: nil }, nil).seed!
           kase.state_machine.add_responses!(responder,
@@ -197,11 +193,7 @@ module CTS
 
       def transition_to_pending_press_office_clearance(kase)
         if kase.approver_assignments.for_user(CTS::dacu_disclosure_approver).any?
-          result = CaseApprovalService
-                     .new(user: CTS::dacu_disclosure_approver, kase: kase).call
-          unless result == :ok
-            raise "Could not approve case response , case id: #{kase.id}, user id: #{CTS::dacu_disclosure_approver.id}, result: #{result}"
-          end
+          call_case_approval_service(CTS::dacu_disclosure_approver, kase)
         end
       end
 
@@ -265,6 +257,15 @@ module CTS
       def press_officer
         Team.press_office.approvers.first
       end
+
+      def call_case_approval_service(user, kase)
+        result = CaseApprovalService
+                   .new(user: user, kase: kase).call
+        unless result == :ok
+          raise "Could not approve case response , case id: #{kase.id}, user id: #{user.id}, result: #{result}"
+        end
+      end
+
     end
   end
 end

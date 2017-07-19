@@ -34,9 +34,7 @@ module Events
 
     event[:callbacks][:guards].each do |guard|
       unless guard.call(@object, last_transition, metadata)
-        raise Statesman::GuardFailedError,
-              "Guard on event: #{event_name} with object: #{@object}" \
-              + " metadata: #{metadata} returned false"
+        raise_guard_failed_error(event_name, @object, metadata)
       end
     end
 
@@ -51,9 +49,7 @@ module Events
     state_info = transitions.first
     state_info[:guards].each do |guard|
       unless guard.call @object, last_transition, metadata
-        raise Statesman::GuardFailedError,
-              "Guard on event: #{event_name} with object: #{@object}" \
-              + " metadata: #{metadata} returned false"
+        raise_guard_failed_error(event_name, @object, metadata)
       end
     end
     new_state = state_info.fetch(:state)
@@ -131,5 +127,11 @@ module Events
     have_transition_for_event?(event_name) &&
       check_guards_for_event(event_name, metadata) &&
       check_guards_for_event_transitions(event_name, metadata)
+  end
+
+  def raise_guard_failed_error(event_name, object, metadata)
+    raise Statesman::GuardFailedError,
+          "Guard on event: #{event_name} with object: #{object}" \
+          + " metadata: #{metadata} returned false"
   end
 end

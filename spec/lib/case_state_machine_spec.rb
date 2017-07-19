@@ -176,10 +176,8 @@ RSpec.describe CaseStateMachine, type: :model do
     let(:kase) { create :pending_dacu_clearance_case, :press_office }
 
     it { should transition_from(:pending_dacu_clearance)
-                  .to :pending_press_office_clearance }
-    xit { should require_permission(:can_escalate_to_next_approval_level?)
-                  .using_options(user_id: approver.id)
-                  .using_object(kase) }
+                  .to(:pending_press_office_clearance)
+                  .checking_case_policy(:can_escalate_to_next_approval_level?) }
   end
 
   describe event(:approve) do
@@ -189,10 +187,6 @@ RSpec.describe CaseStateMachine, type: :model do
     it { should transition_from(:pending_press_office_clearance)
                   .to(:awaiting_dispatch)
                   .checking_case_policy(:can_approve_case?) }
-    xit { should require_permission(:can_approve_case?)
-                  .using_options(user_id: approver.id)
-                  .using_object(pending_dacu_clearance_case)
-    }
   end
 
   describe event(:upload_response_and_approve) do
