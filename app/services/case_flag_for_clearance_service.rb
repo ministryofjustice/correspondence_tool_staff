@@ -15,9 +15,9 @@ class CaseFlagForClearanceService
     if @team.dacu_disclosure?
       assign_approver(@user, @team, @team)
     elsif @team.press_office? || @team.private_office?
-      assign_and_accept_approver(@user, @team)
-      if @case.approver_assignments.where(team: @dts.approving_team).blank?
-        assign_approver(@user, @team, @dts.approving_team)
+      assign_and_accept_approver(@user, @team, @team)
+      @dts.associated_teams(for_team: @team).each do |associated|
+        associate_team(associated[:team], associated[:user])
       end
     end
     @result = :ok
@@ -42,11 +42,21 @@ class CaseFlagForClearanceService
     @case.approving_teams << team
   end
 
-  def assign_and_accept_approver(user, team)
-    @case.state_machine.take_on_for_approval!(user, team)
+  def assign_and_accept_approver(user, managing_team, team)
+    @case.state_machine.take_on_for_approval!(user, managing_team, team)
     @case.approving_teams << team
     @case.reload
     team_assignment = @case.approver_assignments.for_team(team).last
     team_assignment.update!(state: 'accepted', user_id: user.id)
+  end
+
+  def associate_team(associate_team, associate_user)
+    if @case.approver_assignments.where(team: associate_team).blank?
+      if associate_user
+        assign_and_accept_approver(associate_user, @team, associate_team)
+      else
+        assign_approver(@user, @team, associate_team)
+      end
+    end
   end
 end

@@ -39,6 +39,7 @@ default_time_format: '%d %b %Y %H:%M'
 
 press_office_team_name: Press Office
 private_office_team_name: Private Office
+press_office_default_user: Preston Offman
 
 global_navigation:
   default_urls:

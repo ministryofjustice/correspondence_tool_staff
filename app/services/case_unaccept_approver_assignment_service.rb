@@ -13,13 +13,15 @@ class CaseUnacceptApproverAssignmentService
   def call
     return false unless validate_accepted
     ActiveRecord::Base.transaction do
-      if @team.press_office?
+      if @team.press_office? || @team.private_office?
         kase = @assignment.case
-        if last_flagged_for_team(kase, @team, @dts.approving_team)
-          disclosure_assignment = kase.assignments
-                                    .with_teams(@dts.approving_team)
+        @dts.associated_teams(for_team: @team).each do |associated|
+          if last_flagged_for_team(kase, @team, associated[:team])
+            previous_assignment = kase.assignments
+                                    .with_teams(associated[:team])
                                     .first
-          unassign_approver_assignment disclosure_assignment
+            unassign_approver_assignment previous_assignment
+          end
         end
         unassign_approver_assignment @assignment
       else

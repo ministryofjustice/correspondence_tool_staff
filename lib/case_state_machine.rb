@@ -307,9 +307,10 @@ class CaseStateMachine
              event: :unflag_for_clearance
   end
 
-  def take_on_for_approval!(user, approving_team)
+  def take_on_for_approval!(user, managing_team, approving_team)
     trigger! :take_on_for_approval,
              user_id: user.id,
+             managing_team_id: managing_team.id,
              approving_team_id: approving_team.id,
              event: :take_on_for_approval
   end
