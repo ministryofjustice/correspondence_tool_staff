@@ -52,7 +52,7 @@ feature 'cases requiring clearance by press office' do
                                  expected_history:)
     cases_new_response_upload_page.upload_response_button.click
     expect(cases_show_page).to be_displayed(id: kase.id)
-    expect(cases_show_page.notices.first).to have_content(expected_notice)
+    expect(cases_show_page.notice).to have_content(expected_notice)
     expect(cases_show_page.case_status.details.who_its_with)
       .to have_text(expected_team.name)
     expect(cases_show_page.case_status.details.copy)

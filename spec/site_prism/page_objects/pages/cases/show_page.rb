@@ -8,7 +8,7 @@ module PageObjects
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
         element :escalation_notice, '.alert-orange'
-        elements :notices, '.notice-summary-heading'
+        element :notice, '.notice-summary-heading'
 
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
