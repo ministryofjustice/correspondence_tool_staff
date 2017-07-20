@@ -211,7 +211,17 @@ module CTS
       user = CTS::find_user(user_id_or_name)
       permitted_events = kase.state_machine.permitted_events(user.id)
       puts "Permitted events:"
-      permitted_events.each { |p| puts "  #{p}" }
+      tp permitted_events,
+         [
+           { event:      { display_method: ->(e) { e.to_s }, width: 40 } },
+           { from_state: { display_method: ->(e) { kase.current_state } } },
+           { to_state:   { display_method: ->(e) do
+                             kase.state_machine.next_state_for_event(
+                               e,
+                               user_id: user.id
+                             )
+                           end } }
+         ]
     end
 
     desc 'show', 'Show case details.'

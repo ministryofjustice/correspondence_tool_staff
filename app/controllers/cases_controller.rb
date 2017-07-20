@@ -106,7 +106,10 @@ class CasesController < ApplicationController
   def new_response_upload
     authorize @case
 
-    @next_step_info = NextStepInfo.new(@case, request.query_parameters['action'])
+    @next_step_info = NextStepInfo.new(@case,
+                                       request.query_parameters['action'],
+                                       current_user)
+
     flash[:action_params] = request.query_parameters['action']
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
   end
@@ -114,7 +117,9 @@ class CasesController < ApplicationController
   def upload_responses
     authorize @case
 
-    @next_step_info = NextStepInfo.new(@case, flash[:action_params])
+    @next_step_info = NextStepInfo.new(@case,
+                                       flash[:action_params],
+                                       current_user)
     rus = ResponseUploaderService.new(
       @case, current_user, params, flash[:action_params]
     )
@@ -207,7 +212,7 @@ class CasesController < ApplicationController
 
   def approve_response
     authorize @case, :can_approve_or_escalate_case?
-    @next_step_info = NextStepInfo.new(@case, 'approve')
+    @next_step_info = NextStepInfo.new(@case, 'approve', current_user)
     render :approve_response
   end
 

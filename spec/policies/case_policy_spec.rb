@@ -1,5 +1,20 @@
 require 'rails_helper'
 
+
+def fpermissions(*list, &block)
+  fdescribe(list.to_sentence, permissions: list, caller: caller) do
+    instance_eval(&block)
+  end
+end
+
+
+def xpermissions(*list, &block)
+  xdescribe(list.to_sentence, permissions: list, caller: caller) do
+    instance_eval(&block)
+  end
+end
+
+
 describe CasePolicy do
   subject { described_class }
 

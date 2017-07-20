@@ -1,10 +1,11 @@
 class NextStepInfo
 
-  attr_reader :kase, :action, :next_state, :next_team, :action_verb
+  attr_reader :kase, :action, :user, :next_state, :next_team, :action_verb
 
-  def initialize(kase, action_param)
+  def initialize(kase, action_param, user)
     @kase = kase
     @action = action_param
+    @user = user
     @state_machine = @kase.state_machine
     translate_action_param(@action)
     @next_state = get_next_state
@@ -15,7 +16,7 @@ class NextStepInfo
   private
 
   def get_next_state
-    @state_machine.next_state_for_event(@state_machine_event)
+    @state_machine.next_state_for_event(@state_machine_event, user_id: @user.id)
   rescue
     Rails.logger.error "Unexpected action #{@action} for case in #{@kase.current_state} state"
     raise

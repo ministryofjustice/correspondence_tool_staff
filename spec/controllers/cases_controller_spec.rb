@@ -862,7 +862,9 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    shared_examples 'signed-in user can view attachment upload page' do
+    context 'as the assigned responder' do
+      before { sign_in responder }
+
       it 'assigns @case' do
         get :new_response_upload, params: { id: kase, action: 'upload' }
         expect(assigns(:case)).to eq(Case.first)
@@ -870,7 +872,9 @@ RSpec.describe CasesController, type: :controller do
 
       it 'assigns NextStepInfo' do
         nsi = double NextStepInfo
-        expect(NextStepInfo).to receive(:new).with(kase, 'upload').and_return(nsi)
+        expect(NextStepInfo).to receive(:new)
+                                  .with(kase, 'upload', responder)
+                                  .and_return(nsi)
 
         get :new_response_upload, params: { id: kase, action: 'upload' }
         expect(assigns(:next_step_info)).to eq nsi
@@ -882,11 +886,6 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as the assigned responder' do
-      before { sign_in responder }
-
-      it_behaves_like 'signed-in user can view attachment upload page'
-    end
 
     context 'as an authenticated manager' do
       before { sign_in manager }
@@ -1360,7 +1359,8 @@ RSpec.describe CasesController, type: :controller do
         get :approve_response, params: { id: pending_dacu_clearance_case.id }
         expect(NextStepInfo).to have_received(:new)
                                   .with(pending_dacu_clearance_case,
-                                        'approve')
+                                        'approve',
+                                        pending_dacu_clearance_case.approvers.first)
         expect(assigns[:next_step_info]).to eq :new_next_step_info
       end
     end

@@ -1,45 +1,110 @@
 require 'rspec/expectations'
 
 RSpec::Matchers.define :transition_from do |from_state|
-  match do |event|
-    expect(event[:transitions]).to have_key from_state.to_s
-    target_states = event[:transitions][from_state.to_s]
+  def check_target_states(target_states)
     states = target_states.map { |s| s[:state] }
-    expect(states).to include @to_state
-    unless @case_policy.nil?
-      user_id = spy('user_id')
-      user    = stubbed_out_user_for_id(user_id)
-      kase    = case_with_stubbed_out_policy(@case_policy, user)
+    if states.include? @to_state
+      true
+    else
+      @error = "#{@to_state} not found in target states"
+      false
+    end
+  end
 
-      state_info = target_states.find { |si| si[:state] == @to_state }
-      guards     = state_info[:guards]
-      options    = { user_id: user_id}
-      guards.each { |g| g.call(kase, spy('last_transition'), options) }
+  def check_to_state_populated
+    if @to_state.nil?
+      @error = 'cannot check default policy without to_state'
+      false
     else
       true
     end
+  end
+
+  def check_policy_exists_in_policy_class
+    if @policy_class.instance_methods.include? @check_policy.to_sym
+      true
+    else
+      @error = "policy class #{@policy_class} does not have policy method " \
+               + "#{@check_policy}"
+      false
+    end
+  end
+
+  def check_transition_exists(from_state, transitions)
+    if transitions.key? from_state.to_s
+      true
+    else
+      @error = "transition from state #{from_state} does not exist"
+      false
+    end
+  end
+
+  def raise_expectation_failed
+    raise(RSpec::Expectations::ExpectationNotMetError, @error)
+  end
+
+  match do |event_name|
+    state_machine_class = RSpec::current_example
+                            .example_group
+                            .top_level_description
+                            .constantize
+    event = state_machine_class.events[event_name]
+
+    check_transition_exists(from_state, event[:transitions]) ||
+      raise_expectation_failed
+    target_states = event[:transitions][from_state.to_s]
+    check_target_states(target_states) || raise_expectation_failed
+
+    return true if @check_policy.nil? && !@check_default_policy
+
+    if @check_default_policy
+      check_to_state_populated || raise_expectation_failed
+      @check_policy = "#{event_name}_from_#{from_state}_to_#{@to_state}?"
+    end
+
+    check_policy_exists_in_policy_class || raise_expectation_failed
+
+    user_id = spy('user_id')
+    user    = stubbed_out_user_for_id(user_id)
+    object  = object_with_stubbed_out_policy(@check_policy, user)
+
+    state_info = target_states.find { |si| si[:state] == @to_state }
+    guards     = state_info[:guards]
+    options    = { user_id: user_id}
+    guards.each { |g| g.call(object, spy('last_transition'), options) }
   end
 
   chain :to do |to_state|
     @to_state = to_state.to_s
   end
 
-  chain :checking_case_policy do |policy|
-    @case_policy = policy
+  chain :checking_default_policy do |policy_class|
+    @policy_class = policy_class
+    @check_default_policy = true
+  end
+
+  chain :checking_policy do |policy, policy_class|
+    @policy_class = policy_class
+    @check_policy = policy
+  end
+
+  failure_message do |event_name|
+    @error ||= 'unknown error'
+    "Expected event #{event_name} to transition from state #{from_state}: #{@error}"
   end
 
   def stubbed_out_user_for_id(user_id)
     user = spy('user')
-    expect(User).to receive(:find).with(user_id).and_return(user)
+    allow(User).to receive(:find).with(user_id).and_return(user)
     user
   end
 
-  def case_with_stubbed_out_policy(policy_name, user)
-    kase = spy('case')
-    allow(kase).to receive(:policy_class).and_return(CasePolicy)
-    policy = instance_spy(CasePolicy)
+  def object_with_stubbed_out_policy(policy_name, user)
+    object = spy('object')
+    allow(object).to receive(:policy_class).and_return(@policy_class)
+    policy = instance_spy(@policy_class)
     expect(policy).to receive(policy_name)
-    expect(CasePolicy).to receive(:new).with(user, kase).and_return(policy)
-    kase
+    expect(@policy_class).to receive(:new).with(user, object).and_return(policy)
+    object
   end
 end

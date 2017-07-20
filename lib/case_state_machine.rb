@@ -147,10 +147,10 @@ class CaseStateMachine
   end
 
   event :upload_response_and_return_for_redraft do
-    transition from: :pending_dacu_clearance, to: :drafting,
-               policy: :upload_response_and_return_for_redraft_from_pending_dacu_clearance?
-    transition from: :pending_press_office_clearance, to: :pending_dacu_clearance,
-               policy: :upload_response_and_return_for_redraft_from_pending_press_office_clearance?
+    transition from: :pending_dacu_clearance,
+               to: :drafting
+    transition from: :pending_press_office_clearance,
+               to: :pending_dacu_clearance
   end
 
   event :approve do

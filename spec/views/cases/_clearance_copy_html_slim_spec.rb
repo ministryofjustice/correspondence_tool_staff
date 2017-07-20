@@ -1,8 +1,9 @@
+# coding: utf-8
 require 'rails_helper'
 
 describe 'cases/clearance_copy.html.slim', type: :view do
-  let(:kase)      { create :accepted_case, :flagged, subject: "Optimism – is a lack of information." }
-  let(:nsi)      { NextStepInfo.new(kase, 'upload') }
+  let(:kase) { create :accepted_case, :flagged, subject: "Optimism – is a lack of information." }
+  let(:nsi)  { NextStepInfo.new(kase, 'upload', kase.responder) }
   let(:partial) do
     render partial: 'cases/clearance_copy', locals: { nsi: nsi }
     clearance_copy_section(rendered)

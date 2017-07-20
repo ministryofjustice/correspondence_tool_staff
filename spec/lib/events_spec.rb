@@ -44,7 +44,7 @@ describe Events do
     end
   end
 
-  describe "#event" do
+  describe ".event" do
     before do
       machine.class_eval do
         state :x, initial: true
@@ -145,6 +145,56 @@ describe Events do
         expect { instance.trigger!(:event_3) }.
           to raise_error(Statesman::GuardFailedError)
       end
+    end
+  end
+
+  describe '#trigger!' do
+    before do
+      machine.class_eval do
+        state :a, initial: true
+        state :b
+        state :c
+
+        event :event_1 do
+          guard { false }
+          transition from: :a, to: :b
+        end
+
+        event :event_2 do
+          transition from: :a, to: :b, guard: ->(_,_,_) { false }
+        end
+
+        event :event_3 do
+          transition from: :a, to: :c
+        end
+
+        event :event_4 do
+          guard { true }
+          transition from: :a, to: :b, guard: ->(_,_,_) { true }
+        end
+
+        guard_transition(from: :a, to: :c) { |_,_,_| false }
+      end
+    end
+
+    it 'raises if an event guard fails' do
+      expect { instance.trigger! :event_1 }
+        .to raise_error(Statesman::GuardFailedError)
+    end
+
+    it 'raises if the event transition guard fails' do
+      expect { instance.trigger! :event_2 }
+        .to raise_error(Statesman::GuardFailedError)
+    end
+
+    it 'raises if the transition guard fails' do
+      expect { instance.trigger! :event_2 }
+        .to raise_error(Statesman::GuardFailedError)
+    end
+
+    it 'transitions if no guards fail' do
+      instance.trigger! :event_4
+      expect(instance.current_state).to eq 'b'
     end
   end
 

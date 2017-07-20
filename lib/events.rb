@@ -30,30 +30,15 @@ module Events
   end
 
   def trigger!(event_name, metadata = {})
-    event = get_event! event_name
-
-    event[:callbacks][:guards].each do |guard|
-      unless guard.call(@object, last_transition, metadata)
-        raise_guard_failed_error(event_name, @object, metadata)
-      end
+    check_guards_for_event!(event_name, metadata)
+    target_state = get_next_target_state_for_event(event_name, metadata)
+    unless target_state
+      raise Statesman::GuardFailedError,
+            "No transitions available for event: #{event_name} " \
+            + "with object: #{object} in state: #{object.current_state} " \
+            + "and metadata: #{metadata}"
     end
-
-    transitions = event.fetch(:transitions).fetch(current_state) do
-      raise Statesman::TransitionFailedError,
-            "State #{current_state} not found for Event #{event_name}"
-    end
-
-    # We have a list of destination states with their guards here, but for the
-    # time being we just take the first one. We could, in theory, test the
-    # guard for each one and choose the first one that succeeds.
-    state_info = transitions.first
-    state_info[:guards].each do |guard|
-      unless guard.call @object, last_transition, metadata
-        raise_guard_failed_error(event_name, @object, metadata)
-      end
-    end
-    new_state = state_info.fetch(:state)
-
+    new_state = target_state.fetch(:state)
     transition_to!(new_state, metadata)
     true
   end
@@ -79,12 +64,25 @@ module Events
     events.sort! { |a, b| a.to_s <=> b.to_s }
   end
 
-  def next_state_for_event(event_name)
+  def next_state_for_event(event_name, metadata = {})
     target_states = get_event_target_states!(event_name)
-    target_states.first.fetch(:state)
+
+    to_state_info = target_states.find do |state_info|
+      new_state = state_info.fetch(:state)
+      guards = state_info.fetch(:guards)
+      can_transition_to?(new_state, metadata) &&
+        guards.all? { |g| g.call(@object, last_transition, metadata) }
+    end
+    to_state_info[:state]
   end
 
   private
+
+  def can_trigger_event?(event_name:, metadata: {})
+    have_transition_for_event?(event_name) &&
+      check_guards_for_event(event_name, metadata) &&
+      check_guards_for_event_transitions(event_name, metadata)
+  end
 
   def get_event!(event_name)
     self.class.events.fetch(event_name) do
@@ -108,30 +106,35 @@ module Events
     end
   end
 
+  def check_guards_for_event!(event_name, metadata)
+    unless check_guards_for_event(event_name, metadata)
+      raise Statesman::GuardFailedError,
+            "Guard on event: #{event_name} with object: #{object}" \
+            + " metadata: #{metadata} returned false"
+    end
+  end
+
   def have_transition_for_event?(event_name)
     event = get_event!(event_name)
     event.fetch(:transitions).key?(current_state)
   end
 
   def check_guards_for_event_transitions(event_name, metadata)
+    target_state = get_next_target_state_for_event(event_name, metadata)
+    return false if target_state.nil?
+    can_transition_to?(target_state[:state], metadata)
+  end
+
+  def get_next_target_state_for_event(event_name, metadata)
     target_states = get_event_target_states!(event_name)
-    target_states.any? do |state_info|
-      new_state = state_info.fetch(:state)
-      guards = state_info.fetch(:guards)
-      can_transition_to?(new_state, metadata) &&
-        guards.all? { |g| g.call(@object, last_transition, metadata) }
+    target_states.find do |target_state|
+      call_guards_for_target_state(target_state, metadata)
     end
   end
 
-  def can_trigger_event?(event_name:, metadata: {})
-    have_transition_for_event?(event_name) &&
-      check_guards_for_event(event_name, metadata) &&
-      check_guards_for_event_transitions(event_name, metadata)
-  end
-
-  def raise_guard_failed_error(event_name, object, metadata)
-    raise Statesman::GuardFailedError,
-          "Guard on event: #{event_name} with object: #{object}" \
-          + " metadata: #{metadata} returned false"
+  def call_guards_for_target_state(target_state, metadata)
+    guards = target_state[:guards]
+    guards.blank? ||
+      guards.all? { |g| g.call(object,last_transition,metadata) }
   end
 end

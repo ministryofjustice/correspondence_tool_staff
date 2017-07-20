@@ -3,9 +3,31 @@ require 'rails_helper'
 
 
 # helper class to make example groups a bit more readable below
+def events(*list, &block)
+  describe(*list, events: list, caller: caller) do
+    instance_eval(&block)
+  end
+end
+
+
+def fevents(*list, &block)
+  fdescribe(*list, events: list, caller: caller) do
+    instance_eval(&block)
+  end
+end
+
+
+def xevents(*list, &block)
+  xdescribe(*list, events: list, caller: caller) do
+    instance_eval(&block)
+  end
+end
+
+
 def event(event_name)
   CaseStateMachine.events[event_name]
 end
+
 
 RSpec.describe CaseStateMachine, type: :model do
   let(:kase)               { create :case }
@@ -64,14 +86,14 @@ RSpec.describe CaseStateMachine, type: :model do
     end
   end
 
-  describe event(:assign_responder) do
+  events :assign_responder do
     it { should transition_from(:unassigned).to(:awaiting_responder) }
     it { should require_permission(:can_assign_case?)
                   .using_options(user_id: manager.id)
                   .using_object(new_case) }
   end
 
-  describe event(:flag_for_clearance) do
+  events :flag_for_clearance do
     it { should transition_from(:unassigned).to(:unassigned) }
     it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
     it { should transition_from(:drafting).to(:drafting) }
@@ -81,7 +103,7 @@ RSpec.describe CaseStateMachine, type: :model do
                   .using_object(assigned_case) }
   end
 
-  describe event(:unflag_for_clearance) do
+  events :unflag_for_clearance do
     it { should transition_from(:unassigned).to(:unassigned) }
     it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
     it { should transition_from(:drafting).to(:drafting) }
@@ -91,7 +113,7 @@ RSpec.describe CaseStateMachine, type: :model do
                   .using_object(assigned_flagged_case) }
   end
 
-  describe event(:accept_approver_assignment) do
+  events :accept_approver_assignment do
     it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
     it { should transition_from(:drafting).to(:drafting) }
     it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
@@ -101,7 +123,7 @@ RSpec.describe CaseStateMachine, type: :model do
                   .using_object(kase) }
   end
 
-  describe event(:unaccept_approver_assignment) do
+  events :unaccept_approver_assignment do
     it { should transition_from(:unassigned).to(:unassigned) }
     it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
     it { should transition_from(:drafting).to(:drafting) }
@@ -112,7 +134,7 @@ RSpec.describe CaseStateMachine, type: :model do
             .using_object(kase) }
   end
 
-  describe event(:reassign_approver) do
+  events :reassign_approver do
     it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
     it { should transition_from(:drafting).to(:drafting) }
     it { should transition_from(:pending_dacu_clearance).to(:pending_dacu_clearance) }
@@ -122,21 +144,21 @@ RSpec.describe CaseStateMachine, type: :model do
 
   end
 
-  describe event(:accept_responder_assignment) do
+  events :accept_responder_assignment do
     it { should transition_from(:awaiting_responder).to(:drafting) }
     it { should require_permission(:can_accept_or_reject_responder_assignment?)
                   .using_options(user_id: responder.id)
                   .using_object(assigned_case) }
   end
 
-  describe event(:reject_responder_assignment) do
+  events :reject_responder_assignment do
     it { should transition_from(:awaiting_responder).to(:unassigned) }
     it { should require_permission(:can_accept_or_reject_responder_assignment?)
                   .using_options(user_id: responder.id)
                   .using_object(assigned_case) }
   end
 
-  describe event(:add_responses) do
+  events :add_responses do
     it { should transition_from(:drafting).to(:awaiting_dispatch) }
     it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
     it { should require_permission(:can_add_attachment?)
@@ -144,35 +166,35 @@ RSpec.describe CaseStateMachine, type: :model do
                   .using_object(case_being_drafted) }
   end
 
-  describe event(:add_response_to_flagged_case) do
+  events :add_response_to_flagged_case do
     it { should transition_from(:drafting).to(:pending_dacu_clearance) }
     it { should require_permission(:can_add_attachment_to_flagged_case?)
                   .using_options(user_id: responder.id)
                   .using_object(case_being_drafted) }
   end
 
-  describe event(:remove_response) do
+  events :remove_response do
     it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
     it { should require_permission(:can_remove_attachment?)
                   .using_options(user_id: responder.id)
                   .using_object(case_with_response) }
   end
 
-  describe event(:remove_last_response) do
+  events :remove_last_response do
     it { should transition_from(:awaiting_dispatch).to(:drafting) }
     it { should require_permission(:can_remove_attachment?)
                   .using_options(user_id: responder.id)
                   .using_object(case_with_response) }
   end
 
-  describe event(:respond) do
+  events :respond do
     it { should transition_from(:awaiting_dispatch).to(:responded) }
     it { should require_permission(:can_respond?)
                   .using_options(user_id: responder.id)
                   .using_object(case_with_response) }
   end
 
-  describe event(:escalate_to_press_office) do
+  events :escalate_to_press_office do
     let(:kase) { create :pending_dacu_clearance_case, :press_office }
 
     it { should transition_from(:pending_dacu_clearance)
@@ -180,16 +202,16 @@ RSpec.describe CaseStateMachine, type: :model do
                   .checking_case_policy(:can_escalate_to_next_approval_level?) }
   end
 
-  describe event(:approve) do
+  events :approve do
     it { should transition_from(:pending_dacu_clearance)
-                  .to(:awaiting_dispatch)
-                  .checking_case_policy(:can_approve_case?) }
+                   .to(:awaiting_dispatch)
+                   .checking_default_policy(CasePolicy) }
     it { should transition_from(:pending_press_office_clearance)
                   .to(:awaiting_dispatch)
-                  .checking_case_policy(:can_approve_case?) }
+                  .checking_default_policy(CasePolicy) }
   end
 
-  describe event(:upload_response_and_approve) do
+  events :upload_response_and_approve do
     it { should transition_from(:pending_dacu_clearance).to :awaiting_dispatch}
     it { should require_permission(:can_upload_response_and_approve?)
                   .using_options(user_id: approver.id)
@@ -197,23 +219,23 @@ RSpec.describe CaseStateMachine, type: :model do
     }
   end
 
-  describe event(:upload_response_and_return_for_redraft) do
+  events :upload_response_and_return_for_redraft do
     it { should transition_from(:pending_dacu_clearance)
                   .to(:drafting)
-                  .checking_case_policy(:upload_response_and_return_for_redraft_from_pending_dacu_clearance?) }
+                  .checking_default_policy(CasePolicy) }
     it { should transition_from(:pending_press_office_clearance)
                   .to(:pending_dacu_clearance)
-                  .checking_case_policy(:upload_response_and_return_for_redraft_from_pending_press_office_clearance?) }
+                  .checking_default_policy(CasePolicy) }
   end
 
-  describe event(:close) do
+  events :close do
     it { should transition_from(:responded).to(:closed) }
     it { should require_permission(:can_close_case?)
                   .using_options(user_id: manager.id)
                   .using_object(responded_case) }
   end
 
-  describe event(:add_message_to_case) do
+  events :add_message_to_case do
     it { should transition_from(:unassigned).to(:unassigned) }
     it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
     it { should transition_from(:drafting).to(:drafting) }
@@ -495,14 +517,14 @@ RSpec.describe CaseStateMachine, type: :model do
     let(:state_machine) { kase.state_machine }
     let(:team_id) { kase.approving_teams.first.id }
 
-    describe 'trigger escalate_to_press_office!' do
-      it 'triggers an escalate_to_press_office event' do
+    describe 'trigger approve!' do
+      it 'triggers an approve event' do
         expect {
-          state_machine.escalate_to_press_office!(
+          state_machine.approve!(
             approver,
             kase.approver_assignments.first
           )
-        }.to trigger_the_event(:escalate_to_press_office)
+        }.to trigger_the_event(:approve)
                .on_state_machine(state_machine)
                .with_parameters(
                  user_id: approver.id,

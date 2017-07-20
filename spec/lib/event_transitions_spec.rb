@@ -64,5 +64,24 @@ describe Events do
       expect(policies).to have_recieved(:a_policy)
     end
 
+    it 'creates a guard automatically if a case policy exists' do
+      user = instance_double(User)
+      allow(User).to receive(:find).with(:a_user_id).and_return(user)
+      kase = instance_double(Case)
+      policy_name = :test_from_from_state_to_to_state?
+      policies = spy('PunditPolicy', policy_name => true)
+      allow(Pundit).to receive(:policy!).and_return(policies)
+      allow(CasePolicy).to receive(:instance_methods).and_return([policy_name])
+
+      event_transition.transition from: :from_state,
+                                  to: :to_state
+      state_info = machine.events[:test][:transitions]['from_state'].first
+      guard = state_info[:guards].first
+      guard.call(kase, :last_transition, { user_id: :a_user_id })
+
+      expect(Pundit).to have_received(:policy!).with(user, kase)
+      expect(policies).to have_recieved('test_from_from_state_to_to_state')
+    end
+
   end
 end

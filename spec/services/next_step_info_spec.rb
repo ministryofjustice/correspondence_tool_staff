@@ -1,112 +1,127 @@
 require 'rails_helper'
 
-RSpec::Matchers.define :set_next_state_to do |next_state|
+RSpec::Matchers.define :set_action_verb_to do |action_verb|
   match do |next_step_info|
-    expect(next_step_info.next_state).to eq next_state
+    expect(next_step_info.action_verb).to eq action_verb
   end
 
   failure_message do |next_step_info|
     <<~EOM
-      expected next step info #{next_step_info} to return next state
-      expected state: #{next_state}
-           got state: #{next_step_info.next_state}
+      expected next step info #{next_step_info} to return action verb
+      expected text: "#{action_verb}"
+           got text: "#{next_step_info.action_verb}"
     EOM
   end
 end
 
-RSpec::Matchers.define :set_next_team_to do |next_team|
+RSpec::Matchers.define :use_event do |event_name|
   match do |next_step_info|
-    expect(next_step_info.next_team).to eq next_team
-  end
-
-  failure_message do |next_step_info|
-    <<~EOM
-      expected next step info #{next_step_info} to return next team
-      expected team: #{next_team}
-           got team: #{next_step_info.next_team}
-    EOM
+    state_machine = next_step_info.instance_variable_get :@state_machine
+    expect(state_machine).to have_received(:next_state_for_event)
+                               .with(event_name,
+                                     user_id: disclosure_specialist.id )
+                               .at_least(1).times
   end
 end
 
 describe 'NextStepInfo' do
+  let(:responding_team)       { responder.responding_teams.first }
+  let(:responder)             { create :responder }
+  let(:disclosure_specialist) { create :disclosure_specialist}
+  let!(:dacu_disclosure)      { find_or_create :team_dacu_disclosure }
+  let!(:press_office)         { find_or_create :team_press_office }
+  let!(:private_office)       { find_or_create :team_private_office }
 
-  let(:unassigned_case)  { create :case }
-  let(:awaiting_responder_case) { create :awaiting_responder_case }
-  let(:accepted_case) { create :accepted_case }
-  let(:case_with_response) { create :case_with_response }
-  let(:pending_dacu_clearance_case) { create :pending_dacu_clearance_case }
+  context 'when next state is' do
+    let(:kase) { create :case_being_drafted, responder: responder }
+    before do
+      state = RSpec.current_example.metadata[:example_group][:description]
+      allow(kase.state_machine).to receive(:next_state_for_event)
+                                     .and_return(state)
+    end
+    subject { NextStepInfo.new(kase, 'approve', disclosure_specialist) }
 
-  context 'invalid action' do
-    it 'raises' do
-      expect {
-        NextStepInfo.new(unassigned_case, 'invalid-action')
-      }.to raise_error RuntimeError, "Unexpected action parameter: 'invalid-action'"
+    context 'unassigned' do
+      it { should have_attributes(next_team: 'DACU') }
+    end
+
+    context 'responded' do
+      it { should have_attributes(next_team: 'DACU') }
+    end
+
+    context 'closed' do
+      it { should have_attributes(next_team: 'DACU') }
+    end
+
+    context 'awaiting_responder' do
+      it { should have_attributes(next_team: responding_team) }
+    end
+
+    context 'drafting' do
+      it { should have_attributes(next_team: responding_team) }
+    end
+
+    context 'awaiting_dispatch' do
+      it { should have_attributes(next_team: responding_team) }
+    end
+
+    context 'pending_dacu_clearance' do
+      it { should have_attributes(next_team: dacu_disclosure) }
+    end
+
+    context 'pending_press_office_clearance' do
+      it { should have_attributes(next_team: press_office) }
+    end
+
+    context 'something_unexpected' do
+      it 'raises an error' do
+        expect { subject } .to raise_error(RuntimeError)
+      end
     end
   end
 
-  context 'Case in drafting state' do
+  context 'when action is' do
+    let(:kase) { create :case }
+    before do
+      allow(kase.state_machine).to receive(:next_state_for_event)
+                                     .and_return('unassigned')
+    end
+    subject do
+      action = RSpec.current_example.metadata[:example_group][:description]
+      NextStepInfo.new(kase, action, disclosure_specialist)
+    end
+
+    context 'approve' do
+      it { should set_action_verb_to 'clearing the response to' }
+      it { should use_event :approve }
+    end
+
     context 'upload' do
-      it 'calculates next step and team' do
-        nsi = NextStepInfo.new(accepted_case, 'upload')
-        expect(nsi.next_state).to eq 'awaiting_dispatch'
-        expect(nsi.next_team).to eq accepted_case.responding_team
-      end
+      it { should set_action_verb_to 'uploading changes to' }
+      it { should use_event :add_responses }
     end
 
     context 'upload-flagged' do
-      it 'calculates next step and team' do
-        nsi = NextStepInfo.new(accepted_case, 'upload')
-        expect(nsi.next_state).to eq 'awaiting_dispatch'
-        expect(nsi.next_team).to eq accepted_case.responding_team
-      end
-    end
-  end
-
-  context 'Case in awaiting_dispatch state' do
-    context 'upload' do
-      it 'calculates next step and team' do
-        nsi = NextStepInfo.new(case_with_response, 'upload')
-        expect(nsi.next_state).to eq 'awaiting_dispatch'
-        expect(nsi.next_team).to eq case_with_response.responding_team
-      end
+      it { should set_action_verb_to 'uploading changes to' }
+      it { should use_event :add_response_to_flagged_case }
     end
 
-    context 'upload-flagged' do
-      it 'raises' do
-        nsi = NextStepInfo.new(case_with_response, 'upload')
-        expect(nsi.next_state).to eq 'awaiting_dispatch'
-        expect(nsi.next_team).to eq case_with_response.responding_team
-      end
-    end
-  end
-
-  context 'Case in pending_dacu_clearance state' do
     context 'upload-approve' do
-      it 'raises' do
-        nsi = NextStepInfo.new(pending_dacu_clearance_case, 'upload-approve')
-        expect(nsi.next_state).to eq 'awaiting_dispatch'
-        expect(nsi.next_team).to eq pending_dacu_clearance_case.responding_team
-      end
+      it { should set_action_verb_to 'uploading the responses and clearing' }
+      it { should use_event :upload_response_and_approve }
     end
 
     context 'upload-redraft' do
-      it 'raises' do
-        nsi = NextStepInfo.new(pending_dacu_clearance_case, 'upload-redraft')
-        expect(nsi.next_state).to eq 'drafting'
-        expect(nsi.next_team).to eq pending_dacu_clearance_case.responding_team
-      end
+      it { should set_action_verb_to 'uploading changes to' }
+      it { should use_event :upload_response_and_return_for_redraft }
     end
-  end
 
-  context 'case is pending_dacu_clearance and flagged for press office' do
-    let(:press_office) { find_or_create :team_press_office}
-    let(:kase)         { create :pending_dacu_clearance_case, :press_office }
-
-    describe 'approve action' do
-      subject { NextStepInfo.new(kase, 'approve') }
-
-      it { should set_next_state_to 'pending_press_office_clearance' }
-      it { should set_next_team_to press_office }
+    context 'unexpected-action' do
+      it 'raises an error' do
+        expect { subject }
+          .to raise_error(RuntimeError,
+                          "Unexpected action parameter: 'unexpected-action'")
+      end
     end
   end
 end
