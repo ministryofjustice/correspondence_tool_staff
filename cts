@@ -12,6 +12,7 @@ require 'thor'
 
 $: << 'lib'
 require 'cts/cases'
+require 'cts/cases/create'
 require 'cts/teams'
 require 'cts/users'
 require 'cts/policies'
