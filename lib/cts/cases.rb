@@ -26,6 +26,15 @@ module CTS
         :drafting,
         :pending_dacu_disclosure_clearance,
         :pending_press_office_clearance,
+      ],
+      flagged_for_private_office: [
+        :awaiting_responder,
+        :taken_on_by_private_office,
+        :accepted_by_dacu_disclosure,
+        :drafting,
+        :pending_dacu_disclosure_clearance,
+        :pending_press_office_clearance,
+        :pending_private_office_clearance,
       ]
     }
 

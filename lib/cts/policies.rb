@@ -29,11 +29,11 @@ module CTS
       puts "Found User: id:#{user.id} name:#{user.full_name}"
       kase = CTS::find_case(args.shift)
       puts "Found Case: id:#{kase.id} number:#{kase.number}"
-      check_policies = args.present? ? args : ['^can_.*\?$']
+      check_policies = args.present? ? args : ['\?$']
       puts "Checking policies: #{check_policies}"
 
       policy = Pundit.policy!(user, kase)
-      all_policy_methods = policy.public_methods
+      all_policy_methods = policy.public_methods false
       policy_patterns = check_policies.map { |p| Regexp.new p }
       policies_pattern = Regexp.union(policy_patterns)
       policy_methods = all_policy_methods.grep(policies_pattern)

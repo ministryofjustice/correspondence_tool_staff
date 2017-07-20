@@ -20,6 +20,7 @@ module CTS
         puts "\t" + @end_states.join("\n\t")
         puts "Flagging each for DACU Disclosure clearance" if @flag.present?
         puts "Flagging each for Press Office clearance" if @flag == 'press'
+        puts "Flagging each for Private Office clearance" if @flag == 'private'
         puts "\n"
 
         clear if @clear_cases
@@ -155,14 +156,11 @@ module CTS
       end
 
       def transition_to_taken_on_by_press_office(kase)
-        result = CaseFlagForClearanceService.new(
-          user: press_officer,
-          kase: kase,
-          team: Team.press_office
-        ).call
-        unless result == :ok
-          raise "Could not flag case for clearance by press office, case id: #{kase.id}, user id: #{CTS::dacu_manager.id}, result: #{result}"
-        end
+        call_case_flag_for_clearance_service(kase, CTS::press_officer, CTS::press_office_team)
+      end
+
+      def transition_to_taken_on_by_private_office(kase)
+        call_case_flag_for_clearance_service(kase, CTS::private_officer, CTS::private_office_team)
       end
 
       def transition_to_awaiting_dispatch(kase)
@@ -197,6 +195,12 @@ module CTS
         end
       end
 
+      def transition_to_pending_private_office_clearance(kase)
+        if kase.approver_assignments.for_user(CTS::press_officer).any?
+          call_case_approval_service(CTS::press_officer, kase)
+        end
+      end
+
       def transition_to_closed(kase)
         kase.prepare_for_close
         kase.update(date_responded: Date.today, outcome_name: 'Granted in full')
@@ -208,6 +212,7 @@ module CTS
           @flag.blank? ||
             (@flag == 'disclosure' && name == :flagged_for_dacu_disclosure) ||
             (@flag == 'press' && name == :flagged_for_press_office)
+            (@flag == 'private' && name == :flagged_for_private_office)
         end
       end
 
@@ -225,6 +230,8 @@ module CTS
           CASE_JOURNEYS[:flagged_for_dacu_displosure]
         when 'press'
           CASE_JOURNEYS[:flagged_for_press_office]
+        when 'private'
+          CASE_JOURNEYS[:flagged_for_private_office]
         else
           CASE_JOURNEYS[:unflagged]
         end
@@ -263,6 +270,14 @@ module CTS
                    .new(user: user, kase: kase).call
         unless result == :ok
           raise "Could not approve case response , case id: #{kase.id}, user id: #{user.id}, result: #{result}"
+        end
+      end
+
+      def call_case_flag_for_clearance_service(kase, user, team)
+        service = CaseFlagForClearanceService.new user: user, kase: kase, team: team
+        result = service.call
+        unless result == :ok
+          raise "Could not flag case for clearance, case id: #{kase.id}, user id: #{user.id}, result: #{result}"
         end
       end
 

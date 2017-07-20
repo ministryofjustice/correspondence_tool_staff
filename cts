@@ -148,8 +148,8 @@ module CTS
         end
     end
 
-    def press_office_approver
-      @press_office_approver ||=
+    def press_officer
+      @press_officer ||=
         if press_office_team.approvers.blank?
           raise 'Press Office team has no approvers assigned.'
         else
@@ -157,8 +157,8 @@ module CTS
         end
     end
 
-    def private_office_approver
-      @private_office_approver ||=
+    def private_officer
+      @private_officer ||=
           if private_office_team.approvers.blank?
             raise 'Private Office team has no approvers assigned.'
           else
