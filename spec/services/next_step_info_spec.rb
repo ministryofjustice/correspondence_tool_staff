@@ -73,6 +73,10 @@ describe 'NextStepInfo' do
       it { should have_attributes(next_team: press_office) }
     end
 
+    context 'pending_private_office_clearance' do
+      it { should have_attributes(next_team: private_office) }
+    end
+
     context 'something_unexpected' do
       it 'raises an error' do
         expect { subject } .to raise_error(RuntimeError)

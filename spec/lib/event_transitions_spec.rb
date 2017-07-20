@@ -52,6 +52,7 @@ describe Events do
       kase = instance_double(Case)
       policies = spy(ApplicationPolicy, a_policy: true)
       allow(Pundit).to receive(:policy!).and_return(policies)
+      allow(CasePolicy).to receive(:instance_methods).and_return([:a_policy])
 
       event_transition.transition from: :from_state,
                                   to: :to_state,

@@ -28,7 +28,8 @@ describe CasePolicy do
   let(:dacu_disclosure)   { find_or_create :team_dacu_disclosure }
   let(:approver)          { dacu_disclosure.approvers.first }
   let(:disclosure_specialist) { approver }
-  let(:press_officer)     { find_or_create :press_officer }
+  let(:press_officer)     { create :press_officer }
+  let(:private_officer)   { create :private_officer }
   let(:co_approver)       { create :approver, approving_team: dacu_disclosure }
 
   let(:new_case)                { create :case }
@@ -62,6 +63,8 @@ describe CasePolicy do
                                               approver: approver }
   let(:pending_press_clearance_case) { create :pending_press_clearance_case,
                                               press_officer: press_officer }
+  let(:pending_private_clearance_case) { create :pending_private_clearance_case,
+                                                private_officer: private_officer }
   let(:awaiting_dispatch_case)       { create :case_with_response,
                                               responding_team: responding_team,
                                               responder: responder }
@@ -299,60 +302,6 @@ describe CasePolicy do
     end
   end
 
-  permissions :can_approve_case? do
-    it { should     permit(pending_dacu_clearance_case.approvers.first,
-                           pending_dacu_clearance_case) }
-    it { should     permit(disclosure_specialist, pending_dacu_clearance_case) }
-    it { should_not permit(press_officer, pending_dacu_clearance_case) }
-
-    it { should_not permit(approver,   new_case) }
-    it { should_not permit(approver,   accepted_case) }
-    it { should_not permit(approver,   assigned_case) }
-    it { should_not permit(approver,   rejected_case) }
-    it { should_not permit(approver,   unassigned_case) }
-    it { should_not permit(approver,   unassigned_flagged_case) }
-    it { should_not permit(approver,   unassigned_trigger_case) }
-    it { should_not permit(approver,   case_with_response) }
-    it { should_not permit(approver,   responded_case) }
-    it { should_not permit(approver,   closed_case) }
-
-    it { should_not permit(co_approver,   assigned_trigger_case) }
-    it { should_not permit(co_approver,   new_case) }
-    it { should_not permit(co_approver,   accepted_case) }
-    it { should_not permit(co_approver,   assigned_case) }
-    it { should_not permit(co_approver,   rejected_case) }
-    it { should_not permit(co_approver,   unassigned_case) }
-    it { should_not permit(co_approver,   unassigned_flagged_case) }
-    it { should_not permit(co_approver,   unassigned_trigger_case) }
-    it { should_not permit(co_approver,   case_with_response) }
-    it { should_not permit(co_approver,   responded_case) }
-    it { should_not permit(co_approver,   closed_case) }
-
-    it { should_not permit(manager,   assigned_trigger_case) }
-    it { should_not permit(manager,   new_case) }
-    it { should_not permit(manager,   accepted_case) }
-    it { should_not permit(manager,   assigned_case) }
-    it { should_not permit(manager,   rejected_case) }
-    it { should_not permit(manager,   unassigned_case) }
-    it { should_not permit(manager,   unassigned_flagged_case) }
-    it { should_not permit(manager,   unassigned_trigger_case) }
-    it { should_not permit(manager,   case_with_response) }
-    it { should_not permit(manager,   responded_case) }
-    it { should_not permit(manager,   closed_case) }
-
-    it { should_not permit(responder,   assigned_trigger_case) }
-    it { should_not permit(responder,   new_case) }
-    it { should_not permit(responder,   accepted_case) }
-    it { should_not permit(responder,   assigned_case) }
-    it { should_not permit(responder,   rejected_case) }
-    it { should_not permit(responder,   unassigned_case) }
-    it { should_not permit(responder,   unassigned_flagged_case) }
-    it { should_not permit(responder,   unassigned_trigger_case) }
-    it { should_not permit(responder,   case_with_response) }
-    it { should_not permit(responder,   responded_case) }
-    it { should_not permit(responder,   closed_case) }
-  end
-
   permissions :can_approve_or_escalate_case? do
     it { should_not permit(disclosure_specialist, case_with_response) }
     it { should     permit(disclosure_specialist, pending_dacu_clearance_case) }
@@ -500,18 +449,56 @@ describe CasePolicy do
     it { should     permit(press_officer,          pending_press_clearance_case) }
   end
 
-  permissions :upload_response_and_return_for_redraft_from_pending_dacu_clearance? do
+  permissions :upload_response_and_return_for_redraft_from_pending_dacu_clearance_to_drafting? do
     it { should_not permit(manager,                pending_dacu_clearance_case) }
     it { should_not permit(responder,              pending_dacu_clearance_case) }
     it { should     permit(disclosure_specialist,  pending_dacu_clearance_case) }
     it { should_not permit(press_officer,          pending_dacu_clearance_case) }
   end
 
-  permissions :upload_response_and_return_for_redraft_from_pending_press_office_clearance? do
+  permissions :upload_response_and_return_for_redraft_from_pending_press_office_clearance_to_pending_dacu_clearance? do
     it { should_not permit(manager,                pending_press_clearance_case) }
     it { should_not permit(responder,              pending_press_clearance_case) }
     it { should_not permit(disclosure_specialist,  pending_press_clearance_case) }
     it { should     permit(press_officer,          pending_press_clearance_case) }
+  end
+
+  permissions :approve_from_pending_dacu_clearance_to_awaiting_dispatch? do
+    it { should_not permit(responder,             pending_dacu_clearance_case) }
+    it { should     permit(disclosure_specialist, pending_dacu_clearance_case) }
+    it { should_not permit(press_officer,         pending_dacu_clearance_case) }
+    it { should_not permit(private_officer,       pending_dacu_clearance_case) }
+  end
+
+  permissions :approve_from_pending_dacu_clearance_to_pending_press_office_clearance? do
+    let(:kase) { create :pending_dacu_clearance_case, :press_office }
+    it { should_not permit(responder,             kase) }
+    it { should     permit(disclosure_specialist, kase) }
+    it { should_not permit(press_officer,         kase) }
+    it { should_not permit(private_officer,       kase) }
+  end
+
+  permissions :approve_from_pending_press_office_clearance_to_awaiting_dispatch? do
+    it { should_not permit(responder,             pending_press_clearance_case) }
+    it { should_not permit(disclosure_specialist, pending_press_clearance_case) }
+    it { should     permit(press_officer,         pending_press_clearance_case) }
+    it { should_not permit(private_officer,       pending_press_clearance_case) }
+  end
+
+  permissions :approve_from_pending_press_office_clearance_to_pending_private_office_clearance? do
+    let(:kase) { create :pending_press_clearance_case, :private_office }
+    it { should_not permit(responder,             kase) }
+    it { should_not permit(disclosure_specialist, kase) }
+    it { should     permit(press_officer,         kase) }
+    it { should_not permit(private_officer,       kase) }
+  end
+
+  permissions :approve_from_pending_private_office_clearance_to_awaiting_dispatch? do
+
+    it { should_not permit(responder,             pending_private_clearance_case) }
+    it { should_not permit(disclosure_specialist, pending_private_clearance_case) }
+    it { should_not permit(press_officer,         pending_private_clearance_case) }
+    it { should     permit(private_officer,       pending_private_clearance_case) }
   end
 
   describe 'case scope policy' do

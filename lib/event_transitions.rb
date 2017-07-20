@@ -19,7 +19,7 @@ class EventTransitions
     guards << lambda do |kase, _last_transition, options|
       user = User.find(options[:user_id])
       case_policies = Pundit.policy!(user, kase)
-      case_policies.__send__(policy)
+      case_policies.__send__(policy.to_s)
     end if CasePolicy.instance_methods.grep(policy.to_sym).present?
     machine.events[event_name][:transitions][@from] << { state: @to,
                                                          guards: guards }

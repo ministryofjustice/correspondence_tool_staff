@@ -25,6 +25,7 @@ class CaseStateMachine
   state :awaiting_dispatch
   state :pending_dacu_clearance
   state :pending_press_office_clearance
+  state :pending_private_office_clearance
   state :responded
   state :closed
 
@@ -154,15 +155,16 @@ class CaseStateMachine
   end
 
   event :approve do
-    transition from: :pending_dacu_clearance, to: :awaiting_dispatch,
-               guard: lambda { |object,_,options| CaseStateMachine.get_policy(options[:user_id], object).can_approve_case? }
-    transition from: :pending_press_office_clearance, to: :awaiting_dispatch,
-               guard: lambda { |object,_,options| CaseStateMachine.get_policy(options[:user_id], object).can_approve_case? }
-  end
-
-  event :escalate_to_press_office do
-    transition from: :pending_dacu_clearance, to: :pending_press_office_clearance,
-               policy: :can_escalate_to_next_approval_level?
+    transition from: :pending_dacu_clearance,
+               to:   :awaiting_dispatch
+    transition from: :pending_dacu_clearance,
+               to:   :pending_press_office_clearance
+    transition from: :pending_press_office_clearance,
+               to:   :awaiting_dispatch
+    transition from: :pending_press_office_clearance,
+               to:   :pending_private_office_clearance
+    transition from: :pending_private_office_clearance,
+               to:   :awaiting_dispatch
   end
 
   event :upload_response_and_approve do
@@ -322,13 +324,6 @@ class CaseStateMachine
              approving_team_id: assignment.team_id
   end
 
-  def escalate_to_press_office!(user, assignment)
-    trigger! :escalate_to_press_office,
-             user_id: user.id,
-             event: :escalate_to_press_office,
-             approving_team_id: assignment.team_id
-  end
-
   def upload_response_and_approve!(user, approving_team, filenames)
     trigger! :upload_response_and_approve,
              user_id: user.id,
@@ -382,21 +377,6 @@ class CaseStateMachine
              messaging_team_id: team.id,
              message:           message,
              event:             :add_message_to_case
-  end
-
-  def next_approval_event
-    case object.current_state
-    when 'drafting'
-      approve_or_escalate_case_for_team Team.dacu_disclosure,
-                                        :escalate_to_dacu_disclosure
-    when 'pending_dacu_clearance'
-      approve_or_escalate_case_for_team Team.press_office,
-                                        :escalate_to_press_office
-    when 'pending_press_office_clearance'
-      :approve
-    else
-      raise Statesman::InvalidStateError, "case #{object.id} in state '#{object.current_state}' isn't ready for approval"
-    end
   end
 
   private

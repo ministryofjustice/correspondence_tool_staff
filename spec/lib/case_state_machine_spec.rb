@@ -194,19 +194,20 @@ RSpec.describe CaseStateMachine, type: :model do
                   .using_object(case_with_response) }
   end
 
-  events :escalate_to_press_office do
-    let(:kase) { create :pending_dacu_clearance_case, :press_office }
-
-    it { should transition_from(:pending_dacu_clearance)
-                  .to(:pending_press_office_clearance)
-                  .checking_case_policy(:can_escalate_to_next_approval_level?) }
-  end
-
   events :approve do
     it { should transition_from(:pending_dacu_clearance)
                    .to(:awaiting_dispatch)
                    .checking_default_policy(CasePolicy) }
+    it { should transition_from(:pending_dacu_clearance)
+                  .to(:pending_press_office_clearance)
+                  .checking_default_policy(CasePolicy) }
     it { should transition_from(:pending_press_office_clearance)
+                  .to(:awaiting_dispatch)
+                  .checking_default_policy(CasePolicy) }
+    it { should transition_from(:pending_press_office_clearance)
+                  .to(:pending_private_office_clearance)
+                  .checking_default_policy(CasePolicy) }
+    it { should transition_from(:pending_private_office_clearance)
                   .to(:awaiting_dispatch)
                   .checking_default_policy(CasePolicy) }
   end
@@ -558,48 +559,6 @@ RSpec.describe CaseStateMachine, type: :model do
       it 'returns nil' do
         expect(CaseStateMachine.event_name(:trigger_article_50)).to be_nil
       end
-    end
-  end
-
-  describe '#next_approval_event' do
-    RSpec::Matchers.define :have_next_approval_event do |next_event|
-      match do |kase|
-        @got_next_event = kase.state_machine.next_approval_event
-        expect(@got_next_event).to eq next_event
-      end
-
-      failure_message do |kase|
-        <<~EOM
-      expected case #{kase} to have next approval event
-      expected event: #{next_event}
-           got state: #{@got_next_event}
-    EOM
-      end
-    end
-
-    context 'case in drafting and not flagged for approval' do
-      subject { case_being_drafted }
-      it { should have_next_approval_event :approve}
-    end
-
-    context 'case in drafting and requiring dacu approval' do
-      subject { create :case_being_drafted, :flagged_accepted, :dacu_disclosure }
-      it { should have_next_approval_event :escalate_to_dacu_disclosure }
-    end
-
-    context 'case in pending_dacu_clearance and only requiring dacu approval' do
-      subject { create :pending_dacu_clearance_case }
-      it { should have_next_approval_event :approve }
-    end
-
-    context 'case in pending_dacu_clearance and requiring press approval' do
-      subject { create :pending_dacu_clearance_case, :press_office }
-      it { should have_next_approval_event :escalate_to_press_office }
-    end
-
-    context 'case in pending_press_office_clearance and only requiring press approval' do
-      subject { create :pending_press_clearance_case }
-      it { should have_next_approval_event :approve }
     end
   end
 end

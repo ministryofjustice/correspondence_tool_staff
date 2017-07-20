@@ -105,17 +105,6 @@ FactoryGirl.define do
     event 'add_response_to_flagged_case'
   end
 
-  factory :case_transition_escalate_to_press_office, parent: :case_transition do
-    transient do
-      approver       { self.case.approvers.first }
-    end
-
-    to_state       'pending_press_office_clearance'
-    user           { approver }
-    approving_team { find_or_create :team_press_office }
-    event          'escalate_to_press_office'
-  end
-
   factory :case_transition_approve, parent: :case_transition do
     transient do
       approver       { self.case.approvers.first }
@@ -123,6 +112,29 @@ FactoryGirl.define do
 
     to_state       'awaiting_dispatch'
     user           { approver }
+    approving_team { find_or_create :team_dacu_disclosure }
+    event          'approve'
+  end
+
+  factory :case_transition_approve_for_press_office, parent: :case_transition do
+    transient do
+      approver       { self.case.approvers.first }
+    end
+
+    to_state       'pending_press_office_clearance'
+    user           { approver }
+    approving_team { find_or_create :team_press_office }
+    event          'approve'
+  end
+
+  factory :case_transition_approve_for_private_office, parent: :case_transition do
+    transient do
+      approver       { self.case.approvers.first }
+    end
+
+    to_state       'pending_private_office_clearance'
+    user           { approver }
+    approving_team { find_or_create :team_private_office }
     event          'approve'
   end
 

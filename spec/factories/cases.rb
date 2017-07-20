@@ -209,9 +209,40 @@ FactoryGirl.define do
              state: 'accepted',
              user: evaluator.press_officer
 
-      create :case_transition_escalate_to_press_office,
+      create :case_transition_approve_for_press_office,
              case: kase,
              user: evaluator.approver
+      kase.reload
+    end
+  end
+
+  factory :pending_private_clearance_case, parent: :pending_dacu_clearance_case do
+    transient do
+      press_office    { find_or_create :team_press_office }
+      press_officer   { find_or_create :press_officer }
+      private_office  { find_or_create :team_private_office }
+      private_officer { find_or_create :private_officer }
+    end
+
+    after(:create) do |kase, evaluator|
+      create :approver_assignment,
+             case: kase,
+             team: evaluator.private_office,
+             state: 'accepted',
+             user: evaluator.private_officer
+      create :approver_assignment,
+             case: kase,
+             team: evaluator.press_office,
+             state: 'accepted',
+             user: evaluator.press_officer
+
+      create :case_transition_approve_for_press_office,
+             case: kase,
+             user: evaluator.approver
+      create :case_transition_approve_for_private_office,
+             case: kase,
+             user: evaluator.approver
+
       kase.reload
     end
   end

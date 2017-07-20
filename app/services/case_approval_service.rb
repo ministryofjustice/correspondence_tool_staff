@@ -12,19 +12,6 @@ class CaseApprovalService
   end
 
   def call
-    case @kase.state_machine.next_approval_event
-    when :approve
-      mark_as_approved
-    when :escalate_to_press_office
-      escalate_to_press_office
-    end
-
-    @result = :ok
-  end
-
-  private
-
-  def mark_as_approved
     ActiveRecord::Base.transaction do
       assignment = @kase.approver_assignments
                      .with_teams(@user.approving_team)
@@ -32,15 +19,7 @@ class CaseApprovalService
       @state_machine.approve!(@user, assignment)
       assignment.update!(approved: true)
     end
-  end
 
-  def escalate_to_press_office
-    ActiveRecord::Base.transaction do
-      assignment = @kase.approver_assignments
-                     .with_teams(@user.approving_team)
-                     .first
-      @state_machine.escalate_to_press_office!(@user, assignment)
-      assignment.update!(approved: true)
-    end
+    @result = :ok
   end
 end

@@ -119,18 +119,43 @@ class CasePolicy < ApplicationPolicy
       user.responding_teams.include?(self.case.responding_team)
   end
 
-  def can_approve_case?
+  def approve_from_pending_dacu_clearance_to_awaiting_dispatch?
     clear_failed_checks
-    check_case_requires_clearance &&
-      check_user_is_in_current_team &&
-      check_case_on_last_step_of_approvals
+
+    check_case_is_pending_dacu_clearance &&
+      check_case_is_not_assigned_to_press_office &&
+      check_user_is_dacu_disclosure_approver
   end
 
-  def can_escalate_to_next_approval_level?
+  def approve_from_pending_dacu_clearance_to_pending_press_office_clearance?
     clear_failed_checks
-    check_case_requires_clearance &&
-      check_user_is_in_current_team &&
-      !check_case_on_last_step_of_approvals
+
+    check_case_is_pending_dacu_clearance &&
+      check_case_is_assigned_to_press_office &&
+      check_user_is_dacu_disclosure_approver
+  end
+
+  def approve_from_pending_press_office_clearance_to_awaiting_dispatch?
+    clear_failed_checks
+
+    check_case_is_pending_press_office_clearance &&
+      check_case_is_not_assigned_to_private_office &&
+      check_user_is_press_office_approver
+  end
+
+  def approve_from_pending_press_office_clearance_to_pending_private_office_clearance?
+    clear_failed_checks
+
+    check_case_is_pending_press_office_clearance &&
+      check_case_is_assigned_to_private_office &&
+      check_user_is_press_office_approver
+  end
+
+  def approve_from_pending_private_office_clearance_to_awaiting_dispatch?
+    clear_failed_checks
+
+    check_case_is_pending_private_office_clearance &&
+      check_user_is_private_office_approver
   end
 
   def can_approve_or_escalate_case?
@@ -159,19 +184,23 @@ class CasePolicy < ApplicationPolicy
   end
 
   def new_response_upload?
+    clear_failed_checks
     check_user_is_in_current_team
   end
 
   def upload_responses?
+    clear_failed_checks
     check_user_is_in_current_team
   end
 
-  def upload_response_and_return_for_redraft_from_pending_dacu_clearance?
+  def upload_response_and_return_for_redraft_from_pending_dacu_clearance_to_drafting?
+    clear_failed_checks
     check_case_is_assigned_to_dacu_disclosure &&
       check_user_is_dacu_disclosure_approver
   end
 
-  def upload_response_and_return_for_redraft_from_pending_press_office_clearance?
+  def upload_response_and_return_for_redraft_from_pending_press_office_clearance_to_pending_dacu_clearance?
+    clear_failed_checks
     check_case_is_assigned_to_press_office &&
       check_user_is_press_office_approver
   end
@@ -206,7 +235,6 @@ class CasePolicy < ApplicationPolicy
   # def user_not_in_responding_team?
   #   !user_in_responding_team?
   # end
-
 
   def approver_attachable?
     self.case.pending_dacu_clearance? && self.case.approvers.first == user
@@ -260,6 +288,10 @@ class CasePolicy < ApplicationPolicy
     @user.in? Team.press_office.approvers
   end
 
+  check :user_is_private_office_approver do
+    @user.in? Team.private_office.approvers
+  end
+
   # check case_is_in_responder_attachable_state
   check :case_is_in_attachable_state do
     (self.case.drafting? || self.case.awaiting_dispatch?) &&
@@ -288,16 +320,36 @@ class CasePolicy < ApplicationPolicy
     !self.case.closed?
   end
 
-  check :case_on_last_step_of_approvals do
-    begin
-      @case.state_machine.next_approval_event == :approve
-    rescue Statesman::InvalidStateError
-      false
-    end
-  end
-
   check :case_is_assigned_to_dacu_disclosure do
     Team.dacu_disclosure.in? @case.approving_teams
+  end
+
+  check :case_is_assigned_to_press_office do
+    Team.press_office.in? @case.approving_teams
+  end
+
+  check :case_is_not_assigned_to_press_office do
+    !Team.press_office.in? @case.approving_teams
+  end
+
+  check :case_is_assigned_to_private_office do
+    Team.private_office.in? @case.approving_teams
+  end
+
+  check :case_is_not_assigned_to_private_office do
+    !Team.private_office.in? @case.approving_teams
+  end
+
+  check :case_is_pending_dacu_clearance do
+    @case.pending_dacu_clearance?
+  end
+
+  check :case_is_pending_press_office_clearance do
+    @case.pending_press_office_clearance?
+  end
+
+  check :case_is_pending_private_office_clearance do
+    @case.pending_private_office_clearance?
   end
 
   check :case_is_assigned_to_press_office do

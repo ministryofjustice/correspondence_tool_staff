@@ -50,8 +50,10 @@ describe CaseApprovalService do
       end
     end
 
-    context 'escalating case' do
-      let(:kase)                 { create :pending_dacu_clearance_case, :press_office, approver: user }
+    context 'approving case that requires another level of clearance' do
+      let(:kase)                 { create :pending_dacu_clearance_case,
+                                          :press_office,
+                                          approver: user }
       let(:user)                 { create :disclosure_specialist }
       let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
 
@@ -77,7 +79,7 @@ describe CaseApprovalService do
           service.call
         }.to change { kase.transitions.size }.by(1)
         transition = kase.transitions.last
-        expect(transition.event).to eq 'escalate_to_press_office'
+        expect(transition.event).to eq 'approve'
         expect(transition.user_id).to eq user.id
         expect(transition.approving_team_id).to eq kase.approving_teams.first.id
       end

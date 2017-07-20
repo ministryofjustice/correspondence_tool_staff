@@ -6,6 +6,10 @@ describe 'CurrentTeamAndUserService' do
   let(:team_dacu_disclosure)  { find_or_create :team_dacu_disclosure }
   let(:responding_team)       { find_or_create :responding_team }
   let(:responder)             { find_or_create :responder }
+  let(:press_office)          { find_or_create :team_press_office }
+  let(:press_officer)         { create :press_officer }
+  let(:private_office)          { find_or_create :team_private_office }
+  let(:private_officer)         { create :private_officer }
   let(:service)               { CurrentTeamAndUserService.new(kase) }
 
   context 'unassigned state' do
@@ -65,6 +69,28 @@ describe 'CurrentTeamAndUserService' do
     end
   end
 
+  context 'pending_press_office_clearance state' do
+    let(:kase)  { create :pending_press_clearance_case,
+                         press_officer: press_officer }
+    it 'returns the correct team and user' do
+      kase.approver_assignments.first.update!(user_id: nil)
+      expect(kase.current_state).to eq 'pending_press_office_clearance'
+      expect(service.team).to eq press_office
+      expect(service.user).to eq press_officer
+    end
+  end
+
+  context 'pending_private_office_clearance state' do
+    let(:kase)  { create :pending_private_clearance_case,
+                         private_officer: private_officer}
+    it 'returns the correct team and user' do
+      kase.approver_assignments.first.update!(user_id: nil)
+      expect(kase.current_state).to eq 'pending_private_office_clearance'
+      expect(service.team).to eq private_office
+      expect(service.user).to eq private_officer
+    end
+  end
+
   context 'responded state' do
     let(:kase)  { create :responded_case }
     it 'returns the correct team and user' do
@@ -92,7 +118,5 @@ describe 'CurrentTeamAndUserService' do
       }.to raise_error RuntimeError, 'State of_disbelief unknown to CurrentTeamAndUserService'
     end
   end
-
-
 
 end
