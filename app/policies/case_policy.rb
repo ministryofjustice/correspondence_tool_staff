@@ -1,3 +1,4 @@
+# rubocop:disable ClassLength
 class CasePolicy < ApplicationPolicy
 
   attr_reader :user, :case, :failed_checks
@@ -361,3 +362,4 @@ class CasePolicy < ApplicationPolicy
     @user.in? current_info.team.users
   end
 end
+# rubocop:enable ClassLength
