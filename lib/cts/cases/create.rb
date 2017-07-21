@@ -207,14 +207,16 @@ module CTS
         kase.close(CTS::dacu_manager)
       end
 
+      # rubocop:disable Metrics/CyclomaticComplexity
       def journeys_to_check
         CASE_JOURNEYS.find_all do |name, _states|
           @flag.blank? ||
             (@flag == 'disclosure' && name == :flagged_for_dacu_disclosure) ||
-            (@flag == 'press' && name == :flagged_for_press_office)
+            (@flag == 'press' && name == :flagged_for_press_office) ||
             (@flag == 'private' && name == :flagged_for_private_office)
         end
       end
+      # rubocop:enable Metrics/CyclomaticComplexity
 
       def find_case_journey_for_state(state)
         journeys_to_check.each do |_name, states|
