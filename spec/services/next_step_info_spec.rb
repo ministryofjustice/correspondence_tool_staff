@@ -100,6 +100,11 @@ describe 'NextStepInfo' do
       it { should use_event :approve }
     end
 
+    context 'request-amends' do
+      it { should set_action_verb_to 'requesting amends for' }
+      it { should use_event :request_amends }
+    end
+
     context 'upload' do
       it { should set_action_verb_to 'uploading changes to' }
       it { should use_event :add_responses }

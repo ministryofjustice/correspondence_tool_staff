@@ -124,6 +124,8 @@ Rails.application.routes.draw do
     patch 'flag_for_clearance' => 'cases#flag_for_clearance', on: :member
     get 'approve_response' => 'cases#approve_response', on: :member
     patch 'execute_response_approval' => 'cases#execute_response_approval', on: :member
+    get :request_amends, on: :member
+    patch :execute_request_amends, on: :member
     patch 'reassign_approver' => 'cases#reassign_approver', on: :member
     # get 'upload_response_approve' => 'cases#upload_response_approve', on: :member
 

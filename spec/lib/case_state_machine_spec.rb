@@ -50,8 +50,9 @@ RSpec.describe CaseStateMachine, type: :model do
   let(:new_case)           { create :case }
   let(:assigned_case)      { create :assigned_case,
                                  responding_team: responding_team }
-  let(:assigned_flagged_case) { create :assigned_case, :flagged,
-                                       responding_team: responding_team }
+  let(:assigned_flagged_case) { create :assigned_case, :flagged_accepted,
+                                       responding_team: responding_team,
+                                       approver: approver }
   let(:case_being_drafted) { create :case_being_drafted,
                                     responder: responder,
                                     responding_team: responding_team }
@@ -65,9 +66,10 @@ RSpec.describe CaseStateMachine, type: :model do
                              responder: responder,
                              responding_team: responding_team }
 
-  let(:pending_dacu_clearance_case) { create :pending_dacu_clearance_case }
-  let(:disclosure_specialist)       { create :disclosure_specialist }
-  let(:team_dacu_disclosure)        { find_or_create :team_dacu_disclosure }
+  let(:pending_dacu_clearance_case)    { create :pending_dacu_clearance_case }
+  let(:pending_private_clearance_case) { create :pending_private_clearance_case }
+  let(:disclosure_specialist)          { create :disclosure_specialist }
+  let(:team_dacu_disclosure)           { find_or_create :team_dacu_disclosure }
 
   context 'after transition' do
     let(:t1) { Time.now }
@@ -209,6 +211,12 @@ RSpec.describe CaseStateMachine, type: :model do
                   .checking_default_policy(CasePolicy) }
     it { should transition_from(:pending_private_office_clearance)
                   .to(:awaiting_dispatch)
+                  .checking_default_policy(CasePolicy) }
+  end
+
+  events :request_amends do
+    it { should transition_from(:pending_private_office_clearance)
+                  .to(:pending_dacu_clearance)
                   .checking_default_policy(CasePolicy) }
   end
 
@@ -545,6 +553,19 @@ RSpec.describe CaseStateMachine, type: :model do
                .on_state_machine(responded_case.state_machine)
                .with_parameters(user_id: manager.id,
                                 managing_team_id: managing_team.id)
+    end
+  end
+
+  describe 'trigger request_amends!' do
+    it 'triggers a request_amends event' do
+      state_machine = assigned_flagged_case.state_machine
+      assignment = assigned_flagged_case.approver_assignments.first
+      expect do
+        state_machine.request_amends! approver, assignment
+      end.to trigger_the_event(:request_amends)
+               .on_state_machine(state_machine)
+               .with_parameters(user_id: approver.id,
+                                approving_team_id: approving_team.id)
     end
   end
 

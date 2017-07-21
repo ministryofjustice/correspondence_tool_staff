@@ -167,6 +167,11 @@ class CaseStateMachine
                to:   :awaiting_dispatch
   end
 
+  event :request_amends do
+    transition from: :pending_private_office_clearance,
+               to:   :pending_dacu_clearance
+  end
+
   event :upload_response_and_approve do
     guard do |object, _last_transition, options|
       CaseStateMachine.get_policy(options[:user_id], object).can_upload_response_and_approve?
@@ -321,6 +326,13 @@ class CaseStateMachine
     trigger! :approve,
              user_id: user.id,
              event: :approve,
+             approving_team_id: assignment.team_id
+  end
+
+  def request_amends!(user, assignment)
+    trigger! :request_amends,
+             user_id: user.id,
+             event: :request_amends,
              approving_team_id: assignment.team_id
   end
 

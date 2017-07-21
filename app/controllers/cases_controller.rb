@@ -1,3 +1,4 @@
+#rubocop:disable Metrics/ClassLength
 class CasesController < ApplicationController
   before_action :set_case,
     only: [
@@ -6,10 +7,12 @@ class CasesController < ApplicationController
       :confirm_respond,
       :edit,
       :execute_response_approval,
+      :execute_request_amends,
       :flag_for_clearance,
       :new_response_upload,
       :process_closure,
       :reassign_approver,
+      :request_amends,
       :respond,
       :show,
       :unflag_for_clearance,
@@ -216,10 +219,22 @@ class CasesController < ApplicationController
     render :approve_response
   end
 
+  def request_amends
+    authorize @case
+    @next_step_info = NextStepInfo.new(@case, 'request-amends', current_user)
+  end
+
   def execute_response_approval
     authorize @case
     CaseApprovalService.new(user: current_user, kase: @case).call
     flash[:notice] = "You have cleared case #{@case.number} - #{@case.subject}."
+    redirect_to cases_path
+  end
+
+  def execute_request_amends
+    authorize @case
+    CaseRequestAmendsService.new(user: current_user, kase: @case).call
+    flash[:notice] = "You have requested amends to case #{@case.number} - #{@case.subject}."
     redirect_to cases_path
   end
 
@@ -291,3 +306,4 @@ class CasesController < ApplicationController
     end
   end
 end
+#rubocop:enable Metrics/ClassLength

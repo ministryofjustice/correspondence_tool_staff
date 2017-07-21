@@ -13,20 +13,21 @@ module PageObjects
 
       {
         approve_response:          'Cases::ApproveResponsePage',
-        cases:                     'CasesPage',
-        closed_cases:              'Cases::ClosedCasesPage',
-        incoming_cases:            'Cases::IncomingCasesPage',
-        open_cases:                'Cases::OpenCasesPage',
-        cases_new:                 'Cases::NewPage',
-        cases_show:                'Cases::ShowPage',
-        cases_close:               'Cases::ClosePage',
-        cases_respond:             'Cases::RespondPage',
-        cases_new_response_upload: 'Cases::NewResponseUploadPage',
-        login:                     'LoginPage',
-        assignments_new:           'Assignments::NewPage',
         assignments_edit:          'Assignments::EditPage',
+        assignments_new:           'Assignments::NewPage',
+        cases:                     'CasesPage',
+        cases_close:               'Cases::ClosePage',
+        cases_new:                 'Cases::NewPage',
+        cases_new_response_upload: 'Cases::NewResponseUploadPage',
+        cases_respond:             'Cases::RespondPage',
+        cases_show:                'Cases::ShowPage',
+        closed_cases:              'Cases::ClosedCasesPage',
         global_nav_partial:        'Partials::GlobalNavPartial',
-        header_partial:            'Partials::HeaderPartial'
+        header_partial:            'Partials::HeaderPartial',
+        incoming_cases:            'Cases::IncomingCasesPage',
+        login:                     'LoginPage',
+        open_cases:                'Cases::OpenCasesPage',
+        request_amends:            'Cases::RequestAmendsPage',
       }.each do |page_name, page_class|
         full_page_class = "PageObjects::Pages::#{page_class}"
         define_method "#{page_name}_page" do

@@ -28,10 +28,15 @@ module CasesHelper
               it: 'action--reassign-approver',
               class: 'button',
               method: 'patch'
-    when :approve, :escalate_to_press_office
+    when :approve
       link_to t('common.case.clear_response'),
               approve_response_case_path(@case),
               id: 'action--approve',
+              class: 'button'
+    when :request_amends
+      link_to t('common.case.request_amends'),
+              request_amends_case_path(@case),
+              id: 'action--request-amends',
               class: 'button'
     when :upload_response_and_approve
       link_to t('common.case.upload_approve'),

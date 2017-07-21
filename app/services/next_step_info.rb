@@ -39,11 +39,15 @@ class NextStepInfo
     end
   end
 
+  #rubocop:disable Metrics/CyclomaticComplexity
   def translate_action_param(action_param)
     case action_param
     when 'approve'
       @state_machine_event = :approve
       @action_verb = 'clearing the response to'
+    when 'request-amends'
+      @state_machine_event = :request_amends
+      @action_verb = 'requesting amends for'
     when 'upload'
       @state_machine_event = :add_responses
       @action_verb = 'uploading changes to'
@@ -60,4 +64,5 @@ class NextStepInfo
       raise "Unexpected action parameter: '#{@action}'"
     end
   end
+  #rubocop:enable Metrics/CyclomaticComplexity
 end

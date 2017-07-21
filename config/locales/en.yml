@@ -202,6 +202,7 @@ en:
       who_its_with: With
       respond: Mark response as sent
       clear_response: Clear response
+      request_amends: Request Amends
       upload_approve: 'Upload response and clear'
     new_case_button: Create case
     phase_banner: |
@@ -271,6 +272,8 @@ en:
       upload_hint_copy: |
         You can upload different file types such as Word, Excel,
         PDF and JPEG up to 20MB per file.
+    request_amends:
+      heading: Request amends
     respond:
       heading: Marking it as sent
       reminders_html: |

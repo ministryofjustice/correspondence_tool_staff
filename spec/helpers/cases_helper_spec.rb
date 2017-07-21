@@ -61,13 +61,24 @@ href=\"/cases/#{@case.id}/close\">Close case</a>"
 
     end
 
-    context 'when event = ":respond' do
+    context 'when event = :respond' do
       it 'generates HTML that links to the upload response page' do
         @case = create(:case_with_response)
         expect(action_button_for(:respond)).to eq(
 "<a id=\"action--mark-response-as-sent\" class=\"button\" \
 href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
           )
+      end
+    end
+
+    context 'when event = :request_amends' do
+      it 'generates an HTML link to cases/request_amends' do
+        @case = create(:case)
+        expect(action_button_for(:request_amends))
+          .to eq "<a id=\"action--request-amends\" " +
+                 "class=\"button\" " +
+                 "href=\"/cases/#{@case.id}/request_amends\">" +
+                 "Request Amends</a>"
       end
     end
   end

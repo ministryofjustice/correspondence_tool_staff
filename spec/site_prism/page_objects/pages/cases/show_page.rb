@@ -18,6 +18,7 @@ module PageObjects
           element :mark_as_sent, '#action--mark-response-as-sent'
           element :close_case, '#action--close-case'
           element :clear_case, '#action--approve'
+          element :request_amends, '#action--request-amends'
           element :upload_approve, '#action--upload-approve'
           element :upload_redraft, '#action--upload-redraft'
         end
