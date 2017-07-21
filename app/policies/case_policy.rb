@@ -200,13 +200,6 @@ class CasePolicy < ApplicationPolicy
       check_user_is_dacu_disclosure_approver
   end
 
-  def upload_response_and_return_for_redraft_from_pending_press_office_clearance_to_pending_dacu_clearance?
-    clear_failed_checks
-
-    check_case_is_assigned_to_press_office &&
-      check_user_is_press_office_approver
-  end
-
   def request_amends?
     clear_failed_checks
 
@@ -223,6 +216,13 @@ class CasePolicy < ApplicationPolicy
      check_user_is_press_office_approver) ||
       (check_case_is_pending_private_office_clearance &&
        check_user_is_private_office_approver)
+  end
+
+  def request_amends_from_pending_press_office_clearance_to_pending_dacu_clearance?
+    clear_failed_checks
+
+    check_case_is_assigned_to_press_office &&
+      check_user_is_press_office_approver
   end
 
   def request_amends_from_pending_private_office_clearance_to_pending_dacu_clearance?

@@ -91,7 +91,7 @@ feature 'cases requiring clearance by press office' do
     )
   end
 
-  scenario 'Private Officer requsets amends to a response' do
+  scenario 'Private Officer requests amends to a response' do
     login_as private_officer
 
     cases_show_page.load(id: pending_private_clearance_case.id)

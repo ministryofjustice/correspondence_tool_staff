@@ -215,6 +215,9 @@ RSpec.describe CaseStateMachine, type: :model do
   end
 
   events :request_amends do
+    it { should transition_from(:pending_press_office_clearance)
+                  .to(:pending_dacu_clearance)
+                  .checking_default_policy(CasePolicy) }
     it { should transition_from(:pending_private_office_clearance)
                   .to(:pending_dacu_clearance)
                   .checking_default_policy(CasePolicy) }
@@ -231,9 +234,6 @@ RSpec.describe CaseStateMachine, type: :model do
   events :upload_response_and_return_for_redraft do
     it { should transition_from(:pending_dacu_clearance)
                   .to(:drafting)
-                  .checking_default_policy(CasePolicy) }
-    it { should transition_from(:pending_press_office_clearance)
-                  .to(:pending_dacu_clearance)
                   .checking_default_policy(CasePolicy) }
   end
 

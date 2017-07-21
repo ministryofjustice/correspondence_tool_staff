@@ -110,31 +110,22 @@ feature 'cases requiring clearance by press office' do
     )
   end
 
-  scenario 'Press Officer requests amends to a case', js: true do
-    stub_s3_uploader_for_all_files!
-    response_attachment = Rails.root.join 'spec',
-                                          'fixtures',
-                                          'response-press-office-comments.docx'
-
+  scenario 'Press Officer requests amends to a response' do
     login_as press_officer
 
     cases_show_page.load(id: pending_press_clearance_case.id)
     expect(cases_show_page.case_status.details.who_its_with.text)
       .to eq 'Press Office'
 
-    upload_changes_for_redraft kase: pending_press_clearance_case,
-                               response_attachments: [response_attachment],
-                               expected_team: dacu_disclosure,
-                               expected_status: 'Pending clearance'
-    submit_changes_for_redraft kase: pending_press_clearance_case,
-                               expected_team: dacu_disclosure,
-                               expected_status: 'Pending clearance',
-                               expected_attachments:
-                                 [File.basename(response_attachment)],
-                               expected_notice:
-                                 'You have uploaded the response for this case.',
-                               expected_history:
-                                 'Upload response and return for redraft'
-
+    request_amends kase: pending_press_clearance_case,
+                   expected_action: 'requesting amends for',
+                   expected_team: dacu_disclosure,
+                   expected_status: 'Pending clearance'
+    execute_request_amends kase: pending_press_clearance_case
+    select_case_on_open_cases_page(
+      kase: pending_press_clearance_case,
+      expected_team: dacu_disclosure,
+      expected_history: ["#{press_officer.full_name}Request amends"]
+    )
   end
 end
