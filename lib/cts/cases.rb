@@ -214,13 +214,14 @@ module CTS
       tp permitted_events,
          [
            { event:      { display_method: ->(e) { e.to_s }, width: 40 } },
-           { from_state: { display_method: ->(e) { kase.current_state } } },
+           { from_state: { display_method: ->(_) { kase.current_state } } },
            { to_state:   { display_method: ->(e) do
-                             kase.state_machine.next_state_for_event(
-                               e,
-                               user_id: user.id
-                             )
-                           end } }
+                                             kase.state_machine
+                                               .next_state_for_event(
+                                                 e,
+                                                 user_id: user.id
+                                               )
+                                           end } }
          ]
     end
 
