@@ -60,65 +60,6 @@ module CaseClosure
       end
     end
 
-    # def self.s21
-    #   abbrev('othermeans')
-    # end
-    #
-    # def self.s22
-    #   abbrev('future')
-    # end
-    #
-    # def self.s22a
-    #   abbrev('research')
-    # end
-    #
-    # def self.s23
-    #   abbrev('security')
-    # end
-    #
-    # def self.s24
-    #   abbrev('natsec')
-    # end
-    #
-    # def self.s26
-    #   abbrev('defence')
-    # end
-    #
-    # def self.s27
-    #   abbrev('intrel')
-    # end
-    #
-    # def self.s28
-    #   abbrev('ukrel')
-    # end
-    #
-    # def self.s29
-    #   abbrev('economy')
-    # end
-    #
-    # def self.s30
-    #   abbrev('pubauth')
-    # end
-    #
-    # def self.s31
-    #   abbrev('law')
-    # end
-    #
-    # def self.s32
-    #   abbrev('court')
-    # end
-    #
-    # def self.s33
-    #   abbrev('audit')
-    # end
-    #
-    #
-    #
-    # def self.abbrev(abbreviation)
-    #   where(abbreviation: abbreviation).first
-    # end
-
-
     def ncnd?
       subtype == 'ncnd'
     end
