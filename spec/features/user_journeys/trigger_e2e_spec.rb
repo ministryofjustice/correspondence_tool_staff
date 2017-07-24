@@ -21,7 +21,7 @@ feature "#trigger cases" do
   given(:manager)         { create(:manager)  }
   given(:managing_team)   { create :managing_team, managers: [manager] }
   given(:disclosure_specialist) { create :disclosure_specialist }
-  given!(:team_dacu_disclosure) { create :team_dacu_disclosure }
+  given!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
 
   before(:all) do
     CaseClosure::MetadataSeeder.seed!

@@ -480,6 +480,8 @@ FactoryGirl.define do
       disclosure_specialist       { create :disclosure_specialist }
       disclosure_team             { find_or_create :team_dacu_disclosure }
       disclosure_assignment_state { 'pending' }
+      private_officer             { create :private_officer }
+      private_office              { find_or_create :team_private_office }
     end
 
     after(:create) do |kase, evaluator|
@@ -492,6 +494,12 @@ FactoryGirl.define do
              case: kase,
              team: evaluator.disclosure_team,
              user: disclosure_specialist,
+             state: evaluator.disclosure_assignment_state
+
+      create :approver_assignment,
+             case: kase,
+             team: evaluator.private_office,
+             user: evaluator.private_officer,
              state: evaluator.disclosure_assignment_state
     end
   end

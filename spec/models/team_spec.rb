@@ -58,7 +58,11 @@ RSpec.describe Team, type: :model do
 
     describe 'approving scope' do
       it 'returns only approving teams' do
-        expect(Team.approving).to eq [approving_team]
+        expect(Team.approving).to match_array [
+                                    Team.press_office,
+                                    Team.private_office,
+                                    approving_team
+                                  ]
       end
     end
   end

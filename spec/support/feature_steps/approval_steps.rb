@@ -34,12 +34,23 @@ def execute_request_amends(kase:)
     .to have_text "You have requested amends to case #{kase.number} - #{kase.subject}"
 end
 
-def select_case_on_open_cases_page(kase:,
-                                   expected_team:,
-                                   expected_history: nil)
+def select_case_on_open_cases_page(kase:, **expectations)
   open_cases_page.click_on kase.number
-  expect(cases_show_page.case_status.details.who_its_with.text)
-    .to eq expected_team.name
+  expect_case_details_on_cases_show_page(expectations)
+end
+
+def select_case_on_incoming_cases_page(kase:, **expectations)
+  incoming_cases_page.click_on kase.number
+  expect_case_details_on_cases_show_page(expectations)
+end
+
+def expect_case_details_on_cases_show_page(expected_team: nil,
+                                           expected_history: nil)
+  if expected_team.present?
+    expect(cases_show_page.case_status.details.who_its_with.text)
+      .to eq expected_team.name
+  end
+
   if expected_history.present?
     history_entries = cases_show_page.case_history.entries
     history_entries.zip(expected_history).each do |entry, expected_text|

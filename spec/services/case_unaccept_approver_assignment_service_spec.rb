@@ -4,12 +4,12 @@ describe CaseUnacceptApproverAssignmentService do
   let(:assigned_case)           { create :assigned_case, :flagged_accepted, approver: approver }
   let(:approver)                { dacu_disclosure.approvers.first }
   let(:team_dacu)               { create :team_dacu }
-  let(:dacu_disclosure)         { create :team_dacu_disclosure }
+  let(:dacu_disclosure)         { find_or_create :team_dacu_disclosure }
   let(:assignment)              { assigned_case.approver_assignments.first }
   let(:unaccepted_assignment)   { create :approver_assignment }
   let!(:press_officer)          { find_or_create :press_officer, full_name: 'Preston Offman' }
   let!(:press_office)           { press_officer.approving_team }
-  let!(:private_officer)        { find_or_create :private_officer }
+  let!(:private_officer)        { find_or_create :private_officer, full_name: 'Primrose Offord' }
   let!(:private_office)         { private_officer.approving_team }
 
   describe 'call' do
@@ -75,7 +75,7 @@ describe CaseUnacceptApproverAssignmentService do
       end
       let(:service) { CaseUnacceptApproverAssignmentService.new(assignment: press_office_assignment) }
 
-      context 'case is not already flagged for clearance' do
+      context 'case is not previously flagged for clearance' do
         before do
           create :flag_case_for_clearance_transition,
                  case: assigned_to_press_office_case,
@@ -86,6 +86,11 @@ describe CaseUnacceptApproverAssignmentService do
                  case: assigned_to_press_office_case,
                  user: press_officer,
                  approving_team: press_office,
+                 managing_team: press_office
+          create :flag_case_for_clearance_transition,
+                 case: assigned_to_press_office_case,
+                 user: private_officer,
+                 approving_team: private_office,
                  managing_team: press_office
         end
 
@@ -103,6 +108,15 @@ describe CaseUnacceptApproverAssignmentService do
                   .with(press_officer, press_office, press_office)
         end
 
+        it 'triggers an unflag event on the case for private office' do
+          state_machine = press_office_assignment.case.state_machine
+          allow(state_machine).to receive(:unflag_for_clearance!).with(any_args)
+          service.call
+          expect(state_machine)
+            .to have_received(:unflag_for_clearance!)
+                  .with(press_officer, press_office, private_office)
+        end
+
         it 'triggers an unflag event on the case for dacu disclosure' do
           state_machine = press_office_assignment.case.state_machine
           allow(state_machine).to receive(:unflag_for_clearance!).with(any_args)
@@ -118,8 +132,13 @@ describe CaseUnacceptApproverAssignmentService do
         end
       end
 
-      context 'case is already flagged for clearance by DACU Disclosure' do
+      context 'case is already flagged by DACU Disclosure and Private Office' do
         before do
+          create :flag_case_for_clearance_transition,
+                 case: assigned_to_press_office_case,
+                 user: private_officer,
+                 approving_team: private_office,
+                 managing_team: private_office
           create :flag_case_for_clearance_transition,
                  case: assigned_to_press_office_case,
                  user: press_officer,
@@ -137,7 +156,7 @@ describe CaseUnacceptApproverAssignmentService do
           approver_assignments =
             assigned_to_press_office_case.approver_assignments
           expect(approver_assignments.first.team).to eq dacu_disclosure
-          expect(approver_assignments.count).to eq 1
+          expect(approver_assignments.count).to eq 2
         end
 
         it 'triggers an unflag event on the case for press office' do
@@ -156,6 +175,15 @@ describe CaseUnacceptApproverAssignmentService do
           expect(state_machine)
             .not_to have_received(:unflag_for_clearance!)
                       .with(press_officer, press_office, dacu_disclosure)
+        end
+
+        it 'does not trigger unflag event on the case for private office' do
+          state_machine = press_office_assignment.case.state_machine
+          allow(state_machine).to receive(:unflag_for_clearance!).with(any_args)
+          service.call
+          expect(state_machine)
+            .not_to have_received(:unflag_for_clearance!)
+                      .with(press_officer, press_office, private_office)
         end
 
         it 'sets the result to ok and returns true' do

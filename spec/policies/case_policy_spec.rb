@@ -28,8 +28,8 @@ describe CasePolicy do
   let(:dacu_disclosure)   { find_or_create :team_dacu_disclosure }
   let(:approver)          { dacu_disclosure.approvers.first }
   let(:disclosure_specialist) { approver }
-  let(:press_officer)     { create :press_officer }
-  let(:private_officer)   { create :private_officer }
+  let(:press_officer)     { find_or_create :press_officer }
+  let(:private_officer)   { find_or_create :private_officer }
   let(:co_approver)       { create :approver, approving_team: dacu_disclosure }
 
   let(:new_case)                { create :case }

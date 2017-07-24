@@ -8,7 +8,7 @@ module Stats
       Team.all.map(&:destroy)
       @team_1 = create :team, name: 'RTA'
       @team_2 = create :team, name: 'RTB'
-      @team_dacu_disclosure = create :team_dacu_disclosure
+      @team_dacu_disclosure = find_or_create :team_dacu_disclosure
       @responder_1 = create :responder, responding_teams: [@team_1]
       @responder_2 = create :responder, responding_teams: [@team_2]
 

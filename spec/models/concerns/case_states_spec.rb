@@ -9,7 +9,7 @@ RSpec.describe Case, type: :model do
     let(:assigned_case)   { create :assigned_case }
     let(:responding_team) { responder.responding_teams.first }
     let(:responder)       { create :responder }
-    let(:dacu_disclosure) { create :team_dacu_disclosure }
+    let(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
 
     describe '#state_machine' do
       subject { kase.state_machine }

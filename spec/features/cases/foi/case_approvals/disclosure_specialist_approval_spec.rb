@@ -5,7 +5,7 @@ feature 'cases requiring clearance by disclosure specialist' do
   given(:disclosure_specialist)       { create :disclosure_specialist }
   given(:other_disclosure_specialist) { create :disclosure_specialist }
   given!(:responding_team)            { create :responding_team }
-  given!(:team_dacu_disclosure)       { create :team_dacu_disclosure }
+  given!(:team_dacu_disclosure)       { find_or_create :team_dacu_disclosure }
   given(:responder)                   { responding_team.users.first }
 
   def create_case(flag_for_clearance: false)

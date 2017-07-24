@@ -28,6 +28,10 @@ class DefaultTeamService
       [{
          team: Team.dacu_disclosure,
          user: nil
+       },
+       {
+         team: Team.private_office,
+         user: User.find_by!(full_name: Settings.private_office_default_user)
        }]
     else
       []

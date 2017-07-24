@@ -96,8 +96,8 @@ class AssignmentsController < ApplicationController
 
   def take_case_on
     service = CaseFlagForClearanceService.new(user: current_user,
-                                    kase: @case,
-                                    team: current_user.approving_team)
+                                              kase: @case,
+                                              team: current_user.approving_team)
     result = service.call
     if result == :ok
       @success = true

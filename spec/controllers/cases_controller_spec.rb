@@ -513,9 +513,10 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'as a responder of the assigned responding team' do
-        let(:user) { responder }
-        let(:press_office) { find_or_create :team_press_office }
-        let(:press_officer) { find_or_create :press_officer }
+        let(:user)             { responder }
+        let(:press_office)     { find_or_create :team_press_office }
+        let(:press_officer)    { find_or_create :press_officer }
+        let!(:private_officer) { find_or_create :default_private_officer }
 
         before do
           team_dacu_disclosure
@@ -527,6 +528,7 @@ RSpec.describe CasesController, type: :controller do
 
         it 'renders the show template for the responder assignment' do
           responder_assignment = assigned_case.assignments.last
+          create :default_press_officer
           CaseFlagForClearanceService.new(user: press_officer, kase: assigned_case, team: press_office).call
           expect(response)
               .to redirect_to(edit_case_assignment_path(
@@ -1262,6 +1264,7 @@ RSpec.describe CasesController, type: :controller do
     end
 
     context 'as an authenticated manager' do
+      let!(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
       before do
         sign_in manager
       end

@@ -118,6 +118,15 @@ RSpec.configure do |config|
     allow(CASE_UPLOADS_S3_BUCKET)
       .to receive(:objects).and_raise("This test requires stubbing of S3Uploader or CASE_UPLOADS_S3_BUCKET methods. Don't actually care what S3 responses you get? Use 'stub_s3_uploader_for_all_files!' in your test(s).")
   end
+
+  config.before(:suite) do
+    seed_database_for_tests
+  end
+end
+
+def seed_database_for_tests
+  FactoryGirl.find_or_create :team_press_office
+  FactoryGirl.find_or_create :team_private_office
 end
 
 Shoulda::Matchers.configure do |config|
@@ -126,6 +135,7 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
 
 module DbHousekeeping
   def self.clean
@@ -145,7 +155,7 @@ module DbHousekeeping
     tables.each do |table|
       ActiveRecord::Base.connection.execute("DELETE FROM #{table}")
     end
-
+    seed_database_for_tests
   end
 
 end

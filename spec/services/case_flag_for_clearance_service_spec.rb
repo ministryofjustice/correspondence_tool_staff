@@ -7,9 +7,9 @@ describe CaseFlagForClearanceService do
   let(:approver)              { dacu_disclosure.approvers.first }
   let!(:dacu_disclosure)      { find_or_create :team_dacu_disclosure }
   let!(:press_office)         { find_or_create :team_press_office }
-  let!(:press_officer)        { create :press_officer, full_name: 'Preston Offman' }
+  let!(:press_officer)        { find_or_create :default_press_officer }
   let!(:private_office)       { find_or_create :team_private_office }
-  let!(:private_officer)      { create :private_officer }
+  let!(:private_officer)      { find_or_create :default_private_officer }
 
   describe 'call' do
     context 'flagging by dacu disclosure' do

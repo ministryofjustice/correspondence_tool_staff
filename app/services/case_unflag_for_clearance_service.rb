@@ -15,13 +15,6 @@ class CaseUnflagForClearanceService
     @case.state_machine.unflag_for_clearance!(@user, @case.managing_team, @team)
     @case.approver_assignments.with_teams(@team).destroy_all
 
-    if @team.press_office? || @team.private_office?
-      @case.state_machine.unflag_for_clearance!(@user,
-                                                @case.managing_team,
-                                                @dts.approving_team)
-      @case.approver_assignments.with_teams(@dts.approving_team).destroy_all
-    end
-
     @result = :ok
   end
 

@@ -57,8 +57,18 @@ FactoryGirl.define do
       approving_team { find_or_create(:team_press_office) }
     end
 
+    factory :default_press_officer do
+      full_name { Settings.press_office_default_user }
+      approving_team { find_or_create(:team_press_office) }
+    end
+
     factory :private_officer do
       sequence(:full_name) { |n| "Private Officer #{n}" }
+      approving_team { find_or_create(:team_private_office) }
+    end
+
+    factory :default_private_officer do
+      full_name { Settings.private_office_default_user }
       approving_team { find_or_create(:team_private_office) }
     end
   end

@@ -51,11 +51,11 @@ describe CaseApprovalService do
     end
 
     context 'approving case that requires another level of clearance' do
-      let(:kase)                 { create :pending_dacu_clearance_case,
-                                          :press_office,
-                                          approver: user }
-      let(:user)                 { create :disclosure_specialist }
-      let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
+      let(:kase)            { create :pending_dacu_clearance_case,
+                                     :press_office,
+                                     approver: user }
+      let(:user)            { create :disclosure_specialist }
+      let(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
 
       it 'returns :ok' do
         service.call
@@ -63,9 +63,9 @@ describe CaseApprovalService do
       end
 
       it 'sets the assignment approved flag' do
-        expect(kase.approver_assignments.with_teams(team_dacu_disclosure).first.approved?).to be false
+        expect(kase.approver_assignments.with_teams(dacu_disclosure).first.approved?).to be false
         service.call
-        expect(kase.approver_assignments.with_teams(team_dacu_disclosure).first.approved?).to be true
+        expect(kase.approver_assignments.with_teams(dacu_disclosure).first.approved?).to be true
       end
 
       it 'sets the state to awaiting_dispatch' do
@@ -81,7 +81,7 @@ describe CaseApprovalService do
         transition = kase.transitions.last
         expect(transition.event).to eq 'approve'
         expect(transition.user_id).to eq user.id
-        expect(transition.approving_team_id).to eq kase.approving_teams.first.id
+        expect(transition.approving_team_id).to eq dacu_disclosure.id
       end
     end
 

@@ -45,12 +45,15 @@ class CaseUnacceptApproverAssignmentService
 
   def last_flagged_for_team(kase, by_team, for_team)
     last_flag_unflag_transition = kase.transitions.where(
-      event: ['flag_for_clearance', 'unflag_for_clearance']
+      event: ['take_on_for_approval',
+              'flag_for_clearance',
+              'unflag_for_clearance']
     ).metadata_where(
       managing_team_id: by_team.id,
       approving_team_id: for_team.id,
     ).last
-    last_flag_unflag_transition&.event == 'flag_for_clearance'
+    last_flag_unflag_transition&.event.in? ['take_on_for_approval',
+                                            'flag_for_clearance']
   end
 
   def unaccept_approver_assignment(assignment)

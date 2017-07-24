@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'cases/approve_response.html.slim' do
-  let!(:dacu_disclosure)        { create :team_dacu_disclosure }
+  let!(:dacu_disclosure)        { find_or_create :team_dacu_disclosure }
   let(:disclosure_specialist)   { create :disclosure_specialist }
   let(:assigned_trigger_case)   { create :pending_dacu_clearance_case,
                                          :flagged_accepted,

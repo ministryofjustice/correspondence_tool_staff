@@ -94,7 +94,7 @@ RSpec.describe User, type: :model do
     end
 
     it 'returns false if the user is not in the press office' do
-      create :team_press_office
+      find_or_create :team_press_office
       expect(approver.press_officer?).not_to be true
     end
   end
