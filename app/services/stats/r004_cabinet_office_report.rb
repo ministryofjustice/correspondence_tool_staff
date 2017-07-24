@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 module Stats
   class R004CabinetOfficeReport < BaseReport
 
@@ -8,10 +9,9 @@ module Stats
 
     def initialize
       super
-      @month_start = Time.now.beginning_of_month
-      @quarter_start = Time.now.beginning_of_quarter
-      @year_start = Time.now.beginning_of_year
-      @today = Time.now
+      @period_start = Time.now.beginning_of_quarter
+      @period_end = Time.now
+      # @today = Time.now
       @stats = StatsCollector.new(report_lines.keys, COLUMNS)
       @first_column_heading = self.class.title
       @superheadings = superheadings
@@ -84,12 +84,53 @@ module Stats
                             "'Exemption applied' and 'What exemption applied' selection of 'S(30) - Investigations and proceedings conducted by public authorities",
         '3.S31'       => "Number of cases created and closed in this quarter that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(31) - Law enforcement'",
-        '3.S32'       => " Number of cases created and closed in this quarter that have been marked as 'Refused fully' with a 'reason for refusal' of " +
-                            "'Exemption applied' and 'What exemption applied' selection of 'S(32) - Court records, etc'"
-
+        '3.S32'       => "Number of cases created and closed in this quarter that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+                            "'Exemption applied' and 'What exemption applied' selection of 'S(32) - Court records, etc'",
+        '3.S33'       => "Number of cases created and closed in this quarter that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+                            "'Exemption applied' and 'What exemption applied' selection of 'S(33) - Audit functions'",
+        '3.S34'       => "Number of cases created and closed in this quarter that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+                            "'Exemption applied' and 'What exemption applied' selection of 'S(34) - Parliamentary privilege'",
+        '3.S35'       => "Number of cases created and closed in this quarter that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+                            "'Exemption applied' and 'What exemption applied' selection of 'S(35) - Formulation of government policy, etc'",
+        '3.S36'       => "Number of cases created and closed in this quarter that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+                            "'Exemption applied' and 'What exemption applied' selection of 'S(36) - Prejudice to effective conduct of public affairs'",
+        '3.S37'       => "Number of cases created and closed in this quarter that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+                            "'Exemption applied' and 'What exemption applied' selection of 'S(37) - Communications with Her Majesty, etc. and honours'",
+        '3.S38'       => "Number of cases created and closed in this quarter that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+                            "'Exemption applied' and 'What exemption applied' selection of 'S(38) - Health and safety'",
+        '3.S40'       => "Number of cases created and closed in this quarter that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+                            "'Exemption applied' and 'What exemption applied' selection of 'S(40) - Personal information'",
+        '3.S41'       => "Number of cases created and closed in this quarter that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+                            "'Exemption applied' and 'What exemption applied' selection of 'S(41) - Information provided in confidence'",
+        '3.S42'       => "Number of cases created and closed in this quarter that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+                            "'Exemption applied' and 'What exemption applied' selection of 'S(42) - Legal professional privilege'",
+        '3.S43'       => "Number of cases created and closed in this quarter that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+                            "'Exemption applied' and 'What exemption applied' selection of 'S(43) - Commercial interests'",
+        '3.S44'       => "Number of cases created and closed in this quarter that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+                            "'Exemption applied' and 'What exemption applied' selection of 'S(44) - Prohibitions on disclosure'",
+        '_SPACER_3'   => '',
+        '_USE OF SECTION 21 EXEMPTIONS' => '',
+        '4.A'         => "Number of requests created and closed this quarter that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of" +
+                            "'Exemption applied' and 'What exemption applied' selection of '(s21) - Information accessible by other means' and this was the ONLY exemption marked for this case",
+        '4.B'         => "Number of requests created and closed this quarter that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of " +
+                              "'Exemption applied' and 'What exemption applied' selection of '(s21) - Information accessible by other means' and this was the " +
+                              "ONLY exemption marked for this case and the case was processed IN TIME against the external deadline",
+        '4.C'         => "Number of requests created and closed this quarter that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of" +
+                              "'Exemption applied' and 'What exemption applied' selection of '(s21) - Information accessible by other means' and this was the " +
+                              "ONLY exemption marked for this case and the case was processed OUT OF TIME against the external deadline",
       }
     end
     # rubocop:enable Metrics/MethodLength
+
+    # use method missing to get values for 3_S22 - to 3_S44
+    def method_missing(method_name, *args)
+      if method_name.to_s =~ /^get_value_3_S(.*)/
+        exemption_number = "s#{$1}"
+        fully_refused_with_exemption(exemption_number.downcase)
+      else
+        super
+      end
+    end
 
     def populate_category(category)
       value = __send__("get_value_#{category.sub('.', '_')}")
@@ -103,7 +144,7 @@ module Stats
     end
 
     def get_value_1_A
-      cases_received_this_quarter.count
+      cases_received_in_period.count
     end
 
     def get_value_1_Ai
@@ -111,7 +152,7 @@ module Stats
     end
 
     def get_value_1_B
-      open_cases_received_this_quarter.count
+      open_cases_received_in_period.count
     end
 
     def get_value_1_Bi
@@ -123,15 +164,15 @@ module Stats
     end
 
     def get_value_1_Biii
-      open_cases_received_this_quarter.where("properties->>'external_deadline' < ?", Date.today).count
+      open_cases_received_in_period.where("properties->>'external_deadline' < ?", @period_end).count
     end
 
     def get_value_1_C
-      Case.closed.where(received_date: [@quarter_start..@today]).count
+      Case.closed.where(received_date: [@period_start..@period_end]).count
     end
 
     def get_value_1_Ci
-      cases_received_and_closed_this_quarter.where("(properties->>'external_deadline')::date >= date_responded").count
+      cases_received_and_closed_in_period.where("(properties->>'external_deadline')::date >= date_responded").count
     end
 
     def get_value_1_Cii
@@ -139,7 +180,7 @@ module Stats
     end
 
     def get_value_1_Ciii
-      cases_received_and_closed_this_quarter.where("(properties->>'external_deadline')::date < date_responded").count
+      cases_received_and_closed_in_period.where("(properties->>'external_deadline')::date < date_responded").count
     end
 
     def get_value_2_A
@@ -148,102 +189,121 @@ module Stats
 
     def get_value_2_B
       granted = CaseClosure::Outcome.granted
-      cases_received_and_closed_this_quarter.where(outcome_id: granted.id).count
+      cases_received_and_closed_in_period.where(outcome_id: granted.id).count
     end
 
     def get_value_2_C
       clarify = CaseClosure::Outcome.clarify
-      cases_received_and_closed_this_quarter.where(outcome_id: clarify.id).count
+      cases_received_and_closed_in_period.where(outcome_id: clarify.id).count
     end
 
     def get_value_2_D
       reason = CaseClosure::RefusalReason.noinfo
-      fully_refused_cases_received_and_closed_this_quarter.where(refusal_reason_id: reason.id).count
+      fully_refused_cases_received_and_closed_in_period.where(refusal_reason_id: reason.id).count
     end
 
     def get_value_2_E
       reason = CaseClosure::RefusalReason.vex
-      fully_or_part_refused_cases_closed_this_quarter.where(refusal_reason_id: reason.id).count
+      fully_or_part_refused_cases_received_and_closed_in_period.where(refusal_reason_id: reason.id).count
     end
 
     def get_value_2_F
       reason = CaseClosure::RefusalReason.repeat
-      fully_or_part_refused_cases_closed_this_quarter.where(refusal_reason_id: reason.id).count
+      fully_or_part_refused_cases_received_and_closed_in_period.where(refusal_reason_id: reason.id).count
     end
 
     def get_value_2_G
       reason = CaseClosure::RefusalReason.cost
-      fully_or_part_refused_cases_closed_this_quarter.where(refusal_reason_id: reason.id).count
+      fully_or_part_refused_cases_received_and_closed_in_period.where(refusal_reason_id: reason.id).count
     end
 
     def get_value_2_H
       reason = CaseClosure::RefusalReason.exempt
-      part_refused_cases_closed_this_quarter.where(refusal_reason_id: reason.id).count
+      part_refused_cases_closed_in_period.where(refusal_reason_id: reason.id).count
     end
 
     def get_value_2_I
       reason = CaseClosure::RefusalReason.exempt
-      fully_refused_cases_received_and_closed_this_quarter.where(refusal_reason_id: reason.id).count
+      fully_refused_cases_received_and_closed_in_period.where(refusal_reason_id: reason.id).count
     end
 
     def get_value_3_A
       @stats.stats['2.H'][:value] + @stats.stats['2.I'][:value]
     end
 
+    def get_value_4_A
+      cases = fully_and_part_refused_cases_recevied_and_closed_in_period_with_exemption_s21
+      filter_cases_with_only_one_exemption(cases).count
+    end
 
-    # use method missing to get values for 3_S22 - to 3_S44
-    def method_missing(method_name)
-      if method_name.to_s =~ /^get_value_3_S(.*)/
-        exemption_number = "s#{$1}"
-        fully_refused_with_exemption(exemption_number.downcase)
-      else
-        super
-      end
+    def get_value_4_B
+      cases = fully_and_part_refused_cases_recevied_and_closed_in_period_with_exemption_s21.in_time
+      filter_cases_with_only_one_exemption(cases).count
+    end
+
+    def get_value_4_C
+      cases = fully_and_part_refused_cases_recevied_and_closed_in_period_with_exemption_s21.late
+      filter_cases_with_only_one_exemption(cases).count
+    end
+
+    def fully_and_part_refused_cases_recevied_and_closed_in_period_with_exemption_s21
+      exemption = CaseClosure::Exemption.__send__('s21')
+      fully_and_part_refused_cases_received_and_closed_in_period_with_exemption(exemption)
+    end
+
+    def filter_cases_with_only_one_exemption(cases)
+      cases.select { |kase| kase.exemptions.count == 1 }
     end
 
     def fully_refused_with_exemption(exemption_number)
       exemption = CaseClosure::Exemption.__send__(exemption_number)
-      fully_refused_cases_received_and_closed_this_quarter_with_exemption(exemption).count
+      fully_refused_cases_received_and_closed_in_period_with_exemption(exemption).count
     end
 
-    def cases_received_this_quarter
-      Case.where(received_date: [@quarter_start..@today])
+    def cases_received_in_period
+      Case.where(received_date: [@period_start..@period_end])
     end
 
-    def open_cases_received_this_quarter
-      Case.opened.where(received_date: [@quarter_start..@today])
+    def open_cases_received_in_period
+      Case.opened.where(received_date: [@period_start..@period_end])
     end
 
-    def cases_received_and_closed_this_quarter
-      Case.closed.where(received_date: [@quarter_start..@today])
+    def cases_received_and_closed_in_period
+      Case.closed.where(received_date: [@period_start..@period_end])
     end
 
-    def fully_refused_cases_received_and_closed_this_quarter
+    def fully_refused_cases_received_and_closed_in_period
       outcome = CaseClosure::Outcome.fully_refused
-      cases_received_and_closed_this_quarter.where(outcome_id: outcome.id)
+      cases_received_and_closed_in_period.where(outcome_id: outcome.id)
     end
 
-    def fully_or_part_refused_cases_closed_this_quarter
+    def fully_or_part_refused_cases_received_and_closed_in_period
       fully_refused = CaseClosure::Outcome.fully_refused
       part_refused = CaseClosure::Outcome.part_refused
-      cases_received_and_closed_this_quarter.where(outcome_id: [fully_refused.id, part_refused.id])
+      cases_received_and_closed_in_period.where(outcome_id: [fully_refused.id, part_refused.id])
     end
 
-    def part_refused_cases_closed_this_quarter
+    def part_refused_cases_closed_in_period
       part_refused = CaseClosure::Outcome.part_refused
-      cases_received_and_closed_this_quarter.where(outcome_id: part_refused.id)
+      cases_received_and_closed_in_period.where(outcome_id: part_refused.id)
     end
 
-    def fully_refused_cases_received_and_closed_this_quarter_with_exemption(exemption)
-      fully_refused_cases_received_and_closed_this_quarter.joins(:cases_exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
+    def fully_refused_cases_received_and_closed_in_period_with_exemption(exemption)
+      fully_refused_cases_received_and_closed_in_period.joins(:cases_exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
+    end
+
+    def fully_and_part_refused_cases_received_and_closed_in_period_with_exemption(exemption)
+      fully_or_part_refused_cases_received_and_closed_in_period.joins(:cases_exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
     end
 
 
     def superheadings
       [
         ["Dated: #{Date.today.strftime(Settings.default_date_format)}"],
+        ["For period #{@period_start.strftime(Settings.default_date_format)} to #{@period_end.strftime(Settings.default_date_format)}"]
       ]
     end
 
   end
 end
+# rubocop:enable Metrics/ClassLength
