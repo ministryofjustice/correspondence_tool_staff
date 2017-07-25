@@ -63,6 +63,27 @@ module CaseClosure
           expect(@qual_1.ncnd?).to be false
         end
       end
+
+
+      describe '.method_missing' do
+        context 'method name is a section number' do
+          it 'queries the record by abbreviation' do
+            arel = double 'ActiveRecord Arel query result'
+            expect(Exemption).to receive(:where).with(abbreviation: 'policy').and_return(arel)
+            expect(arel).to receive(:first).and_return 'policy exemption record'
+            expect(Exemption.s35).to eq 'policy exemption record'
+          end
+        end
+
+        context 'method name is not an section number' do
+          it 'raises NoMethodError' do
+            expect {
+              Exemption.s99
+            }.to raise_error NoMethodError
+          end
+        end
+
+      end
     end
 
   end

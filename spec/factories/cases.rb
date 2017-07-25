@@ -366,6 +366,12 @@ FactoryGirl.define do
       exemptions { [ CaseClosure::Exemption.s21 ] }
     end
 
+    trait :part_refused_exempt_s21 do
+      outcome { find_or_create :outcome, :part_refused }
+      refusal_reason { find_or_create :refusal_reason, :exempt }
+      exemptions { [ CaseClosure::Exemption.s21 ] }
+    end
+
     trait :fully_refused_exempt_s22 do
       outcome { find_or_create :outcome, :refused }
       refusal_reason { find_or_create :refusal_reason, :exempt }
@@ -431,6 +437,85 @@ FactoryGirl.define do
       refusal_reason { find_or_create :refusal_reason, :exempt }
       exemptions { [ CaseClosure::Exemption.s31 ] }
     end
+
+    trait :fully_refused_exempt_s32 do
+      outcome { find_or_create :outcome, :refused }
+      refusal_reason { find_or_create :refusal_reason, :exempt }
+      exemptions { [ CaseClosure::Exemption.s32 ] }
+    end
+
+    trait :fully_refused_exempt_s33 do
+      outcome { find_or_create :outcome, :refused }
+      refusal_reason { find_or_create :refusal_reason, :exempt }
+      exemptions { [ CaseClosure::Exemption.s33 ] }
+    end
+
+    trait :fully_refused_exempt_s34 do
+      outcome { find_or_create :outcome, :refused }
+      refusal_reason { find_or_create :refusal_reason, :exempt }
+      exemptions { [ CaseClosure::Exemption.s34 ] }
+    end
+
+    trait :fully_refused_exempt_s35 do
+      outcome { find_or_create :outcome, :refused }
+      refusal_reason { find_or_create :refusal_reason, :exempt }
+      exemptions { [ CaseClosure::Exemption.s35 ] }
+    end
+
+    trait :fully_refused_exempt_s36 do
+      outcome { find_or_create :outcome, :refused }
+      refusal_reason { find_or_create :refusal_reason, :exempt }
+      exemptions { [ CaseClosure::Exemption.s36 ] }
+    end
+
+    trait :fully_refused_exempt_s37 do
+      outcome { find_or_create :outcome, :refused }
+      refusal_reason { find_or_create :refusal_reason, :exempt }
+      exemptions { [ CaseClosure::Exemption.s37 ] }
+    end
+
+    trait :fully_refused_exempt_s38 do
+      outcome { find_or_create :outcome, :refused }
+      refusal_reason { find_or_create :refusal_reason, :exempt }
+      exemptions { [ CaseClosure::Exemption.s38 ] }
+    end
+
+    trait :fully_refused_exempt_s40 do
+      outcome { find_or_create :outcome, :refused }
+      refusal_reason { find_or_create :refusal_reason, :exempt }
+      exemptions { [ CaseClosure::Exemption.s40 ] }
+    end
+
+    trait :fully_refused_exempt_s41 do
+      outcome { find_or_create :outcome, :refused }
+      refusal_reason { find_or_create :refusal_reason, :exempt }
+      exemptions { [ CaseClosure::Exemption.s41 ] }
+    end
+
+    trait :fully_refused_exempt_s42 do
+      outcome { find_or_create :outcome, :refused }
+      refusal_reason { find_or_create :refusal_reason, :exempt }
+      exemptions { [ CaseClosure::Exemption.s42 ] }
+    end
+
+    trait :fully_refused_exempt_s33 do
+      outcome { find_or_create :outcome, :refused }
+      refusal_reason { find_or_create :refusal_reason, :exempt }
+      exemptions { [ CaseClosure::Exemption.s33 ] }
+    end
+
+    trait :fully_refused_exempt_s43 do
+      outcome { find_or_create :outcome, :refused }
+      refusal_reason { find_or_create :refusal_reason, :exempt }
+      exemptions { [ CaseClosure::Exemption.s43 ] }
+    end
+
+    trait :fully_refused_exempt_s44 do
+      outcome { find_or_create :outcome, :refused }
+      refusal_reason { find_or_create :refusal_reason, :exempt }
+      exemptions { [ CaseClosure::Exemption.s44 ] }
+    end
+
 
 
   end

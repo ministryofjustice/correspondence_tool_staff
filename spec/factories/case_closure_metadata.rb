@@ -44,6 +44,13 @@ FactoryGirl.define do
       sequence_id   605
     end
 
+    trait :s21 do
+      subtype       'absolute'
+      name          '(s21) - Information accessible by other means'
+      abbreviation  'othermeans'
+      sequence_id   510
+    end
+
     factory :outcome, class: CaseClosure::Outcome do
       subtype nil
       sequence(:name) { |n| "Outcome #{n}" }
