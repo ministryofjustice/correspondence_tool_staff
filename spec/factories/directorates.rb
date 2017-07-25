@@ -1,9 +1,10 @@
 FactoryGirl.define do
   factory :directorate do
     sequence(:name) { |n| "Directorate #{n}" }
-    email { Faker::Internet.email(name) }
-    association :business_group
+    sequence(:email) { |n| "directorate_#{n}@localhost" }
+    business_group { find_or_create :business_group }
   end
+
 
   factory :dacu_directorate, parent: :directorate do
     name 'DACU Directorate'

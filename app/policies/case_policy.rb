@@ -197,6 +197,55 @@ class CasePolicy < ApplicationPolicy
     check_user_is_in_current_team
   end
 
+  def unflag_for_clearance_from_unassigned_to_unassigned?
+    clear_failed_checks
+    check_case_requires_clearance &&
+      ( check_user_is_dacu_disclosure_approver ||
+        check_user_is_assigned_approver_for_case ||
+        check_user_is_a_manager
+      )
+  end
+
+  def unflag_for_clearance_from_awaiting_responder_to_awaiting_responder?
+    clear_failed_checks
+    check_case_requires_clearance &&
+      ( check_user_is_dacu_disclosure_approver ||
+        check_user_is_assigned_approver_for_case ||
+        check_user_is_a_manager
+      )
+  end
+
+  def unflag_for_clearance_from_drafting_to_drafting?
+    clear_failed_checks
+    check_case_requires_clearance &&
+      ( check_user_is_dacu_disclosure_approver ||
+        check_user_is_assigned_approver_for_case ||
+        check_user_is_a_manager
+      )
+  end
+
+  def unflag_for_clearance_from_awaiting_dispatch_to_awaiting_dispatch?
+    clear_failed_checks
+    check_case_requires_clearance &&
+      ( check_user_is_dacu_disclosure_approver ||
+        check_user_is_assigned_approver_for_case ||
+        check_user_is_a_manager
+      )
+  end
+
+  def unflag_for_clearance_from_pending_dacu_clearance_to_awaiting_dispatch?
+    clear_failed_checks
+    check_case_requires_clearance_by_dacu_only &&
+      ( check_user_is_a_manager || check_user_is_dacu_disclosure_approver )
+  end
+
+  def unflag_for_clearance_from_pending_dacu_clearance_to_pending_dacu_clearance?
+    clear_failed_checks
+    (check_case_is_assigned_to_press_office && check_user_is_press_office_approver) ||
+      (check_case_is_assigned_to_private_office && check_user_is_private_office_approver)
+  end
+
+
   def upload_responses?
     clear_failed_checks
     check_user_is_in_current_team
@@ -304,8 +353,21 @@ class CasePolicy < ApplicationPolicy
     self.case.requires_clearance?
   end
 
+  check :case_requires_clearance_by_dacu_only do
+    non_dacu_approver_assignments = self.case.approver_assignments - self.case.approver_assignments.where(team: BusinessUnit.dacu_disclosure)
+    non_dacu_approver_assignments.none?
+  end
+
   check :case_has_approvers do
     self.case.approvers.present?
+  end
+
+  check :case_has_no_other_approving_teams do
+    (self.case.approving_teams - [user.approving_team]).empty?
+  end
+
+  check :case_has_another_approving_team do
+    (self.case.approving_teams - [user.approving_team]).any?
   end
 
   check :user_is_a_case_approver do

@@ -25,7 +25,7 @@ describe CasePolicy do
   let(:coworker)          { create :responder,
                                    responding_teams: [responding_team] }
   let(:another_responder) { create :responder}
-  let(:dacu_disclosure)   { find_or_create :team_dacu_disclosure }
+  let!(:dacu_disclosure)   { find_or_create :team_dacu_disclosure }
   let(:approver)          { dacu_disclosure.approvers.first }
   let(:disclosure_specialist) { approver }
   let(:another_disclosure_specialist) { create :disclosure_specialist }
@@ -260,13 +260,72 @@ describe CasePolicy do
     it { should_not permit(coworker,          accepted_case) }
   end
 
-  permissions :can_unflag_for_clearance? do
-    it { should_not permit(responder, assigned_case) }
-    it { should_not permit(manager,   assigned_case) }
-    it { should_not permit(approver,  assigned_case) }
-    it { should_not permit(responder, assigned_flagged_case) }
-    it { should     permit(manager,   assigned_flagged_case) }
-    it { should     permit(approver,  assigned_flagged_case) }
+  context 'unflag for clearance event' do
+    let(:awaiting_responder_case)           { create :awaiting_responder_case }
+    let(:awaiting_responder_flagged_case)   { create :awaiting_responder_case, :flagged }
+    let(:drafting_case)                     { create :accepted_case }
+    let(:drafting_flagged_case)             { create :accepted_case, :flagged }
+    let(:awaiting_dispatch_case)            { create :case_with_response }
+    let(:awaiting_dispatch_flagged_case)    { create :case_with_response, :flagged }
+    let(:pending_dacu_clearance_press_case) { create :pending_dacu_clearance_case_flagged_for_press }
+
+    permissions :unflag_for_clearance_from_unassigned_to_unassigned? do
+      it { should     permit(disclosure_specialist, unassigned_flagged_case) }
+      it { should     permit(manager,               unassigned_flagged_case) }
+      it { should_not permit(responder,             unassigned_flagged_case) }
+      it { should_not permit(manager,               unassigned_case) }
+    end
+
+    permissions :unflag_for_clearance_from_awaiting_responder_to_awaiting_responder? do
+      it { should     permit(disclosure_specialist, awaiting_responder_flagged_case) }
+      it { should     permit(manager,               awaiting_responder_flagged_case) }
+      it { should_not permit(responder,             awaiting_responder_flagged_case) }
+      it { should_not permit(manager,               awaiting_responder_case) }
+    end
+
+    permissions :unflag_for_clearance_from_drafting_to_drafting? do
+      it { should     permit(disclosure_specialist, drafting_flagged_case) }
+      it { should     permit(manager,               drafting_flagged_case) }
+      it { should_not permit(responder,             drafting_flagged_case) }
+      it { should_not permit(manager,               drafting_case) }
+    end
+
+    permissions :unflag_for_clearance_from_awaiting_dispatch_to_awaiting_dispatch? do
+      it { should     permit(disclosure_specialist, awaiting_dispatch_flagged_case) }
+      it { should     permit(manager,               awaiting_dispatch_flagged_case) }
+      it { should_not permit(responder,             awaiting_dispatch_flagged_case) }
+      it { should_not permit(manager,               awaiting_dispatch_case) }
+    end
+
+    permissions :unflag_for_clearance_from_pending_dacu_clearance_to_awaiting_dispatch? do
+      context 'flagged for dacu disclosure only' do
+        it { should     permit(disclosure_specialist, pending_dacu_clearance_case) }
+        it { should     permit(manager,               pending_dacu_clearance_case) }
+        it { should_not permit(responder,             pending_dacu_clearance_case) }
+      end
+
+      context 'flagged for dacu disclosure and press office' do
+        it { should_not permit(manager,               pending_dacu_clearance_press_case) }
+        it { should_not permit(disclosure_specialist, pending_dacu_clearance_press_case) }
+        it { should_not permit(responder,             pending_dacu_clearance_press_case) }
+        it { should_not permit(press_officer,         pending_dacu_clearance_press_case) }
+      end
+    end
+
+    permissions :unflag_for_clearance_from_pending_dacu_clearance_to_pending_dacu_clearance? do
+      context 'flagged for dacu disclosure only' do
+        it { should_not permit(disclosure_specialist, pending_dacu_clearance_case) }
+        it { should_not permit(manager,               pending_dacu_clearance_case) }
+        it { should_not permit(responder,             pending_dacu_clearance_case) }
+      end
+      context 'flagged for dacu disclosure and press office' do
+        it { should_not permit(manager,               pending_dacu_clearance_press_case) }
+        it { should_not permit(disclosure_specialist, pending_dacu_clearance_press_case) }
+        it { should_not permit(responder,             pending_dacu_clearance_press_case) }
+        it { should     permit(press_officer,         pending_dacu_clearance_press_case) }
+        it { should_not permit(private_officer,       pending_dacu_clearance_press_case) }
+      end
+    end
   end
 
   permissions :assignments_reassign_user? do
@@ -328,53 +387,6 @@ describe CasePolicy do
     it { should_not permit(press_officer,         case_with_response) }
     it { should_not permit(press_officer,         pending_dacu_clearance_case) }
     it { should     permit(press_officer,         pending_press_clearance_case) }
-
-  #   it { should_not permit(approver,   new_case) }
-  #   it { should_not permit(approver,   accepted_case) }
-  #   it { should_not permit(approver,   assigned_case) }
-  #   it { should_not permit(approver,   rejected_case) }
-  #   it { should_not permit(approver,   unassigned_case) }
-  #   it { should_not permit(approver,   unassigned_flagged_case) }
-  #   it { should_not permit(approver,   unassigned_trigger_case) }
-  #   it { should_not permit(approver,   case_with_response) }
-  #   it { should_not permit(approver,   responded_case) }
-  #   it { should_not permit(approver,   closed_case) }
-
-  #   it { should_not permit(co_approver,   assigned_trigger_case) }
-  #   it { should_not permit(co_approver,   new_case) }
-  #   it { should_not permit(co_approver,   accepted_case) }
-  #   it { should_not permit(co_approver,   assigned_case) }
-  #   it { should_not permit(co_approver,   rejected_case) }
-  #   it { should_not permit(co_approver,   unassigned_case) }
-  #   it { should_not permit(co_approver,   unassigned_flagged_case) }
-  #   it { should_not permit(co_approver,   unassigned_trigger_case) }
-  #   it { should_not permit(co_approver,   case_with_response) }
-  #   it { should_not permit(co_approver,   responded_case) }
-  #   it { should_not permit(co_approver,   closed_case) }
-
-  #   it { should_not permit(manager,   assigned_trigger_case) }
-  #   it { should_not permit(manager,   new_case) }
-  #   it { should_not permit(manager,   accepted_case) }
-  #   it { should_not permit(manager,   assigned_case) }
-  #   it { should_not permit(manager,   rejected_case) }
-  #   it { should_not permit(manager,   unassigned_case) }
-  #   it { should_not permit(manager,   unassigned_flagged_case) }
-  #   it { should_not permit(manager,   unassigned_trigger_case) }
-  #   it { should_not permit(manager,   case_with_response) }
-  #   it { should_not permit(manager,   responded_case) }
-  #   it { should_not permit(manager,   closed_case) }
-
-  #   it { should_not permit(responder,   assigned_trigger_case) }
-  #   it { should_not permit(responder,   new_case) }
-  #   it { should_not permit(responder,   accepted_case) }
-  #   it { should_not permit(responder,   assigned_case) }
-  #   it { should_not permit(responder,   rejected_case) }
-  #   it { should_not permit(responder,   unassigned_case) }
-  #   it { should_not permit(responder,   unassigned_flagged_case) }
-  #   it { should_not permit(responder,   unassigned_trigger_case) }
-  #   it { should_not permit(responder,   case_with_response) }
-  #   it { should_not permit(responder,   responded_case) }
-  #   it { should_not permit(responder,   closed_case) }
   end
 
   permissions :can_view_case_details? do

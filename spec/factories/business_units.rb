@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :business_unit do
     sequence(:name) { |n| "Business Unit #{n}" }
     email { Faker::Internet.email(name) }
-    association :directorate
+    directorate { find_or_create :directorate }
   end
 
   factory :managing_team, parent: :business_unit do
