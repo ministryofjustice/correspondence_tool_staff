@@ -18,6 +18,7 @@ module CTS
       def call
         puts "Creating #{@number_to_create} cases in each of the following states:"
         puts "\t" + @end_states.join("\n\t")
+        puts "Responder is: #{responding_team.name} user #{responder.full_name}"
         puts "Flagging each for DACU Disclosure clearance" if @flag.present?
         puts "Flagging each for Press Office clearance" if @flag == 'press'
         puts "Flagging each for Private Office clearance" if @flag == 'private'
@@ -240,7 +241,7 @@ module CTS
       end
 
       def responder
-        @responder ||= if !options.has_key?(:responder)
+        @responder ||= if !options.key?(:responder)
                          if responding_team.responders.empty?
                            raise "Responding team '#{responding_team.name}' has no responders."
                          else
@@ -252,8 +253,8 @@ module CTS
       end
 
       def responding_team
-        @responding_team ||= if !options.has_key?(:responding_team)
-                               if options.has_key?(:responder)
+        @responding_team ||= if !options.key?(:responding_team)
+                               if options.key?(:responder)
                                  responder.responding_teams.first
                                else
                                  CTS::hmcts_team

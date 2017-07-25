@@ -241,7 +241,11 @@ module CTS
            { team: { display_method: team_display, width: team_width } }
 
         puts "\nTransitions:"
-        tp kase.transitions, :id, :event, :to_state, :user_id,
+        tp kase.transitions.order(:id),
+           :id,
+           :event,
+           :to_state,
+           { user: { display_method: user_display, width: user_width } },
            metadata: { width: 60 }
 
         puts "\nAttachments:"
