@@ -168,7 +168,9 @@ module CTS
         if kase.approver_assignments.for_user(CTS::dacu_disclosure_approver).any?
           call_case_approval_service(CTS::dacu_disclosure_approver, kase)
         else
-          ResponseUploaderService.new(kase, responder, { uploaded_files: nil }, nil).seed!
+          ResponseUploaderService
+            .new(kase, responder, { uploaded_files: nil }, nil)
+            .seed!('spec/fixtures/eon.pdf')
           kase.state_machine.add_responses!(responder,
                                             responding_team,
                                             kase.attachments)
