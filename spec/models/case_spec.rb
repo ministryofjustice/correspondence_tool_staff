@@ -802,10 +802,19 @@ RSpec.describe Case, type: :model do
   end
 
   describe '#team_for_user' do
+    let(:responder)       { case_being_drafted_trigger.responder }
+    let(:responding_team) { case_being_drafted_trigger.responding_team }
+    let(:other_responder) { create :responder,
+                                   responding_teams: [responding_team] }
+
     it 'returns the team that the user is assigned to the case from' do
-      my_responder = case_being_drafted_trigger.responder
-      my_responding_team = case_being_drafted_trigger.responding_team
-      expect(case_being_drafted_trigger.team_for_user(my_responder)).to eq my_responding_team
+      expect(case_being_drafted_trigger.team_for_user(responder))
+        .to eq responding_team
+    end
+
+    it 'if the user is not assigned to the case it returns the team they have in common' do
+      expect(case_being_drafted_trigger.team_for_user(other_responder))
+        .to eq responding_team
     end
 
     it 'returns nil if there is no assignment for that user' do

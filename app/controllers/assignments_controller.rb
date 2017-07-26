@@ -139,11 +139,10 @@ class AssignmentsController < ApplicationController
     urs = UserReassignmentService
               .new(target_user: target_user,
                    acting_user: current_user,
-                   kase: @case,
-                   target_assignment: @assignment)
+                   assignment: @assignment)
 
     if urs.call == :ok
-      flash[:notice] = "Case re-assigned to #{ @assignment.user.full_name }"
+      flash[:notice] = "Case re-assigned to #{@assignment.user.full_name}"
       redirect_to case_path(@case)
     end
 

@@ -238,7 +238,8 @@ class Case < ApplicationRecord
   # end
 
   def team_for_user(user)
-    assignments.where(user_id: user.id).first&.team
+    assignments.where(user_id: user.id).first&.team ||
+      (teams & user.teams).first
   end
 
   def prevent_number_change
