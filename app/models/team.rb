@@ -13,6 +13,8 @@
 class Team < ApplicationRecord
   validates :name, uniqueness: true
 
+  acts_as_tree
+
   has_many :user_roles, class_name: 'TeamsUsersRole'
   has_many :users, through: :user_roles
   has_many :properties, class_name: TeamProperty

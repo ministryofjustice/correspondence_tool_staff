@@ -11,6 +11,8 @@
 #
 
 class BusinessUnit < Team
+  belongs_to :directorates, foreign_key: 'parent_id'
+
   has_many :manager_user_roles,
            -> { manager_roles },
            class_name: 'TeamsUsersRole',

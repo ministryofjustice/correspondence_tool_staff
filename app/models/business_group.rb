@@ -11,4 +11,5 @@
 #
 
 class BusinessGroup < Team
+  has_many :directorates, foreign_key: 'parent_id'
 end

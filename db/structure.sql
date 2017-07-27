@@ -500,7 +500,8 @@ CREATE TABLE teams (
     email citext NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    type character varying
+    type character varying,
+    parent_id integer
 );
 
 
@@ -939,6 +940,13 @@ CREATE INDEX index_teams_on_name ON teams USING btree (name);
 
 
 --
+-- Name: index_teams_on_parent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_teams_on_parent_id ON teams USING btree (parent_id);
+
+
+--
 -- Name: index_teams_on_type; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1035,6 +1043,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170627112545'),
 ('20170713094438'),
 ('20170727101532'),
-('20170727112001');
+('20170727112001'),
+('20170727162325');
+
 
 

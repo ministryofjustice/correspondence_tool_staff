@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'acts_as_tree', '~> 2.6'
 gem 'awesome_print'
 gem 'aws-sdk'
 gem 'bank_holiday'
