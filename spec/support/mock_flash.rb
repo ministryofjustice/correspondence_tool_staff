@@ -1,7 +1,10 @@
 
 class MockFlash
+  attr_reader :kept
+
   def initialize(values)
     @values = values
+    @kept = []
   end
 
   def now
@@ -9,7 +12,7 @@ class MockFlash
   end
 
   def keep(key)
-    # no_op
+    @kept << key
   end
 
   def [](key)

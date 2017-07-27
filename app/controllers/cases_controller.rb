@@ -132,6 +132,7 @@ class CasesController < ApplicationController
     case rus.result
     when :blank
       flash.now[:alert] = t('alerts.response_upload_blank?')
+      flash.keep(:action_params)
       render :new_response_upload
     when :error
       flash.now[:alert] = t('alerts.response_upload_error')

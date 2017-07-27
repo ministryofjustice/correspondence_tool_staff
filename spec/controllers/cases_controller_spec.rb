@@ -1000,20 +1000,40 @@ RSpec.describe CasesController, type: :controller do
         expect(response).to redirect_to(case_path(kase))
       end
 
-      it 're-renders the page if no files specified' do
-        allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
-        expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
-        expect(response_uploader).to receive(:result).and_return(:blank)
-        do_upload_responses
-        expect(response).to have_rendered(:new_response_upload)
+      context 'no files specified' do
+        before do
+          allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
+          expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
+          expect(response_uploader).to receive(:result).and_return(:blank)
+        end
+
+        it 're-renders the page' do
+          do_upload_responses
+          expect(response).to have_rendered(:new_response_upload)
+        end
+
+        it 'keeps the action_params flash' do
+          do_upload_responses
+          expect(flash.kept).to include :action_params
+        end
       end
 
-      it 're-renders the page if there is an upload error' do
-        allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
-        expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
-        expect(response_uploader).to receive(:result).and_return(:error)
-        do_upload_responses
-        expect(response).to have_rendered(:new_response_upload)
+      context 'there is an upload error' do
+        before do
+          allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
+          expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
+          expect(response_uploader).to receive(:result).and_return(:error)
+        end
+
+        it 're-renders the page if there is an upload error' do
+          do_upload_responses
+          expect(response).to have_rendered(:new_response_upload)
+        end
+
+        it 'keeps the action_params flash' do
+          do_upload_responses
+          expect(flash.kept).to include :action_params
+        end
       end
     end
   end
