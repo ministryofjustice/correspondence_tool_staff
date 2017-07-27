@@ -12,10 +12,12 @@ require 'thor'
 
 $: << 'lib'
 require 'cts/cases'
+require 'cts/cases/assign'
 require 'cts/cases/create'
+require 'cts/cases/check'
+require 'cts/policies'
 require 'cts/teams'
 require 'cts/users'
-require 'cts/policies'
 
 class Thor
   module Shell
