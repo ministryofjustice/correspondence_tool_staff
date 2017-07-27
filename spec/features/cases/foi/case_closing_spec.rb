@@ -19,9 +19,16 @@ feature 'Closing a case' do
       given!(:fully_granted_case) { create :responded_case,
                                            received_date: 10.business_days.ago }
 
+      given!(:responded_date) { fully_granted_case
+                                          .responded_transitions.last.created_at}
+
       scenario 'A KILO has responded and an manager closes the case', js:true do
         open_cases_page.load(timeliness: 'in-time')
         close_case(fully_granted_case)
+
+        expect(cases_close_page.date_responded_day.value.to_i).to eq responded_date.day
+        expect(cases_close_page.date_responded_month.value.to_i).to eq responded_date.month
+        expect(cases_close_page.date_responded_year.value.to_i).to eq responded_date.year
 
         cases_close_page.fill_in_date_responded(0.business_days.ago)
         cases_close_page.outcome_radio_button_fully_granted.click
@@ -45,9 +52,16 @@ feature 'Closing a case' do
       given!(:fully_granted_case) { create :responded_case,
                                            received_date: 22.business_days.ago }
 
+      given!(:responded_date) { fully_granted_case
+                                    .responded_transitions.last.created_at}
+
       scenario 'the case is responded-to late', js: true do
         open_cases_page.load(timeliness: 'late')
         close_case(fully_granted_case)
+
+        expect(cases_close_page.date_responded_day.value.to_i).to eq responded_date.day
+        expect(cases_close_page.date_responded_month.value.to_i).to eq responded_date.month
+        expect(cases_close_page.date_responded_year.value.to_i).to eq responded_date.year
 
         cases_close_page.fill_in_date_responded(0.business_days.ago)
         cases_close_page.outcome_radio_button_fully_granted.click
