@@ -1192,7 +1192,7 @@ RSpec.describe CasesController, type: :controller do
         expect(CaseUnflagForClearanceService)
           .to have_received(:new).with(user: manager,
                                        kase: flagged_case_decorated,
-                                       team: Team.dacu_disclosure)
+                                       team: BusinessUnit.dacu_disclosure)
         expect(service).to have_received(:call)
       end
 
@@ -1217,7 +1217,7 @@ RSpec.describe CasesController, type: :controller do
         expect(CaseUnflagForClearanceService)
           .to have_received(:new).with(user: disclosure_specialist,
                                        kase: flagged_case_decorated,
-                                       team: Team.dacu_disclosure)
+                                       team: BusinessUnit.dacu_disclosure)
         expect(service).to have_received(:call)
       end
 
@@ -1294,7 +1294,7 @@ RSpec.describe CasesController, type: :controller do
         expect(CaseFlagForClearanceService)
           .to have_received(:new).with(user: manager,
                                        kase: unflagged_case_decorated,
-                                       team: Team.dacu_disclosure)
+                                       team: BusinessUnit.dacu_disclosure)
         expect(service).to have_received(:call)
       end
 
@@ -1319,7 +1319,7 @@ RSpec.describe CasesController, type: :controller do
         expect(CaseFlagForClearanceService)
           .to have_received(:new).with(user: disclosure_specialist,
                                        kase: unflagged_case_decorated,
-                                       team: Team.dacu_disclosure)
+                                       team: BusinessUnit.dacu_disclosure)
         expect(service).to have_received(:call)
       end
 

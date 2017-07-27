@@ -10,9 +10,5 @@
 #  type       :string
 #
 
-FactoryGirl.define do
-  factory :team do
-    sequence(:name) { |n| "Team #{n}" }
-    email { Faker::Internet.email(name) }
-  end
+class BusinessGroup < Team
 end

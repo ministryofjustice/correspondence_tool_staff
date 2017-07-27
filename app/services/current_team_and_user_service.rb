@@ -26,10 +26,10 @@ class CurrentTeamAndUserService
       @team = @dts.approving_team
       @user = @case.approver_assignments.for_team(@team).first.user
     when 'pending_press_office_clearance'
-      @team = Team.press_office
+      @team = BusinessUnit.press_office
       @user = @case.approver_assignments.for_team(@team).first.user
     when 'pending_private_office_clearance'
-      @team = Team.private_office
+      @team = BusinessUnit.private_office
       @user = @case.approver_assignments.for_team(@team).first.user
     when 'responded'
       @team = @case.managing_team

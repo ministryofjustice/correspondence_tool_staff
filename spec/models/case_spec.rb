@@ -725,7 +725,7 @@ RSpec.describe Case, type: :model do
         Timecop.freeze(non_trigger_foi.received_date + 1.day) do
           non_trigger_foi.save!
           expect(non_trigger_foi.managing_team)
-            .to eq Team.managing.find_by name: 'DACU'
+            .to eq BusinessUnit.managing.find_by name: 'DACU'
         end
       end
     end

@@ -3,7 +3,7 @@ require 'rails_helper'
 describe CaseUnacceptApproverAssignmentService do
   let(:assigned_case)           { create :assigned_case, :flagged_accepted, approver: approver }
   let(:approver)                { dacu_disclosure.approvers.first }
-  let(:team_dacu)               { create :team_dacu }
+  let(:team_dacu)               { find_or_create :team_dacu }
   let(:dacu_disclosure)         { find_or_create :team_dacu_disclosure }
   let(:assignment)              { assigned_case.approver_assignments.first }
   let(:unaccepted_assignment)   { create :approver_assignment }

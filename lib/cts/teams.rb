@@ -9,7 +9,7 @@ module CTS
       if options[:all]
         columns = []
       else
-        columns = [:id, :name, :email]
+        columns = [:id, :type, :name, :email]
       end
       tp Team.all, *columns
     end

@@ -62,12 +62,12 @@ module CTS
 
     def find_teams(id_or_name)
       if id_or_name.match %r{^\d+$}
-        [Team.find(id_or_name)]
+        [BusinessUnit.find(id_or_name)]
       elsif id_or_name.match %r{^/(.*)/$}
         team_name_regex = Regexp.new(Regexp.last_match(1), Regexp::IGNORECASE)
-        Team.all.find_all { |t| t.name.match(team_name_regex) }
+        BusinessUnit.all.find_all { |t| t.name.match(team_name_regex) }
       else
-        [Team.find_by(name: id_or_name)]
+        [BusinessUnit.find_by(name: id_or_name)]
       end
     end
 

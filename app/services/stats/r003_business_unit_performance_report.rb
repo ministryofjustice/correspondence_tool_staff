@@ -16,7 +16,7 @@ module Stats
       super
       @period_start = Time.now.beginning_of_month
       @period_end = Time.now
-      @stats = StatsCollector.new(Team.responding.map(&:name).sort, COLUMNS)
+      @stats = StatsCollector.new(BusinessUnit.responding.map(&:name).sort, COLUMNS)
       @superheadings = superheadings
     end
 

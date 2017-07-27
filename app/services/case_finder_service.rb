@@ -56,11 +56,11 @@ class CaseFinderService
   end
 
   def incoming_cases_press_office
-    new_cases_from_last_3_days([Team.press_office])
+    new_cases_from_last_3_days([BusinessUnit.press_office])
   end
 
   def incoming_cases_private_office
-    new_cases_from_last_3_days([Team.private_office])
+    new_cases_from_last_3_days([BusinessUnit.private_office])
   end
 
   def my_open_cases

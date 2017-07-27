@@ -18,7 +18,7 @@ end
 describe CasePolicy do
   subject { described_class }
 
-  let(:managing_team)     { create :team_dacu }
+  let(:managing_team)     { find_or_create :team_dacu }
   let(:manager)           { managing_team.managers.first }
   let(:responding_team)   { create :responding_team }
   let(:responder)         { responding_team.responders.first }

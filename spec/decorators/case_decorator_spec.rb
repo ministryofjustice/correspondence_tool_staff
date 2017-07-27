@@ -7,7 +7,7 @@ describe CaseDecorator, type: :model do
   let(:responded_case)  { create(:responded_case).decorate }
   let(:closed_case)     { create(:closed_case).decorate }
   let(:manager)         { create :manager, managing_teams: [managing_team] }
-  let(:managing_team)   { create :team_dacu }
+  let(:managing_team)   { find_or_create :team_dacu }
   let(:responder)       { create :responder }
   let(:coworker)        { create :responder,
                                  responding_teams: responder.responding_teams }

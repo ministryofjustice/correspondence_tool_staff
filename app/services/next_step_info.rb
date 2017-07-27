@@ -29,11 +29,11 @@ class NextStepInfo
     when 'awaiting_responder', 'drafting', 'awaiting_dispatch'
       @kase.responding_team
     when 'pending_dacu_clearance'
-      Team.dacu_disclosure
+      BusinessUnit.dacu_disclosure
     when 'pending_press_office_clearance'
-      Team.press_office
+      BusinessUnit.press_office
     when 'pending_private_office_clearance'
-      Team.private_office
+      BusinessUnit.private_office
     else
       raise "Unexpected next state: #{@next_state}"
     end

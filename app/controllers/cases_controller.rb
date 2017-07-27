@@ -77,7 +77,7 @@ class CasesController < ApplicationController
       if create_foi_params[:flag_for_disclosure_specialists] == 'yes'
         CaseFlagForClearanceService.new(user: current_user,
                                         kase: @case,
-                                        team: Team.dacu_disclosure).call
+                                        team: BusinessUnit.dacu_disclosure).call
       end
       flash[:creating_case] = true
       redirect_to new_case_assignment_path @case
@@ -192,14 +192,14 @@ class CasesController < ApplicationController
     authorize @case, :can_unflag_for_clearance?
     CaseUnflagForClearanceService.new(user: current_user,
                                       kase: @case,
-                                      team: Team.dacu_disclosure).call
+                                      team: BusinessUnit.dacu_disclosure).call
   end
 
   def flag_for_clearance
     authorize @case, :can_flag_for_clearance?
     CaseFlagForClearanceService.new(user: current_user,
                                     kase: @case,
-                                    team: Team.dacu_disclosure).call
+                                    team: BusinessUnit.dacu_disclosure).call
   end
 
   def approve_response

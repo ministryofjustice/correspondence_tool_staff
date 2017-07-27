@@ -4,7 +4,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
 
   let(:dacu) { create :team_dacu }
   let(:dacu_user) { create :manager, managing_teams: [dacu], full_name: 'David Attenborough' }
-  let(:laa) { create :team, name: 'Legal Aid Agency' }
+  let(:laa) { create :business_unit, name: 'Legal Aid Agency' }
   let(:laa_user) { create :responder, responding_teams: [laa], full_name: 'Larry Adler' }
 
   let(:ct) do

@@ -6,8 +6,8 @@ module Stats
     before(:all) do
       DbHousekeeping.clean
       Team.all.map(&:destroy)
-      @team_1 = create :team, name: 'RTA'
-      @team_2 = create :team, name: 'RTB'
+      @team_1 = create :business_unit, name: 'RTA'
+      @team_2 = create :business_unit, name: 'RTB'
       @team_dacu_disclosure = find_or_create :team_dacu_disclosure
       @responder_1 = create :responder, responding_teams: [@team_1]
       @responder_2 = create :responder, responding_teams: [@team_2]

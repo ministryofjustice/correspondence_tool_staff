@@ -66,11 +66,11 @@ class User < ApplicationRecord
   end
 
   def press_officer?
-    approving_team == Team.press_office
+    approving_team == BusinessUnit.press_office
   end
 
   def private_officer?
-    approving_team == Team.private_office
+    approving_team == BusinessUnit.private_office
   end
 
   def roles

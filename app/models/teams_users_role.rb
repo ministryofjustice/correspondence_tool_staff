@@ -16,7 +16,7 @@ class TeamsUsersRole < ApplicationRecord
        }
 
   belongs_to :user
-  belongs_to :team
+  belongs_to :team, foreign_key: :team_id
   scope :manager_roles,   -> { where(role: :manager)  }
   scope :responder_roles, -> { where(role: :responder) }
   scope :approver_roles,  -> { where(role: :approver) }

@@ -11,5 +11,5 @@
 
 = form_for [ @case, @assignment ] do |f|
 
-  = f.radio_button_fieldset :team_id, choices: Team.responding, value_method: :id, text_method: :name
+  = f.radio_button_fieldset :team_id, choices: BusinessUnit.responding, value_method: :id, text_method: :name
   = f.submit t('button.assign'), {class: 'button'}

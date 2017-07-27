@@ -100,8 +100,8 @@ namespace :data do
 
     desc 'Add disclosure team assignments to cases taken on by press office.'
     task add_disclosure_team: :environment do
-      press_office = Team.press_office
-      dacu_disclosure = Team.dacu_disclosure
+      press_office = BusinessUnit.press_office
+      dacu_disclosure = BusinessUnit.dacu_disclosure
       Case.with_teams(press_office)
         .find_all { |c| c.assignments.with_teams(dacu_disclosure).blank? }
         .each do |kase|

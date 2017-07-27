@@ -267,7 +267,7 @@ module CTS
       end
 
       def press_officer
-        Team.press_office.approvers.first
+        BusinessUnit.press_office.approvers.first
       end
 
       def call_case_approval_service(user, kase)

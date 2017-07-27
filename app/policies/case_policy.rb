@@ -317,15 +317,15 @@ class CasePolicy < ApplicationPolicy
   end
 
   check :user_is_dacu_disclosure_approver do
-    @user.in? Team.dacu_disclosure.approvers
+    @user.in? BusinessUnit.dacu_disclosure.approvers
   end
 
   check :user_is_press_office_approver do
-    @user.in? Team.press_office.approvers
+    @user.in? BusinessUnit.press_office.approvers
   end
 
   check :user_is_private_office_approver do
-    @user.in? Team.private_office.approvers
+    @user.in? BusinessUnit.private_office.approvers
   end
 
   # check case_is_in_responder_attachable_state
@@ -357,23 +357,23 @@ class CasePolicy < ApplicationPolicy
   end
 
   check :case_is_assigned_to_dacu_disclosure do
-    Team.dacu_disclosure.in? @case.approving_teams
+    BusinessUnit.dacu_disclosure.in? @case.approving_teams
   end
 
   check :case_is_assigned_to_press_office do
-    Team.press_office.in? @case.approving_teams
+    BusinessUnit.press_office.in? @case.approving_teams
   end
 
   check :case_is_not_assigned_to_press_office do
-    !Team.press_office.in? @case.approving_teams
+    !BusinessUnit.press_office.in? @case.approving_teams
   end
 
   check :case_is_assigned_to_private_office do
-    Team.private_office.in? @case.approving_teams
+    BusinessUnit.private_office.in? @case.approving_teams
   end
 
   check :case_is_not_assigned_to_private_office do
-    !Team.private_office.in? @case.approving_teams
+    !BusinessUnit.private_office.in? @case.approving_teams
   end
 
   check :case_is_pending_dacu_clearance do
@@ -389,7 +389,7 @@ class CasePolicy < ApplicationPolicy
   end
 
   check :case_is_assigned_to_press_office do
-    Team.press_office.in? @case.approving_teams
+    BusinessUnit.press_office.in? @case.approving_teams
   end
 
   check :user_is_in_current_team do

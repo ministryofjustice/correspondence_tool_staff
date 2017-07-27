@@ -173,6 +173,7 @@ class Case < ApplicationRecord
 
   has_many :approving_teams,
            -> { where("state != 'rejected'") },
+           class_name: BusinessUnit,
            through: :approver_assignments,
            source: :team
 
@@ -354,7 +355,7 @@ class Case < ApplicationRecord
   end
 
   def flagged_for_press_office_clearance?
-    approving_teams.include?(Team.press_office)
+    approving_teams.include?(BusinessUnit.press_office)
   end
 
   def responded?
@@ -390,7 +391,7 @@ class Case < ApplicationRecord
   def set_managing_team
     # For now, we just automatically assign cases to DACU.
     self.managing_team =
-      Team.managing.find_by!(name: Settings.foi_cases.default_managing_team)
+      BusinessUnit.managing.find_by!(name: Settings.foi_cases.default_managing_team)
     self.managing_assignment.state = 'accepted'
   end
 
