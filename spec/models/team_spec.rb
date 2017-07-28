@@ -18,9 +18,17 @@ RSpec.describe Team, type: :model do
     expect(bu).to be_valid
   end
 
+  it { should validate_uniqueness_of(:name) }
   it { should have_many(:user_roles)
                 .class_name('TeamsUsersRole') }
   it { should have_many(:users).through(:user_roles) }
+
+  describe 'email' do
+    it 'should consider team emails to be case-insensitive' do
+      team = Team.create name: 'test', email: 'TEST@localhost'
+      expect(Team.find_by(email: 'test@localhost')).to eq team
+    end
+  end
 
   context 'validate uniqueness of name' do
     it 'errors if not unique' do

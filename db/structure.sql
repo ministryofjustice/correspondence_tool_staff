@@ -497,7 +497,7 @@ ALTER SEQUENCE team_properties_id_seq OWNED BY team_properties.id;
 CREATE TABLE teams (
     id integer NOT NULL,
     name character varying NOT NULL,
-    email citext NOT NULL,
+    email citext,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     type character varying,
@@ -1044,7 +1044,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170713094438'),
 ('20170727101532'),
 ('20170727112001'),
-('20170727162325');
+('20170727162325'),
+('20170728154625');
 
 
 
