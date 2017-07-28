@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.5
--- Dumped by pg_dump version 9.5.5
+-- Dumped from database version 9.5.1
+-- Dumped by pg_dump version 9.5.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -458,6 +458,39 @@ CREATE TABLE schema_migrations (
 
 
 --
+-- Name: team_properties; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE team_properties (
+    id integer NOT NULL,
+    team_id integer,
+    key character varying,
+    value text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: team_properties_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE team_properties_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: team_properties_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE team_properties_id_seq OWNED BY team_properties.id;
+
+
+--
 -- Name: teams; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -628,6 +661,13 @@ ALTER TABLE ONLY feedback ALTER COLUMN id SET DEFAULT nextval('feedback_id_seq':
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY team_properties ALTER COLUMN id SET DEFAULT nextval('team_properties_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY teams ALTER COLUMN id SET DEFAULT nextval('teams_id_seq'::regclass);
 
 
@@ -731,6 +771,14 @@ ALTER TABLE ONLY feedback
 
 ALTER TABLE ONLY schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: team_properties_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY team_properties
+    ADD CONSTRAINT team_properties_pkey PRIMARY KEY (id);
 
 
 --
@@ -856,6 +904,20 @@ CREATE INDEX index_cases_on_requester_type ON cases USING btree (requester_type)
 
 
 --
+-- Name: index_team_properties_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_team_properties_on_team_id ON team_properties USING btree (team_id);
+
+
+--
+-- Name: index_team_properties_on_team_id_and_key_and_value; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_team_properties_on_team_id_and_key_and_value ON team_properties USING btree (team_id, key, value);
+
+
+--
 -- Name: index_team_table_team_id_role_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -972,6 +1034,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170626153411'),
 ('20170627112545'),
 ('20170713094438'),
-('20170727101532');
+('20170727101532'),
+('20170727112001');
 
 
