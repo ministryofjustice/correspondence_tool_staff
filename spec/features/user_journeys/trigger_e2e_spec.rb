@@ -91,9 +91,7 @@ feature "#trigger cases" do
 
     cases_new_page.submit_button.click
 
-    assignments_new_page.choose_assignment_team responder.responding_teams.first
-
-    assignments_new_page.create_and_assign_case.click
+    assignments_new_page.assign_to.team.first.assign_link.click
 
     expect(cases_show_page.case_status.details.copy.text).to eq "To be accepted"
 

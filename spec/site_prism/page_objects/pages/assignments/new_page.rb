@@ -2,12 +2,18 @@ module PageObjects
   module Pages
     module Assignments
       class NewPage < PageObjects::Pages::Base
-        set_url '/cases/{id}/assignments/new'
+        set_url '/cases/{case_id}/assignments/new'
 
         section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
-        section :assign_to, :xpath, '//fieldset[contains(.,"Assign to")]' do
-          elements :teams, 'label'
+        section :page_heading,
+                PageObjects::Sections::PageHeadingSection, '.page-heading'
+
+        section :assign_to, 'ul.teams' do
+          sections :team, 'li.team' do
+            element :business_unit, '.team-unit-name'
+            element :assign_link, '.team-actions a'
+          end
         end
 
         element :create_and_assign_case, '.button'

@@ -9,7 +9,12 @@
 = GovukElementsErrorsHelper.error_summary @assignment,
         "#{pluralize(@assignment.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
-= form_for [ @case, @assignment ] do |f|
-
-  = f.radio_button_fieldset :team_id, choices: BusinessUnit.responding, value_method: :id, text_method: :name
-  = f.submit t('button.assign'), {class: 'button'}
+ul.teams
+  - @business_units.each do |team|
+    li.team
+      .team-details
+        h3
+          .team-unit-name
+            = team.name
+      .team-actions
+        = link_to t('button.assign'), case_assign_to_responder_team_path(case_id: @case.id, team_id: team.id), class: 'button'

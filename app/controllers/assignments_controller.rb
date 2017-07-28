@@ -25,7 +25,7 @@ class AssignmentsController < ApplicationController
   def new
     authorize @case, :can_assign_case?
     @assignment = @case.assignments.new
-    @business_units = Team.responding.order(:name)
+    @business_units = BusinessUnit.responding.order(:name)
     @creating_case = flash[:creating_case]
     flash.keep :creating_case
   end

@@ -28,8 +28,7 @@ feature 'Case creation by a manager' do
 
     expect(assignments_new_page).to be_displayed
 
-    assignments_new_page.choose_assignment_team(responding_team)
-    click_button 'Assign case'
+    assignments_new_page.assign_to.team.first.assign_link.click
 
     expect(cases_show_page).to be_displayed
 

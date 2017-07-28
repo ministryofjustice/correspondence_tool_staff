@@ -22,8 +22,8 @@ feature 'Assigning a case from the detail view' do
     click_link 'Assign to a responder'
     expect(assignments_new_page).to be_displayed
 
-    choose responding_team.name
-    click_button 'Assign case'
+    assignments_new_page.assign_to.team.first.assign_link.click
+
     expect(current_path).to eq case_path(kase)
     expect(page).to have_content('Case successfully assigned')
 
@@ -59,8 +59,8 @@ feature 'Assigning a case from the detail view' do
       click_link 'Assign to a responder'
       expect(assignments_new_page).to be_displayed
 
-      choose responding_team.name
-      click_button 'Assign case'
+      assignments_new_page.assign_to.team.first.assign_link.click
+
       expect(current_path).to eq case_path(kase)
       expect(page).to have_content('Case successfully assigned')
 

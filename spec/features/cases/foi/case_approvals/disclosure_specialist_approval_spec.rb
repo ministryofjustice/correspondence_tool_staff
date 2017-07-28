@@ -17,10 +17,11 @@ feature 'cases requiring clearance by disclosure specialist' do
     cases_new_page.submit_button.click
   end
 
-  def assign_case_to_team(team:)
+  def assign_case_to_team
     expect(assignments_new_page).to be_displayed
-    assignments_new_page.choose_assignment_team team
-    assignments_new_page.create_and_assign_case.click
+
+    assignments_new_page.assign_to.team.first.assign_link.click
+
   end
 
   def take_case_on_as_discosure_specialist(kase:, expected_approver:)
@@ -72,7 +73,7 @@ feature 'cases requiring clearance by disclosure specialist' do
     cases_page.new_case_button.click
 
     create_case(flag_for_clearance: true)
-    assign_case_to_team(team: responding_team)
+    assign_case_to_team
     expect(cases_show_page).to be_displayed
     expect(cases_show_page.case_history.entries.last.text)
       .to include('Flag for clearance')

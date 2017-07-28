@@ -84,7 +84,7 @@ en:
       default: "%-d %b %Y %H:%M"
 
   button:
-    assign: Assign case
+    assign: Assign to this unit
     continue: Continue
     next_page_assign: Next - Assign case
     confirm: Confirm
@@ -214,18 +214,18 @@ en:
 
 
   assignments:
+    accept:
+      success: Case taken on
+      already_accepted: Case already accepted by %{name}
+    assign_to_team:
+      case_assigned: Case successfully assigned
+      case_created: Case successfully created
     edit:
       heading: Accept/reject case
     new:
       heading: Assign case
       new_assignment: Create case
       assignment: Existing case
-    accept:
-      success: Case taken on
-      already_accepted: Case already accepted by %{name}
-    create:
-      case_assigned: Case successfully assigned
-      case_created: Case successfully created
     reassign_user:
       heading: Reassign this case to another person
     take_case_on:

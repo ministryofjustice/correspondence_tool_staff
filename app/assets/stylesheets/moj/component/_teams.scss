@@ -1,0 +1,9 @@
+.team {
+  border-top: 1px solid $border-colour;
+  padding-bottom: $gutter;
+}
+
+.team-unit-name {
+  @extend .heading-medium;
+
+}
