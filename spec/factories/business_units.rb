@@ -1,8 +1,8 @@
 FactoryGirl.define do
-  factory :business_unit, class: BusinessUnit do
+  factory :business_unit do
     sequence(:name) { |n| "Business Unit #{n}" }
     email { Faker::Internet.email(name) }
-    type 'BusinessUnit'
+    association :directorate
   end
 
   factory :managing_team, parent: :business_unit do

@@ -11,7 +11,9 @@
 #
 
 class BusinessUnit < Team
-  belongs_to :directorates, foreign_key: 'parent_id'
+  validates :parent_id, presence: true
+
+  belongs_to :directorate, foreign_key: 'parent_id'
 
   has_many :manager_user_roles,
            -> { manager_roles },

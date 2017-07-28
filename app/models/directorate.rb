@@ -11,6 +11,8 @@
 #
 
 class Directorate < Team
+  validates :parent_id, presence: true
+
   belongs_to :business_group, foreign_key: 'parent_id'
   has_many :business_units, foreign_key: 'parent_id'
 end
