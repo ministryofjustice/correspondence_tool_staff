@@ -11,12 +11,6 @@ RSpec.describe AssignmentsController, type: :controller do
   let(:approving_team)    { approver.approving_team }
   let(:press_officer)     { create :press_officer }
   let(:press_office)      { press_officer.approving_team }
-  let(:create_assignment_params) do
-    {
-      case_id: unassigned_case.id,
-      assignment: { team_id: responding_team.id }
-    }
-  end
   let(:accept_assignment_params) do
     {
       id: assignment.id,
@@ -50,27 +44,6 @@ RSpec.describe AssignmentsController, type: :controller do
                                        approver: approver }
 
   context 'as an anonymous user' do
-
-    describe 'GET new' do
-      it 'redirects to sign in page' do
-        get :new, params: { case_id: unassigned_case.id }
-        expect(response).to redirect_to new_user_session_path
-      end
-    end
-
-    describe 'POST create' do
-      it 'redirects to sign in page' do
-        post :create, params: create_assignment_params
-
-        expect(response).to redirect_to new_user_session_path
-      end
-
-      it 'does not create a new assignment' do
-        expect { post :create, params: create_assignment_params }.
-          not_to change { unassigned_case.assignments.count }
-      end
-    end
-
     describe 'GET edit' do
       it 'redirects to sign in page' do
         get :edit, params: {
@@ -81,8 +54,6 @@ RSpec.describe AssignmentsController, type: :controller do
         expect(response).to redirect_to new_user_session_path
       end
     end
-
-
 
     describe 'PATCH accept_or_reject' do
       before do
@@ -106,39 +77,6 @@ RSpec.describe AssignmentsController, type: :controller do
 
   context 'as an authenticated assigner' do
     before { sign_in create(:manager) }
-
-    describe 'GET new' do
-      it 'renders the page for assignment' do
-        get :new, params: {
-          case_id: unassigned_case.id
-        }
-        expect(response).to render_template(:new)
-      end
-    end
-
-    describe 'POST create' do
-      it 'creates a new assignment for a specific case' do
-        expect { post :create, params: create_assignment_params }.
-          to change { unassigned_case.assignments.count }.by 1
-      end
-
-      it 'redirects to the case list view' do
-        post :create, params: create_assignment_params
-        expect(response).to redirect_to case_path(id: create_assignment_params[:case_id])
-      end
-
-      it 'queues an new assignment mail for later delivery' do
-        expect(AssignmentMailer).to receive_message_chain :new_assignment,
-                                                          :deliver_later
-        post :create, params: create_assignment_params
-      end
-
-      it 'errors if no team specified' do
-        post :create, params:  {'commit' => 'Create and assign case', 'case_id' => unassigned_case.id }
-        expect(assigns(:assignment).errors[:team]).to include("can't be blank")
-        expect(response).to render_template(:new)
-      end
-    end
 
     describe 'GET edit' do
       it 'does not render the page for accept / reject assignment' do
@@ -198,27 +136,6 @@ RSpec.describe AssignmentsController, type: :controller do
     let(:assignment_params) { { assignment: { state: 'accept' } } }
 
     before { sign_in responder }
-
-    describe 'GET new' do
-      it 'does not render the page for assignment' do
-        get :new, params: {
-          case_id: unassigned_case.id
-        }
-        expect(response).not_to render_template(:new)
-      end
-    end
-
-    describe 'POST create' do
-      it 'does not create a new assignment for a specific case' do
-        expect { post :create, params: create_assignment_params }.
-          not_to change { unassigned_case.assignments.count }
-      end
-
-      it 'redirects to the application root' do
-        post :create, params: create_assignment_params
-        expect(response).to redirect_to manager_root_path
-      end
-    end
 
     describe 'PATCH accept_or_reject' do
       before do

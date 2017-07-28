@@ -128,16 +128,16 @@ Rails.application.routes.draw do
     get 'respond', on: :member
     patch 'confirm_respond', on: :member
     get '/assignments/show_rejected' => 'assignments#show_rejected'
+    get '/assignments/assign_to_team' => 'assignments#assign_to_team', as: 'assign_to_responder_team'
     patch 'unflag_for_clearance' => 'cases#unflag_for_clearance', on: :member
     patch 'flag_for_clearance' => 'cases#flag_for_clearance', on: :member
     get 'approve_response' => 'cases#approve_response', on: :member
     patch 'execute_response_approval' => 'cases#execute_response_approval', on: :member
     get :request_amends, on: :member
     patch :execute_request_amends, on: :member
-    patch 'reassign_approver' => 'cases#reassign_approver', on: :member
     # get 'upload_response_approve' => 'cases#upload_response_approve', on: :member
 
-    resources :assignments do
+    resources :assignments, except: :create  do
       patch 'accept_or_reject', on: :member
       patch 'accept', on: :member
       patch 'unaccept', on: :member

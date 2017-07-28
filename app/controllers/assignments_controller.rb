@@ -3,11 +3,11 @@ class AssignmentsController < ApplicationController
   before_action :set_case, only: [
                   :accept,
                   :accept_or_reject,
-                  :reassign_user,
-                  :create,
+                  :assign_to_team,
                   :edit,
-                  :new,
                   :execute_reassign_user,
+                  :new,
+                  :reassign_user,
                   :show_rejected,
                   :take_case_on,
                   :unaccept,
@@ -15,9 +15,9 @@ class AssignmentsController < ApplicationController
   before_action :set_assignment, only: [
                   :accept,
                   :accept_or_reject,
-                  :reassign_user,
                   :edit,
                   :execute_reassign_user,
+                  :reassign_user,
                   :unaccept,
                 ]
   before_action :validate_response, only: :accept_or_reject
@@ -25,14 +25,17 @@ class AssignmentsController < ApplicationController
   def new
     authorize @case, :can_assign_case?
     @assignment = @case.assignments.new
+    @business_units = Team.responding.order(:name)
     @creating_case = flash[:creating_case]
     flash.keep :creating_case
   end
 
-  def create
+  def assign_to_team
     authorize @case, :can_assign_case?
 
-    @assignment = @case.assignments.create(assignment_params.merge(role: 'responding'))
+    @new_assignment_params = get_assign_team_params
+
+    @assignment = @case.assignments.create(@new_assignment_params)
     if @assignment.valid?
       @case.assign_responder(current_user, @assignment.team)
       flash[:notice] = flash[:creating_case] ? t('.case_created') : t('.case_assigned')
@@ -160,6 +163,12 @@ class AssignmentsController < ApplicationController
     else
       HashWithIndifferentAccess.new
     end
+  end
+
+  def get_assign_team_params
+    { team_id: params[:team_id],
+      case_id: params[:case_id],
+      role: 'responding'}
   end
 
   def reassign_user_params
