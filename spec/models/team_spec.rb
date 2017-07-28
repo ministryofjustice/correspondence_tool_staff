@@ -8,6 +8,7 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  type       :string
+#  parent_id  :integer
 #
 
 require 'rails_helper'
@@ -18,7 +19,6 @@ RSpec.describe Team, type: :model do
     expect(bu).to be_valid
   end
 
-  it { should validate_uniqueness_of(:name) }
   it { should have_many(:user_roles)
                 .class_name('TeamsUsersRole') }
   it { should have_many(:users).through(:user_roles) }
