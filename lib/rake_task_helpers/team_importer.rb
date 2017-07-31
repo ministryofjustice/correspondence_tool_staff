@@ -93,9 +93,10 @@ class TeamImporter
     row.first == 'Business Unit Group'
   end
 
-  def default_email(name)
+  def default_email(_name)
+    # leave blank for now
     # "correspondence-staff-dev+#{normalize(name)}-team@digital.justice.gov.uk"
-    ""
+    nil
   end
 
   def normalize(name)
