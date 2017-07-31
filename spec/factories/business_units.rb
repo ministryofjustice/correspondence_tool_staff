@@ -34,10 +34,7 @@ FactoryGirl.define do
   factory :team_dacu, parent: :managing_team do
     name 'DACU'
     email 'dacu@localhost'
-
-    # initialize_with do
-    #   BusinessUnit.find_or_create_by(name: 'DACU', email: 'dacu@localhost')
-    # end
+    directorate { find_or_create :dacu_directorate }
   end
 
   factory :team_dacu_disclosure, parent: :approving_team do
@@ -48,10 +45,13 @@ FactoryGirl.define do
   factory :team_press_office, parent: :approving_team do
     name 'Press Office'
     email 'press.office@localhost'
+    directorate { find_or_create :press_office_directorate }
+
   end
 
   factory :team_private_office, parent: :approving_team do
     name 'Private Office'
     email 'private.office@localhost'
+    directorate { find_or_create :press_office_directorate }
   end
 end
