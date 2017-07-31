@@ -24,6 +24,9 @@ RSpec.describe BusinessUnit, type: :model do
   it { should validate_presence_of(:parent_id) }
 
   it { should belong_to(:directorate).with_foreign_key(:parent_id) }
+
+  it { should have_one(:business_group).through(:directorate)}
+
   it { should have_many(:user_roles)
                 .class_name('TeamsUsersRole') }
   it { should have_many(:users).through(:user_roles) }

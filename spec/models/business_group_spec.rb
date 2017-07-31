@@ -23,4 +23,6 @@ RSpec.describe BusinessGroup, type: :model do
   it { should validate_absence_of(:parent_id) }
 
   it { should have_many(:directorates).with_foreign_key(:parent_id) }
+
+  it { should have_many(:business_units).through(:directorates)  }
 end
