@@ -20,10 +20,10 @@ class Category < ApplicationRecord
   has_many :cases
 
   def self.foi
-    where(abbreviation: 'FOI').first
+    find_by!(abbreviation: 'FOI')
   end
 
   def self.gq
-    where(abbreviation: 'GQ').first
+    find_by!(abbreviation: 'GQ')
   end
 end

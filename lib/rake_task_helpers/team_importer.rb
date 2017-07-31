@@ -62,7 +62,7 @@ class TeamImporter
     @bu = BusinessUnit.new(parent_id: @dir.id, name: bu, email: default_email(bu))
     @bu.properties << TeamProperty.new(key: 'lead', value: lead)
     @bu.properties << TeamProperty.new(key: 'area', value: area) if area.present?
-    @bu.properties << TeamProperty.new(key: 'can_allocae', value: 'FOI')
+    @bu.properties << TeamProperty.new(key: 'can_allocate', value: 'FOI')
     @bu.save!
   end
 
