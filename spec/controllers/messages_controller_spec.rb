@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe MessagesController, type: :controller do
-  let!(:team_dacu)         { create :team_dacu }
+  let!(:team_dacu)         { find_or_create :team_dacu }
   let!(:manager)           { team_dacu.users.first }
   let!(:approver)          { create :approver }
   let!(:responder)         { create :responder }
