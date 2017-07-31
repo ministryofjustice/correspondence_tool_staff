@@ -31,9 +31,6 @@ module Stats
       create_case(received: '20170605', responded: nil, deadline: '20170625', team: @team_2, responder: @responder_1, flagged: true)          # team 2 - open late
       create_case(received: '20170605', responded: nil, deadline: '20170702', team: @team_2, responder: @responder_1, flagged: true)          # team 2 - open in time
       create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_1, responder: @responder_1, flagged: true)   # team 1 - responded in time
-
-
-      Team.where.not(id: [@team_1.id, @team_2.id]).map(&:destroy)
     end
 
     after(:all)  { DbHousekeeping.clean }
@@ -100,7 +97,7 @@ module Stats
       responded_date = responded.nil? ? nil : Date.parse(responded)
       kase = nil
       Timecop.freeze(received_date + 10.hours) do
-        kase = create :case_with_response, responding_team: team
+        kase = create :case_with_response, responding_team: team, responder: responder
         kase.external_deadline = Date.parse(deadline)
         if flagged == true
           CaseFlagForClearanceService.new(user: kase.managing_team.users.first, kase: kase, team: @team_dacu_disclosure).call
