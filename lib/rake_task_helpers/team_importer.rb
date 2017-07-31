@@ -94,7 +94,8 @@ class TeamImporter
   end
 
   def default_email(name)
-    "correspondence-staff-dev+#{normalize(name)}-team@digital.justice.gov.uk"
+    # "correspondence-staff-dev+#{normalize(name)}-team@digital.justice.gov.uk"
+    ""
   end
 
   def normalize(name)
