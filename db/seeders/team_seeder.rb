@@ -1,17 +1,18 @@
 require 'csv'
 
-class TeamImporter
+class TeamSeeder
 
-  FILENAME = File.join(ENV['HOME'], 'Dropbox', 'team_data.csv')
+  FILENAME = ENV['TEAM_IMPORT_CSV']
 
 
-  def intialize
+  def initialize
+    raise 'Set TEAM_IMORT_CSV env var to point to the CSV file containing team data' if FILENAME.blank?
     @bg = nil
     @dir = nil
     @bu = nil
   end
 
-  def run
+  def seed!
     CSV.foreach(FILENAME) do |row|
       process_row(row)
     end
