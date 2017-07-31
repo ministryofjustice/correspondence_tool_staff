@@ -160,7 +160,7 @@ FactoryGirl.define do
   factory :case_with_response, parent: :accepted_case do
     transient do
       identifier "case with response"
-      responder { find_or_create :responder, full_name: 'Ivor Response' }
+      responder { find_or_create :responder }
       responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
     end
 
@@ -267,7 +267,7 @@ FactoryGirl.define do
   factory :responded_case, parent: :case_with_response do
     transient do
       identifier "responded case"
-      responder { User.find_by_full_name('Ivor Response') || create(:responder, full_name: 'Ivor Response') }
+      responder { create :responder }
     end
 
     date_responded Date.today
