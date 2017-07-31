@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: team_properties
+#
+#  id         :integer          not null, primary key
+#  team_id    :integer
+#  key        :string
+#  value      :text
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 class TeamProperty < ActiveRecord::Base
 
 
@@ -11,7 +23,7 @@ class TeamProperty < ActiveRecord::Base
   validates :key, inclusion: { in: VALID_KEYS, message: "%{value} is not a valid key" }
 
 
-  scope :area, -> { where( key: 'area') }
+  scope :area, -> { where( key: 'area').order(:value) }
   scope :lead, -> { where( key: 'lead') }
 
 

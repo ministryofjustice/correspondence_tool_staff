@@ -8,6 +8,7 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  type       :string
+#  parent_id  :integer
 #
 
 class BusinessUnit < Team

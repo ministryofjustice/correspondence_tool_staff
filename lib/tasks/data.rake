@@ -133,6 +133,14 @@ namespace :data do
         end
       end
     end
+
+    namespace :import do
+      desc 'Import hierarchical team data'
+      task :teams => :environment do
+        require File.join(Rails.root, 'lib', 'rake_task_helpers', 'team_importer')
+        TeamImporter.new.run
+      end
+    end
   end
 end
 

@@ -954,6 +954,13 @@ CREATE INDEX index_teams_on_type ON teams USING btree (type);
 
 
 --
+-- Name: index_teams_on_type_and_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_teams_on_type_and_name ON teams USING btree (type, name);
+
+
+--
 -- Name: index_teams_users_roles_on_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1045,6 +1052,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170727101532'),
 ('20170727112001'),
 ('20170727162325'),
-('20170728154625');
+('20170728154625'),
+('20170731101430');
 
 

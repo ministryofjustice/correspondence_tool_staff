@@ -19,4 +19,11 @@ class Category < ApplicationRecord
 
   has_many :cases
 
+  def self.foi
+    find_by!(abbreviation: 'FOI')
+  end
+
+  def self.gq
+    find_by!(abbreviation: 'GQ')
+  end
 end

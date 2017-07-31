@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: team_properties
+#
+#  id         :integer          not null, primary key
+#  team_id    :integer
+#  key        :string
+#  value      :text
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 require 'rails_helper'
 
 describe TeamProperty do
