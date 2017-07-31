@@ -28,7 +28,7 @@ module CTS
       CTS::validate_teams_populated
 
       require "#{CTS_ROOT_DIR}/db/seeders/demo_user_seeder"
-      seeder = DemoUserSeeder.new
+      seeder = DevUserSeeder.new
       seeder.seed_users
     end
   end

@@ -19,7 +19,7 @@ module CTS
     desc 'seed', 'Seed teams for dev/demo.'
     def seed
       require "#{CTS_ROOT_DIR}/db/seeders/demo_user_seeder"
-      seeder = DemoUserSeeder.new
+      seeder = DevUserSeeder.new
       seeder.seed_teams
     end
 
