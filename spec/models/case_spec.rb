@@ -721,11 +721,11 @@ RSpec.describe Case, type: :model do
         end
       end
 
-      it 'sets it to DACU' do
+      it 'sets it to DACU BMT' do
         Timecop.freeze(non_trigger_foi.received_date + 1.day) do
           non_trigger_foi.save!
           expect(non_trigger_foi.managing_team)
-            .to eq BusinessUnit.managing.find_by name: 'DACU'
+            .to eq BusinessUnit.managing.find_by name: 'DACU BMT'
         end
       end
     end

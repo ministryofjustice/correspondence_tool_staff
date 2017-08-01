@@ -32,7 +32,7 @@ FactoryGirl.define do
   end
 
   factory :team_dacu, parent: :managing_team do
-    name 'DACU'
+    name 'DACU BMT'
     email 'dacu@localhost'
     directorate { find_or_create :dacu_directorate }
   end
