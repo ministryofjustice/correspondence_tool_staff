@@ -33,8 +33,6 @@ module Stats
         create_case(received: '20170605', responded: nil, deadline: '20170702', team: @team_2, responder: @responder_1, flagged: true)          # team 2 - open in time
         create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_1, responder: @responder_1, flagged: true)   # team 1 - responded in time
       end
-
-      Team.where.not(id: [@team_1.id, @team_2.id]).map(&:destroy)
     end
 
     after(:all)  { DbHousekeeping.clean }
