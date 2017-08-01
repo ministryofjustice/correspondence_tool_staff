@@ -1,6 +1,12 @@
 module Stats
   class R003BusinessUnitPerformanceReport < BaseReport
 
+    HIERARCHY = {
+      business_group:                 'Business Group',
+      directorate:                    'Directorate',
+      business_unit:                  'Business Unit',
+    }
+
     COLUMNS = {
       non_trigger_responded_in_time:  'Responded - in time',
       non_trigger_responded_late:     'Responded - late',
@@ -16,7 +22,10 @@ module Stats
       super
       @period_start = Time.now.beginning_of_month
       @period_end = Time.now
-      @stats = StatsCollector.new(BusinessUnit.responding.map(&:name).sort, COLUMNS)
+      # @stats = StatsCollector.new(BusinessUnit.responding.map(&:name).sort, COLUMNS)
+      @stats = HierarchicalStatsCollector.new(BusinessUnit.responding.sort_by(&:name),
+                                              COLUMNS,
+                                              HIERARCHY)
       @superheadings = superheadings
     end
 
@@ -33,12 +42,16 @@ module Stats
       case_ids.each { |case_id| analyse_case(case_id) }
     end
 
+    def to_csv
+      @stats.to_csv(HIERARCHY.keys, @superheadings)
+    end
+
     private
 
     def superheadings
       [
         ["#{self.class.title} - #{reporting_period}"],
-        ['', 'Non-trigger FOIs', 'Non-trigger FOIs', 'Non-trigger FOIs', 'Non-trigger FOIs', 'Trigger FOIs', 'Trigger FOIs', 'Trigger FOIs', 'Trigger FOIs', 'Trigger FOIs']
+        ['', '', '', 'Non-trigger FOIs', 'Non-trigger FOIs', 'Non-trigger FOIs', 'Non-trigger FOIs', 'Trigger FOIs', 'Trigger FOIs', 'Trigger FOIs', 'Trigger FOIs', 'Trigger FOIs']
       ]
     end
 
@@ -50,14 +63,27 @@ module Stats
       Case.opened.pluck(:id)
     end
 
+    # TODO: do we need the superheadings still?
+
     def analyse_case(case_id)
       kase = Case.find case_id
       return if kase.unassigned?
-      team = kase.responding_team.name
+      team = kase.responding_team
       timeliness = kase.closed? ? analyse_closed_case(kase) : analyse_open_case(kase)
       column_key = add_trigger_state(kase, timeliness)
       @stats.record_stats(team, column_key)
     end
+
+    # def analyse_case(case_id)
+    #   kase = Case.find case_id
+    #   return if kase.unassigned?
+    #   timeliness = kase.closed? ? analyse_closed_case(kase) : analyse_open_case(kase)
+    #   stats_column_key = add_trigger_state(kase, timeliness)
+    #   @stats.increment_grouped_stats(:business_group  => team.directorate.business_group.name,
+    #                                  :directorate     => team.directorate.name,
+    #                                  :business_unit   => team.name,
+    #                                  stats_column_key => 1)
+    # end
 
     def add_trigger_state(kase, timeliness)
       status = kase.flagged? ? 'trigger_' + timeliness : 'non_trigger_' + timeliness
