@@ -27,6 +27,7 @@ FactoryGirl.define do
 
   factory :case do
     transient do
+      creation_time { 4.business_days.ago }
       identifier "new case"
       managing_team { find_or_create :team_dacu }
     end
@@ -41,20 +42,11 @@ FactoryGirl.define do
     sequence(:message) { |n| "#{identifier} message #{n}" }
     received_date { Time.zone.today.to_s }
     sequence(:postal_address) { |n| "#{identifier} postal address #{n}" }
+    created_at { creation_time }
 
     after(:build) do |_kase, evaluator|
       evaluator.managing_team
     end
-
-    # state :unassigned, initial: true
-    # state :awaiting_responder
-    # state :drafting
-    # state :awaiting_dispatch
-    # state :pending_dacu_clearance
-    # state :responded
-    # state :closed
-
-
 
     trait :with_messages do
       after(:create) do |kase|
@@ -88,9 +80,15 @@ FactoryGirl.define do
           end
         end
       end
+    end
 
+
+    after(:create) do | kase, evaluator|
+      ma = kase.managing_assignment
+      ma.update! created_at: evaluator.creation_time
     end
   end
+
 
   factory :awaiting_responder_case, parent: :case,
           aliases: [:assigned_case] do
@@ -100,17 +98,22 @@ FactoryGirl.define do
       responding_team { create :responding_team }
     end
 
+    created_at      { creation_time }
+    received_date   { creation_time }
+
     after(:create) do |kase, evaluator|
       create :assignment,
              case: kase,
              team: evaluator.responding_team,
              state: 'pending',
-             role: 'responding'
+             role: 'responding',
+             created_at: evaluator.creation_time
       create :case_transition_assign_responder,
              case: kase,
              user: evaluator.manager,
              managing_team: evaluator.managing_team,
-             responding_team: evaluator.responding_team
+             responding_team: evaluator.responding_team,
+             created_at: evaluator.creation_time
       kase.reload
     end
   end
@@ -129,7 +132,8 @@ FactoryGirl.define do
       create :case_transition_accept_responder_assignment,
              case: kase,
              user_id: kase.responder.id,
-             responding_team_id: kase.responding_team.id
+             responding_team_id: kase.responding_team.id,
+             created_at: evaluator.creation_time
       kase.reload
     end
 
@@ -160,9 +164,13 @@ FactoryGirl.define do
   factory :case_with_response, parent: :accepted_case do
     transient do
       identifier "case with response"
-      responder { find_or_create :responder }
+      # creation_time { 4.business_days.ago }
+      responder { find_or_create :responder, full_name: 'Ivor Response' }
       responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
     end
+
+
+
 
     after(:create) do |kase, evaluator|
       kase.attachments.push(*evaluator.responses)

@@ -13,6 +13,8 @@
 require 'rails_helper'
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
+include CaseDateManipulation
+
 feature "#non-trigger cases" do
   given(:responder)       { create :responder }
   given(:manager)         { create :manager }
@@ -36,6 +38,7 @@ feature "#non-trigger cases" do
     # Manager creates & assigns to kilo
     login_as_manager
     kase = manager_creates_new_case_and_assigns_it
+    kase = set_dates_back_by(kase, 6.days)
     kase_number = kase.number
 
     # KILO accepts case, uploads response and marks as sent
