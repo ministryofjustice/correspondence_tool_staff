@@ -11,28 +11,17 @@
 
 p.bold-medium
   | Browse by business group
+
 ul.business-groups.list
   - BusinessGroup.all.order(:name).each do | bg |
     li.business-group
-      - if bg.id == params[:business_group_id].to_i
-        = bg.name
-      - else
-        = link_to bg.name, new_case_assignment_path(@case.id, business_group_id: bg.id)
+      = business_group_option(@case,bg,params)
   li.show-all
-    - if params[:show_all]
-      = "See all business units"
-    - else
-      = link_to "See all business units", new_case_assignment_path(@case.id, show_all: true), class: 'bold-small'
+    = all_option(@case,params)
 
-- if params[:business_group_id]
-  - bg = BusinessGroup.find(params[:business_group_id])
+- if params[:business_group_id] || params[:show_all]
   p.bold-medium
-    = "#{ bg.name } business units"
-
-- if params[:show_all]
-  p.bold-medium
-    = "All business units"
-
+    = filtered_group_heading(params)
 
 - if defined?(@business_units)
   ul.teams
@@ -43,4 +32,6 @@ ul.business-groups.list
             .team-unit-name
               = team.name
         .team-actions
-          = link_to t('button.assign'), case_assign_to_responder_team_path(case_id: @case.id, team_id: team.id), class: 'button'
+          = link_to t('button.assign'),
+                  case_assign_to_responder_team_path(case_id: @case.id,
+                          team_id: team.id), class: 'button'

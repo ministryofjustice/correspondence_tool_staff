@@ -23,4 +23,58 @@ RSpec.describe AssignmentsHelper, type: :helper do
         .to eq 'Existing case'
     end
   end
+
+  describe '#filtered_group_heading' do
+    let(:business_group)   { create :business_group}
+
+
+    it 'returns the selected groups name as a heading' do
+
+      controller.params[:business_group_id] = business_group.id
+      expect(filtered_group_heading(params))
+          .to eq "#{ business_group.name } business units"
+    end
+
+    it 'returns "All group" as a heading' do
+      controller.params[:show_all] = true
+      expect(filtered_group_heading(params))
+          .to eq "All business units"
+    end
+  end
+
+  describe '#all_option' do
+    let(:business_group)   { create :business_group}
+    let(:unassigned_case)   { create :case }
+
+    it 'returns a link if the option has not been selected' do
+      controller.params[:show_all] = nil
+      expect(all_option(unassigned_case,params))
+          .to eq "<a class=\"bold-small\" href=\"/cases/#{unassigned_case.id}/assignments/new?show_all=true\">See all business units</a>"
+    end
+
+    it 'returns plain text if it has been selected' do
+      controller.params[:show_all] = true
+      expect(all_option(unassigned_case,params))
+          .to eq "See all business units"
+    end
+
+  end
+
+  describe '#business_group_option' do
+    let(:business_group)   { create :business_group}
+    let(:unassigned_case)   { create :case }
+
+    it 'returns a link if the option has not been selected' do
+      controller.params[:business_group_id] = nil
+      expect(business_group_option(unassigned_case, business_group,params))
+          .to eq "<a href=\"/cases/#{ unassigned_case.id }/assignments/new?business_group_id=#{ business_group.id }\">#{ business_group.name }</a>"
+    end
+
+    it 'returns plain text if it has been selected' do
+      controller.params[:business_group_id] = business_group.id
+      expect(business_group_option(unassigned_case,business_group,params))
+          .to eq business_group.name
+    end
+
+  end
 end
