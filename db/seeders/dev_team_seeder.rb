@@ -33,7 +33,7 @@ class DevTeamSeeder
     @bu_dacu_bmt = BusinessUnit.create!(parent: @dir_dacu, name: 'DACU BMT')
     @bu_dacu_dis = BusinessUnit.create!(parent: @dir_dacu, name: 'DACU Disclosure')
     @bu_private = BusinessUnit.create!(parent: @dir_private, name: 'Private Office')
-    @bu_press = BusinessUnit.create!(parent: @dir_dacu, name: 'Press Office')
+    @bu_press = BusinessUnit.create!(parent: @dir_press, name: 'Press Office')
 
     @bu_laa = BusinessUnit.create!(parent: @dir_laa, name: 'Legal Aid Agency (LAA)')
 

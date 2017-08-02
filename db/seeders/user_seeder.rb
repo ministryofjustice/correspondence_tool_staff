@@ -4,12 +4,13 @@ class UserSeeder
 
   FILENAME = ENV['USER_IMPORT_CSV']
 
-
   def initialize
-    raise 'Set USER_IMORT_CSV env var to point to the CSV file containing user data' if FILENAME.blank?
+    raise 'Set USER_IMPORT_CSV env var to point to the CSV file containing user data' if FILENAME.blank?
     @bg = nil
     @dir = nil
     @bu = nil
+    @initial_password = (0...20).map { ('a'..'z').to_a[rand(26)] }.join
+    puts "Using initial password: #{@initial_password}"
   end
 
   def seed!
@@ -28,12 +29,46 @@ class UserSeeder
         exit
       end
     end
-
+    populate_dev_users
+    populate_hq_users
     report_userless_teams
   end
 
 
   private
+
+  def populate_dev_users
+    dacu_bmt = BusinessUnit.find_by!(name: 'DACU BMT')
+    dacu_dis = BusinessUnit.find_by!(name: 'DACU Disclosure')
+    dev_user_file = File.join(File.dirname(ENV['USER_IMPORT_CSV']), 'dev_users.csv')
+
+    CSV.foreach(dev_user_file) do |row|
+      full_name, email = row
+      puts "Creating dev user #{full_name}"
+      user = User.create!(full_name: full_name, email: email, password: @initial_password)
+      TeamsUsersRole.create!(team_id: dacu_bmt.id, user_id: user.id, role: 'manager')
+      TeamsUsersRole.create!(team_id: dacu_dis.id, user_id: user.id, role: 'approver')
+    end
+  end
+
+
+  def populate_hq_users
+    hq_user_file = File.join(File.dirname(ENV['USER_IMPORT_CSV']), 'hq_users.csv')
+    CSV.foreach(hq_user_file) do |row|
+      team_name, full_name, role, email = row
+      puts "Creating HQ user #{full_name} for team #{team_name}"
+      email.downcase!
+      team = BusinessUnit.find_by!(name: team_name)
+      user = User.find_by(email: email)
+      if user.nil?
+        user = User.create!(full_name: full_name, email: email, password: @initial_password)
+      end
+      TeamsUsersRole.create!(team_id: team.id, user_id: user.id, role: role)
+    end
+  end
+
+
+
 
   def process_row(row)
     case what_type_of_row?(row)
