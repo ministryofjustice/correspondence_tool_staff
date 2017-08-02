@@ -25,7 +25,13 @@ class AssignmentsController < ApplicationController
   def new
     authorize @case, :can_assign_case?
     @assignment = @case.assignments.new
-    @business_units = BusinessUnit.responding.order(:name)
+    if params[:business_group_id].present?
+      @business_units = BusinessGroup.find(params[:business_group_id])
+                            .business_units.responding.order(:name)
+    elsif params[:show_all].present? && params[:show_all]
+      @business_units = BusinessUnit.responding.order(:name)
+    end
+
     @creating_case = flash[:creating_case]
     flash.keep :creating_case
   end

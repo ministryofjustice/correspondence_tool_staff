@@ -22,7 +22,12 @@ feature 'Assigning a case from the detail view' do
     click_link 'Assign to a responder'
     expect(assignments_new_page).to be_displayed
 
-    assignments_new_page.assign_to.team.first.assign_link.click
+    # Browse Business Group
+    assignments_new_page.choose_business_group(responder.responding_teams.first
+                                                   .business_group)
+
+    # Select Business Unit
+    assignments_new_page.choose_business_unit(responder.responding_teams.first)
 
     expect(current_path).to eq case_path(kase)
     expect(page).to have_content('Case successfully assigned')
@@ -59,7 +64,12 @@ feature 'Assigning a case from the detail view' do
       click_link 'Assign to a responder'
       expect(assignments_new_page).to be_displayed
 
-      assignments_new_page.assign_to.team.first.assign_link.click
+      # Browse Business Group
+      assignments_new_page.choose_business_group(responder.responding_teams.first
+                                                     .business_group)
+
+      # Select Business Unit
+      assignments_new_page.choose_business_unit(responder.responding_teams.first)
 
       expect(current_path).to eq case_path(kase)
       expect(page).to have_content('Case successfully assigned')

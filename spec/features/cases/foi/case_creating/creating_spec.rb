@@ -28,7 +28,12 @@ feature 'Case creation by a manager' do
 
     expect(assignments_new_page).to be_displayed
 
-    assignments_new_page.assign_to.team.first.assign_link.click
+    # Browse Business Group
+    assignments_new_page.choose_business_group(responder.responding_teams.first
+                                                   .business_group)
+
+    # Select Business Unit
+    assignments_new_page.choose_business_unit(responder.responding_teams.first)
 
     expect(cases_show_page).to be_displayed
 

@@ -36,10 +36,26 @@ RSpec.describe AssignmentsController, type: :controller do
           .not_to be_nil
     end
 
-    it 'sets @business_units' do
-      get :new, params: params, flash:{"creating_case"=> true}
-      expect( assigns(:business_units))
-          .to eq [responding_team_1, responding_team_2, responding_team_3]
+    describe '@business_units' do
+      it 'is a list business units for a selected business group' do
+        params[:business_group_id] = responding_team_1.business_group.id
+        get :new, params: params, flash:{"creating_case"=> true}
+        expect( assigns(:business_units))
+            .to eq [responding_team_1]
+      end
+
+      it 'is a list of all business units' do
+        params[:show_all] = true
+        get :new, params: params, flash:{"creating_case"=> true}
+        expect( assigns(:business_units))
+            .to eq [responding_team_1, responding_team_2, responding_team_3]
+      end
+
+      it 'is not set if no params are used' do
+        get :new, params: params, flash:{"creating_case"=> true}
+        expect( assigns(:business_units))
+            .not_to be_present
+      end
     end
 
     it 'sets @creating_case' do

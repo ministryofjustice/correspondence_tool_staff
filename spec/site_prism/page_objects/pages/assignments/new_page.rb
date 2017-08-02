@@ -9,6 +9,12 @@ module PageObjects
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
 
+        section :business_groups, 'ul.business-groups' do
+          elements :links, 'li a'
+          elements :group, 'li.business-group'
+          element :all_groups, 'li.show-all'
+        end
+
         section :assign_to, 'ul.teams' do
           sections :team, 'li.team' do
             element :business_unit, '.team-unit-name'
@@ -18,8 +24,14 @@ module PageObjects
 
         element :create_and_assign_case, '.button'
 
-        def choose_assignment_team(team)
-          make_radio_button_choice "assignment_team_id_#{team.id}"
+        def choose_business_unit(team)
+          business_unit = assign_to.find('h3 div', text: team.name)
+          container = business_unit.find(:xpath, '../../..')
+          container.find('a.button').click
+        end
+
+        def choose_business_group(group)
+          business_groups.find_link(group.name).click
         end
       end
     end

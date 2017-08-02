@@ -5,5 +5,10 @@
 
 .team-unit-name {
   @extend .heading-medium;
+}
 
+
+.business-groups {
+  line-height: 1.5em;
+  margin-bottom: $gutter * 2.5;
 }

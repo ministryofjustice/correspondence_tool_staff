@@ -94,7 +94,12 @@ feature "#trigger cases" do
 
     cases_new_page.submit_button.click
 
-    assignments_new_page.assign_to.team.first.assign_link.click
+    # Browse Business Group
+    assignments_new_page.choose_business_group(responder.responding_teams.first
+                                                   .business_group)
+
+    # Select Business Unit
+    assignments_new_page.choose_business_unit(responder.responding_teams.first)
 
     expect(cases_show_page.case_status.details.copy.text).to eq "To be accepted"
 
