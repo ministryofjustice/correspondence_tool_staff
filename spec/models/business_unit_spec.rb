@@ -70,7 +70,7 @@ RSpec.describe BusinessUnit, type: :model do
   end
 
   it 'has a working factory' do
-    expect(find_or_create :business_unit).to be_valid
+    expect(create :business_unit).to be_valid
   end
 
   context 'specific team finding and querying' do
