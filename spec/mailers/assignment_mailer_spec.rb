@@ -35,5 +35,12 @@ RSpec.describe AssignmentMailer, type: :mailer do
     it 'sets the To address of the email' do
       expect(mail.to).to include responding_team.email
     end
+
+    context 'team does not have a group email address' do
+      it 'sends the notification to each user individually' do
+        responding_team.email = nil
+        expect(mail.to).to match_array responding_team.responders.map(&:email)
+      end
+    end
   end
 end

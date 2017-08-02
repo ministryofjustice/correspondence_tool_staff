@@ -17,7 +17,13 @@ class AssignmentMailer < GovukNotifyRails::Mailer
         case_link: edit_case_assignment_url(@assignment.case_id, @assignment.id)
     )
 
-    mail(to: @assignment.team.email)
+    if @assignment.team.email.blank?
+      @assignment.team.responders.each do |responder|
+        mail(to: responder.email)
+      end
+    else
+      mail(to: @assignment.team.email)
+    end
   end
 
   private

@@ -1,5 +1,6 @@
 module CTS
   class Cases
+    # rubocop:disable Metrics/ClassLength
     class Create
       attr_accessor :command, :args, :options
 
@@ -46,6 +47,7 @@ module CTS
 
       private
 
+      # rubocop:disable Metrics/CyclomaticComplexity
       def parse_options(options)
         @end_states = []
         @number_to_create = options.fetch(:number, 1)
@@ -59,7 +61,14 @@ module CTS
         @clear_cases = options.fetch(:clear, false)
         @dry_run = options.fetch(:dry_run, false)
         @created_at = options[:created_at]
+        if options[:received_date]
+          @recieved_date = options[:received_date]
+        elsif @created_at.present? &&
+              DateTime.parse(@created_at) < DateTime.now
+          @received_date = @created_at
+        end
       end
+      # rubocop:enable Metrics/CyclomaticComplexity
 
       def parse_params(args)
         args.each { |arg| process_arg(arg) }
@@ -94,6 +103,7 @@ module CTS
                                   subject: Faker::Company.catch_phrase,
                                   message: Faker::Lorem.paragraph(10, true, 10),
                                   managing_team: CTS::dacu_team,
+                                  received_date: @received_date,
                                   created_at: @created_at)
         flag_for_dacu_disclosure(kase) if @flag.present?
         kase
@@ -287,5 +297,7 @@ module CTS
       end
 
     end
+    # rubocop:enable Metrics/ClassLength
+
   end
 end

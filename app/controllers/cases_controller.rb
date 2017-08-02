@@ -287,7 +287,7 @@ class CasesController < ApplicationController
   def user_not_authorized(exception)
     case exception.query
     when 'can_add_attachment?',
-         'can_add_attachment_to_flagged_case?',
+         /^add_response_to_flagged_case/,
          'upload_responses?',
          'new_response_upload?'
       super(exception, case_path(@case))

@@ -148,6 +148,7 @@ module CTS
     option :responding_team, aliases: :t, type: :string,
            desc: 'ID or name of responding team to use for case assignments.'
     option :created_at, type: :string
+    option :received_date, type: :string
     def create(*args)
       cmd = CTS::Cases::Create.new(self, options, args)
       cmd.call
