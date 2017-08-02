@@ -170,7 +170,7 @@ module CTS
     end
 
     def dacu_team
-      @dacu_team ||= CTS::find_team 'DACU'
+      @dacu_team ||= CTS::find_team Settings.foi_cases.default_managing_team
     end
 
     def dacu_disclosure_team
@@ -188,15 +188,15 @@ module CTS
 
     def hmcts_team
       @hmcts_team ||=
-        CTS::find_team 'HMCTS North East Regional Support Unit (RSU)'
+        CTS::find_team 'North East Regional Support Unit (NE RSU)'
     end
 
     def laa_team
-      @laa_team ||= CTS::find_team 'Legal Aid Agency'
+      @laa_team ||= CTS::find_team 'Legal Aid Agency (LAA)'
     end
 
     def hr_team
-      @hr_team ||= CTS::find_team 'HR'
+      @hr_team ||= CTS::find_team 'MoJ Human Resources (HR)'
     end
   end
 
