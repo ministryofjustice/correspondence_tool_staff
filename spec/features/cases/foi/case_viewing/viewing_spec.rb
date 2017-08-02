@@ -103,10 +103,12 @@ feature 'viewing details of case in the system' do
       expect(cases_show_page.case_history.entries.last).to have_content "Assign responder"
     end
 
-    scenario 'User views the case while its within "Day 6"' do
-      cases_show_page.load id: foi.id
-      expect(cases_show_page).to have_escalation_notice
-      expect(cases_show_page.escalation_notice).to have_text(foi_escalation_deadline)
+    scenario 'User views the case while its within "Day 3"' do
+      Timecop.freeze foi.received_date do
+        cases_show_page.load id: foi.id
+        expect(cases_show_page).to have_escalation_notice
+        expect(cases_show_page.escalation_notice).to have_text(foi_escalation_deadline)
+      end
     end
 
     scenario 'User views the case that is outside "Day 6"' do

@@ -1,5 +1,7 @@
 require 'rails_helper'
 
+include CaseDateManipulation
+
 feature 'cases requiring clearance by disclosure specialist' do
   given(:manager)                     { create :manager }
   given(:disclosure_specialist)       { create :disclosure_specialist }
@@ -66,9 +68,8 @@ feature 'cases requiring clearance by disclosure specialist' do
     expect(kase.reload.approving_teams).to include team_dacu_disclosure
   end
 
-  def create_flagged_case_and_assign_to_team
+  def create_flagged_case_and_assign_to_team(period_in_past = nil)
     login_as manager
-
     cases_page.load
     cases_page.new_case_button.click
 
@@ -77,8 +78,10 @@ feature 'cases requiring clearance by disclosure specialist' do
     expect(cases_show_page).to be_displayed
     expect(cases_show_page.case_history.entries.last.text)
       .to include('Flag for clearance')
+    login_as manager
 
-    Case.last
+    kase = Case.last
+    set_dates_back_by(kase, period_in_past) unless period_in_past.nil?
   end
 
   def accept_case_as_kilo(kase)
@@ -118,7 +121,7 @@ feature 'cases requiring clearance by disclosure specialist' do
   end
 
   scenario 'taking_on, undoing and de-escalating a case as a disclosure specialist', js: true do
-    kase = create_flagged_case_and_assign_to_team
+    kase = create_flagged_case_and_assign_to_team(6.days)
 
     login_as disclosure_specialist
 
@@ -132,10 +135,9 @@ feature 'cases requiring clearance by disclosure specialist' do
   end
 
   scenario 'approving a case as a disclosure specialist', js: true do
-    kase = create_flagged_case_and_assign_to_team
+    kase = create_flagged_case_and_assign_to_team(7.days)
     accept_case_as_kilo(kase)
     upload_response_as_kilo(kase.reload, responder)
-
     login_as disclosure_specialist
     take_case_on_as_discosure_specialist(
       kase: kase,
@@ -144,14 +146,13 @@ feature 'cases requiring clearance by disclosure specialist' do
     cases_show_page.load(id: kase.id)
     expect(cases_show_page.actions).to have_clear_case
     cases_show_page.actions.clear_case.click
-
     expect(approve_response_page).to be_displayed
     approve_response_page.submit_button.click
     expect(kase.reload.current_state).to eq 'awaiting_dispatch'
   end
 
   scenario 'approving a case as a disclosure specialist not assigned directly to the case', js: true do
-    kase = create_flagged_case_and_assign_to_team
+    kase = create_flagged_case_and_assign_to_team(6.days)
     accept_case_as_kilo(kase)
     upload_response_as_kilo(kase.reload, responder)
 
@@ -170,7 +171,7 @@ feature 'cases requiring clearance by disclosure specialist' do
   end
 
   scenario 'upload a response and approve case as a disclosure specialist', js: true do
-    kase = create_flagged_case_and_assign_to_team
+    kase = create_flagged_case_and_assign_to_team(6.days)
     accept_case_as_kilo(kase)
     upload_response_as_kilo(kase.reload, responder)
 

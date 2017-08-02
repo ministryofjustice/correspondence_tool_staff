@@ -17,7 +17,7 @@ FactoryGirl.define do
 
     name "Freedom of information request"
     abbreviation "FOI"
-    escalation_time_limit 6
+    escalation_time_limit 3
     internal_time_limit 10
     external_time_limit 20
 

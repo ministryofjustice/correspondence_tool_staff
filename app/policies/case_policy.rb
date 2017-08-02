@@ -276,7 +276,7 @@ class CasePolicy < ApplicationPolicy
   end
 
   def responder_attachable?
-    check_case_is_in_attachable_state && check_user_is_a_responder_for_case
+    check_escalation_deadline_has_expired && check_case_is_in_attachable_state && check_user_is_a_responder_for_case
   end
 
   check :user_is_a_manager do
@@ -332,6 +332,10 @@ class CasePolicy < ApplicationPolicy
   check :case_is_in_attachable_state do
     (self.case.drafting? || self.case.awaiting_dispatch?) &&
         self.case.assignments.approving.approved.none?
+  end
+
+  check :escalation_deadline_has_expired do
+    self.case.escalation_deadline < Date.today
   end
 
   check :no_user_case_approving_assignments_are_accepted do

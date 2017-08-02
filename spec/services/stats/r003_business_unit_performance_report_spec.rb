@@ -13,8 +13,8 @@ module Stats
       @responder_2 = create :responder, responding_teams: [@team_2]
 
       @outcome = find_or_create :outcome, :granted
-
-      Timecop.freeze Date.new(2017, 6, 30) do
+      
+      Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
         # create cases based on today's date of 30/6/2017
         create_case(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_1, responder: @responder_1)   # team 1 - responded late
         create_case(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_1, responder: @responder_1)   # team 1 - responded late

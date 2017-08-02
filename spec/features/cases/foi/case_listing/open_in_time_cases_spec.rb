@@ -53,12 +53,11 @@ feature 'listing open cases on the system' do
       visit '/cases/open?timeliness=in_time'
       cases = cases_page.case_list
       expect(cases.count).to eq 5
-
-      expect(cases[0].number).to have_text unassigned_case.number
-      expect(cases[1].number).to have_text assigned_case_team_a.number
-      expect(cases[2].number).to have_text assigned_case_coresponder_team_a.number
-      expect(cases[3].number).to have_text assigned_case_dd_flagged.number
-      expect(cases[4].number).to have_text assigned_case_team_b.number
+      expect(cases[0].number).to have_text assigned_case_team_a.number
+      expect(cases[1].number).to have_text assigned_case_coresponder_team_a.number
+      expect(cases[2].number).to have_text assigned_case_dd_flagged.number
+      expect(cases[3].number).to have_text assigned_case_team_b.number
+      expect(cases[4].number).to have_text unassigned_case.number
     end
   end
 
