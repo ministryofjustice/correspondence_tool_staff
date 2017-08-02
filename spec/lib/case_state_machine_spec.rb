@@ -112,13 +112,10 @@ RSpec.describe CaseStateMachine, type: :model do
   end
 
   events :unflag_for_clearance do
-    it { should transition_from(:unassigned).to(:unassigned) }
-    it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
-    it { should transition_from(:drafting).to(:drafting) }
-    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
-    it { should require_permission(:can_unflag_for_clearance?)
-                  .using_options(user_id: manager.id)
-                  .using_object(assigned_flagged_case) }
+    it { should transition_from(:unassigned).to(:unassigned).checking_default_policy(CasePolicy)  }
+    it { should transition_from(:awaiting_responder).to(:awaiting_responder).checking_default_policy(CasePolicy)  }
+    it { should transition_from(:drafting).to(:drafting).checking_default_policy(CasePolicy)  }
+    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch).checking_default_policy(CasePolicy)  }
   end
 
   events :accept_approver_assignment do

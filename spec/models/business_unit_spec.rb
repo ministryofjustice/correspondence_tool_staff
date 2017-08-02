@@ -41,9 +41,9 @@ RSpec.describe BusinessUnit, type: :model do
   it { should have_many(:approvers).through(:approver_user_roles) }
 
   context 'multiple teams created' do
-    let!(:managing_team)   { create :managing_team }
-    let!(:responding_team) { create :responding_team }
-    let!(:approving_team)  { create :approving_team }
+    let!(:managing_team)   { find_or_create :managing_team }
+    let!(:responding_team) { find_or_create :responding_team }
+    let!(:approving_team)  { find_or_create :approving_team }
 
     describe 'managing scope' do
       it 'returns only managing teams' do
@@ -62,6 +62,7 @@ RSpec.describe BusinessUnit, type: :model do
         expect(BusinessUnit.approving).to match_array [
                                             BusinessUnit.press_office,
                                             BusinessUnit.private_office,
+                                            BusinessUnit.dacu_disclosure,
                                             approving_team
                                           ]
       end

@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :business_group do
     sequence(:name) { |n| "Business Group #{n}" }
-    email { Faker::Internet.email(name) }
+    sequence(:email) { |n| "business_group_#{n}@localhost"}
   end
 
   factory :operations_business_group, parent: :business_group do

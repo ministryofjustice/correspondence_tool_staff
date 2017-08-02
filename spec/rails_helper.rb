@@ -129,6 +129,7 @@ end
 def seed_database_for_tests
   FactoryGirl.find_or_create :team_press_office
   FactoryGirl.find_or_create :team_private_office
+  FactoryGirl.find_or_create :team_dacu_disclosure
 end
 
 Shoulda::Matchers.configure do |config|

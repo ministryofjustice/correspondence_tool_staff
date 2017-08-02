@@ -55,16 +55,12 @@ class CaseStateMachine
   end
 
   event :unflag_for_clearance do
-    guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object)
-        .can_unflag_for_clearance?
-    end
-
     transition from: :unassigned,             to: :unassigned
     transition from: :awaiting_responder,     to: :awaiting_responder
     transition from: :drafting,               to: :drafting
     transition from: :awaiting_dispatch,      to: :awaiting_dispatch
     transition from: :pending_dacu_clearance, to: :awaiting_dispatch
+    transition from: :pending_dacu_clearance, to: :pending_dacu_clearance
   end
 
   event :take_on_for_approval do
