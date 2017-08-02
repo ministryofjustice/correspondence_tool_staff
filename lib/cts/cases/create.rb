@@ -59,6 +59,12 @@ module CTS
         @clear_cases = options.fetch(:clear, false)
         @dry_run = options.fetch(:dry_run, false)
         @created_at = options[:created_at]
+        if options[:received_date]
+          @recieved_date = options[:received_date]
+        elsif @created_at.present? &&
+              DateTime.parse(@created_at) < DateTime.now
+          @received_date = @created_at
+        end
       end
 
       def parse_params(args)
@@ -94,6 +100,7 @@ module CTS
                                   subject: Faker::Company.catch_phrase,
                                   message: Faker::Lorem.paragraph(10, true, 10),
                                   managing_team: CTS::dacu_team,
+                                  received_date: @received_date,
                                   created_at: @created_at)
         flag_for_dacu_disclosure(kase) if @flag.present?
         kase
