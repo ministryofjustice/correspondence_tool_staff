@@ -34,11 +34,6 @@ class CasePolicy < ApplicationPolicy
     self.case.does_not_require_clearance? && responder_attachable?
   end
 
-  def can_add_attachment_to_flagged_case?
-    clear_failed_checks
-    self.case.requires_clearance? && responder_attachable?
-  end
-
   def can_upload_response_and_approve?
     clear_failed_checks
     self.case.requires_clearance? && approver_attachable?
@@ -287,6 +282,14 @@ class CasePolicy < ApplicationPolicy
 
     check_case_is_assigned_to_private_office &&
       check_user_is_private_office_approver
+  end
+
+  def add_response_to_flagged_case_from_drafting_to_pending_dacu_clearance?
+    clear_failed_checks
+
+    check_case_requires_clearance &&
+      check_escalation_deadline_has_expired &&
+      check_user_is_a_responder_for_case
   end
 
   class Scope

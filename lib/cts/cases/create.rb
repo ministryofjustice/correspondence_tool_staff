@@ -1,5 +1,6 @@
 module CTS
   class Cases
+    # rubocop:disable Metrics/ClassLength
     class Create
       attr_accessor :command, :args, :options
 
@@ -46,6 +47,7 @@ module CTS
 
       private
 
+      # rubocop:disable Metrics/CyclomaticComplexity
       def parse_options(options)
         @end_states = []
         @number_to_create = options.fetch(:number, 1)
@@ -66,6 +68,7 @@ module CTS
           @received_date = @created_at
         end
       end
+      # rubocop:enable Metrics/CyclomaticComplexity
 
       def parse_params(args)
         args.each { |arg| process_arg(arg) }
@@ -294,5 +297,7 @@ module CTS
       end
 
     end
+    # rubocop:enable Metrics/ClassLength
+
   end
 end

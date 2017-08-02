@@ -128,10 +128,6 @@ class CaseStateMachine
   end
 
   event :add_response_to_flagged_case do
-    guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object).can_add_attachment_to_flagged_case?
-    end
-
     transition from: :drafting, to: :pending_dacu_clearance
   end
 

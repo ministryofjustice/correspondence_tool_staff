@@ -37,7 +37,7 @@ describe CasePolicy do
   let(:accepted_case)           { create :accepted_case,
                                          responder: responder,
                                          manager: manager }
-  let(:flagged_accepted_case)           { create :accepted_case, :flagged,
+  let(:flagged_accepted_case)   { create :accepted_case, :flagged,
                                           responder: responder,
                                           manager: manager }
   let(:assigned_case)           { create :assigned_case,
@@ -55,6 +55,11 @@ describe CasePolicy do
                                          approving_team: dacu_disclosure }
   let(:case_with_response)      { create :case_with_response,
                                          responder: responder }
+  let(:case_with_response_flagged) { create :case_with_response, :flagged,
+                                            responder: responder }
+  let(:case_with_response_trigger) { create :case_with_response,
+                                            :flagged_accepted,
+                                            responder: responder }
   let(:responded_case)          { create :responded_case,
                                          responder: responder }
   let(:closed_case)             { create :closed_case,
@@ -165,24 +170,6 @@ describe CasePolicy do
         it { should     permit(responder,         case_with_response) }
         it { should     permit(coworker,          case_with_response) }
         it { should_not permit(another_responder, case_with_response) }
-      end
-    end
-  end
-
-  permissions :can_add_attachment_to_flagged_case? do
-    context 'in awiting dispatch_state' do
-      context 'flagged case' do
-        it { should_not permit(manager,           flagged_accepted_case) }
-        it { should     permit(responder,         flagged_accepted_case) }
-        it { should     permit(coworker,          flagged_accepted_case) }
-        it { should_not permit(another_responder, flagged_accepted_case) }
-      end
-
-      context 'unflagged case' do
-        it { should_not permit(manager,           accepted_case) }
-        it { should_not permit(responder,         accepted_case) }
-        it { should_not permit(coworker,          accepted_case) }
-        it { should_not permit(another_responder, accepted_case) }
       end
     end
   end
@@ -558,6 +545,17 @@ describe CasePolicy do
     it { should_not permit(disclosure_specialist, pending_private_clearance_case) }
     it { should_not permit(press_officer,         pending_private_clearance_case) }
     it { should     permit(private_officer,       pending_private_clearance_case) }
+  end
+
+  permissions :add_response_to_flagged_case_from_drafting_to_pending_dacu_clearance? do
+    it { should     permit(responder,             case_with_response_trigger) }
+    it { should     permit(responder,             case_with_response_flagged) }
+    it { should     permit(coworker,              case_with_response_trigger) }
+    it { should_not permit(another_responder,     case_with_response_trigger) }
+    it { should_not permit(responder,             case_with_response) }
+    it { should_not permit(disclosure_specialist, case_with_response_trigger) }
+    it { should_not permit(press_officer,         case_with_response_trigger) }
+    it { should_not permit(private_officer,       case_with_response_trigger) }
   end
 
   describe 'case scope policy' do
