@@ -8,9 +8,20 @@ class HostEnv
     ENV['ENV'] == 'dev'
   end
 
-  def self.safe?
-    Rails.env.development? || Rails.env.test? || HostEnv.staging? || HostEnv.dev?
+  def self.demo?
+    ENV['ENV'] == 'demo'
   end
+
+  def self.prod?
+    ENV['ENV'] == 'prod'
+  end
+
+
+  def self.safe?
+    Rails.env.development? || Rails.env.test? || HostEnv.staging? || HostEnv.dev? || HostEnv.demo?
+  end
+
+
 
   def self.safe
     if self.safe?
