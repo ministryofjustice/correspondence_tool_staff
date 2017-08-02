@@ -2,22 +2,38 @@
 namespace :db do
   namespace :seed do
 
-    desc 'delete all teams and users'
+    desc 'clear database'
     task :clear => :environment do
-      puts "WARNING: THIS WILL DELETE ALL EXISTING USERS AND TEAMS AND RECREATE"
+      puts "WARNING: THIS WILL DELETE ALL EXISTING DATA IN THE DATABASE AND REPOPULATE TEAMS AND USERS"
       print "Do you want to continue? "
       x = STDIN.gets.chomp
       exit unless (x == 'y' || x == 'Y')
-      TeamsUsersRole.destroy_all
-      User.destroy_all
-      Team.destroy_all
+      begin
+        ActiveRedord::Base.connection.execute 'DROP TABLE conversations'
+      rescue => err
+        puts "#{err.class} trying to drop conversations table"
+        puts err.message
+        puts '... continuing anyway.'
+      end
+      require File.join(Rails.root, 'spec', 'support', 'db_housekeeping')
+      DbHousekeeping.clean(seed: false)
     end
 
     desc 'seeds live team and user data'
-    task :prod => [ 'db:seed:clear', 'db:seed:prod:teams', 'db:seed:prod:users' ] do
+    task :prod => [ 'db:seed:clear', 'db:seed:prod:misc', 'db:seed:prod:teams', 'db:seed:prod:users' ] do
     end
 
     namespace :prod do
+
+      desc 'Seed categories and closure metadata'
+      task :misc => :environment do
+        require File.join(Rails.root, 'db', 'seeders', 'category_seeder')
+        require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
+        puts 'Seeding Categories'
+        CategorySeeder.new.seed!
+        puts 'Seeding Case closure metadata'
+        CaseClosure::MetadataSeeder.seed!
+      end
 
       desc 'Seed teams for production environment'
       task :teams => :environment do

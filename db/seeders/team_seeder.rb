@@ -6,7 +6,7 @@ class TeamSeeder
 
 
   def initialize
-    raise 'Set TEAM_IMORT_CSV env var to point to the CSV file containing team data' if FILENAME.blank?
+    raise 'Set TEAM_IMPORT_CSV env var to point to the CSV file containing team data' if FILENAME.blank?
     @bg = nil
     @dir = nil
     @bu = nil
@@ -16,9 +16,21 @@ class TeamSeeder
     CSV.foreach(FILENAME) do |row|
       process_row(row)
     end
+    add_hq_teams
   end
 
   private
+
+  def add_hq_teams
+    bg_ops = BusinessGroup.find_by!(name: 'Operations')
+    dir_dacu = Directorate.create!(parent: bg_ops, name: 'DACU')
+    dir_private = Directorate.create!(parent: bg_ops, name: 'Private Office')
+    dir_press = Directorate.create!(parent: bg_ops, name: 'Press Office')
+    BusinessUnit.create!(parent: dir_dacu, name: 'DACU BMT')
+    BusinessUnit.create!(parent: dir_dacu, name: 'DACU Disclosure')
+    BusinessUnit.create!(parent: dir_private, name: 'Private Office')
+    BusinessUnit.create!(parent: dir_press, name: 'Press Office')
+  end
 
   def process_row(row)
     case what_type_of_row?(row)
