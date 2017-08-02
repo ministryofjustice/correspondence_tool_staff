@@ -3,6 +3,8 @@ FactoryGirl.define do
     sequence(:name) { |n| "Business Unit #{n}" }
     email { Faker::Internet.email(name) }
     directorate { find_or_create :directorate }
+    properties { [find_or_create(:team_property, :area),
+                  find_or_create(:team_property, :lead) ]}
   end
 
   factory :managing_team, parent: :business_unit do

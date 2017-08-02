@@ -31,6 +31,19 @@ ul.business-groups.list
           h3
             .team-unit-name
               = team.name
+          .grid-row
+            .column-two-thirds
+              p.bold-small
+                = "Areas covered "
+              ul.areas-covered.list.list-bullet
+                - team.areas.each do | area |
+                  li
+                    = area.value
+            .column-third
+              .bold-small
+                = "Deputy Director"
+              .deputy-director
+                = team.team_lead.value
         .team-actions
           = link_to t('button.assign'),
                   case_assign_to_responder_team_path(case_id: @case.id,

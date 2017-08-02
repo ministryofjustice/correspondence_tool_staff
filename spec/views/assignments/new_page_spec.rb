@@ -5,6 +5,7 @@ describe 'assignments/new.html.slim', type: :view do
   let(:business_unit_1)   { create :responding_team}
   let(:business_unit_2)   { create :responding_team}
   let(:business_unit_3)   { create :responding_team}
+  let(:all_business_units){ [business_unit_1,business_unit_2,business_unit_3] }
 
   it 'displays the new assignment page for a new case' do
 
@@ -53,10 +54,20 @@ describe 'assignments/new.html.slim', type: :view do
 
       expect(page.assign_to.team.count).to eq 3
 
-      any_team = page.assign_to.team.first
-      expect(any_team.business_unit.text).to eq business_unit_1.name
-      expect(any_team.assign_link.text).to eq "Assign to this unit"
-      expect(any_team.assign_link[:href]).to eq case_assign_to_responder_team_path(unassigned_case, team_id: business_unit_1.id )
+      all_business_units.each do | bu |
+        page_team = page.assign_to.team.detect { |team| team.business_unit.text == bu.name }
+
+        expect(page_team.areas_covered.map(&:text))
+            .to match_array bu.areas.map(&:value)
+
+        expect(page_team.deputy_director.text).to eq bu.team_lead.value
+
+        expect(page_team.assign_link.text).to eq "Assign to this unit"
+        expect(page_team.assign_link[:href])
+            .to eq case_assign_to_responder_team_path(unassigned_case,
+                                                      team_id: bu.id )
+      end
     end
+
   end
 end

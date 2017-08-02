@@ -7,8 +7,11 @@
   @extend .heading-medium;
 }
 
-
 .business-groups {
   line-height: 1.5em;
   margin-bottom: $gutter * 2.5;
+}
+
+.team-details p{
+  margin-bottom: 0;
 }
