@@ -76,6 +76,24 @@ en:
     closed: ''
     closed_status: Case closed
 
+  event:
+    accept_approver_assignment: Clearance level added
+    accept_responder_assignment: Accepted by Business unit
+    add_response_to_flagged_case: Response uploaded
+    add_response_to_flagged_case_and_approve: Response uploaded and cleared
+    add_responses: Response uploaded
+    approve: Response cleared
+    close: Case closed
+    reject_responder_assignment: Rejected by Business unit
+    remove_last_response: File removed
+    remove_response: File removed
+    respond: Response sent to requester
+    take_on_for_approval: Clearance level added
+    unaccept_approver_assignment: Clearance level removed
+    unflag_for_clearance: Clearance level removed
+    upload_response_and_approve: Response uploaded and cleared
+    upload_response_and_return_for_redraft: Changes uploaded for redraft
+
   date:
     formats:
       default: "%-d %b %Y"
@@ -335,3 +353,5 @@ en:
   pagination:
     next: "Next "
     previous: "Previous "
+
+

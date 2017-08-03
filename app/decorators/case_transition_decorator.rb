@@ -25,14 +25,6 @@ class CaseTransitionDecorator < Draper::Decorator
       "Assigned to #{object.responding_team.name}"
     when 'reject_responder_assignment'
       object.message
-    when 'accept_responder_assignment'
-      "Accepted for response"
-    when 'add_responses'
-      "#{h.pluralize(object.filenames.size, 'file')} added"
-    when 'add_response_to_flagged_case'
-      "#{h.pluralize(object.filenames.size, 'file')} added<br/>Case is now Pending clearance with DACU disclosure team"
-    when 'respond'
-      'Marked as responded'
     when 'reassign_user'
       target_user = User.find(object.target_user_id)
       acting_user = User.find(object.acting_user_id)
