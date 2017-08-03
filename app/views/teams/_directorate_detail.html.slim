@@ -1,0 +1,27 @@
+h2
+  | Business Units
+.grid-row
+  .column-full.table-container.container
+    table.report.table-font-xsmall
+      colgroup
+        col
+        col
+        col
+        col
+      thead
+        th scope='col'
+          | Name
+        th scope='col'
+          | Deputy Director
+        th scope='col'
+          | Team members
+        th scope='col'
+          | Actions
+      tbody
+        - teams.each do |team|
+          tr.case_row
+            td = link_to team.name, team_path(team)
+            td = team.team_lead.value
+            td = team.responders.map(&:full_name).join(', ')
+            td
+              | Edit

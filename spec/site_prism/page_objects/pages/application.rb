@@ -29,6 +29,8 @@ module PageObjects
         open_cases:                'Cases::OpenCasesPage',
         request_amends:            'Cases::RequestAmendsPage',
         reassign_user:             'Assignments::ReassignUserPage',
+        teams:                     'TeamsPage',
+        teams_show:                'Teams::ShowPage',
 
       }.each do |page_name, page_class|
         full_page_class = "PageObjects::Pages::#{page_class}"

@@ -18,4 +18,20 @@ class BusinessGroup < Team
 
   has_many :business_units, through: :directorates
 
+  def team_lead_title
+    'Director General'
+  end
+
+  def sub_team_types
+    'Directorates'
+  end
+
+  def sub_team_lead
+    'Director'
+  end
+
+  def team_type
+    'Business Group'
+  end
+
 end

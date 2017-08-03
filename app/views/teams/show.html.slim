@@ -1,0 +1,15 @@
+- content_for :heading
+  = "#{@team.team_type}: #{@team.name}"
+
+= render partial: 'layouts/header'
+
+h2 = @team.team_lead_title
+h3 = @team.team_lead.value
+p
+
+- if @team.is_a?(BusinessUnit)
+  = render partial: 'business_unit_detail', locals: {team: @team}
+- elsif @team.is_a?(Directorate)
+  = render partial: 'directorate_detail', locals: {teams: @team.children}
+- else
+  = render partial: 'team_listing', locals: { teams: @children, sub_team_leads: @team.sub_team_lead, sub_team_types: @team.sub_team_types, }

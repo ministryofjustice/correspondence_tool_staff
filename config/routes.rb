@@ -158,6 +158,7 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :teams
 
   get '/stats' => 'stats#index'
   get '/stats/download' => 'stats#download'

@@ -80,4 +80,12 @@ class User < ApplicationRecord
   def teams_for_case(kase)
     kase.teams & teams
   end
+
+  def roles_for_team(team)
+    team_roles.where(team_id: team.id)
+  end
+
+  def decorated_roles_for_team(team)
+    team_roles.where(team_id: team.id).map(&:role).uniq.join(', ')
+  end
 end

@@ -16,4 +16,21 @@ class Directorate < Team
 
   belongs_to :business_group, foreign_key: 'parent_id'
   has_many :business_units, foreign_key: 'parent_id'
+
+  def team_lead_title
+    'Director'
+  end
+
+  def sub_team_types
+    'Business Units'
+  end
+
+  def sub_team_lead
+    'Deputy Director'
+  end
+
+  def team_type
+    'Directorate'
+  end
+
 end

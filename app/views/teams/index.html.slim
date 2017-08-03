@@ -1,0 +1,7 @@
+
+- content_for :heading
+  | Business Groups
+
+= render partial: 'layouts/header'
+
+= render partial: 'team_listing', locals: {teams: @teams, sub_team_types: 'Directorates', sub_team_leads: 'Director General'}
