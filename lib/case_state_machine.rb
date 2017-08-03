@@ -4,7 +4,9 @@ class CaseStateMachine
   include Events
 
   def self.event_name(event)
-    I18n.t("event.#{event}", default: event.to_s.humanize)
+    if self.events.keys.include?(event.to_sym)
+      I18n.t("event.#{event}", default: event.to_s.humanize)
+    end
   end
 
   # Convenience method used by guards to get a policy object

@@ -99,7 +99,7 @@ feature 'viewing details of case in the system' do
 
       expect(cases_show_page).to have_case_history
       expect(cases_show_page.case_history.entries.size).to eq 2
-      expect(cases_show_page.case_history.entries.first).to have_content "Accept responder assignment"
+      expect(cases_show_page.case_history.entries.first).to have_content "Accepted by Business unit"
       expect(cases_show_page.case_history.entries.last).to have_content "Assign responder"
     end
 

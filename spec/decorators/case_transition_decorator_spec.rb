@@ -48,7 +48,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
   end
 
   describe '#event_and_detail' do
-    context 'assign reponder' do
+    context 'assign responder' do
       it 'returns team name to which it has been assigned' do
         event = 'Assign responder'
         details = 'Assigned to Legal Aid Agency'
@@ -59,8 +59,8 @@ RSpec.describe CaseTransitionDecorator, type: :model do
     context 'accept_responder_assignment' do
       it 'returns expected text' do
         ct = create(:case_transition_accept_responder_assignment).decorate
-        event = 'Accept responder assignment'
-        details = 'Accepted for response'
+        event = 'Accepted by Business unit'
+        details = ''
         expect(ct.event_and_detail).to eq response(event, details)
       end
     end
@@ -68,7 +68,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
     context 'reject_responder_assignment' do
       it 'returns the reason for rejection' do
         ct = create(:case_transition_reject_responder_assignment, user: laa_user, message: 'Not LAA matter').decorate
-        event = 'Reject responder assignment'
+        event = 'Rejected by Business unit'
         details = 'Not LAA matter'
         expect(ct.event_and_detail).to eq response(event, details)
       end
@@ -77,8 +77,8 @@ RSpec.describe CaseTransitionDecorator, type: :model do
     context 'add_responses' do
       it 'returns number of files uploaded' do
         ct = create(:case_transition_add_responses).decorate
-        event = 'Add responses'
-        details = '2 files added'
+        event = 'Response uploaded'
+        details = ''
         expect(ct.event_and_detail).to eq response(event, details)
       end
     end
@@ -86,8 +86,8 @@ RSpec.describe CaseTransitionDecorator, type: :model do
     context 'respond' do
       it 'returns marked as reponded' do
         ct = create(:case_transition_respond).decorate
-        event = 'Respond'
-        details = 'Marked as responded'
+        event = 'Response sent to requester'
+        details = ''
         expect(ct.event_and_detail).to eq response(event, details)
       end
     end
@@ -95,14 +95,18 @@ RSpec.describe CaseTransitionDecorator, type: :model do
     context 'remove_response' do
       it 'returns name of event' do
         ct = create(:case_transition_remove_response).decorate
-        expect(ct.event_and_detail).to eq '<strong>Remove response</strong><br>'
+        event = 'File removed'
+        details = ''
+        expect(ct.event_and_detail).to eq response(event, details)
       end
     end
 
-    context 'pending_dacu_clearance' do
+    context 'add_response_to_flagged_case' do
       it 'returns number of files and description of who its with' do
         ct = create(:case_transition_pending_dacu_clearance).decorate
-        expect(ct.event_and_detail).to eq '<strong>Add response to flagged case</strong><br>2 files added<br/>Case is now Pending clearance with DACU disclosure team'
+        event = 'Response uploaded'
+        details = ''
+        expect(ct.event_and_detail).to eq response(event, details)
       end
     end
 

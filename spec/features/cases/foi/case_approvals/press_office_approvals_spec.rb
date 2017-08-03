@@ -77,7 +77,7 @@ feature 'cases requiring clearance by press office' do
     select_case_on_incoming_cases_page(
       kase: case_available_for_taking_on,
       expected_history: [
-        'Primrose Offord Take on for approval',
+        'Primrose Offord Clearance level added',
         "#{press_officer.full_name} Flag for clearance",
       ]
     )

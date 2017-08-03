@@ -35,7 +35,7 @@ feature 'cases requiring clearance by press office' do
 
     case_row.number.click
     expect(cases_show_page.case_history.entries.first)
-      .to have_text('Preston Offman Take on for approval')
+      .to have_text('Preston Offman Clearance level added')
     expect(cases_show_page.case_history.entries[1])
       .to have_text("#{private_officer.full_name} Flag for clearance")
 

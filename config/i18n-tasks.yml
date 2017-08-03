@@ -94,6 +94,7 @@ ignore_unused:
   - 'activerecord.errors.models.*'
   - 'tabs.{in_time,late}_html'
   - 'pundit.nil_class'
+  - 'event.*'
 
 
 ## Consider these keys used:

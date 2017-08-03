@@ -18,7 +18,6 @@ class CaseTransitionDecorator < Draper::Decorator
     CaseStateMachine.event_name(object.event)
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
   def details
     case object.event
     when 'assign_responder'
@@ -31,5 +30,4 @@ class CaseTransitionDecorator < Draper::Decorator
       "#{ acting_user.full_name } re-assigned this case to <strong>#{ target_user.full_name }</strong>"
     end
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
 end

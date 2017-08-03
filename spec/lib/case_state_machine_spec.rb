@@ -623,9 +623,18 @@ RSpec.describe CaseStateMachine, type: :model do
   end
 
   describe '.event_name' do
-    context 'valid state machine event' do
+    context 'event has i18n entry' do
+      it 'returns translation' do
+        expect(CaseStateMachine.event_name(:close)).to eq 'Case closed'
+      end
+    end
+
+    context 'event has no i18n entry' do
       it 'returns human readable format' do
-        expect(CaseStateMachine.event_name(:accept_responder_assignment)).to eq 'Accept responder assignment'
+        allow(CaseStateMachine).to receive(:events)
+                                     .and_return({fake_event: nil})
+        expect(CaseStateMachine.event_name(:fake_event))
+          .to eq 'Fake event'
       end
     end
 
