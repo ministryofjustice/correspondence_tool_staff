@@ -20,17 +20,8 @@ feature 'Assigning a case from the detail view' do
     )
 
     click_link 'Assign to a responder'
-    expect(assignments_new_page).to be_displayed
 
-    # Browse Business Group
-    assignments_new_page.choose_business_group(responder.responding_teams.first
-                                                   .business_group)
-
-    # Select Business Unit
-    assignments_new_page.choose_business_unit(responder.responding_teams.first)
-
-    expect(current_path).to eq case_path(kase)
-    expect(page).to have_content('Case successfully assigned')
+    assign_case(responder.responding_teams.first, 'Case successfully assigned')
 
     newest_assignment = Assignment.last
 
@@ -62,17 +53,8 @@ feature 'Assigning a case from the detail view' do
       )
 
       click_link 'Assign to a responder'
-      expect(assignments_new_page).to be_displayed
 
-      # Browse Business Group
-      assignments_new_page.choose_business_group(responder.responding_teams.first
-                                                     .business_group)
-
-      # Select Business Unit
-      assignments_new_page.choose_business_unit(responder.responding_teams.first)
-
-      expect(current_path).to eq case_path(kase)
-      expect(page).to have_content('Case successfully assigned')
+      assign_case(responder.responding_teams.first, 'Case successfully assigned')
 
       newest_assignment = Assignment.last
 

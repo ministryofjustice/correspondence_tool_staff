@@ -26,18 +26,7 @@ feature 'Case creation by a manager' do
 
     click_button 'Next - Assign case'
 
-    expect(assignments_new_page).to be_displayed
-
-    # Browse Business Group
-    assignments_new_page.choose_business_group(responder.responding_teams.first
-                                                   .business_group)
-
-    # Select Business Unit
-    assignments_new_page.choose_business_unit(responder.responding_teams.first)
-
-    expect(cases_show_page).to be_displayed
-
-    expect(cases_show_page.text).to have_content('Case successfully created')
+    assign_case(responder.responding_teams.first)
 
   end
 

@@ -94,14 +94,7 @@ feature "#trigger cases" do
 
     cases_new_page.submit_button.click
 
-    # Browse Business Group
-    assignments_new_page.choose_business_group(responder.responding_teams.first
-                                                   .business_group)
-
-    # Select Business Unit
-    assignments_new_page.choose_business_unit(responder.responding_teams.first)
-
-    expect(cases_show_page.case_status.details.copy.text).to eq "To be accepted"
+    assign_case(responder.responding_teams.first)
 
     new_case_number = cases_show_page.page_heading.sub_heading
                           .text.to_s.gsub('You are viewing case number ', '')
