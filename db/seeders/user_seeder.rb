@@ -1,4 +1,5 @@
 require 'csv'
+require File.join(Rails.root, 'lib', 'rake_task_helpers', 'host_env')
 
 class UserSeeder
 
@@ -57,7 +58,7 @@ class UserSeeder
     CSV.foreach(hq_user_file) do |row|
       team_name, full_name, role, email = row
       puts "Creating HQ user #{full_name} for team #{team_name}"
-      email.downcase!
+      email = normalize_email(email, full_name)
       team = BusinessUnit.find_by!(name: team_name)
       user = User.find_by(email: email)
       if user.nil?
@@ -66,9 +67,6 @@ class UserSeeder
       TeamsUsersRole.create!(team_id: team.id, user_id: user.id, role: role)
     end
   end
-
-
-
 
   def process_row(row)
     case what_type_of_row?(row)
@@ -90,6 +88,7 @@ class UserSeeder
     _bg, _dir, _bu, kilo_name, kilo_email = row
     kilo_email.downcase! unless kilo_email.nil?
     return if kilo_email == 'unknown' || kilo_email.blank?
+    kilo_email = normalize_email(kilo_email, kilo_name)
     user = User.find_by(email: kilo_email)
     if user.nil?
       user = User.create!(full_name: kilo_name, email: kilo_email, password: '7DvUVgRx7eoxQ3NTKc897BJtExBwCTFunT')
@@ -98,6 +97,14 @@ class UserSeeder
 
     TeamsUsersRole.create!(team_id: @bu.id, user_id: user.id, role: 'responder')
     puts "Added user #{user.full_name} to team: #{@bu.name}"
+  end
+
+  def normalize_email(email, name)
+    HostEnv.prod? ? email.downcase : dummy_email(name)
+  end
+
+  def dummy_email(name)
+    "correspondence-staff-dev+#{name.gsub(/\s+/, '.').downcase}@digital.justice.gov.uk"
   end
 
 
