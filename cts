@@ -17,6 +17,7 @@ require 'cts/cases/create'
 require 'cts/cases/check'
 require 'cts/policies'
 require 'cts/teams'
+require 'cts/teams/roles_seeder'
 require 'cts/users'
 
 class Thor

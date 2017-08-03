@@ -134,6 +134,12 @@ namespace :data do
       end
     end
 
+    desc 'Add Business Unit roles'
+    task add_business_unit_roles: :environment do
+      require File.join(Rails.root, 'lib', 'cts', 'teams', 'roles_seeder')
+      CTS::Teams::RolesSeeder.new.run
+    end
+
     namespace :import do
       desc 'Import hierarchical team data'
       task :teams => :environment do
