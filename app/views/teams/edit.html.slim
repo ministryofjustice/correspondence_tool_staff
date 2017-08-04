@@ -1,0 +1,14 @@
+- content_for :heading
+  | Edit Busines Unit
+
+= render partial: 'layouts/header'
+
+= form_for @team, as: :team, url: team_path(@team) do |f|
+
+  = f.text_field :name
+
+  = f.text_field :email
+
+  = f.text_field :team_lead_name
+
+  = f.submit 'Submit', {class: 'button'}

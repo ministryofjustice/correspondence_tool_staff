@@ -33,4 +33,4 @@ h2.heading-medium
             td aria-label="#{ t('roles.responders') }"
               = team.responders.size
             td aria-label="Actions"
-              | Edit
+              = link_to 'Edit', edit_team_path(team)

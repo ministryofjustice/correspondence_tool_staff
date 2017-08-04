@@ -48,4 +48,12 @@ class Team < ApplicationRecord
   def policy_class
     TeamPolicy
   end
+
+  def team_lead_name
+    team_lead.value
+  end
+
+  def team_lead_name=(name)
+    team_lead.update(value: name)
+  end
 end
