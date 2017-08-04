@@ -160,6 +160,11 @@ Rails.application.routes.draw do
 
   resources :teams
 
+  authenticate :user, lambda { |u| u.manager? } do
+    resources :users do
+    end
+  end
+
   get '/stats' => 'stats#index'
   get '/stats/download' => 'stats#download'
 

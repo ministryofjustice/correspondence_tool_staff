@@ -338,6 +338,12 @@ en:
     success_html: |
       <strong>Your feedback has been submitted.</strong>
 
+  users:
+    index:
+      email: Email
+      full_name: Full name
+      heading: Users
+
   nav:
     pages:
       closed_cases: Closed cases

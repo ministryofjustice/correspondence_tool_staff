@@ -1,0 +1,24 @@
+- content_for :heading
+  = t('.heading')
+
+= render partial: 'layouts/header'
+
+.grid-row
+  .column-full.table-container.container
+    table.users.table-font-xsmall
+      colgroup
+        col
+        col
+      thead
+        th scope='col'
+          = t('.full_name')
+        th scope='col'
+          = t('.email')
+      tbody
+        - @users.each do |user|
+          tr.user_row
+            td aria-label="#{t('.full_name')}"
+              = user.full_name
+            td aria-label="#{t('.email')}"
+              = user.email
+

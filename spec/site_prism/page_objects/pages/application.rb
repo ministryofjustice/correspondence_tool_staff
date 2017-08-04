@@ -31,7 +31,7 @@ module PageObjects
         reassign_user:             'Assignments::ReassignUserPage',
         teams_index:               'Teams::IndexPage',
         teams_show:                'Teams::ShowPage',
-
+        users_index:               'Users::IndexPage',
       }.each do |page_name, page_class|
         full_page_class = "PageObjects::Pages::#{page_class}"
         define_method "#{page_name}_page" do
