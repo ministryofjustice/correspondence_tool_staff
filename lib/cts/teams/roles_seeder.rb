@@ -8,9 +8,10 @@ module CTS
       end
 
       def run
+        max_name_length = BusinessUnit.pluck('max(length(name))').first
         BusinessUnit.all.each do |bu|
           if bu.role.present?
-            puts "#{bu.name}: skipping, role exists: #{bu.role}"
+            puts "%#{max_name_length}s: skipping, role exists: #{bu.role}" % [bu.name]
             next
           end
 
@@ -22,9 +23,9 @@ module CTS
                  else
                    'responder'
                  end
-          puts "#{bu.name}: setting role to #{role}"
+          puts "%#{max_name_length}s: setting role to #{role}" % [bu.name]
           unless options[:dry_run]
-            bu.properties << TeamProperty.create!(key: 'role', value: role)
+            bu.role = role
           end
         end
       end

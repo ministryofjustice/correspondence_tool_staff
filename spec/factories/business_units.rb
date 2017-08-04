@@ -1,10 +1,18 @@
 FactoryGirl.define do
   factory :business_unit do
+    transient do
+      role { 'responder' }
+    end
+
     sequence(:name) { |n| "Business Unit #{n}" }
     email { Faker::Internet.email(name) }
     directorate { find_or_create :directorate }
     properties { [find_or_create(:team_property, :area),
                   find_or_create(:team_property, :lead) ]}
+
+    after :create do |bu, evaluator|
+      bu.properties << TeamProperty.create(key: 'role', value: evaluator.role)
+    end
   end
 
   factory :managing_team, parent: :business_unit do

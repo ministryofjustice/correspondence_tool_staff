@@ -51,7 +51,7 @@ module CTS
 
     def find_team(id_or_name)
       teams = find_teams(id_or_name)
-      if teams.empty?
+      if teams.empty? || teams.first.nil?
         raise "No team matching name #{id_or_name} found."
       elsif teams.count > 1
         error "Multiple teams found matching #{id_or_name}"
@@ -74,7 +74,7 @@ module CTS
 
     def find_user(id_or_name)
       users = find_users(id_or_name)
-      if users.empty?
+      if users.empty? || users.first.nil?
         raise "No user matching name #{id_or_name} found."
       elsif users.count > 1
         error "Multiple users found matching #{id_or_name}."

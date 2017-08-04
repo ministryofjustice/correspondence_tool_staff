@@ -19,12 +19,13 @@ class TeamProperty < ActiveRecord::Base
     can_allocate
     role
   )
+  ROLES = %w[manager responder approver]
 
   validates :value, uniqueness: { scope: [:team_id, :key], message: "%{value} is not unique in team and key" }
   validates :key, inclusion: { in: VALID_KEYS, message: "%{value} is not a valid key" }
   validates :value,
             if: -> (tp) { tp.key == 'role' },
-            inclusion: ['manager', 'responder', 'approver']
+            inclusion: ROLES
 
   scope :area, -> { where( key: 'area').order(:value) }
   scope :lead, -> { where( key: 'lead') }

@@ -35,7 +35,7 @@ class BusinessUnit < Team
   has_many :responders, through: :responder_user_roles, source: :user
   has_many :approvers, through: :approver_user_roles, source: :user
 
-  has_one  :role, -> { role }, class_name: TeamProperty, foreign_key: :team_id
+  # has_one  :role, -> { role }, class_name: TeamProperty, foreign_key: :team_id
 
   scope :managing, -> {
     joins(:user_roles).where(teams_users_roles: { role: 'manager' }).distinct
@@ -69,5 +69,19 @@ class BusinessUnit < Team
 
   def private_office?
     name == Settings.private_office_team_name
+  end
+
+  def role
+    properties.role.first&.value
+  end
+
+  def role=(new_role)
+    if properties.role.exists?
+      properties.role.update value: new_role
+    else
+      new_property = TeamProperty.new(key: 'role', value: new_role)
+      properties << new_property
+      new_property
+    end
   end
 end

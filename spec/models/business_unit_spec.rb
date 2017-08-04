@@ -136,4 +136,27 @@ RSpec.describe BusinessUnit, type: :model do
       end
     end
   end
+
+  describe '#role' do
+    it 'returns the role of a Business Unit' do
+      bu = create :business_unit, role: 'manager'
+      expect(bu.role).to eq 'manager'
+    end
+  end
+
+  describe '#role=' do
+    it 'add a role to a Business Unit' do
+      bu = create :business_unit
+      bu.properties.role.first.delete
+      expect(bu.role).to eq nil
+      bu.role = 'manager'
+      expect(bu.role).to eq 'manager'
+    end
+
+    it 'change the role of a Business Unit' do
+      bu = create :business_unit, role: 'manager'
+      bu.role = 'responder'
+      expect(bu.role).to eq 'responder'
+    end
+  end
 end

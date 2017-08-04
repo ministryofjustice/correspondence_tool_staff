@@ -59,5 +59,37 @@ module CTS
            :role
       end
     end
+
+    desc 'role TEAM [TEAM ...]', 'View or set team role.'
+    option :role, aliases: :r, type: :string,
+           enum: %w[manager responder approver],
+           desc: 'Set the team(s) role(s) to this value.'
+    option :delete, aliases: :d, type: :boolean,
+           desc: 'Delete the team(s) role(s).'
+    option :force, aliases: :f, type: :boolean,
+           desc: 'Force running, even if in prod env.'
+    def role(*args)
+      teams = args.map { |a| CTS::find_team(a) }
+      max_name_length = teams.pluck('max(length(name))').first
+      if options[:role]
+        CTS::check_environment unless options[:force]
+        teams.each do |bu|
+          puts "%#{max_name_length}s: setting role to: #{options[:role]}" %
+               [bu.name]
+          bu.role = options[:role]
+        end
+      elsif options[:delete]
+        CTS::check_environment unless options[:force]
+        teams.each do |bu|
+          puts "%#{max_name_length}s: deleting role: #{bu.role}" % [bu.name]
+          bu.properties.role.first.delete
+        end
+      else
+        teams.each do |bu|
+          puts "%#{max_name_length}s: role is: #{bu.role}" % [bu.name]
+        end
+      end
+    end
+
   end
 end
