@@ -118,7 +118,7 @@ en:
         requester_type: Type of requester
         refusal_reason_name: What was the reason for refusal?
         outcome_name: What was the outcome?
-        flag_for_disclosure_specialists: Does a disclosure specialist need to see this case?
+        flag_for_disclosure_specialists: Clearance required by DACU Disclosure?
     hint:
       feedback:
         comment: |
@@ -142,7 +142,7 @@ en:
         message: Full request
         postal_address: Address
         flag_for_disclosure_specialists:
-          Does a disclosure specialist need to see this?
+          Clearance required by DACU Disclosure?
 
       feedback:
         comment: Help make this service better
@@ -152,8 +152,8 @@ en:
       <strong>You've accepted this case</strong><br>
       It will now appear in <a href="%{case_list_url}">your cases</a>.
     assignment_rejected_html: |
-      <strong>Your response has been sent</strong><br>
-      This case will be reviewed and assigned the to appropriate unit.
+      <strong>You've rejected this case</strong><br>
+      DACU BMT will assign the case to the appropriate business unit.
     assignment_already_rejected_html: |
       <strong>This case has already been rejected.</strong><br>
       This case will be reviewed and assigned the to appropriate unit.
@@ -221,7 +221,7 @@ en:
       who_its_with: With
       respond: Mark response as sent
       clear_response: Clear response
-      request_amends: Request Amends
+      request_amends: Request amends
       upload_approve: 'Upload response and clear'
     new_case_button: Create case
     phase_banner: |
@@ -260,7 +260,7 @@ en:
       name-subject: Name/Subject
       view_case: Link to case
     index: &cases_list
-      heading: Open cases
+      heading: All open cases
       view_case: Link to case
       number: Case number
       number_html: 'Case <abbr title="number">No.</abbr>'
@@ -287,7 +287,7 @@ en:
     new:
       heading: Add case details
       sub_heading: Create case
-      received_date: Date received
+      received_date: Date received at MOJ
       received_date_copy: For example. 31 01 2017
     new_response_upload:
       heading: Upload response
@@ -328,7 +328,7 @@ en:
       incoming_cases_press_office: New cases
       incoming_cases_private_office: New cases
       my_open_cases: My open cases
-      open_cases: Open cases
+      open_cases: All open cases
       stats: Statistics
   devise:
     users:

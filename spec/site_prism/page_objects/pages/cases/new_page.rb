@@ -24,7 +24,7 @@ module PageObjects
                 '//fieldset[contains(.,"Type of requester")]'
 
         element :flag_for_disclosure_specialists, :xpath,
-                '//fieldset[contains(.,"Does a disclosure specialist need to see this case")]'
+                '//fieldset[contains(.,"Clearance required by DACU Disclosure?")]'
 
         element :submit_button, '.button'
 

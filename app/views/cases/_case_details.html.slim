@@ -1,7 +1,7 @@
 .grid-row
   .column-full.case-details
     h2.request--heading
-      = "Request details"
+      = "Case details"
 
     table
       tbody.basic-details
@@ -32,7 +32,7 @@
           td = l case_details.received_date, format: :default
 
         tr.delivery-method
-          th = "Delivery method"
+          th = "Received by"
           td = case_details.delivery_method.humanize
 
       - if case_details.responding_team.present?

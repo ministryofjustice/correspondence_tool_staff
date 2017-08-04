@@ -78,7 +78,7 @@ describe GlobalNavManager::Page do
 
     describe '#text' do
       it 'returns the text' do
-        expect(open_cases_page.text).to eq 'Open cases'
+        expect(open_cases_page.text).to eq 'All open cases'
       end
     end
 

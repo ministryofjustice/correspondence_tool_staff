@@ -46,6 +46,6 @@
                      locals: {s3_direct_post: @s3_direct_post,
                               file_input_name: 'case[uploaded_request_files][]' }
 
-  = f.radio_button_fieldset :flag_for_disclosure_specialists, inline: true
+  = f.radio_button_fieldset :flag_for_disclosure_specialists
 
   = f.submit t('button.next_page_assign'), {class: 'button'}

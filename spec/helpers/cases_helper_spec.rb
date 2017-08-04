@@ -78,7 +78,7 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
           .to eq "<a id=\"action--request-amends\" " +
                  "class=\"button\" " +
                  "href=\"/cases/#{@case.id}/request_amends\">" +
-                 "Request Amends</a>"
+                 "Request amends</a>"
       end
     end
 

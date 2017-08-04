@@ -48,10 +48,10 @@ feature 'respond to responder assignment' do
     click_button 'Confirm'
 
     expect(page).to have_current_path(case_assignments_show_rejected_path assigned_case, rejected_now: true)
-    expect(page).to have_content 'Your response has been sent'
+    expect(page).to have_content "You've rejected this case"
     expect(page).
       to have_content(
-        'This case will be reviewed and assigned the to appropriate unit.'
+        'DACU BMT will assign the case to the appropriate business unit.'
       )
 
     expect(assigned_case.reload.current_state).to eq 'unassigned'
