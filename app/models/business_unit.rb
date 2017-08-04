@@ -4,7 +4,7 @@
 #
 #  id         :integer          not null, primary key
 #  name       :string           not null
-#  email      :citext           not null
+#  email      :citext
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  type       :string
@@ -34,8 +34,6 @@ class BusinessUnit < Team
   has_many :managers, through: :manager_user_roles, source: :user
   has_many :responders, through: :responder_user_roles, source: :user
   has_many :approvers, through: :approver_user_roles, source: :user
-
-  # has_one  :role, -> { role }, class_name: TeamProperty, foreign_key: :team_id
 
   scope :managing, -> {
     joins(:user_roles).where(teams_users_roles: { role: 'manager' }).distinct

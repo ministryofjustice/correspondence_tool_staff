@@ -26,13 +26,13 @@
 #                          respond_case GET    /cases/:id/respond(.:format)                                    cases#respond
 #                  confirm_respond_case PATCH  /cases/:id/confirm_respond(.:format)                            cases#confirm_respond
 #        case_assignments_show_rejected GET    /cases/:case_id/assignments/show_rejected(.:format)             assignments#show_rejected
+#         case_assign_to_responder_team GET    /cases/:case_id/assignments/assign_to_team(.:format)            assignments#assign_to_team
 #             unflag_for_clearance_case PATCH  /cases/:id/unflag_for_clearance(.:format)                       cases#unflag_for_clearance
 #               flag_for_clearance_case PATCH  /cases/:id/flag_for_clearance(.:format)                         cases#flag_for_clearance
 #                 approve_response_case GET    /cases/:id/approve_response(.:format)                           cases#approve_response
 #        execute_response_approval_case PATCH  /cases/:id/execute_response_approval(.:format)                  cases#execute_response_approval
 #                   request_amends_case GET    /cases/:id/request_amends(.:format)                             cases#request_amends
 #           execute_request_amends_case PATCH  /cases/:id/execute_request_amends(.:format)                     cases#execute_request_amends
-#                reassign_approver_case PATCH  /cases/:id/reassign_approver(.:format)                          cases#reassign_approver
 #      accept_or_reject_case_assignment PATCH  /cases/:case_id/assignments/:id/accept_or_reject(.:format)      assignments#accept_or_reject
 #                accept_case_assignment PATCH  /cases/:case_id/assignments/:id/accept(.:format)                assignments#accept
 #              unaccept_case_assignment PATCH  /cases/:case_id/assignments/:id/unaccept(.:format)              assignments#unaccept
@@ -40,7 +40,6 @@
 #         reassign_user_case_assignment GET    /cases/:case_id/assignments/:id/reassign_user(.:format)         assignments#reassign_user
 # execute_reassign_user_case_assignment PATCH  /cases/:case_id/assignments/:id/execute_reassign_user(.:format) assignments#execute_reassign_user
 #                      case_assignments GET    /cases/:case_id/assignments(.:format)                           assignments#index
-#                                       POST   /cases/:case_id/assignments(.:format)                           assignments#create
 #                   new_case_assignment GET    /cases/:case_id/assignments/new(.:format)                       assignments#new
 #                  edit_case_assignment GET    /cases/:case_id/assignments/:id/edit(.:format)                  assignments#edit
 #                       case_assignment GET    /cases/:case_id/assignments/:id(.:format)                       assignments#show
@@ -68,6 +67,14 @@
 #                                       PATCH  /cases/:id(.:format)                                            cases#update
 #                                       PUT    /cases/:id(.:format)                                            cases#update
 #                                       DELETE /cases/:id(.:format)                                            cases#destroy
+#                                 users GET    /users(.:format)                                                users#index
+#                                       POST   /users(.:format)                                                users#create
+#                              new_user GET    /users/new(.:format)                                            users#new
+#                             edit_user GET    /users/:id/edit(.:format)                                       users#edit
+#                                  user GET    /users/:id(.:format)                                            users#show
+#                                       PATCH  /users/:id(.:format)                                            users#update
+#                                       PUT    /users/:id(.:format)                                            users#update
+#                                       DELETE /users/:id(.:format)                                            users#destroy
 #                                 stats GET    /stats(.:format)                                                stats#index
 #                        stats_download GET    /stats/download(.:format)                                       stats#download
 #                                search GET    /search(.:format)                                               cases#search
@@ -161,8 +168,7 @@ Rails.application.routes.draw do
   resources :teams
 
   authenticate :user, lambda { |u| u.manager? } do
-    resources :users do
-    end
+    resources :users
   end
 
   get '/stats' => 'stats#index'

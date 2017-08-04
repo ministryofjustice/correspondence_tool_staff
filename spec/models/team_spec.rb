@@ -4,7 +4,7 @@
 #
 #  id         :integer          not null, primary key
 #  name       :string           not null
-#  email      :citext           not null
+#  email      :citext
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  type       :string

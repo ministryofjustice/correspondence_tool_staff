@@ -343,6 +343,9 @@ en:
       email: Email
       full_name: Full name
       heading: Users
+    new:
+      create: Create user
+      heading: New user
 
   nav:
     pages:
