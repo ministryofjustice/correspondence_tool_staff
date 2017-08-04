@@ -4,7 +4,7 @@ class DevUserSeeder
     @teams = {
       'laa'           => BusinessUnit.find_by!(name: 'Legal Aid Agency (LAA)'),
       'hmctsne'       => BusinessUnit.find_by!(name: 'North East Regional Support Unit (NE RSU)'),
-      'hr'            => BusinessUnit.find_by!(name: 'MoJ Human Resouces (HR)'),
+      'hr'            => BusinessUnit.find_by!(name: 'MoJ Human Resources (MoJ HR)'),
       'dacu'          => BusinessUnit.find_by!(name: 'DACU BMT'),
       'dacudis'       => BusinessUnit.find_by!(name: 'DACU Disclosure'),
       'pressoffice'   => BusinessUnit.find_by!(name: 'Press Office'),

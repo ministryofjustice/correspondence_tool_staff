@@ -61,6 +61,9 @@ en:
       can_remove_attachment?: 'You are not authorised to remove attachments from this case.'
       can_view_case_details?: 'You are not authorised to view this case.'
       can_download_stats?: You are not authorised to view or download statistics.
+    team_policy:
+      index?: 'You are not authorised to view a list of teams'
+      show?: 'You are not authorised to view this team'
     nil_class: 'Authorisation failed due to internal error.'
 
   state: &state_translations

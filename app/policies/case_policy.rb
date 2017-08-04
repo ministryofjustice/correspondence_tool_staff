@@ -332,9 +332,6 @@ class CasePolicy < ApplicationPolicy
     check_escalation_deadline_has_expired && check_case_is_in_attachable_state && check_user_is_a_responder_for_case
   end
 
-  check :user_is_a_manager do
-    user.manager?
-  end
 
   check :user_is_an_approver do
     user.approver?

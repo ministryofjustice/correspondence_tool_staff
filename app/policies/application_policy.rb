@@ -30,4 +30,8 @@ class ApplicationPolicy
     @@failed_checks = []
     @options = {}
   end
+
+  check :user_is_a_manager do
+    user.manager?
+  end
 end

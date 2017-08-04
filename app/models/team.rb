@@ -45,4 +45,7 @@ class Team < ApplicationRecord
     Team.joins(:properties).where(team_properties: { key: 'can_allocate', value: category.abbreviation })
   end
 
+  def policy_class
+    TeamPolicy
+  end
 end
