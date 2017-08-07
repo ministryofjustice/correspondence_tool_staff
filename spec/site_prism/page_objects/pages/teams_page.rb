@@ -1,7 +1,7 @@
 module PageObjects
   module Pages
     class TeamsPage < SitePrism::Page
-      set_url '/'
+      set_url '/teams'
 
       section :primary_navigation,
               PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
