@@ -9,13 +9,6 @@ module CaseStates
     )
   end
 
-  def assign_responder(current_user, responding_team)
-    managing_team = current_user.managing_team_roles.first.team
-    state_machine.assign_responder! current_user,
-                                    managing_team,
-                                    responding_team
-  end
-
   def responder_assignment_rejected(current_user,
                                     responding_team,
                                     message)

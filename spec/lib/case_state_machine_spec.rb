@@ -87,7 +87,11 @@ RSpec.describe CaseStateMachine, type: :model do
         expect(kase.last_transitioned_at).to eq t1
       end
       Timecop.freeze(t2) do
-        kase.assign_responder(manager, responding_team)
+        state_machine.trigger! :assign_responder,
+                               managing_team_id:   managing_team.id,
+                               responding_team_id: responding_team.id,
+                               user_id:            manager.id,
+                               event:              :assign_responder
       end
       expect(kase.current_state).to eq 'awaiting_responder'
       expect(kase.last_transitioned_at).to eq t2

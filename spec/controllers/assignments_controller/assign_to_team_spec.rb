@@ -6,11 +6,21 @@ RSpec.describe AssignmentsController, type: :controller do
   let(:responding_team)   { create :responding_team }
   let(:responder)         { responding_team.responders.first }
   let(:params)            { { team_id: responding_team.id.to_s,
-                             case_id: unassigned_case.id.to_s,
-                             role: 'responding'}}
+                              case_id: unassigned_case.id.to_s,
+                              role: 'responding'}}
 
   describe 'GET assign_to_team' do
-    before { sign_in manager }
+    let(:new_assignment) { instance_double Assignment }
+    let(:service)        { instance_double CaseAssignResponderService,
+                                           call: true,
+                                           assignment: new_assignment,
+                                           result: :ok }
+
+    before do
+      allow(CaseAssignResponderService).to receive(:new)
+                                             .and_return(service)
+      sign_in manager
+    end
 
     it 'authorises' do
       expect{
@@ -19,15 +29,19 @@ RSpec.describe AssignmentsController, type: :controller do
                 .with_args(manager, unassigned_case)
     end
 
-    it 'sets @new_assignment_params' do
+    it 'calls the service' do
       get :assign_to_team, params: params
-      expect( assigns(:new_assignment_params))
-          .to eq params
+      expect(CaseAssignResponderService)
+        .to have_received(:new).with kase: unassigned_case,
+                                     team: responding_team,
+                                     role: 'responding',
+                                     user: manager
+      expect(service).to have_received(:call)
     end
 
-    it 'creates a new assignment for a specific case' do
-      expect { get :assign_to_team, params: params }.
-          to change { unassigned_case.assignments.count }.by 1
+    it 'sets @assignment' do
+      get :assign_to_team, params: params
+      expect(assigns(:assignment)).to eq new_assignment
     end
 
     it 'redirects to the case list view' do
@@ -35,18 +49,20 @@ RSpec.describe AssignmentsController, type: :controller do
       expect(response).to redirect_to case_path(id: params[:case_id])
     end
 
-    it 'queues an new assignment mail for later delivery' do
-      expect(AssignmentMailer).to receive_message_chain :new_assignment,
-                                                        :deliver_later
-      get :assign_to_team, params: params
-    end
+    context 'service fails' do
+      before do
+        allow(service).to receive(:result).and_return(:could_not_create_assignment)
+      end
 
-    it 'errors if no team specified' do
-      params[:team_id] = nil
-      get :assign_to_team, params: params
+      it 're-renders the new page' do
+        get :assign_to_team, params: params
+        expect(:result).to have_rendered(:new)
+      end
 
-      expect(assigns(:assignment).errors[:team]).to include("can't be blank")
-      expect(response).to render_template(:new)
+      it 'sets @assignment' do
+        get :assign_to_team, params: params
+        expect(assigns(:assignment)).to eq new_assignment
+      end
     end
   end
 end

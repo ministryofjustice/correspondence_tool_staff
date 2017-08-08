@@ -2,13 +2,15 @@ require 'rails_helper'
 
 RSpec.describe AssignmentMailer, type: :mailer do
   describe 'new_assignment' do
-    let(:assigned_case) { create :assigned_case,
-                                 name: 'Fyodor Ognievich Ilichion',
-                                 received_date: 10.business_days.ago,
-                                 subject: 'The anatomy of man' }
-    let(:assignment) { assigned_case.responder_assignment }
+    let(:assigned_case)   { create :assigned_case,
+                                   name: 'Fyodor Ognievich Ilichion',
+                                   received_date: 10.business_days.ago,
+                                   subject: 'The anatomy of man' }
+    let(:assignment)      { assigned_case.responder_assignment }
     let(:responding_team) { assignment.team }
-    let(:mail) { described_class.new_assignment(assignment) }
+    let(:responder)       { responding_team.responders.first }
+    let(:mail)            { described_class.new_assignment(assignment,
+                                                           responder) }
 
     it 'sets the template' do
       expect(mail.govuk_notify_template)
@@ -32,15 +34,8 @@ RSpec.describe AssignmentMailer, type: :mailer do
                })
     end
 
-    it 'sets the To address of the email' do
-      expect(mail.to).to include responding_team.email
-    end
-
-    context 'team does not have a group email address' do
-      it 'sends the notification to each user individually' do
-        responding_team.email = nil
-        expect(mail.to).to match_array responding_team.responders.map(&:email)
-      end
+    it 'sets the To address of the email using the provided user' do
+      expect(mail.to).to include responder.email
     end
   end
 end

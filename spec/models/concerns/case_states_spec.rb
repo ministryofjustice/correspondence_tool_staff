@@ -18,24 +18,6 @@ RSpec.describe Case, type: :model do
       it { should have_attributes(object: kase)}
     end
 
-    describe '#assign_responder' do
-      let(:unassigned_case) { create :case }
-      let(:responding_team) { create :responding_team }
-
-      before do
-        allow(unassigned_case.state_machine).to receive(:assign_responder!)
-      end
-
-      it 'creates an assign_responder transition' do
-        unassigned_case.assign_responder manager, responding_team
-        expect(unassigned_case.state_machine)
-          .to have_received(:assign_responder!)
-                .with manager,
-                      managing_team,
-                      responding_team
-      end
-    end
-
     describe '#responder_assignment_rejected' do
       let(:state_machine)   { assigned_case.state_machine }
       let(:assignment)      { assigned_case.responder_assignment }

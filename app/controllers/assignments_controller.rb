@@ -39,17 +39,20 @@ class AssignmentsController < ApplicationController
   def assign_to_team
     authorize @case, :can_assign_case?
 
-    @new_assignment_params = get_assign_team_params
-
-    @assignment = @case.assignments.create(@new_assignment_params)
-    if @assignment.valid?
-      @case.assign_responder(current_user, @assignment.team)
+    team = Team.find(params[:team_id])
+    service = CaseAssignResponderService.new kase: @case,
+                                             team: team,
+                                             role: 'responding',
+                                             user: current_user
+    service.call
+    @assignment = service.assignment
+    if service.result == :ok
       flash[:notice] = flash[:creating_case] ? t('.case_created') : t('.case_assigned')
-      AssignmentMailer.new_assignment(@assignment).deliver_later
       redirect_to case_path @case.id
     else
       render :new
     end
+
   end
 
   def edit
