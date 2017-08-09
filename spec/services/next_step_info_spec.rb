@@ -111,7 +111,7 @@ describe 'NextStepInfo' do
     end
 
     context 'upload-flagged' do
-      it { should set_action_verb_to 'uploading changes to' }
+      it { should set_action_verb_to 'uploading a response to' }
       it { should use_event :add_response_to_flagged_case }
     end
 

@@ -53,7 +53,7 @@ class NextStepInfo
       @action_verb = 'uploading changes to'
     when 'upload-flagged'
       @state_machine_event = :add_response_to_flagged_case
-      @action_verb = 'uploading changes to'
+      @action_verb = 'uploading a response to'
     when 'upload-approve'
       @state_machine_event = :upload_response_and_approve
       @action_verb = 'uploading the responses and clearing'
