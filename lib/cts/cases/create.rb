@@ -145,7 +145,11 @@ module CTS
 
       def transition_to_awaiting_responder(kase)
         kase.responding_team = responding_team
-        kase.assign_responder(CTS::dacu_manager, responding_team)
+        cars = CaseAssignResponderService.new team: responding_team,
+                                              kase: kase,
+                                              role: 'responding',
+                                              user: CTS::dacu_manager
+        cars.call
       end
 
       def transition_to_drafting(kase)
