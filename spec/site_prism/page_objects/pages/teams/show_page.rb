@@ -9,6 +9,7 @@ module PageObjects
 
 
         element :heading, 'h1.page-heading'
+        element :team_lead, 'h2:first'
 
         sections :directorates_list, '.report tbody tr' do
           element :name, 'td[aria-label="Name"] a'
@@ -40,10 +41,11 @@ module PageObjects
           business_units_list.find { |row| row.name.text == name }
         end
 
-        def row_for_information_officer(name, email)
-          information_officers_list.find { |row|
-            row.name.text == name && row.email.text == email
-          }
+        def row_for_information_officer(name_or_email)
+          information_officers_list.find do |row|
+            row.full_name.text == name_or_email ||
+              row.email.text == name_or_email
+          end
         end
       end
     end

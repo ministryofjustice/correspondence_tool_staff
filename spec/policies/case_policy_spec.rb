@@ -25,7 +25,7 @@ describe CasePolicy do
   let(:coworker)          { create :responder,
                                    responding_teams: [responding_team] }
   let(:another_responder) { create :responder}
-  let!(:dacu_disclosure)   { find_or_create :team_dacu_disclosure }
+  let!(:dacu_disclosure)  { find_or_create :team_dacu_disclosure }
   let(:approver)          { dacu_disclosure.approvers.first }
   let(:disclosure_specialist) { approver }
   let(:another_disclosure_specialist) { create :disclosure_specialist }

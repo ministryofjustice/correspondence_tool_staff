@@ -338,6 +338,10 @@ en:
     success_html: |
       <strong>Your feedback has been submitted.</strong>
 
+  teams:
+    business_unit_detail:
+      new_responder_user: New Information Officer
+
   users:
     index:
       email: Email

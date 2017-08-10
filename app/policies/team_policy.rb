@@ -7,6 +7,10 @@ class TeamPolicy < ApplicationPolicy
     super(user, team)
   end
 
+  def can_add_new_responder?
+    clear_failed_checks
+    check_user_is_a_manager
+  end
 
   def index?
     clear_failed_checks
@@ -17,6 +21,4 @@ class TeamPolicy < ApplicationPolicy
     clear_failed_checks
     check_user_is_a_manager
   end
-
-
 end

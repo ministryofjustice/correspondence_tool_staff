@@ -9,12 +9,12 @@ describe 'teams/index.html.slim', type: :view do
   end
 
   before(:each) do
-    @bg_2 = create :business_group, name: 'HMPPS'
-    TeamProperty.create!(team_id: @bg_2.id, key: 'lead', value: 'John Smith')
+    @bg_2 = create :business_group, name: 'HMPPS',
+                   lead: create(:team_lead, value: 'John Smith')
     create :directorate, business_group: @bg_2
     create :directorate, business_group: @bg_2
-    @bg_3 = create :business_group, name: 'HMCTS'
-    TeamProperty.create!(team_id: @bg_3.id, key: 'lead', value: 'Jane Doe')
+    @bg_3 = create :business_group, name: 'HMCTS',
+                   lead: create(:team_lead, value: 'Jane Doe')
     create :directorate, business_group: @bg_3
   end
 

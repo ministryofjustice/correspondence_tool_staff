@@ -8,7 +8,7 @@ h2.heading-medium
 
 .grid-row
   .column-full.table-container.container
-    table.report.table-font-xsmall
+    table#information_officers.table-font-xsmall
       colgroup
         col
         col
@@ -30,3 +30,10 @@ h2.heading-medium
                = user.email
             td aria-label="Actions"
               | Edit
+.grid-row
+  .column-full
+    - if Pundit.policy(current_user, team).can_add_new_responder?
+      = link_to(t('.new_responder_user'),
+                new_team_user_path(team_id: team.id, role: 'responder'),
+                id: 'action--new-responder-user',
+                class: 'button')

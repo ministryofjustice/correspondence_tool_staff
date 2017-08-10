@@ -7,13 +7,13 @@ class UsersController < ApplicationController
     @user.password_confirmation = @user.password
     if @user.valid?
       if @team.present?
-        role = @team.role
+        role = validate_role
         @team.__send__(role.pluralize) << @user
+        redirect_to team_path(id: @team.id)
       else
         @user.save
+        redirect_to users_path
       end
-
-      redirect_to users_path
     else
       render :new
     end
@@ -30,9 +30,19 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
+    role = validate_role
+    @role = role
   end
 
   private
+
+  def validate_role
+    if params.require(:role) == @team.role
+      params[:role]
+    else
+      raise "Role parameter #{params[:role]} does not match team's roles."
+    end
+  end
 
   def create_user_params
     params.require(:user).permit(

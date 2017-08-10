@@ -4,12 +4,15 @@
 
 - content_for :heading
   = t('.heading')
+- content_for :sub_heading
+  = "#{@team.team_type}: #{@team.name}"
 
 = render partial: 'layouts/header'
 
 = form_for @user do |f|
   - if @team.present?
     = f.hidden_field :team, id: 'team_id', name: 'team_id', value: @team.id
+    = f.hidden_field :team, id: 'role', name: 'role', value: @role
   = f.text_field :full_name
   = f.email_field :email
 

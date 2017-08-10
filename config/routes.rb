@@ -67,6 +67,22 @@
 #                                       PATCH  /cases/:id(.:format)                                            cases#update
 #                                       PUT    /cases/:id(.:format)                                            cases#update
 #                                       DELETE /cases/:id(.:format)                                            cases#destroy
+#                            team_users GET    /teams/:team_id/users(.:format)                                 users#index
+#                                       POST   /teams/:team_id/users(.:format)                                 users#create
+#                         new_team_user GET    /teams/:team_id/users/new(.:format)                             users#new
+#                        edit_team_user GET    /teams/:team_id/users/:id/edit(.:format)                        users#edit
+#                             team_user GET    /teams/:team_id/users/:id(.:format)                             users#show
+#                                       PATCH  /teams/:team_id/users/:id(.:format)                             users#update
+#                                       PUT    /teams/:team_id/users/:id(.:format)                             users#update
+#                                       DELETE /teams/:team_id/users/:id(.:format)                             users#destroy
+#                                 teams GET    /teams(.:format)                                                teams#index
+#                                       POST   /teams(.:format)                                                teams#create
+#                              new_team GET    /teams/new(.:format)                                            teams#new
+#                             edit_team GET    /teams/:id/edit(.:format)                                       teams#edit
+#                                  team GET    /teams/:id(.:format)                                            teams#show
+#                                       PATCH  /teams/:id(.:format)                                            teams#update
+#                                       PUT    /teams/:id(.:format)                                            teams#update
+#                                       DELETE /teams/:id(.:format)                                            teams#destroy
 #                                 users GET    /users(.:format)                                                users#index
 #                                       POST   /users(.:format)                                                users#create
 #                              new_user GET    /users/new(.:format)                                            users#new
@@ -165,7 +181,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :teams
+  resources :teams do
+    resources :users
+  end
 
   authenticate :user, lambda { |u| u.manager? } do
     resources :users

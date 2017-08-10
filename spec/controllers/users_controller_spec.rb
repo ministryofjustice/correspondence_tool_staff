@@ -35,13 +35,42 @@ RSpec.describe UsersController, type: :controller do
       expect(User.last.teams).to be_empty
     end
 
+    it 'redirects to the users list if not team specified' do
+      post :create, params: params
+      expect(response).to redirect_to(users_path)
+    end
+
     context 'with a team_id param' do
       let!(:dacu) { create :team_dacu }
-      it 'adds the user to the given team' do
+
+      before do
         params[:team_id] = dacu.id
+        params[:role]    = 'responder'
+      end
+
+      it 'adds the user to the given team with the given role' do
         post :create, params: params
 
-        expect(dacu.users).to include User.last
+        expect(dacu.responders).to include User.last
+      end
+
+      it 'redirects to the team details page' do
+        post :create, params: params
+        expect(response).to redirect_to(team_path(id: dacu.id))
+      end
+
+      it 'requires the role parameter' do
+        params.delete :role
+        expect do
+          post :create, params: params
+        end.to raise_error(ActionController::ParameterMissing)
+      end
+
+      it 'raises error if role does not match teams' do
+        params[:role] = 'not_allowed'
+        expect do
+          post :create, params: params
+        end.to raise_error(RuntimeError)
       end
     end
   end
@@ -67,21 +96,31 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe 'GET new' do
+    let(:params) { { team_id: dacu.id,
+                     role: 'responder' } }
+
     before { sign_in manager }
 
     it 'creates a new user' do
-      get :new
+      get :new, params: params
       expect(assigns(:user)).to be_a User
       expect(assigns(:user).persisted?).to eq false
     end
 
-    context 'with a team_id param' do
-      let(:params) { { team_id: dacu.id } }
+    it 'assigns the team' do
+      get :new, params: params
+      expect(assigns(:team)).to eq dacu
+    end
 
-      it 'retrieves team object' do
-        get :new, params: params
-        expect(assigns(:team)).to eq dacu
-      end
+    it 'assigns the role' do
+      get :new, params: params
+      expect(assigns(:role)).to eq 'responder'
+    end
+
+    it 'returns an error if the team does not support the given role' do
+      expect do
+        get :new, params: params.merge(role: 'unsupported')
+      end.to raise_error(RuntimeError)
     end
   end
 end
