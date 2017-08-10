@@ -9,6 +9,7 @@ module DbHousekeeping
       case_transitions
       cases_exemptions
       feedback
+      team_properties
       teams
       teams_users_roles
       users

@@ -13,7 +13,15 @@
 
 FactoryGirl.define do
   factory :team do
+    transient do
+      lead { create :team_lead }
+    end
+
     sequence(:name) { |n| "Team #{n}" }
-    email { Faker::Internet.email(name) }
+    email { name.downcase.gsub(/\W/, '_') + '@localhost' }
+
+    after :create do |team, evaluator|
+      team.properties << evaluator.lead
+    end
   end
 end

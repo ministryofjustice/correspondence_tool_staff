@@ -10,6 +10,7 @@ require 'capybara/rails'
 require 'capybara/poltergeist'
 require 'rails-controller-testing'
 
+
 Capybara.javascript_driver = :poltergeist
 # Capybara.register_driver :poltergeist do |app|
 #   Capybara::Poltergeist::Driver.new(app,
@@ -123,6 +124,10 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     seed_database_for_tests
+  end
+
+  config.after(:suite) do
+    DbHousekeeping.clean(seed: false)
   end
 end
 
