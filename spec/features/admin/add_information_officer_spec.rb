@@ -9,7 +9,7 @@ feature 'add information officer to a business unit' do
     login_as manager
 
     teams_show_page.load(id: bu.id)
-    expect(teams_page.heading.text).to eq "Business Unit: #{bu.name}"
+    expect(teams_index_page.heading).to have_text "Business Unit #{bu.name}"
     teams_show_page.new_information_officer_button.click
 
     expect(users_new_page).to be_displayed(team_id: bu.id)

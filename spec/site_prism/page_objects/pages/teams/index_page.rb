@@ -13,7 +13,7 @@ module PageObjects
         sections :business_groups_list, '.report tbody tr' do
           element :name, 'td[aria-label="Name"] a'
           element :director_general, 'td[aria-label="Director general"]'
-          element :num_children, 'td[aria-label="Directorates"]'
+          element :directorates, 'td[aria-label="Directorates"]'
           element :actions, 'td[aria-label="Actions"]'
         end
 

@@ -32,22 +32,17 @@ describe 'teams/show.html.slim', type: :view do
 
       expect(teams_show_page.heading.text).to eq 'You are viewing Business group HMPPS'
 
-      # check column headings are correct
-      headers = teams_show_page.table_heading
-      expect(headers.name.text).to eq 'Name'
-      expect(headers.director_general.text).to eq 'Director'
-      expect(headers.num_subteams.text).to eq 'Directorates'
-
-      bg = teams_show_page.team_list[0]
-      expect(bg.name.text).to eq 'Prisons'
-      expect(bg.team_lead.text).to eq 'Phil Copple'
-      expect(bg.num_children.text).to eq '2'
+      expect(teams_show_page.child_teams_type.text).to eq 'Directorates'
+      bg = teams_show_page.directorates_list[0]
+      expect(bg.name.text).to eq 'View the details of Prisons'
+      expect(bg.deputy_director.text).to eq 'Phil Copple'
+      expect(bg.information_officers.text).to eq '2'
       expect(bg.actions.text).to eq 'Edit'
 
-      bg = teams_show_page.team_list[1]
+      bg = teams_show_page.directorates_list[1]
       expect(bg.name.text).to eq 'HR'
-      expect(bg.team_lead.text).to eq 'Martin Beecroft'
-      expect(bg.num_children.text).to eq '1'
+      expect(bg.director_general.text).to eq 'Martin Beecroft'
+      expect(bg.directorates.text).to eq '1'
       expect(bg.actions.text).to eq 'Edit'
     end
   end
@@ -66,7 +61,7 @@ describe 'teams/show.html.slim', type: :view do
       render
       teams_show_page.load(rendered)
 
-      expect(teams_show_page.heading.text).to eq "Business Unit: #{bu.name}"
+      expect(teams_show_page.heading).to have_text "Business Unit #{bu.name}"
     end
 
     it 'displays the deputy director' do
@@ -74,7 +69,7 @@ describe 'teams/show.html.slim', type: :view do
       teams_show_page.load(rendered)
 
       expect(teams_show_page.team_lead)
-        .to have_text "Deputy Director: #{bu.team_lead.value}"
+        .to have_text "Deputy Director #{bu.team_lead.value}"
     end
 
     it 'displays the information officers' do

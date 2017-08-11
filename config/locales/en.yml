@@ -345,7 +345,7 @@ en:
   users:
     index:
       email: Email
-      full_name: Full name
+      full_name: Name
       heading: Users
     new:
       create: Create user

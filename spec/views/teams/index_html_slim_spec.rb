@@ -40,7 +40,7 @@ describe 'teams/index.html.slim', type: :view do
     bg = page.row_for_business_group('HMCTS')
     expect(bg.name.text).to eq 'View the details of HMCTS'
     expect(bg.director_general.text).to eq 'Jane Doe'
-    expect(bg.num_children.text).to eq '1'
+    expect(bg.directorates.text).to eq '1'
     expect(bg.actions.text).to eq 'Edit'
   end
 end
