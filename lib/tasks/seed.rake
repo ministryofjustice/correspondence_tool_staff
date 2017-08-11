@@ -51,13 +51,13 @@ namespace :db do
 
     namespace :dev do
       desc 'Seed teams for dev environment'
-      task :teams do
+      task teams: :environment do
         require File.join(Rails.root, 'db', 'seeders', 'dev_team_seeder')
         DevTeamSeeder.new.seed!
       end
 
       desc 'Seed users, teams, roles for dev environemnt'
-      task :users => :environment do
+      task users: :environment do
 
         require File.join(Rails.root, 'db', 'seeders', 'dev_user_seeder')
         DevUserSeeder.new.seed!
