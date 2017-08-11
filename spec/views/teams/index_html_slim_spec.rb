@@ -24,24 +24,22 @@ describe 'teams/index.html.slim', type: :view do
 
     render
 
-    teams_page.load(rendered)
+    teams_index_page.load(rendered)
 
-    # check column headings are correct
-    headers = teams_page.table_heading
-    expect(headers.name.text).to eq 'Name'
-    expect(headers.team_leader.text).to eq 'Director General'
-    expect(headers.num_subteams.text).to eq 'Directorates'
+    page = teams_index_page
+
+    expect(page.heading.text).to eq "Business Groups"
 
     # check data in table is correct
-    bg = teams_page.team_list[0]
-    expect(bg.name.text).to eq 'HMPPS'
-    expect(bg.team_lead.text).to eq 'John Smith'
+    bg = page.row_for_business_group('HMPPS')
+    expect(bg.name.text).to eq 'View the details of HMPPS'
+    expect(bg.director_general.text).to eq 'John Smith'
     expect(bg.num_children.text).to eq '2'
     expect(bg.actions.text).to eq 'Edit'
 
-    bg = teams_page.team_list[1]
-    expect(bg.name.text).to eq 'HMCTS'
-    expect(bg.team_lead.text).to eq 'Jane Doe'
+    bg = page.row_for_business_group('HMCTS')
+    expect(bg.name.text).to eq 'View the details of HMCTS'
+    expect(bg.director_general.text).to eq 'Jane Doe'
     expect(bg.num_children.text).to eq '1'
     expect(bg.actions.text).to eq 'Edit'
   end

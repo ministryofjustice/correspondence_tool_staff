@@ -19,9 +19,12 @@ h2.heading-medium
           | Actions
       tbody
         - teams.each do |team|
-          tr.case_row
-            td = link_to team.name, team_path(team)
-            td = team.team_lead.value
-            td = team.responders.size
-            td
+          tr
+            td aria-label="Name"
+              = link_to team.name, team_path(team)
+            td aria-label="Deputy Director"
+              = team.team_lead.value
+            td aria-label="#{ t('roles.responders') }"
+              = team.responders.size
+            td aria-label="Actions"
               | Edit

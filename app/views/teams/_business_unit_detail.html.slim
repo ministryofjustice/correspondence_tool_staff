@@ -17,8 +17,10 @@ h2.heading-medium
           | Actions
       tbody
         - team.responders.each do |user|
-          tr.case_row
-            td = user.full_name
-            td = user.email
-            td
+          tr
+            td aria-label="Name"
+              = user.full_name
+            td aria-label="Email"
+               = user.email
+            td aria-label="Actions"
               | Edit

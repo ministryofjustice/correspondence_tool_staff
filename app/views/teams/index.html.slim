@@ -25,9 +25,10 @@
         - @teams.each do |team|
           tr
             td aria-label="Name"
-              span.visually-hidden
-                = "View the details of "
-              = link_to team.name, team_path(team)
+              = link_to team_path(team) do
+                span.visually-hidden
+                  = "View the details of "
+                = team.name
             td aria-label="Director General"
               = team.team_lead&.value
             td aria-label="Directorates"

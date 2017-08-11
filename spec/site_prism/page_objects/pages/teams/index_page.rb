@@ -10,17 +10,17 @@ module PageObjects
 
         element :heading, 'h1.page-heading'
 
-        section :table_heading, '.report thead tr' do
-          element :name, 'th[area-label="Name column heading"]'
-          element :team_leader, 'th[area-label="Team leader column heading"]'
-          element :num_subteams, 'th[area-label="Number of sub-teams column heading"]'
+        sections :business_groups_list, '.report tbody tr' do
+          element :name, 'td[aria-label="Name"] a'
+          element :director_general, 'td[aria-label="Director General"]'
+          element :num_children, 'td[aria-label="Directorates"]'
+          element :actions, 'td[aria-label="Actions"]'
         end
 
-        sections :team_list, '.team-row' do
-          element :name, 'td[aria-label="Link to team name"]'
-          element :team_lead, 'td[aria-label="team lead name"]'
-          element :num_children, 'td[aria-label="number of sub teams"]'
-          element :actions, 'td[aria-label="Actions"]'
+        def row_for_business_group(name)
+          business_groups_list.find { |row|
+            row.name.text == "View the details of #{ name }"
+          }
         end
 
       end
