@@ -1,4 +1,4 @@
-h2
+h2.heading-medium
   | Business Units
 .grid-row
   .column-full.table-container.container
@@ -14,7 +14,7 @@ h2
         th scope='col'
           | Deputy Director
         th scope='col'
-          | Team members
+          = t('roles.responders')
         th scope='col'
           | Actions
       tbody
@@ -22,6 +22,6 @@ h2
           tr.case_row
             td = link_to team.name, team_path(team)
             td = team.team_lead.value
-            td = team.responders.map(&:full_name).join(', ')
+            td = team.responders.size
             td
               | Edit

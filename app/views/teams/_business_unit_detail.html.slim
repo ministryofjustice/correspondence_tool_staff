@@ -1,5 +1,5 @@
-h2
-  | Information Officers
+h2.heading-medium
+  = t('roles.responders')
 .grid-row
   .column-full.table-container.container
     table.report.table-font-xsmall
@@ -14,14 +14,11 @@ h2
         th scope='col'
           | Email
         th scope='col'
-          | Roles
-        th scope='col'
           | Actions
       tbody
-        - team.users.each do |user|
+        - team.responders.each do |user|
           tr.case_row
             td = user.full_name
             td = user.email
-            td = user.decorated_roles_for_team(team)
             td
               | Edit

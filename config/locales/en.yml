@@ -79,6 +79,11 @@ en:
     closed: ''
     closed_status: Case closed
 
+  roles:
+    responder: Information Officer
+    responders: Information Officers
+
+
   event:
     accept_approver_assignment: Clearance level added
     accept_responder_assignment: Accepted by Business unit
@@ -332,6 +337,8 @@ en:
       incoming_cases_private_office: New cases
       my_open_cases: My open cases
       open_cases: All open cases
+      open_cases: Open cases
+      settings: Settings
       stats: Statistics
   devise:
     users:

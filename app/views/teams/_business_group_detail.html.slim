@@ -1,7 +1,5 @@
-- content_for :heading
-  | Business Groups
-
-= render partial: 'layouts/header'
+h2.heading-medium
+ | Directorates
 
 .grid-row
   .column-full.table-container.container
@@ -16,14 +14,14 @@
           th scope='col'
             | Name
           th scope='col'
-            | Director General
+            | Director
           th scope='col'
-            | Directorates
+            | Business units
           th scope='col'
             | Actions
       tbody
-        - @teams.each do |team|
-          tr
+        - teams.each do |team|
+          tr.team-row
             td aria-label="Name"
               span.visually-hidden
                 = "View the details of "
