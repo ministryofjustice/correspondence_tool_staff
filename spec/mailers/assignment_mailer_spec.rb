@@ -10,7 +10,7 @@ RSpec.describe AssignmentMailer, type: :mailer do
     let(:responding_team) { assignment.team }
     let(:responder)       { responding_team.responders.first }
     let(:mail)            { described_class.new_assignment(assignment,
-                                                           responder) }
+                                                           responder.email) }
 
     it 'sets the template' do
       expect(mail.govuk_notify_template)

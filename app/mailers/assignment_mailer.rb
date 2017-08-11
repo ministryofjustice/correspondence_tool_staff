@@ -17,7 +17,7 @@ class AssignmentMailer < GovukNotifyRails::Mailer
         case_link: edit_case_assignment_url(@assignment.case_id, @assignment.id)
     )
 
-    mail(to: recipient.email)
+    mail(to: recipient)
   end
 
   private
