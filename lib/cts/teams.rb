@@ -28,10 +28,10 @@ module CTS
 
     desc 'seed', 'Seed teams for dev/demo.'
     def seed
-      require "#{CTS_ROOT_DIR}/db/seeders/dev_user_seeder"
+      require "#{CTS_ROOT_DIR}/db/seeders/dev_team_seeder"
       CTS::check_environment
-      seeder = DevUserSeeder.new
-      seeder.seed_teams
+      seeder = DevTeamSeeder.new
+      seeder.seed!
     end
 
     desc 'seed_roles', 'Seed business unit roles.'

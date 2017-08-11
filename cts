@@ -110,7 +110,7 @@ module CTS
       laa_team
     rescue => err
       error err.message
-      error "Run 'cts teams seed' to populate teams, or use 'rake db:seed:dev:users' for the whole shebang"
+      error "Run 'cts teams seed' to populate teams"
       error err.backtrace.join("\n\t")
       exit 2
     end
@@ -127,7 +127,7 @@ module CTS
       rescue => ex
         error "Error validating users:"
         error ex.message
-        error "Run 'cts users seed' to populate users, or use 'rake db:seed:dev:users' for the whole shebang"
+        error "Run 'cts users seed' to populate users"
         error ex.backtrace.join("\n\t")
 
         exit 3
