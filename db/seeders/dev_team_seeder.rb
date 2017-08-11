@@ -39,7 +39,7 @@ class DevTeamSeeder
 
     @bu_hmctsne = BusinessUnit.create!(parent: @dir_rsus, name: 'North East Regional Support Unit (NE RSU)')
 
-    @bu_hr = BusinessUnit.create!(parent: @dir_hr, name: 'MoJ Human Resouces (HR)')
+    @bu_hr = BusinessUnit.create!(parent: @dir_hr, name: 'MoJ Human Resources (MoJ HR)')
   end
 
   def add_leads

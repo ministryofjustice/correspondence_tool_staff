@@ -197,7 +197,7 @@ module CTS
     end
 
     def hr_team
-      @hr_team ||= CTS::find_team 'MoJ Human Resources (HR)'
+      @hr_team ||= CTS::find_team 'MoJ Human Resources (MoJ HR)'
     end
   end
 
