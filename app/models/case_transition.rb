@@ -44,6 +44,9 @@ class CaseTransition < ActiveRecord::Base
   scope :drafting,  -> { where to_state: 'drafting'  }
   scope :messages,  -> { where event: 'add_message_to_case' }
   scope :responded, -> { where event: 'respond' }
+  scope :case_history, -> { where.not(event: ['add_message_to_case',
+                                             'flag_for_clearance',
+                                             'unflag_for_clearance'])}
 
 
   def record_state_change(kase)

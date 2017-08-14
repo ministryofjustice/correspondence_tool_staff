@@ -849,10 +849,11 @@ RSpec.describe Case, type: :model do
 
   describe '#transitions.most_recent' do
     it 'returns the one transition that has the most recent flag set to true' do
-      expect(case_being_drafted_trigger.transitions.size).to eq 2
+      expect(case_being_drafted_trigger.transitions.size).to eq 3
       expect(case_being_drafted_trigger.transitions[0].most_recent).to be false
-      expect(case_being_drafted_trigger.transitions[1].most_recent).to be true
-      expect(case_being_drafted_trigger.transitions.most_recent).to eq case_being_drafted_trigger.transitions[1]
+      expect(case_being_drafted_trigger.transitions[1].most_recent).to be false
+      expect(case_being_drafted_trigger.transitions[2].most_recent).to be true
+      expect(case_being_drafted_trigger.transitions.most_recent).to eq case_being_drafted_trigger.transitions[2]
     end
   end
 

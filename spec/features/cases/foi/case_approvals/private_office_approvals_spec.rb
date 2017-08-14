@@ -36,8 +36,6 @@ feature 'cases requiring clearance by press office' do
     case_row.number.click
     expect(cases_show_page.case_history.entries.first)
       .to have_text('Preston Offman Clearance level added')
-    expect(cases_show_page.case_history.entries[1])
-      .to have_text("#{private_officer.full_name} Flag for clearance")
 
     _case_not_for_private_office_open_cases = create :case_being_drafted,
                                                      :flagged_accepted,

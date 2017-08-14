@@ -276,7 +276,7 @@ class CasesController < ApplicationController
 
   def set_case
     @case = Case.find(params[:id]).decorate
-    @case_transitions = @case.transitions.order(id: :desc).decorate
+    @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
   end
 
   def set_assignment

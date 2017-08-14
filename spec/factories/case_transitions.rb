@@ -40,12 +40,28 @@ FactoryGirl.define do
       approving_team { find_or_create :team_dacu_disclosure }
     end
 
-    to_state          'unassigned'
+    to_state          { self.case.current_state }
     event             'flag_for_clearance'
     user_id           { manager.id }
     managing_team_id  { managing_team.id }
     approving_team_id { approving_team.id }
   end
+
+  factory :unflag_case_for_clearance_transition, parent: :case_transition do
+    transient do
+      manager        { create :manager }
+      managing_team  { manager.managing_teams.first }
+      approving_team { find_or_create :team_dacu_disclosure }
+    end
+
+    to_state          { self.case.current_state }
+    event             'unflag_for_clearance'
+    user_id           { manager.id }
+    managing_team_id  { managing_team.id }
+    approving_team_id { approving_team.id }
+
+  end
+
 
   factory :case_transition_assign_responder, parent: :case_transition do
     transient do

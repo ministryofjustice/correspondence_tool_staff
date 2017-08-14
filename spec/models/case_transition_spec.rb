@@ -98,6 +98,28 @@ RSpec.describe CaseTransition, type: :model do
     end
   end
 
+  describe 'case_history scope' do
+    it 'does not return any add messages entries' do
+      kase = create :accepted_case
+      responder = kase.responder
+      team = kase.responding_team
+
+      kase.state_machine.add_message_to_case! responder, team, 'Message #1 - from responder'
+
+      expect(kase.transitions.case_history.map(&:event))
+          .not_to include(['add_message_to_case'])
+    end
+
+    it 'does not return any flagged/unflagged entries' do
+      kase = create :case, :flagged
+
+      create :unflag_case_for_clearance_transition, case: kase
+
+      expect(kase.transitions.case_history.map(&:event))
+          .not_to include(['flag_for_clearance', 'unflag_for_clearance'])
+    end
+  end
+
   describe 'messages scope' do
     it 'only returns messages for the case' do
       kase = create :pending_dacu_clearance_case

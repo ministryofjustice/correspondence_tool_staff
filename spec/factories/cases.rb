@@ -554,6 +554,9 @@ FactoryGirl.define do
              case: kase,
              team: evaluator.approving_team,
              state: 'pending'
+      create :flag_case_for_clearance_transition,
+             case: kase,
+             approving_team: evaluator.approving_team
       kase.reload
     end
   end
@@ -570,6 +573,9 @@ FactoryGirl.define do
              user: evaluator.approver,
              team: evaluator.approving_team,
              state: 'accepted'
+      create :flag_case_for_clearance_transition,
+             case: kase,
+             approving_team: evaluator.approving_team
     end
   end
 

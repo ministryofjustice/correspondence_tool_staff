@@ -76,8 +76,6 @@ feature 'cases requiring clearance by disclosure specialist' do
     create_case(flag_for_clearance: true)
     assign_case_to_team
     expect(cases_show_page).to be_displayed
-    expect(cases_show_page.case_history.entries.last.text)
-      .to include('Flag for clearance')
     login_as manager
 
     kase = Case.last
