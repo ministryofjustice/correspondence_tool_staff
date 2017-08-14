@@ -80,8 +80,17 @@ en:
     closed_status: Case closed
 
   roles:
-    responders: Information Officers
+    responders: Information officers
 
+  team_leads:
+    deputy_director: Deputy director
+    director: Director
+    director_general: Director general
+
+  team_types:
+    business_group: Business group
+    business_unit: Business unit
+    directorate: Directorate
 
   event:
     accept_approver_assignment: Clearance level added
@@ -336,7 +345,6 @@ en:
       incoming_cases_private_office: New cases
       my_open_cases: My open cases
       open_cases: All open cases
-      open_cases: Open cases
       settings: Settings
       stats: Statistics
   devise:

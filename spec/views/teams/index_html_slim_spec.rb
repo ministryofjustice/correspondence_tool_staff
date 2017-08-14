@@ -28,7 +28,7 @@ describe 'teams/index.html.slim', type: :view do
 
     page = teams_index_page
 
-    expect(page.heading.text).to eq "Business Groups"
+    expect(page.heading.text).to eq "Business groups"
 
     # check data in table is correct
     bg = page.row_for_business_group('HMPPS')

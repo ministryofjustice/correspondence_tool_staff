@@ -55,7 +55,7 @@ feature "Viewing Business Groups/Directorate/Business Units" do
     expect(teams_show_page).to be_displayed
 
     expect(teams_show_page.heading.text)
-        .to eq "You are viewing Business Group #{business_group.name}"
+        .to eq "You are viewing Business group #{business_group.name}"
   end
 
   def view_directorate
@@ -74,7 +74,7 @@ feature "Viewing Business Groups/Directorate/Business Units" do
     expect(teams_show_page).to be_displayed
 
     expect(teams_show_page.heading.text)
-        .to eq "You are viewing Business Unit #{business_unit.name}"
+        .to eq "You are viewing Business unit #{business_unit.name}"
   end
 
   def find_information_officer

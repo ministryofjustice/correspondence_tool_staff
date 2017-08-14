@@ -29,7 +29,7 @@ describe 'teams/show.html.slim', type: :view do
 
       teams_show_page.load(rendered)
 
-      expect(teams_show_page.heading.text).to eq 'You are viewing Business Group HMPPS'
+      expect(teams_show_page.heading.text).to eq 'You are viewing Business group HMPPS'
 
       # check column headings are correct
       headers = teams_show_page.table_heading

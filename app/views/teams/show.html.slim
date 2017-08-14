@@ -4,14 +4,9 @@
 - content_for :sub_heading
   span.visually-hidden
     = "You are viewing "
-  = @team.team_type
+  = t("team_types.#{@team.type.underscore}")
 
 = render partial: 'layouts/header'
-
-h2
-  .bold-small
-    = "#{ @team.team_lead_title} "
-  = @team.team_lead.value
 
 - if @team.is_a?(BusinessUnit)
   = render partial: 'business_unit_detail', locals: {team: @team}

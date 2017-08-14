@@ -1,5 +1,5 @@
 - content_for :heading
-  | Business Groups
+  = t('team_types.business_group').pluralize
 
 = render partial: 'layouts/header'
 
@@ -16,9 +16,9 @@
           th scope='col'
             | Name
           th scope='col'
-            | Director General
+            = t('team_leads.director_general')
           th scope='col'
-            | Directorates
+            = t('team_types.directorate').pluralize
           th scope='col'
             | Actions
       tbody
@@ -29,9 +29,9 @@
                 span.visually-hidden
                   = "View the details of "
                 = team.name
-            td aria-label="Director General"
+            td aria-label="#{ t('team_leads.director_general') }"
               = team.team_lead&.value
-            td aria-label="Directorates"
+            td aria-label="#{ t('team_types.directorate').pluralize }"
               = team.children.size
             td aria-label='Actions'
               | Edit

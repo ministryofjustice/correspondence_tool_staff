@@ -1,5 +1,10 @@
+h2
+  .bold-small
+    = t('team_leads.director_general')
+  = @team.team_lead.value
+
 h2.heading-medium
- | Directorates
+  = t('team_types.directorate').pluralize
 
 .grid-row
   .column-full.table-container.container
@@ -14,9 +19,9 @@ h2.heading-medium
           th scope='col'
             | Name
           th scope='col'
-            | Director
+            = t('team_leads.director')
           th scope='col'
-            | Business units
+            = t('team_types.business_unit').pluralize
           th scope='col'
             | Actions
       tbody
@@ -27,9 +32,9 @@ h2.heading-medium
                 span.visually-hidden
                   = "View the details of "
                 = team.name
-            td aria-label="Director"
+            td aria-label="#{t('team_leads.director')}"
               = team.team_lead&.value
-            td aria-label="Directorates"
+            td aria-label="#{t('team_types.directorate')}"
               = team.children.size
             td aria-label='Actions'
               | Edit

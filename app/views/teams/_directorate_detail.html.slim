@@ -1,5 +1,11 @@
+h2
+  .bold-small
+    = t('team_leads.director')
+  = @team.team_lead.value
+
 h2.heading-medium
-  | Business Units
+  = t('team_leads.director').pluralize
+
 .grid-row
   .column-full.table-container.container
     table.report.table-font-xsmall
@@ -12,7 +18,7 @@ h2.heading-medium
         th scope='col'
           | Name
         th scope='col'
-          | Deputy Director
+          = t('team_leads.deputy_director')
         th scope='col'
           = t('roles.responders')
         th scope='col'
@@ -22,7 +28,7 @@ h2.heading-medium
           tr
             td aria-label="Name"
               = link_to team.name, team_path(team)
-            td aria-label="Deputy Director"
+            td aria-label="#{ t('team_leads.deputy_director') }"
               = team.team_lead.value
             td aria-label="#{ t('roles.responders') }"
               = team.responders.size

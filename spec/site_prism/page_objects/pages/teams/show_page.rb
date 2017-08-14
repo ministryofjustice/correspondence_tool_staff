@@ -19,8 +19,8 @@ module PageObjects
 
         sections :business_units_list, '.report tbody tr' do
           element :name, 'td[aria-label="Name"] a'
-          element :deputy_director, 'td[aria-label="Deputy Director"]'
-          element :num_children, 'td[aria-label="Information Officers"]'
+          element :deputy_director, 'td[aria-label="Deputy director"]'
+          element :num_children, 'td[aria-label="Information officers"]'
           element :actions, 'td[aria-label="Actions"]'
         end
 

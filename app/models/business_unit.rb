@@ -84,20 +84,4 @@ class BusinessUnit < Team
       new_property
     end
   end
-
-  def team_lead_title
-    'Deputy Director'
-  end
-
-  def sub_team_type
-    nil
-  end
-
-  def sub_team_lead
-    nil
-  end
-
-  def team_type
-    'Business Unit'
-  end
 end
