@@ -134,7 +134,7 @@ en:
         requester_type: Type of requester
         refusal_reason_name: What was the reason for refusal?
         outcome_name: What was the outcome?
-        flag_for_disclosure_specialists: Clearance required by DACU Disclosure?
+        flag_for_disclosure_specialists: Clearance required by DACU Disclosure
     hint:
       feedback:
         comment: |
@@ -215,7 +215,7 @@ en:
       header_subject: "Case subject, "
       name: Requester
       postal_address: "Requesters postal address"
-      received_date: Date received
+      received_date: Date received at MOJ
       reason_for_refusal: Reason for refusal
       reassign_case: "Re-assign this case"
       remove_link_html: |
