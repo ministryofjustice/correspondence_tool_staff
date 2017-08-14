@@ -34,13 +34,13 @@ describe 'teams/index.html.slim', type: :view do
     bg = page.row_for_business_group('HMPPS')
     expect(bg.name.text).to eq 'View the details of HMPPS'
     expect(bg.director_general.text).to eq 'John Smith'
-    expect(bg.num_children.text).to eq '2'
+    expect(bg.num_directorates.text).to eq '2'
     expect(bg.actions.text).to eq 'Edit'
 
     bg = page.row_for_business_group('HMCTS')
     expect(bg.name.text).to eq 'View the details of HMCTS'
     expect(bg.director_general.text).to eq 'Jane Doe'
-    expect(bg.directorates.text).to eq '1'
+    expect(bg.num_directorates.text).to eq '1'
     expect(bg.actions.text).to eq 'Edit'
   end
 end

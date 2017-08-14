@@ -79,7 +79,6 @@ feature "Viewing Business Groups/Directorate/Business Units" do
 
   def find_information_officer
     expect(teams_show_page
-               .row_for_information_officer(responder.full_name,
-                                            responder.email)).to be_visible
+               .row_for_information_officer(responder.email)).to be_visible
   end
 end

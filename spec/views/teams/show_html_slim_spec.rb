@@ -30,19 +30,21 @@ describe 'teams/show.html.slim', type: :view do
 
       teams_show_page.load(rendered)
 
-      expect(teams_show_page.heading.text).to eq 'You are viewing Business group HMPPS'
+      expect(teams_show_page.heading)
+        .to have_text 'You are viewing Business group HMPPS'
 
-      expect(teams_show_page.child_teams_type.text).to eq 'Directorates'
+      expect(teams_show_page.heading.text)
+        .to have_text 'You are viewing Business group HMPPS'
       bg = teams_show_page.directorates_list[0]
       expect(bg.name.text).to eq 'View the details of Prisons'
-      expect(bg.deputy_director.text).to eq 'Phil Copple'
-      expect(bg.information_officers.text).to eq '2'
+      expect(bg.director.text).to eq 'Phil Copple'
+      expect(bg.num_business_units.text).to eq '2'
       expect(bg.actions.text).to eq 'Edit'
 
       bg = teams_show_page.directorates_list[1]
-      expect(bg.name.text).to eq 'HR'
-      expect(bg.director_general.text).to eq 'Martin Beecroft'
-      expect(bg.directorates.text).to eq '1'
+      expect(bg.name.text).to eq 'View the details of HR'
+      expect(bg.director.text).to eq 'Martin Beecroft'
+      expect(bg.num_business_units.text).to eq '1'
       expect(bg.actions.text).to eq 'Edit'
     end
   end
@@ -61,15 +63,15 @@ describe 'teams/show.html.slim', type: :view do
       render
       teams_show_page.load(rendered)
 
-      expect(teams_show_page.heading).to have_text "Business Unit #{bu.name}"
+      expect(teams_show_page.heading).to have_text "Business unit #{bu.name}"
     end
 
     it 'displays the deputy director' do
       render
       teams_show_page.load(rendered)
 
-      expect(teams_show_page.team_lead)
-        .to have_text "Deputy Director #{bu.team_lead.value}"
+      expect(teams_show_page.deputy_director)
+        .to have_text "Deputy director#{bu.team_lead.value}"
     end
 
     it 'displays the information officers' do
@@ -77,10 +79,10 @@ describe 'teams/show.html.slim', type: :view do
       teams_show_page.load(rendered)
 
       user1 = teams_show_page.information_officers_list.first
-      expect(user1.full_name.text).to  eq responder1.full_name
+      expect(user1.name.text).to  eq responder1.full_name
       expect(user1.email.text).to eq responder1.email
       user2 = teams_show_page.information_officers_list.second
-      expect(user2.full_name.text).to  eq responder2.full_name
+      expect(user2.name.text).to  eq responder2.full_name
       expect(user2.email.text).to eq responder2.email
     end
 

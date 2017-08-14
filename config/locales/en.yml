@@ -349,7 +349,7 @@ en:
       heading: Users
     new:
       create: Create user
-      heading: New user
+      heading: "New %{role}"
 
   nav:
     pages:

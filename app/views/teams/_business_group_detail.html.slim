@@ -34,7 +34,7 @@ h2.heading-medium
                 = team.name
             td aria-label="#{t('team_leads.director')}"
               = team.team_lead&.value
-            td aria-label="#{t('team_types.directorate')}"
+            td aria-label="#{t('team_types.business_unit').pluralize}"
               = team.children.size
             td aria-label='Actions'
               | Edit
