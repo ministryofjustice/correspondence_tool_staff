@@ -106,10 +106,11 @@ feature 'removing a response from response details' do
         create(:responded_case, responder: responder)
       end
 
-      scenario 'is not visible' do
+      scenario 'does not display remove button' do
         cases_show_page.load(id: responded_case.id)
 
-        expect(cases_show_page).to have_no_case_attachments
+        expect(cases_show_page.case_attachments.first.collection.first.actions)
+            .to have_no_remove
       end
     end
 
@@ -197,10 +198,11 @@ feature 'removing a response from response details' do
         create(:responded_case, responder: responder)
       end
 
-      scenario 'is not visible' do
+      scenario 'does not display remove button' do
         cases_show_page.load(id: responded_case.id)
 
-        expect(cases_show_page).to have_no_case_attachments
+        expect(cases_show_page.case_attachments.first.collection.first.actions)
+            .to have_no_remove
       end
     end
   end

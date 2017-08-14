@@ -1132,7 +1132,7 @@ RSpec.describe CasesController, type: :controller do
 
       it 'redirects to the case list view' do
         expect(patch :confirm_respond, params: { id: case_with_response.id }).
-            to redirect_to(cases_path)
+            to redirect_to(case_path(case_with_response))
       end
     end
 

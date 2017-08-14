@@ -27,10 +27,7 @@ feature 'Mark response as sent' do
 
     cases_respond_page.mark_as_sent_button.click
 
-    expect(open_cases_page.case_numbers).to include kase.number
-
-    expect(cases_page.case_numbers).to include kase.number
-    expect(cases_page).
+    expect(cases_show_page).
         to have_content('Response confirmed. The case is now with DACU.')
 
     login_as manager

@@ -18,7 +18,8 @@ class CasePolicy < ApplicationPolicy
     # because the kilo is still workin gon it.
     #
     if self.case.does_not_require_clearance?
-      check_case_is_responded_to_or_closed || check_user_is_a_responder_for_case
+      check_case_is_responded_to_or_closed ||
+          (check_user_in_responding_team)
     else
       true
     end
@@ -173,7 +174,7 @@ class CasePolicy < ApplicationPolicy
     if user.manager? || user.approver?
       true
     elsif user.responder?
-      check_user_is_a_responder_for_case
+      check_user_in_responding_team
     end
   end
 
@@ -289,7 +290,7 @@ class CasePolicy < ApplicationPolicy
 
     check_case_requires_clearance &&
       check_escalation_deadline_has_expired &&
-      check_user_is_a_responder_for_case
+      check_user_is_a_responder_for_case && check_case_is_not_closed
   end
 
   class Scope
@@ -315,9 +316,9 @@ class CasePolicy < ApplicationPolicy
 
   private
 
-  # def user_in_responding_team?
-  #   @user.in?(self.case.responding_team.users)
-  # end
+  check :user_in_responding_team do
+    user.responding_teams.include?(self.case.responding_team)
+  end
 
   # def user_not_in_responding_team?
   #   !user_in_responding_team?

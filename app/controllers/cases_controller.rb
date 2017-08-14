@@ -181,7 +181,7 @@ class CasesController < ApplicationController
     authorize @case, :can_respond?
     @case.respond(current_user)
     flash[:notice] = t('.success')
-    redirect_to cases_path
+    redirect_to case_path(@case)
   end
 
   def search
