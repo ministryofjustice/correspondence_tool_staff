@@ -13,6 +13,7 @@ describe CaseDecorator, type: :model do
                                  responding_teams: responder.responding_teams }
   let(:pending_dacu_clearance_case) { create(:pending_dacu_clearance_case).decorate }
   let(:another_responder) { create :responder }
+  let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
 
 
   describe '#who_its_with' do
@@ -274,5 +275,13 @@ describe CaseDecorator, type: :model do
       expect(responded_case.status).to eq 'Ready to close'
     end
   end
+
+  describe '#escaltion_deadline' do
+    it 'returns the escalation date in the default format' do
+      expect(unassigned_case.object).to receive(:escalation_deadline).and_return(Date.new(2017, 8, 13))
+      expect(unassigned_case.escalation_deadline).to eq '13 Aug 2017'
+    end
+  end
+
 end
 

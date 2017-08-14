@@ -1,0 +1,25 @@
+.grid-row
+  .column-full.clearance-details
+    h2.request--heading
+      = "Clearance levels"
+
+    - if case_details.within_escalation_deadline?
+      p.escalation-deadline
+        | To be decided by &nbsp;
+        strong = case_details.escalation_deadline
+    - else
+      table
+        tbody.basic-details
+          tr.deputy-director
+            th Deputy director
+            td.deputy-director-name = case_details.responding_team_lead_name
+
+          - if case_details.approvers.any?
+            tr.dacu-disclosure
+              th = case_details.default_team_service.approving_team.name
+              td = case_details.default_clearance_approver
+
+          - case_details.non_default_approver_assignments.each do |assignment|
+            tr.non-default-approvers
+              th = assignment.team.name
+              td = assignment.user&.full_name

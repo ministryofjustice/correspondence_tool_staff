@@ -39,6 +39,10 @@ class CaseDecorator < Draper::Decorator
     I18n.l(object.external_deadline, format: :default)
   end
 
+  def escalation_deadline
+    I18n.l(object.escalation_deadline, format: :default)
+  end
+
   def error_summary_message
     "#{h.pluralize(errors.count, I18n.t('common.error'))} #{ I18n.t('common.summary_error')}"
   end
@@ -83,6 +87,18 @@ class CaseDecorator < Draper::Decorator
 
   def self.collection_decorator_class
     PaginatingDecorator
+  end
+
+  def responding_team_lead_name
+    object.responding_team&.team_lead&.value
+  end
+
+  def default_clearance_team_name
+    object.default_team_service.default_clearance_team.name
+  end
+
+  def default_clearance_approver
+    object.approver_assignment_for(object.default_team_service.approving_team)&.user&.full_name
   end
 
 end

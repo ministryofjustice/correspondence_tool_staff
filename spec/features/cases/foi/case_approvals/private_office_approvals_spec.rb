@@ -1,27 +1,27 @@
 require 'rails_helper'
 
 feature 'cases requiring clearance by press office' do
-  given!(:dacu_disclosure)             { find_or_create :team_dacu_disclosure }
-  given(:disclosure_specialist)        { create :disclosure_specialist }
-  given(:other_disclosure_specialist)  { create :disclosure_specialist }
-  given!(:press_office)                { find_or_create :team_press_office }
-  given!(:press_officer)               { create :press_officer,
-                                                full_name: 'Preston Offman' }
-  given!(:private_office)              { find_or_create :team_private_office }
-  given!(:private_officer)             { create :private_officer }
-  given(:other_private_officer)        { create :private_officer }
-  given(:case_available_for_taking_on) { create :case_being_drafted,
-                                                created_at: 1.business_day.ago }
+  given!(:dacu_disclosure) {find_or_create :team_dacu_disclosure}
+  given(:disclosure_specialist) {create :disclosure_specialist}
+  given(:other_disclosure_specialist) {create :disclosure_specialist}
+  given!(:press_office) {find_or_create :team_press_office}
+  given!(:press_officer) {create :press_officer,
+                                 full_name: 'Preston Offman'}
+  given!(:private_office) {find_or_create :team_private_office}
+  given!(:private_officer) {create :private_officer}
+  given(:other_private_officer) {create :private_officer}
+  given(:case_available_for_taking_on) {create :case_being_drafted,
+                                               created_at: 1.business_day.ago}
   given(:pending_dacu_clearance_case) do
     create :pending_dacu_clearance_case,
            :flagged_accepted,
            :press_office,
            disclosure_assignment_state: 'accepted',
-           disclosure_specialist: disclosure_specialist
+           disclosure_specialist:       disclosure_specialist
   end
-  given(:pending_press_clearance_case)   { create :pending_press_clearance_case,
-                                                  :private_office }
-  given(:pending_private_clearance_case) { create :pending_private_clearance_case }
+  given(:pending_press_clearance_case) {create :pending_press_clearance_case,
+                                               :private_office}
+  given(:pending_private_clearance_case) {create :pending_private_clearance_case}
 
   scenario 'Private Officer taking on a case', js: true do
     case_available_for_taking_on
@@ -50,11 +50,11 @@ feature 'cases requiring clearance by press office' do
     login_as press_officer
     cases_show_page.load(id: pending_press_clearance_case.id)
 
-    approve_case kase: pending_press_clearance_case,
-                 expected_team: private_office,
+    approve_case kase:            pending_press_clearance_case,
+                 expected_team:   private_office,
                  expected_status: 'Pending clearance'
     approve_response kase: pending_press_clearance_case
-    select_case_on_open_cases_page kase: pending_press_clearance_case,
+    select_case_on_open_cases_page kase:          pending_press_clearance_case,
                                    expected_team: private_office
   end
 
@@ -65,12 +65,12 @@ feature 'cases requiring clearance by press office' do
     expect(cases_show_page.case_status.details.who_its_with.text)
       .to eq 'Private Office'
 
-    approve_case kase: pending_private_clearance_case,
-                 expected_team: pending_private_clearance_case.responding_team,
+    approve_case kase:            pending_private_clearance_case,
+                 expected_team:   pending_private_clearance_case.responding_team,
                  expected_status: 'Ready to send'
     approve_response kase: pending_private_clearance_case
     select_case_on_open_cases_page(
-      kase: pending_private_clearance_case,
+      kase:          pending_private_clearance_case,
       expected_team: pending_private_clearance_case.responding_team
     )
   end
@@ -79,12 +79,12 @@ feature 'cases requiring clearance by press office' do
     login_as other_private_officer
 
     cases_show_page.load(id: pending_private_clearance_case.id)
-    approve_case kase: pending_private_clearance_case,
-                 expected_team: pending_private_clearance_case.responding_team,
+    approve_case kase:            pending_private_clearance_case,
+                 expected_team:   pending_private_clearance_case.responding_team,
                  expected_status: 'Ready to send'
     approve_response kase: pending_private_clearance_case
     select_case_on_open_cases_page(
-      kase: pending_private_clearance_case,
+      kase:          pending_private_clearance_case,
       expected_team: pending_private_clearance_case.responding_team
     )
   end
@@ -96,14 +96,14 @@ feature 'cases requiring clearance by press office' do
     expect(cases_show_page.case_status.details.who_its_with.text)
       .to eq 'Private Office'
 
-    request_amends kase: pending_private_clearance_case,
+    request_amends kase:            pending_private_clearance_case,
                    expected_action: 'requesting amends for',
-                   expected_team: dacu_disclosure,
+                   expected_team:   dacu_disclosure,
                    expected_status: 'Pending clearance'
     execute_request_amends kase: pending_private_clearance_case
     select_case_on_open_cases_page(
-      kase: pending_private_clearance_case,
-      expected_team: dacu_disclosure,
+      kase:             pending_private_clearance_case,
+      expected_team:    dacu_disclosure,
       expected_history: ["#{private_officer.full_name}Request amends"]
     )
   end

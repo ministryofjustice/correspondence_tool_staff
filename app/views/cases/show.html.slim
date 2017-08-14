@@ -2,9 +2,9 @@
   .alert-green
     = t('alerts.assignment_accepted_html', case_list_url: cases_path)
 
-- if @case.under_review?
+- if @case.within_escalation_deadline?
   .alert-orange
-    = t('alerts.escalation_warning_html', escalation_deadline: "#{l @case.escalation_deadline, format: :default}")
+    = t('alerts.escalation_warning_html', escalation_deadline: @case.escalation_deadline)
 
 - content_for :heading
   span.visually-hidden
@@ -37,6 +37,9 @@ div id="case-#{@case.id}"
 
   section.case-info
     = render partial: 'cases/case_details', locals: {case_details: @case}
+
+  section.case-info
+    = render partial: 'cases/clearance_levels', locals: {case_details: @case}
 
   - if case_attachments_visible_for_case?
     section.case-info
