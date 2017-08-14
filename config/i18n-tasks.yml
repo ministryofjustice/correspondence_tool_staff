@@ -95,6 +95,7 @@ ignore_unused:
   - 'tabs.{in_time,late}_html'
   - 'pundit.nil_class'
   - 'event.*'
+  - 'cases.index.heading_*'
 
 
 ## Consider these keys used:

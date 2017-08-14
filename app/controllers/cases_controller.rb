@@ -30,6 +30,7 @@ class CasesController < ApplicationController
                 .cases
                 .page(params[:page])
                 .decorate
+    @current_tab_name = 'all_cases'
   end
 
 
@@ -46,12 +47,14 @@ class CasesController < ApplicationController
   def my_open_cases
     finder = @global_nav_manager.current_cases_finder
     @cases = finder.cases.page(params[:page]).decorate
+    @current_tab_name = 'my_cases'
     render :index
   end
 
   def open_cases
     finder = @global_nav_manager.current_cases_finder
     @cases = finder.cases.page(params[:page]).decorate
+    @current_tab_name = 'all_cases'
     render :index
   end
 

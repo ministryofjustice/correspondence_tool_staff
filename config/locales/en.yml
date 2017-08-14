@@ -276,7 +276,8 @@ en:
       name-subject: Name/Subject
       view_case: Link to case
     index: &cases_list
-      heading: All open cases
+      heading_all_cases: All open cases
+      heading_my_cases: My open cases
       view_case: Link to case
       number: Case number
       number_html: 'Case <abbr title="number">No.</abbr>'

@@ -283,6 +283,11 @@ RSpec.describe CasesController, type: :controller do
         expect(finder).to have_received(:for_user).with(manager).at_least(1).times
       end
 
+      it 'sets @current_tab_name' do
+        get :index
+        expect(assigns(:current_tab_name)).to eq 'all_cases'
+      end
+
     end
 
     context 'as an authenticated responder' do
@@ -298,6 +303,12 @@ RSpec.describe CasesController, type: :controller do
         get :index
         expect(response).to render_template(:index)
       end
+
+      it 'sets @current_tab_name' do
+        get :index
+        expect(assigns(:current_tab_name)).to eq 'all_cases'
+      end
+
     end
 
     context 'as an authenticated disclosure_specialist' do
@@ -312,6 +323,11 @@ RSpec.describe CasesController, type: :controller do
         expect(finder).to have_received(:for_user)
                             .with(disclosure_specialist)
                             .at_least(1).times
+      end
+
+      it 'sets @current_tab_name' do
+        get :index
+        expect(assigns(:current_tab_name)).to eq 'all_cases'
       end
     end
   end
@@ -382,7 +398,7 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
-  describe 'GET my_open' do
+  describe 'GET my_open_cases' do
 
     context "as an anonymous user" do
       it "be redirected to signin if trying to list of questions" do
@@ -408,9 +424,14 @@ RSpec.describe CasesController, type: :controller do
         expect(gnm.current_cases_finder.cases).to have_received(:page).with('our_page')
       end
 
-      it 'renders the incoming_cases template' do
-        get :open_cases
+      it 'renders the index template' do
+        get :my_open_cases
         expect(response).to render_template(:index)
+      end
+
+      it 'sets @current_tab_name to all cases for "All open cases tab"' do
+        get :my_open_cases
+        expect(assigns(:current_tab_name)).to eq 'my_cases'
       end
     end
   end
