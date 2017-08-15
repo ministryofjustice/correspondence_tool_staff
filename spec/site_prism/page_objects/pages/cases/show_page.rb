@@ -30,6 +30,9 @@ module PageObjects
         section :case_details,
                 PageObjects::Sections::Cases::CaseDetailsSection, '.case-details'
 
+        section :clearance_levels,
+                PageObjects::Sections::Cases::ClearanceLevelsSection, '.clearance-levels'
+
         section :request,
                 PageObjects::Sections::Cases::CaseRequestSection, '.request'
 

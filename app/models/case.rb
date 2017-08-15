@@ -238,6 +238,10 @@ class Case < ApplicationRecord
   #   self.approver_assignments.any? &:pending?
   # end
 
+  def default_team_service
+    @default_team_service ||= DefaultTeamService.new(self)
+  end
+
   def team_for_user(user)
     assignments.where(user_id: user.id).first&.team ||
       (teams & user.teams).first
@@ -373,6 +377,14 @@ class Case < ApplicationRecord
 
   def current_team_and_user
     CurrentTeamAndUserService.new(self)
+  end
+
+  def approver_assignment_for(team)
+    approver_assignments.where(team: team).first
+  end
+
+  def non_default_approver_assignments
+    approver_assignments.where.not(team: default_team_service.approving_team)
   end
 
   private

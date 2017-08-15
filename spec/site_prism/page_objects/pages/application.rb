@@ -45,6 +45,7 @@ module PageObjects
         case_status:                  'Cases::CaseStatusSection',
         case_request:                 'Cases::CaseRequestSection',
         case_details:                 'Cases::CaseDetailsSection',
+        clearance_levels:             'Cases::ClearanceLevelsSection',
         case_attachments:             'Cases::CaseAttachmentSection',
         clearance_copy:               'Cases::ClearanceCopySection',
         pagination:                   'PaginationSection',

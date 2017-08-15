@@ -991,6 +991,86 @@ RSpec.describe Case, type: :model do
     end
   end
 
+  describe '#default_team_service' do
+    context 'first call' do
+      it 'instantiates a DefaultTeamService object' do
+        expect(DefaultTeamService).to receive(:new).with(accepted_case).and_call_original
+        dts = accepted_case.default_team_service
+        expect(dts).to be_instance_of(DefaultTeamService)
+      end
+    end
+
+    context 'subsequent_calls' do
+      before(:each) do
+        @dts = accepted_case.default_team_service
+      end
+
+      it 'uses cached version and does not instantiate new DefaultTeamSErvice' do
+        expect(DefaultTeamService).not_to receive(:new)
+        dts = accepted_case.default_team_service
+        expect(dts).to eq @dts
+      end
+    end
+  end
+
+  describe '#approver_assignment_for(team)' do
+
+    let(:team_dacu_disclosure)  { find_or_create :team_dacu_disclosure }
+    let(:pending_dacu_clearance_case) { create(:pending_dacu_clearance_case) }
+
+    context 'no approver assignments' do
+      it 'returns nil' do
+        expect(kase.approver_assignment_for(team_dacu_disclosure)).to be_nil
+      end
+    end
+
+    context 'approver assignments but none for specified team' do
+
+      let(:pending_dacu_clearance_case) { create(:pending_dacu_clearance_case) }
+
+      it 'returns nil' do
+        expect(pending_dacu_clearance_case.approver_assignments.any?).to be true
+        team = create :team
+        expect(pending_dacu_clearance_case.approver_assignment_for(team)).to be_nil
+      end
+    end
+
+    context 'approver assignments including one for team' do
+      it 'returns the assignment' do
+        team = pending_dacu_clearance_case.approver_assignments.first.team
+        assignment = pending_dacu_clearance_case.approver_assignment_for(team)
+        expect(assignment.team).to eq team
+      end
+    end
+  end
+
+  describe 'non_default_approver_assignments' do
+
+    let(:pending_dacu_clearance_case) { create(:pending_dacu_clearance_case) }
+
+    context 'no approver assignments' do
+      it 'returns empty array' do
+        expect(kase.non_default_approver_assignments).to be_empty
+      end
+    end
+
+    context 'only default clearance team approver assignment' do
+      it 'returns empty array' do
+        expect(pending_dacu_clearance_case.non_default_approver_assignments).to be_empty
+      end
+    end
+
+    context 'multiple apprval assignments' do
+      it 'returns all of them accept the default approval team assignment' do
+        pending_private_clearance_case = create :pending_private_clearance_case
+        private_office = find_or_create(:team_private_office)
+        press_office = find_or_create(:team_press_office)
+        non_default_approver_assignments = pending_private_clearance_case.non_default_approver_assignments
+        expect(non_default_approver_assignments.map(&:team)).to match_array [ private_office, press_office]
+      end
+    end
+  end
+
   # See note in case.rb about why this is commented out.
   #
   # describe 'awaiting_approver?' do
