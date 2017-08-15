@@ -35,13 +35,13 @@ describe 'teams/show.html.slim', type: :view do
 
       expect(teams_show_page.heading.text)
         .to have_text 'You are viewing Business group HMPPS'
-      bg = teams_show_page.directorates_list[0]
+      bg = teams_show_page.row_for_directorate('Prisons')
       expect(bg.name.text).to eq 'View the details of Prisons'
       expect(bg.director.text).to eq 'Phil Copple'
       expect(bg.num_business_units.text).to eq '2'
       expect(bg.actions.text).to eq 'Edit'
 
-      bg = teams_show_page.directorates_list[1]
+      bg = teams_show_page.row_for_directorate('HR')
       expect(bg.name.text).to eq 'View the details of HR'
       expect(bg.director.text).to eq 'Martin Beecroft'
       expect(bg.num_business_units.text).to eq '1'

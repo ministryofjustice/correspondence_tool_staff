@@ -30,9 +30,9 @@ h2.heading-medium
                = user.email
             td aria-label="Actions"
               | Edit
-.grid-row
-  .column-full
-    - if Pundit.policy(current_user, team).can_add_new_responder?
+- if Pundit.policy(current_user, team).can_add_new_responder?
+  .grid-row
+    .column-full
       = link_to(t('.new_responder_user'),
                 new_team_user_path(team_id: team.id, role: 'responder'),
                 id: 'action--new-responder-user',
