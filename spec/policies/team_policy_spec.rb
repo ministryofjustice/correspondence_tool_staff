@@ -14,6 +14,12 @@ describe TeamPolicy do
     it { should_not permit(approver,  responding_team) }
   end
 
+  permissions :edit? do
+    it { should     permit(manager,     Team.first)  }
+    it { should_not permit(responder,   Team.first) }
+    it { should_not permit(approver,    Team.first) }
+  end
+
   permissions :index? do
     it { should     permit(manager,   Team.first)  }
     it { should_not permit(responder, Team.first) }
@@ -24,5 +30,11 @@ describe TeamPolicy do
     it { should     permit(manager,   Team.first)  }
     it { should_not permit(responder, Team.first) }
     it { should_not permit(approver,  Team.first) }
+  end
+
+  permissions :update? do
+    it { should     permit(manager,     Team.first)  }
+    it { should_not permit(responder,   Team.first) }
+    it { should_not permit(approver,    Team.first) }
   end
 end

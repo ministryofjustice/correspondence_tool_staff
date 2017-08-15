@@ -14,6 +14,8 @@
 require 'rails_helper'
 
 RSpec.describe Team, type: :model do
+  let(:team) { create :team }
+
   it 'can be created' do
     bu = Team.create name: 'Busy Units', email: 'busy.units@localhost'
     expect(bu).to be_valid
@@ -164,7 +166,6 @@ RSpec.describe Team, type: :model do
 
   describe '#enable_allocation' do
 
-    let(:team)  { create :team }
     let(:foi)   { create :category, :foi }
 
     it 'creates a team property record' do
@@ -214,6 +215,26 @@ RSpec.describe Team, type: :model do
       [t3, t4].each { |t| t.enable_allocation(gq) }
       expect(Team.allocatable(foi)).to match_array [t1, t2, t4]
       expect(Team.allocatable(gq)).to match_array [t3, t4]
+    end
+  end
+
+  describe '.team_lead' do
+    it 'returns the value for the team lead property' do
+      team.properties << TeamProperty.new(key: 'lead', value: 'A Team Lead')
+      expect(team.team_lead).to eq 'A Team Lead'
+    end
+  end
+
+  describe '.team_lead=' do
+    it 'creates the value for the team lead property' do
+      team.team_lead = 'A New Team Lead'
+      expect(team.properties.lead.first.value).to eq 'A New Team Lead'
+    end
+
+    it 'sets the value for the team lead property' do
+      team.properties << TeamProperty.new(key: 'lead', value: 'A Team Lead')
+      team.team_lead = 'A Newer Team Lead'
+      expect(team.properties.lead.first.value).to eq 'A Newer Team Lead'
     end
   end
 end

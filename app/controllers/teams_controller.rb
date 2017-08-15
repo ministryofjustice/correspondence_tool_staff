@@ -1,4 +1,6 @@
 class TeamsController < ApplicationController
+  before_action :set_team, only: [:show, :edit, :update]
+
 
   def index
     @teams = BusinessGroup.all
@@ -6,21 +8,20 @@ class TeamsController < ApplicationController
   end
 
   def show
-    @team = Team.find(params[:id])
     authorize @team
     @children = @team.children
   end
 
   def edit
-    @team = Team.find(params[:id])
     authorize @team
   end
 
   def update
-    @team = Team.find(params[:id])
+    authorize @team
+
     if @team.update(team_params)
-      flash.now[:notice] = 'Team details updated'
-      redirect_to edit_team_path(@team.parent)
+      flash[:notice] = 'Team details updated'
+      redirect_to team_path(@team.parent)
     else
       render :edit
     end
@@ -30,7 +31,14 @@ class TeamsController < ApplicationController
   def team_params
     params.require(:team).permit(
       :name,
-      :email
+      :email,
+      :team_lead_name
     )
+  end
+
+  private
+
+  def set_team
+    @team = Team.find(params[:id])
   end
 end

@@ -43,7 +43,7 @@ ul.business-groups.list
               .bold-small
                 = "Deputy Director"
               .deputy-director
-                = team.team_lead.value
+                = team.team_lead
         .team-actions
           = link_to t('button.assign'),
                   case_assign_to_responder_team_path(case_id: @case.id,

@@ -2,7 +2,10 @@ require 'rails_helper'
 
 RSpec.describe TeamsController, type: :controller do
 
-  let(:bg)        { create :business_group }
+  let(:bg)            { create :business_group }
+  let(:directorate)   { create :directorate, business_group: bg }
+  let(:business_unit) { create :business_unit, directorate: directorate }
+  let(:manager)       { create :manager }
 
   context 'logged in as a non-manager'do
     before(:each) do
@@ -29,7 +32,6 @@ RSpec.describe TeamsController, type: :controller do
   context 'logged in as a manager' do
 
     before(:each) do
-      manager = create :manager
       sign_in manager
     end
 
@@ -68,5 +70,50 @@ RSpec.describe TeamsController, type: :controller do
     end
   end
 
+  describe 'GET edit' do
+    let(:params) { { id: bg.id } }
 
+    before do
+      sign_in manager
+    end
+
+    it 'authorises' do
+      expect{
+        get :edit, params: params
+      }.to require_permission(:edit?)
+             .with_args(manager, bg)
+    end
+
+    it 'assigns @team' do
+      get :edit, params: params
+      expect(assigns(:team)).to eq bg
+    end
+  end
+
+  describe 'PATCH update' do
+    let(:params) { { id: business_unit.id,
+                     team: {
+                       name: 'New Name',
+                       email: 'n00b@localhost',
+                     } } }
+
+    before do
+      sign_in manager
+    end
+
+    it 'authorises' do
+      expect{
+        patch :update, params: params
+      }.to require_permission(:update?)
+             .with_args(manager, business_unit)
+    end
+
+    it 'updates the given team' do
+      patch :update, params: params
+
+      business_unit.reload
+      expect(business_unit.name).to  eq 'New Name'
+      expect(business_unit.email).to eq 'n00b@localhost'
+    end
+  end
 end

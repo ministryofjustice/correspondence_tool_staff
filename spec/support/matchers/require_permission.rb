@@ -3,18 +3,19 @@ require 'rspec/expectations'
 RSpec::Matchers.define :require_permission do |permission|
   match do |event_or_block|
     if event_or_block.respond_to? :call
-      policy = spy(CasePolicy)
+      policy_class = Pundit::PolicyFinder.new(@with_args.second).policy!
+      policy = spy(policy_class)
       allow(policy).to receive(permission)
                          .with(no_args) { @permission_received = true }
       if @with_args
-        allow(CasePolicy).to receive(:new).with(*@with_args).and_return(policy)
+        allow(policy_class).to receive(:new).with(*@with_args).and_return(policy)
       else
-        allow(CasePolicy).to receive(:new).and_return(policy)
+        allow(policy_class).to receive(:new).and_return(policy)
       end
       event_or_block.call
       expect(@permission_received).to eq true
     else
-      expect_any_instance_of(CasePolicy).to receive(permission).and_return(true)
+      expect_any_instance_of(policy_class).to receive(permission).and_return(true)
       state_machine_class = RSpec::current_example
                               .example_group
                               .top_level_description

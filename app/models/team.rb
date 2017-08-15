@@ -20,7 +20,6 @@ class Team < ApplicationRecord
   has_many :users, through: :user_roles
   has_many :properties, class_name: TeamProperty
   has_many :areas, -> { area }, class_name: TeamProperty
-  has_one  :team_lead, -> { lead }, class_name: TeamProperty
 
   scope :with_user, ->(user) {
     includes(:user_roles)
@@ -49,11 +48,31 @@ class Team < ApplicationRecord
     TeamPolicy
   end
 
-  def team_lead_name
-    team_lead.value
+  def role
+    properties.role.first&.value
   end
 
-  def team_lead_name=(name)
-    team_lead.update(value: name)
+  def role=(new_role)
+    if properties.role.exists?
+      properties.role.update value: new_role
+    else
+      new_property = TeamProperty.new(key: 'role', value: new_role)
+      properties << new_property
+      new_property
+    end
+  end
+
+  def team_lead
+    properties.lead.first.value
+  end
+
+  def team_lead=(name)
+    if properties.lead.exists?
+      properties.lead.first.update value: name
+    else
+      TeamProperty.new(key: 'lead', value: name).tap do |property|
+        properties << property
+      end
+    end
   end
 end
