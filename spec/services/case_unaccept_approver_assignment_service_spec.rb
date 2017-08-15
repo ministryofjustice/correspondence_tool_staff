@@ -77,21 +77,29 @@ describe CaseUnacceptApproverAssignmentService do
 
       context 'case is not previously flagged for clearance' do
         before do
+          # press officer flagging it for themselves and flags for dacu disclosure as side effect
           create :flag_case_for_clearance_transition,
                  case: assigned_to_press_office_case,
-                 user: press_officer,
-                 approving_team: dacu_disclosure,
-                 managing_team: press_office
+                 acting_user_id: press_officer.id,            # user: press_officer
+                 target_team_id: dacu_disclosure.id,          # approving_team: dacu_disclosure
+                 acting_team_id: press_office.id              # managing_team: press_office
+
+          # press office flagging it for themselves
           create :flag_case_for_clearance_transition,
                  case: assigned_to_press_office_case,
-                 user: press_officer,
-                 approving_team: press_office,
-                 managing_team: press_office
+                 acting_user_id: press_officer.id,            # user: press_officer
+                 acting_team_id: press_office.id,             # approving_team: press_office
+                 target_team_id: press_office.id,             # managing_team: press_office
+                 target_user_id: press_officer.id
+
+          # press office flagging it for themselves and flags for private office as a side effect
           create :flag_case_for_clearance_transition,
                  case: assigned_to_press_office_case,
-                 user: private_officer,
-                 approving_team: private_office,
-                 managing_team: press_office
+                 acting_user_id: press_officer.id,
+                 acting_team_id: press_office.id,             # managing_team: press_office
+                 target_user_id: private_officer.id,          # user: private_officer
+                 target_team_id: private_office.id            # approving_team: private_office
+
         end
 
         it 'deletes approver assignments' do
@@ -136,19 +144,19 @@ describe CaseUnacceptApproverAssignmentService do
         before do
           create :flag_case_for_clearance_transition,
                  case: assigned_to_press_office_case,
-                 user: private_officer,
-                 approving_team: private_office,
-                 managing_team: private_office
+                 acting_user: private_officer,
+                 acting_team: private_office,
+                 target_team: private_office
           create :flag_case_for_clearance_transition,
                  case: assigned_to_press_office_case,
-                 user: press_officer,
-                 approving_team: dacu_disclosure,
-                 managing_team: team_dacu
+                 acting_user: press_officer,
+                 target_team: dacu_disclosure,
+                 acting_team: team_dacu
           create :flag_case_for_clearance_transition,
                  case: assigned_to_press_office_case,
-                 user: press_officer,
-                 approving_team: press_office,
-                 managing_team: press_office
+                 acting_user: press_officer,
+                 target_team: press_office,
+                 acting_team: press_office
         end
 
         it 'deletes only the press office approver assignments' do
@@ -218,14 +226,14 @@ describe CaseUnacceptApproverAssignmentService do
         before do
           create :flag_case_for_clearance_transition,
                  case: assigned_to_private_office_case,
-                 user: private_officer,
-                 approving_team: dacu_disclosure,
-                 managing_team: private_office
+                 acting_user: private_officer,
+                 target_team: dacu_disclosure,
+                 acting_team: private_office
           create :flag_case_for_clearance_transition,
                  case: assigned_to_private_office_case,
-                 user: private_officer,
-                 approving_team: private_office,
-                 managing_team: private_office
+                 acting_user: private_officer,
+                 acting_team: private_office,
+                 target_team: private_office
         end
 
         it 'deletes approver assignments' do
@@ -261,14 +269,15 @@ describe CaseUnacceptApproverAssignmentService do
         before do
           create :flag_case_for_clearance_transition,
                  case: assigned_to_private_office_case,
-                 user: private_officer,
-                 approving_team: dacu_disclosure,
-                 managing_team: team_dacu
+                 acting_user_id: private_officer.id,
+                 acting_team_id: team_dacu.id,
+                 target_team_id: dacu_disclosure.id
+
           create :flag_case_for_clearance_transition,
                  case: assigned_to_private_office_case,
-                 user: private_officer,
-                 approving_team: private_office,
-                 managing_team: private_office
+                 acting_user_id: private_officer.id,
+                 acting_team_id: private_office.id,
+                 target_team_id: private_office.id
         end
 
         it 'deletes only the private office approver assignments' do

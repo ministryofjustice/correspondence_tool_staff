@@ -59,7 +59,7 @@ describe Events do
                                   policy: :a_policy
       state_info = machine.events[:test][:transitions]['from_state'].first
       guard = state_info[:guards].first
-      guard.call(kase, :last_transition, { user_id: :a_user_id })
+      guard.call(kase, :last_transition, { acting_user_id: :a_user_id })
 
       expect(Pundit).to have_received(:policy!).with(user, kase)
       expect(policies).to have_recieved(:a_policy)
@@ -78,7 +78,7 @@ describe Events do
                                   to: :to_state
       state_info = machine.events[:test][:transitions]['from_state'].first
       guard = state_info[:guards].first
-      guard.call(kase, :last_transition, { user_id: :a_user_id })
+      guard.call(kase, :last_transition, { acting_user_id: :a_user_id })
 
       expect(Pundit).to have_received(:policy!).with(user, kase)
       expect(policies).to have_recieved('test_from_from_state_to_to_state')

@@ -285,13 +285,13 @@ describe Events do
         state :c
 
         event :event_1 do
-          guard { |_,_,metadata| metadata[:user_id] == :id_of_user }
+          guard { |_,_,metadata| metadata[:acting_user_id] == :id_of_user }
           transition from: :a, to: :b
         end
 
         event :event_2 do
           transition from: :a, to: :c,
-                     guard: ->(_,_,metadata) { metadata[:user_id] == :id_of_user }
+                     guard: ->(_,_,metadata) { metadata[:acting_user_id] == :id_of_user }
         end
       end
 

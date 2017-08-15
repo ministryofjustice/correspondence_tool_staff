@@ -88,9 +88,9 @@ RSpec.describe CaseStateMachine, type: :model do
       end
       Timecop.freeze(t2) do
         state_machine.trigger! :assign_responder,
-                               managing_team_id:   managing_team.id,
-                               responding_team_id: responding_team.id,
-                               user_id:            manager.id,
+                               acting_team_id:     managing_team.id,
+                               target_team_id:     responding_team.id,
+                               acting_user_id:     manager.id,
                                event:              :assign_responder
       end
       expect(kase.current_state).to eq 'awaiting_responder'
@@ -101,7 +101,7 @@ RSpec.describe CaseStateMachine, type: :model do
   events :assign_responder do
     it { should transition_from(:unassigned).to(:awaiting_responder) }
     it { should require_permission(:can_assign_case?)
-                  .using_options(user_id: manager.id)
+                  .using_options(acting_user_id: manager.id)
                   .using_object(new_case) }
   end
 
@@ -111,7 +111,7 @@ RSpec.describe CaseStateMachine, type: :model do
     it { should transition_from(:drafting).to(:drafting) }
     it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
     it { should require_permission(:can_flag_for_clearance?)
-                  .using_options(user_id: manager.id)
+                  .using_options(acting_user_id: manager.id)
                   .using_object(assigned_case) }
   end
 
@@ -128,7 +128,7 @@ RSpec.describe CaseStateMachine, type: :model do
     it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
     it { should transition_from(:responded).to(:responded) }
     it { should require_permission(:can_accept_or_reject_approver_assignment?)
-                  .using_options(user_id: approver.id)
+                  .using_options(acting_user_id: approver.id)
                   .using_object(kase) }
   end
 
@@ -139,7 +139,7 @@ RSpec.describe CaseStateMachine, type: :model do
     it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
     it { should transition_from(:pending_dacu_clearance).to(:pending_dacu_clearance) }
     it { should require_permission(:can_unaccept_approval_assignment?)
-            .using_options(user_id: approver.id)
+            .using_options(acting_user_id: approver.id)
             .using_object(kase) }
   end
 
@@ -159,14 +159,14 @@ RSpec.describe CaseStateMachine, type: :model do
   events :accept_responder_assignment do
     it { should transition_from(:awaiting_responder).to(:drafting) }
     it { should require_permission(:can_accept_or_reject_responder_assignment?)
-                  .using_options(user_id: responder.id)
+                  .using_options(acting_user_id: responder.id)
                   .using_object(assigned_case) }
   end
 
   events :reject_responder_assignment do
     it { should transition_from(:awaiting_responder).to(:unassigned) }
     it { should require_permission(:can_accept_or_reject_responder_assignment?)
-                  .using_options(user_id: responder.id)
+                  .using_options(acting_user_id: responder.id)
                   .using_object(assigned_case) }
   end
 
@@ -174,7 +174,7 @@ RSpec.describe CaseStateMachine, type: :model do
     it { should transition_from(:drafting).to(:awaiting_dispatch) }
     it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
     it { should require_permission(:can_add_attachment?)
-                  .using_options(user_id: responder.id)
+                  .using_options(acting_user_id: responder.id)
                   .using_object(case_being_drafted) }
   end
 
@@ -187,21 +187,21 @@ RSpec.describe CaseStateMachine, type: :model do
   events :remove_response do
     it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
     it { should require_permission(:can_remove_attachment?)
-                  .using_options(user_id: responder.id)
+                  .using_options(acting_user_id: responder.id)
                   .using_object(case_with_response) }
   end
 
   events :remove_last_response do
     it { should transition_from(:awaiting_dispatch).to(:drafting) }
     it { should require_permission(:can_remove_attachment?)
-                  .using_options(user_id: responder.id)
+                  .using_options(acting_user_id: responder.id)
                   .using_object(case_with_response) }
   end
 
   events :respond do
     it { should transition_from(:awaiting_dispatch).to(:responded) }
     it { should require_permission(:can_respond?)
-                  .using_options(user_id: responder.id)
+                  .using_options(acting_user_id: responder.id)
                   .using_object(case_with_response) }
   end
 
@@ -235,7 +235,7 @@ RSpec.describe CaseStateMachine, type: :model do
   events :upload_response_and_approve do
     it { should transition_from(:pending_dacu_clearance).to :awaiting_dispatch}
     it { should require_permission(:can_upload_response_and_approve?)
-                  .using_options(user_id: approver.id)
+                  .using_options(acting_user_id: approver.id)
                   .using_object(pending_dacu_clearance_case)
     }
   end
@@ -249,7 +249,7 @@ RSpec.describe CaseStateMachine, type: :model do
   events :close do
     it { should transition_from(:responded).to(:closed) }
     it { should require_permission(:can_close_case?)
-                  .using_options(user_id: manager.id)
+                  .using_options(acting_user_id: manager.id)
                   .using_object(responded_case) }
   end
 
@@ -261,7 +261,7 @@ RSpec.describe CaseStateMachine, type: :model do
     it { should transition_from(:pending_dacu_clearance).to(:pending_dacu_clearance) }
     it { should transition_from(:responded).to(:responded) }
     it { should require_permission(:can_add_message_to_case?)
-                  .using_options(user_id: manager.id)
+                  .using_options(acting_user_id: manager.id)
                   .using_object(responded_case) }
   end
 
@@ -273,9 +273,9 @@ RSpec.describe CaseStateMachine, type: :model do
                                                  responding_team
       end.to trigger_the_event(:assign_responder)
                .on_state_machine(new_case.state_machine)
-               .with_parameters user_id:            manager.id,
-                                managing_team_id:   managing_team.id,
-                                responding_team_id: responding_team.id
+               .with_parameters acting_user_id:   manager.id,
+                                acting_team_id:   managing_team.id,
+                                target_team_id:   responding_team.id
     end
   end
 
@@ -288,9 +288,9 @@ RSpec.describe CaseStateMachine, type: :model do
       end
         .to trigger_the_event(:flag_for_clearance)
               .on_state_machine(assigned_case.state_machine)
-              .with_parameters user_id: manager.id,
-                               managing_team_id: managing_team.id,
-                               approving_team_id: approving_team.id
+              .with_parameters acting_user_id: manager.id,
+                               acting_team_id: managing_team.id,
+                               target_team_id: approving_team.id
     end
   end
 
@@ -303,9 +303,9 @@ RSpec.describe CaseStateMachine, type: :model do
       end
         .to trigger_the_event(:unflag_for_clearance)
               .on_state_machine(assigned_case.state_machine)
-              .with_parameters user_id: manager.id,
-                               managing_team_id: managing_team.id,
-                               approving_team_id: approving_team.id
+              .with_parameters acting_user_id: manager.id,
+                               acting_team_id: managing_team.id,
+                               target_team_id: approving_team.id
     end
   end
 
@@ -316,8 +316,8 @@ RSpec.describe CaseStateMachine, type: :model do
                                                                 approving_team
       end.to trigger_the_event(:accept_approver_assignment)
                .on_state_machine(assigned_case.state_machine)
-               .with_parameters(user_id: approver.id,
-                                approving_team_id: approving_team.id)
+               .with_parameters(acting_user_id: approver.id,
+                                acting_team_id: approving_team.id)
     end
   end
 
@@ -327,7 +327,7 @@ RSpec.describe CaseStateMachine, type: :model do
         assigned_case.state_machine.unaccept_approver_assignment! approver, approving_team
       }.to trigger_the_event(:unaccept_approver_assignment)
               .on_state_machine(assigned_case.state_machine)
-              .with_parameters(user_id: approver.id, approving_team_id: approving_team.id)
+              .with_parameters(acting_user_id: approver.id, acting_team_id: approving_team.id)
     end
   end
 
@@ -338,8 +338,8 @@ RSpec.describe CaseStateMachine, type: :model do
                                                                  responding_team
       end.to trigger_the_event(:accept_responder_assignment)
                .on_state_machine(assigned_case.state_machine)
-               .with_parameters(user_id: responder.id,
-                                responding_team_id: responding_team.id)
+               .with_parameters(acting_user_id: responder.id,
+                                acting_team_id: responding_team.id)
     end
   end
 
@@ -360,8 +360,7 @@ RSpec.describe CaseStateMachine, type: :model do
                  .with_parameters( target_user_id: another_responder.id,
                                    target_team_id: responding_team.id,
                                    acting_user_id: responder.id,
-                                   acting_team_id: responding_team.id,
-                                   user_id:        responder.id)
+                                   acting_team_id: responding_team.id)
       end
 
       it 'adds a transition history record' do
@@ -374,7 +373,6 @@ RSpec.describe CaseStateMachine, type: :model do
         transition = kase.reload.transitions.last
         expect(transition.event).to eq 'reassign_user'
         expect(transition.to_state).to eq 'drafting'
-        expect(transition.user_id).to eq responder.id
         expect(transition.target_user_id).to eq another_responder.id
         expect(transition.acting_user_id).to eq responder.id
         expect(transition.target_team_id).to eq responding_team.id
@@ -396,8 +394,7 @@ RSpec.describe CaseStateMachine, type: :model do
                  .with_parameters( target_user_id: other_approver.id,
                                    target_team_id: approving_team.id,
                                    acting_user_id: approver.id,
-                                   acting_team_id: approving_team.id,
-                                   user_id:        approver.id)
+                                   acting_team_id: approving_team.id)
       end
 
       it 'adds a transition history record' do
@@ -410,7 +407,6 @@ RSpec.describe CaseStateMachine, type: :model do
         transition = kase.reload.transitions.last
         expect(transition.event).to eq 'reassign_user'
         expect(transition.to_state).to eq 'drafting'
-        expect(transition.user_id).to eq approver.id
         expect(transition.target_user_id).to eq other_approver.id
         expect(transition.acting_user_id).to eq approver.id
         expect(transition.target_team_id).to eq approving_team.id
@@ -430,8 +426,8 @@ RSpec.describe CaseStateMachine, type: :model do
                                                                  message
       end.to trigger_the_event(:reject_responder_assignment)
                .on_state_machine(assigned_case.state_machine)
-               .with_parameters(user_id: responder.id,
-                                responding_team_id: responding_team.id,
+               .with_parameters(acting_user_id: responder.id,
+                                acting_team_id: responding_team.id,
                                 message: message)
     end
   end
@@ -446,8 +442,8 @@ RSpec.describe CaseStateMachine, type: :model do
                                                         filenames
       end.to trigger_the_event(:add_responses)
                .on_state_machine(case_being_drafted.state_machine)
-               .with_parameters(user_id: responder.id,
-                                responding_team_id: responding_team.id,
+               .with_parameters(acting_user_id: responder.id,
+                                acting_team_id: responding_team.id,
                                 filenames: filenames)
     end
   end
@@ -464,8 +460,8 @@ RSpec.describe CaseStateMachine, type: :model do
                                                             0
         end.to trigger_the_event(:remove_last_response)
                  .on_state_machine(case_with_response.state_machine)
-                 .with_parameters(user_id: responder.id,
-                                  responding_team_id: responding_team.id,
+                 .with_parameters(acting_user_id: responder.id,
+                                  acting_team_id: responding_team.id,
                                   filenames: filenames)
       end
     end
@@ -481,8 +477,8 @@ RSpec.describe CaseStateMachine, type: :model do
         )
       end.to trigger_the_event(:remove_response)
                .on_state_machine(case_with_response.state_machine)
-               .with_parameters(user_id: responder.id,
-                                responding_team_id: responding_team.id,
+               .with_parameters(acting_user_id: responder.id,
+                                acting_team_id: responding_team.id,
                                 filenames: filenames)
       end
     end
@@ -495,8 +491,8 @@ RSpec.describe CaseStateMachine, type: :model do
                                                   responding_team
       end.to trigger_the_event(:respond)
                .on_state_machine(case_with_response.state_machine)
-               .with_parameters(user_id: responder.id,
-                                responding_team_id: responding_team.id)
+               .with_parameters(acting_user_id: responder.id,
+                                acting_team_id: responding_team.id)
     end
   end
 
@@ -510,7 +506,7 @@ RSpec.describe CaseStateMachine, type: :model do
         responded_case.state_machine.add_message_to_case!(user, team, 'This is the message')
       }.to trigger_the_event(:add_message_to_case)
             .on_state_machine(responded_case.state_machine)
-            .with_parameters(user_id: responded_case.responder.id, messaging_team_id: team.id, message: 'This is the message')
+            .with_parameters(acting_user_id: responded_case.responder.id, acting_team_id: team.id, message: 'This is the message')
     end
 
     it 'creates a message transition record' do
@@ -525,7 +521,7 @@ RSpec.describe CaseStateMachine, type: :model do
         user, team, 'This is my message to you all')
       transition = case_being_drafted.transitions.last
       expect(transition.event).to eq 'add_message_to_case'
-      expect(transition.user_id).to eq case_being_drafted.responder.id
+      expect(transition.acting_user_id).to eq case_being_drafted.responder.id
       expect(transition.message).to eq 'This is my message to you all'
     end
   end
@@ -542,8 +538,8 @@ RSpec.describe CaseStateMachine, type: :model do
         expect {
           state_machine.approve!(approver, kase.approver_assignments.first)
         }.to trigger_the_event(:approve).on_state_machine(state_machine).with_parameters(
-          user_id: approver.id,
-          approving_team_id: team_id
+          acting_user_id: approver.id,
+          acting_team_id: team_id
         )
       end
     end
@@ -555,8 +551,8 @@ RSpec.describe CaseStateMachine, type: :model do
                                                      kase.approving_teams.first,
                                                      filenames)
         }.to trigger_the_event(:upload_response_and_approve).on_state_machine(state_machine).with_parameters(
-          user_id: approver.id,
-          approving_team_id: team_id,
+          acting_user_id: approver.id,
+          acting_team_id: team_id,
           filenames: filenames
         )
       end
@@ -569,8 +565,8 @@ RSpec.describe CaseStateMachine, type: :model do
                                                      kase.approving_teams.first,
                                                      filenames)
         }.to trigger_the_event(:upload_response_and_return_for_redraft).on_state_machine(state_machine).with_parameters(
-          user_id: approver.id,
-          approving_team_id: team_id,
+          acting_user_id: approver.id,
+          acting_team_id: team_id,
           filenames: filenames
         )
       end
@@ -593,8 +589,8 @@ RSpec.describe CaseStateMachine, type: :model do
         }.to trigger_the_event(:approve)
                .on_state_machine(state_machine)
                .with_parameters(
-                 user_id: approver.id,
-                 approving_team_id: team_id
+                 acting_user_id: approver.id,
+                 acting_team_id: team_id
                )
       end
 
@@ -608,8 +604,8 @@ RSpec.describe CaseStateMachine, type: :model do
                                             managing_team
       end.to trigger_the_event(:close)
                .on_state_machine(responded_case.state_machine)
-               .with_parameters(user_id: manager.id,
-                                managing_team_id: managing_team.id)
+               .with_parameters(acting_user_id: manager.id,
+                                acting_team_id: managing_team.id)
     end
   end
 
@@ -621,8 +617,8 @@ RSpec.describe CaseStateMachine, type: :model do
         state_machine.request_amends! approver, assignment
       end.to trigger_the_event(:request_amends)
                .on_state_machine(state_machine)
-               .with_parameters(user_id: approver.id,
-                                approving_team_id: approving_team.id)
+               .with_parameters(acting_user_id: approver.id,
+                                acting_team_id: approving_team.id)
     end
   end
 

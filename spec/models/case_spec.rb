@@ -649,9 +649,9 @@ RSpec.describe Case, type: :model do
       end
     end
 
-    it { should have_many(:responder_history)
-                  .through(:responded_transitions)
-                  .source(:user) }
+    # it { should have_many(:responder_history)
+    #               .through(:responded_transitions)
+    #               .source(:acting_user) }
   end
 
   describe 'callbacks' do

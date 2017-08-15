@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.5
--- Dumped by pg_dump version 9.5.5
+-- Dumped from database version 9.5.6
+-- Dumped by pg_dump version 9.5.6
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -281,7 +281,10 @@ CREATE TABLE case_transitions (
     most_recent boolean NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    user_id integer
+    acting_user_id integer,
+    acting_team_id integer,
+    target_user_id integer,
+    target_team_id integer
 );
 
 
@@ -1053,6 +1056,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170727112001'),
 ('20170727162325'),
 ('20170728154625'),
-('20170731101430');
+('20170731101430'),
+('20170818082409');
 
 

@@ -70,7 +70,7 @@ RSpec::Matchers.define :transition_from do |from_state|
 
     state_info = target_states.find { |si| si[:state] == @to_state }
     guards     = state_info[:guards]
-    options    = { user_id: user_id}
+    options    = { acting_user_id: user_id}
     guards.each { |g| g.call(object, spy('last_transition'), options) }
   end
 

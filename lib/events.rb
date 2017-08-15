@@ -59,7 +59,7 @@ module Events
   def permitted_events(user_id)
     events = self.class.events.select do |event_name, _event|
       can_trigger_event?(event_name: event_name,
-                         metadata: { user_id: user_id })
+                         metadata: { acting_user_id: user_id })
     end.map(&:first)
     events.sort! { |a, b| a.to_s <=> b.to_s }
   end

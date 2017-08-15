@@ -6,7 +6,7 @@ class CaseTransitionDecorator < Draper::Decorator
   end
 
   def user_name
-    object.user.full_name
+    object.acting_user.full_name
   end
 
   def event_and_detail
@@ -21,7 +21,7 @@ class CaseTransitionDecorator < Draper::Decorator
   def details
     case object.event
     when 'assign_responder'
-      "Assigned to #{object.responding_team.name}"
+      "Assigned to #{object.target_team.name}"
     when 'reject_responder_assignment'
       object.message
     when 'reassign_user'

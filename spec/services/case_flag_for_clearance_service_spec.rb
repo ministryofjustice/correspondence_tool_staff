@@ -119,8 +119,8 @@ describe CaseFlagForClearanceService do
           expect(tx.event).to eq 'take_on_for_approval'
           expect(tx.to_state).to eq 'awaiting_responder'
           expect(tx.message).to be_nil
-          expect(tx.user_id).to eq press_officer.id
-          expect(tx.approving_team_id).to eq press_office.id
+          expect(tx.acting_user_id).to eq press_officer.id
+          expect(tx.acting_team_id).to eq press_office.id
         end
 
         it 'triggers an event on the state machine' do
@@ -230,8 +230,8 @@ describe CaseFlagForClearanceService do
           expect(tx.event).to eq 'take_on_for_approval'
           expect(tx.to_state).to eq 'awaiting_responder'
           expect(tx.message).to be_nil
-          expect(tx.user_id).to eq private_officer.id
-          expect(tx.approving_team_id).to eq private_office.id
+          expect(tx.acting_user_id).to eq private_officer.id
+          expect(tx.acting_team_id).to eq private_office.id
         end
 
         it 'triggers an event on the state machine' do

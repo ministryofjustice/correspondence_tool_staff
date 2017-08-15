@@ -31,7 +31,7 @@ class CaseStateMachine
 
   event :assign_responder do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object).can_assign_case?
+      CaseStateMachine.get_policy(options[:acting_user_id], object).can_assign_case?
     end
 
     transition from: :unassigned, to: :awaiting_responder
@@ -39,9 +39,9 @@ class CaseStateMachine
 
   event :flag_for_clearance do
     guard do |object, _last_transition, options|
-      case_policy = CaseStateMachine.get_policy options[:user_id], object
-      assignment = Assignment.new case: object, team_id: options[:team_id]
-      assignment_policy = CaseStateMachine.get_policy options[:user_id],
+      case_policy = CaseStateMachine.get_policy options[:acting_user_id], object
+      assignment = Assignment.new case: object, team_id: options[:target_team_id]
+      assignment_policy = CaseStateMachine.get_policy options[:acting_user_id],
                                                       assignment
 
       case_policy.can_flag_for_clearance? &&
@@ -65,7 +65,7 @@ class CaseStateMachine
 
   event :take_on_for_approval do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object).can_take_on_for_approval?
+      CaseStateMachine.get_policy(options[:acting_user_id], object).can_take_on_for_approval?
     end
 
     transition from: :unassigned,             to: :unassigned
@@ -77,7 +77,7 @@ class CaseStateMachine
 
   event :reject_responder_assignment do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object)
+      CaseStateMachine.get_policy(options[:acting_user_id], object)
         .can_accept_or_reject_responder_assignment?
     end
 
@@ -86,7 +86,7 @@ class CaseStateMachine
 
   event :accept_approver_assignment do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object)
+      CaseStateMachine.get_policy(options[:acting_user_id], object)
         .can_accept_or_reject_approver_assignment?
     end
 
@@ -99,7 +99,7 @@ class CaseStateMachine
 
   event :unaccept_approver_assignment do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object)
+      CaseStateMachine.get_policy(options[:acting_user_id], object)
         .can_unaccept_approval_assignment?
     end
     transition from: :unassigned,             to: :unassigned
@@ -111,7 +111,7 @@ class CaseStateMachine
 
   event :accept_responder_assignment do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object)
+      CaseStateMachine.get_policy(options[:acting_user_id], object)
         .can_accept_or_reject_responder_assignment?
     end
 
@@ -120,7 +120,7 @@ class CaseStateMachine
 
   event :add_responses do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object).can_add_attachment?
+      CaseStateMachine.get_policy(options[:acting_user_id], object).can_add_attachment?
     end
 
     transition from: :drafting,          to: :awaiting_dispatch
@@ -129,14 +129,6 @@ class CaseStateMachine
 
   event :add_response_to_flagged_case do
     transition from: :drafting, to: :pending_dacu_clearance
-  end
-
-  event :add_response_to_flagged_case_and_approve do
-    guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object).can_upload_response_and_approve?
-    end
-
-    transition from: :pending_dacu_clearance, to: :awaiting_dispatch
   end
 
   event :upload_response_and_return_for_redraft do
@@ -166,7 +158,7 @@ class CaseStateMachine
 
   event :upload_response_and_approve do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object).can_upload_response_and_approve?
+      CaseStateMachine.get_policy(options[:acting_user_id], object).can_upload_response_and_approve?
     end
 
     transition from: :pending_dacu_clearance, to: :awaiting_dispatch
@@ -193,7 +185,7 @@ class CaseStateMachine
 
   event :remove_response do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object)
+      CaseStateMachine.get_policy(options[:acting_user_id], object)
         .can_remove_attachment?
     end
 
@@ -202,7 +194,7 @@ class CaseStateMachine
 
   event :remove_last_response do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object)
+      CaseStateMachine.get_policy(options[:acting_user_id], object)
         .can_remove_attachment?
     end
 
@@ -211,7 +203,7 @@ class CaseStateMachine
 
   event :respond do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object).can_respond?
+      CaseStateMachine.get_policy(options[:acting_user_id], object).can_respond?
     end
 
     transition from: :awaiting_dispatch, to: :responded
@@ -219,7 +211,7 @@ class CaseStateMachine
 
   event :close do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object).can_close_case?
+      CaseStateMachine.get_policy(options[:acting_user_id], object).can_close_case?
     end
 
     transition from: :responded, to: :closed
@@ -227,7 +219,7 @@ class CaseStateMachine
 
   event :add_message_to_case do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:user_id], object).can_add_message_to_case?
+      CaseStateMachine.get_policy(options[:acting_user_id], object).can_add_message_to_case?
     end
 
     transition from: :unassigned,             to: :unassigned
@@ -240,24 +232,24 @@ class CaseStateMachine
 
   def accept_approver_assignment!(user, approving_team)
     trigger! :accept_approver_assignment,
-             approving_team_id: approving_team.id,
-             user_id:           user.id,
+             acting_team_id:    approving_team.id,
+             acting_user_id:    user.id,
              event:             :accept_approver_assignment
   end
 
   def unaccept_approver_assignment!(user, approving_team)
     trigger! :unaccept_approver_assignment,
-             approving_team_id: approving_team.id,
-             user_id:           user.id,
+             acting_team_id:    approving_team.id,
+             acting_user_id:    user.id,
              event:             :unaccept_approver_assignment
   end
 
   def add_request_attachments!(user, managing_team, filenames)
     trigger! :add_request_attachments,
-             user_id:          user.id,
-             managing_team_id: managing_team.id,
-             filenames:        filenames,
-             event:            :add_request_attachments
+             acting_user_id:    user.id,
+             acting_team_id:    managing_team.id,
+             filenames:         filenames,
+             event:             :add_request_attachments
   end
 
   def reassign_user!(target_user:, target_team:, acting_user:, acting_team:)
@@ -267,130 +259,129 @@ class CaseStateMachine
              target_team_id:    target_team.id,
              acting_user_id:    acting_user.id,
              acting_team_id:    acting_team.id,
-             user_id:           acting_user.id,
              event:             :reassign_user
   end
 
   def accept_responder_assignment!(user, responding_team)
     trigger! :accept_responder_assignment,
-             responding_team_id: responding_team.id,
-             user_id:            user.id,
+             acting_team_id:     responding_team.id,
+             acting_user_id:     user.id,
              event:              :accept_responder_assignment
   end
 
   def add_responses!(user, responding_team, filenames)
     trigger! :add_responses,
-             responding_team_id: responding_team.id,
-             user_id:            user.id,
+             acting_team_id:     responding_team.id,
+             acting_user_id:     user.id,
              filenames:          filenames,
              event:              :add_responses
   end
 
   def add_response_to_flagged_case!(user, responding_team, filenames)
     trigger! :add_response_to_flagged_case,
-             responding_team_id: responding_team.id,
-             user_id:            user.id,
+             acting_team_id:     responding_team.id,
+             acting_user_id:     user.id,
              filenames:          filenames,
              event:              :add_response_to_flagged_case
   end
 
   def assign_responder!(user, managing_team, responding_team)
     trigger! :assign_responder,
-             managing_team_id:   managing_team.id,
-             responding_team_id: responding_team.id,
-             user_id:            user.id,
-             event:              :assign_responder
+             acting_team_id:    managing_team.id,
+             target_team_id:    responding_team.id,
+             acting_user_id:    user.id,
+             event:             :assign_responder
   end
 
   def flag_for_clearance!(user, managing_team, approving_team)
     trigger! :flag_for_clearance,
-             user_id: user.id,
-             managing_team_id: managing_team.id,
-             approving_team_id: approving_team.id,
-             event: :flag_for_clearance
+             acting_user_id:    user.id,
+             acting_team_id:    managing_team.id,
+             target_team_id:    approving_team.id,
+             event:             :flag_for_clearance
   end
 
   def unflag_for_clearance!(user, managing_team, approving_team)
     trigger! :unflag_for_clearance,
-             user_id: user.id,
-             managing_team_id: managing_team.id,
-             approving_team_id: approving_team.id,
-             event: :unflag_for_clearance
+             acting_user_id:    user.id,
+             acting_team_id:    managing_team.id,
+             target_team_id:    approving_team.id,
+             event:             :unflag_for_clearance
   end
 
   def take_on_for_approval!(user, managing_team, approving_team)
     trigger! :take_on_for_approval,
-             user_id: user.id,
-             managing_team_id: managing_team.id,
-             approving_team_id: approving_team.id,
+             acting_user_id:    user.id,
+             acting_team_id:    managing_team.id,
+             target_team_id:    approving_team.id,
              event: :take_on_for_approval
   end
 
   def approve!(user, assignment)
     trigger! :approve,
-             user_id: user.id,
-             event: :approve,
-             approving_team_id: assignment.team_id
+             acting_user_id:  user.id,
+             event:           :approve,
+             acting_team_id:  assignment.team_id
   end
 
   def request_amends!(user, assignment)
     trigger! :request_amends,
-             user_id: user.id,
-             event: :request_amends,
-             approving_team_id: assignment.team_id
+             acting_user_id:  user.id,
+             event:           :request_amends,
+             acting_team_id:  assignment.team_id
   end
 
   def upload_response_and_approve!(user, approving_team, filenames)
     trigger! :upload_response_and_approve,
-             user_id: user.id,
-             event: :upload_response_and_approve,
-             approving_team_id: approving_team.id,
-             filenames: filenames
+             acting_user_id:        user.id,
+             event:                 :upload_response_and_approve,
+             acting_team_id:        approving_team.id,
+             filenames:             filenames
   end
 
   def upload_response_and_return_for_redraft!(user, approving_team, filenames)
     trigger! :upload_response_and_return_for_redraft,
-             user_id: user.id,
-             event: :upload_response_and_return_for_redraft,
-             approving_team_id: approving_team.id,
-             filenames: filenames
+             acting_user_id:        user.id,
+             event:                 :upload_response_and_return_for_redraft,
+             acting_team_id:        approving_team.id,
+             filenames:             filenames
   end
 
   def remove_response!(user, responding_team, filename, num_attachments)
     event = num_attachments == 0 ? :remove_last_response : :remove_response
     trigger event,
-            responding_team_id: responding_team.id,
-            user_id: user.id,
-            filenames: filename,
-            event: event
+            acting_team_id:         responding_team.id,
+            acting_user_id:         user.id,
+            filenames:              filename,
+            event:                  event
   end
 
   def reject_responder_assignment!(responder, responding_team, message)
     trigger! :reject_responder_assignment,
-             responding_team_id: responding_team.id,
-             user_id:            responder.id,
-             message:            message,
-             event:              :reject_responder_assignment
+             acting_team_id:      responding_team.id,
+             acting_user_id:      responder.id,
+             message:             message,
+             event:               :reject_responder_assignment
   end
 
   def respond!(user, responding_team)
     trigger! :respond,
-             responding_team_id: responding_team.id,
-             user_id:            user.id,
-             event:              :respond
+             acting_team_id:        responding_team.id,
+             acting_user_id:        user.id,
+             event:                 :respond
   end
 
   def close!(user, managing_team)
     trigger! :close,
-             managing_team_id: managing_team.id,
-             user_id:          user.id,
+             acting_team_id: managing_team.id,
+             acting_user_id:   user.id,
              event:            :close
   end
 
   def add_message_to_case!(user, team, message)
     trigger! :add_message_to_case,
-             user_id:           user.id,
-             messaging_team_id: team.id,
+             acting_user_id:    user.id,
+             acting_team_id:    team.id,
              message:           message,
              event:             :add_message_to_case
   end
