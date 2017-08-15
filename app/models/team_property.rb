@@ -23,6 +23,12 @@ class TeamProperty < ActiveRecord::Base
 
   validates :value, uniqueness: { scope: [:team_id, :key], message: "%{value} is not unique in team and key" }
   validates :key, inclusion: { in: VALID_KEYS, message: "%{value} is not a valid key" }
+
+  # This rather strange syntax checks that there can only be one lead property per team
+  validates :key,
+            if: -> (tp) { tp.key == 'lead' },
+            uniqueness: { scope: :team_id, message: 'lead already exists for this team'}
+
   validates :value,
             if: -> (tp) { tp.key == 'role' },
             inclusion: ROLES

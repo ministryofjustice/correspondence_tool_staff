@@ -32,6 +32,20 @@ describe TeamProperty do
         expect(tp.errors[:key]).to eq [ 'xxxx is not a valid key']
       end
     end
+
+    context 'uniqueness of lead key by team' do
+      it 'does not error if one lead key created per team' do
+        tp = TeamProperty.new(team_id: 33, key: 'lead', value: 'xxxx')
+        expect(tp).to be_valid
+      end
+
+      it 'errors if two lead keys for same team' do
+        TeamProperty.create!(team_id: 33, key: 'lead', value: 'xxxx')
+        tp = TeamProperty.new(team_id: 33, key: 'lead', value: 'zzzz')
+        expect(tp).not_to be_valid
+        expect(tp.errors[:key]).to include('lead already exists for this team')
+      end
+    end
   end
 
 end
