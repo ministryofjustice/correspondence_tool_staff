@@ -4,7 +4,7 @@
 - content_for :sub_heading
   span.visually-hidden
     = "You are viewing "
-  = t("team_types.#{@team.type.underscore}")
+  = @team.pretty_type
 
 = render partial: 'layouts/header'
 

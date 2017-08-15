@@ -32,7 +32,7 @@ class TeamsController < ApplicationController
     params.require(:team).permit(
       :name,
       :email,
-      :team_lead_name
+      :team_lead
     )
   end
 

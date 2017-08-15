@@ -19,8 +19,6 @@
             = t('team_leads.director_general')
           th scope='col'
             = t('team_types.directorate').pluralize
-          th scope='col'
-            | Actions
       tbody
         - @teams.each do |team|
           tr
@@ -30,8 +28,6 @@
                   = "View the details of "
                 = team.name
             td aria-label="#{ t('team_leads.director_general') }"
-              = team.team_lead&.value
+              = team.team_lead
             td aria-label="#{ t('team_types.directorate').pluralize }"
               = team.children.size
-            td aria-label='Actions'
-              | Edit

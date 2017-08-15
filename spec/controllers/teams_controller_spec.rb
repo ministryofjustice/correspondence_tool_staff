@@ -95,6 +95,7 @@ RSpec.describe TeamsController, type: :controller do
                      team: {
                        name: 'New Name',
                        email: 'n00b@localhost',
+                       team_lead: 'New Team Lead',
                      } } }
 
     before do
@@ -114,6 +115,7 @@ RSpec.describe TeamsController, type: :controller do
       business_unit.reload
       expect(business_unit.name).to  eq 'New Name'
       expect(business_unit.email).to eq 'n00b@localhost'
+      expect(business_unit.team_lead).to eq 'New Team Lead'
     end
   end
 end

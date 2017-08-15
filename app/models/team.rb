@@ -48,18 +48,8 @@ class Team < ApplicationRecord
     TeamPolicy
   end
 
-  def role
-    properties.role.first&.value
-  end
-
-  def role=(new_role)
-    if properties.role.exists?
-      properties.role.update value: new_role
-    else
-      new_property = TeamProperty.new(key: 'role', value: new_role)
-      properties << new_property
-      new_property
-    end
+  def pretty_type
+    I18n.t("team_types.#{type.underscore}")
   end
 
   def team_lead

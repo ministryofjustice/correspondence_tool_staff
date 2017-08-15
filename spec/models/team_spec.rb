@@ -220,7 +220,7 @@ RSpec.describe Team, type: :model do
 
   describe '.team_lead' do
     it 'returns the value for the team lead property' do
-      team.properties << TeamProperty.new(key: 'lead', value: 'A Team Lead')
+      team = create :team, team_lead: 'A Team Lead'
       expect(team.team_lead).to eq 'A Team Lead'
     end
   end

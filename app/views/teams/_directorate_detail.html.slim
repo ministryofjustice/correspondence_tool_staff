@@ -1,7 +1,7 @@
 h2
   .bold-small
     = t('team_leads.director')
-  = @team.team_lead.value
+  = @team.team_lead
 
 h2.heading-medium
   = t('team_types.business_unit').pluralize
@@ -20,6 +20,8 @@ h2.heading-medium
         th scope='col'
           = t('team_leads.deputy_director')
         th scope='col'
+          | Email
+        th scope='col'
           = t('roles.responders')
         th scope='col'
           | Actions
@@ -29,8 +31,10 @@ h2.heading-medium
             td aria-label="Name"
               = link_to team.name, team_path(team)
             td aria-label="#{ t('team_leads.deputy_director') }"
-              = team.team_lead.value
+              = team.team_lead
+            td aria-label="Email"
+              = team.email
             td aria-label="#{ t('roles.responders') }"
               = team.responders.size
             td aria-label="Actions"
-              = link_to 'Edit', edit_team_path(team)
+              = link_to 'Edit', edit_team_path(team), { class: 'action--edit' }

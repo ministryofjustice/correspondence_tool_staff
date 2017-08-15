@@ -15,6 +15,7 @@ RSpec::Matchers.define :require_permission do |permission|
       event_or_block.call
       expect(@permission_received).to eq true
     else
+      policy_class = Pundit::PolicyFinder.new(@object).policy!
       expect_any_instance_of(policy_class).to receive(permission).and_return(true)
       state_machine_class = RSpec::current_example
                               .example_group

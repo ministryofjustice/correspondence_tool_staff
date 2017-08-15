@@ -1,7 +1,7 @@
 h2
   .bold-small
     = t('team_leads.director_general')
-  = @team.team_lead.value
+  = @team.team_lead
 
 h2.heading-medium
   = t('team_types.directorate').pluralize
@@ -22,8 +22,6 @@ h2.heading-medium
             = t('team_leads.director')
           th scope='col'
             = t('team_types.business_unit').pluralize
-          th scope='col'
-            | Actions
       tbody
         - teams.each do |team|
           tr
@@ -33,8 +31,6 @@ h2.heading-medium
                   = "View the details of "
                 = team.name
             td aria-label="#{t('team_leads.director')}"
-              = team.team_lead&.value
+              = team.team_lead
             td aria-label="#{t('team_types.business_unit').pluralize}"
               = team.children.size
-            td aria-label='Actions'
-              | Edit

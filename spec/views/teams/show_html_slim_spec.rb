@@ -39,13 +39,58 @@ describe 'teams/show.html.slim', type: :view do
       expect(bg.name.text).to eq 'View the details of Prisons'
       expect(bg.director.text).to eq 'Phil Copple'
       expect(bg.num_business_units.text).to eq '2'
-      expect(bg.actions.text).to eq 'Edit'
 
       bg = teams_show_page.row_for_directorate('HR')
       expect(bg.name.text).to eq 'View the details of HR'
       expect(bg.director.text).to eq 'Martin Beecroft'
       expect(bg.num_business_units.text).to eq '1'
-      expect(bg.actions.text).to eq 'Edit'
+    end
+  end
+
+  context 'showing a directorate' do
+    let(:directorate)   { create :directorate }
+    let(:bu1)           { create :business_unit, directorate: directorate }
+    let(:bu2)           { create :business_unit, directorate: directorate }
+    let!(:responder1_1) { create :responder, responding_teams: [bu1] }
+    let!(:responder2_1) { create :responder, responding_teams: [bu2] }
+    let!(:responder2_2) { create :responder, responding_teams: [bu2] }
+
+    before do
+      login_as manager
+      assign(:team, directorate)
+    end
+
+    it 'displays the directorate name' do
+      render
+      teams_show_page.load(rendered)
+
+      expect(teams_show_page.heading)
+        .to have_text "You are viewing Directorate #{directorate.name}"
+    end
+
+    it 'displays the director' do
+      render
+      teams_show_page.load(rendered)
+
+      expect(teams_show_page.director)
+        .to have_text "Director#{directorate.team_lead}"
+    end
+
+    it 'displays the business units' do
+      render
+      teams_show_page.load(rendered)
+
+      bu1_row = teams_show_page.row_for_business_unit(bu1.name)
+      expect(bu1_row.name.text).to eq bu1.name
+      expect(bu1_row.deputy_director.text).to eq bu1.team_lead
+      expect(bu1_row.email.text).to eq bu1.email
+      expect(bu1_row.num_responders.text).to eq '1'
+
+      bu2_row = teams_show_page.row_for_business_unit(bu2.name)
+      expect(bu2_row.name.text).to eq bu2.name
+      expect(bu2_row.deputy_director.text).to eq bu2.team_lead
+      expect(bu2_row.email.text).to eq bu2.email
+      expect(bu2_row.num_responders.text).to eq '2'
     end
   end
 
@@ -71,7 +116,7 @@ describe 'teams/show.html.slim', type: :view do
       teams_show_page.load(rendered)
 
       expect(teams_show_page.deputy_director)
-        .to have_text "Deputy director#{bu.team_lead.value}"
+        .to have_text "Deputy director#{bu.team_lead}"
     end
 
     it 'displays the information officers' do

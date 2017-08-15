@@ -1416,6 +1416,8 @@ RSpec.describe CasesController, type: :controller do
         expect {
           get :approve_response, params: { id: pending_dacu_clearance_case.id }
         } .to require_permission(:can_approve_or_escalate_case?)
+                .with_args(pending_dacu_clearance_case.approvers.first,
+                           pending_dacu_clearance_case)
       end
 
       it 'gets the next step info' do

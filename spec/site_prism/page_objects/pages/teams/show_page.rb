@@ -23,9 +23,10 @@ module PageObjects
         sections :business_units_list, '.report tbody tr' do
           element :name, 'td[aria-label="Name"] a'
           element :deputy_director, 'td[aria-label="Deputy director"]'
+          element :email, 'td[aria-label="Email"]'
           element :num_responders,
                   'td[aria-label="Information officers"]'
-          element :actions, 'td[aria-label="Actions"]'
+          element :edit, 'a.action--edit'
         end
 
         sections :information_officers_list, '.report tbody tr' do

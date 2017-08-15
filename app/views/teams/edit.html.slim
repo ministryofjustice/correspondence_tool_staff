@@ -1,5 +1,9 @@
 - content_for :heading
-  | Edit Busines Unit
+  = t('.edit', team_type: @team.pretty_type)
+
+- if @team.parent.present?
+  - content_for :sub_heading
+    = "#{@team.parent.pretty_type}: #{@team.parent.name}"
 
 = render partial: 'layouts/header'
 
@@ -9,6 +13,7 @@
 
   = f.text_field :email
 
-  = f.text_field :team_lead_name
+  = f.text_field :team_lead
 
   = f.submit 'Submit', {class: 'button'}
+ 

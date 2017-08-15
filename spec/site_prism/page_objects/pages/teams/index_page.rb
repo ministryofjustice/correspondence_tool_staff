@@ -14,7 +14,6 @@ module PageObjects
           element :name, 'td[aria-label="Name"] a'
           element :director_general, 'td[aria-label="Director general"]'
           element :num_directorates, 'td[aria-label="Directorates"]'
-          element :actions, 'td[aria-label="Actions"]'
         end
 
         def row_for_business_group(name)

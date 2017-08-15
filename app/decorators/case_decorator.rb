@@ -90,7 +90,7 @@ class CaseDecorator < Draper::Decorator
   end
 
   def responding_team_lead_name
-    object.responding_team&.team_lead&.value
+    object.responding_team&.team_lead
   end
 
   def default_clearance_team_name

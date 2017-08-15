@@ -29,6 +29,7 @@ module PageObjects
         open_cases:                'Cases::OpenCasesPage',
         request_amends:            'Cases::RequestAmendsPage',
         reassign_user:             'Assignments::ReassignUserPage',
+        teams_edit:                'Teams::EditPage',
         teams_index:               'Teams::IndexPage',
         teams_show:                'Teams::ShowPage',
         users_index:               'Users::IndexPage',

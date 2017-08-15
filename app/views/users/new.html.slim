@@ -6,7 +6,7 @@
   = t('.heading', role: t('roles.responders').singularize)
 
 - content_for :sub_heading
-  = t("team_types.#{@team.type.underscore}") + ': ' + @team.name
+  = "#{@team.pretty_type}: #{@team.name}"
 
 = render partial: 'layouts/header'
 
