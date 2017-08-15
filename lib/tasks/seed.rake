@@ -47,6 +47,12 @@ namespace :db do
         require File.join(Rails.root, 'db', 'seeders', 'user_seeder')
         UserSeeder.new.seed!
       end
+
+      desc 'Add group emails to teams'
+      task :group_emails => :environment do
+        require File.join(Rails.root, 'db', 'seeders', 'group_email_seeder')
+        GroupEmailSeeder.new.seed!
+      end
     end
 
     namespace :dev do
