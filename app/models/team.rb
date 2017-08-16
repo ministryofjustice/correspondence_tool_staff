@@ -53,12 +53,12 @@ class Team < ApplicationRecord
   end
 
   def team_lead
-    properties.lead.first.value
+    properties.lead.singular.value
   end
 
   def team_lead=(name)
     if properties.lead.exists?
-      properties.lead.first.update value: name
+      properties.lead.singular.update value: name
     else
       TeamProperty.new(key: 'lead', value: name).tap do |property|
         properties << property
