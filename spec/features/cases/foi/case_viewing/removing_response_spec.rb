@@ -183,7 +183,8 @@ feature 'removing a response from response details' do
 
         scenario 'when removing the response with JS', js: true do
           cases_show_page.load(id: case_with_response.id)
-          cases_show_page.wait_for_case_attachments nil, count: 2
+          cases_show_page.wait_for_case_attachments 4, count: 2
+          cases_show_page.case_attachments.first.wait_for_collection 10, count: 2
           expect(cases_show_page.case_attachments.first.collection.count).to eq 2
           uploaded_file.first.actions.remove.click
           cases_show_page.wait_for_case_attachments nil, count: 1
