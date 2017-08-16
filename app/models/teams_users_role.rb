@@ -12,7 +12,8 @@ class TeamsUsersRole < ApplicationRecord
   enum role: {
          manager: 'manager',
          responder: 'responder',
-         approver: 'approver'
+         approver: 'approver',
+         admin: 'admin',
        }
 
   belongs_to :user

@@ -108,7 +108,8 @@ CREATE TYPE user_role AS ENUM (
     'creator',
     'manager',
     'responder',
-    'approver'
+    'approver',
+    'admin'
 );
 
 
@@ -1070,6 +1071,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170830162157'),
 ('20170831091142'),
 ('20170906130950'),
-('20170908083205');
-
-
+('20170908083205'),
+('20170816155918');
