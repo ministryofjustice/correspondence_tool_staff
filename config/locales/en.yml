@@ -156,6 +156,10 @@ en:
           accepted: Accept
           rejected: Reject
         user_id: Business unit
+
+      business_unit:
+        id: Business Unit
+
       case:
         requester_type:
           academic_business_charity: Academic/Business/Charity
@@ -262,6 +266,18 @@ en:
     signout: Sign out
     summary_error: 'prevented this form from being submitted:'
 
+  admin:
+    cases:
+      index:
+        created_at: Created
+        heading: System Cases
+        id: ID
+        number: Case Number
+        received_date: Received
+        request: Request
+      new:
+        heading: New Case
+        create: Create Case
 
   assignments:
     accept:
@@ -389,6 +405,7 @@ en:
       open_cases: All open cases
       settings: Settings
       stats: Statistics
+      system_admin: Admin
   devise:
     users:
       password:

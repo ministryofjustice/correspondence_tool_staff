@@ -69,6 +69,15 @@
 #                                       PATCH  /cases/:id(.:format)                                            cases#update
 #                                       PUT    /cases/:id(.:format)                                            cases#update
 #                                       DELETE /cases/:id(.:format)                                            cases#destroy
+#                            admin_root GET    /admin(.:format)                                                admin#index
+#                           admin_cases GET    /admin/cases(.:format)                                          admin/cases#index
+#                                       POST   /admin/cases(.:format)                                          admin/cases#create
+#                        new_admin_case GET    /admin/cases/new(.:format)                                      admin/cases#new
+#                       edit_admin_case GET    /admin/cases/:id/edit(.:format)                                 admin/cases#edit
+#                            admin_case GET    /admin/cases/:id(.:format)                                      admin/cases#show
+#                                       PATCH  /admin/cases/:id(.:format)                                      admin/cases#update
+#                                       PUT    /admin/cases/:id(.:format)                                      admin/cases#update
+#                                       DELETE /admin/cases/:id(.:format)                                      admin/cases#destroy
 #                            team_users GET    /teams/:team_id/users(.:format)                                 users#index
 #                                       POST   /teams/:team_id/users(.:format)                                 users#create
 #                         new_team_user GET    /teams/:team_id/users/new(.:format)                             users#new
@@ -181,6 +190,11 @@ Rails.application.routes.draw do
     resources :case_attachments, path: 'attachments', only: [:destroy] do
       get 'download', on: :member
     end
+  end
+
+  namespace :admin do
+    root to: 'admin/cases', action: :index
+    resources :cases
   end
 
   resources :teams do

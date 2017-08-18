@@ -1,0 +1,63 @@
+- content_for :heading
+  = t('.heading')
+
+= render partial: 'layouts/header'
+
+.grid-row
+  .column-full.button-holder
+    = link_to t('common.new_case_button'), new_admin_case_path, class: 'button'
+
+.grid-row
+  .column-full.table-container.container
+    table.report.table-font-xsmall
+      colgroup
+        col
+        col
+        col
+        col
+        col
+        col
+        col
+        col
+        col
+      thead
+        th scope='col'
+          = t('.id')
+        th scope='col'
+          = t('.number')
+        th scope='col'
+          = t('.request')
+        th scope='col'
+          = t('.received_date')
+        th scope='col'
+          = t('.created_at')
+        th scope='col'
+          = t('.draft_deadline')
+        th scope='col'
+          = t('.external_deadline')
+        th scope='col'
+          = t('.status')
+        th scope='col'
+          = t('.who_its_with')
+      tbody
+        - @cases.each do |kase|
+          tr.case_row
+            td
+              = kase.id
+            td
+              = link_to kase.number, case_path(kase.id)
+            td
+              = kase.subject
+            td
+              = kase.received_date
+            td
+              = kase.created_at
+            td
+              = kase.internal_deadline
+            td
+              = kase.external_deadline
+            td
+              = t("state.#{kase.current_state}")
+            td
+              = kase.who_its_with
+    = paginate @cases

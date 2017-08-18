@@ -51,6 +51,8 @@ global_navigation:
     manager: /cases/open?timeliness=in_time
     responder: /cases/open?timeliness=in_time
   pages:
+    system_admin:
+      path: /admin/cases
     closed_cases:
       path: /cases/closed
     incoming_cases_dacu_disclosure:
@@ -116,9 +118,18 @@ global_navigation:
       settings:
       stats:
 
+    'admin':
+      open_cases:
+        in_time: default
+        late:
+      my_open_cases:
+      closed_cases:
+      system_admin:
+
     '*':
       open_cases:
         in_time: default
         late:
       my_open_cases:
       closed_cases:
+
