@@ -1,42 +1,9 @@
-module CTS
-  class Cases < Thor
-    include Thor::Rails unless SKIP_RAILS
+require 'cts'
+require 'cts/cases/create'
 
-    CASE_JOURNEYS = {
-      unflagged: [
-        :awaiting_responder,
-        :drafting,
-        :awaiting_dispatch,
-        :responded,
-        :closed,
-      ],
-      flagged_for_dacu_disclosure: [
-        :awaiting_responder,
-        :accepted_by_dacu_disclosure,
-        :drafting,
-        :pending_dacu_disclosure_clearance,
-        :awaiting_dispatch,
-        :responded,
-        :closed,
-      ],
-      flagged_for_press_office: [
-        :awaiting_responder,
-        :taken_on_by_press_office,
-        :accepted_by_dacu_disclosure,
-        :drafting,
-        :pending_dacu_disclosure_clearance,
-        :pending_press_office_clearance,
-      ],
-      flagged_for_private_office: [
-        :awaiting_responder,
-        :taken_on_by_private_office,
-        :accepted_by_dacu_disclosure,
-        :drafting,
-        :pending_dacu_disclosure_clearance,
-        :pending_press_office_clearance,
-        :pending_private_office_clearance,
-      ]
-    }
+module CTS::Cases
+  class CLI < Thor
+    # include Thor::Rails unless const_defined?(:SKIP_RAILS) && SKIP_RAILS
 
     default_command :list
 
@@ -50,9 +17,9 @@ module CTS
       end
       team_id_or_name = args.shift
       if team_id_or_name.blank?
-          error 'team not provided'
-          help
-          exit 1
+        error 'team not provided'
+        help
+        exit 1
       end
       user_id_or_name = args.shift
 
@@ -111,7 +78,7 @@ module CTS
     Multiple states can be specified.
 
     Valid case journeys and their states:
-    #{CASE_JOURNEYS.map do |j, states|
+    #{CTS::Cases::Create::CASE_JOURNEYS.map do |j, states|
       ["    #{j}:\n",
        states.map { |s| "      #{s}\n" }]
     end .flatten.join}
@@ -139,19 +106,50 @@ module CTS
     option :flag_for_team, aliases: :F, type: :string,
            enum: %w{disclosure press private},
            desc: 'Flag case for specific clearance team.'
-    option :clear, aliases: :x, type: :boolean,
-           desc: 'Clear existing cases before creating.'
     option :dry_run, type: :boolean,
            desc: 'Print out what states cases will be created in.'
+    option :force, type: :boolean,
+           desc: 'Force creation of cases even if in prod environment.'
     option :responder, aliases: :r, type: :string,
            desc: 'ID or name of responder to use for case assignments.'
     option :responding_team, aliases: :t, type: :string,
            desc: 'ID or name of responding team to use for case assignments.'
     option :created_at, type: :string
     option :received_date, type: :string
-    def create(*args)
-      cmd = CTS::Cases::Create.new(self, options, args)
-      cmd.call
+    def create(*target_states)
+      creator = CTS::Cases::Create.new(self)
+
+      puts "Creating #{options[:number]} cases in each of the following states:"
+      puts "\t" + target_states.join("\n\t")
+      if options.key? :responder
+        puts "Setting responder user to: #{options[:responder]}"
+      end
+      if options.key? :responding_team
+        puts "Setting responding team to: #{options[:responding_team]}"
+      end
+      if options[:flag_for_disclosure]
+        puts 'Flagging each for DACU Disclosure clearance'
+      end
+      if options[:flag_for_team] == 'press'
+        puts 'Flagging each for Press Office clearance'
+      end
+      if options[:flag_for_team] == 'private'
+        puts 'Flagging each for Private Office clearance'
+      end
+      if options.key? :created_at
+        puts "Setting created at to: #{options[:created_at]}"
+      end
+      if options.key? :received_date
+        puts "Setting received date to: #{options[:received_date]}"
+      end
+      puts "\n"
+
+      # creator.clear_cases if options[:clear]
+
+      cases = creator.call(target_states, options)
+      unless options[:dry_run]
+        tp cases, [:id, :number, :current_state, :requires_clearance?]
+      end
     end
 
     desc 'list', 'List cases in the system.'
@@ -191,7 +189,7 @@ module CTS
         { current_state: {} },
         { responding_team: {
             display_method: ->(c) { c.responding_team&.name }
-        } },
+          } },
         { flagged?: {
             display_method: lambda do |kase|
               flags = []
@@ -217,12 +215,12 @@ module CTS
            { event:      { display_method: ->(e) { e.to_s }, width: 40 } },
            { from_state: { display_method: ->(_) { kase.current_state } } },
            { to_state:   { display_method: ->(e) do
-                                             kase.state_machine
-                                               .next_state_for_event(
-                                                 e,
-                                                 user_id: user.id
-                                               )
-                                           end } }
+                             kase.state_machine
+                               .next_state_for_event(
+                                 e,
+                                 user_id: user.id
+                               )
+                           end } }
          ]
     end
 
