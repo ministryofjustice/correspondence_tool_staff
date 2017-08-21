@@ -139,6 +139,8 @@ en:
       feedback:
         comment: |
           Let us know what you were doing and what could be improved or fixed.
+      case:
+        upload_comment: This will be added to the converstation section of the case.
     label:
       assignment:
         assignee_id: Business unit
@@ -160,6 +162,7 @@ en:
         flag_for_disclosure_specialists:
           Clearance required by DACU Disclosure?
         request_amends_comment: Add amends/comments
+        upload_comment: Add message (optional)
 
       feedback:
         comment: Help make this service better

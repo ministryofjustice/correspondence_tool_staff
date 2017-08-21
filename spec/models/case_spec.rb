@@ -316,12 +316,14 @@ RSpec.describe Case, type: :model do
   end
 
   describe 'conditional validations of message' do
-    xit 'does not validate presence of message for postal foi' do
-      postal_foi = build :case
-      postal_foi.delivery_method = 'sent_by_post'
-      # need to stub out request attachment
-      expect(postal_foi).to be_valid
-    end
+    # TODO write spec 'does not validate presence of message for postal foi'
+
+    # xit 'does not validate presence of message for postal foi' do
+    #   postal_foi = build :case
+    #   postal_foi.delivery_method = 'sent_by_post'
+    #   # need to stub out request attachment
+    #   expect(postal_foi).to be_valid
+    # end
 
     it 'does validate presence of message for email foi' do
       email_foi = build :case
