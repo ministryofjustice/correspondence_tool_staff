@@ -613,12 +613,14 @@ RSpec.describe CaseStateMachine, type: :model do
     it 'triggers a request_amends event' do
       state_machine = assigned_flagged_case.state_machine
       assignment = assigned_flagged_case.approver_assignments.first
+      assigned_flagged_case.request_amends_comment = 'Never use a preposition to end a sentence with'
       expect do
         state_machine.request_amends! approver, assignment
       end.to trigger_the_event(:request_amends)
                .on_state_machine(state_machine)
                .with_parameters(acting_user_id: approver.id,
-                                acting_team_id: approving_team.id)
+                                acting_team_id: approving_team.id,
+                                message: 'Never use a preposition to end a sentence with')
     end
   end
 

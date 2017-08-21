@@ -159,6 +159,7 @@ en:
         postal_address: Address
         flag_for_disclosure_specialists:
           Clearance required by DACU Disclosure?
+        request_amends_comment: Add amends/comments
 
       feedback:
         comment: Help make this service better

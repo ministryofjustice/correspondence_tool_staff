@@ -52,6 +52,7 @@ class Case < ApplicationRecord
 
   attr_accessor :flag_for_disclosure_specialists,
                 :uploaded_request_files,
+                :request_amends_comment,
                 :uploading_user # Used when creating case sent by post.
 
   attr_accessor :message_text
