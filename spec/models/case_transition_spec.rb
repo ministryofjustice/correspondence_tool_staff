@@ -2,16 +2,19 @@
 #
 # Table name: case_transitions
 #
-#  id          :integer          not null, primary key
-#  event       :string
-#  to_state    :string           not null
-#  metadata    :jsonb
-#  sort_key    :integer          not null
-#  case_id     :integer          not null
-#  most_recent :boolean          not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  user_id     :integer
+#  id             :integer          not null, primary key
+#  event          :string
+#  to_state       :string           not null
+#  metadata       :jsonb
+#  sort_key       :integer          not null
+#  case_id        :integer          not null
+#  most_recent    :boolean          not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  acting_user_id :integer
+#  acting_team_id :integer
+#  target_user_id :integer
+#  target_team_id :integer
 #
 
 require 'rails_helper'
@@ -24,34 +27,24 @@ RSpec.describe CaseTransition, type: :model do
   let(:assign_responder_transition) do
     create :case_transition_assign_responder,
            case_id: kase.id,
-           managing_team: managing_team,
-           responding_team: responding_team
+           acting_team_id: managing_team.id,
+           target_team_id: responding_team.id
   end
   let(:flag_case_for_clearance_transition) do
     create :flag_case_for_clearance_transition,
            case_id: kase.id,
-           managing_team: managing_team,
-           approving_team: approving_team
+           acting_team_id: managing_team.id,
+           target_team_id: approving_team.id
   end
 
-  it 'has a user association' do
-    expect(assign_responder_transition.user)
-      .to eq User.find(assign_responder_transition.user_id)
-  end
-
-  it 'has a managing_team' do
-    expect(assign_responder_transition.managing_team_id)
+  it 'has a acting_team_id' do
+    expect(assign_responder_transition.acting_team_id)
       .to eq managing_team.id
   end
 
-  it 'has a responding_team' do
-    bu = assign_responder_transition.responding_team
-    expect(bu).to eq Team.find(bu.id)
-  end
-
   it 'has an approving_team' do
-    expect(flag_case_for_clearance_transition.approving_team)
-      .to eq approving_team
+    expect(flag_case_for_clearance_transition.target_team_id)
+      .to eq approving_team.id
   end
 
   describe 'after_destroy' do
@@ -149,8 +142,8 @@ RSpec.describe CaseTransition, type: :model do
       transition = CaseTransition.new(
                                    case_id: kase.id,
                                    event: 'add_message_to_case',
-                                   user_id: kase.responder.id,
-                                   messaging_team_id: kase.responding_team.id
+                                   acting_user_id: kase.responder.id,
+                                   acting_team_id: kase.responding_team.id
       )
       expect(transition).not_to be_valid
       expect(transition.errors[:message]).to eq ["can't be blank"]

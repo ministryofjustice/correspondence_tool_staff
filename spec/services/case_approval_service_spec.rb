@@ -45,8 +45,8 @@ describe CaseApprovalService do
         }.to change { kase.transitions.size }.by(1)
         transition = kase.transitions.last
         expect(transition.event).to eq 'approve'
-        expect(transition.user_id).to eq user.id
-        expect(transition.approving_team_id).to eq kase.approving_teams.first.id
+        expect(transition.acting_user_id).to eq user.id
+        expect(transition.acting_team_id).to eq kase.approving_teams.first.id
       end
     end
 
@@ -80,8 +80,8 @@ describe CaseApprovalService do
         }.to change { kase.transitions.size }.by(1)
         transition = kase.transitions.last
         expect(transition.event).to eq 'approve'
-        expect(transition.user_id).to eq user.id
-        expect(transition.approving_team_id).to eq dacu_disclosure.id
+        expect(transition.acting_user_id).to eq user.id
+        expect(transition.acting_team_id).to eq dacu_disclosure.id
       end
     end
 
@@ -101,8 +101,8 @@ describe CaseApprovalService do
         }.to change { kase.transitions.size }.by(1)
         transition = kase.transitions.last
         expect(transition.event).to eq 'approve'
-        expect(transition.user_id).to eq user.id
-        expect(transition.approving_team_id).to eq kase.approving_teams.first.id
+        expect(transition.acting_user_id).to eq user.id
+        expect(transition.acting_team_id).to eq kase.approving_teams.first.id
       end
     end
   end

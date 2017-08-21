@@ -91,7 +91,6 @@ feature 'cases requiring clearance by press office' do
 
   scenario 'Private Officer requests amends to a response' do
     login_as private_officer
-
     cases_show_page.load(id: pending_private_clearance_case.id)
     expect(cases_show_page.case_status.details.who_its_with.text)
       .to eq 'Private Office'

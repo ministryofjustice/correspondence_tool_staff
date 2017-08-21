@@ -54,8 +54,8 @@ FactoryGirl.define do
           Timecop.freeze(20.seconds.ago) do
             create(:case_transition_add_message_to_case,
                    case_id: kase.id,
-                   user_id: kase.responder.id,
-                   messaging_team_id: kase.responding_team.id,
+                   acting_user_id: kase.responder.id,
+                   acting_team_id: kase.responding_team.id,
                    message: "I've accepted this case as a KILO")
           end
         end
@@ -64,8 +64,8 @@ FactoryGirl.define do
           Timecop.freeze(15.seconds.ago) do
             create(:case_transition_add_message_to_case,
                    case_id: kase.id,
-                   user_id: kase.responder.id,
-                   messaging_team_id: kase.responding_team.id,
+                   acting_user_id: kase.responder.id,
+                   acting_team_id: kase.responding_team.id,
                    message: "I've uploaded a response")
           end
         end
@@ -74,8 +74,8 @@ FactoryGirl.define do
           Timecop.freeze(10.seconds.ago) do
             create(:case_transition_add_message_to_case,
                    case_id: kase.id,
-                   user_id: kase.responder.id,
-                   messaging_team_id: kase.responding_team.id,
+                   acting_user_id: kase.responder.id,
+                   acting_team_id: kase.responding_team.id,
                    message: "I'm the approver for this case")
           end
         end
@@ -109,10 +109,10 @@ FactoryGirl.define do
              role: 'responding',
              created_at: evaluator.creation_time
       create :case_transition_assign_responder,
-             case: kase,
-             user: evaluator.manager,
-             managing_team: evaluator.managing_team,
-             responding_team: evaluator.responding_team,
+             case_id: kase.id,
+             acting_user_id: evaluator.manager.id,
+             acting_team_id: evaluator.managing_team.id,
+             target_team_id: evaluator.responding_team.id,
              created_at: evaluator.creation_time
       kase.reload
     end
@@ -131,8 +131,8 @@ FactoryGirl.define do
       kase.responder_assignment.accepted!
       create :case_transition_accept_responder_assignment,
              case: kase,
-             user_id: kase.responder.id,
-             responding_team_id: kase.responding_team.id,
+             acting_user_id: kase.responder.id,
+             acting_team_id: kase.responding_team.id,
              created_at: evaluator.creation_time
       kase.reload
     end
@@ -154,8 +154,8 @@ FactoryGirl.define do
       kase.responder_assignment.rejected!
       create :case_transition_reject_responder_assignment,
              case: kase,
-             user: evaluator.responder,
-             responding_team: evaluator.responding_team,
+             acting_user_id: evaluator.responder.id,
+             acting_team_id: evaluator.responding_team.id,
              message: evaluator.rejection_message
       kase.reload
     end
@@ -177,8 +177,8 @@ FactoryGirl.define do
 
       create :case_transition_add_responses,
              case_id: kase.id,
-             responding_team_id: evaluator.responding_team.id,
-             user_id: evaluator.responder.id
+             acting_team_id: evaluator.responding_team.id,
+             acting_user_id: evaluator.responder.id
       # filenames: [evaluator.attachment.filename]
       kase.reload
     end
@@ -199,7 +199,7 @@ FactoryGirl.define do
 
       create :case_transition_pending_dacu_clearance,
              case_id: kase.id,
-             user_id: evaluator.responder.id
+             acting_user_id: evaluator.responder.id
       kase.reload
     end
   end
@@ -235,7 +235,7 @@ FactoryGirl.define do
 
       create :case_transition_approve_for_press_office,
              case: kase,
-             user: evaluator.approver
+             acting_user_id: evaluator.approver.id
       kase.reload
     end
   end
@@ -262,10 +262,10 @@ FactoryGirl.define do
 
       create :case_transition_approve_for_press_office,
              case: kase,
-             user: evaluator.approver
+             target_user_id: evaluator.approver.id
       create :case_transition_approve_for_private_office,
              case: kase,
-             user: evaluator.approver
+             target_user_id: evaluator.approver.id
 
       kase.reload
     end
@@ -280,8 +280,8 @@ FactoryGirl.define do
     after(:create) do |kase, evaluator|
       create :case_transition_approve,
              case: kase,
-             approving_team: evaluator.approving_team,
-             user: evaluator.approver
+             acting_team_id: evaluator.approving_team.id,
+             acting_user_id: evaluator.approver.id
 
       kase.approver_assignments.each { |a| a.update approved: true }
       kase.reload
@@ -299,8 +299,8 @@ FactoryGirl.define do
     after(:create) do |kase, evaluator|
       create :case_transition_respond,
              case: kase,
-             user_id: evaluator.responder.id,
-             responding_team_id: evaluator.responding_team.id
+             acting_user_id: evaluator.responder.id,
+             acting_team_id: evaluator.responding_team.id
       kase.reload
     end
   end
@@ -317,9 +317,9 @@ FactoryGirl.define do
     after(:create) do |kase, evaluator|
       create :case_transition_close,
              case: kase,
-             user: evaluator.manager,
-             managing_team: evaluator.managing_team,
-             responding_team: evaluator.responding_team
+             acting_user_id: evaluator.manager.id,
+             acting_team_id: evaluator.managing_team.id,
+             target_team_id: evaluator.responding_team.id
       kase.reload
     end
 
@@ -556,7 +556,7 @@ FactoryGirl.define do
              state: 'pending'
       create :flag_case_for_clearance_transition,
              case: kase,
-             approving_team: evaluator.approving_team
+             acting_team_id: evaluator.approving_team.id
       kase.reload
     end
   end
@@ -575,7 +575,7 @@ FactoryGirl.define do
              state: 'accepted'
       create :flag_case_for_clearance_transition,
              case: kase,
-             approving_team: evaluator.approving_team
+             target_team_id: evaluator.approving_team.id
     end
   end
 

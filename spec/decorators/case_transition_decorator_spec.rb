@@ -9,17 +9,17 @@ RSpec.describe CaseTransitionDecorator, type: :model do
 
   let(:ct) do
     create(:case_transition_assign_responder,
-           user: dacu_user,
-           managing_team: dacu,
-           responding_team: laa,
+           acting_user: dacu_user,
+           acting_team: dacu,
+           target_team: laa,
            created_at: Time.utc(2017, 4, 10, 13, 22, 44)).decorate
   end
 
   let(:winter_ct) do
     create(:case_transition_assign_responder,
-           user: dacu_user,
-           managing_team: dacu,
-           responding_team: laa,
+           acting_user: dacu_user,
+           acting_team: dacu,
+           target_team: laa,
            created_at: Time.utc(2017, 1, 10, 13, 22, 44)).decorate
   end
 

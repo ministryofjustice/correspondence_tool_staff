@@ -2,16 +2,19 @@
 #
 # Table name: case_transitions
 #
-#  id          :integer          not null, primary key
-#  event       :string
-#  to_state    :string           not null
-#  metadata    :jsonb
-#  sort_key    :integer          not null
-#  case_id     :integer          not null
-#  most_recent :boolean          not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  user_id     :integer
+#  id             :integer          not null, primary key
+#  event          :string
+#  to_state       :string           not null
+#  metadata       :jsonb
+#  sort_key       :integer          not null
+#  case_id        :integer          not null
+#  most_recent    :boolean          not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  acting_user_id :integer
+#  acting_team_id :integer
+#  target_user_id :integer
+#  target_team_id :integer
 #
 
 FactoryGirl.define do
@@ -42,9 +45,9 @@ FactoryGirl.define do
 
     to_state          { self.case.current_state }
     event             'flag_for_clearance'
-    user_id           { manager.id }
-    managing_team_id  { managing_team.id }
-    approving_team_id { approving_team.id }
+    acting_user_id    { manager.id }
+    acting_team_id    { managing_team.id }
+    target_team_id    { approving_team.id }
   end
 
   factory :unflag_case_for_clearance_transition, parent: :case_transition do
@@ -56,9 +59,9 @@ FactoryGirl.define do
 
     to_state          { self.case.current_state }
     event             'unflag_for_clearance'
-    user_id           { manager.id }
-    managing_team_id  { managing_team.id }
-    approving_team_id { approving_team.id }
+    acting_user_id           { manager.id }
+    acting_team_id    { managing_team.id }
+    target_team_id    { approving_team.id }
 
   end
 
@@ -72,9 +75,9 @@ FactoryGirl.define do
 
     to_state           'awaiting_responder'
     event              'assign_responder'
-    user_id            { manager.id }
-    managing_team_id   { managing_team.id }
-    responding_team_id { responding_team.id }
+    acting_user_id     { manager.id }
+    acting_team_id     { managing_team.id }
+    target_team_id     { responding_team.id }
   end
 
   factory :case_transition_accept_responder_assignment, parent: :case_transition do
@@ -90,8 +93,8 @@ FactoryGirl.define do
 
     to_state           'unassigned'
     event              'reject_responder_assignment'
-    user_id            { user.id }
-    responding_team_id { responding_team.id }
+    acting_user_id     { user.id }
+    acting_team_id     { responding_team.id }
     message            { Faker::Hipster.sentence }
   end
 
@@ -102,8 +105,8 @@ FactoryGirl.define do
     end
 
     to_state 'awaiting_dispatch'
-    user_id            { responder.id }
-    responding_team_id { responding_team.id }
+    acting_user_id     { responder.id }
+    acting_team_id     { responding_team.id }
     filenames          ['file1.pdf', 'file2.pdf']
     event 'add_responses'
   end
@@ -115,9 +118,9 @@ FactoryGirl.define do
     end
 
     to_state 'pending_dacu_clearance'
-    user_id            { responder.id }
-    responding_team_id { responding_team.id }
-    filenames          ['file1.pdf', 'file2.pdf']
+    acting_user_id      { responder.id }
+    acting_team_id      { responding_team.id }
+    filenames           ['file1.pdf', 'file2.pdf']
     event 'add_response_to_flagged_case'
   end
 
@@ -127,8 +130,8 @@ FactoryGirl.define do
     end
 
     to_state       'awaiting_dispatch'
-    user           { approver }
-    approving_team { find_or_create :team_dacu_disclosure }
+    acting_user    { approver }
+    acting_team    { find_or_create :team_dacu_disclosure }
     event          'approve'
   end
 
@@ -137,10 +140,10 @@ FactoryGirl.define do
       approver       { self.case.approvers.first }
     end
 
-    to_state       'pending_press_office_clearance'
-    user           { approver }
-    approving_team { find_or_create :team_press_office }
-    event          'approve'
+    to_state        'pending_press_office_clearance'
+    acting_user     { approver }
+    acting_team     { find_or_create :team_press_office }
+    event           'approve'
   end
 
   factory :case_transition_approve_for_private_office, parent: :case_transition do
@@ -149,8 +152,8 @@ FactoryGirl.define do
     end
 
     to_state       'pending_private_office_clearance'
-    user           { approver }
-    approving_team { find_or_create :team_private_office }
+    acting_user    { approver }
+    acting_team    { find_or_create :team_private_office }
     event          'approve'
   end
 
@@ -162,8 +165,8 @@ FactoryGirl.define do
 
     to_state 'responded'
     event 'respond'
-    user_id            { responder.id }
-    responding_team_id { responding_team.id }
+    acting_user_id      { responder.id }
+    acting_team_id      { responding_team.id }
   end
 
   factory :case_transition_remove_response, parent: :case_transition do
@@ -174,9 +177,9 @@ FactoryGirl.define do
 
     to_state 'awaiting_dispatch'
     event 'remove_response'
-    user_id            { responder.id }
-    responding_team_id { responding_team.id }
-    filenames          { 'file1.txt' }
+    acting_user_id      { responder.id }
+    acting_team_id      { responding_team.id }
+    filenames           { 'file1.txt' }
   end
 
   factory :case_transition_close, parent: :case_transition do
@@ -188,8 +191,8 @@ FactoryGirl.define do
     event               'add_message_to_case'
     to_state            { self.case.current_state }
     message             'This is my message'
-    user_id             { self.case.responder.id }
-    messaging_team_id   { self.case.responding_team.id }
+    acting_user_id      { self.case.responder.id }
+    acting_team_id      { self.case.responding_team.id }
   end
 
   factory :case_transition_reassign_user, parent: :case_transition do

@@ -4,8 +4,8 @@
       p
         = message_event.message
     .message-audit
-      = message_event.user.full_name
+      = message_event.acting_user.full_name
       = " - "
-      = message_event.messaging_team&.name || "Team unknown"
+      = message_event.acting_team&.name || "Team unknown"
       br
       = message_event.created_at.strftime("%d/%m/%Y %H:%M")

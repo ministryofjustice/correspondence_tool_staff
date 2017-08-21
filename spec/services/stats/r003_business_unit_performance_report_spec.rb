@@ -46,6 +46,14 @@ module Stats
         create_case(received: '20170605', responded: nil,        deadline: '20170625', team: @team_b, responder: @responder_b, flagged: true, ident: 'case for team b - open late')
         create_case(received: '20170605', responded: nil,        deadline: '20170702', team: @team_b, responder: @responder_b, flagged: true, ident: 'case for team b - open in time')
       end
+
+
+      ###############
+      # TODO Find a way not to create the extraneous teams in the first place
+      ##############
+
+      # delete extraneous teams
+      Team.where('id > ?', @team_d.id).destroy_all
     end
 
     after(:all) do

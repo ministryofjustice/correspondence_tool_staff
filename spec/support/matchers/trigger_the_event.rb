@@ -22,6 +22,6 @@ RSpec::Matchers.define :trigger_the_event do |event|
   supports_block_expectations
 
   failure_message do |_code|
-    "expected #{@state_machine} to have received trigger!(#{event}, #{@parameters.merge({event: event})})"
+    "expected #{@state_machine} to have received trigger!(#{event.inspect}, #{@parameters.merge({event: event})})"
   end
 end

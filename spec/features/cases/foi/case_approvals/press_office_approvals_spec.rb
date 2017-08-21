@@ -133,7 +133,6 @@ feature 'cases requiring clearance by press office' do
 
   scenario 'different Press Officer from same team approving a case' do
     login_as other_press_officer
-
     cases_show_page.load(id: pending_press_clearance_case.id)
     approve_case kase: pending_press_clearance_case,
                  expected_team: pending_press_clearance_case.responding_team,

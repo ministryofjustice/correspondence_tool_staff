@@ -2,16 +2,19 @@
 #
 # Table name: case_transitions
 #
-#  id          :integer          not null, primary key
-#  event       :string
-#  to_state    :string           not null
-#  metadata    :jsonb
-#  sort_key    :integer          not null
-#  case_id     :integer          not null
-#  most_recent :boolean          not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  user_id     :integer
+#  id             :integer          not null, primary key
+#  event          :string
+#  to_state       :string           not null
+#  metadata       :jsonb
+#  sort_key       :integer          not null
+#  case_id        :integer          not null
+#  most_recent    :boolean          not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  acting_user_id :integer
+#  acting_team_id :integer
+#  target_user_id :integer
+#  target_team_id :integer
 #
 
 class CaseTransition < ActiveRecord::Base
@@ -22,24 +25,13 @@ class CaseTransition < ActiveRecord::Base
   validates :message, presence: true, if: -> { event == 'add_message_to_case' }
 
   jsonb_accessor :metadata,
-    user_id:            :integer,
-    original_user_id:   :integer,
-    responding_team_id: :integer,
-    managing_team_id:   :integer,
-    approving_team_id:  :integer,
-    messaging_team_id:  :integer,
     message:            :text,
-    target_user_id:     :integer,
-    target_team_id:     :integer,
-    acting_user_id:     :integer,
-    acting_team_id:     :integer,
     filenames:          [:string, array: true, default: []]
 
-  belongs_to :user
-  belongs_to :responding_team, class_name: Team
-  belongs_to :managing_team, class_name: Team
-  belongs_to :approving_team, class_name: Team
-  belongs_to :messaging_team, class_name: Team
+  belongs_to :acting_user, class_name: User
+  belongs_to :acting_team, class_name: Team
+  belongs_to :target_user, class_name: User
+  belongs_to :target_team, class_name: Team
 
   scope :accepted,  -> { where to_state: 'drafting'  }
   scope :drafting,  -> { where to_state: 'drafting'  }

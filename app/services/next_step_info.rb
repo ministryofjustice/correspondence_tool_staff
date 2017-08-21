@@ -16,7 +16,7 @@ class NextStepInfo
   private
 
   def get_next_state
-    @state_machine.next_state_for_event(@state_machine_event, user_id: @user.id)
+    @state_machine.next_state_for_event(@state_machine_event, acting_user_id: @user.id)
   rescue
     Rails.logger.error "Unexpected action #{@action} for case in #{@kase.current_state} state"
     raise
