@@ -328,6 +328,7 @@ class CaseStateMachine
     trigger! :request_amends,
              acting_user_id:  user.id,
              event:           :request_amends,
+             message:         object.request_amends_comment,
              acting_team_id:  assignment.team_id
   end
 
