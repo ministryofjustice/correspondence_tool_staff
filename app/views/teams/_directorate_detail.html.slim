@@ -38,3 +38,8 @@ h2.heading-medium
               = team.responders.size
             td aria-label="Actions"
               = link_to 'Edit', edit_team_path(team), { class: 'action--edit' }
+
+p
+p
+
+= link_to 'Add new business unit', new_team_path(type: 'bu', parent_id: @team.id), class: 'button'

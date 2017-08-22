@@ -352,6 +352,8 @@ en:
       new_responder_user: New Information Officer
     edit:
       edit: Edit %{team_type}
+    new:
+      new: New %{team_type}
 
   users:
     index:
