@@ -21,6 +21,13 @@
             locals: { s3_direct_post: @s3_direct_post,
                       file_input_name: 'uploaded_files[]' }
 
+      .form-group
+        label.form_label
+          | Add message (optional)
+          span.form-hint Let us know what you were doing and what could be improved or fixed.
+        .message-form
+          = text_area_tag(:upload_comment, nil, class: 'form-control message-form')
+
       .actions
         = submit_tag t('.upload_response'), class: 'button'
 

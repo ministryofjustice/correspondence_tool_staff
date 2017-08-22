@@ -274,6 +274,7 @@ class CaseStateMachine
              acting_team_id:     responding_team.id,
              acting_user_id:     user.id,
              filenames:          filenames,
+             message:            object.upload_comment,
              event:              :add_responses
   end
 
@@ -282,6 +283,7 @@ class CaseStateMachine
              acting_team_id:     responding_team.id,
              acting_user_id:     user.id,
              filenames:          filenames,
+             message:            object.upload_comment,
              event:              :add_response_to_flagged_case
   end
 
@@ -337,6 +339,7 @@ class CaseStateMachine
              acting_user_id:        user.id,
              event:                 :upload_response_and_approve,
              acting_team_id:        approving_team.id,
+             message:               object.upload_comment,
              filenames:             filenames
   end
 
@@ -345,6 +348,7 @@ class CaseStateMachine
              acting_user_id:        user.id,
              event:                 :upload_response_and_return_for_redraft,
              acting_team_id:        approving_team.id,
+             message:               object.upload_comment,
              filenames:             filenames
   end
 

@@ -42,6 +42,7 @@ class ResponseUploaderService
   private
 
   def transition_state(response_attachments)
+    @case.upload_comment = @params[:upload_comment]
     filenames = response_attachments.map(&:filename)
     case @action
     when 'upload'

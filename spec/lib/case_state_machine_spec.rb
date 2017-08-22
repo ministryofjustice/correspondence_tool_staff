@@ -1,7 +1,5 @@
 require 'rails_helper'
 
-
-
 # helper class to make example groups a bit more readable below
 def events(*list, &block)
   describe(*list, events: list, caller: caller) do
@@ -444,7 +442,8 @@ RSpec.describe CaseStateMachine, type: :model do
                .on_state_machine(case_being_drafted.state_machine)
                .with_parameters(acting_user_id: responder.id,
                                 acting_team_id: responding_team.id,
-                                filenames: filenames)
+                                filenames: filenames,
+                                message: nil)
     end
   end
 
@@ -533,6 +532,8 @@ RSpec.describe CaseStateMachine, type: :model do
     let(:team_id) { kase.approving_teams.first.id }
     let(:filenames) { %w(file1.pdf file2.pdf) }
 
+    before(:each) { kase.upload_comment = 'Uploading....' }
+
     describe 'trigger approve!' do
       it 'triggers an approve event' do
         expect {
@@ -553,7 +554,8 @@ RSpec.describe CaseStateMachine, type: :model do
         }.to trigger_the_event(:upload_response_and_approve).on_state_machine(state_machine).with_parameters(
           acting_user_id: approver.id,
           acting_team_id: team_id,
-          filenames: filenames
+          filenames: filenames,
+          message: 'Uploading....'
         )
       end
     end
@@ -567,7 +569,8 @@ RSpec.describe CaseStateMachine, type: :model do
         }.to trigger_the_event(:upload_response_and_return_for_redraft).on_state_machine(state_machine).with_parameters(
           acting_user_id: approver.id,
           acting_team_id: team_id,
-          filenames: filenames
+          filenames: filenames,
+          message: 'Uploading....'
         )
       end
     end
