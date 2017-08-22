@@ -164,6 +164,11 @@ en:
       feedback:
         comment: Help make this service better
 
+      team:
+        name: Business unit name
+        email: Business unit group email
+        team_lead: Deputy director
+
   alerts:
     assignment_accepted_html: |
       <strong>You've accepted this case</strong><br>
