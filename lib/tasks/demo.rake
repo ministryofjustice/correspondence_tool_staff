@@ -2,25 +2,22 @@ namespace :demo do
 
   desc 'Sets specified case to be visible by Press office: rake demo:viz[170821004]'
   task :press, [:case_num] => :environment do  | _task, args |
-    case_num = args[:case_num]
-    kase = Case.find_by!(number: case_num)
-    print_case(kase, "Original State")
-    date = 1.business_days.ago
-    update_dates(kase, date)
-    print_case(kase, "Updated State")
+    update_case_dates(args[:case_num], 1)
   end
 
   desc 'Sets specified case to be respondable by kilo: rake demo:kilo[170823004]'
   task :kilo, [:case_num] => :environment do  | _task, args |
-    case_num = args[:case_num]
-    kase = Case.find_by!(number: case_num)
-    print_case(kase, "Original State")
-    date = 4.business_days.ago
-    update_dates(kase, date)
-    print_case(kase, "Updated State")
+    update_case_dates(args[:case_num], 1)
   end
 end
 
+def update_case_dates(case_num, biz_days_ago)
+  kase = Case.find_by!(number: case_num)
+  print_case(kase, "Original State")
+  date = biz_days_ago.business_days.ago
+  update_dates(kase, date)
+  print_case(kase, "Updated State")
+end
 
 def update_dates(kase, date)
   kase.created_at = kase.received_date = date
