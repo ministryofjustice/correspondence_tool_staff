@@ -13,6 +13,31 @@ RSpec.describe TeamsController, type: :controller do
       sign_in responder
     end
 
+    describe 'POST create' do
+      let(:params) {
+        {
+          'team' => {
+            'name' => 'Frog sizing unit',
+            'email' => 'frogs@a.com',
+            'team_lead' => 'Stephen Richards',
+            'parent_id' => directorate.id
+          },
+          'commit' => 'Submit'}
+      }
+
+      before { sign_in manager }
+
+      it 'creates a user with the given params' do
+        post :create, params: params
+
+        bu = BusinessUnit.last
+        expect(bu.name).to eq 'Frog sizing unit'
+        expect(bu.email).to eq 'frogs@a.com'
+        expect(bu.team_lead).to eq 'Stephen Richards'
+        expect(bu.parent).to eq directorate
+      end
+    end
+
     describe 'GET index' do
       it 'redirects to new root path' do
         get :index
