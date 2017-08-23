@@ -47,6 +47,7 @@ class TeamsController < ApplicationController
     authorize Team.first
 
     @team = BusinessUnit.new(new_team_params)
+    @team.role = 'responder'
     if @team.save
       flash[:notice] = 'Team created'
       redirect_to team_path(@team.parent_id)
