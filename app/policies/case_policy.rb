@@ -140,6 +140,14 @@ class CasePolicy < ApplicationPolicy
       check_user_is_dacu_disclosure_approver
   end
 
+  def upload_response_and_approve_from_pending_dacu_clearance_to_pending_press_office_clearance?
+    approve_from_pending_dacu_clearance_to_pending_press_office_clearance?
+  end
+
+  def upload_response_and_approve_from_pending_dacu_clearance_to_awaiting_dispatch?
+    approve_from_pending_dacu_clearance_to_awaiting_dispatch?
+  end
+
   def approve_from_pending_press_office_clearance_to_awaiting_dispatch?
     clear_failed_checks
 

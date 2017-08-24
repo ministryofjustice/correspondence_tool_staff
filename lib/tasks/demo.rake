@@ -7,7 +7,7 @@ namespace :demo do
 
   desc 'Sets specified case to be respondable by kilo: rake demo:kilo[170823004]'
   task :kilo, [:case_num] => :environment do  | _task, args |
-    update_case_dates(args[:case_num], 1)
+    update_case_dates(args[:case_num], 4)
   end
 end
 
