@@ -75,6 +75,38 @@ RSpec.describe UsersController, type: :controller do
     end
   end
 
+  describe 'PATCH update' do
+
+    before { sign_in manager }
+
+    let(:user) { create :user, full_name: 'John Smith', email: 'js@moj.com' }
+    let(:team) { create :team }
+    let(:params) do
+      {
+        'team_id' => team.id.to_s,
+        'role' => 'responder',
+        'user' => {
+          'full_name' => 'Joanne Smythe',
+          'email' => 'correspondence-staff-dev+joanne.smythe@digital.justice.gov.uk'
+        },
+        'commit' => 'Edit information officer',
+        'id' => user.id.to_s
+      }
+    end
+
+    it 'updates the user' do
+      patch :update, params: params
+
+      expect(user.reload.full_name).to eq 'Joanne Smythe'
+      expect(user.email).to eq 'correspondence-staff-dev+joanne.smythe@digital.justice.gov.uk'
+    end
+
+    it 'redirects to team page' do
+      patch :update, params: params
+      expect(response).to redirect_to(team_path(team.id))
+    end
+  end
+
   describe 'GET index' do
     let(:responder!) { create :responder }
 

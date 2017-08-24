@@ -9,12 +9,6 @@
   = "#{@team.pretty_type}: #{@team.name}"
 
 = render partial: 'layouts/header'
-
 = form_for @user do |f|
-  - if @team.present?
-    = f.hidden_field :team, id: 'team_id', name: 'team_id', value: @team.id
-    = f.hidden_field :team, id: 'role', name: 'role', value: @role
-  = f.text_field :full_name
-  = f.email_field :email
+  = render partial: 'form', locals: {f: f, user: @user, team: @team, role: @role, submit_button_text: t('.create') }
 
-  = f.submit t('.create'), {class: 'button'}

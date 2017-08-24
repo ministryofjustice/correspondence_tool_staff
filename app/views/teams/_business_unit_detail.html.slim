@@ -29,7 +29,10 @@ h2.heading-medium
             td aria-label="Email"
                = user.email
             td aria-label="Actions"
-              | Edit
+              = link_to 'Edit', edit_user_path(user, team_id: @team.id)
+
+p
+
 - if Pundit.policy(current_user, team).can_add_new_responder?
   .grid-row
     .column-full
