@@ -24,7 +24,6 @@ feature 'respond to responder assignment' do
 
   scenario 'kilo accepts assignment' do
     assignments_edit_page.load(case_id: assigned_case.id, id: assignment.id)
-
     choose 'Accept'
     expect(assignments_edit_page).
       to have_selector('#assignment_reasons_for_rejection', visible: false)
@@ -97,15 +96,25 @@ feature 'respond to responder assignment' do
   end
 
   scenario 'kilo clicks on a link to an assignment that has been rejected' do
-    assignment.reject responder, "NO thank you"
+    rejected_case = create :case
+    rejected_case.assignments << Assignment.new(state: 'rejected', team_id: responding_team.id, role: 'responding', user_id: nil, approved: false, reasons_for_rejection: 'xx')
+    rejected_case.assignments << Assignment.new(state: 'pending', team_id: responding_team.id, role: 'responding', user_id: nil, approved: false)
+    rejected_case.current_state = 'awaiting_responder'
+    rejected_case.save!
 
     assignments_edit_page.load(case_id: assigned_case.id, id: assignment.id)
 
-    expect(page).to have_current_path(
-                      case_assignments_show_rejected_path assigned_case,
-                                                          rejected_now: false
-                    )
-    expect(page).to have_content('This case has already been rejected.')
+    choose 'Accept'
+    expect(assignments_edit_page).
+      to have_selector('#assignment_reasons_for_rejection', visible: false)
+    click_button 'Confirm'
+
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content("You've accepted this case")
+
+    expect(assignment.reload.state).to eq 'accepted'
+    expect(assigned_case.reload.current_state).to eq 'drafting'
+    expect(assigned_case.responder).to eq responder
   end
 
   scenario 'kilo clicks on a link to an assignment that has been accepted' do

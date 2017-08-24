@@ -1,7 +1,7 @@
 class CasePrinter
 
-  def initialize(case_id)
-    @case = Case.find case_id
+  def initialize(case_or_case_id)
+    @case = case_or_case_id.is_a?(Case) ? case_or_case_id : Case.find(case_or_case_id)
     @lines = []
   end
 
@@ -15,7 +15,6 @@ class CasePrinter
     @lines <<   "Assignments:"
     @case.assignments.each do |a|
       @lines <<   sprintf("    id: %-5d  role: %-12s state: %-12s team: %-5d %s", a.id, a.role, a.state, a.team.id, a.team.name)
-      # puts "    id: #{a.id}  state #{a.state}  team: #{a.team.id}: #{a.team.name}  user: #{a.user_id}: #{a.user&.full_name} role: #{a.role}"
     end
     puts "Transitions:"
     @case.transitions.each do |t|

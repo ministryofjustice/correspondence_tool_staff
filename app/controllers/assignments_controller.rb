@@ -59,8 +59,6 @@ class AssignmentsController < ApplicationController
     if @assignment
       if @assignment.accepted?
         redirect_to case_path @case, accepted_now: false
-      elsif @assignment.rejected?
-        redirect_to case_assignments_show_rejected_path @case, rejected_now: false
       else
         authorize @case, :can_accept_or_reject_responder_assignment?
         render :edit
