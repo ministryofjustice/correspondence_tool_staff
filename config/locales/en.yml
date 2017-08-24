@@ -363,6 +363,9 @@ en:
     new:
       create: Create user
       heading: "New %{role}"
+    edit:
+      edit: Edit information officer
+      heading: "Edit %{role}"
 
   nav:
     pages:

@@ -1,0 +1,15 @@
+= GovukElementsErrorsHelper.error_summary @user,
+        "#{pluralize(@user.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+        ""
+
+- content_for :heading
+  = t('.heading', role: t('roles.responders').singularize)
+
+- content_for :sub_heading
+  = "#{@team.pretty_type}: #{@team.name}"
+
+= render partial: 'layouts/header'
+
+= form_for @user, as: :user, url: user_path(@user) do |f|
+  = render partial: 'form', locals: {f: f, user: @user, team: @team, role: @role, submit_button_text: t('.edit') }
+

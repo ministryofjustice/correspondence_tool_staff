@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_team, only: [:create, :index, :new]
+  before_action :set_team, only: [:create, :index, :new, :edit, :update]
 
   def create
     @user = User.new(create_user_params)
@@ -32,6 +32,21 @@ class UsersController < ApplicationController
     @user = User.new
     role = validate_role
     @role = role
+  end
+
+  def edit
+    @user = User.find params[:id]
+    @role = @team.role
+  end
+
+  def update
+    @user = User.find params[:id]
+    if @user.update(create_user_params)
+      flash[:notice] = 'User details updated'
+      redirect_to team_path(id: @team.id)
+    else
+      redirec_to user_path(@user)
+    end
   end
 
   private
