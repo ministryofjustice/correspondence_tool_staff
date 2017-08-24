@@ -27,7 +27,7 @@ class CaseTransitionDecorator < Draper::Decorator
       'add_responses',
       'add_response_to_flagged_case',
       'upload_response_and_return_for_redraft',
-      'upload_respons_and_approve'
+      'upload_response_and_approve'
         object.message
     when 'reassign_user'
       target_user = User.find(object.target_user_id)
