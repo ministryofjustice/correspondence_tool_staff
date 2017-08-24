@@ -23,10 +23,9 @@
 
       .form-group
         label.form_label
-          | Add message (optional)
-          span.form-hint Let us know what you were doing and what could be improved or fixed.
+          | <strong>Add message (optional)</strong>
         .message-form
-          = text_area_tag(:upload_comment, nil, class: 'form-control message-form')
+          = text_area_tag(:upload_comment, nil, rows: 4, class: 'form-control')
 
       .actions
         = submit_tag t('.upload_response'), class: 'button'
