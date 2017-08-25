@@ -348,8 +348,12 @@ en:
       <strong>Your feedback has been submitted.</strong>
 
   teams:
+    directorate_detail:
+      team_members: Team members
     business_unit_detail:
-      new_responder_user: New Information Officer
+      team_members: Team members
+      new_team_member: New team member
+#      new_responder_user: New Information Officer
     edit:
       edit: Edit %{team_type}
     new:

@@ -22,7 +22,7 @@ h2.heading-medium
         th scope='col'
           | Email
         th scope='col'
-          = t('roles.responders')
+          = t('.team_members')
         th scope='col'
           | Actions
       tbody
@@ -35,7 +35,7 @@ h2.heading-medium
             td aria-label="Email"
               = team.email
             td aria-label="#{ t('roles.responders') }"
-              = team.responders.size
+              = team.users.size
             td aria-label="Actions"
               = link_to 'Edit', edit_team_path(team), { class: 'action--edit' }
 
