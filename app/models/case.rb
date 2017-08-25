@@ -149,7 +149,7 @@ class Case < ApplicationRecord
           source: :team
 
   has_one :responder_assignment,
-          -> { responding },
+          -> { last_responding },
           class_name: 'Assignment'
 
   has_one :responder,
@@ -157,7 +157,6 @@ class Case < ApplicationRecord
           source: :user
 
   has_one :responding_team,
-          -> { where("state != 'rejected'") },
           through: :responder_assignment,
           source: :team
 
