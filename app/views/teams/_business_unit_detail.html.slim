@@ -1,10 +1,16 @@
-h2
-  .bold-small
-    = t('team_leads.deputy_director')
-  = @team.team_lead
+.column-two-thirds
+  h2.bold-large Team details
+.column-one-third = link_to 'Edit', edit_team_path(@team)
 
-h2.heading-medium
-  = t('.team_members')
+.column-full
+  hr
+
+= render partial: 'shared/areas_covered_list', locals: { team: @team }
+
+.column-full
+  hr
+  h2.heading-medium
+    = t('.team_members')
 
 .grid-row
   .column-full.table-container.container
@@ -22,7 +28,7 @@ h2.heading-medium
         th scope='col'
           | Actions
       tbody
-        - team.users.each do |user|
+        - team.responders.each do |user|
           tr
             td aria-label="Name"
               = user.full_name
@@ -37,6 +43,6 @@ p
   .grid-row
     .column-full
       = link_to(t('.new_team_member'),
-                new_team_user_path(team_id: team.id, role: team.role),
+                new_team_user_path(team_id: team.id, role: 'responder'),
                 id: 'action--new-responder-user',
                 class: 'button')
