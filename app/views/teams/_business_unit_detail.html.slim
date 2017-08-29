@@ -1,16 +1,20 @@
-.column-two-thirds
-  h2.bold-large Team details
-.column-one-third = link_to 'Edit', edit_team_path(@team)
+.grid-row
+  .column-two-thirds
+    h2.heading-medium style='display:inline'
+      | Team details
+  .column-one-third
+    = link_to 'Edit', edit_team_path(@team)
 
-.column-full
-  hr
+  .column-full
+    hr
 
 = render partial: 'shared/areas_covered_list', locals: { team: @team }
 
-.column-full
-  hr
-  h2.heading-medium
-    = t('.team_members')
+.grid-row
+  .column-full
+    hr
+    h2.heading-medium
+      = t('.team_members')
 
 .grid-row
   .column-full.table-container.container

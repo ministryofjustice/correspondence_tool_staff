@@ -116,7 +116,7 @@ describe 'teams/show.html.slim', type: :view do
       teams_show_page.load(rendered)
 
       expect(teams_show_page.deputy_director)
-        .to have_text "Deputy Director#{bu.team_lead}Group email#{bu.email}"
+        .to have_text bu.team_lead
     end
 
     it 'displays the information officers' do
