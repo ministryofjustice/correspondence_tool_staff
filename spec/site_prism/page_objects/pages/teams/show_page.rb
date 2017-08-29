@@ -9,7 +9,7 @@ module PageObjects
 
 
         element :heading, 'h1.page-heading'
-        element :deputy_director, 'h2:first'
+        element :deputy_director, '.team-lead-title'
         element :director, 'h2:first'
         element :director_general, 'h2:first'
 
