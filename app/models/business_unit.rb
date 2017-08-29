@@ -9,9 +9,12 @@
 #  updated_at :datetime         not null
 #  type       :string
 #  parent_id  :integer
+#  role       :string
 #
 
 class BusinessUnit < Team
+
+  VALID_ROLES = %w{ responder approver manager }.freeze
   validates :parent_id, presence: true
 
   belongs_to :directorate, foreign_key: 'parent_id'
@@ -45,6 +48,12 @@ class BusinessUnit < Team
     joins(:user_roles).where(teams_users_roles: { role: 'approver' }).distinct
   }
 
+  def valid_role
+    unless role.in?(VALID_ROLES)
+      errors.add(:role, :invalid)
+    end
+  end
+
   def self.dacu_disclosure
     find_by!(name: Settings.foi_cases.default_clearance_team)
   end
@@ -69,17 +78,4 @@ class BusinessUnit < Team
     name == Settings.private_office_team_name
   end
 
-  def role
-    properties.role.first&.value
-  end
-
-  def role=(new_role)
-    if properties.role.exists?
-      properties.role.update value: new_role
-    else
-      new_property = TeamProperty.new(key: 'role', value: new_role)
-      properties << new_property
-      new_property
-    end
-  end
 end

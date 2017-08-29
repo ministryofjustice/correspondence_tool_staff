@@ -45,13 +45,13 @@ RSpec.describe UsersController, type: :controller do
 
       before do
         params[:team_id] = dacu.id
-        params[:role]    = 'responder'
+        params[:role]    = 'manager'
       end
 
       it 'adds the user to the given team with the given role' do
         post :create, params: params
 
-        expect(dacu.responders).to include User.last
+        expect(dacu.managers).to include User.last
       end
 
       it 'redirects to the team details page' do
@@ -129,7 +129,7 @@ RSpec.describe UsersController, type: :controller do
 
   describe 'GET new' do
     let(:params) { { team_id: dacu.id,
-                     role: 'responder' } }
+                     role: 'manager' } }
 
     before { sign_in manager }
 
@@ -146,7 +146,7 @@ RSpec.describe UsersController, type: :controller do
 
     it 'assigns the role' do
       get :new, params: params
-      expect(assigns(:role)).to eq 'responder'
+      expect(assigns(:role)).to eq 'manager'
     end
 
     it 'returns an error if the team does not support the given role' do

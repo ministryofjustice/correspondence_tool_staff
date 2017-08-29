@@ -10,7 +10,7 @@ describe 'users/new.html.slim', type: :view do
     render
     users_new_page.load(rendered)
     expect(users_new_page.page_heading.heading)
-      .to have_text 'New Information officer'
+      .to have_text 'New team member'
     expect(users_new_page.page_heading.sub_heading)
       .to have_text 'Business unit: DACU'
     expect(users_new_page.team_id.value).to eq dacu.id.to_s

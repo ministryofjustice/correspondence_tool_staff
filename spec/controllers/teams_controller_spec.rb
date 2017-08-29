@@ -20,8 +20,10 @@ RSpec.describe TeamsController, type: :controller do
             'name' => 'Frog sizing unit',
             'email' => 'frogs@a.com',
             'team_lead' => 'Stephen Richards',
-            'parent_id' => directorate.id
+            'parent_id' => directorate.id,
+            'role' => 'responder'
           },
+          'team_type' => 'bu',
           'commit' => 'Submit'}
       }
 

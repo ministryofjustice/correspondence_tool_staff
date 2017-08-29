@@ -9,6 +9,7 @@
 #  updated_at :datetime         not null
 #  type       :string
 #  parent_id  :integer
+#  role       :string
 #
 
 require 'rails_helper'
@@ -17,7 +18,8 @@ RSpec.describe BusinessUnit, type: :model do
   it 'can be created' do
     bu = BusinessUnit.create name: 'Busy Units',
                              email: 'busy.units@localhost',
-                             parent_id: 1
+                             parent_id: 1,
+                             role: 'responder'
     expect(bu).to be_valid
   end
 
@@ -134,29 +136,6 @@ RSpec.describe BusinessUnit, type: :model do
       it 'returns false if not private office team' do
         expect(@dacu_disclosure_team.private_office?).to be false
       end
-    end
-  end
-
-  describe '#role' do
-    it 'returns the role of a Business Unit' do
-      bu = create :business_unit, role: 'manager'
-      expect(bu.role).to eq 'manager'
-    end
-  end
-
-  describe '#role=' do
-    it 'add a role to a Business Unit' do
-      bu = create :business_unit
-      bu.properties.role.first.delete
-      expect(bu.role).to eq nil
-      bu.role = 'manager'
-      expect(bu.role).to eq 'manager'
-    end
-
-    it 'change the role of a Business Unit' do
-      bu = create :business_unit, role: 'manager'
-      bu.role = 'responder'
-      expect(bu.role).to eq 'responder'
     end
   end
 end

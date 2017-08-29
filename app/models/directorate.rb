@@ -9,6 +9,7 @@
 #  updated_at :datetime         not null
 #  type       :string
 #  parent_id  :integer
+#  role       :string
 #
 
 class Directorate < Team

@@ -32,7 +32,7 @@
         th scope='col'
           | Actions
       tbody
-        - team.responders.each do |user|
+        - team.users.each do |user|
           tr
             td aria-label="Name"
               = user.full_name
@@ -47,6 +47,6 @@ p
   .grid-row
     .column-full
       = link_to(t('.new_team_member'),
-                new_team_user_path(team_id: team.id, role: 'responder'),
+                new_team_user_path(team_id: team.id, role: team.role),
                 id: 'action--new-responder-user',
                 class: 'button')

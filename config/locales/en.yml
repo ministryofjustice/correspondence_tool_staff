@@ -87,10 +87,17 @@ en:
     director: Director
     director_general: Director general
 
+  team_lead_types:
+    business_group: Director general
+    directorate: Director
+    business_unit: Deputy director
+
+
   team_types:
     business_group: Business group
-    business_unit: Business unit
     directorate: Directorate
+    business_unit: Business unit
+
 
   event:
     accept_approver_assignment: Clearance level added
@@ -348,6 +355,7 @@ en:
       <strong>Your feedback has been submitted.</strong>
 
   teams:
+    group_email: Group email
     directorate_detail:
       team_members: Team members
     business_unit_detail:
@@ -366,7 +374,7 @@ en:
       heading: Users
     new:
       create: Create user
-      heading: "New %{role}"
+      heading: "New team member"
     edit:
       edit: Edit information officer
       heading: "Edit %{role}"
