@@ -1,0 +1,22 @@
+h1 Feedback
+
+- @feedbacks.each do |f|
+  table
+    tr
+      td Date
+      td = f.created_at
+    tr
+      td User
+      td = f.email
+    tr
+      td Comment
+      td = f.comment
+    tr
+      td Page
+      td = f.referer
+    tr
+      td Browser details
+      td = f.user_agent
+
+  br
+  br
