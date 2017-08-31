@@ -11,6 +11,7 @@ class UsersController < ApplicationController
       redirect_to team_path(id: @team.id)
     when :existing_ok
       flash[:notice] = 'Existing user added to team'
+      redirect_to team_path(id: @team.id)
     else
       render :new
     end
