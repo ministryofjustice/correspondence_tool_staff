@@ -21,37 +21,30 @@ class TeamsController < ApplicationController
 
     if @team.update(team_params)
       flash[:notice] = 'Team details updated'
-      redirect_to team_path(@team.parent)
+      redirect_to params[:team_type] == 'bg' ? teams_path : team_path(@team.parent_id)
     else
       render :edit
     end
   end
 
   def new
-    klass = case params[:type]
-            when 'bu'
-              BusinessUnit
-            when 'dir'
-              Directorate
-            when 'bg'
-              BusinessGroup
-            else
-              raise ArgumentError.new('Invalid team type parameter')
-            end
+    klass = get_class_from_team_type
     @team = klass.new
     @team.team_lead = ''
     @team.parent_id = params[:parent_id].to_i
+    @team_type = params[:team_type]
   end
 
   def create
     authorize Team.first
-
-    @team = BusinessUnit.new(new_team_params)
-    @team.role = 'responder'
+    klass = get_class_from_team_type
+    @team = klass.new(new_team_params)
+    @team.parent_id = nil if @team.is_a?(BusinessGroup)
     if @team.save
       flash[:notice] = 'Team created'
-      redirect_to team_path(@team.parent_id)
+      redirect_to params[:team_type] == 'bg' ? teams_path : team_path(@team.parent_id)
     else
+      @team_type = params[:team_type]
       render :new
     end
   end
@@ -61,7 +54,8 @@ class TeamsController < ApplicationController
     params.require(:team).permit(
       :name,
       :email,
-      :team_lead
+      :team_lead,
+      :role
     )
   end
 
@@ -70,11 +64,25 @@ class TeamsController < ApplicationController
                            :name,
                            :email,
                            :team_lead,
-                           :parent_id
+                           :parent_id,
+                           :role
     )
   end
 
   private
+
+  def get_class_from_team_type
+    case params[:team_type]
+    when 'bu'
+      BusinessUnit
+    when 'dir'
+      Directorate
+    when 'bg'
+      BusinessGroup
+    else
+      raise ArgumentError.new('Invalid team type parameter')
+    end
+  end
 
   def set_team
     @team = Team.find(params[:id])

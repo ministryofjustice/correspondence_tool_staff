@@ -19,6 +19,8 @@
             = t('team_leads.director_general')
           th scope='col'
             = t('team_types.directorate').pluralize
+          th scope='col'
+            = 'Actions'
       tbody
         - @teams.each do |team|
           tr
@@ -31,3 +33,8 @@
               = team.team_lead
             td aria-label="#{ t('team_types.directorate').pluralize }"
               = team.children.size
+            td aria-label="Actions"
+              = link_to 'Edit', edit_team_path(team, team_type: 'bg'), { class: 'action--edit' }
+
+br
+= link_to 'Add new business group', new_team_path(team_type: 'bg'), class: 'button'

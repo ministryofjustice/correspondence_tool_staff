@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.1
--- Dumped by pg_dump version 9.5.1
+-- Dumped from database version 9.5.6
+-- Dumped by pg_dump version 9.5.6
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -504,7 +504,8 @@ CREATE TABLE teams (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     type character varying,
-    parent_id integer
+    parent_id integer,
+    role character varying
 );
 
 
@@ -1057,6 +1058,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170727162325'),
 ('20170728154625'),
 ('20170731101430'),
-('20170818082409');
+('20170818082409'),
+('20170830162157'),
+('20170831091142');
 
 

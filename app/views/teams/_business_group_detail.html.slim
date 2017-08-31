@@ -2,6 +2,11 @@ h2
   .bold-small
     = t('team_leads.director_general')
   = @team.team_lead
+br
+h2
+  .bold-small
+    = t('teams.group_email')
+  = @team.email || '-'
 
 h2.heading-medium
   = t('team_types.directorate').pluralize
@@ -22,6 +27,8 @@ h2.heading-medium
             = t('team_leads.director')
           th scope='col'
             = t('team_types.business_unit').pluralize
+          th scope ='col'
+            = "Actions"
       tbody
         - teams.each do |team|
           tr
@@ -34,3 +41,9 @@ h2.heading-medium
               = team.team_lead
             td aria-label="#{t('team_types.business_unit').pluralize}"
               = team.children.size
+            td aria-label="Actions"
+              = link_to 'Edit', edit_team_path(team, team_type: 'dir'), { class: 'action--edit' }
+  p
+p
+
+= link_to 'Add new directorate', new_team_path(team_type: 'dir', parent_id: @team.id), class: 'button'

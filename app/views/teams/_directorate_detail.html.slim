@@ -2,6 +2,11 @@ h2
   .bold-small
     = t('team_leads.director')
   = @team.team_lead
+br
+h2
+  .bold-small
+    = t('teams.group_email')
+  = @team.email || '-'
 
 h2.heading-medium
   = t('team_types.business_unit').pluralize
@@ -37,9 +42,9 @@ h2.heading-medium
             td aria-label="#{ t('roles.responders') }"
               = team.users.size
             td aria-label="Actions"
-              = link_to 'Edit', edit_team_path(team), { class: 'action--edit' }
+              = link_to 'Edit', edit_team_path(team, team_type: 'bu'), { class: 'action--edit' }
 
 p
 p
 
-= link_to 'Add new business unit', new_team_path(type: 'bu', parent_id: @team.id), class: 'button'
+= link_to 'Add new business unit', new_team_path(team_type: 'bu', parent_id: @team.id), class: 'button'

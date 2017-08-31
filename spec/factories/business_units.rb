@@ -1,7 +1,6 @@
 FactoryGirl.define do
   factory :business_unit do
     transient do
-      role { 'responder' }
       lead do
         create :deputy_director
       end
@@ -9,12 +8,12 @@ FactoryGirl.define do
 
     sequence(:name) { |n| "Business Unit #{n}" }
     email { name.downcase.gsub(/\W/, '_') + '@localhost' }
+    role 'responder'
 
     directorate { find_or_create :directorate }
     properties { [find_or_create(:team_property, :area)] }
 
     after :create do |bu, evaluator|
-      bu.properties << TeamProperty.create(key: 'role', value: evaluator.role)
       bu.properties << evaluator.lead
     end
   end
@@ -26,6 +25,7 @@ FactoryGirl.define do
 
     sequence(:name) { |n| "Managing Team #{n}" }
     directorate { find_or_create :directorate, name: 'Management Directorate' }
+    role 'manager'
 
     after(:create) do |team, evaluator|
       if evaluator.managers.present?
@@ -43,6 +43,7 @@ FactoryGirl.define do
 
   factory :approving_team, parent: :business_unit do
     sequence(:name) { |n| "Approving Team #{n}" }
+    role 'approver'
     approvers { [create(:user)] }
   end
 
