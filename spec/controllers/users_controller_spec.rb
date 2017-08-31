@@ -5,12 +5,15 @@ RSpec.describe UsersController, type: :controller do
   let(:dacu)    { create :team_dacu }
 
   describe 'POST create' do
-    let(:params) { {
-                     user: {
-                       full_name: 'TEst Er',
-                       email:     'test.er@localhost',
-                     }
-                   } }
+    let(:params) do
+      {
+        user: {
+          full_name: 'TEst Er',
+          email:     'test.er@localhost',
+        },
+        team_id: dacu.id
+     }
+    end
 
     before { sign_in manager }
 
@@ -29,15 +32,15 @@ RSpec.describe UsersController, type: :controller do
       expect(user.valid_password?('1zln6qk2ncs')).to be true
     end
 
-    it 'does not add the user to a team by default' do
+    it 'adds the user to the specified team' do
       post :create, params: params
 
-      expect(User.last.teams).to be_empty
+      expect(User.last.teams).to eq [dacu]
     end
 
     it 'redirects to the users list if not team specified' do
       post :create, params: params
-      expect(response).to redirect_to(users_path)
+      expect(response).to redirect_to(team_path(dacu.id))
     end
 
     context 'with a team_id param' do
@@ -57,20 +60,6 @@ RSpec.describe UsersController, type: :controller do
       it 'redirects to the team details page' do
         post :create, params: params
         expect(response).to redirect_to(team_path(id: dacu.id))
-      end
-
-      it 'requires the role parameter' do
-        params.delete :role
-        expect do
-          post :create, params: params
-        end.to raise_error(ActionController::ParameterMissing)
-      end
-
-      it 'raises error if role does not match teams' do
-        params[:role] = 'not_allowed'
-        expect do
-          post :create, params: params
-        end.to raise_error(RuntimeError)
       end
     end
   end
