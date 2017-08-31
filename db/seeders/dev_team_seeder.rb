@@ -1,6 +1,7 @@
 class DevTeamSeeder
 
   def seed!
+    Team.reset_column_information
     clear_database
     add_business_groups
     add_directorates
@@ -30,16 +31,16 @@ class DevTeamSeeder
   end
 
   def add_business_units
-    @bu_dacu_bmt = BusinessUnit.create!(parent: @dir_dacu, name: 'DACU BMT')
-    @bu_dacu_dis = BusinessUnit.create!(parent: @dir_dacu, name: 'DACU Disclosure')
-    @bu_private = BusinessUnit.create!(parent: @dir_private, name: 'Private Office')
-    @bu_press = BusinessUnit.create!(parent: @dir_press, name: 'Press Office')
+    @bu_dacu_bmt = BusinessUnit.create!(parent: @dir_dacu, name: 'DACU BMT', role: 'manager')
+    @bu_dacu_dis = BusinessUnit.create!(parent: @dir_dacu, name: 'DACU Disclosure', role: 'approver')
+    @bu_private = BusinessUnit.create!(parent: @dir_private, name: 'Private Office', role: 'approver')
+    @bu_press = BusinessUnit.create!(parent: @dir_press, name: 'Press Office', role: 'approver')
 
-    @bu_laa = BusinessUnit.create!(parent: @dir_laa, name: 'Legal Aid Agency (LAA)')
+    @bu_laa = BusinessUnit.create!(parent: @dir_laa, name: 'Legal Aid Agency (LAA)', role: 'responder')
 
-    @bu_hmctsne = BusinessUnit.create!(parent: @dir_rsus, name: 'North East Regional Support Unit (NE RSU)')
+    @bu_hmctsne = BusinessUnit.create!(parent: @dir_rsus, name: 'North East Regional Support Unit (NE RSU)', role: 'responder')
 
-    @bu_hr = BusinessUnit.create!(parent: @dir_hr, name: 'MoJ Human Resources (MoJ HR)')
+    @bu_hr = BusinessUnit.create!(parent: @dir_hr, name: 'MoJ Human Resources (MoJ HR)', role: 'responder')
   end
 
   def add_leads
