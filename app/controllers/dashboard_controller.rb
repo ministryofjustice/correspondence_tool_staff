@@ -1,4 +1,4 @@
-class DashboardController < ActionController::Base
+class DashboardController < ApplicationController
 
   def cases
     @dates = { }
