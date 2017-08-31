@@ -1,0 +1,22 @@
+h1 Feedback
+
+- @feedbacks.each do |f|
+  table
+    tr
+      th Date
+      th = f.created_at.strftime('%a %d %b %Y %H:%M')
+    tr
+      td User
+      td = f.email
+    tr
+      td Comment
+      td = f.comment
+    tr
+      td Page
+      td = f.referer
+    tr
+      td Browser details
+      td = f.user_agent
+
+  br
+  br

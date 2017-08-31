@@ -198,5 +198,9 @@ Rails.application.routes.draw do
 
   get 'healthcheck',    to: 'heartbeat#healthcheck',  as: 'healthcheck', format: :json
 
+
+  get '/dashboard/cases' => 'dashboard#cases'
+  get '/dashboard/feedback' => 'dashboard#feedback'
+
   root to: redirect('/users/sign_in')
 end
