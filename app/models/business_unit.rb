@@ -38,15 +38,9 @@ class BusinessUnit < Team
   has_many :responders, through: :responder_user_roles, source: :user
   has_many :approvers, through: :approver_user_roles, source: :user
 
-  scope :managing, -> {
-    joins(:user_roles).where(teams_users_roles: { role: 'manager' }).distinct
-  }
-  scope :responding, -> {
-    joins(:user_roles).where(teams_users_roles: { role: 'responder' }).distinct
-  }
-  scope :approving, -> {
-    joins(:user_roles).where(teams_users_roles: { role: 'approver' }).distinct
-  }
+  scope :managing, -> { where(role: 'manager') }
+  scope :approving, -> { where(role: 'approver') }
+  scope :responding, -> { where(role: 'responder') }
 
   def valid_role
     unless role.in?(VALID_ROLES)
