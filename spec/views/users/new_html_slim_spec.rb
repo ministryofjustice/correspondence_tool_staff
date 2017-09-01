@@ -12,7 +12,7 @@ describe 'users/new.html.slim', type: :view do
     expect(users_new_page.page_heading.heading)
       .to have_text 'New team member'
     expect(users_new_page.page_heading.sub_heading)
-      .to have_text 'Business unit: DACU'
+      .to have_text 'Business unit: Disclosure'
     expect(users_new_page.team_id.value).to eq dacu.id.to_s
     expect(users_new_page.role.value).to eq 'responder'
   end

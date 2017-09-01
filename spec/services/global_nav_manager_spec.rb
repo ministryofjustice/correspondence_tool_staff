@@ -39,7 +39,7 @@ describe GlobalNavManager do
           params:
             timeliness: 'late'
       structure:
-        'DACU Disclosure':
+        'Disclosure':
           incoming_cases:
           opened_cases:
             in_time: 'default'

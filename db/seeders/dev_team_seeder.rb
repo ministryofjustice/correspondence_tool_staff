@@ -20,7 +20,7 @@ class DevTeamSeeder
   end
 
   def add_directorates
-    @dir_dacu = Directorate.create!(parent: @bg_ops, name: 'DACU')
+    @dir_dacu = Directorate.create!(parent: @bg_ops, name: 'Disclosure')
     @dir_private = Directorate.create!(parent: @bg_ops, name: 'Private Office')
     @dir_press = Directorate.create!(parent: @bg_ops, name: 'Press Office')
 
@@ -31,8 +31,8 @@ class DevTeamSeeder
   end
 
   def add_business_units
-    @bu_dacu_bmt = BusinessUnit.create!(parent: @dir_dacu, name: 'DACU BMT', role: 'manager')
-    @bu_dacu_dis = BusinessUnit.create!(parent: @dir_dacu, name: 'DACU Disclosure', role: 'approver')
+    @bu_dacu_bmt = BusinessUnit.create!(parent: @dir_dacu, name: Settings.foi_cases.default_managing_team, role: 'manager')
+    @bu_dacu_dis = BusinessUnit.create!(parent: @dir_dacu, name: Settings.foi_cases.default_clearance_team, role: 'approver')
     @bu_private = BusinessUnit.create!(parent: @dir_private, name: 'Private Office', role: 'approver')
     @bu_press = BusinessUnit.create!(parent: @dir_press, name: 'Press Office', role: 'approver')
 

@@ -74,7 +74,7 @@ global_navigation:
         timeliness: late
 
   structure:
-    'DACU Disclosure':
+    'Disclosure':
       incoming_cases_dacu_disclosure: default
       open_cases:
         in_time:
