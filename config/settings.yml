@@ -31,8 +31,8 @@ new_assignment_notify_template: '6f4d8e34-96cb-482c-9428-a5c1d5efa519'
 reset_password_instructions_notify_template: '705029c9-d7e4-47a6-a963-944cb6d6b09c'
 
 foi_cases:
-  default_managing_team: DACU BMT
-  default_clearance_team: DACU Disclosure
+  default_managing_team: Disclosure BMT
+  default_clearance_team: Disclosure
 
 default_date_format: '%-d %b %Y'
 default_time_format: '%d %b %Y %H:%M'
