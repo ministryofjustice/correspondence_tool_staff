@@ -2,22 +2,19 @@ class UsersController < ApplicationController
   before_action :set_team, only: [:create, :index, :new, :edit, :update]
 
   def create
-    @user = User.new(create_user_params)
-    @user.password = SecureRandom.random_number(36**13).to_s(36)
-    @user.password_confirmation = @user.password
-    if @user.valid?
-      if @team.present?
-        role = validate_role
-        @team.__send__(role.pluralize) << @user
-        redirect_to team_path(id: @team.id)
-      else
-        @user.save
-        redirect_to users_path
-      end
+    service = UserCreationService.new(team: @team, params: create_user_params)
+    service.call
+    @user = service.user
+    case service.result
+    when :ok
+      flash[:notice] = 'User created'
+      redirect_to team_path(id: @team.id)
+    when :existing_ok
+      flash[:notice] = 'Existing user added to team'
+      redirect_to team_path(id: @team.id)
     else
       render :new
     end
-
   end
 
   def index
