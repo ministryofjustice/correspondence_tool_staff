@@ -30,8 +30,11 @@ class UserCreationService
       @team.save!
       @result = :existing_ok
     else
-      @user.errors[:base] << "An existing user with this email address already exists with the name: #{@user.full_name}"
+      error_message = "An existing user with this email address already exists with the name: #{@user.full_name}"
+      @user = User.new(@params)
+      @user.errors[:base] << error_message
     end
+
   end
 
   def create_new_user
