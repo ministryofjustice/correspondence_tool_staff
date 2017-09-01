@@ -5,8 +5,8 @@ class DevUserSeeder
       'laa'           => BusinessUnit.find_by!(name: 'Legal Aid Agency (LAA)'),
       'hmctsne'       => BusinessUnit.find_by!(name: 'North East Regional Support Unit (NE RSU)'),
       'hr'            => BusinessUnit.find_by!(name: 'MoJ Human Resources (MoJ HR)'),
-      'dacu'          => BusinessUnit.find_by!(name: 'DACU BMT'),
-      'dacudis'       => BusinessUnit.find_by!(name: 'DACU Disclosure'),
+      'dacu'          => BusinessUnit.find_by!(name:  Settings.foi_cases.default_managing_team),
+      'dacudis'       => BusinessUnit.find_by!(name:  Settings.foi_cases.default_clearance_team),
       'pressoffice'   => BusinessUnit.find_by!(name: 'Press Office'),
       'privateoffice' => BusinessUnit.find_by!(name: 'Private Office'),
     }

@@ -70,7 +70,7 @@ describe CaseDecorator, type: :model do
       context 'flagged case in pending_dacu_clearance state' do
         it 'returns dacu disclosure' do
           allow_any_instance_of(CaseDecorator).to receive(:h).and_return(double("View", current_user: another_responder))
-          expect(pending_dacu_clearance_case.who_its_with).to eq 'DACU Disclosure'
+          expect(pending_dacu_clearance_case.who_its_with).to eq 'Disclosure'
         end
       end
     end
