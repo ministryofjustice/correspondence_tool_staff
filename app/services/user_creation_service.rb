@@ -10,7 +10,7 @@ class UserCreationService
   end
 
   def call
-    @user = User.where(email: @params[:email]).singular_or_nil
+    @user = User.where(email: @params[:email].downcase).singular_or_nil
     if @user
       if @user.team_roles.map(&:team_id).include?(@team.id)
         @user.errors[:base] << 'This user is already in the team'
