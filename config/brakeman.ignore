@@ -1,9 +1,130 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "04e7bcb59d68e16a8a69f2e536cc11c951d1a8f1f68562e27dff55fdcb75418f",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "lib/db/database_dumper.rb",
+      "line": 51,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"ssh #{@ssh_user}@#{@host} sudo docker exec correspondence-staff gzip  -3 -f #{filename}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "DatabaseDumper",
+        "method": "compress_file"
+      },
+      "user_input": "@ssh_user",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "1d8501f800f3536615a655159c67f5f1908b31069f810109470fcad9c0e2dd6e",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "lib/db/database_dumper.rb",
+      "line": 78,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"ssh #{@ssh_user}@#{@host} rm #{compressed_file}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "DatabaseDumper",
+        "method": "remove_files_on_host_and_container"
+      },
+      "user_input": "@ssh_user",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "2b437a51f94558e7fd8ec4f469a34eb1e219af2213078cfaf2e528da9ac3d99c",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "lib/db/database_dumper.rb",
+      "line": 59,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"ssh #{@ssh_user}@#{@host} sudo docker cp correspondence-staff:/usr/src/app/#{filename} .\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "DatabaseDumper",
+        "method": "copy_to_container_host"
+      },
+      "user_input": "@ssh_user",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "2bf1f5577d136c1af34c74aa8546c4a95dc054cd3664c0aa2dcf2d368a0fefd0",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "lib/db/database_dumper.rb",
+      "line": 74,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"ssh #{@ssh_user}@#{@host} sudo docker exec correspondence-staff rm /usr/src/app/#{compressed_file}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "DatabaseDumper",
+        "method": "remove_files_on_host_and_container"
+      },
+      "user_input": "@ssh_user",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "3c6913c786611e5aff1394bbb6f754cef59aa8fb46afbe2ca920fbc29bd0ced5",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "lib/db/database_loader.rb",
+      "line": 44,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"psql #{\"postgres://localhost/correspondence_platform_development\"} < #{updated_file_name}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "DatabaseLoader",
+        "method": "load_database"
+      },
+      "user_input": "updated_file_name",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "5ce05a8463b1452db5425023a0a6449c38496fca0fe91f20ea4fa6c28abadd25",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "lib/db/database_loader.rb",
+      "line": 27,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"sed -e $'1i\\\\\\nCREATE ROLE correspondence_staff;\\n' -i .bak #{filename}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "DatabaseLoader",
+        "method": "add_role"
+      },
+      "user_input": "filename",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
       "warning_type": "File Access",
       "warning_code": 16,
       "fingerprint": "7a37fb95c5cd8c5d93b1ac95817aa23d44b12dd4c5152a175c3a840cc8b2ca27",
+      "check_name": "SendFile",
       "message": "Parameter value used in file name",
       "file": "app/controllers/case_attachments_controller.rb",
       "line": 11,
@@ -20,9 +141,70 @@
       "note": ""
     },
     {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "7deee4778c3cd3f054cede4dad522b916477f952f87fce91034f809ace2a9e46",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "lib/db/database_loader.rb",
+      "line": 20,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"gunzip #{@file}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "DatabaseLoader",
+        "method": "unzip_file"
+      },
+      "user_input": "@file",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "bf3788832899894c6e503fac28b24e799865174f4facbecc91a24edbbd941a9e",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "lib/db/database_dumper.rb",
+      "line": 43,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"ssh #{@ssh_user}@#{@host} sudo docker exec correspondence-staff rake db:dump:local[#{\"#{Time.now.strftime(\"%Y%m%d-%H%M%S\")}_#{@env}_dump.sql\"}]\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "DatabaseDumper",
+        "method": "dump_local_database"
+      },
+      "user_input": "Time.now.strftime(\"%Y%m%d-%H%M%S\")",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "f464a8baa8f45dc44c46c6b39d0c2db0bad0fdc10635a28ad9bb3646e135d22a",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "lib/db/database_dumper.rb",
+      "line": 67,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"scp #{@ssh_user}@#{@host}:#{compressed_file} #{ENV[\"HOME\"]}/\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "DatabaseDumper",
+        "method": "download_compressed_file"
+      },
+      "user_input": "@ssh_user",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "ff88558e745cb42c6b17e1d15289b382ce0644374be626449196e1d297a059b4",
+      "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/case_attachments_controller.rb",
       "line": 6,
@@ -39,6 +221,6 @@
       "note": ""
     }
   ],
-  "updated": "2017-05-12 15:06:18 +0100",
-  "brakeman_version": "3.4.0"
+  "updated": "2017-09-05 16:41:15 +0100",
+  "brakeman_version": "3.5.0"
 }

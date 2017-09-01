@@ -34,6 +34,7 @@ gem 'pundit', '~>1.1'
 gem 'rails', '~> 5.0'
 gem 'sass-rails', '~> 5.0'
 gem 'slim-rails', '~> 3.1'
+gem 'shell-spinner'
 gem 'schema_plus_enums', '~> 0.1'
 gem 'sidekiq'
 gem 'sidekiq-logging-json'
@@ -68,6 +69,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'annotate'
   gem 'byebug', platform: :mri
+  gem 'colorize'
   gem 'guard-jasmine'
   gem 'launchy'
   gem 'mechanize', '~> 2.7.5'
@@ -78,6 +80,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.4'
   gem 'rubocop', require: false
   gem 'rubocop-rspec', require: false
+  gem 'ruby-progressbar'
 
 end
 
