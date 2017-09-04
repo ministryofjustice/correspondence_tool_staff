@@ -282,7 +282,7 @@ class CasesController < ApplicationController
 
   def set_assignment
     if current_user.responder?
-      @assignment = @case.assignments.for_team(current_user.responding_teams.first.id).last
+      @assignment = @case.responder_assignment
     elsif current_user.approver?
       @assignment = @case.assignments.for_team(current_user.approving_team.id).last
     end

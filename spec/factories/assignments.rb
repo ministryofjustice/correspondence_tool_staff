@@ -39,8 +39,8 @@ FactoryGirl.define do
         team_user { team.responders.first }
       end
 
-      team { create :approving_team }
-      role 'approving'
+      team { create :responding_team }
+      role 'responding'
     end
 
     trait :accepted do

@@ -163,4 +163,17 @@ feature 'viewing details of case in the system' do
       expect(request).to have_no_collapsed_text
     end
   end
+
+  context 'responder is member of multiple responding teams' do
+    before do
+      other_team = create(:responding_team)
+      responder.responding_teams << other_team
+      expect(responder.responding_teams.count).to eq 2
+      @kase = create :accepted_case, responding_team: other_team
+    end
+
+    scenario 'viewing details of simple case' do
+      cases_show_page.load id: @kase.id
+    end
+  end
 end

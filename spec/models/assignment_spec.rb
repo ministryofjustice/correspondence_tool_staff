@@ -79,6 +79,14 @@ RSpec.describe Assignment, type: :model do
     end
   end
 
+  describe 'scope last_responding' do
+    it 'returns the last responding assignment' do
+      create :assignment, :responding
+      assignment2 = create :assignment, :responding
+      expect(Assignment.last_responding).to eq [assignment2]
+    end
+  end
+
   describe '#reasons_for_rejection' do
     it 'is required for rejection' do
       expect(Assignment.new(state: 'rejected')).

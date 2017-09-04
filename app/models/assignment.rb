@@ -41,7 +41,9 @@ class Assignment < ApplicationRecord
   end
   scope :for_team, -> (team) { where(team: team) }
 
-  scope :last_responding, -> {where(role: 'responding').where.not(state: 'rejected').order(id: :desc).limit(1) }
+  scope :last_responding, -> {
+    responding.where.not(state: 'rejected').order(id: :desc).limit(1)
+  }
 
   attr_accessor :reasons_for_rejection
 
