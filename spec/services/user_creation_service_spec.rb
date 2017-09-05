@@ -88,53 +88,73 @@ describe UserCreationService do
     end
 
     context 'when a user with the same email exists' do
+      before(:all) do
+        team_2 = BusinessUnit.create(name: 'UCT 2', parent_id: @team.parent_id, role: 'responder')
+        @existing_user = User.new(full_name: 'danny driver', email: 'dd@moj.com', password: 'kjkjkj')
+        @existing_user.team_roles << TeamsUsersRole.new(team: team_2, role: 'responder')
+        @existing_user.save!
+      end
+
       context 'when the names match' do
 
-        before(:all) do
-          team_2 = BusinessUnit.create(name: 'UCT 2', parent_id: @team.parent_id, role: 'responder')
-          @existing_user = User.new(full_name: 'danny driver', email: 'dd@moj.com', password: 'kjkjkj')
-          @existing_user.team_roles << TeamsUsersRole.new(team: team_2, role: 'responder')
-          @existing_user.save!
+        it 'does not create a new user record' do
+          expect { service.call }.not_to change{ User.count }
         end
 
-        context 'when valid' do
-          it 'does not create a new user record' do
-            expect { service.call }.not_to change{ User.count }
-          end
-
-          it 'creates a team_user_role record' do
-            expect{ service.call }.to change{ TeamsUsersRole.count }.by(1)
-            expect(@existing_user.reload.team_roles.size).to eq 2
-            tr = @existing_user.team_roles.last
-            expect(tr.team_id).to eq @team.id
-            expect(tr.role).to eq 'responder'
-          end
-
-          it 'returns existing_ok' do
-            service.call
-            expect(service.result).to eq :existing_ok
-          end
+        it 'creates a team_user_role record' do
+          expect{ service.call }.to change{ TeamsUsersRole.count }.by(1)
+          expect(@existing_user.reload.team_roles.size).to eq 2
+          tr = @existing_user.team_roles.last
+          expect(tr.team_id).to eq @team.id
+          expect(tr.role).to eq 'responder'
         end
 
-        context 'when names mismatch' do
-          before(:each) {
-            @existing_user.reload.update!(full_name: 'Stephen Richards')
-          }
+        it 'returns existing_ok' do
+          service.call
+          expect(service.result).to eq :existing_ok
+        end
+      end
 
-          it 'does not create a new user record' do
-            service.call
-            expect { service.call }.not_to change{ User.count }
-          end
+      context 'names match but different role' do
+        before do
+          approving_team = create :approving_team
+          @existing_user.team_roles.clear
+          @existing_user.team_roles << TeamsUsersRole.new(team: approving_team,
+                                                          role: 'approver')
+        end
 
-          it 'sets a base error on the user model' do
-            service.call
-            expect(service.user.errors[:base]).to eq ['An existing user with this email address already exists with the name: Stephen Richards']
-          end
+        it 'it returns an error' do
+          service.call
+          expect(service.result).to eq :role_mismatch
+        end
 
-          it 'returns :existing_user_name_mismatch' do
-            service.call
-            expect(service.result).to eq :error
-          end
+        it 'sets a base error on the user model' do
+          service.call
+          expect(service.user.errors[:base])
+            .to eq ['This user already has role(s) approver ' +
+                    'cannot add role responder']
+        end
+
+      end
+
+      context 'when names mismatch' do
+        before(:each) {
+          @existing_user.reload.update!(full_name: 'Stephen Richards')
+        }
+
+        it 'does not create a new user record' do
+          service.call
+          expect { service.call }.not_to change{ User.count }
+        end
+
+        it 'sets a base error on the user model' do
+          service.call
+          expect(service.user.errors[:base]).to eq ['An existing user with this email address already exists with the name: Stephen Richards']
+        end
+
+        it 'returns :existing_user_name_mismatch' do
+          service.call
+          expect(service.result).to eq :error
         end
       end
     end
