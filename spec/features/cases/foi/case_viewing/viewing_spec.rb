@@ -165,15 +165,29 @@ feature 'viewing details of case in the system' do
   end
 
   context 'responder is member of multiple responding teams' do
+    let(:other_responding_team) { create(:responding_team) }
+
     before do
-      other_team = create(:responding_team)
-      responder.responding_teams << other_team
+      responder.responding_teams << other_responding_team
       expect(responder.responding_teams.count).to eq 2
-      @kase = create :accepted_case, responding_team: other_team
+      @kase = create :accepted_case, responding_team: other_responding_team
     end
 
     scenario 'viewing details of simple case' do
       cases_show_page.load id: @kase.id
+      expect(cases_show_page).to be_displayed(@kase.id)
     end
+
+    scenario 'viewing open cases list' do
+      case1 = create :awaiting_responder_case,
+                     responding_team: responding_team
+      case2 = create :awaiting_responder_case,
+                     responding_team: other_responding_team
+
+      open_cases_page.load
+      expect(case1.number).to be_in(open_cases_page.case_numbers)
+      expect(case2.number).to be_in(open_cases_page.case_numbers)
+    end
+
   end
 end
