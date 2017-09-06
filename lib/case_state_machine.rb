@@ -90,6 +90,7 @@ class CaseStateMachine
         .can_accept_or_reject_approver_assignment?
     end
 
+    transition from: :unassigned,             to: :unassigned
     transition from: :awaiting_responder,     to: :awaiting_responder
     transition from: :drafting,               to: :drafting
     transition from: :awaiting_dispatch,      to: :awaiting_dispatch

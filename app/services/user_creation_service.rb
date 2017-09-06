@@ -14,6 +14,12 @@ class UserCreationService
     if @user
       if @user.team_roles.map(&:team_id).include?(@team.id)
         @user.errors[:base] << 'This user is already in the team'
+      elsif !@team.role.in?(@user.team_roles.pluck(:role))
+        existing_roles = @user.team_roles.pluck(:role).uniq - [@team.role]
+        @user.errors[:base] <<
+          "This user already has role(s) #{existing_roles.join(',')} " +
+          "cannot add role #{@team.role}"
+        @result = :role_mismatch
       else
         update_existing_user
       end
