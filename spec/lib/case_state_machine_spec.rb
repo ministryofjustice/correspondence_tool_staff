@@ -121,6 +121,7 @@ RSpec.describe CaseStateMachine, type: :model do
   end
 
   events :accept_approver_assignment do
+    it { should transition_from(:unassigned).to(:unassigned) }
     it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
     it { should transition_from(:drafting).to(:drafting) }
     it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
