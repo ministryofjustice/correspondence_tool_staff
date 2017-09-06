@@ -19,8 +19,9 @@ section.case-info
 .grid-row
   section.case-main
     = form_for [@case, @assignment], url: accept_or_reject_case_assignment_path(@case, @assignment) do |f|
-      = f.radio_button_fieldset :state, choices: [:accepted, :rejected], inline: true, class: 'state'
+      #js-assigment-actions
+        = f.radio_button_fieldset :state, choices: [:accepted, :rejected], inline: true, class: 'state'
 
-      #assignment_state_rejected_content.panel.panel-border-narrow.js-hidden
+      #js-rejected-reasons.panel.panel-border-narrow
         = f.text_area :reasons_for_rejection
       = f.submit t('button.confirm'), class: 'button'
