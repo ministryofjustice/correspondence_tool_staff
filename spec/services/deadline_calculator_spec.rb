@@ -4,7 +4,11 @@ describe DeadlineCalculator do
 
   context 'FOI requests' do
 
-    let(:foi_case) { build :case, category: build(:category, :foi), received_date: Date.today }
+    let(:foi_case) { build :case,
+                           category: build(:category, :foi),
+                           received_date: Date.today,
+                           created_at: Date.today
+    }
 
     context 'received on a workday' do
       let(:thu_may_18) { Time.utc(2017, 5, 18, 12, 0, 0) }
@@ -13,7 +17,7 @@ describe DeadlineCalculator do
       let(:fri_jun_16) { Time.utc(2017, 6, 16, 12, 0, 0) }
 
       describe '.escalation_deadline' do
-        it 'is 3 days after received date' do
+        it 'is 3 days after created date' do
           Timecop.freeze thu_may_18 do
             expect(DeadlineCalculator.escalation_deadline(foi_case)).to eq tue_may_23.to_date
           end
