@@ -100,6 +100,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.10.0)
+    colorize (0.8.1)
     concurrent-ruby (1.0.5)
     config (1.4.0)
       activesupport (>= 3.0)
@@ -415,6 +416,8 @@ GEM
       childprocess (~> 0.5)
       rubyzip (~> 1.0)
       websocket (~> 1.0)
+    shell-spinner (1.0.4)
+      colorize
     shellany (0.0.1)
     shoulda-matchers (3.1.1)
       activesupport (>= 4.0.0)
@@ -511,6 +514,7 @@ DEPENDENCIES
   capybara-screenshot
   codeclimate-test-reporter
   coffee-rails (~> 4.2)
+  colorize
   config
   devise (~> 4.2)
   draper (= 3.0.0.pre1)
@@ -554,9 +558,11 @@ DEPENDENCIES
   rspec-rails (~> 3.4)
   rubocop
   rubocop-rspec
+  ruby-progressbar
   sass-rails (~> 5.0)
   schema_plus_enums (~> 0.1)
   selenium-webdriver
+  shell-spinner
   shoulda-matchers (~> 3.1, >= 3.1.1)
   sidekiq
   sidekiq-logging-json
