@@ -143,6 +143,13 @@ RSpec.describe CaseStateMachine, type: :model do
   end
 
   events :reassign_user do
+    it { should transition_from(:unassigned)
+                  .to(:unassigned)
+                  .checking_policy(:reassign_user?, CasePolicy)  }
+    it { should transition_from(:awaiting_responder)
+                  .to(:awaiting_responder)
+                  .checking_policy(:reassign_user?, CasePolicy)  }
+
     it { should transition_from(:drafting)
                     .to(:drafting)
                     .checking_policy(:reassign_user?, CasePolicy)  }

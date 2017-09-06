@@ -59,9 +59,8 @@ class CasePolicy < ApplicationPolicy
 
   def assignments_reassign_user?
     clear_failed_checks
-    check_user_is_in_current_team ||
-        check_user_is_an_approver_for_case
-
+    check_case_is_not_responded_or_closed &&
+      check_case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
   end
 
   def assignments_execute_reassign_user?
@@ -385,6 +384,13 @@ class CasePolicy < ApplicationPolicy
     @user.in? self.case.approvers
   end
 
+  check :case_is_assigned_to_responder_or_approver_in_same_team_as_current_user do
+    user_teams_ids = user.teams.map(&:id)
+    approving_assignment_team_ids = self.case.assignments.approving.accepted.map(&:team_id)
+    responding_assignment_team_ids = self.case.assignments.responding.accepted.map(&:team_id)
+    (user_teams_ids & (approving_assignment_team_ids + responding_assignment_team_ids)).any?
+  end
+
   check :user_is_not_case_approver do
     !@user.in? self.case.approvers
   end
@@ -427,6 +433,10 @@ class CasePolicy < ApplicationPolicy
 
   check :case_was_accepted_for_approval_by_user do
     self.case.approver_assignments.where(user_id: @user.id).any?
+  end
+
+  check :case_is_not_responded_or_closed do
+    !self.case.current_state.in?( ['responded', 'closed'] )
   end
 
   check :case_is_not_closed do
