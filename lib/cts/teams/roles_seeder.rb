@@ -17,9 +17,11 @@ module CTS::Teams
         end
 
         role = case bu.name
-               when 'DACU BMT'
+               when Settings.foi_cases.default_managing_team
                  'manager'
-               when 'DACU Disclosure', 'Press Office', 'Private Office'
+               when Settings.foi_cases.default_clearance_team,
+                    Settings.press_office_team_name,
+                    Settings.private_office_team_name
                  'approver'
                else
                  'responder'

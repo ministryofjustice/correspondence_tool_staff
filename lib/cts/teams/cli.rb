@@ -18,7 +18,7 @@ module CTS::Teams
           :email,
           {role: {
              display_method: ->(t) {
-               t.class == BusinessUnit ? t.role.value : '-'
+               t.class == BusinessUnit ? t.role : '-'
              }
            } }
         ]
