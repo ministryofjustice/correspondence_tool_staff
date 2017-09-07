@@ -18,7 +18,7 @@ RSpec.describe TeamsUsersRole, type: :model do
     expect(tur).to be_valid
   end
 
-  it { should have_enum(:role).with_values(%w{manager responder approver}) }
+  it { should have_enum(:role).with_values(%w{manager responder approver admin}) }
   it { should belong_to(:user) }
   it { should belong_to(:team).with_foreign_key(:team_id) }
 end

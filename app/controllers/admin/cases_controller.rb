@@ -1,4 +1,6 @@
 class Admin::CasesController < ApplicationController
+  before_action :authorize_admin
+
   def create
     @case = Case.new(case_params)
     @selected_state = params[:target_state]
@@ -51,6 +53,10 @@ class Admin::CasesController < ApplicationController
   end
 
   private
+
+  def authorize_admin
+    authorize Case.new, :user_is_admin?
+  end
 
   def available_target_states
     CTS::Cases::Create::CASE_JOURNEYS.values.flatten.uniq.sort
