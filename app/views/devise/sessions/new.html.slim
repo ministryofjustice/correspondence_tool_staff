@@ -1,3 +1,13 @@
+/[if lte IE 9]
+  .error-summary(role="group" aria-labelledby="old-browser" tabindex='-1')
+    h1.heading-medium.notice-summary-heading(id= "old-browser")
+      | This service may not work using this version of Internet Explorer
+    p
+      | Please use another web browser (for example Firefox).
+    p
+      = "If you do not have another web browser, email the support team: "
+      = mail_to 'correspondence@digital.justice.gov.uk', 'correspondence@digital.justice.gov.uk'
+
 = GovukElementsErrorsHelper.error_summary resource, "Message to alert the user to a problem goes here", ""
 
 - content_for :heading
