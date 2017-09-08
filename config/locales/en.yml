@@ -270,11 +270,15 @@ en:
     cases:
       index:
         created_at: Created
+        draft_deadline: Draft Deadline
+        external_deadline: External Deadline
         heading: System Cases
         id: ID
         number: Case Number
         received_date: Received
         request: Request
+        status: Status
+        who_its_with: Who Its With
       new:
         heading: New Case
         create: Create Case

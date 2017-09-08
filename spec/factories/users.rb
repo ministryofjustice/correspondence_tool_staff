@@ -78,5 +78,13 @@ FactoryGirl.define do
       full_name { Settings.private_office_default_user }
       approving_team { find_or_create(:team_private_office) }
     end
+
+    factory :admin do
+      full_name      { generate(:manager_name) }
+      after(:create) do |user|
+        user.team_roles.create role: 'admin'
+      end
+    end
+
   end
 end

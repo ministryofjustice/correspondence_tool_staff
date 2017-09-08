@@ -1,11 +1,11 @@
 require "rails_helper"
 
 describe Admin::CasesController do
-  let(:manager) { create :manager }
+  let(:admin) { create :admin }
 
   describe '#index' do
     it 'renders the index view' do
-      sign_in manager
+      sign_in admin
       get :index
       expect(response).to have_rendered('admin/cases/index')
     end
