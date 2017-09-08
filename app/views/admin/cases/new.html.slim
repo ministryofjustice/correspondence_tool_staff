@@ -1,5 +1,5 @@
-= GovukElementsErrorsHelper.error_summary @user,
-    "#{pluralize(@user.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+= GovukElementsErrorsHelper.error_summary @case,
+    "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
     ""
 
 - content_for :heading
@@ -7,7 +7,7 @@
 
 = render partial: 'layouts/header'
 
-= form_for @case, url: admin_cases_path do |f|
+= form_for @case, as: 'case', url: admin_cases_path do |f|
 
   = f.text_field :name
 
@@ -26,7 +26,20 @@
 
 
   .form-group
-    = f.gov_uk_date_field :received_date, {legend_text: t('.received_date'), form_hint_text: t('.received_date_copy'), today_button: {class: 'button-secondary'} }
+    fieldset.gov_uk_date
+      legend
+        = 'Received Date'
+      p.form-hint id="received_date-hint"
+        = 'Date correspondence was received, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"'
+      input.form-control id="case_received_date" name="case[received_date]" aria-describedby="received_date-hint" type="string" value=@case.received_date.to_s size="40"
+
+  .form-group
+    fieldset.gov_uk_date
+      legend
+        = 'Created At'
+      p.form-hint id="created_at-hint"
+        = 'Date to use as creation date of case, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"'
+      input.form-control id="case_created_at" name="case[created_at]" aria-describedby="created_at-hint" type="string" value=@case.created_at.to_s size="40"
 
   #delivery-method
     = f.radio_button_fieldset :delivery_method, choices: [:sent_by_email, :sent_by_post]
@@ -46,11 +59,8 @@
 
   = f.check_box_fieldset :flag_for_disclosure_specialists, [:flagged_for_disclosure_specialist_clearance?, :flagged_for_press_office_clearance?, :flagged_for_private_office_clearance?]
 
-  = f.fields_for :responding_team do |responding_team|
-    = responding_team.collection_select :id, BusinessUnit.responding, :id, :name
+  = f.collection_select :responding_team, BusinessUnit.responding, :id, :name, { selected: @case.responding_team.id }
 
-  div.i_wish_i_was_a_gov_uk_element
-    = label_tag :target_state
-    = select_tag :target_state, options_for_select(@target_states, @selected_state)
+  = f.collection_select :target_state, @target_states, :to_s, :to_s, { selected: @selected_state }
 
   = f.submit t('.create'), {class: 'button'}

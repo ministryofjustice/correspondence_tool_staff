@@ -3,7 +3,7 @@ require 'cts'
 # rubocop:disable Metrics/ClassLength
 module CTS::Cases
   class Create
-    attr_accessor :command, :options, :flag
+    attr_accessor :logger, :options, :flag
 
     CASE_JOURNEYS = {
       unflagged: [
@@ -41,39 +41,51 @@ module CTS::Cases
       ]
     }
 
-    def initialize(command)
-      @command = command
+    def initialize(logger, options = {})
+      @logger = logger
+      @options = options
     end
 
-    def call(target_states, options = {})
+    def call(target_states, kase = nil)
       CTS::check_environment unless options[:force]
-      @options = options
       parse_options(options)
 
       target_states.map do |target_state|
         journey = find_case_journey_for_state target_state.to_sym
         @number_to_create.times.map do |n|
-          puts "creating case #{target_state} ##{n}"
-          create_case().tap do |kase|
-            run_transitions(kase, target_state, journey, n)
-          end
+          logger.info "creating case #{target_state} ##{n}"
+          kase ||= create_case
+          run_transitions(kase, target_state, journey, n)
+          kase
         end
       end .flatten
     end
 
     def new_case
-      name = Faker::Name.name
       foi = Category.find_by(abbreviation: 'FOI')
+      name = options.fetch(:name, Faker::Name.name)
+      created_at = if options[:created_at].present?
+                     0.business_days.after(DateTime.parse(options[:created_at]))
+                   else
+                     0.business_days.after(4.business_days.ago)
+                   end
+      received_date = if options.key? :received_date
+                        options[:received_date]
+                      else
+                        0.business_days.after(4.business_days.ago)
+                      end
       Case.new(
         name:            name,
-        email:           Faker::Internet.email(name),
+        email:           options.fetch(:email, Faker::Internet.email(name)),
         category:        foi,
-        delivery_method: 'sent_by_email',
-        subject:         Faker::Company.catch_phrase,
-        message:         Faker::Lorem.paragraph(10, true, 10),
-        requester_type:  Case.requester_types.keys.sample,
-        received_date:   4.business_days.ago,
-        created_at:      4.business_days.ago,
+        delivery_method: options.fetch(:delivery_method, 'sent_by_email'),
+        subject:         options.fetch(:subject, Faker::Company.catch_phrase),
+        message:         options.fetch(:message,
+                                       Faker::Lorem.paragraph(10, true, 10)),
+        requester_type:  options.fetch(:requester_type,
+                                       Case.requester_types.keys.sample),
+        received_date:   received_date,
+        created_at:      created_at,
       )
     end
 
@@ -108,10 +120,10 @@ module CTS::Cases
       elsif find_case_journey_for_state(state.to_sym).any?
         @target_states << state
       else
-        command.error "Unrecognised parameter: #{state}"
-        command.error "Journeys checked:"
+        logger.error "Unrecognised parameter: #{state}"
+        logger.error "Journeys checked:"
         journeys_to_check.each do |name, states|
-          command.error "  #{name}: #{states.join(', ')}"
+          logger.error "  #{name}: #{states.join(', ')}"
         end
         @invalid_params = true
       end
@@ -119,13 +131,6 @@ module CTS::Cases
 
     def create_case()
       kase = new_case
-      # kase = FactoryGirl.create(:case,
-      #                           name: Faker::Name.name,
-      #                           subject: Faker::Company.catch_phrase,
-      #                           message: Faker::Lorem.paragraph(10, true, 10),
-      #                           managing_team: CTS::dacu_team,
-      #                           received_date: @received_date,
-      #                           created_at: @created_at)
       kase.save!
 
       flag_for_dacu_disclosure(kase) if @flag.present?
@@ -142,11 +147,11 @@ module CTS::Cases
             kase.reload
           end
         rescue => exx
-          command.error "Error occured on case #{target_state} id:#{n}: #{exx.message}"
-          command.error ""
-          command.error "Case unsuccessfully transitioned to #{state}:"
-          command.error "---------------------------------------"
-          command.error kase.ai
+          logger.error "Error occured on case #{target_state} id:#{n}: #{exx.message}"
+          logger.error ""
+          logger.error "Case unsuccessfully transitioned to #{state}:"
+          logger.error "---------------------------------------"
+          logger.error kase.ai
           raise
         end
       end

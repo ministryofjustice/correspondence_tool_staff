@@ -117,7 +117,7 @@ module CTS::Cases
     option :created_at, type: :string
     option :received_date, type: :string
     def create(*target_states)
-      creator = CTS::Cases::Create.new(self)
+      creator = CTS::Cases::Create.new(CTS, options)
 
       puts "Creating #{options[:number]} cases in each of the following states:"
       puts "\t" + target_states.join("\n\t")
@@ -144,9 +144,7 @@ module CTS::Cases
       end
       puts "\n"
 
-      # creator.clear_cases if options[:clear]
-
-      cases = creator.call(target_states, options)
+      cases = creator.call(target_states)
       unless options[:dry_run]
         tp cases, [:id, :number, :current_state, :requires_clearance?]
       end

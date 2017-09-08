@@ -2,23 +2,25 @@ class Admin::CasesController < ApplicationController
   before_action :authorize_admin
 
   def create
-    @case = Case.new(case_params)
-    @selected_state = params[:target_state]
+    options = params[:case]
+    case_creator = CTS::Cases::Create.new(Rails.logger, options)
+    @case = case_creator.new_case
+    @selected_state = params[:case][:target_state]
     if @case.valid?
-      options = {}
+      @case.save!
+      options = params[:case]
       options[:flag_for_disclosure] =
         params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
       options[:flag_for_pr] =
         params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
       options[:flag_for_disclosure] =
         params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
-
-      case_creator = CTS::Cases::Create.new(nil)
-      case_creator.call([@selected_state], options)
+      case_creator.call([@selected_state], @case)
+      flash[:alert] = "Case created: #{@case.number}"
       redirect_to(admin_cases_path)
     else
       @case.responding_team = BusinessUnit.find(
-        params[:case][:responding_team_attributes][:id]
+        params[:case][:responding_team]
       )
 
       if params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
@@ -30,7 +32,6 @@ class Admin::CasesController < ApplicationController
       if params[:case][:flagged_for_private_office_clearance] == '1'
         @case.approving_teams << BusinessUnit.private_office
       end
-
       @target_states = available_target_states
       @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
       render :new
@@ -42,7 +43,7 @@ class Admin::CasesController < ApplicationController
   end
 
   def new
-    case_creator = CTS::Cases::Create.new(nil)
+    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case)
     @case = case_creator.new_case
     @case.responding_team = BusinessUnit.responding.sample
     @case.flag_for_disclosure_specialists = 'no'

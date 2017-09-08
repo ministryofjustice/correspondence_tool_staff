@@ -1,6 +1,10 @@
 module CTS
     class << self
 
+    def info(statement)
+      $stdout.puts statement
+    end
+
     def error(statement)
       $stderr.puts statement
     end
