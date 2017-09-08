@@ -8,13 +8,7 @@ class Admin::CasesController < ApplicationController
     @selected_state = params[:case][:target_state]
     if @case.valid?
       @case.save!
-      options = params[:case]
-      options[:flag_for_disclosure] =
-        params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
-      options[:flag_for_pr] =
-        params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
-      options[:flag_for_disclosure] =
-        params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
+      prepare_flagged_options_for_creation(params)
       case_creator.call([@selected_state], @case)
       flash[:alert] = "Case created: #{@case.number}"
       redirect_to(admin_cases_path)
@@ -22,16 +16,7 @@ class Admin::CasesController < ApplicationController
       @case.responding_team = BusinessUnit.find(
         params[:case][:responding_team]
       )
-
-      if params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
-        @case.approving_teams << BusinessUnit.dacu_disclosure
-      end
-      if params[:case][:flagged_for_press_office_clearance] == '1'
-        @case.approving_teams << BusinessUnit.press_office
-      end
-      if params[:case][:flagged_for_private_office_clearance] == '1'
-        @case.approving_teams << BusinessUnit.private_office
-      end
+      prepare_flagged_options_for_displaying(params)
       @target_states = available_target_states
       @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
       render :new
@@ -76,5 +61,27 @@ class Admin::CasesController < ApplicationController
       :flag_for_disclosure_specialists,
       uploaded_request_files: [],
     ).merge(category_id: Category.find_by(abbreviation: 'FOI').id)
+  end
+
+  def prepare_flagged_options_for_creation(params)
+    options = params[:case]
+    options[:flag_for_disclosure] =
+      params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
+    options[:flag_for_pr] =
+      params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
+    options[:flag_for_disclosure] =
+      params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
+  end
+
+  def prepare_flagged_options_for_displaying(params)
+    if params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
+      @case.approving_teams << BusinessUnit.dacu_disclosure
+    end
+    if params[:case][:flagged_for_press_office_clearance] == '1'
+      @case.approving_teams << BusinessUnit.press_office
+    end
+    if params[:case][:flagged_for_private_office_clearance] == '1'
+      @case.approving_teams << BusinessUnit.private_office
+    end
   end
 end

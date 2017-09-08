@@ -116,6 +116,7 @@ module CTS::Cases
            desc: 'ID or name of responding team to use for case assignments.'
     option :created_at, type: :string
     option :received_date, type: :string
+    #rubocop:disable Metrics/CyclomaticComplexity
     def create(*target_states)
       creator = CTS::Cases::Create.new(CTS, options)
 
@@ -149,6 +150,7 @@ module CTS::Cases
         tp cases, [:id, :number, :current_state, :requires_clearance?]
       end
     end
+    #rubocop:enable Metrics/CyclomaticComplexity
 
     desc 'list', 'List cases in the system.'
     long_desc <<~LONGDESC
@@ -213,12 +215,12 @@ module CTS::Cases
            { event:      { display_method: ->(e) { e.to_s }, width: 40 } },
            { from_state: { display_method: ->(_) { kase.current_state } } },
            { to_state:   { display_method: ->(e) do
-                             kase.state_machine
-                               .next_state_for_event(
-                                 e,
-                                 user_id: user.id
-                               )
-                           end } }
+                                             kase.state_machine
+                                               .next_state_for_event(
+                                                 e,
+                                                 user_id: user.id
+                                               )
+                                           end } }
          ]
     end
 
