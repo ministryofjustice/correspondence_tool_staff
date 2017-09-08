@@ -7,7 +7,6 @@ RSpec.describe AssignmentsController, type: :controller do
   let(:approving_team)    { approver.approving_team }
 
   let(:accepted_case)     { create :accepted_case }
-  # let(:assigned_case)     { create :assigned_case }
   let(:accepted_case_trigger) { create :accepted_case, :flagged_accepted,
                                        approver: approver }
 

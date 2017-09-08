@@ -385,9 +385,9 @@ class CasePolicy < ApplicationPolicy
   end
 
   check :case_is_assigned_to_responder_or_approver_in_same_team_as_current_user do
-    user_teams_ids = user.teams.map(&:id)
-    approving_assignment_team_ids = self.case.assignments.approving.accepted.map(&:team_id)
-    responding_assignment_team_ids = self.case.assignments.responding.accepted.map(&:team_id)
+    user_teams_ids = user.teams.pluck(:id)
+    approving_assignment_team_ids = self.case.assignments.approving.accepted.pluck(:team_id)
+    responding_assignment_team_ids = self.case.assignments.responding.accepted.pluck(:team_id)
     (user_teams_ids & (approving_assignment_team_ids + responding_assignment_team_ids)).any?
   end
 
