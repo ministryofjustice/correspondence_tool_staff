@@ -49,27 +49,35 @@ class BusinessUnit < Team
   end
 
   def self.dacu_disclosure
-    find_by!(name: Settings.foi_cases.default_clearance_team)
+    find_by!(code: Settings.foi_cases.default_clearance_team)
   end
 
   def dacu_disclosure?
-    name == Settings.foi_cases.default_clearance_team
+    code == Settings.foi_cases.default_clearance_team
+  end
+
+  def self.dacu_bmt
+     find_by!(code:Settings.foi_cases.default_managing_team)
+  end
+
+  def dacu_bmt?
+    code == Settings.foi_cases.default_managing_team
   end
 
   def self.press_office
-    find_by!(name: Settings.press_office_team_name)
+    find_by!(code: Settings.press_office_team_code)
   end
 
   def press_office?
-    name == Settings.press_office_team_name
+    code == Settings.press_office_team_code
   end
 
   def self.private_office
-    find_by!(name: Settings.private_office_team_name)
+    find_by!(code: Settings.private_office_team_code)
   end
 
   def private_office?
-    name == Settings.private_office_team_name
+    code == Settings.private_office_team_code
   end
 
 end
