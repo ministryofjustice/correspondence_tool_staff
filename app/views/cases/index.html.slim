@@ -40,6 +40,8 @@
           = t('.status')
         th scope='col'
           = t('.who_its_with')
+        th scope='col'
+          = t('.message_notification')
       tbody
         - @cases.each do |kase|
           tr.case_row
@@ -62,4 +64,6 @@
               = t("state.#{kase.current_state}")
             td aria-label="#{t('.who_its_with')}"
               = kase.who_its_with
+            td aria-label="#{t('.message_notification')}"
+              = kase.message_notification_for_user(current_user)
     = paginate @cases

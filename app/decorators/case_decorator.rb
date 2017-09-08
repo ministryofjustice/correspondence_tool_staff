@@ -101,6 +101,13 @@ class CaseDecorator < Draper::Decorator
     object.approver_assignment_for(object.default_team_service.approving_team)&.user&.full_name
   end
 
+  def message_notification_for_user(user)
+    if transition_tracker_for_user(user)&.is_up_to_date?
+      '-'
+    else
+      'MSG'
+    end
+  end
 end
 
 

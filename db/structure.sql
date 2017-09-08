@@ -387,6 +387,37 @@ ALTER SEQUENCE cases_id_seq OWNED BY cases.id;
 
 
 --
+-- Name: cases_users_transitions_trackers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE cases_users_transitions_trackers (
+    id integer NOT NULL,
+    case_id integer,
+    user_id integer,
+    case_transition_id integer
+);
+
+
+--
+-- Name: cases_users_transitions_trackers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE cases_users_transitions_trackers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cases_users_transitions_trackers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE cases_users_transitions_trackers_id_seq OWNED BY cases_users_transitions_trackers.id;
+
+
+--
 -- Name: categories; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -654,6 +685,13 @@ ALTER TABLE ONLY cases_exemptions ALTER COLUMN id SET DEFAULT nextval('cases_exe
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY cases_users_transitions_trackers ALTER COLUMN id SET DEFAULT nextval('cases_users_transitions_trackers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY categories ALTER COLUMN id SET DEFAULT nextval('categories_id_seq'::regclass);
 
 
@@ -754,6 +792,14 @@ ALTER TABLE ONLY cases_exemptions
 
 ALTER TABLE ONLY cases
     ADD CONSTRAINT cases_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cases_users_transitions_trackers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY cases_users_transitions_trackers
+    ADD CONSTRAINT cases_users_transitions_trackers_pkey PRIMARY KEY (id);
 
 
 --
@@ -908,6 +954,20 @@ CREATE UNIQUE INDEX index_cases_on_number ON cases USING btree (number);
 --
 
 CREATE INDEX index_cases_on_requester_type ON cases USING btree (requester_type);
+
+
+--
+-- Name: index_cases_users_transitions_trackers_on_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_cases_users_transitions_trackers_on_case_id ON cases_users_transitions_trackers USING btree (case_id);
+
+
+--
+-- Name: index_cases_users_transitions_trackers_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_cases_users_transitions_trackers_on_user_id ON cases_users_transitions_trackers USING btree (user_id);
 
 
 --
@@ -1072,6 +1132,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170830162157'),
 ('20170831091142'),
 ('20170906130950'),
-('20170908083205');
-
-
+('20170908083205'),
+('20170908142318');

@@ -191,7 +191,8 @@ class Case < ApplicationRecord
                 where(most_recent: true).first
               end
            end
-
+  has_many :users_transitions_trackers,
+           class_name: 'CasesUsersTransitionsTracker'
 
   has_many :responded_transitions, -> { responded }, class_name: 'CaseTransition'
 
@@ -393,6 +394,10 @@ class Case < ApplicationRecord
 
   def non_default_approver_assignments
     approver_assignments.where.not(team: default_team_service.approving_team)
+  end
+
+  def transition_tracker_for_user(user)
+    users_transitions_trackers.where(user: user).singular_or_nil
   end
 
   private
