@@ -158,10 +158,6 @@ class CaseStateMachine
   end
 
   event :upload_response_and_approve do
-    guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:acting_user_id], object).can_upload_response_and_approve?
-    end
-
     transition from: :pending_dacu_clearance,
                to:   :awaiting_dispatch
     transition from: :pending_dacu_clearance,

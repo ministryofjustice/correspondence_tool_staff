@@ -35,11 +35,6 @@ class CasePolicy < ApplicationPolicy
     self.case.does_not_require_clearance? && responder_attachable?
   end
 
-  def can_upload_response_and_approve?
-    clear_failed_checks
-    self.case.requires_clearance? && approver_attachable?
-  end
-
   def can_add_case?
     clear_failed_checks
     user.manager?
@@ -127,17 +122,15 @@ class CasePolicy < ApplicationPolicy
   def approve_from_pending_dacu_clearance_to_awaiting_dispatch?
     clear_failed_checks
 
-    check_case_is_pending_dacu_clearance &&
-      check_case_is_not_assigned_to_press_office &&
-      check_user_is_dacu_disclosure_approver
+    check_case_is_not_assigned_to_press_office &&
+      check_user_is_assigned_dacu_disclosure_approver
   end
 
   def approve_from_pending_dacu_clearance_to_pending_press_office_clearance?
     clear_failed_checks
 
-    check_case_is_pending_dacu_clearance &&
-      check_case_is_assigned_to_press_office &&
-      check_user_is_dacu_disclosure_approver
+    check_case_is_assigned_to_press_office &&
+      check_user_is_assigned_dacu_disclosure_approver
   end
 
   def upload_response_and_approve_from_pending_dacu_clearance_to_pending_press_office_clearance?
@@ -151,24 +144,21 @@ class CasePolicy < ApplicationPolicy
   def approve_from_pending_press_office_clearance_to_awaiting_dispatch?
     clear_failed_checks
 
-    check_case_is_pending_press_office_clearance &&
-      check_case_is_not_assigned_to_private_office &&
-      check_user_is_press_office_approver
+    check_case_is_not_assigned_to_private_office &&
+      check_user_is_assigned_press_office_approver
   end
 
   def approve_from_pending_press_office_clearance_to_pending_private_office_clearance?
     clear_failed_checks
 
-    check_case_is_pending_press_office_clearance &&
-      check_case_is_assigned_to_private_office &&
-      check_user_is_press_office_approver
+    check_case_is_assigned_to_private_office &&
+      check_user_is_assigned_press_office_approver
   end
 
   def approve_from_pending_private_office_clearance_to_awaiting_dispatch?
     clear_failed_checks
 
-    check_case_is_pending_private_office_clearance &&
-      check_user_is_private_office_approver
+    check_user_is_assigned_private_office_approver
   end
 
   def can_approve_or_escalate_case?
@@ -258,7 +248,7 @@ class CasePolicy < ApplicationPolicy
   def upload_response_and_return_for_redraft_from_pending_dacu_clearance_to_drafting?
     clear_failed_checks
     check_case_is_assigned_to_dacu_disclosure &&
-      check_user_is_dacu_disclosure_approver
+      check_user_is_assigned_dacu_disclosure_approver
   end
 
   def request_amends?
@@ -356,6 +346,18 @@ class CasePolicy < ApplicationPolicy
 
   check :user_is_assigned_approver_for_case do
     user.in?(self.case.approvers)
+  end
+
+  check :user_is_assigned_dacu_disclosure_approver do
+    @case.assignments.with_teams(BusinessUnit.dacu_disclosure).for_user(@user).present?
+  end
+
+  check :user_is_assigned_press_office_approver do
+    @case.assignments.with_teams(BusinessUnit.press_office).for_user(@user).present?
+  end
+
+  check :user_is_assigned_private_office_approver do
+    @case.assignments.with_teams(BusinessUnit.private_office).for_user(@user).present?
   end
 
   check :case_requires_clearance do

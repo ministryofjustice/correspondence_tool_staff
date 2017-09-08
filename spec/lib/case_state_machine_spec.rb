@@ -232,11 +232,9 @@ RSpec.describe CaseStateMachine, type: :model do
   end
 
   events :upload_response_and_approve do
-    it { should transition_from(:pending_dacu_clearance).to :awaiting_dispatch}
-    it { should require_permission(:can_upload_response_and_approve?)
-                  .using_options(acting_user_id: approver.id)
-                  .using_object(pending_dacu_clearance_case)
-    }
+    it { should transition_from(:pending_dacu_clearance)
+                    .to(:awaiting_dispatch)
+                    .checking_default_policy(CasePolicy)}
   end
 
   events :upload_response_and_return_for_redraft do
