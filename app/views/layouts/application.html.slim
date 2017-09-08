@@ -14,6 +14,9 @@
 
   = stylesheet_link_tag "application", media: "all"
 
+  /[if lte IE 9]
+    = stylesheet_link_tag "ie_shame", media: "all"
+
   - content_for :body_classes do
     = "controller-" + controller.controller_name
 
