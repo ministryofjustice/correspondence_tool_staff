@@ -1,0 +1,7 @@
+= render partial: 'layouts/header'
+
+
+h1.heading-large
+  = t('team_types.business_unit').pluralize
+
+= render partial: 'business_unit_list', locals: { teams: @teams }

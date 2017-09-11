@@ -64,6 +64,9 @@ en:
     team_policy:
       index?: 'You are not authorised to view a list of teams'
       show?: 'You are not authorised to view this team'
+      new?: 'You are not authorised to add new teams'
+      create?: 'You are not authorised to add new teams'
+      edit?: 'You are not authorised to edit this team'
     nil_class: 'Authorisation failed due to internal error.'
 
   state: &state_translations
@@ -375,7 +378,7 @@ en:
       <strong>Your feedback has been submitted.</strong>
 
   teams:
-    directorate_detail:
+    business_unit_list:
       team_members: Team members
     business_unit_detail:
       team_members: Team members
