@@ -8,7 +8,7 @@ class Admin::CasesController < ApplicationController
     @selected_state = params[:case][:target_state]
     if @case.valid?
       case_creator.call([@selected_state], @case)
-      flash[:alert] = "Case created: #{@case.number}"
+      flash[:notice] = "Case created: #{@case.number}"
       redirect_to(admin_cases_path)
     else
       @case.responding_team = BusinessUnit.find(

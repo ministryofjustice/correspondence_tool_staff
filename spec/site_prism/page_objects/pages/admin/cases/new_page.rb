@@ -29,6 +29,8 @@ module PageObjects
           element :flag_for_private_office,
                   '#case_flagged_for_private_office_clearance'
 
+          element :target_state, '#case_target_state'
+
           element :submit_button, '.button'
         end
       end

@@ -59,5 +59,8 @@
             td
               = t("state.#{kase.current_state}")
             td
-              = kase.who_its_with
+              - if kase.current_state == 'closed'
+                = ''
+              - else
+                = kase.who_its_with
     = paginate @cases

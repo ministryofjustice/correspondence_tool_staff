@@ -231,21 +231,35 @@ module CTS::Cases
         ap kase
 
         puts "\nAssignments:"
-        team_display = team_display_method { |a| a.team }
+        team_display = team_display_method :team
         team_width = kase.assignments.map(&team_display).map(&:length).max
-        user_display = user_display_method { |a| a.user }
+        user_display = user_display_method :user
         user_width = kase.assignments.map(&user_display).map(&:length).max
         tp kase.assignments, :id, :state, :role,
            { user: { display_method: user_display, width: user_width } },
            { team: { display_method: team_display, width: team_width } }
 
         puts "\nTransitions:"
+        transition_display_fields =
+          [
+            [:acting_team, team_display_method(:acting_team)],
+            [:acting_user, user_display_method(:acting_user)],
+            # [:target_team, team_display_method(:target_team)],
+            # [:target_user, user_display_method(:target_user)],
+          ].map do |field, display_method|
+          max_width = longest_field(kase.transitions, &display_method)
+          {
+            field => {
+              display_method: display_method,
+              width: max_width
+            }
+          }
+        end
         tp kase.transitions.order(:id),
            :id,
            :event,
            :to_state,
-           { user: { display_method: user_display, width: user_width } },
-           metadata: { width: 60 }
+           transition_display_fields
 
         puts "\nAttachments:"
         tp kase.attachments, [:id, :type, :key, :preview_key]
@@ -254,9 +268,13 @@ module CTS::Cases
 
     private
 
-    def user_display_method(&get_user)
+    def longest_field(objects, &display_method)
+      objects.map(&display_method).map(&:length).max
+    end
+
+    def user_display_method(attr)
       lambda do |o|
-        user = get_user.call o
+        user = o.send attr
         if user
           "#{user&.full_name}:#{user&.id}"
         else
@@ -265,9 +283,9 @@ module CTS::Cases
       end
     end
 
-    def team_display_method(&get_team)
+    def team_display_method(attr)
       lambda do |object|
-        team = get_team.call object
+        team = object.send attr
         if team
           "#{team&.name}:#{team&.id}"
         else

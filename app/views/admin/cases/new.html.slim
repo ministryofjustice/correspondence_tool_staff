@@ -57,6 +57,8 @@
                      locals: {s3_direct_post: @s3_direct_post,
                               file_input_name: 'case[uploaded_request_files][]' }
 
+  h2
+    = "Please only select one."
   = f.check_box_fieldset :flag_for_disclosure_specialists, [:flagged_for_disclosure_specialist_clearance?, :flagged_for_press_office_clearance?, :flagged_for_private_office_clearance?]
 
   = f.collection_select :responding_team, BusinessUnit.responding, :id, :name, { selected: @case.responding_team.id }
