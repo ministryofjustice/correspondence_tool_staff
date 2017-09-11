@@ -14,7 +14,7 @@ class CasePrinter
     @lines <<  "Case id: #{@case.id}   from #{@case.name}    title: #{@case.message}"
     @lines <<   "Assignments:"
     @case.assignments.each do |a|
-      @lines <<   sprintf("    id: %-5d  role: %-12s state: %-12s team: %-5d %s", a.id, a.role, a.state, a.team.id, a.team.name)
+      @lines <<   sprintf("    id: %-5d  role: %-12s state: %-12s team: %-5d %20s  user: %-5s %s", a.id, a.role, a.state, a.team.id, a.team.name, a.user_id.to_s, a.user&.full_name )
     end
     puts "Transitions:"
     @case.transitions.each do |t|

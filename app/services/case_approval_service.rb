@@ -12,14 +12,18 @@ class CaseApprovalService
   end
 
   def call
-    ActiveRecord::Base.transaction do
-      assignment = @kase.approver_assignments
-                     .with_teams(@user.approving_team)
-                     .first
-      @state_machine.approve!(@user, assignment)
-      assignment.update!(approved: true)
-    end
+    begin
+      ActiveRecord::Base.transaction do
+        assignment = @kase.approver_assignments
+                       .with_teams(@user.approving_team)
+                       .first
+        @state_machine.approve!(@user, assignment)
+        assignment.update!(approved: true)
+      end
 
-    @result = :ok
+      @result = :ok
+    rescue Statesman::GuardFailedError
+      @result = :error
+    end
   end
 end

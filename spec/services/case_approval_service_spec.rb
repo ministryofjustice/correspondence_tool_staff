@@ -51,10 +51,8 @@ describe CaseApprovalService do
     end
 
     context 'approving case that requires another level of clearance' do
-      let(:kase)            { create :pending_dacu_clearance_case,
-                                     :press_office,
-                                     approver: user }
-      let(:user)            { create :disclosure_specialist }
+      let(:kase)            { create :pending_dacu_clearance_case_flagged_for_press }
+      let(:user)            { kase.assigned_disclosure_specialist }
       let(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
 
       it 'returns :ok' do
@@ -92,17 +90,7 @@ describe CaseApprovalService do
 
       it 'returns :ok' do
         service.call
-        expect(service.result).to eq :ok
-      end
-
-      it 'adds a case_transition record' do
-        expect {
-          service.call
-        }.to change { kase.transitions.size }.by(1)
-        transition = kase.transitions.last
-        expect(transition.event).to eq 'approve'
-        expect(transition.acting_user_id).to eq user.id
-        expect(transition.acting_team_id).to eq kase.approving_teams.first.id
+        expect(service.result).to eq :error
       end
     end
   end

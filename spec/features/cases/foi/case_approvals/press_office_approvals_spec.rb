@@ -102,18 +102,6 @@ feature 'cases requiring clearance by press office' do
                                    expected_team: press_office
   end
 
-  scenario 'a Disclosure Specialist not assigned to a case approve it for press office' do
-    login_as other_disclosure_specialist
-    cases_show_page.load(id: pending_dacu_clearance_case.id)
-
-    approve_case kase: pending_dacu_clearance_case,
-                 expected_team: press_office,
-                 expected_status: 'Pending clearance'
-    approve_response kase: pending_dacu_clearance_case
-    select_case_on_open_cases_page kase: pending_dacu_clearance_case,
-                                   expected_team: press_office
-  end
-
   scenario 'Press Officer approves a case' do
     login_as press_officer
 
@@ -121,19 +109,6 @@ feature 'cases requiring clearance by press office' do
     expect(cases_show_page.case_status.details.who_its_with.text)
       .to eq 'Press Office'
 
-    approve_case kase: pending_press_clearance_case,
-                 expected_team: pending_press_clearance_case.responding_team,
-                 expected_status: 'Ready to send'
-    approve_response kase: pending_press_clearance_case
-    select_case_on_open_cases_page(
-      kase: pending_press_clearance_case,
-      expected_team: pending_press_clearance_case.responding_team
-    )
-  end
-
-  scenario 'different Press Officer from same team approving a case' do
-    login_as other_press_officer
-    cases_show_page.load(id: pending_press_clearance_case.id)
     approve_case kase: pending_press_clearance_case,
                  expected_team: pending_press_clearance_case.responding_team,
                  expected_status: 'Ready to send'

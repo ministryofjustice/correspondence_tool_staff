@@ -482,11 +482,14 @@ describe CasePolicy do
   end
 
   permissions :approve_from_pending_dacu_clearance_to_pending_press_office_clearance? do
-    let(:kase) { create :pending_dacu_clearance_case, :press_office }
-    it { should_not permit(responder,             kase) }
-    it { should     permit(disclosure_specialist, kase) }
-    it { should_not permit(press_officer,         kase) }
-    it { should_not permit(private_officer,       kase) }
+    let(:kase) { create :pending_dacu_clearance_case_flagged_for_press }
+    let(:assigned_disclosure_specialist) { kase.assigned_disclosure_specialist }
+
+    it { should_not permit(responder,                       kase) }
+    it { should_not permit(disclosure_specialist,           kase) }
+    it { should     permit(assigned_disclosure_specialist,  kase) }
+    it { should_not permit(press_officer,                   kase) }
+    it { should_not permit(private_officer,                 kase) }
   end
 
   permissions :approve_from_pending_press_office_clearance_to_awaiting_dispatch? do
@@ -498,10 +501,13 @@ describe CasePolicy do
 
   permissions :approve_from_pending_press_office_clearance_to_pending_private_office_clearance? do
     let(:kase) { create :pending_press_clearance_case, :private_office }
-    it { should_not permit(responder,             kase) }
-    it { should_not permit(disclosure_specialist, kase) }
-    it { should     permit(press_officer,         kase) }
-    it { should_not permit(private_officer,       kase) }
+    let(:assigned_press_officer) { kase.assigned_press_officer }
+
+    it { should_not permit(responder,               kase) }
+    it { should_not permit(disclosure_specialist,   kase) }
+    it { should_not permit(press_officer,           kase) }
+    it { should     permit(assigned_press_officer,  kase) }
+    it { should_not permit(private_officer,         kase) }
   end
 
   permissions :approve_from_pending_private_office_clearance_to_awaiting_dispatch? do
@@ -557,6 +563,29 @@ describe CasePolicy do
     it { should_not permit(press_officer,         case_with_response_trigger) }
     it { should_not permit(private_officer,       case_with_response_trigger) }
   end
+
+
+  permissions :upload_response_and_approve_from_pending_dacu_clearance_to_awaiting_dispatch? do
+    it { should_not permit(responder,             pending_dacu_clearance_case) }
+    it { should     permit(disclosure_specialist, pending_dacu_clearance_case) }
+    it { should_not permit(another_disclosure_specialist, pending_dacu_clearance_case) }
+    it { should_not permit(press_officer,         pending_dacu_clearance_case) }
+    it { should_not permit(private_officer,       pending_dacu_clearance_case) }
+  end
+
+  permissions :upload_response_and_approve_from_pending_dacu_clearance_to_pending_press_office_clearance? do
+    let(:kase) { create :pending_dacu_clearance_case, :press_office,
+                                                 disclosure_assignment_state: 'accepted',
+                          disclosure_specialist:       disclosure_specialist }
+    it { should_not permit(responder,             kase) }
+    it { should     permit(disclosure_specialist, kase) }
+    it { should_not permit(another_disclosure_specialist, kase) }
+    it { should_not permit(press_officer,         kase) }
+    it { should_not permit(private_officer,       kase) }
+  end
+
+
+
 
   describe 'case scope policy' do
     let(:existing_cases) do
