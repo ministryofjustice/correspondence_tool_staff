@@ -2,13 +2,11 @@ class Admin::CasesController < ApplicationController
   before_action :authorize_admin
 
   def create
-    options = params[:case]
-    case_creator = CTS::Cases::Create.new(Rails.logger, options)
+    prepare_flagged_options_for_creation(params)
+    case_creator = CTS::Cases::Create.new(Rails.logger, params[:case])
     @case = case_creator.new_case
     @selected_state = params[:case][:target_state]
     if @case.valid?
-      @case.save!
-      prepare_flagged_options_for_creation(params)
       case_creator.call([@selected_state], @case)
       flash[:alert] = "Case created: #{@case.number}"
       redirect_to(admin_cases_path)
@@ -63,25 +61,37 @@ class Admin::CasesController < ApplicationController
     ).merge(category_id: Category.find_by(abbreviation: 'FOI').id)
   end
 
-  def prepare_flagged_options_for_creation(params)
-    options = params[:case]
-    options[:flag_for_disclosure] =
-      params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
-    options[:flag_for_pr] =
-      params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
-    options[:flag_for_disclosure] =
-      params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
+  def param_flag_for_ds?
+    params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
   end
 
-  def prepare_flagged_options_for_displaying(params)
-    if params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
-      @case.approving_teams << BusinessUnit.dacu_disclosure
+  def param_flag_for_press?
+    params[:case][:flagged_for_press_office_clearance] == '1'
+  end
+
+  def param_flag_for_private?
+    params[:case][:flagged_for_private_office_clearance] == '1'
+  end
+
+  def gather_teams_for_flagging
+    teams_for_flagging = []
+    teams_for_flagging << 'disclosure' if param_flag_for_ds?
+    teams_for_flagging << 'press' if param_flag_for_press?
+    teams_for_flagging << 'private' if param_flag_for_private?
+    teams_for_flagging
+  end
+
+  def prepare_flagged_options_for_creation(params)
+    if param_flag_for_ds? && !param_flag_for_press? && !param_flag_for_private?
+      params[:case][:flag_for_disclosure] = true
+    else
+      params[:case][:flag_for_team] = gather_teams_for_flagging.join(',')
     end
-    if params[:case][:flagged_for_press_office_clearance] == '1'
-      @case.approving_teams << BusinessUnit.press_office
-    end
-    if params[:case][:flagged_for_private_office_clearance] == '1'
-      @case.approving_teams << BusinessUnit.private_office
-    end
+  end
+
+  def prepare_flagged_options_for_displaying
+    @case.approving_teams << BusinessUnit.dacu_disclosure if param_flag_for_ds
+    @case.approving_teams << BusinessUnit.press_office if param_flag_for_press
+    @case.approving_teams << BusinessUnit.private_office if param_flag_for_private
   end
 end

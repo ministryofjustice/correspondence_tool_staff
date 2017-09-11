@@ -1,7 +1,8 @@
 require "rails_helper"
 
 feature 'adding cases' do
-  given(:admin) { create :admin }
+  given(:admin)          { create :admin }
+
   before do
     CTS.class_eval { @dacu_manager = nil; @dacu_team = nil }
     create :responding_team
@@ -41,5 +42,35 @@ feature 'adding cases' do
     expect(kase.subject).to eq 'test subject'
     expect(kase.message).to eq 'test message'
     expect(kase.received_date).to eq 1.business_days.ago.to_date
+  end
+
+  scenario 'creating a foi case flagged for DACU disclosure' do
+    admin_cases_page.load
+    admin_cases_page.create_case_button.click
+    expect(admin_cases_new_page).to be_displayed
+    admin_cases_new_page.flag_for_disclosure_specialists.set(true)
+
+    admin_cases_new_page.submit_button.click
+    expect(admin_cases_page).to be_displayed
+    expect(admin_cases_page.case_list.count).to eq 1
+    kase = Case.first
+    expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
+  end
+
+  scenario 'creating a foi case flagged for press office' do
+    find_or_create :default_press_officer
+    find_or_create :default_private_officer
+    admin_cases_page.load
+    admin_cases_page.create_case_button.click
+    expect(admin_cases_new_page).to be_displayed
+    admin_cases_new_page.flag_for_press_office.set(true)
+
+    admin_cases_new_page.submit_button.click
+    expect(admin_cases_page).to be_displayed
+    expect(admin_cases_page.case_list.count).to eq 1
+    kase = Case.first
+    expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
+    expect(BusinessUnit.press_office).to be_in(kase.approving_teams)
+    expect(BusinessUnit.private_office).to be_in(kase.approving_teams)
   end
 end

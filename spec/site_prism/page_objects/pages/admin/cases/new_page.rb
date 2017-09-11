@@ -22,8 +22,12 @@ module PageObjects
           element :received_date, '#case_received_date'
           element :created_at, '#case_created_at'
 
-          element :flag_for_disclosure_specialists, :xpath,
-                  '//fieldset[contains(.,"Clearance required by DACU Disclosure")]'
+          element :flag_for_disclosure_specialists,
+                  '#case_flagged_for_disclosure_specialist_clearance'
+          element :flag_for_press_office,
+                  '#case_flagged_for_press_office_clearance'
+          element :flag_for_private_office,
+                  '#case_flagged_for_private_office_clearance'
 
           element :submit_button, '.button'
         end

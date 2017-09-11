@@ -54,7 +54,9 @@ module CTS::Cases
         journey = find_case_journey_for_state target_state.to_sym
         @number_to_create.times.map do |n|
           logger.info "creating case #{target_state} ##{n}"
-          kase ||= create_case
+          kase ||= new_case
+          kase.save!
+          flag_for_dacu_disclosure(kase) if @flag.present?
           run_transitions(kase, target_state, journey, n)
           kase
         end
@@ -127,14 +129,6 @@ module CTS::Cases
         end
         @invalid_params = true
       end
-    end
-
-    def create_case()
-      kase = new_case
-      kase.save!
-
-      flag_for_dacu_disclosure(kase) if @flag.present?
-      kase
     end
 
     def run_transitions(kase, target_state, journey, n)
