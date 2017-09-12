@@ -33,8 +33,8 @@ class DevTeamSeeder
   def add_business_units
     @bu_dacu_bmt = BusinessUnit.create!(parent: @dir_dacu, name: 'Disclosure BMT', code: Settings.foi_cases.default_managing_team, role: 'manager')
     @bu_dacu_dis = BusinessUnit.create!(parent: @dir_dacu, name: 'Disclosure', code: Settings.foi_cases.default_clearance_team, role: 'approver')
-    @bu_private = BusinessUnit.create!(parent: @dir_private, name: 'Private Office', code: Settings.private_office_team_code ,role: 'approver')
-    @bu_press = BusinessUnit.create!(parent: @dir_press, name: 'Press Office', code: Settings.press_office_team_code role: 'approver')
+    @bu_private = BusinessUnit.create!(parent: @dir_private, name: 'Private Office', code: Settings.private_office_team_code, role: 'approver')
+    @bu_press = BusinessUnit.create!(parent: @dir_press, name: 'Press Office', code: Settings.press_office_team_code, role: 'approver')
 
     @bu_laa = BusinessUnit.create!(parent: @dir_laa, name: 'Legal Aid Agency (LAA)', role: 'responder')
 
