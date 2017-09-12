@@ -26,10 +26,10 @@ class TeamSeeder
     dir_dacu = Directorate.create!(parent: bg_ops, name: 'DACU')
     dir_private = Directorate.create!(parent: bg_ops, name: 'Private Office')
     dir_press = Directorate.create!(parent: bg_ops, name: 'Press Office')
-    BusinessUnit.create!(parent: dir_dacu, name: 'DACU BMT')
-    BusinessUnit.create!(parent: dir_dacu, name: 'DACU Disclosure')
-    BusinessUnit.create!(parent: dir_private, name: 'Private Office')
-    BusinessUnit.create!(parent: dir_press, name: 'Press Office')
+    BusinessUnit.create!(parent: dir_dacu, code: Settings.foi_cases.default_managing_team, name: 'Disclosure BMT')
+    BusinessUnit.create!(parent: dir_dacu, code: Settings.foi_cases.default_clearance_team, name: 'Disclosure')
+    BusinessUnit.create!(parent: dir_private, code: Settings.private_office_team_code ,name: 'Private Office')
+    BusinessUnit.create!(parent: dir_press, code: Settings.press_office_team_code, name: 'Press Office')
   end
 
   def process_row(row)

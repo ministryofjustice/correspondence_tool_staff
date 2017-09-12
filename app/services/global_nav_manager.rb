@@ -52,7 +52,7 @@ class GlobalNavManager
   def get_nav_structure_for_user(user, settings)
     settings.structure.find do |matcher, _structure|
       matcher.to_s == '*' ||
-        matcher.to_s.in?(user.teams.pluck :name) ||
+        matcher.to_s.in?(user.teams.pluck :code) ||
         matcher.to_s.in?(user.roles)
     end .last
   end

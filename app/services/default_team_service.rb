@@ -6,11 +6,11 @@ class DefaultTeamService
   end
 
   def managing_team
-    BusinessUnit.find_by_name! @config.default_managing_team
+    BusinessUnit.dacu_bmt
   end
 
   def approving_team
-    BusinessUnit.find_by_name! @config.default_clearance_team
+    BusinessUnit.dacu_disclosure
   end
 
   def associated_teams(for_team:)

@@ -84,6 +84,7 @@ RSpec.describe BusinessUnit, type: :model do
       @press_office_team =  find_or_create :team_press_office
       @private_office_team =  find_or_create :team_private_office
       @dacu_disclosure_team =  find_or_create :team_dacu_disclosure
+      @dacu_bmt_team = find_or_create :team_dacu
     end
 
     after(:all) do
@@ -100,9 +101,17 @@ RSpec.describe BusinessUnit, type: :model do
       it 'returns true if dacu disclosure' do
         expect(@dacu_disclosure_team.dacu_disclosure?).to be true
       end
+    end
 
-      it 'returns false if not dacu disclosure' do
-        expect(@press_office_team.dacu_disclosure?).to be false
+    describe '.dacu_bmt' do
+      it 'finds the DACU BMT team' do
+        expect(BusinessUnit.dacu_bmt).to eq @dacu_bmt_team
+      end
+    end
+
+    describe '#dacu_bmt?' do
+      it 'returns true if dacu bmt' do
+        expect(@dacu_bmt_team.dacu_bmt?).to be true
       end
     end
 
@@ -116,6 +125,7 @@ RSpec.describe BusinessUnit, type: :model do
       it 'returns true if press office team' do
         expect(@press_office_team.press_office?).to be true
       end
+
 
       it 'returns false if not press office team' do
         expect(@dacu_disclosure_team.press_office?).to be false

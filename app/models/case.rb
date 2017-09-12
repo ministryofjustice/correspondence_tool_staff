@@ -401,8 +401,7 @@ class Case < ApplicationRecord
 
   def set_managing_team
     # For now, we just automatically assign cases to DACU.
-    self.managing_team =
-      BusinessUnit.managing.find_by!(name: Settings.foi_cases.default_managing_team)
+    self.managing_team = BusinessUnit.dacu_bmt
     self.managing_assignment.state = 'accepted'
   end
 

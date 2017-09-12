@@ -50,24 +50,27 @@ FactoryGirl.define do
   factory :team_dacu, parent: :managing_team do
     name 'Disclosure BMT'
     email 'dacu@localhost'
+    code Settings.foi_cases.default_managing_team
     directorate { find_or_create :dacu_directorate }
   end
 
   factory :team_dacu_disclosure, parent: :approving_team do
     name 'Disclosure'
     email 'dacu.disclosure@localhost'
+    code Settings.foi_cases.default_clearance_team
   end
 
   factory :team_press_office, parent: :approving_team do
     name 'Press Office'
     email 'press.office@localhost'
+    code Settings.press_office_team_code
     directorate { find_or_create :press_office_directorate }
-
   end
 
   factory :team_private_office, parent: :approving_team do
     name 'Private Office'
     email 'private.office@localhost'
+    code Settings.private_office_team_code
     directorate { find_or_create :press_office_directorate }
   end
 end
