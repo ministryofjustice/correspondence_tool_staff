@@ -355,7 +355,6 @@ en:
       <strong>Your feedback has been submitted.</strong>
 
   teams:
-    group_email: Group email
     directorate_detail:
       team_members: Team members
     business_unit_detail:
@@ -412,5 +411,3 @@ en:
   pagination:
     next: "Next "
     previous: "Previous "
-
-
