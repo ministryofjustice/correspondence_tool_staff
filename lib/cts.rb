@@ -40,7 +40,7 @@ module CTS
         team_name_regex = Regexp.new(Regexp.last_match(1), Regexp::IGNORECASE)
         BusinessUnit.all.find_all { |t| t.name.match(team_name_regex) }
       else
-        [BusinessUnit.find_by(name: id_or_name)]
+        BusinessUnit.where('name = ? OR code = ?', id_or_name, id_or_name)
       end
     end
 
