@@ -11,6 +11,7 @@ class CasesController < ApplicationController
       :flag_for_clearance,
       :new_response_upload,
       :process_closure,
+      :assign_to_new_team,
       :reassign_approver,
       :request_amends,
       :respond,

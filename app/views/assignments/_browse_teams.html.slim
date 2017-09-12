@@ -1,0 +1,37 @@
+p.bold-medium
+  | Browse by business group
+
+ul.business-groups.list
+  - BusinessGroup.all.order(:name).each do |bg|
+    li.business-group
+      - if assignment.new_record?
+        = business_group_option_for_new_case(kase, bg, params)
+      - else
+        = business_group_option_for_new_team(kase, assignment, bg, params)
+  li.show-all
+    - if assignment.new_record?
+      = all_option_for_new_case(kase, params)
+    - else
+      = all_option_for_new_team(kase, assignment, params)
+
+- if params[:business_group_id] || params[:show_all]
+  p.bold-medium
+    = filtered_group_heading(params)
+
+- if defined?(@business_units)
+  ul.teams
+    - @business_units.each do |team|
+      li.team
+        .team-details
+          h3
+            .team-unit-name
+              = team.name
+          = render partial: 'shared/areas_covered_list', locals: { team: team }
+        .team-actions
+          - if assignment.new_record?
+            = link_to t('button.assign'),
+                  case_assign_to_responder_team_path(case_id: kase.id,
+                          team_id: team.id), class: 'button'
+          - else
+            = link_to t('button.assign'),
+                  execute_assign_to_new_team_case_assignment_path(kase.id, assignment.id, team_id: team.id), class: 'button', method: :patch

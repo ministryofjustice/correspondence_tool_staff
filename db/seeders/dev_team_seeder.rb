@@ -15,32 +15,35 @@ class DevTeamSeeder
   private
 
   def add_business_groups
-    @bg_ops = BusinessGroup.create!(name: 'Operations')
-    @bg_hmcts = BusinessGroup.create!(name: 'HMCTS')
+    @bg_ops       = BusinessGroup.create!(name: 'Operations')
+    @bg_hmcts     = BusinessGroup.create!(name: 'HMCTS')
   end
 
   def add_directorates
-    @dir_dacu = Directorate.create!(parent: @bg_ops, name: 'Disclosure')
-    @dir_private = Directorate.create!(parent: @bg_ops, name: 'Private Office')
-    @dir_press = Directorate.create!(parent: @bg_ops, name: 'Press Office')
+    @dir_dacu     = Directorate.create!(parent: @bg_ops, name: 'Disclosure')
+    @dir_private  = Directorate.create!(parent: @bg_ops, name: 'Private Office')
+    @dir_press    = Directorate.create!(parent: @bg_ops, name: 'Press Office')
 
-    @dir_laa = Directorate.create!(parent: @bg_ops, name: 'Legal Aid Agency')
-    @dir_hr = Directorate.create!(parent: @bg_ops, name: 'MoJ Human Resources')
+    @dir_laa      = Directorate.create!(parent: @bg_ops, name: 'Legal Aid Agency')
+    @dir_hr       = Directorate.create!(parent: @bg_ops, name: 'MoJ Human Resources')
 
-    @dir_rsus = Directorate.create!(parent_id: @bg_hmcts.id, name: 'Regional Support Units')
+    @dir_rsus     = Directorate.create!(parent_id: @bg_hmcts.id, name: 'Regional Support Units')
+    @dir_prop     = Directorate.create!(parent_id: @bg_hmcts.id, name: 'HMCTS Property Directorate')
+    @dir_trib     = Directorate.create!(parent_id: @bg_hmcts.id, name: 'Upper Tribunals')
   end
 
   def add_business_units
-    @bu_dacu_bmt = BusinessUnit.create!(parent: @dir_dacu, name: 'Disclosure BMT', code: Settings.foi_cases.default_managing_team, role: 'manager')
-    @bu_dacu_dis = BusinessUnit.create!(parent: @dir_dacu, name: 'Disclosure', code: Settings.foi_cases.default_clearance_team, role: 'approver')
-    @bu_private = BusinessUnit.create!(parent: @dir_private, name: 'Private Office', code: Settings.private_office_team_code, role: 'approver')
-    @bu_press = BusinessUnit.create!(parent: @dir_press, name: 'Press Office', code: Settings.press_office_team_code, role: 'approver')
-
-    @bu_laa = BusinessUnit.create!(parent: @dir_laa, name: 'Legal Aid Agency (LAA)', role: 'responder')
-
-    @bu_hmctsne = BusinessUnit.create!(parent: @dir_rsus, name: 'North East Regional Support Unit (NE RSU)', role: 'responder')
-
-    @bu_hr = BusinessUnit.create!(parent: @dir_hr, name: 'MoJ Human Resources (MoJ HR)', role: 'responder')
+    @bu_dacu_bmt  = BusinessUnit.create!(parent: @dir_dacu,     name: 'Disclosure BMT', code: Settings.foi_cases.default_managing_team,   role: 'manager')
+    @bu_dacu_dis  = BusinessUnit.create!(parent: @dir_dacu,     name: 'Disclosure',     code: Settings.foi_cases.default_clearance_team,  role: 'approver')
+    @bu_private   = BusinessUnit.create!(parent: @dir_private,  name: 'Private Office', code: Settings.private_office_team_code,          role: 'approver')
+    @bu_press     = BusinessUnit.create!(parent: @dir_press,    name: 'Press Office',   code: Settings.press_office_team_code,            role: 'approver')
+    @bu_laa       = BusinessUnit.create!(parent: @dir_laa,      name: 'Legal Aid Agency (LAA)',                     role: 'responder')
+    @bu_hr        = BusinessUnit.create!(parent: @dir_hr,       name: 'MoJ Human Resources (MoJ HR)',               role: 'responder')
+    @bu_hmctsne   = BusinessUnit.create!(parent: @dir_rsus,     name: 'North East Regional Support Unit (NE RSU)',  role: 'responder')
+    @bu_prop      = BusinessUnit.create!(parent: @dir_prop,     name: 'HMCTS Property Directorate',                 role: 'responder')
+    @bu_utiac     = BusinessUnit.create!(parent: @dir_trib,     name: 'Upper Tribunal Asylum Chamber',              role: 'responder')
+    @bu_utl       = BusinessUnit.create!(parent: @dir_trib,     name: 'Upper Tribunal Lands (UT Lands)',            role: 'responder')
+    @bu_uttc      = BusinessUnit.create!(parent: @dir_trib,     name: 'Upper Tibunal - Tax & Chancery Chamber',     role: 'responder')
   end
 
   def add_leads
@@ -58,6 +61,10 @@ class DevTeamSeeder
     TeamProperty.create!(team_id: @bu_laa.id,       key: 'lead', value: 'Prescilla Offenberg')
     TeamProperty.create!(team_id: @bu_hmctsne.id,   key: 'lead', value: 'Helen Mirren')
     TeamProperty.create!(team_id: @bu_hr.id,        key: 'lead', value: 'Harry Redknapp')
+    TeamProperty.create!(team_id: @bu_prop.id,      key: 'lead', value: 'Donald Trump')
+    TeamProperty.create!(team_id: @bu_utiac.id,     key: 'lead', value: 'Ref Ugee')
+    TeamProperty.create!(team_id: @bu_utl.id,       key: 'lead', value: 'Farmer Jones')
+    TeamProperty.create!(team_id: @bu_uttc.id,      key: 'lead', value: 'Gideon Osborne')
   end
 
   def add_areas_covered
@@ -78,6 +85,10 @@ class DevTeamSeeder
     TeamProperty.create!(team_id: @bu_hmctsne.id,   key: 'area', value: 'Performance (statistics)')
     TeamProperty.create!(team_id: @bu_hmctsne.id,   key: 'area', value: 'Data collection returns (including incident reports, Trade Union Time, interpreter returns, failure in service etc.)')
     TeamProperty.create!(team_id: @bu_hmctsne.id,   key: 'area', value: 'Areas covered: Cleveland, Durham, Humber Area, Northumbria, North Yorkshire, South Yorkshire, West Yorkshire, ET single Region stats')
+    TeamProperty.create!(team_id: @bu_prop.id,      key: 'area', value: 'Property administration')
+    TeamProperty.create!(team_id: @bu_utiac.id,     key: 'area', value: 'Asylum cases')
+    TeamProperty.create!(team_id: @bu_utl.id,       key: 'area', value: 'land ownership')
+    TeamProperty.create!(team_id: @bu_uttc.id,      key: 'area', value: 'Taxing stuff')
   end
 
   def add_allocatable

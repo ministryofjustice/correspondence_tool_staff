@@ -1,21 +1,17 @@
 class AssignmentsController < ApplicationController
 
   before_action :set_case, only: [
-                  :accept,
-                  :accept_or_reject,
                   :assign_to_team,
-                  :edit,
-                  :execute_reassign_user,
                   :new,
-                  :reassign_user,
                   :show_rejected,
                   :take_case_on,
-                  :unaccept,
                 ]
-  before_action :set_assignment, only: [
+  before_action :set_case_and_assignment, only: [
                   :accept,
                   :accept_or_reject,
+                  :assign_to_new_team,
                   :edit,
+                  :execute_assign_to_new_team,
                   :execute_reassign_user,
                   :reassign_user,
                   :unaccept,
@@ -24,14 +20,9 @@ class AssignmentsController < ApplicationController
 
   def new
     authorize @case, :can_assign_case?
-    @assignment = @case.assignments.new
-    if params[:business_group_id].present?
-      @business_units = BusinessGroup.find(params[:business_group_id])
-                            .business_units.responding.order(:name)
-    elsif params[:show_all].present? && params[:show_all]
-      @business_units = BusinessUnit.responding.order(:name)
-    end
 
+    @assignment = @case.assignments.new
+    set_business_units
     @creating_case = flash[:creating_case]
     flash.keep :creating_case
   end
@@ -53,6 +44,23 @@ class AssignmentsController < ApplicationController
       render :new
     end
 
+  end
+
+  def assign_to_new_team
+    authorize @assignment, :can_assign_to_new_team?
+    set_business_units
+  end
+
+  def execute_assign_to_new_team
+    authorize @assignment, :can_assign_to_new_team?
+    service = AssignNewTeamService.new(current_user, params)
+    service.call
+    if service.result == :ok
+      redirect_to open_cases_path
+    else
+      flash[:alert] = "Unable to assign to this team"
+      redirect_to action: 'assign_to_new_team'
+    end
   end
 
   def edit
@@ -160,6 +168,15 @@ class AssignmentsController < ApplicationController
 
   private
 
+  def set_business_units
+    if params[:business_group_id].present?
+      @business_units = BusinessGroup.find(params[:business_group_id])
+                          .business_units.responding.order(:name)
+    elsif params[:show_all].present? && params[:show_all]
+      @business_units = BusinessUnit.responding.order(:name)
+    end
+  end
+
   def assignment_params
     if params[:assignment]
       params.require(:assignment).permit(
@@ -185,9 +202,10 @@ class AssignmentsController < ApplicationController
 
   end
 
-  def set_assignment
+  def set_case_and_assignment
     if Assignment.exists?(id: params[:id])
-      @assignment = Assignment.find(params[:id])
+      set_case
+      @assignment = @case.assignments.find(params[:id])
     end
   end
 

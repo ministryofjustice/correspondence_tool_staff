@@ -181,7 +181,9 @@ Rails.application.routes.draw do
       patch 'unaccept', on: :member
       patch 'take_case_on', on: :member
       get :reassign_user , on: :member
+      get :assign_to_new_team, on: :member
       patch :execute_reassign_user, on: :member
+      patch :execute_assign_to_new_team, on: :member
     end
 
     resources :case_attachments, path: 'attachments'

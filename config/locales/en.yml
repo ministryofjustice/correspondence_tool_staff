@@ -53,6 +53,8 @@ en:
               invalid_url: "url is invalid for file: %{filename}"
 
   pundit:
+    assignment_policy:
+      can_assign_to_new_team?: You are not authorised to assign this case to another team
     case_policy:
       can_add_attachment?: 'You are not authorised to upload attachments to this case.'
       can_add_case?: 'You are not authorised to create new cases.'
@@ -290,6 +292,8 @@ en:
     accept:
       success: Case taken on
       already_accepted: Case already accepted by %{name}
+    assign_to_new_team:
+      heading: 'Assign to new team'
     assign_to_team:
       case_assigned: Case successfully assigned
       case_created: Case successfully created

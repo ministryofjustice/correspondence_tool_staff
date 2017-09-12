@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentsController, type: :controller do
+  let(:manager)           { create :manager }
   let(:assigned_case)     { create :assigned_case }
   let(:assignment)        { assigned_case.responder_assignment }
   let(:unassigned_case)   { create :case }
@@ -28,9 +29,11 @@ RSpec.describe AssignmentsController, type: :controller do
       },
     }
   end
+
   let(:rejection_message) do |_example|
     'rejection test #{example.description}'
   end
+
   let(:unknown_assignment_params) do
     {
       id: assignment.id,
@@ -40,8 +43,12 @@ RSpec.describe AssignmentsController, type: :controller do
   end
   let(:assigned_case_flagged) { create :assigned_case, :flagged,
                                        approving_team: approving_team }
+  let(:assignment)            { assigned_case.responder_assignment }
+
   let(:assigned_case_trigger) { create :assigned_case, :flagged_accepted,
                                        approver: approver }
+
+
 
   context 'as an anonymous user' do
     describe 'GET edit' do
@@ -76,7 +83,7 @@ RSpec.describe AssignmentsController, type: :controller do
   end
 
   context 'as an authenticated assigner' do
-    before { sign_in create(:manager) }
+    before { sign_in manager }
 
     describe 'GET edit' do
       it 'does not render the page for accept / reject assignment' do
@@ -89,15 +96,6 @@ RSpec.describe AssignmentsController, type: :controller do
     end
 
     describe 'PATCH accept_or_reject' do
-      before do
-        allow(Assignment).to receive(:find).
-                               with(assignment.id.to_s).
-                               and_return(assignment)
-        allow(Assignment).to receive(:find).
-                               with(assignment.id).
-                               and_return(assignment)
-      end
-
       context 'accepting' do
         it 'does not call #accept' do
           allow(assignment).to receive(:accept)
@@ -139,21 +137,24 @@ RSpec.describe AssignmentsController, type: :controller do
 
     describe 'PATCH accept_or_reject' do
       before do
-        allow(Assignment).to receive(:find).
-                               with(assignment.id.to_s).
-                               and_return(assignment)
-        allow(Assignment).to receive(:find).
-                               with(assignment.id).
-                               and_return(assignment)
+        stub_s3_uploader_for_all_files!
+
+        # allow(Assignment).to receive(:find).
+        #                        with(assignment.id.to_s).
+        #                        and_return(assignment)
+        # allow(Assignment).to receive(:find).
+        #                        with(assignment.id).
+        #                        and_return(assignment)
       end
 
       context 'accepting' do
         let(:assignment_params) { { assignment: { state: 'accepted' } } }
 
         it 'calls #accept' do
-          allow(assignment).to receive(:accept)
+          expect_any_instance_of(Assignment).to receive(:accept) do |subject_assignment|
+            expect(subject_assignment.id).to eq assignment.id
+          end
           patch :accept_or_reject, params: accept_assignment_params
-          expect(assignment).to have_received(:accept)
         end
 
         it 'updates state' do
@@ -172,10 +173,10 @@ RSpec.describe AssignmentsController, type: :controller do
 
       context 'rejecting' do
         it 'calls #reject' do
-          allow(assignment).to receive(:reject)
+          expect_any_instance_of(Assignment).to receive(:reject).with(responder, rejection_message) do |subject_assignment|
+            expect(subject_assignment.id).to eq assignment.id
+          end
           patch :accept_or_reject, params: reject_assignment_params
-          expect(assignment).to have_received(:reject)
-                                  .with(responder, rejection_message)
         end
 
         it 'redirects to show_rejected page' do
@@ -209,7 +210,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
   describe '#accept' do
     let(:assignment) { assigned_case_flagged.approver_assignments.first }
-    let(:params)     { { case_id: assigned_case.id, id: assignment.id} }
+    let(:params)     { { case_id: assigned_case_flagged.id, id: assignment.id} }
     let(:service)    { double(CaseAcceptApproverAssignmentService, call: true) }
 
     before do
@@ -308,7 +309,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
   describe '#unaccept' do
     let(:assignment) { assigned_case_trigger.approver_assignments.first }
-    let(:params)     { { case_id: assigned_case.id, id: assignment.id} }
+    let(:params)     { { case_id: assigned_case_trigger.id, id: assignment.id} }
     let(:service)    { double(CaseUnacceptApproverAssignmentService, call: true) }
 
     before do
@@ -398,5 +399,138 @@ RSpec.describe AssignmentsController, type: :controller do
         end
       end
     end
+  end
+
+  describe 'GET assign_to_new_team' do
+
+    let(:kase)              { create :assigned_case, :flagged, responding_team: responding_team_1 }
+    let(:responding_team_1) { create :responding_team }
+    let(:assignment)        { kase.responder_assignment }
+
+    context 'as a manager' do
+      before(:each)  { sign_in manager }
+
+      context 'called without a business_group_id' do
+
+        before(:each) { get :assign_to_new_team, params: { id: assignment.id, case_id: kase.id } }
+        it 'assigns nothing to @business units' do
+          expect(assigns(:business_units)).to be_nil
+        end
+
+        it 'is success' do
+          expect(response).to be_success
+        end
+
+        it 'renders the template' do
+          expect(response).to render_template 'assign_to_new_team'
+        end
+      end
+
+      context 'called with a business group id' do
+
+        let(:bg)     { create :business_group }
+        let(:dir)    { create :directorate, business_group: bg }
+        let!(:bu1)   { create :business_unit, directorate: dir }
+        let!(:bu2)   { create :business_unit, directorate: dir }
+
+        before(:each) { get :assign_to_new_team, params: { id: assignment.id, case_id: kase.id, business_group_id: bg.id } }
+
+        it 'assigns all business units within the businss group to business_units' do
+          expect(assigns(:business_units)).to match_array [ bu1, bu2 ]
+        end
+
+        it 'is success' do
+          expect(response).to be_success
+        end
+
+        it 'renders the template' do
+          expect(response).to render_template 'assign_to_new_team'
+        end
+      end
+    end
+
+    context 'as a non manager' do
+      before(:each) { sign_in responder}
+
+      it 'redirects' do
+        get :assign_to_new_team, params: { id: assignment.id, case_id: kase.id }
+        expect(response).to redirect_to root_path
+      end
+
+      it 'has error message in flash' do
+        get :assign_to_new_team, params: { id: assignment.id, case_id: kase.id }
+        expect(flash[:alert]).to eq 'You are not authorised to assign this case to another team'
+      end
+    end
+  end
+
+  describe 'PATCH execute_assign_to_new_team' do
+
+    let(:kase)              { create :assigned_case, :flagged, responding_team: responding_team_1 }
+    let(:responding_team_1) { create :responding_team }
+    let(:assignment)        { kase.responder_assignment }
+    let(:bg)     { create :business_group }
+    let(:dir)    { create :directorate, business_group: bg }
+    let!(:bu1)   { create :business_unit, directorate: dir }
+    let!(:bu2)   { create :business_unit, directorate: dir }
+    let(:params) do
+      ActionController::Parameters.new(
+        {
+          :action     => 'execute_assign_to_new_team',
+          :controller => 'assignments',
+          :team_id    => bu2.id.to_s,
+          :id        => assignment.id.to_s,
+          :case_id    => kase.id.to_s
+        }
+      )
+    end
+
+    context 'as a manager' do
+      before(:each) { sign_in manager }
+
+      it 'calls AssignNewTeamService' do
+        service = double AssignNewTeamService
+        expect(AssignNewTeamService).to receive(:new).with(manager, params).and_return(service)
+        expect(service).to receive(:call)
+        expect(service).to receive(:result)
+        patch :execute_assign_to_new_team, params: params.to_unsafe_hash
+      end
+
+      it 'redirects if service returns ok' do
+        service = double AssignNewTeamService
+        expect(AssignNewTeamService).to receive(:new).with(manager, params).and_return(service)
+        expect(service).to receive(:call)
+        expect(service).to receive(:result).and_return(:ok)
+        patch :execute_assign_to_new_team, params: params.to_unsafe_hash
+        expect(response).to redirect_to open_cases_path
+      end
+
+      it 'sets flash and returns to assign_new_team action if service fails' do
+        service = double AssignNewTeamService
+        expect(AssignNewTeamService).to receive(:new).with(manager, params).and_return(service)
+        expect(service).to receive(:call)
+        expect(service).to receive(:result).and_return(:error)
+        patch :execute_assign_to_new_team, params: params.to_unsafe_hash
+        expect(flash[:alert]).to eq 'Unable to assign to this team'
+        expect(response).to redirect_to assign_to_new_team_case_assignment_path(kase.id, assignment.id)
+      end
+    end
+
+    context 'as a non manager' do
+
+      before(:each) do
+        sign_in responder
+        patch :execute_assign_to_new_team, params: params.to_unsafe_hash
+      end
+
+      it 'redirects' do
+        expect(response).to redirect_to root_path
+      end
+
+      it 'has error message in flash' do
+        expect(flash[:alert]).to eq 'You are not authorised to assign this case to another team'
+      end
+    end
+
   end
 end

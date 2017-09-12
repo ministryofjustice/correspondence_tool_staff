@@ -31,7 +31,7 @@ describe 'assignments/new.html.slim', type: :view do
   end
 
   context 'User has selected a specific business group or viewing all'  do
-    it 'displays the new assignment page with business unites' do
+    it 'displays the new assignment page with business units' do
 
       assign(:case, unassigned_case)
       assign(:assignment, unassigned_case.assignments.new)

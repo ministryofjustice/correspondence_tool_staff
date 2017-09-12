@@ -56,7 +56,7 @@ class Assignment < ApplicationRecord
   def accept(accepting_user)
     self.case.responder_assignment_accepted(accepting_user, team)
     self.user = accepting_user
-    accepted!
+    self.accepted!
   end
 
   def assign_and_validate_state(state)

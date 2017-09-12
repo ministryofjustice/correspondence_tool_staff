@@ -58,7 +58,7 @@ class BusinessUnit < Team
   end
 
   def self.dacu_bmt
-     find_by!(code:Settings.foi_cases.default_managing_team)
+    find_by!(code: Settings.foi_cases.default_managing_team)
   end
 
   def dacu_bmt?

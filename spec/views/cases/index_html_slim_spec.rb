@@ -109,6 +109,7 @@ describe 'cases/index.html.slim', type: :view do
     end
 
     it 'has a count of how many in-time open cases there are' do
+      login_as(responder)
       assigned_case
       assign(:cases, PaginatingDecorator.new(Case.all.page))
       render

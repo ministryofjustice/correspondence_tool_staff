@@ -1,10 +1,8 @@
 require 'rails_helper'
 
-
 describe 'Permitted Events' do
 
   let(:verbose)                                   { false }
-  let(:expected_results)                          { YAML.load_file(File.join(Rails.root, 'spec', 'lib', 'permitted_event_expected_results.yml')) }
 
   # teams
   let(:responding_team)                           { create :responding_team }
@@ -40,24 +38,15 @@ describe 'Permitted Events' do
                                                        approver: assigned_dacu_disclosure_specialist }
   let(:unaccepted_pending_dacu_clearance_case)    { create :unaccepted_pending_dacu_clearance_case,
                                                        responding_team: responding_team }
-  #
-  #
-  #
-  # describe 'examine case' do
-  #   it 'should be unassigned yet flagged for dacu' do
-  #     puts ">>>>>>>>>>>>>> case state: #{pending_private_clearance_case.current_state} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-  #     puts ">>>>>>>>>>>>>> unassigned_private_officer press officer #{unassigned_private_officer.full_name} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-  #     puts ">>>>>>>>>>>>>> assigned_private_officer press officer: #{assigned_private_officer.full_name} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-  #     CasePrinter.new(pending_private_clearance_case).print
-  #   end
-  # end
-  #
 
   describe 'permitted events for different user types and case types' do
-    it 'checks permitted events in yaml file match that produced in reality' do
-      last_user_type = nil
-      expected_results.each do |expected_result|
-        user_type, case_type, expected_events = expected_result
+    last_user_type = nil
+    expected_results = YAML.load_file(File.join(Rails.root, 'spec', 'lib', 'permitted_event_expected_results.yml'))
+
+    expected_results.each do |expected_result|
+      user_type, case_type, expected_events = expected_result
+      __send__(:it, "checks permitted events for #{case_type} with user #{user_type}") do
+        # user_type, case_type, expected_events = expected_result
         user = __send__(user_type)
         kase = __send__(case_type)
         if verbose
@@ -77,7 +66,5 @@ describe 'Permitted Events' do
         expect(actual_events).to eq expected_events
       end
     end
-
   end
-
 end

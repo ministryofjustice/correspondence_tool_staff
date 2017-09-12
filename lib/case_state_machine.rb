@@ -119,6 +119,11 @@ class CaseStateMachine
     transition from: :awaiting_responder, to: :drafting
   end
 
+  event :assign_to_new_team do
+    transition from: :awaiting_responder,     to: :awaiting_responder
+    transition from: :drafting,               to: :awaiting_responder
+  end
+
   event :add_responses do
     guard do |object, _last_transition, options|
       CaseStateMachine.get_policy(options[:acting_user_id], object).can_add_attachment?
@@ -162,12 +167,6 @@ class CaseStateMachine
                to:   :awaiting_dispatch
     transition from: :pending_dacu_clearance,
                to:   :pending_press_office_clearance
-    # transition from: :pending_press_office_clearance,
-    #            to:   :awaiting_dispatch
-    # transition from: :pending_press_office_clearance,
-    #            to:   :pending_private_office_clearance
-    # transition from: :pending_private_office_clearance,
-    #            to:   :awaiting_dispatch
   end
 
   event :reassign_user do
@@ -309,6 +308,14 @@ class CaseStateMachine
              target_team_id:    responding_team.id,
              acting_user_id:    user.id,
              event:             :assign_responder
+  end
+
+  def assign_to_new_team!(user, managing_team, new_team)
+    trigger! :assign_to_new_team,
+             acting_team_id:    managing_team.id,
+             target_team_id:    new_team.id,
+             acting_user_id:    user.id,
+             event:             :assign_to_new_team
   end
 
   def flag_for_clearance!(user, managing_team, approving_team)
