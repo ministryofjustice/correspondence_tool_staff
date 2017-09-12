@@ -13,8 +13,8 @@ feature 'cases being reassigned to other team members' do
   given(:accepted_case) { create :accepted_case, responder: responder,
                                  responding_team: responding_team }
 
-  given(:flagged_case) {create :case_being_drafted, :flagged,
-                               approving_team: approving_team }
+  given(:flagged_case) {create :case_being_drafted, :flagged_accepted,
+                               approving_team: approving_team, responding_team: responding_team }
 
   def assign_case_to_another_team_member(team_member)
     cases_show_page.actions.reassign_user.click
@@ -51,7 +51,7 @@ feature 'cases being reassigned to other team members' do
 
   end
 
-  scenario 'Responder assigns a case to another team member' do
+  scenario 'Approver assigns a case to another team member' do
     login_as approver
 
     cases_show_page.load(id: flagged_case.id)

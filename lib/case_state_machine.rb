@@ -172,6 +172,14 @@ class CaseStateMachine
 
   event :reassign_user do
 
+    transition from:   :unassigned,
+               to:     :unassigned,
+               policy: :reassign_user?
+
+    transition from:   :awaiting_responder,
+               to:     :awaiting_responder,
+               policy: :reassign_user?
+
     transition from:   :drafting,
                to:     :drafting,
                policy: :reassign_user?
