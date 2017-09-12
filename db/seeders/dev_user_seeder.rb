@@ -5,10 +5,10 @@ class DevUserSeeder
       'laa'           => BusinessUnit.find_by!(name: 'Legal Aid Agency (LAA)'),
       'hmctsne'       => BusinessUnit.find_by!(name: 'North East Regional Support Unit (NE RSU)'),
       'hr'            => BusinessUnit.find_by!(name: 'MoJ Human Resources (MoJ HR)'),
-      'dacu'          => BusinessUnit.find_by!(name:  Settings.foi_cases.default_managing_team),
-      'dacudis'       => BusinessUnit.find_by!(name:  Settings.foi_cases.default_clearance_team),
-      'pressoffice'   => BusinessUnit.find_by!(name: 'Press Office'),
-      'privateoffice' => BusinessUnit.find_by!(name: 'Private Office'),
+      'dacu'          => BusinessUnit.dacu_bmt,
+      'dacudis'       => BusinessUnit.dacu_disclosure,
+      'pressoffice'   => BusinessUnit.press_office,
+      'privateoffice' => BusinessUnit.private_office,
     }
 
     @users = {

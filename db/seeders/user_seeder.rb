@@ -39,8 +39,8 @@ class UserSeeder
   private
 
   def populate_dev_users
-    dacu_bmt = BusinessUnit.find_by!(name: 'DACU BMT')
-    dacu_dis = BusinessUnit.find_by!(name: 'DACU Disclosure')
+    dacu_bmt = BusinessUnit.dacu_bmt
+    dacu_dis = BusinessUnit.dacu_disclosure
     dev_user_file = File.join(File.dirname(ENV['USER_IMPORT_CSV']), 'dev_users.csv')
 
     CSV.foreach(dev_user_file) do |row|

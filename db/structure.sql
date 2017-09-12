@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.6
--- Dumped by pg_dump version 9.5.6
+-- Dumped from database version 9.5.9
+-- Dumped by pg_dump version 9.5.9
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -505,7 +505,8 @@ CREATE TABLE teams (
     updated_at timestamp without time zone NOT NULL,
     type character varying,
     parent_id integer,
-    role character varying
+    role character varying,
+    code character varying
 );
 
 
@@ -930,6 +931,13 @@ CREATE UNIQUE INDEX index_team_table_team_id_role_user_id ON teams_users_roles U
 
 
 --
+-- Name: index_teams_on_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_teams_on_code ON teams USING btree (code);
+
+
+--
 -- Name: index_teams_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1061,6 +1069,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170818082409'),
 ('20170830162157'),
 ('20170831091142'),
-('20170906130950');
+('20170906130950'),
+('20170908083205');
 
 

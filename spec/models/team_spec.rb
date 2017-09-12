@@ -26,6 +26,12 @@ RSpec.describe Team, type: :model do
                 .class_name('TeamsUsersRole') }
   it { should have_many(:users).through(:user_roles) }
 
+   describe 'code' do
+     it 'should have a code of null by default' do
+       expect(team.code).to be_nil
+     end
+   end
+
   describe 'email' do
     it 'should consider team emails to be case-insensitive' do
       team = Team.create name: 'test', email: 'TEST@localhost'
