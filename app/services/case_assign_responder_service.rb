@@ -9,8 +9,7 @@ class CaseAssignResponderService
     @result = :incomplete
   end
 
-  def call
-    Assignment.connection.transaction do
+  def call Assignment.connection.transaction do
       @assignment = @case.assignments.new(team: @team, role: @role)
       if @assignment.valid?
         managing_team = @user.managing_team_roles.first.team

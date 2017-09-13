@@ -1,0 +1,51 @@
+- - manager
+  - unflagged_unassigned_case
+  - - :add_message_to_case
+    - :assign_responder
+    - :flag_for_clearance
+
+- - manager
+  - flagged_unassigned_case
+  - - :add_message_to_case
+    - :assign_responder
+    - :flag_for_clearance
+    - :unflag_for_clearance
+
+- - manager
+  - unflagged_awaiting_responder_case
+  - - :add_message_to_case
+    - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
+
+- - manager
+  - flagged_awaiting_responder_case
+  - - :add_message_to_case
+    - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
+
+
+- - manager
+  - unflagged_drafting_case
+  - - :add_message_to_case
+    - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
+
+
+
+
+
+- - unassigned_responder
+  - unflagged_awaiting_responder_case
+  - []
+
+- - unassigned_responder
+  - flagged_awaiting_responder_case
+  - []
+
+- - unassigned_responder
+  - unflagged_drafting_case
+  - []
+
+
+- - assigned_responder
+  - unflagged_drafting_case
+  - - :add_message_to_case
+    - :add_responses
+    - :reassign_user
