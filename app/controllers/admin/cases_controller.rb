@@ -1,3 +1,5 @@
+require 'cts/cases/create'
+
 class Admin::CasesController < ApplicationController
   before_action :authorize_admin
 

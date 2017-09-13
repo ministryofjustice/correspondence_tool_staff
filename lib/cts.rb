@@ -1,5 +1,5 @@
 module CTS
-    class << self
+  class << self
 
     def info(statement)
       $stdout.puts statement
