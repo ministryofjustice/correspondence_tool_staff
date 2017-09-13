@@ -159,6 +159,7 @@ class Case < ApplicationRecord
   has_one :responding_team,
           through: :responder_assignment,
           source: :team
+  accepts_nested_attributes_for :responding_team
 
   has_many :responding_team_users,
            through: :responding_team,
@@ -357,8 +358,16 @@ class Case < ApplicationRecord
     assignments.with_teams(teams).any?
   end
 
+  def flagged_for_disclosure_specialist_clearance?
+    approving_teams.include?(BusinessUnit.dacu_disclosure)
+  end
+
   def flagged_for_press_office_clearance?
     approving_teams.include?(BusinessUnit.press_office)
+  end
+
+  def flagged_for_private_office_clearance?
+    approving_teams.include?(BusinessUnit.private_office)
   end
 
   def responded?

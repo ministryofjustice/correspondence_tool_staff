@@ -290,6 +290,10 @@ class CasePolicy < ApplicationPolicy
       check_user_is_a_responder_for_case && check_case_is_not_closed
   end
 
+  def user_is_admin?
+    user.admin?
+  end
+
   class Scope
     attr_reader :user, :scope
 

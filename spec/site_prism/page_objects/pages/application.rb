@@ -12,6 +12,8 @@ module PageObjects
       end
 
       {
+        admin_cases:               'Admin::CasesPage',
+        admin_cases_new:           'Admin::Cases::NewPage',
         approve_response:          'Cases::ApproveResponsePage',
         assignments_edit:          'Assignments::EditPage',
         assignments_new:           'Assignments::NewPage',

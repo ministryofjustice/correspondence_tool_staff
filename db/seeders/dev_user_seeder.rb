@@ -21,7 +21,8 @@ class DevUserSeeder
       'Harry Redknapp'     => { team: 'hr',             role: 'responder' },
       'Helen Reddy'        => { team: 'hr',             role: 'responder' },
       'Harold Robbins'     => { team: 'hr',             role: 'responder' },
-      'David Attenborough' => { team: 'dacu',           role: 'manager' },
+      'David Attenborough' => { team: 'dacu',           role: 'manager',
+                                admin: true },
       'Desi Arnaz'         => { team: 'dacu',           role: 'manager' },
       'Dave Allen'         => { team: 'dacu',           role: 'manager' },
       'Dack Dispirito'     => { team: 'dacudis',        role: 'approver' },
@@ -55,6 +56,15 @@ class DevUserSeeder
       tur.destroy unless tur.nil?
       TeamsUsersRole.create(user: user, team: team, role: role)
       puts "Role #{role} added for User #{user.full_name} in team #{team.name}"
+
+      if user_info.fetch(:admin, false)
+        if user.admin?
+          puts "Admin role for user #{user_name} already exists."
+        else
+          puts "Making #{user_name} an admin."
+          user.team_roles.create(role: 'admin')
+        end
+      end
     end
   end
 

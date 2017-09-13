@@ -1,42 +1,9 @@
-module CTS
-  class Cases < Thor
-    include Thor::Rails unless SKIP_RAILS
+require 'cts'
+require 'cts/cases/create'
 
-    CASE_JOURNEYS = {
-      unflagged: [
-        :awaiting_responder,
-        :drafting,
-        :awaiting_dispatch,
-        :responded,
-        :closed,
-      ],
-      flagged_for_dacu_disclosure: [
-        :awaiting_responder,
-        :accepted_by_dacu_disclosure,
-        :drafting,
-        :pending_dacu_disclosure_clearance,
-        :awaiting_dispatch,
-        :responded,
-        :closed,
-      ],
-      flagged_for_press_office: [
-        :awaiting_responder,
-        :taken_on_by_press_office,
-        :accepted_by_dacu_disclosure,
-        :drafting,
-        :pending_dacu_disclosure_clearance,
-        :pending_press_office_clearance,
-      ],
-      flagged_for_private_office: [
-        :awaiting_responder,
-        :taken_on_by_private_office,
-        :accepted_by_dacu_disclosure,
-        :drafting,
-        :pending_dacu_disclosure_clearance,
-        :pending_press_office_clearance,
-        :pending_private_office_clearance,
-      ]
-    }
+module CTS::Cases
+  class CLI < Thor
+    # include Thor::Rails unless const_defined?(:SKIP_RAILS) && SKIP_RAILS
 
     default_command :list
 
@@ -50,9 +17,9 @@ module CTS
       end
       team_id_or_name = args.shift
       if team_id_or_name.blank?
-          error 'team not provided'
-          help
-          exit 1
+        error 'team not provided'
+        help
+        exit 1
       end
       user_id_or_name = args.shift
 
@@ -111,7 +78,7 @@ module CTS
     Multiple states can be specified.
 
     Valid case journeys and their states:
-    #{CASE_JOURNEYS.map do |j, states|
+    #{CTS::Cases::Create::CASE_JOURNEYS.map do |j, states|
       ["    #{j}:\n",
        states.map { |s| "      #{s}\n" }]
     end .flatten.join}
@@ -139,20 +106,51 @@ module CTS
     option :flag_for_team, aliases: :F, type: :string,
            enum: %w{disclosure press private},
            desc: 'Flag case for specific clearance team.'
-    option :clear, aliases: :x, type: :boolean,
-           desc: 'Clear existing cases before creating.'
     option :dry_run, type: :boolean,
            desc: 'Print out what states cases will be created in.'
+    option :force, type: :boolean,
+           desc: 'Force creation of cases even if in prod environment.'
     option :responder, aliases: :r, type: :string,
            desc: 'ID or name of responder to use for case assignments.'
     option :responding_team, aliases: :t, type: :string,
            desc: 'ID or name of responding team to use for case assignments.'
     option :created_at, type: :string
     option :received_date, type: :string
-    def create(*args)
-      cmd = CTS::Cases::Create.new(self, options, args)
-      cmd.call
+    #rubocop:disable Metrics/CyclomaticComplexity
+    def create(*target_states)
+      creator = CTS::Cases::Create.new(CTS, options)
+
+      puts "Creating #{options[:number]} cases in each of the following states:"
+      puts "\t" + target_states.join("\n\t")
+      if options.key? :responder
+        puts "Setting responder user to: #{options[:responder]}"
+      end
+      if options.key? :responding_team
+        puts "Setting responding team to: #{options[:responding_team]}"
+      end
+      if options[:flag_for_disclosure]
+        puts 'Flagging each for DACU Disclosure clearance'
+      end
+      if options[:flag_for_team] == 'press'
+        puts 'Flagging each for Press Office clearance'
+      end
+      if options[:flag_for_team] == 'private'
+        puts 'Flagging each for Private Office clearance'
+      end
+      if options.key? :created_at
+        puts "Setting created at to: #{options[:created_at]}"
+      end
+      if options.key? :received_date
+        puts "Setting received date to: #{options[:received_date]}"
+      end
+      puts "\n"
+
+      cases = creator.call(target_states)
+      unless options[:dry_run]
+        tp cases, [:id, :number, :current_state, :requires_clearance?]
+      end
     end
+    #rubocop:enable Metrics/CyclomaticComplexity
 
     desc 'list', 'List cases in the system.'
     long_desc <<~LONGDESC
@@ -191,7 +189,7 @@ module CTS
         { current_state: {} },
         { responding_team: {
             display_method: ->(c) { c.responding_team&.name }
-        } },
+          } },
         { flagged?: {
             display_method: lambda do |kase|
               flags = []
@@ -233,21 +231,10 @@ module CTS
         ap kase
 
         puts "\nAssignments:"
-        team_display = team_display_method { |a| a.team }
-        team_width = kase.assignments.map(&team_display).map(&:length).max
-        user_display = user_display_method { |a| a.user }
-        user_width = kase.assignments.map(&user_display).map(&:length).max
-        tp kase.assignments, :id, :state, :role,
-           { user: { display_method: user_display, width: user_width } },
-           { team: { display_method: team_display, width: team_width } }
+        show_case_assignments(kase)
 
         puts "\nTransitions:"
-        tp kase.transitions.order(:id),
-           :id,
-           :event,
-           :to_state,
-           { user: { display_method: user_display, width: user_width } },
-           metadata: { width: 60 }
+        show_case_transitions(kase)
 
         puts "\nAttachments:"
         tp kase.attachments, [:id, :type, :key, :preview_key]
@@ -256,9 +243,46 @@ module CTS
 
     private
 
-    def user_display_method(&get_user)
+    def show_case_assignments(kase)
+      team_display = team_display_method :team
+      team_width = kase.assignments.map(&team_display).map(&:length).max
+      user_display = user_display_method :user
+      user_width = kase.assignments.map(&user_display).map(&:length).max
+      tp kase.assignments, :id, :state, :role,
+         { user: { display_method: user_display, width: user_width } },
+         { team: { display_method: team_display, width: team_width } }
+    end
+
+    def show_case_transitions(kase)
+      transition_display_fields =
+        [
+          [:acting_team, team_display_method(:acting_team)],
+          [:acting_user, user_display_method(:acting_user)],
+          # [:target_team, team_display_method(:target_team)],
+          # [:target_user, user_display_method(:target_user)],
+        ].map do |field, display_method|
+          max_width = longest_field(kase.transitions, &display_method)
+          {
+            field => {
+              display_method: display_method,
+              width: max_width
+            }
+          }
+        end
+      tp kase.transitions.order(:id),
+         :id,
+         :event,
+         :to_state,
+         transition_display_fields
+    end
+
+    def longest_field(objects, &display_method)
+      objects.map(&display_method).map(&:length).max
+    end
+
+    def user_display_method(attr)
       lambda do |o|
-        user = get_user.call o
+        user = o.send attr
         if user
           "#{user&.full_name}:#{user&.id}"
         else
@@ -267,9 +291,9 @@ module CTS
       end
     end
 
-    def team_display_method(&get_team)
+    def team_display_method(attr)
       lambda do |object|
-        team = get_team.call object
+        team = object.send attr
         if team
           "#{team&.name}:#{team&.id}"
         else

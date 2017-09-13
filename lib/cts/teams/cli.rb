@@ -1,5 +1,7 @@
-module CTS
-  class Teams < Thor
+require 'cts'
+
+module CTS::Teams
+  class CLI < Thor
     include Thor::Rails unless SKIP_RAILS
 
     desc 'list', 'List teams in the system.'
@@ -16,7 +18,7 @@ module CTS
           :email,
           {role: {
              display_method: ->(t) {
-               t.class == BusinessUnit ? t.role.value : '-'
+               t.class == BusinessUnit ? t.role : '-'
              }
            } }
         ]

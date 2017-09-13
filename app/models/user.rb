@@ -53,6 +53,10 @@ class User < ApplicationRecord
     joins(:team_roles).where(teams_users_roles: { role: 'approver' })
   }
 
+  def admin?
+    team_roles.admin.any?
+  end
+
   def manager?
     managing_teams.any?
   end
