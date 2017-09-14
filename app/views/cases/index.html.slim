@@ -65,5 +65,6 @@
             td aria-label="#{t('.who_its_with')}"
               = kase.who_its_with
             td aria-label="#{t('.message_notification')}"
-              = kase.message_notification_for_user(current_user)
+              - if kase.message_notification_visible?(current_user)
+                img src='/message-bubble.svg' style='height: 2em; padding-top: 0.5em'
     = paginate @cases
