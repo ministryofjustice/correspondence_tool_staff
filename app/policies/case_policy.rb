@@ -140,6 +140,23 @@ class CasePolicy < ApplicationPolicy
     approve_from_pending_dacu_clearance_to_awaiting_dispatch?
   end
 
+  def upload_response_and_approve_from_pending_press_office_clearance_to_awaiting_dispatch?
+    clear_failed_checks
+    approve_from_pending_press_office_clearance_to_awaiting_dispatch?
+  end
+
+  def upload_response_and_approve_from_pending_press_office_clearance_to_pending_private_office_clearance?
+    clear_failed_checks
+    check_case_is_assigned_to_private_office && check_user_is_assigned_press_office_approver
+
+  end
+
+  def upload_response_and_approve_from_pending_private_office_clearance_to_awaiting_dispatch?
+    clear_failed_checks
+    check_user_is_assigned_private_office_approver
+  end
+
+
   def approve_from_pending_press_office_clearance_to_awaiting_dispatch?
     clear_failed_checks
 
@@ -254,7 +271,7 @@ class CasePolicy < ApplicationPolicy
     clear_failed_checks
 
     (check_case_is_pending_press_office_clearance &&
-     check_user_is_press_office_approver) ||
+      check_user_is_assigned_press_office_approver) ||
       (check_case_is_pending_private_office_clearance &&
        check_user_is_private_office_approver)
   end
@@ -269,17 +286,16 @@ class CasePolicy < ApplicationPolicy
   end
 
   def request_amends_from_pending_press_office_clearance_to_pending_dacu_clearance?
-    clear_failed_checks
 
     check_case_is_assigned_to_press_office &&
-      check_user_is_press_office_approver
+      check_user_is_assigned_press_office_approver
   end
 
   def request_amends_from_pending_private_office_clearance_to_pending_dacu_clearance?
     clear_failed_checks
 
     check_case_is_assigned_to_private_office &&
-      check_user_is_private_office_approver
+      check_user_is_assigned_private_office_approver
   end
 
   def add_response_to_flagged_case_from_drafting_to_pending_dacu_clearance?
@@ -405,6 +421,14 @@ class CasePolicy < ApplicationPolicy
 
   check :user_is_press_office_approver do
     @user.in? BusinessUnit.press_office.approvers
+  end
+
+  check :user_is_assigned_press_office_approver do
+    @user == self.case.approver_assignments.with_teams(BusinessUnit.press_office).first&.user
+  end
+
+  check :user_is_assigned_private_office_approver do
+    @user == self.case.approver_assignments.with_teams(BusinessUnit.private_office).first&.user
   end
 
   check :user_is_private_office_approver do

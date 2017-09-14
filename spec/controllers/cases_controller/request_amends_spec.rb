@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe CasesController, type: :controller do
-  let(:pending_private_clearance_case) { create :pending_private_clearance_case }
+  let(:pending_private_clearance_case) { create :pending_private_clearance_case, private_officer: private_officer }
   let(:private_officer)                { create :private_officer }
 
   describe 'GET request_amends' do

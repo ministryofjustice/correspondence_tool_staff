@@ -1,3 +1,5 @@
+##################################### MANAGER #########################
+
 - - manager
   - unflagged_unassigned_case
   - - :add_message_to_case
@@ -21,15 +23,27 @@
   - - :add_message_to_case
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
 
-
 - - manager
   - unflagged_drafting_case
   - - :add_message_to_case
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
 
+- - manager
+  - unflagged_case_with_response
+  - - :add_message_to_case
+    - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
 
+- - manager
+  - accepted_pending_dacu_clearance_case
+  - - :add_message_to_case
+    - :unflag_for_clearance                 # don't think this should be here, and no button is displayed for it.
 
+- - manager
+  - unaccepted_pending_dacu_clearance_case
+  - - :add_message_to_case
+    - :unflag_for_clearance                 # don't think this should be here, and no button is displayed for it.
 
+##################################### UNASSIGNED RESPONDER #########################
 
 - - unassigned_responder
   - unflagged_awaiting_responder_case
@@ -41,11 +55,115 @@
 
 - - unassigned_responder
   - unflagged_drafting_case
-  - []
+  - - :add_message_to_case                  # should unassigned responders be allowed to add response?
+    - :add_responses
+    - :reassign_user
 
+- - unassigned_responder
+  - unaccepted_pending_dacu_clearance_case
+  - - :add_message_to_case
+    - :reassign_user
+
+- - unassigned_responder
+  - accepted_pending_dacu_clearance_case
+  - - :add_message_to_case
+    - :reassign_user
+
+
+
+##################################### ASSIGNED RESPONDER #########################
 
 - - assigned_responder
   - unflagged_drafting_case
   - - :add_message_to_case
     - :add_responses
     - :reassign_user
+
+- - assigned_responder
+  - accepted_pending_dacu_clearance_case
+  - - :add_message_to_case
+    - :reassign_user
+
+
+
+##################################### UNASSIGNED DACU DISCLOSURE SPECIALIST #########################
+
+- - unassigned_dacu_disclosure_specialist
+  - unaccepted_pending_dacu_clearance_case
+  - - :accept_approver_assignment
+    - :add_message_to_case
+    - :unflag_for_clearance                 # no button showing up for this
+
+- - unassigned_dacu_disclosure_specialist
+  - accepted_pending_dacu_clearance_case
+  - - :add_message_to_case
+    - :reassign_user
+    - :unflag_for_clearance                 # what about take case on?
+
+
+##################################### ASSIGNED DACU DISCLOSURE SPECIALIST #########################
+
+- - assigned_dacu_disclosure_specialist
+  - unaccepted_pending_dacu_clearance_case
+  - - :accept_approver_assignment
+    - :add_message_to_case
+    - :unflag_for_clearance                 # no button showing up for this
+
+- - assigned_dacu_disclosure_specialist
+  - accepted_pending_dacu_clearance_case
+  - - :add_message_to_case
+    - :approve
+    - :reassign_user
+    - :unaccept_approver_assignment
+    - :unflag_for_clearance                   # no button showing up for this
+    - :upload_response_and_approve
+    - :upload_response_and_return_for_redraft
+
+
+##################################### UNASSIGNED PRESS OFFICER #########################
+
+- - unassigned_press_officer
+  - unflagged_case_within_escalation_period
+  - - :flag_for_clearance                     # no button showing up for this (Thank God!)
+    - :take_on_for_approval                   # shows on /cases/incoming but not detail page
+
+- - unassigned_press_officer
+  - pending_press_clearance_case
+  - - :reassign_user
+
+
+
+
+##################################### ASSIGNED PRESS OFFICER #########################
+
+- - assigned_press_officer
+  - pending_press_clearance_case
+  - - :approve
+    - :reassign_user
+    - :request_amends
+    - :upload_response_and_approve
+
+- - assigned_press_officer
+  - pending_press_clearance_case
+  - - :approve
+    - :reassign_user
+    - :request_amends
+    - :upload_response_and_approve
+
+
+##################################### UNASSIGNED PRIVATE OFFICER #########################
+
+- - unassigned_private_officer
+  - unflagged_case_within_escalation_period
+  - - :flag_for_clearance                     # no button showing up for this (Thank God!)
+    - :take_on_for_approval                   # shows on /cases/incoming but not detail page
+
+- - unassigned_private_officer
+  - pending_private_clearance_case
+  - - :reassign_user
+
+
+##################################### ASSIGNED PRIVATE OFFICER #########################
+
+
+
