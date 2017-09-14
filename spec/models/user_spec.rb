@@ -15,6 +15,7 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  full_name              :string           not null
+#  deleted_at             :datetime
 #
 
 require 'rails_helper'
@@ -39,6 +40,17 @@ RSpec.describe User, type: :model do
   let(:responder)       { create :responder }
   let(:approver)        { create :approver }
   let(:press_officer)   { create :press_officer }
+  let(:deactivated_user){ create :deactivated_user }
+
+  describe 'default_scope' do
+    it 'does not include deactivated users' do
+      expect(User.all).not_to include(deactivated_user)
+    end
+
+    it 'includes all users when unscoped' do
+      expect(User.unscoped.all).to include(deactivated_user)
+    end
+  end
 
   describe '#manager?' do
     it 'returns true for a manager' do
@@ -106,6 +118,63 @@ RSpec.describe User, type: :model do
         responder = kase.responder
         expect(responder.teams_for_case(kase)).to eq [ kase.responding_team ]
       end
+    end
+  end
+
+  describe '#soft_delete' do
+    it 'updates the deleted_at attribute' do
+      subject.soft_delete
+      expect(subject.deleted_at).not_to be nil
+    end
+  end
+
+  describe '#active_for_authentication' do
+    it 'return true for active user' do
+      expect(subject.active_for_authentication?).to be true
+    end
+    it 'returns false for deactivated user' do
+      subject.soft_delete
+      expect(subject.active_for_authentication?).to be false
+    end
+  end
+
+  describe '#has_live_cases?' do
+
+    let(:closed_case)     { create :closed_case }
+    let(:assigned_case)   { create :assigned_case }
+    let(:responder)       { responding_team.responders.first }
+    let(:assignment)      { assigned_case.responder_assignment }
+    let(:responding_team) { assignment.team }
+
+    it 'returns false for a user with no assignments' do
+      expect(subject.has_live_cases?).to be false
+    end
+
+    it 'returns true for a user with an open case' do
+      assignment = assigned_case.responder_assignment
+      assignment.accept(responder)
+      expect(responder.has_live_cases?).to be true
+    end
+
+    it 'returns false for a user with a closed case' do
+      assignment = closed_case.responder_assignment
+      expect(assignment.user.has_live_cases?).to be false
+    end
+  end
+
+  describe '#multiple_team_member?' do
+
+    it 'returns false for a user with one team' do
+      expect(responder.multiple_team_member?).to be false
+    end
+    it 'returns true for a user with mulitple teams' do
+      team = create :responding_team, name: 'User Creation Team'
+      existing_user = User.new(full_name: 'danny driver', email: 'dd@moj.com', password: 'kjkjkj')
+      existing_user.team_roles << TeamsUsersRole.new(team: team, role: 'responder')
+      team_2 = BusinessUnit.create(name: 'UCT 2', parent_id: team.parent_id, role: 'responder')
+      existing_user.team_roles << TeamsUsersRole.new(team: team_2, role: 'responder')
+      existing_user.save!
+      expect(existing_user.multiple_team_member?).to be true
     end
   end
 end

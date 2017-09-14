@@ -15,11 +15,13 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  full_name              :string           not null
+#  deleted_at             :datetime
 #
 
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable and :omniauthable
+  default_scope { where(deleted_at: nil) }
 
   devise :database_authenticatable, :timeoutable,
     :trackable, :validatable, :recoverable
@@ -52,6 +54,7 @@ class User < ApplicationRecord
   scope :approvers, -> {
     joins(:team_roles).where(teams_users_roles: { role: 'approver' })
   }
+  scope :active_users, -> { where(deleted_at: nil) }
 
   def admin?
     team_roles.admin.any?
@@ -91,5 +94,21 @@ class User < ApplicationRecord
 
   def decorated_roles_for_team(team)
     team_roles.where(team_id: team.id).map(&:role).uniq.join(', ')
+  end
+
+  def soft_delete
+   update_attribute(:deleted_at, Time.current)
+  end
+
+  def active_for_authentication?
+    super && !deleted_at
+  end
+
+  def has_live_cases?
+    cases.where.not(current_state: 'closed').any?
+  end
+
+  def multiple_team_member?
+    team_roles.size > 1
   end
 end

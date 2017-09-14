@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.6
--- Dumped by pg_dump version 9.5.6
+-- Dumped from database version 9.5.9
+-- Dumped by pg_dump version 9.5.9
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -609,7 +609,8 @@ CREATE TABLE users (
     last_sign_in_ip inet,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    full_name character varying NOT NULL
+    full_name character varying NOT NULL,
+    deleted_at timestamp without time zone
 );
 
 
@@ -1133,6 +1134,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170831091142'),
 ('20170906130950'),
 ('20170908083205'),
-('20170908142318');
+('20170908142318'),
+('20170913124313');
 
 

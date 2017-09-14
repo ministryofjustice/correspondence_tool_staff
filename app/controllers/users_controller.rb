@@ -47,6 +47,20 @@ class UsersController < ApplicationController
     end
   end
 
+  def destroy
+    service = UserDeletionService.new(params)
+    service.call
+    case service.result
+    when :ok
+      flash[:notice] = I18n.t('devise.registrations.destroyed')
+    when :has_live_cases
+      flash[:alert] = I18n.t('devise.registrations.has_live_cases')
+    else
+      flash[:alert] = service.error_message
+    end
+    redirect_to team_path(params[:team_id])
+  end
+
   private
 
   def validate_role

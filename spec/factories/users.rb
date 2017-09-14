@@ -79,6 +79,11 @@ FactoryGirl.define do
       approving_team { find_or_create(:team_private_office) }
     end
 
+    factory :deactivated_user do
+      full_name      { generate(:manager_name) }
+      managing_teams { [create(:managing_team)] }
+      deleted_at { Time.now }
+    end
     factory :admin do
       full_name      { generate(:manager_name) }
       after(:create) do |user|

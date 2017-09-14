@@ -10,6 +10,8 @@ module PageObjects
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
 
+        element :flash_notice, '.notice-summary'
+
         element :heading, 'h1.page-heading'
         element :deputy_director, '.team-lead-title'
         element :director, 'h2:first'
@@ -36,7 +38,7 @@ module PageObjects
         sections :information_officers_list, '.report tbody tr' do
           element :name, 'td[aria-label="Name"]'
           element :email, 'td[aria-label="Email"]'
-          element :actions, 'td[aria-label="Actions"]'
+          element :actions, 'td[aria-label="Actions"] a'
         end
 
         element :new_information_officer_button, 'a#action--new-responder-user'
@@ -61,4 +63,3 @@ module PageObjects
     end
   end
 end
-

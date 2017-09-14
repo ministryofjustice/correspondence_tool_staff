@@ -404,6 +404,8 @@ en:
     edit:
       edit: Edit team member
       heading: "Edit %{role}"
+    form:
+      destroy: "This will prevent the user from logging in and seeing cases unless a new profile is created for them. All case history will remain. Do you wish to continue?"
 
   nav:
     pages:
@@ -418,6 +420,9 @@ en:
       stats: Statistics
       system_admin: Admin
   devise:
+    registrations:
+      destroyed: "This account has now been deactivated."
+      has_live_cases: "Please ask Disclosure BMT to re-assign these cases before de-activating their account"
     users:
       password:
         edit:
