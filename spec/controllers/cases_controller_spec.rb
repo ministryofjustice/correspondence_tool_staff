@@ -20,6 +20,7 @@ RSpec.describe CasesController, type: :controller do
   let(:responding_team)    { responder.responding_teams.first }
   let(:disclosure_specialist) { create :disclosure_specialist }
   let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
+  let(:unassigned_case)    { create(:case) }
   let(:assigned_case)      { create :assigned_case,
                                     responding_team: responding_team }
   let(:accepted_case)      { create :accepted_case, responder: responder }
@@ -449,8 +450,17 @@ RSpec.describe CasesController, type: :controller do
 
     end
 
+    it 'syncs case transitions tracker for user' do
+      sign_in responder
+
+      stub_find_case(accepted_case.id) do |kase|
+        expect(kase).to receive(:sync_transition_tracker_for_user)
+                          .with(responder)
+      end
+      get :show, params: { id: accepted_case.id }
+    end
+
     context 'viewing an unassigned case' do
-      let(:unassigned_case)       { create(:case) }
       before do
         sign_in user
         get :show, params: { id: unassigned_case.id }
@@ -517,10 +527,10 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-
     context 'viewing an assigned_case' do
       before do
         sign_in user
+        allow(CasesUsersTransitionsTracker).to receive(:update_tracker_for)
         get :show, params: { id: assigned_case.id }
       end
 
@@ -572,6 +582,12 @@ RSpec.describe CasesController, type: :controller do
               .to redirect_to(edit_case_assignment_path(
                                 assigned_case,
                                 responder_assignment.id))
+        end
+
+        it 'does not update the message tracker for the user' do
+          expect(CasesUsersTransitionsTracker)
+            .not_to have_received(:update_tracker_for)
+                      .with(accepted_case, user)
         end
       end
 
@@ -766,6 +782,7 @@ RSpec.describe CasesController, type: :controller do
         end
       end
     end
+
   end
 
   describe 'POST create' do

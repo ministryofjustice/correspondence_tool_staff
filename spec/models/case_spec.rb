@@ -651,6 +651,9 @@ RSpec.describe Case, type: :model do
       end
     end
 
+    it { should have_many(:users_transitions_trackers)
+                  .class_name('CasesUsersTransitionsTracker') }
+
     # it { should have_many(:responder_history)
     #               .through(:responded_transitions)
     #               .source(:acting_user) }
@@ -1070,6 +1073,23 @@ RSpec.describe Case, type: :model do
         non_default_approver_assignments = pending_private_clearance_case.non_default_approver_assignments
         expect(non_default_approver_assignments.map(&:team)).to match_array [ private_office, press_office]
       end
+    end
+  end
+
+  describe '#transition_tracker_for_user' do
+    it 'returns the tracker for the given user' do
+      tracker = CasesUsersTransitionsTracker.create case_id: kase.id,
+                                                    user_id: responder.id
+      expect(kase.transition_tracker_for_user(responder)).to eq tracker
+    end
+  end
+
+  describe '#sync_transition_tracker_for_user' do
+    it 'calls CasesUsersTransitionsTracker.sync_for_case_and_user' do
+      allow(CasesUsersTransitionsTracker).to receive(:sync_for_case_and_user)
+      kase.sync_transition_tracker_for_user(responder)
+      expect(CasesUsersTransitionsTracker)
+        .to have_received(:sync_for_case_and_user).with(kase, responder)
     end
   end
 

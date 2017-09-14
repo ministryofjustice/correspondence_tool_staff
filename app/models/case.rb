@@ -400,6 +400,10 @@ class Case < ApplicationRecord
     users_transitions_trackers.where(user: user).singular_or_nil
   end
 
+  def sync_transition_tracker_for_user(user)
+    CasesUsersTransitionsTracker.sync_for_case_and_user(self, user)
+  end
+
   private
 
   def set_initial_state

@@ -283,5 +283,28 @@ describe CaseDecorator, type: :model do
     end
   end
 
+  describe '#message_notification_visible?' do
+    it 'returns false if the tracker is up-to-date' do
+      CasesUsersTransitionsTracker.create(
+        case: accepted_case,
+        user: responder,
+        case_transition_id: accepted_case.transitions.last.id
+      )
+      expect(accepted_case.message_notification_visible?(responder)).to eq false
+    end
+
+    it 'returns true if the tracker does not exist' do
+      expect(accepted_case.message_notification_visible?(responder)).to eq true
+    end
+
+    it 'returns true if the tracker is not up to date' do
+      CasesUsersTransitionsTracker.create(
+        case: accepted_case,
+        user: responder,
+        case_transition_id: accepted_case.transitions.first.id
+      )
+      expect(accepted_case.message_notification_visible?(responder)).to eq true
+    end
+  end
 end
 

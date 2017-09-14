@@ -3,25 +3,21 @@ class CasesUsersTransitionsTracker < ActiveRecord::Base
   belongs_to :user
 
   class << self
-    def update_tracker_for(kase, user)
-      cutt = CasesUsersTransitionsTracker.find_or_create_by case: kase,
-                                                            user: user
-      cutt.bring_up_to_date
+    def sync_for_case_and_user(kase, user)
+      tracker = find_or_create_by case: kase, user: user
+      latest_transition_id = kase.transitions.pluck(:id).last
+      if tracker
+        tracker.update case_transition_id: latest_transition_id
+      else
+        create case: kase,
+               user: user,
+               case_transition_id: latest_transition_id
+      end
     end
   end
 
   def is_up_to_date?
     self.case_transition_id.present? &&
-      self.case_transition_id >= current_case_transition_id
-  end
-
-  def bring_up_to_date
-    update case_transition_id: current_case_transition_id
-  end
-
-  private
-
-  def current_case_transition_id
-    self.case.transitions.pluck(:id).last
+      self.case_transition_id >= self.case.transitions.pluck(:id).last
   end
 end

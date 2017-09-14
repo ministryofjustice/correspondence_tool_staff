@@ -44,6 +44,16 @@ module PageObjects
                 PageObjects::Sections::Cases::WhatDoYouWantToDoSection,
                 '.what-do-you-want-to-do'
 
+        sections :messages, '#messages-section .message' do
+          element :body, '.message-body'
+          element :audit, '.message-audit'
+        end
+
+        section :new_message, '.message-form' do
+          element :input, 'textarea'
+          element :add_button, '.button'
+        end
+
         section :case_history, '#case-history' do
           element :heading, 'thead tr'
           elements :entries, 'tbody tr'
