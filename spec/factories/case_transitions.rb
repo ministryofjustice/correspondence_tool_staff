@@ -190,7 +190,7 @@ FactoryGirl.define do
   factory :case_transition_add_message_to_case, parent: :case_transition do
     event               'add_message_to_case'
     to_state            { self.case.current_state }
-    message             'This is my message'
+    message             Faker::ChuckNorris.fact
     acting_user_id      { self.case.responder.id }
     acting_team_id      { self.case.responding_team.id }
   end

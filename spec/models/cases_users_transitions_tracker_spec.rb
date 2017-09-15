@@ -3,9 +3,8 @@ require "rails_helper"
 describe CasesUsersTransitionsTracker do
   let(:kase)    { create :accepted_case }
   let(:user)    { kase.responder }
-  let(:tracker) { CasesUsersTransitionsTracker.find_or_create_by case: kase,
-                                                                 user: user  }
-
+  let(:tracker) { CasesUsersTransitionsTracker.create case: kase,
+                                                      user: user  }
   describe '.sync_for_case_and_user' do
     context 'tracker exists for given case and user' do
       before do
@@ -16,23 +15,51 @@ describe CasesUsersTransitionsTracker do
         expect(kase.users_transitions_trackers.where(user: user).count).to eq 1
       end
 
-      it 'updates the existing tracker' do
-        CasesUsersTransitionsTracker.sync_for_case_and_user(kase, user)
-        tracker.reload
-        expect(tracker.case_transition_id).to eq kase.transitions.last.id
+      context 'case has messages' do
+        let!(:message) { create :case_transition_add_message_to_case, case: kase }
+
+        it 'updates the existing tracker' do
+          CasesUsersTransitionsTracker.sync_for_case_and_user(kase, user)
+          tracker.reload
+          expect(tracker.case_transition_id).to eq message.id
+        end
+      end
+
+      context 'case has no messages' do
+        it 'does not update the tracker' do
+          CasesUsersTransitionsTracker.sync_for_case_and_user(kase, user)
+          tracker.reload
+          expect(tracker.case_transition_id).to eq nil
+        end
       end
     end
+  end
 
-    context 'tracker does not exists for given case and user' do
+  context 'tracker does not exists for given case and user' do
+    context 'case has messages' do
+      let!(:message) { create :case_transition_add_message_to_case, case: kase }
+
       it 'creates a new tracker' do
-        expect(kase.users_transitions_trackers.where(user: user).count).to eq 0
+        expect(kase.users_transitions_trackers.where(user: user).count)
+          .to eq 0
         CasesUsersTransitionsTracker.sync_for_case_and_user(kase, user)
-        expect(kase.users_transitions_trackers.where(user: user).count).to eq 1
+        expect(kase.users_transitions_trackers.where(user: user).count)
+          .to eq 1
       end
 
       it 'sets the transition id on the new tracker' do
         CasesUsersTransitionsTracker.sync_for_case_and_user(kase, user)
-        expect(tracker.case_transition_id).to eq kase.transitions.last.id
+        new_tracker = CasesUsersTransitionsTracker.find_by case: kase,
+                                                           user: user
+        expect(new_tracker.case_transition_id).to eq kase.transitions.last.id
+      end
+    end
+
+    context 'case has no messages' do
+      it 'does not create a new tracker' do
+        CasesUsersTransitionsTracker.sync_for_case_and_user(kase, user)
+        expect(kase.users_transitions_trackers.where(user: user).count)
+          .to eq 0
       end
     end
   end

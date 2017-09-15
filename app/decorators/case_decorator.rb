@@ -103,7 +103,11 @@ class CaseDecorator < Draper::Decorator
 
   def message_notification_visible?(user)
     tracker = transition_tracker_for_user(user)
-    tracker.nil? || !tracker.is_up_to_date?
+    if tracker.present?
+      !tracker.is_up_to_date?
+    else
+      object.message_transitions.any?
+    end
   end
 end
 

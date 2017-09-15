@@ -3,12 +3,14 @@ require 'rails_helper'
 describe CaseDecorator, type: :model do
   let(:unassigned_case) { create(:case).decorate }
   let(:assigned_case)   { create(:assigned_case).decorate }
-  let(:accepted_case)   { create(:accepted_case).decorate }
+  let(:accepted_case)   { create(:accepted_case,
+                                 responder: responder).decorate }
   let(:responded_case)  { create(:responded_case).decorate }
   let(:closed_case)     { create(:closed_case).decorate }
   let(:manager)         { create :manager, managing_teams: [managing_team] }
   let(:managing_team)   { find_or_create :team_dacu }
   let(:responder)       { create :responder }
+  let(:responding_team) { responder.teams.first }
   let(:coworker)        { create :responder,
                                  responding_teams: responder.responding_teams }
   let(:pending_dacu_clearance_case) { create(:pending_dacu_clearance_case).decorate }
@@ -284,26 +286,50 @@ describe CaseDecorator, type: :model do
   end
 
   describe '#message_notification_visible?' do
-    it 'returns false if the tracker is up-to-date' do
-      CasesUsersTransitionsTracker.create(
-        case: accepted_case,
-        user: responder,
-        case_transition_id: accepted_case.transitions.last.id
-      )
-      expect(accepted_case.message_notification_visible?(responder)).to eq false
+    context 'transitions tracker for case and user exists' do
+      let(:tracker) { instance_double CasesUsersTransitionsTracker,
+                                      present?: true }
+
+      before do
+        allow(accepted_case).to receive(:transition_tracker_for_user)
+                                  .and_return(tracker)
+      end
+
+      it 'returns true if the tracker is not up-to-date' do
+        allow(tracker).to receive(:is_up_to_date?).and_return(false)
+        expect(accepted_case.message_notification_visible?(responder))
+          .to eq true
+      end
+
+      it 'returns false if the tracker is up-to-date' do
+        allow(tracker).to receive(:is_up_to_date?).and_return(true)
+        expect(accepted_case.message_notification_visible?(responder))
+          .to eq false
+      end
     end
 
-    it 'returns true if the tracker does not exist' do
-      expect(accepted_case.message_notification_visible?(responder)).to eq true
-    end
+    context 'transitions tracker does not exist' do
+      let(:tracker) { instance_double CasesUsersTransitionsTracker,
+                                      present?: false }
 
-    it 'returns true if the tracker is not up to date' do
-      CasesUsersTransitionsTracker.create(
-        case: accepted_case,
-        user: responder,
-        case_transition_id: accepted_case.transitions.first.id
-      )
-      expect(accepted_case.message_notification_visible?(responder)).to eq true
+      before do
+        allow(accepted_case).to receive(:transition_tracker_for_user)
+                                  .and_return(tracker)
+      end
+
+      it 'returns true if the case has any messages' do
+        accepted_case.state_machine.
+          add_message_to_case!(responder, responding_team, 'up-to-date')
+        expect(accepted_case.message_notification_visible?(responder))
+          .to eq true
+      end
+
+      it 'returns false if the case has any messages' do
+        accepted_case.state_machine.
+          add_message_to_case!(responder, responding_team, 'up-to-date')
+        expect(accepted_case.message_notification_visible?(responder))
+          .to eq true
+      end
     end
   end
 end

@@ -191,6 +191,9 @@ class Case < ApplicationRecord
                 where(most_recent: true).first
               end
            end
+  has_many :message_transitions,
+           -> { messages },
+           class_name: 'CaseTransition'
   has_many :users_transitions_trackers,
            class_name: 'CasesUsersTransitionsTracker'
 

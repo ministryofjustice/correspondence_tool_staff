@@ -639,6 +639,8 @@ RSpec.describe Case, type: :model do
 
     it { should have_many(:transitions)
                   .class_name('CaseTransition') }
+    it { should have_many(:message_transitions)
+                  .class_name('CaseTransition') }
 
     describe 'responded_transitions' do
       it { should have_many(:responded_transitions)
