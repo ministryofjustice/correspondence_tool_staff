@@ -318,7 +318,7 @@ en:
       heading_all_cases: All open cases
       heading_my_cases: My open cases
       view_case: Link to case
-      message_notification: Message Notification
+      message_notification: Conversations
       number: Case number
       number_html: 'Case <abbr title="number">No.</abbr>'
       request: Request

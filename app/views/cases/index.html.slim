@@ -41,7 +41,8 @@
         th scope='col'
           = t('.who_its_with')
         th scope='col'
-          = t('.message_notification')
+          span.visually-hidden
+            = t('.message_notification')
       tbody
         - @cases.each do |kase|
           tr.case_row
