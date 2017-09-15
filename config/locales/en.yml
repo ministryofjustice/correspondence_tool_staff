@@ -315,6 +315,7 @@ en:
       name-subject: Name/Subject
       view_case: Link to case
     index: &cases_list
+      heading_search: Search Results
       heading_all_cases: All open cases
       heading_my_cases: My open cases
       view_case: Link to case
@@ -410,6 +411,7 @@ en:
       incoming_cases_private_office: New cases
       my_open_cases: My open cases
       open_cases: All open cases
+      search_cases: Search
       settings: Settings
       stats: Statistics
       system_admin: Admin

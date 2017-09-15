@@ -192,6 +192,8 @@ Rails.application.routes.draw do
     resources :case_attachments, path: 'attachments', only: [:destroy] do
       get 'download', on: :member
     end
+
+    get 'search' => 'cases#search', on: :collection
   end
 
   namespace :admin do

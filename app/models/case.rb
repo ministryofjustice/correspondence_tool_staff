@@ -222,8 +222,8 @@ class Case < ApplicationRecord
 
   include CaseStates
 
-  def self.search(term)
-    where('lower(name) LIKE ?', "%#{term.downcase}%")
+  def self.search(query)
+    where(number: query)
   end
 
   def upload_response_groups

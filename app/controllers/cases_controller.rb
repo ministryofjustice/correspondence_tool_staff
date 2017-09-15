@@ -189,7 +189,13 @@ class CasesController < ApplicationController
   end
 
   def search
-    @case = Case.search(params[:search])
+    @query = params[:query]
+    @current_tab_name = 'search'
+    @cases = Case.search(@query).page(params[:page]).decorate
+    if @cases.empty?
+      flash.now[:notice] = 'Case number not present in the system. ' \
+                           'Please check case number'
+    end
     render :index
   end
 

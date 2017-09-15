@@ -65,6 +65,8 @@ global_navigation:
       path: /cases/my_open
     open_cases:
       path: /cases/open
+    search_cases:
+      path: /cases/search
     stats:
       path: /stats
     settings:
@@ -118,6 +120,7 @@ global_navigation:
         late:
       my_open_cases:
       closed_cases:
+      search_cases:
       settings:
       stats:
 
