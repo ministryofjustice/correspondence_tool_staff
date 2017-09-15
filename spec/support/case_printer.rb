@@ -8,6 +8,7 @@ class CasePrinter
   def print
     generate_lines
     @lines.each { |l| puts l }
+    nil
   end
 
   def generate_lines
@@ -16,7 +17,7 @@ class CasePrinter
     @case.assignments.each do |a|
       @lines <<   sprintf("    id: %-5d  role: %-12s state: %-12s team: %-5d %20s  user: %-5s %s", a.id, a.role, a.state, a.team.id, a.team.name, a.user_id.to_s, a.user&.full_name )
     end
-    puts "Transitions:"
+    @lines << "Transitions:"
     @case.transitions.each do |t|
       @lines <<   sprintf("    id: %-5d   event: %s", t.id, t.event)
       @lines <<   sprintf("        acting team: %-5s %-20s acting user: %-5s %s", t.acting_team_id, t.acting_team&.name, t.acting_user_id, t.acting_user&.full_name)

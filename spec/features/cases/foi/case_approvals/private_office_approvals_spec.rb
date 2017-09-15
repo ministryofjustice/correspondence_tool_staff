@@ -76,7 +76,8 @@ feature 'cases requiring clearance by press office' do
   end
 
   scenario 'Private Officer requests amends to a response' do
-    login_as private_officer
+    assigned_private_officer = pending_private_clearance_case.approver_assignments.with_teams(BusinessUnit.private_office).first.user
+    login_as assigned_private_officer
     cases_show_page.load(id: pending_private_clearance_case.id)
     expect(cases_show_page.case_status.details.who_its_with.text)
       .to eq 'Private Office'
@@ -89,7 +90,7 @@ feature 'cases requiring clearance by press office' do
     select_case_on_open_cases_page(
       kase:             pending_private_clearance_case,
       expected_team:    dacu_disclosure,
-      expected_history: ["#{private_officer.full_name}Request amends"]
+      expected_history: ["#{assigned_private_officer.full_name}Request amends"]
     )
   end
 end

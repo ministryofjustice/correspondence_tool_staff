@@ -204,6 +204,28 @@ FactoryGirl.define do
     end
   end
 
+  factory :unaccepted_pending_dacu_clearance_case, parent: :case_with_response do
+    transient do
+      approving_team { find_or_create :team_dacu_disclosure }
+    end
+
+    after(:create) do |kase, evaluator|
+      create :approver_assignment,
+             case: kase,
+             team: evaluator.approving_team,
+             state: 'pending',
+             user_id: nil
+
+      create :case_transition_pending_dacu_clearance,
+             case_id: kase.id,
+             acting_user_id: evaluator.responder.id
+      kase.reload
+    end
+  end
+
+
+
+
   factory :pending_dacu_clearance_case_flagged_for_press, parent: :pending_dacu_clearance_case do
     transient do
       press_office  { find_or_create :team_press_office }
