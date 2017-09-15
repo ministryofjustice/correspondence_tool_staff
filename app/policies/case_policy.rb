@@ -286,6 +286,7 @@ class CasePolicy < ApplicationPolicy
   end
 
   def request_amends_from_pending_press_office_clearance_to_pending_dacu_clearance?
+    clear_failed_checks
 
     check_case_is_assigned_to_press_office &&
       check_user_is_assigned_press_office_approver
