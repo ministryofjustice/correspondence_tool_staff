@@ -346,6 +346,7 @@ class CasePolicy < ApplicationPolicy
   end
 
   def responder_attachable?
+    clear_failed_checks
     check_escalation_deadline_has_expired && check_case_is_in_attachable_state && check_user_is_a_responder_for_case
   end
 
