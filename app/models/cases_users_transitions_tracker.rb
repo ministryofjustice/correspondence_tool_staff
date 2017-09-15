@@ -4,14 +4,16 @@ class CasesUsersTransitionsTracker < ActiveRecord::Base
 
   class << self
     def sync_for_case_and_user(kase, user)
-      tracker = find_or_create_by case: kase, user: user
       latest_transition_id = kase.message_transitions.pluck(:id).last
-      if tracker
-        tracker.update case_transition_id: latest_transition_id
-      elsif latest_transition_id.present?
-        create case: kase,
-               user: user,
-               case_transition_id: latest_transition_id
+      if latest_transition_id.present?
+        tracker = find_by case: kase, user: user
+        if tracker
+          tracker.update case_transition_id: latest_transition_id
+        else
+          create case: kase,
+                 user: user,
+                 case_transition_id: latest_transition_id
+        end
       end
     end
   end
