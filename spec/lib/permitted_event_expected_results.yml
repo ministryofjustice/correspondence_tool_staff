@@ -141,17 +141,15 @@
   - - :approve
     - :reassign_user
     - :request_amends
-    - :upload_response_and_approve
 
 - - assigned_press_officer
   - pending_press_clearance_case
   - - :approve
     - :reassign_user
     - :request_amends
-    - :upload_response_and_approve
 
 
-##################################### UNASSIGNED PRIVATE OFFICER #########################
+#################################### UNASSIGNED PRIVATE OFFICER #########################
 
 - - unassigned_private_officer
   - unflagged_case_within_escalation_period
@@ -163,7 +161,7 @@
   - - :reassign_user
 
 
-##################################### ASSIGNED PRIVATE OFFICER #########################
+#################################### ASSIGNED PRIVATE OFFICER #########################
 
 
 
