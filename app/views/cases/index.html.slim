@@ -66,5 +66,7 @@
               = kase.who_its_with
             td aria-label="#{t('.message_notification')}"
               - if kase.message_notification_visible?(current_user)
-                img src='/message-bubble.svg' style='height: 2em; padding-top: 0.5em'
+                img { src=image_path('icons/message-bubble.svg')
+                      class="notification-speech-bubble"
+                      alt= "New notifications for case #{kase.number}" }
     = paginate @cases
