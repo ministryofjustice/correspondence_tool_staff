@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: cases_users_transitions_trackers
+#
+#  id                 :integer          not null, primary key
+#  case_id            :integer
+#  user_id            :integer
+#  case_transition_id :integer
+#
+
 class CasesUsersTransitionsTracker < ActiveRecord::Base
   belongs_to :case
   belongs_to :user

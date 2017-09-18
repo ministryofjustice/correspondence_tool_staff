@@ -10,6 +10,7 @@
 #  type       :string
 #  parent_id  :integer
 #  role       :string
+#  code       :string
 #
 
 require 'rails_helper'

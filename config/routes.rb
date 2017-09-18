@@ -1,5 +1,3 @@
-# For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-
 # == Route Map
 #
 #                                Prefix Verb   URI Pattern                                                     Controller#Action
@@ -107,8 +105,12 @@
 #                                search GET    /search(.:format)                                               cases#search
 #                                  ping GET    /ping(.:format)                                                 heartbeat#ping
 #                           healthcheck GET    /healthcheck(.:format)                                          heartbeat#healthcheck
+#                       dashboard_cases GET    /dashboard/cases(.:format)                                      dashboard#cases
+#                    dashboard_feedback GET    /dashboard/feedback(.:format)                                   dashboard#feedback
 #                                  root GET    /                                                               redirect(301, /users/sign_in)
 #
+
+# For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
 require 'sidekiq/web'
 
