@@ -398,7 +398,7 @@ en:
       create: Create user
       heading: "New team member"
     edit:
-      edit: Edit information officer
+      edit: Edit team member
       heading: "Edit %{role}"
 
   nav:

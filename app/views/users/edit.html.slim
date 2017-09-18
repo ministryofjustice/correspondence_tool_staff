@@ -3,7 +3,7 @@
         ""
 
 - content_for :heading
-  = t('.heading', role: t('roles.responders').singularize)
+  = t('.heading', role: 'team member')
 
 - content_for :sub_heading
   = "#{@team.pretty_type}: #{@team.name}"
