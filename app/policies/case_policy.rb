@@ -140,16 +140,16 @@ class CasePolicy < ApplicationPolicy
     approve_from_pending_dacu_clearance_to_awaiting_dispatch?
   end
 
-  def upload_response_and_approve_from_pending_press_office_clearance_to_awaiting_dispatch?
-    clear_failed_checks
-    approve_from_pending_press_office_clearance_to_awaiting_dispatch?
-  end
-
-  def upload_response_and_approve_from_pending_press_office_clearance_to_pending_private_office_clearance?
-    clear_failed_checks
-    check_case_is_assigned_to_private_office && check_user_is_assigned_press_office_approver
-
-  end
+  # def upload_response_and_approve_from_pending_press_office_clearance_to_awaiting_dispatch?
+  #   clear_failed_checks
+  #   approve_from_pending_press_office_clearance_to_awaiting_dispatch?
+  # end
+  #
+  # def upload_response_and_approve_from_pending_press_office_clearance_to_pending_private_office_clearance?
+  #   clear_failed_checks
+  #   check_case_is_assigned_to_private_office && check_user_is_assigned_press_office_approver
+  #
+  # end
 
   def upload_response_and_approve_from_pending_private_office_clearance_to_awaiting_dispatch?
     clear_failed_checks

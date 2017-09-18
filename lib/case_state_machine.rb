@@ -162,12 +162,12 @@ class CaseStateMachine
                to:   :awaiting_dispatch
     transition from: :pending_dacu_clearance,
                to:   :pending_press_office_clearance
-    transition from: :pending_press_office_clearance,
-               to:   :awaiting_dispatch
-    transition from: :pending_press_office_clearance,
-               to:   :pending_private_office_clearance
-    transition from: :pending_private_office_clearance,
-               to:   :awaiting_dispatch
+    # transition from: :pending_press_office_clearance,
+    #            to:   :awaiting_dispatch
+    # transition from: :pending_press_office_clearance,
+    #            to:   :pending_private_office_clearance
+    # transition from: :pending_private_office_clearance,
+    #            to:   :awaiting_dispatch
   end
 
   event :reassign_user do
