@@ -307,4 +307,188 @@ RSpec.describe TeamsController, type: :controller do
       end
     end
   end
+
+  describe 'GET business_areas_covered' do
+    let(:params) { { id: business_unit.id } }
+
+    before do
+      sign_in manager
+    end
+
+    it 'authorises' do
+      expect{
+        get :business_areas_covered, params: params
+      }.to require_permission(:create?)
+               .with_args(manager, business_unit)
+    end
+
+    it 'assigns @team' do
+      get :business_areas_covered, params: params
+      expect(assigns(:team)).to eq business_unit
+    end
+
+    it 'assigns @creating_team' do
+      get :business_areas_covered, params: params, flash:{"creating_team"=> true}
+      expect(assigns(:creating_team)).to eq true
+    end
+
+    it 'renders the business_areas_covered template' do
+      get :business_areas_covered, params: params
+      expect(response).to render_template(:business_areas_covered)
+    end
+  end
+
+  describe 'POST create_business_areas_covered' do
+    let(:params) {
+      {
+          id: business_unit.id,
+          team_property: {
+              'value' => 'A new area covered'
+          }
+      }
+    }
+
+    before do
+      sign_in manager
+    end
+
+    it 'authorises' do
+      expect{
+        post :create_business_areas_covered, params: params, xhr: true
+      }.to require_permission(:create?)
+               .with_args(manager, business_unit)
+    end
+
+    it 'assigns @team' do
+      post :create_business_areas_covered, params: params, xhr: true
+      expect(assigns(:team)).to eq business_unit
+    end
+
+    it 'assigns @areas' do
+      post :create_business_areas_covered, params: params, xhr: true
+      expect(assigns(:areas)).to eq business_unit.areas
+    end
+
+    it 'creates a new area' do
+      post :create_business_areas_covered, params: params, xhr: true
+      expect(business_unit.reload.areas).to eq 2
+    end
+
+    it 'renders the create.js.erb' do
+      post :create_business_areas_covered, params: params, xhr: true
+      expect(response).to render_template('teams/business_areas/create')
+    end
+  end
+
+  describe 'DELETE destroy_business_area' do
+    let(:params) {
+      {
+          id: business_unit.id,
+          area_id: business_unit.areas.first.id,
+          team_property: {
+              'value' => 'A new area covered'
+          }
+      }
+    }
+
+    before do
+      sign_in manager
+    end
+
+    it 'authorises' do
+      expect{
+        delete :destroy_business_area, params: params, xhr: true
+      }.to require_permission(:create?)
+               .with_args(manager, business_unit)
+    end
+
+    it 'assigns @team' do
+      delete :destroy_business_area, params: params, xhr: true
+      expect(assigns(:team)).to eq business_unit
+    end
+
+    it 'deletes the area' do
+      old_area = business_unit.areas.first
+      delete :destroy_business_area, params: params, xhr: true
+      expect(business_unit.reload.areas).not_to include(old_area)
+    end
+    it 'renders the destroy.js.erb' do
+      delete :destroy_business_area, params: params, xhr: true
+      expect(response).to render_template('teams/business_areas/destroy')
+    end
+  end
+
+  describe 'GET update_business_area_form' do
+    let(:params) {
+      {
+          id: business_unit.id,
+          area_id: business_unit.areas.first.id,
+          'team_property' => {
+              'value' => 'This was updated'
+          }
+      }
+    }
+
+    before do
+      sign_in manager
+    end
+
+    it 'authorises' do
+      expect{
+        get :update_business_area_form, params: params, xhr: true
+      }.to require_permission(:create?)
+               .with_args(manager, business_unit)
+    end
+
+    it 'assigns @team' do
+      get :update_business_area_form, params: params, xhr: true
+      expect(assigns(:team)).to eq business_unit
+    end
+
+    it 'renders the get_update_form.js.erb' do
+      get :update_business_area_form, params: params, xhr: true
+      expect(response).to render_template('teams/business_areas/get_update_form')
+    end
+  end
+
+
+  describe 'PATCH update_business_area' do
+    let(:params) {
+      {
+          id: business_unit.id,
+          area_id: business_unit.areas.first.id,
+          'team_property' => {
+              'value' => 'This was updated'
+          }
+      }
+    }
+
+    before do
+      sign_in manager
+    end
+
+    it 'authorises' do
+      expect{
+        patch :update_business_area, params: params, xhr: true
+      }.to require_permission(:create?)
+               .with_args(manager, business_unit)
+    end
+
+    it 'assigns @team' do
+      patch :update_business_area, params: params, xhr: true
+      expect(assigns(:team)).to eq business_unit
+    end
+
+    it 'updates the area' do
+      old_area_value = business_unit.areas.first.value
+      patch :update_business_area, params: params, xhr: true
+      expect(business_unit.reload.areas.first.value).not_to eq old_area_value
+      expect(business_unit.reload.areas.first.value).to eq "This was updated"
+    end
+
+    it 'renders the get_update_form.js.erb' do
+      patch :update_business_area, params: params, xhr: true
+      expect(response).to render_template('teams/business_areas/update')
+    end
+  end
 end

@@ -205,6 +205,15 @@ Rails.application.routes.draw do
 
   resources :teams do
     resources :users
+
+    get 'business_areas_covered' => 'teams#business_areas_covered',
+        as: 'areas_covered_by', on: :member
+    post 'create_areas_covered'=> 'teams#create_business_areas_covered',
+        as: 'create_areas_covered_by', on: :member
+    delete 'destroy_business_area' => 'teams#destroy_business_area', on: :member
+    patch 'update_business_area' => 'teams#update_business_area', on: :member
+    get 'update_business_area_form' => 'teams#update_business_area_form', on: :member
+
   end
 
   authenticate :user do

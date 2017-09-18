@@ -157,3 +157,34 @@ table#response-details {
 .response-actions {
   white-space: nowrap;
 }
+
+
+#js-arears-covered--all {
+  margin-bottom: $gutter;
+
+  .form-label {
+    @include visually-hidden();
+  }
+
+  .form-control {
+    width: 75%;
+  }
+  .grid-row {
+    border-bottom: 1px solid $border-colour;
+    margin-bottom: $gutter;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  input[type="submit"] {
+    background: none;
+    border: none;
+    color: $link-colour;
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+      color: $link-hover-colour;
+    }
+  }
+}
