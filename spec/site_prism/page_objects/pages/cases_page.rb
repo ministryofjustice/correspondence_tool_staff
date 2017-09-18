@@ -26,7 +26,7 @@ module PageObjects
         element :external_deadline, 'td[aria-label="Final deadline"]'
         element :status, 'td[aria-label="Status"]'
         element :who_its_with, 'td[aria-label="With"]'
-        element :message_notification, 'td[aria-label="Message Notification"] img'
+        element :message_notification, 'td[aria-label="Conversations"] img'
       end
 
       element :new_case_button, 'a.button[href="/cases/new"]'
