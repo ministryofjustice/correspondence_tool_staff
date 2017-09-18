@@ -27,6 +27,7 @@ class Team < ApplicationRecord
   scope :with_user, ->(user) {
     includes(:user_roles)
       .where(teams_users_roles: { user_id: user.id })
+      .order(:name)
   }
 
   def valid_role

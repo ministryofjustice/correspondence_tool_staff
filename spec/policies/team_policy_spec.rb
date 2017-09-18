@@ -20,12 +20,6 @@ describe TeamPolicy do
     it { should_not permit(approver,    Team.first) }
   end
 
-  permissions :index? do
-    it { should     permit(manager,   Team.first)  }
-    it { should_not permit(responder, Team.first) }
-    it { should_not permit(approver,  Team.first) }
-  end
-
   permissions :show? do
     it { should     permit(manager,   Team.first)  }
     it { should_not permit(responder, Team.first) }

@@ -61,11 +61,12 @@ feature "Top level global navigation" do
       expect(incoming_cases_page.primary_navigation.active_link[:href])
         .to eq '/cases/incoming'
       nav_links = incoming_cases_page.primary_navigation.all_links
-      expect(nav_links.count).to eq 4
+      expect(nav_links.count).to eq 5
       expect(nav_links[0]).to have_text('New cases')
       expect(nav_links[1]).to have_text('All open cases')
       expect(nav_links[2]).to have_text('My open cases')
       expect(nav_links[3]).to have_text('Closed cases')
+      expect(nav_links[4]).to have_text('Settings')
     end
 
     scenario "open in-time page has nav entries" do
@@ -73,11 +74,12 @@ feature "Top level global navigation" do
       expect(open_cases_page.primary_navigation.active_link[:href])
         .to eq '/cases/open?timeliness=in_time'
       nav_links = open_cases_page.primary_navigation.all_links
-      expect(nav_links.count).to eq 4
+      expect(nav_links.count).to eq 5
       expect(nav_links[0]).to have_text('New cases')
       expect(nav_links[1]).to have_text('All open cases')
       expect(nav_links[2]).to have_text('My open cases')
       expect(nav_links[3]).to have_text('Closed cases')
+      expect(nav_links[4]).to have_text('Settings')
     end
 
     scenario "open in-time page has tabs" do

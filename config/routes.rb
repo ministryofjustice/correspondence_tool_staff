@@ -201,8 +201,10 @@ Rails.application.routes.draw do
     resources :users
   end
 
-  authenticate :user, lambda { |u| u.manager? } do
-    resources :users
+  authenticate :user do
+    resources :users do
+      resources :teams, only: :index
+    end
   end
 
   get '/stats' => 'stats#index'

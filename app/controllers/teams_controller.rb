@@ -3,8 +3,12 @@ class TeamsController < ApplicationController
 
 
   def index
-    @teams = BusinessGroup.all
-    authorize @teams.first
+    @teams = policy_scope(Team)
+    unless current_user.manager?
+      render :teams_for_user
+    else
+      render :index
+    end
   end
 
   def show
@@ -21,13 +25,14 @@ class TeamsController < ApplicationController
 
     if @team.update(team_params)
       flash[:notice] = 'Team details updated'
-      redirect_to params[:team_type] == 'bg' ? teams_path : team_path(@team.parent_id)
+      redirect_to post_update_redirect_destination
     else
       render :edit
     end
   end
 
   def new
+    authorize Team
     klass = get_class_from_team_type
     @team = klass.new
     @team.team_lead = ''
@@ -70,6 +75,14 @@ class TeamsController < ApplicationController
   end
 
   private
+
+  def post_update_redirect_destination
+    if current_user.manager?
+      params[:team_type] == 'bg' ? teams_path : team_path(@team.parent_id)
+    else
+      team_path(@team.id)
+    end
+  end
 
   def get_class_from_team_type
     case params[:team_type]
