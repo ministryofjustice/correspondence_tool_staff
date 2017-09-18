@@ -1095,6 +1095,12 @@ RSpec.describe Case, type: :model do
     end
   end
 
+  describe 'search' do
+    it 'returns case with a number that matches the query' do
+      expect(Case.search(accepted_case.number)).to match_array [accepted_case]
+    end
+  end
+
   # See note in case.rb about why this is commented out.
   #
   # describe 'awaiting_approver?' do

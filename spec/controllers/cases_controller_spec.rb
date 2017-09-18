@@ -95,14 +95,6 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    describe 'GET search' do
-      it "be redirected to signin if trying to search for a specific case" do
-        name = first_case.name
-        get :search, params: { search: name }
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
     describe 'GET closed_cases' do
       it "be redirected to signin if trying to update a specific case" do
         get :closed_cases
@@ -210,16 +202,6 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    describe 'GET search' do
-
-      before do
-        get :search, params: { search: first_case.name }
-      end
-
-      it 'renders the index template' do
-        expect(response).to render_template(:index)
-      end
-    end
   end
 
   context 'as an authenticated responder' do
@@ -1448,4 +1430,34 @@ RSpec.describe CasesController, type: :controller do
       end
     end
   end
+
+  describe 'GET search' do
+    before(:each) do
+      sign_in responder
+    end
+
+    it 'renders the index template' do
+      get :search
+      expect(response).to render_template(:index)
+    end
+
+    it 'finds a case by number' do
+      get :search, params: { query: assigned_case.number }
+      expect(assigns[:cases]).to eq [assigned_case]
+    end
+
+    it 'ignores leading or trailing whitespace' do
+      get :search, params: { query: " #{assigned_case.number} " }
+      expect(assigns[:cases]).to eq [assigned_case]
+    end
+
+    it 'passes page param to the paginator' do
+      paged_cases = double('Paged Cases', decorate: [])
+      cases = double('Cases', page: paged_cases, empty?: true)
+      allow(Case).to receive(:search).and_return(cases)
+      get :search, params: { query: assigned_case.number, page: 'our_pages' }
+      expect(cases).to have_received(:page).with('our_pages')
+    end
+  end
+
 end

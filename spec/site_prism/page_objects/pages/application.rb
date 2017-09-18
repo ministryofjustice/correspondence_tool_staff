@@ -22,6 +22,7 @@ module PageObjects
         cases_new:                 'Cases::NewPage',
         cases_new_response_upload: 'Cases::NewResponseUploadPage',
         cases_respond:             'Cases::RespondPage',
+        cases_search:              'Cases::SearchPage',
         cases_show:                'Cases::ShowPage',
         closed_cases:              'Cases::ClosedCasesPage',
         global_nav_partial:        'Partials::GlobalNavPartial',
