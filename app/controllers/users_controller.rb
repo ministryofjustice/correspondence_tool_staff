@@ -43,7 +43,7 @@ class UsersController < ApplicationController
       flash[:notice] = 'User details updated'
       redirect_to team_path(id: @team.id)
     else
-      redirec_to user_path(@user)
+      redirect_to user_path(@user)
     end
   end
 
