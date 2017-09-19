@@ -59,6 +59,7 @@
 #                 upload_responses_case POST   /cases/:id/upload_responses(.:format)                           cases#upload_responses
 #         download_case_case_attachment GET    /cases/:case_id/attachments/:id/download(.:format)              case_attachments#download
 #                                       DELETE /cases/:case_id/attachments/:id(.:format)                       case_attachments#destroy
+#                          search_cases GET    /cases/search(.:format)                                         cases#search
 #                                 cases GET    /cases(.:format)                                                cases#index
 #                                       POST   /cases(.:format)                                                cases#create
 #                              new_case GET    /cases/new(.:format)                                            cases#new
@@ -92,6 +93,7 @@
 #                                       PATCH  /teams/:id(.:format)                                            teams#update
 #                                       PUT    /teams/:id(.:format)                                            teams#update
 #                                       DELETE /teams/:id(.:format)                                            teams#destroy
+#                            user_teams GET    /users/:user_id/teams(.:format)                                 teams#index
 #                                 users GET    /users(.:format)                                                users#index
 #                                       POST   /users(.:format)                                                users#create
 #                              new_user GET    /users/new(.:format)                                            users#new
