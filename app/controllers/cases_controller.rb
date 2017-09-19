@@ -193,7 +193,7 @@ class CasesController < ApplicationController
     @current_tab_name = 'search'
     if @query.present?
       @query.strip!
-      @cases = Case.search(@query)
+      @cases = policy_scope(Case).search(@query)
       if @cases.empty?
         flash.now[:notice] = 'Case number not present in the system. ' \
                              'Please check case number'

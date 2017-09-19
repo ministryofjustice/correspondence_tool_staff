@@ -1451,7 +1451,13 @@ RSpec.describe CasesController, type: :controller do
       expect(assigns[:cases]).to eq [assigned_case]
     end
 
-    it 'passes page param to the paginator' do
+    it 'uses the policy scope' do
+      allow(controller).to receive(:policy_scope).and_return(Case.none)
+      get :search, params: { query: assigned_case.number }
+      expect(controller).to have_received(:policy_scope).with(Case)
+    end
+
+    it 'passes the page param to the paginator' do
       paged_cases = double('Paged Cases', decorate: [])
       cases = double('Cases', page: paged_cases, empty?: true)
       allow(Case).to receive(:search).and_return(cases)
@@ -1461,3 +1467,5 @@ RSpec.describe CasesController, type: :controller do
   end
 
 end
+
+

@@ -6,8 +6,8 @@
 - if current_page?(search_cases_path)
   .grid-row
     .column-full.button-holder
-      .form-group
-        = form_tag search_cases_path, method: :get
+      = form_tag search_cases_path, method: :get
+        .form-group
           = search_field_tag :query, @query, class: 'form-control'
           = submit_tag 'Search', class: 'button'
 
@@ -24,9 +24,6 @@
           li class="tab #{@global_nav_manager.current_tab == tab ? 'active' : ''}"
             = link_to t("tabs.#{tab.name}_html", count: tab.finder.cases.count), tab.url
 
-.grid-row
-  .column-full
-    = form_tag('')
 .grid-row
   .column-full.table-container.container
     table.report.table-font-xsmall

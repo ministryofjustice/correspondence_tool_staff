@@ -4,7 +4,7 @@ feature 'Searching for cases' do
   given(:approver)  { create :approver }
   given(:manager)   { create :manager }
   given(:responder) { create :responder }
-  given!(:kase)     { create :case_being_drafted }
+  given!(:kase)     { create :case_being_drafted, responder: responder }
 
   scenario 'searching by case number' do
     login_as manager

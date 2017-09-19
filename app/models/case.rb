@@ -111,6 +111,8 @@ class Case < ApplicationRecord
     )
   }
 
+  scope :search, ->(query) { where(number: query) }
+
   validates :current_state, presence: true, on: :update
 
   validates :name,presence: true
@@ -221,10 +223,6 @@ class Case < ApplicationRecord
   end
 
   include CaseStates
-
-  def self.search(query)
-    where(number: query)
-  end
 
   def upload_response_groups
     CaseAttachmentUploadGroupCollection.new(self, attachments.response)
