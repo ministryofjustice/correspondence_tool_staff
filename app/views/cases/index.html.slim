@@ -8,7 +8,7 @@
     .column-full.button-holder
       = form_tag search_cases_path, method: :get
         .form-group
-          = label 'query', 'Search for a case', class: 'form-label-bold'
+          = label_tag :query, 'Search for a case', class: 'form-label-bold'
           p.form-hint
             = 'For example, 170113001'
           = search_field_tag :query, @query, class: 'form-control'
