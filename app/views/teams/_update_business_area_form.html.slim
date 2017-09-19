@@ -1,0 +1,12 @@
+= form_for [team, area],
+        url: update_business_area_team_path(id:team.id, area_id: area.id),
+        method: :patch,
+        remote: true do |f|
+  .column-two-thirds.business-areas--details
+    = f.text_field :value, label_options: { value: "Edit area" }
+  .column-one-third.business-areas--actions
+    = f.submit 'Save'
+    = "  |  "
+    = link_to 'Remove', destroy_business_area_team_path(id: team.id, area_id: area.id),
+          method: :delete,
+          data: { remote: true }

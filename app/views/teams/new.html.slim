@@ -1,3 +1,6 @@
+= GovukElementsErrorsHelper.error_summary @team,
+        "#{pluralize(@team.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
 - content_for :heading
   = t('.new', team_type: @team.pretty_type)
 
@@ -8,4 +11,8 @@
 = render partial: 'layouts/header'
 
 = form_for @team, as: :team, url: teams_path do |f|
+  = f.hidden_field :parent_id
+
+  = hidden_field_tag :team_type, params[:team_type]
+
   = render partial: 'form.html.slim', locals: {form: f, team_type: @team_type }

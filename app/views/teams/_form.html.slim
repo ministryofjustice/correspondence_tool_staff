@@ -8,10 +8,6 @@
 - if @team.is_a?(BusinessUnit)
   = form.radio_button_fieldset :role, choices: [:responder, :approver, :manager], inline: true
 
-= form.hidden_field :parent_id
-
-= hidden_field_tag :team_type, params[:team_type]
-
-= form.submit 'Submit', {class: 'button'}
+= form.submit @action_copy, {class: 'button'}
 
 

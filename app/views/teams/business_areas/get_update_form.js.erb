@@ -1,0 +1,4 @@
+$("#area-<%= area.id %>")
+  .html(" <%= j render partial: 'teams/update_business_area_form', locals: { team: @team, area: area } %>")
+  .find('.form-control')
+  .focus()

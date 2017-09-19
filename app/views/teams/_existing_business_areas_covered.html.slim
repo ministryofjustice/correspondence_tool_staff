@@ -1,0 +1,12 @@
+- areas.each do | area |
+  .grid-row id="area-#{area.id}"
+    .column-two-thirds.business-areas--details
+      = area.value
+    .column-one-third.business-areas--actions
+      = link_to 'Edit', update_business_area_form_team_path(id: areas.first.team_id, area_id: area.id),
+              {data: {remote:true}, class:"edit-action"}
+      = "  |  "
+      = link_to 'Remove', destroy_business_area_team_path(id: areas.first.team_id, area_id: area.id),
+              method: :delete,
+              data: { remote: true }
+

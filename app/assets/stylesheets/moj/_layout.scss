@@ -159,7 +159,7 @@ table#response-details {
 }
 
 
-#js-arears-covered--all {
+#js-areas-covered--all {
   margin-bottom: $gutter;
 
   .form-label {
@@ -171,7 +171,8 @@ table#response-details {
   }
   .grid-row {
     border-bottom: 1px solid $border-colour;
-    margin-bottom: $gutter;
+    padding-bottom: $gutter-half;
+    margin-bottom: $gutter-half;
     margin-left: 0;
     margin-right: 0;
   }
@@ -186,5 +187,9 @@ table#response-details {
     &:hover {
       color: $link-hover-colour;
     }
+  }
+
+  .business-areas--actions {
+    text-align: rightg;
   }
 }

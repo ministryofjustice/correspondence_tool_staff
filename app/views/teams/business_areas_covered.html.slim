@@ -1,0 +1,34 @@
+= GovukElementsErrorsHelper.error_summary @team,
+        "#{pluralize(@team.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+- content_for :heading
+  = "Areas covered"
+
+- content_for :sub_heading
+  = sub_heading_for_teams(@creating_team)
+
+= render partial: 'layouts/header'
+
+= form_for [@team, @team.areas.new],
+        url: create_areas_covered_by_team_path(@team.id),
+        method: :post,
+        remote: true do |f|
+
+
+  = f.text_field :value, label_options: { value: "Add area"}
+
+  .form-group
+    = f.submit "Add area", {class: 'button-secondary'}
+
+h2.visually-hidden
+  = "Existing areas covered"
+
+#js-areas-covered--all
+  = render partial: 'teams/existing_business_areas_covered', locals: { areas: @areas }
+
+.grid-row
+  .column-full.button-holder
+    = link_to "Create #{@team.pretty_type}", team_path(@team), {class: 'button'}
+
+
+
