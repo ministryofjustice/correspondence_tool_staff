@@ -315,7 +315,7 @@ en:
       name-subject: Name/Subject
       view_case: Link to case
     index: &cases_list
-      heading_search: Search Results
+      heading_search: Search
       heading_all_cases: All open cases
       heading_my_cases: My open cases
       view_case: Link to case
