@@ -7,7 +7,7 @@ describe 'assignments/reassign_user.html.slim', type: :view do
   it 'displays the edit assignment page' do
     assign(:case, assigned_case)
     assign(:assignment, assignment)
-    assign(:team_users, assigned_case.responding_team_users)
+    assign(:team_users, assigned_case.responding_team_users.decorate)
 
     render
 

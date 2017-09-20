@@ -147,7 +147,7 @@ class AssignmentsController < ApplicationController
 
   def reassign_user
     authorize @case, :assignments_reassign_user?
-    @team_users = set_team_users
+    @team_users = set_team_users.decorate
   end
 
   def execute_reassign_user

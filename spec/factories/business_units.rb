@@ -58,6 +58,13 @@ FactoryGirl.define do
     name 'Disclosure'
     email 'dacu.disclosure@localhost'
     code Settings.foi_cases.default_clearance_team
+    approvers []
+
+    after :create do |bu, evaluator|
+      if bu.approvers.empty?
+        create(:disclosure_specialist, approving_team: bu)
+      end
+    end
   end
 
   factory :team_press_office, parent: :approving_team do

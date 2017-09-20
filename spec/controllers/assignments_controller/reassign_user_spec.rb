@@ -34,7 +34,7 @@ RSpec.describe AssignmentsController, type: :controller do
     it 'sets the @team_users' do
       get :reassign_user, params: params
       expect(assigns(:team_users))
-        .to eq responding_team.responders.order(:full_name)
+        .to eq responding_team.responders.order(:full_name).decorate
     end
   end
 end
