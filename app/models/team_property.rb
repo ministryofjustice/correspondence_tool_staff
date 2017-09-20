@@ -33,7 +33,7 @@ class TeamProperty < ActiveRecord::Base
             if: -> (tp) { tp.key == 'role' },
             inclusion: ROLES
 
-  scope :area, -> { where( key: 'area') }
+  scope :area, -> { where( key: 'area').order(created_at: :desc) }
 
   scope :lead, -> { where( key: 'lead') }
   scope :role, -> { where( key: 'role') }

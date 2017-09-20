@@ -177,18 +177,6 @@ table#response-details {
     margin-right: 0;
   }
 
-  input[type="submit"] {
-    background: none;
-    border: none;
-    color: $link-colour;
-    text-decoration: underline;
-    cursor: pointer;
-
-    &:hover {
-      color: $link-hover-colour;
-    }
-  }
-
   .business-areas--actions {
     text-align: right;
   }

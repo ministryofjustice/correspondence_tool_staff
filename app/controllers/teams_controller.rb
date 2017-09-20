@@ -163,23 +163,16 @@ class TeamsController < ApplicationController
 
   def post_update_redirect_destination
 
-    if @team.is_a?(BusinessUnit)
-        redirect_to areas_covered_by_team_path(@team)
-      else
-        flash[:notice] = 'Team details updated'
-        redirect_to params[:team_type] == 'bg' ? teams_path : team_path(@team.parent_id)
-      end
-
     if current_user.manager?
       if @team.is_a?(BusinessUnit)
-        redirect_to areas_covered_by_team_path(@team)
+        areas_covered_by_team_path(@team)
       else
         flash[:notice] = 'Team details updated'
         params[:team_type] == 'bg' ? teams_path : team_path(@team.parent_id)
       end
     else
       if @team.is_a?(BusinessUnit)
-        redirect_to areas_covered_by_team_path(@team)
+        areas_covered_by_team_path(@team)
       else
         flash[:notice] = 'Team details updated'
         team_path(@team.id)
