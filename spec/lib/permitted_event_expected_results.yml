@@ -129,7 +129,8 @@
 
 - - unassigned_press_officer
   - pending_press_clearance_case
-  - - :reassign_user
+  - - :add_message_to_case
+    - :reassign_user
 
 
 
@@ -138,13 +139,15 @@
 
 - - assigned_press_officer
   - pending_press_clearance_case
-  - - :approve
+  - - :add_message_to_case
+    - :approve
     - :reassign_user
     - :request_amends
 
 - - assigned_press_officer
   - pending_press_clearance_case
-  - - :approve
+  - - :add_message_to_case
+    - :approve
     - :reassign_user
     - :request_amends
 
@@ -158,7 +161,8 @@
 
 - - unassigned_private_officer
   - pending_private_clearance_case
-  - - :reassign_user
+  - - :add_message_to_case
+    - :reassign_user
 
 
 #################################### ASSIGNED PRIVATE OFFICER #########################

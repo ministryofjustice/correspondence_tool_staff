@@ -266,6 +266,8 @@ RSpec.describe CaseStateMachine, type: :model do
     it { should transition_from(:drafting).to(:drafting) }
     it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
     it { should transition_from(:pending_dacu_clearance).to(:pending_dacu_clearance) }
+    it { should transition_from(:pending_press_office_clearance).to(:pending_press_office_clearance) }
+    it { should transition_from(:pending_private_office_clearance).to(:pending_private_office_clearance) }
     it { should transition_from(:responded).to(:responded) }
     it { should require_permission(:can_add_message_to_case?)
                   .using_options(acting_user_id: manager.id)

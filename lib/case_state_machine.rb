@@ -236,12 +236,14 @@ class CaseStateMachine
       CaseStateMachine.get_policy(options[:acting_user_id], object).can_add_message_to_case?
     end
 
-    transition from: :unassigned,             to: :unassigned
-    transition from: :awaiting_responder,     to: :awaiting_responder
-    transition from: :drafting,               to: :drafting
-    transition from: :awaiting_dispatch,      to: :awaiting_dispatch
-    transition from: :pending_dacu_clearance, to: :pending_dacu_clearance
-    transition from: :responded,              to: :responded
+    transition from: :unassigned,                       to: :unassigned
+    transition from: :awaiting_responder,               to: :awaiting_responder
+    transition from: :drafting,                         to: :drafting
+    transition from: :awaiting_dispatch,                to: :awaiting_dispatch
+    transition from: :pending_dacu_clearance,           to: :pending_dacu_clearance
+    transition from: :pending_press_office_clearance,   to: :pending_press_office_clearance
+    transition from: :pending_private_office_clearance, to: :pending_private_office_clearance
+    transition from: :responded,                        to: :responded
   end
 
   def accept_approver_assignment!(user, approving_team)
