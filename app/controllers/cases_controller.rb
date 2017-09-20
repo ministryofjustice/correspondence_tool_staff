@@ -193,15 +193,13 @@ class CasesController < ApplicationController
     @current_tab_name = 'search'
     if @query.present?
       @query.strip!
-      @cases = policy_scope(Case).search(@query)
+      @cases = policy_scope(Case).search(@query).page(params[:page]).decorate
       if @cases.empty?
-        flash.now[:notice] = 'Case number not present in the system. ' \
-                             'Please check case number'
+        flash.now[:alert] = 'No cases found.'
       end
     else
-      @cases = Case.none
+      @cases = nil
     end
-    @cases = @cases.page(params[:page]).decorate
     render :index
   end
 
