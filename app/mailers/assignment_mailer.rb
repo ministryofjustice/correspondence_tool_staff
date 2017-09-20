@@ -1,6 +1,7 @@
 class AssignmentMailer < GovukNotifyRails::Mailer
 
   def new_assignment(assignment, recipient)
+    RavenContextProvider.set_context
     @assignment = assignment
     kase = @assignment.case
 

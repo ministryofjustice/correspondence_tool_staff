@@ -6,6 +6,7 @@ class DeviseMailer < Devise::Mailer
   include Devise::Controllers::UrlHelpers
 
   def reset_password_instructions record, token, _opts={}
+    RavenContextProvider.set_context
     set_template(Settings.reset_password_instructions_notify_template)
 
     set_personalisation(
