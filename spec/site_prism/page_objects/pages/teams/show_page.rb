@@ -7,11 +7,15 @@ module PageObjects
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
+        section :page_heading,
+                PageObjects::Sections::PageHeadingSection, '.page-heading'
 
         element :heading, 'h1.page-heading'
         element :deputy_director, '.team-lead-title'
         element :director, 'h2:first'
         element :director_general, 'h2:first'
+        element :team_email, '.team-email'
+
 
         sections :directorates_list, '.report tbody tr' do
           element :name, 'td[aria-label="Name"] a'

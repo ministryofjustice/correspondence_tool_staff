@@ -34,6 +34,7 @@ module PageObjects
         reassign_user:             'Assignments::ReassignUserPage',
         teams_edit:                'Teams::EditPage',
         teams_index:               'Teams::IndexPage',
+        teams_areas:               'Teams::BusinessAreasCoveredPage',
         teams_show:                'Teams::ShowPage',
         users_index:               'Users::IndexPage',
         users_new:                 'Users::NewPage',

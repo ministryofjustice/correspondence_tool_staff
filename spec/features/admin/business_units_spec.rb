@@ -4,7 +4,7 @@ feature 'editing teams' do
   given(:manager) { create :manager }
   given(:bu)      { create :business_unit }
 
-  scenario 'editing a business unit' do
+  scenario 'editing a business unit', js: true do
     bu
     login_as manager
 
@@ -38,8 +38,17 @@ feature 'editing teams' do
     teams_edit_page.deputy_director.set new_lead
     teams_edit_page.submit_button.click
 
-    business_unit_row = teams_show_page.row_for_business_unit new_name
-    expect(business_unit_row.email.text).to eq new_email
-    expect(business_unit_row.deputy_director.text).to eq new_lead
+    teams_areas_page.add_area_field.set 'This is another area'
+    teams_areas_page.add_button.click
+    teams_areas_page.wait_for_existing_areas nil, count: 2
+
+    expect(teams_areas_page.descriptions).to include 'This is another area'
+
+    teams_areas_page.create.click
+
+
+    expect(teams_show_page.page_heading.heading.text).to eq new_name
+    expect(teams_show_page.team_email.text).to eq new_email
+    expect(teams_show_page.deputy_director.text).to eq new_lead
   end
 end

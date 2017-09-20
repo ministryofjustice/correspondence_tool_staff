@@ -371,7 +371,7 @@ RSpec.describe TeamsController, type: :controller do
 
     it 'creates a new area' do
       post :create_business_areas_covered, params: params, xhr: true
-      expect(business_unit.reload.areas).to eq 2
+      expect(business_unit.reload.areas.count).to eq 2
     end
 
     it 'renders the create.js.erb' do

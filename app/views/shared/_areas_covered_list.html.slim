@@ -7,10 +7,11 @@
         li
           = area.value
   .column-third
-    .bold-small
+    h2.bold-small
       = "Deputy Director"
     .deputy-director.team-lead-title
       = team.team_lead
     br
     h2.bold-small Group email
-    = "#{team.email || '-'}"
+    .team-email
+      = "#{team.email || '-'}"
