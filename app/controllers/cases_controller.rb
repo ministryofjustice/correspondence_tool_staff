@@ -195,7 +195,7 @@ class CasesController < ApplicationController
       @query.strip!
       @cases = policy_scope(Case).search(@query).page(params[:page]).decorate
       if @cases.empty?
-        flash.now[:alert] = 'No cases found.'
+        flash.now[:alert] = 'No cases found'
       end
     else
       @cases = nil

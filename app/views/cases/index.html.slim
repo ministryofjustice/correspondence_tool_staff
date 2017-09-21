@@ -19,13 +19,15 @@
     .column-full.button-holder
       = link_to t('common.new_case_button'), new_case_path, class: 'button'
 
-.grid-row
-  .column-full
-    nav.section-tabs
-      ul
-        - @global_nav_manager.current_page.tabs.each do |tab|
-          li class="tab #{@global_nav_manager.current_tab == tab ? 'active' : ''}"
-            = link_to t("tabs.#{tab.name}_html", count: tab.finder.cases.count), tab.url
+
+- if @global_nav_manager.current_page.tabs.present?
+  .grid-row
+    .column-full
+      nav.section-tabs
+        ul
+          - @global_nav_manager.current_page.tabs.each do |tab|
+            li class="tab #{@global_nav_manager.current_tab == tab ? 'active' : ''}"
+              = link_to t("tabs.#{tab.name}_html", count: tab.finder.cases.count), tab.url
 
 - if !current_page?(search_cases_path) || !@cases.nil?
   .grid-row
