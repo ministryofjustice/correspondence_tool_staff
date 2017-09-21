@@ -37,10 +37,4 @@ class ApplicationController < ActionController::Base
       Settings.global_navigation,
     )
   end
-
-  # def set_raven_context
-  #   puts ">>>>>>>>>>>>>> SSETTING RAVEN CONTEXT #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-  #   Raven.user_context(id: current_user.id, email: current_user.email)
-  #   Raven.extra_context(host: ENV['ENV'] || 'Not set', myname: 'Stephen Richards')
-  # end
 end
