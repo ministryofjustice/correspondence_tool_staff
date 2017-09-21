@@ -2,6 +2,10 @@ class ApplicationController < ActionController::Base
 
   include Pundit
 
+  before_action do
+    RavenContextProvider.set_context(self)
+  end
+
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception

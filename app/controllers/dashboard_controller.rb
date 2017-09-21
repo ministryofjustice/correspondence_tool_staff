@@ -12,6 +12,10 @@ class DashboardController < ApplicationController
     @feedbacks = Feedback.order(id: :desc).limit(20)
   end
 
+  def exception
+    raise 'Intentionally raised exception'
+  end
+
 
 
   private
