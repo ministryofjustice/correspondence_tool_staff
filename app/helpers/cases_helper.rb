@@ -12,6 +12,11 @@ module CasesHelper
               new_case_assignment_path(@case),
               id: 'action--assign-to-responder',
               class: 'button'
+    when :assign_to_new_team
+      link_to 'Assign to another team',
+              assign_to_new_team_case_assignment_path(@case, @case .responder_assignment),
+              id: 'action--assign-new-team',
+              class: 'button'
     when :add_responses, :add_response_to_flagged_case
       link_to t('common.case.upload_response'),
               new_response_upload_case_path(@case, 'action' => determine_action),
