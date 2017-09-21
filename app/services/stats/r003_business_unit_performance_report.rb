@@ -22,7 +22,7 @@ module Stats
       super
       @period_start = Time.now.beginning_of_month
       @period_end = Time.now
-      @stats = HierarchicalStatsCollector.new(BusinessUnit.responding.sort_by(&:name),
+      @stats = HierarchicalStatsCollector.new(BusinessUnit.order(:name),
                                               COLUMNS,
                                               HIERARCHY)
       @superheadings = superheadings
