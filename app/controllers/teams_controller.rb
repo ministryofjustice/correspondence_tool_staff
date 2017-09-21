@@ -27,7 +27,7 @@ class TeamsController < ApplicationController
 
   def edit
     authorize @team
-    @action_copy = set_action_copy(false)
+    @action_copy = get_action_text(for_creation: false)
   end
 
   def update
@@ -47,7 +47,7 @@ class TeamsController < ApplicationController
     @team.team_lead = ''
     @team.parent_id = params[:parent_id].to_i
     @team_type = params[:team_type]
-    @action_copy = set_action_copy(true)
+    @action_copy = get_action_text(for_creation: true)
   end
 
   def create
@@ -201,9 +201,9 @@ class TeamsController < ApplicationController
     @areas = @team.areas.order(id: :desc)
   end
 
-  def set_action_copy(creation = true)
+  def get_action_text(for_creation: true)
     if @team.is_a?(BusinessUnit)
-      if creation
+      if for_creation
         "Next - add areas covered"
       else
         "Next - edit areas covered"
