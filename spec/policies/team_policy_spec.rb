@@ -31,4 +31,11 @@ describe TeamPolicy do
     it { should_not permit(responder,   Team.first) }
     it { should_not permit(approver,    Team.first) }
   end
+
+  permissions :business_areas_covered? do
+    it { should     permit(manager,   responding_team) }
+    it { should     permit(responder, responder.responding_teams.first) }
+    it { should_not permit(responder, Team.first) }
+    it { should_not permit(approver,  responding_team) }
+  end
 end

@@ -318,7 +318,7 @@ RSpec.describe TeamsController, type: :controller do
     it 'authorises' do
       expect{
         get :business_areas_covered, params: params
-      }.to require_permission(:create?)
+      }.to require_permission(:business_areas_covered?)
                .with_args(manager, business_unit)
     end
 
@@ -355,7 +355,7 @@ RSpec.describe TeamsController, type: :controller do
     it 'authorises' do
       expect{
         post :create_business_areas_covered, params: params, xhr: true
-      }.to require_permission(:create?)
+      }.to require_permission(:business_areas_covered?)
                .with_args(manager, business_unit)
     end
 
@@ -398,7 +398,7 @@ RSpec.describe TeamsController, type: :controller do
     it 'authorises' do
       expect{
         delete :destroy_business_area, params: params, xhr: true
-      }.to require_permission(:create?)
+      }.to require_permission(:business_areas_covered?)
                .with_args(manager, business_unit)
     end
 
@@ -436,7 +436,7 @@ RSpec.describe TeamsController, type: :controller do
     it 'authorises' do
       expect{
         get :update_business_area_form, params: params, xhr: true
-      }.to require_permission(:create?)
+      }.to require_permission(:business_areas_covered?)
                .with_args(manager, business_unit)
     end
 
@@ -470,7 +470,7 @@ RSpec.describe TeamsController, type: :controller do
     it 'authorises' do
       expect{
         patch :update_business_area, params: params, xhr: true
-      }.to require_permission(:create?)
+      }.to require_permission(:business_areas_covered?)
                .with_args(manager, business_unit)
     end
 

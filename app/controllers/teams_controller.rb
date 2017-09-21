@@ -71,13 +71,13 @@ class TeamsController < ApplicationController
   end
 
   def business_areas_covered
-    authorize @team, :create?
+    authorize @team
     @creating_team = flash[:creating_team]
     flash.keep :creating_team
   end
 
   def create_business_areas_covered
-    authorize @team, :create?
+    authorize @team, :business_areas_covered?
     respond_to do |format|
       if @team.areas.create(business_areas_cover_params)
         format.js { render 'teams/business_areas/create'}
@@ -87,7 +87,7 @@ class TeamsController < ApplicationController
   end
 
   def destroy_business_area
-    authorize @team, :create?
+    authorize @team, :business_areas_covered?
 
     area = @team.areas.find(params[:area_id])
 
@@ -99,7 +99,7 @@ class TeamsController < ApplicationController
   end
 
   def update_business_area_form
-    authorize @team, :create?
+    authorize @team, :business_areas_covered?
 
     area = @team.areas.find(params[:area_id])
 
@@ -109,7 +109,7 @@ class TeamsController < ApplicationController
   end
 
   def update_business_area
-    authorize @team, :create?
+    authorize @team, :business_areas_covered?
 
     area = @team.areas.find(params[:area_id])
 
