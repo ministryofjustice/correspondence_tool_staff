@@ -3,7 +3,9 @@ class ApplicationController < ActionController::Base
   include Pundit
 
   before_action do
-    RavenContextProvider.set_context(self)
+    unless self.class.to_s =~ /^Devise::/
+      RavenContextProvider.set_context(self)
+    end
   end
 
   # Prevent CSRF attacks by raising an exception.
