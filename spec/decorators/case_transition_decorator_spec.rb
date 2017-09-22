@@ -47,6 +47,12 @@ RSpec.describe CaseTransitionDecorator, type: :model do
     end
   end
 
+  describe '#user_team' do
+    it 'returns full team name of user' do
+      expect(ct.user_team).to eq dacu.name
+    end
+  end
+
   describe '#event_and_detail' do
     context 'assign responder' do
       it 'returns team name to which it has been assigned' do

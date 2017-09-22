@@ -9,6 +9,10 @@ class CaseTransitionDecorator < Draper::Decorator
     object.acting_user.full_name
   end
 
+  def user_team
+    object.acting_team.name
+  end
+
   def event_and_detail
     "<strong>#{event}</strong><br>#{details}".html_safe
   end

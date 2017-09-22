@@ -61,12 +61,14 @@ div id="case-#{@case.id}"
           tr#case-history-table-headers
             th Date
             th Who
+            th Team
             th Action
         tbody
           - @case_transitions.each do |ct|
             tr.
               td = ct.action_date
               td = ct.user_name
+              td = ct.user_team
               td = ct.event_and_detail
 
 
