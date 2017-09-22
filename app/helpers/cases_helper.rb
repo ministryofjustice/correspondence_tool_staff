@@ -19,7 +19,7 @@ module CasesHelper
               class: 'button'
     when :add_responses, :add_response_to_flagged_case
       link_to t('common.case.upload_response'),
-              new_response_upload_case_path(@case, 'action' => determine_action),
+              new_response_upload_case_path(@case, 'mode' => determine_action),
               id: 'action--upload-response',
               class: 'button'
     when :respond
@@ -34,7 +34,7 @@ module CasesHelper
               class: 'button'
     when :approve
       link_to t('common.case.clear_response'),
-              approve_response_case_path(@case),
+              approve_response_interstitial_case_path(@case, 'mode' => 'clear'),
               id: 'action--approve',
               class: 'button'
     when :request_amends
@@ -44,12 +44,12 @@ module CasesHelper
               class: 'button'
     when :upload_response_and_approve
       link_to t('common.case.upload_approve'),
-              new_response_upload_case_path(@case, 'action' => 'upload-approve'),
+              new_response_upload_case_path(@case, 'mode' => 'upload-approve'),
               id: 'action--upload-approve',
               class: 'button'
     when :upload_response_and_return_for_redraft
       link_to t('common.case.upload_and_redraft'),
-              new_response_upload_case_path(@case, 'action' => 'upload-redraft'),
+              new_response_upload_case_path(@case, 'mode' => 'upload-redraft'),
               id: 'action--upload-redraft',
               class: 'button'
     when :close

@@ -22,7 +22,7 @@ describe ResponseUploaderService do
 
 
   let(:params) do
-    ActionController::Parameters.new(
+    raw_params = ActionController::Parameters.new(
       {
         "type"           => "response",
         "uploaded_files" => [uploads_key],
@@ -30,6 +30,7 @@ describe ResponseUploaderService do
         "controller"     => "cases",
         "action"         => "upload_responses"}
     )
+    BypassParamsManager.new(raw_params)
   end
 
 
@@ -66,7 +67,7 @@ describe ResponseUploaderService do
 
       context 'No valid files to upload' do
         it 'returns a result of :blank' do
-          params.delete('uploaded_files')
+          params.params.delete('uploaded_files')
           rus.upload!
           expect(rus.result).to eq :blank
         end

@@ -1,0 +1,17 @@
+#bypass-press-office-option
+  .form-group
+    fieldset#js-bypass-actions
+      legend
+        span.form-label-bold
+          = t('.press_clearance_reqd')
+      label class="block-label selection-button-radio selected" for="bypass_approval_press_office_approval_required_true" data-target="bypass_approval_press_office_approval_erquired_true_content"
+        input type="radio" value="true" checked="checked" name="bypass_approval[press_office_approval_required]" id="bypass_approval_press_office_approval_required_true"
+          = t('.affirmative')
+      label class="block-label selection-button-radio selected" for="bypass_approval_press_office_approval_required_false" data-target="bypass_approval_press_office_approval_required_false_content"
+        input type="radio" value="false" name="bypass_approval[press_office_approval_required]" id="bypass_approval_press_office_approval_required_false"
+          = t('.negative')
+
+  .form-group#js-bypass-reasons
+    label.form-label for="bypass_approval_bypass_message"
+      = t('.why_not')
+    textarea.form-control name="bypass_approval[bypass_message]" id="bypass_approval_bypass_message"

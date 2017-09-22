@@ -44,7 +44,7 @@ href=\"/cases/#{@case.id}/close\">Close case</a>"
           @case = create(:accepted_case)
           expect(@case).to receive(:requires_clearance?).and_return(false)
           expect(action_button_for(:add_responses)).to eq(
-             "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/new_response_upload?action=upload\">Upload response</a>"
+             "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/new_response_upload?mode=upload\">Upload response</a>"
             )
         end
       end
@@ -54,7 +54,7 @@ href=\"/cases/#{@case.id}/close\">Close case</a>"
           @case = create(:accepted_case)
           expect(@case).to receive(:requires_clearance?).and_return(true)
           expect(action_button_for(:add_responses)).to eq(
-           "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/new_response_upload?action=upload-flagged\">Upload response</a>"
+           "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/new_response_upload?mode=upload-flagged\">Upload response</a>"
          )
         end
       end

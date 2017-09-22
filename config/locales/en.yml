@@ -140,6 +140,9 @@ en:
 
   helpers:
     fieldset:
+      bypass_approval_manager:
+        press_office_approval: 'Does Press office need to clear this response?'
+
       assignment:
         state: What do you want to do?
         team_id: Assign to
@@ -156,6 +159,11 @@ en:
       case:
         upload_comment: This will be added to the converstation section of the case.
     label:
+      bypass_approval_manager:
+        press_office_approval:
+          true_html: 'Yes'
+          false_html: No, the response is ready to send
+        message: 'Why is further clearance not required?'
       assignment:
         assignee_id: Business unit
         reasons_for_rejection: Why are you rejecting this case?
@@ -311,8 +319,13 @@ en:
       already_accepted: Case already accepted by %{name}
 
   cases:
-    approve_response:
-      heading: Clear response
+    approve_response_interstitial:
+      clear: Clear response
+    bypass_approvals_form:
+      press_clearance_reqd: Does Press office need to clear this response?
+      affirmative: 'Yes'
+      negative: 'No, the response is ready to send'
+      why_not: 'Why is further clearance not required?'
     closed_cases:
       heading: Closed cases
       number: Case number

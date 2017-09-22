@@ -239,7 +239,21 @@ FactoryGirl.define do
              user: evaluator.press_officer
       kase.reload
     end
+  end
 
+  factory :pending_dacu_clearance_case_flagged_for_press_and_private, parent: :pending_dacu_clearance_case_flagged_for_press do
+    transient do
+      private_office  { find_or_create :team_private_office }
+      private_officer { find_or_create :private_officer }
+    end
+    after(:create) do |kase, evaluator|
+      create :approver_assignment,
+             case: kase,
+             team: evaluator.private_office,
+             state: 'accepted',
+             user: evaluator.private_officer
+      kase.reload
+    end
   end
 
   factory :pending_press_clearance_case, parent: :pending_dacu_clearance_case do

@@ -249,6 +249,10 @@ class Case < ApplicationRecord
       (teams & user.teams).first
   end
 
+  def allow_event?(user, event)
+    state_machine.permitted_events(user.id).include?(event)
+  end
+
   def prevent_number_change
     raise StandardError.new('number is immutable') if number_changed?
   end

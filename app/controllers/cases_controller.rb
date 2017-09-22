@@ -2,7 +2,7 @@
 class CasesController < ApplicationController
   before_action :set_case,
     only: [
-      :approve_response,
+      :approve_response_interstitial,
       :close,
       :confirm_respond,
       :edit,
@@ -115,22 +115,16 @@ class CasesController < ApplicationController
   def new_response_upload
     authorize @case
 
-    @next_step_info = NextStepInfo.new(@case,
-                                       request.query_parameters['action'],
-                                       current_user)
-
-    flash[:action_params] = request.query_parameters['action']
+    flash[:action_params] = request.query_parameters['mode']
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
   end
 
   def upload_responses
     authorize @case
 
-    @next_step_info = NextStepInfo.new(@case,
-                                       flash[:action_params],
-                                       current_user)
+    bypass_params_manager = BypassParamsManager.new(params)
     rus = ResponseUploaderService.new(
-      @case, current_user, params, flash[:action_params]
+      @case, current_user, bypass_params_manager, flash[:action_params]
     )
     rus.upload!
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
@@ -146,7 +140,7 @@ class CasesController < ApplicationController
     when :ok
       flash[:notice] = t('notices.response_uploaded')
       set_permitted_events
-      redirect_to case_path
+      redirect_to cases_path
     end
   end
 
@@ -218,10 +212,8 @@ class CasesController < ApplicationController
                                     team: BusinessUnit.dacu_disclosure).call
   end
 
-  def approve_response
+  def approve_response_interstitial
     authorize @case, :can_approve_or_escalate_case?
-    @next_step_info = NextStepInfo.new(@case, 'approve', current_user)
-    render :approve_response
   end
 
   def request_amends
@@ -231,9 +223,17 @@ class CasesController < ApplicationController
 
   def execute_response_approval
     authorize @case
-    CaseApprovalService.new(user: current_user, kase: @case).call
-    flash[:notice] = "You have cleared case #{@case.number} - #{@case.subject}."
-    redirect_to cases_path
+
+    bypass_params_manager = BypassParamsManager.new(params)
+    service = CaseApprovalService.new(user: current_user, kase: @case, bypass_params: bypass_params_manager)
+    service.call
+    if service.result == :ok
+      flash[:notice] = "You have cleared case #{@case.number} - #{@case.subject}."
+      redirect_to cases_path
+    else
+      flash[:alert] = service.error_message
+      render :approve_response_interstitial
+    end
   end
 
   def execute_request_amends

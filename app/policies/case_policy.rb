@@ -145,6 +145,19 @@ class CasePolicy < ApplicationPolicy
     check_user_is_assigned_private_office_approver
   end
 
+  def approve_and_bypass_from_pending_dacu_clearance_to_awaiting_dispatch?
+    clear_failed_checks
+
+    check_user_is_an_approver_for_case &&
+      check_case_is_assigned_to_press_office
+  end
+
+  def upload_response_approve_and_bypass_from_pending_dacu_clearance_to_awaiting_dispatch?
+    clear_failed_checks
+
+    check_user_is_an_approver_for_case &&
+      check_case_is_assigned_to_press_office
+  end
 
   def approve_from_pending_press_office_clearance_to_awaiting_dispatch?
     clear_failed_checks
