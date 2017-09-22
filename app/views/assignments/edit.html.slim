@@ -2,7 +2,7 @@
   "#{pluralize(@assignment.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 - content_for :heading
-  = t('.heading')
+  = @case.subject
 
 - content_for :sub_heading
   span.visually-hidden

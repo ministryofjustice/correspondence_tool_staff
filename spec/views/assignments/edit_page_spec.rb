@@ -15,7 +15,7 @@ describe 'assignments/edit.html.slim', type: :view do
 
     page = assignments_edit_page
 
-    expect(page.page_heading.heading.text).to eq "Accept/reject case"
+    expect(page.page_heading.heading.text).to eq assigned_case.subject
     expect(page.page_heading.sub_heading.text)
         .to eq "You are viewing case number #{assigned_case.number} "
 

@@ -17,6 +17,7 @@ module PageObjects
         approve_response:          'Cases::ApproveResponsePage',
         assignments_edit:          'Assignments::EditPage',
         assignments_new:           'Assignments::NewPage',
+        assignment_rejected:       'Assignments::ShowRejectedPage',
         cases:                     'CasesPage',
         cases_close:               'Cases::ClosePage',
         cases_new:                 'Cases::NewPage',

@@ -297,8 +297,6 @@ en:
     assign_to_team:
       case_assigned: Case successfully assigned
       case_created: Case successfully created
-    edit:
-      heading: Accept/reject case
     new:
       heading: Assign case
       new_assignment: Create case
