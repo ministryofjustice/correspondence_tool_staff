@@ -60,7 +60,7 @@ FactoryGirl.define do
     code Settings.foi_cases.default_clearance_team
     approvers []
 
-    after :create do |bu, evaluator|
+    after :create do |bu, _evaluator|
       if bu.approvers.empty?
         create(:disclosure_specialist, approving_team: bu)
       end
