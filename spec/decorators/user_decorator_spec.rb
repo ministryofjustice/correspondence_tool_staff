@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe CaseDecorator, type: :model do
+describe UserDecorator, type: :model do
   let(:disclosure)           { find_or_create(:team_dacu_disclosure) }
   let(:responder)            { create(:responder).decorate }
   let(:sds)                  { disclosure.approvers.first.decorate }
