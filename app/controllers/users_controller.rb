@@ -56,7 +56,7 @@ class UsersController < ApplicationController
     when :has_live_cases
       flash[:alert] = I18n.t('devise.registrations.has_live_cases')
     else
-      flash[:alert] = service.error_message
+      flash[:alert] = I18n.t('devise.registrations.error')
     end
     redirect_to team_path(params[:team_id])
   end

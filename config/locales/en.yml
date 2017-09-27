@@ -423,6 +423,7 @@ en:
     registrations:
       destroyed: "This account has now been deactivated."
       has_live_cases: "Please ask Disclosure BMT to re-assign these cases before de-activating their account"
+      error: "Unable to deactivate."
     users:
       password:
         edit:

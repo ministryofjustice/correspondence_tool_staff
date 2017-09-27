@@ -208,12 +208,11 @@ RSpec.describe UsersController, type: :controller do
         expect(UserDeletionService).to receive(:new).and_return(service)
         expect(service).to receive(:call)
         expect(service).to receive(:result).and_return(:error)
-        expect(service).to receive(:error_message).and_return('service error message')
         delete :destroy, params: params
       end
 
       it 'displays a flash notice' do
-        expect(flash[:alert]).to eq 'service error message'
+        expect(flash[:alert]).to eq I18n.t('devise.registrations.error')
       end
 
       it 'redirects to team path' do
