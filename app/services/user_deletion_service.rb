@@ -12,9 +12,8 @@ class UserDeletionService
     if @user.has_live_cases?
       @result = :has_live_cases
     else
-      if @user.multiple_team_member?
-        delete_memberships_of_team(@user, @team)
-      else
+      delete_memberships_of_team(@user, @team)
+      unless @user.multiple_team_member?
         delete_user_if_not_member_of_other_team(@user)
       end
       @result = :ok

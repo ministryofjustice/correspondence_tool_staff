@@ -25,6 +25,12 @@ describe UserDeletionService do
           service.call
           expect(service.result).to eq(:ok)
         end
+
+        it 'deletes the teams users role' do
+          expect(responder.team_roles.size).to eq 1
+          service.call
+          expect(responder.team_roles.size).to eq 0
+        end
       end
 
       context 'when user has live cases' do
