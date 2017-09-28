@@ -70,6 +70,8 @@ en:
       create?: 'You are not authorised to add new teams'
       edit?: 'You are not authorised to edit this team'
     nil_class: 'Authorisation failed due to internal error.'
+    user_policy:
+      destroy?: 'You are not authorised to deactivate users'
 
   state: &state_translations
     unassigned: Needs reassigning
