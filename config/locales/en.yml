@@ -407,7 +407,7 @@ en:
       edit: Edit team member
       heading: "Edit %{role}"
     form:
-      destroy: "This will prevent the user from logging in and seeing cases unless a new profile is created for them. All case history will remain. Do you wish to continue?"
+      destroy: "If you deactivate this team member, they will no longer be able to sign in and take action on cases. Are you sure you want to continue?"
 
   nav:
     pages:
@@ -423,8 +423,8 @@ en:
       system_admin: Admin
   devise:
     registrations:
-      destroyed: "This account has now been deactivated."
-      has_live_cases: "Please ask Disclosure BMT to re-assign these cases before de-activating their account"
+      destroyed: "Team member has been deactivated"
+      has_live_cases: "Team member could not be deactivated, as open cases are currently assigned to them"
       error: "Unable to deactivate."
     users:
       password:

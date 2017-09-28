@@ -15,7 +15,7 @@ feature 'deactivating users' do
 
     users_show_page.deactivate_user_button.click
     expect(teams_show_page).to be_displayed
-    expect(teams_show_page.flash_notice.text).to eq "This account has now been deactivated."
+    expect(teams_show_page.flash_notice.text).to eq "Team member has been deactivated"
     expect(information_officer).not_to eq responder
 
     # A deactivated user cannot sign in
