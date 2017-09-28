@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 feature "Signing in" do
-  let(:responder) { create(:responder) }
+  let(:responder)         { create(:responder) }
+  let!(:deactivated_user) { create :deactivated_user }
 
   scenario "Signing in with correct credentials" do
     login_page.load
@@ -34,4 +35,9 @@ feature "Signing in" do
     expect(login_page.error_message).to have_content 'Invalid email or password'
   end
 
+  scenario "signing in as a deactivated user" do
+    login_page.load
+    login_page.log_in(deactivated_user.email, deactivated_user.password)
+    expect(login_page.error_message).to have_content 'Invalid email or password'
+  end
 end
