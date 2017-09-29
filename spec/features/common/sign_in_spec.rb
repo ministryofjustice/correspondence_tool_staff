@@ -38,6 +38,6 @@ feature "Signing in" do
   scenario "signing in as a deactivated user" do
     login_page.load
     login_page.log_in(deactivated_user.email, deactivated_user.password)
-    expect(login_page.error_message).to have_content 'Invalid email or password'
+    expect(login_page.error_message).to have_content 'Your account is not activated yet.'
   end
 end

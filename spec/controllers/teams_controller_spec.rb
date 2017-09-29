@@ -491,4 +491,17 @@ RSpec.describe TeamsController, type: :controller do
       expect(response).to render_template('teams/business_areas/update')
     end
   end
+
+  describe '#active_users' do
+    let!(:team) {create :responding_team}
+    let!(:user) { team.users.first }
+
+    it 'displays active users' do
+      expect(team.active_users).to include(user)
+    end
+    it 'does not show deactivated users' do
+      user.soft_delete
+      expect(team.active_users).not_to include(user)
+    end
+  end
 end

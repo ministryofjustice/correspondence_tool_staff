@@ -21,6 +21,6 @@ feature 'deactivating users' do
     # A deactivated user cannot sign in
     cases_page.user_card.signout.click
     login_page.log_in(responder.email, responder.password)
-    expect(login_page.error_message).to have_content 'Invalid email or password'
+    expect(login_page.error_message).to have_content 'Your account is not activated yet.'
   end
 end

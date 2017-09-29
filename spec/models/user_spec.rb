@@ -42,16 +42,6 @@ RSpec.describe User, type: :model do
   let(:press_officer)   { create :press_officer }
   let(:deactivated_user){ create :deactivated_user }
 
-  describe 'default_scope' do
-    it 'does not include deactivated users' do
-      expect(User.all).not_to include(deactivated_user)
-    end
-
-    it 'includes all users when unscoped' do
-      expect(User.unscoped.all).to include(deactivated_user)
-    end
-  end
-
   describe '#manager?' do
     it 'returns true for a manager' do
       expect(manager.manager?).to be true
