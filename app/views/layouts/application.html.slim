@@ -21,12 +21,12 @@
     = "controller-" + controller.controller_name
 
   - content_for :proposition_header do
-    - if controller_name != 'sessions' && @user.full_name.present?
+    - if controller_name != 'sessions' && current_user.full_name.present?
       .header-proposition.user-card
         .content
           nav#proposition-menu
             span.user-card--greetings
-              = t('common.greeting', user: @user.full_name )
+              = t('common.greeting', user: current_user.full_name )
             = link_to t('common.signout'), destroy_user_session_path, :method => :delete,  class: "user-card--signout"
 
 = content_for :content do

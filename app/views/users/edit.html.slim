@@ -12,4 +12,3 @@
 
 = form_for @user, as: :user, url: user_path(@user) do |f|
   = render partial: 'form', locals: {f: f, user: @user, team: @team, role: @role, submit_button_text: t('.edit') }
-

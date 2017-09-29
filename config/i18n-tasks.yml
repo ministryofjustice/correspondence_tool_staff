@@ -96,6 +96,7 @@ ignore_unused:
   - 'pundit.nil_class'
   - 'event.*'
   - 'cases.index.heading_*'
+  - 'devise.registrations.*'
 
 
 ## Consider these keys used:

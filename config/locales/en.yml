@@ -70,6 +70,8 @@ en:
       create?: 'You are not authorised to add new teams'
       edit?: 'You are not authorised to edit this team'
     nil_class: 'Authorisation failed due to internal error.'
+    user_policy:
+      destroy?: 'You are not authorised to deactivate users'
 
   state: &state_translations
     unassigned: Needs reassigning
@@ -404,6 +406,8 @@ en:
     edit:
       edit: Edit team member
       heading: "Edit %{role}"
+    form:
+      destroy: "If you deactivate this team member, they will no longer be able to sign in and take action on cases. Are you sure you want to continue?"
 
   nav:
     pages:
@@ -418,6 +422,10 @@ en:
       stats: Statistics
       system_admin: Admin
   devise:
+    registrations:
+      destroyed: "Team member has been deactivated"
+      has_live_cases: "Team member could not be deactivated, as open cases are currently assigned to them"
+      error: "Unable to deactivate."
     users:
       password:
         edit:
