@@ -114,7 +114,8 @@ RSpec.describe CaseStateMachine, type: :model do
   end
 
   events :unflag_for_clearance do
-    it { should transition_from(:unassigned).to(:unassigned).checking_default_policy(CasePolicy)  }
+    it { should transition_from(:unassigned).to(:unassigned)
+                  .checking_default_policy(CasePolicy)  }
     it { should transition_from(:awaiting_responder).to(:awaiting_responder).checking_default_policy(CasePolicy)  }
     it { should transition_from(:drafting).to(:drafting).checking_default_policy(CasePolicy)  }
     it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch).checking_default_policy(CasePolicy)  }

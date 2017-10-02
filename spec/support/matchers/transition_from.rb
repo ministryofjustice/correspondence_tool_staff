@@ -21,7 +21,7 @@ RSpec::Matchers.define :transition_from do |from_state|
   end
 
   def check_policy_exists_in_policy_class
-    if @policy_class.instance_methods.include? @check_policy.to_sym
+    if @policy_class.respond_to? @check_policy.to_sym
       true
     else
       @error = "policy class #{@policy_class} does not have policy method " \
@@ -62,8 +62,6 @@ RSpec::Matchers.define :transition_from do |from_state|
       @check_policy = "#{event_name}_from_#{from_state}_to_#{@to_state}?"
     end
 
-    check_policy_exists_in_policy_class || raise_expectation_failed
-
     user_id = spy('user_id')
     user    = stubbed_out_user_for_id(user_id)
     object  = object_with_stubbed_out_policy(@check_policy, user)
@@ -102,7 +100,7 @@ RSpec::Matchers.define :transition_from do |from_state|
   def object_with_stubbed_out_policy(policy_name, user)
     object = spy('object')
     allow(object).to receive(:policy_class).and_return(@policy_class)
-    policy = instance_spy(@policy_class)
+    policy = spy(@policy_class)
     expect(policy).to receive(policy_name)
     expect(@policy_class).to receive(:new).with(user, object).and_return(policy)
     object

@@ -15,12 +15,25 @@ class EventTransitions
 
     guards = []
     guards << guard if guard
-    policy ||= "#{@event_name}_from_#{@from}_to_#{@to}?"
+    if policy.nil?
+      policy = "#{@event_name}_from_#{@from}_to_#{@to}?"
+      policy_required = false
+    else
+      policy_required = true
+    end
     guards << lambda do |kase, _last_transition, options|
       user = User.find(options[:acting_user_id])
-      case_policies = Pundit.policy!(user, kase)
-      case_policies.__send__(policy.to_s)
-    end if CasePolicy.instance_methods.grep(policy.to_sym).present?
+      policy_object = Pundit.policy!(user, kase)
+      if policy_object.respond_to? policy
+        policy_object.__send__ policy
+      else
+        if policy_required
+          raise NameError.new("Policy #{policy} does not exist.")
+        else
+          true
+        end
+      end
+    end
     machine.events[event_name][:transitions][@from] << { state: @to,
                                                          guards: guards }
   end
