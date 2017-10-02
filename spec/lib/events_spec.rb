@@ -85,6 +85,39 @@ describe Events do
   end
 
   describe '#permitted_events' do
+    def mock_out_event(event_name, from_state:, to_state:,
+                       event_guard: nil, transition_guard: nil)
+      unless event_guard.nil?
+        machine.events[event_name][:callbacks][:guards] <<
+          Proc.new { event_guard }
+      end
+      transition_guards = []
+      transition_guards << Proc.new { transition_guard } if transition_guard
+
+      machine.events[event_name][:transitions][from_state] =
+        [{
+           state: to_state,
+           guards: transition_guards
+         }]
+
+    end
+
+    specify 'returns a list of the events for which guards return true' do
+      allow(instance).to receive(:can_transition_to?) { true }
+      mock_out_event(:event_allowed_by_event_guard,
+                     from_state: 'start', to_state: 'event_guard_env',
+                     event_guard: true)
+      mock_out_event(:event_allowed_by_transition_guard,
+                     from_state: 'start', to_state: 'transition_guard_end',
+                     transition_guard: true)
+      mock_out_event(:blocked_event, from_state: 'start', to_state: 'blow_up',
+                     event_guard: false)
+
+      expect(instance.permitted_events(1))
+        .to eq [
+              :event_allowed_by_event_guard,
+              :event_allowed_by_transition_guard
+            ]
     end
   end
 end
