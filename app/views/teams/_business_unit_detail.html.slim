@@ -32,7 +32,7 @@ hr
         th scope='col'
           | Actions
       tbody
-        - team.users.each do |user|
+        - team.active_users.each do |user|
           tr
             td aria-label="Name"
               = user.full_name

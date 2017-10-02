@@ -80,4 +80,8 @@ class Team < ApplicationRecord
       end
     end
   end
+
+  def active_users
+    users.where(deleted_at: nil)
+  end
 end

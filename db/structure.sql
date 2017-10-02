@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.9
--- Dumped by pg_dump version 9.5.9
+-- Dumped from database version 9.5.1
+-- Dumped by pg_dump version 9.5.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -85,7 +85,8 @@ CREATE TYPE requester_type AS ENUM (
 CREATE TYPE state AS ENUM (
     'pending',
     'rejected',
-    'accepted'
+    'accepted',
+    'bypassed'
 );
 
 
@@ -1135,6 +1136,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170906130950'),
 ('20170908083205'),
 ('20170908142318'),
-('20170913124313');
+('20170913124313'),
+('20170925142730');
 
 
