@@ -14,4 +14,4 @@
 = form_for [@case, @assignment], url: execute_reassign_user_case_assignment_path(@case,@assignment), method: :patch do |f|
   = f.radio_button_fieldset :user_id , choices: @team_users, value_method: :id, text_method: :full_name_with_optional_load_html
 
-  = f.submit t('button.confirm'), class: 'button'
+  = f.submit t('.action'), class: 'button'

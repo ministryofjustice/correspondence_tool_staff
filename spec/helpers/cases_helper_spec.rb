@@ -70,7 +70,7 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
           )
       end
     end
-    
+
     context 'when event = :request_amends' do
       it 'generates an HTML link to cases/request_amends' do
         @case = create(:case)
@@ -87,7 +87,7 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
         @case = create(:accepted_case)
         @assignment = @case.responder_assignment
         expect(action_button_for(:reassign_user)).to eq(
-          "<a id=\"action--reassign-case\" class=\"button\" href=\"/cases/#{@case.id}/assignments/#{@assignment.id}/reassign_user\">Re-assign this case</a>"
+          "<a id=\"action--reassign-case\" class=\"button\" href=\"/cases/#{@case.id}/assignments/#{@assignment.id}/reassign_user\">Change team member</a>"
         )
       end
     end

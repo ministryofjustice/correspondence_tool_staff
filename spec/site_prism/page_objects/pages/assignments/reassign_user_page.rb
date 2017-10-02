@@ -10,7 +10,7 @@ module PageObjects
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-        section :reassign_to, :xpath, '//fieldset[contains(.,"Re-assign to")]' do
+        section :reassign_to, :xpath, '//fieldset[contains(.,"Choose a new team member for this case")]' do
           elements :users, 'label'
         end
 

@@ -16,13 +16,13 @@ describe 'assignments/reassign_user.html.slim', type: :view do
     page = reassign_user_page
 
     expect(page.page_heading.heading.text)
-        .to eq "Reassign this case to another person"
+        .to eq "Change team member"
     expect(page.page_heading.sub_heading.text)
         .to eq "You are viewing case number #{assigned_case.number} "
 
     expect(page.reassign_to.users.count).to eq 1
 
-    expect(page.confirm_button.value).to eq "Confirm"
+    expect(page.confirm_button.value).to eq "Change team member"
 
   end
 
