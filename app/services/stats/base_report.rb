@@ -22,7 +22,9 @@ module Stats
     end
 
     def to_csv
-      @stats.to_csv(@first_column_heading, @superheadings)
+      @stats.to_csv(first_column_header: @first_column_heading,
+                    superheadings:       @superheadings)
+
     end
 
     def reporting_period
