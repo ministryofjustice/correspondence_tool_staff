@@ -8,12 +8,7 @@ class CasePolicy
     @case = kase
     @user = user
 
-    if @case.respond_to?(:workflow_class) && @case.workflow_class.present?
-      workflow_class = @case.workflow_class
-    else
-      workflow_class = Workflows::Cases::FOIPolicy
-    end
-    @workflow = workflow_class.new(user, kase)
+    @workflow = policy_workflow_for_case(kase, user: user)
   end
 
   class Scope
@@ -45,5 +40,15 @@ class CasePolicy
 
   def method_missing(method, *args, &block)
     @workflow.send(method, *args, &block)
+  end
+
+  def policy_workflow_for_case(kase, user:)
+    workflow_class = if kase.respond_to?(:workflow) && kase.workflow.present?
+                       raise NameError,
+                             "Policy workflow \"#{kase.workflow}\" not found"
+                     else
+                       "Workflows::Cases::FOIPolicy"
+                     end
+    workflow_class.constantize.new(user, kase)
   end
 end
