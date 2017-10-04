@@ -167,4 +167,26 @@ RSpec.describe User, type: :model do
       expect(existing_user.multiple_team_member?).to be true
     end
   end
+
+  describe 'paper_trail versions', versioning: true do
+
+    it 'has versions' do
+      it { is_expected.to be_versioned }
+    end
+
+    context 'on create' do
+      it 'updates versions' do
+        expect(responder.versions.length).to eq 1
+        expect(responder.versions.last.event).to eq 'create'
+      end
+    end
+
+    context 'on update' do
+
+      it 'updates versions' do
+        expect{responder.update_attributes!(full_name: 'Namerson')}.to change(responder.versions, :count).by 1
+        expect(responder.versions.last.event).to eq 'update'
+      end
+    end
+  end
 end

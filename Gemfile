@@ -28,6 +28,7 @@ gem 'libreconv', '~> 0.9.1'
 gem 'logstasher'
 gem 'mimetype-fu', '~> 0.1.2'
 gem 'govuk_notify_rails'
+gem 'paper_trail', '~> 7.1'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.0'
 gem 'pundit', '~>1.1'
@@ -100,4 +101,3 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-

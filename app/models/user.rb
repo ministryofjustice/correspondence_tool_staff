@@ -25,6 +25,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :timeoutable,
     :trackable, :validatable, :recoverable
 
+  has_paper_trail only: [:email, :encrypted_password, :full_name, :deleted_at]
+
   has_many :cases, through: :assignments
   has_many :assignments
   has_many :team_roles, class_name: 'TeamsUsersRole'

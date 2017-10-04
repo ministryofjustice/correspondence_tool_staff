@@ -92,7 +92,7 @@ RSpec.describe TeamsController, type: :controller do
     end
   end
 
-  describe 'POST create' do
+  describe 'POST create', versioning: true do
 
     context 'signed in as a manager' do
 
@@ -120,6 +120,11 @@ RSpec.describe TeamsController, type: :controller do
           expect(bu.email).to eq 'frogs@a.com'
           expect(bu.team_lead).to eq 'Stephen Richards'
           expect(bu.parent).to eq directorate
+        end
+        it 'records the id of the user creating' do
+          post :create, params: params
+          whodunnit = BusinessUnit.last.versions.last.whodunnit.to_i
+          expect(whodunnit).to eq manager.id
         end
       end
     end
@@ -202,7 +207,7 @@ RSpec.describe TeamsController, type: :controller do
     end
   end
 
-  describe 'PATCH update' do
+  describe 'PATCH update', versioning: true do
 
     context 'logged in as a manager' do
       let(:params) { { id: business_unit.id,
@@ -230,6 +235,11 @@ RSpec.describe TeamsController, type: :controller do
         expect(business_unit.name).to  eq 'New Name'
         expect(business_unit.email).to eq 'n00b@localhost'
         expect(business_unit.team_lead).to eq 'New Team Lead'
+      end
+      it 'records the id of the user updating the team' do
+        patch :update, params: params
+        whodunnit = business_unit.versions.last.whodunnit.to_i
+        expect(whodunnit).to eq manager.id
       end
     end
 
