@@ -85,6 +85,7 @@ CREATE TYPE requester_type AS ENUM (
 CREATE TYPE state AS ENUM (
     'pending',
     'rejected',
+    'bypassed',
     'accepted'
 );
 
