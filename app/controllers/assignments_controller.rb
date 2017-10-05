@@ -75,6 +75,7 @@ class AssignmentsController < ApplicationController
       flash[:notice] = 'Case assignment does not exist.'
       redirect_to case_path @case
     end
+    @case.sync_transition_tracker_for_user(current_user)
   end
 
   def accept_or_reject

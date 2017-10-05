@@ -135,6 +135,30 @@ RSpec.describe AssignmentsController, type: :controller do
 
     before { sign_in responder }
 
+    describe 'GET edit' do
+      it 'does not render the page for accept / reject assignment' do
+        get :edit, params: {
+          id: assignment.id,
+          case_id: assignment.case.id
+        }
+        expect(response).to render_template(:edit)
+      end
+
+      it 'syncs case transitions tracker for user' do
+        stub_find_case(assignment.case.id) do |kase|
+          expect(kase).to receive(:sync_transition_tracker_for_user)
+                            .with(responder)
+        end
+
+        get :edit, params: {
+          id: assignment.id,
+          case_id: assignment.case.id
+        }
+      end
+    end
+
+
+
     describe 'PATCH accept_or_reject' do
       before do
         stub_s3_uploader_for_all_files!
