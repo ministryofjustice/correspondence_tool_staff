@@ -27,16 +27,11 @@ describe CasePolicy do
 
   let(:policy) { described_class.new(responder, new_case) }
 
-  class WorkflowClass
-    def initialize(*_args)
-    end
-  end
-
   describe '#initialize' do
     describe 'workflow' do
       it 'is set to FOI workflow if the case workflow is not present' do
         policy = CasePolicy.new(responder, new_case)
-        expect(policy.workflow).to be_a(Workflows::Cases::FOIPolicy)
+        expect(policy.workflow).to be_a(Cases::FOIPolicy)
       end
 
       it 'raises if the workflow is not recognised' do
@@ -44,13 +39,6 @@ describe CasePolicy do
         expect {
           CasePolicy.new(responder, new_case)
         }.to raise_error(NameError, 'Policy workflow "Nonexistent" not found')
-      end
-
-      # Left in as we're likely to need this in short order.
-      xit 'is set using the case workflow if present' do
-        allow(new_case).to receive(:workflow).and_return('TMM')
-        policy = CasePolicy.new(responder, new_case)
-        expect(policy.workflow).to be_a(WorkflowClass)
       end
     end
   end

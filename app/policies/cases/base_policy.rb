@@ -1,4 +1,4 @@
-module Workflows::Cases
+module Cases
   class BasePolicy < ApplicationPolicy
     attr_accessor :user, :case
 

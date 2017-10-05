@@ -47,7 +47,7 @@ class CasePolicy
                        raise NameError,
                              "Policy workflow \"#{kase.workflow}\" not found"
                      else
-                       "Workflows::Cases::FOIPolicy"
+                       "Cases::FOIPolicy"
                      end
     workflow_class.constantize.new(user, kase)
   end
