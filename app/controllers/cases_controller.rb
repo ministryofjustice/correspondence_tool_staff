@@ -5,7 +5,6 @@ class CasesController < ApplicationController
       :approve_response_interstitial,
       :close,
       :confirm_respond,
-      :edit,
       :execute_response_approval,
       :execute_request_amends,
       :flag_for_clearance,
@@ -17,7 +16,6 @@ class CasesController < ApplicationController
       :respond,
       :show,
       :unflag_for_clearance,
-      :update,
       :upload_responses,
     ]
   before_action :set_assignment, only: [:show]
@@ -109,6 +107,13 @@ class CasesController < ApplicationController
   end
 
   def edit
+    # cannot use a decorated case here because the requester type radio buttons
+    # do not populate if you do
+    #
+    @case = Case.find(params[:id])
+    @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
+    authorize @case
+
     render :edit
   end
 
@@ -145,9 +150,22 @@ class CasesController < ApplicationController
   end
 
   def update
-    if @case.update(parsed_edit_params)
-      flash.now[:notice] = t('.case_updated')
-      render :show
+    @case = Case.find(params[:id])
+    authorize @case
+
+    service = CaseUpdaterService.new(current_user, @case, create_foi_params)
+    service.call
+    if service.result != :error
+      if service.result == :ok
+        flash[:notice] = t('.case_updated')
+      elsif service.result == :no_changes
+        flash[:notice] = "No changes were made"
+      end
+
+      set_permitted_events
+      @case = @case.decorate
+      @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
+      redirect_to case_path(@case)
     else
       render :edit
     end
@@ -274,11 +292,7 @@ class CasesController < ApplicationController
       :delivery_method,
       :flag_for_disclosure_specialists,
       uploaded_request_files: [],
-    ).merge(category_id: Category.find_by(abbreviation: 'FOI').id)
-  end
-
-  def parsed_edit_params
-    edit_params.delete_if { |_key, value| value == "" }
+    ).merge(category_id: Category.foi.id)
   end
 
   def edit_params

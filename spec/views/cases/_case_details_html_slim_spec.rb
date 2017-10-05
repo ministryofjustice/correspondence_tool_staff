@@ -1,10 +1,20 @@
 require 'rails_helper'
 
 describe 'cases/case_details.html.slim', type: :view do
-  let(:unassigned_case) { create(:case).decorate }
-  let(:accepted_case)   { create(:accepted_case).decorate }
-  let(:responded_case)  { create(:responded_case).decorate }
-  let(:closed_case)     { create(:closed_case).decorate }
+  let(:unassigned_case)         { create(:case).decorate }
+  let(:accepted_case)           { create(:accepted_case).decorate }
+  let(:responded_case)          { create(:responded_case).decorate }
+  let(:closed_case)             { create(:closed_case).decorate }
+  let(:disclosure_specialist)   { create :disclosure_specialist }
+
+  def login_as(user)
+    allow(view).to receive(:current_user).and_return(user)
+    super(user)
+  end
+
+
+  before(:each) { login_as disclosure_specialist }
+
 
 
   describe 'basic_details' do
@@ -77,6 +87,7 @@ describe 'cases/case_details.html.slim', type: :view do
   describe 'Final response details' do
 
     it 'displays all the case closure details' do
+      closed_case
       render partial: 'cases/case_details.html.slim',
              locals:{ case_details: closed_case}
 

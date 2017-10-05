@@ -8,6 +8,20 @@ module Cases
       @case = kase
     end
 
+
+    def edit?
+      clear_failed_checks
+      check_user_is_a_manager
+    end
+
+    def update?
+      edit?
+    end
+
+    def edit_case?
+      edit?
+    end
+
     def can_view_attachments?
       clear_failed_checks
       # for flagged cases, the state changes to pending_dacu_clearance as soon

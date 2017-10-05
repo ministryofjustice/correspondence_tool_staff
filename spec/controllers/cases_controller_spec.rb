@@ -80,21 +80,6 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    describe 'GET edit' do
-      it "be redirected to signin if trying to show a specific case" do
-        get :edit, params: { id: first_case }
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
-    describe 'PATCH update' do
-      it "be redirected to signin if trying to update a specific case" do
-        patch :update, params: { id: first_case, case: { category_id: create(:category, :gq).id } }
-        expect(response).to redirect_to(new_user_session_path)
-        expect(Case.first.category.name).to eq 'Freedom of information request'
-      end
-    end
-
     describe 'GET closed_cases' do
       it "be redirected to signin if trying to update a specific case" do
         get :closed_cases
@@ -114,38 +99,6 @@ RSpec.describe CasesController, type: :controller do
 
       it 'renders the new template' do
         expect(response).to render_template(:new)
-      end
-    end
-
-    describe 'GET edit' do
-
-      before do
-        get :edit, params: { id: first_case }
-      end
-
-      it 'assigns @case' do
-        expect(assigns(:case)).to eq(Case.first)
-      end
-
-      it 'renders the edit template' do
-        expect(response).to render_template(:edit)
-      end
-    end
-
-    describe 'PATCH update' do
-
-      it 'updates the case record' do
-        patch :update, params: {
-          id: first_case,
-          case: { category_id: create(:category, :gq).id }
-        }
-
-        expect(Case.first.category.abbreviation).to eq 'GQ'
-      end
-
-      it 'does not overwrite entries with blanks (if the blank dropdown option is selected)' do
-        patch :update, params: { id: first_case, case: { category: '' } }
-        expect(Case.first.category.abbreviation).to eq 'FOI'
       end
     end
 
@@ -465,6 +418,7 @@ RSpec.describe CasesController, type: :controller do
         it 'permitted_events == [:add_messsage_to_case, :assign_responder, :flag_for_clearence]' do
           expect(assigns(:permitted_events)).to eq [:add_message_to_case,
                                                     :assign_responder,
+                                                    :edit_case,
                                                     :flag_for_clearance]
         end
 
@@ -533,7 +487,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :assign_to_new_team, :flag_for_clearance]
+          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :assign_to_new_team, :edit_case, :flag_for_clearance]
         end
 
         it 'renders the show template' do
@@ -609,7 +563,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :assign_to_new_team, :flag_for_clearance]
+          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :assign_to_new_team, :edit_case, :flag_for_clearance]
         end
 
         it 'renders the show page' do
@@ -670,7 +624,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :flag_for_clearance]
+          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :edit_case, :flag_for_clearance]
         end
 
         it 'renders the show page' do
@@ -732,7 +686,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it 'permitted_events == [:close]' do
-          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :close]
+          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :close, :edit_case]
         end
 
         it 'renders the show page' do
@@ -1401,6 +1355,116 @@ RSpec.describe CasesController, type: :controller do
       get :search, params: { query: assigned_case.number, page: 'our_pages' }
       expect(cases).to have_received(:page).with('our_pages')
     end
+  end
+
+  describe 'GET edit' do
+    let(:kase) { create :accepted_case }
+
+    context 'as a logged in non-manager' do
+
+      before(:each)  do
+        sign_in responder
+        get :edit, params: { id: kase.id }
+      end
+
+      it 'redirects to case list' do
+        expect(response).to redirect_to root_path
+      end
+
+      it 'displays error message in flash' do
+        expect(flash[:alert]).to eq 'You are not authorised to edit this case.'
+      end
+    end
+    context 'as a manager' do
+      before(:each) do
+        sign_in manager
+        get :edit, params: { id: kase.id }
+      end
+
+      it 'assigns case' do
+        expect(assigns(:case)).to eq kase
+      end
+
+      it 'renders edit' do
+        expect(response).to render_template :edit
+      end
+    end
+  end
+
+  describe 'PATCH update' do
+
+    # let(:managing_team)                 { create :team_dacu_disclosure }
+    # let(:dacu_disclosure_specialist)    { managing_team.users.first }
+    let(:service)                       { double CaseUpdaterService }
+    let(:kase)                          { create :accepted_case }
+    let(:edit_params) do
+      ActionController::Parameters.new({
+        case:  {
+          name: 'Tony Blair',
+          email: 'tb@blairco.pol',
+          postal_address: '2, Vinery Way London W6 0LQ',
+          requester_type: 'offender',
+          received_date_dd: '1',
+          received_date_mm: '10',
+          received_date_yyyy: '2017',
+          subject: 'TEST case',
+          message: 'Lorem ipsum dolor',
+        },
+        commit: 'Submit',
+        id:  kase.id.to_s
+      })
+    end
+
+    let(:expected_params) do
+      ActionController::Parameters.new({
+       name: 'Tony Blair',
+       email: 'tb@blairco.pol',
+       postal_address: '2, Vinery Way London W6 0LQ',
+       requester_type: 'offender',
+       received_date_dd: '1',
+       received_date_mm: '10',
+       received_date_yyyy: '2017',
+       subject: 'TEST case',
+       message: 'Lorem ipsum dolor',
+       category_id: Category.foi.id
+      }).permit(:name, :email, :postal_address, :requester_type, :received_date_dd, :received_date_mm, :received_date_yyyy, :subject, :message, :category_id)
+    end
+
+    context 'as a logged in non-manager' do
+      before(:each) do
+        sign_in responder
+        patch :update, params: edit_params.to_unsafe_hash
+      end
+
+      it 'redirects' do
+        expect(response).to redirect_to root_path
+      end
+
+      it 'gives error in flash' do
+        expect(flash[:alert]).to eq 'You are not authorised to edit this case.'
+      end
+    end
+
+    context 'as a manager' do
+
+      let(:manager)   { create :manager, managing_teams: [find_or_create(:team_dacu)] }
+
+      before(:each) {
+        sign_in manager
+
+      }
+
+      it 'calls case updater service' do
+        expect(CaseUpdaterService).to receive(:new).
+          with(manager, kase, expected_params).
+          and_return(service)
+        expect(service).to receive(:call)
+        allow(service).to receive(:result)
+
+        patch :update, params: edit_params.to_unsafe_hash
+      end
+    end
+
   end
 
 end

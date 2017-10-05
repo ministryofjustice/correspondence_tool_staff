@@ -112,10 +112,11 @@ feature 'state machine events and transitions' do
 
           it "raises an exception" do
             expect do
-              state_machine.trigger!(:event_1, acting_user_id: user.id) 
+              state_machine.trigger!(:event_1, acting_user_id: user.id)
             end.to raise_error(Statesman::GuardFailedError)
           end
         end
+
       end
     end  end
 end

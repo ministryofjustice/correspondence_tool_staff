@@ -4,12 +4,14 @@
   - unflagged_unassigned_case
   - - :add_message_to_case
     - :assign_responder
+    - :edit_case
     - :flag_for_clearance
 
 - - manager
   - flagged_unassigned_case
   - - :add_message_to_case
     - :assign_responder
+    - :edit_case
     - :flag_for_clearance
     - :unflag_for_clearance
 
@@ -17,33 +19,39 @@
   - unflagged_awaiting_responder_case
   - - :add_message_to_case
     - :assign_to_new_team
+    - :edit_case
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
 
 - - manager
   - flagged_awaiting_responder_case
   - - :add_message_to_case
     - :assign_to_new_team
+    - :edit_case
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
 
 - - manager
   - unflagged_drafting_case
   - - :add_message_to_case
     - :assign_to_new_team
+    - :edit_case
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
 
 - - manager
   - unflagged_case_with_response
   - - :add_message_to_case
+    - :edit_case
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
 
 - - manager
   - accepted_pending_dacu_clearance_case
   - - :add_message_to_case
+    - :edit_case
     - :unflag_for_clearance                 # don't think this should be here, and no button is displayed for it.
 
 - - manager
   - unaccepted_pending_dacu_clearance_case
   - - :add_message_to_case
+    - :edit_case
     - :unflag_for_clearance                 # don't think this should be here, and no button is displayed for it.
 
 ##################################### UNASSIGNED RESPONDER #########################

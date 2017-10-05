@@ -28,6 +28,9 @@
 class Case < ApplicationRecord
   include Statesman::Adapters::ActiveRecordQueries
 
+  has_paper_trail only: %i{ name email received_date subject postal_address requester_type }
+
+
   enum requester_type: {
          academic_business_charity: 'academic_business_charity',
          journalist: 'journalist',
@@ -271,23 +274,10 @@ class Case < ApplicationRecord
     date_responded <= external_deadline
   end
 
-  def received_in_acceptable_range?
-    if received_date.present? && self.received_date > Date.today
-      errors.add(
-          :received_date,
-          I18n.t('activerecord.errors.models.case.attributes.received_date.not_in_future')
-      )
-      true
-    elsif received_date.present? && self.received_date < Date.today - 60.days
-      errors.add(
-        :received_date,
-        I18n.t('activerecord.errors.models.case.attributes.received_date.past')
-      )
-      true
-    else
-      false
-    end
-  end
+
+
+
+
 
   def attachments_dir(attachment_type, upload_group)
     "#{S3Uploader.id_for_case(self)}/#{attachment_type}/#{upload_group}"
@@ -408,6 +398,30 @@ class Case < ApplicationRecord
   end
 
   private
+  def received_in_acceptable_range?
+    if self.new_record? || received_date_changed?
+      validate_received_date
+    end
+  end
+
+  def validate_received_date
+    if received_date.present? && self.received_date > Date.today
+      errors.add(
+        :received_date,
+        I18n.t('activerecord.errors.models.case.attributes.received_date.not_in_future')
+      )
+    elsif received_date.present? && self.received_date < Date.today - 60.days
+      errors.add(
+        :received_date,
+        I18n.t('activerecord.errors.models.case.attributes.received_date.past')
+      )
+    end
+    errors[:received_date].any?
+  end
+
+  def received_date_changed?
+    self.received_date != self.received_date_was
+  end
 
   def set_initial_state
     self.current_state = 'unassigned'

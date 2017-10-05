@@ -439,9 +439,9 @@ RSpec.describe Case, type: :model do
 
   describe '#received_date' do
     let(:case_received_yesterday)   { build(:case, received_date: Date.yesterday.to_s) }
-    let(:case_received_long_ago)   { build(:case, received_date: 65.days.ago) }
-    let(:case_received_today){ build(:case, received_date: Date.today.to_s) }
-    let(:case_received_tomorrow) { build(:case, received_date: (Date.today + 1.day).to_s) }
+    let(:case_received_long_ago)    { build(:case, received_date: 65.days.ago) }
+    let(:case_received_today)       { build(:case, received_date: Date.today.to_s) }
+    let(:case_received_tomorrow)    { build(:case, received_date: (Date.today + 1.day).to_s) }
 
     it 'can be received in the past' do
       expect(case_received_yesterday).to be_valid
@@ -460,6 +460,36 @@ RSpec.describe Case, type: :model do
       expect(case_received_long_ago.errors[:received_date]).to eq ['too far in past.']
     end
 
+    context 'updating an old record' do
+      before(:each) do
+        Timecop.freeze(2.years.ago) do
+          @kase = create :case
+        end
+      end
+
+      context 'received date doesnt change' do
+        it 'does validates ok even though received_date is out of range' do
+          @kase.update(name: 'Stepriponikas  Bonstart')
+          expect(@kase.received_date).to eq 2.years.ago.to_date
+          expect(@kase).to be_valid
+        end
+      end
+
+      context 'received date is changed' do
+        it 'changes date for an out-of-range date' do
+          update_result = @kase.update(name: 'Stepriponikas Bonstart', received_date: 23.months.ago)
+          expect(update_result).to be false
+          expect(@kase).not_to be_valid
+          expect(@kase.errors[:received_date]).to eq ['too far in past.']
+        end
+
+        it 'changes for an in-range date' do
+          update_result = @kase.update(name: 'Stepriponikas Bonstart', received_date: 59.days.ago)
+          expect(update_result).to be true
+          expect(@kase).to be_valid
+        end
+      end
+    end
   end
 
   describe '#responder' do
@@ -1101,6 +1131,38 @@ RSpec.describe Case, type: :model do
       expect(Case.search(accepted_case.number)).to match_array [accepted_case]
     end
   end
+
+  describe 'papertrail versioning', versioning: true do
+
+    before(:each) do
+      @kase = create :case, name: 'aaa', email: 'aa@moj.com', received_date: Date.today, subject: 'subject A', postal_address: '10 High Street', requester_type: 'journalist'
+      @kase.update!(name: 'bbb', email: 'bb@moj.com', received_date: 1.day.ago, subject: 'subject B', postal_address: '20 Low Street', requester_type: 'offender')
+    end
+
+    it 'saves all values in the versions object hash' do
+      version_hash = YAML.load(@kase.versions.last.object)
+      expect(version_hash['email']).to eq 'aa@moj.com'
+      expect(version_hash['received_date']).to eq Date.today
+      expect(version_hash['subject']).to eq 'subject A'
+      expect(version_hash['postal_address']).to eq '10 High Street'
+      expect(version_hash['requester_type']).to eq 'journalist'
+    end
+
+    it 'can reconsititue a record from a version (except for received_date)' do
+      original_kase = @kase.versions.last.reify
+      expect(original_kase.email).to eq 'aa@moj.com'
+      expect(original_kase.subject).to eq 'subject A'
+      expect(original_kase.postal_address).to eq '10 High Street'
+      expect(original_kase.requester_type).to eq 'journalist'
+    end
+
+    it 'does not reconstitute the received date properly because of an interaction with govuk_date_fields' do
+      original_kase = @kase.versions.last.reify
+      expect(original_kase.received_date).to eq 1.day.ago.to_date
+    end
+  end
+
+
 
   # See note in case.rb about why this is commented out.
   #

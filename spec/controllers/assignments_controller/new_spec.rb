@@ -41,7 +41,7 @@ RSpec.describe AssignmentsController, type: :controller do
         params[:business_group_id] = responding_team_1.business_group.id
         get :new, params: params, flash:{"creating_case"=> true}
         expect( assigns(:business_units))
-            .to eq [responding_team_1]
+            .to match_array [responding_team_1]
       end
 
       it 'is a list of all business units' do

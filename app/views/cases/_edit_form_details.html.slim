@@ -1,0 +1,10 @@
+#delivery-method-edit-fields
+  = f.text_field :subject
+
+  - if @case.delivery_method == 'sent_by_post'
+    .panel.panel-border-wide
+      p
+        = "You can't edit an uploaded request"
+  - else
+    = f.text_area :message, { rows: 10 }
+

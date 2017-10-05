@@ -19,7 +19,8 @@
 = render partial: 'layouts/header'
 
 div id="case-#{@case.id}"
-  - if @permitted_events.any?
+
+  - if (@permitted_events - [:edit_case]).any?
     section.case-info.has-actions
       .button-holder
         - @permitted_events.each do |event|
@@ -33,6 +34,7 @@ div id="case-#{@case.id}"
     = render partial: 'cases/case_status', locals: {case_details: @case}
 
   section.case-info
+
     = render partial: 'cases/case_request', locals: {case_details: @case}
 
   section.case-info

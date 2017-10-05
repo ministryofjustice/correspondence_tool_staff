@@ -63,6 +63,8 @@ en:
       can_remove_attachment?: 'You are not authorised to remove attachments from this case.'
       can_view_case_details?: 'You are not authorised to view this case.'
       can_download_stats?: You are not authorised to view or download statistics.
+      edit?: You are not authorised to edit this case.
+      update?: You are not authorised to edit this case.
     team_policy:
       index?: 'You are not authorised to view a list of teams'
       show?: 'You are not authorised to view this team'
@@ -114,6 +116,7 @@ en:
     add_responses: Response uploaded
     approve: Response cleared
     close: Case closed
+    edit_case: Case details edited
     reject_responder_assignment: Rejected by Business unit
     remove_last_response: File removed
     remove_response: File removed
@@ -137,6 +140,7 @@ en:
     next_page_assign: Next - Assign case
     confirm: Confirm
     feedback: Send feedback
+    submit: Submit
 
   helpers:
     fieldset:
@@ -326,6 +330,8 @@ en:
       affirmative: 'Yes'
       negative: 'No, the response is ready to send'
       why_not: 'Why is further clearance not required?'
+    case_details:
+      edit_case: 'Edit case details'
     closed_cases:
       heading: Closed cases
       number: Case number
@@ -353,6 +359,10 @@ en:
       number_html: 'Case <abbr title="number">No.</abbr>'
       request: Request
       actions: Actions
+    edit:
+      heading: Edit case details
+    update:
+      case_updated: Case updated
     fixed_details:
       requester: Requester
       email_address: Email address
@@ -384,8 +394,8 @@ en:
         </ul>
     confirm_respond:
       success: Response confirmed. The case is now with DACU.
-    update:
-      case_updated: Case updated
+#    update:
+#      case_updated: Case updated
     close:
       heading: Close case
       close_date: Date response sent

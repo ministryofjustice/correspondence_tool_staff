@@ -41,7 +41,6 @@ class CaseTransition < ActiveRecord::Base
                                              'flag_for_clearance',
                                              'unflag_for_clearance'])}
 
-
   def record_state_change(kase)
     kase.update!(current_state: self.to_state, last_transitioned_at: self.created_at)
   end

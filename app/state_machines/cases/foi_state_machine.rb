@@ -190,6 +190,19 @@ class Cases::FOIStateMachine
                authorize: true
   end
 
+  event :edit_case do
+    authorize_by_event_name
+    transition from: :unassigned,                       to: :unassigned
+    transition from: :awaiting_responder,               to: :awaiting_responder
+    transition from: :drafting,                         to: :drafting
+    transition from: :awaiting_dispatch,                to: :awaiting_dispatch
+    transition from: :pending_dacu_clearance,           to: :pending_dacu_clearance
+    transition from: :pending_press_office_clearance,   to: :pending_press_office_clearance
+    transition from: :pending_private_office_clearance, to: :pending_private_office_clearance
+    transition from: :responded,                        to: :responded
+    transition from: :closed,                           to: :closed
+  end
+
   event :reassign_user do
 
     transition from:      :unassigned,
@@ -324,6 +337,13 @@ class Cases::FOIStateMachine
              target_team_id:    responding_team.id,
              acting_user_id:    user.id,
              event:             :assign_responder
+  end
+
+  def edit_case!(user, team)
+    trigger! :edit_case,
+             acting_team_id:    team.id,
+             acting_user_id:    user.id,
+             event:             :edit_case
   end
 
   def assign_to_new_team!(user, managing_team, new_team)
