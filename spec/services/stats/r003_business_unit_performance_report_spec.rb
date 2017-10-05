@@ -75,6 +75,7 @@ module Stats
     describe '#results' do
       before do
         Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
+          # report = R003BusinessUnitPerformanceReport.new
           report = R003BusinessUnitPerformanceReport.new
           report.run
           @results = report.results
@@ -82,57 +83,69 @@ module Stats
       end
 
       it 'generates hierarchy starting with business_groups' do
-        expect(@results.keys).to match_array [@bizgrp_ab, @bizgrp_cd]
+        expect(@results.keys).to eq Team.hierarchy.map(&:id)
       end
 
       it 'adds up directorate stats in each business_group' do
-        expect(@results[@bizgrp_ab][:stats])
+        expect(@results[@bizgrp_ab.id])
           .to eq({
+                   business_group:                @bizgrp_ab.name,
+                   directorate:                   '',
+                   business_unit:                 '',
+                   responsible:                   @bizgrp_ab.team_lead,
+                   non_trigger_performance:       28.6,
                    non_trigger_responded_in_time: 2,
                    non_trigger_responded_late:    2,
                    non_trigger_open_in_time:      2,
                    non_trigger_open_late:         3,
+                   trigger_performance:           33.3,
                    trigger_responded_in_time:     1,
                    trigger_responded_late:        1,
                    trigger_open_in_time:          2,
-                   trigger_open_late:             1
+                   trigger_open_late:             1,
+                   overall_performance:           30.0
                  })
       end
 
-      it 'generates hierarchy with directorates under business_groups' do
-        expect(@results[@bizgrp_ab][:children].keys).to match_array [@dir_a, @dir_b]
-      end
-
       it 'adds up business_unit stats in each directorate' do
-        expect(@results[@bizgrp_cd][:children][@dir_cd][:stats])
+        expect(@results[@bizgrp_cd.id])
           .to eq({
+                   business_group:                @bizgrp_cd.name,
+                   directorate:                   '',
+                   business_unit:                 '',
+                   responsible:                   @bizgrp_cd.team_lead,
+                   non_trigger_performance:       50.0,
                    non_trigger_responded_in_time: 1,
                    non_trigger_responded_late:    1,
                    non_trigger_open_in_time:      1,
                    non_trigger_open_late:         0,
+                   trigger_performance:           0.0,
                    trigger_responded_in_time:     0,
                    trigger_responded_late:        0,
                    trigger_open_in_time:          0,
-                   trigger_open_late:             0
+                   trigger_open_late:             0,
+                   overall_performance:           50.0
                  })
       end
 
-      it 'generates hierarchy with business_units under directorates' do
-        expect(@results[@bizgrp_cd][:children][@dir_cd][:children].keys)
-          .to match_array [@team_c, @team_d]
-      end
-
       it 'adds up individual business_unit stats' do
-        expect(@results[@bizgrp_cd][:children][@dir_cd][:children][@team_c][:stats])
+        expect(@results[@team_c.id])
           .to eq({
+                   business_group:                @bizgrp_cd.name,
+                   directorate:                   @dir_cd.name,
+                   business_unit:                 @team_c.name,
+                   responsible:                   @team_c.team_lead,
+                   non_trigger_performance:       50.0,
                    non_trigger_responded_in_time: 1,
                    non_trigger_responded_late:    1,
                    non_trigger_open_in_time:      0,
                    non_trigger_open_late:         0,
+                   trigger_performance:           0.0,
                    trigger_responded_in_time:     0,
                    trigger_responded_late:        0,
                    trigger_open_in_time:          0,
-                   trigger_open_late:             0
+                   trigger_open_late:             0,
+                   overall_performance:           50.0,
                  })
       end
     end
@@ -142,21 +155,25 @@ module Stats
         Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
           expected_text = <<~EOCSV
             Business Unit Performance Report - 1 Jun 2017 to 30 Jun 2017
-            "","","",Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs
-            Business Group,Directorate,Business Unit,Responded - in time,Responded - late,Open - in time,Open - late,Responded - in time,Responded - late,Open - in time,Open - late
-            BGAB,"","",2,2,2,3,1,1,2,1
-            BGAB,DRA,"",1,2,1,2,1,1,1,0
-            BGAB,DRA,RTA,1,2,1,2,1,1,1,0
-            BGAB,DRB,"",1,0,1,1,0,0,1,1
-            BGAB,DRB,RTB,1,0,1,1,0,0,1,1
-            BGCD,"","",1,1,1,0,0,0,0,0
-            BGCD,DRCD,"",1,1,1,0,0,0,0,0
-            BGCD,DRCD,RTC,1,1,0,0,0,0,0,0
-            BGCD,DRCD,RTD,0,0,1,0,0,0,0,0
+            "","","","",Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,Overall
+            Business group,Directorate,Business unit,Responsible,Performance %,Responded - in time,Responded - late,Open - in time,Open - late,Performance %,Responded - in time,Responded - late,Open - in time,Open - late,Performance %
+            BGAB,"","",#{@bizgrp_ab.team_lead},28.6,2,2,2,3,33.3,1,1,2,1,30.0
+            BGAB,DRA,"",#{@dir_a.team_lead},20.0,1,2,1,2,50.0,1,1,1,0,28.6
+            BGAB,DRA,RTA,#{@team_a.team_lead},20.0,1,2,1,2,50.0,1,1,1,0,28.6
+            BGAB,DRB,"",#{@dir_b.team_lead},50.0,1,0,1,1,0.0,0,0,1,1,33.3
+            BGAB,DRB,RTB,#{@team_b.team_lead},50.0,1,0,1,1,0.0,0,0,1,1,33.3
+            BGCD,"","",#{@bizgrp_cd.team_lead},50.0,1,1,1,0,0.0,0,0,0,0,50.0
+            BGCD,DRCD,"",#{@dir_cd.team_lead},50.0,1,1,1,0,0.0,0,0,0,0,50.0
+            BGCD,DRCD,RTC,#{@team_c.team_lead},50.0,1,1,0,0,0.0,0,0,0,0,50.0
+            BGCD,DRCD,RTD,#{@team_d.team_lead},0.0,0,0,1,0,0.0,0,0,0,0,0.0
           EOCSV
           report = R003BusinessUnitPerformanceReport.new
           report.run
-          expect(report.to_csv).to eq expected_text
+          actual_lines = report.to_csv.split("\n")
+          expected_lines = expected_text.split("\n")
+          (0...actual_lines.size).each do |i|
+            expect(actual_lines[i]).to eq expected_lines[i]
+          end
         end
       end
     end

@@ -31,6 +31,18 @@ class Team < ApplicationRecord
       .order(:name)
   }
 
+  def self.hierarchy
+    result_set = []
+    BusinessGroup.order(:name).each do |bg|
+      result_set << bg
+      bg.directorates.order(:name).each do |dir|
+        result_set << dir
+        dir.business_units.order(:name).each { |bu| result_set << bu }
+      end
+    end
+    result_set
+  end
+
   def valid_role
     unless role.blank?
       errors.add(:role, :present)
