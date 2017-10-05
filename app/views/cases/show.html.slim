@@ -54,21 +54,6 @@ div id="case-#{@case.id}"
 
   - if @case_transitions.any?
     section.case-info.has-page-break
-      h2.request--heading Case history
-
-      table#case-history
-        thead
-          tr#case-history-table-headers
-            th Date
-            th Who
-            th Team
-            th Action
-        tbody
-          - @case_transitions.each do |ct|
-            tr.
-              td = ct.action_date
-              td = ct.user_name
-              td = ct.user_team
-              td = ct.event_and_detail
+      = render partial: 'cases/case_history', locals: { case_transitions: @case_transitions }
 
 
