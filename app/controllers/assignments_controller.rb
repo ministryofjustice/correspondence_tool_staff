@@ -204,8 +204,10 @@ class AssignmentsController < ApplicationController
   end
 
   def set_case_and_assignment
-    if Assignment.exists?(id: params[:id])
+    if Case.exists?(id: params[:case_id])
       set_case
+    end
+    if Assignment.exists?(id: params[:id])
       @assignment = @case.assignments.find(params[:id])
     end
   end

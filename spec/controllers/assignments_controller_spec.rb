@@ -51,17 +51,6 @@ RSpec.describe AssignmentsController, type: :controller do
 
 
   context 'as an anonymous user' do
-    describe 'GET edit' do
-      it 'redirects to sign in page' do
-        get :edit, params: {
-          id: assignment.id,
-          case_id: assignment.case.id
-        }
-
-        expect(response).to redirect_to new_user_session_path
-      end
-    end
-
     describe 'PATCH accept_or_reject' do
       before do
         patch :accept_or_reject,
@@ -84,16 +73,6 @@ RSpec.describe AssignmentsController, type: :controller do
 
   context 'as an authenticated assigner' do
     before { sign_in manager }
-
-    describe 'GET edit' do
-      it 'does not render the page for accept / reject assignment' do
-        get :edit, params: {
-          id: assignment.id,
-          case_id: assignment.case.id
-        }
-        expect(response).not_to render_template(:edit)
-      end
-    end
 
     describe 'PATCH accept_or_reject' do
       context 'accepting' do
@@ -134,30 +113,6 @@ RSpec.describe AssignmentsController, type: :controller do
     let(:assignment_params) { { assignment: { state: 'accept' } } }
 
     before { sign_in responder }
-
-    describe 'GET edit' do
-      it 'does not render the page for accept / reject assignment' do
-        get :edit, params: {
-          id: assignment.id,
-          case_id: assignment.case.id
-        }
-        expect(response).to render_template(:edit)
-      end
-
-      it 'syncs case transitions tracker for user' do
-        stub_find_case(assignment.case.id) do |kase|
-          expect(kase).to receive(:sync_transition_tracker_for_user)
-                            .with(responder)
-        end
-
-        get :edit, params: {
-          id: assignment.id,
-          case_id: assignment.case.id
-        }
-      end
-    end
-
-
 
     describe 'PATCH accept_or_reject' do
       before do
@@ -487,6 +442,70 @@ RSpec.describe AssignmentsController, type: :controller do
       end
     end
   end
+
+  describe 'GET edit' do
+
+    let(:new_assignment) { instance_double Assignment }
+
+    before(:each) { sign_in responder}
+
+    it 'sets @assignment' do
+      get :edit, params: {
+        id: assignment.id,
+        case_id: assignment.case.id
+      }
+      expect(assigns(:assignment)).to eq assignment
+    end
+
+    it 'sets @case' do
+      get :edit, params: {
+        id: assignment.id,
+        case_id: assignment.case.id
+      }
+      expect(assigns(:case)).to eq assignment.case
+    end
+
+    it 'syncs case transitions tracker for user' do
+      stub_find_case(assignment.case.id) do |kase|
+        expect(kase).to receive(:sync_transition_tracker_for_user)
+                          .with(responder)
+      end
+
+      get :edit, params: {
+        id: assignment.id,
+        case_id: assignment.case.id
+      }
+    end
+
+    context 'authorising and routing' do
+
+      it 'redirects to case details and displays flash notice if previously accepted' do
+        sign_in responder
+        assignment.accepted!
+
+        get :edit, params: { id: assignment.id, case_id: assignment.case.id}
+        expect(response).to redirect_to case_path(id: assignment.case.id, accepted_now: false )
+
+      end
+
+      it 'renders edit page if its not been accepted/rejected' do
+        sign_in responder
+        get :edit, params: { id: assignment.id, case_id: assignment.case.id}
+        expect(response).to render_template(:edit)
+      end
+
+      it 'redirects to case list if assignment is not found' do
+        sign_in responder
+
+        get :edit, params: { id: 9999, case_id: assignment.case.id}
+
+        expect(response).to redirect_to case_path(id: assignment.case.id )
+        expect(flash[:notice]).to eq 'Case assignment does not exist.'
+      end
+
+    end
+  end
+
 
   describe 'PATCH execute_assign_to_new_team' do
 
