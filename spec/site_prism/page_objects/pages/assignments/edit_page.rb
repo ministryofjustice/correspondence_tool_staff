@@ -9,11 +9,36 @@ module PageObjects
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
 
+        section :case_status,
+                PageObjects::Sections::Cases::CaseStatusSection, '.case-status'
+
+        section :case_details,
+                PageObjects::Sections::Cases::CaseDetailsSection, '.case-details'
+
         element :message_label, '.request--heading'
         element :message, '.request--message'
 
+        section :request,
+                PageObjects::Sections::Cases::CaseRequestSection, '.request'
+
+        sections :messages, '#messages-section .message' do
+          element :body, '.message-body'
+          element :audit, '.message-audit'
+        end
+
+        section :new_message, '.message-form' do
+          element :input, 'textarea'
+          element :add_button, '.button'
+        end
+
+        section :case_history,
+                PageObjects::Sections::Cases::CaseHistorySection, '#case-history'
+
         element :accept_radio, 'label[for="assignment_state_accepted"]'
-        element :confirm_button, '.button'
+
+        element :reject_radio, 'label[for="assignment_state_rejected"]'
+
+        element :confirm_button, '.button[value="Confirm"]'
 
 
       end

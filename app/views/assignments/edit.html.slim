@@ -12,9 +12,24 @@
 = render partial: 'layouts/header'
 
 section.case-info
+  = render partial: 'cases/case_status', locals: { case_details: @case }
+
+section.case-info
   = render partial: 'cases/case_request',
           locals: {case_details: @case, full_message: true}
 
+section.case-info
+  = render partial: 'cases/case_details', locals: { case_details: @case }
+
+section.case-info
+  = render partial: 'cases/clearance_levels', locals: {case_details: @case }
+
+section#messages-section.case-info
+  = render partial: 'cases/case_messages', locals: { case_details: @case }
+
+- if @case_transitions.any?
+  section.case-info.has-page-break
+    = render partial: 'cases/case_history', locals: { case_transitions: @case_transitions }
 
 .grid-row
   section.case-main
