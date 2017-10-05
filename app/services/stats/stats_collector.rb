@@ -89,11 +89,6 @@ module Stats
 
     private
 
-    # def rollup_results(child_result_set, parent_team_id)
-    #   parent_result_set = @stats[parent_team_id]
-    #   child_result_set.each { |key, value|  parent_result_set[key] += value }
-    # end
-
     def spacer_or_section_header?(row)
       row =~ /^_/
     end
