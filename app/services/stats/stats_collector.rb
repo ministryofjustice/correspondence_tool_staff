@@ -14,6 +14,9 @@ module Stats
     # Anything else beginning with an underscore, will be treated as a section heading and printed without the underscore
     def initialize(rows, columns)
       @column_hash = columns
+      @callback_methods = {
+        before_finalise: []
+      }
       @stats = {}
       rows.each do |row|
         @stats[row] = {}
@@ -25,9 +28,21 @@ module Stats
       end
     end
 
+    def add_callback(callback_type, meth)
+      raise "Invalid callback type " unless callback_type.in?(@callback_methods.keys)
+      @callback_methods[callback_type] << meth
+    end
+
     def record_stats(row, col, count = 1)
       check_row_and_col_exist(row, col)
       @stats[row][col] += count
+    end
+
+    # finalize() will run any :before_finalise callback methods that have been registered with add_callback()
+    def finalise
+      @callback_methods[:before_finalise].each do |meth|
+        meth.call
+      end
     end
 
     def record_text(row, col, text)
@@ -40,8 +55,9 @@ module Stats
       raise ArgumentError.new("No such column name: '#{col.inspect}'") unless @stats[row].key?(col)
     end
 
-    def to_csv(first_column_header = '', superheadings = [Array.new])
-      cols = [first_column_header] + column_names
+    def to_csv(first_column_header: '', superheadings: [], row_names_as_first_column: true)
+      cols = column_names
+      cols.unshift first_column_header if row_names_as_first_column
       CSV.generate(headers: true) do |csv|
         superheadings.each { |superheading| csv << superheading }
         csv << cols
@@ -51,7 +67,7 @@ module Stats
           elsif row_name =~ /^_/
             row = [row_name.sub(/^_/, '')]
           else
-            row = [row_name]
+            row = row_names_as_first_column ? [row_name] : []
             @column_hash.keys.each { |col_key| row << value(row_name, col_key) }
           end
           csv << row

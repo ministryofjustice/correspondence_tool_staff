@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 module Stats
+
   describe StatsCollector do
 
     let(:rows) { %w( _DOMESTIC Cats Dogs _SPACER _FARMYARD Horses Ducks ) }
@@ -128,8 +129,8 @@ module Stats
         collector.record_stats('Cats', :brown, 4)
         collector.record_stats('Dogs', :white, 1)
         collector.record_stats('Dogs', :black, 2)
-        expect(collector.to_csv('Animal')).to eq(
-            "\nAnimal,White,Brown,Black\n" +
+        expect(collector.to_csv(first_column_header: 'Animal')).to eq(
+            "Animal,White,Brown,Black\n" +
             "DOMESTIC\n" +
             "Cats,0,4,0\n" +
             "Dogs,1,0,2\n" +
@@ -144,7 +145,7 @@ module Stats
         collector.record_stats('Dogs', :white, 1)
         collector.record_stats('Dogs', :black, 2)
         expect(collector.to_csv).to eq(
-            "\n\"\",White,Brown,Black\n" +
+            "\"\",White,Brown,Black\n" +
             "DOMESTIC\n" +
             "Cats,0,4,0\n" +
             "Dogs,1,0,2\n" +
@@ -153,6 +154,33 @@ module Stats
             "Horses,0,0,0\n" +
             "Ducks,0,0,0\n")
       end
+    end
+
+    describe '#add_callback' do
+
+      it 'calls executes the specified callback method' do
+        report = MockReport.new
+        expect(report.stats_collector.stats).to eq( {1=>{1=>0,2=>0},2=>{1=>0,2=>0}} )
+        report.run
+        expect(report.stats_collector.stats).to eq( {1=>{1=>999,2=>0},2=>{1=>0,2=>0}} )
+      end
+    end
+  end
+
+
+  class MockReport
+    attr_reader :stats_collector
+    def initialize
+      @stats_collector = StatsCollector.new([ 1,2 ], { 1 => 'col 1', 2 => 'col 2' })
+    end
+
+    def run
+      @stats_collector.add_callback(:before_finalise, method(:summarize))
+      @stats_collector.finalise
+    end
+
+    def summarize
+      @stats_collector.stats[1][1] = 999
     end
   end
 end
