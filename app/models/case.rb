@@ -21,10 +21,11 @@
 #  current_state        :string
 #  last_transitioned_at :datetime
 #  delivery_method      :enum
+#  workflow             :string
 #
 
 # Required in production with it's eager loading and cacheing of classes.
-require 'case_state_machine'
+# require 'case_state_machine'
 
 #rubocop:disable Metrics/ClassLength
 class Case < ApplicationRecord

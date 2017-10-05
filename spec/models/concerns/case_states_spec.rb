@@ -14,8 +14,19 @@ RSpec.describe Case, type: :model do
     describe '#state_machine' do
       subject { kase.state_machine }
 
-      it { should be_an_instance_of(CaseStateMachine) }
-      it { should have_attributes(object: kase)}
+      it { should have_attributes(object: kase) }
+
+      it 'defaults to the CaseStateMachine when no workflow is specified' do
+        expect(kase.state_machine)
+          .to be_an_instance_of(CaseStateMachine)
+      end
+
+      it 'raises an error when an nonexistant workflow is specified' do
+        allow(kase).to receive(:workflow).and_return('Nonexistent')
+        expect {
+          kase.state_machine
+        }.to raise_error(NameError, 'State machine "Nonexistent" not found')
+      end
     end
 
     describe '#responder_assignment_rejected' do
@@ -181,6 +192,14 @@ RSpec.describe Case, type: :model do
         it 'returns false' do
           expect(responded_case.within_external_deadline?).to eq false
         end
+      end
+    end
+
+    describe 'reset_state_machine callback' do
+      it 'is called when the workflow changes' do
+        expect(kase.state_machine).not_to be_nil
+        kase.update(workflow: '')
+        expect(kase.instance_variable_get(:@state_machine)).to be_nil
       end
     end
 

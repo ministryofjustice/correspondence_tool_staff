@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.6
--- Dumped by pg_dump version 9.5.6
+-- Dumped from database version 9.5.5
+-- Dumped by pg_dump version 9.5.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -332,7 +332,8 @@ CREATE TABLE cases (
     refusal_reason_id integer,
     current_state character varying,
     last_transitioned_at timestamp without time zone,
-    delivery_method cases_delivery_methods
+    delivery_method cases_delivery_methods,
+    workflow character varying
 );
 
 
@@ -1137,6 +1138,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170908083205'),
 ('20170908142318'),
 ('20170913124313'),
-('20170925142730');
+('20170925142730'),
+('20171003080427');
 
 

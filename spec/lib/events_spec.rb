@@ -14,6 +14,9 @@ describe Events do
       include Statesman::Machine
       include Events
 
+      state :start
+      state :end
+
       def current_state
         'start'
       end
@@ -77,10 +80,21 @@ describe Events do
   end
 
   describe '#trigger!' do
-    specify 'raises if the guard fails for the given event' do
+    it 'raises if the guard fails for the given event' do
       machine.events[:fail_event][:callbacks][:guards] << Proc.new { false }
       expect { instance.trigger!(:fail_event) }
         .to raise_error(Statesman::GuardFailedError)
+    end
+
+    it 'calls "switch_to_workflow" if required by the transition' do
+      allow(resource).to receive(:switch_to_workflow)
+      allow(instance).to receive(:transition_to!)
+      machine.events[:switch_workflow][:transitions]['start'] << {
+        state: 'end',
+        workflow: 'new_workflow'
+      }
+      instance.trigger!(:switch_workflow)
+      expect(resource).to have_received(:switch_to_workflow).with('new_workflow')
     end
   end
 

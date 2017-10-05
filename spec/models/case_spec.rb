@@ -21,6 +21,7 @@
 #  current_state        :string
 #  last_transitioned_at :datetime
 #  delivery_method      :enum
+#  workflow             :string
 #
 
 require 'rails_helper'
