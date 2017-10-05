@@ -210,7 +210,7 @@ class AssignmentsController < ApplicationController
   end
 
   def set_case
-    @case = Case.find(params[:case_id])
+    @case = Case.find(params[:case_id]).decorate
     @case_transitions = @case.transitions.decorate
   end
 
