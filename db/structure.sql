@@ -2,13 +2,8 @@
 -- PostgreSQL database dump
 --
 
-<<<<<<< HEAD
--- Dumped from database version 9.5.5
--- Dumped by pg_dump version 9.5.5
-=======
 -- Dumped from database version 9.5.9
 -- Dumped by pg_dump version 9.5.9
->>>>>>> CT-1097 initialises paper trail
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1200,10 +1195,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170908142318'),
 ('20170913124313'),
 ('20170925142730'),
-<<<<<<< HEAD
-('20171003080427');
-=======
+('20171003080427'),
 ('20171003153752');
->>>>>>> CT-1097 initialises paper trail
-
-
