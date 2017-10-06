@@ -1,6 +1,6 @@
 class CasePolicy
 
-  attr_reader :user, :case, :failed_checks, :workflow
+  attr_reader :user, :case, :failed_checks, :policy_workflow
 
   def initialize(user, kase)
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
@@ -8,7 +8,7 @@ class CasePolicy
     @case = kase
     @user = user
 
-    @workflow = policy_workflow_for_case(kase, user: user)
+    @policy_workflow = policy_workflow_for_case(kase, user: user)
   end
 
   class Scope
@@ -35,11 +35,11 @@ class CasePolicy
   private
 
   def respond_to_missing?(name, include_private = false)
-    @workflow.respond_to?(name, include_private)
+    @policy_workflow.respond_to?(name, include_private)
   end
 
   def method_missing(method, *args, &block)
-    @workflow.send(method, *args, &block)
+    @policy_workflow.send(method, *args, &block)
   end
 
   def policy_workflow_for_case(kase, user:)

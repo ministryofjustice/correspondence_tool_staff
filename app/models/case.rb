@@ -24,9 +24,6 @@
 #  workflow             :string
 #
 
-# Required in production with it's eager loading and cacheing of classes.
-# require 'case_state_machine'
-
 #rubocop:disable Metrics/ClassLength
 class Case < ApplicationRecord
   include Statesman::Adapters::ActiveRecordQueries

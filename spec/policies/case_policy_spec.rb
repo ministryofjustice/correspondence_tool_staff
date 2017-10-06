@@ -31,7 +31,7 @@ describe CasePolicy do
     describe 'workflow' do
       it 'is set to FOI workflow if the case workflow is not present' do
         policy = CasePolicy.new(responder, new_case)
-        expect(policy.workflow).to be_a(Cases::FOIPolicy)
+        expect(policy.policy_workflow).to be_a(Cases::FOIPolicy)
       end
 
       it 'raises if the workflow is not recognised' do
@@ -81,21 +81,21 @@ describe CasePolicy do
 
   describe 'missing methods' do
     it 'are delegated to the workflow object' do
-      workflow = spy('WorkflowPolicy')
-      policy.instance_eval { @workflow = workflow }
+      policy_workflow = spy('PolicyWorkflow')
+      policy.instance_variable_set :@policy_workflow, policy_workflow
       policy.can_do_this_or_that?
-      expect(workflow).to have_received(:can_do_this_or_that?)
+      expect(policy_workflow).to have_received(:can_do_this_or_that?)
     end
 
     it 'can test whether the workflow responds to a method' do
-      workflow = double('WorkflowPolicy', can_do_this_or_that?: true)
-      policy.instance_eval { @workflow = workflow }
+      policy_workflow = double('PolicyWorkflow', can_do_this_or_that?: true)
+      policy.instance_variable_set :@policy_workflow, policy_workflow
       expect(policy.respond_to?(:can_do_this_or_that?)).to eq true
     end
 
     it 'can test whether the workflow responds to a method' do
-      workflow = double('WorkflowPolicy', can_do_this_or_that?: true)
-      policy.instance_eval { @workflow = workflow }
+      policy_workflow = double('PolicyWorkflow', can_do_this_or_that?: true)
+      policy.instance_variable_set :@policy_workflow, policy_workflow
       expect(policy.respond_to?(:nonexistant_hat?)).to eq false
     end
   end
