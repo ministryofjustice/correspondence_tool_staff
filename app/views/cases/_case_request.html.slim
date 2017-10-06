@@ -5,10 +5,7 @@
   .request--message
     - if case_details.sent_by_email?
       p
-        - if defined?(full_message) && full_message
-          = case_details.message
-        - else
-          = show_hide_message(case_details)
+        = show_hide_message(case_details)
     - else
       - case_details.upload_request_groups.each do |ug|
         .case-attachments-group

@@ -53,7 +53,6 @@ feature 'cases requiring clearance by press office' do
     approve_case kase:            pending_press_clearance_case,
                  expected_team:   private_office,
                  expected_status: 'Pending clearance'
-    approve_response kase: pending_press_clearance_case
     select_case_on_open_cases_page kase:          pending_press_clearance_case,
                                    expected_team: private_office
   end
@@ -68,7 +67,6 @@ feature 'cases requiring clearance by press office' do
     approve_case kase:            pending_private_clearance_case,
                  expected_team:   pending_private_clearance_case.responding_team,
                  expected_status: 'Ready to send'
-    approve_response kase: pending_private_clearance_case
     select_case_on_open_cases_page(
       kase:          pending_private_clearance_case,
       expected_team: pending_private_clearance_case.responding_team

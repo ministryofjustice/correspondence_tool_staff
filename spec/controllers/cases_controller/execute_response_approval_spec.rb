@@ -4,7 +4,8 @@ RSpec.describe CasesController, type: :controller do
   let(:responded_trigger_case) { create :case_with_response, :flagged_accepted }
   let(:approver)               { responded_trigger_case.approvers.first }
   let(:service)                { instance_double(CaseApprovalService,
-                                                 call: true) }
+                                                 call: true,
+                                                 result: :ok) }
 
   describe 'PATCH execute_response_approval' do
     before do
@@ -22,8 +23,9 @@ RSpec.describe CasesController, type: :controller do
     it 'calls the case approval service' do
       patch :execute_response_approval, params: { id: responded_trigger_case }
       expect(CaseApprovalService).to have_received(:new)
-                                       .with(user: approver,
-                                             kase: responded_trigger_case)
+                                       .with(hash_including(user: approver,
+                                                            kase: responded_trigger_case))
+
       expect(service).to have_received(:call)
     end
 

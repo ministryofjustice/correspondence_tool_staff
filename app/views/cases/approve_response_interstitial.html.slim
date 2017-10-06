@@ -1,0 +1,27 @@
+
+- content_for :heading
+  = t('.clear')
+
+
+- content_for :sub_heading
+span.visually-hidden
+  = t('common.case.header_case_number')
+= @case.number
+
+= render partial: 'layouts/header'
+br
+
+.clearance-copy
+  p
+    = "You are clearing the response to: "
+    strong.strong-block
+      = @case.subject
+
+br
+
+= form_tag execute_response_approval_case_path(@case)
+  - if @case.allow_event?(current_user, :approve_and_bypass)
+    = render partial: 'bypass_approvals_form'
+
+  .actions
+  = submit_tag 'Clear response', class: 'button'

@@ -59,7 +59,7 @@ describe 'cases routes', type: :routing do
     it { should route_to 'cases#approve_response', id: '1' }
   end
 
-  describe patch: '/cases/1/execute_response_approval' do
+  describe post: '/cases/1/execute_response_approval' do
     it { should route_to 'cases#execute_response_approval', id: '1' }
   end
 

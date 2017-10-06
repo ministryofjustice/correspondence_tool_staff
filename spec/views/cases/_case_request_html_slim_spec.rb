@@ -62,34 +62,6 @@ describe 'cases/case_request.html.slim', type: :view do
     end
   end
 
-  describe 'displays the full request without "show more" link' do
-
-    let(:kase) { double CaseDecorator,
-                        message:  long_message,
-                        message_extract: [short_message,last_part],
-                        delivery_method: "sent_by_email",
-                        sent_by_email?: true
-    }
-
-    let(:partial) do
-      render partial: 'cases/case_request.html.slim',
-             locals:{ case_details: kase, full_message: true}
-
-      case_request_section(rendered)
-    end
-
-    it 'displays the full request ' do
-      expect(partial.message.text)
-          .to eq kase.message
-    end
-
-    it 'does not have a collapsed request' do
-      expect(partial).to have_no_show_more_link
-      expect(partial).to have_no_preview
-      expect(partial).to have_no_ellipsis
-      expect(partial).to have_no_collapsed_text
-    end
-  end
 
   describe 'displaying a long request and collapsing content' do
     let(:kase) { double CaseDecorator,

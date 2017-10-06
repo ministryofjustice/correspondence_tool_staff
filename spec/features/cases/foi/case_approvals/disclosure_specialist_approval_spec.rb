@@ -103,7 +103,7 @@ feature 'cases requiring clearance by disclosure specialist' do
 
   def upload_response_with_action_param(kase, user, action)
     uploads_key = "uploads/#{kase.id}/responses/#{Faker::Internet.slug}.jpg"
-    params = ActionController::Parameters.new(
+    raw_params = ActionController::Parameters.new(
       {
         "type"=>"response",
         "uploaded_files"=>[uploads_key],
@@ -112,6 +112,7 @@ feature 'cases requiring clearance by disclosure specialist' do
         "upload_comment" => "I've uploaded it",
         "action"=>"upload_responses"}
     )
+    params = BypassParamsManager.new(raw_params)
     rus = ResponseUploaderService.new(kase, user, params, action)
     uploader = rus.instance_variable_get :@uploader
     allow(uploader).to receive(:move_uploaded_file)
@@ -145,8 +146,9 @@ feature 'cases requiring clearance by disclosure specialist' do
     cases_show_page.load(id: kase.id)
     expect(cases_show_page.actions).to have_clear_case
     cases_show_page.actions.clear_case.click
-    expect(approve_response_page).to be_displayed
-    approve_response_page.submit_button.click
+    expect(approve_response_interstitial_page).to be_displayed
+    expect(approve_response_interstitial_page).not_to have_bypass_press_option
+    approve_response_interstitial_page.clear_response_button.click
     expect(kase.reload.current_state).to eq 'awaiting_dispatch'
   end
 
@@ -163,8 +165,8 @@ feature 'cases requiring clearance by disclosure specialist' do
     cases_show_page.load(id: kase.id)
     expect(cases_show_page.actions).to have_clear_case
     cases_show_page.actions.clear_case.click
-
-    expect(approve_response_page).to be_displayed
+    expect(approve_response_interstitial_page).to be_displayed
+    expect(approve_response_interstitial_page).not_to have_bypass_press_option
     approve_response_page.submit_button.click
     expect(kase.reload.current_state).to eq 'awaiting_dispatch'
   end
@@ -209,5 +211,14 @@ feature 'cases requiring clearance by disclosure specialist' do
     cases_show_page.load(id: kase.id)
     expect(cases_show_page.case_status.details.copy.text).to eq 'Draft in progress'
     expect(cases_show_page.case_status.details.who_its_with.text).to eq kase.responding_team.name
+  end
+
+  scenario 'approving a case and bypassing press and private clearance', js: true do
+    kase = create :pending_dacu_clearance_case_flagged_for_press_and_private, approver: disclosure_specialist
+    responding_team = kase.responding_team
+    login_as disclosure_specialist
+
+    cases_show_page.load(id: kase.id)
+    approve_case_with_bypass(kase: kase, expected_team: responding_team, expected_status: 'Ready to send')
   end
 end
