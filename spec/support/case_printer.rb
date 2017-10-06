@@ -18,8 +18,9 @@ class CasePrinter
       @lines <<   sprintf("    id: %-5d  role: %-12s state: %-12s team: %-5d %20s  user: %-5s %s", a.id, a.role, a.state, a.team.id, a.team.name, a.user_id.to_s, a.user&.full_name )
     end
     @lines << "Transitions:"
-    @case.transitions.each do |t|
+    @case.transitions.order(:id).each do |t|
       @lines <<   sprintf("    id: %-5d   event: %s", t.id, t.event)
+      @lines <<   sprintf("             to_state: %s", t.to_state)
       @lines <<   sprintf("        acting team: %-5s %-20s acting user: %-5s %s", t.acting_team_id, t.acting_team&.name, t.acting_user_id, t.acting_user&.full_name)
       @lines <<   sprintf("        target team: %-5s %-20s target user: %-5s %s", t.target_team_id, t.target_team&.name, t.target_user_id, t.target_user&.full_name)
     end

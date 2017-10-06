@@ -10,7 +10,7 @@ class CaseDecorator < Draper::Decorator
     if tandu.user.present? && h.current_user.responding_teams.include?(tandu.team)
       tandu.user.full_name
     else
-      tandu.team.name
+      tandu.team&.name
     end
   end
 
@@ -27,8 +27,9 @@ class CaseDecorator < Draper::Decorator
     end
   end
 
+  # we only display the internal deadline for flagged cases
   def internal_deadline
-    if object.requires_clearance?
+    if object.flagged?
       I18n.l(object.internal_deadline, format: :default)
     else
       ' '
