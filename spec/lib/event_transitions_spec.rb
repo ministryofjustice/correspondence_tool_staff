@@ -69,10 +69,10 @@ describe Events do
     it 'adds the workflow to the transition info' do
       event_transition.transition from: :from_state,
                                   to: :to_state,
-                                  workflow: 'new_workflow'
+                                  new_workflow: 'new_workflow'
       expect(TestStateMachine
                .events[:test][:transitions]['from_state']
-               .first[:workflow]).to eq 'new_workflow'
+               .first[:new_workflow]).to eq 'new_workflow'
     end
 
     it 'adds the guard' do

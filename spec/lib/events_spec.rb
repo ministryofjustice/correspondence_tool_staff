@@ -90,7 +90,7 @@ describe Events do
       before do
         machine.events[:switch_workflow][:transitions]['start'] << {
           state: 'end',
-          workflow: 'new_workflow'
+          new_workflow: 'new_workflow'
         }
       end
 
@@ -98,7 +98,8 @@ describe Events do
         allow(resource).to receive(:update)
         allow(instance).to receive(:transition_to!)
         instance.trigger!(:switch_workflow)
-        expect(resource).to have_received(:update).with(workflow: 'new_workflow')
+        expect(resource).to have_received(:update)
+                              .with(workflow: 'new_workflow')
       end
 
       it 'updates the object workflow only after transitioning' do

@@ -7,7 +7,7 @@ class EventTransitions
     instance_eval(&block)
   end
 
-  def transition(from: nil, to: nil, guard: nil, policy: nil, workflow: nil)
+  def transition(from: nil, to: nil, guard: nil, policy: nil, new_workflow: nil)
     @from = to_s_or_nil(from)
     @to = to_s_or_nil(to)
 
@@ -38,7 +38,7 @@ class EventTransitions
       state: @to,
       guards: guards
     }
-    transition[:workflow] = workflow if workflow.present?
+    transition[:new_workflow] = new_workflow if new_workflow.present?
     machine.events[event_name][:transitions][@from] << transition
   end
 
