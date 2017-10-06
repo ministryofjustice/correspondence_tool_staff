@@ -22,6 +22,7 @@ class Assignment < ApplicationRecord
          pending: 'pending',
          rejected: 'rejected',
          accepted: 'accepted',
+         bypassed: 'bypassed'
        }
   enum role: {
          managing: 'managing',

@@ -155,6 +155,16 @@ class CaseStateMachine
                to:   :awaiting_dispatch
   end
 
+  event :approve_and_bypass do
+    transition from: :pending_dacu_clearance,
+               to:   :awaiting_dispatch
+  end
+
+  event :upload_response_approve_and_bypass do
+    transition from: :pending_dacu_clearance,
+               to:   :awaiting_dispatch
+  end
+
   event :request_amends do
     transition from: :pending_press_office_clearance,
                to:   :pending_dacu_clearance
@@ -347,6 +357,23 @@ class CaseStateMachine
              acting_user_id:  user.id,
              event:           :approve,
              acting_team_id:  assignment.team_id
+  end
+
+  def approve_and_bypass!(user, assignment, message)
+    trigger! :approve_and_bypass,
+             acting_user_id:    user.id,
+             acting_team_id:    assignment.team_id,
+             message:           message,
+             event:             :approve_and_bypass
+  end
+
+  def upload_response_approve_and_bypass!(user, team, filenames, message)
+    trigger! :upload_response_approve_and_bypass,
+             acting_user_id:    user.id,
+             acting_team_id:    team.id,
+             event:             :upload_response_approve_and_bypass,
+             message:           message,
+             filenames:         filenames
   end
 
   def request_amends!(user, assignment)

@@ -4,11 +4,6 @@
   = @case.number
 
 = render partial: 'layouts/header'
-
-- if @case.requires_clearance?
-  .form-group
-    = render partial: 'cases/clearance_copy', locals: { nsi: @next_step_info }
-
 .grid-row
   .column-two-thirds
     p.form-hint
@@ -27,6 +22,8 @@
         .message-form
           = text_area_tag(:upload_comment, nil, rows: 4, class: 'form-control')
 
+      - if params[:mode] == 'upload-approve' && @case.allow_event?(current_user, :upload_response_approve_and_bypass)
+        = render partial: 'bypass_approvals_form'
+
       .actions
         = submit_tag t('.upload_response'), class: 'button'
-

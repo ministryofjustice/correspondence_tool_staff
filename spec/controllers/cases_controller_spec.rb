@@ -912,15 +912,7 @@ RSpec.describe CasesController, type: :controller do
         expect(assigns(:case)).to eq(Case.first)
       end
 
-      it 'assigns NextStepInfo' do
-        nsi = double NextStepInfo
-        expect(NextStepInfo).to receive(:new)
-                                  .with(kase, 'upload', responder)
-                                  .and_return(nsi)
 
-        get :new_response_upload, params: { id: kase, action: 'upload' }
-        expect(assigns(:next_step_info)).to eq nsi
-      end
 
       it 'renders the new_response_upload view' do
         get :new_response_upload, params: { id: kase, action: 'upload'  }
@@ -1003,7 +995,9 @@ RSpec.describe CasesController, type: :controller do
       before { sign_in responder }
 
       let(:uploader) { double ResponseUploaderService }
-      let(:expected_params) { ActionController::Parameters.new({"type"=>"response", "uploaded_files"=>[uploads_key], "id"=>kase.id.to_s, "controller"=>"cases", "action"=>"upload_responses"}) }
+      let(:expected_params) { BypassParamsManager.new(
+        ActionController::Parameters.new({"type"=>"response", "uploaded_files"=>[uploads_key], "id"=>kase.id.to_s, "controller"=>"cases", "action"=>"upload_responses"}))
+      }
       let(:response_uploader) { double ResponseUploaderService, upload!: nil, result: :ok }
       let(:flash) { MockFlash.new(action_params: 'upload')}
 
@@ -1017,7 +1011,7 @@ RSpec.describe CasesController, type: :controller do
         allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
         expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
         do_upload_responses
-        expect(response).to redirect_to(case_path(kase))
+        expect(response).to redirect_to(cases_path)
       end
 
       context 'no files specified' do
@@ -1375,62 +1369,6 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
-  describe 'GET approve_response' do
-    context "as an anonymous user" do
-      it "be redirected to signin if trying to approve a case" do
-        get :approve_response, params: { id: assigned_trigger_case.id }
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
-    context 'as an authenticated manager' do
-      before { sign_in manager }
-
-      it 'redirects to the root' do
-        get :approve_response, params: { id: assigned_trigger_case.id }
-        expect(response).to redirect_to(root_path)
-      end
-    end
-
-    context 'as an authenticated responder' do
-      before { sign_in responder }
-
-      it 'redirects to the root' do
-        get :approve_response, params: { id: assigned_trigger_case.id }
-        expect(response).to redirect_to(root_path)
-      end
-    end
-
-    context 'as an authenticated disclosure_specialist' do
-      before do
-        sign_in pending_dacu_clearance_case.approvers.first
-      end
-
-      it 'renders the view' do
-        get :approve_response, params: { id: pending_dacu_clearance_case.id }
-        expect(response).to have_rendered(:approve_response)
-      end
-
-      it 'requires the correct permission' do
-        expect {
-          get :approve_response, params: { id: pending_dacu_clearance_case.id }
-        } .to require_permission(:can_approve_or_escalate_case?)
-                .with_args(pending_dacu_clearance_case.approvers.first,
-                           pending_dacu_clearance_case)
-      end
-
-      it 'gets the next step info' do
-        allow(NextStepInfo).to receive(:new).and_return(:new_next_step_info)
-        get :approve_response, params: { id: pending_dacu_clearance_case.id }
-        expect(NextStepInfo).to have_received(:new)
-                                  .with(pending_dacu_clearance_case,
-                                        'approve',
-                                        pending_dacu_clearance_case.approvers.first)
-        expect(assigns[:next_step_info]).to eq :new_next_step_info
-      end
-    end
-  end
-
   describe 'GET search' do
     before(:each) do
       sign_in responder
@@ -1450,7 +1388,6 @@ RSpec.describe CasesController, type: :controller do
       get :search, params: { query: " #{assigned_case.number} " }
       expect(assigns[:cases]).to eq [assigned_case]
     end
-
     it 'uses the policy scope' do
       allow(controller).to receive(:policy_scope).and_return(Case.none)
       get :search, params: { query: assigned_case.number }

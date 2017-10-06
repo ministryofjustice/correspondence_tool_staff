@@ -205,7 +205,7 @@ module CTS::Cases
         call_case_approval_service(CTS::dacu_disclosure_approver, kase)
       else
         ResponseUploaderService
-          .new(kase, responder, { uploaded_files: nil }, nil)
+          .new(kase, responder, BypassParamsManager.new({}), nil)
           .seed!('spec/fixtures/eon.pdf')
         kase.state_machine.add_responses!(responder,
                                           responding_team,
@@ -220,7 +220,7 @@ module CTS::Cases
     def transition_to_pending_dacu_disclosure_clearance(kase)
       rus = ResponseUploaderService.new(kase,
                                         responder,
-                                        { uploaded_files: nil },
+                                        BypassParamsManager.new({}),
                                         nil)
       rus.seed!('spec/fixtures/eon.pdf')
       kase.state_machine.add_response_to_flagged_case!(responder,

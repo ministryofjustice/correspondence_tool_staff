@@ -128,7 +128,7 @@ feature "#trigger cases" do
 
     uploads_key = "uploads/#{kase.id}/responses/#{Faker::Internet.slug}.jpg"
 
-    params = ActionController::Parameters.new(
+    raw_params = ActionController::Parameters.new(
         {
             "type"=>"response",
             "uploaded_files"=>[uploads_key],
@@ -136,7 +136,7 @@ feature "#trigger cases" do
             "controller"=>"cases",
             "action"=>"upload_responses"}
     )
-
+    params = BypassParamsManager.new(raw_params)
     rus = ResponseUploaderService.new(kase, user, params, action)
     uploader = rus.instance_variable_get :@uploader
     allow(uploader).to receive(:move_uploaded_file)

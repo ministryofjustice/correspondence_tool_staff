@@ -48,7 +48,7 @@ RSpec.describe AssignmentsController, type: :controller do
         params[:show_all] = true
         get :new, params: params, flash:{"creating_case"=> true}
         expect( assigns(:business_units))
-            .to eq [responding_team_1, responding_team_2, responding_team_3]
+            .to match_array([responding_team_1, responding_team_2, responding_team_3])
       end
 
       it 'is not set if no params are used' do

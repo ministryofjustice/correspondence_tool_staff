@@ -34,7 +34,7 @@ RSpec.describe Assignment, type: :model do
   it { should belong_to(:team)                }
   it { should belong_to(:user)                }
   it { should have_enum(:state)
-                .with_values(%w{pending accepted rejected}) }
+                .with_values(%w{pending accepted bypassed rejected}) }
   it { should have_enum(:role)
                 .with_values(%w{managing responding approving}) }
 

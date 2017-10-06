@@ -90,14 +90,14 @@ feature 'cases requiring clearance by press office' do
     expect(open_cases_page.case_list.count).to eq 1
   end
 
-  scenario 'Disclosure Specialist approves a case that requires Press Office approval' do
+  scenario 'Disclosure Specialist approves a case that requires Press Office approval', js: true do
     login_as disclosure_specialist
     cases_show_page.load(id: pending_dacu_clearance_case.id)
 
     approve_case kase: pending_dacu_clearance_case,
                  expected_team: press_office,
                  expected_status: 'Pending clearance'
-    approve_response kase: pending_dacu_clearance_case
+
     select_case_on_open_cases_page kase: pending_dacu_clearance_case,
                                    expected_team: press_office
   end
@@ -112,7 +112,6 @@ feature 'cases requiring clearance by press office' do
     approve_case kase: pending_press_clearance_case,
                  expected_team: pending_press_clearance_case.responding_team,
                  expected_status: 'Ready to send'
-    approve_response kase: pending_press_clearance_case
     select_case_on_open_cases_page(
       kase: pending_press_clearance_case,
       expected_team: pending_press_clearance_case.responding_team
