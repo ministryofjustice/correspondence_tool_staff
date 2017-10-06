@@ -39,7 +39,7 @@ module Events
             + "and metadata: #{metadata}"
     end
     if target_state.key? :workflow
-      object.switch_to_workflow target_state[:workflow].to_s
+      object.update workflow: target_state[:workflow].to_s
     end
     new_state = target_state.fetch(:state)
     transition_to!(new_state, metadata)
