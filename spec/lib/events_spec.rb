@@ -86,15 +86,28 @@ describe Events do
         .to raise_error(Statesman::GuardFailedError)
     end
 
-    it 'updates the objects workflow if set by transition' do
-      allow(resource).to receive(:update)
-      allow(instance).to receive(:transition_to!)
-      machine.events[:switch_workflow][:transitions]['start'] << {
-        state: 'end',
-        workflow: 'new_workflow'
-      }
-      instance.trigger!(:switch_workflow)
-      expect(resource).to have_received(:update).with(workflow: 'new_workflow')
+    context 'with a new workflow' do
+      before do
+        machine.events[:switch_workflow][:transitions]['start'] << {
+          state: 'end',
+          workflow: 'new_workflow'
+        }
+      end
+
+      it 'updates the object workflow' do
+        allow(resource).to receive(:update)
+        allow(instance).to receive(:transition_to!)
+        instance.trigger!(:switch_workflow)
+        expect(resource).to have_received(:update).with(workflow: 'new_workflow')
+      end
+
+      it 'updates the object workflow only after transitioning' do
+        allow(instance).to receive(:transition_to!)
+        allow(resource).to receive(:update) {
+          expect(instance).to have_received(:transition_to!)
+        }
+        instance.trigger!(:switch_workflow)
+      end
     end
   end
 
