@@ -54,10 +54,8 @@ module PageObjects
           element :add_button, '.button'
         end
 
-        section :case_history, '#case-history' do
-          element :heading, 'thead tr'
-          elements :entries, 'tbody tr'
-        end
+        section :case_history,
+                PageObjects::Sections::Cases::CaseHistorySection, '#case-history'
       end
 
     end

@@ -48,41 +48,6 @@ FactoryGirl.define do
       evaluator.managing_team
     end
 
-    trait :with_messages do
-      after(:create) do |kase|
-        if kase.current_state.in?(%w( drafting awaiting_dispatch pending_dacu_clearance responded closed ))
-          Timecop.freeze(20.seconds.ago) do
-            create(:case_transition_add_message_to_case,
-                   case_id: kase.id,
-                   acting_user_id: kase.responder.id,
-                   acting_team_id: kase.responding_team.id,
-                   message: "I've accepted this case as a KILO")
-          end
-        end
-
-        if kase.current_state.in?(%w( awaiting_dispatch pending_dacu_clearance responded closed ))
-          Timecop.freeze(15.seconds.ago) do
-            create(:case_transition_add_message_to_case,
-                   case_id: kase.id,
-                   acting_user_id: kase.responder.id,
-                   acting_team_id: kase.responding_team.id,
-                   message: "I've uploaded a response")
-          end
-        end
-
-        if kase.current_state.in?(%w(  pending_dacu_clearance ))
-          Timecop.freeze(10.seconds.ago) do
-            create(:case_transition_add_message_to_case,
-                   case_id: kase.id,
-                   acting_user_id: kase.responder.id,
-                   acting_team_id: kase.responding_team.id,
-                   message: "I'm the approver for this case")
-          end
-        end
-      end
-    end
-
-
     after(:create) do | kase, evaluator|
       ma = kase.managing_assignment
       ma.update! created_at: evaluator.creation_time
@@ -681,4 +646,51 @@ FactoryGirl.define do
   trait :sent_by_email do
     delivery_method :sent_by_email
   end
+
+  trait :with_messages do
+
+    after(:create) do |kase|
+
+      if kase.current_state.in?(%w( awaiting_responder ))
+        Timecop.freeze(25.seconds.ago) do
+          create(:case_transition_add_message_to_case,
+                 case_id: kase.id,
+                 acting_user_id: kase.responding_team.users.first.id,
+                 acting_team_id: kase.responding_team.id,
+                 message: "I'm not sure if I should accept or reject this case")
+        end
+      end
+
+      if kase.current_state.in?(%w( drafting awaiting_dispatch pending_dacu_clearance responded closed ))
+        Timecop.freeze(20.seconds.ago) do
+          create(:case_transition_add_message_to_case,
+                 case_id: kase.id,
+                 acting_user_id: kase.responder.id,
+                 acting_team_id: kase.responding_team.id,
+                 message: "I've accepted this case as a KILO")
+        end
+      end
+
+      if kase.current_state.in?(%w( awaiting_dispatch pending_dacu_clearance responded closed ))
+        Timecop.freeze(15.seconds.ago) do
+          create(:case_transition_add_message_to_case,
+                 case_id: kase.id,
+                 acting_user_id: kase.responder.id,
+                 acting_team_id: kase.responding_team.id,
+                 message: "I've uploaded a response")
+        end
+      end
+
+      if kase.current_state.in?(%w(  pending_dacu_clearance ))
+        Timecop.freeze(10.seconds.ago) do
+          create(:case_transition_add_message_to_case,
+                 case_id: kase.id,
+                 acting_user_id: kase.responder.id,
+                 acting_team_id: kase.responding_team.id,
+                 message: "I'm the approver for this case")
+        end
+      end
+    end
+  end
+
 end

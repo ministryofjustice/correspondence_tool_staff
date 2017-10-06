@@ -53,6 +53,7 @@ module PageObjects
         case_status:                  'Cases::CaseStatusSection',
         case_request:                 'Cases::CaseRequestSection',
         case_details:                 'Cases::CaseDetailsSection',
+        case_history:                 'Cases::CaseHistorySection',
         clearance_levels:             'Cases::ClearanceLevelsSection',
         case_attachments:             'Cases::CaseAttachmentSection',
         clearance_copy:               'Cases::ClearanceCopySection',
