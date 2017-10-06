@@ -64,7 +64,6 @@ describe Cases::BasePolicy do
 
   after(:each) do |example|
     if example.exception
-      policy_class = described_class
       failed_checks = described_class.failed_checks rescue []
       puts "Failed CasePolicy checks: " +
            failed_checks.map(&:first).map(&:to_s).join(', ')

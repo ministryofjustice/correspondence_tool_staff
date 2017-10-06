@@ -1,4 +1,5 @@
 module Cases
+  #rubocop:disable Metrics/ClassLength
   class BasePolicy < ApplicationPolicy
     attr_accessor :user, :case
 
@@ -507,4 +508,5 @@ module Cases
     end
 
   end
+  #rubocop:enable Metrics/ClassLength
 end
