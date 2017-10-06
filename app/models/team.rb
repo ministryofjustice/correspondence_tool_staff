@@ -20,6 +20,8 @@ class Team < ApplicationRecord
 
   acts_as_tree
 
+  has_paper_trail ignore: [:created_at, :updated_at]
+
   has_many :user_roles, class_name: 'TeamsUsersRole'
   has_many :users, -> { order(:full_name) }, through: :user_roles
   has_many :properties, class_name: TeamProperty, :dependent => :delete_all

@@ -16,6 +16,7 @@
 require 'rails_helper'
 
 RSpec.describe Team, type: :model do
+
   let(:team) { create :team }
 
   it 'can be created' do
@@ -243,6 +244,28 @@ RSpec.describe Team, type: :model do
       team.properties << TeamProperty.new(key: 'lead', value: 'A Team Lead')
       team.team_lead = 'A Newer Team Lead'
       expect(team.properties.lead.first.value).to eq 'A Newer Team Lead'
+    end
+  end
+
+  describe 'paper_trail versions', versioning: true do
+
+    it 'has versions' do
+      it { is_expected.to be_versioned }
+    end
+
+    context 'on create' do
+      it 'updates versions' do
+        expect(team.versions.length).to eq 1
+        expect(team.versions.last.event).to eq 'create'
+      end
+    end
+
+    context 'on update' do
+      before(:each) {team.name = 'Name Changing Unit'}
+      it 'updates versions' do
+        expect{team.update_attributes!(name: 'Name Changing Unit')}.to change(team.versions, :count).by 1
+        expect(team.versions.last.event).to eq 'update'
+      end
     end
   end
 end

@@ -9,6 +9,7 @@ require 'rspec/rails'
 require 'capybara/rails'
 require 'capybara/poltergeist'
 require 'rails-controller-testing'
+require 'paper_trail/frameworks/rspec'
 
 
 Capybara.javascript_driver = :poltergeist
@@ -143,6 +144,3 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
-
-
-

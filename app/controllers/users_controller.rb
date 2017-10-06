@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :set_paper_trail_whodunnit
   before_action :set_team, only: [:create, :index, :new, :edit, :update]
 
   def create

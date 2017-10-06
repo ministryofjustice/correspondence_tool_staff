@@ -1,4 +1,6 @@
 class TeamsController < ApplicationController
+  before_action :set_paper_trail_whodunnit
+
   before_action :set_team, only: [:business_areas_covered,
                                   :create_business_areas_covered, :show,
                                   :edit,
@@ -9,7 +11,6 @@ class TeamsController < ApplicationController
 
   before_action :set_areas, only: [:business_areas_covered,
                                   :create_business_areas_covered]
-
 
   def index
     @teams = policy_scope(Team)

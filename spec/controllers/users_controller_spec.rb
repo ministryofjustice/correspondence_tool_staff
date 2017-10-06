@@ -4,7 +4,7 @@ RSpec.describe UsersController, type: :controller do
   let(:manager) { create :manager }
   let(:dacu)    { create :team_dacu }
 
-  describe 'POST create' do
+  describe 'POST create', versioning: true do
     let(:params) do
       {
         user: {
@@ -62,9 +62,15 @@ RSpec.describe UsersController, type: :controller do
         expect(response).to redirect_to(team_path(id: dacu.id))
       end
     end
+
+    it 'records the id of the user who is creating a new user' do
+      post :create, params: params
+      whodunnit = User.last.versions.last.whodunnit.to_i
+      expect(whodunnit).to eq manager.id
+    end
   end
 
-  describe 'PATCH update' do
+  describe 'PATCH update', versioning: true do
 
     before { sign_in manager }
 
@@ -93,6 +99,11 @@ RSpec.describe UsersController, type: :controller do
     it 'redirects to team page' do
       patch :update, params: params
       expect(response).to redirect_to(team_path(team.id))
+    end
+    it 'records the id of the user who is performing an update' do
+      patch :update, params: params
+      whodunnit = user.versions.last.whodunnit.to_i
+      expect(whodunnit).to eq manager.id
     end
   end
 
