@@ -18,6 +18,9 @@ class CasesController < ApplicationController
       :show,
       :destroy,
       :unflag_for_clearance,
+      :unflag_taken_on_case_for_clearance,
+      :remove_clearance,
+      :update,
       :upload_responses,
     ]
   before_action :set_assignment, only: [:show]
@@ -243,11 +246,25 @@ class CasesController < ApplicationController
     render :index
   end
 
+  def unflag_taken_on_case_for_clearance
+    authorize @case, :can_unflag_for_clearance?
+    service = CaseUnflagForClearanceService.new(user: current_user,
+                                      kase: @case,
+                                      team: BusinessUnit.dacu_disclosure,
+                                      message: params[:message])
+    service.call
+    if service.result == :ok
+      flash[:notice] = "Clearance removed for case #{@case.number}"
+      redirect_to cases_path
+    end
+  end
+
   def unflag_for_clearance
     authorize @case, :can_unflag_for_clearance?
     CaseUnflagForClearanceService.new(user: current_user,
                                       kase: @case,
-                                      team: BusinessUnit.dacu_disclosure).call
+                                      team: BusinessUnit.dacu_disclosure,
+                                      message: params[:message]).call
   end
 
   def flag_for_clearance
@@ -255,6 +272,10 @@ class CasesController < ApplicationController
     CaseFlagForClearanceService.new(user: current_user,
                                     kase: @case,
                                     team: BusinessUnit.dacu_disclosure).call
+  end
+
+  def remove_clearance
+    @case = Case.find(params[:id]).decorate
   end
 
   def approve_response_interstitial
@@ -359,6 +380,9 @@ class CasesController < ApplicationController
         kase.errors.add(:message_text, error)
       end
     end
+  end
+  def redirect?(kase)
+
   end
 end
 

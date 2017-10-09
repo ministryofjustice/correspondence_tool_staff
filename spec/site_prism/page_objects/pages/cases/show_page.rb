@@ -31,7 +31,7 @@ module PageObjects
                 PageObjects::Sections::Cases::CaseDetailsSection, '.case-details'
 
         section :clearance_levels,
-                PageObjects::Sections::Cases::ClearanceLevelsSection, '.clearance-levels'
+                PageObjects::Sections::Cases::ClearanceLevelsSection, '.clearance-details'
 
         section :request,
                 PageObjects::Sections::Cases::CaseRequestSection, '.request'

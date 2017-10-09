@@ -33,6 +33,8 @@ describe 'cases/clearance_details.html.slim', type: :view do
       allow(@kase).to receive(:default_team_service).and_return(@dts)
       allow(@dts).to receive(:approving_team).and_return(team_dacu_disclosure)
       allow(@kase).to receive(:default_clearance_approver).and_return('Dack Dispirito')
+      allow(@kase).to receive(:id).and_return(1)
+      allow(@kase).to receive(:requires_clearance?).and_return(false)
     end
 
     context 'case not flagged for approval' do
@@ -70,7 +72,7 @@ describe 'cases/clearance_details.html.slim', type: :view do
         partial = clearance_levels_section(rendered).basic_details
 
         expect(partial.deputy_director.data.text).to eq 'Margaret Thatcher'
-        expect(partial.dacu_disclosure.data.text).to eq 'Dack Dispirito'
+        expect(partial.dacu_disclosure.text).to include 'Dack Dispirito'
       end
     end
 
@@ -89,7 +91,7 @@ describe 'cases/clearance_details.html.slim', type: :view do
         partial = clearance_levels_section(rendered).basic_details
 
         expect(partial.deputy_director.data.text).to eq 'Margaret Thatcher'
-        expect(partial.dacu_disclosure.data.text).to eq 'Dack Dispirito'
+        expect(partial.dacu_disclosure.text).to include 'Dack Dispirito'
 
         approver_dets = partial.non_default_approvers[0]
         expect(approver_dets.department_name.text).to eq 'Press Office'

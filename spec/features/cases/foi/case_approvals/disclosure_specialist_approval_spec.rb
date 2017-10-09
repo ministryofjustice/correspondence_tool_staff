@@ -121,6 +121,20 @@ feature 'cases requiring clearance by disclosure specialist' do
   end
 
   scenario 'taking_on, undoing and de-escalating a case as a disclosure specialist', js: true do
+   kase = create_flagged_case_and_assign_to_team(6.days)
+
+   login_as disclosure_specialist
+
+   case_list_item = take_case_on_as_discosure_specialist(
+    kase: kase,
+    expected_approver: disclosure_specialist
+    )
+    undo_take_case_on_as_disclosure_specialist(kase, case_list_item)
+    de_escalate_case_as_disclosure_specialist(kase, case_list_item)
+    undo_de_escalate_case_as_disclosure_specialist(kase, case_list_item)
+  end
+
+  scenario 'taking_on, undoing and de-escalating a case as a disclosure specialist', js: true do
     kase = create_flagged_case_and_assign_to_team(6.days)
 
     login_as disclosure_specialist
@@ -194,6 +208,27 @@ feature 'cases requiring clearance by disclosure specialist' do
     cases_show_page.load(id: kase.id)
     expect(cases_show_page.case_status.details.copy.text).to eq 'Ready to send'
     expect(cases_show_page.case_status.details.who_its_with.text).to eq responding_team.name
+  end
+
+  scenario 'upload a response and remove clearance as a disclosure specialist', js: true do
+    kase = create_flagged_case_and_assign_to_team(7.days)
+    accept_case_as_kilo(kase)
+
+    upload_response_as_kilo(kase.reload, responder)
+
+    login_as disclosure_specialist
+    take_case_on_as_discosure_specialist(
+      kase: kase,
+      expected_approver: disclosure_specialist
+    )
+    cases_show_page.load(id: kase.id)
+    expect(cases_show_page.clearance_levels.basic_details.dacu_disclosure.remove_clearance.text).to eq(
+      'Remove clearance')
+    cases_show_page.clearance_levels.basic_details.dacu_disclosure.remove_clearance.click
+    expect(page).to have_current_path(remove_clearance_case_path(kase))
+    fill_in 'Reason for removing clearance', :with => "reason"
+    cases_remove_clearance_form_page.submit_button.click
+    expect(cases_show_page.notice.text).to eq "Clearance removed for case #{kase.number}"
   end
 
   scenario 'upload a response and return for redraft', js: true do

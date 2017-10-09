@@ -1122,10 +1122,57 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
+  describe 'PATCH unflag_taken_on_case_for_clearance' do
+    let!(:service) {double(CaseUnflagForClearanceService)}
+    let(:params) { { id: flagged_case.id, message: "message"} }
+
+    context 'as an authenticated responder' do
+      before do
+        sign_in responder
+      end
+      it 'flashes an alert to the user' do
+        patch :unflag_taken_on_case_for_clearance, params: params
+        expect(flash['alert']).to eq 'You are not authorised to remove clearance from this case'
+      end
+    end
+
+    context 'as an authenticated disclosure_specialist' do
+      before do
+        sign_in disclosure_specialist
+      end
+
+      it 'renders the view' do
+        patch :unflag_taken_on_case_for_clearance, params: params
+        expect(response).to redirect_to(cases_path)
+      end
+
+      it 'displays a flash notice' do
+        patch :unflag_taken_on_case_for_clearance, params: params
+        expect(flash[:notice]).to eq "Clearance removed for case #{flagged_case.number}"
+      end
+    end
+
+    context 'as an authenicated manager' do
+      before do
+        sign_in manager
+      end
+
+      it 'renders the view' do
+        patch :unflag_taken_on_case_for_clearance, params: params
+        expect(response).to redirect_to(cases_path)
+      end
+
+      it 'displays a flash notice' do
+        patch :unflag_taken_on_case_for_clearance, params: params
+        expect(flash[:notice]).to eq "Clearance removed for case #{flagged_case.number}"
+      end
+    end
+  end
+
   describe 'PATCH unflag_for_clearance' do
     let!(:service) do
       double(CaseUnflagForClearanceService, call: true).tap do |svc|
-        allow(CaseUnflagForClearanceService).to receive(:new).and_return(svc)
+      allow(CaseUnflagForClearanceService).to receive(:new).and_return(svc)
       end
     end
 
@@ -1135,7 +1182,7 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    let(:params) { { id: flagged_case.id } }
+    let(:params) { { id: flagged_case.id} }
 
     context 'as an anonymous user' do
       it 'redirects to sign_in' do
@@ -1181,7 +1228,8 @@ RSpec.describe CasesController, type: :controller do
         expect(CaseUnflagForClearanceService)
           .to have_received(:new).with(user: manager,
                                        kase: flagged_case_decorated,
-                                       team: BusinessUnit.dacu_disclosure)
+                                       team: BusinessUnit.dacu_disclosure,
+                                       message: nil)
         expect(service).to have_received(:call)
       end
 
@@ -1206,7 +1254,8 @@ RSpec.describe CasesController, type: :controller do
         expect(CaseUnflagForClearanceService)
           .to have_received(:new).with(user: disclosure_specialist,
                                        kase: flagged_case_decorated,
-                                       team: BusinessUnit.dacu_disclosure)
+                                       team: BusinessUnit.dacu_disclosure,
+                                       message: nil)
         expect(service).to have_received(:call)
       end
 
@@ -1475,5 +1524,3 @@ RSpec.describe CasesController, type: :controller do
   end
 
 end
-
-

@@ -86,6 +86,10 @@ module CasesHelper
 
   end
 
+  def show_remove_clearance_link(kase)
+    CaseUnflagForClearanceService.eligible?(kase) ? link_to('Remove clearance', remove_clearance_case_path(id: kase.id)) : ""
+  end
+
   def attachment_preview_link(attachment)
     if attachment.preview_key != nil
       link_to "View",

@@ -124,4 +124,18 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
         .to eq 'error_case_uploaded_request_files'
     end
   end
+  describe '#show_remove_clearance_link' do
+    context 'clearance can be removed' do
+      it 'returns the remove clearance link' do
+        dacu_flagged_kase = create :pending_dacu_clearance_case
+        expect(show_remove_clearance_link(dacu_flagged_kase)).to eq("<a href=\"/cases/#{dacu_flagged_kase.id}/remove_clearance\">Remove clearance</a>")
+      end
+    end
+    context 'clearance cannot be removed' do
+      it 'returns an empty string' do
+        press_flagged_case = create :pending_dacu_clearance_case_flagged_for_press
+        expect(show_remove_clearance_link(press_flagged_case)).to eq ""
+      end
+    end
+  end
 end
