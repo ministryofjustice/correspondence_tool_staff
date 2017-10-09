@@ -7,6 +7,7 @@ class EventTransitions
     instance_eval(&block)
   end
 
+  # rubocop:disable Metrics/ParameterLists
   def transition(from: nil, to: nil, guard: nil, policy: nil, new_workflow: nil,
                  authorize: nil)
     unless policy.nil?
@@ -34,6 +35,7 @@ class EventTransitions
     transition[:new_workflow] = new_workflow if new_workflow.present?
     machine.events[event_name][:transitions][@from] << transition
   end
+  # rubocop:enable Metrics/ParameterLists
 
   def guard(&block)
     add_callback(callback_type: :guards, &block)
