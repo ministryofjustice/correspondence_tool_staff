@@ -5,12 +5,13 @@ describe ResponseUploaderService do
   let(:upload_group)       { '20170615102233' }
   let(:responder)          { create :responder }
   let(:kase)               { create(:accepted_case, responder: responder) }
+  let(:user)               { kase.responder }
   let(:filename)           { "#{Faker::Internet.slug}.jpg" }
   let(:uploads_key)        { "uploads/#{kase.id}/responses/#{filename}" }
   let(:destination_key)    { "#{kase.id}/responses/#{upload_group}/#{filename}" }
   let(:destination_path)   { "correspondence-staff-case-uploads-testing/#{destination_key}" }
   let(:rus)                { ResponseUploaderService.new(kase,
-                                                         kase.responder,
+                                                         user,
                                                          params,
                                                          action) }
   let(:attachments)        { [instance_double(CaseAttachment,
@@ -35,6 +36,9 @@ describe ResponseUploaderService do
   before(:each) do
     ActiveJob::Base.queue_adapter = :test
     allow(S3Uploader).to receive(:new).and_return(uploader)
+
+    allow(AssignmentMailer).to receive_message_chain(:ready_for_approver_review,
+                                                       :deliver_later)
   end
 
   describe '#upload!' do
@@ -68,6 +72,7 @@ describe ResponseUploaderService do
           params.params.delete('uploaded_files')
           rus.upload!
           expect(rus.result).to eq :blank
+
         end
       end
 
@@ -80,7 +85,8 @@ describe ResponseUploaderService do
         end
 
         it 'returns :error' do
-          expect(rus.upload!).to eq :error
+          rus.upload!
+          expect(rus.result).to eq :error
         end
       end
 
@@ -93,7 +99,8 @@ describe ResponseUploaderService do
         end
 
         it 'returns :error' do
-          expect(rus.upload!).to eq :error
+          rus.upload!
+          expect(rus.result).to eq :error
         end
       end
 
@@ -106,7 +113,8 @@ describe ResponseUploaderService do
         end
 
         it 'returns :error' do
-          expect(rus.upload!).to eq :error
+          rus.upload!
+          expect(rus.result).to eq :error
         end
       end
 
@@ -119,7 +127,8 @@ describe ResponseUploaderService do
         end
 
         it 'returns :error' do
-          expect(rus.upload!).to eq :error
+          rus.upload!
+          expect(rus.result).to eq :error
         end
       end
     end
@@ -154,5 +163,48 @@ describe ResponseUploaderService do
     end
   end
 
+  describe 'notifying approvers when a case is ready for them to clear' do
+    context 'as Disclosure' do
+
+      let(:kase)            { create :pending_dacu_clearance_case_flagged_for_press }
+      let(:user)            { kase.assigned_disclosure_specialist }
+
+      context 'clear and upload a response' do
+        let(:action)          { 'upload-approve' }
+
+        it 'does send an email' do
+          rus.upload!
+          expect(rus.result).to eq :ok
+
+          current_info = CurrentTeamAndUserService.new(kase)
+          assignment = kase.approver_assignments
+                         .for_team(current_info.team)
+                         .first
+
+          expect(AssignmentMailer).to have_received(:ready_for_approver_review).with assignment
+        end
+      end
+
+      context 'upload a response and request redraft' do
+        let(:action)          { 'upload-redraft' }
+
+        it 'does not send an email' do
+          rus.upload!
+          expect(rus.result).to eq :ok
+          expect(AssignmentMailer).not_to have_received(:ready_for_approver_review)
+        end
+      end
+    end
+
+    context 'as responder when I upload a response' do
+      let(:action)  { 'upload' }
+
+      it 'does not send an email' do
+        rus.upload!
+        expect(rus.result).to eq :ok
+        expect(AssignmentMailer).not_to have_received(:ready_for_approver_review)
+      end
+    end
+  end
 end
 

@@ -31,16 +31,21 @@ class CaseApprovalService
                        .with_teams(@user.approving_team)
                        .singular
         assignment.update!(approved: true)
+
         if @bypass_params.present? && @bypass_params.bypass_requested?
           bypass_press_and_private_approvals(assignment)
         else
           approve_and_progress_as_normal(assignment)
         end
+
         @result = :ok
       end
     rescue Statesman::GuardFailedError
       @result = :error
     end
+
+    notify_next_approver if @result == :ok
+
   end
 
   def approve_and_progress_as_normal(assignment)
@@ -58,4 +63,18 @@ class CaseApprovalService
     assignment.bypassed! unless assignment.nil?
   end
 
+  def notify_next_approver
+    if @kase.current_state
+           .in?(%w( pending_press_office_clearance pending_private_office_clearance ))
+
+      current_info = CurrentTeamAndUserService.new(@kase)
+      assignment = @kase.approver_assignments
+                       .for_team(current_info.team)
+                       .first
+
+      AssignmentMailer
+          .ready_for_approver_review( assignment )
+          .deliver_later
+    end
+  end
 end

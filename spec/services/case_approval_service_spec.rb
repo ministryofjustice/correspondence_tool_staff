@@ -12,6 +12,11 @@ describe CaseApprovalService do
                  present?: false
       end
 
+      before do
+        allow(AssignmentMailer).to receive_message_chain(:ready_for_approver_review,
+                                                       :deliver_later)
+      end
+
       let(:service)  { CaseApprovalService.new(user: user, kase: kase, bypass_params: bypass_params) }
 
       context 'case not in pending_dacu_clearance state' do
@@ -56,6 +61,11 @@ describe CaseApprovalService do
           expect(transition.acting_user_id).to eq user.id
           expect(transition.acting_team_id).to eq kase.approving_teams.first.id
         end
+
+        it 'does not send an email' do
+          service.call
+          expect(AssignmentMailer).not_to have_received(:ready_for_approver_review)
+        end
       end
 
       context 'approving case that requires another level of clearance' do
@@ -89,6 +99,12 @@ describe CaseApprovalService do
           expect(transition.acting_user_id).to eq user.id
           expect(transition.acting_team_id).to eq dacu_disclosure.id
         end
+
+        it 'does send an email' do
+          assignment = kase.approver_assignments.with_teams(BusinessUnit.press_office).first
+          service.call
+          expect(AssignmentMailer).to have_received(:ready_for_approver_review).with assignment
+        end
       end
 
       context 'approving case with different user in the same team' do
@@ -96,11 +112,18 @@ describe CaseApprovalService do
         let(:user) { create :approver,
                             approving_team: kase.approving_teams.first }
 
-        it 'returns :ok' do
+        it 'returns :error' do
           service.call
           expect(service.result).to eq :error
         end
+
+        it 'does not send an email' do
+          service.call
+          expect(AssignmentMailer).not_to have_received(:ready_for_approver_review)
+        end
       end
+
+
     end
 
     context 'bypassing press and private approval' do

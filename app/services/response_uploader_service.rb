@@ -13,6 +13,7 @@ class ResponseUploaderService
     @bypass_params_manager = bypass_params_manager
     @uploaded_files = @bypass_params_manager.params[:uploaded_files]
     @result = nil
+    @attachments = nil
     @action = action_params
     @type = :response
     @uploader = S3Uploader.new(@case, @current_user)
@@ -24,19 +25,25 @@ class ResponseUploaderService
   end
 
   def upload!
-    if @uploaded_files.blank?
-      @result = :blank
-    else
-      attachments = @uploader.process_files(@uploaded_files, @type)
-      transition_state(attachments)
-      @result = :ok
-      attachments
+    begin
+      if @uploaded_files.blank?
+        @result = :blank
+        @attachments = []
+      else
+        @attachments = @uploader.process_files(@uploaded_files, @type)
+        transition_state(@attachments)
+        @result = :ok
+      end
+    rescue Aws::S3::Errors::ServiceError,
+           ActiveRecord::RecordInvalid,
+           ActiveRecord::RecordNotUnique => err
+      Rails.logger.error("Error processing uploaded files: #{err.message}")
+      @result = :error
+      @attachments = nil
     end
-  rescue Aws::S3::Errors::ServiceError,
-         ActiveRecord::RecordInvalid,
-         ActiveRecord::RecordNotUnique => err
-    Rails.logger.error("Error processing uploaded files: #{err.message}")
-    @result = :error
+
+    notify_next_approver if @result == :ok && @action == 'upload-approve'
+    @attachments
   end
 
   private
@@ -100,6 +107,21 @@ class ResponseUploaderService
       @case.approving_teams.with_user(@current_user).first,
       filenames
     )
+  end
+
+  def notify_next_approver
+    if @case.current_state
+           .in?(%w( pending_press_office_clearance pending_private_office_clearance ))
+
+      current_info = CurrentTeamAndUserService.new(@case)
+      assignment = @case.approver_assignments
+                       .for_team(current_info.team)
+                       .first
+
+      AssignmentMailer
+          .ready_for_approver_review( assignment )
+          .deliver_later
+    end
   end
 
 end
