@@ -55,12 +55,24 @@ class CaseStateMachine
   end
 
   event :unflag_for_clearance do
-    transition from: :unassigned,             to: :unassigned
-    transition from: :awaiting_responder,     to: :awaiting_responder
-    transition from: :drafting,               to: :drafting
-    transition from: :awaiting_dispatch,      to: :awaiting_dispatch
-    transition from: :pending_dacu_clearance, to: :awaiting_dispatch
-    transition from: :pending_dacu_clearance, to: :pending_dacu_clearance
+    transition from:      :unassigned,
+               to:        :unassigned,
+               authorize: true
+    transition from:      :awaiting_responder,
+               to:        :awaiting_responder,
+               authorize: true
+    transition from:      :drafting,
+               to:        :drafting,
+               authorize: true
+    transition from:      :awaiting_dispatch,
+               to:        :awaiting_dispatch,
+               authorize: true
+    transition from:      :pending_dacu_clearance,
+               to:        :awaiting_dispatch,
+               authorize: true
+    transition from:      :pending_dacu_clearance,
+               to:        :pending_dacu_clearance,
+               authorize: true
   end
 
   event :take_on_for_approval do
@@ -120,8 +132,12 @@ class CaseStateMachine
   end
 
   event :assign_to_new_team do
-    transition from: :awaiting_responder,     to: :awaiting_responder
-    transition from: :drafting,               to: :awaiting_responder
+    transition from: :awaiting_responder,
+               to: :awaiting_responder,
+               authorize: true
+    transition from: :drafting,
+               to: :awaiting_responder,
+               authorize: true
   end
 
   event :add_responses do
@@ -134,76 +150,88 @@ class CaseStateMachine
   end
 
   event :add_response_to_flagged_case do
-    transition from: :drafting, to: :pending_dacu_clearance
+    transition from: :drafting, to: :pending_dacu_clearance, authorize: true
   end
 
   event :upload_response_and_return_for_redraft do
-    transition from: :pending_dacu_clearance,
-               to: :drafting
+    transition from:      :pending_dacu_clearance,
+               to:        :drafting,
+               authorize: true
   end
 
   event :approve do
-    transition from: :pending_dacu_clearance,
-               to:   :awaiting_dispatch
-    transition from: :pending_dacu_clearance,
-               to:   :pending_press_office_clearance
-    transition from: :pending_press_office_clearance,
-               to:   :awaiting_dispatch
-    transition from: :pending_press_office_clearance,
-               to:   :pending_private_office_clearance
-    transition from: :pending_private_office_clearance,
-               to:   :awaiting_dispatch
+    transition from:      :pending_dacu_clearance,
+               to:        :awaiting_dispatch,
+               authorize: true
+    transition from:      :pending_dacu_clearance,
+               to:        :pending_press_office_clearance,
+               authorize: true
+    transition from:      :pending_press_office_clearance,
+               to:        :awaiting_dispatch,
+               authorize: true
+    transition from:      :pending_press_office_clearance,
+               to:        :pending_private_office_clearance,
+               authorize: true
+    transition from:      :pending_private_office_clearance,
+               to:        :awaiting_dispatch,
+               authorize: true
   end
 
   event :approve_and_bypass do
-    transition from: :pending_dacu_clearance,
-               to:   :awaiting_dispatch
+    transition from:      :pending_dacu_clearance,
+               to:        :awaiting_dispatch,
+               authorize: true
   end
 
   event :upload_response_approve_and_bypass do
-    transition from: :pending_dacu_clearance,
-               to:   :awaiting_dispatch
+    transition from:      :pending_dacu_clearance,
+               to:        :awaiting_dispatch,
+               authorize: true
   end
 
   event :request_amends do
-    transition from: :pending_press_office_clearance,
-               to:   :pending_dacu_clearance
-    transition from: :pending_private_office_clearance,
-               to:   :pending_dacu_clearance
+    transition from:      :pending_press_office_clearance,
+               to:        :pending_dacu_clearance,
+               authorize: true
+    transition from:      :pending_private_office_clearance,
+               to:        :pending_dacu_clearance,
+               authorize: true
   end
 
   event :upload_response_and_approve do
-    transition from: :pending_dacu_clearance,
-               to:   :awaiting_dispatch
-    transition from: :pending_dacu_clearance,
-               to:   :pending_press_office_clearance
+    transition from:      :pending_dacu_clearance,
+               to:        :awaiting_dispatch,
+               authorize: true
+    transition from:      :pending_dacu_clearance,
+               to:        :pending_press_office_clearance,
+               authorize: true
   end
 
   event :reassign_user do
 
-    transition from:   :unassigned,
-               to:     :unassigned,
-               policy: :reassign_user?
+    transition from:      :unassigned,
+               to:        :unassigned,
+               authorize: :reassign_user?
 
-    transition from:   :awaiting_responder,
-               to:     :awaiting_responder,
-               policy: :reassign_user?
+    transition from:      :awaiting_responder,
+               to:        :awaiting_responder,
+               authorize: :reassign_user?
 
-    transition from:   :drafting,
-               to:     :drafting,
-               policy: :reassign_user?
+    transition from:      :drafting,
+               to:        :drafting,
+               authorize: :reassign_user?
 
-    transition from:   :pending_dacu_clearance,
-               to:     :pending_dacu_clearance,
-               policy: :reassign_user?
+    transition from:      :pending_dacu_clearance,
+               to:        :pending_dacu_clearance,
+               authorize: :reassign_user?
 
-    transition from:   :pending_press_office_clearance,
-               to:     :pending_press_office_clearance,
-               policy: :reassign_user?
+    transition from:      :pending_press_office_clearance,
+               to:        :pending_press_office_clearance,
+               authorize: :reassign_user?
 
-    transition from:   :pending_private_office_clearance,
-               to:     :pending_private_office_clearance,
-               policy: :reassign_user?
+    transition from:      :pending_private_office_clearance,
+               to:        :pending_private_office_clearance,
+               authorize: :reassign_user?
   end
 
   event :remove_response do

@@ -25,12 +25,7 @@ describe Events do
 
   let(:object) { Model.new }
   let(:instance) { TestStateMachine.new(object) }
-  let(:guard) do
-    state_info = TestStateMachine
-                   .events[:test][:transitions]['from_state']
-                   .first
-    state_info[:guards].first
-  end
+  let(:event_transition) { EventTransitions.new(TestStateMachine, :test) {} }
 
   describe '#initialize' do
     it 'instance_evals the given block' do
@@ -44,7 +39,6 @@ describe Events do
 
   describe '#transition' do
     let(:user) { create :user }
-    let(:event_transition) { EventTransitions.new(TestStateMachine, :test) {} }
 
     before do
       allow(TestStateMachine).to receive(:transition).with(any_args)
@@ -76,21 +70,74 @@ describe Events do
     end
 
     it 'adds the guard' do
-      event_transition.transition from: :from_state,
-                                  to: :to_state,
+      event_transition.transition from:  :from_state,
+                                  to:    :to_state,
                                   guard: :a_guard
       expect(TestStateMachine.events[:test][:transitions]['from_state'].first[:guards])
         .to include :a_guard
     end
 
-    context 'with a specific policy' do
+    context 'authorizing with the default policy' do
       describe 'the generated guard' do
+        let(:guard) do
+          state_info = TestStateMachine
+                         .events[:test][:transitions]['from_state']
+                         .first
+          state_info[:guards].first
+        end
+
+        it 'calls the default policy returning true if it succeeds' do
+          expect_any_instance_of(ModelPolicy)
+            .to receive(:test_from_from_state_to_to_state?).and_return(true)
+
+          event_transition.transition from: :from_state, to: :to_state,
+                                      authorize: true
+
+          expect(
+            guard.call(object, :last_transition, { acting_user_id: user.id })
+          ).to eq true
+        end
+
+        it 'calls the default policy returning false if it fails' do
+          expect_any_instance_of(ModelPolicy)
+            .to receive(:test_from_from_state_to_to_state?).and_return(false)
+
+          event_transition.transition from: :from_state, to: :to_state,
+                                      authorize: true
+
+          expect(
+            guard.call(object, :last_transition, { acting_user_id: user.id })
+          ).to eq false
+        end
+
+        it 'raises if the default policy does not exist' do
+          event_transition.transition from: :from_state, to: :another_state,
+                                      authorize: true
+
+          expect {
+            guard.call(object, :last_transition, { acting_user_id: user.id })
+          }.to raise_error(NameError,
+                           'Policy "test_from_from_state_to_another_state?" ' +
+                           'does not exist.')
+        end
+      end
+    end
+
+    context 'authorizing with a specific policy' do
+      describe 'the generated guard' do
+        let(:guard) do
+          state_info = TestStateMachine
+                         .events[:test][:transitions]['from_state']
+                         .first
+          state_info[:guards].first
+        end
+
         it 'calls the policy returning true if it succeeds' do
           expect_any_instance_of(ModelPolicy)
             .to receive(:can_test_policy?).and_return(true)
 
           event_transition.transition from: :from_state, to: :to_state,
-                                      policy: :can_test_policy?
+                                      authorize: :can_test_policy?
 
           expect(
             guard.call(object, :last_transition, { acting_user_id: user.id })
@@ -102,60 +149,44 @@ describe Events do
             .to receive(:can_test_policy?).and_return(false)
 
           event_transition.transition from: :from_state, to: :to_state,
-                                      policy: :can_test_policy?
+                                      authorize: :can_test_policy?
 
           expect(
             guard.call(object, :last_transition, { acting_user_id: user.id })
           ).to eq false
         end
 
-        it 'returns false if the policy method does not exist' do
+        it 'raises if the policy method does not exist' do
           event_transition.transition from: :from_state, to: :to_state,
-                                      policy: :can_test_missing_policy?
+                                      authorize: :can_test_missing_policy?
 
           expect {
             guard.call(object, :last_transition, { acting_user_id: user.id })
-          }.to raise_error(NameError, 'Policy can_test_missing_policy? does not exist.')
+          }.to raise_error(NameError,
+                           'Policy "can_test_missing_policy?" does not exist.')
         end
       end
     end
+  end
 
-    context 'without a specific policy' do
-      describe 'the generated guard' do
-        it 'calls a policy derived from the event and returns true if succeeds' do
-          expect_any_instance_of(ModelPolicy)
-            .to receive(:test_from_from_state_to_to_state?).and_return(true)
+  describe '#authorize' do
+    let(:user) { create :user }
+    let(:guard) do
+      state_info = TestStateMachine
+                     .events[:test][:transitions]['auth']
+                     .first
+      state_info[:guards].first
+    end
 
-          event_transition.transition from: :from_state, to: :to_state
-
-          expect(
-            guard.call(object, :last_transition, { acting_user_id: user.id })
-          ).to eq true
-        end
-
-        it 'calls a policy derived from the event and returns false if fails' do
-          expect_any_instance_of(ModelPolicy)
-            .to receive(:test_from_from_state_to_to_state?).and_return(false)
-
-          event_transition.transition from: :from_state, to: :to_state
-
-          expect(
-            guard.call(object, :last_transition, { acting_user_id: user.id })
-          ).to eq false
-        end
-
-        it 'returns true if the derived policy does not exist' do
-          event_transition.transition from: :this_state, to: :that_state
-
-          state_info = TestStateMachine
-                         .events[:test][:transitions]['this_state']
-                         .first
-          guard = state_info[:guards].first
-          expect(
-            guard.call(object, :last_transition, { acting_user_id: user.id })
-          ).to eq true
-        end
-      end
+    it 'sets the policy for new transitions' do
+      allow(TestStateMachine).to receive(:transition).with(any_args)
+      event_transition.authorize :authorize_this?
+      expect_any_instance_of(ModelPolicy).to receive(:authorize_this?)
+                                               .and_return(true)
+      event_transition.transition from: :auth, to: :orize
+      expect(
+        guard.call(object, :last_transition, { acting_user_id: user.id })
+      ).to eq true
     end
   end
 end

@@ -7,7 +7,12 @@ class EventTransitions
     instance_eval(&block)
   end
 
-  def transition(from: nil, to: nil, guard: nil, policy: nil, new_workflow: nil)
+  def transition(from: nil, to: nil, guard: nil, policy: nil, new_workflow: nil,
+                 authorize: nil)
+    unless policy.nil?
+      raise RuntimeError, 'The "policy" option for state machine transition is deprecated, use "authorize".'
+    end
+
     @from = to_s_or_nil(from)
     @to = to_s_or_nil(to)
 
@@ -15,25 +20,13 @@ class EventTransitions
 
     guards = []
     guards << guard if guard
-    if policy.nil?
-      policy = "#{@event_name}_from_#{@from}_to_#{@to}?"
-      policy_required = false
-    else
-      policy_required = true
+
+    if authorize.present?
+      guards << make_policy_checker(authorize)
+    elsif @authorize.present?
+      guards << make_policy_checker(@authorize)
     end
-    guards << lambda do |kase, _last_transition, options|
-      user = User.find(options[:acting_user_id])
-      policy_object = Pundit.policy!(user, kase)
-      if policy_object.respond_to? policy
-        policy_object.__send__ policy
-      else
-        if policy_required
-          raise NameError.new("Policy #{policy} does not exist.")
-        else
-          true
-        end
-      end
-    end
+
     transition = {
       state: @to,
       guards: guards
@@ -44,6 +37,14 @@ class EventTransitions
 
   def guard(&block)
     add_callback(callback_type: :guards, &block)
+  end
+
+  def authorize(policy)
+    @authorize = policy || "#{@event_name}?"
+  end
+
+  def authorize_by_event_name
+    authorize "#{@event_name}?"
   end
 
   private
@@ -66,5 +67,28 @@ class EventTransitions
 
   def array_to_s_or_nil(input)
     Array(input).map { |item| to_s_or_nil(item) }
+  end
+
+  def make_policy_checker(authorize)
+    policy = if authorize == true
+               "#{@event_name}_from_#{@from}_to_#{@to}?"
+             else
+               authorize
+             end
+
+    if authorize
+      lambda do |kase, _last_transition, options|
+        user = User.find(options[:acting_user_id])
+
+        policy_object = Pundit.policy!(user, kase)
+        if policy_object.respond_to? policy
+          policy_object.__send__ policy
+        else
+          raise NameError.new("Policy \"#{policy}\" does not exist.")
+        end
+      end
+    else
+      lambda { |_kase, _last_transition, _options| true }
+    end
   end
 end
