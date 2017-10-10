@@ -7,16 +7,23 @@ module Stats
       business_unit:                   'Business unit',
       responsible:                     'Responsible',
       non_trigger_performance:         'Performance %',
+      non_trigger_total:               'Total received',
       non_trigger_responded_in_time:   'Responded - in time',
       non_trigger_responded_late:      'Responded - late',
       non_trigger_open_in_time:        'Open - in time',
       non_trigger_open_late:           'Open - late',
       trigger_performance:             'Performance %',
+      trigger_total:                   'Total received',
       trigger_responded_in_time:       'Responded - in time',
       trigger_responded_late:          'Responded - late',
       trigger_open_in_time:            'Open - in time',
       trigger_open_late:               'Open - late',
-      overall_performance:             'Performance %'
+      overall_performance:             'Performance %',
+      overall_total:                   'Total received',
+      overall_responded_in_time:       'Responded - in time',
+      overall_responded_late:          'Responded - late',
+      overall_open_in_time:            'Open - in time',
+      overall_open_late:               'Open - late',
     }.freeze
 
     SUPERHEADINGS = {
@@ -25,16 +32,24 @@ module Stats
       business_unit:                   '',
       responsible:                     '',
       non_trigger_performance:         'Non-trigger FOIs',
+      non_trigger_total:               'Non-trigger FOIs',
       non_trigger_responded_in_time:   'Non-trigger FOIs',
       non_trigger_responded_late:      'Non-trigger FOIs',
       non_trigger_open_in_time:        'Non-trigger FOIs',
       non_trigger_open_late:           'Non-trigger FOIs',
       trigger_performance:             'Trigger FOIs',
+      trigger_total:                   'Trigger FOIs',
       trigger_responded_in_time:       'Trigger FOIs',
       trigger_responded_late:          'Trigger FOIs',
       trigger_open_in_time:            'Trigger FOIs',
       trigger_open_late:               'Trigger FOIs',
-      overall_performance:             'Overall'
+      overall_performance:             'Overall',
+      overall_total:                   'Overall',
+      overall_responded_in_time:       'Overall',
+      overall_responded_late:          'Overall',
+      overall_open_in_time:            'Overall',
+      overall_open_late:               'Overall',
+
     }.freeze
 
 
@@ -46,6 +61,8 @@ module Stats
       @superheadings = superheadings
       @stats.add_callback(:before_finalise, method(:roll_up_stats))
       @stats.add_callback(:before_finalise, method(:populate_team_details))
+      @stats.add_callback(:before_finalise, method(:calculate_overall_columns))
+      @stats.add_callback(:before_finalise, method(:calculate_total_columns))
       @stats.add_callback(:before_finalise, method(:calculate_percentages))
     end
 
@@ -117,7 +134,7 @@ module Stats
       @stats.stats.each do | _team_id, row |
         row[:non_trigger_performance]  = calculate_non_trigger(row)
         row[:trigger_performance]  = calculate_trigger(row)
-        row[:overall_performance]  = calculate_overall(row)
+        row[:overall_performance]  = calculate_overall_performance(row)
       end
     end
 
@@ -129,7 +146,41 @@ module Stats
       calculate_percentage(row[:trigger_responded_in_time], row[:trigger_responded_in_time] + row[:trigger_responded_late] + row[:trigger_open_late])
     end
 
-    def calculate_overall(row)
+    def calculate_total_columns
+      @stats.stats.each do | _team_id, row |
+        row[:non_trigger_total] = sum_all_received(:non_trigger, row)
+        row[:trigger_total] = sum_all_received(:trigger, row)
+        row[:overall_total] = sum_all_received(:overall, row)
+      end
+    end
+
+    def calculate_overall_columns
+      @stats.stats.each do |_team_id, row|
+        calculate_overall_figure(row, :responded_in_time)
+        calculate_overall_figure(row, :responded_late)
+        calculate_overall_figure(row, :open_in_time)
+        calculate_overall_figure(row, :open_late)
+      end
+    end
+
+
+    def calculate_overall_figure(row, cat)
+      target = "overall_#{cat}".to_sym
+      source_1 = "non_trigger_#{cat}".to_sym
+      source_2 = "trigger_#{cat}".to_sym
+      row[target] = row[source_1] + row[source_2]
+    end
+
+    def sum_all_received(prefix, row)
+      ttl = "#{prefix}_total".to_sym
+      rit = "#{prefix}_responded_in_time".to_sym
+      rl  = "#{prefix}_responded_late".to_sym
+      oit = "#{prefix}_open_in_time".to_sym
+      ol  = "#{prefix}_open_late".to_sym
+      row[ttl] = row[rit] + row[rl] + row[oit] + row[ol]
+    end
+
+    def calculate_overall_performance(row)
       value = row[:trigger_responded_in_time] + row[:non_trigger_responded_in_time]
       total = row[:non_trigger_responded_in_time] + row[:non_trigger_responded_late] + row[:non_trigger_open_late] +
               row[:trigger_responded_in_time] + row[:trigger_responded_late] + row[:trigger_open_late]
