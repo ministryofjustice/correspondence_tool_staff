@@ -44,10 +44,7 @@ RSpec::Matchers.define :transition_from do |from_state|
   end
 
   match do |event_name|
-    state_machine_class = RSpec::current_example
-                            .example_group
-                            .top_level_description
-                            .constantize
+    state_machine_class = state_machine_name.constantize
     event = state_machine_class.events[event_name]
 
     check_transition_exists(from_state, event[:transitions]) ||
@@ -76,13 +73,13 @@ RSpec::Matchers.define :transition_from do |from_state|
     @to_state = to_state.to_s
   end
 
-  chain :checking_default_policy do |policy_class|
-    @policy_class = policy_class
+  chain :checking_default_policy do |policy_class = nil|
+    @policy_class = policy_class || default_policy_class
     @check_default_policy = true
   end
 
-  chain :checking_policy do |policy, policy_class|
-    @policy_class = policy_class
+  chain :checking_policy do |policy, policy_class = nil|
+    @policy_class = policy_class || default_policy_class
     @check_policy = policy
   end
 
@@ -104,5 +101,13 @@ RSpec::Matchers.define :transition_from do |from_state|
     expect(policy).to receive(policy_name)
     expect(@policy_class).to receive(:new).with(user, object).and_return(policy)
     object
+  end
+
+  def state_machine_name
+    RSpec::current_example.example_group.top_level_description
+  end
+
+  def default_policy_class
+    state_machine_name.sub('StateMachine', 'Policy').constantize
   end
 end

@@ -23,14 +23,14 @@ end
 
 
 def event(event_name)
-  CaseStateMachine.events[event_name]
+  Cases::FOIStateMachine.events[event_name]
 end
 
 
-RSpec.describe CaseStateMachine, type: :model do
+RSpec.describe Cases::FOIStateMachine, type: :model do
   let(:kase)               { create :case }
   let(:state_machine) do
-    CaseStateMachine.new(
+    described_class.new(
       kase,
       transition_class: CaseTransition,
       association_name: :transitions
@@ -642,22 +642,22 @@ RSpec.describe CaseStateMachine, type: :model do
   describe '.event_name' do
     context 'event has i18n entry' do
       it 'returns translation' do
-        expect(CaseStateMachine.event_name(:close)).to eq 'Case closed'
+        expect(described_class.event_name(:close)).to eq 'Case closed'
       end
     end
 
     context 'event has no i18n entry' do
       it 'returns human readable format' do
-        allow(CaseStateMachine).to receive(:events)
+        allow(described_class).to receive(:events)
                                      .and_return({fake_event: nil})
-        expect(CaseStateMachine.event_name(:fake_event))
+        expect(described_class.event_name(:fake_event))
           .to eq 'Fake event'
       end
     end
 
     context 'invalid state machine event' do
       it 'returns nil' do
-        expect(CaseStateMachine.event_name(:trigger_article_50)).to be_nil
+        expect(described_class.event_name(:trigger_article_50)).to be_nil
       end
     end
   end

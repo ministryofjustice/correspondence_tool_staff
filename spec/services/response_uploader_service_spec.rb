@@ -13,8 +13,6 @@ describe ResponseUploaderService do
                                                          kase.responder,
                                                          params,
                                                          action) }
-  let(:state_machine)      { instance_double CaseStateMachine,
-                                             add_responses!: true }
   let(:attachments)        { [instance_double(CaseAttachment,
                                               filename: filename)] }
   let(:uploader)           { instance_double(S3Uploader,
@@ -60,9 +58,9 @@ describe ResponseUploaderService do
       end
 
       it 'calls add_responses! for non flagged cases' do
-        expect(kase).to receive(:state_machine).and_return(state_machine)
+        allow(kase.state_machine).to receive(:add_responses!)
         rus.upload!
-        expect(state_machine).to have_received(:add_responses!)
+        expect(kase.state_machine).to have_received(:add_responses!)
       end
 
       context 'No valid files to upload' do
@@ -132,8 +130,7 @@ describe ResponseUploaderService do
     let(:action)  { 'upload-flagged' }
 
     it 'calls add_response_to_flagged_case! on state machine' do
-      expect(kase).to receive(:state_machine).and_return(state_machine)
-      expect(state_machine).to receive(:add_response_to_flagged_case!)
+      expect(kase.state_machine).to receive(:add_response_to_flagged_case!)
       rus.upload!
     end
   end
@@ -143,8 +140,7 @@ describe ResponseUploaderService do
     let(:action)  { 'upload-approve' }
 
     it 'calls add_response_to_flagged_case! on state machine' do
-      expect(kase).to receive(:state_machine).and_return(state_machine)
-      expect(state_machine).to receive(:upload_response_and_approve!)
+      expect(kase.state_machine).to receive(:upload_response_and_approve!)
       rus.upload!
     end
   end
@@ -153,8 +149,7 @@ describe ResponseUploaderService do
     let(:action)  { 'upload-redraft' }
 
     it 'calls upload_response_and_return_for_redraft! on state_machine' do
-      expect(kase).to receive(:state_machine).and_return(state_machine)
-      expect(state_machine).to receive(:upload_response_and_return_for_redraft!)
+      expect(kase.state_machine).to receive(:upload_response_and_return_for_redraft!)
       rus.upload!
     end
   end

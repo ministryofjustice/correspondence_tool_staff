@@ -44,9 +44,12 @@ class CasePolicy
 
   def policy_workflow_for_case(kase, user:)
     workflow_class = if kase.respond_to?(:workflow) && kase.workflow.present?
-                       raise NameError,
-                             "Policy workflow \"#{kase.workflow}\" not found"
+                       "Cases::#{kase.category.abbreviation}::#{kase.workflow}Policy"
                      else
+                       # This will have to change at some point, i.e. when we
+                       # have non-FOI cases. At that time, we'll have to ensure
+                       # we pass in the FOI class and use that to generate the
+                       # policy below.
                        "Cases::FOIPolicy"
                      end
     workflow_class.constantize.new(user, kase)

@@ -124,7 +124,8 @@ describe CaseFlagForClearanceService do
         end
 
         it 'triggers an event on the state machine' do
-          expect_any_instance_of(CaseStateMachine).to receive(:take_on_for_approval!)
+          expect(assigned_case.state_machine)
+            .to receive(:take_on_for_approval!).exactly(2).times
           service.call
         end
       end
@@ -235,7 +236,8 @@ describe CaseFlagForClearanceService do
         end
 
         it 'triggers an event on the state machine' do
-          expect_any_instance_of(CaseStateMachine).to receive(:take_on_for_approval!)
+          expect(assigned_case.state_machine)
+            .to receive(:take_on_for_approval!).exactly(2).times
           service.call
         end
       end

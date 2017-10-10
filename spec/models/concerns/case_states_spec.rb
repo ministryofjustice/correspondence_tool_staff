@@ -16,16 +16,19 @@ RSpec.describe Case, type: :model do
 
       it { should have_attributes(object: kase) }
 
-      it 'defaults to the CaseStateMachine when no workflow is specified' do
+      it 'defaults to the Cases::FOIStateMachine when no workflow is specified' do
         expect(kase.state_machine)
-          .to be_an_instance_of(CaseStateMachine)
+          .to be_an_instance_of(Cases::FOIStateMachine)
       end
 
       it 'raises an error when an nonexistant workflow is specified' do
         allow(kase).to receive(:workflow).and_return('Nonexistent')
         expect {
           kase.state_machine
-        }.to raise_error(NameError, 'State machine "Nonexistent" not found')
+        }.to raise_error(
+               NameError,
+               'uninitialized constant Cases::FOI::NonexistentStateMachine'
+             )
       end
     end
 

@@ -7,9 +7,6 @@ class CaseApprovalService
     @kase = kase
     @result = :incomplete
     @bypass_params = bypass_params
-    @state_machine = CaseStateMachine.new(@kase,
-                                          transition_class: CaseTransition,
-                                          association_name: :transitions)
   end
 
   def call
@@ -47,13 +44,13 @@ class CaseApprovalService
   end
 
   def approve_and_progress_as_normal(assignment)
-    @state_machine.approve!(@user, assignment)
+    @kase.state_machine.approve!(@user, assignment)
   end
 
   def bypass_press_and_private_approvals(assignment)
     bypass_approval_for_team(BusinessUnit.press_office)
     bypass_approval_for_team(BusinessUnit.private_office)
-    @state_machine.approve_and_bypass!(@user, assignment, @bypass_params.message)
+    @kase.state_machine.approve_and_bypass!(@user, assignment, @bypass_params.message)
   end
 
   def bypass_approval_for_team(team)

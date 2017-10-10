@@ -1,5 +1,5 @@
 # rubocop:disable ClassLength
-class CaseStateMachine
+class Cases::FOIStateMachine
   include Statesman::Machine
   include Events
 
@@ -31,7 +31,7 @@ class CaseStateMachine
 
   event :assign_responder do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:acting_user_id], object).can_assign_case?
+      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object).can_assign_case?
     end
 
     transition from: :unassigned, to: :awaiting_responder
@@ -39,10 +39,10 @@ class CaseStateMachine
 
   event :flag_for_clearance do
     guard do |object, _last_transition, options|
-      case_policy = CaseStateMachine.get_policy options[:acting_user_id], object
+      case_policy = Cases::FOIStateMachine.get_policy options[:acting_user_id], object
       assignment = Assignment.new case: object, team_id: options[:target_team_id]
-      assignment_policy = CaseStateMachine.get_policy options[:acting_user_id],
-                                                      assignment
+      assignment_policy = Cases::FOIStateMachine.get_policy options[:acting_user_id],
+                                                            assignment
 
       case_policy.can_flag_for_clearance? &&
         assignment_policy.can_create_for_team?
@@ -77,7 +77,7 @@ class CaseStateMachine
 
   event :take_on_for_approval do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:acting_user_id], object).can_take_on_for_approval?
+      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object).can_take_on_for_approval?
     end
 
     transition from: :unassigned,             to: :unassigned
@@ -89,7 +89,7 @@ class CaseStateMachine
 
   event :reject_responder_assignment do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:acting_user_id], object)
+      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object)
         .can_accept_or_reject_responder_assignment?
     end
 
@@ -98,7 +98,7 @@ class CaseStateMachine
 
   event :accept_approver_assignment do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:acting_user_id], object)
+      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object)
         .can_accept_or_reject_approver_assignment?
     end
 
@@ -112,9 +112,10 @@ class CaseStateMachine
 
   event :unaccept_approver_assignment do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:acting_user_id], object)
+      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object)
         .can_unaccept_approval_assignment?
     end
+
     transition from: :unassigned,             to: :unassigned
     transition from: :awaiting_responder,     to: :awaiting_responder
     transition from: :drafting,               to: :drafting
@@ -124,7 +125,7 @@ class CaseStateMachine
 
   event :accept_responder_assignment do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:acting_user_id], object)
+      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object)
         .can_accept_or_reject_responder_assignment?
     end
 
@@ -142,7 +143,7 @@ class CaseStateMachine
 
   event :add_responses do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:acting_user_id], object).can_add_attachment?
+      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object).can_add_attachment?
     end
 
     transition from: :drafting,          to: :awaiting_dispatch
@@ -236,7 +237,7 @@ class CaseStateMachine
 
   event :remove_response do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:acting_user_id], object)
+      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object)
         .can_remove_attachment?
     end
 
@@ -245,7 +246,7 @@ class CaseStateMachine
 
   event :remove_last_response do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:acting_user_id], object)
+      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object)
         .can_remove_attachment?
     end
 
@@ -254,7 +255,7 @@ class CaseStateMachine
 
   event :respond do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:acting_user_id], object).can_respond?
+      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object).can_respond?
     end
 
     transition from: :awaiting_dispatch, to: :responded
@@ -262,7 +263,7 @@ class CaseStateMachine
 
   event :close do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:acting_user_id], object).can_close_case?
+      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object).can_close_case?
     end
 
     transition from: :responded, to: :closed
@@ -270,7 +271,7 @@ class CaseStateMachine
 
   event :add_message_to_case do
     guard do |object, _last_transition, options|
-      CaseStateMachine.get_policy(options[:acting_user_id], object).can_add_message_to_case?
+      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object).can_add_message_to_case?
     end
 
     transition from: :unassigned,                       to: :unassigned
@@ -313,6 +314,13 @@ class CaseStateMachine
              acting_user_id:    acting_user.id,
              acting_team_id:    acting_team.id,
              event:             :reassign_user
+  end
+
+  def create_needing_clarification!(acting_user:)
+    trigger! :create_needing_clarification,
+             acting_user_id:    acting_user.id,
+             acting_team_id:    object.team_for_user(acting_user).id,
+             event:             :create_needing_clarification
   end
 
   def accept_responder_assignment!(user, responding_team)

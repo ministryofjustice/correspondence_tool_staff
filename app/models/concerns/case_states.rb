@@ -9,10 +9,9 @@ module CaseStates
     if @state_machine.nil?
       state_machine_class_name =
         if respond_to?(:workflow) && workflow.present?
-          raise NameError,
-                "State machine \"#{workflow}\" not found"
+          "Cases::#{category.abbreviation}::#{workflow}StateMachine"
         else
-          "CaseStateMachine"
+          "Cases::FOIStateMachine"
         end
       @state_machine = state_machine_class_name.constantize.new(
         self,

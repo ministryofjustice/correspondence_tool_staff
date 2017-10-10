@@ -2,8 +2,9 @@
 require 'rails_helper'
 
 describe 'cases/clearance_copy.html.slim', type: :view do
-  let(:kase) { create :accepted_case, :flagged, subject: "Optimism – is a lack of information." }
-  let(:nsi)  { NextStepInfo.new(kase, 'upload', kase.responder) }
+  let(:kase) { create :pending_dacu_clearance_case,
+                      subject: "Optimism – is a lack of information." }
+  let(:nsi)  { NextStepInfo.new(kase, 'upload-redraft', kase.approvers.first) }
   let(:partial) do
     render partial: 'cases/clearance_copy', locals: { nsi: nsi }
     clearance_copy_section(rendered)
@@ -21,6 +22,6 @@ describe 'cases/clearance_copy.html.slim', type: :view do
 
   it 'displays the status' do
     expect(partial.expectations.status.text)
-        .to eq I18n.t("state.awaiting_dispatch")
+        .to eq I18n.t("state.drafting")
   end
 end
