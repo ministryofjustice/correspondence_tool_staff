@@ -30,9 +30,7 @@ class Cases::FOIStateMachine
   state :closed
 
   event :assign_responder do
-    guard do |object, _last_transition, options|
-      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object).can_assign_case?
-    end
+    authorize :can_assign_case?
 
     transition from: :unassigned, to: :awaiting_responder
   end
@@ -76,9 +74,7 @@ class Cases::FOIStateMachine
   end
 
   event :take_on_for_approval do
-    guard do |object, _last_transition, options|
-      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object).can_take_on_for_approval?
-    end
+    authorize :can_take_on_for_approval?
 
     transition from: :unassigned,             to: :unassigned
     transition from: :awaiting_responder,     to: :awaiting_responder
@@ -88,19 +84,13 @@ class Cases::FOIStateMachine
   end
 
   event :reject_responder_assignment do
-    guard do |object, _last_transition, options|
-      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object)
-        .can_accept_or_reject_responder_assignment?
-    end
+    authorize :can_accept_or_reject_responder_assignment?
 
     transition from: :awaiting_responder, to: :unassigned
   end
 
   event :accept_approver_assignment do
-    guard do |object, _last_transition, options|
-      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object)
-        .can_accept_or_reject_approver_assignment?
-    end
+    authorize :can_accept_or_reject_approver_assignment?
 
     transition from: :unassigned,             to: :unassigned
     transition from: :awaiting_responder,     to: :awaiting_responder
@@ -111,10 +101,7 @@ class Cases::FOIStateMachine
   end
 
   event :unaccept_approver_assignment do
-    guard do |object, _last_transition, options|
-      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object)
-        .can_unaccept_approval_assignment?
-    end
+    authorize :can_unaccept_approval_assignment?
 
     transition from: :unassigned,             to: :unassigned
     transition from: :awaiting_responder,     to: :awaiting_responder
@@ -124,10 +111,7 @@ class Cases::FOIStateMachine
   end
 
   event :accept_responder_assignment do
-    guard do |object, _last_transition, options|
-      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object)
-        .can_accept_or_reject_responder_assignment?
-    end
+    authorize :can_accept_or_reject_responder_assignment?
 
     transition from: :awaiting_responder, to: :drafting
   end
@@ -142,9 +126,7 @@ class Cases::FOIStateMachine
   end
 
   event :add_responses do
-    guard do |object, _last_transition, options|
-      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object).can_add_attachment?
-    end
+    authorize :can_add_attachment?
 
     transition from: :drafting,          to: :awaiting_dispatch
     transition from: :awaiting_dispatch, to: :awaiting_dispatch
@@ -236,43 +218,31 @@ class Cases::FOIStateMachine
   end
 
   event :remove_response do
-    guard do |object, _last_transition, options|
-      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object)
-        .can_remove_attachment?
-    end
+    authorize :can_remove_attachment?
 
     transition from: :awaiting_dispatch, to: :awaiting_dispatch
   end
 
   event :remove_last_response do
-    guard do |object, _last_transition, options|
-      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object)
-        .can_remove_attachment?
-    end
+    authorize :can_remove_attachment?
 
     transition from: :awaiting_dispatch, to: :drafting
   end
 
   event :respond do
-    guard do |object, _last_transition, options|
-      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object).can_respond?
-    end
+    authorize :can_respond?
 
     transition from: :awaiting_dispatch, to: :responded
   end
 
   event :close do
-    guard do |object, _last_transition, options|
-      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object).can_close_case?
-    end
+    authorize :can_close_case?
 
     transition from: :responded, to: :closed
   end
 
   event :add_message_to_case do
-    guard do |object, _last_transition, options|
-      Cases::FOIStateMachine.get_policy(options[:acting_user_id], object).can_add_message_to_case?
-    end
+    authorize :can_add_message_to_case?
 
     transition from: :unassigned,                       to: :unassigned
     transition from: :awaiting_responder,               to: :awaiting_responder

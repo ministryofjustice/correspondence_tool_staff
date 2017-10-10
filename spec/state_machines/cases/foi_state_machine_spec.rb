@@ -97,10 +97,9 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
   end
 
   events :assign_responder do
-    it { should transition_from(:unassigned).to(:awaiting_responder) }
-    it { should require_permission(:can_assign_case?)
-                  .using_options(acting_user_id: manager.id)
-                  .using_object(new_case) }
+    it { should transition_from(:unassigned)
+                  .to(:awaiting_responder)
+                  .checking_policy(:can_assign_case?) }
   end
 
   events :flag_for_clearance do
@@ -122,67 +121,66 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
   end
 
   events :accept_approver_assignment do
-    it { should transition_from(:unassigned).to(:unassigned) }
-    it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
-    it { should transition_from(:drafting).to(:drafting) }
-    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
-    it { should transition_from(:responded).to(:responded) }
-    it { should require_permission(:can_accept_or_reject_approver_assignment?)
-                  .using_options(acting_user_id: approver.id)
-                  .using_object(kase) }
+    it { should transition_from(:unassigned).to(:unassigned)
+                  .checking_policy(:can_accept_or_reject_approver_assignment?) }
+    it { should transition_from(:awaiting_responder).to(:awaiting_responder)
+                  .checking_policy(:can_accept_or_reject_approver_assignment?) }
+    it { should transition_from(:drafting).to(:drafting)
+                  .checking_policy(:can_accept_or_reject_approver_assignment?) }
+    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch)
+                  .checking_policy(:can_accept_or_reject_approver_assignment?) }
+    it { should transition_from(:responded).to(:responded)
+                  .checking_policy(:can_accept_or_reject_approver_assignment?) }
   end
 
   events :unaccept_approver_assignment do
-    it { should transition_from(:unassigned).to(:unassigned) }
-    it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
-    it { should transition_from(:drafting).to(:drafting) }
-    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
-    it { should transition_from(:pending_dacu_clearance).to(:pending_dacu_clearance) }
-    it { should require_permission(:can_unaccept_approval_assignment?)
-            .using_options(acting_user_id: approver.id)
-            .using_object(kase) }
+    it { should transition_from(:unassigned).to(:unassigned)
+                  .checking_policy(:can_unaccept_approval_assignment?) }
+    it { should transition_from(:awaiting_responder).to(:awaiting_responder)
+                  .checking_policy(:can_unaccept_approval_assignment?) }
+    it { should transition_from(:drafting).to(:drafting)
+                  .checking_policy(:can_unaccept_approval_assignment?) }
+    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch)
+                  .checking_policy(:can_unaccept_approval_assignment?) }
+    it { should transition_from(:pending_dacu_clearance).to(:pending_dacu_clearance)
+                  .checking_policy(:can_unaccept_approval_assignment?) }
   end
 
   events :reassign_user do
     it { should transition_from(:unassigned)
                   .to(:unassigned)
-                  .checking_policy(:reassign_user?, CasePolicy)  }
+                  .checking_policy(:reassign_user?)  }
     it { should transition_from(:awaiting_responder)
                   .to(:awaiting_responder)
-                  .checking_policy(:reassign_user?, CasePolicy)  }
+                  .checking_policy(:reassign_user?)  }
 
     it { should transition_from(:drafting)
                     .to(:drafting)
-                    .checking_policy(:reassign_user?, CasePolicy)  }
+                    .checking_policy(:reassign_user?)  }
     it { should transition_from(:pending_dacu_clearance)
                     .to(:pending_dacu_clearance)
-                    .checking_policy(:reassign_user?, CasePolicy) }
+                    .checking_policy(:reassign_user?) }
     it { should transition_from(:pending_press_office_clearance)
                     .to(:pending_press_office_clearance)
-                    .checking_policy(:reassign_user?, CasePolicy) }
+                    .checking_policy(:reassign_user?) }
 
   end
 
   events :accept_responder_assignment do
-    it { should transition_from(:awaiting_responder).to(:drafting) }
-    it { should require_permission(:can_accept_or_reject_responder_assignment?)
-                  .using_options(acting_user_id: responder.id)
-                  .using_object(assigned_case) }
+    it { should transition_from(:awaiting_responder).to(:drafting)
+                  .checking_policy(:can_accept_or_reject_responder_assignment?) }
   end
 
   events :reject_responder_assignment do
-    it { should transition_from(:awaiting_responder).to(:unassigned) }
-    it { should require_permission(:can_accept_or_reject_responder_assignment?)
-                  .using_options(acting_user_id: responder.id)
-                  .using_object(assigned_case) }
+    it { should transition_from(:awaiting_responder).to(:unassigned)
+                  .checking_policy(:can_accept_or_reject_responder_assignment?) }
   end
 
   events :add_responses do
-    it { should transition_from(:drafting).to(:awaiting_dispatch) }
-    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
-    it { should require_permission(:can_add_attachment?)
-                  .using_options(acting_user_id: responder.id)
-                  .using_object(case_being_drafted) }
+    it { should transition_from(:drafting).to(:awaiting_dispatch)
+                  .checking_policy(:can_add_attachment?) }
+    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch)
+                  .checking_policy(:can_add_attachment?) }
   end
 
   events :add_response_to_flagged_case do
@@ -192,24 +190,18 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
   end
 
   events :remove_response do
-    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
-    it { should require_permission(:can_remove_attachment?)
-                  .using_options(acting_user_id: responder.id)
-                  .using_object(case_with_response) }
+    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch)
+                  .checking_policy(:can_remove_attachment?) }
   end
 
   events :remove_last_response do
-    it { should transition_from(:awaiting_dispatch).to(:drafting) }
-    it { should require_permission(:can_remove_attachment?)
-                  .using_options(acting_user_id: responder.id)
-                  .using_object(case_with_response) }
+    it { should transition_from(:awaiting_dispatch).to(:drafting)
+                  .checking_policy(:can_remove_attachment?) }
   end
 
   events :respond do
-    it { should transition_from(:awaiting_dispatch).to(:responded) }
-    it { should require_permission(:can_respond?)
-                  .using_options(acting_user_id: responder.id)
-                  .using_object(case_with_response) }
+    it { should transition_from(:awaiting_dispatch).to(:responded)
+                  .checking_policy(:can_respond?) }
   end
 
   events :approve do
@@ -255,24 +247,30 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
   end
 
   events :close do
-    it { should transition_from(:responded).to(:closed) }
-    it { should require_permission(:can_close_case?)
-                  .using_options(acting_user_id: manager.id)
-                  .using_object(responded_case) }
+    it { should transition_from(:responded).to(:closed)
+                  .checking_policy(:can_close_case?) }
   end
 
   events :add_message_to_case do
-    it { should transition_from(:unassigned).to(:unassigned) }
-    it { should transition_from(:awaiting_responder).to(:awaiting_responder) }
-    it { should transition_from(:drafting).to(:drafting) }
-    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch) }
-    it { should transition_from(:pending_dacu_clearance).to(:pending_dacu_clearance) }
-    it { should transition_from(:pending_press_office_clearance).to(:pending_press_office_clearance) }
-    it { should transition_from(:pending_private_office_clearance).to(:pending_private_office_clearance) }
-    it { should transition_from(:responded).to(:responded) }
-    it { should require_permission(:can_add_message_to_case?)
-                  .using_options(acting_user_id: manager.id)
-                  .using_object(responded_case) }
+    it { should transition_from(:unassigned).to(:unassigned)
+                  .checking_policy(:can_add_message_to_case?) }
+    it { should transition_from(:awaiting_responder).to(:awaiting_responder)
+                  .checking_policy(:can_add_message_to_case?) }
+    it { should transition_from(:drafting).to(:drafting)
+                  .checking_policy(:can_add_message_to_case?) }
+    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch)
+                  .checking_policy(:can_add_message_to_case?) }
+    it { should transition_from(:pending_dacu_clearance)
+                  .to(:pending_dacu_clearance)
+                  .checking_policy(:can_add_message_to_case?) }
+    it { should transition_from(:pending_press_office_clearance)
+                  .to(:pending_press_office_clearance)
+                  .checking_policy(:can_add_message_to_case?) }
+    it { should transition_from(:pending_private_office_clearance)
+                  .to(:pending_private_office_clearance)
+                  .checking_policy(:can_add_message_to_case?) }
+    it { should transition_from(:responded).to(:responded)
+                  .checking_policy(:can_add_message_to_case?) }
   end
 
   describe 'trigger assign_responder!' do
