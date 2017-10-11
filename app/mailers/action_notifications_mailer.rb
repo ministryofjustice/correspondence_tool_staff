@@ -1,4 +1,4 @@
-class AssignmentMailer < GovukNotifyRails::Mailer
+class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
   def new_assignment(assignment, recipient)
     RavenContextProvider.set_context

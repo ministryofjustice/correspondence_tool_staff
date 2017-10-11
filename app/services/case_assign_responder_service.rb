@@ -35,12 +35,12 @@ class CaseAssignResponderService
   def notify_responders
     if @team.email.blank?
       @team.responders.each do |responder|
-        AssignmentMailer
+        ActionNotificationsMailer
           .new_assignment(@assignment, responder.email)
           .deliver_later
       end
     else
-      AssignmentMailer.new_assignment(@assignment, @team.email).deliver_later
+      ActionNotificationsMailer.new_assignment(@assignment, @team.email).deliver_later
     end
   end
 end

@@ -19,7 +19,7 @@ describe CaseAssignResponderService, type: :service do
       allow(unassigned_case).to receive_message_chain(:assignments,
                                                       new: new_assignment)
       allow(unassigned_case.state_machine).to receive(:assign_responder!)
-      allow(AssignmentMailer).to receive_message_chain(:new_assignment,
+      allow(ActionNotificationsMailer).to receive_message_chain(:new_assignment,
                                                        :deliver_later)
     end
 
@@ -54,7 +54,7 @@ describe CaseAssignResponderService, type: :service do
 
       it 'emails the team' do
         service.call
-        expect(AssignmentMailer).to have_received(:new_assignment)
+        expect(ActionNotificationsMailer).to have_received(:new_assignment)
                                       .with new_assignment,
                                             responding_team.email
       end
@@ -69,10 +69,10 @@ describe CaseAssignResponderService, type: :service do
 
         it 'emails each of the responders on the team' do
           service.call
-          expect(AssignmentMailer).to have_received(:new_assignment)
+          expect(ActionNotificationsMailer).to have_received(:new_assignment)
                                         .with new_assignment,
                                               responder.email
-          expect(AssignmentMailer).to have_received(:new_assignment)
+          expect(ActionNotificationsMailer).to have_received(:new_assignment)
                                         .with new_assignment,
                                               other_responder.email
         end

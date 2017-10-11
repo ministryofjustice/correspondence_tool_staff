@@ -72,7 +72,7 @@ class CaseApprovalService
                        .for_team(current_info.team)
                        .first
 
-      AssignmentMailer
+      ActionNotificationsMailer
           .ready_for_approver_review( assignment )
           .deliver_later
     end

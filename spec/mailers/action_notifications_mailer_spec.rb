@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe AssignmentMailer, type: :mailer do
+RSpec.describe ActionNotificationsMailer, type: :mailer do
   describe 'new_assignment' do
     let(:assigned_case)   { create :assigned_case,
                                    name: 'Fyodor Ognievich Ilichion',

@@ -13,7 +13,7 @@ describe CaseApprovalService do
       end
 
       before do
-        allow(AssignmentMailer).to receive_message_chain(:ready_for_approver_review,
+        allow(ActionNotificationsMailer).to receive_message_chain(:ready_for_approver_review,
                                                        :deliver_later)
       end
 
@@ -64,7 +64,7 @@ describe CaseApprovalService do
 
         it 'does not send an email' do
           service.call
-          expect(AssignmentMailer).not_to have_received(:ready_for_approver_review)
+          expect(ActionNotificationsMailer).not_to have_received(:ready_for_approver_review)
         end
       end
 
@@ -103,7 +103,7 @@ describe CaseApprovalService do
         it 'does send an email' do
           assignment = kase.approver_assignments.with_teams(BusinessUnit.press_office).first
           service.call
-          expect(AssignmentMailer).to have_received(:ready_for_approver_review).with assignment
+          expect(ActionNotificationsMailer).to have_received(:ready_for_approver_review).with assignment
         end
       end
 
@@ -119,7 +119,7 @@ describe CaseApprovalService do
 
         it 'does not send an email' do
           service.call
-          expect(AssignmentMailer).not_to have_received(:ready_for_approver_review)
+          expect(ActionNotificationsMailer).not_to have_received(:ready_for_approver_review)
         end
       end
 
