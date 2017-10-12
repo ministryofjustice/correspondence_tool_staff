@@ -115,8 +115,10 @@ describe 'CurrentTeamAndUserService' do
       allow(kase).to receive(:current_state).and_return('of_disbelief')
       expect{
         service
-      }.to raise_error RuntimeError, 'State of_disbelief unknown to CurrentTeamAndUserService'
+      }.to raise_error(
+             RuntimeError,
+             'State of_disbelief unrecognised by CurrentTeamAndUser::FOI'
+           )
     end
   end
-
 end

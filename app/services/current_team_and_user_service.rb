@@ -1,47 +1,28 @@
 class CurrentTeamAndUserService
-
-  attr_reader :team, :user
-
   def initialize(kase)
     @case = kase
-    @dts = DefaultTeamService.new(@case)
-    analyse_case
+    @resolver = resolver_for_case(kase)
+    if @resolver.respond_to? kase.current_state
+      @resolver.__send__ kase.current_state
+    else
+      raise "State #{kase.current_state} unrecognised by #{@resolver.class}"
+    end
+  end
+
+  def team
+    @resolver.team
+  end
+
+  def user
+    @resolver.user
   end
 
   private
 
-  # rubocop:disable Metrics/CyclomaticComplexity
-  def analyse_case
-    case @case.current_state
-    when 'unassigned'
-      @team = @case.managing_team
-      @user = nil
-    when 'awaiting_responder'
-      @team = @case.responding_team
-      @user = nil
-    when 'drafting', 'awaiting_dispatch'
-      @team = @case.responding_team
-      @user = @case.responder
-    when 'pending_dacu_clearance'
-      @team = @dts.approving_team
-      @user = @case.approver_assignments.for_team(@team).first.user
-    when 'pending_press_office_clearance'
-      @team = BusinessUnit.press_office
-      @user = @case.approver_assignments.for_team(@team).first.user
-    when 'pending_private_office_clearance'
-      @team = BusinessUnit.private_office
-      @user = @case.approver_assignments.for_team(@team).first.user
-    when 'responded'
-      @team = @case.managing_team
-      @user = nil
-    when 'closed'
-      @team = nil
-      @user = nil
-    else
-      raise "State #{@case.current_state} unknown to CurrentTeamAndUserService"
-    end
+  def resolver_for_case(kase)
+    kase.format_workflow_class_name(
+      'CurrentTeamAndUser::%{type}',
+      'CurrentTeamAndUser::%{type}::%{worklow}'
+    ).constantize.new(kase)
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
 end
-
-
