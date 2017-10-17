@@ -2,17 +2,13 @@
 
 CTS_ROOT_DIR = File.dirname($0)
 
-
-require 'raven'
-require File.join(File.dirname(__FILE__), 'lib', 'raven_context_provider')
-RavenContextProvider.set_context
-
-
 if defined?(Rails) || ARGV.include?('-h') || ARGV.include?('--help')
   SKIP_RAILS=true
 else
   exec(File.join(CTS_ROOT_DIR, 'bin', 'rails'), 'runner', $0, *ARGV)
 end
+
+RavenContextProvider.set_context if defined?(RavenContextProvider)
 
 require 'thor'
 
