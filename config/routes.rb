@@ -175,6 +175,7 @@ Rails.application.routes.draw do
     post 'execute_response_approval' => 'cases#execute_response_approval', on: :member
     get :request_amends, on: :member
     patch :execute_request_amends, on: :member
+    post  :filter, on: :collection
     # get 'upload_response_approve' => 'cases#upload_response_approve', on: :member
 
     resources :assignments, except: :create  do

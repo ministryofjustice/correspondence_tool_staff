@@ -42,7 +42,7 @@ describe GlobalNavManager::Tab do
 
   let(:finder) { instance_double(CaseFinderService,
                                  filter_for_params: :filter_result)}
-  let(:tab) { GlobalNavManager::Tab.new "late", 'page_path', finder, config }
+  let(:tab) { GlobalNavManager::Tab.new "late", 'page_path', finder, config, {} }
 
 
   describe 'initialisation' do

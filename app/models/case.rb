@@ -79,6 +79,8 @@ class Case < ApplicationRecord
     where.not(id: Case.with_teams(teams).pluck(:id))
   end
 
+  scope :in_states, -> (states) { where(current_state: states) }
+
   scope :with_user, ->(*users) do
     includes(:assignments)
       .where(assignments: { user_id: users.map { |u| u.id },

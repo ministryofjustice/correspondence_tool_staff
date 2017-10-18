@@ -40,18 +40,21 @@ describe GlobalNavManager::Page do
     end
   end
 
+  let(:url_params)  { {'timeliness' => 'in_time', 'states' => 'awaiting_dispatch,drafting'} }
   let(:user_double) { instance_double User }
   let(:open_cases_page) { described_class.new(
                             :open_cases,
                             user_double,
                             [:in_time, :late],
                             config,
+                            url_params
                           ) }
   let(:closed_cases_page) { described_class.new(
                               :closed_cases,
                               user_double,
                               [],
                               config,
+                              {}
                             ) }
   let(:in_time_tab) { instance_double(GlobalNavManager::Tab,
                                       url: :in_time_tab_url) }

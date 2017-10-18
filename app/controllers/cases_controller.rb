@@ -21,6 +21,7 @@ class CasesController < ApplicationController
       :upload_responses,
     ]
   before_action :set_assignment, only: [:show]
+  before_action :set_state_selector, only: [:open_cases, :my_open_cases]
 
   def index
     # index doesn't have a nav page defined so cannot use the GlobalNavManager
@@ -57,6 +58,13 @@ class CasesController < ApplicationController
     @cases = finder.cases.page(params[:page]).decorate
     @current_tab_name = 'all_cases'
     render :index
+  end
+
+
+  def filter
+    state_selector = StateSelector.new(params)
+    redirect_url = make_redirect_url_with_additional_params(states: state_selector.states_for_url)
+    redirect_to redirect_url
   end
 
   def new
@@ -352,5 +360,19 @@ class CasesController < ApplicationController
       end
     end
   end
+end
+
+def set_state_selector
+  @state_selector = StateSelector.new(params)
+end
+
+def make_redirect_url_with_additional_params(new_params)
+  new_params[:controller] = params[:controller]
+  new_params[:action] = params[:orig_action]
+  params.keys.each do |key|
+    next if key.to_sym.in?( %i{ utf8 authenticity_token state_selector states action commit action orig_action} )
+    new_params[key] = params[key]
+  end
+  url_for(new_params)
 end
 #rubocop:enable Metrics/ClassLength
