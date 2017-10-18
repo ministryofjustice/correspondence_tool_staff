@@ -22,6 +22,15 @@ module Cases
       edit?
     end
 
+    def can_delete_case?
+      clear_failed_checks
+      user.manager?
+    end
+
+    def delete_case?
+      can_delete_case?
+    end
+
     def can_view_attachments?
       clear_failed_checks
       # for flagged cases, the state changes to pending_dacu_clearance as soon

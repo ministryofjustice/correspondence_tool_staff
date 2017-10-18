@@ -63,8 +63,10 @@ en:
       can_remove_attachment?: 'You are not authorised to remove attachments from this case.'
       can_view_case_details?: 'You are not authorised to view this case.'
       can_download_stats?: You are not authorised to view or download statistics.
+      can_delete_case?: You are not authorised to delete this case.
       edit?: You are not authorised to edit this case.
       update?: You are not authorised to edit this case.
+      delete?: You are not authorised to delete this case.
     team_policy:
       index?: 'You are not authorised to view a list of teams'
       show?: 'You are not authorised to view this team'
