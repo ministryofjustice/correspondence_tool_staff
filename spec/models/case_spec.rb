@@ -151,6 +151,12 @@ RSpec.describe Case, type: :model do
     end
   end
 
+  describe 'default_scope' do
+    it "applies a default scope to exclude deleted cases" do
+      expect(Case.all.to_sql).to eq Case.unscoped.where( deleted?: false).to_sql
+    end
+  end
+
   describe 'open scope' do
     it 'returns only closed cases in most recently closed first' do
       Timecop.freeze 1.minute.ago

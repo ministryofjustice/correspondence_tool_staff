@@ -28,6 +28,8 @@
 class Case < ApplicationRecord
   include Statesman::Adapters::ActiveRecordQueries
 
+  default_scope { where( deleted?: false) }
+
   has_paper_trail only: %i{ name email received_date subject postal_address requester_type }
 
 
