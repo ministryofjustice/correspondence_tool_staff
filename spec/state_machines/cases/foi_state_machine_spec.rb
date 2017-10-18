@@ -273,6 +273,28 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
                   .checking_policy(:can_add_message_to_case?) }
   end
 
+  events :delete_case do
+    it { should transition_from(:unassigned).to(:unassigned)
+                  .checking_policy(:delete_case?) }
+    it { should transition_from(:awaiting_responder).to(:awaiting_responder)
+                  .checking_policy(:delete_case?) }
+    it { should transition_from(:drafting).to(:drafting)
+                  .checking_policy(:delete_case?) }
+    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch)
+                  .checking_policy(:delete_case?) }
+    it { should transition_from(:pending_dacu_clearance)
+                  .to(:pending_dacu_clearance)
+                  .checking_policy(:delete_case?) }
+    it { should transition_from(:pending_press_office_clearance)
+                  .to(:pending_press_office_clearance)
+                  .checking_policy(:delete_case?) }
+    it { should transition_from(:pending_private_office_clearance)
+                  .to(:pending_private_office_clearance)
+                  .checking_policy(:delete_case?) }
+    it { should transition_from(:responded).to(:responded)
+                  .checking_policy(:delete_case?) }
+  end
+
   describe 'trigger assign_responder!' do
     it 'triggers an assign_responder event' do
       expect do
@@ -657,6 +679,30 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
       it 'returns nil' do
         expect(described_class.event_name(:trigger_article_50)).to be_nil
       end
+    end
+  end
+
+  context 'User deletes a case' do
+    let(:kase) { create :case }
+    let(:manager) { create :manager }
+    let(:state_machine) { kase.state_machine }
+    let(:team) { manager.managing_teams.first }
+
+    describe 'trigger delete_case!' do
+      it 'triggers an delete_case event' do
+        expect {
+          state_machine.delete_case!(
+            manager,
+            team
+          )
+        }.to trigger_the_event(:delete_case)
+               .on_state_machine(state_machine)
+               .with_parameters(
+                 acting_user_id: manager.id,
+                 acting_team_id: team.id
+               )
+      end
+
     end
   end
 end
