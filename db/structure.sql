@@ -333,7 +333,8 @@ CREATE TABLE cases (
     current_state character varying,
     last_transitioned_at timestamp without time zone,
     delivery_method cases_delivery_methods,
-    workflow character varying
+    workflow character varying,
+    "deleted?" boolean DEFAULT false
 );
 
 
@@ -1196,6 +1197,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170913124313'),
 ('20170925142730'),
 ('20171003080427'),
-('20171003153752');
+('20171003153752'),
+('20171013134445');
 
 
