@@ -5,6 +5,7 @@ class CasesController < ApplicationController
       :approve_response_interstitial,
       :close,
       :confirm_respond,
+      :confirm_destroy,
       :execute_response_approval,
       :execute_request_amends,
       :flag_for_clearance,
@@ -15,6 +16,7 @@ class CasesController < ApplicationController
       :request_amends,
       :respond,
       :show,
+      :destroy,
       :unflag_for_clearance,
       :upload_responses,
     ]
@@ -115,6 +117,23 @@ class CasesController < ApplicationController
     authorize @case
 
     render :edit
+  end
+
+
+  def confirm_destroy
+    authorize @case
+  end
+
+  def destroy
+    authorize @case
+    service = CaseDeletionService.new(current_user, @case)
+    service.call
+    if service.result == :ok
+      flash[:notice] = "You have deleted case #{@case.number}."
+      redirect_to cases_path
+    else
+      render :confirm_destroy
+    end
   end
 
   def new_response_upload

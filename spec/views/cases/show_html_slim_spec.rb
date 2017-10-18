@@ -21,6 +21,10 @@ describe 'cases/show.html.slim', type: :view do
     allow(policy)
       .to receive(:can_add_message_to_case?)
         .and_return policies[:can_add_message_to_case?]
+
+    allow(policy)
+      .to receive(:destroy_case?)
+        .and_return policies[:destroy_case?]
   end
 
   let(:case_pending_dacu_clearance) { create(:pending_dacu_clearance_case)

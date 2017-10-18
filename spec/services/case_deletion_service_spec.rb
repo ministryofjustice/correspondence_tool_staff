@@ -6,7 +6,7 @@ describe CaseDeletionService do
     let(:team)          { find_or_create :team_dacu }
     let(:user)          { team.users.first }
     let(:kase)          { create :accepted_case }
-    let(:state_machine) { double Cases::FOIStateMachine, delete_case!: true }
+    let(:state_machine) { double Cases::FOIStateMachine, destroy_case!: true }
 
     before(:each) do
       @service = CaseDeletionService.new(user, kase)
@@ -21,7 +21,7 @@ describe CaseDeletionService do
       end
 
       it 'transitions the cases state' do
-        expect(state_machine).to receive(:delete_case!).with(user, team)
+        expect(state_machine).to receive(:destroy_case!).with(user, team)
         @service.call
       end
 

@@ -996,6 +996,13 @@ CREATE INDEX index_cases_on_category_id ON cases USING btree (category_id);
 
 
 --
+-- Name: index_cases_on_deleted?; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "index_cases_on_deleted?" ON cases USING btree ("deleted?");
+
+
+--
 -- Name: index_cases_on_number; Type: INDEX; Schema: public; Owner: -
 --
 

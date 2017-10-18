@@ -203,7 +203,7 @@ class Cases::FOIStateMachine
     transition from: :closed,                           to: :closed
   end
 
-  event :delete_case do
+  event :destroy_case do
     authorize_by_event_name
     transition from: :unassigned,                       to: :unassigned
     transition from: :awaiting_responder,               to: :awaiting_responder
@@ -359,11 +359,11 @@ class Cases::FOIStateMachine
              event:             :edit_case
   end
 
-  def delete_case!(user, team)
-    trigger! :delete_case,
+  def destroy_case!(user, team)
+    trigger! :destroy_case,
              acting_team_id:    team.id,
              acting_user_id:    user.id,
-             event:             :delete_case
+             event:             :destroy_case
   end
 
   def assign_to_new_team!(user, managing_team, new_team)

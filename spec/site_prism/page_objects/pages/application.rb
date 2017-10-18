@@ -29,6 +29,7 @@ module PageObjects
         cases_search:                   'Cases::SearchPage',
         cases_show:                     'Cases::ShowPage',
         closed_cases:                   'Cases::ClosedCasesPage',
+        confirm_destroy:                'Cases::ConfirmDestroyPage',
         global_nav_partial:             'Partials::GlobalNavPartial',
         header_partial:                 'Partials::HeaderPartial',
         incoming_cases:                 'Cases::IncomingCasesPage',

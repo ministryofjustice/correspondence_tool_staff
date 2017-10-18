@@ -22,13 +22,17 @@ module Cases
       edit?
     end
 
-    def can_delete_case?
+    def destroy?
       clear_failed_checks
       user.manager?
     end
 
-    def delete_case?
-      can_delete_case?
+    def destroy_case?
+      destroy?
+    end
+
+    def confirm_destroy?
+      destroy?
     end
 
     def can_view_attachments?

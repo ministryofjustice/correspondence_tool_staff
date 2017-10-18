@@ -418,6 +418,7 @@ RSpec.describe CasesController, type: :controller do
         it 'permitted_events == [:add_messsage_to_case, :assign_responder, :flag_for_clearence]' do
           expect(assigns(:permitted_events)).to eq [:add_message_to_case,
                                                     :assign_responder,
+                                                    :destroy_case,
                                                     :edit_case,
                                                     :flag_for_clearance]
         end
@@ -487,7 +488,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :assign_to_new_team, :edit_case, :flag_for_clearance]
+          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :assign_to_new_team, :destroy_case, :edit_case, :flag_for_clearance]
         end
 
         it 'renders the show template' do
@@ -563,7 +564,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :assign_to_new_team, :edit_case, :flag_for_clearance]
+          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :assign_to_new_team, :destroy_case, :edit_case, :flag_for_clearance]
         end
 
         it 'renders the show page' do
@@ -624,7 +625,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :edit_case, :flag_for_clearance]
+          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :destroy_case, :edit_case, :flag_for_clearance]
         end
 
         it 'renders the show page' do
@@ -686,7 +687,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it 'permitted_events == [:close]' do
-          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :close, :edit_case]
+          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :close, :destroy_case, :edit_case]
         end
 
         it 'renders the show page' do

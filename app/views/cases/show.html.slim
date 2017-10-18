@@ -20,7 +20,7 @@
 
 div id="case-#{@case.id}"
 
-  - if (@permitted_events - [:edit_case]).any?
+  - if (@permitted_events - [:edit_case, :destroy_case]).any?
     section.case-info.has-actions
       .button-holder
         - @permitted_events.each do |event|
@@ -59,3 +59,5 @@ div id="case-#{@case.id}"
       = render partial: 'cases/case_history', locals: { case_transitions: @case_transitions }
 
 
+  - if policy(@case).destroy_case?
+    = link_to 'Delete case', confirm_destroy_case_path(@case)

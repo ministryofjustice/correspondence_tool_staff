@@ -194,7 +194,7 @@ describe Cases::BasePolicy do
     it { should     permit(manager,   new_case) }
   end
 
-  permissions :can_delete_case? do
+  permissions :destroy_case? do
     it { should_not permit(responder, new_case)}
     it { should_not permit(approver, assigned_trigger_case)}
     it { should     permit(manager,   new_case) }

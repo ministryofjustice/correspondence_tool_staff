@@ -159,6 +159,7 @@ Rails.application.routes.draw do
 
     get 'close', on: :member
     get 'closed' => 'cases#closed_cases', on: :collection
+    get 'confirm_destroy' => 'cases#confirm_destroy', on: :member
     get 'incoming' => 'cases#incoming_cases', on: :collection
     get 'my_open' => 'cases#my_open_cases', on: :collection
     get 'open' => 'cases#open_cases', on: :collection

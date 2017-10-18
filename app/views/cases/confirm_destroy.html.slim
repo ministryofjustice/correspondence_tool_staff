@@ -1,0 +1,28 @@
+= GovukElementsErrorsHelper.error_summary @case,
+  "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+- content_for :heading
+  = "Delete case"
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+.delete-copy
+  p
+    = "You are deleting the case: "
+    strong.strong-block
+      = @case.subject
+
+  .notice
+    i.icon.icon-important
+      span.visually-hidden
+        = "Important! "
+    strong.bold-small
+      = "Once you delete this case, you will not be able to retrieve it."
+
+.button-holder
+  = link_to "Delete case", case_path(@case), class: 'button', method: :delete
