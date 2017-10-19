@@ -180,6 +180,10 @@ testing:
 2. [Use environment variables to configure the AWS SDK](http://docs.aws.amazon.com/sdk-for-ruby/v2/developer-guide/setup-config.html#aws-ruby-sdk-credentials-environment)
    locally.
 
+#### Footnotes
+
+<a name="footnote-aws-access-key">1</a>: When following these instructions, I had to replace step 3 (Continue to Security Credentials) with clicking on *Users* on the left, selecting my account from the list there, and then clicking on "Security Credentials".
+
 # Case Journey
 1. **unassigned**  
    A new case entered by a DACU user is created in this state.  It is in this state very 
@@ -206,8 +210,17 @@ testing:
 1. **closed**  
    The kilo has marked the case as closed.
   
+#Smoke Tests
 
+The smoke test runs through the process of signing into the service using a dedicated user account setup as Disclosure BMT team member. 
+It checks that sign in was successful and then randomly views one case in the case list view.  
 
-# Footnotes
+To run the smoke test, set the following environment variables:
 
-<a name="footnote-aws-access-key">1</a>: When following these instructions, I had to replace step 3 (Continue to Security Credentials) with clicking on *Users* on the left, selecting my account from the list there, and then clicking on "Security Credentials".
+    SETTINGS__SMOKE_TESTS__USERNAME    # the email address to use for smoke tests
+    SETTINGS__SMOKE_TESTS__PASSWORD    # The password for the smoketest email account
+
+and then run
+
+    bundle exec rails smoke
+

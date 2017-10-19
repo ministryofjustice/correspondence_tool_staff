@@ -3,7 +3,7 @@ desc 'run Smoke tests'
 task smoke: :environment do
   require File.join(Rails.root, 'lib', 'smoketest')
   require File.join(Rails.root, 'lib', 'rake_task_helpers', 'host_env')
-  
+
   HostEnv.safe do
     require File.join(Rails.root, 'spec', 'support', 'find_or_create_strategy')
     create_smoketest_user_if_needed
