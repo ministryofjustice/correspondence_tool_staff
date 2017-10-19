@@ -140,3 +140,4 @@ global_navigation:
 smoke_tests:
   username: 'no-reply-smoke-test@digital.justice.gov.uk'
   password: 'abcdefg'
+  site_url: 'http://localhost:3000'
