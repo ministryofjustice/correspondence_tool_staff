@@ -137,3 +137,6 @@ global_navigation:
       search_cases:
       settings:
 
+smoke_tests:
+  username: 'no-reply-smoke-test@digital.justice.gov.uk'
+  password: 'abcdefg'
