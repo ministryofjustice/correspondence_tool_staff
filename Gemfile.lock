@@ -550,7 +550,7 @@ DEPENDENCIES
   libreconv (~> 0.9.1)
   listen (~> 3.0.5)
   logstasher
-  mechanize (~> 2.7.5)
+  mechanize (>= 2.7.5)
   mimetype-fu (~> 0.1.2)
   paper_trail (~> 7.1)
   parallel_tests
