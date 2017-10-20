@@ -3,7 +3,7 @@ class AddStateToCases < ActiveRecord::Migration[5.0]
     add_column :cases, :current_state, :string
     add_column :cases, :last_transitioned_at, :datetime
 
-    Case.all.each do |kase|
+    Case.unscoped.all.each do |kase|
       transition = kase.transitions.order(:sort_key).last
       if transition.nil?
         kase.update!(current_state: 'unassigned', last_transitioned_at: kase.created_at)
