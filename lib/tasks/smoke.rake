@@ -17,8 +17,13 @@ end
 
 def create_smoketest_user_if_needed
   HostEnv.safe do
-    FactoryGirl.find_or_create :team_dacu
-    FactoryGirl.find_or_create :team_dacu_disclosure
+    if BusinessUnit.where(code: Settings.foi_cases.default_managing_team).none?
+      FactoryGirl.create :team_dacu
+    end
+
+    if BusinessUnit.where(code: Settings.foi_cases.default_clearance_team).none?
+      FactoryGirl.create :team_dacu_disclosure
+    end
 
     new__or_existing_user = User.find_or_create_by( email: Settings.smoke_tests.username) do | user |
       user.full_name             = 'Smokey Test(DO NOT EDIT)'
