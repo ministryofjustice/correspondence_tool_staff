@@ -224,6 +224,10 @@ RSpec.describe CasesController, type: :controller do
         expect(assigns(:current_tab_name)).to eq 'all_cases'
       end
 
+      it 'sets @can_add_case to true' do
+        get :index
+        expect(assigns(:can_add_case)).to eq true
+      end
     end
 
     context 'as an authenticated responder' do
@@ -245,6 +249,10 @@ RSpec.describe CasesController, type: :controller do
         expect(assigns(:current_tab_name)).to eq 'all_cases'
       end
 
+      it 'sets @can_add_case to fasle' do
+        get :index
+        expect(assigns(:can_add_case)).to eq false
+      end
     end
 
     context 'as an authenticated disclosure_specialist' do
@@ -264,6 +272,11 @@ RSpec.describe CasesController, type: :controller do
       it 'sets @current_tab_name' do
         get :index
         expect(assigns(:current_tab_name)).to eq 'all_cases'
+      end
+
+      it 'sets @can_add_case to false' do
+        get :index
+        expect(assigns(:can_add_case)).to eq false
       end
     end
   end

@@ -50,6 +50,11 @@ module PageObjects
         make_check_box_choice("state_selector_#{choice}")
       end
 
+      def row_for_case_number(number)
+        case_list.find { |row|
+          row.number.text == "Link to case #{number}"
+        }
+      end
     end
   end
 end

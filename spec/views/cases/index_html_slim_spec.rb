@@ -75,6 +75,7 @@ describe 'cases/index.html.slim', type: :view do
     it 'is displayed when the user can add cases' do
       assign(:cases, PaginatingDecorator.new(Case.all.page))
       assign(:state_selector, StateSelector.new( {} ))
+      assign(:can_add_case, true)
 
       allow_case_policy :can_add_case?
 

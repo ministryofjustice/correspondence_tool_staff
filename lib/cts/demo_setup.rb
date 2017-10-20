@@ -132,10 +132,10 @@ module CTS
     def close_case(kase, delay_days)
       Timecop.freeze random_approval_time(delay_days) do
         puts ">>>>>> closing case #{kase.id} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-        kase.state_machine.respond!(kase.responder, kase.responding_team)
+        kase.state_machine.respond!(kase.responder)
         granted = CaseClosure::Outcome.where(abbreviation: 'granted').first
         kase.update!(date_responded: Date.today, outcome_id: granted.id)
-        kase.state_machine.close!(@managing_team.users.sample, @managing_team)
+        kase.state_machine.close!(@managing_team.users.sample)
       end
     end
 

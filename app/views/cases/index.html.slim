@@ -14,7 +14,7 @@
           = search_field_tag :query, @query, class: 'form-control'
         = submit_tag 'Search', class: 'button'
 
-- elsif policy(:case).can_add_case?
+- elsif @can_add_case
   .grid-row
     .column-full.button-holder
       = link_to t('common.new_case_button'), new_case_path, class: 'button'

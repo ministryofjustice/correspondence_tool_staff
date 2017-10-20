@@ -79,13 +79,18 @@ module Events
     to_state_info[:state]
   end
 
-  private
-
   def can_trigger_event?(event_name:, metadata: {})
-    have_transition_for_event?(event_name) &&
+    event_exists?(event_name) &&
+      have_transition_for_event?(event_name) &&
       check_guards_for_event(event_name, metadata) &&
       check_guards_for_event_transitions(event_name, metadata)
   end
+
+  def event_exists?(event_name)
+    self.class.events.key? event_name
+  end
+
+  private
 
   def get_event!(event_name)
     self.class.events.fetch(event_name) do

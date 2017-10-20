@@ -36,7 +36,7 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
       association_name: :transitions
     )
   end
-  let(:managing_team)      { create :managing_team }
+  let(:managing_team)      { find_or_create :team_dacu }
   let(:manager)            { managing_team.managers.first }
   let(:responding_team)    { create :responding_team }
   let(:responder)          { responding_team.responders.first }
@@ -492,7 +492,6 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
     it 'triggers an add_responses event' do
       expect do
         case_being_drafted.state_machine.add_responses! responder,
-                                                        responding_team,
                                                         filenames
       end.to trigger_the_event(:add_responses)
                .on_state_machine(case_being_drafted.state_machine)
@@ -542,8 +541,7 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
   describe 'trigger respond!' do
     it 'triggers a respond event' do
       expect do
-        case_with_response.state_machine.respond! responder,
-                                                  responding_team
+        case_with_response.state_machine.respond! responder
       end.to trigger_the_event(:respond)
                .on_state_machine(case_with_response.state_machine)
                .with_parameters(acting_user_id: responder.id,
@@ -659,8 +657,7 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
   describe 'trigger close!' do
     it 'triggers a close event' do
       expect do
-        responded_case.state_machine.close! manager,
-                                            managing_team
+        responded_case.state_machine.close! manager
       end.to trigger_the_event(:close)
                .on_state_machine(responded_case.state_machine)
                .with_parameters(acting_user_id: manager.id,

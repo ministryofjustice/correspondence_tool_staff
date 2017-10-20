@@ -36,6 +36,7 @@ class CasesController < ApplicationController
                 .page(params[:page])
                 .decorate
     @current_tab_name = 'all_cases'
+    @can_add_case = policy(Case.new(category: Category.foi)).can_add_case?
   end
 
 
@@ -53,6 +54,7 @@ class CasesController < ApplicationController
     finder = @global_nav_manager.current_cases_finder
     @cases = finder.cases.page(params[:page]).decorate
     @current_tab_name = 'my_cases'
+    @can_add_case = policy(Case.new(category: Category.foi)).can_add_case?
     render :index
   end
 
@@ -60,6 +62,7 @@ class CasesController < ApplicationController
     finder = @global_nav_manager.current_cases_finder
     @cases = finder.cases.page(params[:page]).decorate
     @current_tab_name = 'all_cases'
+    @can_add_case = policy(Case.new(category: Category.foi)).can_add_case?
     render :index
   end
 
@@ -71,34 +74,30 @@ class CasesController < ApplicationController
   end
 
   def new
-    authorize Case, :can_add_case?
+    authorize Case.new(category: Category.foi), :can_add_case?
 
     @case = Case.new
-    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
+    @s3_direct_post = s3_uploader_for(@case, 'requests')
     render :new
   end
 
   def create
-    authorize Case, :can_add_case?
+    authorize Case.new(category: Category.foi), :can_add_case?
 
-    @case = Case.new(create_foi_params.merge(uploading_user: current_user))
-    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
-
-    if create_foi_params[:flag_for_disclosure_specialists].blank?
-      @case.valid?
-      @case.errors.add(:flag_for_disclosure_specialists, :blank)
-      render :new
-    elsif @case.save
-      if create_foi_params[:flag_for_disclosure_specialists] == 'yes'
-        CaseFlagForClearanceService.new(user: current_user,
-                                        kase: @case,
-                                        team: BusinessUnit.dacu_disclosure).call
-      end
+    ccs = CaseCreateService.new current_user, create_foi_params
+    ccs.call
+    @case = ccs.case
+    case ccs.result
+    when :case_created
+      redirect_to case_path @case
+    when :assign_responder
       flash[:creating_case] = true
       redirect_to new_case_assignment_path @case
-    else
+    else # including :error
+      @s3_direct_post = s3_uploader_for @case, 'requests'
       render :new
     end
+
   rescue ActiveRecord::RecordNotUnique
     flash[:notice] =
       t('activerecord.errors.models.case.attributes.number.duplication')
@@ -148,14 +147,13 @@ class CasesController < ApplicationController
   end
 
   def new_response_upload
-    authorize @case
-
     flash[:action_params] = request.query_parameters['mode']
+    authorize_upload_response_for_action @case, flash[:action_params]
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
   end
 
   def upload_responses
-    authorize @case
+    authorize_upload_response_for_action @case, flash[:action_params]
 
     bypass_params_manager = BypassParamsManager.new(params)
     rus = ResponseUploaderService.new(
@@ -213,7 +211,7 @@ class CasesController < ApplicationController
       @case.close(current_user)
       set_permitted_events
       flash[:notice] = t('notices.case_closed')
-      render :show
+      redirect_to case_path(@case)
     else
       set_permitted_events
       render :close
@@ -376,6 +374,20 @@ class CasesController < ApplicationController
         kase.errors.add(:message_text, error)
       end
     end
+  end
+
+  def authorize_upload_response_for_action(kase, action)
+    case action
+    when nil, 'upload'    then authorize kase, 'upload_responses?'
+    when 'upload-flagged' then authorize kase, 'upload_responses_for_flagged?'
+    when 'upload-approve' then authorize kase, 'upload_responses_for_approve?'
+    when 'upload-redraft' then authorize kase, 'upload_responses_for_redraft?'
+    # else authorize kase, 'upload_responses?'
+    end
+  end
+
+  def s3_uploader_for(kase, upload_type)
+    S3Uploader.s3_direct_post_for_case(kase, upload_type)
   end
 end
 

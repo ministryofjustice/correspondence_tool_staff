@@ -220,9 +220,9 @@ module Stats
         end
         unless responded_date.nil?
           Timecop.freeze responded_date + 14.hours do
-            kase.state_machine.respond!(responder, team)
+            kase.state_machine.respond!(responder)
             kase.update!(date_responded: Time.now, outcome_id: @outcome.id)
-            kase.state_machine.close!(kase.managing_team.users.first, kase.managing_team)
+            kase.state_machine.close!(kase.managing_team.users.first)
           end
         end
       end

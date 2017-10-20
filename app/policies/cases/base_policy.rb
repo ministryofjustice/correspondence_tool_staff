@@ -233,11 +233,6 @@ module Cases
       check_user_is_an_approver_for_case
     end
 
-    def new_response_upload?
-      clear_failed_checks
-      check_user_is_in_current_team
-    end
-
     def unflag_for_clearance_from_unassigned_to_unassigned?
       clear_failed_checks
       check_case_requires_clearance &&
@@ -286,10 +281,28 @@ module Cases
         (check_case_is_assigned_to_private_office && check_user_is_private_office_approver)
     end
 
-
     def upload_responses?
       clear_failed_checks
-      check_user_is_in_current_team
+      check_user_is_in_current_team &&
+        check_can_trigger_event(:add_responses)
+    end
+
+    def upload_responses_for_flagged?
+      clear_failed_checks
+      check_user_is_in_current_team &&
+        check_can_trigger_event(:add_response_to_flagged_case)
+    end
+
+    def upload_responses_for_approve?
+      clear_failed_checks
+      check_user_is_in_current_team &&
+        check_can_trigger_event(:upload_response_and_approve)
+    end
+
+    def upload_responses_for_redraft?
+      clear_failed_checks
+      check_user_is_in_current_team &&
+        check_can_trigger_event(:upload_response_and_return_for_redraft)
     end
 
     def upload_response_and_return_for_redraft_from_pending_dacu_clearance_to_drafting?
@@ -378,6 +391,10 @@ module Cases
       check_escalation_deadline_has_expired && check_case_is_in_attachable_state && check_user_is_a_responder_for_case
     end
 
+
+    check :user_is_assigned_manager_for_case do
+      user == self.case.manager
+    end
 
     check :user_is_an_approver do
       user.approver?
@@ -542,6 +559,12 @@ module Cases
       current_info.team.present? && @user.in?(current_info.team.users)
     end
 
+    check :can_trigger_event do |event_name|
+      self.case.state_machine.can_trigger_event?(
+        event_name: event_name,
+        metadata: { acting_user_id: user.id }
+      )
+    end
   end
   #rubocop:enable Metrics/ClassLength
 end

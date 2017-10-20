@@ -54,7 +54,7 @@ class ResponseUploaderService
       filenames = response_attachments.map(&:filename)
       case @action
       when 'upload'
-        @case.state_machine.add_responses!(@current_user, @case.responding_team, filenames)
+        @case.state_machine.add_responses!(@current_user, filenames)
       when 'upload-flagged'
         @case.state_machine.add_response_to_flagged_case!(@current_user, @case.responding_team, filenames)
       when 'upload-approve'

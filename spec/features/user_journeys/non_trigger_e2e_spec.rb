@@ -78,7 +78,7 @@ feature "#non-trigger cases" do
 
     cases_new_page.submit_button.click
 
-    assign_case(responder.responding_teams.first)
+    assign_case(expected_business_unit: responder.responding_teams.first)
 
     new_case_number = cases_show_page.page_heading.sub_heading
                           .text.to_s.gsub('You are viewing case number ', '')

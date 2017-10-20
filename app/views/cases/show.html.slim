@@ -23,11 +23,22 @@ div id="case-#{@case.id}"
   - if (@permitted_events - [:edit_case, :destroy_case]).any?
     section.case-info.has-actions
       .button-holder
-        - @permitted_events.each do |event|
-          - next if event == :reassign_user
+        - if policy(@case).upload_responses?
+          = action_button_for(:add_responses)
+        - if policy(@case).upload_responses_for_flagged?
+          = action_button_for(:add_response_to_flagged_case)
+        - if policy(@case).upload_responses_for_approve?
+          = action_button_for(:upload_response_and_approve)
+        - if policy(@case).upload_responses_for_redraft?
+          = action_button_for(:upload_response_and_return_for_redraft)
+
+        - if policy(@case).can_respond?
+          = action_button_for(:respond)
+
+        - (@permitted_events - [:add_responses, :add_response_to_flagged_case, :respond, :reassign_user, :upload_response_and_approve, :upload_response_and_return_for_redraft]).each do |event|
           = action_button_for(event)
 
-        - if :reassign_user.in?(@permitted_events)
+        - if policy(@case).assignments_execute_reassign_user?
           = action_button_for(:reassign_user)
 
   section.case-info

@@ -48,7 +48,7 @@ module CaseStates
 
   def respond(current_user)
     ActiveRecord::Base.transaction do
-      state_machine.respond!(current_user, responding_team)
+      state_machine.respond!(current_user)
 
       # pre-populate the date_responded field with the date the user
       # marked the case as sent
@@ -58,7 +58,7 @@ module CaseStates
   end
 
   def close(current_user)
-    state_machine.close!(current_user, managing_team)
+    state_machine.close!(current_user)
   end
 
   private

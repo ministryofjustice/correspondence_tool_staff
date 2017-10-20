@@ -28,6 +28,7 @@ FactoryGirl.define do
   sequence(:responder_name)             { |n| "Mr Responder #{n}" }
   sequence(:approver_name)              { |n| "Ms Approver #{n}" }
   sequence(:disclosure_specialist_name) { |n| "Disclosure Specialist #{n}" }
+  sequence(:disclosure_bmt_user_name)   { |n| "Disclosure BMT #{n}" }
   sequence(:press_officer_name)         { |n| "Press Officer #{n}" }
   sequence(:private_officer_name)       { |n| "Private Officer #{n}" }
 
@@ -43,6 +44,11 @@ FactoryGirl.define do
     factory :manager do
       full_name      { generate(:manager_name) }
       managing_teams { [create(:managing_team)] }
+    end
+
+    factory :disclosure_bmt_user do
+      full_name      { generate :disclosure_bmt_user_name }
+      managing_teams { [create(:team_dacu)] }
     end
 
     factory :responder do

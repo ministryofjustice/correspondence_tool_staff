@@ -45,6 +45,10 @@ class EventTransitions
     @authorize = policy || "#{@event_name}?"
   end
 
+  def authorize_each_transition
+    authorize true
+  end
+
   def authorize_by_event_name
     authorize "#{@event_name}?"
   end

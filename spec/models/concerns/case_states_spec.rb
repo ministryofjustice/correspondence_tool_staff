@@ -12,23 +12,19 @@ RSpec.describe Case, type: :model do
     let(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
 
     describe '#state_machine' do
-      subject { kase.state_machine }
-
-      it { should have_attributes(object: kase) }
-
       it 'defaults to the Cases::FOIStateMachine when no workflow is specified' do
         expect(kase.state_machine)
           .to be_an_instance_of(Cases::FOIStateMachine)
       end
 
-      it 'raises an error when an nonexistant workflow is specified' do
-        allow(kase).to receive(:workflow).and_return('Nonexistent')
-        expect {
-          kase.state_machine
-        }.to raise_error(
-               NameError,
-               'uninitialized constant Cases::FOI::NonexistentStateMachine'
-             )
+      context 'workflow is not valid' do
+        let(:kase) { create :case, workflow: 'Nonexistent' }
+
+        it 'raises an error when an nonexistant workflow is specified' do
+          expect {
+            kase.state_machine
+          }.to raise_error(NameError, /uninitialized constant Cases::FOI.*/)
+        end
       end
     end
 
@@ -131,16 +127,14 @@ RSpec.describe Case, type: :model do
       it 'triggers the raising version of the event' do
         case_with_response.respond(case_with_response.responder)
         expect(state_machine).to have_received(:respond!)
-                                   .with(case_with_response.responder,
-                                         case_with_response.responding_team)
+                                   .with(case_with_response.responder)
         expect(state_machine).not_to have_received(:respond)
       end
 
       it 'set the date_responded to the date the user triggered "Marked as sent"' do
         case_with_response.respond(case_with_response.responder)
         expect(state_machine).to have_received(:respond!)
-                                     .with(case_with_response.responder,
-                                           case_with_response.responding_team)
+                                     .with(case_with_response.responder)
         expect(state_machine).not_to have_received(:respond)
         expect(case_with_response.date_responded).to eq Date.today
       end
@@ -159,7 +153,7 @@ RSpec.describe Case, type: :model do
         manager = responded_case.managing_team.managers.first
         responded_case.close(manager)
         expect(state_machine).to have_received(:close!)
-                                   .with(manager, responded_case.managing_team)
+                                   .with(manager)
         expect(state_machine).not_to have_received(:close)
       end
     end

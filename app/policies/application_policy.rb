@@ -7,8 +7,8 @@ class ApplicationPolicy
     end
 
     def check(name, &block)
-      define_method "check_#{name}" do
-        if instance_eval(&block)
+      define_method "check_#{name}" do |*args|
+        if instance_exec(*args, &block)
           true
         else
           @@failed_checks << [name, @user, @record]

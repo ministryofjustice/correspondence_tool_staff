@@ -57,24 +57,14 @@ class Cases::FOIStateMachine
   end
 
   event :unflag_for_clearance do
-    transition from:      :unassigned,
-               to:        :unassigned,
-               authorize: true
-    transition from:      :awaiting_responder,
-               to:        :awaiting_responder,
-               authorize: true
-    transition from:      :drafting,
-               to:        :drafting,
-               authorize: true
-    transition from:      :awaiting_dispatch,
-               to:        :awaiting_dispatch,
-               authorize: true
-    transition from:      :pending_dacu_clearance,
-               to:        :awaiting_dispatch,
-               authorize: true
-    transition from:      :pending_dacu_clearance,
-               to:        :pending_dacu_clearance,
-               authorize: true
+    authorize_each_transition
+
+    transition from: :unassigned,             to: :unassigned
+    transition from: :awaiting_responder,     to: :awaiting_responder
+    transition from: :drafting,               to: :drafting
+    transition from: :awaiting_dispatch,      to: :awaiting_dispatch
+    transition from: :pending_dacu_clearance, to: :awaiting_dispatch
+    transition from: :pending_dacu_clearance, to: :pending_dacu_clearance
   end
 
   event :take_on_for_approval do
@@ -221,30 +211,25 @@ class Cases::FOIStateMachine
   end
 
   event :reassign_user do
+    authorize_by_event_name
 
     transition from:      :unassigned,
-               to:        :unassigned,
-               authorize: :reassign_user?
+               to:        :unassigned
 
     transition from:      :awaiting_responder,
-               to:        :awaiting_responder,
-               authorize: :reassign_user?
+               to:        :awaiting_responder
 
     transition from:      :drafting,
-               to:        :drafting,
-               authorize: :reassign_user?
+               to:        :drafting
 
     transition from:      :pending_dacu_clearance,
-               to:        :pending_dacu_clearance,
-               authorize: :reassign_user?
+               to:        :pending_dacu_clearance
 
     transition from:      :pending_press_office_clearance,
-               to:        :pending_press_office_clearance,
-               authorize: :reassign_user?
+               to:        :pending_press_office_clearance
 
     transition from:      :pending_private_office_clearance,
-               to:        :pending_private_office_clearance,
-               authorize: :reassign_user?
+               to:        :pending_private_office_clearance
   end
 
   event :remove_response do
@@ -316,13 +301,6 @@ class Cases::FOIStateMachine
              event:             :reassign_user
   end
 
-  def create_needing_clarification!(acting_user:)
-    trigger! :create_needing_clarification,
-             acting_user_id:    acting_user.id,
-             acting_team_id:    object.team_for_user(acting_user).id,
-             event:             :create_needing_clarification
-  end
-
   def accept_responder_assignment!(user, responding_team)
     trigger! :accept_responder_assignment,
              acting_team_id:     responding_team.id,
@@ -330,9 +308,9 @@ class Cases::FOIStateMachine
              event:              :accept_responder_assignment
   end
 
-  def add_responses!(user, responding_team, filenames)
+  def add_responses!(user, filenames)
     trigger! :add_responses,
-             acting_team_id:     responding_team.id,
+             acting_team_id:     object.responding_team.id,
              acting_user_id:     user.id,
              filenames:          filenames,
              message:            object.upload_comment,
@@ -475,18 +453,18 @@ class Cases::FOIStateMachine
              event:               :reject_responder_assignment
   end
 
-  def respond!(user, responding_team)
+  def respond!(user)
     trigger! :respond,
-             acting_team_id:        responding_team.id,
-             acting_user_id:        user.id,
-             event:                 :respond
+             acting_team_id: object.responding_team.id,
+             acting_user_id: user.id,
+             event:          :respond
   end
 
-  def close!(user, managing_team)
+  def close!(user)
     trigger! :close,
-             acting_team_id: managing_team.id,
-             acting_user_id:   user.id,
-             event:            :close
+             acting_team_id: object.managing_team.id,
+             acting_user_id: user.id,
+             event:          :close
   end
 
   def add_message_to_case!(user, team, message)
@@ -502,10 +480,6 @@ class Cases::FOIStateMachine
   end
 
   private
-
-  def get_policy
-    Pundit.policy!(self.object)
-  end
 
   def approve_or_escalate_case_for_team(team, next_event)
     if team.in? object.approving_teams

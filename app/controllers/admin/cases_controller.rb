@@ -41,7 +41,7 @@ class Admin::CasesController < ApplicationController
   private
 
   def authorize_admin
-    authorize Case.new, :user_is_admin?
+    authorize Case.new(category: Category.foi), :user_is_admin?
   end
 
   def available_target_states

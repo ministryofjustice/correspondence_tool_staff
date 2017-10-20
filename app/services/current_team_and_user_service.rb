@@ -22,7 +22,7 @@ class CurrentTeamAndUserService
   def resolver_for_case(kase)
     kase.format_workflow_class_name(
       'CurrentTeamAndUser::%{type}',
-      'CurrentTeamAndUser::%{type}::%{worklow}'
+      'CurrentTeamAndUser::%{type}::%{workflow}'
     ).constantize.new(kase)
   end
 end

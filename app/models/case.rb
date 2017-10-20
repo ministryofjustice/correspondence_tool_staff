@@ -151,9 +151,17 @@ class Case < ApplicationRecord
           -> { managing },
           class_name: 'Assignment'
 
+  has_one :manager,
+          through: :managing_assignment,
+          source: :user
+
   has_one :managing_team,
           through: :managing_assignment,
           source: :team
+
+  has_one :responder,
+          through: :responder_assignment,
+          source: :user
 
   has_one :responder_assignment,
           -> { last_responding },
@@ -278,11 +286,6 @@ class Case < ApplicationRecord
     date_responded <= external_deadline
   end
 
-
-
-
-
-
   def attachments_dir(attachment_type, upload_group)
     "#{S3Uploader.id_for_case(self)}/#{attachment_type}/#{upload_group}"
   end
@@ -401,6 +404,14 @@ class Case < ApplicationRecord
     CasesUsersTransitionsTracker.sync_for_case_and_user(self, user)
   end
 
+  def format_workflow_class_name(type_template, type_workflow_template)
+    if workflow.present?
+      type_workflow_template % {type: category.abbreviation, workflow: workflow}
+    else
+      type_template % {type: category.abbreviation}
+    end
+  end
+
   private
   def received_in_acceptable_range?
     if self.new_record? || received_date_changed?
@@ -428,7 +439,7 @@ class Case < ApplicationRecord
   end
 
   def set_initial_state
-    self.current_state = 'unassigned'
+    self.current_state = self.state_machine.current_state
     self.last_transitioned_at = Time.now
   end
 

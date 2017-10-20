@@ -441,26 +441,53 @@ describe Cases::BasePolicy do
     it { should_not permit(responder, pending_dacu_clearance_case) }
   end
 
-  permissions :new_response_upload? do
-    it { should_not permit(manager,                accepted_case) }
-    it { should     permit(responder,              accepted_case) }
-    it { should_not permit(disclosure_specialist,  accepted_case) }
-    it { should_not permit(press_officer,          accepted_case) }
-    it { should_not permit(manager,                pending_dacu_clearance_case) }
-    it { should_not permit(responder,              pending_dacu_clearance_case) }
-    it { should     permit(disclosure_specialist,  pending_dacu_clearance_case) }
-    it { should_not permit(press_officer,          pending_dacu_clearance_case) }
-    it { should_not permit(manager,                pending_press_clearance_case) }
-    it { should_not permit(responder,              pending_press_clearance_case) }
-    it { should_not permit(disclosure_specialist,  pending_press_clearance_case) }
-    it { should     permit(press_officer,          pending_press_clearance_case) }
-  end
-
   permissions :upload_responses? do
     it { should_not permit(manager,                accepted_case) }
     it { should     permit(responder,              accepted_case) }
     it { should_not permit(disclosure_specialist,  accepted_case) }
     it { should_not permit(press_officer,          accepted_case) }
+    it { should_not permit(manager,                flagged_accepted_case) }
+    it { should_not permit(responder,              flagged_accepted_case) }
+    it { should_not permit(disclosure_specialist,  flagged_accepted_case) }
+    it { should_not permit(press_officer,          flagged_accepted_case) }
+    it { should_not permit(manager,                pending_dacu_clearance_case) }
+    it { should_not permit(responder,              pending_dacu_clearance_case) }
+    it { should_not permit(disclosure_specialist,  pending_dacu_clearance_case) }
+    it { should_not permit(press_officer,          pending_dacu_clearance_case) }
+    it { should_not permit(manager,                pending_press_clearance_case) }
+    it { should_not permit(responder,              pending_press_clearance_case) }
+    it { should_not permit(disclosure_specialist,  pending_press_clearance_case) }
+    it { should_not permit(press_officer,          pending_press_clearance_case) }
+  end
+
+  permissions :upload_responses_for_flagged? do
+    it { should_not permit(manager,                accepted_case) }
+    it { should_not permit(responder,              accepted_case) }
+    it { should_not permit(disclosure_specialist,  accepted_case) }
+    it { should_not permit(press_officer,          accepted_case) }
+    it { should_not permit(manager,                flagged_accepted_case) }
+    it { should     permit(responder,              flagged_accepted_case) }
+    it { should_not permit(disclosure_specialist,  flagged_accepted_case) }
+    it { should_not permit(press_officer,          flagged_accepted_case) }
+    it { should_not permit(manager,                pending_dacu_clearance_case) }
+    it { should_not permit(responder,              pending_dacu_clearance_case) }
+    it { should_not permit(disclosure_specialist,  pending_dacu_clearance_case) }
+    it { should_not permit(press_officer,          pending_dacu_clearance_case) }
+    it { should_not permit(manager,                pending_press_clearance_case) }
+    it { should_not permit(responder,              pending_press_clearance_case) }
+    it { should_not permit(disclosure_specialist,  pending_press_clearance_case) }
+    it { should_not permit(press_officer,          pending_press_clearance_case) }
+  end
+
+  permissions :upload_responses_for_approve? do
+    it { should_not permit(manager,                accepted_case) }
+    it { should_not permit(responder,              accepted_case) }
+    it { should_not permit(disclosure_specialist,  accepted_case) }
+    it { should_not permit(press_officer,          accepted_case) }
+    it { should_not permit(manager,                flagged_accepted_case) }
+    it { should_not permit(responder,              flagged_accepted_case) }
+    it { should_not permit(disclosure_specialist,  flagged_accepted_case) }
+    it { should_not permit(press_officer,          flagged_accepted_case) }
     it { should_not permit(manager,                pending_dacu_clearance_case) }
     it { should_not permit(responder,              pending_dacu_clearance_case) }
     it { should     permit(disclosure_specialist,  pending_dacu_clearance_case) }
@@ -468,7 +495,26 @@ describe Cases::BasePolicy do
     it { should_not permit(manager,                pending_press_clearance_case) }
     it { should_not permit(responder,              pending_press_clearance_case) }
     it { should_not permit(disclosure_specialist,  pending_press_clearance_case) }
-    it { should     permit(press_officer,          pending_press_clearance_case) }
+    it { should_not permit(press_officer,          pending_press_clearance_case) }
+  end
+
+  permissions :upload_responses_for_redraft? do
+    it { should_not permit(manager,                accepted_case) }
+    it { should_not permit(responder,              accepted_case) }
+    it { should_not permit(disclosure_specialist,  accepted_case) }
+    it { should_not permit(press_officer,          accepted_case) }
+    it { should_not permit(manager,                flagged_accepted_case) }
+    it { should_not permit(responder,              flagged_accepted_case) }
+    it { should_not permit(disclosure_specialist,  flagged_accepted_case) }
+    it { should_not permit(press_officer,          flagged_accepted_case) }
+    it { should_not permit(manager,                pending_dacu_clearance_case) }
+    it { should_not permit(responder,              pending_dacu_clearance_case) }
+    it { should     permit(disclosure_specialist,  pending_dacu_clearance_case) }
+    it { should_not permit(press_officer,          pending_dacu_clearance_case) }
+    it { should_not permit(manager,                pending_press_clearance_case) }
+    it { should_not permit(responder,              pending_press_clearance_case) }
+    it { should_not permit(disclosure_specialist,  pending_press_clearance_case) }
+    it { should_not permit(press_officer,          pending_press_clearance_case) }
   end
 
   permissions :upload_response_and_return_for_redraft_from_pending_dacu_clearance_to_drafting? do

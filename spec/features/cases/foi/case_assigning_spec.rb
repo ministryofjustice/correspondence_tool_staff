@@ -21,7 +21,8 @@ feature 'Assigning a case from the detail view' do
 
     click_link 'Assign to a responder'
 
-    assign_case(responder.responding_teams.first, 'Case successfully assigned')
+    assign_case expected_business_unit: responder.responding_teams.first,
+                expected_flash_msg: 'Case successfully assigned'
 
     newest_assignment = Assignment.last
 
@@ -54,7 +55,8 @@ feature 'Assigning a case from the detail view' do
 
       click_link 'Assign to a responder'
 
-      assign_case(responder.responding_teams.first, 'Case successfully assigned')
+      assign_case expected_business_unit: responder.responding_teams.first,
+                  expected_flash_msg: 'Case successfully assigned'
 
       newest_assignment = Assignment.last
 

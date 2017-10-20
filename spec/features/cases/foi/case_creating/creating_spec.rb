@@ -4,9 +4,8 @@ feature 'Case creation by a manager' do
 
   given(:responder)       { create(:responder) }
   given(:responding_team) { create :responding_team, responders: [responder] }
-  given(:manager)         { create(:manager)  }
+  given(:manager)         { create :disclosure_bmt_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
-
 
   background do
     responding_team
@@ -18,26 +17,16 @@ feature 'Case creation by a manager' do
   end
 
   scenario 'creating a case that does not need clearance', js: true do
-    expect(cases_new_page).to be_displayed
+    create_case_step flag_for_disclosure: false
 
-    cases_new_page.fill_in_case_details
-
-    cases_new_page.choose_flag_for_disclosure_specialists 'no'
-
-    click_button 'Next - Assign case'
-
-    assign_case(responder.responding_teams.first)
+    assign_case(expected_business_unit: responder.responding_teams.first)
 
   end
 
   scenario 'creating a case that needs clearance' do
     expect(cases_new_page).to be_displayed
 
-    cases_new_page.fill_in_case_details
-
-    cases_new_page.choose_flag_for_disclosure_specialists 'yes'
-
-    click_button 'Next - Assign case'
+    create_case_step flag_for_disclosure: true
 
     new_case = Case.last
     expect(new_case.requires_clearance?).to be true
@@ -47,13 +36,8 @@ feature 'Case creation by a manager' do
     stub_s3_uploader_for_all_files!
     request_attachment = Rails.root.join('spec', 'fixtures', 'request-1.pdf')
 
-    expect(cases_new_page).to be_displayed
-
-    cases_new_page.fill_in_case_details(
-      delivery_method: :sent_by_post,
-      uploaded_request_files: [request_attachment]
-    )
-    click_button 'Next - Assign case'
+    create_case_step delivery_method: :sent_by_post,
+                     uploaded_request_files: [request_attachment]
 
     new_case = Case.last
     request_attachment = new_case.attachments.request.first

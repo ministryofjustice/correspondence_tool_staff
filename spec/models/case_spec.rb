@@ -598,6 +598,15 @@ RSpec.describe Case, type: :model do
     end
   end
 
+  describe '#current_state' do
+    it "is set to the state machine's state initially" do
+      kase = build :case
+      allow(kase.state_machine)
+        .to receive(:current_state).and_return('initial_state')
+      kase.save
+      expect(kase.current_state).to eq 'initial_state'
+    end
+  end
   describe 'associations' do
     describe '#category' do
       it 'is mandatory' do
@@ -1167,8 +1176,6 @@ RSpec.describe Case, type: :model do
       expect(original_kase.received_date).to eq 1.day.ago.to_date
     end
   end
-
-
 
   # See note in case.rb about why this is commented out.
   #

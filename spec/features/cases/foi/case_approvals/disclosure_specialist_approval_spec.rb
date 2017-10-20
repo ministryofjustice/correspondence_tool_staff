@@ -22,7 +22,7 @@ feature 'cases requiring clearance by disclosure specialist' do
   def assign_case_to_team
     expect(assignments_new_page).to be_displayed
 
-    assign_case(responder.responding_teams.first)
+    assign_case expected_business_unit: responder.responding_teams.first
 
   end
 

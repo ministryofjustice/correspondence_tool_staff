@@ -21,6 +21,9 @@ module PageObjects
         element :outcome_radio_button_refused_fully,
                 'label[for="case_outcome_name_refused_fully"]'
 
+        element :outcome_radio_button_clarification_needed,
+                'label[for="case_outcome_name_clarification_needed_-_section_13"]'
+
         section :refusal, '#refusal' do
           element :info_not_held,
                   'label[for="case_refusal_reason_name_information_not_held"]'
