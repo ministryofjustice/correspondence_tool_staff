@@ -381,9 +381,6 @@ class CasesController < ApplicationController
       end
     end
   end
-  def redirect?(kase)
-
-  end
 end
 
 def set_state_selector
