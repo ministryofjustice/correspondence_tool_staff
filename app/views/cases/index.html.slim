@@ -3,8 +3,6 @@
 
 = render partial: 'layouts/header'
 
-= render partial: 'state_filter_form' unless params[:action] == 'search'
-
 - if current_page?(search_cases_path)
   .grid-row
     .column-full.button-holder
@@ -21,6 +19,8 @@
     .column-full.button-holder
       = link_to t('common.new_case_button'), new_case_path, class: 'button'
 
+
+= render partial: 'state_filter_form' unless params[:action] == 'search'
 
 - if @global_nav_manager.current_page.tabs.present?
   .grid-row
