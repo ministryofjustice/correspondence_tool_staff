@@ -40,7 +40,7 @@ class CaseFinderService
     if params[:timeliness]
       result = timeliness(params[:timeliness])
     end
-    if url_params['states']
+    if url_params['states']  && url_params['states'].present?
       result = result.in_states(url_params['states'])
     end
     result

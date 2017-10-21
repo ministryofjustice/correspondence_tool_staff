@@ -12,8 +12,7 @@ RSpec.describe CasesController, type: :controller do
         'pending_dacu_clearance'            => '1',
         'pending_press_office_clearance'    => '0',
         'pending_private_office_clearance'  => '0',
-        'responded'                         => '0',
-        'closed'                            => '0'
+        'responded'                         => '0'
       },
       'states' => 'pending_press_office_clearance,pending_dacu_clearance,drafting',
       'timeliness' => 'in_time',

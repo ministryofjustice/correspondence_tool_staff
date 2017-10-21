@@ -20,19 +20,23 @@ feature 'filtering cases' do
 
   before(:each) { sign_in create(:manager) }
 
-  scenario 'no filter applied' do
+  let(:all_case_numbers) do
+    case_nos(@unassigned_case,
+             @awaiting_responder_case,
+             @drafting_case,
+             @awaiting_dispatch_case,
+             @pending_dacu_clearance_case,
+             @unaccepted_pending_dacu_clearance_case,
+             @pending_dacu_clearance_case_flagged_for_press,
+             @pending_dacu_clearance_case_flagged_for_press_and_private,
+             @pending_press_clearance_case,
+             @pending_private_clearance_case)
+  end
+
+  scenario 'no checkboxes selected before filter applied' do
     open_cases_page.load(timeliness: 'in_time')
-    expected_case_nos = case_nos(@unassigned_case,
-                                 @awaiting_responder_case,
-                                 @drafting_case,
-                                 @awaiting_dispatch_case,
-                                 @pending_dacu_clearance_case,
-                                 @unaccepted_pending_dacu_clearance_case,
-                                 @pending_dacu_clearance_case_flagged_for_press,
-                                 @pending_dacu_clearance_case_flagged_for_press_and_private,
-                                 @pending_press_clearance_case,
-                                 @pending_private_clearance_case)
-    expect(open_cases_page.case_numbers).to match_array(expected_case_nos)
+    open_cases_page.state_filter.filter_button.click
+    expect(open_cases_page.case_numbers).to match_array(all_case_numbers)
   end
 
   scenario 'filter just unassigned cases', js: true do
