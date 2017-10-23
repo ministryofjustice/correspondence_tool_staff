@@ -1392,7 +1392,7 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
-  describe 'PATCH update' do
+  describe 'PATCH update', versioning: true do
 
     # let(:managing_team)                 { create :team_dacu_disclosure }
     # let(:dacu_disclosure_specialist)    { managing_team.users.first }
@@ -1463,6 +1463,12 @@ RSpec.describe CasesController, type: :controller do
         allow(service).to receive(:result)
 
         patch :update, params: edit_params.to_unsafe_hash
+      end
+
+      it 'creates a papertrail version with the current user as whodunnit' do
+        patch :update, params: edit_params.to_unsafe_hash
+        expect(kase.versions.size).to eq 2
+        expect(kase.versions.last.whodunnit).to eq manager.id.to_s
       end
     end
 
