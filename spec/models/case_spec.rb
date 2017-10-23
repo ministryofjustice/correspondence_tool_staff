@@ -78,6 +78,34 @@ RSpec.describe Case, type: :model do
     it { should validate_presence_of(:delivery_method) }
   end
 
+  describe 'info_status_held_validation' do
+    context 'active case' do
+      it 'does not error if blank' do
+        expect(kase.info_held_status_id).to be_blank
+        expect(kase).to be_valid
+      end
+    end
+
+    context 'closed_case' do
+      let(:closed_case) { create :closed_case }
+
+      context 'info_held_status is present' do
+        it 'is valid' do
+          expect(closed_case.info_held_status_id).to be_present
+          expect(closed_case).to be_valid
+        end
+      end
+
+      context 'info_held_status is absent' do
+        it 'is not valid' do
+          closed_case.info_held_status = nil
+          expect(closed_case).not_to be_valid
+          expect(closed_case.errors[:info_held_status]).to eq ["can't be blank"]
+        end
+      end
+    end
+  end
+
   context 'flagged for approval scopes' do
     before(:all) do
       Team.all.map(&:destroy)
@@ -515,20 +543,6 @@ RSpec.describe Case, type: :model do
     end
   end
 
-  describe '#has_ncnd_exemption?' do
-    it 'returns true if one of the exemptions is ncnd' do
-      kase = create :closed_case, :with_ncnd_exemption
-      kase.exemptions << create(:exemption)
-      expect(kase.has_ncnd_exemption?).to be true
-    end
-
-    it 'returns false if none of the exemptions are ncnd' do
-      kase = create :closed_case, :without_ncnd_exemption
-      kase.exemptions << create(:exemption)
-      expect(kase.has_ncnd_exemption?).to be false
-    end
-  end
-
   context 'preparing_for_close' do
     describe '#prepared_for_close?' do
 
@@ -578,35 +592,6 @@ RSpec.describe Case, type: :model do
     end
   end
 
-  describe '#requires_exemptions' do
-    it 'returns true when there is a refusal reason that requires an exemption' do
-      kase = build :closed_case, :requires_exemption
-      expect(kase.refusal_reason.requires_exemption?).to be true
-      expect(kase.requires_exemption?).to be true
-    end
-
-    it 'returns false when there is a refusal reason that does not require an exemption' do
-      kase = build :closed_case, :without_exemption
-      expect(kase.refusal_reason.requires_exemption?).to be false
-      expect(kase.requires_exemption?).to be false
-    end
-
-    it 'returns false if there is no refusal reason' do
-      kase = build :case
-      expect(kase.refusal_reason).to be_nil
-      expect(kase.requires_exemption?).to be false
-    end
-  end
-
-  describe '#current_state' do
-    it "is set to the state machine's state initially" do
-      kase = build :case
-      allow(kase.state_machine)
-        .to receive(:current_state).and_return('initial_state')
-      kase.save
-      expect(kase.current_state).to eq 'initial_state'
-    end
-  end
   describe 'associations' do
     describe '#category' do
       it 'is mandatory' do
@@ -631,10 +616,10 @@ RSpec.describe Case, type: :model do
     describe 'exemptions' do
       before(:all) do
         @ncnd = create :exemption, :ncnd, name: 'NCND'
-        @abs_1 = create :exemption, :absolute, name: 'Abs 1'
-        @abs_2 = create :exemption, :absolute, name: 'Abs 2'
-        @qual_1 = create :exemption, :qualified, name: 'Qualified 1'
-        @qual_2 = create :exemption, :qualified, name: 'Qualified 2'
+        @abs_1 = create :exemption, :absolute, name: 'Abs 1', abbreviation: 'abs1'
+        @abs_2 = create :exemption, :absolute, name: 'Abs 2', abbreviation: 'abs2'
+        @qual_1 = create :exemption, :qualified, name: 'Qualified 1', abbreviation: 'qual1'
+        @qual_2 = create :exemption, :qualified, name: 'Qualified 2', abbreviation: 'qual2'
       end
 
       after(:all) { CaseClosure::Metadatum.delete_all }

@@ -193,38 +193,51 @@ module Stats
     end
 
     def get_value_2_C
-      clarify = CaseClosure::Outcome.clarify
-      cases_received_and_closed_in_period.where(outcome_id: clarify.id).count
+      rr_clarify = CaseClosure::RefusalReason.tmm
+      cases_received_and_closed_in_period.where(refusal_reason_id: rr_clarify.id).count
     end
 
     def get_value_2_D
-      reason = CaseClosure::RefusalReason.noinfo
-      fully_refused_cases_received_and_closed_in_period.where(refusal_reason_id: reason.id).count
+      cases_received_and_closed_in_period.where(info_held_status: CaseClosure::InfoHeldStatus.not_held).count
     end
 
     def get_value_2_E
       reason = CaseClosure::RefusalReason.vex
-      fully_or_part_refused_cases_received_and_closed_in_period.where(refusal_reason_id: reason.id).count
+      info_not_confirmed_cases_received_and_closed_in_period.where(refusal_reason_id: reason.id).count
     end
 
     def get_value_2_F
       reason = CaseClosure::RefusalReason.repeat
-      fully_or_part_refused_cases_received_and_closed_in_period.where(refusal_reason_id: reason.id).count
+      info_not_confirmed_cases_received_and_closed_in_period.where(refusal_reason_id: reason.id).count
     end
 
     def get_value_2_G
+      # this stat needs to count:
+      # * Exemption s12(1) when info held in full and part or fully refused
+      # * Refusal reason s12(2) when info held = Other
+      num_s12_exemptions + num_s12_refusal_reasons
+    end
+
+    def num_s12_exemptions
+      exemption = CaseClosure::Exemption.s12
+      fully_and_part_refused_cases_received_and_closed_in_period_with_exemption(exemption).count
+    end
+
+    def num_s12_refusal_reasons
       reason = CaseClosure::RefusalReason.cost
-      fully_or_part_refused_cases_received_and_closed_in_period.where(refusal_reason_id: reason.id).count
+      info_not_confirmed_cases_received_and_closed_in_period.where(refusal_reason_id: reason.id).count
     end
 
     def get_value_2_H
-      reason = CaseClosure::RefusalReason.exempt
-      part_refused_cases_closed_in_period.where(refusal_reason_id: reason.id).count
+      # part refused_cases with an exemption - just count number of part refused cases, because each
+      # part refused case must have at least on exemption
+      part_refused_cases_closed_in_period.count
     end
 
     def get_value_2_I
-      reason = CaseClosure::RefusalReason.exempt
-      fully_refused_cases_received_and_closed_in_period.where(refusal_reason_id: reason.id).count
+      # fully refused_cases with an exemption - just count number of fully refused cases, because each
+      # fully refused case must have at least on exemption
+      fully_refused_cases_received_and_closed_in_period.count
     end
 
     def get_value_3_A
@@ -294,6 +307,11 @@ module Stats
 
     def fully_and_part_refused_cases_received_and_closed_in_period_with_exemption(exemption)
       fully_or_part_refused_cases_received_and_closed_in_period.joins(:cases_exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
+    end
+
+    def info_not_confirmed_cases_received_and_closed_in_period
+      info_not_confirmed = CaseClosure::InfoHeldStatus.not_confirmed
+      cases_received_and_closed_in_period.where(info_held_status_id: info_not_confirmed.id)
     end
 
 

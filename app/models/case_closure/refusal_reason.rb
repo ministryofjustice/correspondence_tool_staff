@@ -12,6 +12,9 @@
 #  updated_at              :datetime         not null
 #  requires_refusal_reason :boolean          default(FALSE)
 #  requires_exemption      :boolean          default(FALSE)
+#  active                  :boolean          default(TRUE)
+#  required_for_refused    :boolean          default(FALSE)
+#  required_for_ncnd       :boolean          default(FALSE)
 #
 
 module CaseClosure
@@ -39,6 +42,18 @@ module CaseClosure
 
     def self.repeat
       abbrev('repeat')
+    end
+
+    def self.tmm
+      abbrev('tmm')
+    end
+
+    def self.ncnd
+      abbrev('ncnd')
+    end
+
+    def ncnd?
+      abbreviation == 'ncnd'
     end
 
 

@@ -20,7 +20,7 @@ feature "#non-trigger cases" do
   given(:manager)         { create :manager }
 
   before(:all) do
-    CaseClosure::MetadataSeeder.seed!
+    CaseClosure::MetadataSeeder.seed!(verbose: false)
   end
 
   after(:all) do
@@ -147,22 +147,26 @@ feature "#non-trigger cases" do
 
     cases_close_page.fill_in_date_responded(Date.today)
 
-    cases_close_page.outcome_radio_button_refused_fully.click
+    cases_close_page.is_info_held.yes.click
 
-    cases_close_page.wait_until_refusal_visible
+    cases_close_page.wait_until_outcome_visible
 
-    expect(cases_close_page.refusal).to have_no_exemptions
+    cases_close_page.outcome.granted_in_full.click
 
-    cases_close_page.refusal.exemption_applied.click
-
-    cases_close_page.refusal.wait_until_exemptions_visible
-
-    expect(cases_close_page.refusal.exemptions.exemption_options.size).to eq 25
-
-    cases_close_page.refusal.exemptions.exemption_options.first.click
-
-    cases_close_page.refusal.exemptions.exemption_options[2].click
-
+    # cases_close_page.wait_until_refusal_visible
+    #
+    # expect(cases_close_page.refusal).to have_no_exemptions
+    #
+    # cases_close_page.refusal.exemption_applied.click
+    #
+    # cases_close_page.refusal.wait_until_exemptions_visible
+    #
+    # expect(cases_close_page.refusal.exemptions.exemption_options.size).to eq 25
+    #
+    # cases_close_page.refusal.exemptions.exemption_options.first.click
+    #
+    # cases_close_page.refusal.exemptions.exemption_options[2].click
+    #
     cases_close_page.submit_button.click
 
     expect(cases_show_page).to have_content("You've closed this case")

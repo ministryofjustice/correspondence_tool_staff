@@ -65,7 +65,7 @@ describe CaseFinderService do
         @responding_team      = @responder.responding_teams.first
         @team_dacu_disclosure = find_or_create :team_dacu_disclosure
 
-        @closed_case_1        = create(:closed_case,
+        @closed_case_1        = create(:closed_case, :granted_in_full,
                                        received_date: dd(17),
                                        date_responded: dd(22),
                                        identifier: 'closed case 1')
@@ -87,7 +87,7 @@ describe CaseFinderService do
         @older_case_2         = create(:case,
                                        received_date: dd(15),
                                        identifier: 'older case 2')
-        @closed_case_2        = create(:closed_case,
+        @closed_case_2        = create(:closed_case, :granted_in_full,
                                        received_date: dd(15),
                                        date_responded: dd(23),
                                        identifier: 'closed case 2')

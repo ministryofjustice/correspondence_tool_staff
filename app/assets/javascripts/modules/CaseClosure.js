@@ -1,44 +1,109 @@
 moj.Modules.CaseClosure = {
-  $refusal          : $('#refusal'),
 
-  $refusedOutcomes  : $('#case_outcome_name_refused_in_part,' +
-                       ' #case_outcome_name_refused_fully'),
+  $infoHeldGroup : $('.js-info-held-status'),
 
-  $exemptionApplied : $('#case_refusal_reason_name_exemption_applied'),
+  $infoIsHeld : $('#case_info_held_status_abbreviation_held, #case_info_held_status_abbreviation_part_held'),
 
-  $refusalExemptions: $('#refusal_exemptions'),
+  $infoOther : $('#case_info_held_status_abbreviation_not_confirmed'),
+
+  $outcomeGroup : $('.js-outcome-group'),
+
+  $outcomeRefusedPartly : $('#case_outcome_name_refused_in_part'),
+
+  $outcomeRefused : $('#case_outcome_name_refused_in_part, #case_outcome_name_refused_fully'),
+
+  $otherReasons : $('.js-other-reasons'),
+
+  $refusalNCND : $('#case_refusal_reason_name_neither_confirm_nor_deny_ncnd'),
+
+  $refusalExemptions : $('.js-refusal-exemptions'),
 
   init: function() {
     var self = this;
 
-    self.showHideRefusalReasons();
+    self.showHideOtherGroup();
 
-    self.showHideExemptions();
+    self.showHideExemption();
 
     //Bind events
-    $('#outcome').on('change', ':radio', function() {
-      self.showHideRefusalReasons();
+    self.$infoHeldGroup.on('change', ':radio', function(){
+      self.showHideOtherGroup();
     });
 
-    $('#refusal_reasons').on('change', ':radio', function() {
-      self.showHideExemptions();
+    self.$outcomeGroup.on('change', ':radio', function() {
+      self.showHideExemption();
+    });
+
+    self.$otherReasons.on('change', ':radio', function() {
+      self.showHideExemption();
     });
   },
 
-  showHideRefusalReasons: function() {
-    if (this.$refusedOutcomes.is(':checked')) {
-      this.$refusal.show();
-      moj.Modules.CaseClosure.showHideExemptions();
-    } else {
-      this.$refusal.hide();
-    }
-  },
+  showHideOtherGroup: function() {
+    if(this.$infoIsHeld.is(':checked')) {
+      this.$outcomeGroup.show();
+      this.enableOptions(this.$outcomeGroup);
+      this.$otherReasons.hide();
+      this.disableOptions(this.$otherReasons);
 
-  showHideExemptions: function() {
-    if (this.$exemptionApplied.is(':checked')) {
-      this.$refusalExemptions.show();
+      moj.Modules.CaseClosure.showHideExemption();
+    } else if (this.$infoOther.is(':checked')) {
+      this.$otherReasons.show();
+      this.enableOptions(this.$otherReasons);
+      this.$outcomeGroup.hide();
+      this.disableOptions(this.$outcomeGroup);
+      moj.Modules.CaseClosure.showHideExemption();
     } else {
+      this.$outcomeGroup.hide();
+      this.disableOptions(this.$outcomeGroup);
+      this.$otherReasons.hide();
+      this.disableOptions(this.$otherReasons);
       this.$refusalExemptions.hide();
+      this.disableOptions(this.$refusalExemptions);
     }
+  },
+
+  showHideExemption: function() {
+    if((this.$infoIsHeld.is(':checked') && this.$outcomeRefused.is(':checked')) ||
+      (this.$infoOther.is(':checked') && this.$refusalNCND.is(':checked'))) {
+      this.$refusalExemptions.show();
+      this.enableOptions(this.$refusalExemptions);
+    }else{
+      this.$refusalExemptions.hide();
+      this.disableOptions(this.$refusalExemptions);
+    }
+
+    moj.Modules.CaseClosure.showHideExemptionCost();
+  },
+
+  showHideExemptionCost: function() {
+    var refusalCostExemption = this.$refusalExemptions
+                                .find('input:checkbox[data-omit-for-part-refused="true"]')
+                                .closest('label');
+    var $outcomeRefusedPartlyLabel = this.$outcomeRefusedPartly.closest('label');
+
+    var $NCNDLabel = this.$refusalNCND.closest('label');
+
+    var selectedRefusedPartly = $outcomeRefusedPartlyLabel.is(':visible')
+                                  && this.$outcomeRefusedPartly.is(':checked');
+
+    var selectedNCND = $NCNDLabel.is(':visible') && this.$refusalNCND.is(':checked');
+
+    if(selectedRefusedPartly || selectedNCND ) {
+      refusalCostExemption.hide();
+      this.disableOptions(refusalCostExemption);
+    } else {
+      refusalCostExemption.show();
+      this.enableOptions(refusalCostExemption);
+    }
+  },
+
+  enableOptions: function($el) {
+    $el.find(':radio,:checkbox').prop('disabled', false);
+  },
+
+  disableOptions: function($el) {
+    $el.find(':radio,:checkbox').prop('disabled', true);
   }
+
 };

@@ -317,13 +317,17 @@ FactoryGirl.define do
   end
 
   factory :closed_case, parent: :responded_case do
+
+    info_held_status            { find_or_create :info_status, :held }
+    outcome                     { find_or_create :outcome, :granted }
+    message                     'info held, granted'
+
     transient do
       identifier "closed case"
     end
 
     received_date { 22.business_days.ago }
     date_responded { 4.business_days.ago }
-    outcome { CaseClosure::Outcome.first || create(:outcome) }
 
     after(:create) do |kase, evaluator|
       create :case_transition_close,
@@ -334,27 +338,12 @@ FactoryGirl.define do
       kase.reload
     end
 
-    trait :requires_exemption do
-      outcome { create :outcome, :requires_refusal_reason }
-      refusal_reason { create(:refusal_reason, :requires_exemption) }
-      exemptions { [ create(:exemption) ] }
-    end
-
-    trait :without_exemption do
-      outcome { create :outcome, :requires_refusal_reason }
-      refusal_reason { create(:refusal_reason) }
-    end
 
     trait :with_ncnd_exemption do
-      outcome { create :outcome, :requires_refusal_reason }
-      refusal_reason { create(:refusal_reason, :requires_exemption) }
-      exemptions { [create(:exemption, :ncnd), create(:exemption)] }
-    end
-
-    trait :without_ncnd_exemption do
-      outcome { create :outcome, :requires_refusal_reason }
-      refusal_reason { create(:refusal_reason, :requires_exemption) }
-      exemptions { [create(:exemption), create(:exemption)] }
+      info_held_status        { find_or_create :info_status, :ncnd }
+      outcome                 nil
+      refusal_reason          { find_or_create :refusal_reason, :ncnd }
+      exemptions              { [create(:exemption, :absolute)] }
     end
 
     trait :late do
@@ -363,196 +352,240 @@ FactoryGirl.define do
     end
 
     trait :granted_in_full do
-      outcome { find_or_create :outcome, :granted }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :granted }
+      message                     'info held, granted'
     end
 
     trait :clarification_required do
-      outcome { find_or_create :outcome, :clarify }
+      info_held_status            { find_or_create :info_status, :ncnd }
+      refusal_reason              { find_or_create :refusal_reason, :tmm }
+      outcome                     nil
+      message                     'info held other, clarification required'
     end
 
-    trait :refused_fully_info_not_held do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :noinfo }
+    trait :info_not_held do
+      info_held_status            { find_or_create :info_status, :not_held }
+      outcome                     nil
+      message                     'info not held'
     end
 
-    trait :fully_refused_vexatious do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :vex }
+    trait :other_vexatious do
+      info_held_status            { find_or_create :info_status, :ncnd }
+      refusal_reason              { find_or_create :refusal_reason, :vex }
+      outcome                     nil
+      message                     'info held other, refusal reason vexatious'
     end
 
-    trait :part_refused_vexatious do
-      outcome { find_or_create :outcome, :part_refused }
-      refusal_reason { find_or_create :refusal_reason, :vex }
+    trait :other_repeat do
+      info_held_status            { find_or_create :info_status, :ncnd }
+      refusal_reason              { find_or_create :refusal_reason, :repeat }
+      outcome                     nil
+      message                     'info held other, refusal reason - repeated request'
     end
 
-    trait :part_refused_repeat do
-      outcome { find_or_create :outcome, :part_refused }
-      refusal_reason { find_or_create :refusal_reason, :repeat }
+    trait :other_exceeded_cost do
+      info_held_status            { find_or_create :info_status, :ncnd }
+      refusal_reason              { find_or_create :refusal_reason, :cost }
+      outcome                     nil
+      message                     'info held other, refusal reason - exceeded cost'
     end
 
-    trait :fully_refused_cost do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :cost }
+    trait :fully_refused_exempt_s12_1 do
+      info_held_status            { find_or_create :info_status, :held   }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s12_1) ] }
+      message                     'info held, fully refused, exemption: s12'
     end
 
     trait :fully_refused_exempt_s21 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s21 ] }
+      info_held_status            { find_or_create :info_status, :held   }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s21) ] }
+      message                     'info held, fully refused, exemption: s21'
     end
 
     trait :part_refused_exempt_s21 do
-      outcome { find_or_create :outcome, :part_refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s21 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :part_refused }
+      exemptions                  { [ find_or_create(:exemption, :s22) ] }
+      message                     'info held, part refused, exemption: s22'
     end
 
     trait :fully_refused_exempt_s22 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s22 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s22) ] }
+      message                     'info held, fully refused, exemption: s22'
     end
 
     trait :part_refused_exempt_s22a do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s22a ] }
+      info_held_status            { find_or_create :info_status, :held   }
+      outcome                     { find_or_create :outcome, :part_refused }
+      exemptions                  { [ find_or_create(:exemption, :s22a) ] }
+      message                     'info held, part refused, exemption: s22a'
+    end
+
+    trait :fully_refused_exempt_s22a do
+      info_held_status            { find_or_create :info_status, :held   }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s22a) ] }
+      message                     'info held, fully refused, exemption: s22a'
     end
 
     trait :part_refused_exempt_s23 do
-      outcome { find_or_create :outcome, :part_refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s23 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :part_refused }
+      exemptions                  { [ find_or_create(:exemption, :s23) ] }
+      message                     'info held, part refused, exemption: s23'
     end
 
     trait :fully_refused_exempt_s23 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s23 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [find_or_create(:exemption, :s23) ] }
+      message                     'info held, fully refused, exemption: s23'
     end
 
     trait :fully_refused_exempt_s24 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s24 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s24) ] }
+      message                     'info held, fully refused, exemption: s24'
     end
 
     trait :fully_refused_exempt_s26 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s26 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s26) ] }
+      message                     'info held, fully refused, exemption: s26'
     end
 
     trait :fully_refused_exempt_s27 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s27 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s27) ] }
+      message                     'info held, fully refused, exemption: s27'
     end
 
     trait :fully_refused_exempt_s28 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s28 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s28) ] }
+      message                     'info held, fully refused, exemption: s28'
     end
 
     trait :fully_refused_exempt_s29 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s29 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s29) ] }
+      message                     'info held, fully refused, exemption: s29'
     end
 
     trait :fully_refused_exempt_s30 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s30 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s30) ] }
+      message                     'info held, fully refused, exemption: s30'
     end
 
     trait :fully_refused_exempt_s31 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s31 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s31) ] }
+      message                     'info held, fully refused, exemption: s31'
     end
 
     trait :fully_refused_exempt_s32 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s32 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s32) ] }
+      message                     'info held, fully refused, exemption: s32'
     end
 
     trait :fully_refused_exempt_s33 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s33 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s33) ] }
+      message                     'info held, fully refused, exemption: s33'
     end
 
     trait :fully_refused_exempt_s34 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s34 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s34) ] }
+      message                     'info held, fully refused, exemption: s34'
     end
 
     trait :fully_refused_exempt_s35 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s35 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s35) ] }
+      message                     'info held, fully refused, exemption: s35'
     end
 
     trait :fully_refused_exempt_s36 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s36 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s36) ] }
+      message                     'info held, fully refused, exemption: s36'
     end
 
     trait :fully_refused_exempt_s37 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s37 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s37) ] }
+      message                     'info held, fully refused, exemption: s37'
     end
 
     trait :fully_refused_exempt_s38 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s38 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s38) ] }
+      message                     'info held, fully refused, exemption: s38'
     end
 
     trait :fully_refused_exempt_s40 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s40 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s40) ] }
+      message                     'info held, fully refused, exemption: s40'
     end
 
     trait :fully_refused_exempt_s41 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s41 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s41) ] }
+      message                     'info held, fully refused, exemption: s41'
     end
 
     trait :fully_refused_exempt_s42 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s42 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s42) ] }
+      message                     'info held, fully refused, exemption: s42'
     end
 
     trait :fully_refused_exempt_s33 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s33 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s33) ] }
+      message                     'info held, fully refused, exemption: s33'
     end
 
     trait :fully_refused_exempt_s43 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s43 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s43) ] }
+      message                     'info held, fully refused, exemption: s43'
     end
 
     trait :fully_refused_exempt_s44 do
-      outcome { find_or_create :outcome, :refused }
-      refusal_reason { find_or_create :refusal_reason, :exempt }
-      exemptions { [ CaseClosure::Exemption.s44 ] }
+      info_held_status            { find_or_create :info_status, :held }
+      outcome                     { find_or_create :outcome, :refused }
+      exemptions                  { [ find_or_create(:exemption, :s44) ] }
+      message                     'info held, fully refused, exemption: s44'
     end
-
-
-
   end
 
   trait :flagged do

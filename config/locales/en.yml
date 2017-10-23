@@ -139,7 +139,7 @@ en:
 
   button:
     assign: Assign to this unit
-    continue: Continue
+    close_case: Close case
     next_page_assign: Next - Assign case
     confirm: Confirm
     feedback: Send feedback
@@ -155,6 +155,7 @@ en:
         team_id: Assign to
         user_id: Choose a new team member for this case
       case:
+        info_held_status_abbreviation: Was the information held?
         requester_type: Type of requester
         refusal_reason_name: What was the reason for refusal?
         outcome_name: What was the outcome?

@@ -3,6 +3,7 @@ class ClosedCaseValidator < ActiveModel::Validator
   def validate(rec)
     if rec.prepared_for_close? || rec.current_state == 'closed'
       validate_date_responded(rec)
+      validate_info_held_status(rec)
       validate_outcome(rec)
       validate_refusal_reason(rec)
       validate_exemptions(rec)
@@ -10,6 +11,12 @@ class ClosedCaseValidator < ActiveModel::Validator
   end
 
   private
+
+  def validate_info_held_status(rec)
+    if rec.info_held_status.nil?
+      rec.errors.add(:info_held_status, "can't be blank")
+    end
+  end
 
   def validate_date_responded(rec)
     if rec.date_responded.blank?
@@ -23,43 +30,79 @@ class ClosedCaseValidator < ActiveModel::Validator
     end
   end
 
+
   def validate_outcome(rec)
-    rec.errors.add(:outcome, "can't be blank") if rec.outcome.blank?
+    if rec.info_held_status&.held? || rec.info_held_status&.part_held?
+      rec.errors.add(:outcome, "can't be blank") if rec.outcome.blank?
+    else
+      rec.errors.add(:outcome, 'can only be present if information held or part held') if rec.outcome.present?
+    end
   end
 
   def validate_refusal_reason(rec)
-    if rec.outcome&.requires_refusal_reason?
+    if rec.info_held_status&.not_confirmed?
       if rec.refusal_reason.blank?
         rec.errors.add(:refusal_reason, 'must be present for the specified outcome')
       end
-    else
-      if rec.refusal_reason.present?
-        rec.errors.add(:refusal_reason, 'cannot be present for the specified outcome')
-      end
+    elsif rec.refusal_reason.present?
+      rec.errors.add(:refusal_reason, "cannot be present unless Information Held in 'Other'")
     end
   end
 
   def validate_exemptions(rec)
-    validate_exemption_required(rec)
-    validate_ncnd_has_at_least_one_other_exemption(rec)
-  end
-
-  def validate_exemption_required(rec)
-    if rec.requires_exemption?
-      rec.errors.add(:exemptions, 'At least one exemption must be selected for this refusal reason') if rec.exemptions.empty?
+    if exemption_required?(rec)
+      validate_at_least_one_exemption_present(rec)
+      validate_cost_exemption_not_present_for_part_refused(rec)
+      validate_cost_exemption_not_present_for_ncnd(rec)
     else
-      rec.errors.add(:exemptions, 'You cannot specify exemptions for this refusal reason') if rec.exemptions.any?
+      validate_exemptions_not_present(rec)
     end
   end
 
-  def validate_ncnd_has_at_least_one_other_exemption(rec)
-    if rec.has_ncnd_exemption?
-      non_ncnds = rec.exemptions.where.not(subtype: 'ncnd')
-      if non_ncnds.empty?
-        rec.errors.add(:exemptions, 'You must specify at least one other exemption if you select NCND') if rec.exemptions.any?
-      end
+  def exemption_required?(rec)
+    info_not_confirmed_and_refusal_ncnd?(rec) || info_held_and_refused_fully_or_in_part?(rec)
+  end
+
+  def info_not_confirmed_and_refusal_ncnd?(rec)
+    rec.info_held_status&.not_confirmed? && rec.refusal_reason&.ncnd?
+  end
+
+  def info_held_and_refused_fully_or_in_part?(rec)
+    info_held_or_part_held?(rec) && refused_or_part_refused?(rec)
+  end
+
+  def info_held_or_part_held?(rec)
+    rec.info_held_status&.held? || rec.info_held_status&.part_held?
+  end
+
+  def refused_or_part_refused?(rec)
+    rec.outcome&.fully_refused? || rec.outcome&.part_refused?
+  end
+
+  def validate_exemptions_not_present(rec)
+    if rec.exemptions.any?
+      rec.errors.add(:exemptions, 'cannot be present unless case was fully or partly refused, or information held not confirmed and NCND')
     end
   end
+
+  def validate_at_least_one_exemption_present(rec)
+    if rec.exemptions.empty?
+      rec.errors.add(:exemptions, "must be specified for this outcome")
+    end
+  end
+
+  def validate_cost_exemption_not_present_for_part_refused(rec)
+    if rec.outcome&.part_refused?  && rec.exemptions.include?(CaseClosure::Exemption.s12)
+      rec.errors.add(:exemptions, 'cost is not valid for part refusals')
+    end
+  end
+
+  def validate_cost_exemption_not_present_for_ncnd(rec)
+    if rec.info_held_status.not_confirmed? && rec.exemptions.include?(CaseClosure::Exemption.s12)
+      rec.errors.add(:exemptions, 'cost is not valid NCND')
+    end
+  end
+
 
 end
 

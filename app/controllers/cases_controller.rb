@@ -201,6 +201,7 @@ class CasesController < ApplicationController
 
   def close
     authorize @case, :can_close_case?
+    @case.date_responded = nil
     set_permitted_events
   end
 
@@ -318,6 +319,7 @@ class CasesController < ApplicationController
       :date_responded_yyyy,
       :outcome_name,
       :refusal_reason_name,
+      :info_held_status_abbreviation,
       exemption_ids: params[:case][:exemption_ids].nil? ? nil : params[:case][:exemption_ids].keys
     )
   end

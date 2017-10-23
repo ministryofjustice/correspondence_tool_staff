@@ -12,12 +12,16 @@
 #  updated_at              :datetime         not null
 #  requires_refusal_reason :boolean          default(FALSE)
 #  requires_exemption      :boolean          default(FALSE)
+#  active                  :boolean          default(TRUE)
+#  required_for_refused    :boolean          default(FALSE)
+#  required_for_ncnd       :boolean          default(FALSE)
 #
 
 module CaseClosure
   class Exemption < Metadatum
 
     SECTION_NUMBERS = {
+      's12'   => 'cost',
       's21'   => 'othermeans',
       's22'   => 'future',
       's22a'  => 'research',
@@ -50,13 +54,17 @@ module CaseClosure
     scope :absolute, -> { where(subtype: 'absolute') }
     scope :qualified, -> { where(subtype: 'qualified') }
 
+    def self.absolute_for_partly_refused
+      absolute.where.not(abbreviation: 'cost')
+    end
 
-    def self.method_missing(method)
+
+    def self.method_missing(method, *args)
       # process self.s21 to self.s40
       if method.to_s.in?(SECTION_NUMBERS.keys)
         where(abbreviation: SECTION_NUMBERS[method.to_s]).first
       else
-        super
+        super(method, args)
       end
     end
 

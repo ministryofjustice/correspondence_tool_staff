@@ -61,9 +61,16 @@
           tr.time-taken
             th = t('common.case.time_taken')
             td = case_details.time_taken
-          tr.outcome
-            th = t('common.case.outcome')
-            td = case_details.outcome.name
+
+          - if case_details.info_held_status.present?
+            tr.info-held
+              th = "Was the information held?"
+              td = case_details.info_held_status.name
+
+          - if case_details.outcome.present?
+            tr.outcome
+              th = t('common.case.outcome')
+              td = case_details.outcome.name
 
           - if case_details.refusal_reason.present?
             tr.refusal-reason
