@@ -28,6 +28,7 @@ describe 'cases/index.html.slim', type: :view do
                                     .decorate }
 
   before do
+    allow(request).to receive(:filtered_parameters).and_return({})
     assign(:global_nav_manager, GlobalNavManager.new(responder,
                                                      request,
                                                      Settings.global_navigation))
@@ -42,6 +43,7 @@ describe 'cases/index.html.slim', type: :view do
     assigned_case
     accepted_case
     assign(:cases, PaginatingDecorator.new(Case.all.page.order(:number)))
+    assign(:state_selector, StateSelector.new( {} ))
 
     disallow_case_policy :can_add_case?
 
@@ -72,6 +74,7 @@ describe 'cases/index.html.slim', type: :view do
   describe 'add case button' do
     it 'is displayed when the user can add cases' do
       assign(:cases, PaginatingDecorator.new(Case.all.page))
+      assign(:state_selector, StateSelector.new( {} ))
 
       allow_case_policy :can_add_case?
 
@@ -83,6 +86,7 @@ describe 'cases/index.html.slim', type: :view do
 
     it 'is not displayed when the user cannot add cases' do
       assign(:cases, PaginatingDecorator.new(Case.all.page))
+      assign(:state_selector, StateSelector.new( {} ))
 
       disallow_case_policy :can_add_case?
 
@@ -100,6 +104,7 @@ describe 'cases/index.html.slim', type: :view do
 
     it 'has a link to in-time open cases' do
       assign(:cases, PaginatingDecorator.new(Case.all.page))
+      assign(:state_selector, StateSelector.new( {} ))
       render
       cases_page.load(rendered)
 
@@ -112,6 +117,7 @@ describe 'cases/index.html.slim', type: :view do
       login_as(responder)
       assigned_case
       assign(:cases, PaginatingDecorator.new(Case.all.page))
+      assign(:state_selector, StateSelector.new( {} ))
       render
       cases_page.load(rendered)
 
@@ -126,6 +132,7 @@ describe 'cases/index.html.slim', type: :view do
 
     it 'renders the paginator' do
       assign(:cases, Case.none.page.decorate)
+      assign(:state_selector, StateSelector.new( {} ))
       render
       expect(response).to have_rendered('kaminari/_paginator')
     end

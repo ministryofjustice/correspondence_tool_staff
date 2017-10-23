@@ -1,6 +1,6 @@
 module PageObjects
   module Pages
-    class CasesPage < SitePrism::Page
+    class CasesPage < PageObjects::Pages::Base
       set_url '/'
 
       sections :notices, '.notice-summary' do
@@ -9,6 +9,11 @@ module PageObjects
 
       section :primary_navigation,
               PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
+
+      section :state_filter, '.state-filter' do
+        elements :check_boxes, 'label'
+        element :filter_button, 'input[value="Filter"]'
+      end
 
       sections :tabs, '.section-tabs .tab' do
         element :tab_link, 'a'
@@ -40,6 +45,11 @@ module PageObjects
           row.number.text.delete('Link to case')
         end
       end
+
+      def choose_state(choice)
+        make_check_box_choice("state_selector_#{choice}")
+      end
+
     end
   end
 end

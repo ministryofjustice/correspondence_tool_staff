@@ -20,6 +20,8 @@
       = link_to t('common.new_case_button'), new_case_path, class: 'button'
 
 
+= render partial: 'state_filter_form' unless params[:action] == 'search'
+
 - if @global_nav_manager.current_page.tabs.present?
   .grid-row
     .column-full

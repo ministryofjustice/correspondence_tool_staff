@@ -17,7 +17,8 @@ describe GlobalNavManager do
 
   let(:request) { instance_double ActionDispatch::Request,
                                   path: '/cases/open',
-                                  fullpath: '/cases/open?timeliness=in_time' }
+                                  fullpath: '/cases/open?timeliness=in_time',
+                                  filtered_parameters: {timeliness: 'in_time'} }
   let(:manager)   { create :manager }
   let(:responder) { create :responder }
   let(:disclosure_specialist)  { create :disclosure_specialist }
@@ -89,13 +90,13 @@ describe GlobalNavManager do
         gnm = GlobalNavManager.new(user, request, config)
         expect(GlobalNavManager::Page)
           .to have_received(:new)
-                .with(:incoming_cases, user, [], config)
+                .with(:incoming_cases, user, [], config, {timeliness: 'in_time'})
         expect(GlobalNavManager::Page)
           .to have_received(:new)
-                .with(:opened_cases, user, [:in_time, :late], config)
+                .with(:opened_cases, user, [:in_time, :late], config, {timeliness: 'in_time'})
         expect(GlobalNavManager::Page)
           .to have_received(:new)
-                .with(:closed_cases, user, [], config)
+                .with(:closed_cases, user, [], config, {timeliness: 'in_time'})
         expect(gnm.nav_pages).to eq [incoming_page, open_page, closed_page]
       end
     end
@@ -107,10 +108,10 @@ describe GlobalNavManager do
         gnm = GlobalNavManager.new(user, request, config)
         expect(GlobalNavManager::Page)
           .to have_received(:new)
-                .with(:opened_cases, user, [:in_time, :late], config)
+                .with(:opened_cases, user, [:in_time, :late], config, {timeliness: 'in_time'})
         expect(GlobalNavManager::Page)
           .to have_received(:new)
-                .with(:closed_cases, user, [], config)
+                .with(:closed_cases, user, [], config, {timeliness: 'in_time'})
         expect(gnm.nav_pages).to eq [open_page, closed_page]
       end
     end

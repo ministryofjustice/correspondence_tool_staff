@@ -35,10 +35,15 @@ class CaseFinderService
   end
   # rubocop:enable Metrics/CyclomaticComplexity
 
-  def filter_for_params(params)
+  def filter_for_params(params, url_params = {})
+    result = self
     if params[:timeliness]
-      timeliness(params[:timeliness])
+      result = timeliness(params[:timeliness])
     end
+    if url_params['states']  && url_params['states'].present?
+      result = result.in_states(url_params['states'])
+    end
+    result
   end
 
   def index_cases
@@ -90,6 +95,10 @@ class CaseFinderService
     when 'in_time' then chain @cases.in_time
     when 'late'    then chain @cases.late
     end
+  end
+
+  def in_states(states)
+    chain @cases.in_states(states.split(','))
   end
 
   private

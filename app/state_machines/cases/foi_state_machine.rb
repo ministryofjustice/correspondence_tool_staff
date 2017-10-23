@@ -19,15 +19,19 @@ class Cases::FOIStateMachine
     transition.record_state_change(kase)
   end
 
-  state :unassigned, initial: true
+
+  # The order here is important - it governs the order of the checkboxes appear on the filter by state form
   state :awaiting_responder
+  state :unassigned, initial: true
   state :drafting
-  state :awaiting_dispatch
   state :pending_dacu_clearance
   state :pending_press_office_clearance
   state :pending_private_office_clearance
+  state :awaiting_dispatch
   state :responded
   state :closed
+
+
 
   event :assign_responder do
     authorize :can_assign_case?

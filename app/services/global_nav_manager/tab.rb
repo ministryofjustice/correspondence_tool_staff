@@ -5,17 +5,18 @@ class GlobalNavManager
 
     attr_reader :name, :finder, :params
 
-    def initialize(name, path, finder, settings)
+    def initialize(name, path, finder, settings, url_params)
       @name = name
       @path = path
       @params = settings.tabs[name].params
-      @finder = finder.filter_for_params(@params)
+      @url_params = url_params
+      @finder = finder.filter_for_params(@params, @url_params)
     end
 
     def url
       if @url.nil?
         url = URI(@path)
-        url.query = params.to_h.to_query
+        url.query = (@url_params.except('controller', 'action').merge(params.to_h)).to_query
         @url = url.to_s
       end
       @url
@@ -30,14 +31,14 @@ class GlobalNavManager
       else
         match_params = query_to_h(match_url.query)
         @params.to_h.with_indifferent_access ==
-          remove_pagination_params(match_params)
+          remove_ignorable_params(match_params)
       end
       # We don't match hosts yet, will we ever need to?
     end
 
     private
 
-    PAGINATION_PARAMS = ['page']
+    IGNORABLE_PARAMS = ['page', 'states']
 
     def fullpath
       @fullpath ||= "#{@path}?#{@params.to_h.to_query}"
@@ -47,9 +48,9 @@ class GlobalNavManager
       Rack::Utils.parse_nested_query(query)
     end
 
-    def remove_pagination_params(params)
+    def remove_ignorable_params(params)
       return if params.nil?
-      params.reject { |k,_v| PAGINATION_PARAMS.include? k }
+      params.reject { |k,_v| IGNORABLE_PARAMS.include? k }
     end
   end
 end

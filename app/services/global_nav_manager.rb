@@ -62,7 +62,7 @@ class GlobalNavManager
     @nav_pages = structure.map do |page_name, tabs_or_default|
       tabs_structure = parse_tabs_list_from_setting(tabs_or_default)
       default_page = parse_default_from_setting(tabs_or_default)
-      page = Page.new(page_name, user, tabs_structure.keys, settings)
+      page = Page.new(page_name, user, tabs_structure.keys, settings, @request.filtered_parameters)
 
       if default_page
         @default = page

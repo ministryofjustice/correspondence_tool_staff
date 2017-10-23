@@ -9,6 +9,14 @@ module PageObjects
         end
       end
 
+      def make_check_box_choice(choice_id)
+        if Capybara.current_driver == Capybara.javascript_driver
+          find("input##{choice_id}", visible: false).trigger("click")
+        else
+          find("input##{choice_id}").set(true)
+        end
+      end
+
       # Upload a file to Dropzone.js
       def drop_in_dropzone(file_path:, input_name:, container_selector:)
           # Generate a uploaded request file input selector
