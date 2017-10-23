@@ -274,10 +274,6 @@ class CasesController < ApplicationController
                                     team: BusinessUnit.dacu_disclosure).call
   end
 
-  def remove_clearance
-    @case = Case.find(params[:id]).decorate
-  end
-
   def approve_response_interstitial
     authorize @case, :can_approve_or_escalate_case?
   end

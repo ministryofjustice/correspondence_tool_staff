@@ -16,17 +16,17 @@ describe CaseUnflagForClearanceService do
   let(:press_office)          { find_or_create :team_press_office }
 
   describe 'call' do
-    context 'case is not already flagged' do
-      let(:service) { described_class.new user: approver,
-                                          kase: assigned_case,
-                                          team: dacu_disclosure,
-                                          message: "message"}
-
-      it 'validates that the case is flagged' do
-        expect(service.call).to eq :incomplete
-        expect(service.result).to eq :incomplete
-      end
-    end
+    # context 'case is not already flagged' do
+    #   let(:service) { described_class.new user: approver,
+    #                                       kase: assigned_case,
+    #                                       team: dacu_disclosure,
+    #                                       message: "message"}
+    #
+    #   it 'validates that the case is flagged' do
+    #     expect(service.call).to eq :incomplete
+    #     expect(service.result).to eq :incomplete
+    #   end
+    # end
 
     context 'case is flagged' do
       let(:service) { described_class.new user: approver,
@@ -56,15 +56,15 @@ describe CaseUnflagForClearanceService do
       end
     end
   end
-  context 'case is flagged by the press office' do
-    let(:service) { described_class.new user: approver,
-                                        kase: press_flagged_case,
-                                        team: dacu_disclosure,
-                                        message: "message"}
-
-    it 'validates that the case is flagged by for dacu_disclosure' do
-      service.call
-      expect(service.result).to eq :incomplete
-    end
-  end
+  # context 'case is flagged by the press office' do
+  #   let(:service) { described_class.new user: approver,
+  #                                       kase: press_flagged_case,
+  #                                       team: dacu_disclosure,
+  #                                       message: "message"}
+  #
+  #   it 'validates that the case is flagged by for dacu_disclosure' do
+  #     service.call
+  #     expect(service.result).to eq :incomplete
+  #   end
+  # end
 end
