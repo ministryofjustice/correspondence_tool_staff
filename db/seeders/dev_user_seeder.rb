@@ -35,7 +35,7 @@ class DevUserSeeder
   end
 
 
-
+  #rubocop:disable Metrics/MethodLength
   def seed!
     @users.each do |user_name, user_info|
       team_abbr = user_info[:team]
@@ -66,7 +66,19 @@ class DevUserSeeder
         end
       end
     end
+
+    smoketest_user = User.find_or_create_by( email: Settings.smoke_tests.username) do | user |
+      user.full_name             = 'Smokey Test(DO NOT EDIT)'
+      user.password              = Settings.smoke_tests.password
+      user.password_confirmation = Settings.smoke_tests.password
+      puts 'Created Smoke Test user'
+    end
+
+    TeamsUsersRole.find_or_create_by!(team: BusinessUnit.dacu_bmt, user: smoketest_user, role: 'manager') do
+      puts 'Created Team/Role link to user'
+    end
   end
+  #rubocop:enable Metrics/MethodLength
 
   private
 
