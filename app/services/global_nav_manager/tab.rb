@@ -16,7 +16,7 @@ class GlobalNavManager
     def url
       if @url.nil?
         url = URI(@path)
-        url.query = (@url_params.except('controller', 'action').merge(params.to_h)).to_query
+        url.query = (@url_params.except('controller', 'action', 'page').merge(params.to_h)).to_query
         @url = url.to_s
       end
       @url

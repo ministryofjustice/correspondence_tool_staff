@@ -370,7 +370,7 @@ def make_redirect_url_with_additional_params(new_params)
   new_params[:controller] = params[:controller]
   new_params[:action] = params[:orig_action]
   params.keys.each do |key|
-    next if key.to_sym.in?( %i{ utf8 authenticity_token state_selector states action commit action orig_action} )
+    next if key.to_sym.in?( %i{ utf8 authenticity_token state_selector states action commit action orig_action page} )
     new_params[key] = params[key]
   end
   url_for(new_params)
