@@ -11,12 +11,14 @@ class CaseUnflagForClearanceService
   end
 
   def call
-      @case.state_machine.unflag_for_clearance!(@user, @case.managing_team, @team, @message)
-      @case.approver_assignments.with_teams(@team).destroy_all
-      @result = :ok
-  end
-
-  def self.eligible?(kase)
-    kase.requires_clearance? && !kase.flagged_for_press_office_clearance?
+    begin
+      ActiveRecord::Base.transaction do
+        @case.state_machine.unflag_for_clearance!(@user, @case.managing_team, @team, @message)
+        @case.approver_assignments.with_teams(@team).destroy_all
+        @result = :ok
+      end
+    end
+  rescue
+    @result = :error
   end
 end

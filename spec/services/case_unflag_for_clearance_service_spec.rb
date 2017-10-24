@@ -16,18 +16,6 @@ describe CaseUnflagForClearanceService do
   let(:press_office)          { find_or_create :team_press_office }
 
   describe 'call' do
-    # context 'case is not already flagged' do
-    #   let(:service) { described_class.new user: approver,
-    #                                       kase: assigned_case,
-    #                                       team: dacu_disclosure,
-    #                                       message: "message"}
-    #
-    #   it 'validates that the case is flagged' do
-    #     expect(service.call).to eq :incomplete
-    #     expect(service.result).to eq :incomplete
-    #   end
-    # end
-
     context 'case is flagged' do
       let(:service) { described_class.new user: approver,
                                           kase: assigned_flagged_case,
@@ -55,16 +43,22 @@ describe CaseUnflagForClearanceService do
         expect(service.result).to eq :ok
       end
     end
+
+    context 'if anything fails in the transaction' do
+      let(:service) { described_class.new user: approver,
+                                          kase: assigned_flagged_case,
+                                          team: dacu_disclosure,
+                                          message: "message"}
+
+      it 'raises an error when it saves and no assignments change' do
+        all_assignments = assigned_flagged_case.assignments
+        expect(assigned_flagged_case.state_machine)
+            .to receive(:unflag_for_clearance!)
+                    .and_raise(RuntimeError)
+        service.call
+        expect(service.result).to eq :error
+        expect(assigned_flagged_case.assignments).to eq all_assignments
+      end
+    end
   end
-  # context 'case is flagged by the press office' do
-  #   let(:service) { described_class.new user: approver,
-  #                                       kase: press_flagged_case,
-  #                                       team: dacu_disclosure,
-  #                                       message: "message"}
-  #
-  #   it 'validates that the case is flagged by for dacu_disclosure' do
-  #     service.call
-  #     expect(service.result).to eq :incomplete
-  #   end
-  # end
 end
