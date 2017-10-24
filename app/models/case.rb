@@ -135,7 +135,7 @@ class Case < ApplicationRecord
             on: :create,
             if: -> { sent_by_post? }
   validates :subject,  :category, presence: true
-  validates :subject, length: { maximum: 80 }
+  validates :subject, length: { maximum: 100 }
 
   validates_with ::ClosedCaseValidator
 

@@ -440,7 +440,7 @@ RSpec.describe Case, type: :model do
   end
 
   describe '#subject' do
-    it { should validate_length_of(:subject).is_at_most(80) }
+    it { should validate_length_of(:subject).is_at_most(100) }
   end
 
   describe '#received_date' do
