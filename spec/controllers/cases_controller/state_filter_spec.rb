@@ -47,6 +47,16 @@ RSpec.describe CasesController, type: :controller do
         expect(@redirect_params['states']).to eq ['awaiting_responder,pending_dacu_clearance,unassigned']
       end
     end
+
+    it 'removes the page parameter' do
+      sign_in create(:manager)
+      my_params = params.merge('page' => '3')
+      post :filter, params: my_params
+      redirect_url = URI.parse response.redirect_url
+      redirect_params = CGI.parse(redirect_url.query)
+
+      expect(redirect_params).not_to have_key('page')
+    end
   end
 
 end

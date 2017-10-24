@@ -59,6 +59,11 @@ describe GlobalNavManager::Tab do
     it 'adds params to the page url' do
       expect(tab.url).to eq 'page_path?timeliness=late'
     end
+
+    it 'adds in all url params except page' do
+      tab = GlobalNavManager::Tab.new "late", 'page_path', finder, config, {'page' => '3', 'states' => 'drafting', 'foo' => 'bar'}
+      expect(tab.url).to eq 'page_path?foo=bar&states=drafting&timeliness=late'
+    end
   end
 
   describe '#matches_fullpath?' do
