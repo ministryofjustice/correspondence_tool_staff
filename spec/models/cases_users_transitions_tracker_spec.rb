@@ -18,7 +18,7 @@ describe CasesUsersTransitionsTracker do
   describe 'uniqueness validation' do
     it 'prevents two records for that same case id and user id being created ' do
       expect {
-        dupe = CasesUsersTransitionsTracker.create!(case: tracker.case, user: tracker.user)
+        CasesUsersTransitionsTracker.create!(case: tracker.case, user: tracker.user)
       }.to raise_error ActiveRecord::RecordInvalid, 'Validation failed: User has already been taken'
     end
   end
