@@ -7,8 +7,6 @@ require 'mechanize'
 class Smoketest
 
   def initialize
-    puts "Smoketest running in #{Rails.env} mode!"
-    @env_vars_ok = true
     check_settings
     @username = Settings.smoke_tests.username
     @password = Settings.smoke_tests.password
