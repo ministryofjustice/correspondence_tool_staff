@@ -15,6 +15,14 @@ describe CasesUsersTransitionsTracker do
   let(:user)    { kase.responder }
   let(:tracker) { CasesUsersTransitionsTracker.create case: kase,
                                                       user: user  }
+  describe 'uniqueness validation' do
+    it 'prevents two records for that same case id and user id being created ' do
+      expect {
+        CasesUsersTransitionsTracker.create!(case: tracker.case, user: tracker.user)
+      }.to raise_error ActiveRecord::RecordInvalid, 'Validation failed: User has already been taken'
+    end
+  end
+
   describe '.sync_for_case_and_user' do
     context 'tracker exists for given case and user' do
       before do

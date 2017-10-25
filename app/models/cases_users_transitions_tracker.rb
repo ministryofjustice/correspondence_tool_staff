@@ -12,6 +12,8 @@ class CasesUsersTransitionsTracker < ActiveRecord::Base
   belongs_to :case
   belongs_to :user
 
+  validates :user_id, uniqueness: { scope: :case_id }
+
   class << self
     def sync_for_case_and_user(kase, user)
       latest_transition_id = kase.message_transitions.pluck(:id).last
