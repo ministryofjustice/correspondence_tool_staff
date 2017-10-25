@@ -26,7 +26,8 @@ describe 'cases/clearance_details.html.slim', type: :view do
                                                          responding_team: responding_team,
                                                          responder: responder,
                                                          approver: dack,
-                                                         private_officer: create(:private_officer, full_name: 'Prince Johns')}
+                                                         private_officer: create(:private_officer, full_name: 'Prince Johns'),
+                                                         press_officer: create(:press_officer, full_name: 'Alistair Campbell') }
 
 
 
@@ -77,6 +78,7 @@ describe 'cases/clearance_details.html.slim', type: :view do
 
         expect(partial.deputy_director.data.text).to eq 'Margaret Thatcher'
         expect(partial.dacu_disclosure.text).to include 'Dack Dispirito'
+        expect(partial.dacu_disclosure.text).to include 'Remove clearance'
       end
     end
 
@@ -88,14 +90,15 @@ describe 'cases/clearance_details.html.slim', type: :view do
 
         expect(partial.deputy_director.data.text).to eq 'Margaret Thatcher'
         expect(partial.dacu_disclosure.text).to include 'Dack Dispirito'
+        expect(partial.dacu_disclosure.text).not_to include 'Remove clearance'
 
         approver_dets = partial.non_default_approvers[0]
         expect(approver_dets.department_name.text).to eq 'Press Office'
-        expect(approver_dets.approver_name.text).to eq 'Preston Offman'
+        expect(approver_dets.approver_name.text).to eq 'Alistair Campbell'
 
         approver_dets = partial.non_default_approvers[1]
         expect(approver_dets.department_name.text).to eq 'Private Office'
-        expect(approver_dets.approver_name.text).to eq 'Primrose Offord'
+        expect(approver_dets.approver_name.text).to eq 'Prince Johns'
       end
     end
   end
