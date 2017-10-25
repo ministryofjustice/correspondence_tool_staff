@@ -479,7 +479,7 @@ class Cases::FOIStateMachine
     trigger! :respond,
              acting_team_id:        responding_team.id,
              acting_user_id:        user.id,
-             event:                 :respon
+             event:                 :respond
   end
 
   def close!(user, managing_team)
@@ -512,7 +512,7 @@ class Cases::FOIStateMachine
   end
 
   def notify_kilo_case_is_ready_to_send(kase)
-    NotifyResponderService.new(kase).call
+    NotifyResponderService.new(kase).call if kase.approver_assignments.any?
   end
 end
 # rubocop:enable ClassLength

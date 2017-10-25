@@ -44,7 +44,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     mail(to: recipient.email)
   end
 
-  def notify_information_office(kase)
+  def notify_information_officers(kase)
     RavenContextProvider.set_context
 
     recipient = kase.assignment.last.user

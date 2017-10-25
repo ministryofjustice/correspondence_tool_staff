@@ -1,9 +1,27 @@
 require 'rails_helper'
 
 describe NotifyResponderService, type: :service do
-  let(:ready_to_send_case) { create :something }
+  let(:responded_case) { create :responded_case }
+  let(:service)        { NotifyResponderService.new(kase: responded_case) }
 
-  context "flagged case "
+  before do
+    allow(ActionNotificationsMailer).to receive_message_chain(:notify_information_officers,
+                                               :deliver_later)
+  end
+  context 'when it works' do
+
+    it 'sets the result to ok' do
+
+      service.call
+      expect(service.result).to eq :ok
+    end
+
+    it 'emails' do
+      service.call
+      expect(ActionNotificationsMailer).to have_received(:notify_information_officers)
+                                    .with notify_information_officers, responded_case
+    end
+  end
 end
 
 # describe CaseAssignResponderService, type: :service do

@@ -6,18 +6,15 @@ class NotifyResponderService
   end
 
   def call
-    if @case.approver_assignments.any?
-      @result = :ok
-      notify_responders
-    else return @result
-    end
+    @result = :ok
+    notify_responders
   end
 
   private
 
   def notify_responders
     ActionNotificationsMailer
-      .notify_information_office(@case)
+      .notify_information_officers(@case)
       .deliver_later
   end
 end
