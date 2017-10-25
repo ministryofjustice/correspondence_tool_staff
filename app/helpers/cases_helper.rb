@@ -87,10 +87,10 @@ module CasesHelper
   end
 
   def show_remove_clearance_link(kase)
-    if policy(kase).can_unflag_for_clearance?
+    policy = CasePolicy.new(current_user, kase)
+    if policy.can_unflag_for_clearance?
       link_to('Remove clearance', remove_clearance_case_path(id: kase.id))
     end
-
   end
 
   def attachment_preview_link(attachment)
