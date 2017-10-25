@@ -1,4 +1,4 @@
-class ReadyToSendNotificationService
+class NotifyResponderService
   attr_reader :result, :case
   def initialize(kase)
     @case = kase
@@ -6,7 +6,7 @@ class ReadyToSendNotificationService
   end
 
   def call
-    if @case.assignments.approver_assignments.any?
+    if @case.approver_assignments.any?
       @result = :ok
       notify_responders
     else return @result
@@ -17,7 +17,7 @@ class ReadyToSendNotificationService
 
   def notify_responders
     ActionNotificationsMailer
-      .case_ready_to_send(@case, responder.email)
+      .notify_information_office(@case)
       .deliver_later
   end
 end
