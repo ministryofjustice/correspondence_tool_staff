@@ -393,6 +393,7 @@ class Cases::FOIStateMachine
              target_team_id:    approving_team.id,
              message:           message,
              event:             :unflag_for_clearance
+    notify_kilo_case_is_ready_to_send(kase)
   end
 
   def take_on_for_approval!(user, managing_team, approving_team)
@@ -408,6 +409,7 @@ class Cases::FOIStateMachine
              acting_user_id:  user.id,
              event:           :approve,
              acting_team_id:  assignment.team_id
+    notify_kilo_case_is_ready_to_send(kase)
   end
 
   def approve_and_bypass!(user, assignment, message)
@@ -416,6 +418,7 @@ class Cases::FOIStateMachine
              acting_team_id:    assignment.team_id,
              message:           message,
              event:             :approve_and_bypass
+    notify_kilo_case_is_ready_to_send(kase)
   end
 
   def upload_response_approve_and_bypass!(user, team, filenames, message)
@@ -425,6 +428,7 @@ class Cases::FOIStateMachine
              event:             :upload_response_approve_and_bypass,
              message:           message,
              filenames:         filenames
+    notify_kilo_case_is_ready_to_send(kase)
   end
 
   def request_amends!(user, assignment)
@@ -442,6 +446,7 @@ class Cases::FOIStateMachine
              acting_team_id:        approving_team.id,
              message:               object.upload_comment,
              filenames:             filenames
+    notify_kilo_case_is_ready_to_send(kase)
   end
 
   def upload_response_and_return_for_redraft!(user, approving_team, filenames)
@@ -504,6 +509,10 @@ class Cases::FOIStateMachine
     else
       :approve
     end
+  end
+
+  def notify_kilo_case_is_ready_to_send(kase)
+    ReadyToSendNotificationService.new(kase).call
   end
 end
 # rubocop:enable ClassLength
