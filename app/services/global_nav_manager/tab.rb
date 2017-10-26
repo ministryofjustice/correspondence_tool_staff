@@ -9,7 +9,7 @@ class GlobalNavManager
       @name = name
       @path = path
       @params = settings.tabs[name].params
-      @url_params = url_params
+      @url_params = url_params.except('id')
       @finder = finder.filter_for_params(@params, @url_params)
     end
 

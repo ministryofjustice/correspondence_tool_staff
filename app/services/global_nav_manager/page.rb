@@ -9,7 +9,7 @@ class GlobalNavManager
       @user = user
       @path = settings.pages[name].path
       @settings = settings
-      @url_params = url_params
+      @url_params = url_params.except('id')
       @tabs = build_tabs(tab_names, settings)
     end
 
