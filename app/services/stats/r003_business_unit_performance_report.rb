@@ -55,7 +55,7 @@ module Stats
 
     def initialize
       super
-      @period_start = Time.now.beginning_of_month
+      @period_start = Time.now.beginning_of_year
       @period_end = Time.now
       @stats = StatsCollector.new(Team.hierarchy.map(&:id), COLUMNS)
       @superheadings = superheadings
