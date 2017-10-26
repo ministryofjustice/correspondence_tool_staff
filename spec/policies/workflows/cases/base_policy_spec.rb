@@ -248,12 +248,23 @@ describe Cases::BasePolicy do
     let(:awaiting_dispatch_case)            { create :case_with_response }
     let(:awaiting_dispatch_flagged_case)    { create :case_with_response, :flagged }
     let(:pending_dacu_clearance_press_case) { create :pending_dacu_clearance_case_flagged_for_press }
+    let(:press_flagged_case)                { create :assigned_case,
+                                                     :flagged_accepted,
+                                                     :press_office }
+
+    permissions :can_unflag_for_clearance? do
+      it { should     permit(disclosure_specialist, unassigned_flagged_case) }
+      it { should_not permit(manager,               unassigned_flagged_case) }
+      it { should_not permit(responder,             unassigned_flagged_case) }
+      it { should_not permit(disclosure_specialist, unassigned_case) }
+      it { should_not permit(disclosure_specialist, press_flagged_case) }
+    end
 
     permissions :unflag_for_clearance_from_unassigned_to_unassigned? do
       it { should     permit(disclosure_specialist, unassigned_flagged_case) }
       it { should     permit(manager,               unassigned_flagged_case) }
       it { should_not permit(responder,             unassigned_flagged_case) }
-      it { should_not permit(manager,               unassigned_case) }
+      it { should_not permit(disclosure_specialist, unassigned_case) }
     end
 
     permissions :unflag_for_clearance_from_awaiting_responder_to_awaiting_responder? do

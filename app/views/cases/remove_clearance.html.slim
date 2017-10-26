@@ -1,0 +1,24 @@
+= GovukElementsErrorsHelper.error_summary @case,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  = @case.number
+
+= render partial: 'layouts/header'
+
+div
+  = t('.explanation')
+  br
+  strong
+    = @case.subject
+
+removal-form
+  = form_for [@case], url: unflag_taken_on_case_for_clearance_case_path(@case) do |f|
+    label.form-label for="unflag_for_clearance_message"
+      = t('.why')
+    textarea.form-control name="message" id="unflag_for_clearance_message"
+    .button-holder
+    = f.submit 'Submit', class:'button'

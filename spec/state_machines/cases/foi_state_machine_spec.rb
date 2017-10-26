@@ -351,13 +351,15 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
       expect do
         assigned_case.state_machine.unflag_for_clearance! manager,
                                                           managing_team,
-                                                          approving_team
+                                                          approving_team,
+                                                          "message"
       end
         .to trigger_the_event(:unflag_for_clearance)
               .on_state_machine(assigned_case.state_machine)
               .with_parameters acting_user_id: manager.id,
                                acting_team_id: managing_team.id,
-                               target_team_id: approving_team.id
+                               target_team_id: approving_team.id,
+                               message: "message"
     end
   end
 

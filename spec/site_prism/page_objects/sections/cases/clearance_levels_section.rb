@@ -12,6 +12,7 @@ module PageObjects
 
           section :dacu_disclosure, 'tr.dacu-disclosure' do
             element :data, 'td'
+            element :remove_clearance, 'td.clearance-actions'
           end
 
           sections :non_default_approvers, 'tr.non-default-approvers' do

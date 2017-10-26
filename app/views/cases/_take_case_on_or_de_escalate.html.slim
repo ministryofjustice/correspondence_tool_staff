@@ -5,11 +5,12 @@
             class: 'button take-case-on-link',
             remote: true,
             method: :patch
-  = link_to 'De-escalate',
-            unflag_for_clearance_case_path(id: case_details.id),
-            remote: true,
-            class: 'js-de-escalate-link secondard-action-link',
-            method: :patch
+  - unless case_details.flagged_for_press_office_clearance? || case_details.flagged_for_private_office_clearance?
+    = link_to 'De-escalate',
+              unflag_for_clearance_case_path(id: case_details.id),
+              remote: true,
+              class: 'js-de-escalate-link secondard-action-link',
+              method: :patch
 
 - elsif current_user.approving_team.press_office? || current_user.approving_team.private_office?
     = link_to 'Take case on',

@@ -169,6 +169,7 @@ Rails.application.routes.draw do
     get '/assignments/show_rejected' => 'assignments#show_rejected'
     get '/assignments/assign_to_team' => 'assignments#assign_to_team', as: 'assign_to_responder_team'
     patch 'unflag_for_clearance' => 'cases#unflag_for_clearance', on: :member
+    patch 'unflag_taken_on_case_for_clearance' => 'cases#unflag_taken_on_case_for_clearance', on: :member
     patch 'flag_for_clearance' => 'cases#flag_for_clearance', on: :member
     get 'approve_response' => 'cases#approve_response', on: :member
     get 'approve_response_interstitial' => 'cases#approve_response_interstitial', on: :member
@@ -176,6 +177,7 @@ Rails.application.routes.draw do
     get :request_amends, on: :member
     patch :execute_request_amends, on: :member
     post  :filter, on: :collection
+    get 'remove_clearance' => 'cases#remove_clearance', on: :member
     # get 'upload_response_approve' => 'cases#upload_response_approve', on: :member
 
     resources :assignments, except: :create  do

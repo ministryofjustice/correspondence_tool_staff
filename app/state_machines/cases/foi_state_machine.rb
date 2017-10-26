@@ -386,11 +386,12 @@ class Cases::FOIStateMachine
              event:             :flag_for_clearance
   end
 
-  def unflag_for_clearance!(user, managing_team, approving_team)
+  def unflag_for_clearance!(user, managing_team, approving_team, message = nil)
     trigger! :unflag_for_clearance,
              acting_user_id:    user.id,
              acting_team_id:    managing_team.id,
              target_team_id:    approving_team.id,
+             message:           message,
              event:             :unflag_for_clearance
   end
 

@@ -125,8 +125,9 @@ module Cases
 
     def can_unflag_for_clearance?
       clear_failed_checks
-      check_user_is_an_approver_for_case ||
-        (check_user_is_a_manager && check_case_requires_clearance)
+      only_flagged_for_disclosure_clearance? &&
+        check_user_is_an_approver_for_case &&
+        check_case_requires_clearance
     end
 
     def can_remove_attachment?
@@ -349,6 +350,13 @@ module Cases
     def assign_to_new_team_from_drafting_to_awaiting_responder?
       clear_failed_checks
       check_user_is_a_manager
+    end
+
+    def only_flagged_for_disclosure_clearance?
+      clear_failed_checks
+      check_case_requires_clearance &&
+        check_case_is_not_assigned_to_press_office &&
+        check_case_is_not_assigned_to_private_office
     end
 
     private

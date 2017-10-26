@@ -67,6 +67,7 @@ en:
       edit?: You are not authorised to edit this case.
       update?: You are not authorised to edit this case.
       delete?: You are not authorised to delete this case.
+      can_unflag_for_clearance?: 'You are not authorised to remove clearance from this case'
     team_policy:
       index?: 'You are not authorised to view a list of teams'
       show?: 'You are not authorised to view this team'
@@ -417,6 +418,10 @@ en:
       heading: Close case
       close_date: Date response sent
       date_example: For example, 30 1 2017
+    remove_clearance:
+      heading: 'Remove Clearance'
+      explanation: 'You are removing clearance level of Disclosure for the case:'
+      why: 'Reason for removing clearance'
 
   feedback:
     error_html: |

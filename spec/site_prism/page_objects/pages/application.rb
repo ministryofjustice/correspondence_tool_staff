@@ -25,6 +25,7 @@ module PageObjects
         cases_new:                      'Cases::NewPage',
         cases_edit:                     'Cases::EditPage',
         cases_new_response_upload:      'Cases::NewResponseUploadPage',
+        cases_remove_clearance_form:    'Cases::RemoveClearanceFormPage',
         cases_respond:                  'Cases::RespondPage',
         cases_search:                   'Cases::SearchPage',
         cases_show:                     'Cases::ShowPage',

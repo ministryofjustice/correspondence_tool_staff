@@ -17,6 +17,7 @@ RSpec.describe CasesHelper, type: :helper do
   let(:coworker)  { create :responder,
                            responding_teams: responder.responding_teams }
   let(:another_responder) { create :responder }
+  let(:policy)    { double('Pundit::Policy', can_add_case?: false)}
 
   describe '#action_button_for(event)' do
 
@@ -124,4 +125,5 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
         .to eq 'error_case_uploaded_request_files'
     end
   end
+
 end

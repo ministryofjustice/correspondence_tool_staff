@@ -2,9 +2,36 @@ require 'rails_helper'
 
 describe 'cases/clearance_details.html.slim', type: :view do
 
-  let(:team_dacu_disclosure)    { find_or_create :team_dacu_disclosure }
-  let(:team_press_office)            { find_or_create :team_press_office }
-  let(:team_private_office)            { find_or_create :team_private_office }
+  # teams
+  let(:team_dacu_disclosure)                    { find_or_create :team_dacu_disclosure }
+  let(:team_press_office)                       { find_or_create :team_press_office }
+  let(:team_private_office)                     { find_or_create :team_private_office }
+  let(:responding_team)                         { create :responding_team, responders: [responder], lead: create(:team_property, :lead, value: 'Margaret Thatcher') }
+
+  #users
+  let(:disclosure_specialist)                   { create :disclosure_specialist }
+  let(:responder)                               { create :user, full_name: 'Ralph Responder' }
+  let(:dack)                                    { create :disclosure_specialist, full_name: 'Dack Dispirito' }
+
+  #cases
+  let(:accepted_case)                           { create :accepted_case, responding_team: responding_team, responder: responder }
+  let(:unaccepted_pending_dacu_clearance_case)  { create :unaccepted_pending_dacu_clearance_case,
+                                                         responding_team: responding_team,
+                                                         responder: responder }
+  let(:accepted_pending_dacu_clearance_case)    { create :pending_dacu_clearance_case,
+                                                         responding_team: responding_team,
+                                                         responder: responder,
+                                                         approver: dack }
+  let(:triple_flagged_case)                     { create :pending_dacu_clearance_case_flagged_for_press_and_private,
+                                                         responding_team: responding_team,
+                                                         responder: responder,
+                                                         approver: dack,
+                                                         private_officer: create(:private_officer, full_name: 'Prince Johns'),
+                                                         press_officer: create(:press_officer, full_name: 'Alistair Campbell') }
+
+
+
+  before(:each) { allow(controller).to receive(:current_user).and_return(disclosure_specialist) }
 
   context 'escalation_deadline not yet reached' do
     it 'just displays escalation date' do
@@ -16,31 +43,15 @@ describe 'cases/clearance_details.html.slim', type: :view do
                  locals:{ case_details: kase}
 
       partial = clearance_levels_section(rendered)
-
-
       expect(partial.escalation_deadline.text).to eq 'To be decided by  13 Aug 2017'
     end
   end
 
   context 'escalation deadline reached' do
-    let(:kase)  { double CaseDecorator }
-
-    before(:each) do
-      @kase = double CaseDecorator
-      allow(@kase).to receive(:within_escalation_deadline?).and_return(false)
-      allow(@kase).to receive(:responding_team_lead_name).and_return('Margaret Thatcher')
-      @dts = double DefaultTeamService
-      allow(@kase).to receive(:default_team_service).and_return(@dts)
-      allow(@dts).to receive(:approving_team).and_return(team_dacu_disclosure)
-      allow(@kase).to receive(:default_clearance_approver).and_return('Dack Dispirito')
-    end
-
     context 'case not flagged for approval' do
       it 'displays the name of the deputy director of the responding team' do
-        allow(@kase).to receive(:approvers).and_return([])
-        allow(@kase).to receive(:non_default_approver_assignments).and_return([])
         render partial: 'cases/clearance_levels.html.slim',
-               locals:{ case_details: @kase}
+               locals:{ case_details: accepted_case.decorate }
         partial = clearance_levels_section(rendered).basic_details
 
         expect(partial.deputy_director.data.text).to eq 'Margaret Thatcher'
@@ -50,10 +61,8 @@ describe 'cases/clearance_details.html.slim', type: :view do
 
     context 'case flagged for approval by DACU Disclosure but not yet accepted by disclosure team member' do
       it 'displays the name of the deputy director of the responding team' do
-        allow(@kase).to receive(:approvers).and_return([])
-        allow(@kase).to receive(:non_default_approver_assignments).and_return([])
         render partial: 'cases/clearance_levels.html.slim',
-               locals:{ case_details: @kase}
+               locals:{ case_details:unaccepted_pending_dacu_clearance_case.decorate }
         partial = clearance_levels_section(rendered).basic_details
 
         expect(partial.deputy_director.data.text).to eq 'Margaret Thatcher'
@@ -63,41 +72,33 @@ describe 'cases/clearance_details.html.slim', type: :view do
 
     context 'case flagged and accepted for approval by DACU disclosure only' do
       it 'displays the name of the deputy direcyor and the name of the dacu disclosure approver' do
-        allow(@kase).to receive(:approvers).and_return([ double(User) ])
-        allow(@kase).to receive(:non_default_approver_assignments).and_return([])
         render partial: 'cases/clearance_levels.html.slim',
-               locals:{ case_details: @kase}
+               locals:{ case_details: accepted_pending_dacu_clearance_case.decorate }
         partial = clearance_levels_section(rendered).basic_details
 
         expect(partial.deputy_director.data.text).to eq 'Margaret Thatcher'
-        expect(partial.dacu_disclosure.data.text).to eq 'Dack Dispirito'
+        expect(partial.dacu_disclosure.text).to include 'Dack Dispirito'
+        expect(partial.dacu_disclosure.text).to include 'Remove clearance'
       end
     end
 
     context 'case flagged and accepted for approval by DACU Disclosure, Press and Private offices' do
       it 'displays details of all approvers' do
-        allow(@kase).to receive(:approvers).and_return([ double(User), double(User), double(User) ])
-        press_office_assignment = double(Assignment)
-        allow(press_office_assignment).to receive(:team).and_return(team_press_office)
-        allow(press_office_assignment).to receive(:user).and_return(double User, full_name: 'Preston Offman')
-        private_office_assignment = double(Assignment)
-        allow(private_office_assignment).to receive(:team).and_return(team_private_office)
-        allow(private_office_assignment).to receive(:user).and_return(double User, full_name: 'Primrose Offord')
-        allow(@kase).to receive(:non_default_approver_assignments).and_return([ press_office_assignment, private_office_assignment ])
         render partial: 'cases/clearance_levels.html.slim',
-               locals:{ case_details: @kase}
+               locals:{ case_details: triple_flagged_case.decorate }
         partial = clearance_levels_section(rendered).basic_details
 
         expect(partial.deputy_director.data.text).to eq 'Margaret Thatcher'
-        expect(partial.dacu_disclosure.data.text).to eq 'Dack Dispirito'
+        expect(partial.dacu_disclosure.text).to include 'Dack Dispirito'
+        expect(partial.dacu_disclosure.text).not_to include 'Remove clearance'
 
         approver_dets = partial.non_default_approvers[0]
         expect(approver_dets.department_name.text).to eq 'Press Office'
-        expect(approver_dets.approver_name.text).to eq 'Preston Offman'
+        expect(approver_dets.approver_name.text).to eq 'Alistair Campbell'
 
         approver_dets = partial.non_default_approvers[1]
         expect(approver_dets.department_name.text).to eq 'Private Office'
-        expect(approver_dets.approver_name.text).to eq 'Primrose Offord'
+        expect(approver_dets.approver_name.text).to eq 'Prince Johns'
       end
     end
   end

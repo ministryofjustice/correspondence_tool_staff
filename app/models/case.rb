@@ -242,7 +242,7 @@ class Case < ApplicationRecord
   # do we should just delete it.
   #
   # def awaiting_approver?
-  #   self.approver_assignments.any? &:pending?
+  #   self.approver_assignments.any?(&:pending?)
   # end
 
   def default_team_service
