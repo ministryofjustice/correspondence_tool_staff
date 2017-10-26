@@ -105,6 +105,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
          case_received_date: 10.business_days.ago.to_date.strftime(Settings.default_date_format),
          case_subject: 'The anatomy of man',
          case_link: case_url(approved_case.id),
+         case_draft_deadline: approved_case.internal_deadline.strftime(Settings.default_date_format),
          case_external_deadline: approved_case.external_deadline.strftime(Settings.default_date_format)
          })
     end

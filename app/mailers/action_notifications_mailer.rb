@@ -60,7 +60,8 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
         case_name:              kase.name,
         case_received_date:     kase.received_date.strftime(Settings.default_date_format),
         case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format),
-        case_link:              case_url(kase.id)
+        case_link:              case_url(kase.id),
+        case_draft_deadline:    kase.internal_deadline.strftime(Settings.default_date_format)
     )
 
     mail(to: recipient.email)
