@@ -53,7 +53,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
     set_personalisation(
         email_subject:          format_subject(kase),
-        approver_full_name:     recipient.full_name,
+        responder_full_name:    recipient.full_name,
         case_number:            kase.number,
         case_subject:           kase.subject,
         case_type:              kase.category.abbreviation,
