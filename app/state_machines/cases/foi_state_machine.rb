@@ -393,7 +393,7 @@ class Cases::FOIStateMachine
              target_team_id:    approving_team.id,
              message:           message,
              event:             :unflag_for_clearance
-    notify_kilo_case_is_ready_to_send(object)
+    # notify_kilo_case_is_ready_to_send(object)
   end
 
   def take_on_for_approval!(user, managing_team, approving_team)
@@ -497,6 +497,10 @@ class Cases::FOIStateMachine
              event:             :add_message_to_case
   end
 
+  def notify_kilo_case_is_ready_to_send(kase)
+    NotifyResponderService.new(kase).call if kase.approver_assignments.any?
+  end
+
   private
 
   def get_policy
@@ -511,8 +515,6 @@ class Cases::FOIStateMachine
     end
   end
 
-  def notify_kilo_case_is_ready_to_send(kase)
-    NotifyResponderService.new(kase).call if kase.approver_assignments.any?
-  end
+
 end
 # rubocop:enable ClassLength

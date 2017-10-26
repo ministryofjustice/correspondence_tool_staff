@@ -75,4 +75,42 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       expect(mail.to).to include approver.email
     end
   end
+
+  describe 'notify_information_officers' do
+    let(:assigned_case)   { create :assigned_case,
+                                   name: 'Fyodor Ognievich Ilichion',
+                                   received_date: 10.business_days.ago,
+                                   subject: 'The anatomy of man' }
+    let(:assignment)      { assigned_case.responder_assignment }
+    let(:responding_team) { assignment.team }
+    let(:responder)       { responding_team.responders.first }
+    let(:mail)            { described_class.notify_information_officers(assignment)}
+
+    it 'sets the template' do
+      expect(mail.govuk_notify_template)
+        .to eq '46dc4848-5ad7-4772-9de4-dd6b6f558e5b'
+    end
+
+    it 'personalises the email' do
+      binding.pry
+      allow(CaseNumberCounter).to receive(:next_for_date).and_return(333)
+      expect(mail.govuk_notify_personalisation)
+        .to eq({
+                 email_subject:
+                   "#{assigned_case.number} - FOI - The anatomy of man - To be accepted",
+                 team_name: assignment.team.name,
+                 case_current_state: 'to be accepted',
+                 case_number: assigned_case.number,
+                 case_abbr: 'FOI',
+                 case_name: 'Fyodor Ognievich Ilichion',
+                 case_received_date: 10.business_days.ago.to_date.strftime(Settings.default_date_format),
+                 case_subject: 'The anatomy of man',
+                 case_link: edit_case_assignment_url(assigned_case.id, assignment.id)
+               })
+    end
+
+    it 'sets the To address of the email using the provided user' do
+      expect(mail.to).to include responder.email
+    end
+  end
 end

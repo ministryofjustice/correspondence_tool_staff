@@ -44,16 +44,17 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     mail(to: recipient.email)
   end
 
-  def notify_information_officers(kase)
+  def notify_information_officers(assignment)
     RavenContextProvider.set_context
 
-    recipient = kase.assignment.last.user
+    kase = assignment.case
+    recipient = assignment.user
 
     set_template(Settings.case_ready_to_send_notify_template)
 
     set_personalisation(
         email_subject:          format_subject(kase),
-        responder_full_name:    recipient.full_name,
+        # responder_full_name:    recipient.full_name,
         case_number:            kase.number,
         case_subject:           kase.subject,
         case_type:              kase.category.abbreviation,

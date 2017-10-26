@@ -6,11 +6,11 @@ class NotifyResponderService
   end
 
   def call
-    @result = :ok
     notify_responders
+    @result = :ok
   end
 
-  private
+private
 
   def notify_responders
     ActionNotificationsMailer
