@@ -497,6 +497,10 @@ class Cases::FOIStateMachine
              event:             :add_message_to_case
   end
 
+  def notify_kilo_case_is_ready_to_send(kase)
+    NotifyResponderService.new(kase).call if kase.current_state == "awaiting_dispatch"
+  end
+
   private
 
   def get_policy
@@ -509,10 +513,6 @@ class Cases::FOIStateMachine
     else
       :approve
     end
-  end
-
-  def notify_kilo_case_is_ready_to_send(kase)
-    NotifyResponderService.new(kase).call
   end
 end
 # rubocop:enable ClassLength

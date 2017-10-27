@@ -750,7 +750,34 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
                  acting_team_id: team.id
                )
       end
+    end
+  end
 
+  describe '#notify_kilo_case_is_ready_to_send' do
+    let(:approved_case)   { create :approved_case }
+    let(:kase)            { create :case }
+    let!(:service) do
+      double(NotifyResponderService, call: true).tap do |svc|
+        allow(NotifyResponderService).to receive(:new).and_return(svc)
+      end
+    end
+
+    context 'case state is awaiting_dispatch' do
+      it 'calls the service' do
+        approved_case.state_machine.notify_kilo_case_is_ready_to_send(approved_case)
+        expect(NotifyResponderService)
+          .to have_received(:new).with(approved_case)
+        expect(service).to have_received(:call)
+      end
+    end
+
+    context 'case state is not awaiting_dispatch' do
+      it 'does not calls the service' do
+        new_case.state_machine.notify_kilo_case_is_ready_to_send(new_case)
+        expect(NotifyResponderService)
+          .not_to have_received(:new).with(new_case)
+        expect(service).not_to have_received(:call)
+      end
     end
   end
 end

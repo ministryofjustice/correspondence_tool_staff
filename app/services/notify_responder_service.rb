@@ -17,4 +17,8 @@ private
       .notify_information_officers(@case)
       .deliver_later
   end
+
+  def ready_to_send
+    kase.current_state == "awaiting_dispatch"
+  end
 end
