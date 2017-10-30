@@ -48,16 +48,6 @@ class CaseDecorator < Draper::Decorator
     "#{h.pluralize(errors.count, I18n.t('common.error'))} #{ I18n.t('common.summary_error')}"
   end
 
-  def user_allowed_action?(user, action)
-    policy(@case).__send__ action
-  end
-
-  def user_allowed_actions(user, *actions)
-    actions.find_all do |action|
-      user_allowed_action?(user, action)
-    end
-  end
-
   def requester_type
     object.requester_type.humanize
   end

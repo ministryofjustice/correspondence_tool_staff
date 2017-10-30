@@ -382,7 +382,6 @@ class CasesController < ApplicationController
     when 'upload-flagged' then authorize kase, 'upload_responses_for_flagged?'
     when 'upload-approve' then authorize kase, 'upload_responses_for_approve?'
     when 'upload-redraft' then authorize kase, 'upload_responses_for_redraft?'
-    # else authorize kase, 'upload_responses?'
     end
   end
 
