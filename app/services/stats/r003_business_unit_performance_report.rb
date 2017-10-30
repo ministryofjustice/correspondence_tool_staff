@@ -57,7 +57,7 @@ module Stats
       super
       @period_start = Time.now.beginning_of_year
       @period_end = Time.now
-      @stats = StatsCollector.new(Team.hierarchy.map(&:id), COLUMNS)
+      @stats = StatsCollector.new(Team.hierarchy.map(&:id) + [:total], COLUMNS)
       @superheadings = superheadings
       @stats.add_callback(:before_finalise, method(:roll_up_stats))
       @stats.add_callback(:before_finalise, method(:populate_team_details))
@@ -96,18 +96,22 @@ module Stats
     # this method is passed into the stats collector as a before_finalize callback and accesses the
     # @stats variable  inside the stats collector to sum totals for directorates and business groups
     def roll_up_stats
-      [ BusinessUnit, Directorate ].each do |child_klass|
-          child_klass.all.each do |child_team|
-            child_result_set = @stats.stats[child_team.id]
-            parent_result_set = @stats.stats[child_team.parent.id]
-            child_result_set.each { |key, value|  parent_result_set[key] += value }
-          end
+      overall_total_results = @stats.stats[:total]
+      BusinessUnit.all.each do |bu|
+        bu_results = @stats.stats[bu.id]
+        directorate_results = @stats.stats[bu.directorate.id]
+        business_group_results = @stats.stats[bu.business_group.id]
+        bu_results.each do |key, value|
+          directorate_results   [key] += value
+          business_group_results[key] += value
+          overall_total_results [key] += value
+        end
       end
     end
 
     # another callback method to populate the team names from the team id column
     def populate_team_details
-      @stats.stats.each do | team_id, result_set|
+      @stats.stats.except(:total).each do | team_id, result_set|
         team = Team.find(team_id)
         case team.class.to_s
         when 'BusinessUnit'
@@ -127,6 +131,11 @@ module Stats
         end
         result_set[:responsible] = team.team_lead
       end
+
+      @stats.stats[:total][:business_group] = 'Total'
+      @stats.stats[:total][:directorate] = ''
+      @stats.stats[:total][:business_unit] = ''
+      @stats.stats[:total][:responsible] = ''
     end
 
     # another callback method
@@ -162,7 +171,6 @@ module Stats
         calculate_overall_figure(row, :open_late)
       end
     end
-
 
     def calculate_overall_figure(row, cat)
       target = "overall_#{cat}".to_sym

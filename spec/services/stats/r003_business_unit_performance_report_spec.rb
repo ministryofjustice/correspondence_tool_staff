@@ -83,7 +83,7 @@ module Stats
       end
 
       it 'generates hierarchy starting with business_groups' do
-        expect(@results.keys).to eq Team.hierarchy.map(&:id)
+        expect(@results.keys).to eq Team.hierarchy.map(&:id) + [:total]
       end
 
       it 'adds up directorate stats in each business_group' do
@@ -195,6 +195,7 @@ module Stats
             BGCD,DRCD,"",#{@dir_cd.team_lead},50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0
             BGCD,DRCD,RTC,#{@team_c.team_lead},50.0,2,1,1,0,0,0.0,0,0,0,0,0,50.0,2,1,1,0,0
             BGCD,DRCD,RTD,#{@team_d.team_lead},0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0
+            Total,"","","",33.3,12,3,3,3,3,33.3,5,1,1,2,1,33.3,17,4,4,5,4
           EOCSV
           report = R003BusinessUnitPerformanceReport.new
           report.run
