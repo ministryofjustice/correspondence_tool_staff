@@ -36,6 +36,19 @@ class CaseDecorator < Draper::Decorator
     end
   end
 
+   # we only display the marker for flagged cases
+  def trigger_case_marker
+    if object.flagged?
+      h.content_tag :div, class: 'foi-trigger' do
+        h.content_tag(:span, 'This is a ', class: 'visually-hidden') +
+          "Trigger" +
+          h.content_tag(:span, ' case', class: 'visually-hidden' )
+      end
+    else
+      ' '
+    end
+  end
+
   def external_deadline
     I18n.l(object.external_deadline, format: :default)
   end
