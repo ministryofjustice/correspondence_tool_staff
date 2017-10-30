@@ -7,6 +7,10 @@ module Stats
       (closed_case_ids + open_case_ids).uniq
     end
 
+    def self.ids_for_cases_received_in_period(period_start, period_end)
+      Case.where(received_date: [period_start..period_end]).pluck(:id)
+    end
+
   end
 end
 

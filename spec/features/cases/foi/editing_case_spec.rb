@@ -27,7 +27,7 @@ feature 'Closing a case' do
     expect(cases_show_page).to be_displayed
     expect(cases_show_page.notice.text).to eq 'Case updated'
     expect(cases_show_page.page_heading.heading.text).to eq 'Case subject, Aardvarks for sale'
-    expect(cases_show_page.case_details.basic_details.date_received.data.text).to eq Date.today.strftime(Settings.default_date_format)
+    expect(cases_show_page.case_details.basic_details.date_received.data.text).to eq Date.today.strftime('%-d %b %Y')
     expect(cases_show_page.case_details.basic_details.name.data.text).to eq 'John Doe'
     expect(cases_show_page.case_details.basic_details.email.data.text).to eq 'john.doe@moj.com'
 
