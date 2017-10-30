@@ -371,7 +371,7 @@ class Cases::FOIStateMachine
              target_team_id:    approving_team.id,
              message:           message,
              event:             :unflag_for_clearance
-    notify_responder(object, :ready_to_send)
+    notify_responder(object, 'ready_to_send') if ready_to_send?(object)
   end
 
   def take_on_for_approval!(user, managing_team, approving_team)
@@ -387,7 +387,7 @@ class Cases::FOIStateMachine
              acting_user_id:  user.id,
              event:           :approve,
              acting_team_id:  assignment.team_id
-    notify_responder(object, :ready_to_send)
+    notify_responder(object, 'ready_to_send')
   end
 
   def approve_and_bypass!(user, assignment, message)
@@ -396,7 +396,7 @@ class Cases::FOIStateMachine
              acting_team_id:    assignment.team_id,
              message:           message,
              event:             :approve_and_bypass
-    notify_responder(object, :ready_to_send)
+    notify_responder(object, 'ready_to_send') if ready_to_send?(object)
   end
 
   def upload_response_approve_and_bypass!(user, team, filenames, message)
@@ -406,7 +406,7 @@ class Cases::FOIStateMachine
              event:             :upload_response_approve_and_bypass,
              message:           message,
              filenames:         filenames
-    notify_responder(object, :ready_to_send)
+    notify_responder(object, 'ready_to_send') if ready_to_send?(object)
   end
 
   def request_amends!(user, assignment)
@@ -424,7 +424,7 @@ class Cases::FOIStateMachine
              acting_team_id:        approving_team.id,
              message:               object.upload_comment,
              filenames:             filenames
-    notify_responder(object, :ready_to_send)
+    notify_responder(object, 'ready_to_send') if ready_to_send?(object)
   end
 
   def upload_response_and_return_for_redraft!(user, approving_team, filenames)
@@ -434,7 +434,7 @@ class Cases::FOIStateMachine
              acting_team_id:        approving_team.id,
              message:               object.upload_comment,
              filenames:             filenames
-    notify_responder(object, :redraft)
+    notify_responder(object, 'redraft')
   end
 
   def remove_response!(user, responding_team, filename, num_attachments)
@@ -474,6 +474,7 @@ class Cases::FOIStateMachine
              acting_team_id:    team.id,
              message:           message,
              event:             :add_message_to_case
+    notify_responder(object, 'message')
   end
 
   # def notify_kilo_case_is_ready_to_send(kase)
@@ -487,8 +488,20 @@ class Cases::FOIStateMachine
   def notify_responder(kase, mail_type)
     NotifyResponderService.new(kase, mail_type).call
   end
+
   private
 
+<<<<<<< HEAD
+=======
+  def ready_to_send?(kase)
+    kase.current_state == "awaiting_dispatch"
+  end
+
+  def get_policy
+    Pundit.policy!(self.object)
+  end
+
+>>>>>>> CT-1185 adds functionality for new mail types
   def approve_or_escalate_case_for_team(team, next_event)
     if team.in? object.approving_teams
       next_event
