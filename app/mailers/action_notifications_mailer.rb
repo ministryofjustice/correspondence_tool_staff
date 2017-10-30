@@ -44,7 +44,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     mail(to: recipient.email)
   end
 
-  def notify_information_officers(kase)
+  def notify_information_officers(kase, type)
     RavenContextProvider.set_context
 
     recipient = kase.responder_assignment.user
@@ -75,4 +75,9 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     "#{kase.number} - #{kase.category.abbreviation} - #{kase.subject} - #{I18n.t(translation_key)}"
   end
 
+  def find_template(type)
+    if type == :ready_to_send
+      Settings.case_ready_to_send_notify_template
+    end
+  end
 end

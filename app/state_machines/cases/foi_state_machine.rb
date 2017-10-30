@@ -371,7 +371,7 @@ class Cases::FOIStateMachine
              target_team_id:    approving_team.id,
              message:           message,
              event:             :unflag_for_clearance
-    notify_kilo_case_is_ready_to_send(object)
+    notify_responder(object, :ready_to_send)
   end
 
   def take_on_for_approval!(user, managing_team, approving_team)
@@ -387,7 +387,7 @@ class Cases::FOIStateMachine
              acting_user_id:  user.id,
              event:           :approve,
              acting_team_id:  assignment.team_id
-    notify_kilo_case_is_ready_to_send(object)
+    notify_responder(object, :ready_to_send)
   end
 
   def approve_and_bypass!(user, assignment, message)
@@ -396,7 +396,7 @@ class Cases::FOIStateMachine
              acting_team_id:    assignment.team_id,
              message:           message,
              event:             :approve_and_bypass
-    notify_kilo_case_is_ready_to_send(object)
+    notify_responder(object, :ready_to_send)
   end
 
   def upload_response_approve_and_bypass!(user, team, filenames, message)
@@ -406,7 +406,7 @@ class Cases::FOIStateMachine
              event:             :upload_response_approve_and_bypass,
              message:           message,
              filenames:         filenames
-    notify_kilo_case_is_ready_to_send(object)
+    notify_responder(object, :ready_to_send)
   end
 
   def request_amends!(user, assignment)
@@ -424,7 +424,7 @@ class Cases::FOIStateMachine
              acting_team_id:        approving_team.id,
              message:               object.upload_comment,
              filenames:             filenames
-    notify_kilo_case_is_ready_to_send(object)
+    notify_responder(object, :ready_to_send)
   end
 
   def upload_response_and_return_for_redraft!(user, approving_team, filenames)
@@ -434,6 +434,7 @@ class Cases::FOIStateMachine
              acting_team_id:        approving_team.id,
              message:               object.upload_comment,
              filenames:             filenames
+    notify_responder(object, :redraft)
   end
 
   def remove_response!(user, responding_team, filename, num_attachments)
@@ -475,10 +476,17 @@ class Cases::FOIStateMachine
              event:             :add_message_to_case
   end
 
-  def notify_kilo_case_is_ready_to_send(kase)
-    NotifyResponderService.new(kase).call if kase.current_state == "awaiting_dispatch"
-  end
+  # def notify_kilo_case_is_ready_to_send(kase)
+  #   NotifyResponderService.new(kase).call if kase.current_state == "awaiting_dispatch"
+  # end
+  #
+  # def notify_responders_redraft_case(kase)
+  #   NotifyResponderService.new(kase).call
+  # end
 
+  def notify_responder(kase, mail_type)
+    NotifyResponderService.new(kase, mail_type).call
+  end
   private
 
   def approve_or_escalate_case_for_team(team, next_event)
