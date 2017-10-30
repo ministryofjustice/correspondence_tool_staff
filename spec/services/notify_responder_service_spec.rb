@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe NotifyResponderService, type: :service do
   let(:responded_case) { create :responded_case }
-  let(:service)        { NotifyResponderService.new(kase: responded_case) }
+  let(:service)        { NotifyResponderService.new(responded_case, 'mail_type') }
 
   before do
     allow(ActionNotificationsMailer).to receive_message_chain(

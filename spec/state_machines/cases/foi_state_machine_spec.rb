@@ -761,20 +761,20 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
 
     context 'case state is awaiting_dispatch' do
       it 'calls the service' do
-        approved_case.state_machine.notify_kilo_case_is_ready_to_send(approved_case)
+        approved_case.state_machine.notify_responder(approved_case, 'ready_to_send')
         expect(NotifyResponderService)
-          .to have_received(:new).with(approved_case)
+          .to have_received(:new).with(approved_case, 'ready_to_send')
         expect(service).to have_received(:call)
       end
     end
-
-    context 'case state is not awaiting_dispatch' do
-      it 'does not calls the service' do
-        new_case.state_machine.notify_kilo_case_is_ready_to_send(new_case)
-        expect(NotifyResponderService)
-          .not_to have_received(:new).with(new_case)
-        expect(service).not_to have_received(:call)
-      end
-    end
+# TODO move this logic to the method that triggers the event
+    # context 'case state is not awaiting_dispatch' do
+    #   it 'does not calls the service' do
+    #     new_case.state_machine.notify_responder(new_case, 'ready_to_send')
+    #     expect(NotifyResponderService)
+    #       .not_to have_received(:new).with(new_case)
+    #     expect(service).not_to have_received(:call)
+    #   end
+    # end
   end
 end

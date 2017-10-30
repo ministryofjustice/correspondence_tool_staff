@@ -22,7 +22,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       expect(mail.govuk_notify_personalisation)
         .to eq({
                  email_subject:
-                   "#{assigned_case.number} - FOI - The anatomy of man - To be accepted",
+                 "To be accepted - FOI - #{assigned_case.number} - The anatomy of man",
                  team_name: assignment.team.name,
                  case_current_state: 'to be accepted',
                  case_number: assigned_case.number,
@@ -59,7 +59,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       expect(mail.govuk_notify_personalisation)
         .to eq({
                  email_subject:
-                   "#{pending_case.number} - FOI - The anatomy of man - Pending clearance",
+                 "Pending clearance - FOI - #{pending_case.number} - The anatomy of man",
                  approver_full_name: approver.full_name,
                  case_number: pending_case.number,
                  case_subject: 'The anatomy of man',
@@ -84,7 +84,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
     let(:assignment)      { approved_case.responder_assignment }
     let(:responding_team) { assignment.team }
     let(:responder)       { responding_team.responders.first }
-    let(:mail)            { described_class.notify_information_officers(approved_case)}
+    let(:mail)            { described_class.notify_information_officers(approved_case, 'ready_to_send')}
 
     it 'sets the template' do
       expect(mail.govuk_notify_template)
@@ -96,7 +96,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       expect(mail.govuk_notify_personalisation)
         .to eq({
          email_subject:
-           "#{approved_case.number} - FOI - The anatomy of man - Ready to send",
+           "Ready to send - FOI - #{approved_case.number} - The anatomy of man",
          responder_full_name: assignment.user.full_name,
          case_current_state: 'ready to send',
          case_number: approved_case.number,
