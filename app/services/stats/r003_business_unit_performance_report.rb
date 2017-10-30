@@ -82,7 +82,7 @@ module Stats
     end
 
     def run
-      case_ids = (closed_case_ids + open_case_ids).uniq
+      case_ids = CaseSelector.ids_for_period(@period_start, @period_end)
       case_ids.each { |case_id| analyse_case(case_id) }
       @stats.finalise
     end
@@ -195,20 +195,9 @@ module Stats
       end
     end
 
-
-    def closed_case_ids
-      Case.closed.where(date_responded: [@period_start..@period_end]).pluck(:id)
-    end
-
-    def open_case_ids
-      Case.opened.pluck(:id)
-    end
-
     def analyse_case(case_id)
       kase = Case.find case_id
-      return if kase.unassigned?
-      timeliness = kase.closed? ? analyse_closed_case(kase) : analyse_open_case(kase)
-      column_key = add_trigger_state(kase, timeliness)
+      column_key = CaseAnalyser.new(kase).result
       @stats.record_stats(kase.responding_team.id, column_key)
     end
 
