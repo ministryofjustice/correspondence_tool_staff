@@ -5,9 +5,11 @@
 
     table
       tbody.basic-details
-        tr
+        tr.case-type
           th Case type
-          td FOI
+          td
+            = "FOI "
+            = case_details.trigger_case_marker
         tr.requester-name
           th = t('common.case.name')
           td = case_details.name

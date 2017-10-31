@@ -364,6 +364,7 @@ en:
       message_notification: Conversations
       number: Case number
       number_html: 'Case <abbr title="number">No.</abbr>'
+      type: 'Type'
       request: Request
       request_detail: Request detail
       draft_deadline: Draft deadline

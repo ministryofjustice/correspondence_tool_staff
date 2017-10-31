@@ -4,6 +4,8 @@ describe 'cases/case_details.html.slim', type: :view do
   let(:unassigned_case)         { create(:case).decorate }
   let(:accepted_case)           { create(:accepted_case).decorate }
   let(:responded_case)          { create(:responded_case).decorate }
+  let(:trigger_case)            { create(:case, :flagged_accepted).decorate }
+
   let(:closed_case)             { create(:closed_case).decorate }
   let(:disclosure_specialist)   { create :disclosure_specialist }
 
@@ -26,6 +28,10 @@ describe 'cases/case_details.html.slim', type: :view do
 
       expect(partial).to be_all_there
 
+      expect(partial.case_type).to have_no_foi_trigger
+
+      expect(partial.case_type.data.text).to eq "FOI  "
+
       expect(partial.date_received.data.text)
           .to eq unassigned_case.received_date.strftime(Settings.default_date_format)
 
@@ -44,6 +50,21 @@ describe 'cases/case_details.html.slim', type: :view do
       expect(partial.delivery_method.data.text)
           .to eq unassigned_case.delivery_method.humanize
 
+    end
+
+    it 'displays a trigger badge if the case has been triggered' do
+      trigger_case
+
+      render partial: 'cases/case_details.html.slim',
+                   locals:{ case_details: trigger_case}
+
+      partial = case_details_section(rendered).basic_details
+
+      expect(partial).to be_all_there
+
+      expect(partial.case_type).to have_foi_trigger
+
+      expect(partial.case_type.data.text).to eq "FOI This is a Trigger case"
     end
 
     it 'does not display the email address if one is not provided' do

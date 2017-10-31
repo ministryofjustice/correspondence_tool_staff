@@ -43,9 +43,12 @@
           col
           col
           col
+          col
         thead
           th scope='col'
             = t('.number_html')
+          th scope='col'
+            = t('.type')
           th scope='col'
             = t('.request')
           th scope='col'
@@ -67,6 +70,8 @@
                   = t('.view_case')
                 = " "
                 = link_to kase.number, case_path(kase.id)
+              td aria-label="#{t('.type')}"
+                = kase.trigger_case_marker
               td aria-label="#{t('.request_detail')}"
                 strong
                   = kase.subject

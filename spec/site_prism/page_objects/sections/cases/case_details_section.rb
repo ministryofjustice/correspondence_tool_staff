@@ -4,6 +4,12 @@ module PageObjects
       class CaseDetailsSection < SitePrism::Section
 
         section :basic_details, '.basic-details' do
+
+          section :case_type, 'tr.case-type' do
+            element :foi_trigger, 'td .foi-trigger'
+            element :data, 'td'
+          end
+
           section :date_received, 'tr.date-received' do
             element :data, 'td'
           end

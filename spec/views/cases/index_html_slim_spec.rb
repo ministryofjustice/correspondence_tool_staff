@@ -23,9 +23,9 @@ describe 'cases/index.html.slim', type: :view do
                                           path: '/cases/open',
                                           fullpath: '/cases/open' }
 
-  let(:awaiting_responder_case) { create(:awaiting_responder_case,
-                                         responding_team: responding_team)
-                                    .decorate }
+  let(:unflagged_case) { create(:case,
+                                responding_team: responding_team)
+                             .decorate }
 
   before do
     allow(request).to receive(:filtered_parameters).and_return({})
@@ -42,6 +42,8 @@ describe 'cases/index.html.slim', type: :view do
     login_as responder
     assigned_case
     accepted_case
+    unflagged_case
+
     assign(:cases, PaginatingDecorator.new(Case.all.page.order(:number)))
     assign(:state_selector, StateSelector.new( {} ))
 
@@ -52,6 +54,7 @@ describe 'cases/index.html.slim', type: :view do
 
     first_case = cases_page.case_list[0]
     expect(first_case.number.text).to eq "Link to case #{assigned_case.number}"
+    expect(first_case.type.text).to eq "This is a Trigger case"
     expect(first_case.request_detail.text)
       .to eq assigned_case.subject + assigned_case.name
     expect(first_case.draft_deadline.text).to eq assigned_case.internal_deadline
@@ -69,6 +72,17 @@ describe 'cases/index.html.slim', type: :view do
       .to eq accepted_case.external_deadline
     expect(second_case.status.text).to eq accepted_case.status
     expect(second_case.who_its_with.text).to eq accepted_case.who_its_with
+
+    third_case = cases_page.case_list[2]
+    expect(third_case.number.text).to eq "Link to case #{unflagged_case.number}"
+    expect(third_case.type.text).to eq " "
+    expect(third_case.request_detail.text)
+      .to eq unflagged_case.subject + unflagged_case.name
+    expect(third_case.draft_deadline.text).to eq ' '
+    expect(third_case.external_deadline.text)
+      .to eq unflagged_case.external_deadline
+    expect(third_case.status.text).to eq unflagged_case.status
+    expect(third_case.who_its_with.text).to eq unflagged_case.who_its_with
   end
 
   describe 'add case button' do

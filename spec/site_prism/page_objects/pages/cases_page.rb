@@ -26,6 +26,7 @@ module PageObjects
       section :user_card, PageObjects::Sections::UserCardSection, '.user-card'
       sections :case_list, '.case_row' do
         element :number, 'td[aria-label="Case number"]'
+        element :type, 'td[aria-label="Type"]'
         element :request_detail, 'td[aria-label="Request detail"]'
         element :draft_deadline, 'td[aria-label="Draft deadline"]'
         element :external_deadline, 'td[aria-label="Final deadline"]'
