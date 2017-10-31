@@ -483,13 +483,6 @@ class Cases::FOIStateMachine
     NotifyResponderService.new(kase, mail_type).call
   end
 
-<<<<<<< HEAD
-  private
-
-<<<<<<< HEAD
-=======
-=======
->>>>>>> CT-1185 adds notifications for a message received on a case
   def ready_to_send?(kase)
     kase.current_state == "awaiting_dispatch"
   end
@@ -502,7 +495,6 @@ class Cases::FOIStateMachine
     Pundit.policy!(self.object)
   end
 
->>>>>>> CT-1185 adds functionality for new mail types
   def approve_or_escalate_case_for_team(team, next_event)
     if team.in? object.approving_teams
       next_event
