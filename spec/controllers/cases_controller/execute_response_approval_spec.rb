@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe CasesController, type: :controller do
-  let(:responded_trigger_case) { create :case_with_response, :flagged_accepted }
+  let(:responded_trigger_case) { create :pending_dacu_clearance_case }
   let(:approver)               { responded_trigger_case.approvers.first }
   let(:service)                { instance_double(CaseApprovalService,
                                                  call: true,

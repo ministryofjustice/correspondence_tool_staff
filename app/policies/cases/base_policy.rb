@@ -230,7 +230,8 @@ module Cases
 
     def execute_response_approval?
       clear_failed_checks
-      check_user_is_an_approver_for_case
+      check_user_is_an_approver_for_case &&
+        check_can_trigger_event(:approve)
     end
 
     def unflag_for_clearance_from_unassigned_to_unassigned?
