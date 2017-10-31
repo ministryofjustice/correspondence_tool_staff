@@ -51,7 +51,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
     set_template(find_template(type))
     set_personalisation(
-        email_subject:          format_subject(kase),
+        email_subject:          format_subject_type(kase, type),
         responder_full_name:    recipient.full_name,
         case_current_state:     I18n.t("state.#{kase.current_state}").downcase,
         case_number:            kase.number,
@@ -67,7 +67,6 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     mail(to: recipient.email)
   end
 
-
   private
 
   def format_subject(kase)
@@ -75,11 +74,18 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     "#{I18n.t(translation_key)} - #{kase.category.abbreviation} - #{kase.number} - #{kase.subject}"
   end
 
+  def format_subject_type(kase, type)
+    "#{type} - #{kase.category.abbreviation} - #{kase.number} - #{kase.subject}"
+  end
+
   def find_template(type)
-    if type == 'ready_to_send'
+    case type
+    when 'Ready to send'
       Settings.case_ready_to_send_notify_template
-    elsif type == 'redraft'
+    when 'Redraft requested'
       Settings.redraft_requested_notify_template
+    when 'Message received'
+      Settings.message_received_notify_template
     end
   end
 end

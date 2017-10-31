@@ -70,10 +70,17 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
                              responder: responder,
                              responding_team: responding_team }
 
+  let(:approved_case)   { create :approved_case }
   let(:pending_dacu_clearance_case)    { create :pending_dacu_clearance_case }
   let(:pending_private_clearance_case) { create :pending_private_clearance_case }
   let(:disclosure_specialist)          { create :disclosure_specialist }
   let(:team_dacu_disclosure)           { find_or_create :team_dacu_disclosure }
+
+  let!(:service) do
+    double(NotifyResponderService, call: true).tap do |svc|
+      allow(NotifyResponderService).to receive(:new).and_return(svc)
+    end
+  end
 
   context 'after transition' do
     let(:t1) { Time.now }
@@ -551,7 +558,7 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
 
   describe 'trigger add_message_to_case!' do
 
-    let(:user) { responded_case.responder }
+    let(:user)      { responded_case.responder }
     let(:team)      { responded_case.responding_team }
 
     it 'triggers the event' do
@@ -577,7 +584,30 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
       expect(transition.acting_user_id).to eq case_being_drafted.responder.id
       expect(transition.message).to eq 'This is my message to you all'
     end
+
+    context 'user sending message is the resonder' do
+      it ' does not call the notify responder service' do
+        case_being_drafted.state_machine.add_message_to_case!(
+          user, team, 'This is my message to you all')
+        expect(NotifyResponderService)
+          .not_to have_received(:new).with(case_being_drafted, 'Message received')
+        expect(service).not_to have_received(:call)
+      end
+    end
+
+    context 'user sending message is not the responder' do
+      let(:user)      { find_or_create :manager }
+      let(:team)      { responded_case.managing_team }
+      it 'calls the notify responder service' do
+        case_being_drafted.state_machine.add_message_to_case!(
+          user, team, 'This is my message to you all')
+        expect(NotifyResponderService)
+          .to have_received(:new).with(case_being_drafted, 'Message received')
+        expect(service).to have_received(:call)
+      end
+    end
   end
+
 
   context 'dacu disclosure approvals' do
     let(:kase) { pending_dacu_clearance_case }
@@ -597,6 +627,13 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
           acting_team_id: team_id
         )
       end
+      it 'calls the notify responder service' do
+        state_machine.approve!(approver, kase.approver_assignments.first)
+        expect(NotifyResponderService)
+          .to have_received(:new).with(kase, 'Ready to send')
+        expect(service).to have_received(:call)
+      end
+
     end
 
     describe 'trigger upload_response_and_approve!' do
@@ -612,6 +649,14 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
           message: 'Uploading....'
         )
       end
+      it 'calls the notify responder service' do
+        state_machine.upload_response_and_approve!(approver,
+                                                   kase.approving_teams.first,
+                                                   filenames)
+        expect(NotifyResponderService)
+          .to have_received(:new).with(kase, 'Ready to send')
+        expect(service).to have_received(:call)
+      end
     end
 
     describe 'trigger upload_response_and_return_for_redraft!' do
@@ -626,6 +671,14 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
           filenames: filenames,
           message: 'Uploading....'
         )
+      end
+      it 'calls the notify responder service' do
+        state_machine.upload_response_and_return_for_redraft!(approver,
+                                                   kase.approving_teams.first,
+                                                   filenames)
+        expect(NotifyResponderService)
+          .to have_received(:new).with(kase, 'Redraft requested')
+        expect(service).to have_received(:call)
       end
     end
   end
@@ -748,33 +801,5 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
                )
       end
     end
-  end
-
-  describe '#notify_kilo_case_is_ready_to_send' do
-    let(:approved_case)   { create :approved_case }
-    let(:kase)            { create :case }
-    let!(:service) do
-      double(NotifyResponderService, call: true).tap do |svc|
-        allow(NotifyResponderService).to receive(:new).and_return(svc)
-      end
-    end
-
-    context 'case state is awaiting_dispatch' do
-      it 'calls the service' do
-        approved_case.state_machine.notify_responder(approved_case, 'ready_to_send')
-        expect(NotifyResponderService)
-          .to have_received(:new).with(approved_case, 'ready_to_send')
-        expect(service).to have_received(:call)
-      end
-    end
-# TODO move this logic to the method that triggers the event
-    # context 'case state is not awaiting_dispatch' do
-    #   it 'does not calls the service' do
-    #     new_case.state_machine.notify_responder(new_case, 'ready_to_send')
-    #     expect(NotifyResponderService)
-    #       .not_to have_received(:new).with(new_case)
-    #     expect(service).not_to have_received(:call)
-    #   end
-    # end
   end
 end
