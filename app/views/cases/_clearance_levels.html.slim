@@ -21,7 +21,8 @@
               td.clearance-actions = show_remove_clearance_link(case_details)
 
           - case_details.non_default_approver_assignments.each do |assignment|
-            tr.non-default-approvers
-              th = assignment.team.name
+            tr class="non-default-approvers #{ assignment.team.name.parameterize}"
+              th
+                = assignment.team.name
               td colspan=2
                 = assignment.user&.full_name

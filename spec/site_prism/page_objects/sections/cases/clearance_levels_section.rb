@@ -19,6 +19,16 @@ module PageObjects
             element :department_name, 'th'
             element :approver_name, 'td'
           end
+
+          section :press_office, 'tr.press-office' do
+            element :department_name, 'th'
+            element :approver_name, 'td'
+          end
+
+          section :private_office, 'tr.private-office' do
+            element :department_name, 'th'
+            element :approver_name, 'td'
+          end
         end
       end
     end

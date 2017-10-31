@@ -92,11 +92,11 @@ describe 'cases/clearance_details.html.slim', type: :view do
         expect(partial.dacu_disclosure.text).to include 'Dack Dispirito'
         expect(partial.dacu_disclosure.text).not_to include 'Remove clearance'
 
-        approver_dets = partial.non_default_approvers[0]
+        approver_dets = partial.press_office
         expect(approver_dets.department_name.text).to eq 'Press Office'
         expect(approver_dets.approver_name.text).to eq 'Alistair Campbell'
 
-        approver_dets = partial.non_default_approvers[1]
+        approver_dets = partial.private_office
         expect(approver_dets.department_name.text).to eq 'Private Office'
         expect(approver_dets.approver_name.text).to eq 'Prince Johns'
       end
