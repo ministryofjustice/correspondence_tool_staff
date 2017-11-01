@@ -48,7 +48,6 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     RavenContextProvider.set_context
 
     recipient = kase.responder_assignment.user
-
     find_template(type)
 
     set_personalisation(
@@ -64,6 +63,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
         case_link:              case_url(kase.id),
         case_draft_deadline:    kase.internal_deadline.strftime(Settings.default_date_format)
     )
+
     mail(to: recipient.email)
   end
 
@@ -80,10 +80,10 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
   def find_template(type)
     case type
-    when 'Ready to send'
-      set_template(Settings.case_ready_to_send_notify_template)
     when 'Redraft requested'
       set_template(Settings.redraft_requested_notify_template)
+    when 'Ready to send'
+      set_template(Settings.case_ready_to_send_notify_template)
     when 'Message received'
       set_template(Settings.message_received_notify_template)
     end

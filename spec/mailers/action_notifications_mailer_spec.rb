@@ -125,9 +125,23 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       it 'personalises the email' do
         allow(CaseNumberCounter).to receive(:next_for_date).and_return(333)
         expect(mail.govuk_notify_personalisation)
-          .to include(email_subject: "Redraft requested - FOI - #{approved_case.number} - The anatomy of man")
+          .to eq({
+           email_subject:
+             "Redraft requested - FOI - #{approved_case.number} - The anatomy of man",
+           responder_full_name: assignment.user.full_name,
+           case_current_state: 'ready to send',
+           case_number: approved_case.number,
+           case_abbr: 'FOI',
+           case_name: 'Fyodor Ognievich Ilichion',
+           case_received_date: 10.business_days.ago.to_date.strftime(Settings.default_date_format),
+           case_subject: 'The anatomy of man',
+           case_link: case_url(approved_case.id),
+           case_draft_deadline: approved_case.internal_deadline.strftime(Settings.default_date_format),
+           case_external_deadline: approved_case.external_deadline.strftime(Settings.default_date_format)
+           })
       end
     end
+
     context 'message' do
       let(:mail) { described_class.notify_information_officers(approved_case, 'Message received')}
       it 'sets the template' do
