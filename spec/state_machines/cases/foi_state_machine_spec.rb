@@ -591,7 +591,6 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
           user, team, 'This is my message to you all')
         expect(NotifyResponderService)
           .not_to have_received(:new).with(case_being_drafted, 'Message received')
-        expect(service).not_to have_received(:call)
       end
     end
 
@@ -672,6 +671,7 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
           message: 'Uploading....'
         )
       end
+
       it 'calls the notify responder service' do
         state_machine.upload_response_and_return_for_redraft!(approver,
                                                    kase.approving_teams.first,

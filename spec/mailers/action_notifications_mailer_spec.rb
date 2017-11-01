@@ -111,43 +111,36 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
 
     context 'ready to send' do
       let(:mail) { described_class.notify_information_officers(approved_case, 'Ready to send')}
+
       it 'sets the template' do
         expect(mail.govuk_notify_template)
           .to eq '46dc4848-5ad7-4772-9de4-dd6b6f558e5b'
       end
     end
+
     context 'redraft' do
       let(:mail) { described_class.notify_information_officers(approved_case, 'Redraft requested')}
+
       it 'sets the template' do
         expect(mail.govuk_notify_template)
           .to eq '534f0e07-007f-4a48-99e4-c46a41fbd81f'
       end
+
       it 'personalises the email' do
         allow(CaseNumberCounter).to receive(:next_for_date).and_return(333)
         expect(mail.govuk_notify_personalisation)
-          .to eq({
-           email_subject:
-             "Redraft requested - FOI - #{approved_case.number} - The anatomy of man",
-           responder_full_name: assignment.user.full_name,
-           case_current_state: 'ready to send',
-           case_number: approved_case.number,
-           case_abbr: 'FOI',
-           case_name: 'Fyodor Ognievich Ilichion',
-           case_received_date: 10.business_days.ago.to_date.strftime(Settings.default_date_format),
-           case_subject: 'The anatomy of man',
-           case_link: case_url(approved_case.id),
-           case_draft_deadline: approved_case.internal_deadline.strftime(Settings.default_date_format),
-           case_external_deadline: approved_case.external_deadline.strftime(Settings.default_date_format)
-           })
+          .to include(email_subject: "Redraft requested - FOI - #{approved_case.number} - The anatomy of man")
       end
     end
 
     context 'message' do
       let(:mail) { described_class.notify_information_officers(approved_case, 'Message received')}
+      
       it 'sets the template' do
         expect(mail.govuk_notify_template)
           .to eq '55d7abbc-9042-4646-8835-35a1b2e432c4'
       end
+
       it 'personalises the email' do
         allow(CaseNumberCounter).to receive(:next_for_date).and_return(333)
         expect(mail.govuk_notify_personalisation)

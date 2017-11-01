@@ -1,5 +1,7 @@
 class NotifyResponderService
+
   attr_reader :result, :case
+  
   def initialize(kase, mail_type)
     @case = kase
     @result = :incomplete
