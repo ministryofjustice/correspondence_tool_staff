@@ -208,6 +208,19 @@ module Stats
       end
     end
 
+    context 'with a case in the db that is unassigned' do
+      before do
+        Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
+          create :case, identifier: 'unassigned case'
+        end
+      end
+
+      it 'does not raise an error' do
+        report = R003BusinessUnitPerformanceReport.new
+        expect { report.run }.not_to raise_error
+      end
+    end
+
     # rubocop:disable Metrics/ParameterLists
     def create_case(received:, responded:, deadline:, team:, responder:, ident:, flagged: false)
       received_date = Date.parse(received)
@@ -231,7 +244,6 @@ module Stats
       kase
     end
     # rubocop:enable Metrics/ParameterLists
-
 
   end
 end
