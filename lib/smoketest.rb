@@ -109,7 +109,7 @@ class Smoketest
 
     case_link    = selected_row.at_css('a')
     @case_number  = case_link.text
-    @case_summary = selected_row.at_css('td[2] strong').text
+    @case_summary = selected_row.at_css('td[aria-label="Request detail"] strong').text
 
     response = @agent.click(case_link)
 
