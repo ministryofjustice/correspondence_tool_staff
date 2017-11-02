@@ -474,7 +474,7 @@ class Cases::FOIStateMachine
              acting_team_id:    team.id,
              message:           message,
              event:             :add_message_to_case
-    notify_responder(object, 'Message received') unless message_sent_by_responder?(user, object)
+    notify_responder(object, 'Message received') if message_not_sent_by_responder?(user, object) && case_has_responder(object)
   end
 
   private
@@ -487,8 +487,12 @@ class Cases::FOIStateMachine
     kase.current_state == "awaiting_dispatch"
   end
 
-  def message_sent_by_responder?(user, kase)
-    user == kase.responder_assignment.user
+  def message_not_sent_by_responder?(user, kase)
+    !(user == kase.responder_assignment.user)
+  end
+
+  def case_has_responder(kase)
+    kase.responder_assignment.user.present?
   end
 
   def get_policy

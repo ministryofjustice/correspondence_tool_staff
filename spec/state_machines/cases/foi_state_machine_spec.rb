@@ -605,6 +605,17 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
         expect(service).to have_received(:call)
       end
     end
+    context 'case has not been accepted' do
+      let(:kase)      { create :awaiting_responder_case }
+      let(:user)      { find_or_create :manager }
+      let(:team)      { responded_case.managing_team }
+      it ' does not call the notify responder service' do
+        kase.state_machine.add_message_to_case!(
+          user, team, 'This is my message to you all')
+        expect(NotifyResponderService)
+          .not_to have_received(:new).with(kase, 'Message received')
+      end
+    end
   end
 
 
