@@ -487,7 +487,7 @@ class Cases::FOIStateMachine
     kase.current_state == "awaiting_dispatch"
   end
 
-  def send_email?(user, kase)
+  def able_to_send?(user, kase)
     message_not_sent_by_responder?(user, kase) && case_has_responder(kase)
   end
 
