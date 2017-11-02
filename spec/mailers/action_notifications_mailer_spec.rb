@@ -22,7 +22,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       expect(mail.govuk_notify_personalisation)
         .to eq({
                  email_subject:
-                   "#{assigned_case.number} - FOI - The anatomy of man - To be accepted",
+                 "To be accepted - FOI - #{assigned_case.number} - The anatomy of man",
                  team_name: assignment.team.name,
                  case_current_state: 'to be accepted',
                  case_number: assigned_case.number,
@@ -59,7 +59,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       expect(mail.govuk_notify_personalisation)
         .to eq({
                  email_subject:
-                   "#{pending_case.number} - FOI - The anatomy of man - Pending clearance",
+                 "Pending clearance - FOI - #{pending_case.number} - The anatomy of man",
                  approver_full_name: approver.full_name,
                  case_number: pending_case.number,
                  case_subject: 'The anatomy of man',
@@ -84,19 +84,14 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
     let(:assignment)      { approved_case.responder_assignment }
     let(:responding_team) { assignment.team }
     let(:responder)       { responding_team.responders.first }
-    let(:mail)            { described_class.notify_information_officers(approved_case)}
-
-    it 'sets the template' do
-      expect(mail.govuk_notify_template)
-        .to eq '46dc4848-5ad7-4772-9de4-dd6b6f558e5b'
-    end
+    let(:mail)            { described_class.notify_information_officers(approved_case, 'Ready to send')}
 
     it 'personalises the email' do
       allow(CaseNumberCounter).to receive(:next_for_date).and_return(333)
       expect(mail.govuk_notify_personalisation)
         .to eq({
          email_subject:
-           "#{approved_case.number} - FOI - The anatomy of man - Ready to send",
+           "Ready to send - FOI - #{approved_case.number} - The anatomy of man",
          responder_full_name: assignment.user.full_name,
          case_current_state: 'ready to send',
          case_number: approved_case.number,
@@ -112,6 +107,45 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
 
     it 'sets the To address of the email using the provided user' do
       expect(mail.to).to include assignment.user.email
+    end
+
+    context 'ready to send' do
+      let(:mail) { described_class.notify_information_officers(approved_case, 'Ready to send')}
+
+      it 'sets the template' do
+        expect(mail.govuk_notify_template)
+          .to eq '46dc4848-5ad7-4772-9de4-dd6b6f558e5b'
+      end
+    end
+
+    context 'redraft' do
+      let(:mail) { described_class.notify_information_officers(approved_case, 'Redraft requested')}
+
+      it 'sets the template' do
+        expect(mail.govuk_notify_template)
+          .to eq '534f0e07-007f-4a48-99e4-c46a41fbd81f'
+      end
+
+      it 'personalises the email' do
+        allow(CaseNumberCounter).to receive(:next_for_date).and_return(333)
+        expect(mail.govuk_notify_personalisation)
+          .to include(email_subject: "Redraft requested - FOI - #{approved_case.number} - The anatomy of man")
+      end
+    end
+
+    context 'message' do
+      let(:mail) { described_class.notify_information_officers(approved_case, 'Message received')}
+      
+      it 'sets the template' do
+        expect(mail.govuk_notify_template)
+          .to eq '55d7abbc-9042-4646-8835-35a1b2e432c4'
+      end
+
+      it 'personalises the email' do
+        allow(CaseNumberCounter).to receive(:next_for_date).and_return(333)
+        expect(mail.govuk_notify_personalisation)
+          .to include(email_subject: "Message received - FOI - #{approved_case.number} - The anatomy of man")
+      end
     end
   end
 end

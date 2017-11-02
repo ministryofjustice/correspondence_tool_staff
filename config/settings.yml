@@ -31,6 +31,8 @@ new_assignment_notify_template: '6f4d8e34-96cb-482c-9428-a5c1d5efa519'
 ready_for_approver_review_notify_template: 'fe9a1e2a-2707-4e10-bb63-aae142f10382'
 reset_password_instructions_notify_template: '705029c9-d7e4-47a6-a963-944cb6d6b09c'
 case_ready_to_send_notify_template: '46dc4848-5ad7-4772-9de4-dd6b6f558e5b'
+redraft_requested_notify_template: '534f0e07-007f-4a48-99e4-c46a41fbd81f'
+message_received_notify_template: '55d7abbc-9042-4646-8835-35a1b2e432c4'
 
 foi_cases:
   default_managing_team: DISCLOSURE-BMT

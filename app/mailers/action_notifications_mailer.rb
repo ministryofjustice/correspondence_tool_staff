@@ -44,14 +44,14 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     mail(to: recipient.email)
   end
 
-  def notify_information_officers(kase)
+  def notify_information_officers(kase, type)
     RavenContextProvider.set_context
 
     recipient = kase.responder_assignment.user
+    find_template(type)
 
-    set_template(Settings.case_ready_to_send_notify_template)
     set_personalisation(
-        email_subject:          format_subject(kase),
+        email_subject:          format_subject_type(kase, type),
         responder_full_name:    recipient.full_name,
         case_current_state:     I18n.t("state.#{kase.current_state}").downcase,
         case_number:            kase.number,
@@ -67,12 +67,25 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     mail(to: recipient.email)
   end
 
-
   private
 
   def format_subject(kase)
     translation_key = "state.#{kase.current_state}"
-    "#{kase.number} - #{kase.category.abbreviation} - #{kase.subject} - #{I18n.t(translation_key)}"
+    "#{I18n.t(translation_key)} - #{kase.category.abbreviation} - #{kase.number} - #{kase.subject}"
   end
 
+  def format_subject_type(kase, type)
+    "#{type} - #{kase.category.abbreviation} - #{kase.number} - #{kase.subject}"
+  end
+
+  def find_template(type)
+    case type
+    when 'Redraft requested'
+      set_template(Settings.redraft_requested_notify_template)
+    when 'Ready to send'
+      set_template(Settings.case_ready_to_send_notify_template)
+    when 'Message received'
+      set_template(Settings.message_received_notify_template)
+    end
+  end
 end
