@@ -605,6 +605,7 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
         expect(service).to have_received(:call)
       end
     end
+    
     context 'case has not been accepted' do
       let(:kase)      { create :awaiting_responder_case }
       let(:user)      { find_or_create :manager }

@@ -474,7 +474,7 @@ class Cases::FOIStateMachine
              acting_team_id:    team.id,
              message:           message,
              event:             :add_message_to_case
-    notify_responder(object, 'Message received') if message_not_sent_by_responder?(user, object) && case_has_responder(object)
+    notify_responder(object, 'Message received') if able_to_send?(user, object)
   end
 
   private
@@ -485,6 +485,10 @@ class Cases::FOIStateMachine
 
   def ready_to_send?(kase)
     kase.current_state == "awaiting_dispatch"
+  end
+
+  def send_email?(user, kase)
+    message_not_sent_by_responder?(user, kase) && case_has_responder(kase)
   end
 
   def message_not_sent_by_responder?(user, kase)
