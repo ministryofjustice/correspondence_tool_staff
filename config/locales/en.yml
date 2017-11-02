@@ -437,10 +437,14 @@ en:
       team_members: Team members
       new_team_member: New team member
 #      new_responder_user: New Information Officer
+    business_group_detail:
+      destroy: 'You sure?'
     edit:
       edit: Edit %{team_type}
     new:
       new: New %{team_type}
+    index:
+      destroy: 'You sure?'
 
   users:
     index:
