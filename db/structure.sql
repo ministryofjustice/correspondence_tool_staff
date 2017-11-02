@@ -546,7 +546,8 @@ CREATE TABLE teams (
     type character varying,
     parent_id integer,
     role character varying,
-    code character varying
+    code character varying,
+    deleted_at timestamp without time zone
 );
 
 
@@ -1211,9 +1212,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171003080427'),
 ('20171003153752'),
 ('20171013134445'),
+<<<<<<< HEAD
 ('20171023134233'),
 ('20171023142558'),
 ('20171025142614'),
 ('20171027112328');
 
 
+=======
+('20171101171629');
+('20171013134445');
+>>>>>>> CT-1106 adds team deletion service

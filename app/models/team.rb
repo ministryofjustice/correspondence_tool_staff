@@ -98,4 +98,8 @@ class Team < ApplicationRecord
   def active_users
     users.where(deleted_at: nil)
   end
+
+  def has_active_children?
+
+  end
 end

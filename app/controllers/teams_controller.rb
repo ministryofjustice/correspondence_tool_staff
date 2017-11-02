@@ -120,6 +120,22 @@ class TeamsController < ApplicationController
     end
   end
 
+  def destroy
+    authorize @user
+    service = TeamDeletionService.new(params)
+    team = Team.find(params[:id])
+    service.call
+    case service.result
+    when :ok
+      flash[:notice] = "it worked"
+    when :has_live_cases
+      flash[:alert] = "active Children"
+    else
+      flash[:alert] = "didn't work"
+    end
+    redirect_to team_path(team.parent_id)
+  end
+
   private
 
   def team_params
