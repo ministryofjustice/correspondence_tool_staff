@@ -541,7 +541,8 @@ CREATE TABLE teams (
     type character varying,
     parent_id integer,
     role character varying,
-    code character varying
+    code character varying,
+    deleted_at timestamp without time zone
 );
 
 
@@ -1205,6 +1206,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170925142730'),
 ('20171003080427'),
 ('20171003153752'),
+('20171013134445'),
+('20171101171629');
 ('20171013134445');
-
-
