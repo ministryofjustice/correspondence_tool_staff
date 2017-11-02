@@ -57,6 +57,10 @@ module CasesHelper
               close_case_path(@case),
               id: 'action--close-case',
               class: 'button', method: :get
+    when :extend_for_pit
+      link_to I18n.t('common.case.extend_for_pit'),
+              extend_for_pit_case_path(@case),
+              id: 'action--extend-for-pit'
     end
   end
   #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength

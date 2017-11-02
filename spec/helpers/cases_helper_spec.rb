@@ -93,6 +93,16 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
       end
     end
 
+    context 'when event == :extend_for_pit' do
+      it 'generates HTML that links to the extend-for-pit action' do
+        @case = create(:accepted_case)
+        @assignment = @case.responder_assignment
+        expect(action_button_for(:extend_for_pit))
+          .to eq "<a id=\"action--extend-for-pit\" " +
+                 "href=\"/cases/#{@case.id}/extend_for_pit\">" +
+                 "Extend for Public Interest Test</a>"
+      end
+    end
   end
 
   describe '#case_uploaded_request_files_class' do

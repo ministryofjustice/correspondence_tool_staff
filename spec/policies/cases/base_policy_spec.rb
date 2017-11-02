@@ -633,4 +633,13 @@ describe Cases::BasePolicy do
     it { should_not permit(press_officer,         kase) }
     it { should_not permit(private_officer,       kase) }
   end
+
+  permissions :execute_extend_for_pit? do
+    it { should_not permit(responder,             accepted_case) }
+    it { should     permit(manager,               accepted_case) }
+    it { should_not permit(disclosure_specialist, accepted_case) }
+    it { should_not permit(press_officer,         accepted_case) }
+    it { should_not permit(private_officer,       accepted_case) }
+  end
+
 end

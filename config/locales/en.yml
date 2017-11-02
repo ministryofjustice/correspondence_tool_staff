@@ -266,6 +266,7 @@ en:
         Download <span class="visuallyhidden">file %{filename}.</span>
       email: "Requesters email"
       exemptions_heading: Exemptions
+      extend_for_pit: Extend for Public Interest Test
       external_deadline: Final deadline
       internal_deadline: Draft deadline
       filename: File name

@@ -23,6 +23,7 @@ module PageObjects
           element :upload_redraft, '#action--upload-redraft'
           element :reassign_user, '#action--reassign-case'
         end
+        element :extend_for_pit_action, '#action--extend-for-pit'
 
         section :case_status,
                 PageObjects::Sections::Cases::CaseStatusSection, '.case-status'

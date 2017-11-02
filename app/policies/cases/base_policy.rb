@@ -373,6 +373,12 @@ module Cases
         check_case_is_not_assigned_to_private_office
     end
 
+    def execute_extend_for_pit?
+      clear_failed_checks
+
+      check_user_is_a_manager_for_case
+    end
+
     private
 
     check :user_in_responding_team do
@@ -395,6 +401,10 @@ module Cases
 
     check :user_is_assigned_manager_for_case do
       user == self.case.manager
+    end
+
+    check :user_is_a_manager_for_case do
+      user.in? self.case.managing_team.users
     end
 
     check :user_is_an_approver do
