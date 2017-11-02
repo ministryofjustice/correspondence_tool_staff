@@ -100,6 +100,6 @@ class Team < ApplicationRecord
   end
 
   def has_active_children?
-
+    users.has_live_cases?
   end
 end

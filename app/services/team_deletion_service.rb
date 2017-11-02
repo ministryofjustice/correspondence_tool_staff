@@ -8,12 +8,13 @@ class TeamDeletionService
   end
 
   def call
-    # if @team.has_active_children?
-    #   @result = :has_live_children
-    # else
+    if @team.has_active_children?
+      @result = :has_live_children
+    else
       update_name
+      soft_delete
       @result = :ok
-    # end
+    end
   end
 
   private

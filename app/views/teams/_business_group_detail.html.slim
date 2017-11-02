@@ -40,7 +40,7 @@ h2.heading-medium
               = link_to 'Edit', edit_team_path(team, team_type: 'dir'), { class: 'action--edit' }
               br
               = link_to "Deactivate", team_path(team.id),
-                  #data: {:confirm => t('.destroy')},
+                  data: {:confirm => t('.destroy')},
                   method: :delete,
                   id: 'deactivate-user-button'
 

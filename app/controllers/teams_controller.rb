@@ -128,12 +128,16 @@ class TeamsController < ApplicationController
     case service.result
     when :ok
       flash[:notice] = "it worked"
-    when :has_live_cases
+    when :has_active_children
       flash[:alert] = "active Children"
     else
       flash[:alert] = "didn't work"
     end
-    redirect_to team_path(team.parent_id)
+    if team.type = 'Business Group'
+      redirect_to teams_path
+    else
+      redirect_to team_path(team.parent_id)
+    end
   end
 
   private
