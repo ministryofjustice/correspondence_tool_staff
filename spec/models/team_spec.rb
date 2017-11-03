@@ -268,4 +268,29 @@ RSpec.describe Team, type: :model do
       end
     end
   end
+
+  describe '#has_active_children?' do
+    let(:dir) { create :dacu_directorate }
+    context 'a directorate has active children' do
+      let!(:bu) { create(:team_dacu,
+                          directorate: dir) }
+      it 'returns true' do
+        expect(dir.has_active_children?).to be true
+      end
+    end
+
+    context 'a directorate has no children' do
+      it 'returns false' do
+        expect(dir.has_active_children?).to be false
+      end
+    end
+
+    context 'a directorate has deactived children' do
+      let!(:bu) { create(:deactivated_team,
+                          directorate: dir) }
+      it 'returns false' do
+        expect(dir.has_active_children?).to be false
+      end
+    end
+  end
 end
