@@ -61,7 +61,7 @@ class Case < ApplicationRecord
 
   attr_accessor :message_text
 
-  acts_as_gov_uk_date :received_date, :date_responded,
+  acts_as_gov_uk_date :received_date, :date_responded, :external_deadline,
                       validate_if: :received_in_acceptable_range?
 
   scope :by_deadline, -> {order("(properties ->> 'external_deadline')::timestamp with time zone ASC, cases.id") }

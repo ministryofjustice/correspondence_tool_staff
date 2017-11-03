@@ -48,7 +48,7 @@ FactoryGirl.define do
 
     factory :disclosure_bmt_user do
       full_name      { generate :disclosure_bmt_user_name }
-      managing_teams { [create(:team_dacu)] }
+      managing_teams { [find_or_create(:team_dacu)] }
     end
 
     factory :responder do

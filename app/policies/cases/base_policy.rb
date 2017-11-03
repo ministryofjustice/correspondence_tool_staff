@@ -376,7 +376,8 @@ module Cases
     def execute_extend_for_pit?
       clear_failed_checks
 
-      check_user_is_a_manager_for_case
+      check_user_is_a_manager_for_case &&
+        check_can_trigger_event(:extend_for_pit)
     end
 
     private

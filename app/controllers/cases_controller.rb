@@ -8,6 +8,8 @@ class CasesController < ApplicationController
       :confirm_destroy,
       :execute_response_approval,
       :execute_request_amends,
+      :execute_extend_for_pit,
+      :extend_for_pit,
       :flag_for_clearance,
       :new_response_upload,
       :process_closure,
@@ -305,6 +307,35 @@ class CasesController < ApplicationController
     redirect_to cases_path
   end
 
+  def extend_for_pit
+    authorize @case, :execute_extend_for_pit?
+    @case.instance_eval do
+      # to satisfy the form's requirement for a method of this name
+      define_singleton_method(:reason_for_extending) {}
+    end
+    @case.external_deadline = nil
+  end
+
+  def execute_extend_for_pit
+    authorize @case
+    new_external_deadline = Date.new params[:case][:external_deadline_yyyy].to_i,
+                                     params[:case][:external_deadline_mm].to_i,
+                                     params[:case][:external_deadline_dd].to_i
+    cefps = CaseExtendForPitService.new current_user,
+                                        @case,
+                                        new_external_deadline,
+                                        params[:case][:reason_for_extending]
+    result = cefps.call
+
+    if result == :ok
+      flash[:notice] = 'Case extended for Public Interest Test (PIT)'
+      redirect_to case_path(@case.id)
+    else
+      flash[:alert] = "Unable to perform PIT extension on case #{@case.number}"
+      redirect_to case_path(@case.id)
+    end
+  end
+
   private
 
   def set_permitted_events
@@ -342,6 +373,14 @@ class CasesController < ApplicationController
   def edit_params
     params.require(:case).permit(
       :category_id
+    )
+  end
+
+  def extend_for_pit_params
+    params.require(:case).permit(
+      :external_deadline_dd,
+      :external_deadline_mm,
+      :external_deadline_yyyy
     )
   end
 

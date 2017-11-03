@@ -31,6 +31,7 @@ module PageObjects
         cases_show:                     'Cases::ShowPage',
         closed_cases:                   'Cases::ClosedCasesPage',
         confirm_destroy:                'Cases::ConfirmDestroyPage',
+        cases_extend_for_pit:           'Cases::ExtendForPITPage',
         global_nav_partial:             'Partials::GlobalNavPartial',
         header_partial:                 'Partials::HeaderPartial',
         incoming_cases:                 'Cases::IncomingCasesPage',
