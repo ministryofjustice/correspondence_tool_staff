@@ -492,11 +492,11 @@ class Cases::FOIStateMachine
   end
 
   def message_not_sent_by_responder?(user, kase)
-    user != kase.responder_assignment.user
+    user != kase.responder_assignment&.user
   end
 
   def case_has_responder(kase)
-    kase.responder_assignment.user.present?
+    kase.responder_assignment&.user.present?
   end
 
   def get_policy
