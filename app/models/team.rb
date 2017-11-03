@@ -33,6 +33,9 @@ class Team < ApplicationRecord
       .order(:name)
   }
 
+  scope :active, ->{ where(deleted_at: nil)}
+
+
   def self.hierarchy
     result_set = []
     BusinessGroup.order(:name).each do |bg|
@@ -100,6 +103,6 @@ class Team < ApplicationRecord
   end
 
   def has_active_children?
-    users.has_live_cases?
+    children.active.any?
   end
 end
