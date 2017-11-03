@@ -19,7 +19,7 @@ module Stats
     end
 
     def self.title
-      'Cabinet Office Report'
+      'Cabinet office report'
     end
 
     def self.description

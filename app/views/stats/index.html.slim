@@ -9,7 +9,7 @@ table
       td
         strong
           = report_class.title
-        br
-        = report_class.description
-      td = link_to 'Generate and Download', stats_download_path(report_id: report_id), class: 'button', target: '_blank'
+
+      td.action-right-aligned
+         = link_to 'Download', stats_download_path(report_id: report_id), target: '_blank'
 

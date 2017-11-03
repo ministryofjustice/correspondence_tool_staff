@@ -2,6 +2,49 @@ module Stats
 
   class CaseAnalyser
 
+    COMMON_COLUMNS = {
+      non_trigger_performance:         'Performance %',
+      non_trigger_total:               'Total received',
+      non_trigger_responded_in_time:   'Responded - in time',
+      non_trigger_responded_late:      'Responded - late',
+      non_trigger_open_in_time:        'Open - in time',
+      non_trigger_open_late:           'Open - late',
+      trigger_performance:             'Performance %',
+      trigger_total:                   'Total received',
+      trigger_responded_in_time:       'Responded - in time',
+      trigger_responded_late:          'Responded - late',
+      trigger_open_in_time:            'Open - in time',
+      trigger_open_late:               'Open - late',
+      overall_performance:             'Performance %',
+      overall_total:                   'Total received',
+      overall_responded_in_time:       'Responded - in time',
+      overall_responded_late:          'Responded - late',
+      overall_open_in_time:            'Open - in time',
+      overall_open_late:               'Open - late',
+    }.freeze
+
+    COMMON_SUPERHEADINGS = {
+      non_trigger_performance:         'Non-trigger FOIs',
+      non_trigger_total:               'Non-trigger FOIs',
+      non_trigger_responded_in_time:   'Non-trigger FOIs',
+      non_trigger_responded_late:      'Non-trigger FOIs',
+      non_trigger_open_in_time:        'Non-trigger FOIs',
+      non_trigger_open_late:           'Non-trigger FOIs',
+      trigger_performance:             'Trigger FOIs',
+      trigger_total:                   'Trigger FOIs',
+      trigger_responded_in_time:       'Trigger FOIs',
+      trigger_responded_late:          'Trigger FOIs',
+      trigger_open_in_time:            'Trigger FOIs',
+      trigger_open_late:               'Trigger FOIs',
+      overall_performance:             'Overall',
+      overall_total:                   'Overall',
+      overall_responded_in_time:       'Overall',
+      overall_responded_late:          'Overall',
+      overall_open_in_time:            'Overall',
+      overall_open_late:               'Overall',
+
+    }.freeze
+
     def initialize(kase)
       @kase = kase
       @result = nil
@@ -15,14 +58,6 @@ module Stats
     private
 
     def analyse_case
-      if @kase.unassigned?
-        @result = :unassigned
-      else
-        analyse_assigned_case
-      end
-    end
-
-    def analyse_assigned_case
       timeliness = @kase.closed? ? analyse_closed_case : analyse_open_case
       @result = add_trigger_state(timeliness)
     end

@@ -297,6 +297,7 @@ RSpec.describe TeamsController, type: :controller do
         it 'renders the root path with unauth message' do
 
         end
+
         it 'does not update the team'
       end
     end
