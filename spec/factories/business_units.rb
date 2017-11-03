@@ -80,4 +80,12 @@ FactoryGirl.define do
     code Settings.private_office_team_code
     directorate { find_or_create :press_office_directorate }
   end
+
+  factory :deactivated_team, parent: :business_unit do
+    name 'Disclosure BMT'
+    email 'dacu@localhost'
+    code Settings.foi_cases.default_managing_team
+    directorate { find_or_create :dacu_directorate }
+    deleted_at { Time.now }
+  end
 end
