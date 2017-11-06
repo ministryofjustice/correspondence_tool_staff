@@ -102,6 +102,10 @@ class Team < ApplicationRecord
     users.where(deleted_at: nil)
   end
 
+  # def active
+  #   teams.where(deleted_at: nil)
+  # end
+
   def has_active_children?
     children.active.any?
   end

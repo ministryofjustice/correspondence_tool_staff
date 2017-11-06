@@ -31,6 +31,7 @@ describe TeamDeletionService do
         service.call
         expect(dir.reload.name).not_to include "DEACTIVATED"
       end
+
       it 'does not update the deleted_at column' do
         service.call
         expect(dir.reload.deleted_at).to be nil
