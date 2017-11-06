@@ -128,7 +128,6 @@ class TeamsController < ApplicationController
     when :ok
       flash[:notice] = I18n.t('teams.destroyed')
       destroy_redirect_destination(Team.find(params[:id]))
-      # redirect_to team_path(team)
     else
       flash[:alert] = I18n.t('teams.error')
       redirect_to(team_path)

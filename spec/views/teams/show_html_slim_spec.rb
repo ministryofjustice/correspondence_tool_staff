@@ -24,7 +24,7 @@ describe 'teams/show.html.slim', type: :view do
     it 'displays the directorates inside it' do
       login_as manager
       assign(:team, @hmpps)
-      assign(:children, [ @prisons, @hr ] )
+      assign(:children, @hmpps.children)
 
       render
 
