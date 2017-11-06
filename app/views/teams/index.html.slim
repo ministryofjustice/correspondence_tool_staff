@@ -22,7 +22,7 @@
           th scope='col'
             = 'Actions'
       tbody
-        - @teams.each do |team|
+        - @teams.active.each do |team|
           tr
             td aria-label="Name"
               = link_to team_path(team) do
@@ -36,9 +36,5 @@
             td aria-label="Actions"
               = link_to 'Edit', edit_team_path(team, team_type: 'bg'), { class: 'action--edit' }
               br
-              = link_to "Deactivate", team_path(team.id),
-                  data: {:confirm => t('.destroy')},
-                  method: :delete,
-                  id: 'deactivate-user-button'
 br
 = link_to 'Add new business group', new_team_path(team_type: 'bg'), class: 'button'
