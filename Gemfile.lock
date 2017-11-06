@@ -1,4 +1,12 @@
 GIT
+  remote: https://github.com/ministryofjustice/bank_holiday.git
+  revision: 16d511a1d1628eece8d61ade9223b10caccbcea3
+  branch: bundler-fix
+  specs:
+    bank_holiday (0.0.4)
+      dish
+
+GIT
   remote: https://github.com/ministryofjustice/statesman-events.git
   revision: b4958d4855114e732acef5c884dfa941f3aede76
   branch: add-before-event
@@ -67,8 +75,6 @@ GEM
     aws-sdk-resources (2.7.3)
       aws-sdk-core (= 2.7.3)
     aws-sigv4 (1.0.0)
-    bank_holiday (0.0.24)
-      dish
     bcrypt (3.1.11)
     brakeman (3.4.0)
     builder (3.2.3)
@@ -514,7 +520,7 @@ DEPENDENCIES
   annotate
   awesome_print
   aws-sdk
-  bank_holiday
+  bank_holiday!
   business_time
   byebug
   capybara
@@ -590,4 +596,4 @@ DEPENDENCIES
   web-console
 
 BUNDLED WITH
-   1.14.4
+   1.16.0
