@@ -12,12 +12,12 @@ services:
 before_script:
   - psql -c 'create database correspondence_platform_test;' -U postgres
 script:
-  - bundle _1.14.4_ install
-  - bundle _1.14.4_ exec rubocop
-  - bundle _1.14.4_ exec rails jasmine:ci
-  - bundle _1.14.4_ exec rails db:create db:structure:load
-  - bundle _1.14.4_ exec rails spec
-  - bundle _1.14.4_ exec codeclimate-test-reporter
+  - bundle  install
+  - bundle exec rubocop
+  - bundle exec rails jasmine:ci
+  - bundle exec rails db:create db:structure:load
+  - bundle exec rails spec
+  - bundle exec codeclimate-test-reporter
 before_install:
   - "phantomjs --version"
   - "export PATH=$PWD/travis_phantomjs/phantomjs-2.1.1-linux-x86_64/bin:$PATH"
@@ -26,5 +26,4 @@ before_install:
   - "if [ $(phantomjs --version) != '2.1.1' ]; then wget https://assets.membergetmember.co/software/phantomjs-2.1.1-linux-x86_64.tar.bz2 -O $PWD/travis_phantomjs/phantomjs-2.1.1-linux-x86_64.tar.bz2; fi"
   - "if [ $(phantomjs --version) != '2.1.1' ]; then tar -xvf $PWD/travis_phantomjs/phantomjs-2.1.1-linux-x86_64.tar.bz2 -C $PWD/travis_phantomjs; fi"
   - "phantomjs --version"
-  - gem install bundler -v 1.14.4
 

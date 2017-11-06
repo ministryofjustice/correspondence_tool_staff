@@ -6,7 +6,6 @@ module PageObjects
 
         section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
-
         sections :case_attachments,
                  PageObjects::Sections::Cases::CaseAttachmentSection,
                  '.case-attachments-group'
@@ -15,28 +14,27 @@ module PageObjects
         element :date_responded_month, '#case_date_responded_mm'
         element :date_responded_year, '#case_date_responded_yyyy'
 
-        element :outcome_radio_button_fully_granted,
-                'label[for="case_outcome_name_granted_in_full"]'
+        section :is_info_held, '.js-info-held-status' do
+          element :yes, :xpath, '//input[@value="held"]//..'
+          element :held_in_part, :xpath, '//input[@value="part_held"]//..'
+          element :no, :xpath, '//input[@value="not_held"]//..'
+          element :other, :xpath, '//input[@value="not_confirmed"]//..'
+        end
 
-        element :outcome_radio_button_refused_fully,
-                'label[for="case_outcome_name_refused_fully"]'
+        section :outcome, '.js-outcome-group' do
+          element :granted_in_full, 'label[for="case_outcome_name_granted_in_full"]'
+          element :refused_in_part, 'label[for="case_outcome_name_refused_in_part"]'
+          element :refused_fully, 'label[for="case_outcome_name_refused_fully"]'
+        end
 
-        element :outcome_radio_button_clarification_needed,
-                'label[for="case_outcome_name_clarification_needed_-_section_13"]'
+        section :other_reasons, '.js-other-reasons' do
+          elements :options, 'label'
+          element :ncnd, :xpath, '//input[@value="Neither confirm nor deny (NCND)"]//..'
+        end
 
-        section :refusal, '#refusal' do
-          element :info_not_held,
-                  'label[for="case_refusal_reason_name_information_not_held"]'
-          element :exemption_applied,
-                  'label[for="case_refusal_reason_name_exemption_applied"]'
-          section :exemptions, '#refusal_exemptions' do
-            elements :exemption_options, 'label'
-
-            element :ncnd, 'label[for="case_exemption_ids_10"]'
-
-            element :court_records, 'label[for="case_exemption_ids_13"]'
-
-          end
+        section :exemptions, '.js-refusal-exemptions' do
+          elements :exemption_options, 'label'
+          element :s12_exceeded_cost, :xpath, '//input[@data-omit-for-part-refused="true"]//..'
         end
 
         element :submit_button, '.button'

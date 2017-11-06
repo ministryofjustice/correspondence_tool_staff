@@ -61,6 +61,9 @@ module PageObjects
             element :data, 'td'
           end
 
+          section :info_held, '.info-held' do
+            element :data, 'td'
+          end
           section :outcome, '.outcome' do
             element :data, 'td'
           end

@@ -12,6 +12,9 @@
 #  updated_at              :datetime         not null
 #  requires_refusal_reason :boolean          default(FALSE)
 #  requires_exemption      :boolean          default(FALSE)
+#  active                  :boolean          default(TRUE)
+#  required_for_refused    :boolean          default(FALSE)
+#  required_for_ncnd       :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -27,18 +30,17 @@ module CaseClosure
     context 'scopes' do
       before(:all) do
         @ncnd_1 = create :exemption, :ncnd
-        @ncnd_2 = create :exemption, :ncnd
-        @abs_1 = create :exemption, :absolute
-        @abs_2 = create :exemption, :absolute
-        @qual_1 = create :exemption, :qualified
-        @qual_2 = create :exemption, :qualified
+        @abs_1 = create :exemption, :absolute, abbreviation: 'abs1', name: 'Absolute 1'
+        @abs_2 = create :exemption, :absolute, abbreviation: 'abs2', name: 'Absolute 3'
+        @qual_1 = create :exemption, :qualified, abbreviation: 'qual1', name: 'Qualified 1'
+        @qual_2 = create :exemption, :qualified, abbreviation: 'qual2', name: 'Qualified 2'
       end
 
       after(:all) { CaseClosure::Metadatum.delete_all }
 
       describe '.ncnd' do
         it 'returns only records of subtype ncnd' do
-          expect(Exemption.ncnd).to eq([@ncnd_1, @ncnd_2])
+          expect(Exemption.ncnd).to eq([@ncnd_1])
         end
       end
 

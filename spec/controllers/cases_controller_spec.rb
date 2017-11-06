@@ -129,15 +129,14 @@ RSpec.describe CasesController, type: :controller do
     end
 
     describe 'PATCH process_closure' do
-      let(:outcome) { create :outcome, :requires_refusal_reason }
-      let(:refusal_reason) { create :refusal_reason }
+      let(:outcome)     { create :outcome, :requires_refusal_reason }
+      let(:info_held)   { create :info_status, :held }
 
       it "closes a case that has been responded to" do
         patch :process_closure, params: case_closure_params(responded_case)
         expect(Case.first.current_state).to eq 'closed'
         expect(Case.first.outcome_id).to eq outcome.id
         expect(Case.first.date_responded).to eq 3.days.ago.to_date
-        expect(Case.first.refusal_reason_id).to eq refusal_reason.id
       end
 
       def case_closure_params(kase)
@@ -148,8 +147,9 @@ RSpec.describe CasesController, type: :controller do
             date_responded_dd: date_responded.day,
             date_responded_mm: date_responded.month,
             date_responded_yyyy: date_responded.year,
+            info_held_status_abbreviation: info_held.abbreviation,
             outcome_name: outcome.name,
-            refusal_reason_name: refusal_reason.name,
+            # refusal_reason_name: refusal_reason.name,
           }
         }
       end

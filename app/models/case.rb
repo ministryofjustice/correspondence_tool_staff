@@ -220,6 +220,8 @@ class Case < ApplicationRecord
 
   belongs_to :refusal_reason, class_name: 'CaseClosure::RefusalReason'
 
+  belongs_to :info_held_status, class_name: 'CaseClosure::InfoHeldStatus'
+
   has_and_belongs_to_many :exemptions, class_name: 'CaseClosure::Exemption', join_table: 'cases_exemptions'
 
   before_create :set_initial_state,
@@ -252,6 +254,14 @@ class Case < ApplicationRecord
   # def awaiting_approver?
   #   self.approver_assignments.any?(&:pending?)
   # end
+
+  def info_held_status_abbreviation
+    info_held_status&.abbreviation
+  end
+
+  def info_held_status_abbreviation=(value)
+    self.info_held_status_id = CaseClosure::InfoHeldStatus.id_from_abbreviation(value)
+  end
 
   def default_team_service
     @default_team_service ||= DefaultTeamService.new(self)
@@ -335,10 +345,6 @@ class Case < ApplicationRecord
 
   def requires_exemption?
     refusal_reason.present? && refusal_reason.requires_exemption?
-  end
-
-  def has_ncnd_exemption?
-    exemptions.select{ |ex| ex.ncnd? }.any?
   end
 
   # case is flagged, and still requires at least one response from an approver

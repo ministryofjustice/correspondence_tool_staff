@@ -15,28 +15,35 @@ module Stats
         # cases created this quarter
         Timecop.freeze @frozen_time - 2.days do
           2.times { create :case }
-          2.times { create :closed_case, :granted_in_full }
+          2.times { create :closed_case }
           2.times { create :closed_case, :clarification_required }
-          3.times { create :closed_case, :refused_fully_info_not_held }
-          1.times { create :closed_case, :part_refused_vexatious }
-          1.times { create :closed_case, :part_refused_repeat }
+          3.times { create :closed_case, :info_not_held  }
+
+          1.times { create :closed_case, :other_vexatious }
+          1.times { create :closed_case, :other_repeat }
+          2.times { create :closed_case, :other_exceeded_cost }
           3.times { create :closed_case, :part_refused_exempt_s23 }
+
           4.times { create :closed_case, :fully_refused_exempt_s22 }
           2.times { create :closed_case, :fully_refused_exempt_s23 }
           1.times { create :closed_case, :fully_refused_exempt_s24 }
           4.times { create :closed_case, :fully_refused_exempt_s26 }
+
           3.times { create :closed_case, :fully_refused_exempt_s27 }
           2.times { create :closed_case, :fully_refused_exempt_s28 }
           1.times { create :closed_case, :fully_refused_exempt_s29 }
           2.times { create :closed_case, :fully_refused_exempt_s30 }
+
           3.times { create :closed_case, :fully_refused_exempt_s31 }
           2.times { create :closed_case, :fully_refused_exempt_s32 }
           1.times { create :closed_case, :fully_refused_exempt_s33 }
           2.times { create :closed_case, :fully_refused_exempt_s34 }
+
           1.times { create :closed_case, :fully_refused_exempt_s35 }
           2.times { create :closed_case, :fully_refused_exempt_s36 }
           1.times { create :closed_case, :fully_refused_exempt_s37 }
           2.times { create :closed_case, :fully_refused_exempt_s38 }
+
           1.times { create :closed_case, :fully_refused_exempt_s40 }
           2.times { create :closed_case, :fully_refused_exempt_s41 }
           1.times { create :closed_case, :fully_refused_exempt_s42 }
@@ -47,11 +54,11 @@ module Stats
         # cases created more than 20 days ago still in this quarter
         Timecop.freeze @frozen_time - 30.days do
           3.times { create :case }
-          2.times { create :closed_case, :granted_in_full }
-          2.times { create :closed_case, :fully_refused_vexatious }
-          4.times { create :closed_case, :fully_refused_cost }
+          2.times { create :closed_case }
+          2.times { create :closed_case, :other_vexatious }
+          4.times { create :closed_case, :fully_refused_exempt_s12_1 }
           2.times { create :closed_case, :fully_refused_exempt_s21 }
-          create :closed_case, :part_refused_exempt_s22a
+          create :closed_case, :fully_refused_exempt_s22a
         end
 
         # cases created and closed in this quarter but out of time against the external deadline
@@ -77,7 +84,7 @@ module Stats
       context '1.A' do
         it 'records the total number' do
           expect(@results['1.A'][:desc]).to eq 'Total number of FOI requests received this quarter'
-          expect(@results['1.A'][:value]).to eq 71
+          expect(@results['1.A'][:value]).to eq 73
         end
       end
 
@@ -118,14 +125,14 @@ module Stats
       context '1.C' do
         it 'records the stat' do
           expect(@results['1.C'][:desc]).to eq 'Number of requests that have been created and closed within this quarter'
-          expect(@results['1.C'][:value]).to eq 66
+          expect(@results['1.C'][:value]).to eq 68
         end
       end
 
       context '1.Ci' do
         it 'records the stat' do
           expect(@results['1.Ci'][:desc]).to eq 'Number of requests created and processed in this quarter that were within time against the external deadline'
-          expect(@results['1.Ci'][:value]).to eq 63
+          expect(@results['1.Ci'][:value]).to eq 65
         end
       end
 
@@ -146,7 +153,7 @@ module Stats
       context '2.A' do
         it 'replicates the figure in 1.C' do
           expect(@results['2.A'][:desc]).to eq 'Number of requests that have been created and closed within this quarter (Replicates \'C\' above in TIMELINESS section)'
-          expect(@results['2.A'][:value]).to eq 66
+          expect(@results['2.A'][:value]).to eq 68
         end
       end
 
@@ -188,7 +195,7 @@ module Stats
       context '2.G' do
         it 'records the stat' do
           expect(@results['2.G'][:desc]).to eq "Number of cases created and closed in this quarter that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of '(s12) - exceeded cost'"
-          expect(@results['2.G'][:value]).to eq 4
+          expect(@results['2.G'][:value]).to eq 6
         end
       end
 
@@ -202,14 +209,14 @@ module Stats
       context '2.I' do
         it 'records the stat' do
           expect(@results['2.I'][:desc]).to eq "Number of cases created and closed in this quarter that have been marked as 'Refused fully' with a 'reason for refusal' of 'Exemption applied'"
-          expect(@results['2.I'][:value]).to eq 43
+          expect(@results['2.I'][:value]).to eq 47
         end
       end
 
       context '3.A' do
         it 'records the stat' do
           expect(@results['3.A'][:desc]).to eq "Number of cases created and closed in this quarter that were fully or partly refused"
-          expect(@results['3.A'][:value]).to eq 46
+          expect(@results['3.A'][:value]).to eq 50
         end
       end
 

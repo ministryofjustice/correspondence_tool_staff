@@ -2,150 +2,401 @@ require 'rails_helper'
 
 describe 'ClosedCaseValidator' do
 
+  before(:all) do
+    require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
+    CaseClosure::MetadataSeeder.seed!
+  end
+
+  after(:all) { CaseClosure::Metadatum.destroy_all }
+
   context 'preparing for close validations' do
 
-    let(:kase) { create :case }
+    let(:kase) { create :case, date_responded: Date.today }
 
-    context 'when closed / preparing for closed' do
 
-      before(:each) { kase.prepare_for_close }
+    before(:each) { kase.prepare_for_close }
 
-      describe 'date responded validation' do
+    describe 'date responded validation' do
 
-        before(:each) do
-          kase.outcome = create :outcome
+      before(:each) do
+        kase.outcome = CaseClosure::Outcome.granted
+        kase.info_held_status = CaseClosure::InfoHeldStatus.part_held
+      end
+
+      it 'errors if date_responded blank' do
+        kase.date_responded = nil
+        expect(kase).not_to be_valid
+        expect(kase.errors[:date_responded]).to eq(["can't be blank"])
+      end
+
+      it 'errors if date_responded in the future' do
+        kase.date_responded = 3.days.from_now
+        expect(kase).not_to be_valid
+        expect(kase.errors[:date_responded]).to eq(["can't be in the future"])
+      end
+
+      it 'errors if date before received date' do
+        kase.date_responded = kase.received_date - 1.day
+        expect(kase).not_to be_valid
+        expect(kase.errors[:date_responded]).to eq(["can't be before date received"])
+      end
+
+      it 'does not error if between received date and today' do
+        kase.date_responded = kase.received_date
+        expect(kase).to be_valid
+      end
+    end
+
+    context 'Info Held in full' do
+
+      before(:each) { kase.info_held_status = CaseClosure::InfoHeldStatus.held }
+
+      context 'Granted in full' do
+        before(:each) { kase.outcome = CaseClosure::Outcome.granted }
+
+        context 'no refusal reason or exemptions' do
+          it 'is valid' do
+            kase.refusal_reason = nil
+            kase.exemptions = []
+            expect(kase).to be_valid
+          end
         end
 
-        it 'errors if date_responded blank' do
-          expect(kase).not_to be_valid
-          expect(kase.errors[:date_responded]).to eq(["can't be blank"])
+        context 'refusal reason supplied' do
+          it 'is not valid' do
+            kase.refusal_reason = CaseClosure::RefusalReason.vex
+            expect(kase).not_to be_valid
+            expect(kase.errors[:refusal_reason]).to eq ["cannot be present unless Information Held in 'Other'"]
+          end
         end
 
-        it 'errors if date_responded in the future' do
-          kase.date_responded = 3.days.from_now
-          expect(kase).not_to be_valid
-          expect(kase.errors[:date_responded]).to eq(["can't be in the future"])
+        context 'exemption supplied' do
+          it 'is not valid' do
+            kase.exemptions = [ CaseClosure::Exemption.s27 ]
+            expect(kase).not_to be_valid
+            expect(kase.errors[:exemptions]).to eq ['cannot be present unless case was fully or partly refused, or information held not confirmed and NCND']
+          end
+        end
+      end
+
+      context 'Refused in part' do
+        before(:each)  { kase.outcome = CaseClosure::Outcome.part_refused }
+
+        context 'refusal reason supplied' do
+          it 'is not valid' do
+            kase.refusal_reason = CaseClosure::RefusalReason.vex
+            expect(kase).not_to be_valid
+            expect(kase.errors[:refusal_reason]).to eq ["cannot be present unless Information Held in 'Other'"]
+          end
         end
 
-        it 'errors if date before received date' do
-          kase.date_responded = kase.received_date - 1.day
-          expect(kase).not_to be_valid
-          expect(kase.errors[:date_responded]).to eq(["can't be before date received"])
+        context 'no refusal reason supplied' do
+          before(:each) { kase.refusal_reason = nil }
+
+          context 'at least one exemption supplied' do
+            it 'is valid' do
+              kase.exemptions = [ CaseClosure::Exemption.s27 ]
+              expect(kase).to be_valid
+            end
+          end
+
+          context 'multiple exemptions supplied' do
+            it 'is valid' do
+              kase.exemptions = [ CaseClosure::Exemption.s27, CaseClosure::Exemption.s35 ]
+              expect(kase).to be_valid
+            end
+          end
+
+          context 'no exemptions supplied' do
+            it 'is not valid' do
+              kase.exemptions = []
+              expect(kase).not_to be_valid
+              expect(kase.errors[:exemptions]).to eq ['must be specified for this outcome']
+            end
+          end
+
+          context 'cost exemption is supplied' do
+            it 'is invalid' do
+              kase.exemptions = [ CaseClosure::Exemption.s12 ]
+              expect(kase).not_to be_valid
+              expect(kase.errors[:exemptions]).to eq ['cost is not valid for part refusals']
+            end
+          end
+        end
+      end
+
+      context 'Refused in full' do
+        before(:each)  { kase.outcome = CaseClosure::Outcome.fully_refused }
+
+        context 'refusal reason supplied' do
+          it 'is not valid' do
+            kase.refusal_reason = CaseClosure::RefusalReason.vex
+            expect(kase).not_to be_valid
+            expect(kase.errors[:refusal_reason]).to eq ["cannot be present unless Information Held in 'Other'"]
+          end
         end
 
-        it 'does not error if between received date and today' do
-          kase.date_responded = kase.received_date
+        context 'no refusal reason supplied' do
+          before(:each) { kase.refusal_reason = nil }
+
+          context 'at least one exemption supplied' do
+            it 'is valid' do
+              kase.exemptions = [ CaseClosure::Exemption.s27 ]
+              expect(kase).to be_valid
+            end
+          end
+
+          context 'multiple exemptions supplied' do
+            it 'is valid' do
+              kase.exemptions = [ CaseClosure::Exemption.s27, CaseClosure::Exemption.s35 ]
+              expect(kase).to be_valid
+            end
+          end
+
+          context 'no exemptions supplied' do
+            it 'is not valid' do
+              kase.exemptions = []
+              expect(kase).not_to be_valid
+              expect(kase.errors[:exemptions]).to eq ['must be specified for this outcome']
+            end
+          end
+
+          context 'exemption cost' do
+            it 'is valid' do
+              kase.exemptions = [ CaseClosure::Exemption.s12 ]
+              expect(kase).to be_valid
+            end
+          end
+        end
+      end
+    end
+
+    context 'Info Held in part' do
+
+      before(:each) { kase.info_held_status = CaseClosure::InfoHeldStatus.part_held }
+
+      context 'Granted in full' do
+        before(:each) { kase.outcome = CaseClosure::Outcome.granted }
+
+        context 'no refusal reason or exemptions' do
+          it 'is valid' do
+            kase.refusal_reason = nil
+            kase.exemptions = []
+            expect(kase).to be_valid
+          end
+        end
+
+        context 'refusal reason supplied' do
+          it 'is not valid' do
+            kase.refusal_reason = CaseClosure::RefusalReason.vex
+            expect(kase).not_to be_valid
+            expect(kase.errors[:refusal_reason]).to eq ["cannot be present unless Information Held in 'Other'"]
+          end
+        end
+
+        context 'exemption supplied' do
+          it 'is not valid' do
+            kase.exemptions = [ CaseClosure::Exemption.s27 ]
+            expect(kase).not_to be_valid
+            expect(kase.errors[:exemptions]).to eq ['cannot be present unless case was fully or partly refused, or information held not confirmed and NCND']
+          end
+        end
+      end
+
+      context 'Refused in part' do
+        before(:each)  { kase.outcome = CaseClosure::Outcome.part_refused }
+
+        context 'refusal reason supplied' do
+          it 'is not valid' do
+            kase.refusal_reason = CaseClosure::RefusalReason.vex
+            expect(kase).not_to be_valid
+            expect(kase.errors[:refusal_reason]).to eq ["cannot be present unless Information Held in 'Other'"]
+          end
+        end
+
+        context 'no refusal reason supplied' do
+          before(:each) { kase.refusal_reason = nil }
+
+          context 'at least one exemption supplied' do
+            it 'is valid' do
+              kase.exemptions = [ CaseClosure::Exemption.s27 ]
+              expect(kase).to be_valid
+            end
+          end
+
+          context 'multiple exemptions supplied' do
+            it 'is valid' do
+              kase.exemptions = [ CaseClosure::Exemption.s27, CaseClosure::Exemption.s35 ]
+              expect(kase).to be_valid
+            end
+          end
+
+          context 'no exemptions supplied' do
+            it 'is not valid' do
+              kase.exemptions = []
+              expect(kase).not_to be_valid
+              expect(kase.errors[:exemptions]).to eq ['must be specified for this outcome']
+            end
+          end
+
+          context 'cost exemption is supplied' do
+            it 'is invalid' do
+              kase.exemptions = [ CaseClosure::Exemption.s12 ]
+              expect(kase).not_to be_valid
+              expect(kase.errors[:exemptions]).to eq ['cost is not valid for part refusals']
+            end
+          end
+        end
+      end
+
+      context 'Refused in full' do
+        before(:each)  { kase.outcome = CaseClosure::Outcome.fully_refused }
+
+        context 'refusal reason supplied' do
+          it 'is not valid' do
+            kase.refusal_reason = CaseClosure::RefusalReason.vex
+            expect(kase).not_to be_valid
+            expect(kase.errors[:refusal_reason]).to eq ["cannot be present unless Information Held in 'Other'"]
+          end
+        end
+
+        context 'no refusal reason supplied' do
+          before(:each) { kase.refusal_reason = nil }
+
+          context 'at least one exemption supplied' do
+            it 'is valid' do
+              kase.exemptions = [ CaseClosure::Exemption.s27 ]
+              expect(kase).to be_valid
+            end
+          end
+
+          context 'multiple exemptions supplied' do
+            it 'is valid' do
+              kase.exemptions = [ CaseClosure::Exemption.s27, CaseClosure::Exemption.s35 ]
+              expect(kase).to be_valid
+            end
+          end
+
+          context 'no exemptions supplied' do
+            it 'is not valid' do
+              kase.exemptions = []
+              expect(kase).not_to be_valid
+              expect(kase.errors[:exemptions]).to eq ['must be specified for this outcome']
+            end
+          end
+
+          context 'exemption cost' do
+            it 'is valid' do
+              kase.exemptions = [ CaseClosure::Exemption.s12 ]
+              expect(kase).to be_valid
+            end
+          end
+        end
+      end
+    end
+
+    context 'Info not held' do
+      before(:each) do
+        kase.info_held_status = CaseClosure::InfoHeldStatus.not_held
+        kase.refusal_reason = nil
+        kase.outcome = nil
+        kase.exemptions = []
+      end
+
+      context 'no refusal reason' do
+        it 'is valid' do
           expect(kase).to be_valid
         end
       end
 
-      describe 'outcome validations' do
-        it 'errors if not present' do
+      context 'refusal reason present' do
+        it 'is invalid' do
+          kase.refusal_reason = CaseClosure::RefusalReason.vex
           expect(kase).not_to be_valid
-          expect(kase.errors[:outcome]).to eq(["can't be blank"])
+          expect(kase.errors[:refusal_reason]).to eq ["cannot be present unless Information Held in 'Other'"]
         end
       end
 
-      describe 'refusal reason validations' do
-
-        before(:all) do
-          @outcome1 = create :outcome, :requires_refusal_reason
-          @outcome2 = create :outcome
-          @reason = create :refusal_reason
-        end
-
-        after(:all) { CaseClosure::Metadatum.delete_all }
-
-        context 'outcome requires refusal reason' do
-          it 'errors if refusal reason not present' do
-            kase = build :case, outcome: @outcome1, date_responded: 3.days.ago
-            kase.prepare_for_close
-            expect(kase).not_to be_valid
-            expect(kase.errors[:refusal_reason]).to include('must be present for the specified outcome')
-          end
-
-          it 'does not error if refusal reason present' do
-            kase = build :case, outcome: @outcome1, refusal_reason: @reason, received_date: 10.days.ago, date_responded: 3.days.ago
-            kase.prepare_for_close
-            expect(kase).to be_valid
-          end
-        end
-
-        context 'outcome does not require refusal reason' do
-          it 'errors if refusal reason present' do
-            kase = build :case, outcome: @outcome2, refusal_reason: @reason, received_date: 10.days.ago, date_responded: 3.days.ago
-            kase.prepare_for_close
-            expect(kase).not_to be_valid
-            expect(kase.errors[:refusal_reason]).to include('cannot be present for the specified outcome')
-          end
-
-          it 'does not error if refusal reason absent' do
-            kase = build :case, outcome: @outcome2
-            expect(kase).to be_valid
-          end
-
+      context 'outcome present' do
+        it 'is invalid' do
+          kase.outcome = CaseClosure::Outcome.first
+          expect(kase).not_to be_valid
+          expect(kase.errors[:outcome]).to eq ['can only be present if information held or part held']
         end
       end
 
-      context 'exemption validations' do
+      context 'exemptions present' do
+        it 'is invalid' do
+          kase.exemptions = [ CaseClosure::Exemption.first ]
+          expect(kase).not_to be_valid
+          expect(kase.errors[:exemptions]).to eq ['cannot be present unless case was fully or partly refused, or information held not confirmed and NCND']
+        end
+      end
+    end
 
-        let(:ex_1) { create :exemption }
-        let(:ex_2) { create :exemption }
+    context 'Info not confirmed (a.k.a Other)' do
+      before(:each) do
+        kase.info_held_status = CaseClosure::InfoHeldStatus.not_confirmed
+        kase.outcome = nil
+        kase.refusal_reason = CaseClosure::RefusalReason.first
+      end
 
-        context 'refusal reason exemption applied' do
+      context 'refusal reason present, exemption present, but no outcome or refusal reason' do
+        it 'is invalid' do
+          expect(kase).to be_valid
+        end
+      end
 
-          let(:kase) { create :closed_case, :requires_exemption }
+      context 'no refusal reason present' do
+        it 'is not valid' do
+          kase.refusal_reason = nil
+          expect(kase).not_to be_valid
+          expect(kase.errors[:refusal_reason]).to eq ['must be present for the specified outcome']
+        end
+      end
 
-          it 'errors if no exemption present' do
-            kase.exemptions.map(&:destroy)
-            kase.reload
-            expect(kase.refusal_reason.requires_exemption?).to be true
-            expect(kase.exemptions).to be_empty
+      context 'outcome present' do
+        it 'is invalid' do
+          kase.outcome = CaseClosure::Outcome.first
+          expect(kase).not_to be_valid
+          expect(kase.errors[:outcome]).to eq ['can only be present if information held or part held']
+        end
+      end
+
+      context 'exemptions not present' do
+        it 'is is valid' do
+          kase.exemptions = []
+          expect(kase).to be_valid
+        end
+      end
+
+      context 'exemption present' do
+        it 'is not valid' do
+          kase.exemptions = [ CaseClosure::Exemption.s12 ]
+          expect(kase).not_to be_valid
+          expect(kase.errors[:exemptions]).to eq ['cannot be present unless case was fully or partly refused, or information held not confirmed and NCND']
+        end
+      end
+
+      context 'refusal reason is NCND' do
+        context 'no exemption present' do
+          it 'is not valid' do
+            kase.refusal_reason = CaseClosure::RefusalReason.ncnd
             expect(kase).not_to be_valid
-            expect(kase.errors[:exemptions]).to include('At least one exemption must be selected for this refusal reason')
-          end
-
-          it 'does not error if at least one exemption present' do
-            kase.exemptions = [ex_1, ex_2]
-            expect(kase.refusal_reason.requires_exemption?).to be true
-            expect(kase.exemptions).not_to be_empty
-            expect(kase).to be_valid
+            expect(kase.errors[:exemptions]).to eq ['must be specified for this outcome']
           end
         end
 
-        context 'refusal reason other than exemption applied' do
-          it 'errors if exemptions present' do
-            kase = create :closed_case, :without_exemption
-            kase.exemptions = [ex_1]
-            expect(kase.refusal_reason.requires_exemption?).to be false
-            expect(kase.exemptions).not_to be_empty
-            expect(kase).not_to be_valid
-            expect(kase.errors[:exemptions]).to include('You cannot specify exemptions for this refusal reason')
-          end
-        end
-
-        context 'NCND exemption present' do
-          it 'errors if no other exemption present' do
-            kase = create :closed_case, :with_ncnd_exemption
-            kase.exemptions.last.destroy
-            expect(kase.reload.exemptions.size).to eq 1
-            expect(kase.exemptions.first).to be_ncnd
-            expect(kase).not_to be_valid
-            expect(kase.errors[:exemptions]).to include('You must specify at least one other exemption if you select NCND')
-          end
-
-          it 'does not error is another exemption present' do
-            kase = create :closed_case, :with_ncnd_exemption
-            kase.exemptions.last.destroy
-            kase.reload.exemptions << create(:exemption)
-            expect(kase.exemptions.size).to eq 2
-            expect(kase.exemptions.first).to be_ncnd
-            expect(kase.exemptions.last).not_to be_ncnd
+        context 'with an exemption' do
+          it 'is valid' do
+            kase.refusal_reason = CaseClosure::RefusalReason.ncnd
+            kase.exemptions = [ CaseClosure::Exemption.first ]
             expect(kase).to be_valid
           end
         end
       end
     end
+
   end
 end
 

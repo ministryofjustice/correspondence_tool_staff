@@ -24,6 +24,7 @@ module Stats
         @responder_d = create :responder, responding_teams: [@team_d]
 
         @outcome = find_or_create :outcome, :granted
+        @info_held = find_or_create :info_status, :held
 
         # create cases based on today's date of 30/6/2017
         create_case(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - responded late')
@@ -235,7 +236,7 @@ module Stats
         unless responded_date.nil?
           Timecop.freeze responded_date + 14.hours do
             kase.state_machine.respond!(responder)
-            kase.update!(date_responded: Time.now, outcome_id: @outcome.id)
+            kase.update!(date_responded: Time.now, outcome_id: @outcome.id, info_held_status: @info_held)
             kase.state_machine.close!(kase.managing_team.users.first)
           end
         end

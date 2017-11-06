@@ -12,25 +12,40 @@
 #  updated_at              :datetime         not null
 #  requires_refusal_reason :boolean          default(FALSE)
 #  requires_exemption      :boolean          default(FALSE)
+#  active                  :boolean          default(TRUE)
+#  required_for_refused    :boolean          default(FALSE)
+#  required_for_ncnd       :boolean          default(FALSE)
 #
 
 module CaseClosure
   class Outcome < Metadatum
 
     def self.granted
-      where(abbreviation: 'granted').first
+      where(abbreviation: 'granted').singular
     end
 
     def self.part_refused
-      where(abbreviation: 'part').first
+      where(abbreviation: 'part').singular
     end
 
     def self.fully_refused
-      where(abbreviation: 'refused').first
+      where(abbreviation: 'refused').singular
     end
 
     def self.clarify
-      where(abbreviation: 'clarify').first
+      where(abbreviation: 'clarify').singular
+    end
+
+    def granted?
+      abbreviation == 'granted'
+    end
+
+    def part_refused?
+      abbreviation == 'part'
+    end
+
+    def fully_refused?
+      abbreviation == 'refused'
     end
 
   end

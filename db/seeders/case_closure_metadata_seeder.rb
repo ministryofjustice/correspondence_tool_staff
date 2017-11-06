@@ -1,25 +1,41 @@
 
-#rubocop:disable Metrics/MethodLength
+
+#rubocop:disable Metrics/ClassLength
 module CaseClosure
   class MetadataSeeder
 
     def self.seed!(verbose: false)
+      seed_outcomes(verbose)
+      seed_refusal_reasons(verbose)
+      seed_exemptions(verbose)
+      implement_oct_2017_changes(verbose)
+    end
 
+    def self.unseed!
+      CaseClosure::Metadatum.delete_all
+    end
+
+    def self.seed_outcomes(verbose)
       puts "----Seeding CaseClosure::Outcomes----" if verbose
       Outcome.find_or_create_by!(subtype: nil, name: 'Granted in full', abbreviation: 'granted', sequence_id: 10)
       rec1 = Outcome.find_or_create_by!(subtype: nil, name: 'Refused in part', abbreviation: 'part', sequence_id: 20)
       rec2 = Outcome.find_or_create_by!(subtype: nil, name: 'Refused fully', abbreviation: 'refused', sequence_id: 30)
-      Outcome.find_or_create_by!(subtype: nil, name: 'Clarification needed - Section 1(3)', abbreviation: 'clarify', sequence_id: 15)
+      rec3 = Outcome.find_or_create_by!(subtype: nil, name: 'Clarification needed - Section 1(3)', abbreviation: 'clarify', sequence_id: 15)
+      rec3.update!(active: false)
 
       [rec1, rec2].each { |r| r.update_attribute(:requires_refusal_reason, true) }
+    end
 
+    #rubocop:disable Metrics/MethodLength
+    def self.seed_refusal_reasons(verbose)
       puts "----Seeding CaseClosure::RefusalReasons----" if verbose
 
       exemption = RefusalReason.find_or_create_by!(
         subtype: nil,
         name: 'Exemption applied',
         abbreviation: 'exempt',
-        sequence_id: 110)
+        sequence_id: 110,
+        active: false)
 
       exemption.update_attribute(:requires_exemption, true)
 
@@ -27,7 +43,8 @@ module CaseClosure
         subtype: nil,
         name: 'Information not held',
         abbreviation: 'noinfo',
-        sequence_id: 120)
+        sequence_id: 120,
+        active: false)
 
       RefusalReason.find_or_create_by!(
         subtype: nil,
@@ -52,7 +69,9 @@ module CaseClosure
         name: '(s14(2)) - Repeated request',
         abbreviation: 'repeat',
         sequence_id: 160)
+    end
 
+    def self.seed_exemptions(verbose)
       puts "----Seeding CaseClosure::Exemptions----" if verbose
       Exemption.find_or_create_by!(
         subtype: 'ncnd',
@@ -204,10 +223,97 @@ module CaseClosure
         abbreviation: 'comm',
         sequence_id: 685)
     end
+    #rubocop:enable Metrics/MethodLength
 
-    def self.unseed!
-      CaseClosure::Metadatum.delete_all
+    def self.implement_oct_2017_changes(verbose)
+      puts 'Updating Case Closure data inline with October 2017 changes' if verbose
+      CaseClosure::MetadataSeeder.insert_info_held_status_records
+      CaseClosure::MetadataSeeder.add_new_refusal_reasons
+      CaseClosure::MetadataSeeder.deactivate_outcome_clarify
+      CaseClosure::MetadataSeeder.deactivate_old_refusal_reasons
+      CaseClosure::MetadataSeeder.create_new_cost_exemption
+      CaseClosure::MetadataSeeder.update_cost_refusal_reason
     end
+
+    def self.insert_info_held_status_records
+      InfoHeldStatus.find_or_create_by!(
+        subtype: nil,
+        name: 'Yes',
+        abbreviation: 'held',
+        sequence_id: 710
+      )
+
+      InfoHeldStatus.find_or_create_by!(
+        subtype: nil,
+        name: 'No',
+        abbreviation: 'not_held',
+        sequence_id: 730
+      )
+
+      InfoHeldStatus.find_or_create_by!(
+        subtype: nil,
+        name: 'Held in part',
+        abbreviation: 'part_held',
+        sequence_id: 720
+      )
+
+      InfoHeldStatus.find_or_create_by!(
+        subtype: nil,
+        name: 'Other',
+        abbreviation: 'not_confirmed',
+        sequence_id: 740
+      )
+    end
+
+    def self.add_new_refusal_reasons
+      rec = CaseClosure::RefusalReason.find_by_abbreviation('tmm')
+      if rec.nil?
+        CaseClosure::RefusalReason.create!(
+          name: '(s1(3)) - Clarification required',
+          abbreviation: 'tmm',
+          sequence_id: 100)
+      end
+
+      rec = CaseClosure::RefusalReason.find_by_abbreviation('ncnd')
+      if rec.nil?
+        CaseClosure::RefusalReason.create!(
+          name: 'Neither confirm nor deny (NCND)',
+          abbreviation: 'ncnd',
+          requires_exemption: true,
+          sequence_id: 170)
+      end
+    end
+
+    def self.deactivate_outcome_clarify
+      outcome = CaseClosure::Outcome.find_by_abbreviation!('clarify')
+      outcome.update!(active: false)
+    end
+
+    def self.deactivate_old_refusal_reasons
+      # deactive refusal_reasons 'exempt', 'notmet', and 'noinfo'
+      %w{ exempt noinfo notmet }.each do |abbrev|
+        rec = CaseClosure::RefusalReason.find_by_abbreviation(abbrev)
+        rec.update!(active: false) unless rec.nil?
+      end
+    end
+
+    def self.create_new_cost_exemption
+      CaseClosure::Exemption.find_or_create_by(
+        name: '(s12(1)) - Exceeded cost to obtain',
+        subtype: 'absolute',
+        abbreviation: 'cost',
+        omit_for_part_refused: true,
+        sequence_id: 505)
+    end
+
+    def self.update_cost_refusal_reason
+      # update description of refusal reason s12(2)
+      cost = CaseClosure::RefusalReason.find_by_abbreviation('cost')
+      cost.update!(name: '(s12(2)) - Exceeded cost to investigate') unless cost.nil?
+    end
+
+
+
   end
 end
-#rubocop:enable Metrics/MethodLength
+#rubocop:enable Metrics/ClassLength
