@@ -64,7 +64,7 @@ module CaseClosure
       end
     end
 
-    def self.respond_to?(method, include_private = false)
+    def self.respond_to_missing?(method, include_private = false)
       method.to_s.in?(SECTION_NUMBERS.keys)  || super
     end
 
