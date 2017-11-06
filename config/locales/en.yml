@@ -363,7 +363,6 @@ en:
       extend_for_pit: Extend for Public Interest Test (PIT)
       extension_date: Date of extension deadline
       extension_date_hint: For example, 30 1 2017
-      reason_for_extending: Reason for extending
     index: &cases_list
       heading_search: Search
       heading_all_cases: All open cases

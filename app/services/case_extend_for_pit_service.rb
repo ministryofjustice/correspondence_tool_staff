@@ -1,4 +1,4 @@
-class CaseExtendForPitService
+class CaseExtendForPITService
   attr_reader :result, :error
 
   def initialize(user, kase, new_deadline, reason)

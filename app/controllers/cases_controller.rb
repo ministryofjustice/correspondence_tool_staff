@@ -1,4 +1,5 @@
 #rubocop:disable Metrics/ClassLength
+
 class CasesController < ApplicationController
   before_action :set_case,
     only: [
@@ -309,22 +310,20 @@ class CasesController < ApplicationController
 
   def extend_for_pit
     authorize @case, :execute_extend_for_pit?
-    @case.instance_eval do
-      # to satisfy the form's requirement for a method of this name
-      define_singleton_method(:reason_for_extending) {}
-    end
-    @case.external_deadline = nil
+
+    @case = CaseExtendForPITDecorator.decorate(@case)
   end
 
   def execute_extend_for_pit
     authorize @case
-    new_external_deadline = Date.new params[:case][:external_deadline_yyyy].to_i,
-                                     params[:case][:external_deadline_mm].to_i,
-                                     params[:case][:external_deadline_dd].to_i
-    cefps = CaseExtendForPitService.new current_user,
+    pit_params = params[:case]
+    new_external_deadline = Date.new pit_params[:external_deadline_yyyy].to_i,
+                                     pit_params[:external_deadline_mm].to_i,
+                                     pit_params[:external_deadline_dd].to_i
+    cefps = CaseExtendForPITService.new current_user,
                                         @case,
                                         new_external_deadline,
-                                        params[:case][:reason_for_extending]
+                                        pit_params[:reason_for_extending]
     result = cefps.call
 
     if result == :ok
@@ -376,14 +375,6 @@ class CasesController < ApplicationController
     )
   end
 
-  def extend_for_pit_params
-    params.require(:case).permit(
-      :external_deadline_dd,
-      :external_deadline_mm,
-      :external_deadline_yyyy
-    )
-  end
-
   def set_case
     @case = Case.find(params[:id]).decorate
     @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
@@ -430,8 +421,8 @@ class CasesController < ApplicationController
     S3Uploader.s3_direct_post_for_case(kase, upload_type)
   end
 end
-
 def set_state_selector
+
   @state_selector = StateSelector.new(params)
 end
 

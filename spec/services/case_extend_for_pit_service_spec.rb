@@ -1,10 +1,10 @@
 require "rails_helper"
 
-describe CaseExtendForPitService do
+describe CaseExtendForPITService do
   let(:case_being_drafted) { create :case_being_drafted }
   let(:manager) { find_or_create :disclosure_bmt_user }
 
-  let(:service) { CaseExtendForPitService.new manager,
+  let(:service) { CaseExtendForPITService.new manager,
                                               case_being_drafted,
                                               10.business_days.after(Date.today),
                                               'I lkie to extend my best tests' }

@@ -636,12 +636,16 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
 
   describe 'trigger extend_for_pit!' do
     it 'triggers a extend_for_pit event' do
+      new_deadline = 30.business_days.from_now
       expect do
-        case_with_response.state_machine.extend_for_pit! manager, 'for test'
+        case_with_response.state_machine.extend_for_pit! manager,
+                                                         new_deadline,
+                                                         'for test'
       end.to trigger_the_event(:extend_for_pit)
                .on_state_machine(case_with_response.state_machine)
                .with_parameters(acting_user_id: manager.id,
                                 acting_team_id: managing_team.id,
+                                final_deadline: new_deadline,
                                 message: 'for test')
     end
 
