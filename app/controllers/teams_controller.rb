@@ -123,12 +123,12 @@ class TeamsController < ApplicationController
   def destroy
     authorize @user
     service = TeamDeletionService.new(params)
-    team = Team.find(params[:id])
     service.call
     case service.result
     when :ok
       flash[:notice] = I18n.t('teams.destroyed')
-      destroy_redirect_destination(team)
+      destroy_redirect_destination(Team.find(params[:id]))
+      # redirect_to team_path(team)
     else
       flash[:alert] = I18n.t('teams.error')
       redirect_to(team_path)
@@ -230,19 +230,11 @@ class TeamsController < ApplicationController
   end
 
   def destroy_redirect_destination(team)
-    if team.type = 'Business Group'
+    if team.type == 'BusinessGroup'
       redirect_to teams_path
     else
       redirect_to team_path(team.parent_id)
     end
   end
-
-  # def destroy_unsucessful_redirect_destination(team)
-  #   if team.type = 'Business Group'
-  #     redirect_to teams_path
-  #   else
-  #     redirect_to teams_path(team)
-  #   end
-  # end
 
 end

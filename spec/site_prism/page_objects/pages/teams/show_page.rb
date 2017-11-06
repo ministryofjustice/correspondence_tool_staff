@@ -11,6 +11,7 @@ module PageObjects
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
 
         element :flash_notice, '.notice-summary'
+        element :flash_alert, '.error-summary'
 
         element :heading, 'h1.page-heading'
         element :deputy_director, '.team-lead-title'

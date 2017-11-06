@@ -519,7 +519,8 @@ RSpec.describe TeamsController, type: :controller do
   describe 'DELETE destroy' do
 
     let(:responder) { create :responder }
-    let(:team)      { create :responding_team }
+    let(:team)      { create :responding_team, directorate: dir }
+    let(:dir)       { create :directorate}
     let(:params) do
       {
         id: team.id
@@ -551,27 +552,9 @@ RSpec.describe TeamsController, type: :controller do
         end
 
         it 'redirects to team path' do
-          expect(response).to redirect_to(teams_path)
+          expect(response).to redirect_to(team_path(dir))
         end
       end
-
-      # context 'response :has_live_children?' do
-      #   before(:each) do
-      #     service = double(TeamDeletionService)
-      #     expect(TeamDeletionService).to receive(:new).and_return(service)
-      #     expect(service).to receive(:call)
-      #     expect(service).to receive(:result).and_return(:has_live_cases)
-      #     delete :destroy, params: params
-      #   end
-      #
-      #   it 'displays a flash notice' do
-      #     expect(flash[:alert]).to eq I18n.t('devise.registrations.has_live_cases')
-      #   end
-      #
-      #   it 'redirects to team path' do
-      #     expect(response).to redirect_to(team_path(team))
-      #   end
-      # end
 
       context 'response :error' do
         before(:each) do
