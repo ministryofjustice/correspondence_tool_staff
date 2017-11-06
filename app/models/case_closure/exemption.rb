@@ -53,11 +53,7 @@ module CaseClosure
     scope :ncnd, -> { where(subtype: 'ncnd') }
     scope :absolute, -> { where(subtype: 'absolute') }
     scope :qualified, -> { where(subtype: 'qualified') }
-
-    def self.absolute_for_partly_refused
-      absolute.where.not(abbreviation: 'cost')
-    end
-
+    scope :absolute_for_partly_refused, -> { where.not(abbreviation: 'cost') }
 
     def self.method_missing(method, *args)
       # process self.s21 to self.s40
@@ -66,6 +62,10 @@ module CaseClosure
       else
         super(method, args)
       end
+    end
+
+    def self.respond_to?(method, include_private = false)
+      method.to_s.in?(SECTION_NUMBERS.keys)  || super
     end
 
     def ncnd?

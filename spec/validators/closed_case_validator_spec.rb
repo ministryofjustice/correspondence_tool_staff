@@ -5,7 +5,6 @@ describe 'ClosedCaseValidator' do
   before(:all) do
     require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
     CaseClosure::MetadataSeeder.seed!
-    # CaseClosure::MetadataSeeder.implement_oct_2017_changes
   end
 
   after(:all) { CaseClosure::Metadatum.destroy_all }
