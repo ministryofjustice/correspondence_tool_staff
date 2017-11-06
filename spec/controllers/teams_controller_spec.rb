@@ -519,7 +519,7 @@ RSpec.describe TeamsController, type: :controller do
 
     let(:responder) { create :responder }
     let(:team)      { create :responding_team, directorate: dir }
-    let(:dir)       { create :directorate}
+    let(:dir)       { create :directorate }
     let(:params) do
       {
         id: team.id
@@ -550,8 +550,17 @@ RSpec.describe TeamsController, type: :controller do
           expect(flash[:notice]).to eq I18n.t('teams.destroyed')
         end
 
-        it 'redirects to team path' do
-          expect(response).to redirect_to(team_path(dir))
+        context 'deactivating a directorate' do
+          it 'redirects to parent team path' do
+            expect(response).to redirect_to(team_path(dir))
+          end
+        end
+        context 'deactivating a business group' do
+          let(:bg)      { create :business_group }
+          let(:params)  {{ id: bg.id }}
+          it 'redirects to team path' do
+            expect(response).to redirect_to(teams_path)
+          end
         end
       end
 
