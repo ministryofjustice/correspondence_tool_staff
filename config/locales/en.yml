@@ -446,6 +446,8 @@ en:
       new: New %{team_type}
     index:
       destroy: 'You sure?'
+    destroyed: 'This team has now been deactivated'
+    error: 'This team still has active members. Please deactivate all members of the team before deactivating the team'
 
   users:
     index:

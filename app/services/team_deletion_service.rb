@@ -9,7 +9,7 @@ class TeamDeletionService
 
   def call
     if @team.has_active_children?
-      @result = :has_live_children
+      return @result
     else
       update_name
       soft_delete
