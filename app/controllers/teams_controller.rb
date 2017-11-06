@@ -127,16 +127,11 @@ class TeamsController < ApplicationController
     service.call
     case service.result
     when :ok
-      flash[:notice] = "it worked"
-    when :has_active_children
-      flash[:alert] = "active Children"
+      flash[:notice] = I18n.t('teams.destroyed')
+      destroy_redirect_destination(team)
     else
-      flash[:alert] = "didn't work"
-    end
-    if team.type = 'Business Group'
-      redirect_to teams_path
-    else
-      redirect_to team_path(team.parent_id)
+      flash[:alert] = I18n.t('teams.error')
+      redirect_to(team_path)
     end
   end
 
@@ -233,5 +228,21 @@ class TeamsController < ApplicationController
     end
 
   end
+
+  def destroy_redirect_destination(team)
+    if team.type = 'Business Group'
+      redirect_to teams_path
+    else
+      redirect_to team_path(team.parent_id)
+    end
+  end
+
+  # def destroy_unsucessful_redirect_destination(team)
+  #   if team.type = 'Business Group'
+  #     redirect_to teams_path
+  #   else
+  #     redirect_to teams_path(team)
+  #   end
+  # end
 
 end

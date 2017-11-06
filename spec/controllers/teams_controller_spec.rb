@@ -546,7 +546,7 @@ RSpec.describe TeamsController, type: :controller do
         end
 
         it 'displays a flash notice' do
-          expect(flash[:notice]).to eq "it worked"
+          expect(flash[:notice]).to eq I18n.t('teams.destroyed')
         end
 
         it 'redirects to team path' do
@@ -582,11 +582,11 @@ RSpec.describe TeamsController, type: :controller do
         end
 
         it 'displays a flash notice' do
-          expect(flash[:alert]).to eq "didn't work"
+          expect(flash[:alert]).to eq I18n.t('teams.error')
         end
 
         it 'redirects to team path' do
-          expect(response).to redirect_to(teams_path)
+          expect(response).to redirect_to(team_path(team.id))
         end
       end
     end
