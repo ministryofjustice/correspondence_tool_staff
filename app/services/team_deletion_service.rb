@@ -4,26 +4,40 @@ class TeamDeletionService
 
   def initialize(params)
     @team = Team.find(params[:id])
-    @result = :error
+    @result = :incomplete
   end
 
+  # def call
+  #   if @team.has_active_children?
+  #     return @result
+  #   else
+  #     update_name
+  #     soft_delete
+  #     @result = :ok
+  #   end
+  # end
+
   def call
-    if @team.has_active_children?
-      return @result
-    else
-      update_name
-      soft_delete
-      @result = :ok
+    unless @team.has_active_children?
+      ActiveRecord::Base.transaction do
+        begin
+          update_name
+          soft_delete
+          @result = :ok
+        rescue
+          @result = :error
+        end
+      end
     end
   end
 
   private
 
   def soft_delete
-    @team.update_attribute(:deleted_at, Time.current)
+    @team.update_attributes!(deleted_at: Time.current)
   end
 
   def update_name
-    @team.update_attribute(:name, "DEACTIVATED #{@team.name} " + Time.now.to_s)
+    @team.update_attributes!(name: "DEACTIVATED #{@team.name} " + Time.now.to_s)
   end
 end

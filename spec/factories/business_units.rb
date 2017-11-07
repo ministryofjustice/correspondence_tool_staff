@@ -86,6 +86,9 @@ FactoryGirl.define do
     email 'dacu@localhost'
     code Settings.foi_cases.default_managing_team
     directorate { find_or_create :dacu_directorate }
+  end
+
+  trait :deactivated do
     deleted_at { Time.now }
   end
 end

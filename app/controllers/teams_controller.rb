@@ -127,7 +127,8 @@ class TeamsController < ApplicationController
     case service.result
     when :ok
       flash[:notice] = I18n.t('teams.destroyed')
-      destroy_redirect_destination(Team.find(params[:id]))
+      redirect_to(set_destination(Team.find(params[:id])))
+      # destroy_redirect_destination(Team.find(params[:id]))
     else
       flash[:alert] = I18n.t('teams.error')
       redirect_to(team_path)
@@ -228,11 +229,11 @@ class TeamsController < ApplicationController
 
   end
 
-  def destroy_redirect_destination(team)
+  def set_destination(team)
     if team.type == 'BusinessGroup'
-      redirect_to teams_path
+      teams_path
     else
-      redirect_to team_path(team.parent_id)
+      team_path(team.parent_id)
     end
   end
 

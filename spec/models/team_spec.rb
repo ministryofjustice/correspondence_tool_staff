@@ -286,7 +286,7 @@ RSpec.describe Team, type: :model do
     end
 
     context 'a directorate has deactived children' do
-      let!(:bu) { create(:deactivated_team,
+      let!(:bu) { create(:team_dacu, :deactivated,
                           directorate: dir) }
       it 'returns false' do
         expect(dir.has_active_children?).to be false

@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 feature 'deactivating users' do
-  given!(:manager)         { create :manager }
-  given!(:dir)             { create :dacu_directorate }
-  given!(:active_dir)      { create :dacu_directorate, name: "directorate"}
-  let!(:business_unit)     { create :business_unit, directorate: active_dir }
+  given(:manager)         { create :manager }
+  given(:dir)             { create :dacu_directorate }
+  given(:active_dir)      { create :dacu_directorate, name: "directorate"}
+  let!(:business_unit)    { create :business_unit, directorate: active_dir }
 
 
   scenario 'manager deactivates a team with no active children' do
