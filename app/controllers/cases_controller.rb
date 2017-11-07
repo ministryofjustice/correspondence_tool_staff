@@ -320,11 +320,11 @@ class CasesController < ApplicationController
     new_external_deadline = Date.new pit_params[:external_deadline_yyyy].to_i,
                                      pit_params[:external_deadline_mm].to_i,
                                      pit_params[:external_deadline_dd].to_i
-    cefps = CaseExtendForPITService.new current_user,
-                                        @case,
-                                        new_external_deadline,
-                                        pit_params[:reason_for_extending]
-    result = cefps.call
+    service = CaseExtendForPITService.new current_user,
+                                          @case,
+                                          new_external_deadline,
+                                          pit_params[:reason_for_extending]
+    result = service.call
 
     if result == :ok
       flash[:notice] = 'Case extended for Public Interest Test (PIT)'

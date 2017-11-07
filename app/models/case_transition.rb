@@ -27,7 +27,7 @@ class CaseTransition < ActiveRecord::Base
   jsonb_accessor :metadata,
                  message:        :text,
                  filenames:      [:string, array: true, default: []],
-                 final_deadline: :text
+                 final_deadline: :date
 
   belongs_to :acting_user, class_name: User
   belongs_to :acting_team, class_name: Team
