@@ -26,14 +26,15 @@ class CaseTransitionDecorator < Draper::Decorator
     case object.event
     when 'assign_responder'
       "Assigned to #{object.target_team.name}"
-    when 'reject_responder_assignment',
-      'request_amends',
-      'add_responses',
-      'add_response_to_flagged_case',
-      'upload_response_and_return_for_redraft',
-      'upload_response_and_approve',
-      'approve_and_bypass',
-      'upload_response_approve_and_bypass'
+    when 'add_responses',
+         'add_response_to_flagged_case',
+         'approve_and_bypass',
+         'extend_for_pit',
+         'reject_responder_assignment',
+         'request_amends',
+         'upload_response_and_return_for_redraft',
+         'upload_response_and_approve',
+         'upload_response_approve_and_bypass'
         object.message
     when 'reassign_user'
       target_user = User.find(object.target_user_id)

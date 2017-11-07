@@ -14,8 +14,12 @@ div.action-copy
     = "You are extending the time on:"
     strong.strong-block
       = @case.subject
-  p
-    = "The additional time can't be used to determine whether exemptions apply. It must already be identified that a qualified exemption applies."
+  p.notice
+    i class="icon icon-important"
+      span.visually-hidden
+        = "Important"
+    strong
+      = "The additional time can't be used to determine whether exemptions apply. It must already be identified that a qualified exemption applies."
 
 br
 
