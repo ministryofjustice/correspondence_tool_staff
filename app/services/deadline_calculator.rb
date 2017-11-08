@@ -2,9 +2,9 @@ class DeadlineCalculator
 
   class << self
 
-    def escalation_deadline(kase)
+    def escalation_deadline(kase, start_from=kase.created_at.to_date)
       days_after_day_one = kase.category.escalation_time_limit - 1
-      days_after_day_one.business_days.after(start_date(kase.created_at.to_date))
+      days_after_day_one.business_days.after(start_date(start_from))
     end
 
     def internal_deadline(kase)      # aka draft deadline
