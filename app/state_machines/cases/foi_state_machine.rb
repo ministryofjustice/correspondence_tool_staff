@@ -32,7 +32,6 @@ class Cases::FOIStateMachine
   state :closed
 
 
-
   event :assign_responder do
     authorize :can_assign_case?
 
@@ -269,6 +268,21 @@ class Cases::FOIStateMachine
     transition from: :responded,                        to: :responded
   end
 
+  event :extend_for_pit do
+    transition from: :awaiting_dispatch,
+               to:   :awaiting_dispatch
+    transition from: :drafting,
+               to:   :drafting
+    transition from: :pending_dacu_clearance,
+               to:   :pending_dacu_clearance
+    transition from: :pending_press_office_clearance,
+               to:   :pending_press_office_clearance
+    transition from: :pending_private_office_clearance,
+               to:   :pending_private_office_clearance
+    transition from: :responded,
+               to:   :responded
+  end
+
   def accept_approver_assignment!(user, approving_team)
     trigger! :accept_approver_assignment,
              acting_team_id:    approving_team.id,
@@ -475,6 +489,16 @@ class Cases::FOIStateMachine
              message:           message,
              event:             :add_message_to_case
     notify_responder(object, 'Message received') if able_to_send?(user, object)
+  end
+
+  def extend_for_pit!(user, new_deadline, message)
+    team = object.team_for_user(user)
+    trigger! :extend_for_pit,
+             acting_user_id: user.id,
+             acting_team_id: team.id,
+             final_deadline: new_deadline,
+             message:        message,
+             event:          :extend_for_pit
   end
 
   private

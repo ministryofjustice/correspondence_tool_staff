@@ -324,6 +324,21 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
                   .checking_policy(:destroy_case?) }
   end
 
+  events :extend_for_pit do
+    it { should transition_from(:awaiting_dispatch)
+                  .to(:awaiting_dispatch) }
+    it { should transition_from(:drafting)
+                  .to(:drafting) }
+    it { should transition_from(:pending_dacu_clearance)
+                  .to(:pending_dacu_clearance) }
+    it { should transition_from(:pending_press_office_clearance)
+                  .to(:pending_press_office_clearance) }
+    it { should transition_from(:pending_private_office_clearance)
+                  .to(:pending_private_office_clearance) }
+    it { should transition_from(:responded)
+                  .to(:responded) }
+  end
+
   describe 'trigger assign_responder!' do
     it 'triggers an assign_responder event' do
       expect do
@@ -619,6 +634,22 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
     end
   end
 
+  describe 'trigger extend_for_pit!' do
+    it 'triggers a extend_for_pit event' do
+      new_deadline = 30.business_days.from_now
+      expect do
+        case_with_response.state_machine.extend_for_pit! manager,
+                                                         new_deadline,
+                                                         'for test'
+      end.to trigger_the_event(:extend_for_pit)
+               .on_state_machine(case_with_response.state_machine)
+               .with_parameters(acting_user_id: manager.id,
+                                acting_team_id: managing_team.id,
+                                final_deadline: new_deadline,
+                                message: 'for test')
+    end
+
+  end
 
   context 'dacu disclosure approvals' do
     let(:kase) { pending_dacu_clearance_case }

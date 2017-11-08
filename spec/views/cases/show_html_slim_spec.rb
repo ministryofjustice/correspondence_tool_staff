@@ -7,24 +7,26 @@ describe 'cases/show.html.slim', type: :view do
   end
 
   def setup_policies(policies)
+    policy_names = [
+      :can_remove_attachment?,
+      :can_add_attachment?,
+      :can_accept_or_reject_approver_assignment?,
+      :can_view_attachments?,
+      :can_add_message_to_case?,
+      :destroy_case?,
+      :execute_extend_for_pit?,
+    ]
 
-    allow(policy).to receive(:can_remove_attachment?)
-                       .and_return policies[:can_remove_attachment?]
-    allow(policy).to receive(:can_add_attachment?)
-                       .and_return policies[:can_add_attachment?]
-    allow(policy)
-      .to receive(:can_accept_or_reject_approver_assignment?)
-            .and_return policies[:can_accept_or_reject_approver_assignment?]
-    allow(policy)
-      .to receive(:can_view_attachments?)
-        .and_return policies[:can_view_attachments?]
-    allow(policy)
-      .to receive(:can_add_message_to_case?)
-        .and_return policies[:can_add_message_to_case?]
+    if (policies.keys - policy_names).any?
+      raise NameError,
+            "unknown policy/ies: #{(policies.keys - policy_names).join(', ')}"
+    end
 
-    allow(policy)
-      .to receive(:destroy_case?)
-        .and_return policies[:destroy_case?]
+    policy_names.each do |policy_name|
+      unless policies.key? policy_name
+      end
+      allow(policy).to receive(policy_name).and_return policies[policy_name]
+    end
   end
 
   let(:case_pending_dacu_clearance) { create(:pending_dacu_clearance_case)
@@ -215,6 +217,36 @@ describe 'cases/show.html.slim', type: :view do
       end
 
       it { should have_rendered 'cases/_case_attachments'}
+    end
+  end
+
+  describe 'link to extend case for pit' do
+    before do
+      assign(:case, case_being_drafted)
+    end
+
+    subject do
+      render
+      cases_show_page.load(rendered)
+      cases_show_page
+    end
+
+    context 'for a user that has permission to do the action' do
+      before do
+        login_as manager
+        setup_policies execute_extend_for_pit?: true
+      end
+
+      it { should have_extend_for_pit_action }
+    end
+
+    context 'for a user that does not have permission to do the action' do
+      before do
+        login_as responder
+        setup_policies execute_extend_for_pit?: false
+      end
+
+      it { should_not have_extend_for_pit_action }
     end
   end
 end

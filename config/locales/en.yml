@@ -120,6 +120,7 @@ en:
     approve: Response cleared
     close: Case closed
     edit_case: Case details edited
+    extend_for_pit: Extended for Public Interest Test (PIT)
     reject_responder_assignment: Rejected by Business unit
     remove_last_response: File removed
     remove_response: File removed
@@ -266,6 +267,7 @@ en:
         Download <span class="visuallyhidden">file %{filename}.</span>
       email: "Requesters email"
       exemptions_heading: Exemptions
+      extend_for_pit: Extend for Public Interest Test
       external_deadline: Final deadline
       internal_deadline: Draft deadline
       filename: File name
@@ -357,6 +359,10 @@ en:
       number_html: 'Case <abbr title="number">No.</abbr>'
       name-subject: Name/Subject
       view_case: Link to case
+    extend_for_pit:
+      extend_for_pit: Extend for Public Interest Test (PIT)
+      extension_date: Date of extension deadline
+      extension_date_hint: For example, 30 1 2017
     index: &cases_list
       heading_search: Search
       heading_all_cases: All open cases

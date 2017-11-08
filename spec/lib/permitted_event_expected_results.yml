@@ -23,7 +23,7 @@
     - :assign_to_new_team
     - :destroy_case
     - :edit_case
-    - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
+    - :flag_for_clearance                   # don't think this should be here, and no bu[tton is displayed for it.
 
 - - manager
   - flagged_awaiting_responder_case
@@ -39,6 +39,7 @@
     - :assign_to_new_team
     - :destroy_case
     - :edit_case
+    - :extend_for_pit
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
 
 - - manager
@@ -46,6 +47,7 @@
   - - :add_message_to_case
     - :destroy_case
     - :edit_case
+    - :extend_for_pit
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
 
 - - manager
@@ -53,6 +55,7 @@
   - - :add_message_to_case
     - :destroy_case
     - :edit_case
+    - :extend_for_pit
     - :unflag_for_clearance                 # don't think this should be here, and no button is displayed for it.
 
 - - manager
@@ -60,6 +63,7 @@
   - - :add_message_to_case
     - :destroy_case
     - :edit_case
+    - :extend_for_pit
     - :unflag_for_clearance                 # don't think this should be here, and no button is displayed for it.
 
 ##################################### UNASSIGNED RESPONDER #########################
@@ -76,16 +80,19 @@
   - unflagged_drafting_case
   - - :add_message_to_case                  # should unassigned responders be allowed to add response?
     - :add_responses
+    - :extend_for_pit
     - :reassign_user
 
 - - unassigned_responder
   - unaccepted_pending_dacu_clearance_case
   - - :add_message_to_case
+    - :extend_for_pit
     - :reassign_user
 
 - - unassigned_responder
   - accepted_pending_dacu_clearance_case
   - - :add_message_to_case
+    - :extend_for_pit
     - :reassign_user
 
 
@@ -96,11 +103,13 @@
   - unflagged_drafting_case
   - - :add_message_to_case
     - :add_responses
+    - :extend_for_pit
     - :reassign_user
 
 - - assigned_responder
   - accepted_pending_dacu_clearance_case
   - - :add_message_to_case
+    - :extend_for_pit
     - :reassign_user
 
 
@@ -111,11 +120,13 @@
   - unaccepted_pending_dacu_clearance_case
   - - :accept_approver_assignment
     - :add_message_to_case
+    - :extend_for_pit
     - :unflag_for_clearance                 # no button showing up for this
 
 - - unassigned_dacu_disclosure_specialist
   - accepted_pending_dacu_clearance_case
   - - :add_message_to_case
+    - :extend_for_pit
     - :reassign_user
     - :unflag_for_clearance                 # what about take case on?
 
@@ -126,12 +137,14 @@
   - unaccepted_pending_dacu_clearance_case
   - - :accept_approver_assignment
     - :add_message_to_case
+    - :extend_for_pit
     - :unflag_for_clearance                 # no button showing up for this
 
 - - assigned_dacu_disclosure_specialist
   - accepted_pending_dacu_clearance_case
   - - :add_message_to_case
     - :approve
+    - :extend_for_pit
     - :reassign_user
     - :unaccept_approver_assignment
     - :unflag_for_clearance                   # no button showing up for this
@@ -149,6 +162,7 @@
 - - unassigned_press_officer
   - pending_press_clearance_case
   - - :add_message_to_case
+    - :extend_for_pit
     - :reassign_user
 
 
@@ -160,13 +174,7 @@
   - pending_press_clearance_case
   - - :add_message_to_case
     - :approve
-    - :reassign_user
-    - :request_amends
-
-- - assigned_press_officer
-  - pending_press_clearance_case
-  - - :add_message_to_case
-    - :approve
+    - :extend_for_pit
     - :reassign_user
     - :request_amends
 
@@ -181,6 +189,7 @@
 - - unassigned_private_officer
   - pending_private_clearance_case
   - - :add_message_to_case
+    - :extend_for_pit
     - :reassign_user
 
 

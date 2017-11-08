@@ -179,6 +179,8 @@ Rails.application.routes.draw do
     post  :filter, on: :collection
     get 'remove_clearance' => 'cases#remove_clearance', on: :member
     # get 'upload_response_approve' => 'cases#upload_response_approve', on: :member
+    get :extend_for_pit, on: :member
+    patch :execute_extend_for_pit, on: :member
 
     resources :assignments, except: :create  do
       patch 'accept_or_reject', on: :member

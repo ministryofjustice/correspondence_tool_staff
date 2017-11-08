@@ -25,8 +25,9 @@ class CaseTransition < ActiveRecord::Base
   validates :message, presence: true, if: -> { event == 'add_message_to_case' }
 
   jsonb_accessor :metadata,
-    message:            :text,
-    filenames:          [:string, array: true, default: []]
+                 message:        :text,
+                 filenames:      [:string, array: true, default: []],
+                 final_deadline: :date
 
   belongs_to :acting_user, class_name: User
   belongs_to :acting_team, class_name: Team

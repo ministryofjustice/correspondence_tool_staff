@@ -210,4 +210,15 @@ FactoryGirl.define do
     acting_team_id { responding_team.id }
   end
 
+  factory :case_transition_extend_for_pit, parent: :case_transition do
+    transient do
+      manager        { create :manager }
+      managing_team  { manager.managing_teams.first }
+    end
+
+    event          'extend_for_pit'
+    to_state       { self.case.current_state }
+    acting_user_id { manager.id }
+    acting_team_id { managing_team.id }
+  end
 end

@@ -1,4 +1,5 @@
 #rubocop:disable Metrics/ClassLength
+
 class CasesController < ApplicationController
   before_action :set_case,
     only: [
@@ -8,6 +9,8 @@ class CasesController < ApplicationController
       :confirm_destroy,
       :execute_response_approval,
       :execute_request_amends,
+      :execute_extend_for_pit,
+      :extend_for_pit,
       :flag_for_clearance,
       :new_response_upload,
       :process_closure,
@@ -305,6 +308,33 @@ class CasesController < ApplicationController
     redirect_to cases_path
   end
 
+  def extend_for_pit
+    authorize @case, :execute_extend_for_pit?
+
+    @case = CaseExtendForPITDecorator.decorate(@case)
+  end
+
+  def execute_extend_for_pit
+    authorize @case
+    pit_params = params[:case]
+    new_external_deadline = Date.new pit_params[:external_deadline_yyyy].to_i,
+                                     pit_params[:external_deadline_mm].to_i,
+                                     pit_params[:external_deadline_dd].to_i
+    service = CaseExtendForPITService.new current_user,
+                                          @case,
+                                          new_external_deadline,
+                                          pit_params[:reason_for_extending]
+    result = service.call
+
+    if result == :ok
+      flash[:notice] = 'Case extended for Public Interest Test (PIT)'
+      redirect_to case_path(@case.id)
+    else
+      flash[:alert] = "Unable to perform PIT extension on case #{@case.number}"
+      redirect_to case_path(@case.id)
+    end
+  end
+
   private
 
   def set_permitted_events
@@ -391,8 +421,8 @@ class CasesController < ApplicationController
     S3Uploader.s3_direct_post_for_case(kase, upload_type)
   end
 end
-
 def set_state_selector
+
   @state_selector = StateSelector.new(params)
 end
 

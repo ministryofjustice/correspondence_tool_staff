@@ -54,14 +54,6 @@ RSpec.describe CaseTransitionDecorator, type: :model do
   end
 
   describe '#event_and_detail' do
-    context 'assign responder' do
-      it 'returns team name to which it has been assigned' do
-        event = 'Assign responder'
-        details = 'Assigned to Legal Aid Agency'
-        expect(ct.event_and_detail).to eq response(event, details)
-      end
-    end
-
     context 'accept_responder_assignment' do
       it 'returns expected text' do
         ct = create(:case_transition_accept_responder_assignment).decorate
@@ -71,20 +63,39 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
-    context 'reject_responder_assignment' do
-      it 'returns the reason for rejection' do
-        ct = create(:case_transition_reject_responder_assignment, user: laa_user, message: 'Not LAA matter').decorate
-        event = 'Rejected by Business unit'
-        details = 'Not LAA matter'
-        expect(ct.event_and_detail).to eq response(event, details)
-      end
-    end
-
     context 'add_responses' do
       it 'returns number of files uploaded' do
         ct = create(:case_transition_add_responses).decorate
         event = 'Response uploaded'
         details = ''
+        expect(ct.event_and_detail).to eq response(event, details)
+      end
+    end
+
+    context 'assign responder' do
+      it 'returns team name to which it has been assigned' do
+        event = 'Assign responder'
+        details = 'Assigned to Legal Aid Agency'
+        expect(ct.event_and_detail).to eq response(event, details)
+      end
+    end
+
+    context 'extend_for_pit' do
+      it 'returns the reason for extending' do
+        ct = create(:case_transition_extend_for_pit,
+                    acting_user: dacu_user,
+                    message: 'Too many vipers').decorate
+        event = 'Extended for Public Interest Test (PIT)'
+        details = 'Too many vipers'
+        expect(ct.event_and_detail).to eq response(event, details)
+      end
+    end
+
+    context 'reject_responder_assignment' do
+      it 'returns the reason for rejection' do
+        ct = create(:case_transition_reject_responder_assignment, user: laa_user, message: 'Not LAA matter').decorate
+        event = 'Rejected by Business unit'
+        details = 'Not LAA matter'
         expect(ct.event_and_detail).to eq response(event, details)
       end
     end
