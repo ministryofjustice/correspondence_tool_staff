@@ -38,6 +38,8 @@ foi_cases:
   default_managing_team: DISCLOSURE-BMT
   default_clearance_team: DISCLOSURE
 
+pit_extension_limit: 20
+
 default_date_format: '%-d %b %Y'
 default_time_format: '%d %b %Y %H:%M'
 

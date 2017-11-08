@@ -3,11 +3,17 @@ require "rails_helper"
 describe CaseExtendForPITService do
   let(:case_being_drafted) { create :case_being_drafted }
   let(:manager) { find_or_create :disclosure_bmt_user }
-
-  let(:service) { CaseExtendForPITService.new manager,
-                                              case_being_drafted,
-                                              10.business_days.after(Date.today),
-                                              'I lkie to extend my best tests' }
+  let(:old_external_deadline) { case_being_drafted.external_deadline }
+  let(:days_to_extend_deadline_by) { 10 }
+  let(:new_external_deadline) { days_to_extend_deadline_by
+                                  .business_days
+                                  .after(old_external_deadline) }
+  let(:service) { CaseExtendForPITService.new(
+                    manager,
+                    case_being_drafted,
+                    new_external_deadline,
+                    'I lkie to extend my best tests'
+                  ) }
 
   describe '#call' do
     before do
@@ -19,20 +25,90 @@ describe CaseExtendForPITService do
       expect(case_being_drafted.state_machine)
         .to have_received(:extend_for_pit!)
               .with manager,
-                    10.business_days.after(Date.today),
+                    10.business_days.after(old_external_deadline),
                     'I lkie to extend my best tests'
     end
 
     it 'sets the external deadline on the case' do
       service.call
       expect(case_being_drafted.external_deadline)
-        .to eq 10.business_days.after(Date.today)
+        .to eq 10.business_days.after(old_external_deadline)
     end
 
     it 'sets result to :ok and returns same' do
       result = service.call
       expect(result).to eq :ok
       expect(service.result).to eq :ok
+    end
+
+    context 'when the reason for extending is missing' do
+      let(:service) { CaseExtendForPITService.new(
+                        manager,
+                        case_being_drafted,
+                        10.business_days.after(Date.today),
+                        ''
+                      ) }
+
+      it 'sets the result to :validation_error and returns it' do
+        result = service.call
+        expect(result).to eq :validation_error
+      end
+
+      it 'adds an error to the case' do
+        service.call
+        expect(case_being_drafted.errors[:reason_for_extending])
+          .to eq ["can't be blank"]
+      end
+    end
+
+    context 'when the extension deadline is missing' do
+      let(:service) { CaseExtendForPITService.new(
+                        manager,
+                        case_being_drafted,
+                        nil,
+                        'no deadline'
+                      ) }
+
+      it 'sets the result to :validation_error and returns it' do
+        result = service.call
+        expect(result).to eq :validation_error
+      end
+
+      it 'adds an error to the case' do
+        service.call
+        expect(case_being_drafted.errors[:extension_deadline])
+          .to eq ["Date can't be blank"]
+      end
+    end
+
+    context 'when the extension deadline is too far in the future' do
+      let(:days_to_extend_deadline_by) { Settings.pit_extension_limit.to_i + 1 }
+
+      it 'sets the result to :validation_error and returns it' do
+        result = service.call
+        expect(result).to eq :validation_error
+      end
+
+      it 'adds an error to the case' do
+        service.call
+        expect(case_being_drafted.errors[:extension_deadline])
+          .to eq ["Date is more than 20 beyond the final deadline"]
+      end
+    end
+
+    context 'when the extension deadline is before the final deadline' do
+      let(:new_external_deadline) { 1.business_days.before(old_external_deadline) }
+
+      it 'sets the result to :validation_error and returns it' do
+        result = service.call
+        expect(result).to eq :validation_error
+      end
+
+      it 'adds an error to the case' do
+        service.call
+        expect(case_being_drafted.errors[:extension_deadline])
+          .to eq ["Date can't be before the final deadline"]
+      end
     end
 
     context 'when an error occurs' do

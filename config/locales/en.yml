@@ -362,7 +362,7 @@ en:
     extend_for_pit:
       extend_for_pit: Extend for Public Interest Test (PIT)
       extension_date: Date of extension deadline
-      extension_date_hint: For example, 30 1 2017
+      extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
     index: &cases_list
       heading_search: Search
       heading_all_cases: All open cases

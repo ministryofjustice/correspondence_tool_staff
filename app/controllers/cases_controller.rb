@@ -2,30 +2,47 @@
 
 class CasesController < ApplicationController
   before_action :set_case,
-    only: [
-      :approve_response_interstitial,
-      :close,
-      :confirm_respond,
-      :confirm_destroy,
-      :execute_response_approval,
-      :execute_request_amends,
-      :execute_extend_for_pit,
-      :extend_for_pit,
-      :flag_for_clearance,
-      :new_response_upload,
-      :process_closure,
-      :assign_to_new_team,
-      :reassign_approver,
-      :request_amends,
-      :respond,
-      :show,
-      :destroy,
-      :unflag_for_clearance,
-      :unflag_taken_on_case_for_clearance,
-      :remove_clearance,
-      :update,
-      :upload_responses,
-    ]
+                only: [
+                  :extend_for_pit,
+                  :execute_extend_for_pit,
+                ]
+  # As per the Draper documentation, we really shouldn't be decorating @case at
+  # the beginning of controller actions (see:
+  # https://github.com/drapergem/draper#when-to-decorate-objects) as we do
+  # here. Unfortunately we have a good bit of code that already relies on @case
+  # being a decorator so instead of changing each of these actions let's
+  # relegate them to a deprecated 'set_decorated_case' and change `set_case` to
+  # not decorate @case. Also, as "case" is a reserved word in Ruby, the
+  # suggestion in the Draper documentation isn't the best idea. So for an
+  # action to move from using set_decorated_case to set_case it will have to
+  # re-assign @case to be decorated, e.g.:
+  #
+  #   @case = @case.decorate
+  #
+  # or, this could be done in a new after_action block.
+  before_action :set_decorated_case,
+                only: [
+                  :approve_response_interstitial,
+                  :close,
+                  :confirm_respond,
+                  :confirm_destroy,
+                  :execute_response_approval,
+                  :execute_request_amends,
+                  :flag_for_clearance,
+                  :new_response_upload,
+                  :process_closure,
+                  :assign_to_new_team,
+                  :reassign_approver,
+                  :request_amends,
+                  :respond,
+                  :show,
+                  :destroy,
+                  :unflag_for_clearance,
+                  :unflag_taken_on_case_for_clearance,
+                  :remove_clearance,
+                  :update,
+                  :upload_responses,
+                ]
   before_action :set_assignment, only: [:show]
   before_action :set_state_selector, only: [:open_cases, :my_open_cases]
 
@@ -311,24 +328,34 @@ class CasesController < ApplicationController
   def extend_for_pit
     authorize @case, :execute_extend_for_pit?
 
-    @case = CaseExtendForPITDecorator.decorate(@case)
+    @case = CaseExtendForPITDecorator.decorate @case
   end
 
   def execute_extend_for_pit
     authorize @case
+
     pit_params = params[:case]
-    new_external_deadline = Date.new pit_params[:external_deadline_yyyy].to_i,
-                                     pit_params[:external_deadline_mm].to_i,
-                                     pit_params[:external_deadline_dd].to_i
+    extension_deadline = Date.new(
+      pit_params[:extension_deadline_yyyy].to_i,
+      pit_params[:extension_deadline_mm].to_i,
+      pit_params[:extension_deadline_dd].to_i
+    ) rescue nil
     service = CaseExtendForPITService.new current_user,
                                           @case,
-                                          new_external_deadline,
+                                          extension_deadline,
                                           pit_params[:reason_for_extending]
     result = service.call
 
     if result == :ok
       flash[:notice] = 'Case extended for Public Interest Test (PIT)'
       redirect_to case_path(@case.id)
+    elsif result == :validation_error
+      @case = CaseExtendForPITDecorator.decorate @case
+      @case.extension_deadline_yyyy = pit_params[:extension_deadline_yyyy]
+      @case.extension_deadline_mm = pit_params[:extension_deadline_mm]
+      @case.extension_deadline_dd = pit_params[:extension_deadline_dd]
+      @case.reason_for_extending = pit_params[:reason_for_extending]
+      render :extend_for_pit
     else
       flash[:alert] = "Unable to perform PIT extension on case #{@case.number}"
       redirect_to case_path(@case.id)
@@ -375,9 +402,14 @@ class CasesController < ApplicationController
     )
   end
 
-  def set_case
+  def set_decorated_case
     @case = Case.find(params[:id]).decorate
     @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
+  end
+
+  def set_case
+    @case = Case.find(params[:id])
+    @case_transitions = @case.transitions.case_history.order(id: :desc)
   end
 
   def set_assignment

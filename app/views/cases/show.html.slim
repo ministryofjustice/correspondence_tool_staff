@@ -71,9 +71,11 @@ div id="case-#{@case.id}"
     section.case-info.has-page-break
       = render partial: 'cases/case_history', locals: { case_transitions: @case_transitions }
 
-  - if policy(@case).execute_extend_for_pit?
-    section.case-info
+  section.case-info
+    - if policy(@case).execute_extend_for_pit?
       = action_button_for(:extend_for_pit)
 
-  - if policy(@case).destroy_case?
-    = link_to 'Delete case', confirm_destroy_case_path(@case)
+    - if policy(@case).destroy_case?
+      / NOPE ... not right, should do a join(' | ')
+      = ' | '
+      = link_to 'Delete case', confirm_destroy_case_path(@case)

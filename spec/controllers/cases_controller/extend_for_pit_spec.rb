@@ -18,8 +18,7 @@ describe CasesController, type: :controller do
     it 'assigns case object' do
       get :extend_for_pit, params: { id: case_being_drafted.id }
       expect(assigns(:case)).to be_a CaseExtendForPITDecorator
-      expect(assigns(:case).object).to be_a CaseDecorator
-      expect(assigns(:case).object.object).to eq case_being_drafted
+      expect(assigns(:case).object).to eq case_being_drafted
     end
   end
 end
