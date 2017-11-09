@@ -80,4 +80,8 @@ FactoryGirl.define do
     code Settings.private_office_team_code
     directorate { find_or_create :press_office_directorate }
   end
+
+  trait :deactivated do
+    deleted_at { Time.now }
+  end
 end

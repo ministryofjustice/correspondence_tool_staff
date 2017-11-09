@@ -120,6 +120,20 @@ class TeamsController < ApplicationController
     end
   end
 
+  def destroy
+    authorize @user
+    service = TeamDeletionService.new(params)
+    service.call
+    case service.result
+    when :ok
+      flash[:notice] = I18n.t('teams.destroyed')
+      redirect_to(set_destination(Team.find(params[:id])))
+    else
+      flash[:alert] = I18n.t('teams.error')
+      redirect_to(team_path)
+    end
+  end
+
   private
 
   def team_params
@@ -212,6 +226,14 @@ class TeamsController < ApplicationController
       "Submit"
     end
 
+  end
+
+  def set_destination(team)
+    if team.type == 'BusinessGroup'
+      teams_path
+    else
+      team_path(team.parent_id)
+    end
   end
 
 end

@@ -22,7 +22,7 @@
           th scope='col'
             = 'Actions'
       tbody
-        - @teams.each do |team|
+        - @teams.active.each do |team|
           tr
             td aria-label="Name"
               = link_to team_path(team) do

@@ -11,6 +11,7 @@ module PageObjects
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
 
         element :flash_notice, '.notice-summary'
+        element :flash_alert, '.error-summary'
 
         element :heading, 'h1.page-heading'
         element :deputy_director, '.team-lead-title'
@@ -42,6 +43,7 @@ module PageObjects
         end
 
         element :new_information_officer_button, 'a#action--new-responder-user'
+        element :deactivate_team_link, 'a#deactivate-team-link'
 
         def row_for_directorate(name)
           directorates_list.find { |row|

@@ -25,7 +25,7 @@ h2.heading-medium
           th scope ='col'
             = "Actions"
       tbody
-        - teams.each do |team|
+        - teams.active.each do |team|
           tr
             td aria-label="Name"
               = link_to team_path(team) do
@@ -38,7 +38,13 @@ h2.heading-medium
               = team.children.size
             td aria-label="Actions"
               = link_to 'Edit', edit_team_path(team, team_type: 'dir'), { class: 'action--edit' }
+              br
   p
 p
 
 = link_to 'Add new directorate', new_team_path(team_type: 'dir', parent_id: @team.id), class: 'button'
+= link_to "Deactivate", team_path(@team.id),
+                      data: {:confirm => t('.destroy')},
+                      method: :delete,
+                      class: 'button-secondary button-left-spacing',
+                      id: 'deactivate-team-link'

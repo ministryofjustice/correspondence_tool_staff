@@ -20,7 +20,7 @@ describe 'teams/index.html.slim', type: :view do
 
   it 'displays all business groups' do
     login_as manager
-    assign(:teams, [@bg_2, @bg_3])
+    assign(:teams, BusinessGroup.all)
 
     render
 
