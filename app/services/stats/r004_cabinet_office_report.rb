@@ -156,7 +156,9 @@ module Stats
     end
 
     def get_value_1_Bi
-      'N/A'
+      open_cases_received_in_period.joins(:transitions).where(
+        'case_transitions.event = ?',
+        'extend_for_pit').group('cases.id').count.size
     end
 
     def get_value_1_Bii
@@ -176,7 +178,9 @@ module Stats
     end
 
     def get_value_1_Cii
-      'N/A'
+      open_cases_received_in_period.joins(:transitions).where(
+        'case_transitions.event = ?',
+        'extend_for_pit').group('cases.id').count.size
     end
 
     def get_value_1_Ciii

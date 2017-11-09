@@ -736,4 +736,11 @@ FactoryGirl.define do
     end
   end
 
+  trait :extended_for_pit do
+    after(:create) do |kase|
+      create :case_transition_extend_for_pit,
+             case: kase
+      kase.reload
+    end
+  end
 end
