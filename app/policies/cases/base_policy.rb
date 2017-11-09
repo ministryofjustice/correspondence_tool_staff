@@ -373,7 +373,7 @@ module Cases
         check_case_is_not_assigned_to_private_office
     end
 
-    def execute_extend_for_pit?
+    def extend_for_pit?
       clear_failed_checks
 
       check_user_is_a_manager_for_case &&

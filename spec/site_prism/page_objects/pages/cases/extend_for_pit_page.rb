@@ -14,9 +14,9 @@ module PageObjects
 
         element :copy, '.action-copy'
 
-        element :extension_date_day,   '#case_external_deadline_dd'
-        element :extension_date_month, '#case_external_deadline_mm'
-        element :extension_date_year,  '#case_external_deadline_yyyy'
+        element :extension_date_day,   '#case_extension_deadline_dd'
+        element :extension_date_month, '#case_extension_deadline_mm'
+        element :extension_date_year,  '#case_extension_deadline_yyyy'
 
         def fill_in_extension_date(date)
           extension_date_day.set(date.day)

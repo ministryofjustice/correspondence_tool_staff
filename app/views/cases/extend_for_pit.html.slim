@@ -1,3 +1,7 @@
+= GovukElementsErrorsHelper.error_summary @case.object,
+    "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+    ""
+
 - content_for :heading
   = t('.extend_for_pit')
 
@@ -19,15 +23,18 @@ div.action-copy
       span.visually-hidden
         = "Important"
     strong.normal-weight
-      = "The additional time can't be used to determine whether exemptions apply. It must already be identified that a qualified exemption applies."
+      = "The additional time can't be used to determine whether exemptions apply."
+      br
+      = "It must already be identified that a qualified exemption applies."
 
 br
 
 = form_for @case, url: execute_extend_for_pit_case_path(@case) do |f|
   .form-group
-    = f.gov_uk_date_field :external_deadline,
+    = f.gov_uk_date_field :extension_deadline,
                           { legend_text: t('cases.extend_for_pit.extension_date'),
-                            form_hint_text: t('cases.extend_for_pit.extension_date_hint') }
+                            form_hint_text: t('cases.extend_for_pit.extension_date_hint',
+                                              extension_limit: Settings.pit_extension_limit) }
 
 
   = f.text_area :reason_for_extending

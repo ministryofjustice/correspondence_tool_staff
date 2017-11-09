@@ -14,7 +14,7 @@ describe 'cases/show.html.slim', type: :view do
       :can_view_attachments?,
       :can_add_message_to_case?,
       :destroy_case?,
-      :execute_extend_for_pit?,
+      :extend_for_pit?,
     ]
 
     if (policies.keys - policy_names).any?
@@ -234,7 +234,7 @@ describe 'cases/show.html.slim', type: :view do
     context 'for a user that has permission to do the action' do
       before do
         login_as manager
-        setup_policies execute_extend_for_pit?: true
+        setup_policies extend_for_pit?: true
       end
 
       it { should have_extend_for_pit_action }
@@ -243,7 +243,7 @@ describe 'cases/show.html.slim', type: :view do
     context 'for a user that does not have permission to do the action' do
       before do
         login_as responder
-        setup_policies execute_extend_for_pit?: false
+        setup_policies extend_for_pit?: false
       end
 
       it { should_not have_extend_for_pit_action }
