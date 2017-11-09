@@ -17,7 +17,6 @@ RSpec.describe CasesHelper, type: :helper do
   let(:coworker)  { create :responder,
                            responding_teams: responder.responding_teams }
   let(:another_responder) { create :responder }
-  let(:policy)    { double('Pundit::Policy', can_add_case?: false)}
 
   describe '#action_button_for(event)' do
 
@@ -92,17 +91,6 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
         )
       end
     end
-
-    context 'when event == :extend_for_pit' do
-      it 'generates HTML that links to the extend-for-pit action' do
-        @case = create(:accepted_case)
-        @assignment = @case.responder_assignment
-        expect(action_button_for(:extend_for_pit))
-          .to eq "<a id=\"action--extend-for-pit\" " +
-                 "href=\"/cases/#{@case.id}/extend_for_pit\">" +
-                 "Extend for Public Interest Test</a>"
-      end
-    end
   end
 
   describe '#case_uploaded_request_files_class' do
@@ -133,6 +121,22 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
       @case.errors.add(:uploaded_request_files, :blank)
       expect(case_uploaded_request_files_id)
         .to eq 'error_case_uploaded_request_files'
+    end
+  end
+
+  describe '#action_links_for_allowed_events' do
+    let(:policy_double) { double 'Pundit::Policy',
+                                 one?: true,
+                                 two?: false,
+                                 three?: true }
+
+    it 'generates links for allowed events' do
+      @case = :case
+      allow_any_instance_of(CasesHelper).to receive(:policy).with(:case).and_return(policy_double)
+      allow_any_instance_of(CasesHelper).to receive(:action_link_for_one).and_return('link_one')
+      allow_any_instance_of(CasesHelper).to receive(:action_link_for_three).and_return('link_three')
+      links = action_links_for_allowed_events(:one, :two, :three)
+      expect(links).to eq ['link_one', 'link_three']
     end
   end
 

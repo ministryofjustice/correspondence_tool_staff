@@ -72,10 +72,4 @@ div id="case-#{@case.id}"
       = render partial: 'cases/case_history', locals: { case_transitions: @case_transitions }
 
   section.case-info
-    - if policy(@case).execute_extend_for_pit?
-      = action_button_for(:extend_for_pit)
-
-    - if policy(@case).destroy_case?
-      / NOPE ... not right, should do a join(' | ')
-      = ' | '
-      = link_to 'Delete case', confirm_destroy_case_path(@case)
+    = action_links_for_allowed_events(:extend_for_pit, :destroy_case).join(' | ').html_safe

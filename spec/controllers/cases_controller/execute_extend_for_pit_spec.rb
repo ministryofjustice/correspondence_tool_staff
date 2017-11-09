@@ -22,7 +22,7 @@ describe CasesController, type: :controller do
     it 'authorizes' do
       expect {
         patch :execute_extend_for_pit, params: patch_params
-      } .to require_permission(:execute_extend_for_pit?)
+      } .to require_permission(:extend_for_pit?)
               .with_args(manager, case_being_drafted)
     end
 

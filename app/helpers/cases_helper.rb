@@ -57,10 +57,6 @@ module CasesHelper
               close_case_path(@case),
               id: 'action--close-case',
               class: 'button', method: :get
-    when :extend_for_pit
-      link_to I18n.t('common.case.extend_for_pit'),
-              extend_for_pit_case_path(@case),
-              id: 'action--extend-for-pit'
     end
   end
   #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
@@ -139,4 +135,25 @@ module CasesHelper
       "error_case_uploaded_request_files"
     end
   end
+
+  def action_links_for_allowed_events(*events)
+    allowed_events = events.find_all do |event_name|
+      policy(@case).__send__ "#{event_name}?"
+    end
+    allowed_events.map do |event_name|
+      __send__ "action_link_for_#{event_name}"
+    end
+  end
+
+  def action_link_for_destroy_case
+    link_to 'Delete case', confirm_destroy_case_path(@case)
+  end
+
+  def action_link_for_extend_for_pit
+    link_to I18n.t('common.case.extend_for_pit'),
+            extend_for_pit_case_path(@case),
+            id: 'action--extend-for-pit'
+
+  end
+
 end

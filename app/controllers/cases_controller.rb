@@ -326,13 +326,13 @@ class CasesController < ApplicationController
   end
 
   def extend_for_pit
-    authorize @case, :execute_extend_for_pit?
+    authorize @case
 
     @case = CaseExtendForPITDecorator.decorate @case
   end
 
   def execute_extend_for_pit
-    authorize @case
+    authorize @case, :extend_for_pit?
 
     pit_params = params[:case]
     extension_deadline = Date.new(
