@@ -7,16 +7,6 @@ class TeamDeletionService
     @result = :incomplete
   end
 
-  # def call
-  #   if @team.has_active_children?
-  #     return @result
-  #   else
-  #     update_name
-  #     soft_delete
-  #     @result = :ok
-  #   end
-  # end
-
   def call
     unless @team.has_active_children?
       ActiveRecord::Base.transaction do
