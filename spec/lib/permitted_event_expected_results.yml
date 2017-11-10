@@ -41,6 +41,7 @@
     - :edit_case
     - :extend_for_pit
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
+    - :request_further_clearance
 
 - - manager
   - unflagged_case_with_response
@@ -49,6 +50,7 @@
     - :edit_case
     - :extend_for_pit
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
+    - :request_further_clearance
 
 - - manager
   - accepted_pending_dacu_clearance_case

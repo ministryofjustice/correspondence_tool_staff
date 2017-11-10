@@ -504,6 +504,7 @@ class Cases::FOIStateMachine
              final_deadline: new_deadline,
              message:        message,
              event:          :extend_for_pit
+  end
 
   def request_further_clearance!(acting_user:, acting_team:, target_team:, target_user:)
     trigger! :request_further_clearance,

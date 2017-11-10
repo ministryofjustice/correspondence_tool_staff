@@ -1,5 +1,5 @@
 $('#case-<%= @case.id %>')
-  .find('.js-take-case-on-container').html(
+  .find('.js-take-case-on-container .container-actions').html(
     "<%= escape_javascript(
            render partial: 'de_escalated',
                   locals: { kase: @case }

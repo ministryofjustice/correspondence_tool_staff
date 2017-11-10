@@ -35,6 +35,12 @@ module Cases
       destroy?
     end
 
+    def request_further_clearance?
+      clear_failed_checks
+      check_user_is_a_manager_for_case &&
+          check_can_trigger_event(:request_further_clearance)
+    end
+
     def can_view_attachments?
       clear_failed_checks
       # for flagged cases, the state changes to pending_dacu_clearance as soon
