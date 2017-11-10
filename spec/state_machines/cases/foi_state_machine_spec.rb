@@ -620,7 +620,7 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
         expect(service).to have_received(:call)
       end
     end
-    
+
     context 'case has not been accepted' do
       let(:kase)      { create :awaiting_responder_case }
       let(:user)      { find_or_create :manager }
@@ -843,6 +843,57 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
                  acting_team_id: team.id
                )
       end
+    end
+  end
+
+  describe '#notify_kilo_case_is_ready_to_send' do
+    let(:approved_case)   { create :approved_case }
+    let(:kase)            { create :case }
+    let!(:service) do
+      double(NotifyResponderService, call: true).tap do |svc|
+        allow(NotifyResponderService).to receive(:new).and_return(svc)
+      end
+    end
+
+    context 'case state is awaiting_dispatch' do
+      it 'calls the service' do
+        approved_case.state_machine.notify_kilo_case_is_ready_to_send(approved_case)
+        expect(NotifyResponderService)
+          .to have_received(:new).with(approved_case)
+        expect(service).to have_received(:call)
+      end
+    end
+
+    context 'case state is not awaiting_dispatch' do
+      it 'does not calls the service' do
+        new_case.state_machine.notify_kilo_case_is_ready_to_send(new_case)
+        expect(NotifyResponderService)
+          .not_to have_received(:new).with(new_case)
+        expect(service).not_to have_received(:call)
+      end
+    end
+  end
+
+  describe '#request_further_clearance' do
+    let(:accepted_case) { create :accepted_case }
+    let(:manager) { create :manager }
+    let(:state_machine) { accepted_case.state_machine }
+    let(:team) { manager.managing_teams.first }
+
+    it 'triggers an request_further_clearance event' do
+      expect {
+        state_machine.request_further_clearance!(
+          acting_user: manager,
+          acting_team: team,
+          target_user: accepted_case.responder,
+          target_team: accepted_case.responding_team)
+      }.to trigger_the_event(:request_further_clearance)
+             .on_state_machine(state_machine)
+             .with_parameters(
+               acting_user_id: manager.id,
+               acting_team_id: team.id,
+               target_user_id: accepted_case.responder.id,
+               target_team_id: accepted_case.responding_team.id)
     end
   end
 end
