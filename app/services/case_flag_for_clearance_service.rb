@@ -13,11 +13,12 @@ class CaseFlagForClearanceService
     return @result unless validate_case_is_unflagged
 
     if @team.dacu_disclosure?
-      assign_approver target_user: @user, target_team: @team,
-                      acting_team: @team
+      assign_approver acting_user: @user, acting_team: @team,
+                      target_team: @team
+
     elsif @team.press_office? || @team.private_office?
-      assign_and_accept_approver target_team: @team, target_user: @user,
-                                 acting_team: @team
+      assign_and_accept_approver acting_user: @user, acting_team: @team,
+                                 target_team: @team
       @dts.associated_teams(for_team: @team).each do |associated|
         associate_team(associated[:team], associated[:user])
       end
@@ -37,32 +38,32 @@ class CaseFlagForClearanceService
     end
   end
 
-  def assign_approver(target_user:, target_team:, acting_team:)
-    @case.state_machine.flag_for_clearance! target_user,
+  def assign_approver(acting_user:, acting_team:, target_team:)
+    @case.state_machine.flag_for_clearance! acting_user,
                                             acting_team,
                                             target_team
     @case.approving_teams << target_team
   end
 
-  def assign_and_accept_approver(target_user:, target_team:, acting_team:)
-    @case.state_machine.take_on_for_approval! target_user,
+  def assign_and_accept_approver(acting_user:, acting_team:, target_team:)
+    @case.state_machine.take_on_for_approval! acting_user,
                                               acting_team,
                                               target_team
     @case.approving_teams << target_team
     @case.reload
     team_assignment = @case.approver_assignments.for_team(target_team).last
-    team_assignment.update!(state: 'accepted', user_id: target_user.id)
+    team_assignment.update!(state: 'accepted', user_id: acting_user.id)
   end
 
   def associate_team(associate_team, associate_user)
     if @case.approver_assignments.where(team: associate_team).blank?
       if associate_user
         assign_and_accept_approver target_team: associate_team,
-                                   target_user: associate_user,
+                                   acting_user: associate_user,
                                    acting_team: @team
       else
-        assign_approver target_team: associate_team, target_user: @user,
-                        acting_team: @team
+        assign_approver acting_user: @user, acting_team: @team,
+                        target_team: associate_team
       end
     end
   end
