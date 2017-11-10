@@ -43,8 +43,8 @@ h2.heading-medium
 p
 
 = link_to 'Add new directorate', new_team_path(team_type: 'dir', parent_id: @team.id), class: 'button'
-= link_to "Deactivate", team_path(@team.id),
-                      data: {:confirm => t('.destroy')},
-                      method: :delete,
-                      class: 'button-secondary button-left-spacing',
-                      id: 'deactivate-team-link'
+/ = link_to "Deactivate", team_path(@team.id),
+/                       data: {:confirm => t('.destroy')},
+/                       method: :delete,
+/                       class: 'button-secondary button-left-spacing',
+/                       id: 'deactivate-team-link'

@@ -444,10 +444,10 @@ en:
       team_members: Team members
       new_team_member: New team member
 #      new_responder_user: New Information Officer
-    business_group_detail:
-      destroy: 'Are you sure you want to deactivate this business group?'
-    directorate_detail:
-      destroy: 'Are you sure you want to deactivate this directorate?'
+    # business_group_detail:
+    #   destroy: 'Are you sure you want to deactivate this business group?'
+    # directorate_detail:
+    #   destroy: 'Are you sure you want to deactivate this directorate?'
     edit:
       edit: Edit %{team_type}
     new:
