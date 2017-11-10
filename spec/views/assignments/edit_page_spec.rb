@@ -7,8 +7,11 @@ describe 'assignments/edit.html.slim', type: :view do
     super(user)
   end
 
-  def allow_case_policy(policy_name)
-    policy = double('Pundit::Policy', policy_name => true)
+  def allow_case_policies(*policy_names)
+    policy = double 'Pundit::Policy'
+    policy_names.each do |policy_name|
+      allow(policy).to receive(policy_name).and_return(true)
+    end
     allow(view).to receive(:policy).with(awaiting_responder_case).and_return(policy)
   end
 
@@ -25,7 +28,7 @@ describe 'assignments/edit.html.slim', type: :view do
     assign(:assignment, assignment)
 
     login_as responder
-    allow_case_policy :can_add_message_to_case?
+    allow_case_policies :can_add_message_to_case?, :request_further_clearance?
 
     render
 
