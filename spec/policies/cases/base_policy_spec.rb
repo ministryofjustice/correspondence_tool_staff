@@ -61,6 +61,10 @@ describe Cases::BasePolicy do
                                               responder: responder }
   let(:awaiting_dispatch_flagged_case)  { create :case_with_response, :flagged, responding_team: responding_team, responder: responder }
 
+  let(:drafting_trigger_case) { create :case_being_drafted,
+                                :flagged_accepted,
+                                approver: approver}
+
 
   after(:each) do |example|
     if example.exception
@@ -636,10 +640,10 @@ describe Cases::BasePolicy do
 
   permissions :extend_for_pit? do
     it { should_not permit(responder,             accepted_case) }
-    it { should     permit(manager,               accepted_case) }
+    it { should_not permit(manager,               accepted_case) }
     it { should_not permit(manager,               unassigned_case) }
     it { should_not permit(manager,               closed_case) }
-    it { should_not permit(disclosure_specialist, accepted_case) }
+    it { should     permit(approver,              drafting_trigger_case) }
     it { should_not permit(press_officer,         accepted_case) }
     it { should_not permit(private_officer,       accepted_case) }
   end

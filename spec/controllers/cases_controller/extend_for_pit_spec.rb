@@ -1,18 +1,20 @@
 require "rails_helper"
 
 describe CasesController, type: :controller do
-  let(:case_being_drafted) { create :case_being_drafted }
-  let(:manager)            { create :disclosure_bmt_user }
+  let(:case_being_drafted)   { create :case_being_drafted,
+                                :flagged_accepted,
+                                 approver: specialist }
+  let(:specialist)           { create :disclosure_specialist}
 
   before do
-    sign_in manager
+    sign_in specialist
   end
 
   describe 'GET extend_for_pit' do
     it 'authorizes' do
       expect { get :extend_for_pit, params: { id: case_being_drafted.id } }
         .to require_permission(:extend_for_pit?)
-              .with_args(manager, case_being_drafted)
+              .with_args(specialist, case_being_drafted)
     end
 
     it 'assigns case object' do

@@ -1,14 +1,17 @@
 require "rails_helper"
 
 feature 'Applying a PIT extension to a case' do
-  given(:manager)            { create :disclosure_bmt_user }
-  given(:case_being_drafted) { create :case_being_drafted }
+  given(:specialist)         { create :disclosure_specialist }
+  let(:case_being_drafted)   { create :case_being_drafted,
+                                :flagged_accepted,
+                                 approver: specialist }
+
 
   background do
-    login_as manager
+    login_as specialist
   end
 
-  scenario 'manager applies the extension' do
+  scenario 'specialist applies the extension' do
     cases_show_page.load(id: case_being_drafted.id)
     cases_show_page.extend_for_pit_action.click
     expect(cases_extend_for_pit_page).to be_displayed

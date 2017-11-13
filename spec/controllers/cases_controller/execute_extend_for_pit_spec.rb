@@ -2,8 +2,10 @@ require "rails_helper"
 
 describe CasesController, type: :controller do
   describe 'PATCH execute_extend_for_pit' do
-    let(:case_being_drafted) { create :case_being_drafted }
-    let(:manager)            { create :disclosure_bmt_user }
+    let(:case_being_drafted)   { create :case_being_drafted,
+                                :flagged_accepted,
+                                approver: specialist }
+    let(:specialist)         { create :disclosure_specialist }
     let(:patch_params)       { { id: case_being_drafted.id,
                                  case: {
                                    extension_deadline_yyyy: '2017',
@@ -16,20 +18,20 @@ describe CasesController, type: :controller do
 
     before do
       allow(CaseExtendForPITService).to receive(:new).and_return(service)
-      sign_in manager
+      sign_in specialist
     end
 
     it 'authorizes' do
       expect {
         patch :execute_extend_for_pit, params: patch_params
       } .to require_permission(:extend_for_pit?)
-              .with_args(manager, case_being_drafted)
+              .with_args(specialist, case_being_drafted)
     end
 
     it 'calls the CaseExtendForPitService' do
       patch :execute_extend_for_pit, params: patch_params
       expect(CaseExtendForPITService)
-        .to have_received(:new).with(manager,
+        .to have_received(:new).with(specialist,
                                      case_being_drafted,
                                      Date.new(2017, 2, 10),
                                      'need more time')
