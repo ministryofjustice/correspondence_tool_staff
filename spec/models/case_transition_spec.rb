@@ -91,6 +91,21 @@ RSpec.describe CaseTransition, type: :model do
     end
   end
 
+  describe 'further_clearance scope' do
+    let!(:further_clearance_transition) do
+      create :case_transition_further_clearance, case_id: kase.id
+    end
+    let!(:add_responses_transition) do
+      create :case_transition_add_responses, case_id: kase.id
+    end
+
+    it 'limits scope to "further_clearance" transitions' do
+      expect(CaseTransition.all.count).to eq 2
+      expect(CaseTransition.all.further_clearance.count).to eq 1
+      expect(CaseTransition.all.further_clearance.last).to eq further_clearance_transition
+    end
+  end
+
   describe 'case_history scope' do
     it 'does not return any add messages entries' do
       kase = create :accepted_case

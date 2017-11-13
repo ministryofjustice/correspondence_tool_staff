@@ -15,6 +15,7 @@ describe 'cases/show.html.slim', type: :view do
       :can_add_message_to_case?,
       :destroy_case?,
       :extend_for_pit?,
+      :request_further_clearance?
     ]
 
     if (policies.keys - policy_names).any?
@@ -65,7 +66,8 @@ describe 'cases/show.html.slim', type: :view do
         login_as manager
         setup_policies can_remove_attachment?: false,
                        can_add_attachment?: false,
-                       can_accept_or_reject_approver_assignment?: false
+                       can_accept_or_reject_approver_assignment?: false,
+                       request_further_clearance?: true
       end
 
       it { should_not have_rendered 'cases/_case_attachments'}
@@ -213,7 +215,8 @@ describe 'cases/show.html.slim', type: :view do
         setup_policies can_remove_attachment?: false,
                        can_add_attachment?: false,
                        can_accept_or_reject_approver_assignment?: false,
-                       can_view_attachments?: true
+                       can_view_attachments?: true,
+                       request_further_clearance?: true
       end
 
       it { should have_rendered 'cases/_case_attachments'}

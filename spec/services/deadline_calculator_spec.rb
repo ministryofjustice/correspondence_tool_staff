@@ -72,5 +72,14 @@ describe DeadlineCalculator do
         end
       end
     end
+
+    context 'escalation deadline' do
+      let(:thu_may_18) { Time.utc(2017, 5, 18, 12, 0, 0) }
+      let(:tue_may_23) { Time.utc(2017, 5, 23, 12, 0, 0) }
+
+      it 'accepts an optional date param' do
+        expect(DeadlineCalculator.escalation_deadline(foi_case, thu_may_18.to_date)).to eq tue_may_23.to_date
+      end
+    end
   end
 end

@@ -648,4 +648,14 @@ describe Cases::BasePolicy do
     it { should_not permit(private_officer,       accepted_case) }
   end
 
+  permissions :request_further_clearance? do
+    it { should_not permit(responder,             accepted_case) }
+    it { should     permit(manager,               accepted_case) }
+    it { should     permit(manager,               case_with_response)}
+    it { should_not permit(manager,               unassigned_case) }
+    it { should_not permit(manager,               closed_case) }
+    it { should_not permit(disclosure_specialist, accepted_case) }
+    it { should_not permit(press_officer,         accepted_case) }
+    it { should_not permit(private_officer,       accepted_case) }
+  end
 end

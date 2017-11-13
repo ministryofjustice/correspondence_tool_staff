@@ -167,6 +167,23 @@ FactoryGirl.define do
     event 'respond'
     acting_user_id      { responder.id }
     acting_team_id      { responding_team.id }
+    target_user_id      { responder.id }
+    target_team_id      { responding_team.id }
+  end
+
+  factory :case_transition_further_clearance, parent: :case_transition do
+    transient do
+      manager       { create :manager }
+      managing_team { manager.managing_teams.first }
+      responder     { create :responder }
+      responding_team { responder.responding_teams.first }
+    end
+
+    to_state 'drafting'
+    event 'request_further_clearance'
+    acting_user_id      { manager.id }
+    acting_team_id      { managing_team.id }
+
   end
 
   factory :case_transition_remove_response, parent: :case_transition do

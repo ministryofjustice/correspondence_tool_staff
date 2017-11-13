@@ -109,9 +109,8 @@ class CaseFinderService
 
   def new_cases_from_last_3_days(team)
     chain @cases
-      .where(created_at: (3.business_day.ago.beginning_of_day..
-          1.business_days.ago.end_of_day))
-              .not_with_teams(team)
-              .order(id: :desc)
+      .where("(properties ->> 'escalation_deadline')::date >= ?", Date.today)
+        .not_with_teams(team)
+        .order(id: :desc)
   end
 end

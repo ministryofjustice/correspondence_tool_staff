@@ -181,6 +181,7 @@ Rails.application.routes.draw do
     # get 'upload_response_approve' => 'cases#upload_response_approve', on: :member
     get :extend_for_pit, on: :member
     patch :execute_extend_for_pit, on: :member
+    patch :request_further_clearance, on: :member
 
     resources :assignments, except: :create  do
       patch 'accept_or_reject', on: :member

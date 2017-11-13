@@ -23,7 +23,7 @@
     - :assign_to_new_team
     - :destroy_case
     - :edit_case
-    - :flag_for_clearance                   # don't think this should be here, and no bu[tton is displayed for it.
+    - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
 
 - - manager
   - flagged_awaiting_responder_case
@@ -41,6 +41,7 @@
     - :edit_case
     - :extend_for_pit
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
+    - :request_further_clearance
 
 - - manager
   - unflagged_case_with_response
@@ -49,6 +50,7 @@
     - :edit_case
     - :extend_for_pit
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
+    - :request_further_clearance
 
 - - manager
   - accepted_pending_dacu_clearance_case
@@ -82,6 +84,7 @@
     - :add_responses
     - :extend_for_pit
     - :reassign_user
+    - :request_further_clearance
 
 - - unassigned_responder
   - unaccepted_pending_dacu_clearance_case
@@ -105,6 +108,7 @@
     - :add_responses
     - :extend_for_pit
     - :reassign_user
+    - :request_further_clearance
 
 - - assigned_responder
   - accepted_pending_dacu_clearance_case

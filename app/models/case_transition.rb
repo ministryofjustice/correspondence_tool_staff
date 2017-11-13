@@ -34,10 +34,12 @@ class CaseTransition < ActiveRecord::Base
   belongs_to :target_user, class_name: User
   belongs_to :target_team, class_name: Team
 
-  scope :accepted,  -> { where to_state: 'drafting'  }
-  scope :drafting,  -> { where to_state: 'drafting'  }
-  scope :messages,  -> { where(event: 'add_message_to_case').order(:id) }
-  scope :responded, -> { where event: 'respond' }
+  scope :accepted,          -> { where to_state: 'drafting'  }
+  scope :drafting,          -> { where to_state: 'drafting'  }
+  scope :messages,          -> { where(event: 'add_message_to_case').order(:id) }
+  scope :responded,         -> { where event: 'respond' }
+  scope :further_clearance, -> { where event: 'request_further_clearance' }
+
   scope :case_history, -> { where.not(event: ['add_message_to_case',
                                              'flag_for_clearance',
                                              'unflag_for_clearance'])}

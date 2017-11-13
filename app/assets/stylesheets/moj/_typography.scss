@@ -68,6 +68,14 @@ strong.normal-weight {
   font-weight: normal;
 }
 
+.container-notices {
+  margin-top: $gutter-half;
+  margin-bottom: $gutter-half;
+  strong {
+    display: block;
+  }
+}
+
 /*********** Case Attachments ***********/
 
 .case-attachments-group {
@@ -113,4 +121,9 @@ strong.normal-weight {
 
 .action-right-aligned {
   text-align: right;
+}
+
+.secondary-action-link {
+  margin-top: $gutter;
+  display: inline-block;
 }

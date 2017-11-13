@@ -34,6 +34,7 @@ class CasesController < ApplicationController
                   :assign_to_new_team,
                   :reassign_approver,
                   :request_amends,
+                  :request_further_clearance,
                   :respond,
                   :show,
                   :destroy,
@@ -358,6 +359,22 @@ class CasesController < ApplicationController
       render :extend_for_pit
     else
       flash[:alert] = "Unable to perform PIT extension on case #{@case.number}"
+      redirect_to case_path(@case.id)
+    end
+  end
+
+  def request_further_clearance
+    authorize @case
+
+    service = RequestFurtherClearanceService.new(user: current_user, kase: @case)
+
+    result = service.call
+
+    if result == :ok
+      flash[:notice] = 'Further clearance requested'
+      redirect_to case_path(@case.id)
+    else
+      flash[:alert] = "Unable to request further clearance on case #{@case.number}"
       redirect_to case_path(@case.id)
     end
   end

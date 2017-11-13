@@ -283,6 +283,11 @@ class Cases::FOIStateMachine
                to:   :responded
   end
 
+  event :request_further_clearance do
+    transition from: :drafting,                         to: :drafting
+    transition from: :awaiting_dispatch,                to: :awaiting_dispatch
+  end
+
   def accept_approver_assignment!(user, approving_team)
     trigger! :accept_approver_assignment,
              acting_team_id:    approving_team.id,
@@ -499,6 +504,19 @@ class Cases::FOIStateMachine
              final_deadline: new_deadline,
              message:        message,
              event:          :extend_for_pit
+  end
+
+  def request_further_clearance!(acting_user:, acting_team:, target_team:, target_user:)
+    trigger! :request_further_clearance,
+             acting_user_id:    acting_user.id,
+             acting_team_id:    acting_team.id,
+             target_team_id:    target_team.id,
+             target_user_id:    target_user.id,
+             event:             :request_further_clearance
+  end
+
+  def notify_kilo_case_is_ready_to_send(kase)
+    NotifyResponderService.new(kase).call if kase.current_state == "awaiting_dispatch"
   end
 
   private

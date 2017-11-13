@@ -34,12 +34,19 @@
               .case_message_extract
                 = kase.shortened_message
             td.js-take-case-on-container aria-label="#{t('.actions')}"
-              - if kase.state_machine.permitted_events(current_user.id).include? :take_on_for_approval
-                = render partial: 'take_case_on_for_approver',
-                        locals: { case_details: kase }
-              - elsif kase.approver_assignments.with_teams(current_user.teams)
-                = render partial: 'take_case_on_or_de_escalate',
-                         locals: { case_details: kase }
+              .container-actions
+                - if kase.state_machine.permitted_events(current_user.id).include? :take_on_for_approval
+                  = render partial: 'take_case_on_for_approver',
+                          locals: { case_details: kase }
+                - elsif kase.approver_assignments.with_teams(current_user.teams)
+                  = render partial: 'take_case_on_or_de_escalate',
+                           locals: { case_details: kase }
+
+              - if kase.transitions.further_clearance.present?
+                .container-notices
+                  = "Clearance requested by: "
+                  strong
+                    = kase.transitions.further_clearance.last.target_team.name
     = paginate @cases
 
 
