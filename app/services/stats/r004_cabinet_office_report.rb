@@ -178,7 +178,7 @@ module Stats
     end
 
     def get_value_1_Cii
-      open_cases_received_in_period.joins(:transitions).where(
+      cases_received_and_closed_in_period.joins(:transitions).where(
         'case_transitions.event = ?',
         'extend_for_pit').group('cases.id').count.size
     end
