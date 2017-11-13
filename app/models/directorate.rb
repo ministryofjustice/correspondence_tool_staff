@@ -19,4 +19,7 @@ class Directorate < Team
   belongs_to :business_group, foreign_key: 'parent_id'
   has_many :business_units, foreign_key: 'parent_id'
 
+  def child_type
+    "business units"
+  end
 end

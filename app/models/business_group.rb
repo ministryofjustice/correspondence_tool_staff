@@ -20,4 +20,7 @@ class BusinessGroup < Team
 
   has_many :business_units, through: :directorates
 
+  def child_type
+    "directorates"
+  end
 end
