@@ -15,7 +15,9 @@ module Stats
         # cases created this quarter
         Timecop.freeze @frozen_time - 2.days do
           2.times { create :case }
+          1.times { create :case, :extended_for_pit }
           2.times { create :closed_case }
+          2.times { create :closed_case, :extended_for_pit }
           2.times { create :closed_case, :clarification_required }
           3.times { create :closed_case, :info_not_held  }
 
@@ -84,7 +86,7 @@ module Stats
       context '1.A' do
         it 'records the total number' do
           expect(@results['1.A'][:desc]).to eq 'Total number of FOI requests received this quarter'
-          expect(@results['1.A'][:value]).to eq 73
+          expect(@results['1.A'][:value]).to eq 76
         end
       end
 
@@ -97,14 +99,14 @@ module Stats
       context '1.B' do
         it 'records  the stat' do
           expect(@results['1.B'][:desc]).to eq 'Number of requests that have been created but not closed in this quarter'
-          expect(@results['1.B'][:value]).to eq 5
+          expect(@results['1.B'][:value]).to eq 6
         end
       end
 
       context '1.Bi' do
-        it 'is out of scope' do
+        it 'records the stat' do
           expect(@results['1.Bi'][:desc]).to eq 'Number of requests where the 20 working day deadline for response has been extended as permitted in legislation'
-          expect(@results['1.Bi'][:value]).to eq 'N/A'
+          expect(@results['1.Bi'][:value]).to eq 1
         end
       end
 
@@ -125,21 +127,21 @@ module Stats
       context '1.C' do
         it 'records the stat' do
           expect(@results['1.C'][:desc]).to eq 'Number of requests that have been created and closed within this quarter'
-          expect(@results['1.C'][:value]).to eq 68
+          expect(@results['1.C'][:value]).to eq 70
         end
       end
 
       context '1.Ci' do
         it 'records the stat' do
           expect(@results['1.Ci'][:desc]).to eq 'Number of requests created and processed in this quarter that were within time against the external deadline'
-          expect(@results['1.Ci'][:value]).to eq 65
+          expect(@results['1.Ci'][:value]).to eq 67
         end
       end
 
       context '1.Cii' do
-        it 'is out of scope' do
+        it 'records the stat' do
           expect(@results['1.Cii'][:desc]).to eq 'Number of requests where the 20 working day deadline for response has been extended as permitted in legislation'
-          expect(@results['1.Cii'][:value]).to eq 'N/A'
+          expect(@results['1.Cii'][:value]).to eq 2
         end
       end
 
@@ -153,14 +155,14 @@ module Stats
       context '2.A' do
         it 'replicates the figure in 1.C' do
           expect(@results['2.A'][:desc]).to eq 'Number of requests that have been created and closed within this quarter (Replicates \'C\' above in TIMELINESS section)'
-          expect(@results['2.A'][:value]).to eq 68
+          expect(@results['2.A'][:value]).to eq 70
         end
       end
 
       context '2.B' do
         it 'records the stat' do
           expect(@results['2.B'][:desc]).to match(/Number of cases created and closed in this quarter .*Granted in full/)
-          expect(@results['2.B'][:value]).to eq 7
+          expect(@results['2.B'][:value]).to eq 9
         end
       end
 
