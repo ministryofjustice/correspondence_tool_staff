@@ -375,8 +375,8 @@ module Cases
 
     def extend_for_pit?
       clear_failed_checks
-
-      check_user_is_a_manager_for_case &&
+      
+      check_user_is_assigned_dacu_disclosure_approver &&
         check_can_trigger_event(:extend_for_pit)
     end
 
