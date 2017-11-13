@@ -81,4 +81,7 @@ class BusinessUnit < Team
     code == Settings.private_office_team_code
   end
 
+  def child_type
+    "users"
+  end
 end

@@ -5,12 +5,12 @@ RSpec.describe TeamsController, type: :controller do
   describe 'DELETE destroy' do
 
     let(:responder) { create :responder }
-    let(:team)      { create :responding_team, directorate: dir }
-    let(:dir)       { create :directorate }
+    let(:dir)       { create :directorate, business_group: bg }
+    let(:bg)        { create :business_group}
     let(:manager)   { create :manager }
     let(:params) do
       {
-        id: team.id
+        id: dir.id
       }
     end
 
@@ -40,9 +40,10 @@ RSpec.describe TeamsController, type: :controller do
 
         context 'deactivating a directorate' do
           it 'redirects to parent team path' do
-            expect(response).to redirect_to(team_path(dir))
+            expect(response).to redirect_to(team_path(bg))
           end
         end
+
         context 'deactivating a business group' do
           let(:bg)      { create :business_group }
           let(:params)  {{ id: bg.id }}
@@ -61,12 +62,12 @@ RSpec.describe TeamsController, type: :controller do
           delete :destroy, params: params
         end
 
-        it 'displays a flash notice' do
-          expect(flash[:alert]).to eq I18n.t('teams.error')
+        it 'displays a flash alert' do
+          expect(flash[:alert]).to eq "This Directorate still has active business units. Please deactivate all business units of the Directorate before deactivating the Directorate"
         end
 
         it 'redirects to team path' do
-          expect(response).to redirect_to(team_path(team.id))
+          expect(response).to redirect_to(team_path(dir.id))
         end
       end
     end
