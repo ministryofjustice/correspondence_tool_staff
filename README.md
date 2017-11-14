@@ -67,6 +67,59 @@ $ brew install phantomjs
 
 </details>
 
+### Frontend local development setup
+[BrowserSync](https://www.browsersync.io/) is setup and configured for local development 
+using the [BrowserSync Rails gem](https://github.com/brunoskonrad/browser-sync-rails). 
+BrowserSync helps us test across different browsers and devices and sync the 
+various actions that take place.
+
+####Dependencies
+Node.js
+Install using `brew install node` and then check its installed using `node -v` and `npm -v`
+
+- [Team Treehouse](http://blog.teamtreehouse.com/install-node-js-npm-mac)
+- [Dy Classroom](https://www.dyclassroom.com/howto-mac/how-to-install-nodejs-and-npm-on-mac-using-homebrew)
+####Installing and running:
+
+Bundle install as normal then 
+After bundle install:
+
+```bash
+bundle exec rails generate browser_sync_rails:install
+```
+
+This will use Node.js npm (Node Package Manager(i.e similar to Bundle or Pythons PIP)) 
+to install BrowserSync and this command is only required once. If you run into 
+problems with your setup visit the [Gems README](https://github.com/brunoskonrad/browser-sync-rails#problems).
+
+To run BrowserSync start your rails server as normal then in a seperate terminal window
+run the following rake task:
+
+```bash
+bundle exec rails browser_sync:start
+```
+
+You should see the following output:
+```
+browser-sync start --proxy localhost:3000 --files 'app/assets, app/views'
+[Browsersync] Proxying: http://localhost:3000
+[Browsersync] Access URLs:
+ ------------------------------------
+       Local: http://localhost:3001
+    External: http://xxx.xxx.xxx.x:3001
+ ------------------------------------
+          UI: http://localhost:3002
+ UI External: http://xxx.xxx.xxx.x:3002
+ ------------------------------------
+[Browsersync] Watching files...
+```
+Open any number of browsers and use either the local or external address and your
+browser windows should be sync. If you make any changes to assets or views then all
+the browsers should automatically update and sync.
+
+The UI URL are there if you would like to tweak the BrowserSync server and configure it further
+
+
 ### Libreoffice
 
 Libreoffice is used to convert documents to PDF's so that they can be viewed in a browser.

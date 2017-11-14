@@ -87,8 +87,8 @@ group :development, :test do
 end
 
 group :development do
+  gem 'browser_sync_rails'
   gem 'guard-brakeman'
-  gem 'guard-livereload', '>= 2.5.2'
   gem 'guard-rspec'
   gem 'guard-rubocop'
   gem 'listen', '~> 3.0.5'
