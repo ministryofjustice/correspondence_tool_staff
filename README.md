@@ -68,18 +68,21 @@ $ brew install phantomjs
 </details>
 
 ### Frontend local development setup
+
 [BrowserSync](https://www.browsersync.io/) is setup and configured for local development 
 using the [BrowserSync Rails gem](https://github.com/brunoskonrad/browser-sync-rails). 
 BrowserSync helps us test across different browsers and devices and sync the 
 various actions that take place.
 
-####Dependencies
-Node.js
+#### Dependencies
+
+Node.js:
 Install using `brew install node` and then check its installed using `node -v` and `npm -v`
 
 - [Team Treehouse](http://blog.teamtreehouse.com/install-node-js-npm-mac)
 - [Dy Classroom](https://www.dyclassroom.com/howto-mac/how-to-install-nodejs-and-npm-on-mac-using-homebrew)
-####Installing and running:
+
+#### Installing and running:
 
 Bundle install as normal then 
 After bundle install:
