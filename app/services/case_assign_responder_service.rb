@@ -14,7 +14,7 @@ class CaseAssignResponderService
       @assignment = @case.assignments.new(team: @team, role: @role)
       if @assignment.valid?
         managing_team = @user.managing_team_roles.first.team
-        @case.state_machine.assign_responder! @user, managing_team, @team
+        @case.state_machine.assign_responder! acting_user: @user, acting_team: managing_team, target_team: @team
         @assignment.save
         @result = :ok
       else

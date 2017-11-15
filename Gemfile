@@ -35,6 +35,7 @@ gem 'pry-rails'
 gem 'puma', '~> 3.0'
 gem 'pundit', '~>1.1'
 gem 'rails', '~> 5.0'
+gem 'recursive-open-struct'
 gem 'sass-rails', '~> 5.0'
 gem 'sentry-raven', '~> 2.6.3'
 gem 'slim-rails', '~> 3.1'
@@ -72,6 +73,8 @@ end
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'annotate'
+  gem 'better_errors'
+  gem 'binding_of_caller'
   gem 'byebug', platform: :mri
   gem 'colorize'
   gem 'guard-jasmine'

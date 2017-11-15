@@ -42,9 +42,10 @@ describe CaseAssignResponderService, type: :service do
         service.call
         expect(unassigned_case.state_machine)
           .to have_received(:assign_responder!)
-                .with manager,
-                      manager.managing_teams.first,
-                      responding_team
+                .with(
+                  acting_user: manager,
+                  acting_team: manager.managing_teams.first,
+                  target_team: responding_team)
       end
 
       it 'saves the assignment' do
