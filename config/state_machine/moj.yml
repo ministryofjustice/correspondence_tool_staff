@@ -1,0 +1,61 @@
+preamble:
+  organisation: Ministry of Justice
+  organisation_abbreviation: moj
+
+  permitted_correspondence_types:
+    foi: Freedom of information request
+#    osar: Offender subject access request
+#    nosar: Non-offender subject access request
+
+correspondence_types:
+  foi:
+    name: Freedom of Information Request
+    permitted_workflows:
+      - standard
+#      - review_for_compliance
+#      - review_for_timeliness
+
+    permitted_user_roles:
+      - manager
+      - approver
+      - responder
+
+    permitted_states:
+      - unassigned
+      - awaiting_responder
+      - drafting
+      - pending_dacu_clearance
+      - pending_press_office_clearance
+      - pending_private_office_clearance
+      - awaiting_dispatch
+      - responded
+      - closed
+
+    workflows:
+      standard:
+        initial_state: unassigned
+        user_roles:
+          manager:
+            states:
+              unassigned:
+                add_message_to_case:
+                  if: Cases::FOIPolicy#can_add_message_to_case?
+                assign_responder:
+                  transition_to: awaiting_responder
+                destroy_case:
+                edit_case:
+                flag_for_clearance:
+                unflag_for_clearance:
+                  if: Cases::FOIPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
+
+
+
+#                  before_transition:
+#                  transition_to:
+#                  after_transition: ConfigurableStateMachine::Callbacks#notify_responder
+#                  switch_workflow:
+          approver:
+            states:
+              unassigned:
+                flag_for_clearance:
+

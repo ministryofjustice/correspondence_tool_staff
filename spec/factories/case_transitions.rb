@@ -43,7 +43,7 @@ FactoryGirl.define do
       approving_team { find_or_create :team_dacu_disclosure }
     end
 
-    to_state          { self.case.current_state }
+    to_state          { self.case.current_state ||  'unassigned' }
     event             'flag_for_clearance'
     acting_user_id    { manager.id }
     acting_team_id    { managing_team.id }

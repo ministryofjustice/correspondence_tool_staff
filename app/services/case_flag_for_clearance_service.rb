@@ -39,9 +39,10 @@ class CaseFlagForClearanceService
   end
 
   def assign_approver(acting_user:, acting_team:, target_team:)
-    @case.state_machine.flag_for_clearance! acting_user,
-                                            acting_team,
-                                            target_team
+    @case.state_machine.flag_for_clearance! acting_user: acting_user,
+                                            acting_team: acting_team,
+                                            target_team: target_team
+
     @case.approving_teams << target_team
   end
 

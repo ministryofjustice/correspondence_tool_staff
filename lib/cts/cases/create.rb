@@ -167,6 +167,7 @@ module CTS::Cases
 
     def transition_to_awaiting_responder(kase)
       kase.responding_team = responding_team
+
       cars = CaseAssignResponderService.new team: responding_team,
                                             kase: kase,
                                             role: 'responding',
