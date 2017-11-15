@@ -337,7 +337,8 @@ CREATE TABLE cases (
     delivery_method cases_delivery_methods,
     workflow character varying,
     "deleted?" boolean DEFAULT false,
-    info_held_status_id integer
+    info_held_status_id integer,
+    type character varying DEFAULT 'Case'::character varying
 );
 
 
@@ -1214,6 +1215,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171023142558'),
 ('20171025142614'),
 ('20171027112328'),
-('20171101171629');
+('20171101171629'),
+('20171114111458');
 
 

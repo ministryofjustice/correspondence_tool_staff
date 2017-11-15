@@ -136,6 +136,7 @@ class Case < ApplicationRecord
             if: -> { sent_by_post? }
   validates :subject,  :category, presence: true
   validates :subject, length: { maximum: 100 }
+  validates :type, presence: true
 
   validates_with ::ClosedCaseValidator
 
@@ -245,6 +246,10 @@ class Case < ApplicationRecord
 
   def upload_request_groups
     CaseAttachmentUploadGroupCollection.new(self, attachments.request)
+  end
+
+  def set_type
+    self.type = 'Case'
   end
 
   # Commented out as this is not being used and we don't know how to re-write

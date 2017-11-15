@@ -123,7 +123,17 @@ class CaseDecorator < Draper::Decorator
       object.message_transitions.any?
     end
   end
+
+  def type_printer
+    case object.type
+    when 'FOIComplianceReview'
+      'FOI - Internal review for compliance'
+    when 'FOITimelinessReview'
+      'FOI - Internal review for Timeliness'
+    when "Case"
+      'FOI'
+    else
+      raise 'type does not exist'
+    end
+  end
 end
-
-
-

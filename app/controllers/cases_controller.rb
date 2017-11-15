@@ -105,10 +105,10 @@ class CasesController < ApplicationController
   def create
     authorize Case.new(category: Category.foi), :can_add_case?
 
-    ccs = CaseCreateService.new current_user, create_foi_params
-    ccs.call
-    @case = ccs.case
-    case ccs.result
+    service = CaseCreateService.new current_user, create_foi_params
+    service.call
+    @case = service.case
+    case service.result
     when :case_created
       redirect_to case_path @case
     when :assign_responder
@@ -408,6 +408,7 @@ class CasesController < ApplicationController
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :delivery_method,
       :flag_for_disclosure_specialists,
+      :type,
       uploaded_request_files: [],
     ).merge(category_id: Category.foi.id)
   end
@@ -469,6 +470,7 @@ class CasesController < ApplicationController
     S3Uploader.s3_direct_post_for_case(kase, upload_type)
   end
 end
+
 def set_state_selector
 
   @state_selector = StateSelector.new(params)

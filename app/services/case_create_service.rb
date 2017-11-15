@@ -7,7 +7,8 @@ class CaseCreateService
   end
 
   def call
-    @case = Case.new(params.merge(uploading_user: user))
+    klass = get_class_from_case_type(params[:type])
+    @case = klass.new(params.merge(uploading_user: user))
     if params[:flag_for_disclosure_specialists].blank?
       @case.valid?
       @case.errors.add(:flag_for_disclosure_specialists, :blank)
@@ -29,5 +30,20 @@ class CaseCreateService
       @result = :error
     end
     @result != :error
+  end
+
+  private
+
+  def get_class_from_case_type(case_type)
+    case case_type
+    when 'FOITimelinessReview'
+      FOITimelinessReview
+    when 'FOIComplianceReview'
+      FOIComplianceReview
+    when 'Case'
+      Case
+    else
+      raise ArgumentError.new('Invalid case type parameter')
+    end
   end
 end
