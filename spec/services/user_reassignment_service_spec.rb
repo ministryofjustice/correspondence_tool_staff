@@ -52,8 +52,14 @@ describe UserReassignmentService do
 
     let(:policy)          { service.instance_variable_get(:@policy) }
 
-
     context 'Reassign the assignment' do
+
+      before do
+        allow(ActionNotificationsMailer).to receive_message_chain(
+                                            :case_assigned_to_another_user,
+                                            :deliver_later)
+      end
+
       it 'returns :ok' do
         expect(service.call).to eq :ok
       end
@@ -70,7 +76,61 @@ describe UserReassignmentService do
         service.call
         expect(accepted_case.assignments).to eq assignment
       end
+
+      it 'sends an email (only if different and user not assigning themselves' do
+        service.call
+        expect(ActionNotificationsMailer).to have_received(:case_assigned_to_another_user)
+      end
+
+      context 'when an error occurs' do
+        it 'rolls-back changes' do
+          old_user_id = assignment.user_id
+          allow(assignment).to receive(:update).and_throw(RuntimeError)
+          service.call
+
+          # does not change the original assigned user
+          expect(assignment.user_id).to eq old_user_id
+
+          #no case history
+          reassigned_user_transitions = accepted_case
+                                              .transitions
+                                              .where( event: 'reassign_user')
+          expect(reassigned_user_transitions.any?).to be false
+        end
+
+        it 'sets result to :error and returns same' do
+          allow(assignment).to receive(:update).and_throw(RuntimeError)
+          result = service.call
+          expect(result).to eq :error
+          expect(service.result).to eq :error
+        end
+
+        it 'does not send an email' do
+          allow(assignment).to receive(:update).and_throw(RuntimeError)
+          service.call
+          expect(ActionNotificationsMailer).to_not have_received(:case_assigned_to_another_user)
+        end
+      end
     end
 
+    context 'user assigns a case to themselves' do
+      let(:service) {
+        UserReassignmentService.new(target_user: responder,
+                                    acting_user: responder,
+                                    assignment: assignment )
+      }
+
+      before do
+        allow(ActionNotificationsMailer).to receive_message_chain(
+                                            :case_assigned_to_another_user,
+                                            :deliver_later)
+      end
+
+      it 'should not send email' do
+        service.call
+        expect(service.result).to eq :ok
+        expect(ActionNotificationsMailer).to_not have_received(:case_assigned_to_another_user)
+      end
+    end
   end
 end
