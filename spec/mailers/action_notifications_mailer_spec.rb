@@ -135,7 +135,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
 
     context 'message' do
       let(:mail) { described_class.notify_information_officers(approved_case, 'Message received')}
-      
+
       it 'sets the template' do
         expect(mail.govuk_notify_template)
           .to eq '55d7abbc-9042-4646-8835-35a1b2e432c4'
@@ -146,6 +146,44 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
         expect(mail.govuk_notify_personalisation)
           .to include(email_subject: "Message received - FOI - #{approved_case.number} - The anatomy of man")
       end
+    end
+  end
+
+  describe 'case_assigned_to_another_user' do
+    let(:accepted_case)   { create :accepted_case,
+                                   name: 'Fyodor Ognievich Ilichion',
+                                   received_date: 10.business_days.ago,
+                                   subject: 'The anatomy of man'}
+    let(:responding_team) { accepted_case.responding_team }
+    let(:responder)       { responding_team.responders.first }
+    let(:mail)            { described_class
+                                .case_assigned_to_another_user(accepted_case,
+                                                               responder) }
+
+    it 'sets the template' do
+      expect(mail.govuk_notify_template)
+        .to eq '1e26c707-e7e3-4b21-835d-1241da6ea251'
+    end
+
+    it 'personalises the email' do
+      allow(CaseNumberCounter).to receive(:next_for_date).and_return(333)
+      expect(mail.govuk_notify_personalisation)
+        .to eq({
+         email_subject:
+           "Assigned to you - FOI - #{accepted_case.number} - The anatomy of man",
+         user_name: responder.full_name,
+         case_number: accepted_case.number,
+         case_abbr: 'FOI',
+         case_name: 'Fyodor Ognievich Ilichion',
+         case_received_date: 10.business_days.ago.to_date.strftime(Settings.default_date_format),
+         case_subject: 'The anatomy of man',
+         case_link: case_url(accepted_case.id),
+         case_external_deadline: accepted_case.external_deadline.strftime(Settings.default_date_format)
+         })
+    end
+
+    it 'sets the To address of the email using the provided user' do
+      expect(mail.to).to include responder.email
     end
   end
 end
