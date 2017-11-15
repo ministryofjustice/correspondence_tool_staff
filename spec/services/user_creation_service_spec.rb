@@ -88,7 +88,7 @@ describe UserCreationService do
     end
 
     context 'when a user with the same email exists' do
-      before(:all) do
+      before(:each) do
         team_2 = BusinessUnit.create(name: 'UCT 2', parent_id: @team.parent_id, role: 'responder')
         @existing_user = User.new(full_name: 'danny driver', email: 'dd@moj.com', password: 'kjkjkj')
         @existing_user.team_roles << TeamsUsersRole.new(team: team_2, role: 'responder')

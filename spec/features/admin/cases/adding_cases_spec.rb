@@ -21,7 +21,7 @@ feature 'adding cases' do
     login_as admin
   end
 
-  scenario 'creating a foi case with the default values' do
+  xscenario 'creating a foi case with the default values' do
     admin_cases_page.load
     admin_cases_page.create_case_button.click
     expect(admin_cases_new_page).to be_displayed
@@ -30,7 +30,7 @@ feature 'adding cases' do
     expect(admin_cases_page.case_list.count).to eq 1
   end
 
-  scenario 'creating a foi case with specific values' do
+  xscenario 'creating a foi case with specific values' do
     admin_cases_page.load
     admin_cases_page.create_case_button.click
     expect(admin_cases_new_page).to be_displayed
@@ -53,7 +53,7 @@ feature 'adding cases' do
     expect(kase.received_date).to eq 1.business_days.ago.to_date
   end
 
-  scenario 'creating a foi case flagged for DACU disclosure' do
+  xscenario 'creating a foi case flagged for DACU disclosure' do
     admin_cases_page.load
     admin_cases_page.create_case_button.click
     expect(admin_cases_new_page).to be_displayed
@@ -66,7 +66,7 @@ feature 'adding cases' do
     expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
   end
 
-  scenario 'creating a foi case flagged for press office' do
+  xscenario 'creating a foi case flagged for press office' do
     find_or_create :default_press_officer
     find_or_create :default_private_officer
     admin_cases_page.load
@@ -83,7 +83,7 @@ feature 'adding cases' do
     expect(BusinessUnit.private_office).to be_in(kase.approving_teams)
   end
 
-  scenario 'creating a foi case flagged for private office' do
+  xscenario 'creating a foi case flagged for private office' do
     find_or_create :default_press_officer
     find_or_create :default_private_officer
     admin_cases_page.load
@@ -100,7 +100,7 @@ feature 'adding cases' do
     expect(BusinessUnit.private_office).to be_in(kase.approving_teams)
   end
 
-  scenario 'creating a flagged for disclosure case that is pending ds clearance' do
+  xscenario 'creating a flagged for disclosure case that is pending ds clearance' do
     stub_s3_uploader_for_all_files!
     find_or_create :default_press_officer
     find_or_create :default_private_officer
@@ -118,7 +118,7 @@ feature 'adding cases' do
     expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
   end
 
-  scenario 'creating a closed foi case' do
+  xscenario 'creating a closed foi case' do
     stub_s3_uploader_for_all_files!
     find_or_create :default_press_officer
     find_or_create :default_private_officer

@@ -15,10 +15,13 @@ class Case::FOIStateMachine
     Pundit.policy!(user, object)
   end
 
+  def configurable?
+    false
+  end
+
   after_transition do | kase, transition|
     transition.record_state_change(kase)
   end
-
 
   # The order here is important - it governs the order of the checkboxes appear on the filter by state form
   state :awaiting_responder
@@ -387,11 +390,11 @@ class Case::FOIStateMachine
              event:             :assign_to_new_team
   end
 
-  def flag_for_clearance!(user, managing_team, approving_team)
+  def flag_for_clearance!(acting_user:, acting_team:, target_team:)
     trigger! :flag_for_clearance,
-             acting_user_id:    user.id,
-             acting_team_id:    managing_team.id,
-             target_team_id:    approving_team.id,
+             acting_user_id:    acting_user.id,
+             acting_team_id:    acting_team.id,
+             target_team_id:    target_team.id,
              event:             :flag_for_clearance
   end
 
@@ -531,13 +534,13 @@ class Case::FOIStateMachine
     NotifyResponderService.new(kase).call if kase.current_state == "awaiting_dispatch"
   end
 
-  def link_a_case!(acting_user, acting_team, linked_case)
+  def link_a_case!(acting_user_id:, acting_team_id:, linked_case_id:)
     trigger! :link_a_case,
-             acting_user_id: acting_user.id,
-             acting_team_id: acting_team.id,
-             linked_case_id: linked_case.id,
+             acting_user_id: acting_user_id,
+             acting_team_id: acting_team_id,
+             linked_case_id: linked_case_id,
              event:          :link_a_case
-
+538
   end
   private
 

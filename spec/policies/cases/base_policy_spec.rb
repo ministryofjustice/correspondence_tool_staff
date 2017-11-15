@@ -74,6 +74,24 @@ describe CasePolicy do
     end
   end
 
+  describe '.new' do
+    context 'initialized with old style' do
+      it 'instantiates the policy using positional parameters' do
+        policy = Cases::BasePolicy.new(manager, accepted_case)
+        expect(policy.user).to eq manager
+        expect(policy.case).to eq accepted_case
+      end
+    end
+
+    context 'initialized with new style' do
+      it 'instantiates the policy using named parameters' do
+        policy = Cases::BasePolicy.new(user: manager, kase: accepted_case)
+        expect(policy.user).to eq manager
+        expect(policy.case).to eq accepted_case
+      end
+    end
+  end
+
 
   permissions :can_view_attachments? do
     context 'flagged cases' do

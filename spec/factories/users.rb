@@ -47,6 +47,12 @@ FactoryGirl.define do
       managing_teams { [create(:managing_team)] }
     end
 
+    factory :manager_approver do
+      full_name      { generate(:manager_name) }
+      managing_teams { [create(:managing_team)] }
+      approving_team { create(:approving_team) }
+    end
+
     factory :disclosure_bmt_user do
       full_name      { generate :disclosure_bmt_user_name }
       managing_teams { [find_or_create(:team_dacu)] }
