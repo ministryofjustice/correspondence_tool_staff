@@ -1,10 +1,6 @@
-class FOITimelinessReview < Case
+class FoiTimelinessReview < Case
 
   def set_type
-    self.type = 'FOITimelinessReview'
-  end
-
-  def type
-    'FOITimelinessReview'
+    self.type = 'FoiTimelinessReview'
   end
 end

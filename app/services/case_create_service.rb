@@ -32,14 +32,12 @@ class CaseCreateService
     @result != :error
   end
 
-  private
-
   def get_class_from_case_type(case_type)
     case case_type
-    when 'FOITimelinessReview'
-      FOITimelinessReview
-    when 'FOIComplianceReview'
-      FOIComplianceReview
+    when 'FoiTimelinessReview'
+      FoiTimelinessReview
+    when 'FoiComplianceReview'
+      FoiComplianceReview
     when 'Case'
       Case
     else

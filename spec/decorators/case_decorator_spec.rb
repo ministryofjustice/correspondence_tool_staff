@@ -351,14 +351,6 @@ describe CaseDecorator, type: :model do
     end
   end
   describe '#type_printer' do
-    it 'pretty prints FOIComplianceReview' do
-      kase = create :foi_compliance_review
-      expect(kase.type_printer).to eq'foi compliance'
-    end
-    it 'pretty prints FOITimelinessReview' do
-      kase = create :foi_timeliness_review
-      expect(kase.type_printer).to eq'foi timeliness'
-    end
     it 'pretty prints Case' do
       expect(accepted_case.type_printer).to eq 'FOI'
     end

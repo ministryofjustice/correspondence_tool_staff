@@ -822,15 +822,15 @@ RSpec.describe CasesController, type: :controller do
         end
 
         it "create a internal review for timeliness" do
-          params[:case][:type] = 'FOITimelinessReview'
+          params[:case][:type] = 'FoiTimelinessReview'
           post :create, params: params
-          expect(created_case.type).to eq 'FOITimelinessReview'
+          expect(created_case.type).to eq 'FoiTimelinessReview'
         end
 
         it "create a internal review for compliance" do
-          params[:case][:type] = 'FOIComplianceReview'
+          params[:case][:type] = 'FoiComplianceReview'
           post :create, params: params
-          expect(created_case.type).to eq 'FOIComplianceReview'
+          expect(created_case.type).to eq 'FoiComplianceReview'
         end
 
         describe 'flag_for_clearance' do

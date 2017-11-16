@@ -125,11 +125,11 @@ class CaseDecorator < Draper::Decorator
   end
 
   def type_printer
-    case object.type
-    when 'FOIComplianceReview'
+    case type
+    when 'FoiComplianceReview'
       'FOI - Internal review for compliance'
-    when 'FOITimelinessReview'
-      'FOI - Internal review for Timeliness'
+    when 'FoiTimelinessReview'
+      'FOI - Internal review for timeliness'
     when "Case"
       'FOI'
     else

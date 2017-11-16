@@ -26,7 +26,7 @@
 
 FactoryGirl.define do
 
-  factory :foi_timeliness_review do
+  factory :foi_compliance_review do
     transient do
       creation_time { 4.business_days.ago }
       identifier "new case"
@@ -34,7 +34,7 @@ FactoryGirl.define do
     end
 
     requester_type 'member_of_the_public'
-    type 'FOITimelinessReview'
+    type 'FoiComplianceReview'
     sequence(:name) { |n| "#{identifier} name #{n}" }
     email { Faker::Internet.email(identifier) }
     # association :category, factory: :category, strategy: :create
