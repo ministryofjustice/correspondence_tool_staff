@@ -7,8 +7,7 @@ class CaseCreateService
   end
 
   def call
-    klass = get_class_from_case_type(params[:type])
-    @case = klass.new(params.merge(uploading_user: user))
+    @case = Case.new(params.merge(uploading_user: user))
     if params[:flag_for_disclosure_specialists].blank?
       @case.valid?
       @case.errors.add(:flag_for_disclosure_specialists, :blank)

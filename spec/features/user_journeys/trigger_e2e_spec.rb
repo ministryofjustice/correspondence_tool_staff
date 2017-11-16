@@ -96,9 +96,11 @@ feature "#trigger cases" do
 
     assign_case(expected_business_unit: responder.responding_teams.first)
 
-    new_case_number = cases_show_page.page_heading.sub_heading
+    new_case_description= cases_show_page.page_heading.sub_heading
                           .text.to_s.gsub('You are viewing case number ', '')
 
+    new_case_description =~ /^(\d{9})/
+    new_case_number = $1
     Case.where(number: new_case_number).first
   end
 

@@ -352,7 +352,7 @@ describe CaseDecorator, type: :model do
   end
   describe '#type_printer' do
     it 'pretty prints Case' do
-      expect(accepted_case.type_printer).to eq 'FOI'
+      expect(accepted_case.pretty_type).to eq 'FOI'
     end
   end
 end

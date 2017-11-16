@@ -76,7 +76,7 @@ RSpec.describe Case, type: :model do
     it { should validate_presence_of(:subject)         }
     it { should validate_presence_of(:requester_type)  }
     it { should validate_presence_of(:delivery_method) }
-    it { should validate_presence_of(:type) }
+    it { should validate_presence_of(:type)            }
   end
 
   describe 'info_status_held_validation' do

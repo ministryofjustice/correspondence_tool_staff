@@ -124,7 +124,7 @@ class CaseDecorator < Draper::Decorator
     end
   end
 
-  def type_printer
+  def pretty_type
     case type
     when 'FoiComplianceReview'
       'FOI - Internal review for compliance'

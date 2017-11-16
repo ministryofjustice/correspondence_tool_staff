@@ -9,6 +9,8 @@ module PageObjects
 
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
+        element :case_type, :xpath,
+                '//fieldset[contains(.,"Type")]'
 
         element :date_received_day, '#case_received_date_dd'
         element :date_received_month, '#case_received_date_mm'
@@ -36,6 +38,10 @@ module PageObjects
           make_radio_button_choice("case_flag_for_disclosure_specialists_#{choice}")
         end
 
+        def choose_foi_type(choice = 'case')
+          make_radio_button_choice("case_type_#{choice}")
+        end
+
         def choose_delivery_method(choice = 'sent_by_email')
           make_radio_button_choice("case_delivery_method_#{choice}")
         end
@@ -53,6 +59,8 @@ module PageObjects
           choose_delivery_method kase.delivery_method
           subject.set kase.subject
           full_request.set kase.message if kase.delivery_method == 'sent_by_email'
+          choose_foi_type
+
 
           choose_type_of_requester(kase.requester_type)
 
