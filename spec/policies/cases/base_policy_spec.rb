@@ -384,41 +384,6 @@ describe Cases::BasePolicy do
     it { should     permit(press_officer,         pending_press_clearance_case) }
   end
 
-  permissions :can_view_case_details? do
-    it { should     permit(manager,           new_case) }
-    it { should     permit(manager,           assigned_case) }
-    it { should     permit(manager,           accepted_case) }
-    it { should     permit(manager,           rejected_case) }
-    it { should     permit(manager,           case_with_response) }
-    it { should     permit(manager,           responded_case) }
-    it { should     permit(manager,           closed_case) }
-    it { should_not permit(responder,         new_case) }
-    it { should     permit(responder,         assigned_case) }
-    it { should     permit(responder,         accepted_case) }
-    it { should_not permit(responder,         rejected_case) }
-    it { should     permit(responder,         case_with_response) }
-    it { should     permit(responder,         responded_case) }
-    it { should     permit(responder,         closed_case) }
-    it { should_not permit(coworker,          new_case) }
-    it { should     permit(coworker,          assigned_case) }
-    it { should     permit(coworker,          accepted_case) }
-    it { should_not permit(coworker,          rejected_case) }
-    it { should     permit(coworker,          case_with_response) }
-    it { should     permit(coworker,          responded_case) }
-    it { should     permit(coworker,          closed_case) }
-    it { should_not permit(another_responder, new_case) }
-    it { should_not permit(another_responder, assigned_case) }
-    it { should_not permit(another_responder, rejected_case) }
-    it { should_not permit(another_responder, accepted_case) }
-    it { should_not permit(another_responder, case_with_response) }
-    it { should_not permit(another_responder, responded_case) }
-    it { should_not permit(another_responder, closed_case) }
-    it { should     permit(approver,          assigned_flagged_case) }
-    it { should     permit(approver,          assigned_trigger_case) }
-    it { should     permit(approver,          assigned_case) }
-    it { should     permit(approver,          assigned_case) }
-  end
-
   permissions :can_add_message_to_case? do
     let(:flagged_case_responder)  { pending_dacu_clearance_case.responder }
     let(:other_responder) { create :responder }

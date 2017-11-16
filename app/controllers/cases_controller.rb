@@ -126,8 +126,6 @@ class CasesController < ApplicationController
   end
 
   def show
-    authorize @case, :can_view_case_details?
-
     if policy(@case).can_accept_or_reject_responder_assignment?
       redirect_to edit_case_assignment_path @case, @case.responder_assignment.id
     else
@@ -384,6 +382,7 @@ class CasesController < ApplicationController
   def set_permitted_events
     @permitted_events = @case.state_machine.permitted_events(current_user.id)
     @permitted_events ||= []
+    @permitted_events = @permitted_events - [:extend_for_pit, :request_further_clearance]
   end
 
   def process_closure_params

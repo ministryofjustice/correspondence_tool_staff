@@ -444,12 +444,12 @@ RSpec.describe CasesController, type: :controller do
       context 'as a responder' do
         let(:user) { create(:responder) }
 
-        it 'permitted_events == nil' do
-          expect(assigns(:permitted_events)).to eq nil
+        it 'permitted_events to be empty' do
+          expect(assigns(:permitted_events)).to be_empty
         end
 
-        it 'redirects to the application root path' do
-          expect(response).to redirect_to(responder_root_path)
+        it 'renders case details page' do
+          expect(response).to render_template :show
         end
 
 
@@ -544,12 +544,12 @@ RSpec.describe CasesController, type: :controller do
       context 'as a responder of another responding team' do
         let(:user) { another_responder }
 
-        it 'permitted_events == nil' do
-          expect(assigns(:permitted_events)).to eq nil
+        it 'permitted_events to be empty' do
+          expect(assigns(:permitted_events)).to be_empty
         end
 
-        it 'redirects to the application root path' do
-          expect(response).to redirect_to(responder_root_path)
+        it 'renders case details page' do
+          expect(response).to render_template :show
         end
       end
     end
@@ -609,12 +609,12 @@ RSpec.describe CasesController, type: :controller do
       context 'as another responder' do
         let(:user) { create(:responder) }
 
-        it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to be_nil
+        it 'permitted_events to be empty' do
+          expect(assigns(:permitted_events)).to be_empty
         end
 
-        it 'redirects to the application root path' do
-          expect(response).to redirect_to(responder_root_path)
+        it 'renders case details page' do
+          expect(response).to render_template :show
         end
       end
     end
@@ -671,12 +671,12 @@ RSpec.describe CasesController, type: :controller do
       context 'as another responder' do
         let(:user) { create(:responder) }
 
-        it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to be_nil
+        it 'permitted_events to be empty' do
+          expect(assigns(:permitted_events)).to be_empty
         end
 
-        it 'redirects to the application root path' do
-          expect(response).to redirect_to(responder_root_path)
+        it 'renders case details page' do
+          expect(response).to render_template :show
         end
       end
     end
@@ -718,24 +718,24 @@ RSpec.describe CasesController, type: :controller do
       context 'as the previously assigned responder' do
         let(:user) { responder }
 
-        it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to be_nil
+        it 'permitted_events to be empty' do
+          expect(assigns(:permitted_events)).to be_empty
         end
 
-        it 'redirects to the application root path' do
-          expect(response).to redirect_to(responder_root_path)
+        it 'renders case details page' do
+          expect(response).to render_template :show
         end
       end
 
       context 'as another responder' do
         let(:user) { create(:responder) }
 
-        it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to be_nil
+        it 'permitted_events to be empty' do
+          expect(assigns(:permitted_events)).to be_empty
         end
 
-        it 'redirects to the application root path' do
-          expect(response).to redirect_to(responder_root_path)
+        it 'renders case details page' do
+          expect(response).to render_template :show
         end
       end
     end

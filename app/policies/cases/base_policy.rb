@@ -220,15 +220,6 @@ module Cases
         check_user_is_in_current_team
     end
 
-    def can_view_case_details?
-      clear_failed_checks
-      if user.manager? || user.approver?
-        true
-      elsif user.responder?
-        check_user_in_responding_team
-      end
-    end
-
     def can_add_message_to_case?
       clear_failed_checks
       check_case_is_not_closed && (check_user_is_a_manager || check_user_is_an_approver_for_case || check_user_is_a_responder_for_case)
