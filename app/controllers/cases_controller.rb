@@ -5,6 +5,8 @@ class CasesController < ApplicationController
                 only: [
                   :extend_for_pit,
                   :execute_extend_for_pit,
+                  :execute_new_case_link,
+                  :new_case_link
                 ]
   # As per the Draper documentation, we really shouldn't be decorating @case at
   # the beginning of controller actions (see:
@@ -23,25 +25,25 @@ class CasesController < ApplicationController
   before_action :set_decorated_case,
                 only: [
                   :approve_response_interstitial,
+                  :assign_to_new_team,
                   :close,
                   :confirm_respond,
                   :confirm_destroy,
+                  :destroy,
                   :execute_response_approval,
                   :execute_request_amends,
                   :flag_for_clearance,
                   :new_response_upload,
                   :process_closure,
-                  :assign_to_new_team,
                   :reassign_approver,
+                  :remove_clearance,
                   :request_amends,
                   :request_further_clearance,
                   :respond,
                   :show,
-                  :destroy,
+                  :update,
                   :unflag_for_clearance,
                   :unflag_taken_on_case_for_clearance,
-                  :remove_clearance,
-                  :update,
                   :upload_responses,
                 ]
   before_action :set_assignment, only: [:show]
@@ -390,12 +392,41 @@ class CasesController < ApplicationController
     end
   end
 
+  def new_case_link
+    authorize @case
+
+    @case = CaseLinkDecorator.decorate @case
+  end
+
+  def execute_new_case_link
+    authorize @case, :new_case_link?
+
+    link_case_number = params[:case][:linked_case_number]
+
+    service = CaseLinkingService.new current_user, @case, link_case_number
+
+    result = service.call
+
+
+    if result == :ok
+      flash[:notice] = "Case #{link_case_number} has been linked to this case"
+      redirect_to case_path(@case)
+    elsif result == :validation_error
+      @case = CaseLinkDecorator.decorate @case
+      @case.linked_case_number = link_case_number
+      render :new_case_link
+    else
+      flash[:alert] = "Unable to create a link to case #{link_case_number}"
+      redirect_to case_path(@case)
+    end
+  end
+
   private
 
   def set_permitted_events
     @permitted_events = @case.state_machine.permitted_events(current_user.id)
     @permitted_events ||= []
-    @permitted_events = @permitted_events - [:extend_for_pit, :request_further_clearance]
+    @permitted_events = @permitted_events - [:extend_for_pit, :request_further_clearance, :link_a_case]
   end
 
   def process_closure_params

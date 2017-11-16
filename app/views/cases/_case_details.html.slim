@@ -85,5 +85,4 @@
                   - case_details.exemptions.each do |exemption|
                     li = exemption.name
 
-    br
-    = link_to t('.edit_case'), edit_case_path(case_details) if case_details.allow_event?(current_user, :edit_case)
+    = link_to t('.edit_case'), edit_case_path(case_details), class: "secondary-action-link" if case_details.allow_event?(current_user, :edit_case)

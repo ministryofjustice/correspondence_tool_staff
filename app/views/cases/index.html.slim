@@ -70,17 +70,12 @@
               td aria-label="#{t('.number')}"
                 span.visually-hidden
                   = t('.view_case')
-                = " "
                 = link_to kase.number, case_path(kase.id)
               td aria-label="#{t('.type')}"
                 = "#{kase.pretty_type} "
                 = kase.trigger_case_marker
               td aria-label="#{t('.request_detail')}"
-                strong
-                  = kase.subject
-                br
-                .case-name-detail
-                  = kase.name
+                = request_details_html(kase)
               td aria-label="#{t('.draft_deadline')}"
                 = kase.internal_deadline
               td aria-label="#{t('.external_deadline')}"

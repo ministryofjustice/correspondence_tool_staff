@@ -47,7 +47,9 @@ div id="case-#{@case.id}"
     = render partial: 'cases/case_status', locals: {case_details: @case}
 
   section.case-info
+    = render partial: 'cases/linked_cases', locals: { case_details: @case }
 
+  section.case-info
     = render partial: 'cases/case_request', locals: {case_details: @case}
 
   section.case-info
@@ -72,4 +74,4 @@ div id="case-#{@case.id}"
       = render partial: 'cases/case_history', locals: { case_transitions: @case_transitions }
 
   section.case-info
-    = action_links_for_allowed_events(:extend_for_pit, :destroy_case).join(' | ').html_safe
+    = action_links_for_allowed_events(@case, :extend_for_pit, :destroy_case).join(' | ').html_safe

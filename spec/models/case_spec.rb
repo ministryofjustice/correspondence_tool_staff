@@ -693,9 +693,32 @@ RSpec.describe Case, type: :model do
     it { should have_many(:users_transitions_trackers)
                   .class_name('CasesUsersTransitionsTracker') }
 
-    # it { should have_many(:responder_history)
-    #               .through(:responded_transitions)
-    #               .source(:acting_user) }
+    describe 'linked_cases' do
+      before(:all) do
+        @case_1 = create :case
+        @case_2 = create :case
+        @case_3 = create :case
+
+        #link cases
+        @case_1.linked_cases << [@case_2, @case_3]
+        @case_3.linked_cases << [@case_1]
+      end
+
+      it 'should show case 1 having two links' do
+        expect(@case_1.linked_cases).to include @case_2 ,@case_3
+        expect(@case_1.linked_cases.size).to eq 2
+      end
+
+      it 'should show case 2 having no links' do
+        expect(@case_2.linked_cases).to be_empty
+      end
+
+      it 'should show case 3 having one links' do
+        expect(@case_3.linked_cases).to include @case_1
+        expect(@case_3.linked_cases.size).to eq 1
+      end
+    end
+
   end
 
   describe 'callbacks' do
@@ -1167,6 +1190,29 @@ RSpec.describe Case, type: :model do
       expect(original_kase.received_date).to eq 1.day.ago.to_date
     end
   end
+
+  describe '#add_linked_case' do
+    let(:kase_1) { create :case }
+    let(:kase_2) { create :case }
+
+    describe 'creates a link between two cases' do
+
+      it 'creates two entries in the linked case table' do
+        kase_1.add_linked_case(kase_2)
+        expect(kase_1.linked_cases.first.id).to eq kase_2.id
+        expect(kase_2.linked_cases.first.id).to eq kase_1.id
+      end
+
+      it 'does not fail if the links already exist' do
+        kase_1.add_linked_case(kase_2)
+        kase_1.add_linked_case(kase_2)
+        expect(kase_1.linked_cases.first.id).to eq kase_2.id
+        expect(kase_2.linked_cases.first.id).to eq kase_1.id
+      end
+
+    end
+  end
+
 
   # See note in case.rb about why this is commented out.
   #

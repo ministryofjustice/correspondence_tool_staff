@@ -136,23 +136,36 @@ module CasesHelper
     end
   end
 
-  def action_links_for_allowed_events(*events)
+  def action_links_for_allowed_events(kase, *events)
     allowed_events = events.find_all do |event_name|
-      policy(@case).__send__ "#{event_name}?"
+      policy(kase).__send__ "#{event_name}?"
     end
     allowed_events.map do |event_name|
-      __send__ "action_link_for_#{event_name}"
+      __send__ "action_link_for_#{event_name}", kase
     end
   end
 
-  def action_link_for_destroy_case
-    link_to 'Delete case', confirm_destroy_case_path(@case)
+  def action_link_for_destroy_case(kase)
+    link_to 'Delete case', confirm_destroy_case_path(kase)
   end
 
-  def action_link_for_extend_for_pit
+  def action_link_for_extend_for_pit(kase)
     link_to I18n.t('common.case.extend_for_pit'),
-            extend_for_pit_case_path(@case),
+            extend_for_pit_case_path(kase),
             id: 'action--extend-for-pit'
+
+  end
+
+  def action_link_for_new_case_link(kase)
+    link_to "Link a case",
+            new_case_link_case_path(kase.id),
+            class: 'secondary-action-link',
+            id: 'action--link-a-case'
+  end
+
+  def request_details_html(kase)
+    content_tag(:strong, "#{kase.subject} ", class: 'strong') +
+        content_tag(:div, kase.name, class: 'case-name-detail')
 
   end
 

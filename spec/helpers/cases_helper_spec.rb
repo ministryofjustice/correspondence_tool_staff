@@ -133,10 +133,18 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
     it 'generates links for allowed events' do
       @case = :case
       allow_any_instance_of(CasesHelper).to receive(:policy).with(:case).and_return(policy_double)
-      allow_any_instance_of(CasesHelper).to receive(:action_link_for_one).and_return('link_one')
-      allow_any_instance_of(CasesHelper).to receive(:action_link_for_three).and_return('link_three')
-      links = action_links_for_allowed_events(:one, :two, :three)
+      allow_any_instance_of(CasesHelper).to receive(:action_link_for_one).with(:case).and_return('link_one')
+      allow_any_instance_of(CasesHelper).to receive(:action_link_for_three).with(:case).and_return('link_three')
+      links = action_links_for_allowed_events(@case, :one, :two, :three)
       expect(links).to eq ['link_one', 'link_three']
+    end
+  end
+
+  describe '#request_details_html' do
+    it 'generates html markup' do
+      kase = instance_double(Case, subject: 'Once upon a time...', name: 'Ray Gunn')
+      request_details = request_details_html(kase)
+      expect(request_details).to eq '<strong class="strong">Once upon a time... </strong><div class="case-name-detail">Ray Gunn</div>'
     end
   end
 

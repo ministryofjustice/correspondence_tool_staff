@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.9
--- Dumped by pg_dump version 9.5.9
+-- Dumped from database version 9.5.6
+-- Dumped by pg_dump version 9.5.6
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -491,6 +491,36 @@ ALTER SEQUENCE feedback_id_seq OWNED BY feedback.id;
 
 
 --
+-- Name: linked_cases; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE linked_cases (
+    id integer NOT NULL,
+    case_id integer NOT NULL,
+    linked_case_id integer NOT NULL
+);
+
+
+--
+-- Name: linked_cases_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE linked_cases_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: linked_cases_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE linked_cases_id_seq OWNED BY linked_cases.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -749,6 +779,13 @@ ALTER TABLE ONLY feedback ALTER COLUMN id SET DEFAULT nextval('feedback_id_seq':
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY linked_cases ALTER COLUMN id SET DEFAULT nextval('linked_cases_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY team_properties ALTER COLUMN id SET DEFAULT nextval('team_properties_id_seq'::regclass);
 
 
@@ -866,6 +903,14 @@ ALTER TABLE ONLY categories
 
 ALTER TABLE ONLY feedback
     ADD CONSTRAINT feedback_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: linked_cases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY linked_cases
+    ADD CONSTRAINT linked_cases_pkey PRIMARY KEY (id);
 
 
 --
@@ -1033,6 +1078,20 @@ CREATE INDEX index_cases_users_transitions_trackers_on_case_id ON cases_users_tr
 --
 
 CREATE INDEX index_cases_users_transitions_trackers_on_user_id ON cases_users_transitions_trackers USING btree (user_id);
+
+
+--
+-- Name: index_linked_cases_on_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_linked_cases_on_case_id ON linked_cases USING btree (case_id);
+
+
+--
+-- Name: index_linked_cases_on_case_id_and_linked_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_linked_cases_on_case_id_and_linked_case_id ON linked_cases USING btree (case_id, linked_case_id);
 
 
 --
@@ -1216,6 +1275,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171025142614'),
 ('20171027112328'),
 ('20171101171629'),
-('20171114111458');
+('20171114111458'),
+('20171116102127');
 
 

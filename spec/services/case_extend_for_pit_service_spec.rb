@@ -12,7 +12,7 @@ describe CaseExtendForPITService do
                     manager,
                     case_being_drafted,
                     new_external_deadline,
-                    'I lkie to extend my best tests'
+                    'I like to extend my best tests'
                   ) }
 
   describe '#call' do
@@ -26,7 +26,7 @@ describe CaseExtendForPITService do
         .to have_received(:extend_for_pit!)
               .with manager,
                     10.business_days.after(old_external_deadline),
-                    'I lkie to extend my best tests'
+                    'I like to extend my best tests'
     end
 
     it 'sets the external deadline on the case' do

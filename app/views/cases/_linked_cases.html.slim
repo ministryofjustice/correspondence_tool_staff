@@ -1,0 +1,35 @@
+.grid-row
+  .column-full
+    h2.request--heading
+      = "Linked cases"
+
+    table
+      thead
+        tr
+          th
+            = 'Case no.'
+          th
+            = 'Case type'
+          th
+            = 'Request'
+      tbody
+        - if case_details.linked_cases.any?
+          - case_details.linked_cases.each do |linked_case|
+            tr
+              td
+                = link_to case_path(linked_case.id) do
+                  span.visually-hidden
+                    = t('common.view_case')
+                  = linked_case.number
+              td
+                = "FOI "
+                = case_details.trigger_case_marker
+              td
+                = request_details_html(linked_case)
+        - else
+          tr
+            td colspan=3
+              = "No linked cases"
+
+    = action_links_for_allowed_events(case_details, :new_case_link).join(' | ').html_safe
+

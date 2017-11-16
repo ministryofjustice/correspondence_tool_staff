@@ -8,11 +8,19 @@ describe 'assignments/edit.html.slim', type: :view do
   end
 
   def allow_case_policies(*policy_names)
-    policy = double 'Pundit::Policy'
+    @policy ||= double 'Pundit::Policy'
     policy_names.each do |policy_name|
-      allow(policy).to receive(policy_name).and_return(true)
+      allow(@policy).to receive(policy_name).and_return(true)
     end
-    allow(view).to receive(:policy).with(awaiting_responder_case).and_return(policy)
+    allow(view).to receive(:policy).with(awaiting_responder_case).and_return(@policy)
+  end
+
+  def disallow_case_policies(*policy_names)
+    @policy ||= double 'Pundit::Policy'
+    policy_names.each do |policy_name|
+      allow(@policy).to receive(policy_name).and_return(false)
+    end
+    allow(view).to receive(:policy).with(awaiting_responder_case).and_return(@policy)
   end
 
   let(:responder)       { create :responder }
@@ -29,6 +37,7 @@ describe 'assignments/edit.html.slim', type: :view do
 
     login_as responder
     allow_case_policies :can_add_message_to_case?, :request_further_clearance?
+    disallow_case_policies :new_case_link?
 
     render
 

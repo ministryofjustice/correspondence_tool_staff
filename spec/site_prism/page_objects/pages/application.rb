@@ -23,6 +23,7 @@ module PageObjects
         cases:                          'CasesPage',
         cases_close:                    'Cases::ClosePage',
         cases_new:                      'Cases::NewPage',
+        cases_new_case_link:            'Cases::NewCaseLinkPage',
         cases_edit:                     'Cases::EditPage',
         cases_new_response_upload:      'Cases::NewResponseUploadPage',
         cases_remove_clearance_form:    'Cases::RemoveClearanceFormPage',
@@ -56,6 +57,7 @@ module PageObjects
       {
         cases_what_do_you_want_to_do: 'Cases::WhatDoYouWantToDoSection',
         case_status:                  'Cases::CaseStatusSection',
+        linked_cases:                 'Cases::LinkedCasesSection',
         case_request:                 'Cases::CaseRequestSection',
         case_details:                 'Cases::CaseDetailsSection',
         case_history:                 'Cases::CaseHistorySection',

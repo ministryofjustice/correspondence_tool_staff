@@ -58,7 +58,7 @@ describe 'cases/index.html.slim', type: :view do
     expect(first_case.number.text).to eq "Link to case #{assigned_case.number}"
     expect(first_case.type.text).to eq "FOI This is a Trigger case"
     expect(first_case.request_detail.text)
-      .to eq assigned_case.subject + assigned_case.name
+      .to eq "#{ assigned_case.subject } #{assigned_case.name}"
     expect(first_case.draft_deadline.text).to eq assigned_case.internal_deadline
     expect(first_case.external_deadline.text)
       .to eq assigned_case.external_deadline
@@ -68,7 +68,7 @@ describe 'cases/index.html.slim', type: :view do
     second_case = cases_page.case_list[1]
     expect(second_case.number.text).to eq "Link to case #{accepted_case.number}"
     expect(second_case.request_detail.text)
-      .to eq accepted_case.subject + accepted_case.name
+      .to eq "#{ accepted_case.subject } #{accepted_case.name}"
     expect(second_case.draft_deadline.text).to eq accepted_case.internal_deadline
     expect(second_case.external_deadline.text)
       .to eq accepted_case.external_deadline
@@ -79,7 +79,7 @@ describe 'cases/index.html.slim', type: :view do
     expect(third_case.number.text).to eq "Link to case #{unflagged_case.number}"
     expect(third_case.type.text).to eq "FOI  "
     expect(third_case.request_detail.text)
-      .to eq unflagged_case.subject + unflagged_case.name
+      .to eq "#{unflagged_case.subject} #{unflagged_case.name}"
     expect(third_case.draft_deadline.text).to eq ' '
     expect(third_case.external_deadline.text)
       .to eq unflagged_case.external_deadline

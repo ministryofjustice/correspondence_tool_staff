@@ -67,6 +67,7 @@ en:
       edit?: You are not authorised to edit this case.
       update?: You are not authorised to edit this case.
       delete?: You are not authorised to delete this case.
+      new_case_link?: You are not authorise to link other cases to this case.
       can_unflag_for_clearance?: 'You are not authorised to remove clearance from this case'
     team_policy:
       index?: 'You are not authorised to view a list of teams'
@@ -170,6 +171,7 @@ en:
         comment: |
           Let us know what you were doing and what could be improved or fixed.
       case:
+        linked_case_number: " For example 170131001"
         upload_comment: This will be added to the converstation section of the case.
     label:
       bypass_approval_manager:
@@ -218,7 +220,7 @@ en:
           FoiComplianceReview: FOI - Internal review for compliance
           FoiTimelinessReview: FOI - Internal review for timeliness
           Case: FOI
-
+        linked_case_number: Case number
       feedback:
         comment: Help make this service better
 
@@ -260,6 +262,7 @@ en:
     choose_file: Choose a file
     error: error
     greeting: Hello %{user}
+    view_case: "Link to case "
     case:
       actions: Actions
       answered_in_time: Answered in time
@@ -372,7 +375,7 @@ en:
       heading_search: Search
       heading_all_cases: All open cases
       heading_my_cases: My open cases
-      view_case: Link to case
+      view_case: "Link to case "
       message_notification: Conversations
       number: Case number
       number_html: 'Case <abbr title="number">No.</abbr>'
@@ -406,6 +409,8 @@ en:
       sub_heading: Create case
       received_date: Date received at MOJ
       received_date_copy: For example. 31 01 2017
+    new_case_link:
+      heading: 'Link case'
     new_response_upload:
       heading: Upload response
       upload_response: 'Upload response'

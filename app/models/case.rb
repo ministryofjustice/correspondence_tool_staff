@@ -228,6 +228,12 @@ class Case < ApplicationRecord
 
   has_and_belongs_to_many :exemptions, class_name: 'CaseClosure::Exemption', join_table: 'cases_exemptions'
 
+  has_and_belongs_to_many :linked_cases,
+                          class_name: Case,
+                          join_table: 'linked_cases',
+                          foreign_key: :case_id,
+                          association_foreign_key: :linked_case_id
+
   before_create :set_initial_state,
                 :set_number,
                 :set_managing_team,
@@ -411,6 +417,18 @@ class Case < ApplicationRecord
       type_workflow_template % {type: category.abbreviation, workflow: workflow}
     else
       type_template % {type: category.abbreviation}
+    end
+  end
+
+  def add_linked_case(linked_case)
+    ActiveRecord::Base.transaction do
+      unless self.linked_cases.include? linked_case
+        self.linked_cases << linked_case
+      end
+
+      unless linked_case.linked_cases.include? self
+        linked_case.linked_cases << self
+      end
     end
   end
 

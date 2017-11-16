@@ -1,0 +1,23 @@
+= GovukElementsErrorsHelper.error_summary @case.object,
+    "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+    ""
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+.action-copy
+  p
+    = "You are linking a case to:"
+    strong.strong-block
+      = @case.subject
+
+= form_for @case, url: execute_new_case_link_case_path(@case), method: :post do |f|
+  = f.text_field :linked_case_number
+  = f.submit 'Add link', class: 'button'

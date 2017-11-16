@@ -15,7 +15,8 @@ describe 'cases/show.html.slim', type: :view do
       :can_add_message_to_case?,
       :destroy_case?,
       :extend_for_pit?,
-      :request_further_clearance?
+      :request_further_clearance?,
+      :new_case_link?
     ]
 
     if (policies.keys - policy_names).any?

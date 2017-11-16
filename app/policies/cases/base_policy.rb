@@ -41,6 +41,17 @@ module Cases
           check_can_trigger_event(:request_further_clearance)
     end
 
+    def new_case_link?
+      clear_failed_checks
+      check_can_trigger_event(:link_a_case) &&
+          check_user_is_a_manager_for_case ||
+          (!self.case.awaiting_responder? &&
+              check_user_is_a_responder_for_case) ||
+          check_user_is_an_approver_for_case
+
+
+    end
+
     def can_view_attachments?
       clear_failed_checks
       # for flagged cases, the state changes to pending_dacu_clearance as soon
@@ -372,7 +383,6 @@ module Cases
 
     def extend_for_pit?
       clear_failed_checks
-      
       check_user_is_assigned_dacu_disclosure_approver &&
         check_can_trigger_event(:extend_for_pit)
     end

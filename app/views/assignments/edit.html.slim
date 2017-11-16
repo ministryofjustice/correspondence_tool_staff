@@ -15,6 +15,9 @@ section.case-info
   = render partial: 'cases/case_status', locals: { case_details: @case }
 
 section.case-info
+  = render partial: 'cases/linked_cases', locals: { case_details: @case }
+
+section.case-info
   = render partial: 'cases/case_request', locals: { case_details: @case }
 
 section.case-info

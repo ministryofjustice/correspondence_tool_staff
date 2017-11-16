@@ -184,6 +184,8 @@ Rails.application.routes.draw do
     get :extend_for_pit, on: :member
     patch :execute_extend_for_pit, on: :member
     patch :request_further_clearance, on: :member
+    get :new_case_link, on: :member
+    post :execute_new_case_link, on: :member
 
     resources :assignments, except: :create  do
       patch 'accept_or_reject', on: :member
