@@ -146,8 +146,8 @@ RSpec.describe Team, type: :model do
 
   describe 'scope with_user' do
     it 'lists teams with a given user' do
-      t1 = create :team
-      t2 = create :team
+      t1 = create :business_unit
+      t2 = create :business_unit
       u1 = create :user
       u2 = create :user
       u1.managing_teams << t1
