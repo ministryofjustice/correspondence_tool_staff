@@ -469,19 +469,6 @@ class CasesController < ApplicationController
   def s3_uploader_for(kase, upload_type)
     S3Uploader.s3_direct_post_for_case(kase, upload_type)
   end
-
-  # def get_class_from_case_type
-  #   case params[:type]
-  #   when 'FoiTimelinessReview'
-  #     FoiTimelinessReview
-  #   when 'FoiComplianceReview'
-  #     FoiComplianceReview
-  #   when 'Case'
-  #     Case
-  #   else
-  #     raise ArgumentError.new('Invalid case type parameter')
-  #   end
-  # end
 end
 
 def set_state_selector

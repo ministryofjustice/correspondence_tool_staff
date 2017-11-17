@@ -71,7 +71,7 @@
                 = " "
                 = link_to kase.number, case_path(kase.id)
               td aria-label="#{t('.type')}"
-                = kase.pretty_type
+                = "#{kase.pretty_type} "
                 br
                 = kase.trigger_case_marker
               td aria-label="#{t('.request_detail')}"
