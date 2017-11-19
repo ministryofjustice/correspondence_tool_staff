@@ -61,35 +61,42 @@ global_navigation:
   pages:
     incoming_cases:
       path: /cases/incoming
-      visibility:
-        'DISCLOSURE':
-          filter: incoming_cases_dacu_disclosure
-        'PRESS-OFFICE':
-          filter: incoming_cases_press_office
-        'PRIVATE-OFFICE':
-          filter: incoming_cases_private_office
+
+      visibility: approver
+      scope:
+        'DISCLOSURE': incoming_approving_cases
+        'PRESS-OFFICE': incoming_cases_press_office
+        'PRIVATE-OFFICE': incoming_cases_private_office
 
     open_cases:
       path: /cases/open
 
+      scope:
+        approver: open_flagged_for_approval
+        manager: open_cases
+        responder: open_cases
+
       tabs:
         in_time:
-          filter: in_time
+          scope: in_time_cases
         late:
-          filter: late
+          scope: late_cases
 
     my_open_cases:
       path: /cases/my_open
-      filter: my_open_cases
+      scope:
+        approver: my_open_flagged_for_approval_cases
+        manager: my_open_cases
+        responder: my_open_cases
       tabs:
         in_time:
-          filter: in_time
+          scope: in_time_cases
         late:
-          filter: late
+          scope: late_cases
 
     closed_cases:
       path: /cases/closed
-      filter: closed_cases
+      scope: closed_cases
 
     search_cases:
       path: /cases/search
@@ -125,9 +132,6 @@ global_navigation:
 
     'PRESS-OFFICE':
       incoming_cases_press_office: default
-        # expires_today:
-        # expires_tomorrow:
-        # expires_in_two_days:
       open_cases:
         in_time:
         late:
@@ -138,9 +142,6 @@ global_navigation:
 
     'PRIVATE-OFFICE':
       incoming_cases_private_office: default
-        # expires_today:
-        # expires_tomorrow:
-        # expires_in_two_days:
       open_cases:
         in_time:
         late:

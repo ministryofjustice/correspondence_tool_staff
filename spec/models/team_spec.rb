@@ -28,11 +28,11 @@ RSpec.describe Team, type: :model do
                 .class_name('TeamsUsersRole') }
   it { should have_many(:users).through(:user_roles) }
 
-   describe 'code' do
-     it 'should have a code of null by default' do
-       expect(team.code).to be_nil
-     end
-   end
+  describe 'code' do
+    it 'should have a code of null by default' do
+      expect(team.code).to be_nil
+    end
+  end
 
   describe 'email' do
     it 'should consider team emails to be case-insensitive' do
@@ -54,10 +54,14 @@ RSpec.describe Team, type: :model do
     let!(:managing_team)   { find_or_create :managing_team }
     let!(:responding_team) { find_or_create :responding_team }
     let!(:approving_team)  { find_or_create :approving_team }
+    let!(:team_dacu)       { find_or_create :team_dacu }
 
     describe 'managing scope' do
-      it 'returns only managing teams' do
-        expect(BusinessUnit.managing).to eq [managing_team]
+      it 'returns managing teams' do
+        expect(BusinessUnit.managing).to match_array [
+                                           team_dacu,
+                                           managing_team
+                                         ]
       end
     end
 
@@ -270,10 +274,9 @@ RSpec.describe Team, type: :model do
   end
 
   describe '#has_active_children?' do
-    let(:dir) { create :dacu_directorate }
+    let(:dir) { create :directorate }
     context 'a directorate has active children' do
-      let!(:bu) { create(:team_dacu,
-                          directorate: dir) }
+      let!(:bu) { create(:business_unit, directorate: dir) }
       it 'returns true' do
         expect(dir.has_active_children?).to be true
       end
@@ -286,8 +289,7 @@ RSpec.describe Team, type: :model do
     end
 
     context 'a directorate has deactived children' do
-      let!(:bu) { create(:team_dacu, :deactivated,
-                          directorate: dir) }
+      let!(:bu) { create(:business_unit, :deactivated, directorate: dir) }
       it 'returns false' do
         expect(dir.has_active_children?).to be false
       end

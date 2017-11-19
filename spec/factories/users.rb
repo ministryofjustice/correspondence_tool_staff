@@ -66,6 +66,12 @@ FactoryGirl.define do
       approving_team { find_or_create(:team_dacu_disclosure) }
     end
 
+    factory :disclosure_specialist_bmt do
+      full_name      { generate(:disclosure_specialist_name) }
+      managing_teams { [find_or_create(:team_dacu)] }
+      approving_team { find_or_create(:team_dacu_disclosure) }
+    end
+
     factory :press_officer do
       full_name      { generate(:press_officer_name) }
       approving_team { find_or_create(:team_press_office) }

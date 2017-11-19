@@ -30,6 +30,10 @@ class GlobalNavManager
     end
   end
 
+  def finder
+    CaseFinderService.new(user).for_user.for_params(request.params)
+  end
+
   private
 
   def page_or_tab_for_request(request)

@@ -1,93 +1,117 @@
 class CaseFinderService
-  attr_reader :user, :cases
+  attr_reader :user, :scope
 
-  def initialize(user, filters, params)
+  def initialize(user)
     @user = user
-    @filters = filters
-    @params = params
-    @cases = apply_filters(filters, Pundit.policy_scope(user, Case))
-    @cases = filter_for_params(params, @cases)
+    @scope = Case.all
   end
 
-  def apply_filters(filters, cases)
-    filters.reduce(cases) do |filtered_cases, filter|
-      filter_method = "#{filter}_filter"
-      if respond_to? filter_method
-        __send__(filter_method, filtered_cases)
-      else
-        raise NameError.new("could not find filter named #{filter_method}")
+  def for_user
+    @scope = Pundit.policy_scope(user, @scope)
+    self
+  end
+
+  def for_scopes scope_names
+    # This takes a list of scope names:
+    #
+    #   ['open_cases', 'open_flagged_for_approval']
+    #
+    # And performs an AREL OR on them:
+    #
+    #   open_cases_scope.or(open_flagged_for_approval_scope)
+    #
+    # This will work with any number of *_scope methods that return an AREL.
+    if scope_names.any?
+      (initial_scope, *remaining_scopes) = scope_names.map do |scope_name|
+        scope_method = "#{scope_name}_scope"
+        if respond_to? scope_method
+          __send__ scope_method
+        else
+          raise NameError.new("could not find scope named #{scope_method}")
+        end
+      end
+
+      @scope = remaining_scopes.reduce(initial_scope) do |merged_scopes, scope|
+        merged_scopes.or(scope)
       end
     end
+
+    self
   end
 
-  def index_cases_filter(cases)
-    cases
-  end
-
-  def closed_cases_filter(cases)
-    cases.closed.most_recent_first
-  end
-
-  def incoming_cases_dacu_disclosure_filter(cases)
-    cases
-      .flagged_for_approval(*@user.approving_team)
-      .unaccepted.by_deadline
-  end
-
-  def incoming_cases_press_office_filter(cases)
-    new_cases_from_last_3_days(cases, [BusinessUnit.press_office])
-  end
-
-  def incoming_cases_private_office_filter(cases)
-    new_cases_from_last_3_days(cases, [BusinessUnit.private_office])
-  end
-
-  def my_open_cases_filter(cases)
-    if @user.approver?
-      cases.opened
-        .flagged_for_approval(*@user.approving_team)
-        .with_user(@user)
-        .accepted.by_deadline
-    else
-      cases.opened.with_user(@user).by_deadline
-    end
-  end
-
-  def open_cases_filter(cases)
-    if @user.approver?
-      cases.opened
-        .flagged_for_approval(*@user.approving_team)
-        .accepted
-        .by_deadline
-    else
-      cases.opened.by_deadline
-    end
-  end
-
-  def in_time_filter(cases)
-    cases.in_time
-  end
-
-  def late_filter(cases)
-    cases.late
-  end
-
-  def filter_for_params(params, cases)
+  def for_params(params)
     if params['states'].present?
-      in_states(params['states'], cases)
-    else
-      cases
+      @scope = in_states(params['states'])
     end
-  end
-
-  def in_states(states, cases)
-    cases.in_states(states.split(','))
+    self
   end
 
   private
 
-  def new_cases_from_last_3_days(cases, team)
-    cases
+  def index_cases_scope
+    # effectively a nop; just return all the cases the user can view
+    scope
+  end
+
+  def closed_cases_scope
+    scope.closed.most_recent_first
+  end
+
+  def incoming_approving_cases_scope
+    scope
+      .flagged_for_approval(*user.approving_team)
+      .unaccepted.by_deadline
+  end
+
+  def incoming_cases_press_office_scope
+    new_cases_from_last_3_days([BusinessUnit.press_office])
+  end
+
+  def incoming_cases_private_office_scope
+    new_cases_from_last_3_days([BusinessUnit.private_office])
+  end
+
+  def my_open_cases_scope
+    scope.joins(:assignments).opened
+      .with_user(user)
+      .distinct('case.id')
+  end
+
+  def my_open_flagged_for_approval_cases_scope
+    scope.opened
+      .flagged_for_approval(*user.approving_team)
+      .with_user(user, states: ['accepted'])
+      .distinct('case.id')
+  end
+
+  def open_cases_scope
+    scope.opened
+      .joins(:assignments)
+      .where(assignments: { state: ['pending', 'accepted']})
+      .distinct('case.id')
+  end
+
+  def open_flagged_for_approval_scope
+    scope.opened
+      .flagged_for_approval(*user.approving_team)
+      .where(assignments: { state: ['accepted']})
+      .distinct('case.id')
+  end
+
+  def in_time_cases_scope
+    scope.in_time
+  end
+
+  def late_cases_scope
+    scope.late
+  end
+
+  def in_states(states)
+    scope.in_states(states.split(','))
+  end
+
+  def new_cases_from_last_3_days(team)
+    scope
       .where("(properties ->> 'escalation_deadline')::date >= ?", Date.today)
       .not_with_teams(team)
       .order(id: :desc)

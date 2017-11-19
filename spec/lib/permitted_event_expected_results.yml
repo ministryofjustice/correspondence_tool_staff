@@ -156,6 +156,52 @@
     - :upload_response_and_return_for_redraft
 
 
+##################################### UNASSIGNED DACU DISCLOSURE SPECIALIST/BMT #########################
+
+- - unassigned_dacu_disclosure_specialist_bmt
+  - unaccepted_pending_dacu_clearance_case
+  - - :accept_approver_assignment
+    - :add_message_to_case
+    - :destroy_case
+    - :edit_case
+    - :extend_for_pit
+    - :unflag_for_clearance                 # no button showing up for this
+
+- - unassigned_dacu_disclosure_specialist_bmt
+  - accepted_pending_disclosure_specialist_bmt_case
+  - - :add_message_to_case
+    - :destroy_case
+    - :edit_case
+    - :extend_for_pit
+    - :reassign_user
+    - :unflag_for_clearance                 # what about take case on?
+
+
+##################################### ASSIGNED DACU DISCLOSURE SPECIALIST/BMT #########################
+
+- - assigned_dacu_disclosure_specialist_bmt
+  - unaccepted_pending_dacu_clearance_case
+  - - :accept_approver_assignment
+    - :add_message_to_case
+    - :destroy_case
+    - :edit_case
+    - :extend_for_pit
+    - :unflag_for_clearance                 # no button showing up for this
+
+- - assigned_dacu_disclosure_specialist_bmt
+  - accepted_pending_disclosure_specialist_bmt_case
+  - - :add_message_to_case
+    - :approve
+    - :destroy_case
+    - :edit_case
+    - :extend_for_pit
+    - :reassign_user
+    - :unaccept_approver_assignment
+    - :unflag_for_clearance                   # no button showing up for this
+    - :upload_response_and_approve
+    - :upload_response_and_return_for_redraft
+
+
 ##################################### UNASSIGNED PRESS OFFICER #########################
 
 - - unassigned_press_officer

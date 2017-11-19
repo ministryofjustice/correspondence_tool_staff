@@ -22,7 +22,7 @@ describe 'cases/index.html.slim', type: :view do
   let(:request)         { instance_double ActionDispatch::Request,
                                           path: '/cases/open/in_time',
                                           fullpath: '/cases/open/in_time',
-                                          query_parameters: {} }
+                                          params: {} }
 
   let(:unflagged_case) { create(:case,
                                 responding_team: responding_team)

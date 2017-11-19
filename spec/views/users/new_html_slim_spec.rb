@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'users/new.html.slim', type: :view do
-  let(:dacu) { create :team_dacu }
+  let(:dacu) { find_or_create :team_dacu }
 
   it 'populates the team_id and role if team is set' do
     assign(:user, User.new)

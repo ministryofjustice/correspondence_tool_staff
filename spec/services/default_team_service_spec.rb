@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe DefaultTeamService do
 
-  let!(:team_dacu)            { create :team_dacu}
+  let!(:team_dacu)            { find_or_create :team_dacu}
   let!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
   let!(:press_office)         { find_or_create :team_press_office }
   let!(:press_officer)        { create :press_officer, full_name: 'Preston Offman' }

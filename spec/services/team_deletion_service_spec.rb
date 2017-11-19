@@ -3,7 +3,7 @@ require 'rails_helper'
 describe TeamDeletionService do
 
   describe '#call' do
-    let(:dir)           { create :dacu_directorate }
+    let(:dir)           { find_or_create :dacu_directorate }
     let(:service)       { TeamDeletionService.new(params) }
     let(:params) do
       {
@@ -14,8 +14,7 @@ describe TeamDeletionService do
     context 'child team is not active' do
       time = Time.new(2017, 6, 30, 12, 0, 0)
       before(:all) { Timecop.freeze(time) }
-      let!(:bu) { create(:team_dacu, :deactivated,
-                          directorate: dir) }
+      let!(:bu) { find_or_create(:team_dacu, :deactivated, directorate: dir) }
 
       it 'updates the team name' do
         service.call
@@ -29,8 +28,7 @@ describe TeamDeletionService do
     end
 
     context 'child team is active' do
-      let!(:bu) { create(:team_dacu,
-                          directorate: dir) }
+      let!(:bu) { find_or_create(:team_dacu, directorate: dir) }
       it 'does not change the name' do
         service.call
         expect(dir.reload.name).not_to include "DEACTIVATED"

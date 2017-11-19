@@ -7,12 +7,12 @@ describe GlobalNavManager::Tab do
       pages:
         open_cases:
           path: '/opened'
-          filter: opened
+          scope: opened
           tabs:
             in_time:
-              filter: in_time
+              scope: in_time
             late:
-              filter: late
+              scope: late
      EOY
   end
 
@@ -32,10 +32,9 @@ describe GlobalNavManager::Tab do
                                       user: responder,
                                       request: request }
   let(:parent_page) { instance_double GlobalNavManager::Page,
-                                      filters: ['open'],
+                                      scopes: ['open'],
                                       path: '/opened' }
   let(:tab) { GlobalNavManager::Tab.new 'late',
-                                        global_nav,
                                         parent_page,
                                         config.pages.open_cases.tabs.late }
 

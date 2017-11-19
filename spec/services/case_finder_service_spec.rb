@@ -79,26 +79,49 @@ describe CaseFinderService do
 
     after(:all) { DbHousekeeping.clean }
 
-    describe '#filter_for_params' do
-      context 'params specify state' do
-        it 'filters cases for provided states' do
-          finder = CaseFinderService.new(@manager,
-                                         ['index_cases'],
-                                         { 'states' => 'drafting' })
-          expect(finder.cases).to match_array [@accepted_case]
-        end
+    describe '#for_params' do
+      it 'filters cases for provided states' do
+        finder = CaseFinderService.new(@manager)
+        expect(finder.for_params('states' => 'drafting').scope)
+          .to match_array [@accepted_case]
       end
     end
 
-    describe 'apply_filter' do
-      it 'applies the listed filters' do
+    describe '#for_scopes' do
+      it 'applies the listed scopes' do
+        finder = CaseFinderService.new(@manager)
+        index_cases_scope_result = double('IndexCasesScopeResult')
+        expect(finder).to receive(:index_cases_scope)
+                            .and_return(index_cases_scope_result)
+        result = finder.for_scopes(['index_cases'])
+        expect(result).to be_a CaseFinderService
+        expect(result.scope).to eq index_cases_scope_result
+      end
 
+      it 'raises a NameError if a scope cannot be found' do
+        finder = CaseFinderService.new(@manager)
+        index_cases_scope_result = double('IndexCasesScopeResult')
+        expect(finder).to receive(:index_cases_scope)
+                            .and_return(index_cases_scope_result)
+        expect { finder.for_scopes(['index_cases', 'missing_cases']) }
+          .to raise_error NameError, 'could not find scope named missing_cases_scope'
       end
     end
 
-    describe 'index_case filter' do
+    describe '#for_user' do
+      it 'returns a finder that with a finder scoped to the users cases' do
+        finder = CaseFinderService.new(@responder)
+        expect(finder.for_user.scope).to match_array [
+                                           @assigned_newer_case,
+                                           @assigned_older_case,
+                                           @accepted_case
+                                         ]
+      end
+    end
+
+    describe '#index_cases_scope' do
       it 'returns all the cases' do
-        expect(CaseFinderService.new(@manager, ['index_cases'], {}).cases)
+        expect(CaseFinderService.new(@manager).index_cases_scope)
           .to match_array [
                 @older_case_1,
                 @older_case_2,
@@ -120,10 +143,10 @@ describe CaseFinderService do
       end
     end
 
-    describe 'closed_cases filter' do
+    describe '#closed_cases_scope' do
       it 'returns closed cases' do
-        finder = CaseFinderService.new(@manager, ['closed_cases'], {})
-        expect(finder.cases)
+        finder = CaseFinderService.new(@manager)
+        expect(finder.closed_cases_scope)
           .to eq [
                 @closed_case_1,
                 @closed_case_2,
@@ -131,131 +154,98 @@ describe CaseFinderService do
       end
     end
 
-    describe 'incoming_cases_dacu_disclosure filter' do
+    describe '#incoming_approving_cases_scope' do
       context 'as a disclosure specialist' do
-        it 'returns incoming cases' do
-          finder = CaseFinderService.new(@disclosure_specialist,
-                                         ['incoming_cases_dacu_disclosure'],
-                                         {})
-          expect(finder.cases) .to match_array [
-                                     @older_dacu_flagged_case,
-                                     @newer_dacu_flagged_case
-                                   ]
+        it 'returns incoming cases assigned to the users team' do
+          finder = CaseFinderService.new(@disclosure_specialist)
+          expect(finder.incoming_approving_cases_scope)
+            .to match_array [
+                  @older_dacu_flagged_case,
+                  @newer_dacu_flagged_case
+                ]
         end
       end
     end
 
-    describe 'my_open_cases filter' do
+    describe '#my_open_cases_scope' do
       context 'as a disclosure specialist' do
         it 'returns my open cases' do
-          finder = CaseFinderService.new(@disclosure_specialist,
-                                         ['my_open_cases'],
-                                         {})
-          expect(finder.cases).to eq [ @older_dacu_flagged_accept,
-                                       @newer_dacu_flagged_accept, ]
+          finder = CaseFinderService.new(@disclosure_specialist)
+          expect(finder.my_open_cases_scope).to match_array [
+                                                  @older_dacu_flagged_accept,
+                                                  @newer_dacu_flagged_accept
+                                                ]
         end
       end
 
       context 'as a responder' do
         it 'returns my open cases' do
-          finder = CaseFinderService.new(@responder,
-                                         ['my_open_cases'],
-                                         {})
-          expect(finder.cases).to eq [ @accepted_case, ]
+          finder = CaseFinderService.new(@responder)
+          expect(finder.my_open_cases_scope).to match_array [
+                                                  @accepted_case
+                                                ]
         end
       end
     end
 
-    describe 'open_cases filter' do
-      context 'as a manager' do
-        it 'returns my open cases' do
-          finder = CaseFinderService.new(@manager,
-                                         ['open_cases'],
-                                         {})
-          expect(finder.cases).to eq [
-                                    @older_case_1,
-                                    @older_case_2,
-                                    @assigned_older_case,
-                                    @older_dacu_flagged_case,
-                                    @older_dacu_flagged_accept,
-                                    @case_1,
-                                    @case_2,
-                                    @newer_case_1,
-                                    @newer_case_2,
-                                    @assigned_newer_case,
-                                    @assigned_other_team,
-                                    @newer_dacu_flagged_case,
-                                    @newer_dacu_flagged_accept,
-                                    @accepted_case,
-                                  ]
-        end
-      end
-
-      context 'as a disclosure specialist' do
-        it 'returns my open cases' do
-          finder = CaseFinderService.new(@disclosure_specialist,
-                                         ['open_cases'],
-                                         {})
-          expect(finder.cases).to eq [
-                                    @older_dacu_flagged_accept,
-                                    @newer_dacu_flagged_accept
-                                  ]
-        end
-      end
-
-      context 'as a responder' do
-        it 'returns my open cases' do
-          finder = CaseFinderService.new(@responder,
-                                         ['open_cases'],
-                                         {})
-          expect(finder.cases).to eq [
-                                    @assigned_older_case,
-                                    @assigned_newer_case,
-                                    @accepted_case,
-                                  ]
-        end
+    describe '#open_cases_scope' do
+      it 'returns all open cases' do
+        finder = CaseFinderService.new(@manager)
+        expect(finder.open_cases_scope).to match_array [
+                                             @older_case_1,
+                                             @older_case_2,
+                                             @assigned_older_case,
+                                             @older_dacu_flagged_case,
+                                             @older_dacu_flagged_accept,
+                                             @case_1,
+                                             @case_2,
+                                             @newer_case_1,
+                                             @newer_case_2,
+                                             @assigned_newer_case,
+                                             @assigned_other_team,
+                                             @newer_dacu_flagged_case,
+                                             @newer_dacu_flagged_accept,
+                                             @accepted_case,
+                                           ]
       end
     end
 
-    describe 'in_time filter' do
+    describe '#in_time_cases_scope' do
       it 'returns all the cases that are in time' do
         Timecop.freeze(@case_1.external_deadline) do
-          finder = CaseFinderService.new(@manager,
-                                         ['in_time'],
-                                         {})
-          expect(finder.cases).to match_array [
-                                    @case_1,
-                                    @case_2,
-                                    @newer_case_1,
-                                    @newer_case_2,
-                                    @assigned_newer_case,
-                                    @assigned_other_team,
-                                    @closed_case_1,
-                                    @closed_case_2,
-                                    @newer_dacu_flagged_case,
-                                    @newer_dacu_flagged_accept,
-                                    @accepted_case,
-                                  ]
+          finder = CaseFinderService.new(@manager)
+          expect(finder.in_time_cases_scope).to match_array [
+                                                  @case_1,
+                                                  @case_2,
+                                                  @newer_case_1,
+                                                  @newer_case_2,
+                                                  @assigned_newer_case,
+                                                  @assigned_other_team,
+                                                  @closed_case_1,
+                                                  @closed_case_2,
+                                                  @newer_dacu_flagged_case,
+                                                  @newer_dacu_flagged_accept,
+                                                  @accepted_case,
+                                                ]
         end
       end
     end
 
-    describe 'late filter' do
+    describe '#late_cases_scope' do
       it 'returns all the cases that are late' do
         Timecop.freeze(@case_1.external_deadline) do
-          finder = CaseFinderService.new(@manager,
-                                         ['late'],
-                                         {})
-          expect(finder.cases).to match_array [
-                                    @older_case_1,
-                                    @older_case_2,
-                                    @assigned_older_case,
-                                    @older_dacu_flagged_case,
-                                    @older_dacu_flagged_accept,
-                                  ]
+          finder = CaseFinderService.new(@manager)
+          expect(finder.late_cases_scope).to match_array [
+                                               @older_case_1,
+                                               @older_case_2,
+                                               @assigned_older_case,
+                                               @older_dacu_flagged_case,
+                                               @older_dacu_flagged_accept,
+                                             ]
         end
       end
     end
+
   end
 
   context 'cases flagged for press office' do
@@ -275,23 +265,11 @@ describe CaseFinderService do
 
     let(:press_officer) { create :press_officer }
 
-    context 'as a press officer' do
-      describe 'incoming_cases_press_office filter' do
-        it 'returns incoming cases ordered by creation date' do
-          finder = CaseFinderService.new(press_officer,
-                                         ['incoming_cases_press_office'],
-                                         {})
-          expect(finder.cases).to eq [new_case, old_case]
-        end
-      end
-
-      describe 'open_cases filter' do
-        it 'returns incoming cases ordered by creation date' do
-          finder = CaseFinderService.new(press_officer,
-                                         ['open_cases'],
-                                         {})
-          expect(finder.cases).to eq [press_flagged_case]
-        end
+    describe 'incoming_cases_press_office filter' do
+      it 'returns incoming cases ordered by creation date' do
+        finder = CaseFinderService.new(press_officer)
+        expect(finder.incoming_cases_press_office_scope)
+          .to match_array [new_case, old_case]
       end
     end
   end

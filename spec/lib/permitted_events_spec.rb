@@ -15,7 +15,9 @@ describe 'Permitted Events' do
   let(:unassigned_responder)                      { create :responder, responding_teams: [ responding_team ] }
   let(:assigned_responder)                        { create :responder, responding_teams: [ responding_team ] }
   let(:assigned_dacu_disclosure_specialist)       { create :disclosure_specialist }
+  let(:assigned_dacu_disclosure_specialist_bmt)   { create :disclosure_specialist_bmt }
   let(:unassigned_dacu_disclosure_specialist)     { create :disclosure_specialist }
+  let(:unassigned_dacu_disclosure_specialist_bmt) { create :disclosure_specialist_bmt }
   let(:unassigned_press_officer)                  { create :press_officer }
   let(:assigned_press_officer)                    { create :press_officer }
   let(:unassigned_private_officer)                { create :private_officer }
@@ -36,6 +38,9 @@ describe 'Permitted Events' do
   let(:accepted_pending_dacu_clearance_case)      { create :pending_dacu_clearance_case,
                                                        responding_team: responding_team,
                                                        approver: assigned_dacu_disclosure_specialist }
+  let(:accepted_pending_disclosure_specialist_bmt_case) { create :pending_dacu_clearance_case,
+                                                                 responding_team: responding_team,
+                                                                 approver: assigned_dacu_disclosure_specialist_bmt }
   let(:unaccepted_pending_dacu_clearance_case)    { create :unaccepted_pending_dacu_clearance_case,
                                                        responding_team: responding_team }
 

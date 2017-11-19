@@ -71,8 +71,6 @@ describe GlobalNavManager do
   let(:gnm) { GlobalNavManager.new(responder, request, config) }
 
   before do
-    allow_any_instance_of(CaseFinderService)
-      .to receive_message_chain(:for_user, :for_action, :filter_for_params)
     allow(GlobalNavManager::Page).to receive(:new)
                                        .with(:incoming_cases, any_args())
                                        .and_return(incoming_page)
@@ -113,6 +111,33 @@ describe GlobalNavManager do
       gnm.instance_eval { @nav_pages = [page1, page2] }
       expect { |block| gnm.each(&block) }
         .to yield_successive_args page1, page2
+    end
+  end
+
+  describe '#finder' do
+    let(:request) { instance_double ActionDispatch::Request,
+                                    path: '/cases/incoming',
+                                    params: { 'state' => 'unequivocal' }}
+    let(:case_finder_service) { instance_double(CaseFinderService) }
+
+    before do
+      allow(CaseFinderService).to receive(:new)
+                                    .and_return case_finder_service
+      allow(case_finder_service).to receive(:for_user)
+                                      .and_return case_finder_service
+      allow(case_finder_service).to receive(:for_params)
+                                      .and_return case_finder_service
+    end
+
+    it 'returns a finder' do
+      expect(gnm.finder).to eq case_finder_service
+    end
+
+    it 'customizes for user and params' do
+      gnm.finder
+      expect(case_finder_service).to have_received(:for_user)
+      expect(case_finder_service).to have_received(:for_params)
+                                       .with({ 'state' => 'unequivocal' })
     end
   end
 

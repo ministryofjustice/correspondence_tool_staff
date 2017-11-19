@@ -1,12 +1,13 @@
 class GlobalNavManager
   class Page
-    attr_reader :name, :path, :filters, :tabs
+    attr_reader :name, :path, :scopes, :tabs
 
-    def initialize(name, global_nav, attrs)
+    def initialize(name, parent, attrs)
       @name = name
-      @global_nav = global_nav
+      @parent = parent
       @path = attrs[:path]
-      @filters = attrs[:filter] ? [attrs[:filter]] : []
+
+      process_scope attrs[:scope] if attrs[:scope].present?
 
       @tabs = build_tabs attrs[:tabs]
 
@@ -14,7 +15,7 @@ class GlobalNavManager
     end
 
     def user
-      @global_nav.user
+      @parent.user
     end
 
     def visible?
@@ -30,13 +31,12 @@ class GlobalNavManager
     end
 
     def finder
-      @finder ||= CaseFinderService.new(@global_nav.user,
-                                        @filters,
-                                        @global_nav.request.query_parameters)
+      @parent.finder.for_scopes(@scopes)
     end
 
     def cases
-      @cases ||= finder.cases
+      @cases ||= finder.scope
+
     end
 
     def matches_path?(match_path)
@@ -48,31 +48,49 @@ class GlobalNavManager
     def build_tabs(tabs_settings)
       tabs_settings ||= []
       tabs_settings.map do |tab_name, tab_settings|
-        Tab.new(tab_name, @global_nav, self, tab_settings)
+        Tab.new(tab_name, self, tab_settings)
       end .find_all do |tab|
         tab.visible?
       end
     end
 
-    def process_visibility(visibility_settings)
-      if visibility_settings.blank?
+    def user_teams
+      @user_teams ||= user.teams.pluck(:code)
+    end
+
+    def user_roles
+      @user_roles ||= user.team_roles.pluck(:role)
+    end
+
+    def process_visibility(visibility)
+      if visibility.blank?
         @visible = true
       else
-        user_teams = user.teams.pluck(:code)
-        user_roles = user.team_roles.pluck(:role)
-        if !visibility_settings.respond_to? :keys
-          @visible = (user_teams & visibility_settings).any? ||
-                     (user_roles & visibility_settings).any?
-        else
-          teams_or_roles = visibility_settings.keys.map(&:to_s)
-          matching_teams_or_roles = (user_teams & teams_or_roles) +
-                                    (user_roles & teams_or_roles)
-          @visible = matching_teams_or_roles.any?
-          @filters += matching_teams_or_roles.map do |team_or_role|
-            visibility_settings[team_or_role].filter
-          end
-        end
+        visibility = Array(visibility)
+        @visible = (user_teams & visibility).any? ||
+                   (user_roles & visibility).any?
       end
+    end
+
+    def process_scope(scope)
+      if scope.respond_to? :keys
+        @scopes = (
+          scopes_for(user_teams, from_scope: scope.to_h.with_indifferent_access) +
+          scopes_for(user_roles, from_scope: scope.to_h.with_indifferent_access)
+        ).uniq
+      else
+        @scopes = [scope]
+      end
+    end
+
+    def scopes_for(user_teams_or_roles, from_scope:)
+      user_teams_or_roles.map do |user_team_or_role|
+
+        if from_scope.has_key? user_team_or_role
+          from_scope[user_team_or_role]
+        end
+
+      end .compact.uniq
     end
   end
 end

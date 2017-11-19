@@ -2,12 +2,11 @@ class GlobalNavManager
   class Tab < Page
     attr_reader :name, :parent
 
-    def initialize(name, global_nav, parent, attrs)
+    def initialize(name, parent, attrs)
       @name        = name
-      @global_nav  = global_nav
       @parent      = parent
       @path        = attrs[:path] || name.to_s
-      @filters     = parent.filters + (attrs[:filter] ? [attrs[:filter]] : [])
+      process_scope attrs[:scope] if attrs[:scope].present?
       process_visibility attrs[:visibility]
     end
 

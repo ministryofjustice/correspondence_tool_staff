@@ -3,7 +3,8 @@ require 'rails_helper'
 
 def stub_current_case_finder_cases_with(result)
   pager = double 'Kaminari Pager', decorate: result
-  cases = double 'ActiveRecord Cases', page: pager
+  cases_by_deadline = double 'ActiveRecord Cases', page: pager
+  cases = double 'ActiveRecord Cases', by_deadline: cases_by_deadline
   page = instance_double GlobalNavManager::Page, cases: cases
   gnm = instance_double GlobalNavManager, current_page_or_tab: page
   allow(GlobalNavManager).to receive(:new).and_return gnm
@@ -117,7 +118,8 @@ RSpec.describe CasesController, type: :controller do
       it 'passes page param to the paginator' do
         gnm = stub_current_case_finder_cases_with(:closed_cases_result)
         get :closed_cases, params: { page: 'our_page' }
-        expect(gnm.current_page_or_tab.cases).to have_received(:page).with('our_page')
+        expect(gnm.current_page_or_tab.cases.by_deadline)
+          .to have_received(:page).with('our_page')
       end
     end
 
@@ -189,10 +191,12 @@ RSpec.describe CasesController, type: :controller do
     let(:decorate_result) { double 'decorated_result' }
     let(:pager) { double 'Kaminari Pager', decorate: decorate_result }
     let(:cases) { double 'ActiveRecord Cases', page: pager }
-    let(:finder) { instance_double(CaseFinderService, cases: cases) }
+    let(:finder) { instance_double(CaseFinderService, scope: cases) }
 
     before do
       allow(CaseFinderService).to receive(:new).and_return(finder)
+      allow(finder).to receive(:for_user).and_return(finder)
+      allow(finder).to receive(:for_params).and_return(finder)
     end
 
     context "as an anonymous user" do
@@ -212,7 +216,7 @@ RSpec.describe CasesController, type: :controller do
 
       it 'assigns cases returned by CaseFinderService' do
         get :index
-        expect(CaseFinderService).to have_received(:new).with(manager, [], {})
+        expect(CaseFinderService).to have_received(:new).with(manager)
         expect(assigns(:cases)).to eq decorate_result
       end
 
@@ -256,7 +260,8 @@ RSpec.describe CasesController, type: :controller do
       it 'passes page param to the paginator' do
         gnm = stub_current_case_finder_cases_with(:incoming_cases_result)
         get :incoming_cases, params: { page: 'our_page' }
-        expect(gnm.current_page_or_tab.cases).to have_received(:page).with('our_page')
+        expect(gnm.current_page_or_tab.cases.by_deadline)
+          .to have_received(:page).with('our_page')
       end
     end
   end
@@ -284,7 +289,8 @@ RSpec.describe CasesController, type: :controller do
       it 'passes page param to the paginator' do
         gnm = stub_current_case_finder_cases_with(:open_cases_result)
         get :open_cases, params: { page: 'our_page' }
-        expect(gnm.current_page_or_tab.cases).to have_received(:page).with('our_page')
+        expect(gnm.current_page_or_tab.cases.by_deadline)
+          .to have_received(:page).with('our_page')
       end
 
       it 'renders the incoming_cases template' do
@@ -317,7 +323,8 @@ RSpec.describe CasesController, type: :controller do
       it 'passes page param to the paginator' do
         gnm = stub_current_case_finder_cases_with(:my_open_cases_result)
         get :my_open_cases, params: { page: 'our_page' }
-        expect(gnm.current_page_or_tab.cases).to have_received(:page).with('our_page')
+        expect(gnm.current_page_or_tab.cases.by_deadline)
+          .to have_received(:page).with('our_page')
       end
 
       it 'renders the index template' do
