@@ -54,30 +54,55 @@ private_office_team_code: PRIVATE-OFFICE
 
 global_navigation:
   default_urls:
-    approver: /cases/open?timeliness=in_time
-    manager: /cases/open?timeliness=in_time
-    responder: /cases/open?timeliness=in_time
+    approver: /cases/open/in_time
+    manager: /cases/open/in_time
+    responder: /cases/open/in_time
+
   pages:
-    system_admin:
-      path: /admin/cases
-    closed_cases:
-      path: /cases/closed
-    incoming_cases_dacu_disclosure:
+    incoming_cases:
       path: /cases/incoming
-    incoming_cases_press_office:
-      path: /cases/incoming
-    incoming_cases_private_office:
-      path: /cases/incoming
-    my_open_cases:
-      path: /cases/my_open
+      visibility:
+        'DISCLOSURE':
+          filter: incoming_cases_dacu_disclosure
+        'PRESS-OFFICE':
+          filter: incoming_cases_press_office
+        'PRIVATE-OFFICE':
+          filter: incoming_cases_private_office
+
     open_cases:
       path: /cases/open
+
+      tabs:
+        in_time:
+          filter: in_time
+        late:
+          filter: late
+
+    my_open_cases:
+      path: /cases/my_open
+      filter: my_open_cases
+      tabs:
+        in_time:
+          filter: in_time
+        late:
+          filter: late
+
+    closed_cases:
+      path: /cases/closed
+      filter: closed_cases
+
     search_cases:
       path: /cases/search
-    stats:
-      path: /stats
     settings:
       path: /teams
+    stats:
+      path: /stats
+      visibility:
+        - manager
+    system_admin:
+      path: /admin/cases
+      visibility:
+        - admin
 
   tabs:
     in_time:

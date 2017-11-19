@@ -29,6 +29,7 @@ class CasePolicy
         case_ids = Assignment.with_teams(user.responding_teams).pluck(:case_id)
         scopes << -> (inner_scope) { inner_scope.where(id: case_ids) }
       end
+
       if user.approver?
         scopes << ->(inner_scope) { inner_scope.all }
       end

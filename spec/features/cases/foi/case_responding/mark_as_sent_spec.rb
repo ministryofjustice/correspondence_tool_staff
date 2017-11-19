@@ -31,7 +31,7 @@ feature 'Mark response as sent' do
         to have_content('Response confirmed. The case is now with DACU.')
 
     login_as manager
-    open_cases_page.load(timeliness: 'in-time')
+    open_cases_page.load(timeliness: 'in_time')
     expect(open_cases_page.case_numbers).to include kase.number
   end
 

@@ -28,8 +28,10 @@
       nav.section-tabs
         ul
           - @global_nav_manager.current_page.tabs.each do |tab|
-            li class="tab #{@global_nav_manager.current_tab == tab ? 'active' : ''}"
-              = link_to t("tabs.#{tab.name}_html", count: tab.finder.cases.count), tab.url
+            li class="tab #{active_link_class(tab.fullpath)}"
+              = link_to t("nav.tabs.#{tab.name}_html",
+                         count: tab.cases.count),
+                        tab.fullpath
 
 - if !current_page?(search_cases_path) || !@cases.nil?
   .grid-row

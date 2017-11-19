@@ -57,7 +57,7 @@ feature 'listing open cases on the system' do
   context 'for managers' do
     scenario 'shows all cases' do
       login_as create(:manager)
-      visit '/cases/open?timeliness=late'
+      visit '/cases/open/late'
       cases = cases_page.case_list
       expect(cases.count).to eq 4
 
@@ -72,7 +72,7 @@ feature 'listing open cases on the system' do
 
   scenario 'for responder A on team A' do
     login_as responder_a
-    visit '/cases/open?timeliness=late'
+    visit '/cases/open/late'
 
     cases = cases_page.case_list
     expect(cases.count).to eq 3
@@ -87,7 +87,7 @@ feature 'listing open cases on the system' do
     scenario 'only shows their cases' do
       login_as disclosure_specialist
 
-      visit '/cases/open?timeliness=late'
+      visit '/cases/open/late'
 
       cases = cases_page.case_list
 

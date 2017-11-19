@@ -1,116 +1,95 @@
 class CaseFinderService
-  attr_reader :user
+  attr_reader :user, :cases
 
-  def initialize(user = nil, cases=nil)
+  def initialize(user, filters, params)
     @user = user
-    @cases = cases || Case.all
+    @filters = filters
+    @params = params
+    @cases = apply_filters(filters, Pundit.policy_scope(user, Case))
+    @cases = filter_for_params(params, @cases)
   end
 
-  def cases
-    @user ? Pundit.policy_scope(user, @cases) : @cases
-  end
-
-  def for_user(user)
-    chain @cases, user
-  end
-
-  # rubocop:disable Metrics/CyclomaticComplexity
-  def for_action(action)
-    case action.to_s
-    when 'index'
-      index_cases
-    when 'closed_cases'
-      closed_cases
-    when 'incoming_cases_dacu_disclosure'
-      incoming_cases_dacu_disclosure
-    when 'incoming_cases_press_office'
-      incoming_cases_press_office
-    when 'incoming_cases_private_office'
-      incoming_cases_private_office
-    when 'my_open_cases'
-      my_open_cases
-    when 'open_cases'
-      open_cases
+  def apply_filters(filters, cases)
+    filters.reduce(cases) do |filtered_cases, filter|
+      filter_method = "#{filter}_filter"
+      if respond_to? filter_method
+        __send__(filter_method, filtered_cases)
+      else
+        raise NameError.new("could not find filter named #{filter_method}")
+      end
     end
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
 
-  def filter_for_params(params, url_params = {})
-    result = self
-    if params[:timeliness]
-      result = timeliness(params[:timeliness])
-    end
-    if url_params['states']  && url_params['states'].present?
-      result = result.in_states(url_params['states'])
-    end
-    result
+  def index_cases_filter(cases)
+    cases
   end
 
-  def index_cases
-    self
+  def closed_cases_filter(cases)
+    cases.closed.most_recent_first
   end
 
-  def closed_cases
-    chain @cases.closed.most_recent_first
-  end
-
-  def incoming_cases_dacu_disclosure
-    chain @cases
+  def incoming_cases_dacu_disclosure_filter(cases)
+    cases
       .flagged_for_approval(*@user.approving_team)
       .unaccepted.by_deadline
   end
 
-  def incoming_cases_press_office
-    new_cases_from_last_3_days([BusinessUnit.press_office])
+  def incoming_cases_press_office_filter(cases)
+    new_cases_from_last_3_days(cases, [BusinessUnit.press_office])
   end
 
-  def incoming_cases_private_office
-    new_cases_from_last_3_days([BusinessUnit.private_office])
+  def incoming_cases_private_office_filter(cases)
+    new_cases_from_last_3_days(cases, [BusinessUnit.private_office])
   end
 
-  def my_open_cases
+  def my_open_cases_filter(cases)
     if @user.approver?
-      chain @cases.opened
+      cases.opened
         .flagged_for_approval(*@user.approving_team)
         .with_user(@user)
         .accepted.by_deadline
     else
-      chain @cases.opened.with_user(@user).by_deadline
+      cases.opened.with_user(@user).by_deadline
     end
   end
 
-  def open_cases
+  def open_cases_filter(cases)
     if @user.approver?
-      chain @cases.opened
+      cases.opened
         .flagged_for_approval(*@user.approving_team)
         .accepted
         .by_deadline
     else
-      chain @cases.opened.by_deadline
+      cases.opened.by_deadline
     end
   end
 
-  def timeliness(timeliness)
-    case timeliness
-    when 'in_time' then chain @cases.in_time
-    when 'late'    then chain @cases.late
+  def in_time_filter(cases)
+    cases.in_time
+  end
+
+  def late_filter(cases)
+    cases.late
+  end
+
+  def filter_for_params(params, cases)
+    if params['states'].present?
+      in_states(params['states'], cases)
+    else
+      cases
     end
   end
 
-  def in_states(states)
-    chain @cases.in_states(states.split(','))
+  def in_states(states, cases)
+    cases.in_states(states.split(','))
   end
 
   private
 
-  def chain(cases, user = @user)
-    self.class.new(user, cases)
-  end
-
-  def new_cases_from_last_3_days(team)
-    chain @cases
+  def new_cases_from_last_3_days(cases, team)
+    cases
       .where("(properties ->> 'escalation_deadline')::date >= ?", Date.today)
-        .not_with_teams(team)
-        .order(id: :desc)
+      .not_with_teams(team)
+      .order(id: :desc)
   end
 end

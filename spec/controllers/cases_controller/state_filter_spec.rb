@@ -35,11 +35,10 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'redirects to original action path' do
-        expect(@redirect_url.path).to eq '/cases/open'
+        expect(@redirect_url.path).to eq '/cases/open/in_time'
       end
 
       it 'passes on any other params' do
-        expect(@redirect_params['timeliness']).to eq ['in_time']
         expect(@redirect_params['other_param']).to eq ['other_value']
       end
 

@@ -4,8 +4,8 @@ require 'rails_helper'
 def stub_current_case_finder_cases_with(result)
   pager = double 'Kaminari Pager', decorate: result
   cases = double 'ActiveRecord Cases', page: pager
-  csf = instance_double CaseFinderService, cases: cases
-  gnm = instance_double GlobalNavManager, current_cases_finder: csf
+  page = instance_double GlobalNavManager::Page, cases: cases
+  gnm = instance_double GlobalNavManager, current_page_or_tab: page
   allow(GlobalNavManager).to receive(:new).and_return gnm
   gnm
 end
@@ -117,7 +117,7 @@ RSpec.describe CasesController, type: :controller do
       it 'passes page param to the paginator' do
         gnm = stub_current_case_finder_cases_with(:closed_cases_result)
         get :closed_cases, params: { page: 'our_page' }
-        expect(gnm.current_cases_finder.cases).to have_received(:page).with('our_page')
+        expect(gnm.current_page_or_tab.cases).to have_received(:page).with('our_page')
       end
     end
 
@@ -186,15 +186,12 @@ RSpec.describe CasesController, type: :controller do
   # primarily, with sub-grouping for different contexts.
 
   describe 'GET index' do
-    let(:finder) { instance_double(CaseFinderService) }
+    let(:decorate_result) { double 'decorated_result' }
+    let(:pager) { double 'Kaminari Pager', decorate: decorate_result }
+    let(:cases) { double 'ActiveRecord Cases', page: pager }
+    let(:finder) { instance_double(CaseFinderService, cases: cases) }
 
     before do
-      pager = double 'Kaminari Pager', decorate: :index_cases_result
-      cases = double 'ActiveRecord Cases', page: pager
-      allow(finder).to receive_message_chain :for_user,
-                                             :for_action,
-                                             :filter_for_params,
-                                             cases: cases
       allow(CaseFinderService).to receive(:new).and_return(finder)
     end
 
@@ -205,7 +202,7 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'as an authenticated manager' do
+    context 'as an authenticated user' do
       before { sign_in manager }
 
       it 'renders the index page' do
@@ -215,8 +212,8 @@ RSpec.describe CasesController, type: :controller do
 
       it 'assigns cases returned by CaseFinderService' do
         get :index
-        expect(assigns(:cases)).to eq :index_cases_result
-        expect(finder).to have_received(:for_user).with(manager).at_least(1).times
+        expect(CaseFinderService).to have_received(:new).with(manager, [], {})
+        expect(assigns(:cases)).to eq decorate_result
       end
 
       it 'sets @current_tab_name' do
@@ -227,56 +224,6 @@ RSpec.describe CasesController, type: :controller do
       it 'sets @can_add_case to true' do
         get :index
         expect(assigns(:can_add_case)).to eq true
-      end
-    end
-
-    context 'as an authenticated responder' do
-      before { sign_in responder }
-
-      it 'assigns cases returned by CaseFinderService' do
-        get :index
-        expect(assigns(:cases)).to eq :index_cases_result
-        expect(finder).to have_received(:for_user).with(responder).at_least(1).times
-      end
-
-      it 'renders the index template' do
-        get :index
-        expect(response).to render_template(:index)
-      end
-
-      it 'sets @current_tab_name' do
-        get :index
-        expect(assigns(:current_tab_name)).to eq 'all_cases'
-      end
-
-      it 'sets @can_add_case to fasle' do
-        get :index
-        expect(assigns(:can_add_case)).to eq false
-      end
-    end
-
-    context 'as an authenticated disclosure_specialist' do
-
-      before do
-        sign_in disclosure_specialist
-      end
-
-      it 'assigns the result set from the CaseFinderService' do
-        get :index
-        expect(assigns(:cases)).to eq :index_cases_result
-        expect(finder).to have_received(:for_user)
-                            .with(disclosure_specialist)
-                            .at_least(1).times
-      end
-
-      it 'sets @current_tab_name' do
-        get :index
-        expect(assigns(:current_tab_name)).to eq 'all_cases'
-      end
-
-      it 'sets @can_add_case to false' do
-        get :index
-        expect(assigns(:can_add_case)).to eq false
       end
     end
   end
@@ -309,7 +256,7 @@ RSpec.describe CasesController, type: :controller do
       it 'passes page param to the paginator' do
         gnm = stub_current_case_finder_cases_with(:incoming_cases_result)
         get :incoming_cases, params: { page: 'our_page' }
-        expect(gnm.current_cases_finder.cases).to have_received(:page).with('our_page')
+        expect(gnm.current_page_or_tab.cases).to have_received(:page).with('our_page')
       end
     end
   end
@@ -337,7 +284,7 @@ RSpec.describe CasesController, type: :controller do
       it 'passes page param to the paginator' do
         gnm = stub_current_case_finder_cases_with(:open_cases_result)
         get :open_cases, params: { page: 'our_page' }
-        expect(gnm.current_cases_finder.cases).to have_received(:page).with('our_page')
+        expect(gnm.current_page_or_tab.cases).to have_received(:page).with('our_page')
       end
 
       it 'renders the incoming_cases template' do
@@ -370,15 +317,17 @@ RSpec.describe CasesController, type: :controller do
       it 'passes page param to the paginator' do
         gnm = stub_current_case_finder_cases_with(:my_open_cases_result)
         get :my_open_cases, params: { page: 'our_page' }
-        expect(gnm.current_cases_finder.cases).to have_received(:page).with('our_page')
+        expect(gnm.current_page_or_tab.cases).to have_received(:page).with('our_page')
       end
 
       it 'renders the index template' do
+        stub_current_case_finder_cases_with(:my_open_cases_result)
         get :my_open_cases
         expect(response).to render_template(:index)
       end
 
       it 'sets @current_tab_name to all cases for "All open cases tab"' do
+        stub_current_case_finder_cases_with(:my_open_cases_result)
         get :my_open_cases
         expect(assigns(:current_tab_name)).to eq 'my_cases'
       end

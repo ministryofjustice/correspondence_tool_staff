@@ -92,7 +92,7 @@ ignore_unused:
   - 'time.formats.default_date'
   # ActiveRecord Model error messages
   - 'activerecord.errors.models.*'
-  - 'tabs.{in_time,late}_html'
+  - 'nav.tabs.{in_time,late}_html'
   - 'pundit.nil_class'
   - 'event.*'
   - 'cases.index.heading_*'
