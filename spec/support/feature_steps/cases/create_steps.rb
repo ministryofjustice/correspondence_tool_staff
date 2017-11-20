@@ -4,6 +4,7 @@ def create_case_step(delivery_method: :sent_by_email,
 
   expect(cases_new_page).to be_displayed
   cases_new_page.fill_in_case_details(
+    'case',
     delivery_method: delivery_method,
     uploaded_request_files: uploaded_request_files
   )

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Case creation by a manager' do
+feature 'FOI Case creation by a manager' do
 
   given(:responder)       { create(:responder) }
   given(:responding_team) { create :responding_team, responders: [responder] }

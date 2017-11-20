@@ -34,7 +34,6 @@ FactoryGirl.define do
     end
 
     requester_type 'member_of_the_public'
-    type 'Case'
     sequence(:name) { |n| "#{identifier} name #{n}" }
     email { Faker::Internet.email(identifier) }
     # association :category, factory: :category, strategy: :create

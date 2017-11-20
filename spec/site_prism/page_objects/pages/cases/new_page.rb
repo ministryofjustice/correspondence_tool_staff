@@ -38,7 +38,7 @@ module PageObjects
           make_radio_button_choice("case_flag_for_disclosure_specialists_#{choice}")
         end
 
-        def choose_foi_type(choice = 'case')
+        def choose_foi_type(choice)
           make_radio_button_choice("case_type_#{choice}")
         end
 
@@ -46,7 +46,7 @@ module PageObjects
           make_radio_button_choice("case_delivery_method_#{choice}")
         end
 
-        def fill_in_case_details(params={})
+        def fill_in_case_details(choice = 'case', params={})
           kase = FactoryGirl.build :case, params
 
           date_received_day.set(kase.received_date.day)
@@ -59,7 +59,7 @@ module PageObjects
           choose_delivery_method kase.delivery_method
           subject.set kase.subject
           full_request.set kase.message if kase.delivery_method == 'sent_by_email'
-          choose_foi_type
+          choose_foi_type(choice)
 
 
           choose_type_of_requester(kase.requester_type)
