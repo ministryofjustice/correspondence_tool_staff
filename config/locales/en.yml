@@ -161,6 +161,7 @@ en:
         refusal_reason_name: What was the outcome?
         outcome_name: What was the outcome?
         flag_for_disclosure_specialists: Clearance required by DACU Disclosure
+        type: Case type
 
       state_selector:
         selected_states: Filter by status
@@ -213,6 +214,10 @@ en:
           Clearance required by DACU Disclosure?
         request_amends_comment: Add amends/comments
         upload_comment: Add message (optional)
+        type:
+          FoiComplianceReview: FOI - Internal review for compliance
+          FoiTimelinessReview: FOI - Internal review for timeliness
+          Case: FOI
 
       feedback:
         comment: Help make this service better
