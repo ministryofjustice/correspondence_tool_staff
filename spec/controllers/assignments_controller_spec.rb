@@ -576,4 +576,51 @@ RSpec.describe AssignmentsController, type: :controller do
     end
 
   end
+
+  describe '#assign_to_team' do
+    let(:kase)              { create :foi_compliance_review }
+    let(:responding_team_1) { create :responding_team }
+    let(:assignment)        { kase.responder_assignment }
+    let(:bg)     { create :business_group }
+    let(:dir)    { create :directorate, business_group: bg }
+    let!(:bu1)   { create :business_unit, directorate: dir }
+    let!(:bu2)   { create :business_unit, directorate: dir }
+    let(:params) do
+      ActionController::Parameters.new(
+        {
+          :action     => 'assign_to_team',
+          :controller => 'assignments',
+          :team_id    => bu2.id.to_s,
+          :id        => assignment.id.to_s,
+          :case_id    => kase.id.to_s
+        }
+      )
+      it 'calls CaseAssignResponderService' do
+        service = double CaseAssignResponderService
+        expect(CaseAssignResponderService).to receive(:new).with(manager, params).and_return(service)
+        expect(service).to receive(:call)
+        expect(service).to receive(:result)
+        patch :assign_to_new_team, params: params.to_unsafe_hash
+      end
+
+      it 'redirects if service returns ok' do
+        service = double CaseAssignResponderService
+        expect(CaseAssignResponderService).to receive(:new).with(manager, params).and_return(service)
+        expect(service).to receive(:call)
+        expect(service).to receive(:result).and_return(:ok)
+        patch :assign_to_team, params: params.to_unsafe_hash
+        expect(response).to redirect_to open_cases_path
+      end
+
+      it 'sets flash and returns to assign_new_team action if service fails' do
+        service = double CaseAssignResponderService
+        expect(CaseAssignResponderService).to receive(:new).with(manager, params).and_return(service)
+        expect(service).to receive(:call)
+        expect(service).to receive(:result).and_return(:error)
+        patch :assign_to_team, params: params.to_unsafe_hash
+        expect(flash[:alert]).to eq 'Internal reviews must be flagged for clearance'
+        expect(response).to redirect_to assign_to_new_team_case_assignment_path(kase.id, assignment.id)
+      end
+    end
+  end
 end

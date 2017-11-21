@@ -21,6 +21,16 @@ RSpec.describe FoiTimelinessReview, type: :model do
     it { should validate_presence_of(:type)            }
   end
 
+  describe 'case_flagged_validation' do
+    context 'case is not flagged for clearance' do
+      it 'is not valid' do
+        time_review.current_state = 'awaiting_responder'
+        expect(time_review).not_to be_valid
+        expect(time_review.errors.full_messages).to eq ["Internal reviews must be flagged for clearance"]
+      end
+    end
+  end
+
   describe 'state_machining' do
     it 'has a state machine' do
       expect(time_review.state_machine).to be_a Cases::FOIStateMachine

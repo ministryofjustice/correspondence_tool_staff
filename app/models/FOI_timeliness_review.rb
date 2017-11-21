@@ -1,3 +1,0 @@
-class FoiTimelinessReview < Case
-
-end

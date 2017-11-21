@@ -10,16 +10,20 @@ class CaseAssignResponderService
   end
 
   def call
-    Assignment.connection.transaction do
-      @assignment = @case.assignments.new(team: @team, role: @role)
-      if @assignment.valid?
-        managing_team = @user.managing_team_roles.first.team
-        @case.state_machine.assign_responder! @user, managing_team, @team
-        @assignment.save
-        @result = :ok
-      else
-        @result = :could_not_create_assignment
+    begin
+      Assignment.connection.transaction do
+        @assignment = @case.assignments.new(team: @team, role: @role)
+        if @assignment.valid?
+          managing_team = @user.managing_team_roles.first.team
+          @case.state_machine.assign_responder! @user, managing_team, @team
+          @assignment.save
+          @result = :ok
+        else
+          @result = :could_not_create_assignment
+        end
       end
+    rescue => err
+      @result = :could_not_create_assignment
     end
 
     if @result == :ok

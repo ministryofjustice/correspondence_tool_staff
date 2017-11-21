@@ -12,7 +12,7 @@ class CaseCreateService
       @case.valid?
       @case.errors.add(:flag_for_disclosure_specialists, :blank)
       @result = :error
-    elsif @case.valid?
+    else
       if params[:flag_for_disclosure_specialists] == 'yes'
         @case.save!
         CaseFlagForClearanceService.new(
@@ -25,22 +25,7 @@ class CaseCreateService
         @case.save!
         @result = :assign_responder
       end
-    else
-      @result = :error
     end
     @result != :error
-  end
-
-  def get_class_from_case_type(case_type)
-    case case_type
-    when 'FoiTimelinessReview'
-      FoiTimelinessReview
-    when 'FoiComplianceReview'
-      FoiComplianceReview
-    when 'Case'
-      Case
-    else
-      raise ArgumentError.new('Invalid case type parameter')
-    end
   end
 end
