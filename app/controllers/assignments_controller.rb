@@ -26,7 +26,7 @@ class AssignmentsController < ApplicationController
     @creating_case = flash[:creating_case]
     flash.keep :creating_case
   end
-
+# see commit message for the reasoning behind the flash alet
   def assign_to_team
     authorize @case, :can_assign_case?
 
@@ -41,7 +41,7 @@ class AssignmentsController < ApplicationController
       flash[:notice] = flash[:creating_case] ? t('.case_created') : t('.case_assigned')
       redirect_to case_path @case.id
     else
-      flash[:alert] = @case.errors.full_messages.join('li')
+      flash[:alert] = @case.errors.full_messages.first
       render :new
     end
 
