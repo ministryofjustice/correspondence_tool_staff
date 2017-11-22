@@ -41,7 +41,7 @@ class AssignmentsController < ApplicationController
       flash[:notice] = flash[:creating_case] ? t('.case_created') : t('.case_assigned')
       redirect_to case_path @case.id
     else
-      flash[:alert] = @case.errors.full_messages.join('/br')
+      flash[:alert] = @case.errors.full_messages.join('li')
       render :new
     end
 
