@@ -31,6 +31,7 @@ gem 'mimetype-fu', '~> 0.1.2'
 gem 'govuk_notify_rails'
 gem 'paper_trail', '~> 7.1'
 gem 'pg', '~> 0.18'
+gem 'pry-rails'
 gem 'puma', '~> 3.0'
 gem 'pundit', '~>1.1'
 gem 'rails', '~> 5.0'
@@ -78,7 +79,6 @@ group :development, :test do
   gem 'parallel_tests'
   gem 'pry'
   gem 'pry-byebug'
-  gem 'rb-readline', '~> 0.5.4'
   gem 'rspec-rails', '~> 3.4'
   gem 'rubocop', require: false
   gem 'rubocop-rspec', require: false
