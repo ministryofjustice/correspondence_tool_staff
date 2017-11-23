@@ -35,3 +35,11 @@ dump.rdb
 
 # ignore local coverage files
 /coverage/*
+
+# Ignore files that may contain production data. If you need to allow specific
+# files include them below using the ! notation.
+**/*.sql
+**/*.csv
+**/*.txt
+!db/structure.sql
+!public/robots.txt
