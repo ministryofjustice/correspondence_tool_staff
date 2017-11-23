@@ -105,5 +105,3 @@ class ClosedCaseValidator < ActiveModel::Validator
 
 
 end
-
-

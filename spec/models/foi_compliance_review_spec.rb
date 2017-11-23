@@ -21,16 +21,6 @@ RSpec.describe FoiComplianceReview, type: :model do
     it { should validate_presence_of(:type)            }
   end
 
-  describe 'case_flagged_validation' do
-    context 'case is not flagged for clearance' do
-      it 'is not valid' do
-        compliance_review.current_state = 'awaiting_responder'
-        expect(compliance_review).not_to be_valid
-        expect(compliance_review.errors.full_messages).to eq ["Internal reviews must be flagged for clearance"]
-      end
-    end
-  end
-
   describe 'state_machining' do
     it 'has a state machine' do
       expect(compliance_review.state_machine).to be_a Cases::FOIStateMachine
