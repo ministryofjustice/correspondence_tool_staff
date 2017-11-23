@@ -136,6 +136,7 @@ class Case < ApplicationRecord
             if: -> { sent_by_post? }
   validates :subject,  :category, presence: true
   validates :subject, length: { maximum: 100 }
+  validates :type, presence: true
 
   validates_with ::ClosedCaseValidator
 
@@ -246,14 +247,6 @@ class Case < ApplicationRecord
   def upload_request_groups
     CaseAttachmentUploadGroupCollection.new(self, attachments.request)
   end
-
-  # Commented out as this is not being used and we don't know how to re-write
-  # this yet, we can wait until we actually need this method, and if we never
-  # do we should just delete it.
-  #
-  # def awaiting_approver?
-  #   self.approver_assignments.any?(&:pending?)
-  # end
 
   def info_held_status_abbreviation
     info_held_status&.abbreviation

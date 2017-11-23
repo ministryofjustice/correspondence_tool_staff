@@ -54,7 +54,7 @@ describe 'cases/index.html.slim', type: :view do
 
     first_case = cases_page.case_list[0]
     expect(first_case.number.text).to eq "Link to case #{assigned_case.number}"
-    expect(first_case.type.text).to eq "This is a Trigger case"
+    expect(first_case.type.text).to eq "FOI This is a Trigger case"
     expect(first_case.request_detail.text)
       .to eq assigned_case.subject + assigned_case.name
     expect(first_case.draft_deadline.text).to eq assigned_case.internal_deadline
@@ -75,7 +75,7 @@ describe 'cases/index.html.slim', type: :view do
 
     third_case = cases_page.case_list[2]
     expect(third_case.number.text).to eq "Link to case #{unflagged_case.number}"
-    expect(third_case.type.text).to eq " "
+    expect(third_case.type.text).to eq "FOI  "
     expect(third_case.request_detail.text)
       .to eq unflagged_case.subject + unflagged_case.name
     expect(third_case.draft_deadline.text).to eq ' '

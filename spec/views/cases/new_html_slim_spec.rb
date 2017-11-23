@@ -27,6 +27,7 @@ describe 'cases/new.html.slim', type: :view do
     expect(page).to have_email
     expect(page).to have_address
     expect(page).to have_type_of_requester
+    expect(page).to have_case_type
     expect(page).to have_flag_for_disclosure_specialists
 
     expect(page).to have_submit_button

@@ -785,6 +785,7 @@ RSpec.describe CasesController, type: :controller do
           {
             case: {
               requester_type: 'member_of_the_public',
+              type: 'Case',
               name: 'A. Member of Public',
               postal_address: '102 Petty France',
               email: 'member@public.com',
@@ -811,12 +812,25 @@ RSpec.describe CasesController, type: :controller do
           post :create, params: params
 
           expect(created_case.requester_type).to eq 'member_of_the_public'
+          expect(created_case.type).to eq 'Case'
           expect(created_case.name).to eq 'A. Member of Public'
           expect(created_case.postal_address).to eq '102 Petty France'
           expect(created_case.email).to eq 'member@public.com'
           expect(created_case.subject).to eq 'FOI request from controller spec'
           expect(created_case.message).to eq 'FOI about prisons and probation'
           expect(created_case.received_date).to eq Time.zone.today
+        end
+
+        it "create a internal review for timeliness" do
+          params[:case][:type] = 'FoiTimelinessReview'
+          post :create, params: params
+          expect(created_case.type).to eq 'FoiTimelinessReview'
+        end
+
+        it "create a internal review for compliance" do
+          params[:case][:type] = 'FoiComplianceReview'
+          post :create, params: params
+          expect(created_case.type).to eq 'FoiComplianceReview'
         end
 
         describe 'flag_for_clearance' do

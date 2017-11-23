@@ -1,6 +1,6 @@
 ###################################
 #
-# Trigger
+# Internal Review
 #
 ###################################
 
@@ -13,23 +13,22 @@
 # Manager view case and closes the case
 
 require 'rails_helper'
-require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
 include CaseDateManipulation
 
-feature "#trigger cases" do
+feature "#internal review" do
   given(:responder)       { create :responder }
   given(:manager)         { create :manager }
   given(:disclosure_specialist) { create :disclosure_specialist }
   given!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
 
-  before(:all) do
-    CaseClosure::MetadataSeeder.seed!
-  end
-
-  after(:all) do
-    CaseClosure::MetadataSeeder.unseed!
-  end
+  # before(:all) do
+  #   CaseClosure::MetadataSeeder.seed!
+  # end
+  #
+  # after(:all) do
+  #   CaseClosure::MetadataSeeder.unseed!
+  # end
 
   background do
     manager
@@ -37,10 +36,10 @@ feature "#trigger cases" do
     create(:category, :foi)
   end
 
-  scenario "creating, assigning, responding, approving and closing a case", js: true do
+  scenario "creating, assigning, responding and approving", js: true do
     # Manager creates & assigns to kilo
     login_as_manager
-    kase = manager_creates_new_flagged_case_and_assigns_it
+    kase = manager_creates_new_internal_review_and_assigns_it
     kase = set_dates_back_by(kase, 7.days)
     kase_number = kase.number
 
@@ -57,11 +56,6 @@ feature "#trigger cases" do
     # KILO marks response as sent
     login_as_responder
     responder_marks_as_sent(kase_number)
-
-    # Manager closes the case
-    login_as_manager
-    manager_views_case(kase_number)
-    manager_closes_case
   end
 
 
@@ -85,10 +79,10 @@ feature "#trigger cases" do
     open_cases_page.load(timeliness: 'in-time')
   end
 
-  def manager_creates_new_flagged_case_and_assigns_it
+  def manager_creates_new_internal_review_and_assigns_it
     open_cases_page.new_case_button.click
 
-    cases_new_page.fill_in_case_details
+    cases_new_page.fill_in_case_details('foicompliancereview')
 
     cases_new_page.choose_flag_for_disclosure_specialists('yes')
 
@@ -185,31 +179,5 @@ feature "#trigger cases" do
   def manager_views_case(kase_number)
     open_cases_page.case_list
         .find{ |c| c.number.text.include?(kase_number) }.number.click
-  end
-
-  def manager_closes_case
-    cases_show_page.actions.close_case.click
-
-    cases_close_page.fill_in_date_responded(Date.today)
-
-    cases_close_page.is_info_held.yes.click
-    cases_close_page.wait_until_outcome_visible
-
-    cases_close_page.outcome.refused_fully.click
-
-    # cases_close_page.wait_until_exemptions_visible
-    sleep 1
-
-    expect(cases_close_page.exemptions.exemption_options.size).to eq 25
-
-    cases_close_page.exemptions.exemption_options.first.click
-
-    cases_close_page.exemptions.exemption_options[2].click
-
-    cases_close_page.submit_button.click
-
-    expect(cases_show_page).to have_content("You've closed this case")
-
-    expect(cases_show_page.case_status.details.copy.text).to eq "Case closed"
   end
 end

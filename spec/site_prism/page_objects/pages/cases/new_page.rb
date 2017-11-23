@@ -9,6 +9,8 @@ module PageObjects
 
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
+        element :case_type, :xpath,
+                '//fieldset[contains(.,"Type")]'
 
         element :date_received_day, '#case_received_date_dd'
         element :date_received_month, '#case_received_date_mm'
@@ -36,16 +38,24 @@ module PageObjects
           make_radio_button_choice("case_flag_for_disclosure_specialists_#{choice}")
         end
 
+        def choose_foi_type(choice)
+          make_radio_button_choice("case_type_#{choice}")
+        end
+
         def choose_delivery_method(choice = 'sent_by_email')
           make_radio_button_choice("case_delivery_method_#{choice}")
         end
 
-        def fill_in_case_details(params={})
+        def set_received_date(received_date)
+          date_received_day.set(received_date.day)
+          date_received_month.set(received_date.month)
+          date_received_year.set(received_date.year)
+        end
+
+        def fill_in_case_details(choice = 'case', params={})
           kase = FactoryGirl.build :case, params
 
-          date_received_day.set(kase.received_date.day)
-          date_received_month.set(kase.received_date.month)
-          date_received_year.set(kase.received_date.year)
+          set_received_date(kase.received_date)
 
           full_name.set kase.name
           email.set kase.email
@@ -53,6 +63,7 @@ module PageObjects
           choose_delivery_method kase.delivery_method
           subject.set kase.subject
           full_request.set kase.message if kase.delivery_method == 'sent_by_email'
+          choose_foi_type(choice)
 
           choose_type_of_requester(kase.requester_type)
 
@@ -75,7 +86,6 @@ module PageObjects
               drop_in_dropzone(file)
             end
           end
-
           kase
         end
 

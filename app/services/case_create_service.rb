@@ -12,7 +12,7 @@ class CaseCreateService
       @case.valid?
       @case.errors.add(:flag_for_disclosure_specialists, :blank)
       @result = :error
-    elsif @case.valid?
+    else
       if params[:flag_for_disclosure_specialists] == 'yes'
         @case.save!
         CaseFlagForClearanceService.new(
@@ -25,8 +25,6 @@ class CaseCreateService
         @case.save!
         @result = :assign_responder
       end
-    else
-      @result = :error
     end
     @result != :error
   end

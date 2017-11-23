@@ -76,6 +76,7 @@ RSpec.describe Case, type: :model do
     it { should validate_presence_of(:subject)         }
     it { should validate_presence_of(:requester_type)  }
     it { should validate_presence_of(:delivery_method) }
+    it { should validate_presence_of(:type)            }
   end
 
   describe 'info_status_held_validation' do
@@ -359,6 +360,11 @@ RSpec.describe Case, type: :model do
     #   # need to stub out request attachment
     #   expect(postal_foi).to be_valid
     # end
+
+    it 'does validate presence of deafult type' do
+      foi = build :case
+      expect(foi.type).to eq 'Case'
+    end
 
     it 'does validate presence of message for email foi' do
       email_foi = build :case

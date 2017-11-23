@@ -8,7 +8,7 @@
         tr.case-type
           th Case type
           td
-            = "FOI "
+            = "#{case_details.pretty_type} "
             = case_details.trigger_case_marker
         tr.requester-name
           th = t('common.case.name')
