@@ -97,7 +97,7 @@ class CasesController < ApplicationController
   def new
     authorize Case.new(category: Category.foi), :can_add_case?
 
-    @case = Case.new
+    @case = Case.new(type: nil)
     @s3_direct_post = s3_uploader_for(@case, 'requests')
     render :new
   end
