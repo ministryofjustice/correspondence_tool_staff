@@ -80,7 +80,7 @@ group :development, :test do
   gem 'pry'
   gem 'pry-byebug'
   gem 'rspec-rails', '~> 3.4'
-  gem 'rubocop', require: false
+  gem 'rubocop', '~> 0.49.0', require: false
   gem 'rubocop-rspec', require: false
   gem 'ruby-progressbar'
 
