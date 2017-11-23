@@ -1,7 +1,5 @@
 class FoiTimelinessReview < Case
 
-<<<<<<< HEAD
-=======
   belongs_to :appeal_outcome, class_name: 'CaseClosure::AppealOutcome'
 
   def check_is_flagged
@@ -21,5 +19,4 @@ class FoiTimelinessReview < Case
   def appeal_outcome_name=(name)
     self.appeal_outcome = CaseClosure::AppealOutcome.by_name(name)
   end
->>>>>>> CT-1289 adds appeal outcomes to ccase closure metadata
 end
