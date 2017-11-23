@@ -24,7 +24,7 @@ class CaseFinderService
     if scope_names.any?
       (initial_scope, *remaining_scopes) = scope_names.map do |scope_name|
         scope_method = "#{scope_name}_scope"
-        if respond_to? scope_method
+        if respond_to? scope_method, true
           __send__ scope_method
         else
           raise NameError.new("could not find scope named #{scope_method}")
