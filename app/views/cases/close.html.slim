@@ -1,7 +1,5 @@
 = GovukElementsErrorsHelper.error_summary @case.object, @case.error_summary_message, ''
 
-
-
 - content_for :heading
   = t('.heading')
 
@@ -23,6 +21,10 @@
   .js-info-held-status
     = f.radio_button_fieldset :info_held_status_abbreviation, choices: CaseClosure::InfoHeldStatus.all, text_method: :name, value_method: :abbreviation
 
+  = if @case.is_internal_review?
+    .js-appeal_outcome_group
+      = f.radio_button_fieldset :appeal_outcome_name, choices: CaseClosure::AppealOutcome.active.map(&:name)
+
   .js-outcome-group
     = f.radio_button_fieldset :outcome_name, choices: CaseClosure::Outcome.active.map(&:name)
 
@@ -39,4 +41,3 @@
       = render partial: 'exemption_checkbox_section', locals: { exemptions: CaseClosure::Exemption.qualified, heading: 'Qualified exemptions', hint: 'These are subject to a public interest test', kase: @case }
 
   = f.submit t('button.close_case'), {class: 'button'}
-

@@ -161,6 +161,7 @@ en:
         requester_type: Type of requester
         refusal_reason_name: What was the outcome?
         outcome_name: What was the outcome?
+        appeal_outcome_name: What was the appeal outcome?
         flag_for_disclosure_specialists: Clearance required by DACU Disclosure
         type: Case type
 

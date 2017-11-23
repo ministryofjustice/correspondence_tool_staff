@@ -151,6 +151,7 @@ RSpec.describe CasesController, type: :controller do
             date_responded_yyyy: date_responded.year,
             info_held_status_abbreviation: info_held.abbreviation,
             outcome_name: outcome.name,
+            appeal_outcome_name: appeal_outcome.name
             # refusal_reason_name: refusal_reason.name,
           }
         }

@@ -6,6 +6,7 @@ module CaseClosure
 
     def self.seed!(verbose: false)
       seed_outcomes(verbose)
+      seed_appeal_outcomes(verbose)
       seed_refusal_reasons(verbose)
       seed_exemptions(verbose)
       implement_oct_2017_changes(verbose)
@@ -24,6 +25,13 @@ module CaseClosure
       rec3.update!(active: false)
 
       [rec1, rec2].each { |r| r.update_attribute(:requires_refusal_reason, true) }
+    end
+
+    def self.seed_appeal_outcomes(verbose)
+      puts "----Seeding CaseClosure::AppealOutcomes----" if verbose
+      AppealOutcome.find_or_create_by!(subtype: nil, name: 'Upheld', abbreviation: 'upheld', sequence_id: 40)
+      AppealOutcome.find_or_create_by!(subtype: nil, name: 'Upheld in part', abbreviation: 'part_upheld', sequence_id: 50)
+      AppealOutcome.find_or_create_by!(subtype: nil, name: 'Reversed', abbreviation: 'reversed', sequence_id: 60)
     end
 
     #rubocop:disable Metrics/MethodLength

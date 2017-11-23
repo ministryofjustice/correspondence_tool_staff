@@ -432,6 +432,10 @@ class Case < ApplicationRecord
     end
   end
 
+  def is_internal_review?
+    false
+  end
+
   private
   def received_in_acceptable_range?
     if self.new_record? || received_date_changed?
