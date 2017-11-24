@@ -1,5 +1,4 @@
 class GlobalNavManager
-
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
 
@@ -10,7 +9,7 @@ class GlobalNavManager
     @request = request
     @nav_pages = []
     @settings = settings
-    add_pages_for_user(user, settings)
+    add_pages_for_user(settings)
   end
 
   def each
@@ -19,58 +18,43 @@ class GlobalNavManager
     end
   end
 
+  def current_page_or_tab
+    @current_page_or_tab ||= page_or_tab_for_request(@request)
+  end
+
   def current_page
-    @current_page ||= @nav_pages.find do |page|
-      page.matches_path? request.path
+    if current_page_or_tab.is_a? Tab
+      current_page_or_tab.parent
+    else
+      current_page_or_tab
     end
   end
 
-  def current_tab
-    @current_tab ||= current_page&.tabs&.find do |tab|
-      tab.matches_fullpath? request.fullpath
-    end
-  end
-
-  def current_cases_finder
-    current_tab&.finder || current_page&.finder
+  def finder
+    CaseFinderService.new(user).for_user.for_params(request.params)
   end
 
   private
 
-  def parse_tabs_list_from_setting(tabs_or_default)
-    tabs_or_default.respond_to?(:keys) ? tabs_or_default : {}
-  end
-
-  def parse_default_from_setting(tabs_or_default)
-    if tabs_or_default.respond_to? :keys
-      false
-    else
-      tabs_or_default.to_s == 'default'
-    end
-  end
-
-  def get_nav_structure_for_user(user, settings)
-    settings.structure.find do |matcher, _structure|
-      matcher.to_s == '*' ||
-        matcher.to_s.in?(user.teams.pluck :code) ||
-        matcher.to_s.in?(user.roles)
-    end .last
-  end
-
-  def add_pages_for_user(user, settings)
-    structure = get_nav_structure_for_user(user, settings)
-    @nav_pages = structure.map do |page_name, tabs_or_default|
-      tabs_structure = parse_tabs_list_from_setting(tabs_or_default)
-      default_page = parse_default_from_setting(tabs_or_default)
-      page = Page.new(page_name, user, tabs_structure.keys, settings, @request.filtered_parameters)
-
-      if default_page
-        @default = page
+  def page_or_tab_for_request(request)
+    @nav_pages.each do |page|
+      if page.tabs.present?
+        page.tabs.each do |tab|
+          return tab if tab.matches_path?(request.path)
+        end
       else
-        @default ||= tabs_structure.find { |_,d| d.to_s == 'default' }
+        return page if page.matches_path?(request.path)
       end
+    end
+    nil
+  end
 
-      page
+  def add_pages_for_user(settings)
+    settings.pages.each do |page_name, page_settings|
+      page = Page.new(page_name, self, page_settings)
+      if page.visible?
+        @nav_pages << page
+      end
     end
   end
 end

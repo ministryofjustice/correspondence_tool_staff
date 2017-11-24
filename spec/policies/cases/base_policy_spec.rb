@@ -133,10 +133,10 @@ describe Cases::BasePolicy do
   end
 
   permissions :can_download_stats? do
-    it { should     permit(manager,           assigned_case) }
-    it { should_not permit(responder,         assigned_case) }
-    it { should_not permit(another_responder, assigned_case) }
-    it { should_not permit(approver,          assigned_case) }
+    it { should     permit(manager,               assigned_case) }
+    it { should_not permit(responder,             assigned_case) }
+    it { should_not permit(another_responder,     assigned_case) }
+    it { should_not permit(disclosure_specialist, assigned_case) }
   end
 
   permissions :can_add_attachment? do
@@ -199,9 +199,9 @@ describe Cases::BasePolicy do
   end
 
   permissions :destroy_case? do
-    it { should_not permit(responder, new_case)}
-    it { should_not permit(approver, assigned_trigger_case)}
-    it { should     permit(manager,   new_case) }
+    it { should_not permit(responder,              new_case)}
+    it { should_not permit(disclosure_specialist,  assigned_trigger_case)}
+    it { should     permit(manager,                new_case) }
   end
 
   permissions :can_assign_case? do

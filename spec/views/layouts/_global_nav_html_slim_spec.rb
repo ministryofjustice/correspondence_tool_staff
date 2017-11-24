@@ -6,11 +6,11 @@ describe 'layouts/_global_nav.html.slim' do
     nav_man = instance_double(GlobalNavManager)
     allow(nav_man).to receive(:each)
                         .and_yield(instance_double GlobalNavManager::Page,
-                                                   text: 'nav1',
-                                                   url: 'http://localhost/nav1')
+                                                   name: 'nav1',
+                                                   fullpath: '/nav1')
                         .and_yield(instance_double GlobalNavManager::Page,
-                                                   text: 'nav2',
-                                                   url: 'http://localhost/nav2')
+                                                   name: 'nav2',
+                                                   fullpath: '/nav2')
     assign(:global_nav_manager, nav_man)
     render
     global_nav_partial_page.load(rendered)
@@ -23,21 +23,19 @@ describe 'layouts/_global_nav.html.slim' do
 
     expect(@partial.global_nav.all_links.size).to eq 2
 
-    expect(@partial.global_nav.all_links.first[:href])
-      .to eq 'http://localhost/nav1'
-    expect(@partial.global_nav.all_links.first.text).to eq 'nav1'
+    expect(@partial.global_nav.all_links.first[:href]).to eq '/nav1'
+    expect(@partial.global_nav.all_links.first.text).to eq 'Nav1'
 
-    expect(@partial.global_nav.all_links.last[:href])
-      .to eq 'http://localhost/nav2'
-    expect(@partial.global_nav.all_links.last.text).to eq 'nav2'
+    expect(@partial.global_nav.all_links.last[:href]).to eq '/nav2'
+    expect(@partial.global_nav.all_links.last.text).to eq 'Nav2'
   end
 
   describe 'active link' do
     it 'marks link as active if it is the current page' do
       allow(view).to receive(:current_page?).and_return(false)
-      allow(view).to receive(:current_page?).with('http://localhost/nav1').and_return(true)
+      allow(view).to receive(:current_page?).with('/nav1').and_return(true)
       render_page
-      expect(@partial.global_nav.active_link.text).to eq 'nav1'
+      expect(@partial.global_nav.active_link.text).to eq 'Nav1'
     end
 
     it 'does not mark as active links that are not the current page' do

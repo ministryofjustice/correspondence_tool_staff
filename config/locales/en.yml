@@ -477,15 +477,18 @@ en:
   nav:
     pages:
       closed_cases: Closed cases
-      incoming_cases_dacu_disclosure: New cases
-      incoming_cases_press_office: New cases
-      incoming_cases_private_office: New cases
+      incoming_cases: New cases
       my_open_cases: My open cases
       open_cases: All open cases
       search_cases: Search
       settings: Settings
       stats: Statistics
       system_admin: Admin
+    tabs:
+      in_time_html: |
+        <span class="visuallyhidden">View tab </span>In time (%{count})
+      late_html: |
+        <span class="visuallyhidden">View tab </span>Late (%{count})
   devise:
     registrations:
       destroyed: "Team member has been deactivated"
@@ -504,11 +507,6 @@ en:
       sign_in:
         title: Sign in
         button: Sign in
-  tabs:
-    in_time_html: |
-      <span class="visuallyhidden">View tab </span>In time (%{count})
-    late_html: |
-      <span class="visuallyhidden">View tab </span>Late (%{count})
 
   pagination:
     next: "Next "

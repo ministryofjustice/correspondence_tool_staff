@@ -16,9 +16,7 @@ describe GlobalNavManager do
   end
 
   let(:request) { instance_double ActionDispatch::Request,
-                                  path: '/cases/open',
-                                  fullpath: '/cases/open?timeliness=in_time',
-                                  filtered_parameters: {timeliness: 'in_time'} }
+                                  path: '/cases/incoming' }
   let(:manager)   { create :manager }
   let(:responder) { create :responder }
   let(:disclosure_specialist)  { create :disclosure_specialist }
@@ -26,31 +24,27 @@ describe GlobalNavManager do
   let(:settings) do
     YAML.load(ERB.new(<<~EOY).result)
       pages:
-        closed_cases:
-          path: '/closed'
-        opened_cases:
-          path: '/opened'
         incoming_cases:
           path: '/incoming'
-      tabs:
-        in_time:
-          params:
-            timeliness: 'in_time'
-        late:
-          params:
-            timeliness: 'late'
-      structure:
-        'DISCLOSURE':
-          incoming_cases:
-          opened_cases:
-            in_time: 'default'
+          filter: incoming_cases
+          visibility:
+            'DISCLOSURE':
+              filter: incoming_cases_disclosure
+        opened_cases:
+          path: '/opened'
+          filter: 'opened_cases'
+          tabs:
+            in_time:
+              filter: in_time
             late:
-          closed_cases:
-        '*':
-          opened_cases:
-            in_time: 'default'
-            late:
-          closed_cases:
+              filter: late
+        closed_cases:
+          path: '/closed'
+          filter: closed_cases
+        stats_page:
+          path: '/stats'
+          visibility:
+            - manager
      EOY
   end
   let(:config) do
@@ -61,16 +55,22 @@ describe GlobalNavManager do
   end
 
   let(:incoming_page) { instance_double GlobalNavManager::Page,
-                                        'incoming cases page' }
-  let(:open_page)   { instance_double GlobalNavManager::Page,
-                                      'open cases page' }
+                                        'incoming cases page',
+                                        visible?: false }
+  let(:open_page)     { instance_double GlobalNavManager::Page,
+                                        'open cases page',
+                                        tabs: [],
+                                        visible?: true }
   let(:closed_page)   { instance_double GlobalNavManager::Page,
-                                        'closed cases page' }
+                                        'closed cases page',
+                                        tabs: [],
+                                        visible?: true }
+  let(:stats_page)    { instance_double GlobalNavManager::Page,
+                                         'stats page',
+                                         visible?: false }
   let(:gnm) { GlobalNavManager.new(responder, request, config) }
 
   before do
-    allow_any_instance_of(CaseFinderService)
-      .to receive_message_chain(:for_user, :for_action, :filter_for_params)
     allow(GlobalNavManager::Page).to receive(:new)
                                        .with(:incoming_cases, any_args())
                                        .and_return(incoming_page)
@@ -80,40 +80,27 @@ describe GlobalNavManager do
     allow(GlobalNavManager::Page).to receive(:new)
                                        .with(:closed_cases, any_args())
                                        .and_return(closed_page)
+    allow(GlobalNavManager::Page).to receive(:new)
+                                       .with(:stats_page, any_args())
+                                       .and_return(stats_page)
   end
 
   describe 'instantiation' do
-    context 'user has structure for their team' do
-      let(:user) { disclosure_specialist }
-
-      it 'creates the pages for the structure that matches the users team' do
-        gnm = GlobalNavManager.new(user, request, config)
-        expect(GlobalNavManager::Page)
-          .to have_received(:new)
-                .with(:incoming_cases, user, [], config, {timeliness: 'in_time'})
-        expect(GlobalNavManager::Page)
-          .to have_received(:new)
-                .with(:opened_cases, user, [:in_time, :late], config, {timeliness: 'in_time'})
-        expect(GlobalNavManager::Page)
-          .to have_received(:new)
-                .with(:closed_cases, user, [], config, {timeliness: 'in_time'})
-        expect(gnm.nav_pages).to eq [incoming_page, open_page, closed_page]
-      end
-    end
-
-    context 'user has no structure defined specifically for their team' do
-      let(:user) { manager }
-
-      it 'creates the pages for the default "*" structure' do
-        gnm = GlobalNavManager.new(user, request, config)
-        expect(GlobalNavManager::Page)
-          .to have_received(:new)
-                .with(:opened_cases, user, [:in_time, :late], config, {timeliness: 'in_time'})
-        expect(GlobalNavManager::Page)
-          .to have_received(:new)
-                .with(:closed_cases, user, [], config, {timeliness: 'in_time'})
-        expect(gnm.nav_pages).to eq [open_page, closed_page]
-      end
+    it 'only exposes visible pages' do
+      expect(incoming_page).to receive(:visible?).and_return false
+      expect(open_page).to receive(:visible?).and_return true
+      expect(closed_page).to receive(:visible?).and_return true
+      expect(stats_page).to receive(:visible?).and_return false
+      gnm = GlobalNavManager.new(responder, request, config)
+      expect(GlobalNavManager::Page).to have_received(:new)
+                                          .with(:opened_cases,
+                                                gnm,
+                                                config.pages.opened_cases)
+      expect(GlobalNavManager::Page).to have_received(:new)
+                                          .with(:closed_cases,
+                                                gnm,
+                                                config.pages.closed_cases)
+      expect(gnm.nav_pages).to eq [open_page, closed_page]
     end
   end
 
@@ -127,72 +114,76 @@ describe GlobalNavManager do
     end
   end
 
+  describe '#finder' do
+    let(:request) { instance_double ActionDispatch::Request,
+                                    path: '/cases/incoming',
+                                    params: { 'state' => 'unequivocal' }}
+    let(:case_finder_service) { instance_double(CaseFinderService) }
+
+    before do
+      allow(CaseFinderService).to receive(:new)
+                                    .and_return case_finder_service
+      allow(case_finder_service).to receive(:for_user)
+                                      .and_return case_finder_service
+      allow(case_finder_service).to receive(:for_params)
+                                      .and_return case_finder_service
+    end
+
+    it 'returns a finder' do
+      expect(gnm.finder).to eq case_finder_service
+    end
+
+    it 'customizes for user and params' do
+      gnm.finder
+      expect(case_finder_service).to have_received(:for_user)
+      expect(case_finder_service).to have_received(:for_params)
+                                       .with({ 'state' => 'unequivocal' })
+    end
+  end
+
+  describe '#current_page_or_tab' do
+    let(:in_time_tab) { instance_double GlobalNavManager::Tab,
+                                        'open in_time cases tab',
+                                        visible?: true }
+    let(:late_tab)    { instance_double GlobalNavManager::Tab,
+                                        'open late cases tab',
+                                        visible?: true }
+
+    before do
+      allow(open_page).to   receive(:tabs).and_return([in_time_tab, late_tab])
+      allow(open_page).to   receive(:tabs).and_return([in_time_tab, late_tab])
+      allow(closed_page).to receive(:matches_path?).and_return(false)
+      allow(in_time_tab).to receive(:matches_path?).and_return(false)
+      allow(late_tab).to    receive(:matches_path?).and_return(false)
+    end
+
+    context 'request is for a page' do
+      it 'returns the current tab' do
+        expect(closed_page).to receive(:matches_path?)
+                                 .with('/cases/incoming')
+                                 .and_return(true)
+        expect(gnm.current_page_or_tab).to eq closed_page
+      end
+    end
+
+    context 'request is for a tab' do
+      it 'returns the current tab' do
+        expect(in_time_tab).to receive(:matches_path?)
+                                 .with('/cases/incoming')
+                                 .and_return(true)
+        expect(gnm.current_page_or_tab).to eq in_time_tab
+      end
+    end
+  end
+
   describe '#current_page' do
     before do
       allow(closed_page).to receive(:matches_path?).and_return(false)
       allow(open_page).to receive(:matches_path?).and_return(true)
     end
 
-
     it 'returns the current page' do
       expect(gnm.current_page).to eq open_page
-    end
-  end
-
-  describe '#current_tab' do
-
-    it 'returns the current tab' do
-      tab = double GlobalNavManager::Tab, matches_fullpath?: true
-      page = double GlobalNavManager::Page, tabs: [tab]
-      allow(gnm).to receive(:current_page).and_return(page)
-
-      expect(gnm.current_tab).to eq tab
-    end
-
-    it 'calls matches_fullpath? on the tab' do
-      tab = double GlobalNavManager::Tab, matches_fullpath?: true
-      page = double GlobalNavManager::Page, tabs: [tab]
-      allow(gnm).to receive(:current_page).and_return(page)
-
-      gnm.current_tab
-      expect(tab).to have_received(:matches_fullpath?).with(request.fullpath)
-    end
-
-    it 'returns nil if no tab matches' do
-      tab = double GlobalNavManager::Tab, matches_fullpath?: false
-      page = double GlobalNavManager::Page, tabs: [tab]
-      allow(gnm).to receive(:current_page).and_return(page)
-
-      expect(gnm.current_tab).to be_nil
-    end
-  end
-
-  describe '#current_cases_finder' do
-    let(:finder) { double CaseFinderService }
-
-    context 'page with no tabs' do
-      let(:page) { double GlobalNavManager::Page, finder: finder }
-
-      before do
-        allow(gnm).to receive(:current_page).and_return(page)
-        allow(gnm).to receive(:current_tab).and_return(nil)
-      end
-
-      it 'returns the current page finder' do
-        expect(gnm.current_cases_finder).to eq finder
-      end
-    end
-
-    context 'page with tabs' do
-      let(:tab) { double GlobalNavManager::Tab, finder: finder }
-
-      before do
-        allow(gnm).to receive(:current_tab).and_return(tab)
-      end
-
-      it 'returns the current tab finder' do
-        expect(gnm.current_cases_finder).to eq finder
-      end
     end
   end
 end

@@ -48,45 +48,58 @@ class CasesController < ApplicationController
   before_action :set_state_selector, only: [:open_cases, :my_open_cases]
 
   def index
-    # index doesn't have a nav page defined so cannot use the GlobalNavManager
-    # to provide it with a finder
-    @cases = CaseFinderService.new.for_user(current_user)
-                .for_action(:index)
-                .filter_for_params(params)
-                .cases
-                .page(params[:page])
-                .decorate
+    @cases = CaseFinderService.new(current_user)
+               .for_user
+               .for_params(request.params)
+               .scope
+               .page(params[:page])
+               .decorate
     @current_tab_name = 'all_cases'
     @can_add_case = policy(Case.new(category: Category.foi)).can_add_case?
   end
 
-
   def closed_cases
-    finder = @global_nav_manager.current_cases_finder
-    @cases = finder.cases.page(params[:page]).decorate
+    @cases = @global_nav_manager
+               .current_page_or_tab
+               .cases
+               .by_deadline
+               .page(params[:page])
+               .decorate
   end
 
   def incoming_cases
-    finder = @global_nav_manager.current_cases_finder
-    @cases = finder.cases.page(params[:page]).decorate
+    @cases = @global_nav_manager
+               .current_page_or_tab
+               .cases
+               .by_deadline
+               .page(params[:page]).decorate
   end
 
   def my_open_cases
-    finder = @global_nav_manager.current_cases_finder
-    @cases = finder.cases.page(params[:page]).decorate
+    @cases = @global_nav_manager
+               .current_page_or_tab
+               .cases
+               .by_deadline
+               .page(params[:page])
+               .decorate
     @current_tab_name = 'my_cases'
     @can_add_case = policy(Case.new(category: Category.foi)).can_add_case?
     render :index
   end
 
   def open_cases
-    finder = @global_nav_manager.current_cases_finder
-    @cases = finder.cases.page(params[:page]).decorate
+    @cases = @global_nav_manager
+               .current_page_or_tab
+               .cases
+               .by_deadline
+               .page(params[:page])
+               .decorate
+
+    # .by_deadline
     @current_tab_name = 'all_cases'
     @can_add_case = policy(Case.new(category: Category.foi)).can_add_case?
     render :index
   end
-
 
   def filter
     state_selector = StateSelector.new(params)

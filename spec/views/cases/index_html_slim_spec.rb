@@ -20,8 +20,9 @@ describe 'cases/index.html.slim', type: :view do
                                  responder: responder)
                             .decorate }
   let(:request)         { instance_double ActionDispatch::Request,
-                                          path: '/cases/open',
-                                          fullpath: '/cases/open' }
+                                          path: '/cases/open/in_time',
+                                          fullpath: '/cases/open/in_time',
+                                          params: {} }
 
   let(:unflagged_case) { create(:case,
                                 responding_team: responding_team)
@@ -125,7 +126,7 @@ describe 'cases/index.html.slim', type: :view do
 
       expect(cases_page.tabs[0].tab_link).to have_text 'In time (0)'
       expect(cases_page.tabs[0].tab_link[:href])
-        .to eq '/cases/open?timeliness=in_time'
+        .to eq '/cases/open/in_time'
     end
 
     it 'has a count of how many in-time open cases there are' do

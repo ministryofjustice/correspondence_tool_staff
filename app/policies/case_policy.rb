@@ -20,12 +20,26 @@ class CasePolicy
     end
 
     def resolve
+      scopes = []
       if user.manager?
-        scope.all
-      elsif user.responder?
-        scope.with_teams(user.responding_teams)
-      elsif user.approver?
-        scope.all
+        scopes << ->(inner_scope) { inner_scope.all }
+      end
+
+      if user.responder?
+        case_ids = Assignment.with_teams(user.responding_teams).pluck(:case_id)
+        scopes << -> (inner_scope) { inner_scope.where(id: case_ids) }
+      end
+
+      if user.approver?
+        scopes << ->(inner_scope) { inner_scope.all }
+      end
+
+      if scopes.present?
+        final_scope = scopes.shift.call(scope)
+        scopes.each do |scope_func|
+          final_scope.or(scope_func.call(scope))
+        end
+        final_scope
       else
         Case.none
       end

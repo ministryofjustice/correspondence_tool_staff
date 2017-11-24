@@ -1,116 +1,119 @@
 class CaseFinderService
-  attr_reader :user
+  attr_reader :user, :scope
 
-  def initialize(user = nil, cases=nil)
+  def initialize(user)
     @user = user
-    @cases = cases || Case.all
+    @scope = Case.all
   end
 
-  def cases
-    @user ? Pundit.policy_scope(user, @cases) : @cases
-  end
-
-  def for_user(user)
-    chain @cases, user
-  end
-
-  # rubocop:disable Metrics/CyclomaticComplexity
-  def for_action(action)
-    case action.to_s
-    when 'index'
-      index_cases
-    when 'closed_cases'
-      closed_cases
-    when 'incoming_cases_dacu_disclosure'
-      incoming_cases_dacu_disclosure
-    when 'incoming_cases_press_office'
-      incoming_cases_press_office
-    when 'incoming_cases_private_office'
-      incoming_cases_private_office
-    when 'my_open_cases'
-      my_open_cases
-    when 'open_cases'
-      open_cases
-    end
-  end
-  # rubocop:enable Metrics/CyclomaticComplexity
-
-  def filter_for_params(params, url_params = {})
-    result = self
-    if params[:timeliness]
-      result = timeliness(params[:timeliness])
-    end
-    if url_params['states']  && url_params['states'].present?
-      result = result.in_states(url_params['states'])
-    end
-    result
-  end
-
-  def index_cases
+  def for_user
+    @scope = Pundit.policy_scope(user, @scope)
     self
   end
 
-  def closed_cases
-    chain @cases.closed.most_recent_first
-  end
+  def for_scopes scope_names
+    # This takes a list of scope names:
+    #
+    #   ['open_cases', 'open_flagged_for_approval']
+    #
+    # And performs an AREL OR on them:
+    #
+    #   open_cases_scope.or(open_flagged_for_approval_scope)
+    #
+    # This will work with any number of *_scope methods that return an AREL.
+    if scope_names.any?
+      (initial_scope, *remaining_scopes) = scope_names.map do |scope_name|
+        scope_method = "#{scope_name}_scope"
+        if respond_to? scope_method, true
+          __send__ scope_method
+        else
+          raise NameError.new("could not find scope named #{scope_method}")
+        end
+      end
 
-  def incoming_cases_dacu_disclosure
-    chain @cases
-      .flagged_for_approval(*@user.approving_team)
-      .unaccepted.by_deadline
-  end
-
-  def incoming_cases_press_office
-    new_cases_from_last_3_days([BusinessUnit.press_office])
-  end
-
-  def incoming_cases_private_office
-    new_cases_from_last_3_days([BusinessUnit.private_office])
-  end
-
-  def my_open_cases
-    if @user.approver?
-      chain @cases.opened
-        .flagged_for_approval(*@user.approving_team)
-        .with_user(@user)
-        .accepted.by_deadline
-    else
-      chain @cases.opened.with_user(@user).by_deadline
+      @scope = remaining_scopes.reduce(initial_scope) do |merged_scopes, scope|
+        merged_scopes.or(scope)
+      end
     end
+
+    self
   end
 
-  def open_cases
-    if @user.approver?
-      chain @cases.opened
-        .flagged_for_approval(*@user.approving_team)
-        .accepted
-        .by_deadline
-    else
-      chain @cases.opened.by_deadline
+  def for_params(params)
+    if params['states'].present?
+      @scope = in_states(params['states'])
     end
-  end
-
-  def timeliness(timeliness)
-    case timeliness
-    when 'in_time' then chain @cases.in_time
-    when 'late'    then chain @cases.late
-    end
-  end
-
-  def in_states(states)
-    chain @cases.in_states(states.split(','))
+    self
   end
 
   private
 
-  def chain(cases, user = @user)
-    self.class.new(user, cases)
+  def index_cases_scope
+    # effectively a nop; just return all the cases the user can view
+    scope
+  end
+
+  def closed_cases_scope
+    scope.closed.most_recent_first
+  end
+
+  def incoming_approving_cases_scope
+    scope
+      .flagged_for_approval(*user.approving_team)
+      .unaccepted.by_deadline
+  end
+
+  def incoming_cases_press_office_scope
+    new_cases_from_last_3_days([BusinessUnit.press_office])
+  end
+
+  def incoming_cases_private_office_scope
+    new_cases_from_last_3_days([BusinessUnit.private_office])
+  end
+
+  def my_open_cases_scope
+    scope.joins(:assignments).opened
+      .with_user(user)
+      .distinct('case.id')
+  end
+
+  def my_open_flagged_for_approval_cases_scope
+    scope.opened
+      .flagged_for_approval(*user.approving_team)
+      .with_user(user, states: ['accepted'])
+      .distinct('case.id')
+  end
+
+  def open_cases_scope
+    scope.opened
+      .joins(:assignments)
+      .where(assignments: { state: ['pending', 'accepted']})
+      .distinct('case.id')
+  end
+
+  def open_flagged_for_approval_scope
+    scope.opened
+      .flagged_for_approval(*user.approving_team)
+      .where(assignments: { state: ['accepted']})
+      .distinct('case.id')
+  end
+
+  def in_time_cases_scope
+    scope.in_time
+  end
+
+  def late_cases_scope
+    scope.late
+  end
+
+  def in_states(states)
+    scope.in_states(states.split(','))
   end
 
   def new_cases_from_last_3_days(team)
-    chain @cases
+    scope
       .where("(properties ->> 'escalation_deadline')::date >= ?", Date.today)
-        .not_with_teams(team)
-        .order(id: :desc)
+      .not_with_teams(team)
+      .order(id: :desc)
   end
 end

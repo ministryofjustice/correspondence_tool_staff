@@ -52,7 +52,7 @@ module CaseClosure
 
       describe '.qualified' do
         it 'returns only records of subtype qualified' do
-          expect(Exemption.qualified).to eq([@qual_1, @qual_2])
+          expect(Exemption.qualified).to match_array([@qual_1, @qual_2])
         end
       end
 

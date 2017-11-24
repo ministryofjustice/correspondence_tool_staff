@@ -5,31 +5,14 @@ describe GlobalNavManager::Tab do
   let(:settings) do
     YAML.load(<<~EOY)
       pages:
-        closed_cases:
-          path: '/closed'
-        incoming_cases:
-          path: '/incoming'
         open_cases:
           path: '/opened'
-      tabs:
-        in_time:
-          params:
-            timeliness: 'in_time'
-        late:
-          params:
-            timeliness: 'late'
-      structure:
-        'DACU Disclosure':
-          incoming_cases:
-          open_cases:
-            in_time: 'default'
+          scope: opened
+          tabs:
+            in_time:
+              scope: in_time
             late:
-          closed_cases:
-        '*':
-          open_cases:
-            in_time: 'default'
-            late:
-          closed_cases:
+              scope: late
      EOY
   end
 
@@ -40,47 +23,34 @@ describe GlobalNavManager::Tab do
     end
   end
 
-  let(:finder) { instance_double(CaseFinderService,
-                                 filter_for_params: :filter_result)}
-  let(:tab) { GlobalNavManager::Tab.new "late", 'page_path', finder, config, {} }
+  let(:responder)             { create :responder }
+  let(:request)               { instance_double ActionDispatch::Request,
+                                                path: '/cases/open',
+                                                fullpath: '/cases/open',
+                                                query_parameters: {} }
+  let(:global_nav)  { instance_double GlobalNavManager,
+                                      user: responder,
+                                      request: request }
+  let(:parent_page) { instance_double GlobalNavManager::Page,
+                                      scopes: ['open'],
+                                      path: '/opened' }
+  let(:tab) { GlobalNavManager::Tab.new 'late',
+                                        parent_page,
+                                        config.pages.open_cases.tabs.late }
 
+  it 'inherits from GlobalNavManager::Page' do
+    expect(tab).to be_a GlobalNavManager::Page
+  end
 
   describe 'initialisation' do
     it 'uses the supplied attributes' do
-      expect(tab).to have_attributes(
-                       name: 'late',
-                       finder: :filter_result,
-                     )
-      expect(tab.params.to_h).to eq timeliness: 'late'
+      expect(tab).to have_attributes name: 'late'
     end
   end
 
-  describe '#url' do
-    it 'adds params to the page url' do
-      expect(tab.url).to eq 'page_path?timeliness=late'
-    end
-
-    it 'adds in all url params except page' do
-      tab = GlobalNavManager::Tab.new "late", 'page_path', finder, config, {'page' => '3', 'states' => 'drafting', 'foo' => 'bar'}
-      expect(tab.url).to eq 'page_path?foo=bar&states=drafting&timeliness=late'
-    end
-  end
-
-  describe '#matches_fullpath?' do
-    it 'returns true if the given fullpath and our fullpath perfectly match' do
-      expect(tab.matches_fullpath?('page_path?timeliness=late')).to be true
-    end
-
-    it 'returns true if params match, ignoring pagination params' do
-      expect(tab.matches_fullpath?('page_path?timeliness=late&page=3')).to be true
-    end
-
-    it 'returns false if non-pagination params are different' do
-      expect(tab.matches_fullpath?('page_path?filter=nomnom')).to be false
-    end
-
-    it 'returns false if path is different but params are the same' do
-      expect(tab.matches_fullpath?('earl?timeliness=late')).to be false
+  describe '#fullpath' do
+    it 'joins parent path with ours' do
+      expect(tab.fullpath).to eq '/opened/late'
     end
   end
 end

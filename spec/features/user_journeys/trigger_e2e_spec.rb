@@ -70,19 +70,19 @@ feature "#trigger cases" do
   def login_as_manager
     login_as manager
 
-    open_cases_page.load(timeliness: 'in-time')
+    open_cases_page.load(timeliness: 'in_time')
   end
 
   def login_as_responder
     login_as responder
 
-    open_cases_page.load(timeliness: 'in-time')
+    open_cases_page.load(timeliness: 'in_time')
   end
 
   def login_as_disclosure_specialist
     login_as disclosure_specialist
 
-    open_cases_page.load(timeliness: 'in-time')
+    open_cases_page.load(timeliness: 'in_time')
   end
 
   def manager_creates_new_flagged_case_and_assigns_it

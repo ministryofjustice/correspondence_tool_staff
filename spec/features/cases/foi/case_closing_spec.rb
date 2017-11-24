@@ -23,7 +23,7 @@ feature 'Closing a case' do
                                           .responded_transitions.last.created_at}
 
       scenario 'A KILO has responded and an manager closes the case', js:true do
-        open_cases_page.load(timeliness: 'in-time')
+        open_cases_page.load(timeliness: 'in_time')
         close_case(fully_granted_case)
 
         cases_close_page.fill_in_date_responded(0.business_days.ago)
@@ -87,7 +87,7 @@ feature 'Closing a case' do
                                          received_date: 10.business_days.ago }
 
     before do
-      open_cases_page.load(timeliness: 'in-time')
+      open_cases_page.load(timeliness: 'in_time')
       close_case(kase)
     end
 
@@ -183,7 +183,7 @@ feature 'Closing a case' do
                                          received_date: 10.business_days.ago }
 
     before do
-      open_cases_page.load(timeliness: 'in-time')
+      open_cases_page.load(timeliness: 'in_time')
       close_case(no_info_held_case)
     end
 
@@ -218,7 +218,7 @@ feature 'Closing a case' do
                                          received_date: 10.business_days.ago }
 
     before do
-      open_cases_page.load(timeliness: 'in-time')
+      open_cases_page.load(timeliness: 'in_time')
       close_case(other_info_held_case)
       cases_close_page.fill_in_date_responded(2.business_days.ago)
 

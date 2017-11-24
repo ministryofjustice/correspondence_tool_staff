@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
   let(:manager) { create :manager }
-  let(:dacu)    { create :team_dacu }
+  let(:dacu)    { find_or_create :team_dacu }
 
   describe 'POST create', versioning: true do
     let(:params) do
@@ -44,7 +44,7 @@ RSpec.describe UsersController, type: :controller do
     end
 
     context 'with a team_id param' do
-      let!(:dacu) { create :team_dacu }
+      let!(:dacu) { find_or_create :team_dacu }
 
       before do
         params[:team_id] = dacu.id

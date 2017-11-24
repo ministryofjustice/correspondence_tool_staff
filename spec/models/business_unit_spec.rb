@@ -53,7 +53,9 @@ RSpec.describe BusinessUnit, type: :model do
 
     describe 'managing scope' do
       it 'returns only managing teams' do
-        expect(BusinessUnit.managing).to eq [managing_team]
+        expect(BusinessUnit.managing).to match_array [
+                                           managing_team
+                                         ]
       end
     end
 

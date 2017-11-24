@@ -64,7 +64,10 @@ class Case < ApplicationRecord
   acts_as_gov_uk_date :received_date, :date_responded,
                       validate_if: :received_in_acceptable_range?
 
-  scope :by_deadline, -> {order("(properties ->> 'external_deadline')::timestamp with time zone ASC, cases.id") }
+  scope :by_deadline, -> {
+    select("\"cases\".*, (properties ->> 'external_deadline')::timestamp with time zone, cases.id")
+      .order("(properties ->> 'external_deadline')::timestamp with time zone ASC, cases.id")
+  }
   scope :most_recent_first, -> {reorder("(properties ->> 'external_deadline')::timestamp with time zone DESC, cases.id") }
 
   scope :opened, -> { where.not(current_state: 'closed') }
@@ -81,14 +84,14 @@ class Case < ApplicationRecord
 
   scope :in_states, -> (states) { where(current_state: states) }
 
-  scope :with_user, ->(*users) do
-    includes(:assignments)
+  scope :with_user, ->(*users, states: ['pending', 'accepted']) do
+    joins(:assignments)
       .where(assignments: { user_id: users.map { |u| u.id },
-                            state: ['pending', 'accepted']})
+                            state: states})
   end
 
   scope :accepted, -> { joins(:assignments)
-                          .where(assignments: {state: 'accepted'} ) }
+                          .where(assignments: {state: ['accepted']} ) }
   scope :unaccepted, -> { joins(:assignments)
                             .where.not(assignments: {state: 'accepted'} ) }
 

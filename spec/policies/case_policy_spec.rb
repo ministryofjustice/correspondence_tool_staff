@@ -77,6 +77,14 @@ describe CasePolicy do
       approver_scope = described_class::Scope.new(approver, Case.all).resolve
       expect(approver_scope).to match_array(existing_cases)
     end
+
+    it 'for responder & manager - returns all cases' do
+      responder.team_roles << TeamsUsersRole.new(team: dacu_disclosure,
+                                                 role: 'manager')
+      existing_cases
+      resolved_scope = described_class::Scope.new(responder, Case.all).resolve
+      expect(resolved_scope).to match_array(existing_cases)
+    end
   end
 
   describe 'missing methods' do

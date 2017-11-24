@@ -2,35 +2,41 @@ require 'rails_helper'
 
 
 describe GlobalNavManager::Page do
+  let(:disclosure_specialist) { create :disclosure_specialist }
+  let(:disclosure_bmt_user)   { create :disclosure_bmt_user }
+  let(:disclosure_specialist_bmt) { create :disclosure_specialist_bmt }
+  let(:press_officer)         { create :press_officer }
+  let(:responder)             { create :responder }
+  let(:request)               { instance_double ActionDispatch::Request,
+                                                path: '/cases/open',
+                                                fullpath: '/cases/open',
+                                                query_parameters: {} }
 
   let(:settings) do
     YAML.load(ERB.new(<<~EOY).result)
       pages:
-        closed_cases:
-          path: '/closed'
         incoming_cases:
           path: '/incoming'
+          visibility: approver
+          scope:
+            'PRESS-OFFICE': incoming_for_press_office
         open_cases:
           path: '/opened'
-      tabs:
-        in_time:
-          params:
-            timeliness: 'in_time'
-        late:
-          params:
-            timeliness: 'late'
-      structure:
-        'DACU Disclosure':
-          incoming_cases:
-          open_cases:
-            in_time: 'default'
+          scope:
+            manager: opened
+            responder: opened
+            approver: flagged
+          tabs:
+            in_time:
+              scope: in_time
             late:
-          closed_cases:
-        '*':
-          open_cases:
-            in_time: 'default'
-            late:
-          closed_cases:
+              scope: late
+        closed_cases:
+          path: '/closed'
+          scope: closed
+        stats_page:
+          path: '/stats'
+          visibility: manager
      EOY
   end
   let(:config) do
@@ -40,25 +46,37 @@ describe GlobalNavManager::Page do
     end
   end
 
-  let(:url_params)  { {'timeliness' => 'in_time', 'states' => 'awaiting_dispatch,drafting'} }
-  let(:user_double) { instance_double User }
-  let(:open_cases_page) { described_class.new(
-                            :open_cases,
-                            user_double,
-                            [:in_time, :late],
-                            config,
-                            url_params
-                          ) }
-  let(:closed_cases_page) { described_class.new(
-                              :closed_cases,
-                              user_double,
-                              [],
-                              config,
-                              {}
-                            ) }
+  let(:user)                { responder }
+  let(:global_nav)          { instance_double GlobalNavManager,
+                                      user: user,
+                                      request: request }
+  let(:incoming_cases_page) { described_class.new(
+                                :incoming_cases,
+                                global_nav,
+                                config.pages.incoming_cases
+                              ) }
+  let(:open_cases_page)     { described_class.new(
+                                :open_cases,
+                                global_nav,
+                                config.pages.open_cases
+                              ) }
+  let(:closed_cases_page)   { described_class.new(
+                                :closed_cases,
+                                global_nav,
+                                config.pages.closed_cases
+                              ) }
+  let(:stats_page)          { described_class.new(
+                                :stats,
+                                global_nav,
+                                config.pages.stats_page
+                              ) }
   let(:in_time_tab) { instance_double(GlobalNavManager::Tab,
-                                      url: :in_time_tab_url) }
-  let(:late_tab)    { instance_double(GlobalNavManager::Tab) }
+                                      fullpath: :in_time_fullpath,
+                                      visible?: true) }
+                                      # url: :in_time_tab_url) }
+  let(:late_tab)    { instance_double(GlobalNavManager::Tab,
+                                      fullpath: :late_fullpath,
+                                      visible?: true) }
 
   before do
     allow(GlobalNavManager::Tab).to receive(:new)
@@ -72,36 +90,85 @@ describe GlobalNavManager::Page do
   end
 
   context 'initialization' do
-
-    describe '#name' do
-      it 'returns the name' do
-        expect(open_cases_page.name).to eq :open_cases
-      end
-    end
-
-    describe '#text' do
-      it 'returns the text' do
-        expect(open_cases_page.text).to eq 'All open cases'
-      end
-    end
-
     describe 'tabs' do
       it 'creates tab objects for the list provided' do
         expect(open_cases_page.tabs).to eq [in_time_tab, late_tab]
       end
     end
+
+    describe 'visibility' do
+      it 'uses user team(s) to determine visibility' do
+        expect(press_officer).not_to be_a_manager
+        expect(press_officer.teams.pluck :code).to include 'PRESS-OFFICE'
+        allow(global_nav).to receive(:user).and_return(press_officer)
+
+        expect(incoming_cases_page.visible?).to be true
+        expect(open_cases_page.visible?).to     be true
+        expect(closed_cases_page.visible?).to   be true
+        expect(stats_page.visible?).to          be false
+      end
+
+      it 'uses user role(s) to determine visibility' do
+        expect(disclosure_bmt_user).to be_a_manager
+        expect(disclosure_bmt_user.teams.pluck :code).not_to include 'DISCLOSURE'
+        allow(global_nav).to receive(:user).and_return(disclosure_bmt_user)
+
+        expect(incoming_cases_page.visible?).to be false
+        expect(open_cases_page.visible?).to     be true
+        expect(closed_cases_page.visible?).to   be true
+        expect(stats_page.visible?).to          be true
+      end
+    end
+
+    describe 'scopes' do
+      context 'press officer user' do
+        let(:user) { press_officer }
+
+        it 'sets the scopes using the users team' do
+          expect(incoming_cases_page.scopes).to eq ['incoming_for_press_office']
+        end
+      end
+
+      context 'responder' do
+        let(:user) { responder }
+
+        it 'sets the scopes using the users role' do
+          expect(open_cases_page.scopes).to eq ['opened']
+        end
+      end
+
+      context 'disclosure specialist' do
+        let(:user) { disclosure_specialist_bmt }
+
+        it 'merges scopes' do
+          expect(open_cases_page.scopes).to match_array ['opened', 'flagged']
+        end
+      end
+    end
   end
 
-  describe '#url' do
+  describe '#scopes' do
+    it 'returns the scopes' do
+      expect(open_cases_page.scopes).to eq ['opened']
+    end
+  end
+
+  describe '#path' do
+    it 'returns the path' do
+      expect(open_cases_page.path).to eq '/opened'
+    end
+  end
+
+  describe '#fullpath' do
     context 'on a page with no tabs' do
       it "returns the page's path" do
-        expect(closed_cases_page.url).to eq '/closed'
+        expect(closed_cases_page.fullpath).to eq '/closed'
       end
     end
 
     context 'on a page with tabs' do
-      it 'returns the url of the first tab' do
-        expect(open_cases_page.url).to eq :in_time_tab_url
+      it 'returns the path of the first tab' do
+        expect(open_cases_page.fullpath).to eq :in_time_fullpath
       end
     end
   end
@@ -109,21 +176,37 @@ describe GlobalNavManager::Page do
   let(:finder) { instance_double CaseFinderService }
 
   describe '#finder' do
-    it 'returns the correct CaseFinderService object' do
-      allow(CaseFinderService)
-        .to receive_message_chain :new,
-                                  :for_user,
-                                  for_action: :user_action_finder
-      expect(open_cases_page.finder).to eq :user_action_finder
-      expect(CaseFinderService.new).to have_received(:for_user).with(user_double)
-      expect(CaseFinderService.new.for_user(user_double))
-        .to have_received(:for_action).with(:open_cases)
+    let(:cfs) { instance_double(CaseFinderService) }
+
+    before do
+      allow(cfs).to receive(:for_scopes).and_return(cfs)
+      allow(global_nav).to receive(:finder).and_return(cfs)
+    end
+
+    it 'returns the CaseFinderService received from the global nav' do
+      result = open_cases_page.finder
+      expect(global_nav).to have_received(:finder)
+      expect(result).to be cfs
+    end
+
+    it 'calls for_scopes on the finder' do
+      open_cases_page.finder
+      expect(cfs).to have_received(:for_scopes).with(['opened'])
+    end
+  end
+
+  describe '#cases' do
+    it 'returns the cases from the finder' do
+      finder = instance_double CaseFinderService,
+                               scope: double('Case::ActiveRecord_Relation')
+      allow(open_cases_page).to receive(:finder).and_return(finder)
+      expect(open_cases_page.cases).to eq finder.scope
     end
   end
 
   describe '#matches_path?' do
-    it 'returns true if the provided path matches the path of the page' do
-      expect(open_cases_page.matches_path? '/opened').to be true
+    it '#matches_path? returns true if the paths match' do
+      expect(open_cases_page.matches_path? :in_time_fullpath).to be true
     end
   end
 end

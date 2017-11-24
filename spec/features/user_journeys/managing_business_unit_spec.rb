@@ -42,7 +42,7 @@ feature "Viewing Business Groups/Directorate/Business Units" do
 
   def login_as_manager
     login_as manager
-    open_cases_page.load(timeliness: 'in-time')
+    open_cases_page.load(timeliness: 'in_time')
   end
 
   def visit_settings_page
