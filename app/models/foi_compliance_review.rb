@@ -1,6 +1,6 @@
 class FoiComplianceReview < Case
 
-  belongs_to :appeal_outcome, class_name: 'CaseClosure::AppealOutcome'
+  belongs_to :appeal_outcome, class_name: CaseClosure::AppealOutcome
 
   def check_is_flagged
     unless current_state.in?([nil, 'unassigned'])

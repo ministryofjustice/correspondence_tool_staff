@@ -222,6 +222,8 @@ class Case < ApplicationRecord
 
   belongs_to :outcome, class_name: 'CaseClosure::Outcome'
 
+  belongs_to :appeal_outcome, class_name: 'CaseClosure::AppealOutcome'
+
   belongs_to :refusal_reason, class_name: 'CaseClosure::RefusalReason'
 
   belongs_to :info_held_status, class_name: 'CaseClosure::InfoHeldStatus'
@@ -312,6 +314,14 @@ class Case < ApplicationRecord
 
   def outcome_name=(name)
     self.outcome = CaseClosure::Outcome.by_name(name)
+  end
+
+  def appeal_outcome_name=(name)
+    self.appeal_outcome = CaseClosure::AppealOutcome.by_name(name)
+  end
+
+  def appeal_outcome_name
+    appeal_outcome&.name
   end
 
   def refusal_reason_name

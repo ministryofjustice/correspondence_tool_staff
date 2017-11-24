@@ -67,6 +67,11 @@
               th = "Was the information held?"
               td = case_details.info_held_status.name
 
+          - if case_details.appeal_outcome.present?
+            tr.appeal_outcome
+              th = t('common.case.appeal_outcome')
+              td = case_details.appeal_outcome.name
+
           - if case_details.outcome.present?
             tr.outcome
               th = t('common.case.outcome')

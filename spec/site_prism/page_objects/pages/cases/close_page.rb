@@ -14,9 +14,15 @@ module PageObjects
         element :date_responded_month, '#case_date_responded_mm'
         element :date_responded_year, '#case_date_responded_yyyy'
 
+        section :appeal_outcome, '.appeal-outcome-group' do
+          element :upheld, '#case_appeal_outcome_name_upheld'
+          element :upheld_in_part, '#case_appeal_outcome_name_upheld_in_part'
+          element :reversed, :xpath, '//*[@id="edit_case"]/div[2]/div/fieldset/label[3]'
+        end
+
         section :is_info_held, '.js-info-held-status' do
           element :yes, :xpath, '//input[@value="held"]//..'
-          element :held_in_part, :xpath, '//input[@value="part_held"]//..'
+          element :held_in_part, :xpath, '//input[@value="held_in_part"]//..'
           element :no, :xpath, '//input[@value="not_held"]//..'
           element :other, :xpath, '//input[@value="not_confirmed"]//..'
         end

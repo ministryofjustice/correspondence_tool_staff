@@ -151,11 +151,54 @@ RSpec.describe CasesController, type: :controller do
             date_responded_yyyy: date_responded.year,
             info_held_status_abbreviation: info_held.abbreviation,
             outcome_name: outcome.name,
-            appeal_outcome_name: appeal_outcome.name
+            # appeal_outcome_name: appeal_outcome.name
             # refusal_reason_name: refusal_reason.name,
           }
         }
       end
+
+    #   context 'FOI internal review' do
+    #     let(:outcome)     { create : }
+    #     let(:info_held)   { create :info_status, :not_held }
+    #
+    #     it "closes a case that has been responded to" do
+    #       patch :process_closure, params: case_closure_params(responded_case)
+    #       expect(Case.first.current_state).to eq 'closed'
+    #       expect(Case.first.outcome_id).to eq outcome.id
+    #       expect(Case.first.date_responded).to eq 3.days.ago.to_date
+    #     end
+    #
+    #     def case_closure_params(kase)
+    #       date_responded = 3.days.ago
+    #       {
+    #         id: kase.id,
+    #         case: {
+    #           date_responded_dd: date_responded.day,
+    #           date_responded_mm: date_responded.month,
+    #           date_responded_yyyy: date_responded.year,
+    #           info_held_status_abbreviation: info_held.abbreviation,
+    #           outcome_name: outcome.name,
+    #           # appeal_outcome_name: appeal_outcome.name
+    #           # refusal_reason_name: refusal_reason.name,
+    #         }
+    #       }
+    #     end
+    #   end
+    #   def case_closure_params(internal_review)
+    #     date_responded = 3.days.ago
+    #     {
+    #       id: kase.id,
+    #       case: {
+    #         date_responded_dd: date_responded.day,
+    #         date_responded_mm: date_responded.month,
+    #         date_responded_yyyy: date_responded.year,
+    #         info_held_status_abbreviation: info_held.abbreviation,
+    #         outcome_name: outcome.name,
+    #         # appeal_outcome_name: appeal_outcome.name
+    #         # refusal_reason_name: refusal_reason.name,
+    #       }
+    #     }
+    #   end
     end
 
   end

@@ -338,7 +338,8 @@ CREATE TABLE cases (
     workflow character varying,
     "deleted?" boolean DEFAULT false,
     info_held_status_id integer,
-    type character varying DEFAULT 'Case'::character varying
+    type character varying DEFAULT 'Case'::character varying,
+    appeal_outcome_id integer
 );
 
 
@@ -1276,6 +1277,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171027112328'),
 ('20171101171629'),
 ('20171114111458'),
-('20171116102127');
-
-
+('20171116102127'),
+('20171123170106');
