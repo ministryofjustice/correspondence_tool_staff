@@ -12,6 +12,7 @@ module PageObjects
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
 
+        element :form, '.edit_case'
         element :date_received_day, '#case_received_date_dd'
         element :date_received_month, '#case_received_date_mm'
         element :date_received_year, '#case_received_date_yyyy'
