@@ -321,6 +321,14 @@ class Case < ApplicationRecord
     self.outcome = CaseClosure::Outcome.by_name(name)
   end
 
+  def appeal_outcome_name=(name)
+    self.appeal_outcome = CaseClosure::AppealOutcome.by_name(name)
+  end
+
+  def appeal_outcome_name
+    appeal_outcome&.name
+  end
+
   def refusal_reason_name
     refusal_reason&.name
   end

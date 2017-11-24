@@ -25,6 +25,9 @@
   .js-info-held-status
     = f.radio_button_fieldset :info_held_status_abbreviation, choices: CaseClosure::InfoHeldStatus.all, text_method: :name, value_method: :abbreviation
 
+  .js-info-held-status
+    = f.radio_button_fieldset :info_held_status_abbreviation, choices: CaseClosure::InfoHeldStatus.all, text_method: :name, value_method: :abbreviation
+
   .js-outcome-group
     = f.radio_button_fieldset :outcome_name, choices: CaseClosure::Outcome.active.map(&:name)
 
