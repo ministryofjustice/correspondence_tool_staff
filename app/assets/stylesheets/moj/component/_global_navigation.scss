@@ -10,24 +10,32 @@
 
 .global-nav a {
   text-decoration: none;
-  @include bold-19();
-  display: inline-block;
-  height: 100%;
-  padding: 25px 25px 15px 25px;
+  @include bold-16();
+  float: none;
+  display: block;
+  text-align: center;
+  padding: 1em 1em 0.75em 1em;
+
   &.active {
     border-bottom: 5px solid $link-colour;
   }
-  @include media(mobile) {
-    float: none;
-    display: block;
-    text-align: center;
+  @include media(tablet) {
+    @include bold-16();
+    display: inline-block;
+    height: 100%;
+    padding: 0.75em 1em;
+  }
+  @include media(desktop) {
+    @include bold-19();
+    display: inline-block;
+    height: 100%;
+    padding: 1em 1em 0.75em 1em;
   }
 }
 
 .global-nav ul {
   @include clearfix;
   position: relative;
-  white-space: nowrap;
   top: 1px;
   margin: 0;
   padding: 0;
