@@ -369,4 +369,26 @@ FactoryGirl.define do
     end
   end
 
+  factory :appeal_outcome, class: CaseClosure::AppealOutcome do
+    subtype                       nil
+
+    trait :upheld do
+      name                        'upheld'
+      abbreviation                'Upheld'
+      sequence_id                 40
+    end
+
+    trait :upheld_in_part do
+      name                        'upheld_in_part'
+      abbreviation                'Upheld in part'
+      sequence_id                 50
+    end
+
+    trait :reversed do
+      name                        'Reversed'
+      abbreviation                'reversed'
+      sequence_id                 60
+    end
+  end
+
 end

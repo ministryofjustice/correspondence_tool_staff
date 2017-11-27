@@ -21,7 +21,7 @@
   - if @case.is_internal_review?
     .appeal-outcome-group
       = f.radio_button_fieldset :appeal_outcome_name, choices: CaseClosure::AppealOutcome.active.map(&:name)
-
+      
   .js-info-held-status
     = f.radio_button_fieldset :info_held_status_abbreviation, choices: CaseClosure::InfoHeldStatus.all, text_method: :name, value_method: :abbreviation
 

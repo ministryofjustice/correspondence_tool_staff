@@ -54,4 +54,75 @@ FactoryGirl.define do
       ma.update! created_at: evaluator.creation_time
     end
   end
+  factory :awaiting_responder_tinternal_review, parent: :foi_timeliness_review do
+    transient do
+      identifier "assigned case"
+      manager         { managing_team.managers.first }
+      responding_team { create :responding_team }
+    end
+
+    created_at      { creation_time }
+    received_date   { creation_time }
+
+    after(:create) do |kase, evaluator|
+      create :assignment,
+             case: kase,
+             team: evaluator.responding_team,
+             state: 'pending',
+             role: 'responding',
+             created_at: evaluator.creation_time
+      create :case_transition_assign_responder,
+             case_id: kase.id,
+             acting_user_id: evaluator.manager.id,
+             acting_team_id: evaluator.managing_team.id,
+             target_team_id: evaluator.responding_team.id,
+             created_at: evaluator.creation_time
+      kase.reload
+    end
+  end
+
+  factory :accepted_tinternal_review, parent: :awaiting_responder_tinternal_review do
+    transient do
+      identifier "accepted case"
+      responder { create :responder }
+      responding_team { responder.responding_teams.first }
+    end
+
+    after(:create) do |kase, evaluator|
+      kase.responder_assignment.update_attribute :user, evaluator.responder
+      kase.responder_assignment.accepted!
+      create :case_transition_accept_responder_assignment,
+             case: kase,
+             acting_user_id: kase.responder.id,
+             acting_team_id: kase.responding_team.id,
+             created_at: evaluator.creation_time
+      kase.reload
+    end
+  end
+
+  factory :tinternal_review_with_response, parent: :accepted_tinternal_review do
+    transient do
+      identifier "case with response"
+      # creation_time { 4.business_days.ago }
+      responder { find_or_create :responder, full_name: 'Ivor Response' }
+      responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
+    end
+  end
+
+  factory :responded_tinternal_review, parent: :tinternal_review_with_response do
+    transient do
+      identifier "responded case"
+      responder { create :responder }
+    end
+
+    date_responded Date.today
+
+    after(:create) do |kase, evaluator|
+      create :case_transition_respond,
+             case: kase,
+             acting_user_id: evaluator.responder.id,
+             acting_team_id: evaluator.responding_team.id
+      kase.reload
+    end
+  end
 end

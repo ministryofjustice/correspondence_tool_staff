@@ -157,70 +157,54 @@ RSpec.describe CasesController, type: :controller do
         }
       end
 
-    #   context 'FOI internal review' do
-    #     let(:outcome)     { create : }
-    #     let(:info_held)   { create :info_status, :not_held }
-    #
-    #     it "closes a case that has been responded to" do
-    #       patch :process_closure, params: case_closure_params(responded_case)
-    #       expect(Case.first.current_state).to eq 'closed'
-    #       expect(Case.first.outcome_id).to eq outcome.id
-    #       expect(Case.first.date_responded).to eq 3.days.ago.to_date
-    #     end
-    #
-    #     def case_closure_params(kase)
-    #       date_responded = 3.days.ago
-    #       {
-    #         id: kase.id,
-    #         case: {
-    #           date_responded_dd: date_responded.day,
-    #           date_responded_mm: date_responded.month,
-    #           date_responded_yyyy: date_responded.year,
-    #           info_held_status_abbreviation: info_held.abbreviation,
-    #           outcome_name: outcome.name,
-    #           # appeal_outcome_name: appeal_outcome.name
-    #           # refusal_reason_name: refusal_reason.name,
-    #         }
-    #       }
-    #     end
-    #   end
-    #   def case_closure_params(internal_review)
-    #     date_responded = 3.days.ago
-    #     {
-    #       id: kase.id,
-    #       case: {
-    #         date_responded_dd: date_responded.day,
-    #         date_responded_mm: date_responded.month,
-    #         date_responded_yyyy: date_responded.year,
-    #         info_held_status_abbreviation: info_held.abbreviation,
-    #         outcome_name: outcome.name,
-    #         # appeal_outcome_name: appeal_outcome.name
-    #         # refusal_reason_name: refusal_reason.name,
-    #       }
-    #     }
-    #   end
-    end
+      context 'FOI internal review' do
+        let(:appeal_outcome)         { create :appeal_outcome, :upheld }
+        let(:info_held)       { create :info_status, :not_held }
+        let(:internal_review) { create :responded_internal_review }
 
-  end
+        it "closes a case that has been responded to" do
+          patch :process_closure, params: case_closure_params(internal_review)
+          expect(Case.first.current_state).to eq 'closed'
+          expect(Case.first.appeal_outcome_id).to eq appeal_outcome.id
+          expect(Case.first.date_responded).to eq 3.days.ago.to_date
+        end
 
-  context 'as an authenticated responder' do
-    before { sign_in responder }
-
-    describe 'GET new' do
-      before {
-        get :new
-      }
-
-      it 'does not render the new template' do
-        expect(response).not_to render_template(:new)
+        def case_closure_params(internal_review)
+          date_responded = 3.days.ago
+          {
+            id: internal_review.id,
+            case: {
+              date_responded_dd: date_responded.day,
+              date_responded_mm: date_responded.month,
+              date_responded_yyyy: date_responded.year,
+              info_held_status_abbreviation: info_held.abbreviation,
+              appeal_outcome_name: appeal_outcome.name
+            }
+          }
+        end
       end
 
-      it 'redirects to the application root path' do
-        expect(response).to redirect_to(responder_root_path)
-      end
-    end
+      context 'as an authenticated responder' do
+        before { sign_in responder }
 
-  end
+        describe 'GET new' do
+          before {
+            get :new
+          }
+
+          it 'does not render the new template' do
+            expect(response).not_to render_template(:new)
+          end
+
+          it 'redirects to the application root path' do
+            expect(response).to redirect_to(responder_root_path)
+          end
+        end
+
+      end
+      end
+end
+
 
   # An astute reader who has persevered to this point in the file may notice
   # that the following tests are in a different structure than those above:

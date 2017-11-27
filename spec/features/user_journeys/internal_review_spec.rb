@@ -200,6 +200,7 @@
 # Manager view case and closes the case
 
 require 'rails_helper'
+require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
 include CaseDateManipulation
 
@@ -209,13 +210,13 @@ feature "#internal review" do
   given(:disclosure_specialist) { create :disclosure_specialist }
   given!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
 
-  # before(:all) do
-  #   CaseClosure::MetadataSeeder.seed!
-  # end
-  #
-  # after(:all) do
-  #   CaseClosure::MetadataSeeder.unseed!
-  # end
+  before(:all) do
+    CaseClosure::MetadataSeeder.seed!
+  end
+
+  after(:all) do
+    CaseClosure::MetadataSeeder.unseed!
+  end
 
   background do
     manager
@@ -245,9 +246,9 @@ feature "#internal review" do
     responder_marks_as_sent(kase_number)
 
     # Manager closes the case
-    # login_as_manager
-    # manager_views_case(kase_number)
-    # manager_closes_case
+    login_as_manager
+    manager_views_case(kase_number)
+    manager_closes_case
   end
 
 
@@ -375,23 +376,18 @@ feature "#internal review" do
 
   def manager_closes_case
     cases_show_page.actions.close_case.click
-    # save_and_open_page
+
     cases_close_page.fill_in_date_responded(Date.today)
 
     cases_close_page.appeal_outcome.upheld.click
 
-    cases_close_page.is_info_held.yes.click    cases_close_page.wait_until_outcome_visible
+    cases_close_page.is_info_held.yes.click
 
-    cases_close_page.outcome.refused_fully.click
+    cases_close_page.wait_until_outcome_visible
 
-    cases_close_page.wait_until_exemptions_visible
+    cases_close_page.outcome.granted_in_full.click
+
     sleep 1
-
-    expect(cases_close_page.exemptions.exemption_options.size).to eq 25
-
-    cases_close_page.exemptions.exemption_options.first.click
-
-    cases_close_page.exemptions.exemption_options[2].click
 
     cases_close_page.submit_button.click
 
