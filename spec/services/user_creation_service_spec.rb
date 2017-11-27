@@ -123,16 +123,17 @@ describe UserCreationService do
                                                           role: 'approver')
         end
 
-        it 'it returns an error' do
+        it 'it returns existing_ok' do
           service.call
-          expect(service.result).to eq :role_mismatch
+          expect(service.result).to eq :existing_ok
         end
 
-        it 'sets a base error on the user model' do
-          service.call
-          expect(service.user.errors[:base])
-            .to eq ['This user already has role(s) approver ' +
-                    'cannot add role responder']
+        it 'creates a team_user_role record' do
+          expect{ service.call }.to change{ TeamsUsersRole.count }.by(1)
+          expect(@existing_user.reload.team_roles.size).to eq 2
+          tr = @existing_user.team_roles.last
+          expect(tr.team_id).to eq @team.id
+          expect(tr.role).to eq 'responder'
         end
 
       end
