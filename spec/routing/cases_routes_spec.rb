@@ -35,7 +35,7 @@ describe 'cases routes', type: :routing do
     it { should route_to 'cases#incoming_cases' }
   end
 
-  describe  '/cases/my_open', type: :request  do
+  describe '/cases/my_open', type: :request  do
     before do
       get '/cases/my_open'
     end
