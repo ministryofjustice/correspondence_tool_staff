@@ -270,7 +270,7 @@ RSpec.describe CasesController, type: :controller do
 
     context "as an anonymous user" do
       it "be redirected to signin if trying to list of questions" do
-        get :open_cases
+        get :open_cases, params: {tab: 'in_time'}
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -282,19 +282,19 @@ RSpec.describe CasesController, type: :controller do
 
       it 'assigns the result set from the CaseFinderService' do
         stub_current_case_finder_cases_with(:open_cases_result)
-        get :open_cases
+        get :open_cases, params: {tab: 'in_time'}
         expect(assigns(:cases)).to eq :open_cases_result
       end
 
       it 'passes page param to the paginator' do
         gnm = stub_current_case_finder_cases_with(:open_cases_result)
-        get :open_cases, params: { page: 'our_page' }
+        get :open_cases, params: { page: 'our_page', tab: 'in_time' }
         expect(gnm.current_page_or_tab.cases.by_deadline)
           .to have_received(:page).with('our_page')
       end
 
-      it 'renders the incoming_cases template' do
-        get :open_cases
+      it 'renders the index template' do
+        get :open_cases, params: {tab: 'in_time'}
         expect(response).to render_template(:index)
       end
     end
@@ -304,7 +304,7 @@ RSpec.describe CasesController, type: :controller do
 
     context "as an anonymous user" do
       it "be redirected to signin if trying to list of questions" do
-        get :my_open_cases
+        get :my_open_cases, params: {tab: 'in_time'}
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -316,26 +316,26 @@ RSpec.describe CasesController, type: :controller do
 
       it 'assigns the result set from the finder provided by GlobalNavManager' do
         stub_current_case_finder_cases_with(:my_open_cases_result)
-        get :my_open_cases
+        get :my_open_cases, params: { tab: 'in_time' }
         expect(assigns(:cases)).to eq :my_open_cases_result
       end
 
       it 'passes page param to the paginator' do
         gnm = stub_current_case_finder_cases_with(:my_open_cases_result)
-        get :my_open_cases, params: { page: 'our_page' }
+        get :my_open_cases, params: { page: 'our_page', tab: 'in_time' }
         expect(gnm.current_page_or_tab.cases.by_deadline)
           .to have_received(:page).with('our_page')
       end
 
       it 'renders the index template' do
         stub_current_case_finder_cases_with(:my_open_cases_result)
-        get :my_open_cases
+        get :my_open_cases, params: { tab: 'in_time' }
         expect(response).to render_template(:index)
       end
 
       it 'sets @current_tab_name to all cases for "All open cases tab"' do
         stub_current_case_finder_cases_with(:my_open_cases_result)
-        get :my_open_cases
+        get :my_open_cases, params: { tab: 'in_time' }
         expect(assigns(:current_tab_name)).to eq 'my_cases'
       end
     end

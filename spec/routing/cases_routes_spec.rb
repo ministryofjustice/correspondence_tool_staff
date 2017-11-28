@@ -35,8 +35,16 @@ describe 'cases routes', type: :routing do
     it { should route_to 'cases#incoming_cases' }
   end
 
-  describe get: '/cases/my_open' do
-    it { should route_to 'cases#my_open_cases' }
+  describe  '/cases/my_open', type: :request  do
+    before do
+      get '/cases/my_open'
+    end
+
+    it { should redirect_to '/cases/my_open/in_time' }
+  end
+
+  describe get: '/cases/my_open/in_time' do
+    it { should route_to 'cases#my_open_cases', tab: 'in_time' }
   end
 
   describe '/cases/open', type: :request do
@@ -48,11 +56,11 @@ describe 'cases routes', type: :routing do
   end
 
   describe get: '/cases/open/in_time' do
-    it { should route_to 'cases#open_cases' }
+    it { should route_to 'cases#open_cases', tab: 'in_time' }
   end
 
   describe get: '/cases/open/late' do
-    it { should route_to 'cases#open_cases' }
+    it { should route_to 'cases#open_cases' , tab: 'late' }
   end
 
   describe get: '/cases/1/assignments/show_rejected' do

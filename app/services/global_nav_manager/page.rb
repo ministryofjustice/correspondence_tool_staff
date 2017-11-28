@@ -26,8 +26,18 @@ class GlobalNavManager
       @fullpath ||= if @tabs.empty?
                       @path
                     else
-                      tabs.first.fullpath
+                      @tabs.first.fullpath
                     end
+    end
+
+    def fullpath_with_query
+      if @fullpath_with_query.nil?
+        @fullpath_with_query = fullpath
+        if request.query_parameters.present?
+          @fullpath_with_query += "?#{request.query_parameters.to_query}"
+        end
+      end
+      @fullpath_with_query
     end
 
     def finder
@@ -41,6 +51,10 @@ class GlobalNavManager
 
     def matches_path?(match_path)
       fullpath == match_path
+    end
+
+    def request
+      @parent.request
     end
 
     private

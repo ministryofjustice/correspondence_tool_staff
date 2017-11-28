@@ -31,7 +31,7 @@
             li class="tab #{active_link_class(tab.fullpath)}"
               = link_to t("nav.tabs.#{tab.name}_html",
                          count: tab.cases.count),
-                        tab.fullpath
+                        tab.fullpath_with_query
 
 - if !current_page?(search_cases_path) || !@cases.nil?
   .grid-row

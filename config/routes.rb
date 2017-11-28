@@ -161,12 +161,10 @@ Rails.application.routes.draw do
     get 'closed' => 'cases#closed_cases', on: :collection
     get 'confirm_destroy' => 'cases#confirm_destroy', on: :member
     get 'incoming' => 'cases#incoming_cases', on: :collection
-    get 'my_open' => 'cases#my_open_cases', on: :collection
-    get 'my_open/in_time' => 'cases#my_open_cases', on: :collection
-    get 'my_open/late' => 'cases#my_open_cases', on: :collection
+    get 'my_open', on: :collection, to: redirect('/cases/my_open/in_time')
+    get 'my_open/:tab' => 'cases#my_open_cases', on: :collection
     get 'open', on: :collection, to: redirect('/cases/open/in_time')
-    get 'open/in_time' => 'cases#open_cases', on: :collection
-    get 'open/late' => 'cases#open_cases', on: :collection
+    get 'open/:tab' => 'cases#open_cases', on: :collection
     patch 'process_closure', on: :member
     get 'respond', on: :member
     patch 'confirm_respond', on: :member

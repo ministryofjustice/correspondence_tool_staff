@@ -71,7 +71,7 @@ describe GlobalNavManager::Page do
                                 config.pages.stats_page
                               ) }
   let(:in_time_tab) { instance_double(GlobalNavManager::Tab,
-                                      fullpath: :in_time_fullpath,
+                                      fullpath: 'in_time_fullpath',
                                       visible?: true) }
                                       # url: :in_time_tab_url) }
   let(:late_tab)    { instance_double(GlobalNavManager::Tab,
@@ -168,9 +168,29 @@ describe GlobalNavManager::Page do
 
     context 'on a page with tabs' do
       it 'returns the path of the first tab' do
-        expect(open_cases_page.fullpath).to eq :in_time_fullpath
+        expect(open_cases_page.fullpath).to eq 'in_time_fullpath'
       end
     end
+  end
+
+  describe '#fullpath_with_query' do
+    let(:request) { instance_double ActionDispatch::Request,
+                                    path: '/cases/open',
+                                    fullpath: '/cases/open',
+                                    query_parameters: {foo: 'bar'} }
+
+    context 'on a page with no tabs' do
+      it "returns the page's path" do
+        expect(closed_cases_page.fullpath_with_query).to eq '/closed?foo=bar'
+      end
+    end
+
+    context 'on a page with tabs' do
+      it 'returns the path of the first tab' do
+        expect(open_cases_page.fullpath_with_query).to eq 'in_time_fullpath?foo=bar'
+      end
+    end
+
   end
 
   let(:finder) { instance_double CaseFinderService }
@@ -206,7 +226,7 @@ describe GlobalNavManager::Page do
 
   describe '#matches_path?' do
     it '#matches_path? returns true if the paths match' do
-      expect(open_cases_page.matches_path? :in_time_fullpath).to be true
+      expect(open_cases_page.matches_path? 'in_time_fullpath').to be true
     end
   end
 end

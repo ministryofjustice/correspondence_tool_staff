@@ -16,6 +16,7 @@ RSpec.describe CasesController, type: :controller do
       },
       'states' => 'pending_press_office_clearance,pending_dacu_clearance,drafting',
       'timeliness' => 'in_time',
+      'tab' => 'in_time',
       'other_param' => 'other_value',
       'controller' => 'cases',
       'orig_action' => 'open_cases',
