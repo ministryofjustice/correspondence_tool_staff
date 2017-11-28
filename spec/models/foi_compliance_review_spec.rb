@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe FOIComplianceReview, type: :model do
+RSpec.describe FOIComplianceReview, type: :model, parent: :case do
 
   let(:compliance_review) { create :FOI_compliance_review}
 

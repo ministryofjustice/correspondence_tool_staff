@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe FOITimelinessReview, type: :model do
+RSpec.describe FOITimelinessReview, type: :model, parent: :case do
 
   let(:time_review) { create :FOI_timeliness_review}
 
