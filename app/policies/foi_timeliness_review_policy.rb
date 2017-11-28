@@ -1,2 +1,2 @@
-class FoiTimelinessReviewPolicy < Cases::BasePolicy
+class FOITimelinessReviewPolicy < Cases::BasePolicy
 end

@@ -26,7 +26,7 @@
 
 FactoryGirl.define do
 
-  factory :foi_timeliness_review do
+  factory :FOI_timeliness_review, class: FOITimelinessReview do
     transient do
       creation_time { 4.business_days.ago }
       identifier "new case"
@@ -54,7 +54,7 @@ FactoryGirl.define do
       ma.update! created_at: evaluator.creation_time
     end
   end
-  factory :awaiting_responder_tinternal_review, parent: :foi_timeliness_review do
+  factory :awaiting_responder_tinternal_review, parent: :FOI_timeliness_review do
     transient do
       identifier "assigned case"
       manager         { managing_team.managers.first }

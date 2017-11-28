@@ -26,7 +26,7 @@
 
 FactoryGirl.define do
 
-  factory :foi_compliance_review do
+  factory :FOI_compliance_review, class: FOIComplianceReview do
     transient do
       creation_time { 4.business_days.ago }
       identifier "new case"
@@ -55,7 +55,7 @@ FactoryGirl.define do
     end
   end
 
-  factory :awaiting_responder_internal_review, parent: :foi_compliance_review,
+  factory :awaiting_responder_internal_review, parent: :FOI_compliance_review,
           aliases: [:d_case] do
     transient do
       identifier "assigned case"

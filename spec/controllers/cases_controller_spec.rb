@@ -158,9 +158,9 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'FOI internal review' do
-        let(:appeal_outcome)         { create :appeal_outcome, :upheld }
-        let(:info_held)       { create :info_status, :not_held }
-        let(:internal_review) { create :responded_internal_review }
+        let(:appeal_outcome)    { create :appeal_outcome, :upheld }
+        let(:info_held)         { create :info_status, :not_held }
+        let(:internal_review)   { create :responded_internal_review }
 
         it "closes a case that has been responded to" do
           patch :process_closure, params: case_closure_params(internal_review)
@@ -806,15 +806,15 @@ end
         end
 
         it "create a internal review for timeliness" do
-          params[:case][:type] = 'FoiTimelinessReview'
+          params[:case][:type] = 'FOITimelinessReview'
           post :create, params: params
-          expect(created_case.type).to eq 'FoiTimelinessReview'
+          expect(created_case.type).to eq 'FOITimelinessReview'
         end
 
         it "create a internal review for compliance" do
-          params[:case][:type] = 'FoiComplianceReview'
+          params[:case][:type] = 'FOIComplianceReview'
           post :create, params: params
-          expect(created_case.type).to eq 'FoiComplianceReview'
+          expect(created_case.type).to eq 'FOIComplianceReview'
         end
 
         describe 'flag_for_clearance' do

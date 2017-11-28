@@ -1,4 +1,4 @@
-class FoiTimelinessReviewDecorator < CaseDecorator
+class FOITimelinessReviewDecorator < CaseDecorator
   delegate_all
 
 end

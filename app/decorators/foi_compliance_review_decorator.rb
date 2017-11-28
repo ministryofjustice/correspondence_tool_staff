@@ -1,4 +1,4 @@
-class FoiComplianceReviewDecorator < CaseDecorator
+class FOIComplianceReviewDecorator < CaseDecorator
   delegate_all
 
 end

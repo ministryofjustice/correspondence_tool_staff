@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe FoiComplianceReview, type: :model do
+RSpec.describe FOIComplianceReview, type: :model do
 
-  let(:compliance_review) { create :foi_compliance_review}
+  let(:compliance_review) { create :FOI_compliance_review}
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do

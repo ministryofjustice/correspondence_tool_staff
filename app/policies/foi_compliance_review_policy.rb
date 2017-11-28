@@ -1,2 +1,2 @@
-class FoiComplianceReviewPolicy < Cases::BasePolicy
+class FOIComplianceReviewPolicy < Cases::BasePolicy
 end

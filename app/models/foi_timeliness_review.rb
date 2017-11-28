@@ -1,4 +1,4 @@
-class FoiTimelinessReview < Case
+class FOITimelinessReview < Case
 
   belongs_to :appeal_outcome, class_name: CaseClosure::AppealOutcome
 
