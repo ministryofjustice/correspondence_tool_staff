@@ -26,34 +26,12 @@
 
 FactoryGirl.define do
 
-  factory :FOI_timeliness_review, class: FOITimelinessReview do
+  factory :FOI_timeliness_review, class: FOITimelinessReview, parent: :case do
     transient do
-      creation_time { 4.business_days.ago }
-      identifier "new case"
-      managing_team { find_or_create :team_dacu }
-    end
-
-    requester_type 'member_of_the_public'
-    sequence(:name) { |n| "#{identifier} name #{n}" }
-    email { Faker::Internet.email(identifier) }
-    # association :category, factory: :category, strategy: :create
-    category
-    delivery_method 'sent_by_email'
-    sequence(:subject) { |n| "#{identifier} subject #{n}" }
-    sequence(:message) { |n| "#{identifier} message #{n}" }
-    received_date { Time.zone.today.to_s }
-    sequence(:postal_address) { |n| "#{identifier} postal address #{n}" }
-    created_at { creation_time }
-
-    after(:build) do |_kase, evaluator|
-      evaluator.managing_team
-    end
-
-    after(:create) do | kase, evaluator|
-      ma = kase.managing_assignment
-      ma.update! created_at: evaluator.creation_time
+      identifier "new timeliness review"
     end
   end
+
   factory :awaiting_responder_tinternal_review, parent: :FOI_timeliness_review do
     transient do
       identifier "assigned case"
