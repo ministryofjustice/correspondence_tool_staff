@@ -1,14 +1,13 @@
 require 'rails_helper'
 
 describe CaseFinderService do
+  def dd(n)
+    Date.new(2016, 11, n)
+  end
 
   let(:empty_collection) { CaseDecorator.decorate_collection(Array.new)}
 
   context 'cases for responders and flagged dacu disclosure' do
-    def dd(n)
-      Date.new(2016, 11, n)
-    end
-
     before(:all) do
       Timecop.freeze Date.new(2016, 11, 25) do
         @manager               = create :manager
@@ -254,6 +253,61 @@ describe CaseFinderService do
 
   end
 
+  context 'mix of FOI cases including compliance review cases' do
+    before(:all) do
+      @manager               = create :manager
+      @responder             = create :responder
+      @press_officer         = create :press_officer
+      @private_officer       = create :private_officer
+
+      @disclosure_specialist = create :disclosure_specialist
+
+      @responding_team      = @responder.responding_teams.first
+      @team_dacu_disclosure = find_or_create :team_dacu_disclosure
+
+      @foi_case_1             = create(:assigned_case,
+                                     creation_time: 2.business_days.ago,
+                                     identifier: 'foi case')
+      @foi_case_2             = create(:assigned_case,
+                                     creation_time: 1.business_days.ago,
+                                     identifier: 'foi case')
+      @foi_ir_case          = create(:accepted_foi_compliance_review_case,
+                                     creation_time: 1.business_days.ago,
+                                     identifier: 'foi ir case')
+    end
+
+    describe '#incoming_cases_press_office_scope' do
+      it 'returns incoming non-review cases ordered by creation date descending' do
+        finder = CaseFinderService.new(@press_officer)
+        expect(finder.__send__ :incoming_cases_press_office_scope)
+          .to eq [@foi_case_2, @foi_case_1]
+      end
+
+      it 'does not return compliance review cases' do
+        finder = CaseFinderService.new(@press_officer)
+        expect(finder.__send__ :incoming_cases_press_office_scope)
+          .to match_array [ @foi_case_1, @foi_case_2 ]
+      end
+
+      context 'internal review case has received request for further clearance' do
+        before do
+          @foi_ir_case.state_machine.request_further_clearance!(
+            acting_user: @disclosure_specialist,
+            acting_team: @team_dacu_disclosure,
+            target_user: @responder,
+            target_team: @responding_team,
+          )
+        end
+
+        it 'does return the case' do
+          finder = CaseFinderService.new(@press_officer)
+          expect(finder.__send__ :incoming_cases_press_office_scope)
+            .to match_array [ @foi_case_1, @foi_case_2, @foi_ir_case ]
+        end
+      end
+    end
+  end
+
   context 'cases flagged for press office' do
     let!(:too_old_case)       { create(:case,
                                        created_at: 4.business_days.ago,
@@ -272,11 +326,6 @@ describe CaseFinderService do
     let(:press_officer) { create :press_officer }
 
     describe 'incoming_cases_press_office filter' do
-      it 'returns incoming cases ordered by creation date' do
-        finder = CaseFinderService.new(press_officer)
-        expect(finder.__send__ :incoming_cases_press_office_scope)
-          .to match_array [new_case, old_case]
-      end
     end
   end
 end

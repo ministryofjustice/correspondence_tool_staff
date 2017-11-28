@@ -59,6 +59,9 @@ FactoryGirl.define do
     end
   end
 
+  factory :foi_compliance_review_case, class: FoiComplianceReview, parent: :case do
+    identifier "foi compliance review case"
+  end
 
   factory :awaiting_responder_case, parent: :case,
           aliases: [:assigned_case] do
@@ -88,6 +91,13 @@ FactoryGirl.define do
     end
   end
 
+  factory :awaiting_responder_foi_compliance_review_case,
+          class: FoiComplianceReview,
+          parent: :awaiting_responder_case,
+          aliases: [:assigned_foi_compliance_review_case] do
+    identifier "awaiting responder foi compliance review case"
+  end
+
   factory :accepted_case, parent: :assigned_case,
           aliases: [:case_being_drafted] do
     transient do
@@ -106,9 +116,15 @@ FactoryGirl.define do
              created_at: evaluator.creation_time
       kase.reload
     end
-
-
   end
+
+  factory :accepted_foi_compliance_review_case,
+          class: FoiComplianceReview,
+          parent: :accepted_case,
+          aliases: [:foi_compliance_review_case_being_drafted] do
+    identifier "accepted foi compliance review case"
+  end
+
 
   factory :rejected_case, parent: :assigned_case do
     transient do

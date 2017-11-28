@@ -31,6 +31,13 @@ feature 'listing incoming on the system' do
            created_at: 2.business_days.ago,
            identifier: 'assigned_case_flagged_for_press_office_accepted'
   end
+  given(:assigned_ir_case_flagged_for_press_office_accepted) do
+    create :assigned_foi_compliance_review_case,
+           :flagged_accepted,
+           :press_office,
+           created_at: 2.business_days.ago,
+           identifier: 'assigned_ir_case_flagged_for_press_office_accepted'
+  end
 
   given(:assigned_case_flagged_for_private_office_accepted) do
     create :assigned_case,
@@ -72,6 +79,7 @@ feature 'listing incoming on the system' do
       too_old_assigned_case
       assigned_case_flagged_for_dacu_disclosure
       assigned_case_flagged_for_press_office_accepted
+      assigned_ir_case_flagged_for_press_office_accepted
       assigned_case
       fresh_assigned_case
     end
