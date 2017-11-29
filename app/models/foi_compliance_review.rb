@@ -1,3 +1,0 @@
-class FOIComplianceReview < FOIInternalReview
-
-end

@@ -26,7 +26,7 @@
 
 FactoryGirl.define do
 
-  factory :FOI_timeliness_review, class: FOITimelinessReview, parent: :case do
+  factory :FOI_timeliness_review, class: Case::FOI::TimelinessReview, parent: :case do
     transient do
       identifier "new timeliness review"
     end

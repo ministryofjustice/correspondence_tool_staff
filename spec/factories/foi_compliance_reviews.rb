@@ -26,7 +26,7 @@
 
 FactoryGirl.define do
 
-  factory :FOI_compliance_review, class: FOIComplianceReview, parent: :case do
+  factory :FOI_compliance_review, class: Case::FOI::ComplianceReview, parent: :case do
     transient do
       identifier "new compliance review"
     end

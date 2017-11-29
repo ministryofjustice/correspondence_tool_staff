@@ -218,8 +218,8 @@ en:
         request_amends_comment: Add amends/comments
         upload_comment: Add message (optional)
         type:
-          FOIComplianceReview: FOI - Internal review for compliance
-          FOITimelinessReview: FOI - Internal review for timeliness
+          Case::FOI::TimelinessReview: FOI - Internal review for timeliness 
+          Case::FOI::ComplianceReview: FOI - Internal review for compliance
           Case: FOI
         linked_case_number: Case number
       feedback:

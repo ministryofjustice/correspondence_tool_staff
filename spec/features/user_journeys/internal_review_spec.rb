@@ -275,7 +275,7 @@ feature "#internal review" do
   def manager_creates_new_internal_review_and_assigns_it
     open_cases_page.new_case_button.click
 
-    cases_new_page.fill_in_case_details('foicompliancereview')
+    cases_new_page.fill_in_case_details('casefoicompliancereview')
 
     cases_new_page.choose_flag_for_disclosure_specialists('yes')
 

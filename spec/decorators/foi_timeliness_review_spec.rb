@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-describe FOITimelinessReviewDecorator, type: :model do
+describe Case::FOI::TimelinessReviewDecorator, type: :model do
 
-  it 'pretty prints FOITimelinessReview' do
+  it 'pretty prints Case::FOI::TimelinessReview' do
     kases = (create :FOI_timeliness_review).decorate
     expect(kases.pretty_type).to eq 'FOI - Internal review for timeliness'
   end

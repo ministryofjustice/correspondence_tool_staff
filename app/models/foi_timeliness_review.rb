@@ -1,3 +1,0 @@
-class FOITimelinessReview < FOIInternalReview
-
-end

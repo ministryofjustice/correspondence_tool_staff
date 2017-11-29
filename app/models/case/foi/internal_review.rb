@@ -1,4 +1,4 @@
-class FOIInternalReview < Case
+class Case::FOI::InternalReview < Case
 
   belongs_to :appeal_outcome, class_name: CaseClosure::AppealOutcome
 

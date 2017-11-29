@@ -806,15 +806,15 @@ end
         end
 
         it "create a internal review for timeliness" do
-          params[:case][:type] = 'FOITimelinessReview'
+          params[:case][:type] = 'Case::FOI::TimelinessReview'
           post :create, params: params
-          expect(created_case.type).to eq 'FOITimelinessReview'
+          expect(created_case.type).to eq 'Case::FOI::TimelinessReview'
         end
 
         it "create a internal review for compliance" do
-          params[:case][:type] = 'FOIComplianceReview'
+          params[:case][:type] = 'Case::FOI::ComplianceReview'
           post :create, params: params
-          expect(created_case.type).to eq 'FOIComplianceReview'
+          expect(created_case.type).to eq 'Case::FOI::ComplianceReview'
         end
 
         describe 'flag_for_clearance' do
