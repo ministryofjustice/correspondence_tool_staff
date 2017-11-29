@@ -159,7 +159,7 @@ RSpec.describe CasesController, type: :controller do
       context 'FOI internal review' do
         let(:appeal_outcome)    { create :appeal_outcome, :upheld }
         let(:info_held)         { create :info_status, :not_held }
-        let(:internal_review)   { create :responded_internal_review }
+        let(:internal_review)   { create :responded_compliance_review }
 
         it "closes a case that has been responded to" do
           patch :process_closure, params: case_closure_params(internal_review)

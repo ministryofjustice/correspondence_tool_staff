@@ -265,15 +265,16 @@ describe CaseFinderService do
       @responding_team      = @responder.responding_teams.first
       @team_dacu_disclosure = find_or_create :team_dacu_disclosure
 
-      @foi_case_1             = create(:assigned_case,
+      @foi_case_1           = create :assigned_case,
                                      creation_time: 2.business_days.ago,
-                                     identifier: 'foi case')
-      @foi_case_2             = create(:assigned_case,
+                                     identifier: 'foi 1 case'
+      @foi_case_2           = create :assigned_case,
                                      creation_time: 1.business_days.ago,
-                                     identifier: 'foi case')
-      @foi_ir_case          = create(:accepted_foi_compliance_review_case,
-                                     creation_time: 1.business_days.ago,
-                                     identifier: 'foi ir case')
+                                     identifier: 'foi 2 case'
+      @foi_cr_case          = create :accepted_compliance_review,
+                                     creation_time: 1.business_days.ago
+      @foi_tr_case          = create :accepted_timeliness_review,
+                                     creation_time: 1.business_days.ago
     end
 
     describe '#incoming_cases_press_office_scope' do
@@ -283,7 +284,7 @@ describe CaseFinderService do
           .to eq [@foi_case_2, @foi_case_1]
       end
 
-      it 'does not return compliance review cases' do
+      it 'does not return internal review cases' do
         finder = CaseFinderService.new(@press_officer)
         expect(finder.__send__ :incoming_cases_press_office_scope)
           .to match_array [ @foi_case_1, @foi_case_2 ]
@@ -291,7 +292,13 @@ describe CaseFinderService do
 
       context 'internal review case has received request for further clearance' do
         before do
-          @foi_ir_case.state_machine.request_further_clearance!(
+          @foi_cr_case.state_machine.request_further_clearance!(
+            acting_user: @disclosure_specialist,
+            acting_team: @team_dacu_disclosure,
+            target_user: @responder,
+            target_team: @responding_team,
+          )
+          @foi_tr_case.state_machine.request_further_clearance!(
             acting_user: @disclosure_specialist,
             acting_team: @team_dacu_disclosure,
             target_user: @responder,
@@ -302,7 +309,7 @@ describe CaseFinderService do
         it 'does return the case' do
           finder = CaseFinderService.new(@press_officer)
           expect(finder.__send__ :incoming_cases_press_office_scope)
-            .to match_array [ @foi_case_1, @foi_case_2, @foi_ir_case ]
+            .to match_array [ @foi_case_1, @foi_case_2, @foi_cr_case, @foi_tr_case ]
         end
       end
     end
