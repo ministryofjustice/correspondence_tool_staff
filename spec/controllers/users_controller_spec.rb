@@ -89,22 +89,51 @@ RSpec.describe UsersController, type: :controller do
       }
     end
 
-    it 'updates the user' do
-      patch :update, params: params
+    context 'valid updates' do
+      it 'updates the user' do
+        patch :update, params: params
 
-      expect(user.reload.full_name).to eq 'Joanne Smythe'
-      expect(user.email).to eq 'correspondence-staff-dev+joanne.smythe@digital.justice.gov.uk'
+        expect(user.reload.full_name).to eq 'Joanne Smythe'
+        expect(user.email).to eq 'correspondence-staff-dev+joanne.smythe@digital.justice.gov.uk'
+      end
+
+      it 'redirects to team page' do
+        patch :update, params: params
+        expect(response).to redirect_to(team_path(team.id))
+      end
+      it 'records the id of the user who is performing an update' do
+        patch :update, params: params
+        whodunnit = user.versions.last.whodunnit.to_i
+        expect(whodunnit).to eq manager.id
+      end
     end
 
-    it 'redirects to team page' do
-      patch :update, params: params
-      expect(response).to redirect_to(team_path(team.id))
+    context 'invalid update' do
+      let!(:existing_user) { create :user, full_name: 'John Smith', email: 'eu@moj.com' }
+      let(:params) do
+        {
+          'team_id' => team.id.to_s,
+          'role' => 'responder',
+          'user' => {
+            'full_name' => 'Joanne Smythe',
+            'email' => 'eu@moj.com'
+          },
+          'commit' => 'Edit information officer',
+          'id' => user.id.to_s
+        }
+      end
+
+      it 'does not update the user' do
+        patch :update, params: params
+        expect(user.reload.email).to eq 'js@moj.com'
+      end
+
+      it 'redisplays the edit page' do
+        patch :update, params: params
+        expect(response).to render_template :edit
+      end
     end
-    it 'records the id of the user who is performing an update' do
-      patch :update, params: params
-      whodunnit = user.versions.last.whodunnit.to_i
-      expect(whodunnit).to eq manager.id
-    end
+
   end
 
   describe 'GET index' do

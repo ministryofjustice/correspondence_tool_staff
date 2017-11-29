@@ -44,7 +44,7 @@ class UsersController < ApplicationController
       flash[:notice] = 'User details updated'
       redirect_to team_path(id: @team.id)
     else
-      redirect_to user_path(@user)
+      render :edit
     end
   end
 
