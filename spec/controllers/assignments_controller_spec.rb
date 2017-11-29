@@ -578,7 +578,7 @@ RSpec.describe AssignmentsController, type: :controller do
   end
 
   describe '#assign_to_team' do
-    let(:kase)              { create :FOI_compliance_review }
+    let(:kase)              { create :FOI_internal_review, :timeliness }
     let(:responding_team_1) { create :responding_team }
     let(:assignment)        { kase.responder_assignment }
     let(:bg)     { create :business_group }

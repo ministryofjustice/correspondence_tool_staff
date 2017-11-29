@@ -22,7 +22,7 @@ module PageObjects
 
         section :is_info_held, '.js-info-held-status' do
           element :yes, :xpath, '//input[@value="held"]//..'
-          element :held_in_part, :xpath, '//input[@value=part_held"]//..'
+          element :held_in_part, :xpath, '//input[@value="part_held"]//..'
           element :no, :xpath, '//input[@value="not_held"]//..'
           element :other, :xpath, '//input[@value="not_confirmed"]//..'
         end

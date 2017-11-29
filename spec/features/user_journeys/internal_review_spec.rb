@@ -40,7 +40,6 @@ feature "#internal review" do
   scenario "creating, assigning, responding and approving", js: true do
     # Manager creates & assigns to kilo
     login_as_manager
-    binding.pry
     kase = manager_creates_new_internal_review_and_assigns_it
     kase = set_dates_back_by(kase, 7.days)
     kase_number = kase.number
@@ -71,19 +70,19 @@ feature "#internal review" do
   def login_as_manager
     login_as manager
 
-    open_cases_page.load(timeliness: 'in-time')
+    open_cases_page.load(timeliness: 'in_time')
   end
 
   def login_as_responder
     login_as responder
 
-    open_cases_page.load(timeliness: 'in-time')
+    open_cases_page.load(timeliness: 'in_time')
   end
 
   def login_as_disclosure_specialist
     login_as disclosure_specialist
 
-    open_cases_page.load(timeliness: 'in-time')
+    open_cases_page.load(timeliness: 'in_time')
   end
 
   def manager_creates_new_internal_review_and_assigns_it
