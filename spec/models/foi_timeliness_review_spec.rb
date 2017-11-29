@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe FoiTimelinessReview, type: :model do
 
-  let(:time_review) { create :foi_tiap meliness_review}
+  let(:time_review) { create :foi_timeliness_review}
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do
