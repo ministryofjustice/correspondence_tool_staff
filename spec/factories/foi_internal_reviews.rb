@@ -26,15 +26,15 @@
 
 FactoryGirl.define do
 
-  factory :FOI_timeliness_review, class: Case::FOI::TimelinessReview, parent: :case do
+  factory :FOI_internal_review, class: Case::FOI::InternalReview, parent: :case do
     transient do
-      identifier "new timeliness review"
+      identifier "new internal review"
     end
   end
 
-  factory :awaiting_responder_tinternal_review, parent: :FOI_timeliness_review do
+  factory :awaiting_responder_internal_review, parent: :FOI_internal_review do
     transient do
-      identifier "assigned case"
+      identifier "assigned internal review"
       manager         { managing_team.managers.first }
       responding_team { create :responding_team }
     end
@@ -59,9 +59,9 @@ FactoryGirl.define do
     end
   end
 
-  factory :accepted_tinternal_review, parent: :awaiting_responder_tinternal_review do
+  factory :accepted_internal_review, parent: :awaiting_responder_internal_review do
     transient do
-      identifier "accepted case"
+      identifier "accepted internal review"
       responder { create :responder }
       responding_team { responder.responding_teams.first }
     end
@@ -78,18 +78,18 @@ FactoryGirl.define do
     end
   end
 
-  factory :tinternal_review_with_response, parent: :accepted_tinternal_review do
+  factory :internal_review_with_response, parent: :accepted_internal_review do
     transient do
-      identifier "case with response"
+      identifier "internal review with response"
       # creation_time { 4.business_days.ago }
       responder { find_or_create :responder, full_name: 'Ivor Response' }
       responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
     end
   end
 
-  factory :responded_tinternal_review, parent: :tinternal_review_with_response do
+  factory :responded_internal_review, parent: :internal_review_with_response do
     transient do
-      identifier "responded case"
+      identifier "responded internal review"
       responder { create :responder }
     end
 
@@ -102,5 +102,13 @@ FactoryGirl.define do
              acting_team_id: evaluator.responding_team.id
       kase.reload
     end
+  end
+
+  trait :compliance do
+    type "Case::FOI::ComplianceReview"
+  end
+
+  trait :timeliness do
+    type "Case::FOI::TimelinessReview"
   end
 end

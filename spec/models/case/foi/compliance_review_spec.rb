@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Case::FOI::ComplianceReview, type: :model, parent: :case do
 
-  let(:compliance_review) { create :FOI_compliance_review}
+  let(:compliance_review) { create :FOI_internal_review, :compliance }
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do
