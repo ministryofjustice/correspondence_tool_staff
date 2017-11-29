@@ -2,6 +2,8 @@ class GlobalNavManager
   class Page
     attr_reader :name, :path, :scopes, :tabs
 
+    IGNORE_QUERY_PARAMS = ['page']
+
     def initialize(name, parent, attrs)
       @name = name
       @parent = parent
@@ -33,8 +35,11 @@ class GlobalNavManager
     def fullpath_with_query
       if @fullpath_with_query.nil?
         @fullpath_with_query = fullpath
-        if request.query_parameters.present?
-          @fullpath_with_query += "?#{request.query_parameters.to_query}"
+        query_params = request.query_parameters.reject do |k,_|
+          k.in? IGNORE_QUERY_PARAMS
+        end
+        if query_params.present?
+          @fullpath_with_query += "?#{query_params.to_query}"
         end
       end
       @fullpath_with_query
