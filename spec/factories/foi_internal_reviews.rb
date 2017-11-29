@@ -26,13 +26,19 @@
 
 FactoryGirl.define do
 
-  factory :FOI_internal_review, class: Case::FOI::InternalReview, parent: :case do
+  factory :foi_internal_review, class: Case::FOI::InternalReview, parent: :case do
     transient do
       identifier "new internal review"
     end
+    factory :compliance_review, class: Case::FOI::ComplianceReview do
+      identifier "new compliance review"
+    end
+    factory :timeliness_review, class: Case::FOI::TimelinessReview do
+      identifier "new timeliness review"
+    end
   end
 
-  factory :awaiting_responder_internal_review, parent: :FOI_internal_review do
+  factory :awaiting_responder_internal_review, parent: :foi_internal_review do
     transient do
       identifier "assigned internal review"
       manager         { managing_team.managers.first }
@@ -102,13 +108,5 @@ FactoryGirl.define do
              acting_team_id: evaluator.responding_team.id
       kase.reload
     end
-  end
-
-  trait :compliance do
-    type "Case::FOI::ComplianceReview"
-  end
-
-  trait :timeliness do
-    type "Case::FOI::TimelinessReview"
   end
 end

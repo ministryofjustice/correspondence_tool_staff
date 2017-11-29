@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Case::FOI::ComplianceReview, type: :model, parent: :case do
 
-  let(:compliance_review) { create :FOI_internal_review, :compliance }
+  let(:compliance_review) { create :compliance_review}
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do
@@ -24,6 +24,11 @@ RSpec.describe Case::FOI::ComplianceReview, type: :model, parent: :case do
   describe 'state_machining' do
     it 'has a state machine' do
       expect(compliance_review.state_machine).to be_a Cases::FOIStateMachine
+    end
+  end
+  describe 'type' do
+    it 'is a type' do
+      expect(compliance_review.is_a?(Case::FOI::ComplianceReview)).to be true
     end
   end
 end
