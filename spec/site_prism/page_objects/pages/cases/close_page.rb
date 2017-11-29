@@ -17,7 +17,7 @@ module PageObjects
         section :appeal_outcome, '.appeal-outcome-group' do
           element :upheld, 'label[for="case_appeal_outcome_name_upheld"]'
           element :upheld_in_part, 'label[for="case_appeal_outcome_name_upheld_in_part"]'
-          element :reversed, 'label[for="case_appeal_outcome_name_reversed"]'
+          element :overturned, 'label[for="case_appeal_outcome_name_overturned"]'
         end
 
         section :is_info_held, '.js-info-held-status' do

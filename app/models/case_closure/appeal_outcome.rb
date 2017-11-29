@@ -27,8 +27,8 @@ module CaseClosure
       where(abbreviation: 'upheld_part').singular
     end
 
-    def self.reversed
-      where(abbreviation: 'reversed').singular
+    def self.overturned
+      where(abbreviation: 'overturned').singular
     end
 
     def upheld?
@@ -39,8 +39,8 @@ module CaseClosure
       abbreviation == 'upheld_part'
     end
 
-    def reversed?
-      abbreviation == 'reversed'
+    def overturned?
+      abbreviation == 'overturned'
     end
   end
 end

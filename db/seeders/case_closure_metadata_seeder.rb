@@ -31,7 +31,7 @@ module CaseClosure
       puts "----Seeding CaseClosure::AppealOutcomes----" if verbose
       AppealOutcome.find_or_create_by!(subtype: nil, name: 'Upheld', abbreviation: 'upheld', sequence_id: 40)
       AppealOutcome.find_or_create_by!(subtype: nil, name: 'Upheld in part', abbreviation: 'part_upheld', sequence_id: 50)
-      AppealOutcome.find_or_create_by!(subtype: nil, name: 'Reversed', abbreviation: 'reversed', sequence_id: 60)
+      AppealOutcome.find_or_create_by!(subtype: nil, name: 'Overturned', abbreviation: 'overturned', sequence_id: 60)
     end
 
     #rubocop:disable Metrics/MethodLength

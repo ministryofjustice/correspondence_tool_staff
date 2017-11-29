@@ -384,9 +384,9 @@ FactoryGirl.define do
       sequence_id                 50
     end
 
-    trait :reversed do
-      name                        'Reversed'
-      abbreviation                'reversed'
+    trait :overturned do
+      name                        'Overturned'
+      abbreviation                'overturned'
       sequence_id                 60
     end
   end
