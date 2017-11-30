@@ -177,20 +177,16 @@ describe GlobalNavManager::Page do
     let(:request) { instance_double ActionDispatch::Request,
                                     path: '/cases/open',
                                     fullpath: '/cases/open',
-                                    query_parameters: {foo: 'bar'} }
-
-    context 'on a page with no tabs' do
-      it "returns the page's path" do
-        expect(closed_cases_page.fullpath_with_query).to eq '/closed?foo=bar'
-      end
-    end
+                                    query_parameters: {
+                                      'foo' => 'bar',
+                                      'page' => '2'
+                                    } }
 
     context 'on a page with tabs' do
       it 'returns the path of the first tab' do
         expect(open_cases_page.fullpath_with_query).to eq 'in_time_fullpath?foo=bar'
       end
     end
-
   end
 
   let(:finder) { instance_double CaseFinderService }

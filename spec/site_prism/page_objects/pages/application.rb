@@ -37,6 +37,7 @@ module PageObjects
         header_partial:                 'Partials::HeaderPartial',
         incoming_cases:                 'Cases::IncomingCasesPage',
         login:                          'LoginPage',
+        my_open_cases:                  'Cases::MyOpenCasesPage',
         open_cases:                     'Cases::OpenCasesPage',
         request_amends:                 'Cases::RequestAmendsPage',
         reassign_user:                  'Assignments::ReassignUserPage',
