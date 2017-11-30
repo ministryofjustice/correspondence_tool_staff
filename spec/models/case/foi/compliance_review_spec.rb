@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe FoiTimelinessReview, type: :model do
+RSpec.describe Case::FOI::ComplianceReview, type: :model, parent: :case do
 
-  let(:time_review) { create :foi_timeliness_review}
+  let(:compliance_review) { create :compliance_review}
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do
-      Timecop.freeze time_review.received_date + 1.day do
-        expect(time_review).to be_valid
+      Timecop.freeze compliance_review.received_date + 1.day do
+        expect(compliance_review).to be_valid
       end
     end
   end
@@ -23,7 +23,12 @@ RSpec.describe FoiTimelinessReview, type: :model do
 
   describe 'state_machining' do
     it 'has a state machine' do
-      expect(time_review.state_machine).to be_a Cases::FOIStateMachine
+      expect(compliance_review.state_machine).to be_a Cases::FOIStateMachine
+    end
+  end
+  describe 'type' do
+    it 'is a type' do
+      expect(compliance_review.is_a?(Case::FOI::ComplianceReview)).to be true
     end
   end
 end

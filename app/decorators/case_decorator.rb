@@ -126,9 +126,9 @@ class CaseDecorator < Draper::Decorator
 
   def pretty_type
     case type
-    when 'FoiComplianceReview'
+    when 'Case::FOI::ComplianceReview'
       'FOI - Internal review for compliance'
-    when 'FoiTimelinessReview'
+    when 'Case::FOI::TimelinessReview'
       'FOI - Internal review for timeliness'
     when "Case"
       'FOI'

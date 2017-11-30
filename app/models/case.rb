@@ -22,6 +22,10 @@
 #  last_transitioned_at :datetime
 #  delivery_method      :enum
 #  workflow             :string
+#  deleted?             :boolean          default(FALSE)
+#  info_held_status_id  :integer
+#  type                 :string           default("Case")
+#  appeal_outcome_id    :integer
 #
 
 #rubocop:disable Metrics/ClassLength
@@ -221,6 +225,8 @@ class Case < ApplicationRecord
   has_many :attachments, -> { order(id: :desc) }, class_name: 'CaseAttachment', dependent: :destroy
 
   belongs_to :outcome, class_name: 'CaseClosure::Outcome'
+
+  belongs_to :appeal_outcome, class_name: 'CaseClosure::AppealOutcome'
 
   belongs_to :refusal_reason, class_name: 'CaseClosure::RefusalReason'
 
@@ -430,6 +436,10 @@ class Case < ApplicationRecord
         linked_case.linked_cases << self
       end
     end
+  end
+
+  def is_internal_review?
+    self.is_a?(Case::FOI::InternalReview)
   end
 
   private

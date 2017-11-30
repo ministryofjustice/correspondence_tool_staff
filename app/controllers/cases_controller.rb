@@ -435,6 +435,7 @@ class CasesController < ApplicationController
       :date_responded_mm,
       :date_responded_yyyy,
       :outcome_name,
+      :appeal_outcome_name,
       :refusal_reason_name,
       :info_held_status_abbreviation,
       exemption_ids: params[:case][:exemption_ids].nil? ? nil : params[:case][:exemption_ids].keys

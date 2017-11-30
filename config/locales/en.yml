@@ -161,6 +161,7 @@ en:
         requester_type: Type of requester
         refusal_reason_name: What was the outcome?
         outcome_name: What was the outcome?
+        appeal_outcome_name: What was the appeal outcome?
         flag_for_disclosure_specialists: Clearance required by DACU Disclosure
         type: Case type
 
@@ -217,8 +218,8 @@ en:
         request_amends_comment: Add amends/comments
         upload_comment: Add message (optional)
         type:
-          FoiComplianceReview: FOI - Internal review for compliance
-          FoiTimelinessReview: FOI - Internal review for timeliness
+          Case::FOI::TimelinessReview: FOI - Internal review for timeliness 
+          Case::FOI::ComplianceReview: FOI - Internal review for compliance
           Case: FOI
         linked_case_number: Case number
       feedback:
@@ -271,6 +272,7 @@ en:
       close: Close case
       date_responded: Date sent to requester
       outcome: Outcome
+      appeal_outcome: Appeal Outcome
       download_link_html: |
         Download <span class="visuallyhidden">file %{filename}.</span>
       email: "Requesters email"

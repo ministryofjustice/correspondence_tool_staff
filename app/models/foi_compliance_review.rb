@@ -1,3 +1,0 @@
-class FoiComplianceReview < Case
-
-end

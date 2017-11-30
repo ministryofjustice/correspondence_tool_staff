@@ -1,3 +1,8 @@
+= f.radio_button_fieldset :type,
+            choices: [:Case,
+                      Case::FOI::TimelinessReview,
+                      Case::FOI::ComplianceReview]
+
 = f.text_field :name
 
 = f.email_field :email
