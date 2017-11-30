@@ -5,6 +5,7 @@ module Stats
 
     REPORTS = {
       'R003' => R003BusinessUnitPerformanceReport,
+      'R003ap' => R003AppealsPerformanceReport,
       'R005' => R005MonthlyPerformanceReport,
       'R004' => R004CabinetOfficeReport
     }.freeze

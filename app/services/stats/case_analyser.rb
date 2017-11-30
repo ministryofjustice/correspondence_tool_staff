@@ -45,6 +45,26 @@ module Stats
 
     }.freeze
 
+    APPEAL_COLUMNS = {
+      appeals_performance:         'Performance %',
+      appeals_total:               'Total received',
+      appeals_responded_in_time:   'Responded - in time',
+      appeals_responded_late:      'Responded - late',
+      appeals_open_in_time:        'Open - in time',
+      appeals_open_late:           'Open - late',
+
+    }.freeze
+
+    APPEAL_SUPERHEADINGS = {
+      non_trigger_performance:         'Internal reviews',
+      non_trigger_total:               'Internal reviews',
+      appeals_responded_in_time:       'Internal reviews',
+      appeals_responded_late:          'Internal reviews',
+      appeals_open_in_time:            'Internal reviews',
+      appeals_open_late:               'Internal reviews',
+
+    }.freeze
+
     def initialize(kase)
       @kase = kase
       @result = nil
