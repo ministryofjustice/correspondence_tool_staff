@@ -13,8 +13,7 @@
 #  requires_refusal_reason :boolean          default(FALSE)
 #  requires_exemption      :boolean          default(FALSE)
 #  active                  :boolean          default(TRUE)
-#  required_for_refused    :boolean          default(FALSE)
-#  required_for_ncnd       :boolean          default(FALSE)
+#  omit_for_part_refused   :boolean          default(FALSE)
 #
 
 FactoryGirl.define do
@@ -366,6 +365,28 @@ FactoryGirl.define do
         abbreviation                'not_confirmed'
         sequence_id                 740
       end
+    end
+  end
+
+  factory :appeal_outcome, class: CaseClosure::AppealOutcome do
+    subtype                       nil
+
+    trait :upheld do
+      name                        'upheld'
+      abbreviation                'Upheld'
+      sequence_id                 40
+    end
+
+    trait :upheld_in_part do
+      name                        'upheld_in_part'
+      abbreviation                'Upheld in part'
+      sequence_id                 50
+    end
+
+    trait :overturned do
+      name                        'Overturned'
+      abbreviation                'overturned'
+      sequence_id                 60
     end
   end
 

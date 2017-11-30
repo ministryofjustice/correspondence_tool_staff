@@ -155,28 +155,55 @@ RSpec.describe CasesController, type: :controller do
           }
         }
       end
-    end
 
-  end
+      context 'FOI internal review' do
+        let(:appeal_outcome)    { create :appeal_outcome, :upheld }
+        let(:info_held)         { create :info_status, :not_held }
+        let(:internal_review)   { create :responded_internal_review }
 
-  context 'as an authenticated responder' do
-    before { sign_in responder }
+        it "closes a case that has been responded to" do
+          patch :process_closure, params: case_closure_params(internal_review)
+          expect(Case.first.current_state).to eq 'closed'
+          expect(Case.first.appeal_outcome_id).to eq appeal_outcome.id
+          expect(Case.first.date_responded).to eq 3.days.ago.to_date
+        end
 
-    describe 'GET new' do
-      before {
-        get :new
-      }
-
-      it 'does not render the new template' do
-        expect(response).not_to render_template(:new)
+        def case_closure_params(internal_review)
+          date_responded = 3.days.ago
+          {
+            id: internal_review.id,
+            case: {
+              date_responded_dd: date_responded.day,
+              date_responded_mm: date_responded.month,
+              date_responded_yyyy: date_responded.year,
+              info_held_status_abbreviation: info_held.abbreviation,
+              appeal_outcome_name: appeal_outcome.name
+            }
+          }
+        end
       end
 
-      it 'redirects to the application root path' do
-        expect(response).to redirect_to(responder_root_path)
+      context 'as an authenticated responder' do
+        before { sign_in responder }
+
+        describe 'GET new' do
+          before {
+            get :new
+          }
+
+          it 'does not render the new template' do
+            expect(response).not_to render_template(:new)
+          end
+
+          it 'redirects to the application root path' do
+            expect(response).to redirect_to(responder_root_path)
+          end
+        end
+
       end
     end
-
   end
+
 
   # An astute reader who has persevered to this point in the file may notice
   # that the following tests are in a different structure than those above:
@@ -778,15 +805,15 @@ RSpec.describe CasesController, type: :controller do
         end
 
         it "create a internal review for timeliness" do
-          params[:case][:type] = 'FoiTimelinessReview'
+          params[:case][:type] = 'Case::FOI::TimelinessReview'
           post :create, params: params
-          expect(created_case.type).to eq 'FoiTimelinessReview'
+          expect(created_case.type).to eq 'Case::FOI::TimelinessReview'
         end
 
         it "create a internal review for compliance" do
-          params[:case][:type] = 'FoiComplianceReview'
+          params[:case][:type] = 'Case::FOI::ComplianceReview'
           post :create, params: params
-          expect(created_case.type).to eq 'FoiComplianceReview'
+          expect(created_case.type).to eq 'Case::FOI::ComplianceReview'
         end
 
         describe 'flag_for_clearance' do

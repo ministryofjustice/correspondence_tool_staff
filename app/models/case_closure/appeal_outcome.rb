@@ -17,35 +17,29 @@
 #
 
 module CaseClosure
-  class Outcome < Metadatum
-
-    def self.granted
-      where(abbreviation: 'granted').singular
+  class AppealOutcome < Metadatum
+    def self.upheld
+      where(abbreviation: 'upheld').singular
     end
 
-    def self.part_refused
-      where(abbreviation: 'part').singular
+    def self.upheld_in_part
+      where(abbreviation: 'upheld_part').singular
     end
 
-    def self.fully_refused
-      where(abbreviation: 'refused').singular
+    def self.overturned
+      where(abbreviation: 'overturned').singular
     end
 
-    def self.clarify
-      where(abbreviation: 'clarify').singular
+    def upheld?
+      abbreviation == 'upheld'
     end
 
-    def granted?
-      abbreviation == 'granted'
+    def upheld_in_part?
+      abbreviation == 'upheld_part'
     end
 
-    def part_refused?
-      abbreviation == 'part'
+    def overturned?
+      abbreviation == 'overturned'
     end
-
-    def fully_refused?
-      abbreviation == 'refused'
-    end
-
   end
 end

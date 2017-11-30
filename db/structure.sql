@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.6
--- Dumped by pg_dump version 9.5.6
+-- Dumped from database version 9.5.9
+-- Dumped by pg_dump version 9.5.9
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -338,7 +338,8 @@ CREATE TABLE cases (
     workflow character varying,
     "deleted?" boolean DEFAULT false,
     info_held_status_id integer,
-    type character varying DEFAULT 'Case'::character varying
+    type character varying DEFAULT 'Case'::character varying,
+    appeal_outcome_id integer
 );
 
 
@@ -1276,6 +1277,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171027112328'),
 ('20171101171629'),
 ('20171114111458'),
-('20171116102127');
-
-
+('20171116102127'),
+('20171123170106');

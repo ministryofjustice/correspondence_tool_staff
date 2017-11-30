@@ -11,6 +11,7 @@
 #  parent_id  :integer
 #  role       :string
 #  code       :string
+#  deleted_at :datetime
 #
 
 class Directorate < Team
