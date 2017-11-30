@@ -30,7 +30,7 @@ describe 'cases/linked_cases.html.slim', type: :view do
                                 subject: 'Case 3',
                                 trigger_case_marker: '',
                                 linked_cases: [linked_case_1,
-                                                        linked_case_2 ])}
+                                               linked_case_2 ])}
 
 
     it 'displays the initial case details' do
