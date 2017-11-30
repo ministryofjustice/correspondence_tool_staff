@@ -244,6 +244,7 @@ class Case < ApplicationRecord
                 :set_number,
                 :set_managing_team,
                 :set_deadlines
+  before_update :update_deadlines
   before_save :prevent_number_change
   after_create :process_uploaded_request_files, if: :sent_by_post?
 
@@ -475,6 +476,11 @@ class Case < ApplicationRecord
 
   def set_deadlines
     self.escalation_deadline = DeadlineCalculator.escalation_deadline(self)
+    self.internal_deadline = DeadlineCalculator.internal_deadline(self)
+    self.external_deadline = DeadlineCalculator.external_deadline(self)
+  end
+
+  def update_deadlines
     self.internal_deadline = DeadlineCalculator.internal_deadline(self)
     self.external_deadline = DeadlineCalculator.external_deadline(self)
   end
