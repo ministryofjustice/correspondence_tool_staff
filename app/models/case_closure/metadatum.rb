@@ -13,8 +13,7 @@
 #  requires_refusal_reason :boolean          default(FALSE)
 #  requires_exemption      :boolean          default(FALSE)
 #  active                  :boolean          default(TRUE)
-#  required_for_refused    :boolean          default(FALSE)
-#  required_for_ncnd       :boolean          default(FALSE)
+#  omit_for_part_refused   :boolean          default(FALSE)
 #
 
 class CaseClosure::Metadatum < ApplicationRecord
