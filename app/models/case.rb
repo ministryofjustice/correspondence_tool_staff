@@ -481,8 +481,14 @@ class Case < ApplicationRecord
   end
 
   def update_deadlines
-    self.internal_deadline = DeadlineCalculator.internal_deadline(self)
-    self.external_deadline = DeadlineCalculator.external_deadline(self)
+    if changed.include?('received_date')  && !extended_for_pit?
+      self.internal_deadline = DeadlineCalculator.internal_deadline(self)
+      self.external_deadline = DeadlineCalculator.external_deadline(self)
+    end
+  end
+
+  def extended_for_pit?
+    transitions.where(event: 'extend_for_pit').any?
   end
 
   def set_managing_team

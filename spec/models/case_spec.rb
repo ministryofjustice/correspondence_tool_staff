@@ -1218,28 +1218,57 @@ RSpec.describe Case, type: :model do
 
   context 'updating deadlines after updates' do
     context 'received_date is updated' do
-      it 'changes the internal and external deadlines (but not escalation deadline)' do
-        kase = nil
-        Timecop.freeze(Time.local(2017, 12, 1, 12, 0, 0)) do
-          kase = create :case, :flagged, received_date: Date.today, created_at: Time.now
-        end
-        expect(kase.received_date).to eq Date.new(2017, 12, 1)
-        expect(kase.external_deadline).to eq Date.new(2018, 1, 3)
-        expect(kase.internal_deadline).to eq Date.new(2017, 12, 15)
-        expect(kase.escalation_deadline).to eq Date.new(2017, 12, 6)
+      context 'case has not been extended for pit' do
+        it 'changes the internal and external deadlines (but not escalation deadline)' do
+          kase = nil
+          Timecop.freeze(Time.local(2017, 12, 1, 12, 0, 0)) do
+            kase = create :case, :flagged, received_date: Date.today, created_at: Time.now
+          end
+          expect(kase.received_date).to eq Date.new(2017, 12, 1)
+          expect(kase.external_deadline).to eq Date.new(2018, 1, 3)
+          expect(kase.internal_deadline).to eq Date.new(2017, 12, 15)
+          expect(kase.escalation_deadline).to eq Date.new(2017, 12, 6)
 
-        Timecop.freeze(Time.local(2017, 11, 23, 13, 13, 56)) do
-          kase.update!(received_date: Date.today)
+          Timecop.freeze(Time.local(2017, 11, 23, 13, 13, 56)) do
+            kase.update!(received_date: Date.today)
+          end
+          expect(kase.received_date).to eq Date.new(2017, 11, 23)
+          expect(kase.external_deadline).to eq Date.new(2017, 12, 21)
+          expect(kase.internal_deadline).to eq Date.new(2017, 12, 07)
+          expect(kase.escalation_deadline).to eq Date.new(2017, 12, 6)
         end
-        expect(kase.received_date).to eq Date.new(2017, 11, 23)
-        expect(kase.external_deadline).to eq Date.new(2018, 12, 21)
-        expect(kase.internal_deadline).to eq Date.new(2017, 12, 07)
-        expect(kase.escalation_deadline).to eq Date.new(2017, 12, 6)
+      end
+
+      context 'case has been extended for pit' do
+        it 'does not update deadlines' do
+          disclosure_team = find_or_create :team_dacu_disclosure
+          manager = disclosure_team.users.first
+          kase = nil
+          Timecop.freeze(Time.local(2017, 12, 1, 12, 0, 0)) do
+            kase = create :case_being_drafted, :flagged, received_date: Date.today, created_at: Time.now
+            expect(kase).to receive(:team_for_user).with(manager).and_return(disclosure_team)
+            service = CaseExtendForPITService.new(manager, kase, kase.external_deadline + 15.days, 'testing updates')
+            service.call
+          end
+          expect(kase.received_date).to eq Date.new(2017, 12, 1)
+          expect(kase.external_deadline).to eq Date.new(2018, 1, 18)
+          expect(kase.internal_deadline).to eq Date.new(2017, 12, 15)
+          expect(kase.escalation_deadline).to eq Date.new(2017, 12, 6)
+
+          Timecop.freeze(Time.local(2017, 11, 23, 13, 13, 56)) do
+            kase.update!(received_date: Date.today)
+          end
+          expect(kase.received_date).to eq Date.new(2017, 11, 23)
+          expect(kase.external_deadline).to eq Date.new(2018, 1, 18)
+          expect(kase.internal_deadline).to eq Date.new(2017, 12, 15)
+          expect(kase.escalation_deadline).to eq Date.new(2017, 12, 6)
+        end
       end
     end
 
+
     context 'received_date is not updated' do
-      it 'changes the internal and external deadlines (but not escalation deadline)' do
+      it 'does not update deadlines' do
         kase = nil
         Timecop.freeze(Time.local(2017, 12, 1, 12, 0, 0)) do
           kase = create :case, :flagged, received_date: Date.today, created_at: Time.now
