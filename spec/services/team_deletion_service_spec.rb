@@ -3,7 +3,7 @@ require 'rails_helper'
 describe TeamDeletionService do
 
   describe '#call' do
-    let(:dir)           { create :dacu_directorate }
+    let(:dir)           { find_or_create :dacu_directorate }
     let(:service)       { TeamDeletionService.new(params) }
     let(:params) do
       {

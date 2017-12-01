@@ -42,7 +42,7 @@ feature 'cases being reassigned to other team members' do
         # u.respond_to? :full_name ? u.full_name : u.to_s
       end
       expect(reassign_user_page.reassign_to.users.map(&:text))
-        .to eq expected_user_names
+        .to match_array expected_user_names
     end
   end
 
