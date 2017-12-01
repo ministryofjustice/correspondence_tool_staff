@@ -19,7 +19,7 @@ module Stats
       super
       @period_start = Time.now.beginning_of_year
       @period_end = Time.now
-      @stats = StatsCollector.new(Team.hierarchy.map(&:id) + [:total], R003_SPECIFIC_COLUMNS.merge(CaseAnalyser::APPEAL_COLUMNS))
+      @stats = StatsCollector.new(Team.hierarchy.map(&:id) + [:total], R003_SPECIFIC_COLUMNS.merge(CaseAnalyser::COMMON_COLUMNS))
       @superheadings = superheadings
       @stats.add_callback(:before_finalise, -> { roll_up_stats_callback })
       @stats.add_callback(:before_finalise, -> { populate_team_details_callback })
@@ -31,7 +31,7 @@ module Stats
     def superheadings
       [
         ["#{self.class.title} - #{reporting_period}"],
-        R003_SPECIFIC_SUPERHEADINGS.merge(CaseAnalyser::APPEAL_SUPERHEADINGS).values
+        R003_SPECIFIC_SUPERHEADINGS.merge(CaseAnalyser::COMMON_SUPERHEADINGS).values
       ]
     end
 
@@ -44,7 +44,7 @@ module Stats
     end
 
     def run
-      case_ids = CaseSelector.ids_for_period(@period_start, @period_end)
+      case_ids = CaseSelector.ids_for_period_appeals(Case::FOI::TimelinessReview, @period_start, @period_end)
       case_ids.each { |case_id| analyse_case(case_id) }
       @stats.finalise
     end
