@@ -125,10 +125,7 @@ RSpec.describe Case, type: :model do
     end
 
     after(:all) { DbHousekeeping.clean }
-    #   Case.all.map(&:destroy)
-    #   User.all.map(&:destroy)
-    #   TeamsUsersRole.all.map(&:destroy)
-    # end
+
 
     context '.flagged_for_approval' do
       context 'passed one team as a parameter' do
@@ -707,6 +704,8 @@ RSpec.describe Case, type: :model do
         @case_1.linked_cases << [@case_2, @case_3]
         @case_3.linked_cases << [@case_1]
       end
+
+      after(:all) { DbHousekeeping.clean }
 
       it 'should show case 1 having two links' do
         expect(@case_1.linked_cases).to include @case_2 ,@case_3
