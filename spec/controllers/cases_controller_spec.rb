@@ -1347,18 +1347,26 @@ RSpec.describe CasesController, type: :controller do
       }).permit(:name, :email, :postal_address, :requester_type, :received_date_dd, :received_date_mm, :received_date_yyyy, :subject, :message, :category_id)
     end
 
+    let(:date)    { Time.local(2017, 10, 3) }
+
     context 'as a logged in non-manager' do
       before(:each) do
-        sign_in responder
-        patch :update, params: edit_params.to_unsafe_hash
+        Timecop.freeze(date) do
+          sign_in responder
+          patch :update, params: edit_params.to_unsafe_hash
+        end
       end
 
       it 'redirects' do
-        expect(response).to redirect_to root_path
+        Timecop.freeze(date) do
+          expect(response).to redirect_to root_path
+        end
       end
 
       it 'gives error in flash' do
-        expect(flash[:alert]).to eq 'You are not authorised to edit this case.'
+        Timecop.freeze(date) do
+          expect(flash[:alert]).to eq 'You are not authorised to edit this case.'
+        end
       end
     end
 
@@ -1368,23 +1376,27 @@ RSpec.describe CasesController, type: :controller do
 
       before(:each) {
         sign_in manager
-
       }
 
       it 'calls case updater service' do
-        expect(CaseUpdaterService).to receive(:new).
+        Timecop.freeze(date) do
+          expect(CaseUpdaterService).to receive(:new).
           with(manager, kase, expected_params).
           and_return(service)
-        expect(service).to receive(:call)
-        allow(service).to receive(:result)
+          expect(service).to receive(:call)
+          allow(service).to receive(:result)
 
-        patch :update, params: edit_params.to_unsafe_hash
+          patch :update, params: edit_params.to_unsafe_hash
+        end
       end
 
+
       it 'creates a papertrail version with the current user as whodunnit' do
-        patch :update, params: edit_params.to_unsafe_hash
-        expect(kase.versions.size).to eq 2
-        expect(kase.versions.last.whodunnit).to eq manager.id.to_s
+        Timecop.freeze(date) do
+          patch :update, params: edit_params.to_unsafe_hash
+          expect(kase.versions.size).to eq 2
+          expect(kase.versions.last.whodunnit).to eq manager.id.to_s
+        end
       end
     end
 
