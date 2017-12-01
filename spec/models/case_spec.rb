@@ -1225,7 +1225,7 @@ RSpec.describe Case, type: :model do
         end
         expect(kase.received_date).to eq Date.new(2017, 12, 1)
         expect(kase.external_deadline).to eq Date.new(2018, 1, 3)
-        expect(kase.internal_deadline).to  eq Date.new(2017, 12, 15)
+        expect(kase.internal_deadline).to eq Date.new(2017, 12, 15)
         expect(kase.escalation_deadline).to eq Date.new(2017, 12, 6)
 
         Timecop.freeze(Time.local(2017, 11, 23, 13, 13, 56)) do
@@ -1233,7 +1233,7 @@ RSpec.describe Case, type: :model do
         end
         expect(kase.received_date).to eq Date.new(2017, 11, 23)
         expect(kase.external_deadline).to eq Date.new(2018, 12, 21)
-        expect(kase.internal_deadline).to  eq Date.new(2017, 12, 07)
+        expect(kase.internal_deadline).to eq Date.new(2017, 12, 07)
         expect(kase.escalation_deadline).to eq Date.new(2017, 12, 6)
       end
     end
@@ -1246,7 +1246,7 @@ RSpec.describe Case, type: :model do
         end
         expect(kase.received_date).to eq Date.new(2017, 12, 1)
         expect(kase.external_deadline).to eq Date.new(2018, 1, 3)
-        expect(kase.internal_deadline).to  eq Date.new(2017, 12, 15)
+        expect(kase.internal_deadline).to eq Date.new(2017, 12, 15)
         expect(kase.escalation_deadline).to eq Date.new(2017, 12, 6)
 
         Timecop.freeze(Time.local(2017, 11, 23, 13, 13, 56)) do
@@ -1254,7 +1254,7 @@ RSpec.describe Case, type: :model do
         end
         expect(kase.received_date).to eq Date.new(2017, 12, 1)
         expect(kase.external_deadline).to eq Date.new(2018, 1, 3)
-        expect(kase.internal_deadline).to  eq Date.new(2017, 12, 15)
+        expect(kase.internal_deadline).to eq Date.new(2017, 12, 15)
         expect(kase.escalation_deadline).to eq Date.new(2017, 12, 6)
       end
     end
