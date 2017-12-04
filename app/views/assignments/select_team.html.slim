@@ -1,0 +1,19 @@
+
+- content_for :heading
+  = "Select team"
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+table
+  - @assignments.each do |assignment|
+    tr
+      td = assignment.team.name
+      td = link_to t('common.case.reassign_case'),
+              reassign_user_case_assignment_path(@case, assignment),
+              id: 'action--reassign-case',
+              class: 'button'

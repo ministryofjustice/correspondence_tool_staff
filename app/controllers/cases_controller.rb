@@ -46,7 +46,7 @@ class CasesController < ApplicationController
                   :unflag_taken_on_case_for_clearance,
                   :upload_responses,
                 ]
-  before_action :set_assignment, only: [:show]
+  before_action :set_assignments, only: [:show]
   before_action :set_state_selector, only: [:open_cases, :my_open_cases]
 
   def index
@@ -474,11 +474,14 @@ class CasesController < ApplicationController
     @case_transitions = @case.transitions.case_history.order(id: :desc)
   end
 
-  def set_assignment
+  def set_assignments
+    @assignments = []
     if current_user.responder? && @case.responder_assignment
-      @assignment = @case.responder_assignment
-    elsif current_user.approver? && @case.assignments.for_team(current_user.approving_team.id).any?
-      @assignment = @case.assignments.for_team(current_user.approving_team.id).last
+      @assignments << @case.responder_assignment
+    end
+
+    if current_user.approver? && @case.assignments.for_team(current_user.approving_team.id).any?
+      @assignments << @case.assignments.for_team(current_user.approving_team.id).last
     end
   end
 
