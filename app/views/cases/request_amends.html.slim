@@ -16,7 +16,7 @@
   = render partial: 'cases/clearance_copy',
           locals: { nsi: @next_step_info }
 
-= form_for @case, url: execute_request_amends_case_path(@case) do |f|
+= form_for @case, as: :case, url: execute_request_amends_case_path(@case) do |f|
   = f.text_area :request_amends_comment
 
   .button-holder
