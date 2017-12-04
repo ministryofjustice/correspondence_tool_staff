@@ -111,9 +111,25 @@ class CaseFinderService
   end
 
   def new_cases_from_last_3_days(team)
+    case_types_only_visible_with_further_clearance = [
+      'Case::FOI::ComplianceReview',
+      'Case::FOI::TimelinessReview'
+    ]
     scope
+      .joins(:transitions)
+      .where.not(type: case_types_only_visible_with_further_clearance)
       .where("(properties ->> 'escalation_deadline')::date >= ?", Date.today)
+      .or(
+        scope
+          .joins(:transitions)
+          .where(type: case_types_only_visible_with_further_clearance)
+          .where("(properties ->> 'escalation_deadline')::date >= ?", Date.today)
+          .where('case_transitions.event = ?', :request_further_clearance)
+      )
       .not_with_teams(team)
-      .order(id: :desc)
+      .order(created_at: :desc)
+      .distinct('case.id')
   end
 end
+
+

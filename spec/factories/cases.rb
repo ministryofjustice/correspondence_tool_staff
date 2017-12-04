@@ -59,7 +59,6 @@ FactoryGirl.define do
     end
   end
 
-
   factory :awaiting_responder_case, parent: :case,
           aliases: [:assigned_case] do
     transient do
@@ -106,8 +105,6 @@ FactoryGirl.define do
              created_at: evaluator.creation_time
       kase.reload
     end
-
-
   end
 
   factory :rejected_case, parent: :assigned_case do
@@ -192,9 +189,6 @@ FactoryGirl.define do
       kase.reload
     end
   end
-
-
-
 
   factory :pending_dacu_clearance_case_flagged_for_press, parent: :pending_dacu_clearance_case do
     transient do
