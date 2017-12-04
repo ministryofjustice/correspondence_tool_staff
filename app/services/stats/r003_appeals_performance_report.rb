@@ -19,19 +19,19 @@ module Stats
       super
       @period_start = Time.now.beginning_of_year
       @period_end = Time.now
-      @stats = StatsCollector.new(Team.hierarchy.map(&:id) + [:total], R003_SPECIFIC_COLUMNS.merge(CaseAnalyser::COMMON_COLUMNS))
+      @stats = StatsCollector.new(Team.hierarchy.map(&:id) + [:total], R003_SPECIFIC_COLUMNS.merge(AppealAnalyser::APPEAL_COLUMNS))
       @superheadings = superheadings
       @stats.add_callback(:before_finalise, -> { roll_up_stats_callback })
       @stats.add_callback(:before_finalise, -> { populate_team_details_callback })
-      @stats.add_callback(:before_finalise, -> { Calculations::Callbacks.calculate_overall_columns(@stats) })
-      @stats.add_callback(:before_finalise, -> { Calculations::Callbacks.calculate_total_columns(@stats) })
-      @stats.add_callback(:before_finalise, -> { Calculations::Callbacks.calculate_percentages(@stats) })
+      # @stats.add_callback(:before_finalise, -> { AppealCalculations::Callbacks.calculate_overall_columns(@stats) })
+      # @stats.add_callback(:before_finalise, -> { AppealCalculations::Callbacks.calculate_total_columns(@stats) })
+      # @stats.add_callback(:before_finalise, -> { AppealCalculations::Callbacks.calculate_percentages(@stats) })
     end
 
     def superheadings
       [
         ["#{self.class.title} - #{reporting_period}"],
-        R003_SPECIFIC_SUPERHEADINGS.merge(CaseAnalyser::COMMON_SUPERHEADINGS).values
+        R003_SPECIFIC_SUPERHEADINGS.merge(AppealAnalyser::APPEAL_SUPERHEADINGS).values
       ]
     end
 
@@ -103,13 +103,8 @@ module Stats
     def analyse_case(case_id)
       kase = Case.find case_id
       return if kase.unassigned?
-      column_key = CaseAnalyser.new(kase).result
+      column_key = AppealAnalyser.new(kase).result
       @stats.record_stats(kase.responding_team.id, column_key)
-    end
-
-    def add_trigger_state(kase, timeliness)
-      status = kase.flagged? ? 'trigger_' + timeliness : 'non_trigger_' + timeliness
-      status.to_sym
     end
 
     def analyse_closed_case(kase)
