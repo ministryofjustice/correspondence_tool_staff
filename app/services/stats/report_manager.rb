@@ -4,7 +4,7 @@ module Stats
     include ActiveSupport::Inflector
 
     REPORTS = {
-      'R003ap' => R003AppealsPerformanceReport,
+      'R002' => R002AppealsPerformanceReport,
       'R003' => R003BusinessUnitPerformanceReport,
       'R005' => R005MonthlyPerformanceReport,
       'R004' => R004CabinetOfficeReport

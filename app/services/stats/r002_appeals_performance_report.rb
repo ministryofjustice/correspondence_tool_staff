@@ -1,14 +1,14 @@
 module Stats
-  class R003AppealsPerformanceReport < BaseReport
+  class R002AppealsPerformanceReport < BaseReport
 
-    R003_SPECIFIC_COLUMNS = {
+    R002_SPECIFIC_COLUMNS = {
       business_group:                  'Business group',
       directorate:                     'Directorate',
       business_unit:                   'Business unit',
       responsible:                     'Responsible'
     }
 
-    R003_SPECIFIC_SUPERHEADINGS = {
+    R002_SPECIFIC_SUPERHEADINGS = {
       business_group:                  '',
       directorate:                     '',
       business_unit:                   '',
@@ -19,19 +19,18 @@ module Stats
       super
       @period_start = Time.now.beginning_of_year
       @period_end = Time.now
-      @stats = StatsCollector.new(Team.hierarchy.map(&:id) + [:total], R003_SPECIFIC_COLUMNS.merge(AppealAnalyser::APPEAL_COLUMNS))
+      @stats = StatsCollector.new(Team.hierarchy.map(&:id) + [:total], R002_SPECIFIC_COLUMNS.merge(AppealAnalyser::APPEAL_COLUMNS))
       @superheadings = superheadings
       @stats.add_callback(:before_finalise, -> { roll_up_stats_callback })
       @stats.add_callback(:before_finalise, -> { populate_team_details_callback })
-      # @stats.add_callback(:before_finalise, -> { AppealCalculations::Callbacks.calculate_overall_columns(@stats) })
-      # @stats.add_callback(:before_finalise, -> { AppealCalculations::Callbacks.calculate_total_columns(@stats) })
-      # @stats.add_callback(:before_finalise, -> { AppealCalculations::Callbacks.calculate_percentages(@stats) })
+      @stats.add_callback(:before_finalise, -> { AppealCalculations::Callbacks.calculate_total_columns(@stats) })
+      @stats.add_callback(:before_finalise, -> { AppealCalculations::Callbacks.calculate_percentages(@stats) })
     end
 
     def superheadings
       [
         ["#{self.class.title} - #{reporting_period}"],
-        R003_SPECIFIC_SUPERHEADINGS.merge(AppealAnalyser::APPEAL_SUPERHEADINGS).values
+        R002_SPECIFIC_SUPERHEADINGS.merge(AppealAnalyser::APPEAL_SUPERHEADINGS).values
       ]
     end
 
