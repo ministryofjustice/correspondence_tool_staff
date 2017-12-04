@@ -458,9 +458,9 @@ class Case < ApplicationRecord
 
   private
   # determines whether or not the BU responded to flagged cases in time (NOT whether the case was responded to in time!)
-  # calculated as the time between the responding BY accepting the case and the disclosure team approving it.
+  # calculated as the time between the responding BU being assigned the case and the disclosure team approving it.
   def business_unit_responded_to_flagged_case_in_time?
-    responding_team_acceptance_date = transitions.where(event: 'accept_responder_assignment').last.created_at.to_date
+    responding_team_acceptance_date = transitions.where(event: 'assign_responder').last.created_at.to_date
     disclosure_approval_date = transitions.where(event: 'approve', acting_team_id: default_clearance_team.id).last.created_at.to_date
     internal_deadline = DeadlineCalculator.internal_deadline_for_date(category, responding_team_acceptance_date)
     internal_deadline >= disclosure_approval_date

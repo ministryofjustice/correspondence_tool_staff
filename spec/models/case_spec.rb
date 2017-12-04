@@ -1369,7 +1369,7 @@ RSpec.describe Case, type: :model do
 
     context 'out of time' do
       it 'returns false' do
-        # responding team 2 accept# responding on 5 Sep, Disclosure approves response on 20 Sep
+        # responding team 2 assigned on 5 Sep, Disclosure approves response on 20 Sep
         kase = create_case '2017-09-01 13:45:22', bmt_team
         assign_to_responder(kase, '2017-09-02 10:33:01', bmt_team, responding_team_1)
         flag_for_clearance(kase, '2017-09-01 13:48:12', bmt_team, disclosure_team)
@@ -1388,13 +1388,13 @@ RSpec.describe Case, type: :model do
 
     context 'responding_team_2 is in time' do
       it 'returns true' do
-        # responding team 2 accepts assignment on 5 Sep, Disclosure approves response on 18 Sept
+        # responding team 2 assigned on 5 Sep, Disclosure approves response on 18 Sept
         kase = create_case '2017-09-01 13:45:22', bmt_team
         assign_to_responder(kase, '2017-09-02 10:33:01', bmt_team, responding_team_1)
         flag_for_clearance(kase, '2017-09-01 13:48:12', bmt_team, disclosure_team)
         reject_assignment(kase, '2017-09-03 09:13:44', responding_team_1)
-        assign_to_responder(kase, '2017-09-03 12:43:04', bmt_team, responding_team_2)
-        accept_assignment(kase, '2017-09-05 12:02:04', responding_team_2)
+        assign_to_responder(kase, '2017-09-05 12:43:04', bmt_team, responding_team_2)
+        accept_assignment(kase, '2017-09-05 13:02:04', responding_team_2)
         upload_response(kase, '2017-09-14 15:33:01', responding_team_2)
         request_amends(kase, '2017-09-14 17:45:22', disclosure_team)
         upload_response(kase, '2017-09-18 10:33:44', responding_team_2)
