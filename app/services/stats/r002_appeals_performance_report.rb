@@ -43,7 +43,7 @@ module Stats
     end
 
     def run
-      case_ids = CaseSelector.ids_for_period_appeals(Case::FOI::InternalReview, @period_start, @period_end)
+      case_ids = CaseSelector.ids_for_period_appeals(Case::FOI::TimelinessReview, @period_start, @period_end)
       case_ids.each { |case_id| analyse_case(case_id) }
       @stats.finalise
     end
