@@ -23,7 +23,6 @@ module Stats
     end
 
     def self.sum_all_received(row)
-      binding.pry
       ttl = "appeal_total".to_sym
       rit = "appeal_responded_in_time".to_sym
       rl  = "appeal_responded_late".to_sym
