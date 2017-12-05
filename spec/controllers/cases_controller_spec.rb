@@ -1397,8 +1397,8 @@ RSpec.describe CasesController, type: :controller do
       it 'calls case updater service' do
         Timecop.freeze(date) do
           expect(CaseUpdaterService).to receive(:new).
-          with(manager, kase, expected_params).
-          and_return(service)
+            with(manager, kase, expected_params).
+            and_return(service)
           expect(service).to receive(:call)
           allow(service).to receive(:result)
 

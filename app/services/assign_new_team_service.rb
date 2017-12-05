@@ -16,7 +16,7 @@ class AssignNewTeamService
     ActiveRecord::Base.transaction do
       @assignment.update!(state: 'pending', team_id: @team.id, user_id: nil)
       @case.state_machine.assign_to_new_team!(@user, @managing_team, @team)
-
+      NotifyNewAssignmentService.new(team: @team, assignment: @assignment).run
       @result = :ok
     end
   end
