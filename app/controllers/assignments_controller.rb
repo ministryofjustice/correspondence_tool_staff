@@ -48,8 +48,6 @@ class AssignmentsController < ApplicationController
 
 
   def select_team
-    puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-    ap @case
     assignment_ids = params[:assignment_ids].split('+')
     @assignments = Assignment.find(assignment_ids)
   end
