@@ -16,12 +16,6 @@ module Stats
       end
     end
 
-    def self.calculate_overall_figure(row, cat)
-      target = "overall_#{cat}".to_sym
-      source_1 = "appeal_#{cat}".to_sym
-      row[target] = row[source_1]
-    end
-
     def self.calculate_overall_performance(row)
       value = row[:appeal_responded_in_time]
       total = row[:appeal_responded_in_time] + row[:appeal_responded_late] + row[:appeal_open_late]
@@ -29,6 +23,7 @@ module Stats
     end
 
     def self.sum_all_received(row)
+      binding.pry
       ttl = "appeal_total".to_sym
       rit = "appeal_responded_in_time".to_sym
       rl  = "appeal_responded_late".to_sym
