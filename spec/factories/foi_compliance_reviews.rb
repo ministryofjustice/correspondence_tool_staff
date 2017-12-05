@@ -50,6 +50,15 @@ FactoryGirl.define do
     identifier "awaiting responder foi compliance review case"
   end
 
+  factory :compliance_review_with_response,
+          class: Case::FOI::ComplianceReview,
+          parent: :case_with_response do
+    transient do
+
+      identifier "foi compliance review case with response"
+    end
+  end
+
   factory :responded_compliance_review,
           class: Case::FOI::ComplianceReview,
           parent: :responded_case do
