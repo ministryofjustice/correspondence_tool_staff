@@ -16,6 +16,8 @@ module Stats
         Timecop.freeze @frozen_time - 2.days do
           2.times { create :case }
           1.times { create :case, :extended_for_pit }
+          2.times { create :awaiting_responder_compliance_review, :extended_for_pit }
+          3.times { create :accepted_timeliness_review, :extended_for_pit }
           2.times { create :closed_case }
           2.times { create :closed_case, :extended_for_pit }
           2.times { create :closed_case, :clarification_required }
@@ -86,7 +88,7 @@ module Stats
       context '1.A' do
         it 'records the total number' do
           expect(@results['1.A'][:desc]).to eq 'Total number of FOI requests received this quarter'
-          expect(@results['1.A'][:value]).to eq 76
+          expect(@results['1.A'][:value]).to eq 81
         end
       end
 
@@ -99,7 +101,7 @@ module Stats
       context '1.B' do
         it 'records  the stat' do
           expect(@results['1.B'][:desc]).to eq 'Number of requests that have been created but not closed in this quarter'
-          expect(@results['1.B'][:value]).to eq 6
+          expect(@results['1.B'][:value]).to eq 11
         end
       end
 
