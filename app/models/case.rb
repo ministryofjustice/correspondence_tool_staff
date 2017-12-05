@@ -125,6 +125,8 @@ class Case < ApplicationRecord
 
   scope :search, ->(query) { where(number: query) }
 
+  scope :appeal, -> { where('type=? OR type=?', 'Case::FOI::TimelinessReview', 'Case::FOI::ComplianceReview' )}
+
   validates :current_state, presence: true, on: :update
 
   validates :name,presence: true
