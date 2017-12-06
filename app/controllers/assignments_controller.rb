@@ -224,11 +224,7 @@ class AssignmentsController < ApplicationController
   end
 
   def set_team_users
-    if current_user.responder?
-      @case.responding_team_users.order(:full_name)
-    elsif current_user.approver?
-      current_user.approving_team.users.order(:full_name)
-    end
+    @assignment.team.users.order(:full_name)
   end
 
   def validate_response
