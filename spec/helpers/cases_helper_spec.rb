@@ -83,12 +83,25 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
     end
 
     context 'when event == :reassign_user' do
-      it 'generates HTML that links to the close case action' do
-        @case = create(:accepted_case)
-        @assignment = @case.responder_assignment
-        expect(action_button_for(:reassign_user)).to eq(
-          "<a id=\"action--reassign-case\" class=\"button\" href=\"/cases/#{@case.id}/assignments/#{@assignment.id}/reassign_user\">Change team member</a>"
-        )
+      context 'when there is only one assignment for this users teams' do
+        it 'generates HTML that links to the close case action' do
+          @case = create(:accepted_case)
+          @assignments = [@case.responder_assignment]
+          expect(action_button_for(:reassign_user)).to eq(
+                   %[<a id="action--reassign-case" class="button" href="/cases/#{@case.id}/assignments/#{@assignments.first.id}/reassign_user">Change team member</a>]
+                 )
+        end
+      end
+
+
+      context 'when there are two assignemnts for this users teams' do
+        it 'generates a link to the select_team page' do
+          @case = create(:accepted_case, :flagged)
+          @assignments = [ @case.responder_assignment, @case.approver_assignments.first ]
+          expect(action_button_for(:reassign_user)).to eq(
+                 %[<a id="action--reassign-case" class="button" href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.first.id}%2B#{@assignments.last.id}">Change team member</a>]
+               )
+        end
       end
     end
   end

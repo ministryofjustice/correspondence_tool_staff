@@ -3,6 +3,7 @@ class AssignmentsController < ApplicationController
   before_action :set_case, only: [
                   :assign_to_team,
                   :new,
+                  :select_team,
                   :show_rejected,
                   :take_case_on,
                 ]
@@ -43,7 +44,12 @@ class AssignmentsController < ApplicationController
     else
       render :new
     end
+  end
 
+
+  def select_team
+    assignment_ids = params[:assignment_ids].split('+')
+    @assignments = Assignment.find(assignment_ids)
   end
 
   def assign_to_new_team

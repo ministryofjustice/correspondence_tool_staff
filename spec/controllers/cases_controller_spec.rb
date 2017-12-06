@@ -13,31 +13,36 @@ end
 
 RSpec.describe CasesController, type: :controller do
 
-  let(:all_cases)          { create_list(:case, 5)   }
-  let(:first_case)         { all_cases.first         }
-  let(:manager)            { create :manager }
-  let(:responder)          { create :responder }
-  let(:another_responder)  { create :responder }
-  let(:responding_team)    { responder.responding_teams.first }
+  let(:all_cases)             { create_list(:case, 5)   }
+  let(:first_case)            { all_cases.first         }
+  let(:manager)               { create :manager }
+  let(:responder)             { create :responder }
+  let(:another_responder)     { create :responder }
+  let(:responding_team)       { responder.responding_teams.first }
   let(:disclosure_specialist) { create :disclosure_specialist }
-  let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
-  let(:unassigned_case)    { create(:case) }
-  let(:assigned_case)      { create :assigned_case,
-                                    responding_team: responding_team }
-  let(:accepted_case)      { create :accepted_case, responder: responder }
-  let(:responded_case)     { create :responded_case, responder: responder, received_date: 5.days.ago }
-  let(:case_with_response) { create :case_with_response, responder: responder }
-  let(:flagged_case)       { create :assigned_case, :flagged,
-                                    responding_team: responding_team,
-                                    approving_team: team_dacu_disclosure }
+  let(:team_dacu_disclosure)  { find_or_create :team_dacu_disclosure }
+  let(:approver_responder)    { create :approver_responder }
+  let(:unassigned_case)       { create(:case) }
+  let(:assigned_case)         { create :assigned_case,
+                                        responding_team: responding_team }
+  let(:accepted_case)         { create :accepted_case, responder: responder }
+  let(:responded_case)        { create :responded_case, responder: responder, received_date: 5.days.ago }
+  let(:case_with_response)    { create :case_with_response, responder: responder }
+  let(:flagged_case)          { create :assigned_case, :flagged,
+                                        responding_team: responding_team,
+                                        approving_team: team_dacu_disclosure }
   let(:flagged_accepted_case) { create :accepted_case, :flagged_accepted,
                                        responding_team: responding_team,
                                        approver: disclosure_specialist,
                                        responder: responder}
 
-  let(:assigned_trigger_case)   { create :assigned_case, :flagged_accepted,
-                                         approver: disclosure_specialist }
-  let(:pending_dacu_clearance_case) { create :pending_dacu_clearance_case }
+  let(:assigned_trigger_case)               { create :assigned_case, :flagged_accepted,
+                                                      approver: disclosure_specialist }
+  let(:pending_dacu_clearance_case)         { create :pending_dacu_clearance_case }
+  let(:case_accepted_by_approver_responder) { create :accepted_case,
+                                                     :flagged_accepted,
+                                                     approver:  approver_responder,
+                                                     responder: approver_responder }
 
   before { create(:category, :foi) }
 
@@ -58,17 +63,28 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
-  describe '#set_assignment' do
-    it 'instantiates the assignments for responders' do
-      sign_in responder
-      get :show, params: {id: accepted_case.id}
-      expect(assigns(:assignment)).to eq accepted_case.responder_assignment
+  describe '#set_assignments' do
+    context 'current user is only in responder team' do
+      it 'instantiates the assignments for responders' do
+        sign_in responder
+        get :show, params: {id: accepted_case.id}
+        expect(assigns(:assignments)).to eq [ accepted_case.responder_assignment ]
+      end
+    end
+
+    context 'current_user is in both responder and approver team' do
+      it 'instantiates both the assignments for responders and approvers' do
+        kase = case_accepted_by_approver_responder
+        sign_in approver_responder
+        get :show, params: {id: kase.id}
+        expect(assigns(:assignments)).to eq [ kase.responder_assignment, kase.approver_assignments.first ]
+      end
     end
 
     it 'instantiates the assignments for approvers' do
       sign_in disclosure_specialist
       get :show, params: {id: pending_dacu_clearance_case.id}
-      expect(assigns(:assignment)).to eq pending_dacu_clearance_case.approver_assignments.first
+      expect(assigns(:assignments)).to eq [ pending_dacu_clearance_case.approver_assignments.first ]
     end
   end
 
