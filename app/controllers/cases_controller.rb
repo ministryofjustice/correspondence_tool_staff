@@ -476,11 +476,11 @@ class CasesController < ApplicationController
 
   def set_assignments
     @assignments = []
-    if current_user.responder? && @case.responder_assignment
+    if @case.responding_team.in? current_user.responding_teams
       @assignments << @case.responder_assignment
     end
 
-    if current_user.approver? && @case.assignments.for_team(current_user.approving_team.id).any?
+    if current_user.approving_team.in? @case.approving_teams
       @assignments << @case.assignments.for_team(current_user.approving_team.id).last
     end
   end

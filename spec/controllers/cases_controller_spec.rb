@@ -19,6 +19,8 @@ RSpec.describe CasesController, type: :controller do
   let(:responder)             { create :responder }
   let(:another_responder)     { create :responder }
   let(:responding_team)       { responder.responding_teams.first }
+  let(:co_responder)          { create :responder,
+                                       responding_teams: [responding_team] }
   let(:disclosure_specialist) { create :disclosure_specialist }
   let(:team_dacu_disclosure)  { find_or_create :team_dacu_disclosure }
   let(:approver_responder)    { create :approver_responder }
@@ -43,6 +45,11 @@ RSpec.describe CasesController, type: :controller do
                                                      :flagged_accepted,
                                                      approver:  approver_responder,
                                                      responder: approver_responder }
+  let(:case_only_accepted_for_approving) { create :accepted_case,
+                                                  :flagged_accepted,
+                                                  approver:  approver_responder,
+                                                  responder: responder }
+
 
   before { create(:category, :foi) }
 
@@ -72,12 +79,32 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
+    context 'current user is another responder on same team' do
+      let(:kase) { accepted_case }
+
+      it 'instantiates responding assignment' do
+        sign_in co_responder
+        get :show, params: {id: kase.id}
+        expect(assigns(:assignments)).to eq [ kase.responder_assignment ]
+      end
+    end
+
     context 'current_user is in both responder and approver team' do
       it 'instantiates both the assignments for responders and approvers' do
         kase = case_accepted_by_approver_responder
         sign_in approver_responder
         get :show, params: {id: kase.id}
         expect(assigns(:assignments)).to eq [ kase.responder_assignment, kase.approver_assignments.first ]
+      end
+    end
+
+    context 'current user is responder on a different team' do
+      let(:kase) { case_only_accepted_for_approving }
+
+      it 'does not instantiate responding assignment' do
+        sign_in approver_responder
+        get :show, params: {id: kase.id}
+        expect(assigns(:assignments)).to eq [ kase.approver_assignments.first ]
       end
     end
 
