@@ -10,11 +10,6 @@
 = render partial: 'layouts/header'
 
 = form_for @case do |f|
-  / = f.radio_button_fieldset :type,
-  /                           choices: [:Case,
-  /                                     :FoiTimelinessReview,
-  /                                     :FoiComplianceReview]
-
   = render partial: 'new_form_common', locals: { f: f }
   = render partial: 'new_form_details', locals: { f: f }
 
