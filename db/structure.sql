@@ -522,6 +522,71 @@ ALTER SEQUENCE linked_cases_id_seq OWNED BY linked_cases.id;
 
 
 --
+-- Name: report_types; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE report_types (
+    id integer NOT NULL,
+    abbr character varying NOT NULL,
+    full_name character varying NOT NULL,
+    class_name character varying NOT NULL,
+    custom_report boolean DEFAULT false,
+    seq_id integer NOT NULL
+);
+
+
+--
+-- Name: report_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE report_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: report_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE report_types_id_seq OWNED BY report_types.id;
+
+
+--
+-- Name: reports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE reports (
+    id integer NOT NULL,
+    report_type_id integer NOT NULL,
+    period_start date NOT NULL,
+    period_end date NOT NULL,
+    report_data bytea
+);
+
+
+--
+-- Name: reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE reports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE reports_id_seq OWNED BY reports.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -787,6 +852,20 @@ ALTER TABLE ONLY linked_cases ALTER COLUMN id SET DEFAULT nextval('linked_cases_
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY report_types ALTER COLUMN id SET DEFAULT nextval('report_types_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY reports ALTER COLUMN id SET DEFAULT nextval('reports_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY team_properties ALTER COLUMN id SET DEFAULT nextval('team_properties_id_seq'::regclass);
 
 
@@ -912,6 +991,22 @@ ALTER TABLE ONLY feedback
 
 ALTER TABLE ONLY linked_cases
     ADD CONSTRAINT linked_cases_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: report_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY report_types
+    ADD CONSTRAINT report_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY reports
+    ADD CONSTRAINT reports_pkey PRIMARY KEY (id);
 
 
 --
@@ -1093,6 +1188,20 @@ CREATE INDEX index_linked_cases_on_case_id ON linked_cases USING btree (case_id)
 --
 
 CREATE UNIQUE INDEX index_linked_cases_on_case_id_and_linked_case_id ON linked_cases USING btree (case_id, linked_case_id);
+
+
+--
+-- Name: index_report_types_on_abbr; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_report_types_on_abbr ON report_types USING btree (abbr);
+
+
+--
+-- Name: index_reports_on_report_type_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reports_on_report_type_id ON reports USING btree (report_type_id);
 
 
 --
@@ -1278,4 +1387,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171101171629'),
 ('20171114111458'),
 ('20171116102127'),
-('20171123170106');
+('20171123170106'),
+('20171205092729'),
+('20171205102155');

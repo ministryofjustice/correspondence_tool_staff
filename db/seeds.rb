@@ -1,5 +1,6 @@
 require File.join(Rails.root, 'db', 'seeders', 'category_seeder')
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
+require File.join(Rails.root, 'db', 'seeders', 'report_type_seeder')
 require File.join(Rails.root, 'db', 'seeders', 'user_seeder')
 
 
@@ -13,5 +14,6 @@ require File.join(Rails.root, 'db', 'seeders', 'user_seeder')
 
 
 CategorySeeder.new.seed!
+ReportTypeSeeder.new.seed!
 CaseClosure::MetadataSeeder.seed!(verbose: true)
 
