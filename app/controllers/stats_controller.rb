@@ -2,14 +2,22 @@ class StatsController < ApplicationController
 
   before_action :authorize_user
 
+  before_action :set_reports,
+                only: :index
+
   def index
-    @report_manager = Stats::ReportManager.new
   end
 
   def download
-    @report_manager = Stats::ReportManager.new
-    filename  = @report_manager.filename(params[:report_id])
-    report = @report_manager.report_object(params[:report_id])
+    report_type = ReportType.find(params[:id])
+
+    filename  = "#{report_type[:class_name].underscore}.csv"
+
+    report = "Stats::#{report_type.class_name}".constantize.new
+    report.run
+
+    send_data report.to_csv, filename: filename
+  end
     report.run
 
     send_data report.to_csv, filename: filename
@@ -20,6 +28,10 @@ class StatsController < ApplicationController
 
   def authorize_user
     authorize Case.first, :can_download_stats?
+  end
+
+  def set_reports
+    @reports = ReportType.all.order(:seq_id)
   end
 end
 

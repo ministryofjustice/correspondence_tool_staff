@@ -127,3 +127,12 @@ strong.normal-weight {
   margin-top: $gutter;
   display: inline-block;
 }
+
+table caption{
+  text-align: left;
+}
+
+.table-captions {
+  @include bold-24();
+  margin-bottom: $gutter-half;
+}

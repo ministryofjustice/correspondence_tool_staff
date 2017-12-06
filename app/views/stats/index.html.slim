@@ -3,13 +3,29 @@
 
 = render partial: 'layouts/header'
 
-table
-  - @report_manager.reports.each do |report_id, report_class|
-    tr
-      td
-        strong
-          = report_class.title
+.grid-row
+.grid-row
+  .column-full.table-container.container
+    table.stats-report
+      caption
+        .table-captions
+          = "Reports for this year"
+      thead
+        tr.visually-hidden
+          th
+            = "Report name"
+          th
+            = "Action"
+      tbody
+      - @reports.each do |report|
+        tr
+          th
+            = report.full_name
 
-      td.action-right-aligned
-         = link_to 'Download', stats_download_path(report_id: report_id), target: '_blank'
+          td.action-right-aligned
+            = link_to stats_download_path(id: report.id), target: '_blank' do
+              = 'Download'
+              span.visually-hidden
+                = " #{ report.full_name }"
+
 
