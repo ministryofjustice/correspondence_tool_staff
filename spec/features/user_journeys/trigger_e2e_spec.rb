@@ -94,7 +94,7 @@ feature "#trigger cases" do
 
     cases_new_page.submit_button.click
 
-    assign_case(expected_business_unit: responder.responding_teams.first)
+    assign_case_step(business_unit: responder.responding_teams.first)
 
     new_case_description= cases_show_page.page_heading.sub_heading
                           .text.to_s.gsub('You are viewing case number ', '')

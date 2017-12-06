@@ -7,6 +7,7 @@ module PageObjects
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
+        element :happy_action_notice, '.alert-green'
         element :escalation_notice, '.alert-orange'
         element :notice, '.notice-summary-heading'
 
@@ -57,6 +58,14 @@ module PageObjects
 
         section :case_history,
                 PageObjects::Sections::Cases::CaseHistorySection, '#case-history'
+
+        def collection_for_case_attachment(file)
+          case_attachments.each do |case_attachment|
+            case_attachment.collection.each do |collection|
+              return collection if collection.filename == file
+            end
+          end
+        end
       end
 
     end
