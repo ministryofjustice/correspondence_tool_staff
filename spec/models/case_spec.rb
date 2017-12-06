@@ -480,7 +480,7 @@ RSpec.describe Case, type: :model do
 
   describe '#received_date' do
     let(:case_received_yesterday)   { build(:case, received_date: Date.yesterday.to_s) }
-    let(:case_received_long_ago)    { build(:case, received_date: 65.days.ago) }
+    let(:case_received_long_ago)    { build(:case, received_date: 370.days.ago) }
     let(:case_received_today)       { build(:case, received_date: Date.today.to_s) }
     let(:case_received_tomorrow)    { build(:case, received_date: (Date.today + 1.day).to_s) }
 
