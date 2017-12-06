@@ -478,7 +478,7 @@ class Case < ApplicationRecord
         :received_date,
         I18n.t('activerecord.errors.models.case.attributes.received_date.not_in_future')
       )
-    elsif received_date.present? && self.received_date < Date.today - 60.days
+    elsif received_date.present? && self.received_date < Date.today - 1.year
       errors.add(
         :received_date,
         I18n.t('activerecord.errors.models.case.attributes.received_date.past')
