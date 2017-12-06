@@ -1266,7 +1266,6 @@ RSpec.describe Case, type: :model do
       end
     end
 
-
     context 'received_date is not updated' do
       it 'does not update deadlines' do
         kase = nil
@@ -1279,7 +1278,7 @@ RSpec.describe Case, type: :model do
         expect(kase.escalation_deadline).to eq Date.new(2017, 12, 6)
 
         Timecop.freeze(Time.local(2017, 11, 23, 13, 13, 56)) do
-          kase.update!(email: 'john.doe@moj.com')
+          kase.update!(email: 'mg@moj.gov')
         end
         expect(kase.received_date).to eq Date.new(2017, 12, 1)
         expect(kase.external_deadline).to eq Date.new(2018, 1, 3)
@@ -1287,8 +1286,126 @@ RSpec.describe Case, type: :model do
         expect(kase.escalation_deadline).to eq Date.new(2017, 12, 6)
       end
     end
-
   end
+
+  #rubocop:disable Metrics/ParameterLists
+  describe '#responded_in_time_for_stats_purposes' do
+
+    let(:responding_team_1)     { create :responding_team }
+    let(:responding_team_2)     { create :responding_team }
+    let(:bmt_team)              { find_or_create :team_dacu }
+    let(:disclosure_team)       { find_or_create :team_dacu_disclosure }
+    let(:press_office_team)     { find_or_create :team_press_office }
+    let(:private_office_team)   { find_or_create :team_private_office }
+
+    def create_transition(kase, event, to_state, acting_team, target_team = nil, target_user = nil)
+      kase.transitions << CaseTransition.new(
+        event: event,
+        to_state: to_state,
+        metadata: {},
+        sort_key: kase.transitions.empty? ? 10 : kase.transitions.maximum(:sort_key) + 10,
+        most_recent: false,
+        acting_user_id: acting_team.users.first.id,
+        acting_team_id: acting_team.id,
+        target_user_id: target_user&.id,
+        target_team_id: target_team&.id)
+    end
+
+    def create_case(t, creating_team)
+      Timecop.freeze(Time.at(Time.parse(t))) do
+        kase = create :case
+        create_transition(kase, 'flag_for_clearance', 'unassigned', creating_team )
+        kase
+      end
+    end
+
+    def assign_to_responder(kase, t, acting_team, target_team)
+      Timecop.freeze(Time.at(Time.parse(t))) do
+        create_transition(kase, 'assign_responder', 'awaiting_responder', acting_team, target_team)
+      end
+    end
+
+    def reject_assignment(kase, t, acting_team)
+      Timecop.freeze(Time.at(Time.parse(t))) do
+        create_transition(kase, 'reject_responder_assignment', 'unassigned', acting_team)
+      end
+    end
+
+    def accept_assignment(kase, t, acting_team)
+      Timecop.freeze(Time.at(Time.parse(t))) do
+        create_transition(kase, 'accept_responder_assignment', 'drafting', acting_team)
+      end
+    end
+
+    def flag_for_clearance(kase, t, acting_team, target_team)
+      Timecop.freeze(Time.at(Time.parse(t))) do
+        create_transition(kase, 'flag_for_clearance', kase.current_state, acting_team, target_team)
+        kase.assignments << Assignment.new(
+          state: 'accepted',
+          team_id: target_team.id,
+          role: 'approving',
+          user_id: target_team.users.first.id,
+          approved: false)
+      end
+    end
+
+    def upload_response(kase, t, acting_team)
+      Timecop.freeze(Time.at(Time.parse(t))) do
+        create_transition(kase, 'add_response_to_flagged_case', 'pending_dacu_clearance', acting_team)
+      end
+    end
+
+    def request_amends(kase, t, acting_team)
+      Timecop.freeze(Time.at(Time.parse(t))) do
+        create_transition(kase, 'upload_response_and_return_for_redraft', 'drafting', acting_team)
+      end
+    end
+
+    def clear_case(kase, t, new_state, acting_team)
+      Timecop.freeze(Time.at(Time.parse(t))) do
+        create_transition(kase, 'approve', new_state, acting_team)
+      end
+    end
+
+    context 'out of time' do
+      it 'returns false' do
+        # responding team 2 assigned on 5 Sep, Disclosure approves response on 20 Sep
+        kase = create_case '2017-09-01 13:45:22', bmt_team
+        assign_to_responder(kase, '2017-09-02 10:33:01', bmt_team, responding_team_1)
+        flag_for_clearance(kase, '2017-09-01 13:48:12', bmt_team, disclosure_team)
+        reject_assignment(kase, '2017-09-03 09:13:44', responding_team_1)
+        assign_to_responder(kase, '2017-09-03 12:43:04', bmt_team, responding_team_2)
+        accept_assignment(kase, '2017-09-05 12:02:04', responding_team_2)
+        upload_response(kase, '2017-09-14 15:33:01', responding_team_2)
+        request_amends(kase, '2017-09-14 17:45:22', disclosure_team)
+        upload_response(kase, '2017-09-19 10:33:44', responding_team_2)
+        clear_case(kase, '2017-09-20 14:37:24', 'pending_press_office_clearance', disclosure_team)
+        clear_case(kase, '2017-09-21 11:17:44', 'pending_private_office_clearance', press_office_team)
+        clear_case(kase, '2017-09-21 11:17:44', 'awaiting_dispatch', private_office_team)
+        expect(kase.responded_in_time_for_stats_purposes?).to be false
+      end
+    end
+
+    context 'responding_team_2 is in time' do
+      it 'returns true' do
+        # responding team 2 assigned on 5 Sep, Disclosure approves response on 18 Sept
+        kase = create_case '2017-09-01 13:45:22', bmt_team
+        assign_to_responder(kase, '2017-09-02 10:33:01', bmt_team, responding_team_1)
+        flag_for_clearance(kase, '2017-09-01 13:48:12', bmt_team, disclosure_team)
+        reject_assignment(kase, '2017-09-03 09:13:44', responding_team_1)
+        assign_to_responder(kase, '2017-09-05 12:43:04', bmt_team, responding_team_2)
+        accept_assignment(kase, '2017-09-05 13:02:04', responding_team_2)
+        upload_response(kase, '2017-09-14 15:33:01', responding_team_2)
+        request_amends(kase, '2017-09-14 17:45:22', disclosure_team)
+        upload_response(kase, '2017-09-18 10:33:44', responding_team_2)
+        clear_case(kase, '2017-09-18 14:37:24', 'pending_press_office_clearance', disclosure_team)
+        clear_case(kase, '2017-09-21 11:17:44', 'pending_private_office_clearance', press_office_team)
+        clear_case(kase, '2017-09-21 11:17:44', 'awaiting_dispatch', private_office_team)
+        expect(kase.responded_in_time_for_stats_purposes?).to be true
+      end
+    end
+  end
+  #rubocop:enable Metrics/ParameterLists
 
 
   # See note in case.rb about why this is commented out.
