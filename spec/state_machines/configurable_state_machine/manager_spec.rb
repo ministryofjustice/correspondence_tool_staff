@@ -32,7 +32,7 @@ module ConfigurableStateMachine
       let(:kase) { create :case }
       it 'returns a state machine for the correct org/ct/workflow' do
         manager = Manager.instance(config_dir)
-        machine = manager.state_machine(org: 'moj', ct: 'foi', workflow: 'standard', kase: kase)
+        machine = manager.state_machine(org: 'moj', case_type: 'foi', workflow: 'standard', kase: kase)
         expect(machine).to be_instance_of(Machine)
         config = machine.instance_variable_get(:@config)
         expect(config).to be_instance_of(RecursiveOpenStruct)

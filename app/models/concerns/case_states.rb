@@ -1,7 +1,7 @@
 module CaseStates
   extend ActiveSupport::Concern
 
-  STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = %w( unassigned )
+  STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = [ nil, 'unassigned' ]
 
   included do
     after_update :reset_state_machine, if: :workflow_changed?
@@ -20,8 +20,8 @@ module CaseStates
 
   def instantiate_configurable_state_machine
     @state_machine = ConfigurableStateMachine::Manager.instance.state_machine(org: 'moj',
-                                                                              ct: 'foi',
-                                                                              workflow: 'standard',
+                                                                              case_type: 'foi',
+                                                                              workflow: workflow.nil? ? 'standard' : workflow,
                                                                               kase: self)
   end
 
@@ -88,7 +88,7 @@ module CaseStates
   end
 
   def state_requires_configurable_state_machine?
-    current_state.nil? || current_state.in?(STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE)
+    current_state.in?(STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE)
   end
 
   def reset_state_machine

@@ -1,5 +1,6 @@
 module ConfigurableStateMachine
 
+  #rubocop:disable Metrics/ClassLength
   class ConfigValidator
 
     attr_reader :errors
@@ -7,10 +8,7 @@ module ConfigurableStateMachine
     def initialize(config, filename)
       @filename = filename
       @config = config
-      @correspondence_types = []
-      @correspondence_type = nil
-      @workflow = nil
-      @role = nil
+      @case_types = []
       @permitted_workflows = []
       @permitted_user_roles = []
       @permitted_states = []
@@ -25,18 +23,17 @@ module ConfigurableStateMachine
     end
 
     def validate_configs
-      validate_exact_keys(@config, 'root', :preamble, :correspondence_types)
-      validate_is_hash(@config, 'root', :preamble, :correspondence_types)
+      validate_exact_keys(@config, 'root', :preamble, :case_types)
+      validate_is_hash(@config, 'root', :preamble, :case_types)
       if @config.preamble.present?
         if @config.preamble.is_a?(RecursiveOpenStruct)
           validate_exact_keys(@config.preamble,
                             'preamble',
                             :organisation,
                             :organisation_abbreviation,
-                            :permitted_correspondence_types)
-          validate_min_keys(@config.preamble.permitted_correspondence_types, 1)
-          store_permitted_correspondence_types
-          validate_correspondence_types
+                            :permitted_case_types)
+          process_permitted_case_types(@config.preamble)
+          validate_case_types
         end
       end
     end
@@ -55,181 +52,202 @@ module ConfigurableStateMachine
       end
     end
 
-    def validate_correspondence_types
-      validate_exact_keys(@config.correspondence_types,
-                          'correspondence_types',
-                          *@correspondence_types)
-      @config.correspondence_types.to_hash.keys.each do |ct_key|
-        validate_correspondence_type(ct_key)
+    def validate_case_types
+      validate_exact_keys(@config.case_types,
+                          'case_types',
+                          *@case_types)
+      @config.case_types.to_hash.keys.each do |case_type_key|
+        validate_case_type(case_type_key)
       end
     end
 
-    def validate_correspondence_type(ct_key)
-      @correspondence_type  = ct_key
-      ct_config = @config.correspondence_types.__send__(ct_key)
+    def validate_case_type(case_type_key)
+      ct_config = @config.case_types.__send__(case_type_key)
       validate_exact_keys(ct_config,
-                          "correspondence_types/#{ct_key}",
+                          "case_types/#{case_type_key}",
                           :name,
                           :permitted_workflows,
                           :permitted_user_roles,
                           :permitted_states,
                           :workflows)
-      validate_and_store_permitted_workflows(ct_config)
-      validate_and_store_permitted_user_roles(ct_config)
-      validate_and_store_permitted_states(ct_config)
-      validate_workflows(ct_config)
+      process_permitted_workflows(case_type_name: case_type_key, case_type_config: ct_config)
+      process_permitted_user_roles(case_type_name: case_type_key, case_type_config: ct_config)
+      process_permitted_states(case_type_name: case_type_key, case_type_config: ct_config)
+      validate_workflows(case_type_name: case_type_key, case_type_config: ct_config)
     end
 
-    def validate_and_store_permitted_workflows(ct_config)
-      if ct_config.permitted_workflows.is_a?(Array)
-        @permitted_workflows = ct_config.permitted_workflows.map(&:to_sym)
+    def process_permitted_workflows(case_type_name:, case_type_config:)
+      if case_type_config.permitted_workflows.is_a?(Array)
+        @permitted_workflows = case_type_config.permitted_workflows.map(&:to_sym)
       else
-        add_error("correspondence_types/#{@correspondence_type}/permitted_workflows",
-                    "Expected an array, got #{ct_config.permitted_workflows.class}")
+        add_error("case_types/#{case_type_name}/permitted_workflows",
+                    "Expected an array, got #{case_type_config.permitted_workflows.class}")
       end
     end
 
-    def validate_and_store_permitted_user_roles(ct_config)
-      if ct_config.permitted_user_roles.is_a?(Array)
-        @permitted_user_roles = ct_config.permitted_user_roles.map(&:to_sym)
+    def process_permitted_user_roles(case_type_name:, case_type_config:)
+      if case_type_config.permitted_user_roles.is_a?(Array)
+        @permitted_user_roles = case_type_config.permitted_user_roles.map(&:to_sym)
       else
-        add_error("correspondence_types/#{@correspondence_type}/permitted_user_roles",
-                  "Expected an array, got #{ct_config.permitted_user_roles.class}")
+        add_error("case_types/#{case_type_name}/permitted_user_roles",
+                  "Expected an array, got #{case_type_config.permitted_user_roles.class}")
       end
     end
 
-    def validate_and_store_permitted_states(ct_config)
-      if ct_config.permitted_states.is_a?(Array)
-        @permitted_states = ct_config.permitted_states.map(&:to_sym)
+    def process_permitted_states(case_type_name:, case_type_config:)
+      if case_type_config.permitted_states.is_a?(Array)
+        @permitted_states = case_type_config.permitted_states.map(&:to_sym)
       else
-        add_error("correspondence_types/#{@correspondence_type}/permitted_states",
-                  "Expected an array, got #{ct_config.permitted_states.class}")
+        add_error("case_types/#{case_type_name}/permitted_states",
+                  "Expected an array, got #{case_type_config.permitted_states.class}")
       end
     end
 
-    def validate_workflows(ct_config)
-      validate_is_hash(ct_config, "correspondence_types/#{@correspondence_type}", :workflows)
-      unless ct_config.workflows.nil?
-        if ct_config.workflows.is_a?(RecursiveOpenStruct)
-          ct_config.workflows.to_h.keys.each do |workflow|
-            @workflow = workflow
-            if workflow_name_is_valid?
-              validate_workflow(ct_config.workflows.__send__(workflow))
+    def validate_workflows(case_type_name:, case_type_config:)
+      validate_is_hash(case_type_config, "case_types/#{case_type_name}", :workflows)
+      unless case_type_config.workflows.nil?
+        if case_type_config.workflows.is_a?(RecursiveOpenStruct)
+          case_type_config.workflows.to_h.keys.each do |workflow|
+            if workflow_name_is_valid?(workflow_name: workflow)
+              validate_workflow(case_type_name: case_type_name,
+                                workflow_name: workflow,
+                                workflow_config: case_type_config.workflows.__send__(workflow))
             else
-              add_error("correspondence_types/#{@correspondence_type}/workflows",
-                        "#{@workflow} is not a permitted workflow")
+              add_error("case_types/#{case_type_name}/workflows",
+                        "#{workflow} is not a permitted workflow")
             end
           end
         end
       end
     end
 
-    def workflow_name_is_valid?
-      @workflow.in?(@permitted_workflows)
+    def workflow_name_is_valid?(workflow_name:)
+      workflow_name.in?(@permitted_workflows)
     end
 
-    def validate_workflow(workflow_config)
+    def validate_workflow(case_type_name:, workflow_name:, workflow_config:)
       if workflow_config.is_a?(RecursiveOpenStruct)
-        validate_initial_state(workflow_config)
-        validate_user_roles(workflow_config)
+        validate_initial_state(case_type_name: case_type_name,
+                               workflow_name: workflow_name,
+                               workflow_config: workflow_config)
+        validate_user_roles(case_type_name: case_type_name,
+                            workflow_name: workflow_name,
+                            workflow_config: workflow_config)
       else
-        add_error("correspondence_types/#{@correspondence_type}/workflows/#{@workflow}",
+        add_error("case_types/#{case_type_name}/workflows/#{workflow_name}",
                   "Expected to be a Hash, got #{workflow_config.class}")
       end
     end
 
-    def validate_user_roles(workflow_config)
+    def validate_user_roles(case_type_name:, workflow_name:, workflow_config:)
       if workflow_config.to_h.keys.include?(:user_roles)
         if workflow_config.user_roles.is_a?(RecursiveOpenStruct)
           workflow_config.user_roles.to_h.keys.each do |user_role|
-            validate_user_role(user_role, workflow_config.user_roles.__send__(user_role))
+            validate_user_role(case_type_name: case_type_name,
+                               workflow_name: workflow_name,
+                               user_role: user_role,
+                               user_role_config: workflow_config.user_roles.__send__(user_role))
           end
         else
-          add_error("correspondence_types/#{@correspondence_type}/workflows/#{@workflow}",
+          add_error("case_types/#{case_type_name}/workflows/#{workflow_name}",
                     "Expected user_roles to be a Hash, got #{workflow_config.user_roles.class}")
         end
       else
-        add_error("correspondence_types/#{@correspondence_type}/workflows/#{@workflow}",
+        add_error("case_types/#{case_type_name}/workflows/#{workflow_name}",
                   "Missing mandatory key: user_roles")
       end
     end
 
-    def validate_user_role(role, role_config)
-      if role_config.is_a?(RecursiveOpenStruct)
-        if role.in?(@permitted_user_roles)
-          @role = role
-          validate_user_role_keys(role_config)
+    def validate_user_role(case_type_name:, workflow_name:, user_role:, user_role_config:)
+      if user_role_config.is_a?(RecursiveOpenStruct)
+        if user_role.in?(@permitted_user_roles)
+          validate_user_role_keys(case_type_name: case_type_name,
+                                  workflow_name: workflow_name,
+                                  user_role: user_role,
+                                  user_role_config: user_role_config)
         else
-          add_error("correspondence_types/#{@correspondence_type}/workflows/#{@workflow}/user_roles",
-                    "User role #{role} is not a permitted user role")
+          add_error("case_types/#{case_type_name}/workflows/#{workflow_name}/user_roles",
+                    "User role #{user_role} is not a permitted user role")
         end
       else
-        add_error("correspondence_types/#{@correspondence_type}/workflows/#{@workflow}/user_roles",
-                  "Expected #{role} to be a hash, is a #{role_config.class}")
+        add_error("case_types/#{case_type_name}/workflows/#{workflow_name}/user_roles",
+                  "Expected #{user_role} to be a hash, is a #{user_role_config.class}")
       end
     end
 
-    def validate_user_role_keys(role_config)
-      validate_exact_keys(role_config,
-                          "correspondence_types/#{@correspondence_type}/workflows/#{@workflow}/user_roles/#{@role}",
+    def validate_user_role_keys(case_type_name:, workflow_name:, user_role:, user_role_config:)
+      validate_exact_keys(user_role_config,
+                          "case_types/#{case_type_name}/workflows/#{workflow_name}/user_roles/#{user_role}",
                           :states)
-      states_config = role_config.states
+      states_config = user_role_config.states
       if states_config.present?
         if states_config.is_a?(RecursiveOpenStruct)
-          validate_states(states_config)
+          validate_states(case_type_name: case_type_name,
+                          workflow_name: workflow_name,
+                          user_role: user_role,
+                          states_config: states_config)
         end
       end
     end
 
-    def validate_states(states_config)
+    def validate_states(case_type_name:, workflow_name:, user_role:, states_config:)
       states = states_config.to_h.keys
       states.each do |state|
         if state.in?(@permitted_states)
-          validate_state(state, states_config)
+          validate_state(case_type_name: case_type_name,
+                         workflow_name: workflow_name,
+                         user_role: user_role,
+                         state_name: state, states_config: states_config)
         else
-          add_error("correspondence_types/#{@correspondence_type}/workflows/#{@workflow}/user_roles/#{@role}/states/",
+          add_error("case_types/#{case_type_name}/workflows/#{workflow_name}/user_roles/#{user_role}/states/",
                    "State #{state} not a permitted state")
         end
       end
     end
 
-    def validate_state(state, states_config)
-      @state = state
-      my_state_config = states_config.__send__(state)
+    def validate_state(case_type_name:, workflow_name:, user_role:, state_name:, states_config:)
+      my_state_config = states_config.__send__(state_name)
       if my_state_config.is_a?(RecursiveOpenStruct)
         events = my_state_config.to_h.keys
         events.each do |event|
-          validate_event(event, my_state_config.__send__(event))
+          validate_event(case_type_name: case_type_name,
+                         workflow_name: workflow_name,
+                         user_role: user_role,
+                         state_name: state_name,
+                         event_name: event,
+                         event_config: my_state_config.__send__(event))
         end
       else
-        add_error("correspondence_types/#{@correspondence_type}/workflows/#{@workflow}/user_roles/#{@role}/states",
-                  "Expected #{state} to be a Hash, is a #{my_state_config.class}")
+        add_error("case_types/#{case_type_name}/workflows/#{workflow_name}/user_roles/#{user_role}/states",
+                  "Expected #{state_name} to be a Hash, is a #{my_state_config.class}")
       end
     end
 
-    def validate_event(event_name, event_config)
+    #rubocop:disable Metrics/ParameterLists
+    def validate_event(case_type_name:, workflow_name:, user_role:, state_name:, event_name:, event_config:)
       if event_config.is_a?(RecursiveOpenStruct) || event_config.nil?
         validate_keys_in(event_config,
-                        "correspondence_types/#{@correspondence_type}/workflows/#{@workflow}/user_roles/#{@role}/states/#{@state}/#{event_name}",
+                        "case_types/#{case_type_name}/workflows/#{workflow_name}/user_roles/#{user_role}/states/#{state_name}/#{event_name}",
                         :if,
                         :transition_to,
                         :after_transition,
                         :before_transition,
                         :switch_workflow)
       else
-        add_error("correspondence_types/#{@correspondence_type}/workflows/#{@workflow}/user_roles/#{@role}/states",
+        add_error("case_types/#{case_type_name}/workflows/#{workflow_name}/user_roles/#{user_role}/states",
           "Expected #{event_config} to be a Hash, is a #{event_config.class}")
       end
     end
+    #rubocop:enable Metrics/ParameterLists
 
-    def validate_initial_state(workflow_config)
+    def validate_initial_state(case_type_name:, workflow_name:, workflow_config:)
       if workflow_config.to_h.keys.include?(:initial_state)
         unless workflow_config.initial_state.to_sym.in?(@permitted_states)
-          add_error("correspondence_types/#{@correspondence_type}/workflows/#{@workflow}",
+          add_error("case_types/#{case_type_name}/workflows/#{workflow_name}",
                     "Initial state #{workflow_config.initial_state} is not a permitted state")
         end
       else
-        add_error("correspondence_types/#{@correspondence_type}/workflows/#{@workflow}",
+        add_error("case_types/#{case_type_name}/workflows/#{workflow_name}",
                   "Mandatory key :initial_state not specified")
       end
     end
@@ -238,8 +256,9 @@ module ConfigurableStateMachine
       key.in?(config.to_h.keys)
     end
 
-    def store_permitted_correspondence_types
-      @correspondence_types = @config.preamble.permitted_correspondence_types.to_hash.keys
+    def process_permitted_case_types(preamble)
+      validate_min_keys(preamble.permitted_case_types, 'preamble/permitted_case_types', 1)
+      @case_types = preamble.permitted_case_types.to_hash.keys
     end
 
     def validate_exact_keys(config, section_name, *exact_keys)
@@ -264,12 +283,13 @@ module ConfigurableStateMachine
       end
     end
 
-    def validate_min_keys(config, min_keys)
+    def validate_min_keys(config, section_name, min_keys)
       if config.to_hash.keys.size < min_keys
-        add_error('preamble/permitted_correspondence_types',
+        add_error(section_name,
                   "expected at least #{min_keys} entries, found #{config.to_hash.keys.size}")
       end
     end
 
   end
+  #rubocop:enable Metrics/ClassLength
 end

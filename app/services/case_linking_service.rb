@@ -17,14 +17,12 @@ class CaseLinkingService
         @case.add_linked_case(@link_case)
 
         # Log event in both cases
-        @case.state_machine.link_a_case! @user,
-                                           @user.teams_for_case(@case).first,
-                                           @link_case
-
-        @link_case.state_machine.link_a_case! @user,
-                                           @user.teams_for_case(@case).first,
-                                           @case
-
+        @case.state_machine.link_a_case!(acting_user: @user,
+                                         acting_team: @user.teams_for_case(@case).first,
+                                         linked_case_id: @link_case.id)
+        @link_case.state_machine.link_a_case!(acting_user: @user,
+                                              acting_team: @user.teams_for_case(@case).first,
+                                              linked_case_id: @case.id)
         @result = :ok
       end
     end

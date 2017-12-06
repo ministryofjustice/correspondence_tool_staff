@@ -38,8 +38,8 @@ module ConfigurableStateMachine
     private_class_method :new
 
 
-    def state_machine(org:, ct:, workflow:, kase:)
-      workflow_config = @state_machines[org].correspondence_types[ct].workflows[workflow]
+    def state_machine(org:, case_type:, workflow:, kase:)
+      workflow_config = @state_machines[org].case_types[case_type].workflows[workflow]
       Machine.new(config: workflow_config, kase: kase)
     end
 

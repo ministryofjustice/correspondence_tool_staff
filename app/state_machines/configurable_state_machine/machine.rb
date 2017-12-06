@@ -88,7 +88,8 @@ module ConfigurableStateMachine
     # * :acting_team
     #
     def trigger_event(event:, params:)
-      role = params[:acting_team].role
+      raise ::ConfigurableStateMachine::ArgumentError.new(kase: @kase, event: event, params: params) if !params.key?(:acting_user) || !params.key?(:acting_team)
+      role =  params[:acting_team].role
       user_role_config = @config.user_roles[role]
       raise InvalidEventError.new(kase: @kase, user: params[:acting_user], event: event) if user_role_config.nil?
       state_config = user_role_config.states[@kase.current_state]
@@ -105,6 +106,7 @@ module ConfigurableStateMachine
         raise InvalidEventError.new(kase: @kase, user: params[:acting_user],  event: event)
       end
     end
+
 
     def extract_roles_from_metadata(metadata)
       if metadata.key?(:acting_team)

@@ -2,12 +2,12 @@ preamble:
   organisation: Ministry of Justice
   organisation_abbreviation: moj
 
-  permitted_correspondence_types:
+  permitted_case_types:
     foi: Freedom of information request
 #    osar: Offender subject access request
 #    nosar: Non-offender subject access request
 
-correspondence_types:
+case_types:
   foi:
     name: Freedom of Information Request
     permitted_workflows:
@@ -45,6 +45,7 @@ correspondence_types:
                 destroy_case:
                 edit_case:
                 flag_for_clearance:
+                link_a_case:
                 unflag_for_clearance:
                   if: Cases::FOIPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
 

@@ -63,6 +63,17 @@ module ConfigurableStateMachine
     let(:kase)        { create :case }
     let(:machine)     { Machine.new(config: config, kase: kase)}
 
+    before(:all) do
+      @managing_team      = create :managing_team
+      @unassigned_case    = create :case
+      @manager            = create :manager, managing_teams: [@managing_team]
+      @approver           = create :approver
+      @manager_approver   = create :manager_approver
+
+    end
+
+    after(:all)   { DbHousekeeping.clean }
+
     describe 'configurable?' do
       it 'returns true' do
         expect(machine.configurable?).to be true
@@ -139,17 +150,6 @@ module ConfigurableStateMachine
     end
 
     describe 'can_trigger_event' do
-
-      before(:all) do
-        @managing_team      = create :managing_team
-        @unassigned_case    = create :case
-        @manager            = create :manager, managing_teams: [@managing_team]
-        @approver           = create :approver
-        @manager_approver   = create :manager_approver
-
-      end
-
-      after(:all)   { DbHousekeeping.clean }
 
       before(:each) { @policy = double Cases::FOIPolicy }
 
@@ -341,10 +341,64 @@ module ConfigurableStateMachine
           end
         end
       end
-
     end
 
-  end
+    describe '#method_missing' do
+      it 'intercepts bang methods and triggers them as events' do
+        user = double User
+        team = double BusinessUnit
+        metadata = { acting_user: user, acting_team: team }
+        expect(machine).to receive(:trigger_event).with(event: 'dummy_event', params: metadata)
+        machine.dummy_event!(metadata)
+      end
 
+      it 'raises NoMethodError for methods not ending in a bang' do
+        expect {
+          machine.dummy_method
+        }.to raise_error NoMethodError, /undefined method `dummy_method' for/
+      end
+    end
+
+    describe '#trigger_event' do
+      context 'invalid metadata' do
+        context 'no acting user' do
+          it 'raises' do
+            expect {
+              machine.dummy_event!({acting_team: 'abdb'})
+            }.to raise_error ConfigurableStateMachine::ArgumentError, %(Invalid params when triggering dummy_event on case #{kase.id}: {:acting_team=>"abdb"})
+          end
+        end
+
+        context 'no acting team' do
+          it 'raises' do
+            expect {
+              machine.dummy_event!({acting_user: 'abdb'})
+            }.to raise_error ConfigurableStateMachine::ArgumentError, %(Invalid params when triggering dummy_event on case #{kase.id}: {:acting_user=>"abdb"})
+          end
+        end
+      end
+
+      context 'valid metadata' do
+        context 'no config for the user role' do
+          it 'raises InvalidEventError' do
+            team = create :responding_team
+            user = team.users.first
+            expect {
+              machine.link_a_case!({acting_user: user, acting_team: team, linked_case_id: 33})
+            }.to raise_error InvalidEventError, %(Invalid Event: 'link_a_case': case_id: #{kase.id}, user_id: #{user.id})
+          end
+        end
+
+        context 'no config for the state in this user role' do
+          it 'raises InvalidEventError' do
+            allow(@unassigned_case).to receive(:current_state).and_return('pending_dacu_clearance')
+            expect {
+              machine.link_a_case!({acting_user: @manager, acting_team: @managing_team, linked_case_id: 33})
+            }.to raise_error InvalidEventError, %(Invalid Event: 'link_a_case': case_id: #{kase.id}, user_id: #{@manager.id})
+          end
+        end
+      end
+    end
+  end
 end
 #rubocop:enable Metrics/ModuleLength
