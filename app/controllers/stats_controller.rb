@@ -18,6 +18,11 @@ class StatsController < ApplicationController
 
     send_data report.to_csv, filename: filename
   end
+
+  def custom
+    @report = Report.new
+    @custom_reports = ReportType.custom.all
+  end
     report.run
 
     send_data report.to_csv, filename: filename

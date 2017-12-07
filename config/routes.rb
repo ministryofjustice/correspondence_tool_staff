@@ -257,6 +257,7 @@ Rails.application.routes.draw do
 
   get '/stats' => 'stats#index'
   get '/stats/download/:id' => 'stats#download', as: :stats_download
+  get '/stats/custom' => 'stats#custom'
 
   get '/search' => 'cases#search'
 

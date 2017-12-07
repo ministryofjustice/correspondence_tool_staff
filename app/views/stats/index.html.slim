@@ -4,6 +4,12 @@
 = render partial: 'layouts/header'
 
 .grid-row
+  .column-full.button-holder
+    = link_to t('common.stats_custom_button'), stats_custom_path, class: 'button'
+
+
+hr
+
 .grid-row
   .column-full.table-container.container
     table.stats-report

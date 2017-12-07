@@ -314,6 +314,7 @@ en:
       This is a new service.
     service_name: Track a query
     signout: Sign out
+    stats_custom_button: Create custom report
     summary_error: 'prevented this form from being submitted:'
 
   admin:
@@ -449,6 +450,10 @@ en:
     success_html: |
       <strong>Your feedback has been submitted.</strong>
 
+  stats:
+    common:
+      period_start: Date from
+      period_end: Date to
   teams:
     business_unit_list:
       team_members: Team members
