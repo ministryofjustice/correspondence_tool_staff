@@ -9,10 +9,10 @@ module Stats
       month:     ''
     }
 
-    def initialize
+    def initialize(period_start= Time.now.beginning_of_year, period_end=Time.now)
       super
-      @period_start = Time.now.beginning_of_year
-      @period_end = Time.now
+      @period_start = period_start
+      @period_end = period_end
       @stats = StatsCollector.new(array_of_month_numbers + [:total], R005_SPECIFIC_COLUMNS.merge(CaseAnalyser::COMMON_COLUMNS))
       @superheadings = superheadings
 

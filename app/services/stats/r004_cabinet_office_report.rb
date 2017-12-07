@@ -7,10 +7,10 @@ module Stats
       value:  "Value"
     }
 
-    def initialize
+    def initialize(period_start= Time.now.beginning_of_quarter, period_end=Time.now)
       super
-      @period_start = Time.now.beginning_of_quarter
-      @period_end = Time.now
+      @period_start = period_start
+      @period_end = period_end
       # @today = Time.now
       @stats = StatsCollector.new(report_lines.keys, COLUMNS)
       @first_column_heading = self.class.title

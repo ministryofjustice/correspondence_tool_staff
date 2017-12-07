@@ -10,3 +10,8 @@
         .notice-summary(role="group" aria-labelledby="notice-summary-heading" tabindex='-1')
           h1.heading-medium.notice-summary-heading(id= "notice-summary-heading")
             = value
+
+      - elsif key == "download"
+        .notice-summary(role="group" aria-labelledby="notice-summary-heading" tabindex='-1')
+          h1.heading-medium.notice-summary-heading(id= "notice-summary-heading")
+            = value.html_safe

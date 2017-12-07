@@ -2,7 +2,7 @@ module Stats
   class BaseReport
 
 
-    def initialize
+    def initialize(_period_start=nil,_period_end=nil)
       raise "Cannot instantiate Stats::BaseReport - use derived class instead" if self.class == BaseReport
       @stats = nil                        # implement @stats as an instance of StatsCollector in derived class
       @first_column_heading = 'Teams'     # override in derived class if other heading required

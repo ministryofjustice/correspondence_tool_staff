@@ -15,10 +15,10 @@ module Stats
       responsible:                     ''
     }
 
-    def initialize
+    def initialize(period_start= Time.now.beginning_of_year, period_end=Time.now)
       super
-      @period_start = Time.now.beginning_of_year
-      @period_end = Time.now
+      @period_start = period_start
+      @period_end = period_end
       @stats = StatsCollector.new(Team.hierarchy.map(&:id) + [:total], R003_SPECIFIC_COLUMNS.merge(CaseAnalyser::COMMON_COLUMNS))
       @superheadings = superheadings
       @stats.add_callback(:before_finalise, -> { roll_up_stats_callback })

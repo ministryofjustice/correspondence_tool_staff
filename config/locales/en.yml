@@ -51,6 +51,14 @@ en:
             url:
               bad_file_type: "unnacceptable type %{type} for file: %{filename}"
               invalid_url: "url is invalid for file: %{filename}"
+        report:
+          attributes:
+            period_start:
+              after_end_date: can't be after Date to
+              not_in_future: can't be in the future.
+            period_start:
+              before_start_date: can't be after Date to
+              not_in_future: can't be in the future.
 
   pundit:
     assignment_policy:

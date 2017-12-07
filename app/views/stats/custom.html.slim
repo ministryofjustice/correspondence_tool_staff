@@ -1,3 +1,6 @@
+= GovukElementsErrorsHelper.error_summary @report,
+        "#{pluralize(@report.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
 - content_for :heading
   | Create custom report
 
