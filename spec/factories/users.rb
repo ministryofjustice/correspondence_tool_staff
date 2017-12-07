@@ -31,6 +31,7 @@ FactoryGirl.define do
   sequence(:disclosure_bmt_user_name)   { |n| "Disclosure BMT #{n}" }
   sequence(:press_officer_name)         { |n| "Press Officer #{n}" }
   sequence(:private_officer_name)       { |n| "Private Officer #{n}" }
+  sequence(:approver_responder_name)    { |n| "Ms Approver-Responder #{n}" }
 
   factory :user do
     password '12345678'
@@ -59,6 +60,12 @@ FactoryGirl.define do
     factory :approver do
       full_name      { generate(:approver_name) }
       approving_team { create(:approving_team) }
+    end
+
+    factory :approver_responder do
+      full_name         { generate(:approver_responder_name) }
+      approving_team    { find_or_create(:approving_team) }
+      responding_teams  { [ find_or_create(:responding_team) ] }
     end
 
     factory :disclosure_specialist do
