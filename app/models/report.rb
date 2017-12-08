@@ -11,7 +11,7 @@ class Report < ApplicationRecord
   #validates :report_data, presence: true, on: :create
 
 
-   def period_within_acceptable_range?
+  def period_within_acceptable_range?
     # if self.new_record? || received_date_changed?
       validate_period_start
       validate_period_end

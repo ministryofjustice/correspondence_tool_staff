@@ -30,7 +30,6 @@ class StatsController < ApplicationController
 
     if stats_selector.valid?
       report_type = ReportType.find(create_custom_params[:report_type_id])
-      filename  = "#{report_type.class_name.underscore}.csv"
       report = "Stats::#{report_type.class_name}".constantize.new(stats_selector.period_start,
                                                                   stats_selector.period_end)
       report.run

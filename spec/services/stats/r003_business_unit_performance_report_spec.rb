@@ -61,6 +61,26 @@ module Stats
       DbHousekeeping.clean
     end
 
+    context 'defining the period' do
+      context 'no period parameters passsed in' do
+        it 'defaults from beginning of year to now' do
+          Timecop.freeze(Time.local(2017, 12, 7, 12,33,44)) do
+            report = R003BusinessUnitPerformanceReport.new
+            expect(report.__send__(:reporting_period)).to eq '1 Jan 2017 to 7 Dec 2017'
+          end
+        end
+      end
+
+      context 'period params are passed in' do
+        it 'uses the specify period' do
+          d1 = Date.new(2017, 6, 1)
+          d2 = Date.new(2017, 6, 30)
+          report = R003BusinessUnitPerformanceReport.new(d1, d2)
+          expect(report.__send__(:reporting_period)).to eq '1 Jun 2017 to 30 Jun 2017'
+        end
+      end
+    end
+
     describe '#title' do
       it 'returns the report title' do
         expect(R003BusinessUnitPerformanceReport.title).to eq 'Business unit report'
