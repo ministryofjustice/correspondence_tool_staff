@@ -212,6 +212,7 @@ Rails.application.routes.draw do
       patch 'take_case_on', on: :member
       get :reassign_user , on: :member
       get :assign_to_new_team, on: :member
+      get :select_team, on: :collection
       patch :execute_reassign_user, on: :member
       patch :execute_assign_to_new_team, on: :member
     end
