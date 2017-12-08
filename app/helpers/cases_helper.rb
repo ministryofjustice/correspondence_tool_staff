@@ -28,8 +28,14 @@ module CasesHelper
               id: 'action--mark-response-as-sent',
               class: 'button'
     when :reassign_user
+      path = nil
+      if @assignments.size > 1
+        path = select_team_case_assignments_path(@case, assignment_ids: @assignments.map(&:id).join('+'))
+      else
+        path = reassign_user_case_assignment_path(@case, @assignments.first)
+      end
       link_to t('common.case.reassign_case'),
-              reassign_user_case_assignment_path(@case, @assignment),
+              path,
               id: 'action--reassign-case',
               class: 'button'
     when :approve

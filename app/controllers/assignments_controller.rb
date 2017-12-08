@@ -3,6 +3,7 @@ class AssignmentsController < ApplicationController
   before_action :set_case, only: [
                   :assign_to_team,
                   :new,
+                  :select_team,
                   :show_rejected,
                   :take_case_on,
                 ]
@@ -43,7 +44,12 @@ class AssignmentsController < ApplicationController
     else
       render :new
     end
+  end
 
+
+  def select_team
+    assignment_ids = params[:assignment_ids].split('+')
+    @assignments = Assignment.find(assignment_ids)
   end
 
   def assign_to_new_team
@@ -218,11 +224,7 @@ class AssignmentsController < ApplicationController
   end
 
   def set_team_users
-    if current_user.responder?
-      @case.responding_team_users.order(:full_name)
-    elsif current_user.approver?
-      current_user.approving_team.users.order(:full_name)
-    end
+    @assignment.team.users.order(:full_name)
   end
 
   def validate_response

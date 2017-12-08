@@ -7,8 +7,6 @@ RSpec.describe AssignmentsController, type: :controller do
   let(:approving_team)    { approver.approving_team }
 
   let(:accepted_case)     { create :accepted_case }
-  let(:accepted_case_trigger) { create :accepted_case, :flagged_accepted,
-                                       approver: approver }
 
   let(:assignment)        { accepted_case.responder_assignment }
 
@@ -35,6 +33,20 @@ RSpec.describe AssignmentsController, type: :controller do
       get :reassign_user, params: params
       expect(assigns(:team_users))
         .to eq responding_team.responders.order(:full_name).decorate
+    end
+
+    context 'user is both responder and approver' do
+      let(:approver_responder) { create :approver_responder }
+      let(:approving_team)     { approver_responder.approving_team }
+      let(:accepted_case)      { create :accepted_case, :flagged_accepted,
+                                        approver: approver_responder }
+      let(:assignment)         { accepted_case.approver_assignments.first }
+
+      it 'uses the assignment_id param to set @team_users' do
+        get :reassign_user, params: params
+        expect(assigns(:team_users))
+          .to eq approving_team.approvers.order(:full_name).decorate
+      end
     end
   end
 end

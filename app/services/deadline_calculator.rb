@@ -8,8 +8,12 @@ class DeadlineCalculator
     end
 
     def internal_deadline(kase)      # aka draft deadline
-      days_after_day_one = kase.category.internal_time_limit - 1
-      days_after_day_one.business_days.after(start_date(kase.received_date))
+      internal_deadline_for_date(kase.category, start_date(kase.received_date))
+    end
+
+    def internal_deadline_for_date(category, date)
+      days_after_day_one = category.internal_time_limit - 1
+      days_after_day_one.business_days.after(date)
     end
 
     def external_deadline(kase)
