@@ -159,6 +159,7 @@ class CasesController < ApplicationController
     @case = Case.find(params[:id])
     @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
     authorize @case
+    not_perform_closure_validations(@case)
 
     render :edit
   end
@@ -214,6 +215,7 @@ class CasesController < ApplicationController
   def update
     @case = Case.find(params[:id])
     authorize @case
+    perform_closure_validations?(@case)
 
     service = CaseUpdaterService.new(current_user, @case, create_foi_params)
     service.call
@@ -223,6 +225,7 @@ class CasesController < ApplicationController
       elsif service.result == :no_changes
         flash[:notice] = "No changes were made"
       end
+      perform_closure_validations(@case)
 
       set_permitted_events
       @case = @case.decorate
@@ -516,6 +519,14 @@ class CasesController < ApplicationController
 
   def s3_uploader_for(kase, upload_type)
     S3Uploader.s3_direct_post_for_case(kase, upload_type)
+  end
+
+  def not_perform_closure_validations(kase)
+    kase.perform_closure_validations = false
+  end
+
+  def perform_closure_validations(kase)
+    kase.perform_closure_validations = true
   end
 end
 
