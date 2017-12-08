@@ -52,7 +52,8 @@ module PageObjects
           date_received_year.set(received_date.year)
         end
 
-        def fill_in_case_details(choice = 'case', params={})
+        def fill_in_case_details(params={})
+          type = params.delete(:type) || 'case'
           kase = FactoryGirl.build :case, params
 
           set_received_date(kase.received_date)
@@ -63,7 +64,7 @@ module PageObjects
           choose_delivery_method kase.delivery_method
           subject.set kase.subject
           full_request.set kase.message if kase.delivery_method == 'sent_by_email'
-          choose_foi_type(choice)
+          choose_foi_type(type)
 
           choose_type_of_requester(kase.requester_type)
 

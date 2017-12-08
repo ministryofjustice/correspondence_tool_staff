@@ -62,9 +62,10 @@ module PageObjects
         def collection_for_case_attachment(file)
           case_attachments.each do |case_attachment|
             case_attachment.collection.each do |collection|
-              return collection if collection.filename == file
+              return collection if collection.filename.text == file
             end
           end
+          nil
         end
       end
 

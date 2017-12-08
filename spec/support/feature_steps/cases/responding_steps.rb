@@ -10,7 +10,7 @@ def upload_response_step(file: UPLOAD_RESPONSE_DOCX_FIXTURE)
     .to have_text 'You have uploaded the response for this case.'
 end
 
-def mark_as_sent_step
+def mark_case_as_sent_step
   cases_show_page.actions.mark_as_sent.click
 
   cases_respond_page.mark_as_sent_button.click
@@ -22,10 +22,10 @@ def mark_as_sent_step
   expect(cases_show_page.case_status.details.copy.text).to eq 'Ready to close'
 end
 
-def close_case_step
+def close_case_step(responded_date: Date.today)
   cases_show_page.actions.close_case.click
 
-  cases_close_page.fill_in_date_responded(Date.today)
+  cases_close_page.fill_in_date_responded(responded_date)
 
   cases_close_page.is_info_held.yes.click
 

@@ -36,7 +36,8 @@ feature 'cases requiring clearance by press office' do
     case_row.actions.take_on_case.click
     expect(case_row.actions.success_message).to have_text 'Case taken on'
 
-    select_case_on_incoming_cases_page(
+    go_to_case_details_step(
+      page: incoming_cases_page,
       kase: case_available_for_taking_on,
       expected_history: [
         'Primrose Offord Press Office Clearance level added'
@@ -56,12 +57,12 @@ feature 'cases requiring clearance by press office' do
     login_as disclosure_specialist
     cases_show_page.load(id: pending_dacu_clearance_case.id)
 
-    approve_case kase: pending_dacu_clearance_case,
-                 expected_team: press_office,
-                 expected_status: 'Pending clearance'
+    approve_case_step kase: pending_dacu_clearance_case,
+                      expected_team: press_office,
+                      expected_status: 'Pending clearance'
 
-    select_case_on_open_cases_page kase: pending_dacu_clearance_case,
-                                   expected_team: press_office
+    go_to_case_details_step kase: pending_dacu_clearance_case,
+                            expected_team: press_office
   end
 
   scenario 'Press Officer approves a case' do
@@ -71,10 +72,10 @@ feature 'cases requiring clearance by press office' do
     expect(cases_show_page.case_status.details.who_its_with.text)
       .to eq 'Press Office'
 
-    approve_case kase: pending_press_clearance_case,
-                 expected_team: pending_press_clearance_case.responding_team,
-                 expected_status: 'Ready to send'
-    select_case_on_open_cases_page(
+    approve_case_step kase: pending_press_clearance_case,
+                      expected_team: pending_press_clearance_case.responding_team,
+                      expected_status: 'Ready to send'
+    go_to_case_details_step(
       kase: pending_press_clearance_case,
       expected_team: pending_press_clearance_case.responding_team
     )
@@ -92,10 +93,12 @@ feature 'cases requiring clearance by press office' do
                    expected_team: dacu_disclosure,
                    expected_status: 'Pending clearance'
     execute_request_amends kase: pending_press_clearance_case
-    select_case_on_open_cases_page(
+    go_to_case_details_step(
       kase: pending_press_clearance_case,
       expected_team: dacu_disclosure,
-      expected_history: ["#{press_officer.full_name}#{press_office.name}Request amends"]
+      expected_history: [
+        "#{press_officer.full_name}#{press_office.name}Request amends"
+      ]
     )
   end
 end

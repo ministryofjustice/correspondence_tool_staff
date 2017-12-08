@@ -88,13 +88,13 @@ feature "#internal review" do
   def manager_creates_new_internal_review_and_assigns_it
     open_cases_page.new_case_button.click
 
-    cases_new_page.fill_in_case_details('casefoicompliancereview')
+    cases_new_page.fill_in_case_details(type: 'casefoicompliancereview')
 
     cases_new_page.choose_flag_for_disclosure_specialists('yes')
 
     cases_new_page.submit_button.click
 
-    assign_case(expected_business_unit: responder.responding_teams.first)
+    assign_case_step business_unit: responder.responding_teams.first
 
     new_case_description= cases_show_page.page_heading.sub_heading
                           .text.to_s.gsub('You are viewing case number ', '')
