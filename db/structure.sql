@@ -1279,5 +1279,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171114111458'),
 ('20171116102127'),
 ('20171123170106');
-
-

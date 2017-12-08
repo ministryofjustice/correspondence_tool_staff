@@ -277,6 +277,8 @@ describe CaseFinderService do
                                      creation_time: 1.business_days.ago
     end
 
+    after(:all) {DbHousekeeping.clean}
+
     describe '#incoming_cases_press_office_scope' do
       it 'returns incoming non-review cases ordered by creation date descending' do
         finder = CaseFinderService.new(@press_officer)
