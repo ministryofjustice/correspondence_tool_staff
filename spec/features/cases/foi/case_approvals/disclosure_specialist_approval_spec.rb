@@ -79,7 +79,7 @@ feature 'cases requiring clearance by disclosure specialist' do
     login_as manager
 
     kase = Case.last
-    set_dates_back_by(kase, period_in_past) unless period_in_past.nil?
+    set_case_dates_back_by(kase, period_in_past) unless period_in_past.nil?
   end
 
   def accept_case_as_kilo(kase)

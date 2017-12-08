@@ -38,7 +38,7 @@ feature "#non-trigger cases" do
     login_step user: manager
     kase = create_case_step
     assign_case_step business_unit: responder.responding_teams.first
-    kase = set_dates_back_by(kase, 7.days)
+    set_case_dates_back_by(kase, 7.days)
     logout_step
 
     # KILO accepts case, uploads response and marks as sent

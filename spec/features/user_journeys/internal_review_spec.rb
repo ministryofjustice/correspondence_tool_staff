@@ -41,7 +41,7 @@ feature "#internal review" do
     # Manager creates & assigns to kilo
     login_as_manager
     kase = manager_creates_new_internal_review_and_assigns_it
-    kase = set_dates_back_by(kase, 7.days)
+    set_case_dates_back_by(kase, 7.days)
     kase_number = kase.number
 
     # KILO accepts case, uploads response
