@@ -1,7 +1,19 @@
+# == Schema Information
+#
+# Table name: reports
+#
+#  id             :integer          not null, primary key
+#  report_type_id :integer          not null
+#  period_start   :date
+#  period_end     :date
+#  report_data    :binary
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#
+
 class Report < ApplicationRecord
 
-  validates :report_type_id,:period_start, :period_end,
-            presence: true
+  validates :report_type_id, presence: true
 
   acts_as_gov_uk_date :period_start, :period_end,
                       validate_if: :period_within_acceptable_range?
