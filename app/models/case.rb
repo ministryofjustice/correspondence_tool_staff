@@ -74,8 +74,9 @@ class Case < ApplicationRecord
   }
   scope :most_recent_first, -> {reorder("(properties ->> 'external_deadline')::timestamp with time zone DESC, cases.id") }
 
-  scope :opened, -> { where.not(current_state: 'closed') }
-  scope :closed, -> { where(current_state: 'closed').order(last_transitioned_at: :desc) }
+  scope :opened, ->       { where.not(current_state: 'closed') }
+  scope :closed, ->       { where(current_state: 'closed').order(last_transitioned_at: :desc) }
+  scope :standard_foi, -> { where(type: 'Case') }
 
   scope :with_teams, -> (teams) do
     includes(:assignments)
