@@ -149,6 +149,7 @@ class Case < ApplicationRecord
   validates :type, presence: true
 
   validates_with ::ClosedCaseValidator
+
   serialize :exemption_ids, Array
 
   belongs_to :category, required: true

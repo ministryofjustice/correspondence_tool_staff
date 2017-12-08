@@ -1,20 +1,22 @@
 class ClosedCaseValidator < ActiveModel::Validator
 
   def validate(rec)
-    if validate_closure?(rec)
-      if rec.prepared_for_close? || rec.current_state == 'closed'
+    if rec.prepared_for_close? || rec.current_state == 'closed'
+      if validate_closure_details?(rec)
         validate_date_responded(rec)
         validate_info_held_status(rec)
         validate_outcome(rec)
         validate_refusal_reason(rec)
         validate_exemptions(rec)
+      else
+        validate_date_responded(rec)
       end
     end
   end
 
   private
 
-  def validate_closure?(rec)
+  def validate_closure_details?(rec)
     if rec.date_responded.blank?
       true
     else
