@@ -61,8 +61,7 @@ class Case < ApplicationRecord
                 :uploaded_request_files,
                 :request_amends_comment,
                 :upload_comment,
-                :uploading_user, # Used when creating case sent by post.
-                :perform_closure_validations
+                :uploading_user # Used when creating case sent by post.
 
   attr_accessor :message_text
 
@@ -150,7 +149,6 @@ class Case < ApplicationRecord
   validates :type, presence: true
 
   validates_with ::ClosedCaseValidator, if: -> { prepared_for_close? }
-
   serialize :exemption_ids, Array
 
   belongs_to :category, required: true
@@ -354,10 +352,6 @@ class Case < ApplicationRecord
 
   def prepared_for_close?
     @preparing_for_close == true
-  end
-
-  def perform_closure_validations?
-    @perform_closure_validations == true
   end
 
   def requires_exemption?
