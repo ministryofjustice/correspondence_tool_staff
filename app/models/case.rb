@@ -148,7 +148,7 @@ class Case < ApplicationRecord
   validates :subject, length: { maximum: 100 }
   validates :type, presence: true
 
-  validates_with ::ClosedCaseValidator, if: -> { prepared_for_close? }
+  validates_with ::ClosedCaseValidator
   serialize :exemption_ids, Array
 
   belongs_to :category, required: true
