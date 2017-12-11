@@ -1,6 +1,7 @@
 module Stats
   class BaseReport
 
+    attr_reader :period_start, :period_end
 
     def initialize(_period_start=nil,_period_end=nil)
       raise "Cannot instantiate Stats::BaseReport - use derived class instead" if self.class == BaseReport
