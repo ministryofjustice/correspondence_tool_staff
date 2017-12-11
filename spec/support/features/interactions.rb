@@ -16,7 +16,8 @@ module Features
     def take_case_on(kase:,
                      user:,
                      do_login: true,
-                     do_logout: true)
+                     do_logout: true,
+                     test_undo: false)
       if do_login
         login_step user: user
         go_to_incoming_cases_step
@@ -26,6 +27,10 @@ module Features
           .to have_content user.full_name
       end
       take_on_case_step kase: kase
+      if test_undo
+        undo_taking_case_on_step kase: kase
+        take_on_case_step kase: kase
+      end
       go_to_incoming_cases_step expect_not_to_see_cases: [kase]
       logout_step if do_logout
     end
@@ -35,6 +40,13 @@ module Features
       go_to_case_details_step kase: kase
       accept_responder_assignment_step
       logout_step if do_logout
+    end
+
+    def edit_case(kase:, user:, subject: nil)
+      login_step user: user
+      go_to_case_details_step kase: kase
+      edit_case_step kase: kase, subject: subject
+      logout_step
     end
 
     def upload_response(kase:,

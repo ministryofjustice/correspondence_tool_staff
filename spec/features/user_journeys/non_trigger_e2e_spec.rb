@@ -35,6 +35,10 @@ feature 'FOI case that does not require clearance' do
                                   user: manager,
                                   responding_team: responding_team
 
+    edit_case kase: kase,
+              user: manager,
+              subject: 'new test subject'
+
     accept_case kase: kase,
                 user: responder,
                 do_logout: false

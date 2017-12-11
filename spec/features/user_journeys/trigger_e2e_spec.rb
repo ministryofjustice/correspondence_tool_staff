@@ -48,9 +48,15 @@ feature 'FOI case that does not require clearance' do
                                   flag_for_disclosure: true
 
     take_case_on kase: kase,
-                 user: disclosure_specialist
+                 user: disclosure_specialist,
+                 test_undo: true
     take_case_on kase: kase,
-                 user: press_officer
+                 user: press_officer,
+                 test_undo: true
+
+    edit_case kase: kase,
+              user: manager,
+              subject: 'new test subject'
 
     accept_case kase: kase,
                 user: responder,

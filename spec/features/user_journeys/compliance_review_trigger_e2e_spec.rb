@@ -47,7 +47,12 @@ feature 'FOI compliance review case that requires clearance' do
                                   flag_for_disclosure: true
 
     take_case_on kase: kase,
-                 user: disclosure_specialist
+                 user: disclosure_specialist,
+                 test_undo: true
+
+    edit_case kase: kase,
+              user: manager,
+              subject: 'new test subject'
 
     accept_case kase: kase,
                 user: responder,
