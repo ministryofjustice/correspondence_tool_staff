@@ -13,8 +13,12 @@ module PageObjects
 
         sections :reports, '.stats-report tbody tr' do
           element :name, 'th'
+          element :action_column, 'td'
           element :action_link, 'td a'
+
         end
+
+        element :custom_reports, '.button'
       end
     end
   end

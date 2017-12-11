@@ -15,10 +15,10 @@ module Stats
       responsible:                     ''
     }
 
-    def initialize
+    def initialize(period_start= Time.now.beginning_of_year, period_end=Time.now)
       super
-      @period_start = Time.now.beginning_of_year
-      @period_end = Time.now
+      @period_start = period_start
+      @period_end = period_end
       @stats = StatsCollector.new(Team.hierarchy.map(&:id) + [:total], R002_SPECIFIC_COLUMNS.merge(AppealAnalyser::APPEAL_COLUMNS))
       @superheadings = superheadings
       @stats.add_callback(:before_finalise, -> { roll_up_stats_callback })
@@ -43,7 +43,7 @@ module Stats
     end
 
     def run
-      case_ids = CaseSelector.ids_for_period_appeals(Case.appeal, @period_start, @period_end)
+      case_ids = CaseSelector.ids_for_period_appeals(@period_start, @period_end)
       case_ids.each { |case_id| analyse_case(case_id) }
       @stats.finalise
     end

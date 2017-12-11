@@ -6,7 +6,7 @@ describe 'stats/index.html.slim', type: :view do
                                         full_name: "Report 1" }
   let(:report_2)      { instance_double ReportType,
                                         id: 2,
-                                        full_name: "Report 1" }
+                                        full_name: "Report 2" }
   let(:reports){ [ report_1, report_2 ]  }
 
 
@@ -32,8 +32,8 @@ describe 'stats/index.html.slim', type: :view do
     page.reports.each_with_index  do | report, index |
       expect(report.name.text).to eq reports[index].full_name
 
-      expect(report.action).to have_link("Download #{reports[index].full_name}",
-                               stats_download_path(report_type_id: report.id))
+      expect(report.action_column).to have_link("Download #{reports[index].full_name}",
+                               stats_download_path(id: reports[index].id))
 
     end
 

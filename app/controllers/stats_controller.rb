@@ -11,9 +11,9 @@ class StatsController < ApplicationController
   def download
     report_type = ReportType.find(params[:id])
 
-    filename  = "#{report_type[:class_name].underscore}.csv"
+    filename  = "#{report_type[:class_name].to_s.underscore.sub('stats/', '')}.csv"
 
-    report = "Stats::#{report_type.class_name}".constantize.new
+    report = report_type.class_name.constantize.new
     report.run
 
     send_data report.to_csv, filename: filename
@@ -24,35 +24,33 @@ class StatsController < ApplicationController
     @custom_reports = ReportType.custom.all
   end
 
-  def create_custom
+  def create_custom_report
 
-    stats_selector = Report.new(create_custom_params)
+    @report = Report.new(create_custom_params)
 
-    if stats_selector.valid?
-      report_type = ReportType.find(create_custom_params[:report_type_id])
-      report = "Stats::#{report_type.class_name}".constantize.new(stats_selector.period_start,
-                                                                  stats_selector.period_end)
+    if @report.save
+      report_type = ReportType.find(@report.report_type_id)
+
+      report = report_type.class_name.constantize
+                   .new(@report.period_start,
+                        @report.period_end)
       report.run
 
-      stats_selector.report_data = report.to_csv
-      stats_selector.save
+      @report.report_data = report.to_csv
+      @report.save
 
       # send_data report.to_csv, {filename: filename, disposition: :attachment}
-      flash[:download] =  "Report generated and #{view_context.link_to 'ready to download', stats_download_custom_path(id: stats_selector.id)}"
+      flash[:download] =  "Your custom report has been created. #{view_context.link_to 'Download', stats_download_custom_report_path(id: @report.id)}"
       redirect_to stats_custom_path
     else
-      @report = Report.new(create_custom_params)
-
-      #Set the validation error messages
-      @report.save
       @custom_reports = ReportType.custom.all
       render :custom
     end
   end
 
-  def download_custom
+  def download_custom_report
     report= Report.find(params[:id])
-    filename = "#{ report.report_type.class_name.underscore}.csv"
+    filename = "#{ report.report_type.class_name.to_s.underscore.sub('stats/', '')}.csv"
 
     send_data report.report_data, {filename: filename, disposition: :attachment}
   end

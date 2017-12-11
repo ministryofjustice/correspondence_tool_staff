@@ -54,10 +54,10 @@ en:
         report:
           attributes:
             period_start:
-              after_end_date: can't be after Date to
+              after_end_date: can't be after period end
               not_in_future: can't be in the future.
-            period_start:
-              before_start_date: can't be after Date to
+            period_end:
+              before_start_date: can't be before period start
               not_in_future: can't be in the future.
 
   pundit:
@@ -226,7 +226,7 @@ en:
         request_amends_comment: Add amends/comments
         upload_comment: Add message (optional)
         type:
-          Case::FOI::TimelinessReview: FOI - Internal review for timeliness 
+          Case::FOI::TimelinessReview: FOI - Internal review for timeliness
           Case::FOI::ComplianceReview: FOI - Internal review for compliance
           Case: FOI
         linked_case_number: Case number

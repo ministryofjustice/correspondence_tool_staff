@@ -6,7 +6,7 @@
 
 = render partial: 'layouts/header'
 
-= form_for @report, url: stats_create_custom_path do |f|
+= form_for @report, url: stats_create_custom_report_path do |f|
   .report-types
     = f.radio_button_fieldset :report_type_id,
             choices: @custom_reports, value_method: :id, text_method: :full_name

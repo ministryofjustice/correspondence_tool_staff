@@ -31,7 +31,7 @@ module Stats
     end
 
     def run
-      case_ids = CaseSelector.ids_for_cases_received_in_period(Case, @period_start, @period_end)
+      case_ids = CaseSelector.ids_for_cases_received_in_period(@period_start, @period_end)
       case_ids.each { |case_id| analyse_case(case_id) }
       @stats.finalise
     end

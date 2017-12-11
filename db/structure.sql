@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.9
--- Dumped by pg_dump version 9.5.9
+-- Dumped from database version 9.5.0
+-- Dumped by pg_dump version 9.5.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -561,9 +561,11 @@ ALTER SEQUENCE report_types_id_seq OWNED BY report_types.id;
 CREATE TABLE reports (
     id integer NOT NULL,
     report_type_id integer NOT NULL,
-    period_start date NOT NULL,
-    period_end date NOT NULL,
-    report_data bytea
+    period_start date,
+    period_end date,
+    report_data bytea,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 

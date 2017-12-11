@@ -8,14 +8,12 @@ class Report < ApplicationRecord
 
   belongs_to :report_type
 
-  #validates :report_data, presence: true, on: :create
 
+  private
 
   def period_within_acceptable_range?
-    # if self.new_record? || received_date_changed?
-      validate_period_start
-      validate_period_end
-    # end
+    validate_period_start
+    validate_period_end
   end
 
   def validate_period_start
