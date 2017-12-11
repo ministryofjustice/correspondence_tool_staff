@@ -15,6 +15,8 @@ describe TeamDeletionService do
       time = Time.new(2017, 6, 30, 12, 0, 0)
       before(:all) { Timecop.freeze(time) }
       let!(:bu) { find_or_create(:team_dacu, :deactivated, directorate: dir) }
+      
+      after(:all) { Timecop.return }
 
       it 'updates the team name' do
         service.call
