@@ -21,7 +21,7 @@ FactoryGirl.define do
     trait :r003 do
       abbr          'R003'
       full_name     'Business unit report'
-      class_name    'R003BusinessUnitPerformanceReport'
+      class_name    'Stats::R003BusinessUnitPerformanceReport'
       custom_report true
       seq_id        100
     end
