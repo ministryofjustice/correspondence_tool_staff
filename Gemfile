@@ -43,6 +43,7 @@ gem 'shell-spinner'
 gem 'schema_plus_enums', '~> 0.1'
 gem 'sidekiq'
 gem 'sidekiq-logging-json'
+gem 'sidekiq-scheduler'
 gem 'statesman', '~> 2.0.1'
 # gem 'statesman-events', '~> 0.0.1'
 gem 'statesman-events', git: 'https://github.com/ministryofjustice/statesman-events.git',

@@ -1,6 +1,9 @@
 
 # see https://github.com/moove-it/sidekiq-scheduler
 #
+#
+#
+require 'sidekiq-scheduler'
 
 class ReportGeneratorJob < ApplicationJob
 
@@ -16,9 +19,12 @@ class ReportGeneratorJob < ApplicationJob
     )
 
     report_klass = report_type.class_name.constantize
+    report = args.empty? ? report_klass.new : report_klass.new(*args)
+    report.run
 
-    report = report_klass.new(args)
-    report_record.report_data = report.to_csv
-    report.save!
+    report_record.update(report_data: report.to_csv,
+                         period_start: report.period_start,
+                         period_end: report.period_end)
+    report_record.save!
   end
 end
