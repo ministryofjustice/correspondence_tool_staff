@@ -4,6 +4,8 @@ module PageObjects
       class ShowPage < SitePrism::Page
         set_url '/cases/{id}'
 
+        section :user_card, PageObjects::Sections::UserCardSection, '.user-card'
+
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 

@@ -4,13 +4,9 @@ def go_to_case_details_step(kase:,
                             expected_team: nil,
                             expected_history: nil)
   page ||= cases_page
-  # page.row_for_case_number(kase.number).number.click
   page.click_on kase.number
-  if kase.current_state == 'unassigned'
-    expect(assignments_edit_page).to be_displayed(case_id: kase.id)
-  else
-    expect(cases_show_page).to be_displayed(id: kase.id)
-  end
+  expect(cases_show_page.displayed? || assignments_edit_page.displayed?)
+    .to be_truthy
 
   if expected_response_files.present?
     expected_response_files.each do |file|

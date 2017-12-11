@@ -76,6 +76,8 @@ module PageObjects
             elements :list, 'td ul li'
           end
         end
+
+        element :edit_case, :xpath, '//a[contains(.,"Edit case details")]'
       end
     end
   end
