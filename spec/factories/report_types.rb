@@ -25,6 +25,14 @@ FactoryGirl.define do
       custom_report true
       seq_id        100
     end
+
+    trait :r004 do
+      abbr          'R004'
+      full_name     'Cabinet Office report'
+      class_name    'Stats::R004CabinetOfficeReport'
+      custom_report false
+      seq_id        200
+    end
   end
 
   factory :r003_business_units, parent: :report_type do
