@@ -103,13 +103,16 @@ class Smoketest
 
     page = @agent.page
     case_records = page.css('table.report tbody tr')
+
     total_visible_cases = case_records.count
     random_row_number = Random.new.rand(0..(total_visible_cases - 1))
     selected_row = case_records[random_row_number]
 
     case_link    = selected_row.at_css('a')
     @case_number  = case_link.text
-    @case_summary = selected_row.at_css('td[aria-label="Request detail"] strong').text
+    @case_summary = selected_row
+                        .at_css('td[aria-label="Request detail"] strong')
+                        .text.rstrip!
 
     response = @agent.click(case_link)
 
@@ -124,9 +127,8 @@ class Smoketest
 
   def check_case_details_page
     info '.. Smoketest check "Case details" page has loaded'
-
-    if @agent.page.at_css('.page-heading--primary').text != "Case subject, #{ @case_summary }" &&
-        @agent.page.at_css('.page-heading--secondary').text != "You are viewing case number #{ @case_number} "
+    if !@agent.page.at_css('.page-heading--primary').text.include?(@case_summary) &&
+        !@agent.page.at_css('.page-heading--secondary').text.include?( @case_number )
 
       error "Case details page has not loaded"
       exit 2
