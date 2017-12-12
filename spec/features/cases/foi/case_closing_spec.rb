@@ -276,29 +276,29 @@ feature 'Closing a case' do
       expect(show_page).to have_no_exemptions
     end
   end
-end
 
+  private
 
-
-def select_random_exemption
-  excemption_options = cases_close_page.exemptions.exemption_options
-  #select a random exemption
-  total_number_exemptions = excemption_options.count
-  random_exemption =  Random.new
+  def select_random_exemption
+    excemption_options = cases_close_page.exemptions.exemption_options
+    #select a random exemption
+    total_number_exemptions = excemption_options.count
+    random_exemption =  Random.new
                           .rand(0..(total_number_exemptions - 1))
 
-  excemption_options[random_exemption].click
+    excemption_options[random_exemption].click
 
-  excemption_options[random_exemption].text
-end
+    excemption_options[random_exemption].text
+  end
 
-def close_case(kase)
-  expect(cases_page.case_list.last.status.text).to eq 'Ready to close'
-  click_link kase.number
+  def close_case(kase)
+    expect(cases_page.case_list.last.status.text).to eq 'Ready to close'
+    click_link kase.number
 
-  expect(cases_show_page.actions).
-    to have_link('Close case', href: close_case_path(kase))
-  click_link 'Close case'
+    expect(cases_show_page.actions).
+      to have_link('Close case', href: close_case_path(kase))
+    click_link 'Close case'
 
-  expect(cases_close_page).to have_case_attachments
+    expect(cases_close_page).to have_case_attachments
+  end
 end

@@ -4,9 +4,12 @@ module PageObjects
       class ShowPage < SitePrism::Page
         set_url '/cases/{id}'
 
+        section :user_card, PageObjects::Sections::UserCardSection, '.user-card'
+
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
+        element :happy_action_notice, '.alert-green'
         element :escalation_notice, '.alert-orange'
         element :notice, '.notice-summary-heading'
 
@@ -57,6 +60,20 @@ module PageObjects
 
         section :case_history,
                 PageObjects::Sections::Cases::CaseHistorySection, '#case-history'
+
+        def collection_for_case_attachment(file)
+          case_attachments.each do |case_attachment|
+            case_attachment.collection.each do |collection|
+              return collection if collection.filename.text == file
+            end
+          end
+          nil
+        end
+
+        def add_message_to_case(message)
+          new_message.input.set message
+          new_message.add_button.click
+        end
       end
 
     end

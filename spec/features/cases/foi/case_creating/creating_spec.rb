@@ -13,19 +13,15 @@ feature 'FOI Case creation by a manager' do
     create(:category, :foi)
     login_as manager
     cases_page.load
-    cases_page.new_case_button.click
   end
 
   scenario 'creating a case that does not need clearance', js: true do
     create_case_step flag_for_disclosure: false
 
-    assign_case(expected_business_unit: responder.responding_teams.first)
-
+    assign_case_step business_unit: responder.responding_teams.first
   end
 
   scenario 'creating a case that needs clearance' do
-    expect(cases_new_page).to be_displayed
-
     create_case_step flag_for_disclosure: true
 
     new_case = Case.last

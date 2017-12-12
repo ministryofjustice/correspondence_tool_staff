@@ -16,7 +16,7 @@ require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 include CaseDateManipulation
 include Features::Interactions
 
-feature 'FOI case that does not require clearance' do
+feature 'FOI compliance review case that does not require clearance' do
   given(:responder)       { create :responder }
   given(:responding_team) { responder.responding_teams.first }
   given(:manager)         { create :manager }
@@ -31,7 +31,7 @@ feature 'FOI case that does not require clearance' do
   end
 
   scenario 'end-to-end journey', js: true do
-    kase = create_and_assign_case type: Case,
+    kase = create_and_assign_case type: Case::FOI::ComplianceReview,
                                   user: manager,
                                   responding_team: responding_team
 

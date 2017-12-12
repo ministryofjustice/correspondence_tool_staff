@@ -22,7 +22,7 @@ feature 'cases requiring clearance by disclosure specialist' do
   def assign_case_to_team
     expect(assignments_new_page).to be_displayed
 
-    assign_case expected_business_unit: responder.responding_teams.first
+    assign_case_step business_unit: responder.responding_teams.first
 
   end
 
@@ -79,7 +79,7 @@ feature 'cases requiring clearance by disclosure specialist' do
     login_as manager
 
     kase = Case.last
-    set_dates_back_by(kase, period_in_past) unless period_in_past.nil?
+    set_case_dates_back_by(kase, period_in_past) unless period_in_past.nil?
   end
 
   def accept_case_as_kilo(kase)

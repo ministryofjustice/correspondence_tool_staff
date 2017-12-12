@@ -19,7 +19,7 @@ include CaseDateManipulation
 include Features::Interactions
 
 
-feature 'FOI case that does not require clearance' do
+feature 'FOI compliance review case that requires clearance' do
   given(:responder)             { create :responder }
   given(:responding_team)       { responder.responding_teams.first }
   given(:manager)               { create :manager }
@@ -30,7 +30,6 @@ feature 'FOI case that does not require clearance' do
                                          full_name: Settings.private_office_default_user }
   given(:private_office)        { private_officer.approving_team }
   given!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
-
   given!(:foi_category)         { create(:category, :foi) }
 
   background(:all) do
@@ -42,16 +41,13 @@ feature 'FOI case that does not require clearance' do
   end
 
   scenario 'end-to-end journey', js: true do
-    kase = create_and_assign_case type: Case,
+    kase = create_and_assign_case type: Case::FOI::ComplianceReview,
                                   user: manager,
                                   responding_team: responding_team,
                                   flag_for_disclosure: true
 
     take_case_on kase: kase,
                  user: disclosure_specialist,
-                 test_undo: true
-    take_case_on kase: kase,
-                 user: press_officer,
                  test_undo: true
 
     edit_case kase: kase,
@@ -64,7 +60,8 @@ feature 'FOI case that does not require clearance' do
 
     set_case_dates_back_by(kase, 7.days)
 
-    add_message_to_case kase: kase, message: 'This. Is. A. Test.'
+    add_message_to_case kase: kase,
+                        message: 'This. Is. A. Test.'
 
     extend_for_pit kase: kase,
                    user: disclosure_specialist,
@@ -76,14 +73,6 @@ feature 'FOI case that does not require clearance' do
 
     clear_response kase: kase,
                    user: disclosure_specialist,
-                   expected_team: press_office,
-                   expected_status: 'Pending clearance'
-    clear_response kase: kase,
-                   user: press_officer,
-                   expected_team: private_office,
-                   expected_status: 'Pending clearance'
-    clear_response kase: kase,
-                   user: private_officer,
                    expected_team: responding_team,
                    expected_status: 'Ready to send'
 

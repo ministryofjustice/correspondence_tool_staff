@@ -31,6 +31,12 @@ module PageObjects
             row.number.text.delete('Link to case')
           end
         end
+
+        def row_for_case_number(number)
+          case_list.find do |row|
+            row.number.text.delete('Link to case') == number
+          end
+        end
       end
     end
   end

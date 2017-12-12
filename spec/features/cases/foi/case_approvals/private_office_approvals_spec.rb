@@ -50,11 +50,11 @@ feature 'cases requiring clearance by press office' do
     login_as pending_press_clearance_case.assigned_press_officer
     cases_show_page.load(id: pending_press_clearance_case.id)
 
-    approve_case kase:            pending_press_clearance_case,
-                 expected_team:   private_office,
-                 expected_status: 'Pending clearance'
-    select_case_on_open_cases_page kase:          pending_press_clearance_case,
-                                   expected_team: private_office
+    approve_case_step kase:            pending_press_clearance_case,
+                      expected_team:   private_office,
+                      expected_status: 'Pending clearance'
+    go_to_case_details_step kase:          pending_press_clearance_case,
+                            expected_team: private_office
   end
 
   scenario 'Private Officer approves a case' do
@@ -64,10 +64,12 @@ feature 'cases requiring clearance by press office' do
     expect(cases_show_page.case_status.details.who_its_with.text)
       .to eq 'Private Office'
 
-    approve_case kase:            pending_private_clearance_case,
-                 expected_team:   pending_private_clearance_case.responding_team,
-                 expected_status: 'Ready to send'
-    select_case_on_open_cases_page(
+    approve_case_step(
+      kase:            pending_private_clearance_case,
+      expected_team:   pending_private_clearance_case.responding_team,
+      expected_status: 'Ready to send'
+    )
+    go_to_case_details_step(
       kase:          pending_private_clearance_case,
       expected_team: pending_private_clearance_case.responding_team
     )
@@ -85,7 +87,7 @@ feature 'cases requiring clearance by press office' do
                    expected_team:   dacu_disclosure,
                    expected_status: 'Pending clearance'
     execute_request_amends kase: pending_private_clearance_case
-    select_case_on_open_cases_page(
+    go_to_case_details_step(
       kase:             pending_private_clearance_case,
       expected_team:    dacu_disclosure,
       expected_history: ["#{assigned_private_officer.full_name}#{private_office.name}Request amends"]
