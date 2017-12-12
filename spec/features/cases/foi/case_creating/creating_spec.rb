@@ -22,8 +22,6 @@ feature 'FOI Case creation by a manager' do
   end
 
   scenario 'creating a case that needs clearance' do
-    expect(cases_new_page).to be_displayed
-
     create_case_step flag_for_disclosure: true
 
     new_case = Case.last
