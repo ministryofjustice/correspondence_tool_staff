@@ -96,11 +96,18 @@ module Features
       close_case_step
     end
 
-    def add_message_to_case(kase:, message:)
+    def add_message_to_case(kase:, message:, do_logout: true)
       expect(cases_show_page).to be_displayed(id: kase.id)
       cases_show_page.add_message_to_case(message)
       expect(cases_show_page.messages.first).to have_content(message)
       logout_step if do_logout
+    end
+
+    def extend_for_pit(kase:, user:, new_deadline:)
+      login_step user: user
+      go_to_case_details_step kase: kase
+      extend_for_pit_step kase: kase, new_deadline: new_deadline
+      logout_step
     end
   end
 end

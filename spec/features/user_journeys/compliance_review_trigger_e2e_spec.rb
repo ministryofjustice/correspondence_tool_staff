@@ -60,12 +60,16 @@ feature 'FOI compliance review case that requires clearance' do
 
     set_case_dates_back_by(kase, 7.days)
 
-    add_message_to_case kase: kase, message: 'This. Is. A. Test.'
+    add_message_to_case kase: kase,
+                        message: 'This. Is. A. Test.'
+
+    extend_for_pit kase: kase,
+                   user: disclosure_specialist,
+                   new_deadline: 30.business_days.from_now
 
     upload_response kase: kase,
                     user: responder,
-                    file: UPLOAD_RESPONSE_DOCX_FIXTURE,
-                    do_login: false
+                    file: UPLOAD_RESPONSE_DOCX_FIXTURE
 
     clear_response kase: kase,
                    user: disclosure_specialist,

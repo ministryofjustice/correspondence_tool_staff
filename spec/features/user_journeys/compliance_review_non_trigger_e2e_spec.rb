@@ -45,7 +45,9 @@ feature 'FOI compliance review case that does not require clearance' do
 
     set_case_dates_back_by(kase, 7.days)
 
-    add_message_to_case kase: kase, message: 'This. Is. A. Test.'
+    add_message_to_case kase: kase,
+                        message: 'This. Is. A. Test.',
+                        do_logout: false
 
     upload_response kase: kase,
                     user: responder,
