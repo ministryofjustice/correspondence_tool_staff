@@ -13,7 +13,8 @@ class CaseFlagForClearanceService
     return @result unless validate_case_is_unflagged
 
     if @team.dacu_disclosure?
-      assign_approver acting_user: @user, acting_team: @team,
+      assign_approver acting_user: @user,
+                      acting_team: @dts.managing_team,
                       target_team: @team
 
     elsif @team.press_office? || @team.private_office?

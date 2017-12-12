@@ -24,6 +24,8 @@ module Stats
       ReportTypeSeeder.new.seed!
     end
 
+    after(:all) { ReportType.delete_all }
+
     describe '#create_custom_report' do
       before do
         sign_in manager
