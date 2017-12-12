@@ -24,14 +24,15 @@ def email_from_name(name)
 end
 
 FactoryGirl.define do
-  sequence(:manager_name)               { |n| "Ms Manager #{n}" }
-  sequence(:responder_name)             { |n| "Mr Responder #{n}" }
-  sequence(:approver_name)              { |n| "Ms Approver #{n}" }
-  sequence(:disclosure_specialist_name) { |n| "Disclosure Specialist #{n}" }
-  sequence(:disclosure_bmt_user_name)   { |n| "Disclosure BMT #{n}" }
-  sequence(:press_officer_name)         { |n| "Press Officer #{n}" }
-  sequence(:private_officer_name)       { |n| "Private Officer #{n}" }
-  sequence(:approver_responder_name)    { |n| "Ms Approver-Responder #{n}" }
+  sequence(:manager_name)                     { |n| "Ms Manager #{n}" }
+  sequence(:responder_name)                   { |n| "Mr Responder #{n}" }
+  sequence(:approver_name)                    { |n| "Ms Approver #{n}" }
+  sequence(:disclosure_specialist_name)       { |n| "Disclosure Specialist #{n}" }
+  sequence(:disclosure_bmt_user_name)         { |n| "Disclosure BMT #{n}" }
+  sequence(:press_officer_name)               { |n| "Press Officer #{n}" }
+  sequence(:private_officer_name)             { |n| "Private Officer #{n}" }
+  sequence(:approver_responder_name)          { |n| "Ms Approver-Responder #{n}" }
+  sequence(:approver_responder_manager_name)  { |n| "Mgr Approver-Responder #{n}" }
 
   factory :user do
     password '12345678'
@@ -72,6 +73,13 @@ FactoryGirl.define do
       full_name         { generate(:approver_responder_name) }
       approving_team    { find_or_create(:approving_team) }
       responding_teams  { [ find_or_create(:responding_team) ] }
+    end
+
+    factory :approver_responder_manager do
+      full_name         { generate(:approver_responder_manager_name) }
+      approving_team    { find_or_create(:approving_team) }
+      responding_teams  { [ find_or_create(:responding_team) ] }
+      managing_teams    { [ find_or_create(:team_dacu) ] }
     end
 
     factory :disclosure_specialist do

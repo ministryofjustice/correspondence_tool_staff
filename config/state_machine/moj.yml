@@ -49,12 +49,6 @@ case_types:
                 unflag_for_clearance:
                   if: Cases::FOIPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
 
-
-
-#                  before_transition:
-#                  transition_to:
-#                  after_transition: ConfigurableStateMachine::Callbacks#notify_responder
-#                  switch_workflow:
           approver:
             states:
               unassigned:

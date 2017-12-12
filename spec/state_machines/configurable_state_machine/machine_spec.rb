@@ -168,7 +168,7 @@ module ConfigurableStateMachine
             end
           end
 
-          context 'triggered as a result of no if present' do
+          context 'triggered as a result of no "if present' do
             it 'returns true' do
               expect(Cases::FOIPolicy).not_to receive(:new)
               config.user_roles.manager.states.unassigned.add_message_to_case.delete_field(:if)
@@ -359,6 +359,36 @@ module ConfigurableStateMachine
       end
     end
 
+
+    describe '#respond_to?' do
+      context 'methods ending with a bang' do
+        it 'returns true to respond_to? with a method ending in a bang' do
+          expect(machine.respond_to?(:add_message!)).to be true
+        end
+
+        it 'returns true to a method defined on an ancestor' do
+          expect(machine.respond_to?(:object_id)).to be true
+        end
+
+        it 'returns false to unrecognized methods' do
+          expect(machine.respond_to?(:xxxxxxx)).to be false
+        end
+      end
+    end
+
+    describe '#method' do
+      it 'returns a method object for a valid method' do
+        method_object = machine.method(:add_message!)
+        expect(method_object).to be_instance_of(Method)
+      end
+
+      it 'returns a method object for a valid method' do
+        expect {
+          machine.method(:xxxxxx)
+        }.to raise_error NameError, %(undefined method `xxxxxx' for class `ConfigurableStateMachine::Machine')
+      end
+    end
+
     describe '#trigger_event' do
       context 'invalid metadata' do
         context 'no acting user' do
@@ -395,6 +425,46 @@ module ConfigurableStateMachine
             expect {
               machine.link_a_case!({acting_user: @manager, acting_team: @managing_team, linked_case_id: 33})
             }.to raise_error InvalidEventError, %(Invalid Event: 'link_a_case': case_id: #{kase.id}, user_id: #{@manager.id})
+          end
+        end
+      end
+    end
+
+    context 'private methods' do
+      describe 'extract_roles_from_metadata' do
+
+
+        let(:user)            { create :approver_responder_manager }
+        let(:approving_team)  { user.approving_team }
+        let(:responding_team) { user.responding_teams.first }
+        let(:managing_team)   { user.managing_teams.first }
+        let(:expected_roles)  { %w( approver manager responder ) }
+
+        context 'acting_user no team' do
+          it 'extracts all three roles' do
+            metadata = { acting_user: user }
+           expect(machine.__send__(:extract_roles_from_metadata, metadata)).to match_array expected_roles
+          end
+        end
+
+        context 'acting_user_id no team' do
+          it 'extracts all three roles' do
+            metadata = { acting_user_id: user.id }
+            expect(machine.__send__(:extract_roles_from_metadata, metadata)).to match_array expected_roles
+          end
+        end
+
+        context 'acting_team_id' do
+          it 'extracts the role for managing team' do
+            metadata = { acting_user_id: user.id, acting_team_id: managing_team.id }
+            expect(machine.__send__(:extract_roles_from_metadata, metadata)).to eq [ 'manager' ]
+          end
+        end
+
+        context 'acting_team' do
+          it 'extracts the role for approver' do
+            metadata = { acting_user_id: user.id, acting_team: responding_team }
+            expect(machine.__send__(:extract_roles_from_metadata, metadata)).to eq [ 'responder' ]
           end
         end
       end
