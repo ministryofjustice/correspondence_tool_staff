@@ -15,7 +15,7 @@ describe ReportGeneratorJob do
           ReportGeneratorJob.perform_now('R003')
           report = Report.last_by_abbr('R003')
           expect(report.report_data).not_to be_nil
-          expect(report.report_data).to match /^Business unit report - 1 Jan 2017 to 11 Dec 2017/
+          expect(report.report_data).to match(/^Business unit report - 1 Jan 2017 to 11 Dec 2017/)
         end
       end
 
@@ -37,7 +37,7 @@ describe ReportGeneratorJob do
         ReportGeneratorJob.perform_now('R003', period_start, period_end)
         report = Report.last_by_abbr('R003')
         expect(report.report_data).not_to be_nil
-        expect(report.report_data).to match /^Business unit report - 1 Jun 2017 to 30 Jun 2017/
+        expect(report.report_data).to match(/^Business unit report - 1 Jun 2017 to 30 Jun 2017/)
       end
 
       it 'updates the period start and end on the report record' do
