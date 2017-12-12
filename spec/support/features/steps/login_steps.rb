@@ -1,4 +1,4 @@
-def login_step user:
+def login_step(user:)
   login_page.load
   login_page.username_field.set user.email
   login_page.password_field.set user.password

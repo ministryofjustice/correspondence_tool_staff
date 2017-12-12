@@ -95,5 +95,12 @@ module Features
       go_to_case_details_step kase: kase
       close_case_step
     end
+
+    def add_message_to_case(kase:, message:)
+      expect(cases_show_page).to be_displayed(id: kase.id)
+      cases_show_page.add_message_to_case(message)
+      expect(cases_show_page.messages.first).to have_content(message)
+      logout_step if do_logout
+    end
   end
 end

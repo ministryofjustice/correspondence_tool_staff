@@ -69,6 +69,11 @@ module PageObjects
           end
           nil
         end
+
+        def add_message_to_case(message)
+          new_message.input.set message
+          new_message.add_button.click
+        end
       end
 
     end
