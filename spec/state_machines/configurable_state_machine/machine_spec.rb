@@ -359,6 +359,36 @@ module ConfigurableStateMachine
       end
     end
 
+
+    describe '#respond_to?' do
+      context 'methods ending with a bang' do
+        it 'returns true to respond_to? with a method ending in a bang' do
+          expect(machine.respond_to?(:add_message!)).to be true
+        end
+
+        it 'returns true to a method defined on an ancestor' do
+          expect(machine.respond_to?(:object_id)).to be true
+        end
+
+        it 'returns false to unrecognized methods' do
+          expect(machine.respond_to?(:xxxxxxx)).to be false
+        end
+      end
+    end
+
+    describe '#method' do
+      it 'returns a method object for a valid method' do
+        method_object = machine.method(:add_message!)
+        expect(method_object).to be_instance_of(Method)
+      end
+
+      it 'returns a method object for a valid method' do
+        expect {
+          method_object = machine.method(:xxxxxx)
+        }.to raise_error NameError, %(undefined method `xxxxxx' for class `ConfigurableStateMachine::Machine')
+      end
+    end
+
     describe '#trigger_event' do
       context 'invalid metadata' do
         context 'no acting user' do
