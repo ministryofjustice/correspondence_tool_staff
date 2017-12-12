@@ -39,6 +39,11 @@ module Stats
         create_appeal(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_c, responder: @responder_c, ident: 'case for team c - responded late')
         create_appeal(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'case for team c - responded in time')
         create_appeal(received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'case for team d - open in time')
+
+        create_case(received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'case for team d - open in time')
+        create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'case for team c - responded in time')
+        create_case(received: '20170607', responded: '20170620', deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'case for team b - responded in time')
+        create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_a, responder: @responder_a, ident: 'case for team a - responded in time')
       end
 
 
@@ -173,6 +178,25 @@ module Stats
         report = R002AppealsPerformanceReport.new
         expect { report.run }.not_to raise_error
       end
+    end
+
+    def create_case(received:, responded:, deadline:, team:, responder:, ident:)
+      received_date = Date.parse(received)
+      responded_date = responded.nil? ? nil : Date.parse(responded)
+      kase = nil
+      Timecop.freeze(received_date + 10.hours) do
+        kase = create :case_with_response, responding_team: team, responder: responder, identifier: ident
+        kase.external_deadline = Date.parse(deadline)
+        unless responded_date.nil?
+          Timecop.freeze responded_date + 14.hours do
+            kase.state_machine.respond!(responder)
+            kase.update!(date_responded: Time.now, outcome_id: @outcome.id, info_held_status: @info_held)
+            kase.state_machine.close!(kase.managing_team.users.first)
+          end
+        end
+      end
+      kase.save!
+      kase
     end
 
     # rubocop:disable Metrics/ParameterLists
