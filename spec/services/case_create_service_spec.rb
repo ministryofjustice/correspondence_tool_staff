@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe CaseCreateService do
-  let(:manager) { create :manager }
+  let(:manager) { create :manager, managing_teams: [ team_dacu ] }
   let!(:team_dacu) { find_or_create :team_dacu }
   let!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
   let(:foi) { find_or_create :category, :foi }
@@ -87,31 +87,6 @@ describe CaseCreateService do
     end
 
     it 'sets the result to "assign_responder"' do
-
-      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-
-      puts ">>>>>>>>>>>>>> SET UP THE TEAM USER ROLES PROPOERLY FOR THIS #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-
-
-
-      puts ">>>>>>>>>>>>>> team dacu #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-      ap team_dacu
-      puts ">>>>>>>>>>>>>> team dacu disclosure #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-      ap team_dacu_disclosure
-      puts ">>>>>>>>>>>>>> manager #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-      ap manager
-      puts ">>>>>>>>>>>>>> manager.teams #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-      ap manager.teams
-      puts ">>>>>>>>>>>>>> manager.team_roles #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-      ap manager.team_roles
-
       ccs.call
       expect(ccs.result).to eq :assign_responder
     end

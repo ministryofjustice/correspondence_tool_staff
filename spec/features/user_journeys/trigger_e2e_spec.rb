@@ -30,6 +30,7 @@ feature 'FOI case that does not require clearance' do
                                          full_name: Settings.private_office_default_user }
   given(:private_office)        { private_officer.approving_team }
   given!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
+  given(:team_dacu)             { find_or_create :team_dacu }
 
   given!(:foi_category)         { create(:category, :foi) }
 
