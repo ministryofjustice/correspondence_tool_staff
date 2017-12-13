@@ -37,11 +37,6 @@ class Report < ApplicationRecord
         :period_end,
         I18n.t('activerecord.errors.models.report.attributes.period_start.not_in_future')
       )
-    elsif period_start.present? && period_end.present? && self.period_start > self.period_end
-      errors.add(
-        :period_end,
-         I18n.t('activerecord.errors.models.report.attributes.period_start.after_end_date')
-      )
     end
     errors[:period_end].any?
   end
