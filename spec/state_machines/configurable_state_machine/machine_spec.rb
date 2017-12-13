@@ -384,7 +384,7 @@ module ConfigurableStateMachine
 
       it 'returns a method object for a valid method' do
         expect {
-          method_object = machine.method(:xxxxxx)
+          machine.method(:xxxxxx)
         }.to raise_error NameError, %(undefined method `xxxxxx' for class `ConfigurableStateMachine::Machine')
       end
     end
@@ -425,6 +425,46 @@ module ConfigurableStateMachine
             expect {
               machine.link_a_case!({acting_user: @manager, acting_team: @managing_team, linked_case_id: 33})
             }.to raise_error InvalidEventError, %(Invalid Event: 'link_a_case': case_id: #{kase.id}, user_id: #{@manager.id})
+          end
+        end
+      end
+    end
+
+    context 'private methods' do
+      describe 'extract_roles_from_metadata' do
+
+
+        let(:user)            { create :approver_responder_manager }
+        let(:approving_team)  { user.approving_team }
+        let(:responding_team) { user.responding_teams.first }
+        let(:managing_team)   { user.managing_teams.first }
+        let(:expected_roles)  { %w( approver manager responder ) }
+
+        context 'acting_user no team' do
+          it 'extracts all three roles' do
+            metadata = { acting_user: user }
+           expect(machine.__send__(:extract_roles_from_metadata, metadata)).to match_array expected_roles
+          end
+        end
+
+        context 'acting_user_id no team' do
+          it 'extracts all three roles' do
+            metadata = { acting_user_id: user.id }
+            expect(machine.__send__(:extract_roles_from_metadata, metadata)).to match_array expected_roles
+          end
+        end
+
+        context 'acting_team_id' do
+          it 'extracts the role for managing team' do
+            metadata = { acting_user_id: user.id, acting_team_id: managing_team.id }
+            expect(machine.__send__(:extract_roles_from_metadata, metadata)).to eq [ 'manager' ]
+          end
+        end
+
+        context 'acting_team' do
+          it 'extracts the role for approver' do
+            metadata = { acting_user_id: user.id, acting_team: responding_team }
+            expect(machine.__send__(:extract_roles_from_metadata, metadata)).to eq [ 'responder' ]
           end
         end
       end

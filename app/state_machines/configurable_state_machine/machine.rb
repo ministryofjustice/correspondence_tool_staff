@@ -113,15 +113,25 @@ module ConfigurableStateMachine
 
 
     def extract_roles_from_metadata(metadata)
-      if metadata.key?(:acting_team)
-        return [ metadata[:acting_team].role ]
+      team = extract_team_from_metadata(metadata)
+      user = extract_user_from_metadata(metadata)
+      if team.nil?
+        user.roles
+      else
+        user.roles_for_team(team).map(&:role)
       end
-      if metadata.key?(:acting_team_id)
-        return [ Team.find(metadata[:acting_team_id]).role ]
-      end
-      user = metadata.key?(:acting_user) ? metadata[:acting_user] : User.find(metadata[:acting_user_id])
-      user.roles
     end
+
+    def extract_team_from_metadata(metadata)
+      if metadata.key?(:acting_team)
+        metadata[:acting_team]
+      elsif metadata.key?(:acting_team_id)
+        Team.find(metadata[:acting_team_id])
+      else
+        nil
+      end
+    end
+
 
     def extract_user_from_metadata(metadata)
       if metadata.key?(:acting_user_id)

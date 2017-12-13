@@ -87,6 +87,31 @@ describe CaseCreateService do
     end
 
     it 'sets the result to "assign_responder"' do
+
+      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      puts ">>>>>>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+
+      puts ">>>>>>>>>>>>>> SET UP THE TEAM USER ROLES PROPOERLY FOR THIS #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+
+
+
+      puts ">>>>>>>>>>>>>> team dacu #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      ap team_dacu
+      puts ">>>>>>>>>>>>>> team dacu disclosure #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      ap team_dacu_disclosure
+      puts ">>>>>>>>>>>>>> manager #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      ap manager
+      puts ">>>>>>>>>>>>>> manager.teams #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      ap manager.teams
+      puts ">>>>>>>>>>>>>> manager.team_roles #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      ap manager.team_roles
+
       ccs.call
       expect(ccs.result).to eq :assign_responder
     end
