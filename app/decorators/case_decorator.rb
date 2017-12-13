@@ -132,6 +132,8 @@ class CaseDecorator < Draper::Decorator
       'FOI - Internal review for timeliness'
     when "Case"
       'FOI'
+    when "Case::FOI"
+      'FOI'
     else
       raise 'type does not exist'
     end
