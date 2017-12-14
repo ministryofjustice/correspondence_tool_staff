@@ -1,8 +1,9 @@
 require 'rails_helper'
 
-include CaseDateManipulation
+
 
 feature 'cases requiring clearance by disclosure specialist' do
+  include CaseDateManipulation
   given(:manager)                     { create :manager, managing_teams: [ team_dacu ] }
   given(:disclosure_specialist)       { create :disclosure_specialist }
   given(:other_disclosure_specialist) { create :disclosure_specialist }

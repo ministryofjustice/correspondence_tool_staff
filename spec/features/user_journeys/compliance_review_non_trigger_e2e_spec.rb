@@ -13,10 +13,9 @@
 require 'rails_helper'
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
-include CaseDateManipulation
-include Features::Interactions
-
 feature 'FOI compliance review case that does not require clearance' do
+  include CaseDateManipulation
+  include Features::Interactions
   given(:responder)       { create :responder }
   given(:responding_team) { responder.responding_teams.first }
   given(:manager)         { create :manager }

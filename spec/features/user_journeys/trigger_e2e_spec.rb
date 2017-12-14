@@ -15,14 +15,14 @@
 require 'rails_helper'
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
-include CaseDateManipulation
-include Features::Interactions
-
 
 feature 'FOI case that does not require clearance' do
+  include Features::Interactions
+  include CaseDateManipulation
+
   given(:responder)             { create :responder }
   given(:responding_team)       { responder.responding_teams.first }
-  given(:manager)               { create :manager }
+  given(:manager)               { create :manager, managing_teams: [ team_dacu ] }
   given(:disclosure_specialist) { create :disclosure_specialist }
   given!(:press_officer)        { create :press_officer }
   given(:press_office)          { press_officer.approving_team }

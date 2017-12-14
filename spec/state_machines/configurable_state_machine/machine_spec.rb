@@ -168,7 +168,7 @@ module ConfigurableStateMachine
             end
           end
 
-          context 'triggered as a result of no if present' do
+          context 'triggered as a result of no "if present' do
             it 'returns true' do
               expect(Cases::FOIPolicy).not_to receive(:new)
               config.user_roles.manager.states.unassigned.add_message_to_case.delete_field(:if)

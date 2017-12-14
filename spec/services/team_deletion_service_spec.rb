@@ -12,19 +12,21 @@ describe TeamDeletionService do
     end
 
     context 'child team is not active' do
-      time = Time.new(2017, 6, 30, 12, 0, 0)
-      before(:all) { Timecop.freeze(time) }
+      let(:time) { Time.new(2017, 6, 30, 12, 0, 0) }
       let!(:bu) { find_or_create(:business_unit, :deactivated, directorate: dir) }
-      after(:all) { Timecop.return }
 
       it 'updates the team name' do
-        service.call
-        expect(dir.reload.name).to include "DEACTIVATED", dir.name
+        Timecop.freeze(time) do
+          service.call
+          expect(dir.reload.name).to include "DEACTIVATED", dir.name
+        end
       end
 
       it 'updates the deleted_at column' do
-        service.call
-        expect(dir.reload.deleted_at).to eq time
+        Timecop.freeze(time) do
+          service.call
+          expect(dir.reload.deleted_at).to eq time
+        end
       end
     end
 
