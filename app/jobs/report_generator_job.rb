@@ -10,6 +10,7 @@ class ReportGeneratorJob < ApplicationJob
   queue_as :report_generator
 
   def perform(report_abbr, *args)
+    Rails.logger.info "generating report #{report_abbr}"
     RavenContextProvider.set_context
     report_type = ReportType.find_by_abbr(report_abbr)
     report_record = Report.create!(
