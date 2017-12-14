@@ -18,7 +18,6 @@ class ReportGeneratorJob < ApplicationJob
       period_start: nil,
       period_end: nil
     )
-
     report_klass = report_type.class_name.constantize
     report = args.empty? ? report_klass.new : report_klass.new(*args)
     report.run
@@ -27,5 +26,6 @@ class ReportGeneratorJob < ApplicationJob
                          period_start: report.period_start,
                          period_end: report.period_end)
     report_record.save!
+    Report.where('id < ?', report_record.id).destroy_all
   end
 end
