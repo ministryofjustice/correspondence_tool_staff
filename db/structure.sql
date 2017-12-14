@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.9
--- Dumped by pg_dump version 9.5.9
+-- Dumped from database version 9.5.6
+-- Dumped by pg_dump version 9.5.6
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -312,7 +312,7 @@ ALTER SEQUENCE case_transitions_id_seq OWNED BY case_transitions.id;
 
 
 --
--- Name: cases; Type: TABLE; Schema: public; Owner: -
+-- Name: case; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE cases (
@@ -338,7 +338,7 @@ CREATE TABLE cases (
     workflow character varying,
     "deleted?" boolean DEFAULT false,
     info_held_status_id integer,
-    type character varying DEFAULT 'Case'::character varying,
+    type character varying NOT NULL,
     appeal_outcome_id integer
 );
 

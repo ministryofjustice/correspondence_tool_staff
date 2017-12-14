@@ -253,7 +253,7 @@ class Case < ApplicationRecord
 
   delegate :available_events, to: :state_machine
 
-  Cases::FOIStateMachine.states.each do |state|
+  Case::FOIStateMachine.states.each do |state|
     define_method("#{state}?") { current_state == state }
   end
 

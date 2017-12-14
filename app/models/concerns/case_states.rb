@@ -9,9 +9,9 @@ module CaseStates
     if @state_machine.nil?
       state_machine_class_name =
         if respond_to?(:workflow) && workflow.present?
-          "Cases::#{category.abbreviation}::#{workflow}StateMachine"
+          "Case::#{category.abbreviation}::#{workflow}StateMachine"
         else
-          "Cases::FOIStateMachine"
+          "Case::FOIStateMachine"
         end
       @state_machine = state_machine_class_name.constantize.new(
         self,

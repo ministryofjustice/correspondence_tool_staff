@@ -169,7 +169,6 @@ class CasesController < ApplicationController
   end
 
   def destroy
-    binding.pry
     authorize @case
     service = CaseDeletionService.new(current_user, @case)
     service.call

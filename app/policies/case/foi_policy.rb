@@ -1,2 +1,2 @@
-class Case::FOIPolicy < Cases::BasePolicy
+class Case::FOIPolicy < CasePolicy
 end

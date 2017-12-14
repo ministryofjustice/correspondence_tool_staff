@@ -31,7 +31,7 @@ describe CasePolicy do
     describe 'workflow' do
       it 'is set to FOI workflow if the case workflow is not present' do
         policy = CasePolicy.new(responder, new_case)
-        expect(policy.policy_workflow).to be_a(Cases::FOIPolicy)
+        expect(policy.policy_workflow).to be_a(Case::FOIPolicy)
       end
 
       it 'raises if the workflow is not recognised' do

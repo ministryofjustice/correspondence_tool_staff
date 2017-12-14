@@ -805,7 +805,7 @@ RSpec.describe Case, type: :model do
     let(:kase)  { build(:case) }
 
     it 'any defined state can be used' do
-      Cases::FOIStateMachine.states.each do |state|
+      Case::FOIStateMachine.states.each do |state|
         query = state + '?'
         expect([true, false]).to include kase.send(query)
       end

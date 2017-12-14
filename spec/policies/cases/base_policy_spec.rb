@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Cases::BasePolicy do
+xdescribe 'Cases::BasePolicy' do
   subject { described_class }
 
   let(:managing_team)     { find_or_create :team_dacu }

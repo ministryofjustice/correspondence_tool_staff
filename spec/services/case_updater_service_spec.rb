@@ -6,7 +6,7 @@ describe CaseUpdaterService do
     let(:team)          { find_or_create :team_dacu }
     let(:user)          { team.users.first }
     let(:kase)          { create :accepted_case }
-    let(:state_machine) { double Cases::FOIStateMachine, edit_case!: true }
+    let(:state_machine) { double Case::FOIStateMachine, edit_case!: true }
 
     before(:each) do
       @service = CaseUpdaterService.new(user, kase, params)

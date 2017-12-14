@@ -241,7 +241,7 @@ en:
         type:
           Case::FOI::TimelinessReview: FOI - Internal review for timeliness
           Case::FOI::ComplianceReview: FOI - Internal review for compliance
-          Case: FOI
+          Case::FOI: FOI
         linked_case_number: Case number
       feedback:
         comment: Help make this service better

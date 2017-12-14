@@ -23,7 +23,7 @@ RSpec.describe Case::FOI::ComplianceReview, type: :model, parent: :case do
 
   describe 'state_machining' do
     it 'has a state machine' do
-      expect(compliance_review.state_machine).to be_a Cases::FOIStateMachine
+      expect(compliance_review.state_machine).to be_a Case::FOIStateMachine
     end
   end
   describe 'type' do
