@@ -1,4 +1,3 @@
-module Cases
-  class FOIPolicy < Cases::BasePolicy
-  end
+class Cases::FOIPolicy < Cases::BasePolicy
+
 end

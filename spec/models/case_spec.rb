@@ -364,7 +364,7 @@ RSpec.describe Case, type: :model do
 
     it 'does validate presence of deafult type' do
       foi = build :case
-      expect(foi.type).to eq 'Case'
+      expect(foi.type).to eq 'Case::FOI'
     end
 
     it 'does validate presence of message for email foi' do
