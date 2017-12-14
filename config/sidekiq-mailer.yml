@@ -4,14 +4,3 @@
 :queues:
   - correspondence_tool_staff_mailers
   - correspondence_tool_staff_pdf_maker
-  - correspondence_tool_staff_report_generator
-
-
-:schedule:
-  R003 YTD Business unit performance report:
-    every: '5m'
-    class: ReportGeneratorJob
-
-    queue: report_generator
-    args: ['R003']
-    description: This job generates the R003 YTD Bunsiness unit performance report
