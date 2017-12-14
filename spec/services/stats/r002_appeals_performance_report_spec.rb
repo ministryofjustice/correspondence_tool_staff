@@ -26,19 +26,25 @@ module Stats
         @outcome = find_or_create :outcome, :granted
         @info_held = find_or_create :info_status, :held
 
-        # create cases based on today's date of 30/6/2017
-        create_appeal(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - responded late')
-        create_appeal(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - responded late')
-        create_appeal(received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - open late')
-        create_appeal(received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - open late')
-        create_appeal(received: '20170605', responded: nil,        deadline: '20170702', team: @team_a, responder: @responder_a, ident: 'case for team a - open in time')
-        create_appeal(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_a, responder: @responder_a, ident: 'case for team a - responded in time')
-        create_appeal(received: '20170605', responded: nil,        deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'case for team b - open late')
-        create_appeal(received: '20170605', responded: nil,        deadline: '20170702', team: @team_b, responder: @responder_b, ident: 'case for team b - open in time')
-        create_appeal(received: '20170607', responded: '20170620', deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'case for team b - responded in time')
-        create_appeal(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_c, responder: @responder_c, ident: 'case for team c - responded late')
-        create_appeal(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'case for team c - responded in time')
-        create_appeal(received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'case for team d - open in time')
+        # create appeals based on today's date of 30/6/2017
+        create_case(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - responded late', case_type: :compliance_review_with_response)
+        create_case(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - responded late', case_type: :compliance_review_with_response)
+        create_case(received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - open late', case_type: :compliance_review_with_response)
+        create_case(received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - open late', case_type: :compliance_review_with_response)
+        create_case(received: '20170605', responded: nil,        deadline: '20170702', team: @team_a, responder: @responder_a, ident: 'case for team a - open in time', case_type: :compliance_review_with_response)
+        create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_a, responder: @responder_a, ident: 'case for team a - responded in time', case_type: :compliance_review_with_response)
+        create_case(received: '20170605', responded: nil,        deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'case for team b - open late', case_type: :compliance_review_with_response)
+        create_case(received: '20170605', responded: nil,        deadline: '20170702', team: @team_b, responder: @responder_b, ident: 'case for team b - open in time', case_type: :compliance_review_with_response)
+        create_case(received: '20170607', responded: '20170620', deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'case for team b - responded in time', case_type: :compliance_review_with_response)
+        create_case(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_c, responder: @responder_c, ident: 'case for team c - responded late', case_type: :compliance_review_with_response)
+        create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'case for team c - responded in time', case_type: :compliance_review_with_response)
+        create_case(received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'case for team d - open in time', case_type: :compliance_review_with_response)
+
+        # standard FOIs which should be ignored by report
+        create_case(received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'case for team d - open in time', case_type: :case_with_response)
+        create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'case for team c - responded in time', case_type: :case_with_response)
+        create_case(received: '20170607', responded: '20170620', deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'case for team b - responded in time', case_type: :case_with_response)
+        create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_a, responder: @responder_a, ident: 'case for team a - responded in time', case_type: :case_with_response)
       end
 
 
@@ -176,12 +182,12 @@ module Stats
     end
 
     # rubocop:disable Metrics/ParameterLists
-    def create_appeal(received:, responded:, deadline:, team:, responder:, ident:)
+    def create_case(received:, responded:, deadline:, team:, responder:, ident:, case_type:)
       received_date = Date.parse(received)
       responded_date = responded.nil? ? nil : Date.parse(responded)
       kase = nil
       Timecop.freeze(received_date + 10.hours) do
-        kase = create :compliance_review_with_response, responding_team: team, responder: responder, identifier: ident
+        kase = create case_type, responding_team: team, responder: responder, identifier: ident
         kase.external_deadline = Date.parse(deadline)
         unless responded_date.nil?
           Timecop.freeze responded_date + 14.hours do
