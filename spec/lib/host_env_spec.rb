@@ -1,5 +1,4 @@
 require 'rails_helper'
-require File.join(Rails.root, 'lib', 'rake_task_helpers', 'host_env')
 
 describe HostEnv do
 
