@@ -38,7 +38,7 @@ describe CasePolicy do
         allow(new_case).to receive(:workflow).and_return('Nonexistent')
         expect {
           CasePolicy.new(responder, new_case)
-        }.to raise_error(NameError, 'uninitialized constant Cases::FOI')
+        }.to raise_error(NameError, 'uninitialized constant Case::FOI::NonexistentPolicy')
       end
     end
   end
