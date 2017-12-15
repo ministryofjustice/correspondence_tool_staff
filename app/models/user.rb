@@ -106,7 +106,7 @@ class User < ApplicationRecord
   end
 
   def has_live_cases?
-    cases.where.not(current_state: 'closed').any?
+    cases.where.not(current_state: ['closed', 'responded']).any?
   end
 
   def multiple_team_member?

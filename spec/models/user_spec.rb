@@ -131,6 +131,7 @@ RSpec.describe User, type: :model do
   describe '#has_live_cases?' do
 
     let(:closed_case)     { create :closed_case }
+    let(:responded_case)  { create :responded_case }
     let(:assigned_case)   { create :assigned_case }
     let(:responder)       { responding_team.responders.first }
     let(:assignment)      { assigned_case.responder_assignment }
@@ -148,6 +149,11 @@ RSpec.describe User, type: :model do
 
     it 'returns false for a user with a closed case' do
       assignment = closed_case.responder_assignment
+      expect(assignment.user.has_live_cases?).to be false
+    end
+
+    it 'returns false for a user with a responded case' do
+      assignment = responded_case.responder_assignment
       expect(assignment.user.has_live_cases?).to be false
     end
   end
