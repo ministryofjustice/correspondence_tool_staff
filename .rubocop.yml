@@ -1130,8 +1130,8 @@ Style/VariableName:
   Enabled: false
 
 Style/WhenThen:
-  Description: 'Use when x then ... for one-line case.'
-  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#one-line-case'
+  Description: 'Use when x then ... for one-line cases.'
+  StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#one-line-cases'
   Enabled: false
 
 Style/WhileUntilDo:
