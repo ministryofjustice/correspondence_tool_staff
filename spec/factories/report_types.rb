@@ -23,7 +23,7 @@ FactoryGirl.define do
       full_name     'Business unit report'
       class_name    'Stats::R003BusinessUnitPerformanceReport'
       custom_report true
-      seq_id        100
+      seq_id        200
     end
 
     trait :r004 do
@@ -31,15 +31,23 @@ FactoryGirl.define do
       full_name     'Cabinet Office report'
       class_name    'Stats::R004CabinetOfficeReport'
       custom_report false
-      seq_id        200
+      seq_id        300
     end
   end
 
-  factory :r003_business_units, parent: :report_type do
-    abbr "R003"
-    full_name "Business unit report"
-    class_name { "Stats::R003BusinessUnitPerformanceReport"}
+  factory :r003_report_type, parent: :report_type do
+    abbr 'R003'
+    full_name 'Business unit report'
+    class_name 'Stats::R003BusinessUnitPerformanceReport'
     custom_report true
     seq_id 200
+  end
+
+  factory :r004_report_type, parent: :report_type do
+    abbr 'R004'
+    full_name 'Cabinet Office report'
+    class_name 'Stats::R004CabinetOfficeReport'
+    custom_report true
+    seq_id 300
   end
 end

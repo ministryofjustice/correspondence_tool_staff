@@ -15,4 +15,7 @@ class ReportType < ApplicationRecord
 
   scope :custom, -> { where( custom_report: true ) }
 
+  def class_constant
+    class_name.constantize
+  end
 end
