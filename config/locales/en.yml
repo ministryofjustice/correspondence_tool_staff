@@ -78,6 +78,10 @@ en:
       can_unflag_for_clearance?: 'You are not authorised to remove clearance from this case'
     case/foi_policy:
       <<: *case_policy
+    case/foi/compliance_review_policy:
+      <<: *case_policy
+    case/foi/timeliness_review_policy:
+      <<: *case_policy
     team_policy:
       index?: 'You are not authorised to view a list of teams'
       show?: 'You are not authorised to view this team'

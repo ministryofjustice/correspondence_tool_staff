@@ -9,7 +9,6 @@ class CasePolicy < ApplicationPolicy
     @case = kase
     @user = user
 
-    @policy_workflow = policy_workflow_for_case(kase, user: user) if self.class == CasePolicy
   end
 
   class Scope
@@ -621,26 +620,6 @@ class CasePolicy < ApplicationPolicy
         event_name: event_name,
         metadata: { acting_user_id: user.id }
     )
-  end
-
-  def respond_to_missing?(name, include_private = false)
-    @policy_workflow.respond_to?(name, include_private)
-  end
-
-  def method_missing(method, *args, &block)
-    @policy_workflow.send(method, *args, &block)
-  end
-
-  def policy_workflow_for_case(kase, user:)
-    workflow_class = kase.format_workflow_class_name(
-      # This will have to change at some point, i.e. when we
-      # have non-FOI case. At that time, we'll have to ensure
-      # we pass in the FOI class and use that to generate the
-      # policy below.
-      'Case::%{type}Policy',
-      'Case::%{type}::%{workflow}Policy'
-    )
-    workflow_class.constantize.new(user, kase)
   end
 end
 #rubocop:enable Metrics/ClassLength

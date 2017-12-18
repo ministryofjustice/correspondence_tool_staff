@@ -1442,6 +1442,29 @@ RSpec.describe CasesController, type: :controller do
         end
       end
     end
+    context 'case is an appeal' do
+      let(:kase)     { create :accepted_compliance_review}
+      context 'as a logged in non-manager' do
+        before(:each) do
+          Timecop.freeze(date) do
+            sign_in responder
+            patch :update, params: edit_params.to_unsafe_hash
+          end
+        end
+
+        it 'redirects' do
+          Timecop.freeze(date) do
+            expect(response).to redirect_to root_path
+          end
+        end
+
+        it 'gives error in flash' do
+          Timecop.freeze(date) do
+            expect(flash[:alert]).to eq 'You are not authorised to edit this case.'
+          end
+        end
+      end
+    end
 
   end
 
