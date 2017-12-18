@@ -19,7 +19,7 @@ class HostEnv
 
   def self.host_env
     if ENV['ENV'].nil? && ( Rails.env.development? || Rails.env.test? )
-      "Rails-development"
+      'Local'
     else
       "Host-#{ENV['ENV']}"
     end

@@ -51,6 +51,15 @@ class FeatureSet
     end
   end
 
+  def self.respond_to_missing?(meth, _include_private = false)
+    efs = instance
+    efs.respond_to?(meth)
+  end
+
+  def respond_to_missing?(meth, _include_private = false)
+    meth.in?(@config.keys) ? true : super
+  end
+
 
 
 

@@ -5,11 +5,11 @@ describe FeatureSet do
   before(:each) do
     # override whatever is in the settings file with these settings
     Settings.enabled_features.sars = Config::Options.new({
-                                                              :"Rails-development" => true,
-                                                              :"Host-dev" => true,
-                                                              :"Host-demo" => true,
-                                                              :"Host-staging" => false,
-                                                              :"Host-production" => false
+                                                             :"Local" => true,
+                                                             :"Host-dev" => true,
+                                                             :"Host-demo" => true,
+                                                             :"Host-staging" => false,
+                                                             :"Host-production" => false
                                                          })
   end
 
@@ -84,5 +84,24 @@ describe FeatureSet do
     end
   end
 
+  describe '#respond_to?' do
+    context 'a feature defined in the config' do
+      it 'responds true' do
+        expect(FeatureSet.respond_to?(:sars)).to be true
+      end
+    end
+
+    context 'a method defined on the superclass' do
+      it 'responds true' do
+        expect(FeatureSet.respond_to?(:object_id)).to be true
+      end
+    end
+
+    context 'unknown method' do
+      it 'responds false' do
+        expect(FeatureSet.respond_to?(:xxxx)).to be false
+      end
+    end
+  end
 
 end
