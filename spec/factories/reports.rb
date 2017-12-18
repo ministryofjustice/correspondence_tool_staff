@@ -18,4 +18,12 @@ FactoryGirl.define do
     period_end { 1.business_days.ago}
     report_data { Faker::Hipster.paragraph }
   end
+
+  factory :r003_report, parent: :report do
+    report_type { find_or_create(:r003_report_type) }
+  end
+
+  factory :r004_report, parent: :report do
+    report_type { find_or_create(:r004_report_type) }
+  end
 end

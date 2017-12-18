@@ -28,18 +28,9 @@ class StatsController < ApplicationController
 
     @report = Report.new(create_custom_params)
 
-    if @report.save
-      report_type = ReportType.find(@report.report_type_id)
+    if @report.valid?
+      @report.run(@report.period_start, @report.period_end)
 
-      report = report_type.class_name.constantize
-                   .new(@report.period_start,
-                        @report.period_end)
-      report.run
-
-      @report.report_data = report.to_csv
-      @report.save
-
-      # send_data report.to_csv, {filename: filename, disposition: :attachment}
       flash[:download] =  "Your custom report has been created. #{view_context.link_to 'Download', stats_download_custom_report_path(id: @report.id)}"
       redirect_to stats_custom_path
     else
