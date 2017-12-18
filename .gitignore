@@ -41,5 +41,7 @@ dump.rdb
 **/*.sql
 **/*.csv
 **/*.txt
+**/*.xls
+**/*.xlsx
 !db/structure.sql
 !public/robots.txt
