@@ -54,10 +54,10 @@ en:
         report:
           attributes:
             period_start:
-              after_end_date: can't be after period end
-              not_in_future: can't be in the future.
+              in_future: "can't be in the future."
             period_end:
-              not_in_future: can't be in the future.
+              before_start_date: "can't be after Date to"
+              in_future: "can't be in the future."
 
   pundit:
     assignment_policy:

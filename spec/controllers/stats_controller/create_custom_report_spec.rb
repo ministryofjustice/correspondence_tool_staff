@@ -6,7 +6,7 @@ module Stats
 
     let!(:kase)       { create :case }
     let(:manager)     { create :disclosure_bmt_user }
-    let(:report_type) { find_or_create :r003_business_units }
+    let(:report_type) { find_or_create :r003_report_type }
 
     let(:params)      {{report: {
                         report_type_id: report_type.id,
@@ -16,8 +16,9 @@ module Stats
                         period_end_dd: Date.today.day,
                         period_end_mm: Date.today.month,
                         period_end_yyyy: Date.today.year } }}
-    let(:service)     { double R003BusinessUnitPerformanceReport }
-
+    let(:report)     { create :r003_report,
+                              period_start: Date.yesterday,
+                              period_end: Date.today }
 
     before(:all) do
       require File.join(Rails.root, 'db', 'seeders', 'report_type_seeder')
@@ -37,13 +38,12 @@ module Stats
                 .with_args(manager, kase)
       end
 
-      it 'calls a report service to generate csv data' do
-        expect(R003BusinessUnitPerformanceReport)
-          .to receive(:new).and_return(service)
-
-        expect(service).to receive(:run)
-        expect(service).to receive(:to_csv)
+      it 'runs the report' do
+        expect(Report).to receive(:new).and_return(report)
+        allow(report).to receive(:run)
         post :create_custom_report, params: params
+        expect(report).to have_received(:run).with(Date.yesterday,
+                                                   Date.today)
       end
 
       it 'populates the report_data column' do
