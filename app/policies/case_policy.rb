@@ -3,12 +3,10 @@ class CasePolicy < ApplicationPolicy
 
   attr_reader :user, :case, :failed_checks, :policy_workflow
 
-  def initialize(user, kase)
-    raise Pundit::NotAuthorizedError, "must be logged in" unless user
-
-    @case = kase
-    @user = user
-
+  def initialize(user_obj = nil, kase_obj = nil, user: nil, kase: nil)
+    @user = user_obj || user
+    @case = kase_obj || kase
+    raise "Missing param" if @user.nil? || @case.nil?
   end
 
   class Scope

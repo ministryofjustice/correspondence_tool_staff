@@ -77,7 +77,7 @@ describe CasePolicy do
   describe '.new' do
     context 'initialized with old style' do
       it 'instantiates the policy using positional parameters' do
-        policy = Cases::BasePolicy.new(manager, accepted_case)
+        policy = CasePolicy.new(manager, accepted_case)
         expect(policy.user).to eq manager
         expect(policy.case).to eq accepted_case
       end
@@ -85,7 +85,7 @@ describe CasePolicy do
 
     context 'initialized with new style' do
       it 'instantiates the policy using named parameters' do
-        policy = Cases::BasePolicy.new(user: manager, kase: accepted_case)
+        policy = CasePolicy.new(user: manager, kase: accepted_case)
         expect(policy.user).to eq manager
         expect(policy.case).to eq accepted_case
       end

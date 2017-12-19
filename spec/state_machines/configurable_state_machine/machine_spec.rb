@@ -20,7 +20,7 @@ module ConfigurableStateMachine
               states: {
                 unassigned: {
                   add_message_to_case: {
-                    if: 'Cases::FOIPolicy#can_add_message_to_case?'
+                    if: 'Case::FOIPolicy#can_add_message_to_case?'
                   },
                   assign_responder: {
                     transition_to: 'awaiting_responder'
@@ -29,12 +29,12 @@ module ConfigurableStateMachine
                   edit_case: nil,
                   flag_for_clearance: nil,
                   unflag_for_clearance: {
-                    if: 'Cases::FOIPolicy#can_unflag_for_clearance?',
+                    if: 'Case::FOIPolicy#can_unflag_for_clearance?',
                   }
                 },
                 drafting: {
                   add_message_to_case: {
-                    if: 'Cases::FOIPolicy#can_add_message_to_case?',
+                    if: 'Case::FOIPolicy#can_add_message_to_case?',
                     before_transition: 'ConfigurableStateMachine::TestCallbacks#before_transition_meth',
                     after_transition: 'ConfigurableStateMachine::TestCallbacks#before_transition_meth',
                     switch_workflow: 'timeliness_appeal',
@@ -48,7 +48,7 @@ module ConfigurableStateMachine
               states: {
                 unassigned: {
                   add_message_to_case: {
-                    if: 'Cases::FOIPolicy#can_add_message_to_case?'
+                    if: 'Case::FOIPolicy#can_add_message_to_case?'
                   },
                   flag_for_press: {
                     transition_to: 'awaiting_press_clearance'
@@ -108,18 +108,18 @@ module ConfigurableStateMachine
 
           context 'predicate returns true' do
             it 'returns both the events for a user' do
-              policy = double Cases::FOIPolicy
+              policy = double Case::FOIPolicy
               expect(policy).to receive(:can_add_message_to_case?).and_return(true)
-              expect(Cases::FOIPolicy).to receive(:new).with(user: user, kase: kase).and_return(policy)
+              expect(Case::FOIPolicy).to receive(:new).with(user: user, kase: kase).and_return(policy)
               expect(machine.permitted_events(user)).to eq %i{ add_message_to_case flag_for_press}
             end
           end
 
           context 'predicate returns false' do
             it 'returns just the one event' do
-              policy = double Cases::FOIPolicy
+              policy = double Case::FOIPolicy
               expect(policy).to receive(:can_add_message_to_case?).and_return(false)
-              expect(Cases::FOIPolicy).to receive(:new).with(user: user, kase: kase).and_return(policy)
+              expect(Case::FOIPolicy).to receive(:new).with(user: user, kase: kase).and_return(policy)
               expect(machine.permitted_events(user)).to eq %i{ flag_for_press}
             end
           end
@@ -130,10 +130,10 @@ module ConfigurableStateMachine
 
           context 'predicate returns true' do
             it 'returns all events' do
-              policy = double Cases::FOIPolicy
+              policy = double Case::FOIPolicy
               expect(policy).to receive(:can_add_message_to_case?).exactly(2).and_return(true)
               expect(policy).to receive(:can_unflag_for_clearance?).and_return(true)
-              expect(Cases::FOIPolicy).to receive(:new).with(user: user, kase: kase).exactly(3).and_return(policy)
+              expect(Case::FOIPolicy).to receive(:new).with(user: user, kase: kase).exactly(3).and_return(policy)
               expect(machine.permitted_events(user)).to eq %i{
                                   add_message_to_case
                                   assign_responder
@@ -151,13 +151,13 @@ module ConfigurableStateMachine
 
     describe 'can_trigger_event' do
 
-      before(:each) { @policy = double Cases::FOIPolicy }
+      before(:each) { @policy = double Case::FOIPolicy }
 
       context 'role provided as a string parameter' do
         context 'event can be triggered' do
           context 'triggered as a result of an predicate returning true' do
             it 'returns  true' do
-              expect(Cases::FOIPolicy).to receive(:new).with(user: @manager, kase: @unassigned_case).and_return(@policy)
+              expect(Case::FOIPolicy).to receive(:new).with(user: @manager, kase: @unassigned_case).and_return(@policy)
               expect(@policy).to receive(:can_add_message_to_case?).and_return(true)
               machine = Machine.new(config: config, kase: @unassigned_case)
               expect(machine.can_trigger_event?(
@@ -170,7 +170,7 @@ module ConfigurableStateMachine
 
           context 'triggered as a result of no "if present' do
             it 'returns true' do
-              expect(Cases::FOIPolicy).not_to receive(:new)
+              expect(Case::FOIPolicy).not_to receive(:new)
               config.user_roles.manager.states.unassigned.add_message_to_case.delete_field(:if)
               expect(machine.can_trigger_event?(
                                                 event_name: :add_message_to_case,
@@ -185,7 +185,7 @@ module ConfigurableStateMachine
         context 'event cannot be triggered' do
           context 'not triggered as a result of a predicate returning false' do
             it 'returns  false' do
-              expect(Cases::FOIPolicy).to receive(:new).with(user: @manager, kase: @unassigned_case).and_return(@policy)
+              expect(Case::FOIPolicy).to receive(:new).with(user: @manager, kase: @unassigned_case).and_return(@policy)
               expect(@policy).to receive(:can_add_message_to_case?).and_return(false)
               machine = Machine.new(config: config, kase: @unassigned_case)
               expect(machine.can_trigger_event?(
@@ -425,6 +425,14 @@ module ConfigurableStateMachine
             expect {
               machine.link_a_case!({acting_user: @manager, acting_team: @managing_team, linked_case_id: 33})
             }.to raise_error InvalidEventError, %(Invalid Event: 'link_a_case': case_id: #{kase.id}, user_id: #{@manager.id})
+          end
+        end
+
+        context 'no event for this state' do
+          it 'raises InvalidEventError' do
+            expect {
+              machine.non_existent_event!({acting_user: @manager, acting_team: @managing_team, linked_case_id: 33})
+            }.to raise_error InvalidEventError, %(Invalid Event: 'non_existent_event': case_id: #{kase.id}, user_id: #{@manager.id})
           end
         end
       end

@@ -28,7 +28,7 @@ module ConfigurableStateMachine
                     states: {
                       unassigned: {
                         add_message_to_case: {
-                          if: 'Cases::BasePolicy#can_add_message_to_case?',
+                          if: 'Case::FOIPolicy#can_add_message_to_case?',
                           transition_to: nil,
                           before_transition: nil,
                           after_transition: nil,
@@ -44,7 +44,7 @@ module ConfigurableStateMachine
                       },
                       drafting: {
                         edit_case: {
-                          if: 'Cases#BaseCase.editable?'
+                          if: 'Case::FOICase.editable?'
                         }
                       }
                     }
