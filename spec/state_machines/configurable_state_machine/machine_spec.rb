@@ -427,6 +427,14 @@ module ConfigurableStateMachine
             }.to raise_error InvalidEventError, %(Invalid Event: 'link_a_case': case_id: #{kase.id}, user_id: #{@manager.id})
           end
         end
+
+        context 'no event for this state' do
+          it 'raises InvalidEventError' do
+            expect {
+              machine.non_existent_event!({acting_user: @manager, acting_team: @managing_team, linked_case_id: 33})
+            }.to raise_error InvalidEventError, %(Invalid Event: 'non_existent_event': case_id: #{kase.id}, user_id: #{@manager.id})
+          end
+        end
       end
     end
 
