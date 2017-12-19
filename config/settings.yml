@@ -173,3 +173,11 @@ smoke_tests:
   username: 'no-reply-smoke-test@digital.justice.gov.uk'
   password: 'abcdefg'
   site_url: 'http://localhost:3000'
+
+enabled_features:
+  sars:
+    Local: true
+    Host-dev: false
+    Host-demo: false
+    Host-staging: false
+    Host-production: false
