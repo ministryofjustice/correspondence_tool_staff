@@ -99,7 +99,7 @@ describe 'FOI permittted events' do
           it 'should show permitted events' do
             k = create :case
             expect(k.current_state).to eq 'unassigned'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case]
+            expect(k.state_machine.permitted_events(responder.id)).to be_empty
           end
         end
 
