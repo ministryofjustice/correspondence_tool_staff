@@ -156,6 +156,7 @@ en:
     assign: Assign to this unit
     close_case: Close case
     next_page_assign: Next - Assign case
+    next_page_new: Continue
     confirm: Confirm
     feedback: Send feedback
     submit: Submit
@@ -234,6 +235,7 @@ en:
           Case::FOI::TimelinessReview: FOI - Internal review for timeliness
           Case::FOI::ComplianceReview: FOI - Internal review for compliance
           Case::FOI: FOI
+          Case::SAR: SAR
         linked_case_number: Case number
       feedback:
         comment: Help make this service better
@@ -415,7 +417,7 @@ en:
       case_updated: Case updated
     fixed_details:
       requester: Requester
-      email_address: Email address
+      email_address: Email ddress
       escalation_deadline: Escalation deadline
       external_deadline: Final deadline
       message: Full request
@@ -425,6 +427,9 @@ en:
       sub_heading: Create case
       received_date: Date received at MOJ
       received_date_copy: For example. 31 01 2017
+    create:
+      heading: Choose case type
+      sub_heading: Create case
     new_case_link:
       heading: 'Link case'
     new_response_upload:
