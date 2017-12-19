@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: report_types
+#
+#  id            :integer          not null, primary key
+#  abbr          :string           not null
+#  full_name     :string           not null
+#  class_name    :string           not null
+#  custom_report :boolean          default(FALSE)
+#  seq_id        :integer          not null
+#
+
 require 'rails_helper'
 
 RSpec.describe ReportType, type: :model do

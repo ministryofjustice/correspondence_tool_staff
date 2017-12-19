@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: report_types
+#
+#  id            :integer          not null, primary key
+#  abbr          :string           not null
+#  full_name     :string           not null
+#  class_name    :string           not null
+#  custom_report :boolean          default(FALSE)
+#  seq_id        :integer          not null
+#
+
 FactoryGirl.define do
   factory :report_type do
     sequence(:abbr) { |n| "R#{n}" }

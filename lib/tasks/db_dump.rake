@@ -26,30 +26,42 @@ namespace :db do
     desc 'makes a sql dump of the production database and copies to the local machine'
     task :prod, [:host] do |_task, args|
       require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_dumper')
-      DatabaseDumper.new('prod', args[:host]).run
+      DatabaseDumper.new('prod', args[:host], 'anon').run
     end
 
     desc 'makes an sql dump of the database on the demo environement to the local machine'
     task :demo, [:host] do |_task, args|
       require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_dumper')
-      DatabaseDumper.new('demo', args[:host]).run
+      DatabaseDumper.new('demo', args[:host], 'clear').run
     end
 
 
     desc 'makes an sql dump of the database on the staging environement to the local machine'
     task :staging, [:host] do |_task, args|
       require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_dumper')
-      DatabaseDumper.new('demo', args[:host]).run
+      DatabaseDumper.new('demo', args[:host], 'clear').run
     end
 
     desc 'makes an anonymised dump of the local database'
-    task :local, [:filename] => :environment do |_task, args|
+    task :local, [:filename, :anonymized] => :environment do |_task, args|require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_dumper')
+      require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_anonymizer')
       filename = args[:filename]
       raise "Must specify a filename" if filename.blank?
+      raise "Second argument must be 'anon' or 'clear', is: #{args[:anonymized]}" unless args[:anonymized].in?(%w( anon clear ))
       db_connection_url = ENV['DATABASE_URL'] || 'postgres://localhost/correspondence_platform_development'
-      ShellSpinner 'exporting unanonymised database data' do
-        system "pg_dump #{db_connection_url} --insert -f #{filename}"
+      if args[:anonymized] == 'anon'
+        ShellSpinner 'exporting unanonymised database data' do
+          system "pg_dump #{db_connection_url} #{DatabaseDumper.excluded_anonymised_tables} --insert -f #{filename}"
+        end
+        ShellSpinner 'adding anonymised tables' do
+          DatabaseAnonymizer.new(filename).run
+        end
+      else
+        ShellSpinner 'exporting unanonymised database data' do
+          system "pg_dump #{db_connection_url} --insert -f #{filename}"
+        end
       end
+
     end
   end
 
