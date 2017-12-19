@@ -91,13 +91,16 @@ module ConfigurableStateMachine
     # * :acting_user (this corresponds to the current_user)
     # * :acting_team
     #
+    #rubocop:disable Metrics/CyclomaticComplexity
     def trigger_event(event:, params:)
       raise ::ConfigurableStateMachine::ArgumentError.new(kase: @kase, event: event, params: params) if !params.key?(:acting_user) || !params.key?(:acting_team)
       role =  params[:acting_team].role
       user_role_config = @config.user_roles[role]
       raise InvalidEventError.new(kase: @kase, user: params[:acting_user], event: event) if user_role_config.nil?
       state_config = user_role_config.states[@kase.current_state]
-      raise InvalidEventError.new(kase: @kase, user: params[:acting_user], event: event) if state_config.nil?
+      if state_config.nil? || !state_config.to_hash.keys.include?(event)
+        raise InvalidEventError.new(kase: @kase, user: params[:acting_user], event: event) if state_config.nil?
+      end
       event_config = state_config[event]
       if can_trigger_event?(event_name: event, metadata: params)
         ActiveRecord::Base.transaction do
@@ -110,6 +113,7 @@ module ConfigurableStateMachine
         raise InvalidEventError.new(kase: @kase, user: params[:acting_user],  event: event)
       end
     end
+    #rubocop:enable Metrics/CyclomaticComplexity
 
 
     def extract_roles_from_metadata(metadata)
