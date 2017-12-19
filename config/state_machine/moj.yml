@@ -4,6 +4,7 @@ preamble:
 
   permitted_case_types:
     foi: Freedom of information request
+    sar: Subject Access Request
 #    osar: Offender subject access request
 #    nosar: Non-offender subject access request
 
@@ -54,7 +55,124 @@ case_types:
                 add_message_to_case:
                 flag_for_clearance:
 
+
+#########################################################################
+#                                                                       #
+#                               SAR                                     #
+#                                                                       #
+#########################################################################
+  sar:
+    name: Freedom of Information Request
+    permitted_workflows:
+      - standard
+
+    permitted_user_roles:
+      - manager
+      - responder
+
+    permitted_states:
+      - unassigned
+      - awaiting_responder
+      - drafting
+      - awaiting_dispatch
+      - responded
+      - closed
+
+    workflows:
+      standard:
+        initial_state: unassigned
+        user_roles:
+
+        ########################### SAR :: STANDARD WORKFLOW :: MANAGER ########################
+          manager:
+            states:
+              unassigned:
+                add_message_to_case:
+                assign_responder:
+                  transition_to: awaiting_responder
+                destroy_case:
+                edit_case:
+                link_a_case:
+
+              awaiting_responder:
+                add_message_to_case:
+                assign_to_new_team:
+                destroy_case:
+                edit_case:
+                flag_for_clearance:
+                link_a_case:
+
+              drafting:
+                add_message_to_case:
+                assign_to_new_team:
+                destroy_case:
+                edit_case:
+                link_a_case:
+
+              awaiting_dispatch:
+                add_message_to_case:
+                destroy_case:
+                edit_case:
+                link_a_case:
+
+              responded:
+                add_message_to_case:
+                close:
+                  transition_to: closed
+                destroy_case:
+                edit_case:
+                link_a_case:
+
+              closed:
+                destroy_case:
+                edit_case:
+                link_a_case:
+
+          ########################### SAR :: STANDARD WORKFLOW :: RESPONDER ########################
           responder:
             states:
               unassigned:
                 add_message_to_case:
+                  if: Predicates#responder_is_member_of_assigned_team?
+              awaiting_responder:
+                accept_responder_assignment:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                  transition_to: drafting
+                add_message_to_case:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                link_a_case:
+                reject_responder_assignment:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                  transition_to: unassigned
+
+              drafting:
+                add_message_to_case:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                add_responses:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                  transition_to: awaiting_dispatch
+                link_a_case:
+                reassign_user:
+                  if: Predicates#responder_is_member_of_assigned_team?
+
+              awaiting_dispatch:
+                add_message_to_case:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                add_responses:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                link_a_case:
+                remove_last_response:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                remove_response:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                respond:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                  transition_to: responded
+
+              responded:
+                link_a_case:
+
+
+
+
+

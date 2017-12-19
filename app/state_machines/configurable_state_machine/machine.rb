@@ -93,6 +93,7 @@ module ConfigurableStateMachine
     #
     #rubocop:disable Metrics/CyclomaticComplexity
     def trigger_event(event:, params:)
+      event = event.to_sym
       raise ::ConfigurableStateMachine::ArgumentError.new(kase: @kase, event: event, params: params) if !params.key?(:acting_user) || !params.key?(:acting_team)
       role =  params[:acting_team].role
       user_role_config = @config.user_roles[role]
@@ -188,7 +189,7 @@ module ConfigurableStateMachine
         target_user_id: params[:target_user]&.id,
         target_team_id: params[:target_team]&.id,
       }
-      %i{ acting_user acting_team target_user target_team }.each do |key|
+      %i{ acting_user acting_team target_user target_team num_attachments }.each do |key|
         params.delete(key)
       end
       @kase.transitions.create!(attrs.merge(params))

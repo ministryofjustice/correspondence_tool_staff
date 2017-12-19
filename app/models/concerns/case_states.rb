@@ -19,8 +19,13 @@ module CaseStates
   end
 
   def instantiate_configurable_state_machine
+    case_type = if self.is_a?(Case::FOI)
+                  'foi'
+                else
+                  'sar'
+                end
     @state_machine = ConfigurableStateMachine::Manager.instance.state_machine(org: 'moj',
-                                                                              case_type: 'foi',
+                                                                              case_type: case_type,
                                                                               workflow: workflow.nil? ? 'standard' : workflow,
                                                                               kase: self)
   end
@@ -43,21 +48,21 @@ module CaseStates
   def responder_assignment_rejected(current_user,
                                     responding_team,
                                     message)
-    state_machine.reject_responder_assignment! current_user,
-                                               responding_team,
-                                               message
+    state_machine.reject_responder_assignment! acting_user: current_user,
+                                               acting_team: responding_team,
+                                               message: message
   end
 
   def responder_assignment_accepted(current_user, responding_team)
-    state_machine.accept_responder_assignment!(current_user, responding_team)
+    state_machine.accept_responder_assignment!(acting_user: current_user, acting_team: responding_team)
   end
 
   def remove_response(current_user, attachment)
     attachment.destroy!
-    state_machine.remove_response! current_user,
-                                   responding_team,
-                                   attachment.filename,
-                                   self.reload.attachments.size
+    state_machine.remove_response! acting_user: current_user,
+                                   acting_team: responding_team,
+                                   filenames: attachment.filename,
+                                   num_attachments: self.reload.attachments.size
   end
 
   def response_attachments
@@ -66,7 +71,7 @@ module CaseStates
 
   def respond(current_user)
     ActiveRecord::Base.transaction do
-      state_machine.respond!(current_user)
+      state_machine.respond!(acting_user: current_user, acting_team: self.responding_team)
 
       # pre-populate the date_responded field with the date the user
       # marked the case as sent
@@ -76,19 +81,24 @@ module CaseStates
   end
 
   def close(current_user)
-    state_machine.close!(current_user)
+    state_machine.close!(acting_user: current_user, acting_team: managing_team)
   end
 
   private
 
   def state_machine_of_wrong_type?
+    return false unless self.is_a?(Case::FOI)
     (current_state.in?(STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE) && !@state_machine.configurable?) ||
       (!current_state.in?(STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE) && @state_machine.configurable?)
 
   end
 
   def state_requires_configurable_state_machine?
-    current_state.in?(STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE)
+    if self.is_a?(Case::FOI)
+      current_state.in?(STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE)
+    else
+      true
+    end
   end
 
   def reset_state_machine

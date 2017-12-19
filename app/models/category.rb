@@ -27,4 +27,8 @@ class Category < ApplicationRecord
   def self.gq
     find_by!(abbreviation: 'GQ')
   end
+
+  def self.sar
+    find_by!(abbreviation: 'SAR')
+  end
 end

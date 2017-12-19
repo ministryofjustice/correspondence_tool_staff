@@ -335,17 +335,18 @@ class Case::FOIStateMachine
              event:             :reassign_user
   end
 
-  def accept_responder_assignment!(user, responding_team)
+  def accept_responder_assignment!(acting_user:, acting_team:)
     trigger! :accept_responder_assignment,
-             acting_team_id:     responding_team.id,
-             acting_user_id:     user.id,
+             acting_team_id:     acting_team.id,
+             acting_user_id:     acting_user.id,
              event:              :accept_responder_assignment
   end
 
-  def add_responses!(user, filenames)
+  def add_responses!(acting_user:, acting_team: nil, filenames:)
+    team = acting_team || object.responding_team
     trigger! :add_responses,
-             acting_team_id:     object.responding_team.id,
-             acting_user_id:     user.id,
+             acting_team_id:     team.id,
+             acting_user_id:     acting_user.id,
              filenames:          filenames,
              message:            object.upload_comment,
              event:              :add_responses
@@ -382,11 +383,11 @@ class Case::FOIStateMachine
              event:             :destroy_case
   end
 
-  def assign_to_new_team!(user, managing_team, new_team)
+  def assign_to_new_team!(acting_user:, acting_team:, target_team:)
     trigger! :assign_to_new_team,
-             acting_team_id:    managing_team.id,
-             target_team_id:    new_team.id,
-             acting_user_id:    user.id,
+             acting_team_id:    acting_team.id,
+             target_team_id:    target_team.id,
+             acting_user_id:    acting_user.id,
              event:             :assign_to_new_team
   end
 
@@ -471,34 +472,34 @@ class Case::FOIStateMachine
     notify_responder(object, 'Redraft requested')
   end
 
-  def remove_response!(user, responding_team, filename, num_attachments)
+  def remove_response!(acting_user:, acting_team:, filenames:, num_attachments:)
     event = num_attachments == 0 ? :remove_last_response : :remove_response
     trigger event,
-            acting_team_id:         responding_team.id,
-            acting_user_id:         user.id,
-            filenames:              filename,
+            acting_team_id:         acting_team.id,
+            acting_user_id:         acting_user.id,
+            filenames:              filenames,
             event:                  event
   end
 
-  def reject_responder_assignment!(responder, responding_team, message)
+  def reject_responder_assignment!(acting_user:, acting_team:, message:)
     trigger! :reject_responder_assignment,
-             acting_team_id:      responding_team.id,
-             acting_user_id:      responder.id,
+             acting_team_id:      acting_team.id,
+             acting_user_id:      acting_user.id,
              message:             message,
              event:               :reject_responder_assignment
   end
 
-  def respond!(user)
+  def respond!(acting_user:, acting_team:)
     trigger! :respond,
-             acting_team_id: object.responding_team.id,
-             acting_user_id: user.id,
+             acting_team_id: acting_team.id,
+             acting_user_id: acting_user.id,
              event:          :respond
   end
 
-  def close!(user)
+  def close!(acting_user:, acting_team:)
     trigger! :close,
-             acting_team_id: object.managing_team.id,
-             acting_user_id: user.id,
+             acting_team_id: acting_team.id,
+             acting_user_id: acting_user.id,
              event:          :close
   end
 

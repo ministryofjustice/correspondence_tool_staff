@@ -30,6 +30,15 @@ FactoryGirl.define do
       external_time_limit 15
     end
 
+    trait :sar do
+      name 'Subject Access Request'
+      abbreviation 'SAR'
+      escalation_time_limit 3
+      internal_time_limit 10
+      external_time_limit 20
+    end
+
+
     initialize_with { Category.find_or_create_by(name: name) }
   end
 end

@@ -26,6 +26,7 @@ class DatabaseAnonymizer
                              insert_stmt_for_case_transition(object)
                            else
                              raise "Unexpected object #{object.class}"
+
                            end
         fp.puts insert_statement
       end

@@ -76,7 +76,7 @@ module CTS::Cases
                       else
                         0.business_days.after(4.business_days.ago)
                       end
-      Case::FOI.new(
+      Case::Base.new(
         name:            name,
         email:           options.fetch(:email, Faker::Internet.email(name)),
         category:        foi,
@@ -208,8 +208,8 @@ module CTS::Cases
         ResponseUploaderService
           .new(kase, responder, BypassParamsManager.new({}), nil)
           .seed!('spec/fixtures/eon.pdf')
-        kase.state_machine.add_responses!(responder,
-                                          kase.attachments)
+        kase.state_machine.add_responses!(acting_user: responder,
+                                          filenames: kase.attachments)
       end
     end
 

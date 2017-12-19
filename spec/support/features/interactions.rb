@@ -13,6 +13,12 @@ module Features
       kase
     end
 
+    def assign_unassigned_case(user:, responding_team:)
+      login_step user: user
+      assign_case_step business_unit: responding_team
+      logout_step
+    end
+
     def take_case_on(kase:,
                      user:,
                      do_login: true,
