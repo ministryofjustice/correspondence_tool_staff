@@ -13,7 +13,8 @@ class CaseFlagForClearanceService
     return @result unless validate_case_is_unflagged
 
     if @team.dacu_disclosure?
-      assign_approver acting_user: @user, acting_team: @team,
+      assign_approver acting_user: @user,
+                      acting_team: @dts.managing_team,
                       target_team: @team
 
     elsif @team.press_office? || @team.private_office?
@@ -39,9 +40,10 @@ class CaseFlagForClearanceService
   end
 
   def assign_approver(acting_user:, acting_team:, target_team:)
-    @case.state_machine.flag_for_clearance! acting_user,
-                                            acting_team,
-                                            target_team
+    @case.state_machine.flag_for_clearance! acting_user: acting_user,
+                                            acting_team: acting_team,
+                                            target_team: target_team
+
     @case.approving_teams << target_team
   end
 

@@ -3,9 +3,12 @@ module Cases
   class BasePolicy < ApplicationPolicy
     attr_accessor :user, :case
 
-    def initialize(user, kase)
-      @user = user
-      @case = kase
+
+    # accepts either user and case for legacy style, or named parameters :user and  :case
+    def initialize(user_obj = nil, kase_obj = nil, user: nil, kase: nil)
+      @user = user_obj || user
+      @case = kase_obj || kase
+      raise "Missing param" if @user.nil? || @case.nil?
     end
 
 

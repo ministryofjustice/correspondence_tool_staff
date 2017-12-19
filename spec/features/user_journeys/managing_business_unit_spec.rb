@@ -12,9 +12,10 @@
 
 require 'rails_helper'
 
-include CaseDateManipulation
+
 
 feature "Viewing Business Groups/Directorate/Business Units" do
+  include CaseDateManipulation
   given(:manager)         { create :manager }
   given(:responder)       { create :responder }
   given(:business_unit )  { responder.teams.first }

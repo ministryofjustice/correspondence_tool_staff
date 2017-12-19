@@ -22,8 +22,18 @@ RSpec.describe Case::FOI::TimelinessReview, type: :model, parent: :case do
   end
 
   describe 'state_machining' do
-    it 'has a state machine' do
-      expect(time_review.state_machine).to be_a Cases::FOIStateMachine
+    context 'drafting state' do
+      it 'has an FOI state machine' do
+        allow(time_review).to receive(:current_state).and_return('drafting')
+        expect(time_review.state_machine).to be_a Cases::FOIStateMachine
+      end
+    end
+
+    context 'unassigned state' do
+      it 'has a Configurable State machine' do
+        allow(time_review).to receive(:current_state).and_return('unassigned')
+        expect(time_review.state_machine).to be_a ConfigurableStateMachine::Machine
+      end
     end
   end
   describe 'type' do

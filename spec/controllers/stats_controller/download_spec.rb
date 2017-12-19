@@ -9,6 +9,8 @@ RSpec.describe StatsController, type: :controller do
     ReportTypeSeeder.new.seed!
   end
 
+  after(:all) { ReportType.delete_all }
+
   describe '#download' do
     before do
       sign_in manager
