@@ -1,4 +1,4 @@
-class Case::SARdecorator < CaseDecorator
+class Case::SARDecorator < CaseDecorator
 
   def pretty_type
     'SAR'
