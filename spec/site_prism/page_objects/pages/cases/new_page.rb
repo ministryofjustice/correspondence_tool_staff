@@ -53,7 +53,7 @@ module PageObjects
         end
 
         def fill_in_case_details(params={})
-          type = params.delete(:type) || 'case'
+          type = params.delete(:type) || 'casefoi'
           kase = FactoryGirl.build :case, params
 
           set_received_date(kase.received_date)

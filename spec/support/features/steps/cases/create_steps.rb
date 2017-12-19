@@ -1,9 +1,9 @@
-def create_case_step(type: 'case',
+def create_case_step(type: 'casefoi',
                      delivery_method: :sent_by_email,
                      uploaded_request_files: [],
                      flag_for_disclosure: false)
 
-  # Assume we are on a cases listing page
+  # Assume we are on a case listing page
   expect(cases_page).to have_new_case_button
   cases_page.new_case_button.click
 

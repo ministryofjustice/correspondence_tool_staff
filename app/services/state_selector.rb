@@ -7,7 +7,7 @@ class StateSelector
   attr_reader   :available_states
 
   def initialize(params)
-    @available_states = Cases::FOIStateMachine.states.map(&:to_sym) - [:closed]
+    @available_states = Case::FOIStateMachine.states.map(&:to_sym) - [:closed]
     @selected_states = []
     if params[:state_selector]
       set_states_from_form_input(params)

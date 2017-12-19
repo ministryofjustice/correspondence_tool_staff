@@ -1,2 +1,2 @@
-class Case::FOI::ComplianceReviewPolicy < Case::FOI::InternalReviewPolicy
+class Case::FOI::ComplianceReviewPolicy < Case::FOIPolicy
 end
