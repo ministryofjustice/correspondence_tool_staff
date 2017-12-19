@@ -16,6 +16,11 @@ namespace :db do
     Rake::Task['db:seed:dev:users'].invoke
   end
 
+
+  task :anon => :environment do
+    Anonymizer.new.run
+  end
+
   def clear_database
     conn = ActiveRecord::Base.connection
     tables = conn.tables

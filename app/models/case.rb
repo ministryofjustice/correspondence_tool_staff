@@ -22,7 +22,7 @@
 #  last_transitioned_at :datetime
 #  delivery_method      :enum
 #  workflow             :string
-#  deleted?             :boolean          default(FALSE)
+#  deleted              :boolean          default(FALSE)
 #  info_held_status_id  :integer
 #  type                 :string           default("Case")
 #  appeal_outcome_id    :integer
@@ -32,7 +32,7 @@
 class Case < ApplicationRecord
   include Statesman::Adapters::ActiveRecordQueries
 
-  default_scope { where( deleted?: false) }
+  default_scope { where( deleted: false) }
 
   has_paper_trail only: %i{ name email received_date subject postal_address requester_type }
 
