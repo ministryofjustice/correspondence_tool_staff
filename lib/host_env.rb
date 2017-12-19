@@ -17,6 +17,15 @@ class HostEnv
   end
 
 
+  def self.host_env
+    if ENV['ENV'].nil? && ( Rails.env.development? || Rails.env.test? )
+      'Local'
+    else
+      "Host-#{ENV['ENV']}"
+    end
+  end
+
+
   def self.safe?
     Rails.env.development? || Rails.env.test? || HostEnv.staging? || HostEnv.dev? || HostEnv.demo?
   end
