@@ -1,11 +1,10 @@
 module CaseDateManipulation
 
-  def set_case_dates_back_by(kase, period_in_past)
-    kase.received_date = kase.received_date - period_in_past
-    kase.external_deadline = kase.external_deadline - period_in_past
-    kase.internal_deadline = kase.internal_deadline - period_in_past
-    kase.escalation_deadline = kase.escalation_deadline - period_in_past
-    kase.save!
+  def set_case_dates_back_by(kase, days_back)
+    kase.update! received_date:       days_back.before(kase.received_date),
+                 external_deadline:   days_back.before(kase.external_deadline),
+                 internal_deadline:   days_back.before(kase.internal_deadline),
+                 escalation_deadline: days_back.before(kase.escalation_deadline)
     kase
   end
 
