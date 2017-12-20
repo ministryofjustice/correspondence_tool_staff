@@ -29,6 +29,7 @@ module PageObjects
         cases_remove_clearance_form:    'Cases::RemoveClearanceFormPage',
         cases_respond:                  'Cases::RespondPage',
         cases_search:                   'Cases::SearchPage',
+        cases_select_type:               'Cases::SelectTypePage',
         cases_show:                     'Cases::ShowPage',
         closed_cases:                   'Cases::ClosedCasesPage',
         confirm_destroy:                'Cases::ConfirmDestroyPage',

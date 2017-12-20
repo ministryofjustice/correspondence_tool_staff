@@ -427,7 +427,7 @@ en:
       sub_heading: Create case
       received_date: Date received at MOJ
       received_date_copy: For example. 31 01 2017
-    create:
+    select_type:
       heading: Choose case type
       sub_heading: Create case
     new_case_link:
