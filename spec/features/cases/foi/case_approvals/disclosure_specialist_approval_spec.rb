@@ -149,7 +149,7 @@ feature 'cases requiring clearance by disclosure specialist' do
   end
 
   scenario 'approving a case as a disclosure specialist', js: true do
-    kase = create_flagged_case_and_assign_to_team(7.days)
+    kase = create_flagged_case_and_assign_to_team(8.days)
     accept_case_as_kilo(kase)
     upload_response_as_kilo(kase.reload, responder)
     login_as disclosure_specialist
@@ -167,7 +167,7 @@ feature 'cases requiring clearance by disclosure specialist' do
   end
 
   scenario 'approving a case as a disclosure specialist not assigned directly to the case', js: true do
-    kase = create_flagged_case_and_assign_to_team(7.days)
+    kase = create_flagged_case_and_assign_to_team(8.days)
     accept_case_as_kilo(kase)
     upload_response_as_kilo(kase.reload, responder)
 
@@ -186,7 +186,7 @@ feature 'cases requiring clearance by disclosure specialist' do
   end
 
   scenario 'upload a response and approve case as a disclosure specialist', js: true do
-    kase = create_flagged_case_and_assign_to_team(7.days)
+    kase = create_flagged_case_and_assign_to_team(8.days)
     accept_case_as_kilo(kase)
     upload_response_as_kilo(kase.reload, responder)
 
@@ -211,7 +211,7 @@ feature 'cases requiring clearance by disclosure specialist' do
   end
 
   scenario 'upload a response and remove clearance as a disclosure specialist', js: true do
-    kase = create_flagged_case_and_assign_to_team(7.days)
+    kase = create_flagged_case_and_assign_to_team(8.days)
     accept_case_as_kilo(kase)
 
     upload_response_as_kilo(kase.reload, responder)
