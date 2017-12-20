@@ -13,6 +13,8 @@ feature 'cases requiring clearance by disclosure specialist' do
   given(:responder)                   { responding_team.users.first }
 
   def create_case(flag_for_clearance: false)
+    expect(cases_select_type_page).to be_displayed
+    cases_select_type_page.fill_in_case_type('casefoi')
     expect(cases_new_page).to be_displayed
     cases_new_page.fill_in_case_details
     cases_new_page.choose_flag_for_disclosure_specialists(

@@ -204,6 +204,7 @@ Rails.application.routes.draw do
     patch :request_further_clearance, on: :member
     get :new_case_link, on: :member
     post :execute_new_case_link, on: :member
+    get :select_type, on: :new
 
     resources :assignments, except: :create  do
       patch 'accept_or_reject', on: :member

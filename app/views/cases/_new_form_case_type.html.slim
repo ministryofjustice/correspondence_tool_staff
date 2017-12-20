@@ -1,7 +1,7 @@
-- if params[:case][:type] == 'Case::FOI'
-  = f.radio_button_fieldset :type,
+/ - if params[:case][:type] == 'Case::FOI'
+= f.radio_button_fieldset :type,
             choices: [Case::FOI,
                       Case::FOI::TimelinessReview,
                       Case::FOI::ComplianceReview]
-- else
-  = f.hidden_field :type
+/ - else
+/   = f.hidden_field :type
