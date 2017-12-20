@@ -68,7 +68,7 @@ feature 'cases requiring clearance by disclosure specialist' do
     expect(kase.reload.approving_teams).to include team_dacu_disclosure
   end
 
-  def create_flagged_case_and_assign_to_team(period_in_past = nil)
+  def create_flagged_case_and_assign_to_team(days_back)
     login_as manager
     cases_page.load
     cases_page.new_case_button.click
@@ -79,7 +79,7 @@ feature 'cases requiring clearance by disclosure specialist' do
     login_as manager
 
     kase = Case.last
-    set_case_dates_back_by(kase, period_in_past) unless period_in_past.nil?
+    set_case_dates_back_by(kase, days_back)
   end
 
   def accept_case_as_kilo(kase)
@@ -121,13 +121,13 @@ feature 'cases requiring clearance by disclosure specialist' do
   end
 
   scenario 'taking_on, undoing and de-escalating a case as a disclosure specialist', js: true do
-   kase = create_flagged_case_and_assign_to_team(6.days)
+    kase = create_flagged_case_and_assign_to_team(3.business_days)
 
-   login_as disclosure_specialist
+    login_as disclosure_specialist
 
-   case_list_item = take_case_on_as_discosure_specialist(
-    kase: kase,
-    expected_approver: disclosure_specialist
+    case_list_item = take_case_on_as_discosure_specialist(
+      kase: kase,
+      expected_approver: disclosure_specialist
     )
     undo_take_case_on_as_disclosure_specialist(kase, case_list_item)
     de_escalate_case_as_disclosure_specialist(kase, case_list_item)
@@ -135,7 +135,7 @@ feature 'cases requiring clearance by disclosure specialist' do
   end
 
   scenario 'taking_on, undoing and de-escalating a case as a disclosure specialist', js: true do
-    kase = create_flagged_case_and_assign_to_team(6.days)
+    kase = create_flagged_case_and_assign_to_team(3.business_days)
 
     login_as disclosure_specialist
 
@@ -149,7 +149,7 @@ feature 'cases requiring clearance by disclosure specialist' do
   end
 
   scenario 'approving a case as a disclosure specialist', js: true do
-    kase = create_flagged_case_and_assign_to_team(7.days)
+    kase = create_flagged_case_and_assign_to_team(5.business_days)
     accept_case_as_kilo(kase)
     upload_response_as_kilo(kase.reload, responder)
     login_as disclosure_specialist
@@ -167,7 +167,7 @@ feature 'cases requiring clearance by disclosure specialist' do
   end
 
   scenario 'approving a case as a disclosure specialist not assigned directly to the case', js: true do
-    kase = create_flagged_case_and_assign_to_team(7.days)
+    kase = create_flagged_case_and_assign_to_team(5.business_days)
     accept_case_as_kilo(kase)
     upload_response_as_kilo(kase.reload, responder)
 
@@ -186,7 +186,7 @@ feature 'cases requiring clearance by disclosure specialist' do
   end
 
   scenario 'upload a response and approve case as a disclosure specialist', js: true do
-    kase = create_flagged_case_and_assign_to_team(7.days)
+    kase = create_flagged_case_and_assign_to_team(5.business_days)
     accept_case_as_kilo(kase)
     upload_response_as_kilo(kase.reload, responder)
 
@@ -211,7 +211,7 @@ feature 'cases requiring clearance by disclosure specialist' do
   end
 
   scenario 'upload a response and remove clearance as a disclosure specialist', js: true do
-    kase = create_flagged_case_and_assign_to_team(7.days)
+    kase = create_flagged_case_and_assign_to_team(5.business_days)
     accept_case_as_kilo(kase)
 
     upload_response_as_kilo(kase.reload, responder)
