@@ -2,7 +2,6 @@ namespace :db do
 
   desc 'Erase all tables'
   task :clear => :environment do
-    require File.join(Rails.root, 'lib', 'rake_task_helpers', 'host_env')
     HostEnv.safe do
       clear_database
     end

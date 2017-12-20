@@ -1,5 +1,4 @@
 require 'csv'
-require File.join(Rails.root, 'lib', 'rake_task_helpers', 'host_env')
 
 class UserSeeder
 
