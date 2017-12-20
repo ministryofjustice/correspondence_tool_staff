@@ -109,12 +109,18 @@ class CasesController < ApplicationController
     redirect_to redirect_url
   end
 
+  def select_type
+    @case = Case.new
+  end
+
   def new
+    @type = params[:case][:type]
+
     authorize Case.new(category: Category.foi), :can_add_case?
 
     @case = Case.new
     @s3_direct_post = s3_uploader_for(@case, 'requests')
-    render :create
+    render :new
   end
 
   def create
