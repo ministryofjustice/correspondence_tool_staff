@@ -31,7 +31,7 @@ feature 'FOI case that does not require clearance' do
   end
 
   scenario 'end-to-end journey', js: true do
-    kase = create_and_assign_case type: Case,
+    kase = create_and_assign_case type: Case::FOI,
                                   user: manager,
                                   responding_team: responding_team
 

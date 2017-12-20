@@ -62,7 +62,7 @@ en:
   pundit:
     assignment_policy:
       can_assign_to_new_team?: You are not authorised to assign this case to another team
-    case_policy:
+    case_policy: &case_policy
       can_add_attachment?: 'You are not authorised to upload attachments to this case.'
       can_add_case?: 'You are not authorised to create new cases.'
       can_accept_or_reject_case?: 'You are not authorised to view to this assignment.'
@@ -76,6 +76,12 @@ en:
       delete?: You are not authorised to delete this case.
       new_case_link?: You are not authorise to link other cases to this case.
       can_unflag_for_clearance?: 'You are not authorised to remove clearance from this case'
+    case/foi_policy:
+      <<: *case_policy
+    case/foi/compliance_review_policy:
+      <<: *case_policy
+    case/foi/timeliness_review_policy:
+      <<: *case_policy
     team_policy:
       index?: 'You are not authorised to view a list of teams'
       show?: 'You are not authorised to view this team'
@@ -227,7 +233,7 @@ en:
         type:
           Case::FOI::TimelinessReview: FOI - Internal review for timeliness
           Case::FOI::ComplianceReview: FOI - Internal review for compliance
-          Case: FOI
+          Case::FOI: FOI
         linked_case_number: Case number
       feedback:
         comment: Help make this service better

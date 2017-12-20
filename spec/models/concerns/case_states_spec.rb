@@ -14,7 +14,7 @@ RSpec.describe Case, type: :model do
     describe '#state_machine' do
       it 'defaults to the Cases::FOIStateMachine when no workflow is specified' do
         expect(kase.state_machine)
-          .to be_an_instance_of(Cases::FOIStateMachine)
+          .to be_an_instance_of(Case::FOIStateMachine)
       end
 
       context 'workflow is not valid' do
@@ -23,7 +23,7 @@ RSpec.describe Case, type: :model do
         it 'raises an error when an nonexistant workflow is specified' do
           expect {
             kase.state_machine
-          }.to raise_error(NameError, /uninitialized constant Cases::FOI.*/)
+          }.to raise_error(NameError, /uninitialized constant Case::FOI.*/)
         end
       end
     end

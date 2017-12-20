@@ -23,12 +23,14 @@ end
 
 
 def event(event_name)
-  Cases::FOIStateMachine.events[event_name]
+  Case::FOIStateMachine.events[event_name]
 end
 
 
-RSpec.describe Cases::FOIStateMachine, type: :model do
-  let(:kase)               { create :case }
+RSpec.describe Case::FOIStateMachine, type: :model do
+  let(:kase)               {
+    create :case
+  }
   let(:state_machine) do
     described_class.new(
       kase,
@@ -106,7 +108,8 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
   events :assign_responder do
     it { should transition_from(:unassigned)
                   .to(:awaiting_responder)
-                  .checking_policy(:can_assign_case?) }
+                  .checking_policy(:can_assign_case?)
+    }
   end
 
   events :flag_for_clearance do
@@ -421,7 +424,7 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
 
   describe 'trigger a reassign_user' do
 
-    describe 'unflagged cases' do
+    describe 'unflagged case' do
       let(:kase) { case_being_drafted }
 
       it 'triggers a reassign_user'do
@@ -456,7 +459,7 @@ RSpec.describe Cases::FOIStateMachine, type: :model do
       end
     end
 
-    describe 'flagged cases' do
+    describe 'flagged case' do
       let(:kase) { flagged_accepted_case }
       it 'triggers a reassign_user'do
         expect {
