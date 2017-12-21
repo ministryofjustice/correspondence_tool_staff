@@ -18,4 +18,8 @@ class ReportType < ApplicationRecord
   def class_constant
     class_name.constantize
   end
+
+  def filename
+    "#{class_name.to_s.underscore.sub('stats/', '')}.csv"
+  end
 end
