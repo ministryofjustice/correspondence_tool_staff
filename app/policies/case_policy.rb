@@ -6,6 +6,7 @@ class CasePolicy < ApplicationPolicy
   def initialize(user_obj = nil, kase_obj = nil, user: nil, kase: nil)
     @user = user_obj || user
     @case = kase_obj || kase
+    raise Pundit::NotAuthorizedError, "must be logged in" if @user.nil?
     raise "Missing param" if @user.nil? || @case.nil?
   end
 
