@@ -25,7 +25,7 @@ class DatabaseAnonymizer
                            elsif model.is_a?(CaseTransition)
                              insert_stmt_for_case_transition(model)
                            else
-                             raise "Unexpected model #{model.class.to_s}"
+                             raise "Unexpected model #{model.class}"
                            end
         fp.puts insert_statement
       end
