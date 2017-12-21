@@ -12,11 +12,13 @@ class StatsController < ApplicationController
     report_type = ReportType.find(params[:id])
 
     filename  = "#{report_type[:class_name].to_s.underscore.sub('stats/', '')}.csv"
+    report = Report.where(report_type_id: report_type.id).last
+    unless report.present?
+      report = Report.create report_type_id: report_type.id
+      report.run
+    end
 
-    report = report_type.class_name.constantize.new
-    report.run
-
-    send_data report.to_csv, filename: filename
+    send_data report.report_data, filename: filename
   end
 
   def custom
