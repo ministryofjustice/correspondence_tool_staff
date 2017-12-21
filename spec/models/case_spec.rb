@@ -338,7 +338,7 @@ RSpec.describe Case, type: :model do
   describe 'conditional validations of current state' do
     context 'new record' do
       it 'does not validate presence of current_state' do
-        kase = build :case
+        kase = build :case, current_state: nil
         expect(kase.current_state).to be_nil
         expect(kase.valid?).to be true
       end

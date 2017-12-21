@@ -49,6 +49,16 @@ class CaseTransition < ActiveRecord::Base
     kase.update!(current_state: self.to_state, last_transitioned_at: self.created_at)
   end
 
+  def self.next_sort_key(kase)
+    n = kase.transitions.order(sort_key: :desc).limit(1).pluck(:sort_key).singular_or_nil
+    n.nil? ? 10 : n + 10
+  end
+
+  def self.unset_most_recent(kase)
+    transition = kase.transitions.most_recent
+    transition.update!(most_recent: false) unless transition.nil?
+  end
+
   private
 
   def update_most_recent

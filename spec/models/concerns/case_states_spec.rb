@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Case, type: :model do
-  let(:kase) { create :case }
+  let(:kase) { create :assigned_case }
 
   describe 'case states' do
     let(:managing_team)   { create :managing_team }
@@ -12,13 +12,13 @@ RSpec.describe Case, type: :model do
     let(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
 
     describe '#state_machine' do
-      it 'defaults to the Cases::FOIStateMachine when no workflow is specified' do
+      it 'defaults to the Case::FOIStateMachine when no workflow is specified' do
         expect(kase.state_machine)
           .to be_an_instance_of(Case::FOIStateMachine)
       end
 
       context 'workflow is not valid' do
-        let(:kase) { create :case, workflow: 'Nonexistent' }
+        let(:kase) { create :assigned_case, workflow: 'Nonexistent' }
 
         it 'raises an error when an nonexistant workflow is specified' do
           expect {
@@ -202,7 +202,7 @@ RSpec.describe Case, type: :model do
 
     context 'initial state' do
       it 'is set to unassigned' do
-        kase = build(:case)
+        kase = build(:case, current_state: nil)
         expect(kase.current_state).to be_nil
         kase.save!
         expect(kase.current_state).to eq 'unassigned'
