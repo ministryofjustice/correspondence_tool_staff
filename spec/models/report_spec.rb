@@ -109,4 +109,20 @@ RSpec.describe Report, type: :model do
       expect(report.report_data).to eq 'report,data'
     end
   end
+
+  describe '#trim_older_reports' do
+    it 'removes reports of the same type' do
+      old_report = create :r003_report
+      report = create :r003_report
+      report.trim_older_reports
+      expect(Report.where(id: old_report.id)).to be_blank
+    end
+
+    it 'does not remove other reports' do
+      other_report = create :r004_report
+      report = create :r003_report
+      report.trim_older_reports
+      expect(Report.find(other_report.id)).to be_present
+    end
+  end
 end
