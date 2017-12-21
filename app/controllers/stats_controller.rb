@@ -11,14 +11,13 @@ class StatsController < ApplicationController
   def download
     report_type = ReportType.find(params[:id])
 
-    filename  = "#{report_type[:class_name].to_s.underscore.sub('stats/', '')}.csv"
     report = Report.where(report_type_id: report_type.id).last
     unless report.present?
       report = Report.create report_type_id: report_type.id
       report.run
     end
 
-    send_data report.report_data, filename: filename
+    send_data report.report_data, filename: report_type.filename
   end
 
   def custom
@@ -43,7 +42,7 @@ class StatsController < ApplicationController
 
   def download_custom_report
     report= Report.find(params[:id])
-    filename = "#{ report.report_type.class_name.to_s.underscore.sub('stats/', '')}.csv"
+    filename = report.report_type.filename
 
     send_data report.report_data, {filename: filename, disposition: :attachment}
   end
