@@ -12,9 +12,10 @@ class StatsController < ApplicationController
     report_type = ReportType.find(params[:id])
 
     report = Report.where(report_type_id: report_type.id).last
-    unless report.present?
+    if !report.present? || !report_is_current?(report)
       report = Report.create report_type_id: report_type.id
       report.run
+      report.trim_older_reports
     end
 
     send_data report.report_data, filename: report_type.filename
@@ -63,6 +64,39 @@ class StatsController < ApplicationController
       :period_start_dd, :period_start_mm, :period_start_yyyy,
       :period_end_dd, :period_end_mm, :period_end_yyyy,
       )
+  end
+
+  def report_is_current?(report)
+    job_config = get_job_config 'config/sidekiq-report-generator.yml',
+                                report.report_type.abbr
+    scheduled_time = job_previous_run_time(job_config)
+    report.created_at >= scheduled_time
+  rescue
+    false
+  end
+
+  def get_job_config(filename, report_type_abbr)
+    sidekiq_config = YAML.load_file(
+      Rails.root.join(filename)
+    )
+    if sidekiq_config.has_key?(Rails.env)
+      sidekiq_config = sidekiq_config[Rails.env]
+    end
+    sidekiq_config[:schedule].find do |_name, config|
+      config['args'] == [report_type_abbr]
+    end.last
+  end
+
+  def job_previous_run_time(job_config)
+    if job_config.has_key?('cron')
+      Rufus::Scheduler::CronLine
+        .new(job_config['cron'])
+        .previous_time.to_local_time
+    elsif job_config.has_key?('every')
+      Rufus::Scheduler
+        .parse(job_config['every'].first)
+        .seconds.ago
+    end
   end
 end
 

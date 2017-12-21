@@ -40,6 +40,12 @@ class Report < ApplicationRecord
             period_end: report_service.period_end
   end
 
+  def trim_older_reports
+    Report
+      .where('id < ? and report_type_id = ?', self.id, self.report_type_id)
+      .destroy_all
+  end
+
   private
 
   def period_within_acceptable_range?
