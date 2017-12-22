@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Case::FOI do
+describe Case::SAR do
 
   context 'validates that SAR-specific fields are blank' do
     it 'is not valid' do
