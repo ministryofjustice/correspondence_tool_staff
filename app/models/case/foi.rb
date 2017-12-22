@@ -1,5 +1,5 @@
 class Case::FOI < Case
 
-  validates absence_of(:subject_full_name, :subject_type, :third_party)
-
+  validates :subject_full_name, :subject_type, absence: true
+  validates :third_party, exclusion: { in: [true, false], message: 'must be blank' }
 end
