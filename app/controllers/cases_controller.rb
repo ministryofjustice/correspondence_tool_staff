@@ -114,7 +114,10 @@ class CasesController < ApplicationController
   end
 
   def new
-    @type = params[:case][:type]
+    if FeatureSet.sars.enabled?
+      @type = params[:case][:type]
+    end
+
 
     authorize Case.new(category: Category.foi), :can_add_case?
 
