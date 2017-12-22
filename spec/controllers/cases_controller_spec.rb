@@ -138,7 +138,7 @@ RSpec.describe CasesController, type: :controller do
 
     describe 'GET new' do
       before {
-        get :new
+        get :new, params: { case: { type: 'Case::FOI' } }
       }
 
       it 'renders the new template' do
@@ -231,7 +231,7 @@ RSpec.describe CasesController, type: :controller do
 
         describe 'GET new' do
           before {
-            get :new
+            get :new, params: { case: {type: 'Case::FOI'}}
           }
 
           it 'does not render the new template' do

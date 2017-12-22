@@ -9,7 +9,7 @@ def create_case_step(type: 'casefoi',
 
   expect(cases_select_type_page).to be_displayed
 
-  cases_select_type_page.fill_in_case_type('casefoi_content')
+  cases_select_type_page.fill_in_case_type('casefoi')
 
   expect(cases_new_page).to be_displayed
   cases_new_page.fill_in_case_details(
