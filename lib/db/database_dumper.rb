@@ -18,6 +18,7 @@ class DatabaseDumper
   end
 
   def run
+    check_is_necessary
     begin
       client_filename = dump_local_database
       compressed_file = compress_file(client_filename)
@@ -33,6 +34,14 @@ class DatabaseDumper
   end
 
   private
+
+  def check_is_necessary
+    puts 'Are you sure you need to do this data dump?'
+    puts 'Could you solve the issue with any other option such as...'
+    print "Please confirm that you wish to continue "
+    x = STDIN.gets.chomp
+    exit unless (x == 'y' || x == 'Y')
+  end
 
   def dump_local_database
     filename = "#{Time.now.strftime('%Y%m%d-%H%M%S')}_#{@env}_dump.sql"
