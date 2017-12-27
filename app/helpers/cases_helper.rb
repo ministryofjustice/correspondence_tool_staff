@@ -174,5 +174,4 @@ module CasesHelper
         content_tag(:div, kase.name, class: 'case-name-detail')
 
   end
-
 end
