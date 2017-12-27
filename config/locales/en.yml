@@ -417,7 +417,7 @@ en:
       case_updated: Case updated
     fixed_details:
       requester: Requester
-      email_address: Email ddress
+      email_address: Email address
       escalation_deadline: Escalation deadline
       external_deadline: Final deadline
       message: Full request
