@@ -36,21 +36,28 @@ class DatabaseDumper
   private
 
   def safeguard
-    puts 'Are you sure you need to do this data dump?'.yellow
+    puts 'Are you sure you need to do this data dump?'
     puts ''
-    puts 'Could you solve the issue with any other option such as:'
-    puts 'recreating the problem locally or on staging'
-    puts 'tracking the problemn through kibana'
-    puts 'using automated testing'
-    puts ''
+    question_user('is the issue covered with existing feature tests? ', 'no')
+    question_user('can you track problem through Kibana? ', 'no')
+    question_user('can you recreate the problem locally? ', 'no')
+    question_user('can you recreate the problem on staging with an anonymised dump? ', 'no')
     confirm_data_dump
     verify_password
   end
 
+  def question_user(query, expected_result)
+    response = Readline.readline(query)
+    unless expected_result.downcase.start_with? response.downcase.strip
+      puts "the task will now exit"
+      exit
+    end
+  end
+
   def confirm_data_dump
-    print "If you are certain that you need to make a dump of the database please confirm y/n ".yellow
+    print "If you are still certain that you need to make a dump of the database please confirm y/n "
     input = STDIN.gets.chomp
-    exit unless (input == 'y' || input == 'Y')
+    exit unless(input.downcase.start_with?('y'))
   end
 
   def verify_password
