@@ -37,7 +37,8 @@ class DatabaseDumper
 
   def check_is_necessary
     puts 'Are you sure you need to do this data dump?'
-    puts 'Could you solve the issue with any other option such as...'
+    puts 'Could you solve the issue with any other option such as:'
+    puts 'using dummy data'
     print "Please confirm that you wish to continue "
     x = STDIN.gets.chomp
     exit unless (x == 'y' || x == 'Y')
