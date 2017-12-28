@@ -18,7 +18,7 @@ class DatabaseDumper
   end
 
   def run
-    check_is_necessary
+    safeguard
     begin
       client_filename = dump_local_database
       compressed_file = compress_file(client_filename)
@@ -35,14 +35,25 @@ class DatabaseDumper
 
   private
 
-  def check_is_necessary
-    puts 'Are you sure you need to do this data dump?'
+  def safeguard
+    puts 'Are you sure you need to do this data dump?'.yellow
+    puts ''
     puts 'Could you solve the issue with any other option such as:'
-    puts 'recreating the problem locally'
+    puts 'recreating the problem locally or on staging'
     puts 'tracking the problemn through kibana'
-    print "If you are certain that you need to make a dump of the database please confirm y/n "
-    x = STDIN.gets.chomp
-    exit unless (x == 'y' || x == 'Y')
+    puts 'using automated testing'
+    puts ''
+    confirm_data_dump
+    verify_password
+  end
+
+  def confirm_data_dump
+    print "If you are certain that you need to make a dump of the database please confirm y/n ".yellow
+    input = STDIN.gets.chomp
+    exit unless (input == 'y' || input == 'Y')
+  end
+
+  def verify_password
     sudo_command = "sudo -v"
     result = system sudo_command
     exit unless result == true
