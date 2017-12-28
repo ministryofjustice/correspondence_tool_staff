@@ -38,10 +38,14 @@ class DatabaseDumper
   def check_is_necessary
     puts 'Are you sure you need to do this data dump?'
     puts 'Could you solve the issue with any other option such as:'
-    puts 'using dummy data'
-    print "Please confirm that you wish to continue "
+    puts 'recreating the problem locally'
+    puts 'tracking the problemn through kibana'
+    print "If you are certain that you need to make a dump of the database please confirm y/n "
     x = STDIN.gets.chomp
     exit unless (x == 'y' || x == 'Y')
+    sudo_command = "sudo -v"
+    result = system sudo_command
+    exit unless result == true
   end
 
   def dump_local_database
