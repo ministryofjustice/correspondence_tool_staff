@@ -46,7 +46,7 @@ describe 'cases/linked_cases.html.slim', type: :view do
 
       main_case.linked_cases.each_with_index do | linked_case, index|
         row = partial.linked_records[index]
-        expect(row.link).to have_link("Link to case #{ linked_case.number}", href: case_path(linked_case.id))
+        expect(row.link).to have_link("Link to case #{linked_case.number}", href: case_path(linked_case.id))
         expect(row.case_type.text).to eq 'FOI '
         expect(row.request.text)
             .to eq "#{ linked_case.subject } #{ linked_case.name }"
