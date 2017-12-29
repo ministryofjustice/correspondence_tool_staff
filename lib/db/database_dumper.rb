@@ -18,6 +18,7 @@ class DatabaseDumper
   end
 
   def run
+    safeguard
     begin
       client_filename = dump_local_database
       compressed_file = compress_file(client_filename)
@@ -33,6 +34,37 @@ class DatabaseDumper
   end
 
   private
+
+  def safeguard
+    puts 'Are you sure you need to do this data dump?'.yellow
+    puts ''
+    question_user('is the issue covered with existing feature tests? ', 'no')
+    question_user('can you track problem through Kibana? ', 'no')
+    question_user('can you recreate the problem locally? ', 'no')
+    question_user('can you recreate the problem on staging with an anonymised dump? ', 'no')
+    confirm_data_dump
+    verify_password
+  end
+
+  def question_user(query, expected_result)
+    response = Readline.readline(query.green)
+    unless expected_result.downcase.start_with? response.downcase.strip
+      puts "the task will now exit"
+      exit
+    end
+  end
+
+  def confirm_data_dump
+    print "If you are still certain that you need to make a dump of the database please confirm y/n ".yellow
+    input = STDIN.gets.chomp
+    exit unless(input.downcase.start_with?('y'))
+  end
+
+  def verify_password
+    sudo_command = "sudo -v"
+    result = system sudo_command
+    exit unless result == true
+  end
 
   def dump_local_database
     filename = "#{Time.now.strftime('%Y%m%d-%H%M%S')}_#{@env}_dump.sql"
