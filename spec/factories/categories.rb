@@ -41,4 +41,9 @@ FactoryGirl.define do
 
     initialize_with { Category.find_or_create_by(name: name) }
   end
+
+  factory :sar_category, parent: :category do
+    name 'Subject Access Request'
+    abbreviation 'SAR'
+  end
 end
