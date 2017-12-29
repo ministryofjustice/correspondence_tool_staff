@@ -9,4 +9,4 @@
 
 = render partial: 'layouts/header'
 
-= render partial: "new_#{@case.class.to_s.demodulize.underscore}", locals: { kase: @case }
+= render partial: "new_#{@case.type_abbreviation.downcase}", locals: { kase: @case }

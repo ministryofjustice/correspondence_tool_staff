@@ -57,7 +57,7 @@ class CasesController < ApplicationController
                .page(params[:page])
                .decorate
     @current_tab_name = 'all_cases'
-    @can_add_case = policy(Case::Base.new(category: Category.foi)).can_add_case?
+    @can_add_case = policy(Case::FOI::Standard).can_add_case?
   end
 
   def closed_cases
@@ -85,7 +85,7 @@ class CasesController < ApplicationController
                .page(params[:page])
                .decorate
     @current_tab_name = 'my_cases'
-    @can_add_case = policy(Case::Base.new(category: Category.foi)).can_add_case?
+    @can_add_case = policy(Case::FOI::Standard).can_add_case?
     render :index
   end
 
@@ -99,7 +99,7 @@ class CasesController < ApplicationController
 
     # .by_deadline
     @current_tab_name = 'all_cases'
-    @can_add_case = policy(Case::Base.new(category: Category.foi)).can_add_case?
+    @can_add_case = policy(Case::FOI::Standard).can_add_case?
     render :index
   end
 
@@ -114,20 +114,17 @@ class CasesController < ApplicationController
   end
 
   def new
-    if FeatureSet.sars.enabled?
-      @type = params[:case][:type]
-    end
+    case_class = params[:case].fetch(:type, 'Case::FOI::Standard').constantize
+    authorize case_class, :can_add_case?
 
-
-    authorize Case::Base.new(category: Category.foi), :can_add_case?
-
-    @case = Case::Base.new
+    @case = case_class.new
     @s3_direct_post = s3_uploader_for(@case, 'requests')
     render :new
   end
 
   def create
-    authorize Case::Base.new(category: Category.foi), :can_add_case?
+    case_class = params[:case].fetch(:type, 'Case::FOI::Standard').constantize
+    authorize case_class, :can_add_case?
 
     service = CaseCreateService.new current_user, create_foi_params
     service.call
@@ -453,6 +450,7 @@ class CasesController < ApplicationController
 
   def create_foi_params
     params.require(:case).permit(
+      :type,
       :requester_type,
       :name,
       :postal_address,
@@ -462,9 +460,8 @@ class CasesController < ApplicationController
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :delivery_method,
       :flag_for_disclosure_specialists,
-      :type,
       uploaded_request_files: [],
-    ).merge(category_id: Category.foi.id)
+    )
   end
 
   def edit_params

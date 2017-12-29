@@ -167,7 +167,6 @@ RSpec.describe Case, type: :model do
       let(:foi) { create :category, :foi }
       let(:responded_case) do
         create :responded_case,
-               category: foi,
                received_date: days_taken.business_days.ago,
                date_responded: Time.first_business_day(Date.today)
       end

@@ -41,7 +41,7 @@ class Admin::CasesController < ApplicationController
   private
 
   def authorize_admin
-    authorize Case::Base.new(category: Category.foi), :user_is_admin?
+    authorize Case::Base, :user_is_admin?
   end
 
   def available_target_states
@@ -50,6 +50,7 @@ class Admin::CasesController < ApplicationController
 
   def case_params
     params.require(:case).permit(
+      :type,
       :requester_type,
       :name,
       :subject_full_name,
@@ -63,7 +64,7 @@ class Admin::CasesController < ApplicationController
       :delivery_method,
       :flag_for_disclosure_specialists,
       uploaded_request_files: [],
-    ).merge(category_id: Category.find_by(abbreviation: 'FOI').id)
+    )
   end
 
   def param_flag_for_ds?

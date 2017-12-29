@@ -4,7 +4,7 @@ describe Case::SAR::NonOffender do
   context 'validates that SAR-specific fields are not blank' do
     it 'is not valid' do
 
-      kase = build :non_offender_sar_case, subject_full_name: nil, subject_type: nil, third_party: nil
+      kase = build :sar_case, subject_full_name: nil, subject_type: nil, third_party: nil
 
       expect(kase).not_to be_valid
       expect(kase.errors[:subject_full_name]).to eq(["can't be blank"])
@@ -15,15 +15,15 @@ describe Case::SAR::NonOffender do
   context 'validation of subject type' do
     context 'valid values' do
       it 'does not error' do
-        expect(build(:non_offender_sar_case, subject_type: 'offender')).to be_valid
-        expect(build(:non_offender_sar_case, subject_type: 'staff')).to be_valid
-        expect(build(:non_offender_sar_case, subject_type: 'member_of_the_public')).to be_valid
+        expect(build(:sar_case, subject_type: 'offender')).to be_valid
+        expect(build(:sar_case, subject_type: 'staff')).to be_valid
+        expect(build(:sar_case, subject_type: 'member_of_the_public')).to be_valid
       end
     end
 
     context 'invalid value' do
       it 'errors' do
-        kase = build(:non_offender_sar_case, subject_type: 'plumber')
+        kase = build(:sar_case, subject_type: 'plumber')
         expect(kase).not_to be_valid
         expect(kase.errors[:subject_type]).to eq ['is not a valid subject type']
       end
@@ -31,7 +31,7 @@ describe Case::SAR::NonOffender do
 
     context 'nil' do
       it 'errors' do
-        kase = build(:non_offender_sar_case, subject_type: nil)
+        kase = build(:sar_case, subject_type: nil)
         expect(kase).not_to be_valid
         expect(kase.errors[:subject_type]).to eq ['is not a valid subject type']
       end

@@ -45,16 +45,15 @@ module CTS::Cases
       @klass.new(
         name:               name,
         email:              options.fetch(:email, Faker::Internet.email(name)),
-        category:           determine_category,
         subject_full_name:  determine_subject_full_name,
         third_party:        determine_third_party,
         subject_type:       determine_subject_type,
         delivery_method:    options.fetch(:delivery_method, 'sent_by_email'),
         subject:            options.fetch(:subject, Faker::Company.catch_phrase),
         message:            options.fetch(:message,
-                                       Faker::Lorem.paragraph(10, true, 10)),
+                                          Faker::Lorem.paragraph(10, true, 10)),
         requester_type:     options.fetch(:requester_type,
-                                       Case::Base.requester_types.keys.sample),
+                                          Case::Base.requester_types.keys.sample),
         received_date:      received_date,
         created_at:         created_at,
       )
@@ -64,10 +63,6 @@ module CTS::Cases
 
     def is_sar_case?
       @klass.to_s.in?(%w{ Case::Base Case::SAR::NonOffender })
-    end
-
-    def determine_category
-      is_sar_case? ? Category.sar : Category.foi
     end
 
     def determine_subject_full_name

@@ -65,14 +65,12 @@ feature 'viewing details of case in the system' do
            email: 'freddie.foi@testing.digital.justice.gov.uk',
            subject: 'this is a foi',
            message: 'viewing foi details test message',
-           category: foi_category,
            responding_team: responding_team
   end
 
   given(:old_foi) do
     create :accepted_case,
            received_date: 31.days.ago,
-           category: foi_category,
            responding_team: responding_team
   end
 

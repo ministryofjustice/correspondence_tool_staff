@@ -118,13 +118,6 @@ RSpec.describe CasesController, type: :controller do
 
   context "as an anonymous user" do
 
-    describe 'GET new' do
-      it "be redirected to signin if trying to start a new case" do
-        get :new
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
     describe 'GET closed_cases' do
       it "be redirected to signin if trying to update a specific case" do
         get :closed_cases
@@ -136,16 +129,6 @@ RSpec.describe CasesController, type: :controller do
   context "as an authenticated manager" do
 
     before { sign_in manager }
-
-    describe 'GET new' do
-      before {
-        get :new, params: { case: { type: 'Case::FOI::Standard' } }
-      }
-
-      it 'renders the new template' do
-        expect(response).to render_template(:new)
-      end
-    end
 
     describe 'GET closed_cases' do
       it 'renders the closed cases page' do
@@ -1395,7 +1378,6 @@ RSpec.describe CasesController, type: :controller do
        received_date_yyyy: '2017',
        subject: 'TEST case',
        message: 'Lorem ipsum dolor',
-       category_id: Category.foi.id
       }).permit(:name, :email, :postal_address, :requester_type, :received_date_dd, :received_date_mm, :received_date_yyyy, :subject, :message, :category_id)
     end
 
