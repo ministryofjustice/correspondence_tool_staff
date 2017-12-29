@@ -1,4 +1,4 @@
-class Case::SAR::BaseSAR < Case
+class Case::SAR::Base < Case
 
   VALID_SUBJECT_TYPES = %w{ offender staff member_of_the_public }
 
