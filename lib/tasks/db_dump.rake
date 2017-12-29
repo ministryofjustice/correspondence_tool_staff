@@ -36,7 +36,7 @@ namespace :db do
     end
 
 
-    desc 'makes an sql dump of the database on the staging environement to the local machine'
+    desc 'makes an sql dump of the database on the staging environment to the local machine'
     task :staging, [:host] do |_task, args|
       require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_dumper')
       DatabaseDumper.new('demo', args[:host], 'clear').run

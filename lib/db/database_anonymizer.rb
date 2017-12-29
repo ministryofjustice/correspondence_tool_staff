@@ -17,15 +17,15 @@ class DatabaseAnonymizer
 
   def anonymise_class(klass)
     File.open(@filename, 'a') do |fp|
-      klass.find_each(batch_size: @batch_size) do |model|
-        insert_statement = if model.is_a?(Case)
-                             insert_stmt_for_case(model)
-                           elsif model.is_a?(User)
-                             insert_stmt_for_user(model)
-                           elsif model.is_a?(CaseTransition)
-                             insert_stmt_for_case_transition(model)
+      klass.find_each(batch_size: @batch_size) do |object|
+        insert_statement = if object.is_a?(Case)
+                             insert_stmt_for_case(object)
+                           elsif object.is_a?(User)
+                             insert_stmt_for_user(object)
+                           elsif object.is_a?(CaseTransition)
+                             insert_stmt_for_case_transition(object)
                            else
-                             raise "Unexpected model #{model.class}"
+                             raise "Unexpected object #{object.class}"
                            end
         fp.puts insert_statement
       end
@@ -33,33 +33,33 @@ class DatabaseAnonymizer
   end
 
 
-  def insert_stmt_for_case(model)
-    kase = anonymize_case(model)
+  def insert_stmt_for_case(object)
+    kase = anonymize_case(object)
     kase.class.arel_table.create_insert.tap { |im|
       im.insert(kase.send(:arel_attributes_with_values_for_create, attrs_without_properties(kase)))
     }.to_sql + ';'
   end
 
-  def insert_stmt_for_user(model)
-    user = anonymize_user(model)
+  def insert_stmt_for_user(object)
+    user = anonymize_user(object)
     user.class.arel_table.create_insert.tap { |im|
       im.insert(user.send(:arel_attributes_with_values_for_create, user.attribute_names))
     }.to_sql + ';'
   end
 
-  def insert_stmt_for_case_transition(model)
-    ct = anonymise_case_transition(model)
+  def insert_stmt_for_case_transition(object)
+    ct = anonymise_case_transition(object)
     ct.class.arel_table.create_insert.tap { |im|
       im.insert(ct.send(:arel_attributes_with_values_for_create, attrs_without_metadata(ct)))
     }.to_sql + ';'
   end
 
-  def attrs_without_properties(model)
-    model.attribute_names - model.properties.keys
+  def attrs_without_properties(object)
+    object.attribute_names - object.properties.keys
   end
 
-  def attrs_without_metadata(model)
-    model.attribute_names - model.metadata.keys
+  def attrs_without_metadata(object)
+    object.attribute_names - object.metadata.keys
   end
 
 
@@ -99,5 +99,3 @@ class DatabaseAnonymizer
     ].join("\n")
   end
 end
-
-
