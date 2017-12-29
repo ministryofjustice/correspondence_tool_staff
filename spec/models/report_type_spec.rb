@@ -31,6 +31,14 @@ RSpec.describe ReportType, type: :model do
     end
   end
 
+  describe '#class_constant' do
+    it 'returns the report class name as a constant' do
+      r003 = create :r003_report_type
+      expect(r003.class_constant)
+        .to eq Stats::R003BusinessUnitPerformanceReport
+    end
+  end
+
   describe '#filename' do
     it 'formats the class name into a filename' do
       r003 = find_or_create :r003_report_type
