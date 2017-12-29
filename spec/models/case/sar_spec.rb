@@ -9,7 +9,6 @@ describe Case::SAR do
 
       expect(kase).not_to be_valid
       expect(kase.errors[:subject_full_name]).to eq(["can't be blank"])
-      expect(kase.errors[:subject_type]).to eq(["can't be blank"])
       expect(kase.errors[:third_party]).to eq(["can't be blank"])
     end
   end
