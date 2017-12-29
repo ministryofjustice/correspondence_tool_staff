@@ -12,7 +12,6 @@ FactoryGirl.define do
     requester_type                'member_of_the_public'
     sequence(:name)               { |n| "#{identifier} name #{n}" }
     email                         { Faker::Internet.email(identifier) }
-    category                      { find_or_create :category, :sar }
     delivery_method               'sent_by_email'
     sequence(:subject)            { |n| "#{identifier} subject #{n}" }
     sequence(:message)            { |n| "#{identifier} message #{n}" }

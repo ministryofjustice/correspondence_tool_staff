@@ -4,8 +4,7 @@ describe DeadlineCalculator do
 
   context 'FOI requests' do
 
-    let(:foi_case) { build :case,
-                           category: build(:category, :foi),
+    let(:foi_case) { build :foi_case,
                            received_date: Date.today,
                            created_at: Date.today
     }

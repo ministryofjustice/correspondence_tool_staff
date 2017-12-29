@@ -149,15 +149,12 @@ class Case::Base < ApplicationRecord
             presence: true,
             on: :create,
             if: -> { sent_by_post? }
-  validates :subject,  :category, presence: true
-  validates :subject, length: { maximum: 100 }
+  validates :subject, presence: true, length: { maximum: 100 }
   validates :type, presence: true, exclusion: { in: %w{Case}, message: "Case type can't be blank" }
 
   validates_with ::ClosedCaseValidator
 
   serialize :exemption_ids, Array
-
-  belongs_to :category, required: true
 
   has_many :assignments, dependent: :destroy, foreign_key: :case_id
 
@@ -432,7 +429,8 @@ class Case::Base < ApplicationRecord
   end
 
   def default_clearance_team
-    team_code = Settings.__send__("#{category.abbreviation.downcase}_cases").default_clearance_team
+    case_type = "#{type_abbreviation.downcase}_cases"
+    team_code = Settings.__send__(case_type).default_clearance_team
     Team.find_by_code team_code
   end
 
@@ -470,9 +468,9 @@ class Case::Base < ApplicationRecord
 
   def format_workflow_class_name(type_template, type_workflow_template)
     if workflow.present?
-      type_workflow_template % {type: category.abbreviation, workflow: workflow}
+      type_workflow_template % {type: type_abbreviation, workflow: workflow}
     else
-      type_template % {type: category.abbreviation}
+      type_template % {type: type_abbreviation}
     end
   end
 
@@ -490,6 +488,14 @@ class Case::Base < ApplicationRecord
 
   def is_internal_review?
     self.is_a?(Case::FOI::InternalReview)
+  end
+
+  def type_abbreviation
+    self.class.type_abbreviation
+  end
+
+  def category
+    @category ||= Category.find_by!(abbreviation: type_abbreviation)
   end
 
   private
