@@ -1,7 +1,5 @@
 class Case::SAR::BaseSAR < Case
 
-  # self.abstract_class = true
-
   VALID_SUBJECT_TYPES = %w{ offender staff member_of_the_public }
 
   validates :subject_full_name, presence: true
