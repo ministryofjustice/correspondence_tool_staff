@@ -152,7 +152,7 @@ $ rails db:seed:dev:users
 
 The above commands will set up a minimal set of teams, roles and users.
 
-In order to populate the database with corrrespondence items, use the cts script as follows:
+In order to populate the database with correspondence items, use the cts script as follows:
 
 ```
 $ ./cts clear                          # clears all cases from the database
@@ -163,7 +163,7 @@ $ ./cts --help create                  # display full help text for create comma
 
 ### Dumping the database
 
-We have functionality to create an anonymised copy of the database on production or staging. This feature is to be used as a very last resort. If the copy of the database is needed for debugging please consider the following options first:
+We have functionality to create an anonymised copy of the production or staging database. This feature is to be used as a very last resort. If the copy of the database is needed for debugging please consider the following options first:
 - seeing if the issue is covered in the feature tests
 - trying to track the issue through Kibana
 - recreating the issue locally
@@ -180,6 +180,9 @@ or a standard copy
 
 ```rake db:dump:local[filename,clear]```
 
+For more help with the data dump tasks run:
+
+```rake db:dump:help```
 
 ### Testing in Parallel
 
@@ -196,10 +199,17 @@ in order to speed up execution.
 
     ```bundle exec rake parallel:load_structure```
 
+    ##### To run all the tests in parallel
 
-#### To run the tests in parallel
+    ```bundle exec rake parallel:spec```
 
-    bundle exec rake parallel:spec
+    ##### To run only feature tests in parallel
+
+    ```bundle exec rake parallel:spec:features```
+
+    ##### To run only the non-feature tests in parallel
+
+    ```bundle exec rake parallel:spec:non_features```
 
 ### Emails
 
