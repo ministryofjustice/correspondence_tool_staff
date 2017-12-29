@@ -1,4 +1,6 @@
-class Case::SAR < Case
+class Case::SAR::BaseSAR < Case
+
+  # self.abstract_class = true
 
   VALID_SUBJECT_TYPES = %w{ offender staff member_of_the_public }
 
