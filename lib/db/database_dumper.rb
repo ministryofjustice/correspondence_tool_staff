@@ -36,7 +36,7 @@ class DatabaseDumper
   private
 
   def safeguard
-    puts 'Are you sure you need to do this data dump?'
+    puts 'Are you sure you need to do this data dump?'.yellow
     puts ''
     question_user('is the issue covered with existing feature tests? ', 'no')
     question_user('can you track problem through Kibana? ', 'no')
@@ -47,7 +47,7 @@ class DatabaseDumper
   end
 
   def question_user(query, expected_result)
-    response = Readline.readline(query)
+    response = Readline.readline(query.green)
     unless expected_result.downcase.start_with? response.downcase.strip
       puts "the task will now exit"
       exit
@@ -55,7 +55,7 @@ class DatabaseDumper
   end
 
   def confirm_data_dump
-    print "If you are still certain that you need to make a dump of the database please confirm y/n "
+    print "If you are still certain that you need to make a dump of the database please confirm y/n ".yellow
     input = STDIN.gets.chomp
     exit unless(input.downcase.start_with?('y'))
   end
