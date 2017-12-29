@@ -1,3 +1,3 @@
-class Case::SAR::NonOffender < Case::SAR::BaseSAR
+class Case::SAR::NonOffender < Case::SAR::Base
 
 end
