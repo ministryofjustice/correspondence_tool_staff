@@ -7,7 +7,6 @@ describe CaseCreateService do
   let(:foi) { find_or_create :category, :foi }
   let(:regular_params) do
     {
-      category_id: foi.id,
       type: 'Case::FOI::Standard',
       requester_type: 'member_of_the_public',
       name: 'A. Member of Public',

@@ -124,4 +124,7 @@ class Case::BaseDecorator < Draper::Decorator
     end
   end
 
+  def pretty_type
+    object.class.type_abbreviation
+  end
 end

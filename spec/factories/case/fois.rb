@@ -30,8 +30,7 @@
 
 FactoryGirl.define do
 
-  factory :case,
-    class: Case::FOI::Standard do
+  factory :foi_case, aliases: [:case], class: Case::FOI::Standard do
     transient do
       creation_time { 4.business_days.ago }
       identifier "new case"
@@ -42,8 +41,6 @@ FactoryGirl.define do
     requester_type 'member_of_the_public'
     sequence(:name) { |n| "#{identifier} name #{n}" }
     email { Faker::Internet.email(identifier) }
-    # association :category, factory: :category, strategy: :create
-    category
     delivery_method 'sent_by_email'
     sequence(:subject) { |n| "#{identifier} subject #{n}" }
     sequence(:message) { |n| "#{identifier} message #{n}" }

@@ -9,6 +9,8 @@
 
 = form_for @case, as: 'case', url: admin_cases_path do |f|
 
+  = f.hidden_field :type, value: 'Case::FOI::Standard'
+
   = f.text_field :name
 
   = f.email_field :email

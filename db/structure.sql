@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.6
--- Dumped by pg_dump version 9.5.6
+-- Dumped from database version 9.5.9
+-- Dumped by pg_dump version 9.5.9
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -322,7 +322,6 @@ CREATE TABLE cases (
     message text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    category_id integer,
     received_date date,
     postal_address character varying,
     subject character varying,
@@ -1137,13 +1136,6 @@ CREATE INDEX index_cases_exemptions_on_exemption_id ON cases_exemptions USING bt
 
 
 --
--- Name: index_cases_on_category_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_cases_on_category_id ON cases USING btree (category_id);
-
-
---
 -- Name: index_cases_on_deleted; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1305,14 +1297,6 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON versions USING btree (it
 
 
 --
--- Name: fk_rails_56df0121af; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY cases
-    ADD CONSTRAINT fk_rails_56df0121af FOREIGN KEY (category_id) REFERENCES categories(id);
-
-
---
 -- PostgreSQL database dump complete
 --
 
@@ -1395,6 +1379,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171215103720'),
 ('20171220135129'),
 ('20171230113732'),
-('20180106124709');
-
-
+('20180106124709'),
+('20171220135129'),
+('20171227223627'),
+('20171228145707');

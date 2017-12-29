@@ -33,9 +33,7 @@ require 'rails_helper'
 RSpec.describe Case::Base, type: :model do
 
   let(:general_enquiry) do
-    build :case,
-      received_date: Date.parse('16/11/2016'),
-      category: create(:category, :gq)
+    build :case, received_date: Date.parse('16/11/2016')
   end
 
   let(:no_postal)          { build :case, postal_address: nil             }
@@ -478,6 +476,11 @@ RSpec.describe Case::Base, type: :model do
     it { should validate_length_of(:subject).is_at_most(100) }
   end
 
+  describe '#type' do
+    it { should validate_exclusion_of(:type).in_array(['Case'])
+                    .with_message("Case type can't be blank")}
+  end
+
   describe '#received_date' do
     let(:case_received_yesterday)   { build(:case, received_date: Date.yesterday.to_s) }
     let(:case_received_long_ago)    { build(:case, received_date: 370.days.ago) }
@@ -600,14 +603,6 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe 'associations' do
-    describe '#category' do
-      it 'is mandatory' do
-        should validate_presence_of(:category)
-      end
-
-      it { should belong_to(:category) }
-    end
-
     describe '#assignments' do
       it { should have_many(:assignments) }
 
@@ -1407,6 +1402,25 @@ RSpec.describe Case::Base, type: :model do
   end
   #rubocop:enable Metrics/ParameterLists
 
+  describe '#type_abbreviation' do
+    it 'returns the class-defined type abbreviation' do
+      expect(kase.type_abbreviation).to eq 'FOI'
+    end
+  end
+
+  describe '#category' do
+    it 'retrieves a category object' do
+      expect(kase.category).to eq Category.foi
+    end
+
+    it 'only finds the category once' do
+      foi = Category.foi
+      allow(Category).to receive(:find_by!).and_return(foi)
+      kase.category
+      kase.category
+      expect(Category).to have_received(:find_by!).once
+    end
+  end
 
   # See note in case.rb about why this is commented out.
   #

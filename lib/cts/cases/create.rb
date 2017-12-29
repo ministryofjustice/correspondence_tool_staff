@@ -64,7 +64,6 @@ module CTS::Cases
     end
 
     def new_case
-      foi = Category.find_by(abbreviation: 'FOI')
       name = options.fetch(:name, Faker::Name.name)
       created_at = if options[:created_at].present?
                      0.business_days.after(DateTime.parse(options[:created_at]))
@@ -77,9 +76,9 @@ module CTS::Cases
                         0.business_days.after(4.business_days.ago)
                       end
       Case::FOI::Standard.new(
+        type:            options.fetch(:type, 'Case::FOI::Standard'),
         name:            name,
         email:           options.fetch(:email, Faker::Internet.email(name)),
-        category:        foi,
         delivery_method: options.fetch(:delivery_method, 'sent_by_email'),
         subject:         options.fetch(:subject, Faker::Company.catch_phrase),
         message:         options.fetch(:message,
