@@ -3,8 +3,8 @@
               choices: [Case::FOI::Standard,
                         Case::FOI::TimelinessReview,
                         Case::FOI::ComplianceReview]
-  = render partial: 'new_form_common', locals: { f: f }
-  = render partial: 'new_form_details', locals: { f: f }
+  = render partial: 'cases/foi/new_form_common', locals: { f: f }
+  = render partial: 'cases/foi/new_form_details', locals: { f: f }
 
   = f.radio_button_fieldset :flag_for_disclosure_specialists
 

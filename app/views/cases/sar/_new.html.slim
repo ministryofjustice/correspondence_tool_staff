@@ -1,0 +1,9 @@
+= form_for kase, as: :case, url: cases_path do |f|
+  = f.hidden_field :type, value: 'Case::SAR'
+
+  = render partial: 'cases/sar/new_form_common', locals: { f: f }
+  = render partial: 'cases/sar/new_form_details', locals: { f: f }
+
+  = f.radio_button_fieldset :flag_for_disclosure_specialists
+
+  = f.submit t('button.next_page_assign'), {class: 'button'}
