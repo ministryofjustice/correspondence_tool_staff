@@ -1,4 +1,9 @@
 class Case::SAR::Base < Case::Base
+  class << self
+    def type_abbreviation
+      'SAR'
+    end
+  end
 
   VALID_SUBJECT_TYPES = %w{ offender staff member_of_the_public }
 

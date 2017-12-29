@@ -57,6 +57,8 @@ class CasesController < ApplicationController
                .page(params[:page])
                .decorate
     @current_tab_name = 'all_cases'
+
+    # TODO: This needs to be true for any type of case, really.
     @can_add_case = policy(Case::FOI::Standard).can_add_case?
   end
 
@@ -85,6 +87,8 @@ class CasesController < ApplicationController
                .page(params[:page])
                .decorate
     @current_tab_name = 'my_cases'
+
+    # TODO: This needs to be true for any type of case, really.
     @can_add_case = policy(Case::FOI::Standard).can_add_case?
     render :index
   end
@@ -99,6 +103,7 @@ class CasesController < ApplicationController
 
     # .by_deadline
     @current_tab_name = 'all_cases'
+    # TODO: This needs to be true for any type of case, really.
     @can_add_case = policy(Case::FOI::Standard).can_add_case?
     render :index
   end
@@ -115,6 +120,7 @@ class CasesController < ApplicationController
 
   def new
     case_class = params[:case].fetch(:type, 'Case::FOI::Standard').constantize
+    # TODO: Should be authorizing :create?
     authorize case_class, :can_add_case?
 
     @case = case_class.new
@@ -124,6 +130,7 @@ class CasesController < ApplicationController
 
   def create
     case_class = params[:case].fetch(:type, 'Case::FOI::Standard').constantize
+    # TODO: Should be authorizing :create?
     authorize case_class, :can_add_case?
 
     service = CaseCreateService.new current_user, create_foi_params

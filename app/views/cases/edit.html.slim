@@ -11,7 +11,7 @@
 
 = form_for @case, as: :case, url: case_path(@case) do |f|
 
-  = render partial: 'new_form_common', locals: { f: f }
+  = render partial: 'cases/foi/new_form_common', locals: { f: f }
   = render partial: 'edit_form_details', locals: { f: f }
 
   = f.submit t('button.submit'), { class: 'button' }
