@@ -18,7 +18,10 @@
 #
 
 class CaseTransition < ActiveRecord::Base
-  belongs_to :case, inverse_of: :transitions
+  belongs_to :case,
+             inverse_of: :transitions,
+             class_name: 'Case::Base',
+             foreign_key: :case_id
 
   after_destroy :update_most_recent, if: :most_recent?
 

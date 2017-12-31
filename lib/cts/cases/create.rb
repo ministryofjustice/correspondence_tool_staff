@@ -76,7 +76,7 @@ module CTS::Cases
                       else
                         0.business_days.after(4.business_days.ago)
                       end
-      Case.new(
+      Case::Base.new(
         name:            name,
         email:           options.fetch(:email, Faker::Internet.email(name)),
         category:        foi,
@@ -85,7 +85,7 @@ module CTS::Cases
         message:         options.fetch(:message,
                                        Faker::Lorem.paragraph(10, true, 10)),
         requester_type:  options.fetch(:requester_type,
-                                       Case.requester_types.keys.sample),
+                                       Case::Base.requester_types.keys.sample),
         received_date:   received_date,
         created_at:      created_at,
       )

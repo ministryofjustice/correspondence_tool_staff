@@ -82,7 +82,7 @@ feature 'cases requiring clearance by disclosure specialist' do
     expect(cases_show_page).to be_displayed
     login_as manager
 
-    kase = Case.last
+    kase = Case::Base.last
     set_case_dates_back_by(kase, days_back)
   end
 

@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'cases/case_status.html.slim', type: :view do
 
   it 'displays the all 4 key information ' do
-    unassigned_case = double CaseDecorator,
+    unassigned_case = double Case::BaseDecorator,
                    status: "Needs reassigning",
                    internal_deadline: DateTime.now.strftime(Settings.default_date_format),
                    external_deadline: (DateTime.now + 10.days).strftime(Settings.default_date_format),
@@ -32,7 +32,7 @@ describe 'cases/case_status.html.slim', type: :view do
 
 
   it 'does not display "Who its with" for closed cases' do
-    closed_case = double CaseDecorator,
+    closed_case = double Case::BaseDecorator,
                              status: "Case closed",
                              internal_deadline: DateTime.now.strftime(Settings.default_date_format) ,
                              external_deadline: (DateTime.now + 10.days).strftime(Settings.default_date_format),
@@ -54,7 +54,7 @@ describe 'cases/case_status.html.slim', type: :view do
   end
 
   it 'does not display Draft deadline for non-trigger cases' do
-    non_trigger_case = double CaseDecorator,
+    non_trigger_case = double Case::BaseDecorator,
                              status: "Needs reassigning",
                              external_deadline: (DateTime.now + 10.days).strftime(Settings.default_date_format),
                              internal_deadline: nil,

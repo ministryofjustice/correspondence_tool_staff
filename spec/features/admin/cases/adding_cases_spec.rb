@@ -45,7 +45,7 @@ feature 'adding cases' do
     admin_cases_new_page.submit_button.click
     expect(admin_cases_page).to be_displayed
     expect(admin_cases_page.case_list.count).to eq 1
-    kase = Case.first
+    kase = Case::Base.first
     expect(kase.name).to eq 'Test Name'
     expect(kase.email).to eq 'test@localhost'
     expect(kase.subject).to eq 'test subject'
@@ -62,7 +62,7 @@ feature 'adding cases' do
     admin_cases_new_page.submit_button.click
     expect(admin_cases_page).to be_displayed
     expect(admin_cases_page.case_list.count).to eq 1
-    kase = Case.first
+    kase = Case::Base.first
     expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
   end
 
@@ -77,7 +77,7 @@ feature 'adding cases' do
     admin_cases_new_page.submit_button.click
     expect(admin_cases_page).to be_displayed
     expect(admin_cases_page.case_list.count).to eq 1
-    kase = Case.first
+    kase = Case::Base.first
     expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
     expect(BusinessUnit.press_office).to be_in(kase.approving_teams)
     expect(BusinessUnit.private_office).to be_in(kase.approving_teams)
@@ -94,7 +94,7 @@ feature 'adding cases' do
     admin_cases_new_page.submit_button.click
     expect(admin_cases_page).to be_displayed
     expect(admin_cases_page.case_list.count).to eq 1
-    kase = Case.first
+    kase = Case::Base.first
     expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
     expect(BusinessUnit.press_office).to be_in(kase.approving_teams)
     expect(BusinessUnit.private_office).to be_in(kase.approving_teams)
@@ -113,7 +113,7 @@ feature 'adding cases' do
     admin_cases_new_page.submit_button.click
     expect(admin_cases_page).to be_displayed
     expect(admin_cases_page.case_list.count).to eq 1
-    kase = Case.first
+    kase = Case::Base.first
     expect(kase.current_state).to eq 'pending_dacu_clearance'
     expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
   end
@@ -130,7 +130,7 @@ feature 'adding cases' do
     admin_cases_new_page.submit_button.click
     expect(admin_cases_page).to be_displayed
     expect(admin_cases_page.case_list.count).to eq 1
-    kase = Case.first
+    kase = Case::Base.first
     expect(kase.current_state).to eq 'closed'
   end
 end

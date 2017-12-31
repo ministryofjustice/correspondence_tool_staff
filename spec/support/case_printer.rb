@@ -1,7 +1,7 @@
 class CasePrinter
 
   def initialize(case_or_case_id)
-    @case = case_or_case_id.is_a?(Case) ? case_or_case_id : Case.find(case_or_case_id)
+    @case = case_or_case_id.is_a?(Case::Base) ? case_or_case_id : Case::Base.find(case_or_case_id)
     @lines = []
   end
 

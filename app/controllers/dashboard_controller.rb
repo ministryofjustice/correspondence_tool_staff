@@ -21,7 +21,7 @@ class DashboardController < ApplicationController
   private
 
   def count_cases_created_on(date)
-    Case.where(created_at:  date.beginning_of_day..date.end_of_day).count
+    Case::Base.where(created_at:  date.beginning_of_day..date.end_of_day).count
   end
 
 end

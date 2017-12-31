@@ -9,7 +9,10 @@
 #
 
 class CasesUsersTransitionsTracker < ActiveRecord::Base
-  belongs_to :case
+  belongs_to :case,
+             class_name: 'Case::Base',
+             foreign_key: :case_id
+
   belongs_to :user
 
   validates :user_id, uniqueness: { scope: :case_id }

@@ -9,7 +9,7 @@ module CTS
     def initialize(number)
       @real_time = Time.now
       @number = number
-      @cases = Case.order(id: :desc).limit(number).to_a
+      @cases = Case::Base.order(id: :desc).limit(number).to_a
       @managing_team = CTS::dacu_team
       @responding_teams = BusinessUnit.where(name: ['Legal Aid Agency', 'HR', 'HMCTS North East Regional Support Unit (RSU)'])
       @dacu_disclosure = BusinessUnit.dacu_disclosure

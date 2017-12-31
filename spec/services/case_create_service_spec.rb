@@ -8,7 +8,7 @@ describe CaseCreateService do
   let(:regular_params) do
     {
       category_id: foi.id,
-      type: 'Case',
+      type: 'Case::FOI',
       requester_type: 'member_of_the_public',
       name: 'A. Member of Public',
       postal_address: '102 Petty France',
@@ -30,13 +30,13 @@ describe CaseCreateService do
     let(:ccs) { CaseCreateService.new(manager, params) }
 
     it 'creates a case' do
-      expect { ccs.call }.to change { Case.count }.by 1
+      expect { ccs.call }.to change { Case::Base.count }.by 1
     end
 
     it 'uses the params provided' do
       ccs.call
 
-      created_case = Case.first
+      created_case = Case::Base.first
       expect(created_case.requester_type).to eq 'member_of_the_public'
       expect(created_case.name).to eq 'A. Member of Public'
       expect(created_case.postal_address).to eq '102 Petty France'
@@ -63,13 +63,13 @@ describe CaseCreateService do
     let(:ccs) { CaseCreateService.new(manager, params) }
 
     it 'creates a case' do
-      expect { ccs.call }.to change { Case.count }.by 1
+      expect { ccs.call }.to change { Case::Base.count }.by 1
     end
 
     it 'uses the params provided' do
       ccs.call
 
-      created_case = Case.first
+      created_case = Case::Base.first
       expect(created_case.requester_type).to eq 'member_of_the_public'
       expect(created_case.name).to eq 'A. Member of Public'
       expect(created_case.postal_address).to eq '102 Petty France'
@@ -81,7 +81,7 @@ describe CaseCreateService do
 
     it 'flags for disclosure specialists' do
       ccs.call
-      created_case = Case.first
+      created_case = Case::Base.first
       expect(created_case.approver_assignments.first.team)
         .to eq team_dacu_disclosure
     end

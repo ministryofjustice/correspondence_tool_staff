@@ -179,9 +179,9 @@ RSpec.describe CasesController, type: :controller do
 
       it "closes a case that has been responded to" do
         patch :process_closure, params: case_closure_params(responded_case)
-        expect(Case.first.current_state).to eq 'closed'
-        expect(Case.first.outcome_id).to eq outcome.id
-        expect(Case.first.date_responded).to eq 3.days.ago.to_date
+        expect(Case::Base.first.current_state).to eq 'closed'
+        expect(Case::Base.first.outcome_id).to eq outcome.id
+        expect(Case::Base.first.date_responded).to eq 3.days.ago.to_date
       end
 
       def case_closure_params(kase)
@@ -206,9 +206,9 @@ RSpec.describe CasesController, type: :controller do
 
         it "closes a case that has been responded to" do
           patch :process_closure, params: case_closure_params(internal_review)
-          expect(Case.first.current_state).to eq 'closed'
-          expect(Case.first.appeal_outcome_id).to eq appeal_outcome.id
-          expect(Case.first.date_responded).to eq 3.days.ago.to_date
+          expect(Case::Base.first.current_state).to eq 'closed'
+          expect(Case::Base.first.appeal_outcome_id).to eq appeal_outcome.id
+          expect(Case::Base.first.date_responded).to eq 3.days.ago.to_date
         end
 
         def case_closure_params(internal_review)
@@ -791,7 +791,7 @@ RSpec.describe CasesController, type: :controller do
       subject { post :create, params: params }
 
       it 'does not create a new case' do
-        expect{ subject }.not_to change { Case.count }
+        expect{ subject }.not_to change { Case::Base.count }
       end
 
       it 'redirects to the application root path' do
@@ -811,7 +811,7 @@ RSpec.describe CasesController, type: :controller do
           {
             case: {
               requester_type: 'member_of_the_public',
-              type: 'Case',
+              type: 'Case::FOI',
               name: 'A. Member of Public',
               postal_address: '102 Petty France',
               email: 'member@public.com',
@@ -827,18 +827,18 @@ RSpec.describe CasesController, type: :controller do
           }
         end
 
-        let(:created_case) { Case.first }
+        let(:created_case) { Case::Base.first }
 
         it 'makes a DB entry' do
           expect { post :create, params: params }.
-            to change { Case.count }.by 1
+            to change { Case::Base.count }.by 1
         end
 
         it 'uses the params provided' do
           post :create, params: params
 
           expect(created_case.requester_type).to eq 'member_of_the_public'
-          expect(created_case.type).to eq 'Case'
+          expect(created_case.type).to eq 'Case::FOI'
           expect(created_case.name).to eq 'A. Member of Public'
           expect(created_case.postal_address).to eq '102 Petty France'
           expect(created_case.email).to eq 'member@public.com'
@@ -869,7 +869,7 @@ RSpec.describe CasesController, type: :controller do
           it 'does not flag for clearance if parameter is not set' do
             params[:case].delete(:flag_for_disclosure_specialists)
             expect { post :create, params: params }
-              .not_to change { Case.count }
+              .not_to change { Case::Base.count }
             expect(service).not_to have_received(:call)
           end
 
@@ -924,7 +924,7 @@ RSpec.describe CasesController, type: :controller do
 
       it 'assigns @case' do
         get :new_response_upload, params: { id: kase, action: 'upload' }
-        expect(assigns(:case)).to eq(Case.first)
+        expect(assigns(:case)).to eq(Case::Base.first)
       end
 
 
@@ -1303,15 +1303,15 @@ RSpec.describe CasesController, type: :controller do
       expect(assigns[:cases]).to eq [assigned_case]
     end
     it 'uses the policy scope' do
-      allow(controller).to receive(:policy_scope).and_return(Case.none)
+      allow(controller).to receive(:policy_scope).and_return(Case::Base.none)
       get :search, params: { query: assigned_case.number }
-      expect(controller).to have_received(:policy_scope).with(Case)
+      expect(controller).to have_received(:policy_scope).with(Case::Base)
     end
 
     it 'passes the page param to the paginator' do
       paged_cases = double('Paged Cases', decorate: [])
       cases = double('Cases', page: paged_cases, empty?: true)
-      allow(Case).to receive(:search).and_return(cases)
+      allow(Case::Base).to receive(:search).and_return(cases)
       get :search, params: { query: assigned_case.number, page: 'our_pages' }
       expect(cases).to have_received(:page).with('our_pages')
     end

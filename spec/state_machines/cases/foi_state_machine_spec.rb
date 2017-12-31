@@ -124,10 +124,10 @@ RSpec.describe Case::FOIStateMachine, type: :model do
 
   events :unflag_for_clearance do
     it { should transition_from(:unassigned).to(:unassigned)
-                  .checking_default_policy(CasePolicy)  }
-    it { should transition_from(:awaiting_responder).to(:awaiting_responder).checking_default_policy(CasePolicy)  }
-    it { should transition_from(:drafting).to(:drafting).checking_default_policy(CasePolicy)  }
-    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch).checking_default_policy(CasePolicy)  }
+                  .checking_default_policy(Case::BasePolicy)  }
+    it { should transition_from(:awaiting_responder).to(:awaiting_responder).checking_default_policy(Case::BasePolicy)  }
+    it { should transition_from(:drafting).to(:drafting).checking_default_policy(Case::BasePolicy)  }
+    it { should transition_from(:awaiting_dispatch).to(:awaiting_dispatch).checking_default_policy(Case::BasePolicy)  }
   end
 
   events :accept_approver_assignment do
@@ -196,7 +196,7 @@ RSpec.describe Case::FOIStateMachine, type: :model do
   events :add_response_to_flagged_case do
     it { should transition_from(:drafting)
                   .to(:pending_dacu_clearance)
-                  .checking_default_policy(CasePolicy) }
+                  .checking_default_policy(Case::BasePolicy) }
   end
 
   events :remove_response do
@@ -217,43 +217,43 @@ RSpec.describe Case::FOIStateMachine, type: :model do
   events :approve do
     it { should transition_from(:pending_dacu_clearance)
                    .to(:awaiting_dispatch)
-                   .checking_default_policy(CasePolicy) }
+                   .checking_default_policy(Case::BasePolicy) }
     it { should transition_from(:pending_dacu_clearance)
                   .to(:pending_press_office_clearance)
-                  .checking_default_policy(CasePolicy) }
+                  .checking_default_policy(Case::BasePolicy) }
     it { should transition_from(:pending_press_office_clearance)
                   .to(:awaiting_dispatch)
-                  .checking_default_policy(CasePolicy) }
+                  .checking_default_policy(Case::BasePolicy) }
     it { should transition_from(:pending_press_office_clearance)
                   .to(:pending_private_office_clearance)
-                  .checking_default_policy(CasePolicy) }
+                  .checking_default_policy(Case::BasePolicy) }
     it { should transition_from(:pending_private_office_clearance)
                   .to(:awaiting_dispatch)
-                  .checking_default_policy(CasePolicy) }
+                  .checking_default_policy(Case::BasePolicy) }
   end
 
   events :request_amends do
     it { should transition_from(:pending_press_office_clearance)
                   .to(:pending_dacu_clearance)
-                  .checking_default_policy(CasePolicy) }
+                  .checking_default_policy(Case::BasePolicy) }
     it { should transition_from(:pending_private_office_clearance)
                   .to(:pending_dacu_clearance)
-                  .checking_default_policy(CasePolicy) }
+                  .checking_default_policy(Case::BasePolicy) }
   end
 
   events :upload_response_and_approve do
     it { should transition_from(:pending_dacu_clearance)
                     .to(:awaiting_dispatch)
-                    .checking_default_policy(CasePolicy)}
+                    .checking_default_policy(Case::BasePolicy)}
     it { should transition_from(:pending_dacu_clearance)
                   .to(:pending_press_office_clearance)
-                  .checking_default_policy(CasePolicy)}
+                  .checking_default_policy(Case::BasePolicy)}
   end
 
   events :upload_response_and_return_for_redraft do
     it { should transition_from(:pending_dacu_clearance)
                   .to(:drafting)
-                  .checking_default_policy(CasePolicy) }
+                  .checking_default_policy(Case::BasePolicy) }
   end
 
   events :close do

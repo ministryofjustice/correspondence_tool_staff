@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe CaseDecorator, type: :model do
+describe Case::BaseDecorator, type: :model do
   let(:unassigned_case) { create(:case).decorate }
   let(:assigned_case)   { create(:assigned_case).decorate }
   let(:accepted_case)   { create(:accepted_case,
@@ -16,6 +16,33 @@ describe CaseDecorator, type: :model do
   let(:pending_dacu_clearance_case) { create(:pending_dacu_clearance_case).decorate }
   let(:another_responder) { create :responder }
   let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
+
+
+  context 'ensuring the correct decorator is instantiated' do
+    context 'Case::FOI' do
+      it 'instantiates the correct decorator' do
+        expect(Case::FOI.new.decorate).to be_instance_of Case::FOIDecorator
+      end
+    end
+
+    context 'Case::FOI::ComplianceReview' do
+      it 'instantiates the correct decorator' do
+        expect(Case::FOI::ComplianceReview.new.decorate).to be_instance_of Case::FOI::ComplianceReviewDecorator
+      end
+    end
+
+    context 'Case::FOI::TimelinessReview' do
+      it 'instantiates the correct decorator' do
+        expect(Case::FOI::TimelinessReview.new.decorate).to be_instance_of Case::FOI::TimelinessReviewDecorator
+      end
+    end
+
+    context 'Case::SAR::NonOffender' do
+      it 'instantiates the correct decorator' do
+        expect(Case::SAR::NonOffender.new.decorate).to be_instance_of Case::SAR::NonOffenderDecorator
+      end
+    end
+  end
 
 
   describe '#who_its_with' do
@@ -43,7 +70,7 @@ describe CaseDecorator, type: :model do
 
       context 'as the responder' do
         it 'returns the responder name' do
-          allow_any_instance_of(CaseDecorator)
+          allow_any_instance_of(Case::BaseDecorator)
             .to receive(:h).and_return(double("View", current_user: responder))
           expect(assigned_case.who_its_with)
             .to eq assigned_case.responding_team.name
@@ -52,7 +79,7 @@ describe CaseDecorator, type: :model do
 
       context 'as a coworker of the responder' do
         it 'returns the responder name' do
-          allow_any_instance_of(CaseDecorator)
+          allow_any_instance_of(Case::BaseDecorator)
             .to receive(:h).and_return(double("View", current_user: coworker))
           expect(assigned_case.who_its_with)
             .to eq assigned_case.responding_team.name
@@ -61,7 +88,7 @@ describe CaseDecorator, type: :model do
 
       context 'as the responder in another team' do
         it 'returns the responder name' do
-          allow_any_instance_of(CaseDecorator)
+          allow_any_instance_of(Case::BaseDecorator)
             .to receive(:h)
                   .and_return(double("View", current_user: another_responder))
           expect(assigned_case.who_its_with)
@@ -71,7 +98,7 @@ describe CaseDecorator, type: :model do
 
       context 'flagged case in pending_dacu_clearance state' do
         it 'returns dacu disclosure' do
-          allow_any_instance_of(CaseDecorator).to receive(:h).and_return(double("View", current_user: another_responder))
+          allow_any_instance_of(Case::BaseDecorator).to receive(:h).and_return(double("View", current_user: another_responder))
           expect(pending_dacu_clearance_case.who_its_with).to eq 'Disclosure'
         end
       end

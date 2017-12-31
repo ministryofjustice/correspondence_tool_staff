@@ -3,7 +3,7 @@ class CaseFinderService
 
   def initialize(user)
     @user = user
-    @scope = Case.all
+    @scope = Case::Base.all
   end
 
   def for_user

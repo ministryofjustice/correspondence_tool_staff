@@ -14,17 +14,17 @@ describe 'cases/linked_cases.html.slim', type: :view do
 
 
   describe 'Case has linked cases' do
-    let(:linked_case_1){ double(Case, id: 1,
+    let(:linked_case_1){ double(Case::Base, id: 1,
                                 number: '111111',
                                 name:'Hello 1',
                                 subject: 'Case 1',
                                 trigger_case_marker: '',
                                 linked_cases: [])}
-    let(:linked_case_2){ double(Case, id: 2,
+    let(:linked_case_2){ double(Case::Base, id: 2,
                                 number: '222222',
                                 subject: 'Case 2',
                                 name:'Hello 2', linked_cases: [])}
-    let(:main_case)    { double(Case, id: 3,
+    let(:main_case)    { double(Case::Base, id: 3,
                                 number: '333333',
                                 name:'Hello',
                                 subject: 'Case 3',
@@ -56,7 +56,7 @@ describe 'cases/linked_cases.html.slim', type: :view do
 
   describe 'Case with no linked cases' do
 
-    let(:unlinked_case) { instance_double(Case, name:'Hello', linked_cases: [])}
+    let(:unlinked_case) { instance_double(Case::Base, name:'Hello', linked_cases: [])}
 
     it 'renders "No linked cases"' do
 
@@ -77,7 +77,7 @@ describe 'cases/linked_cases.html.slim', type: :view do
 
   describe 'displaying "Link a case" action' do
 
-    let(:main_case)    { double(Case, id: 3,
+    let(:main_case)    { double(Case::Base, id: 3,
                                 number: '333333',
                                 name:'Hello',
                                 subject: 'Case 3',

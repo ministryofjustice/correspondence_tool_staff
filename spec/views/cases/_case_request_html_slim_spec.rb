@@ -35,7 +35,7 @@ describe 'cases/case_request.html.slim', type: :view do
 
 
   describe 'Displaying a short request' do
-    let(:kase) { double CaseDecorator,
+    let(:kase) { double Case::BaseDecorator,
                         message: "This is a request for information",
                         message_extract: ["This is a request for information"],
                         delivery_method: "sent_by_email",
@@ -64,7 +64,7 @@ describe 'cases/case_request.html.slim', type: :view do
 
 
   describe 'displaying a long request and collapsing content' do
-    let(:kase) { double CaseDecorator,
+    let(:kase) { double Case::BaseDecorator,
                         message:  long_message,
                         message_extract: [short_message,last_part],
                         delivery_method: "sent_by_email",

@@ -4,7 +4,7 @@ class AssignNewTeamService
 
   def initialize(current_user, params)
     @user = current_user
-    @case = Case.find(params[:case_id])
+    @case = Case::Base.find(params[:case_id])
     @assignment = @case.responder_assignment
     raise "Assignment mismatch" if @assignment.id != params[:id].to_i
     @team = BusinessUnit.find(params[:team_id])

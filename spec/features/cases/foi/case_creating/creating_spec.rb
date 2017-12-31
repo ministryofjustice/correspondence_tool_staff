@@ -24,7 +24,7 @@ feature 'FOI Case creation by a manager' do
   scenario 'creating a case that needs clearance' do
     create_case_step flag_for_disclosure: true
 
-    new_case = Case.last
+    new_case = Case::Base.last
     expect(new_case.requires_clearance?).to be true
   end
 
@@ -35,7 +35,7 @@ feature 'FOI Case creation by a manager' do
     create_case_step delivery_method: :sent_by_post,
                      uploaded_request_files: [request_attachment]
 
-    new_case = Case.last
+    new_case = Case::Base.last
     request_attachment = new_case.attachments.request.first
     expect(request_attachment.key).to match %{/request-1.pdf$}
   end

@@ -100,7 +100,7 @@ module Stats
     end
 
     def analyse_case(case_id)
-      kase = Case.find case_id
+      kase = Case::Base.find case_id
       return if kase.unassigned?
       column_key = AppealAnalyser.new(kase).result
       @stats.record_stats(kase.responding_team.id, column_key)

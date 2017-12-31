@@ -42,6 +42,6 @@ class CaseAttachmentsController < ApplicationController
   end
 
   def set_case
-    @case = Case.find(params[:case_id])
+    @case = Case::Base.find(params[:case_id])
   end
 end

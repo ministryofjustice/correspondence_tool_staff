@@ -29,7 +29,7 @@ div.action-copy
 
 br
 
-= form_for @case, url: execute_extend_for_pit_case_path(@case) do |f|
+= form_for @case, as: :case, url: execute_extend_for_pit_case_path(@case) do |f|
   .form-group
     = f.gov_uk_date_field :extension_deadline,
                           { legend_text: t('cases.extend_for_pit.extension_date'),

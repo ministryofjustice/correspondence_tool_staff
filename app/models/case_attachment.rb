@@ -18,7 +18,9 @@ class CaseAttachment < ActiveRecord::Base
   UNCONVERTIBLE_EXTENSIONS = %w( .pdf .jpg .jpeg .bmp .gif .png )
 
   self.inheritance_column = :_type_not_used
-  belongs_to :case
+  belongs_to :case,
+             class_name: 'Case::Base',
+             foreign_key: :case_id
 
   validates :type, presence: true
   validates :key, presence: true

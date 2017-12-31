@@ -24,13 +24,13 @@
 #  workflow             :string
 #  deleted              :boolean          default(FALSE)
 #  info_held_status_id  :integer
-#  type                 :string           default("Case")
+#  type                 :string           default("Case::FOI")
 #  appeal_outcome_id    :integer
 #
 
 require 'rails_helper'
 
-RSpec.describe Case, type: :model do
+RSpec.describe Case::Base, type: :model do
 
   let(:general_enquiry) do
     build :case,
@@ -130,14 +130,14 @@ RSpec.describe Case, type: :model do
     context '.flagged_for_approval' do
       context 'passed one team as a parameter' do
         it 'returns all the cases flagged for approval by the specified team' do
-          expect(Case.flagged_for_approval(@team_1))
+          expect(Case::Base.flagged_for_approval(@team_1))
             .to match_array [ @flagged_t1, @accepted_t1 ]
         end
       end
 
       context 'passed an array of teams as a parameter' do
         it 'returns all the cases flagged for approval for all specified teams' do
-          expect(Case.flagged_for_approval(@team_1, @team_2))
+          expect(Case::Base.flagged_for_approval(@team_1, @team_2))
             .to match_array [
                   @flagged_t1,
                   @accepted_t1,
@@ -151,14 +151,14 @@ RSpec.describe Case, type: :model do
     context '.flagged_for_approval.unaccepted' do
       context 'one team passsed as a parameter' do
         it 'returns only cases flagged which HAVE NOT been accepted' do
-          expect(Case.flagged_for_approval(@team_1).unaccepted)
+          expect(Case::Base.flagged_for_approval(@team_1).unaccepted)
             .to match_array [ @flagged_t1 ]
         end
       end
 
       context 'multiple teams passed as a parameter' do
         it 'returns only cases flagged which HAVE NOT been accepted' do
-          expect(Case.flagged_for_approval(@team_2, @team_1).unaccepted)
+          expect(Case::Base.flagged_for_approval(@team_2, @team_1).unaccepted)
             .to match_array [ @flagged_t1, @flagged_t2 ]
         end
       end
@@ -167,14 +167,14 @@ RSpec.describe Case, type: :model do
     context '.flagged_for_approval.accepted' do
       context 'one team passsed as a parameter' do
         it 'returns only cases flagged which HAVE been accepted' do
-          expect(Case.flagged_for_approval(@team_1).accepted)
+          expect(Case::Base.flagged_for_approval(@team_1).accepted)
             .to match_array [ @accepted_t1 ]
         end
       end
 
       context 'multiple teams passsed as a parameter' do
         it 'returns only cases flagged which HAVE been accepted' do
-          expect(Case.flagged_for_approval(@team_1, @team_2).accepted)
+          expect(Case::Base.flagged_for_approval(@team_1, @team_2).accepted)
             .to match_array [ @accepted_t1, @accepted_t2 ]
         end
       end
@@ -183,7 +183,7 @@ RSpec.describe Case, type: :model do
 
   describe 'default_scope' do
     it "applies a default scope to exclude deleted cases" do
-      expect(Case.all.to_sql).to eq Case.unscoped.where( deleted: false).to_sql
+      expect(Case::Base.all.to_sql).to eq Case::Base.unscoped.where( deleted: false).to_sql
     end
   end
 
@@ -196,7 +196,7 @@ RSpec.describe Case, type: :model do
       Timecop.return
       create :closed_case, last_transitioned_at: 2.days.ago
       create :closed_case, last_transitioned_at: 1.day.ago
-      expect(Case.opened).to match_array [ open_case, responded_case ]
+      expect(Case::Base.opened).to match_array [ open_case, responded_case ]
     end
   end
 
@@ -206,14 +206,14 @@ RSpec.describe Case, type: :model do
       create :responded_case
       closed_case_1 = create :closed_case, last_transitioned_at: 2.days.ago
       closed_case_2 = create :closed_case, last_transitioned_at: 1.day.ago
-      expect(Case.closed).to eq [ closed_case_2, closed_case_1 ]
+      expect(Case::Base.closed).to eq [ closed_case_2, closed_case_1 ]
     end
   end
 
   describe 'with_team scope' do
     it 'returns cases that are with a given team' do
       create :assigned_case # Just some other case
-      expect(Case.with_teams(responding_team)).to match_array([assigned_case])
+      expect(Case::Base.with_teams(responding_team)).to match_array([assigned_case])
     end
 
     it 'can accept more than one team' do
@@ -222,33 +222,33 @@ RSpec.describe Case, type: :model do
         assigned_case,
         create(:assigned_case, responding_team: responding_team_b),
       ]
-      expect(Case.with_teams([responding_team, responding_team_b]))
+      expect(Case::Base.with_teams([responding_team, responding_team_b]))
         .to match_array expected_cases
     end
 
     it 'does not include rejected assignments' do
       expected_cases = [assigned_case]
       create(:rejected_case, responding_team: responding_team)
-      expect(Case.with_teams(responding_team)).to match_array(expected_cases)
+      expect(Case::Base.with_teams(responding_team)).to match_array(expected_cases)
     end
 
     it 'includes accepted cases' do
       created_cases = [assigned_case, accepted_case]
-      expect(Case.with_teams(responding_team)).to match_array(created_cases)
+      expect(Case::Base.with_teams(responding_team)).to match_array(created_cases)
     end
   end
 
   describe 'not_with_team scope' do
     it 'returns cases that are not with a given team' do
       other_assigned_case = create :assigned_case
-      expect(Case.not_with_teams(responding_team)).to match_array([other_assigned_case])
+      expect(Case::Base.not_with_teams(responding_team)).to match_array([other_assigned_case])
     end
   end
 
   describe 'with_user scope' do
     it 'returns cases that are with a given user' do
       create :accepted_case # Just some other case
-      expect(Case.with_user(responder)).to match_array([accepted_case])
+      expect(Case::Base.with_user(responder)).to match_array([accepted_case])
     end
 
     it 'can accept more than one user' do
@@ -257,14 +257,14 @@ RSpec.describe Case, type: :model do
         accepted_case,
         create(:accepted_case, responder: responder),
       ]
-      expect(Case.with_user(responder, responder_b))
+      expect(Case::Base.with_user(responder, responder_b))
         .to match_array expected_cases
     end
 
     it 'does not include rejected assignments' do
       expected_cases = [accepted_case]
       create(:rejected_case, responder: responder)
-      expect(Case.with_user(responder)).to match_array(expected_cases)
+      expect(Case::Base.with_user(responder)).to match_array(expected_cases)
     end
   end
 
@@ -272,7 +272,7 @@ RSpec.describe Case, type: :model do
     it 'only returns cases that have not been accepted for team' do
       accepted_case
       expected_cases = [assigned_case]
-      expect(Case.waiting_to_be_accepted(responding_team))
+      expect(Case::Base.waiting_to_be_accepted(responding_team))
         .to match_array(expected_cases)
     end
   end
@@ -282,11 +282,11 @@ RSpec.describe Case, type: :model do
     let!(:case_recent) { create :case, received_date: 10.business_days.ago }
 
     it 'orders cases by their external deadline' do
-      expect(Case.most_recent_first).to eq [case_recent, case_oldest]
+      expect(Case::Base.most_recent_first).to eq [case_recent, case_oldest]
     end
 
     it 're-orders any previous ordering' do
-      expect(Case.by_deadline.most_recent_first).to eq [case_recent, case_oldest]
+      expect(Case::Base.by_deadline.most_recent_first).to eq [case_recent, case_oldest]
     end
   end
 
@@ -312,7 +312,7 @@ RSpec.describe Case, type: :model do
     describe 'in_time scope' do
       it 'only returns cases that are not past their deadline' do
         Timecop.freeze Date.new(2017, 2, 2) do
-          expect(Case.in_time).to match_array([
+          expect(Case::Base.in_time).to match_array([
                                                 @open_in_time_case,
                                                 @responded_in_time_case,
                                                 @closed_in_time_case
@@ -324,7 +324,7 @@ RSpec.describe Case, type: :model do
     describe 'late scope' do
       it 'only returns cases that are past their deadline' do
         Timecop.freeze Date.new(2017, 2, 2) do
-          expect(Case.late).to match_array([
+          expect(Case::Base.late).to match_array([
                                              @open_late_case,
                                              @responded_late_case,
                                              @closed_late_case
@@ -554,18 +554,18 @@ RSpec.describe Case, type: :model do
     describe '#prepared_for_close?' do
 
       it 'is false on newly instantiated objects' do
-        kase = Case.new
+        kase = Case::Base.new
         expect(kase.prepared_for_close?).to be false
       end
 
       it 'is false on objects read from teh database' do
         kase = create :case
-        k2 = Case.find(kase.id)
+        k2 = Case::Base.find(kase.id)
         expect(k2.prepared_for_close?).to be false
       end
 
       it 'is true after calling prepare_for_close' do
-        kase = Case.new
+        kase = Case::Base.new
         kase.prepare_for_close
         expect(kase.prepared_for_close?).to be true
       end
@@ -1011,7 +1011,7 @@ RSpec.describe Case, type: :model do
       allow(SecureRandom).to receive(:urlsafe_base64)
                                .and_return('this_is_not_random')
 
-      expect(Case.new.attachments_dir('responses', upload_group))
+      expect(Case::Base.new.attachments_dir('responses', upload_group))
         .to eq "this_is_not_random/responses/#{upload_group}"
     end
   end
@@ -1026,7 +1026,7 @@ RSpec.describe Case, type: :model do
       allow(SecureRandom).to receive(:urlsafe_base64)
                                .and_return('this_is_not_random')
 
-      expect(Case.new.uploads_dir('responses'))
+      expect(Case::Base.new.uploads_dir('responses'))
         .to eq "this_is_not_random/responses"
     end
   end
@@ -1160,7 +1160,7 @@ RSpec.describe Case, type: :model do
 
   describe 'search' do
     it 'returns case with a number that matches the query' do
-      expect(Case.search(accepted_case.number)).to match_array [accepted_case]
+      expect(Case::Base.search(accepted_case.number)).to match_array [accepted_case]
     end
   end
 

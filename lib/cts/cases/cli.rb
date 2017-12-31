@@ -44,7 +44,7 @@ module CTS::Cases
     def clear
       CTS::check_environment
       puts "Deleting all cases"
-      Case.all.map(&:destroy)
+      Case::Base.all.map(&:destroy)
     end
 
     desc 'demo', 'Create a demo set of cases for stats reporting purposes'
@@ -171,7 +171,7 @@ module CTS::Cases
     option :assigned_team, aliases: :t, type: :array,
            desc: 'List cases assigned to team, identified by name or id.'
     def list
-      cases = Case.all
+      cases = Case::Base.all
       if options[:assigned_user]
         users = options[:assigned_user].map { |u| CTS::find_user(u) }
         cases = cases.includes(:assignments)
