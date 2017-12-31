@@ -46,7 +46,7 @@ describe 'cases/index.html.slim', type: :view do
     accepted_case
     unflagged_case
 
-    assign(:cases, PaginatingDecorator.new(Case.all.page.order(:number)))
+    assign(:cases, PaginatingDecorator.new(Case::Base.all.page.order(:number)))
     assign(:state_selector, StateSelector.new( {} ))
 
     disallow_case_policy :can_add_case?
@@ -89,7 +89,7 @@ describe 'cases/index.html.slim', type: :view do
 
   describe 'add case button' do
     it 'is displayed when the user can add cases' do
-      assign(:cases, PaginatingDecorator.new(Case.all.page))
+      assign(:cases, PaginatingDecorator.new(Case::Base.all.page))
       assign(:state_selector, StateSelector.new( {} ))
       assign(:can_add_case, true)
 
@@ -102,7 +102,7 @@ describe 'cases/index.html.slim', type: :view do
     end
 
     it 'is not displayed when the user cannot add cases' do
-      assign(:cases, PaginatingDecorator.new(Case.all.page))
+      assign(:cases, PaginatingDecorator.new(Case::Base.all.page))
       assign(:state_selector, StateSelector.new( {} ))
 
       disallow_case_policy :can_add_case?
@@ -120,7 +120,7 @@ describe 'cases/index.html.slim', type: :view do
     end
 
     it 'has a link to in-time open cases' do
-      assign(:cases, PaginatingDecorator.new(Case.all.page))
+      assign(:cases, PaginatingDecorator.new(Case::Base.all.page))
       assign(:state_selector, StateSelector.new( {} ))
       render
       cases_page.load(rendered)
@@ -133,7 +133,7 @@ describe 'cases/index.html.slim', type: :view do
     it 'has a count of how many in-time open cases there are' do
       login_as(responder)
       assigned_case
-      assign(:cases, PaginatingDecorator.new(Case.all.page))
+      assign(:cases, PaginatingDecorator.new(Case::Base.all.page))
       assign(:state_selector, StateSelector.new( {} ))
       render
       cases_page.load(rendered)
@@ -148,7 +148,7 @@ describe 'cases/index.html.slim', type: :view do
     end
 
     it 'renders the paginator' do
-      assign(:cases, Case.none.page.decorate)
+      assign(:cases, Case::Base.none.page.decorate)
       assign(:state_selector, StateSelector.new( {} ))
       render
       expect(response).to have_rendered('kaminari/_paginator')
@@ -162,7 +162,7 @@ describe 'cases/index.html.slim', type: :view do
     context 'one pages worth of cases' do
       before :all do
         create_list(:case, 20)
-        @cases = Case.all.page.decorate
+        @cases = Case::Base.all.page.decorate
       end
       after(:all) { DbHousekeeping.clean }
 
@@ -179,7 +179,7 @@ describe 'cases/index.html.slim', type: :view do
     context 'on page one of two of cases' do
       before :all do
         create_list(:case, 21)
-        @cases = Case.all.page(1).decorate
+        @cases = Case::Base.all.page(1).decorate
       end
       after(:all) { DbHousekeeping.clean }
 
@@ -204,7 +204,7 @@ describe 'cases/index.html.slim', type: :view do
     context 'on page two of two of cases' do
       before :all do
         create_list(:case, 21)
-        @cases = Case.all.page(2).decorate
+        @cases = Case::Base.all.page(2).decorate
       end
       after(:all) { DbHousekeeping.clean }
 
@@ -229,7 +229,7 @@ describe 'cases/index.html.slim', type: :view do
     context 'on page two of three of cases' do
       before :all do
         create_list(:case, 41)
-        @cases = Case.all.page(2).decorate
+        @cases = Case::Base.all.page(2).decorate
       end
       after(:all) { DbHousekeeping.clean }
 

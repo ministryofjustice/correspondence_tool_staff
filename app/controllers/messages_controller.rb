@@ -1,7 +1,7 @@
 class MessagesController < ApplicationController
 
   def create
-    @case = Case.find params[:case_id]
+    @case = Case::Base.find params[:case_id]
     authorize(@case, :can_add_message_to_case?)
     team = current_user.teams_for_case(@case).first
     if @case.state_machine.configurable?

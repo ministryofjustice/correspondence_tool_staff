@@ -210,7 +210,7 @@ class AssignmentsController < ApplicationController
   end
 
   def set_case_and_assignment
-    if Case.exists?(id: params[:case_id])
+    if Case::Base.exists?(id: params[:case_id])
       set_case
     end
     if Assignment.exists?(id: params[:id])
@@ -219,7 +219,7 @@ class AssignmentsController < ApplicationController
   end
 
   def set_case
-    @case = Case.find(params[:case_id]).decorate
+    @case = Case::Base.find(params[:case_id]).decorate
     @case_transitions = @case.transitions.decorate
   end
 

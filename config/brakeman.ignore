@@ -129,7 +129,7 @@
       "file": "app/controllers/case_attachments_controller.rb",
       "line": 11,
       "link": "http://brakemanscanner.org/docs/warning_types/file_access/",
-      "code": "send_file(download_to_tmpfile(Case.find(params[:case_id]).attachments.find(params[:id]).preview_key), :type => File.mime_type?(Case.find(params[:case_id]).attachments.find(params[:id]).preview_key), :disposition => \"inline\")",
+      "code": "send_file(download_to_tmpfile(Case::Base.find(params[:case_id]).attachments.find(params[:id]).preview_key), :type => File.mime_type?(Case.find(params[:case_id]).attachments.find(params[:id]).preview_key), :disposition => \"inline\")",
       "render_path": null,
       "location": {
         "type": "method",
@@ -209,14 +209,14 @@
       "file": "app/controllers/case_attachments_controller.rb",
       "line": 6,
       "link": "http://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Case.find(params[:case_id]).attachments.find(params[:id]).temporary_url)",
+      "code": "redirect_to(Case::Base.find(params[:case_id]).attachments.find(params[:id]).temporary_url)",
       "render_path": null,
       "location": {
         "type": "method",
         "class": "CaseAttachmentsController",
         "method": "download"
       },
-      "user_input": "Case.find(params[:case_id]).attachments.find(params[:id]).temporary_url",
+      "user_input": "Case::Base.find(params[:case_id]).attachments.find(params[:id]).temporary_url",
       "confidence": "High",
       "note": ""
     }

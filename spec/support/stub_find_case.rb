@@ -4,7 +4,7 @@
 # controller as stubbing out the return value from Case.find is frought
 # with yuckiness ... e.g. @case.transitions.order...
 def stub_find_case(id)
-  allow(Case).to receive(:find).with(id.to_s)
+  allow(Case::Base).to receive(:find).with(id.to_s)
                    .and_wrap_original do |original_method, *args|
     original_method.call(*args).tap do |kase|
       yield kase

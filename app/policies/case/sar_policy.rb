@@ -1,3 +1,3 @@
-class Case::SARPolicy < CasePolicy
+class Case::SARPolicy < Case::BasePolicy
 
 end

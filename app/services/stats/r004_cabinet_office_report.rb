@@ -170,7 +170,7 @@ module Stats
     end
 
     def get_value_1_C
-      Case.closed.where(received_date: [@period_start..@period_end]).count
+      Case::Base.closed.where(received_date: [@period_start..@period_end]).count
     end
 
     def get_value_1_Ci
@@ -278,15 +278,15 @@ module Stats
     end
 
     def cases_received_in_period
-      Case.where(received_date: [@period_start..@period_end])
+      Case::Base.where(received_date: [@period_start..@period_end])
     end
 
     def open_cases_received_in_period
-      Case.opened.where(received_date: [@period_start..@period_end])
+      Case::Base.opened.where(received_date: [@period_start..@period_end])
     end
 
     def cases_received_and_closed_in_period
-      Case.closed.where(received_date: [@period_start..@period_end])
+      Case::Base.closed.where(received_date: [@period_start..@period_end])
     end
 
     def fully_refused_cases_received_and_closed_in_period
@@ -306,11 +306,11 @@ module Stats
     end
 
     def fully_refused_cases_received_and_closed_in_period_with_exemption(exemption)
-      fully_refused_cases_received_and_closed_in_period.joins(:cases_exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
+      fully_refused_cases_received_and_closed_in_period.joins(:exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
     end
 
     def fully_and_part_refused_cases_received_and_closed_in_period_with_exemption(exemption)
-      fully_or_part_refused_cases_received_and_closed_in_period.joins(:cases_exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
+      fully_or_part_refused_cases_received_and_closed_in_period.joins(:exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
     end
 
     def info_not_confirmed_cases_received_and_closed_in_period

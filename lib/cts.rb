@@ -68,7 +68,7 @@ module CTS
     end
 
     def find_case(id_or_number)
-      Case.where(['id = ? or number = ?', id_or_number, id_or_number]).first or
+      Case::Base.where(['id = ? or number = ?', id_or_number, id_or_number]).first or
         raise "No case found matching id or number '#{id_or_number}'."
     end
 

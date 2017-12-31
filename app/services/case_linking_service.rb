@@ -56,8 +56,8 @@ class CaseLinkingService
 
   def link_case_exists?
     if @case.errors.empty?
-      if Case.where(number: @link_case_number).exists?
-        @link_case = Case.where(number: @link_case_number).first
+      if Case::Base.where(number: @link_case_number).exists?
+        @link_case = Case::Base.where(number: @link_case_number).first
         true
       else
         @case.errors.add(

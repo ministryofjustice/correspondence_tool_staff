@@ -24,5 +24,5 @@ def create_case_step(type: 'casefoi',
 
   # Return the case we created using the params of the current  path
   kase_id = Rails.application.routes.recognize_path(current_path)[:case_id]
-  Case.find(kase_id)
+  Case::Base.find(kase_id)
 end

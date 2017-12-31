@@ -79,7 +79,7 @@ namespace :data do
 
     desc 'Sets internal deadline on all cases'
     task set_internal_deadline: :environment do
-      Case.all.each do |kase|
+      Case::Base.all.each do |kase|
         kase.__send__(:set_internal_deadline) if kase.internal_deadline.nil?
       end
     end
@@ -102,7 +102,7 @@ namespace :data do
     task add_disclosure_team: :environment do
       press_office = BusinessUnit.press_office
       dacu_disclosure = BusinessUnit.dacu_disclosure
-      Case.with_teams(press_office)
+      Case::Base.with_teams(press_office)
         .find_all { |c| c.assignments.with_teams(dacu_disclosure).blank? }
         .each do |kase|
 

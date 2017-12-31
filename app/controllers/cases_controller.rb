@@ -57,7 +57,7 @@ class CasesController < ApplicationController
                .page(params[:page])
                .decorate
     @current_tab_name = 'all_cases'
-    @can_add_case = policy(Case.new(category: Category.foi)).can_add_case?
+    @can_add_case = policy(Case::Base.new(category: Category.foi)).can_add_case?
   end
 
   def closed_cases
@@ -85,7 +85,7 @@ class CasesController < ApplicationController
                .page(params[:page])
                .decorate
     @current_tab_name = 'my_cases'
-    @can_add_case = policy(Case.new(category: Category.foi)).can_add_case?
+    @can_add_case = policy(Case::Base.new(category: Category.foi)).can_add_case?
     render :index
   end
 
@@ -99,7 +99,7 @@ class CasesController < ApplicationController
 
     # .by_deadline
     @current_tab_name = 'all_cases'
-    @can_add_case = policy(Case.new(category: Category.foi)).can_add_case?
+    @can_add_case = policy(Case::Base.new(category: Category.foi)).can_add_case?
     render :index
   end
 
@@ -110,7 +110,7 @@ class CasesController < ApplicationController
   end
 
   def select_type
-    @case = Case.new
+    @case = Case::Base.new
   end
 
   def new
@@ -119,15 +119,15 @@ class CasesController < ApplicationController
     end
 
 
-    authorize Case.new(category: Category.foi), :can_add_case?
+    authorize Case::Base.new(category: Category.foi), :can_add_case?
 
-    @case = Case.new
+    @case = Case::Base.new
     @s3_direct_post = s3_uploader_for(@case, 'requests')
     render :new
   end
 
   def create
-    authorize Case.new(category: Category.foi), :can_add_case?
+    authorize Case::Base.new(category: Category.foi), :can_add_case?
 
     service = CaseCreateService.new current_user, create_foi_params
     service.call
@@ -165,7 +165,7 @@ class CasesController < ApplicationController
     # cannot use a decorated case here because the requester type radio buttons
     # do not populate if you do
     #
-    @case = Case.find(params[:id])
+    @case = Case::Base.find(params[:id])
     @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
     authorize @case
 
@@ -221,7 +221,7 @@ class CasesController < ApplicationController
   end
 
   def update
-    @case = Case.find(params[:id])
+    @case = Case::Base.find(params[:id])
     authorize @case
 
     service = CaseUpdaterService.new(current_user, @case, create_foi_params)
@@ -278,7 +278,7 @@ class CasesController < ApplicationController
     @current_tab_name = 'search'
     if @query.present?
       @query.strip!
-      @cases = policy_scope(Case).search(@query).page(params[:page]).decorate
+      @cases = policy_scope(Case::Base).search(@query).page(params[:page]).decorate
       if @cases.empty?
         flash.now[:alert] = 'No cases found'
       end
@@ -474,12 +474,12 @@ class CasesController < ApplicationController
   end
 
   def set_decorated_case
-    @case = Case.find(params[:id]).decorate
+    @case = Case::Base.find(params[:id]).decorate
     @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
   end
 
   def set_case
-    @case = Case.find(params[:id])
+    @case = Case::Base.find(params[:id])
     @case_transitions = @case.transitions.case_history.order(id: :desc)
   end
 

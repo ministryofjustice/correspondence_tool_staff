@@ -24,7 +24,7 @@ class Admin::CasesController < ApplicationController
   end
 
   def index
-    @cases = Case.all.order(id: :desc).page(params[:page]).decorate
+    @cases = Case::Base.all.order(id: :desc).page(params[:page]).decorate
   end
 
   def new
@@ -41,7 +41,7 @@ class Admin::CasesController < ApplicationController
   private
 
   def authorize_admin
-    authorize Case.new(category: Category.foi), :user_is_admin?
+    authorize Case::Base.new(category: Category.foi), :user_is_admin?
   end
 
   def available_target_states
