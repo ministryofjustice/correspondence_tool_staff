@@ -89,7 +89,9 @@ Rails.application.configure do
 
   config.logstasher.enabled = true
   config.logstasher.logger = Logger.new STDOUT
-
+  config.log_tags = [ :uuid, :remote_ip,
+                      lambda {|req| "#{req.cookie_jar["_correspondence_platform_session"]}" } ]
+                      
   #  Rails 5.0.5 logger
   # if ENV["RAILS_LOG_TO_STDOUT"].present?
   #   logger           = ActiveSupport::Logger.new(STDOUT)

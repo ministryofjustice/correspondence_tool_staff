@@ -54,7 +54,5 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  config.logstasher.enabled = true
-  config.logstasher.logger = Logger.new STDOUT
 
 end
