@@ -22,7 +22,7 @@
 #  last_transitioned_at :datetime
 #  delivery_method      :enum
 #  workflow             :string
-#  deleted?             :boolean          default(FALSE)
+#  deleted              :boolean          default(FALSE)
 #  info_held_status_id  :integer
 #  type                 :string           default("Case")
 #  appeal_outcome_id    :integer
@@ -183,7 +183,7 @@ RSpec.describe Case, type: :model do
 
   describe 'default_scope' do
     it "applies a default scope to exclude deleted cases" do
-      expect(Case.all.to_sql).to eq Case.unscoped.where( deleted?: false).to_sql
+      expect(Case.all.to_sql).to eq Case.unscoped.where( deleted: false).to_sql
     end
   end
 

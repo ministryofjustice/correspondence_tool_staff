@@ -9,12 +9,15 @@ class DatabaseDumper
     'demo' => 'demo.cts'
   }.freeze
 
-  def initialize(env, host)
+  ANONYMISED_TABLES = %w( users cases case_transitions )
+
+  def initialize(env, host, anonymize)
     puts "Create SQL dump of #{env} environemnt on host #{host} - run rake db:dump:help for assistance".yellow
     @ssh_user = ENV['CTS_SSH_USER']
     exit_with_error('No CTS_SSH_USER environment variable found') if @ssh_user.blank?
     @env = env
     @host = host.blank? ? HOST_NAMES[@env] : host
+    @anonymize = anonymize
   end
 
   def run
@@ -31,6 +34,10 @@ class DatabaseDumper
       puts err.backtrace
       exit_with_error(err.message)
     end
+  end
+
+  def self.excluded_anonymised_tables
+    ANONYMISED_TABLES.map{ |x| "--exclude-table-data #{x}"}.join( ' ')
   end
 
   private
@@ -68,7 +75,7 @@ class DatabaseDumper
 
   def dump_local_database
     filename = "#{Time.now.strftime('%Y%m%d-%H%M%S')}_#{@env}_dump.sql"
-    ssh_command = "ssh #{@ssh_user}@#{@host} sudo docker exec correspondence-staff rake db:dump:local[#{filename}]"
+    ssh_command = "ssh #{@ssh_user}@#{@host} sudo docker exec correspondence-staff rake db:dump:local[#{filename},#{@anonymize}]"
     puts "Executing: #{ssh_command}"
     result = system ssh_command
     raise 'Unable to execute SSH command' unless result == true

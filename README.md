@@ -1,11 +1,11 @@
 # Correspondence Tools - Staff
-[![Build Status](https://travis-ci.org/ministryofjustice/correspondence_tool_staff.svg?branch=develop)](https://travis-ci.org/ministryofjustice/correspondence_tool_staff) 
+[![Build Status](https://travis-ci.org/ministryofjustice/correspondence_tool_staff.svg?branch=develop)](https://travis-ci.org/ministryofjustice/correspondence_tool_staff)
 [![Code Climate](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/gpa.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff)
-[![Test Coverage](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/coverage.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/coverage) 
+[![Test Coverage](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/coverage.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/coverage)
 [![Issue Count](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/issue_count.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff)
 
 
-A simple application to allow internal staff users to answer correspondence. 
+A simple application to allow internal staff users to answer correspondence.
 
 ## Local development
 
@@ -69,9 +69,9 @@ $ brew install phantomjs
 
 ### Frontend local development setup
 
-[BrowserSync](https://www.browsersync.io/) is setup and configured for local development 
-using the [BrowserSync Rails gem](https://github.com/brunoskonrad/browser-sync-rails). 
-BrowserSync helps us test across different browsers and devices and sync the 
+[BrowserSync](https://www.browsersync.io/) is setup and configured for local development
+using the [BrowserSync Rails gem](https://github.com/brunoskonrad/browser-sync-rails).
+BrowserSync helps us test across different browsers and devices and sync the
 various actions that take place.
 
 #### Dependencies
@@ -84,15 +84,15 @@ Install using `brew install node` and then check its installed using `node -v` a
 
 #### Installing and running:
 
-Bundle install as normal then 
+Bundle install as normal then
 After bundle install:
 
 ```bash
 bundle exec rails generate browser_sync_rails:install
 ```
 
-This will use Node.js npm (Node Package Manager(i.e similar to Bundle or Pythons PIP)) 
-to install BrowserSync and this command is only required once. If you run into 
+This will use Node.js npm (Node Package Manager(i.e similar to Bundle or Pythons PIP))
+to install BrowserSync and this command is only required once. If you run into
 problems with your setup visit the [Gems README](https://github.com/brunoskonrad/browser-sync-rails#problems).
 
 To run BrowserSync start your rails server as normal then in a seperate terminal window
@@ -129,7 +129,7 @@ Libreoffice is used to convert documents to PDF's so that they can be viewed in 
 In production environments, the installation of libreoffice is taken care of during the build
 of the docker container (see the Dockerfile).
 
-In localhost dev testing environments, libreoffice needs to be installed using homebrew, and then 
+In localhost dev testing environments, libreoffice needs to be installed using homebrew, and then
 the following shell script needs to created with the name ```/usr/local/bin/soffice```:
 
 
@@ -142,7 +142,7 @@ The above script is needed by the libreconv gem to do the conversion.
 ### DB Setup
 
 Run these rake tasks to prepare the database for local development.
- 
+
 ```
 $ rails db:create
 $ rails db:migrate
@@ -150,10 +150,9 @@ $ rails db:seed
 $ rails db:seed:dev:users
 ```
 
-
 The above commands will set up a minimal set of teams, roles and users.
 
-In order to populate the database with corrrespondence items, use the cts script as follows:
+In order to populate the database with correspondence items, use the cts script as follows:
 
 ```
 $ ./cts clear                          # clears all cases from the database
@@ -161,6 +160,29 @@ $ ./cts create all                     # creates 2 cases in each state
 $ ./cts create -n4 unassigned drafting # create 4 cases each in unassigned and drafting states
 $ ./cts --help create                  # display full help text for create command
 ```
+
+### Dumping the database
+
+We have functionality to create an anonymised copy of the production or staging database. This feature is to be used as a very last resort. If the copy of the database is needed for debugging please consider the following options first:
+- seeing if the issue is covered in the feature tests
+- trying to track the issue through Kibana
+- recreating the issue locally
+
+If the options above do not solve the issue you by create an anonymised dump of the database by running
+
+```rake db:dump:prod[host]```
+
+there are also options to create an anonymised version of the local database
+
+```rake db:dump:local[filename,anon]```
+
+or a standard copy
+
+```rake db:dump:local[filename,clear]```
+
+For more help with the data dump tasks run:
+
+```rake db:dump:help```
 
 ### Testing in Parallel
 
@@ -172,19 +194,22 @@ in order to speed up execution.
 1. Create the required number of extra test databases:
 
     ```bundle exec rake parallel:create```
-    
+
 2. Load the schema into all of the extra test databases:
 
     ```bundle exec rake parallel:load_structure```
-    
-    
-#### To run the tests in parallel
 
-    bundle exec rake parallel:spec
+    ##### To run all the tests in parallel
 
+    ```bundle exec rake parallel:spec```
 
-    
+    ##### To run only feature tests in parallel
 
+    ```bundle exec rake parallel:spec:features```
+
+    ##### To run only the non-feature tests in parallel
+
+    ```bundle exec rake parallel:spec:non_features```
 
 ### Emails
 
@@ -242,7 +267,7 @@ testing:
 
 # Case Journey
 1. **unassigned**  
-   A new case entered by a DACU user is created in this state.  It is in this state very 
+   A new case entered by a DACU user is created in this state.  It is in this state very
    briefly before it the user assigns it to a team on the next screen.
 
 1. **awaiting_responder**  
@@ -250,11 +275,11 @@ testing:
 
 1. **drafting**  
    A kilo in the responding business unit has accepted the case.
-   
+
 1. **pending_dacu_clearance**
-   For cases that have an approver assignment with Dacu Disclosure, as soon as a 
+   For cases that have an approver assignment with Dacu Disclosure, as soon as a
    response file is uploaded, the case will transition to pending_dacu disclosure.
-   The DACU disclosure team can either clear the case, in which case it goes forward to 
+   The DACU disclosure team can either clear the case, in which case it goes forward to
    awaiting dispatch, or requrest changes, in which case it goes back to drafting.
 
 1. **awaiting_dispatch**  
@@ -265,10 +290,10 @@ testing:
 
 1. **closed**  
    The kilo has marked the case as closed.
-  
-#Smoke Tests
 
-The smoke test runs through the process of signing into the service using a dedicated user account setup as Disclosure BMT team member. 
+# Smoke Tests
+
+The smoke test runs through the process of signing into the service using a dedicated user account setup as Disclosure BMT team member.
 It checks that sign in was successful and then randomly views one case in the case list view.  
 
 To run the smoke test, set the following environment variables:
@@ -279,4 +304,3 @@ To run the smoke test, set the following environment variables:
 and then run
 
     bundle exec rails smoke
-

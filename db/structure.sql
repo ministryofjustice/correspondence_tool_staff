@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.6
--- Dumped by pg_dump version 9.5.6
+-- Dumped from database version 9.5.9
+-- Dumped by pg_dump version 9.5.9
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -336,7 +336,7 @@ CREATE TABLE cases (
     last_transitioned_at timestamp without time zone,
     delivery_method cases_delivery_methods,
     workflow character varying,
-    "deleted?" boolean DEFAULT false,
+    deleted boolean DEFAULT false,
     info_held_status_id integer,
     type character varying DEFAULT 'Case'::character varying,
     appeal_outcome_id integer
@@ -1144,10 +1144,10 @@ CREATE INDEX index_cases_on_category_id ON cases USING btree (category_id);
 
 
 --
--- Name: index_cases_on_deleted?; Type: INDEX; Schema: public; Owner: -
+-- Name: index_cases_on_deleted; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX "index_cases_on_deleted?" ON cases USING btree ("deleted?");
+CREATE INDEX index_cases_on_deleted ON cases USING btree (deleted);
 
 
 --
@@ -1392,6 +1392,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171123170106'),
 ('20171205092729'),
 ('20171205102155'),
-('20171215103720');
+('20171215103720'),
+('20171220135129');
 
 
