@@ -55,7 +55,10 @@ class Case < ApplicationRecord
   jsonb_accessor :properties,
                  escalation_deadline: :date,
                  internal_deadline: :date,
-                 external_deadline: :date
+                 external_deadline: :date,
+                 subject_full_name: :string,
+                 subject_type: :string,
+                 third_party: :boolean
 
   attr_accessor :flag_for_disclosure_specialists,
                 :uploaded_request_files,

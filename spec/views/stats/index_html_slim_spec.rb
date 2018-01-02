@@ -33,7 +33,7 @@ describe 'stats/index.html.slim', type: :view do
       expect(report.name.text).to eq reports[index].full_name
 
       expect(report.action_column).to have_link("Download #{reports[index].full_name}",
-                               stats_download_path(id: reports[index].id))
+                               href: stats_download_path(id: reports[index].id))
 
     end
 
