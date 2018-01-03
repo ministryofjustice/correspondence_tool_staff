@@ -1,4 +1,4 @@
-class Case::SAR::Base < Case::Base
+class Case::SAR < Case::Base
   class << self
     def type_abbreviation
       'SAR'
