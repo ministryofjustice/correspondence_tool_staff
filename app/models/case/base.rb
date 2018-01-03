@@ -60,7 +60,9 @@ class Case::Base < ApplicationRecord
                  external_deadline: :date,
                  subject_full_name: :string,
                  subject_type: :string,
-                 third_party: :boolean
+                 third_party: :boolean,
+                 requester_email: :string,
+                 requester_postal_address: :string
 
   attr_accessor :flag_for_disclosure_specialists,
                 :uploaded_request_files,
