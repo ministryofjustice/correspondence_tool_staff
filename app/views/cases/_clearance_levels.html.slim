@@ -27,5 +27,5 @@
               td colspan=2
                 = assignment.user&.full_name
 
-      - if policy(case_details).request_further_clearance?
-        = link_to "Request further clearance", request_further_clearance_case_path(case_details.id), method: :patch, class: "secondary-action-link"
+    - if policy(case_details).request_further_clearance?
+      = link_to "Request further clearance", request_further_clearance_case_path(case_details.id), method: :patch, class: "secondary-action-link"
