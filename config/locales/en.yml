@@ -178,7 +178,10 @@ en:
         appeal_outcome_name: What was the appeal outcome?
         flag_for_disclosure_specialists: Clearance required by DACU Disclosure
         type: Case type
-
+      case_sar:
+        delivery_method: "Received by"
+        subject_type: "Type of subject"
+        third_party: "Is the information being requested on someone's behalf?"
       state_selector:
         selected_states: Filter by status
     hint:
@@ -237,6 +240,15 @@ en:
           Case::FOI::Standard: FOI
           Case::SAR: SAR
         linked_case_number: Case number
+      case_sar:
+        delivery_method:
+          sent_by_email: "Email"
+          sent_by_post: "Post"
+        linked_cases: "If it's a linked case, what is the linked case number?"
+        name: "Requestor full name"
+        received_date: "Received at MOJ"
+        subject: "Case summary"
+        subject_full_name: "Full name of subject"
       feedback:
         comment: Help make this service better
 
@@ -324,6 +336,8 @@ en:
       clear_response: Clear response
       request_amends: Request amends
       upload_approve: 'Upload response and clear'
+    case_sar:
+      received_date: "Received at MOJ"
     new_case_button: Create case
     phase_banner: |
       This is a new service.
