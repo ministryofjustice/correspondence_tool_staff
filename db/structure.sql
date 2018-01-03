@@ -338,7 +338,7 @@ CREATE TABLE cases (
     workflow character varying,
     deleted boolean DEFAULT false,
     info_held_status_id integer,
-    type character varying DEFAULT 'Case::FOI'::character varying,
+    type character varying,
     appeal_outcome_id integer
 );
 
