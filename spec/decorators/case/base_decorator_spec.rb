@@ -37,11 +37,6 @@ describe Case::BaseDecorator, type: :model do
       end
     end
 
-    context 'Case::SAR::NonOffender' do
-      it 'instantiates the correct decorator' do
-        expect(Case::SAR::NonOffender.new.decorate).to be_instance_of Case::SAR::NonOffenderDecorator
-      end
-    end
   end
 
 

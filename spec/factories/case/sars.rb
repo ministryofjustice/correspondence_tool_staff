@@ -1,7 +1,7 @@
 FactoryGirl.define do
 
   factory :sar_case,
-          class: Case::SAR::NonOffender do
+          class: Case::SAR do
     transient do
       creation_time             { 4.business_days.ago }
       identifier                "new sar case"
