@@ -11,8 +11,6 @@ describe Case::FOI do
       expect(kase.errors[:subject_type]).to eq(['must be blank'])
       expect(kase.errors[:third_party]).to eq(['must be blank'])
     end
-
   end
-
 
 end

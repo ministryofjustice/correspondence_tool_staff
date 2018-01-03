@@ -12,7 +12,7 @@ namespace :demo do
 end
 
 def update_case_dates(case_num, biz_days_ago)
-  kase = Case.find_by!(number: case_num)
+  kase = Case::Base.find_by!(number: case_num)
   print_case(kase, "Original State")
   date = biz_days_ago.business_days.ago
   update_dates(kase, date)

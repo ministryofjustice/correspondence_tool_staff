@@ -24,13 +24,15 @@
 #  workflow             :string
 #  deleted              :boolean          default(FALSE)
 #  info_held_status_id  :integer
-#  type                 :string           default("Case")
+#  type                 :string           default("Case::FOI")
 #  appeal_outcome_id    :integer
 #
 
 #rubocop:disable Metrics/ClassLength
-class Case < ApplicationRecord
+class Case::Base < ApplicationRecord
   include Statesman::Adapters::ActiveRecordQueries
+
+  self.table_name = :cases
 
   default_scope { where( deleted: false) }
 
@@ -87,7 +89,7 @@ class Case < ApplicationRecord
                             state: ['pending', 'accepted']})
   end
   scope :not_with_teams, -> (teams) do
-    where.not(id: Case.with_teams(teams).pluck(:id))
+    where.not(id: Case::Base.with_teams(teams).pluck(:id))
   end
 
   scope :in_states, -> (states) { where(current_state: states) }
@@ -157,13 +159,14 @@ class Case < ApplicationRecord
 
   belongs_to :category, required: true
 
-  has_many :assignments, dependent: :destroy
+  has_many :assignments, dependent: :destroy, foreign_key: :case_id
 
   has_many :teams, through: :assignments
 
   has_one :managing_assignment,
           -> { managing },
-          class_name: 'Assignment'
+          class_name: 'Assignment',
+          foreign_key: :case_id
 
   has_one :manager,
           through: :managing_assignment,
@@ -179,7 +182,8 @@ class Case < ApplicationRecord
 
   has_one :responder_assignment,
           -> { last_responding },
-          class_name: 'Assignment'
+          class_name: 'Assignment',
+          foreign_key: :case_id
 
   has_one :responder,
           through: :responder_assignment,
@@ -195,8 +199,9 @@ class Case < ApplicationRecord
            source: :users
 
   has_many :approver_assignments,
-          -> { approving },
-          class_name: 'Assignment'
+           -> { approving },
+           class_name: 'Assignment',
+           foreign_key: :case_id
 
   has_many :approvers,
            through: :approver_assignments,
@@ -214,6 +219,7 @@ class Case < ApplicationRecord
 
   has_many :transitions,
            class_name: 'CaseTransition',
+           foreign_key: :case_id,
            autosave: false,
            dependent: :destroy do
               def most_recent
@@ -222,13 +228,21 @@ class Case < ApplicationRecord
            end
   has_many :message_transitions,
            -> { messages },
-           class_name: 'CaseTransition'
+           class_name: 'CaseTransition',
+           foreign_key: :case_id
+
   has_many :users_transitions_trackers,
-           class_name: 'CasesUsersTransitionsTracker'
+           class_name: 'CasesUsersTransitionsTracker',
+           foreign_key: :case_id
 
-  has_many :responded_transitions, -> { responded }, class_name: 'CaseTransition'
+  has_many :responded_transitions, -> { responded },
+           class_name: 'CaseTransition',
+           foreign_key: :case_id
 
-  has_many :attachments, -> { order(id: :desc) }, class_name: 'CaseAttachment', dependent: :destroy
+  has_many :attachments, -> { order(id: :desc) },
+           class_name: 'CaseAttachment',
+           foreign_key: :case_id,
+           dependent: :destroy
 
   belongs_to :outcome, class_name: 'CaseClosure::Outcome'
 
@@ -238,10 +252,13 @@ class Case < ApplicationRecord
 
   belongs_to :info_held_status, class_name: 'CaseClosure::InfoHeldStatus'
 
-  has_and_belongs_to_many :exemptions, class_name: 'CaseClosure::Exemption', join_table: 'cases_exemptions'
+  has_and_belongs_to_many :exemptions,
+                          class_name: 'CaseClosure::Exemption',
+                          join_table: 'cases_exemptions',
+                          foreign_key: :case_id
 
   has_and_belongs_to_many :linked_cases,
-                          class_name: Case,
+                          class_name: 'Case::Base',
                           join_table: 'linked_cases',
                           foreign_key: :case_id,
                           association_foreign_key: :linked_case_id

@@ -1,5 +1,5 @@
 #rubocop:disable Metrics/ClassLength
-class CasePolicy < ApplicationPolicy
+class Case::BasePolicy < ApplicationPolicy
 
   attr_reader :user, :case, :failed_checks, :policy_workflow
 
@@ -40,7 +40,7 @@ class CasePolicy < ApplicationPolicy
         end
         final_scope
       else
-        Case.none
+        Case::Base.none
       end
     end
   end

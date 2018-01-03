@@ -50,7 +50,7 @@ module Stats
     end
 
     def analyse_case(case_id)
-      kase = Case.find case_id
+      kase = Case::Base.find case_id
       column_key = CaseAnalyser.new(kase).result
       month = kase.received_date.month
       @stats.record_stats(month, column_key)

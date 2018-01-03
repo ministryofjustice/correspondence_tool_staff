@@ -1,7 +1,7 @@
-require File.join(Rails.root, 'app', 'models', 'case')
+require File.join(Rails.root, 'app', 'models', 'case', 'base')
 
 
-class Case < ApplicationRecord
+class Case::Base < ApplicationRecord
 
   def assigned_disclosure_specialist
     ass = assignments.approving.accepted.detect{ |a| a.team_id == BusinessUnit.dacu_disclosure.id }

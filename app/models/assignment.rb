@@ -30,8 +30,12 @@ class Assignment < ApplicationRecord
          approving: 'approving',
        }
 
-  belongs_to :case
+  belongs_to :case,
+             foreign_key: :case_id,
+             class_name: 'Case::Base'
+
   belongs_to :team
+
   belongs_to :user
 
   scope :approved, -> { where(approved: true) }

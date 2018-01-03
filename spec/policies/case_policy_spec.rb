@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 
-describe CasePolicy do
+describe Case::BasePolicy do
   let!(:dacu_disclosure)  { find_or_create :team_dacu_disclosure }
   let(:managing_team)     { find_or_create :team_dacu }
   let(:manager)           { managing_team.managers.first }
@@ -42,13 +42,13 @@ describe CasePolicy do
 
     it 'for managers - returns all cases' do
       existing_cases
-      manager_scope = described_class::Scope.new(manager, Case.all).resolve
+      manager_scope = described_class::Scope.new(manager, Case::Base.all).resolve
       expect(manager_scope).to match_array(existing_cases)
     end
 
     it 'for responders - returns only their cases' do
       existing_cases
-      responder_scope = described_class::Scope.new(responder, Case.all).resolve
+      responder_scope = described_class::Scope.new(responder, Case::Base.all).resolve
       expect(responder_scope).to match_array([assigned_case,
                                               accepted_case,
                                               case_with_response,
@@ -58,7 +58,7 @@ describe CasePolicy do
 
     it 'for approvers - returns all cases' do
       existing_cases
-      approver_scope = described_class::Scope.new(approver, Case.all).resolve
+      approver_scope = described_class::Scope.new(approver, Case::Base.all).resolve
       expect(approver_scope).to match_array(existing_cases)
     end
 
@@ -66,7 +66,7 @@ describe CasePolicy do
       responder.team_roles << TeamsUsersRole.new(team: dacu_disclosure,
                                                  role: 'manager')
       existing_cases
-      resolved_scope = described_class::Scope.new(responder, Case.all).resolve
+      resolved_scope = described_class::Scope.new(responder, Case::Base.all).resolve
       expect(resolved_scope).to match_array(existing_cases)
     end
   end

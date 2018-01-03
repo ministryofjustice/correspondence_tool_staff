@@ -8,7 +8,7 @@ namespace :cases do
     HostEnv.safe do
       FactoryGirl.create_list(:case, 10)
       puts 'Created 10 new cases'
-      puts "Total cases is now: #{Case.count}"
+      puts "Total cases is now: #{Case::Base.count}"
     end
   end
 

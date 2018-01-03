@@ -7,7 +7,7 @@ describe 'cases/closed_cases.html.slim' do
   it 'displays all the cases' do
     case_1
     case_2
-    cases = Case.closed.most_recent_first.page.decorate
+    cases = Case::Base.closed.most_recent_first.page.decorate
     assign(:cases, cases)
 
     render
@@ -37,7 +37,7 @@ describe 'cases/closed_cases.html.slim' do
     end
 
     it 'renders the paginator' do
-      assign(:cases, Case.none.page.decorate)
+      assign(:cases, Case::Base.none.page.decorate)
       render
       expect(response).to have_rendered('kaminari/_paginator')
     end

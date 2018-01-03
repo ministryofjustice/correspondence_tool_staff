@@ -7,6 +7,7 @@ class CaseUnacceptApproverAssignmentService
     @user = @assignment.user
     @team = @assignment.team
     @result = :incomplete
+    @kase = assignment.case
     @dts = DefaultTeamService.new(assignment.case)
   end
 
@@ -14,10 +15,9 @@ class CaseUnacceptApproverAssignmentService
     return false unless validate_accepted
     ActiveRecord::Base.transaction do
       if @team.press_office? || @team.private_office?
-        kase = @assignment.case
         @dts.associated_teams(for_team: @team).each do |associated|
-          if last_flagged_for_team(kase, @team, associated[:team])
-            previous_assignment = kase.assignments
+          if last_flagged_for_team(@kase, @team, associated[:team])
+            previous_assignment = @kase.assignments
                                     .with_teams(associated[:team])
                                     .first
             unassign_approver_assignment previous_assignment
@@ -59,8 +59,7 @@ class CaseUnacceptApproverAssignmentService
   end
 
   def unassign_approver_assignment(assignment)
-    kase = assignment.case
-    kase.state_machine.unflag_for_clearance!(@user, @team, assignment.team)
+    @kase.state_machine.unflag_for_clearance!(@user, @team, assignment.team)
     assignment.destroy
   end
 end

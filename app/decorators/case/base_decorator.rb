@@ -1,4 +1,4 @@
-class CaseDecorator < Draper::Decorator
+class Case::BaseDecorator < Draper::Decorator
   delegate_all
 
   # if the case is with a responding team and the current user is a responder

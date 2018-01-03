@@ -155,7 +155,7 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
 
   describe '#request_details_html' do
     it 'generates html markup' do
-      kase = instance_double(Case, subject: 'Once upon a time...', name: 'Ray Gunn')
+      kase = instance_double(Case::Base, subject: 'Once upon a time...', name: 'Ray Gunn')
       request_details = request_details_html(kase)
       expect(request_details).to eq '<strong class="strong">Once upon a time... </strong><div class="case-name-detail">Ray Gunn</div>'
     end
