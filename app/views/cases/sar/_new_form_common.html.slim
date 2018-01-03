@@ -1,11 +1,38 @@
-= f.text_field :name
+h2.heading-medium About the subject
 
-= f.email_field :email
+= f.text_field :subject_full_name
 
-= f.text_area :postal_address, {rows: 4}
+= f.radio_button_fieldset :subject_type,
+                          choices: Case::SAR::VALID_SUBJECT_TYPES
 
-= f.radio_button_fieldset :requester_type,
-        choices: Case.requester_types.values
+#third-party
+  = f.radio_button_fieldset :third_party
+
+  #case_third_party_yes_content.panel.panel-border-thin
+    = f.text_field :name
+
+h2.heading-medium About the case
 
 .form-group
   = f.gov_uk_date_field :received_date, {legend_text: t('cases.new.received_date'), form_hint_text: t('cases.new.received_date_copy'), today_button: {class: 'button-secondary'} }
+
+#delivery-method
+  = f.radio_button_fieldset :delivery_method,
+                            choices: [:sent_by_email, :sent_by_post]
+
+= f.text_field :linked_cases, value: ''
+
+= f.text_field :subject
+
+.grid-row
+  .column-two-thirds
+    div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
+      = render partial: 'shared/dropzone_form',
+              locals: { s3_direct_post: @s3_direct_post,
+                      file_input_name: 'case[uploaded_request_files][]' }
+
+= f.text_area :message
+
+h2.heading-medium Where the information should be sent
+
+= f.email_field :email
