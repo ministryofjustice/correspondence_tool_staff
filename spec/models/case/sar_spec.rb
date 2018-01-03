@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Case::SAR::NonOffender do
+describe Case::SAR do
   context 'validates that SAR-specific fields are not blank' do
     it 'is not valid' do
 
