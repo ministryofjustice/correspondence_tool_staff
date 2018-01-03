@@ -76,7 +76,7 @@ module CTS::Cases
                       else
                         0.business_days.after(4.business_days.ago)
                       end
-      Case::Base.new(
+      Case::FOI.new(
         name:            name,
         email:           options.fetch(:email, Faker::Internet.email(name)),
         category:        foi,
