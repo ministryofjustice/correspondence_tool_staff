@@ -146,7 +146,7 @@ class Case < ApplicationRecord
             if: -> { sent_by_post? }
   validates :subject,  :category, presence: true
   validates :subject, length: { maximum: 100 }
-  validates :type, presence: true
+  validates :type, presence: true, exclusion: { in: %w{Case}, message: "Case type can't be blank" }
 
   validates_with ::ClosedCaseValidator
 
