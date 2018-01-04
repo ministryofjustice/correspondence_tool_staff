@@ -43,7 +43,7 @@ describe 'cases/clearance_details.html.slim', type: :view do
 
   context 'escalation_deadline not yet reached' do
     it 'just displays escalation date' do
-      kase = double Case::BaseDecorator
+      kase = create :case
       allow(kase).to receive(:escalation_deadline).and_return('13 Aug 2017')
       allow(kase).to receive(:within_escalation_deadline?).and_return(true)
 
