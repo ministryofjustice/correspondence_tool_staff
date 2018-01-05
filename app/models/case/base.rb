@@ -24,7 +24,7 @@
 #  workflow             :string
 #  deleted              :boolean          default(FALSE)
 #  info_held_status_id  :integer
-#  type                 :string           default("Case::FOI")
+#  type                 :string
 #  appeal_outcome_id    :integer
 #
 

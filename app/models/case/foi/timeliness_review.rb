@@ -22,9 +22,9 @@
 #  last_transitioned_at :datetime
 #  delivery_method      :enum
 #  workflow             :string
-#  deleted?             :boolean          default(FALSE)
+#  deleted              :boolean          default(FALSE)
 #  info_held_status_id  :integer
-#  type                 :string           default("Case")
+#  type                 :string 
 #  appeal_outcome_id    :integer
 #
 
