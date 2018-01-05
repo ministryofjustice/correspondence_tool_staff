@@ -287,6 +287,8 @@ class Case::FOI::StandardStateMachine
   end
 
   event :request_further_clearance do
+    authorize :can_request_further_clearance?
+    transition from: :awaiting_responder,               to: :awaiting_responder
     transition from: :drafting,                         to: :drafting
     transition from: :awaiting_dispatch,                to: :awaiting_dispatch
   end

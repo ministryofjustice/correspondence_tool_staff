@@ -34,7 +34,7 @@ describe 'Permitted Events' do
 
   # flagged cases
   let(:flagged_unassigned_case)                   { create :case, :flagged }
-  let(:flagged_awaiting_responder_case)           { create :awaiting_responder_case }
+  let(:flagged_awaiting_responder_case)           { create :awaiting_responder_case, :flagged }
   let(:accepted_pending_dacu_clearance_case)      { create :pending_dacu_clearance_case,
                                                        responding_team: responding_team,
                                                        approver: assigned_dacu_disclosure_specialist }
