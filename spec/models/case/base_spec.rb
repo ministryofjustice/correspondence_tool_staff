@@ -364,7 +364,7 @@ RSpec.describe Case::Base, type: :model do
 
     it 'does validate presence of deafult type' do
       foi = build :case
-      expect(foi.type).to eq 'Case::FOI'
+      expect(foi.type).to eq 'Case::FOI::Standard'
     end
 
     it 'does validate presence of message for email foi' do
@@ -805,7 +805,7 @@ RSpec.describe Case::Base, type: :model do
     let(:kase)  { build(:case) }
 
     it 'any defined state can be used' do
-      Case::FOIStateMachine.states.each do |state|
+      Case::FOI::StandardStateMachine.states.each do |state|
         query = state + '?'
         expect([true, false]).to include kase.send(query)
       end

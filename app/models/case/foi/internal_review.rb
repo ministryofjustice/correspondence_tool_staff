@@ -28,7 +28,7 @@
 #  appeal_outcome_id    :integer
 #
 
-class Case::FOI::InternalReview < Case::FOI
+class Case::FOI::InternalReview < Case::FOI::Standard
 
   belongs_to :appeal_outcome, class_name: CaseClosure::AppealOutcome
 

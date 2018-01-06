@@ -138,7 +138,7 @@ RSpec.describe CasesController, type: :controller do
 
     describe 'GET new' do
       before {
-        get :new, params: { case: { type: 'Case::FOI' } }
+        get :new, params: { case: { type: 'Case::FOI::Standard' } }
       }
 
       it 'renders the new template' do
@@ -231,7 +231,7 @@ RSpec.describe CasesController, type: :controller do
 
         describe 'GET new' do
           before {
-            get :new, params: { case: {type: 'Case::FOI'}}
+            get :new, params: { case: {type: 'Case::FOI::Standard'}}
           }
 
           it 'does not render the new template' do
@@ -812,7 +812,7 @@ RSpec.describe CasesController, type: :controller do
           {
             case: {
               requester_type: 'member_of_the_public',
-              type: 'Case::FOI',
+              type: 'Case::FOI::Standard',
               name: 'A. Member of Public',
               postal_address: '102 Petty France',
               email: 'member@public.com',
@@ -839,7 +839,7 @@ RSpec.describe CasesController, type: :controller do
           post :create, params: params
 
           expect(created_case.requester_type).to eq 'member_of_the_public'
-          expect(created_case.type).to eq 'Case::FOI'
+          expect(created_case.type).to eq 'Case::FOI::Standard'
           expect(created_case.name).to eq 'A. Member of Public'
           expect(created_case.postal_address).to eq '102 Petty France'
           expect(created_case.email).to eq 'member@public.com'

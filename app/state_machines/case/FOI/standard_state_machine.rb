@@ -1,5 +1,5 @@
 # rubocop:disable ClassLength
-class Case::FOIStateMachine
+class Case::FOI::StandardStateMachine
   include Statesman::Machine
   include Events
 
@@ -43,9 +43,9 @@ class Case::FOIStateMachine
 
   event :flag_for_clearance do
     guard do |object, _last_transition, options|
-      case_policy = Case::FOIStateMachine.get_policy options[:acting_user_id], object
+      case_policy = Case::FOI::StandardStateMachine.get_policy options[:acting_user_id], object
       assignment = Assignment.new case: object, team_id: options[:target_team_id]
-      assignment_policy = Case::FOIStateMachine.get_policy options[:acting_user_id],
+      assignment_policy = Case::FOI::StandardStateMachine.get_policy options[:acting_user_id],
                                                             assignment
 
       case_policy.can_flag_for_clearance? &&

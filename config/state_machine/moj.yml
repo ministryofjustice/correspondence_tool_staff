@@ -47,7 +47,7 @@ case_types:
                 flag_for_clearance:
                 link_a_case:
                 unflag_for_clearance:
-                  if: Case::FOIPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
+                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
 
           approver:
             states:

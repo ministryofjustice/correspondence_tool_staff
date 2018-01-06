@@ -76,7 +76,7 @@ en:
       delete?: You are not authorised to delete this case.
       new_case_link?: You are not authorised to link other cases to this case.
       can_unflag_for_clearance?: 'You are not authorised to remove clearance from this case'
-    case/foi_policy:
+    case/foi/standard_policy:
       <<: *case_policy
     case/foi/compliance_review_policy:
       <<: *case_policy
@@ -234,7 +234,7 @@ en:
         type:
           Case::FOI::TimelinessReview: FOI - Internal review for timeliness
           Case::FOI::ComplianceReview: FOI - Internal review for compliance
-          Case::FOI: FOI
+          Case::FOI::Standard: FOI
           Case::SAR: SAR
         linked_case_number: Case number
       feedback:

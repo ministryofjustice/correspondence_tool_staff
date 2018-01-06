@@ -25,7 +25,7 @@ RSpec.describe Case::FOI::ComplianceReview, type: :model, parent: :case do
     context 'drafting state' do
       it 'has an FOI state machine' do
         allow(compliance_review).to receive(:current_state).and_return('drafting')
-        expect(compliance_review.state_machine).to be_a Case::FOIStateMachine
+        expect(compliance_review.state_machine).to be_a Case::FOI::StandardStateMachine
       end
     end
 

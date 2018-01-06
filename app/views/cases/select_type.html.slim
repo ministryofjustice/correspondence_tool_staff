@@ -11,7 +11,7 @@
 
 = form_for @case, as: :case, url: new_case_path, method: :get do |f|
   = f.radio_button_fieldset :type,
-              choices: [Case::FOI,
+              choices: [Case::FOI::Standard,
                         Case::SAR]
 
   = f.submit t('button.next_page_new'), {class: 'button'}

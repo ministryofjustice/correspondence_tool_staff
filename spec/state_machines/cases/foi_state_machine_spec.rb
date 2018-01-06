@@ -27,7 +27,7 @@ def event(event_name)
 end
 
 
-RSpec.describe Case::FOIStateMachine, type: :model do
+RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   let(:kase)               {
     create :case
   }

@@ -1,2 +1,2 @@
-class Case::FOI::TimelinessReviewPolicy < Case::FOIPolicy
+class Case::FOI::TimelinessReviewPolicy < Case::FOI::StandardPolicy
 end

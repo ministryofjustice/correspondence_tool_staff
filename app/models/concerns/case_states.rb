@@ -19,7 +19,7 @@ module CaseStates
   end
 
   def instantiate_configurable_state_machine
-    case_type = if self.is_a?(Case::FOI)
+    case_type = if self.is_a?(Case::FOI::Standard)
                   'foi'
                 else
                   'sar'
@@ -35,7 +35,7 @@ module CaseStates
       if respond_to?(:workflow) && workflow.present?
         "Case::#{category.abbreviation}::#{workflow}StateMachine"
       else
-        "Case::FOIStateMachine"
+        "Case::FOI::StandardStateMachine"
       end
     @state_machine = state_machine_class_name.constantize.new(
       self,
@@ -87,14 +87,14 @@ module CaseStates
   private
 
   def state_machine_of_wrong_type?
-    return false unless self.is_a?(Case::FOI)
+    return false unless self.is_a?(Case::FOI::Standard)
     (current_state.in?(STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE) && !@state_machine.configurable?) ||
       (!current_state.in?(STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE) && @state_machine.configurable?)
 
   end
 
   def state_requires_configurable_state_machine?
-    if self.is_a?(Case::FOI)
+    if self.is_a?(Case::FOI::Standard)
       current_state.in?(STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE)
     else
       true

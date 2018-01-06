@@ -12,9 +12,9 @@ RSpec.describe Case, type: :model do
     let(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
 
     describe '#state_machine' do
-      it 'defaults to the Case::FOIStateMachine when no workflow is specified' do
+      it 'defaults to the Case::FOI::StandardStateMachine when no workflow is specified' do
         expect(kase.state_machine)
-          .to be_an_instance_of(Case::FOIStateMachine)
+          .to be_an_instance_of(Case::FOI::StandardStateMachine)
       end
 
       context 'workflow is not valid' do

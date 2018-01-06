@@ -14,7 +14,7 @@ feature 'cases requiring clearance by disclosure specialist' do
 
   def create_case(flag_for_clearance: false)
     expect(cases_select_type_page).to be_displayed
-    cases_select_type_page.fill_in_case_type('casefoi')
+    cases_select_type_page.fill_in_case_type('casefoistandard')
     expect(cases_new_page).to be_displayed
     cases_new_page.fill_in_case_details
     cases_new_page.choose_flag_for_disclosure_specialists(

@@ -1,4 +1,4 @@
-class Case::FOI::ComplianceReviewDecorator < Case::FOIDecorator
+class Case::FOI::ComplianceReviewDecorator < Case::FOI::StandardDecorator
 
   def pretty_type
     'FOI - Internal review for compliance'

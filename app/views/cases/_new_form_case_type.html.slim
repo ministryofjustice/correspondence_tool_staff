@@ -1,6 +1,6 @@
 / - if params[:case][:type] == 'Case::FOI'
 = f.radio_button_fieldset :type,
-            choices: [Case::FOI,
+            choices: [Case::FOI::Standard,
                       Case::FOI::TimelinessReview,
                       Case::FOI::ComplianceReview]
 / - else
