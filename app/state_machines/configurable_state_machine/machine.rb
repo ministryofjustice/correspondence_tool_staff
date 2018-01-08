@@ -56,7 +56,7 @@ module ConfigurableStateMachine
     def method_missing(method, *args)
       if method.to_s =~ /(.+)!$/
         event_name = $1
-        trigger_event(event: event_name, params: args.first)
+        trigger_event(event: event_name.to_sym, params: args.first)
       else
         super
       end
@@ -99,7 +99,7 @@ module ConfigurableStateMachine
       raise InvalidEventError.new(kase: @kase, user: params[:acting_user], event: event) if user_role_config.nil?
       state_config = user_role_config.states[@kase.current_state]
       if state_config.nil? || !state_config.to_hash.keys.include?(event)
-        raise InvalidEventError.new(kase: @kase, user: params[:acting_user], event: event) if state_config.nil?
+        raise InvalidEventError.new(kase: @kase, user: params[:acting_user], event: event)
       end
       event_config = state_config[event]
       if can_trigger_event?(event_name: event, metadata: params)
