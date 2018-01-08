@@ -3,7 +3,9 @@ class MessagesController < ApplicationController
   def create
     @case = Case::Base.find params[:case_id]
     authorize(@case, :can_add_message_to_case?)
-    team = current_user.teams_for_case(@case).first
+    teams = current_user.teams_for_case(@case)
+    weightings = { 'manager' => 100, 'approver' => 200, 'responder' => 300 }
+    team = teams.sort{ |a, b| weightings[a.role] <=> weightings[b.role] }.first
     if @case.state_machine.configurable?
       @case.state_machine.add_message_to_case!(
                                                 acting_user: current_user,
@@ -23,4 +25,3 @@ class MessagesController < ApplicationController
   end
 
 end
-
