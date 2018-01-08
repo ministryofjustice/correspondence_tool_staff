@@ -30,6 +30,7 @@ class DevTeamSeeder
     @dir_rsus     = Directorate.create!(parent_id: @bg_hmcts.id, name: 'Regional Support Units')
     @dir_prop     = Directorate.create!(parent_id: @bg_hmcts.id, name: 'HMCTS Property Directorate')
     @dir_trib     = Directorate.create!(parent_id: @bg_hmcts.id, name: 'Upper Tribunals')
+    @dir_candi    = Directorate.create!(parent_id: @bg_ops.id, name: 'Communications and Information')
   end
 
   def add_business_units
@@ -44,6 +45,7 @@ class DevTeamSeeder
     @bu_utiac     = BusinessUnit.create!(parent: @dir_trib,     name: 'Upper Tribunal Asylum Chamber',              role: 'responder')
     @bu_utl       = BusinessUnit.create!(parent: @dir_trib,     name: 'Upper Tribunal Lands (UT Lands)',            role: 'responder')
     @bu_uttc      = BusinessUnit.create!(parent: @dir_trib,     name: 'Upper Tibunal - Tax & Chancery Chamber',     role: 'responder')
+    @bu_candi     = BusinessUnit.create!(parent: @dir_candi,    name: 'Communications and Information',             role: 'responder')
   end
 
   def add_leads
@@ -55,6 +57,7 @@ class DevTeamSeeder
     TeamProperty.create!(team_id: @dir_laa.id,      key: 'lead', value: 'Kate Adie')
     TeamProperty.create!(team_id: @dir_hr.id,       key: 'lead', value: 'Percy Nell')
     TeamProperty.create!(team_id: @dir_rsus.id,     key: 'lead', value: 'T. Taxman')
+    TeamProperty.create!(team_id: @dir_candi.id,    key: 'lead', value: 'Candi Floss')
     TeamProperty.create!(team_id: @bu_dacu_bmt.id,  key: 'lead', value: 'David Attenborough')
     TeamProperty.create!(team_id: @bu_dacu_dis.id,  key: 'lead', value: 'Dasha Diss')
     TeamProperty.create!(team_id: @bu_private.id,   key: 'lead', value: 'Primrose Offord')
@@ -65,6 +68,7 @@ class DevTeamSeeder
     TeamProperty.create!(team_id: @bu_utiac.id,     key: 'lead', value: 'Ref Ugee')
     TeamProperty.create!(team_id: @bu_utl.id,       key: 'lead', value: 'Farmer Jones')
     TeamProperty.create!(team_id: @bu_uttc.id,      key: 'lead', value: 'Gideon Osborne')
+    TeamProperty.create!(team_id: @bu_candi.id,     key: 'lead', value: 'Candi Floss')
   end
 
   def add_areas_covered
@@ -89,6 +93,8 @@ class DevTeamSeeder
     TeamProperty.create!(team_id: @bu_utiac.id,     key: 'area', value: 'Asylum cases')
     TeamProperty.create!(team_id: @bu_utl.id,       key: 'area', value: 'land ownership')
     TeamProperty.create!(team_id: @bu_uttc.id,      key: 'area', value: 'Taxing stuff')
+    TeamProperty.create!(team_id: @bu_candi.id,     key: 'area', value: 'Communicating')
+    TeamProperty.create!(team_id: @bu_candi.id,     key: 'area', value: 'Replying to requests for information')
   end
 
   def add_allocatable
