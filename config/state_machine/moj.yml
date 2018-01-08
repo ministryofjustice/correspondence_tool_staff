@@ -39,7 +39,6 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
-                  if: Case::FOIPolicy#can_add_message_to_case?
                 assign_responder:
                   transition_to: awaiting_responder
                 destroy_case:
@@ -52,5 +51,10 @@ case_types:
           approver:
             states:
               unassigned:
+                add_message_to_case:
                 flag_for_clearance:
 
+          responder:
+            states:
+              unassigned:
+                add_message_to_case:

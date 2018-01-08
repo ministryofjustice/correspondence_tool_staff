@@ -348,7 +348,7 @@ module ConfigurableStateMachine
         user = double User
         team = double BusinessUnit
         metadata = { acting_user: user, acting_team: team }
-        expect(machine).to receive(:trigger_event).with(event: 'dummy_event', params: metadata)
+        expect(machine).to receive(:trigger_event).with(event: :dummy_event, params: metadata)
         machine.dummy_event!(metadata)
       end
 
