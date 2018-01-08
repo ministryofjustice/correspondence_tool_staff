@@ -71,20 +71,16 @@ class Case::BasePolicy < ApplicationPolicy
     destroy?
   end
 
-  # def request_further_clearance?
-  #   clear_failed_checks
-  #   check_user_is_a_manager_for_case &&
-  #       check_can_trigger_event(:request_further_clearance)
-  # end
-
   def request_further_clearance?
     clear_failed_checks
-    check_user_is_a_manager_for_case &&
-        check_can_trigger_event(:request_further_clearance)
+    check_can_trigger_event(:request_further_clearance) &&
+        check_user_is_a_manager_for_case &&
+        !self.case.approver_assignments.any?
   end
 
   def can_request_further_clearance?
-    !self.case.approvers.present? && user.manager?
+    clear_failed_checks
+    user.manager?
   end
 
   def new_case_link?

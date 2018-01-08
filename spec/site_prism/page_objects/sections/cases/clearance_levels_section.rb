@@ -30,6 +30,8 @@ module PageObjects
             element :approver_name, 'td'
           end
         end
+        
+        element :escalate_link, '.secondary-action-link'
       end
     end
   end
