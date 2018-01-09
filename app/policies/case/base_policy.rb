@@ -73,9 +73,8 @@ class Case::BasePolicy < ApplicationPolicy
 
   def request_further_clearance?
     clear_failed_checks
-    check_can_trigger_event(:request_further_clearance) &&
-        check_user_is_a_manager_for_case &&
-        !self.case.approver_assignments.any?
+    check_user_is_a_manager_for_case &&
+      check_can_trigger_event(:request_further_clearance)
   end
 
   def can_request_further_clearance?

@@ -126,8 +126,6 @@ describe 'cases/clearance_details.html.slim', type: :view do
         approver_dets = partial.basic_details.private_office
         expect(approver_dets.department_name.text).to eq 'Private Office'
         expect(approver_dets.approver_name.text).to eq 'Prince Johns'
-
-        expect(partial).to have_no_escalate_link
       end
     end
   end
