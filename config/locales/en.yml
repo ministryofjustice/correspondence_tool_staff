@@ -74,7 +74,7 @@ en:
       edit?: You are not authorised to edit this case.
       update?: You are not authorised to edit this case.
       delete?: You are not authorised to delete this case.
-      new_case_link?: You are not authorise to link other cases to this case.
+      new_case_link?: You are not authorised to link other cases to this case.
       can_unflag_for_clearance?: 'You are not authorised to remove clearance from this case'
     case/foi_policy:
       <<: *case_policy

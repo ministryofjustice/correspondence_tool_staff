@@ -15,9 +15,13 @@ module PageObjects
 
         element :submit_button, '.button'
 
-        def create_a_new_case_link
-          kase = FactoryGirl.build :case, params
-          linked_case_number_field.set kase.number
+        def create_a_new_case_link(kase_number = nil)
+          if kase_number.nil?
+            kase = FactoryGirl.create :case, params
+            kase_number = kase.number
+          end
+
+          linked_case_number_field.set kase_number
           submit_button.click
           kase # return new case should you need to use it for further tests
         end
