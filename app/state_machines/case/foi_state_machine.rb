@@ -534,13 +534,12 @@ class Case::FOIStateMachine
     NotifyResponderService.new(kase).call if kase.current_state == "awaiting_dispatch"
   end
 
-  def link_a_case!(acting_user_id:, acting_team_id:, linked_case_id:)
+  def link_a_case!(acting_user:, acting_team:, linked_case_id:)
     trigger! :link_a_case,
-             acting_user_id: acting_user_id,
-             acting_team_id: acting_team_id,
+             acting_user_id: acting_user.id,
+             acting_team_id: acting_team.id,
              linked_case_id: linked_case_id,
              event:          :link_a_case
-538
   end
   private
 
