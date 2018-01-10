@@ -251,7 +251,7 @@ en:
       It will now appear in <a href="%{case_list_url}">your cases</a>.
     assignment_rejected_html: |
       <strong>You've rejected this case</strong><br>
-      DACU BMT will assign the case to the appropriate business unit.
+      Disclosure BMT will assign the case to the appropriate business unit.
     assignment_already_rejected_html: |
       <strong>This case has already been rejected.</strong><br>
       This case will be reviewed and assigned the to appropriate unit.
@@ -450,7 +450,7 @@ en:
           <li>sent the response to the person who made the request</li>
         </ul>
     confirm_respond:
-      success: Response confirmed. The case is now with DACU.
+      success: Response confirmed. The case is now with Disclosure BMT.
 #    update:
 #      case_updated: Case updated
     close:

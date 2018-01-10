@@ -15,7 +15,7 @@ describe 'assignments/show_rejected.html.slim', type: :view do
     page = assignment_rejected_page
 
     expect(page.new_rejection_notice.text).
-        to eq "You've rejected this case\nDACU BMT will assign the case to the appropriate business unit.\n"
+        to eq "You've rejected this case\nDisclosure BMT will assign the case to the appropriate business unit.\n"
 
     expect(page.page_heading.heading.text).to eq rejected_case.subject
     expect(page.page_heading.sub_heading.text)

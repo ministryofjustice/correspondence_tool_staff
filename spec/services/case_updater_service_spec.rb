@@ -22,7 +22,7 @@ describe CaseUpdaterService do
       end
 
       it 'transitions the cases state' do
-        expect(state_machine).to receive(:edit_case!).with(user, team)
+        expect(state_machine).to receive(:edit_case!).with(acting_user: user, acting_team: team)
         @service.call
       end
 

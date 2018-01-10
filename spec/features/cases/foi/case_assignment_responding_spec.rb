@@ -50,7 +50,7 @@ feature 'respond to responder assignment' do
     expect(page).to have_content "You've rejected this case"
     expect(page).
       to have_content(
-        'DACU BMT will assign the case to the appropriate business unit.'
+        'Disclosure BMT will assign the case to the appropriate business unit.'
       )
 
     expect(assigned_case.reload.current_state).to eq 'unassigned'
