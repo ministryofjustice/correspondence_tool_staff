@@ -812,8 +812,8 @@ RSpec.describe Case::FOIStateMachine, type: :model do
       it 'triggers an edit_case event' do
         expect {
           state_machine.edit_case!(
-            manager,
-            team
+            acting_user: manager,
+            acting_team: team
           )
         }.to trigger_the_event(:edit_case)
                .on_state_machine(state_machine)

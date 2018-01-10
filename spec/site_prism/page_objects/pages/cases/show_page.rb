@@ -12,6 +12,7 @@ module PageObjects
         element :happy_action_notice, '.alert-green'
         element :escalation_notice, '.alert-orange'
         element :notice, '.notice-summary-heading'
+        element :alert, '.error-summary-heading'
 
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, '.page-heading'

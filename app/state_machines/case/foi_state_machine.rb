@@ -368,10 +368,10 @@ class Case::FOIStateMachine
              event:             :assign_responder
   end
 
-  def edit_case!(user, team)
+  def edit_case!(acting_user:, acting_team:)
     trigger! :edit_case,
-             acting_team_id:    team.id,
-             acting_user_id:    user.id,
+             acting_team_id:    acting_team.id,
+             acting_user_id:    acting_user.id,
              event:             :edit_case
   end
 

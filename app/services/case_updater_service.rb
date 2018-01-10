@@ -16,7 +16,7 @@ class CaseUpdaterService
         @kase.assign_attributes(@params)
         if @kase.changed?
           @kase.save!
-          @kase.state_machine.edit_case!(@user, @team)
+          @kase.state_machine.edit_case!(acting_user: @user, acting_team: @team)
           @result = :ok
         else
           @result = :no_changes
