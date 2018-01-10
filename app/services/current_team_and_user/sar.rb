@@ -1,4 +1,4 @@
 module CurrentTeamAndUser
-  class SAR < Base
+  class SAR < ::CurrentTeamAndUser::Base
   end
 end

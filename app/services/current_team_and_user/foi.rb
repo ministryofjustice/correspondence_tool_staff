@@ -1,4 +1,4 @@
 module CurrentTeamAndUser
-  class FOI < Base
+  class FOI < ::CurrentTeamAndUser::Base
   end
 end
