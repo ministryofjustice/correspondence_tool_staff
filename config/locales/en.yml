@@ -181,6 +181,9 @@ en:
 
       state_selector:
         selected_states: Filter by status
+
+      team:
+        role: What will the business unit be responsible for?
     hint:
       feedback:
         comment: |
@@ -244,6 +247,10 @@ en:
         name: Business unit name
         email: Business unit group email
         team_lead: Deputy director
+        role:
+          responder: Drafting
+          approver: Clearance
+          manager: Case management
 
   alerts:
     assignment_accepted_html: |
