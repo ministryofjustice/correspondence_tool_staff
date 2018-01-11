@@ -55,6 +55,11 @@ case_types:
                 add_message_to_case:
                 flag_for_clearance:
 
+          responder:
+            states:
+              unassigned:
+                add_message_to_case:
+
 
 #########################################################################
 #                                                                       #
