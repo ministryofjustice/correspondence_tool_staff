@@ -273,6 +273,9 @@ class Case::Base < ApplicationRecord
 
   delegate :available_events, to: :state_machine
 
+  # weirdly, this require is needed on travis, but not anywhere else
+  require File.join(Rails.root, 'app', 'state_machines', 'case', 'foi', 'standard_state_machine')
+  
   Case::FOI::StandardStateMachine.states.each do |state|
     define_method("#{state}?") { current_state == state }
   end
