@@ -19,7 +19,7 @@ class CaseTransitionDecorator < Draper::Decorator
 
   private
   def event
-    Case::FOIStateMachine.event_name(object.event)
+    Case::FOI::StandardStateMachine.event_name(object.event)
   end
 
   def details

@@ -12,9 +12,9 @@ RSpec.describe Case, type: :model do
     let(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
 
     describe '#state_machine' do
-      it 'defaults to the Case::FOIStateMachine when no workflow is specified' do
+      it 'defaults to the Case::FOI::StandardStateMachine when no workflow is specified' do
         expect(kase.state_machine)
-          .to be_an_instance_of(Case::FOIStateMachine)
+          .to be_an_instance_of(Case::FOI::StandardStateMachine)
       end
 
       context 'workflow is not valid' do
@@ -44,7 +44,9 @@ RSpec.describe Case, type: :model do
         assigned_case.
           responder_assignment_rejected(responder, responding_team, message)
         expect(state_machine).to have_received(:reject_responder_assignment!).
-                                   with(responder, responding_team, message)
+                                   with(acting_user: responder,
+                                        acting_team: responding_team,
+                                        message: message)
         expect(state_machine).
           not_to have_received(:reject_responder_assignment)
       end
@@ -65,7 +67,8 @@ RSpec.describe Case, type: :model do
       it 'triggers the raising version of the event' do
         assigned_case.responder_assignment_accepted(responder, responding_team)
         expect(state_machine).to have_received(:accept_responder_assignment!).
-                                   with(responder, responding_team)
+                                   with(acting_user: responder,
+                                        acting_team: responding_team)
         expect(state_machine).
           not_to have_received(:accept_responder_assignment)
       end
@@ -127,14 +130,16 @@ RSpec.describe Case, type: :model do
       it 'triggers the raising version of the event' do
         case_with_response.respond(case_with_response.responder)
         expect(state_machine).to have_received(:respond!)
-                                   .with(case_with_response.responder)
+                                   .with(acting_user: case_with_response.responder,
+                                         acting_team: case_with_response.responding_team)
         expect(state_machine).not_to have_received(:respond)
       end
 
       it 'set the date_responded to the date the user triggered "Marked as sent"' do
         case_with_response.respond(case_with_response.responder)
         expect(state_machine).to have_received(:respond!)
-                                     .with(case_with_response.responder)
+                                     .with(acting_user: case_with_response.responder,
+                                           acting_team: case_with_response.responding_team)
         expect(state_machine).not_to have_received(:respond)
         expect(case_with_response.date_responded).to eq Date.today
       end
@@ -153,7 +158,7 @@ RSpec.describe Case, type: :model do
         manager = responded_case.managing_team.managers.first
         responded_case.close(manager)
         expect(state_machine).to have_received(:close!)
-                                   .with(manager)
+                                   .with(acting_user: manager, acting_team: responded_case.managing_team)
         expect(state_machine).not_to have_received(:close)
       end
     end

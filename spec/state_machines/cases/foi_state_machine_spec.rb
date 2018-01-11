@@ -27,7 +27,7 @@ def event(event_name)
 end
 
 
-RSpec.describe Case::FOIStateMachine, type: :model do
+RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   let(:kase)               {
     create :case
   }
@@ -413,8 +413,8 @@ RSpec.describe Case::FOIStateMachine, type: :model do
   describe 'trigger accept_responder_assignment!' do
     it 'triggers an accept_responder_assignment event' do
       expect do
-        assigned_case.state_machine.accept_responder_assignment! responder,
-                                                                 responding_team
+        assigned_case.state_machine.accept_responder_assignment!(acting_user: responder,
+                                                                 acting_team: responding_team)
       end.to trigger_the_event(:accept_responder_assignment)
                .on_state_machine(assigned_case.state_machine)
                .with_parameters(acting_user_id: responder.id,
@@ -500,9 +500,9 @@ RSpec.describe Case::FOIStateMachine, type: :model do
 
     it 'triggers a reject_responder_assignment event' do
       expect do
-        assigned_case.state_machine.reject_responder_assignment! responder,
-                                                                 responding_team,
-                                                                 message
+        assigned_case.state_machine.reject_responder_assignment! acting_user: responder,
+                                                                 acting_team: responding_team,
+                                                                 message: message
       end.to trigger_the_event(:reject_responder_assignment)
                .on_state_machine(assigned_case.state_machine)
                .with_parameters(acting_user_id: responder.id,
@@ -516,8 +516,9 @@ RSpec.describe Case::FOIStateMachine, type: :model do
 
     it 'triggers an add_responses event' do
       expect do
-        case_being_drafted.state_machine.add_responses! responder,
-                                                        filenames
+        case_being_drafted.state_machine.add_responses! acting_user: responder,
+                                                        acting_team: case_being_drafted.responding_team,
+                                                        filenames: filenames
       end.to trigger_the_event(:add_responses)
                .on_state_machine(case_being_drafted.state_machine)
                .with_parameters(acting_user_id: responder.id,
@@ -533,10 +534,10 @@ RSpec.describe Case::FOIStateMachine, type: :model do
     context 'no attachments left' do
       it 'triggers a remove_last_response event' do
         expect do
-          case_with_response.state_machine.remove_response! responder,
-                                                            responding_team,
-                                                            filenames,
-                                                            0
+          case_with_response.state_machine.remove_response! acting_user: responder,
+                                                            acting_team: responding_team,
+                                                            filenames: filenames,
+                                                            num_attachments: 0
         end.to trigger_the_event(:remove_last_response)
                  .on_state_machine(case_with_response.state_machine)
                  .with_parameters(acting_user_id: responder.id,
@@ -549,10 +550,10 @@ RSpec.describe Case::FOIStateMachine, type: :model do
       it 'triggers a remove_last_response event' do
       expect do
         case_with_response.state_machine.remove_response!(
-          responder,
-          responding_team,
-          filenames,
-          1,
+          acting_user: responder,
+          acting_team: responding_team,
+          filenames: filenames,
+          num_attachments: 1,
         )
       end.to trigger_the_event(:remove_response)
                .on_state_machine(case_with_response.state_machine)
@@ -566,7 +567,9 @@ RSpec.describe Case::FOIStateMachine, type: :model do
   describe 'trigger respond!' do
     it 'triggers a respond event' do
       expect do
-        case_with_response.state_machine.respond! responder
+        case_with_response.state_machine.respond!(
+            acting_user: responder,
+            acting_team: case_with_response.responding_team)
       end.to trigger_the_event(:respond)
                .on_state_machine(case_with_response.state_machine)
                .with_parameters(acting_user_id: responder.id,
@@ -756,7 +759,7 @@ RSpec.describe Case::FOIStateMachine, type: :model do
   describe 'trigger close!' do
     it 'triggers a close event' do
       expect do
-        responded_case.state_machine.close! manager
+        responded_case.state_machine.close! acting_user: manager, acting_team: responded_case.managing_team
       end.to trigger_the_event(:close)
                .on_state_machine(responded_case.state_machine)
                .with_parameters(acting_user_id: manager.id,

@@ -1,7 +1,7 @@
-class Case::FOI < Case::Base
+class Case::FOI::Standard < Case::Base
 
   def self.decorator_class
-    Case::FOIDecorator
+    Case::FOI::StandardDecorator
   end
 
   validates :subject_full_name, :subject_type, absence: true

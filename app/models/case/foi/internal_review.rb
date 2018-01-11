@@ -22,13 +22,13 @@
 #  last_transitioned_at :datetime
 #  delivery_method      :enum
 #  workflow             :string
-#  deleted?             :boolean          default(FALSE)
+#  deleted              :boolean          default(FALSE)
 #  info_held_status_id  :integer
-#  type                 :string           default("Case")
+#  type                 :string
 #  appeal_outcome_id    :integer
 #
 
-class Case::FOI::InternalReview < Case::FOI
+class Case::FOI::InternalReview < Case::FOI::Standard
 
   belongs_to :appeal_outcome, class_name: CaseClosure::AppealOutcome
 

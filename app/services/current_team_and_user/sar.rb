@@ -1,4 +1,4 @@
 module CurrentTeamAndUser
-  class FOI < Base
+  class SAR < Base
   end
 end

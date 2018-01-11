@@ -1,4 +1,4 @@
-def create_case_step(type: 'casefoi',
+def create_case_step(type: 'casefoistandard',
                      delivery_method: :sent_by_email,
                      uploaded_request_files: [],
                      flag_for_disclosure: false)
@@ -9,7 +9,7 @@ def create_case_step(type: 'casefoi',
 
   expect(cases_select_type_page).to be_displayed
 
-  cases_select_type_page.fill_in_case_type('casefoi')
+  cases_select_type_page.fill_in_case_type('casefoistandard')
 
   expect(cases_new_page).to be_displayed
   cases_new_page.fill_in_case_details(

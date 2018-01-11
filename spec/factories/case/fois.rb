@@ -31,7 +31,7 @@
 FactoryGirl.define do
 
   factory :case,
-    class: Case::FOI do
+    class: Case::FOI::Standard do
     transient do
       creation_time { 4.business_days.ago }
       identifier "new case"

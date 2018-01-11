@@ -19,9 +19,9 @@ describe Case::BaseDecorator, type: :model do
 
 
   context 'ensuring the correct decorator is instantiated' do
-    context 'Case::FOI' do
+    context 'Case::FOI::Standard' do
       it 'instantiates the correct decorator' do
-        expect(Case::FOI.new.decorate).to be_instance_of Case::FOIDecorator
+        expect(Case::FOI::Standard.new.decorate).to be_instance_of Case::FOI::StandardDecorator
       end
     end
 

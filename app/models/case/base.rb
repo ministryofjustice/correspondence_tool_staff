@@ -24,7 +24,7 @@
 #  workflow             :string
 #  deleted              :boolean          default(FALSE)
 #  info_held_status_id  :integer
-#  type                 :string           default("Case::FOI")
+#  type                 :string
 #  appeal_outcome_id    :integer
 #
 
@@ -81,7 +81,7 @@ class Case::Base < ApplicationRecord
 
   scope :opened, ->       { where.not(current_state: 'closed') }
   scope :closed, ->       { where(current_state: 'closed').order(last_transitioned_at: :desc) }
-  scope :standard_foi, -> { where(type: 'Case::FOI') }
+  scope :standard_foi, -> { where(type: 'Case::FOI::Standard') }
 
   scope :with_teams, -> (teams) do
     includes(:assignments)
@@ -273,7 +273,10 @@ class Case::Base < ApplicationRecord
 
   delegate :available_events, to: :state_machine
 
-  Case::FOIStateMachine.states.each do |state|
+  # weirdly, this require is needed on travis, but not anywhere else
+  require File.join(Rails.root, 'app', 'state_machines', 'case', 'foi', 'standard_state_machine')
+
+  Case::FOI::StandardStateMachine.states.each do |state|
     define_method("#{state}?") { current_state == state }
   end
 
