@@ -44,6 +44,7 @@ module PageObjects
         reassign_user:                  'Assignments::ReassignUserPage',
         stats_index:                    'Stats::IndexPage',
         stats_custom:                   'Stats::CustomPage',
+        teams_new:                      'Teams::NewPage',
         teams_edit:                     'Teams::EditPage',
         teams_index:                    'Teams::IndexPage',
         teams_areas:                    'Teams::BusinessAreasCoveredPage',
@@ -55,7 +56,10 @@ module PageObjects
         full_page_class = "PageObjects::Pages::#{page_class}"
         define_method "#{page_name}_page" do
           app_pages[page_name] ||= full_page_class.constantize.__send__ :new
+
+
         end
+
       end
 
       {
