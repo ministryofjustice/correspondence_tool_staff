@@ -8,7 +8,7 @@ feature 'Closing a case' do
   end
 
   scenario 'editing a case' do
-    kase =  create :accepted_case, received_date: 2.days.ago
+    kase =  create :case, received_date: 2.days.ago
     open_cases_page.load(timeliness: 'in_time')
     click_link kase.number
     expect(cases_show_page).to be_displayed
@@ -31,6 +31,20 @@ feature 'Closing a case' do
     expect(cases_show_page.case_details.basic_details.name.data.text).to eq 'John Doe'
     expect(cases_show_page.case_details.basic_details.email.data.text).to eq 'john.doe@moj.com'
 
+  end
+
+  scenario 'editing a case with no changes' do
+    kase =  create :accepted_case, received_date: 2.days.ago
+    open_cases_page.load(timeliness: 'in_time')
+    click_link kase.number
+    expect(cases_show_page).to be_displayed
+    click_link 'Edit case details'
+    expect(cases_edit_page).to be_displayed
+
+    cases_edit_page.submit_button.click
+
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page.alert.text).to eq 'No changes were made'
   end
 
 end

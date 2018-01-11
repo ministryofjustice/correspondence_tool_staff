@@ -28,7 +28,7 @@ feature 'Mark response as sent' do
     cases_respond_page.mark_as_sent_button.click
 
     expect(cases_show_page).
-        to have_content('Response confirmed. The case is now with DACU.')
+        to have_content('Response confirmed. The case is now with Disclosure BMT.')
 
     login_as manager
     open_cases_page.load(timeliness: 'in_time')

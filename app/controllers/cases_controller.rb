@@ -230,7 +230,7 @@ class CasesController < ApplicationController
       if service.result == :ok
         flash[:notice] = t('.case_updated')
       elsif service.result == :no_changes
-        flash[:notice] = "No changes were made"
+        flash[:alert] = "No changes were made"
       end
 
       set_permitted_events

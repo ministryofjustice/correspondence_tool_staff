@@ -16,7 +16,7 @@ def mark_case_as_sent_step
   cases_respond_page.mark_as_sent_button.click
 
   expect(open_cases_page)
-    .to have_content("Response confirmed. The case is now with DACU.")
+    .to have_content("Response confirmed. The case is now with Disclosure BMT.")
   expect(cases_show_page.case_status.details.who_its_with.text)
     .to eq 'Disclosure BMT'
   expect(cases_show_page.case_status.details.copy.text).to eq 'Ready to close'
