@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'FOI permittted events' do
+describe Case::FOI::StandardStateMachine do
   context 'non-flagged case' do
     context 'manager' do
 
@@ -99,7 +99,7 @@ describe 'FOI permittted events' do
           it 'should show permitted events' do
             k = create :case
             expect(k.current_state).to eq 'unassigned'
-            expect(k.state_machine.permitted_events(responder.id)).to be_empty
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case]
           end
         end
 

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'SAR permitted events' do
+describe ConfigurableStateMachine::Machine do
   context 'non-flagged case' do
     context 'manager' do
       let(:manager) { create :manager }
