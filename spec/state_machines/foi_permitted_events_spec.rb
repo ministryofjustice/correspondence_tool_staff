@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'FOI permittted events' do
+describe Case::FOI::StandardStateMachine do
   context 'non-flagged case' do
     context 'manager' do
 
