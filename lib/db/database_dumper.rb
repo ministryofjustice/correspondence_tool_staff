@@ -9,7 +9,7 @@ class DatabaseDumper
     'demo' => 'demo.cts'
   }.freeze
 
-  ANONYMISED_TABLES = %w( users cases case_transitions )
+  ANONYMISED_TABLES = %w( users cases case_transitions versions)
 
   def initialize(env, host, anonymize)
     puts "Create SQL dump of #{env} environemnt on host #{host} - run rake db:dump:help for assistance".yellow
