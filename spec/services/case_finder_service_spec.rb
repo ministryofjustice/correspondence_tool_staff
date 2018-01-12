@@ -299,14 +299,10 @@ describe CaseFinderService do
           @foi_cr_case.state_machine.request_further_clearance!(
             acting_user: @manager,
             acting_team: @managing_team,
-            target_user: @responder,
-            target_team: @responding_team,
           )
           @foi_tr_case.state_machine.request_further_clearance!(
             acting_user: @manager,
             acting_team: @managing_team,
-            target_user: @responder,
-            target_team: @responding_team,
           )
         end
 

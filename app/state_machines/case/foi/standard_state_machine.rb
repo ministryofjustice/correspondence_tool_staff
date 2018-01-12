@@ -288,8 +288,11 @@ class Case::FOI::StandardStateMachine
 
   event :request_further_clearance do
     authorize :can_request_further_clearance?
-    transition from: :drafting,                         to: :drafting
-    transition from: :awaiting_dispatch,                to: :awaiting_dispatch
+    transition from: :unassigned,             to: :unassigned
+    transition from: :awaiting_responder,     to: :awaiting_responder
+    transition from: :drafting,               to: :drafting
+    transition from: :pending_dacu_clearance, to: :pending_dacu_clearance
+    transition from: :awaiting_dispatch,      to: :awaiting_dispatch
   end
 
   event :link_a_case do
@@ -523,12 +526,10 @@ class Case::FOI::StandardStateMachine
              event:          :extend_for_pit
   end
 
-  def request_further_clearance!(acting_user:, acting_team:, target_team:, target_user:)
+  def request_further_clearance!(acting_user:, acting_team:)
     trigger! :request_further_clearance,
              acting_user_id:    acting_user.id,
              acting_team_id:    acting_team.id,
-             target_team_id:    target_team.id,
-             target_user_id:    target_user.id,
              event:             :request_further_clearance
   end
 

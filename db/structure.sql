@@ -2,8 +2,13 @@
 -- PostgreSQL database dump
 --
 
+<<<<<<< HEAD
 -- Dumped from database version 9.5.10
 -- Dumped by pg_dump version 9.5.10
+=======
+-- Dumped from database version 9.5.9
+-- Dumped by pg_dump version 9.5.9
+>>>>>>> CT-1467 micro-manage when the escalate link shows up a bit more
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;

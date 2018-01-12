@@ -342,6 +342,24 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
                   .to(:responded) }
   end
 
+  events :request_further_clearance do
+    it { should transition_from(:unassigned)
+                  .to(:unassigned)
+                  .checking_policy(:can_request_further_clearance?) }
+    it { should transition_from(:awaiting_responder)
+                  .to(:awaiting_responder)
+                  .checking_policy(:can_request_further_clearance?) }
+    it { should transition_from(:drafting)
+                  .to(:drafting)
+                  .checking_policy(:can_request_further_clearance?) }
+    it { should transition_from(:pending_dacu_clearance)
+                  .to(:pending_dacu_clearance)
+                  .checking_policy(:can_request_further_clearance?) }
+    it { should transition_from(:awaiting_dispatch)
+                  .to(:awaiting_dispatch)
+                  .checking_policy(:can_request_further_clearance?) }
+  end
+
   describe 'trigger assign_responder!' do
     # it 'triggers an assign_responder event' do
     #   expect do
@@ -890,16 +908,12 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
       expect {
         state_machine.request_further_clearance!(
           acting_user: manager,
-          acting_team: team,
-          target_user: accepted_case.responder,
-          target_team: accepted_case.responding_team)
+          acting_team: team)
       }.to trigger_the_event(:request_further_clearance)
              .on_state_machine(state_machine)
              .with_parameters(
                acting_user_id: manager.id,
-               acting_team_id: team.id,
-               target_user_id: accepted_case.responder.id,
-               target_team_id: accepted_case.responding_team.id)
+               acting_team_id: team.id)
     end
   end
 end
