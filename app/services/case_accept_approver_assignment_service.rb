@@ -12,7 +12,7 @@ class CaseAcceptApproverAssignmentService
   def call
     return false unless validate_still_pending
 
-    @assignment.case.state_machine.accept_approver_assignment!(@user, @team)
+    @assignment.case.state_machine.accept_approver_assignment!(acting_user: @user, acting_team: @team)
     @assignment.user = @user
     @assignment.accepted!
     @assignment.save!

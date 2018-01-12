@@ -35,7 +35,7 @@ describe CaseAcceptApproverAssignmentService do
         service.call
         expect(assignment.case.state_machine)
           .to have_received(:accept_approver_assignment!)
-                .with(approver, dacu_disclosure)
+                .with(acting_user: approver, acting_team: dacu_disclosure)
       end
 
       it 'adds the user to the assignment' do

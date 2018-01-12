@@ -53,6 +53,7 @@ case_types:
               unassigned:
                 add_message_to_case:
                 flag_for_clearance:
+                accept_approver_assignment:
 
           responder:
             states:
