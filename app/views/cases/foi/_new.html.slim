@@ -1,4 +1,4 @@
-= form_for kase, as: :case, url: cases_path do |f|
+= form_for kase, url: cases_path do |f|
   = f.radio_button_fieldset :type,
               choices: [Case::FOI::Standard,
                         Case::FOI::TimelinessReview,

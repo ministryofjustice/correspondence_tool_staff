@@ -179,8 +179,8 @@ en:
         flag_for_disclosure_specialists: Clearance required by DACU Disclosure
         type: Case type
       case_sar:
-        delivery_method: "Received by"
-        subject_type: "Type of subject"
+        flag_for_disclosure_specialists: "Clearance required by disclosure?"
+        subject_type: "Type of data subject"
         third_party: "Is the information being requested on someone's behalf?"
       state_selector:
         selected_states: Filter by status
@@ -244,14 +244,11 @@ en:
           Case::SAR::NonOffender: Non-Offender SAR
         linked_case_number: Case number
       case_sar:
-        delivery_method:
-          sent_by_email: "Email"
-          sent_by_post: "Post"
-        linked_cases: "If it's a linked case, what is the linked case number?"
-        name: "Requestor full name"
+        message: "Full case"
+        name: "Who is the requestor?"
         received_date: "Received at MOJ"
         subject: "Case summary"
-        subject_full_name: "Full name of subject"
+        subject_full_name: "Full name of data subject"
       feedback:
         comment: Help make this service better
 
@@ -452,7 +449,7 @@ en:
       details: Details
     new:
       heading: Add case details
-      sub_heading: Create case
+      sub_heading: Create %{case_type} case
       received_date: Date received at MOJ
       received_date_copy: For example. 31 01 2017
     select_type:
