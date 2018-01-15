@@ -52,7 +52,7 @@ case_types:
           approver:
             states:
               unassigned:
-                accept_approver_asignment:
+                accept_approver_assignment:
                 add_message_to_case:
                 flag_for_clearance:
 
