@@ -122,7 +122,7 @@ module CTS
         puts ">>>>>> Time frozen to #{Time.now} for approval"
         dacu_approver= random_dacu_disclosure_team_member
         assig = kase.approver_assignments.for_team(@dacu_disclosure).first
-        kase.state_machine.accept_approver_assignment!(dacu_approver, @dacu_disclosure)
+        kase.state_machine.accept_approver_assignment!(acting_user: dacu_approver, acting_team: @dacu_disclosure)
         assig.update!(user_id:  dacu_approver.id, state: 'accepted')
         assig = kase.approver_assignments.for_team(@dacu_disclosure).first
         kase.state_machine.approve!(dacu_approver, assig)

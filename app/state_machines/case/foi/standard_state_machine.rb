@@ -303,10 +303,10 @@ class Case::FOI::StandardStateMachine
     transition from: :closed,                           to: :closed
   end
 
-  def accept_approver_assignment!(user, approving_team)
+  def accept_approver_assignment!(acting_user:, acting_team:)
     trigger! :accept_approver_assignment,
-             acting_team_id:    approving_team.id,
-             acting_user_id:    user.id,
+             acting_team_id:    acting_team.id,
+             acting_user_id:    acting_user.id,
              event:             :accept_approver_assignment
   end
 
