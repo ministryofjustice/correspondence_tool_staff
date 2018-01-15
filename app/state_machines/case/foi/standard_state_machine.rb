@@ -544,6 +544,7 @@ class Case::FOI::StandardStateMachine
              linked_case_id: linked_case_id,
              event:          :link_a_case
   end
+  
   private
 
   def notify_responder(kase, mail_type)

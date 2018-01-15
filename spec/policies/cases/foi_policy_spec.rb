@@ -2,11 +2,11 @@ require 'rails_helper'
 
 describe Case::FOIPolicy do
   subject { described_class }
+
   # Teams
   let(:managing_team)     { find_or_create :team_dacu }
   let(:responding_team)   { create :responding_team }
   let!(:dacu_disclosure)  { find_or_create :team_dacu_disclosure }
-
 
   # Users
   let(:manager)           { managing_team.managers.first }
@@ -30,8 +30,39 @@ describe Case::FOIPolicy do
                                         responder: responder }
   let(:case_with_response)      { create :case_with_response,
                                         responder: responder }
+  let(:approved_case)           { create :approved_case }
+  let(:accepted_trigger_case)   { create :accepted_case,
+                                        :flagged,
+                                        :dacu_disclosure }
+  let(:accepted_press_case)      { create :accepted_case,
+                                        :flagged,
+                                        :press_office }
+  let(:accepted_flagged_case)    { create :accepted_case,
+                                        :flagged,
+                                        :dacu_disclosure }
 
+  let(:unassigned_case_within_escalation) do
+    create :case_within_escalation_deadline
+  end
 
+  let(:unassigned_flagged_case_within_escalation) do
+    create :case_within_escalation_deadline,
+      :flagged,
+      :dacu_disclosure
+  end
+
+  let(:unassigned_trigger_case_within_escalation) do
+   create :case_within_escalation_deadline,
+        :flagged_accepted,
+        :dacu_disclosure
+  end
+
+  let(:unassigned_press_case_within_escalation) do
+    create :case_within_escalation_deadline,
+        :flagged_accepted,
+        :press_office
+  end
+  
   permissions :request_further_clearance? do
     it { should_not permit(responder,             accepted_case) }
     it { should     permit(manager,               accepted_case) }
@@ -44,39 +75,6 @@ describe Case::FOIPolicy do
   end
 
   permissions :can_request_further_clearance? do
-    let(:unassigned_case_within_escalation) do
-      create :case,
-             creation_time: 1.business_day.ago,
-             identifier: 'unassigned case within escalation deadline'
-    end
-    let(:unassigned_flagged_case_within_escalation) do
-      create :case,
-             :flagged, :dacu_disclosure,
-             creation_time: 1.business_day.ago,
-             identifier: 'unassigned flagged case within escalation deadline'
-    end
-    let(:unassigned_trigger_case_within_escalation) do
-      create :case,
-             :flagged_accepted, :dacu_disclosure,
-             creation_time: 1.business_day.ago,
-             identifier: 'unassigned trigger case within escalation deadline'
-    end
-    let(:unassigned_press_case_within_escalation) do
-      create :case,
-             :flagged_accepted, :press_office,
-             creation_time: 1.business_day.ago,
-             identifier: 'unassigned press case within escalation deadline'
-    end
-    let(:accepted_flagged_case) do
-      create :accepted_case, :flagged, :dacu_disclosure
-    end
-    let(:accepted_trigger_case) do
-      create :accepted_case, :flagged, :dacu_disclosure
-    end
-    let(:accepted_press_case) do
-      create :accepted_case, :flagged, :press_office
-    end
-    let(:approved_case) { create :approved_case }
 
     it { should     permit(manager, unassigned_case_within_escalation) }
     it { should_not permit(manager, unassigned_flagged_case_within_escalation) }

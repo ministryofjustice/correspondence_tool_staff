@@ -61,6 +61,11 @@ FactoryGirl.define do
     end
   end
 
+  factory :case_within_escalation_deadline, parent: :case do
+    creation_time { 1.business_day.ago }
+    identifier 'unassigned case within escalation deadline'
+  end
+
   factory :awaiting_responder_case, parent: :case,
           aliases: [:assigned_case] do
     transient do
