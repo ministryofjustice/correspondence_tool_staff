@@ -5,7 +5,7 @@
   = t('.heading')
 
 - content_for :sub_heading
-  = t('.sub_heading')
+  = t('.sub_heading', case_type: @case.type_abbreviation)
 
 = render partial: 'layouts/header'
 
