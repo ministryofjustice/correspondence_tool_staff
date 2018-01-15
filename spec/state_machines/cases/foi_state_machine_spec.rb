@@ -391,8 +391,8 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   describe 'trigger accept_approver_assignment!' do
     it 'triggers an accept_approver_assignment event' do
       expect do
-        assigned_case.state_machine.accept_approver_assignment! approver,
-                                                                approving_team
+        assigned_case.state_machine.accept_approver_assignment! acting_user: approver,
+                                                                acting_team: approving_team
       end.to trigger_the_event(:accept_approver_assignment)
                .on_state_machine(assigned_case.state_machine)
                .with_parameters(acting_user_id: approver.id,
