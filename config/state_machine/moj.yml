@@ -155,9 +155,9 @@ case_types:
               drafting:
                 add_message_to_case:
                   if: Predicates#responder_is_member_of_assigned_team?
-                add_responses:
+                respond:
                   if: Predicates#responder_is_member_of_assigned_team?
-                  transition_to: awaiting_dispatch
+                  transition_to: responded
                 link_a_case:
                 reassign_user:
                   if: Predicates#responder_is_member_of_assigned_team?

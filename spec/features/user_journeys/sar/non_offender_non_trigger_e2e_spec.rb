@@ -52,13 +52,9 @@ feature 'SAR NonOffender case that does not require clearance' do
                         message: 'This. Is. A. Test.',
                         do_logout: false
 
-    upload_response kase: kase,
-                    user: responder,
-                    file: UPLOAD_RESPONSE_DOCX_FIXTURE,
-                    do_login: false
-
     mark_case_as_sent kase: kase,
-                      user: responder
+                      user: responder,
+                      do_login: false
 
     close_case kase: kase,
                user: manager
