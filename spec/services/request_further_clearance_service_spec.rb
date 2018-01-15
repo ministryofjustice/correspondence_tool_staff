@@ -34,12 +34,11 @@ describe RequestFurtherClearanceService do
           .to change{ accepted_case
                           .transitions
                           .further_clearance.count }.by(1)
-      tr = accepted_case.transitions.last
-      expect(tr.event).to eq 'flag_for_clearance'
+      tr = accepted_case.transitions[-2]
+      expect(tr.event).to eq 'request_further_clearance'
       expect(tr.to_state).to eq 'drafting'
-      expect(tr.most_recent).to be true
       expect(tr.acting_user_id).to eq manager.id
-      expect(tr.acting_team_id).to eq manager.managing_teams.first.id
+      expect(tr.acting_team_id).to eq manager.managing_teams.last.id
     end
 
     it 'returns ok' do

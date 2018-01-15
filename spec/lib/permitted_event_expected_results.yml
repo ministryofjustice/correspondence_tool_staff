@@ -27,7 +27,6 @@
     - :edit_case
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
     - :link_a_case
-    - :request_further_clearance
 
 - - manager
   - flagged_awaiting_responder_case
@@ -37,7 +36,6 @@
     - :edit_case
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
     - :link_a_case
-    - :request_further_clearance
     - :unflag_for_clearance
 
 - - manager
@@ -49,7 +47,6 @@
     - :extend_for_pit
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
     - :link_a_case
-    - :request_further_clearance
 
 - - manager
   - unflagged_case_with_response
@@ -59,7 +56,6 @@
     - :extend_for_pit
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
     - :link_a_case
-    - :request_further_clearance
 
 - - manager
   - accepted_pending_dacu_clearance_case
@@ -68,7 +64,6 @@
     - :edit_case
     - :extend_for_pit
     - :link_a_case
-    - :request_further_clearance
     - :unflag_for_clearance                 # don't think this should be here, and no button is displayed for it.
 
 - - manager
@@ -78,7 +73,6 @@
     - :edit_case
     - :extend_for_pit
     - :link_a_case
-    - :request_further_clearance
     - :unflag_for_clearance                 # don't think this should be here, and no button is displayed for it.
 
 ##################################### UNASSIGNED RESPONDER #########################
