@@ -1,5 +1,6 @@
 require 'rails_helper'
 
+
 RSpec.describe AssignmentsController, type: :controller do
   let(:manager)           { create :manager }
   let(:assigned_case)     { create :assigned_case }
