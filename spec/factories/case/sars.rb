@@ -32,7 +32,10 @@ FactoryGirl.define do
     end
   end
 
-  factory :awaiting_responder_sar, parent: :sar_case, aliases: [:assigned_sar], class: Case::SAR::NonOffender do
+  factory :awaiting_responder_sar,
+          parent: :sar_case,
+          aliases: [:assigned_sar],
+          class: Case::SAR do
     transient do
       identifier "assigned sar"
       manager         { managing_team.managers.first }
