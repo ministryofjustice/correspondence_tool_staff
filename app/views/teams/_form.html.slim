@@ -1,11 +1,12 @@
 
 = form.text_field :name, label_options: { value: @team.pretty_type}
 
-= form.text_field :email, label_options: { value: "#{@team.pretty_type} group email" }
+= form.text_field :email, label_options: { value: "#{@team.pretty_type} email" }
 
 = form.text_field :team_lead, label_options: { value: @team.pretty_team_lead_title }
 
-- if @team.is_a?(BusinessUnit)
+- if @team.is_a?(BusinessUnit) && @team.new_record?
+
   = form.radio_button_fieldset :role, choices: [:responder, :approver, :manager], inline: true
 
 = form.submit @action_copy, {class: 'button'}
