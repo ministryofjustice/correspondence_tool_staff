@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Case::FOIPolicy do
+describe Case::FOI::StandardPolicy do
   subject { described_class }
 
   # Teams
@@ -13,17 +13,16 @@ describe Case::FOIPolicy do
   let(:responder)         { responding_team.responders.first }
   let(:press_officer)     { find_or_create :press_officer }
   let(:private_officer)   { find_or_create :private_officer }
-  let(:disclosure_specialist) { approver }
-  let(:responder)         { responding_team.responders.first }
-  let(:approver)          { dacu_disclosure.approvers.first }
+  let(:disclosure_approver)          { dacu_disclosure.approvers.first }
 
-  # Cases
+# Cases
+  # Unflagged
   let(:unassigned_case)         { create :case }
   let(:accepted_case)           { create :accepted_case,
                                         responder: responder,
                                         manager: manager }
   let(:pending_dacu_clearance_case)  { create :pending_dacu_clearance_case,
-                                        approver: approver }
+                                        approver: disclosure_approver }
   let(:responded_case)          { create :responded_case,
                                         responder: responder }
   let(:closed_case)             { create :closed_case,
@@ -31,6 +30,12 @@ describe Case::FOIPolicy do
   let(:case_with_response)      { create :case_with_response,
                                         responder: responder }
   let(:approved_case)           { create :approved_case }
+  let(:unassigned_case_within_escalation) do
+    create :case_within_escalation_deadline
+  end
+
+  # Flagged case (cases not yet accepted by approvers)
+
   let(:accepted_trigger_case)   { create :accepted_case,
                                         :flagged,
                                         :dacu_disclosure }
@@ -40,17 +45,13 @@ describe Case::FOIPolicy do
   let(:accepted_flagged_case)    { create :accepted_case,
                                         :flagged,
                                         :dacu_disclosure }
-
-  let(:unassigned_case_within_escalation) do
-    create :case_within_escalation_deadline
-  end
-
   let(:unassigned_flagged_case_within_escalation) do
     create :case_within_escalation_deadline,
       :flagged,
       :dacu_disclosure
   end
 
+  # Trigger cases (cases that have been accepted by approvers)
   let(:unassigned_trigger_case_within_escalation) do
    create :case_within_escalation_deadline,
         :flagged_accepted,
@@ -62,14 +63,14 @@ describe Case::FOIPolicy do
         :flagged_accepted,
         :press_office
   end
-  
+
   permissions :request_further_clearance? do
     it { should_not permit(responder,             accepted_case) }
     it { should     permit(manager,               accepted_case) }
     it { should     permit(manager,               case_with_response)}
     it { should_not permit(manager,               unassigned_case) }
     it { should_not permit(manager,               closed_case) }
-    it { should_not permit(disclosure_specialist, accepted_case) }
+    it { should_not permit(disclosure_approver,   accepted_case) }
     it { should_not permit(press_officer,         accepted_case) }
     it { should_not permit(private_officer,       accepted_case) }
   end

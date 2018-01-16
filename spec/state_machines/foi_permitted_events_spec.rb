@@ -29,7 +29,8 @@ describe Case::FOI::StandardStateMachine do
                                                                       :destroy_case,
                                                                       :edit_case,
                                                                       :flag_for_clearance,
-                                                                      :link_a_case]
+                                                                      :link_a_case,
+                                                                      :request_further_clearance]
         end
       end
 
@@ -104,10 +105,14 @@ describe Case::FOI::StandardStateMachine do
         end
 
         context 'awaiting responder state' do
+          # Request further clearance is not permitted by the policies so has been removed
+          # from state machine permitted events check
+
           it 'shows events' do
             k = create :awaiting_responder_case
             expect(k.current_state).to eq 'awaiting_responder'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case]
+            permitted_events = k.state_machine.permitted_events(responder.id) - [:request_further_clearance]
+            expect(permitted_events).to eq [:link_a_case]
           end
         end
 
@@ -131,16 +136,18 @@ describe Case::FOI::StandardStateMachine do
       end
 
       context 'responder in assigned team' do
-
+        # Request further clearance is not permitted by the policies so has been removed
+        # from state machine permitted events check
         context 'awaiting_responder state' do
           it 'shows events' do
             k = create :awaiting_responder_case
             responder = responder_in_assigned_team(k)
             expect(k.current_state).to eq 'awaiting_responder'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:accept_responder_assignment,
-                                                                          :add_message_to_case,
-                                                                          :link_a_case,
-                                                                          :reject_responder_assignment]
+            permitted_events = k.state_machine.permitted_events(responder.id) - [:request_further_clearance]
+            expect(permitted_events).to eq [:accept_responder_assignment,
+                                            :add_message_to_case,
+                                            :link_a_case,
+                                            :reject_responder_assignment]
 
           end
         end

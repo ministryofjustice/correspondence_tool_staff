@@ -61,7 +61,8 @@ describe 'Permitted Events' do
           end
           puts sprintf("    %-40s %s", case_type, expected_events.inspect).yellow
         end
-        actual_events =  kase.state_machine.permitted_events(user.id) - [:request_further_clearance]
+        
+        actual_events = (kase.state_machine.permitted_events(user.id) - [:request_further_clearance])
 
         if actual_events != expected_events
           puts "ERROR: Unexpected events for user #{user_type} with case #{case_type}".red
