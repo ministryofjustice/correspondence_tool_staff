@@ -27,12 +27,12 @@ RSpec.describe CasesController, type: :controller do
 
       it 'redirects to case list' do
         patch :unflag_taken_on_case_for_clearance, params: params
-        expect(response).to redirect_to(cases_path)
+        expect(response).to redirect_to(case_path(flagged_case))
       end
 
       it 'displays a flash notice' do
         patch :unflag_taken_on_case_for_clearance, params: params
-        expect(flash[:notice]).to eq "Clearance removed for case #{flagged_case.number}"
+        expect(flash[:notice]).to eq "Clearance removed for this case."
       end
     end
 

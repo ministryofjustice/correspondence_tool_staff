@@ -62,7 +62,8 @@ class AssignmentsController < ApplicationController
     service = AssignNewTeamService.new(current_user, params)
     service.call
     if service.result == :ok
-      redirect_to root_open_cases_path
+      flash[:notice] = "Case has been assigned to a new team"
+      redirect_to case_path @case
     else
       flash[:alert] = "Unable to assign to this team"
       redirect_to action: 'assign_to_new_team'

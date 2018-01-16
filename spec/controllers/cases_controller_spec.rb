@@ -1028,7 +1028,14 @@ RSpec.describe CasesController, type: :controller do
         allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
         expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
         do_upload_responses
-        expect(response).to redirect_to(cases_path)
+        expect(response).to redirect_to(case_path(kase))
+      end
+
+      it 'sets a flash message' do
+        allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
+        expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
+        do_upload_responses
+        expect(flash[:notice]).to eq "You have uploaded the response for this case."
       end
 
       context 'no files specified' do

@@ -33,15 +33,13 @@ RSpec.describe CasesController, type: :controller do
       patch :execute_request_amends,
             params: { id: pending_private_clearance_case, case: {request_amends_comment: "Oh my!"} }
       expect(flash[:notice])
-        .to eq "You have requested amends to case " +
-               "#{pending_private_clearance_case.number}" +
-               " - #{pending_private_clearance_case.subject}."
+        .to eq 'You have requested amends to this case\'s response.'
     end
 
-    it 'redirects to cases page' do
+    it 'redirects to case detail page' do
       patch :execute_request_amends,
             params: { id: pending_private_clearance_case, case: {request_amends_comment: "Oh my!"} }
-      expect(response).to redirect_to(cases_path)
+      expect(response).to redirect_to(case_path(pending_private_clearance_case))
     end
   end
 end
