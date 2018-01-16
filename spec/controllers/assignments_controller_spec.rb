@@ -1,5 +1,6 @@
 require 'rails_helper'
 
+
 RSpec.describe AssignmentsController, type: :controller do
   let(:manager)           { create :manager }
   let(:assigned_case)     { create :assigned_case }
@@ -188,100 +189,114 @@ RSpec.describe AssignmentsController, type: :controller do
   end
 
   describe '#accept' do
-    let(:assignment) { assigned_case_flagged.approver_assignments.first }
-    let(:params)     { { case_id: assigned_case_flagged.id, id: assignment.id} }
-    let(:service)    { double(CaseAcceptApproverAssignmentService, call: true) }
+    context 'using dummy service' do
+      let(:assignment) { assigned_case_flagged.approver_assignments.first }
+      let(:params)     { { case_id: assigned_case_flagged.id, id: assignment.id} }
+      let(:service)    { double(CaseAcceptApproverAssignmentService, call: true) }
 
-    before do
-      allow(CaseAcceptApproverAssignmentService)
-        .to receive(:new).and_return(service)
+      before do
+        allow(CaseAcceptApproverAssignmentService)
+          .to receive(:new).and_return(service)
+      end
+
+      context 'as an approver' do
+        before do
+          sign_in approver
+        end
+
+        it 'uses the service', js: true do
+          patch :accept, params: params, xhr: true
+          expect(CaseAcceptApproverAssignmentService)
+            .to have_received(:new)
+                  .with(user: approver, assignment: assignment)
+        end
+
+        context 'service succeeds' do
+          before do
+            allow(service).to receive(:call).and_return(true)
+          end
+
+          it 'records success' do
+            patch :accept, params: params, xhr: true
+            expect(assigns(:success)).to be true
+          end
+
+          it 'sets the message to success' do
+            patch :accept, params: params, xhr: true
+            expect(assigns(:message)).to eq 'Case taken on'
+          end
+
+          it 'renders the view' do
+            patch :accept, params: params, xhr: true
+            expect(response).to have_rendered('assignments/accept')
+          end
+        end
+
+        context 'assignment is already accepted by user' do
+          before do
+            allow(service).to receive(:call).and_return(false)
+            allow(service).to receive(:result).and_return(:not_pending)
+            assignment.user = approver
+            assignment.accepted!
+            assignment.save!
+          end
+
+          it 'records success' do
+            patch :accept, params: params, xhr: true
+            expect(assigns(:success)).to be true
+          end
+
+          it 'sets the message to success' do
+            patch :accept, params: params, xhr: true
+            expect(assigns(:message)).to eq 'Case taken on'
+          end
+
+          it 'renders the view' do
+            patch :accept, params: params, xhr: true
+            expect(response).to have_rendered('assignments/accept')
+          end
+        end
+
+
+        context 'assignment is already accepted by another user' do
+          let(:another_approver) { create :approver,
+                                          approving_team: approving_team }
+
+          before do
+            allow(service).to receive(:call).and_return(false)
+            allow(service).to receive(:result).and_return(:not_pending)
+            assignment.user = another_approver
+            assignment.accepted!
+            assignment.save!
+          end
+
+          it 'records failure' do
+            patch :accept, params: params, xhr: true
+            expect(assigns(:success)).to be false
+          end
+
+          it 'sets the message to already_accepted' do
+            patch :accept, params: params, xhr: true
+            expect(assigns(:message))
+              .to eq "Case already accepted by #{another_approver.full_name}"
+          end
+
+          it 'renders the view' do
+            patch :accept, params: params, xhr: true
+            expect(response).to have_rendered('assignments/accept')
+          end
+        end
+      end
     end
 
-    context 'as an approver' do
-      before do
+    context 'case is in unassigned state' do
+      it 'succeeds' do
         sign_in approver
-      end
-
-      it 'uses the service', js: true do
-        patch :accept, params: params, xhr: true
-        expect(CaseAcceptApproverAssignmentService)
-          .to have_received(:new)
-                .with(user: approver, assignment: assignment)
-      end
-
-      context 'service succeeds' do
-        before do
-          allow(service).to receive(:call).and_return(true)
-        end
-
-        it 'records success' do
-          patch :accept, params: params, xhr: true
-          expect(assigns(:success)).to be true
-        end
-
-        it 'sets the message to success' do
-          patch :accept, params: params, xhr: true
-          expect(assigns(:message)).to eq 'Case taken on'
-        end
-
-        it 'renders the view' do
-          patch :accept, params: params, xhr: true
-          expect(response).to have_rendered('assignments/accept')
-        end
-      end
-
-      context 'assignment is already accepted by user' do
-        before do
-          allow(service).to receive(:call).and_return(false)
-          allow(service).to receive(:result).and_return(:not_pending)
-          assignment.user = approver
-          assignment.accepted!
-          assignment.save!
-        end
-
-        it 'records success' do
-          patch :accept, params: params, xhr: true
-          expect(assigns(:success)).to be true
-        end
-
-        it 'sets the message to success' do
-          patch :accept, params: params, xhr: true
-          expect(assigns(:message)).to eq 'Case taken on'
-        end
-
-        it 'renders the view' do
-          patch :accept, params: params, xhr: true
-          expect(response).to have_rendered('assignments/accept')
-        end
-      end
-
-      context 'assignment is already accepted by another user' do
-        let(:another_approver) { create :approver,
-                                        approving_team: approving_team }
-
-        before do
-          allow(service).to receive(:call).and_return(false)
-          allow(service).to receive(:result).and_return(:not_pending)
-          assignment.user = another_approver
-          assignment.accepted!
-          assignment.save!
-        end
-
-        it 'records failure' do
-          patch :accept, params: params, xhr: true
-          expect(assigns(:success)).to be false
-        end
-
-        it 'sets the message to already_accepted' do
-          patch :accept, params: params, xhr: true
-          expect(assigns(:message))
-            .to eq "Case already accepted by #{another_approver.full_name}"
-        end
-
-        it 'renders the view' do
-          patch :accept, params: params, xhr: true
-          expect(response).to have_rendered('assignments/accept')
-        end
+        kase = create :case
+        assignment = create :approver_assignment, case_id: kase.id, team: approving_team
+        expect(kase.current_state).to eq 'unassigned'
+        patch :accept, params: {case_id: kase.id, id: assignment.id}, xhr: true
+        expect(assignment.reload.user_id).to eq approver.id
       end
     end
   end
