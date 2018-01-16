@@ -3,7 +3,7 @@ namespace :sar do
   task :create => :environment do
     category = get_sar_category
     Timecop.freeze Time.now - 24.hours do
-      kase = Case::SAR::NonOffender.new
+      kase = Case::SAR.new
       kase.name = Faker::Name.name
       kase.email = Faker::Internet.email(kase.name)
       kase.subject = Faker::Company.catch_phrase
