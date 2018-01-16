@@ -1,12 +1,17 @@
+# rubocop:disable Metrics/ParameterLists
 def go_to_case_details_step(kase:,
                             page: nil,
                             expected_response_files: nil,
                             expected_team: nil,
-                            expected_history: nil)
-  page ||= cases_page
-  page.click_on kase.number
+                            expected_history: nil,
+                            find_details_page: true)
+  if find_details_page
+    page ||= cases_page
+    page.click_on kase.number
+  end
+
   expect(cases_show_page.displayed? || assignments_edit_page.displayed?)
-    .to be_truthy
+      .to be_truthy
 
   if expected_response_files.present?
     expected_response_files.each do |file|
@@ -27,6 +32,7 @@ def go_to_case_details_step(kase:,
     end
   end
 end
+# rubocop:enable Metrics/ParameterLists
 
 def go_to_incoming_cases_step expect_not_to_see_cases: []
   cases_page.primary_navigation.new_cases.click

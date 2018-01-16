@@ -216,7 +216,7 @@ class CasesController < ApplicationController
     when :ok
       flash[:notice] = t('notices.response_uploaded')
       set_permitted_events
-      redirect_to cases_path
+      redirect_to case_path @case
     end
   end
 
@@ -296,8 +296,8 @@ class CasesController < ApplicationController
                                       message: params[:message])
     service.call
     if service.result == :ok
-      flash[:notice] = "Clearance removed for case #{@case.number}"
-      redirect_to cases_path
+      flash[:notice] = "Clearance removed for this case."
+      redirect_to case_path(@case)
     end
   end
 
@@ -333,7 +333,7 @@ class CasesController < ApplicationController
     service.call
     if service.result == :ok
       flash[:notice] = "You have cleared case #{@case.number} - #{@case.subject}."
-      redirect_to cases_path
+      redirect_to case_path(@case)
     else
       flash[:alert] = service.error_message
       render :approve_response_interstitial
@@ -344,8 +344,8 @@ class CasesController < ApplicationController
     authorize @case
     @case.request_amends_comment = params[:case][:request_amends_comment]
     CaseRequestAmendsService.new(user: current_user, kase: @case).call
-    flash[:notice] = "You have requested amends to case #{@case.number} - #{@case.subject}."
-    redirect_to cases_path
+    flash[:notice] = 'You have requested amends to this case\'s response.'
+    redirect_to case_path(@case)
   end
 
   def extend_for_pit
