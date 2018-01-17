@@ -124,4 +124,20 @@ class Case::BaseDecorator < Draper::Decorator
     end
   end
 
+  def admin_created_at
+    object.created_at.strftime('%Y-%m-%d %H:%M:%S')
+  end
+
+  def admin_received_date
+    object.received_date.strftime('%Y-%m-%d')
+  end
+
+  def admin_external_deadline
+    object.external_deadline.strftime('%Y-%m-%d')
+  end
+
+  def admin_internal_deadline
+    object.internal_deadline.strftime('%Y-%m-%d')
+  end
+
 end
