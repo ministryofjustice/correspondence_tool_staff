@@ -1,6 +1,5 @@
 require 'colorize'
 require 'shell-spinner'
-require 'ruby-progressbar'
 
 class DatabaseDumper
 
