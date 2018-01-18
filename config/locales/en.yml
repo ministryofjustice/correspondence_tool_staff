@@ -179,6 +179,8 @@ en:
         flag_for_disclosure_specialists: Clearance required by DACU Disclosure
         type: Case type
       case_sar:
+        where_to_send_html: |
+          <div class="heading-medium">Where the information should be sent</div>
         flag_for_disclosure_specialists: "Clearance required by disclosure?"
         subject_type: "Type of data subject"
         third_party: "Is the information being requested on someone's behalf?"
@@ -244,8 +246,10 @@ en:
           Case::SAR::NonOffender: Non-Offender SAR
         linked_case_number: Case number
       case_sar:
+        email: "Recipient email address"
         message: "Full case"
         name: "Who is the requestor?"
+        postal_address: "Recipient postal address"
         received_date: "Received at MOJ"
         subject: "Case summary"
         subject_full_name: "Full name of data subject"
