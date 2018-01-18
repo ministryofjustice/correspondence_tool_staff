@@ -1,35 +1,43 @@
-h2.heading-medium About the data subject
+section
+  header
+    h2.heading-medium About the data subject
 
-= f.text_field :subject_full_name
+  = f.text_field :subject_full_name
 
-= f.radio_button_fieldset :subject_type,
-                          choices: Case::SAR::VALID_SUBJECT_TYPES
+  = f.radio_button_fieldset :subject_type,
+                            choices: Case::SAR::VALID_SUBJECT_TYPES
 
-#third-party
-  = f.radio_button_fieldset :third_party
+  #third-party
+    = f.radio_button_fieldset :third_party
 
-  #case_sar_third_party_yes_content.panel.panel-border-thin.js-hidden
+    #case_sar_third_party_yes_content.panel.panel-border-thin.js-hidden
       = f.text_field :name
 
-h2.heading-medium About the case
+section
+  header
+    h2.heading-medium About the case
 
-.form-group
-  = f.gov_uk_date_field :received_date, {legend_text: t('cases.new.received_date'), form_hint_text: t('cases.new.received_date_copy'), today_button: {class: 'button-secondary'} }
+  .form-group
+    = f.gov_uk_date_field :received_date, {legend_text: t('cases.new.received_date'), form_hint_text: t('cases.new.received_date_copy'), today_button: {class: 'button-secondary'} }
 
 
-= f.text_field :subject
+  = f.text_field :subject
 
-= f.text_area :message, { rows: 10 }
+  = f.text_area :message, { rows: 10 }
 
-.grid-row
-  .column-two-thirds
-    div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
-      = render partial: 'shared/dropzone_form',
-              locals: { s3_direct_post: @s3_direct_post,
-                      file_input_name: 'case[uploaded_request_files][]' }
+  .grid-row
+    .column-two-thirds
+      div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
+        = render partial: 'shared/dropzone_form',
+                locals: { s3_direct_post: @s3_direct_post,
+                        file_input_name: 'case[uploaded_request_files][]' }
 
-/= f.radio_button_fieldset :flag_for_disclosure_specialists
+  /= f.radio_button_fieldset :flag_for_disclosure_specialists
 
-h2.heading-medium Where the information should be sent
+  = f.radio_button_fieldset :where_to_send, choices: [:email, :post]
 
-= f.email_field :email
+  #case_sar_where_to_send_email_content.panel.panel-border-thin.js-hidden
+    = f.email_field :email
+
+  #case_sar_where_to_send_post_content.panel.panel-border-thin.js-hidden
+    = f.text_area :postal_address, {rows: 4}

@@ -15,7 +15,7 @@ div
   strong
     = @case.subject
 
-removal-form
+.removal-form
   = form_for [@case], url: unflag_taken_on_case_for_clearance_case_path(@case) do |f|
     label.form-label for="unflag_for_clearance_message"
       = t('.why')
