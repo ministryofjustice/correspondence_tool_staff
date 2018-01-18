@@ -15,26 +15,18 @@
         col
         col
         col
-        col
-        col
-        col
-        col
-        col
+
       thead
         th scope='col'
           = t('.id')
         th scope='col'
           = t('.number')
+          br
+          = t('.case_type')
         th scope='col'
           = t('.request')
-        th scope='col'
-          = t('.received_date')
-        th scope='col'
-          = t('.created_at')
-        th scope='col'
-          = t('.draft_deadline')
-        th scope='col'
-          = t('.external_deadline')
+          br
+          = t('.deadlines')
         th scope='col'
           = t('.status')
         th scope='col'
@@ -46,16 +38,18 @@
               = kase.id
             td
               = link_to kase.number, case_path(kase.id)
+              br
+              = t(".#{kase.type}")
             td
               = kase.subject
-            td
-              = kase.received_date
-            td
-              = kase.created_at
-            td
-              = kase.internal_deadline
-            td
-              = kase.external_deadline
+              br
+              = "Created: #{kase.admin_created_at}"
+              br
+              = "Received: #{kase.admin_received_date}"
+              br
+              = "Internal: #{kase.admin_internal_deadline}"
+              br
+              = "External: #{kase.admin_external_deadline}"
             td
               = t("state.#{kase.current_state}")
             td

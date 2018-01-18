@@ -238,7 +238,7 @@ en:
           Case::FOI::TimelinessReview: FOI - Internal review for timeliness
           Case::FOI::ComplianceReview: FOI - Internal review for compliance
           Case::FOI::Standard: FOI
-          Case::SAR: SAR
+          Case::SAR::NonOffender: Non-Offender SAR
         linked_case_number: Case number
       feedback:
         comment: Help make this service better
@@ -347,11 +347,18 @@ en:
         external_deadline: External Deadline
         heading: System Cases
         id: ID
-        number: Case Number
+        number: Case No
+        case_type: Case Type
         received_date: Received
         request: Request
+        deadlines: Deadlines
         status: Status
         who_its_with: Who Its With
+
+        Case::FOI::Standard: FOI
+        Case::FOI::ComplianceReview: FOI Compliance Review
+        Case::FOI::TimelinessReview: FOI Timeliness Review
+        Case::SAR::NonOffender: Non-offender SAR
       new:
         heading: New Case
         create: Create Case

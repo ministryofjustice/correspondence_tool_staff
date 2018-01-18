@@ -12,6 +12,8 @@ module PageObjects
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
+          element :case_type_foi_standard, '#case_type_casefoistandard'
+
           element :full_name, '#case_name'
           element :email, '#case_email'
           element :address, '#case_postal_address'
