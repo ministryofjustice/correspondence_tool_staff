@@ -34,6 +34,8 @@ section
 
   /= f.radio_button_fieldset :flag_for_disclosure_specialists
 
+  = f.hidden_field :flag_for_disclosure_specialists, value: 'no'
+
   = f.radio_button_fieldset :where_to_send, choices: [:email, :post]
 
   #case_sar_where_to_send_email_content.panel.panel-border-thin.js-hidden
