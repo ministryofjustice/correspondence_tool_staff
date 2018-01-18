@@ -86,7 +86,7 @@ describe Case::FOI::StandardPolicy do
     it { should     permit(manager, accepted_trigger_case) }
     it { should_not permit(manager, accepted_press_case) }
     it { should     permit(manager, pending_dacu_clearance_case) }
-    it { should     permit(manager, responded_case) }
+    it { should_not permit(manager, responded_case) }
     it { should     permit(manager, approved_case) }
   end
 end
