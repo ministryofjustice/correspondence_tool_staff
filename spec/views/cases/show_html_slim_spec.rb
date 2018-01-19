@@ -34,7 +34,7 @@ describe 'cases/show.html.slim', type: :view do
   let(:case_pending_dacu_clearance) { create(:pending_dacu_clearance_case)
                                         .decorate }
   let(:case_being_drafted) { create(:case_being_drafted).decorate }
-  let(:case_being_drafted_flagged) { create(:case_being_drafted, :flagged)
+  let(:case_being_drafted_flagged) { create(:case_being_drafted, :flagged, :dacu_disclosure)
                                        .decorate }
   let(:case_with_response) { create(:case_with_response).decorate }
   let(:policy) do
@@ -67,8 +67,7 @@ describe 'cases/show.html.slim', type: :view do
         login_as manager
         setup_policies can_remove_attachment?: false,
                        can_add_attachment?: false,
-                       can_accept_or_reject_approver_assignment?: false,
-                       request_further_clearance?: true
+                       can_accept_or_reject_approver_assignment?: false
       end
 
       it { should_not have_rendered 'cases/_case_attachments'}

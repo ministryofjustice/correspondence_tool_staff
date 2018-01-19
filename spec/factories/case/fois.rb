@@ -595,7 +595,7 @@ FactoryGirl.define do
 
   trait :flagged do
     transient do
-      approving_team { create :approving_team }
+      approving_team { find_or_create :approving_team }
     end
 
     after(:create) do |kase, evaluator|

@@ -23,7 +23,8 @@ RSpec.describe CasesController, type: :controller do
                                        responding_teams: [responding_team] }
   let(:disclosure_specialist) { create :disclosure_specialist }
   let(:team_dacu_disclosure)  { find_or_create :team_dacu_disclosure }
-  let(:approver_responder)    { create :approver_responder }
+  let(:approver_responder)    { create :approver_responder,
+                                        approving_team: team_dacu_disclosure }
   let(:unassigned_case)       { create(:case) }
   let(:assigned_case)         { create :assigned_case,
                                         responding_team: responding_team }
