@@ -17,6 +17,7 @@ class ApplicationController < ActionController::Base
   before_action :set_paper_trail_whodunnit
   before_action :authenticate_user!, :set_user, except: [:ping, :healthcheck]
   before_action :set_global_nav, if: -> { current_user.present?  && global_nav_required? }
+  before_action :add_security_headers
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
@@ -25,6 +26,17 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def add_security_headers
+    headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    headers['Pragma'] = 'no-cache'
+    headers['Expires'] = '-1'
+    if Rails.env.production?
+      headers['Strict-Transport-Security'] = 'max-age=31536000, includeSubDomains'
+    end
+  end
+
+
 
   # Don't bother setting the global nav for requests with paths in GLOBAL_NAV_EXCLUSION_PATHS
   def global_nav_required?
