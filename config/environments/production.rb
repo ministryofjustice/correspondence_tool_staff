@@ -87,8 +87,6 @@ Rails.application.configure do
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  config.logstasher.enabled = true
-  config.logstasher.logger = Logger.new STDOUT
 
   #  Rails 5.0.5 logger
   # if ENV["RAILS_LOG_TO_STDOUT"].present?
@@ -100,4 +98,10 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+
+  # lograge configuration - the setting below is in addition to those specified
+  # in /config/intializers/lograge.rb
+
+  config.lograge.logger = ActiveSupport::Logger.new STDOUT
 end
