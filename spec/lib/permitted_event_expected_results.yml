@@ -36,6 +36,7 @@
     - :edit_case
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
     - :link_a_case
+    - :unflag_for_clearance
 
 - - manager
   - unflagged_drafting_case
@@ -46,7 +47,6 @@
     - :extend_for_pit
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
     - :link_a_case
-    - :request_further_clearance
 
 - - manager
   - unflagged_case_with_response
@@ -56,7 +56,6 @@
     - :extend_for_pit
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
     - :link_a_case
-    - :request_further_clearance
 
 - - manager
   - accepted_pending_dacu_clearance_case
@@ -93,7 +92,6 @@
     - :extend_for_pit
     - :link_a_case
     - :reassign_user
-    - :request_further_clearance
 
 - - unassigned_responder
   - unaccepted_pending_dacu_clearance_case
@@ -120,7 +118,6 @@
     - :extend_for_pit
     - :link_a_case
     - :reassign_user
-    - :request_further_clearance
 
 - - assigned_responder
   - accepted_pending_dacu_clearance_case
@@ -270,6 +267,3 @@
 
 
 #################################### ASSIGNED PRIVATE OFFICER #########################
-
-
-

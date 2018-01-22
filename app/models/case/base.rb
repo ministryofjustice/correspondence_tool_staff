@@ -327,6 +327,10 @@ class Case::Base < ApplicationRecord
     escalation_deadline.future? || escalation_deadline.today?
   end
 
+  def outside_escalation_deadline?
+    !within_escalation_deadline?
+  end
+
   def within_external_deadline?
     date_responded <= external_deadline
   end
@@ -410,6 +414,12 @@ class Case::Base < ApplicationRecord
 
   def flagged_for_private_office_clearance?
     approving_teams.include?(BusinessUnit.private_office)
+  end
+
+  def flagged_for_all?
+    flagged_for_disclosure_specialist_clearance? &&
+      flagged_for_press_office_clearance? &&
+      flagged_for_private_office_clearance?
   end
 
   def responded?

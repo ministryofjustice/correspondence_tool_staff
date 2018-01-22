@@ -17,6 +17,7 @@ describe CaseFinderService do
 
         @responding_team      = @responder.responding_teams.first
         @team_dacu_disclosure = find_or_create :team_dacu_disclosure
+        @managing_team        = find_or_create :managing_team
 
         @closed_case_1        = create(:closed_case, :granted_in_full,
                                        received_date: dd(17),
@@ -264,6 +265,7 @@ describe CaseFinderService do
 
       @responding_team      = @responder.responding_teams.first
       @team_dacu_disclosure = find_or_create :team_dacu_disclosure
+      @managing_team        = find_or_create :managing_team
 
       @foi_case_1           = create :assigned_case,
                                      creation_time: 2.business_days.ago,
@@ -295,16 +297,12 @@ describe CaseFinderService do
       context 'internal review case has received request for further clearance' do
         before do
           @foi_cr_case.state_machine.request_further_clearance!(
-            acting_user: @disclosure_specialist,
-            acting_team: @team_dacu_disclosure,
-            target_user: @responder,
-            target_team: @responding_team,
+            acting_user: @manager,
+            acting_team: @managing_team,
           )
           @foi_tr_case.state_machine.request_further_clearance!(
-            acting_user: @disclosure_specialist,
-            acting_team: @team_dacu_disclosure,
-            target_user: @responder,
-            target_team: @responding_team,
+            acting_user: @manager,
+            acting_team: @managing_team,
           )
         end
 

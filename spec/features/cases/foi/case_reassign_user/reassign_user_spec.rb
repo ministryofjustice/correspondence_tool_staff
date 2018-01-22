@@ -6,12 +6,12 @@ feature 'cases being reassigned to other team members' do
   given(:another_responder) { create :responder,
                                      responding_teams: [responding_team] }
 
-  given(:approving_team)   { create :approving_team }
-  given(:approver) { approving_team.approvers.first }
+  given(:approving_team)   { find_or_create :team_dacu_disclosure }
+  given(:approver)         { create :disclosure_specialist, approving_team: approving_team }
   given(:another_approver) { create :approver, approving_team: approving_team }
 
-  given(:disclosure_team)  { find_or_create :team_dacu_disclosure }
-  given(:sds)              { disclosure_team.approvers.first }
+  # given(:disclosure_team)  { find_or_create :team_dacu_disclosure }
+  given(:sds)              { approving_team.approvers.first }
   given(:another_sds)      { create :disclosure_specialist }
 
   given(:accepted_case) { create :accepted_case, responder: responder,
@@ -21,11 +21,11 @@ feature 'cases being reassigned to other team members' do
                                 approver: approver,
                                 responding_team: responding_team }
   given(:sds_flagged_case) { create :case_being_drafted, :flagged_accepted,
-                                    approving_team: disclosure_team,
+                                    approving_team: approving_team,
                                     approver: sds,
                                     responding_team: responding_team }
   given(:sds_flagged_case_2) { create :case_being_drafted, :flagged_accepted,
-                                      approving_team: disclosure_team,
+                                      approving_team: approving_team,
                                       approver: sds,
                                       responding_team: responding_team }
 
@@ -68,7 +68,9 @@ feature 'cases being reassigned to other team members' do
     login_as approver
 
     cases_show_page.load(id: flagged_case.id)
-    go_to_case_reassign expected_users: [approver, another_approver]
+    go_to_case_reassign expected_users: ["#{approver.full_name} (1 open case)",
+                                         "#{another_approver.full_name} (0 open cases)",
+                                         "#{sds.full_name} (0 open cases)"]
     do_case_reassign_to another_approver
     go_to_case_reassign expected_users: nil
     do_case_reassign_to approver

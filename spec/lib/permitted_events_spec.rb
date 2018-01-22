@@ -34,7 +34,7 @@ describe 'Permitted Events' do
 
   # flagged cases
   let(:flagged_unassigned_case)                   { create :case, :flagged }
-  let(:flagged_awaiting_responder_case)           { create :awaiting_responder_case }
+  let(:flagged_awaiting_responder_case)           { create :awaiting_responder_case, :flagged, :dacu_disclosure }
   let(:accepted_pending_dacu_clearance_case)      { create :pending_dacu_clearance_case,
                                                        responding_team: responding_team,
                                                        approver: assigned_dacu_disclosure_specialist }
@@ -61,7 +61,8 @@ describe 'Permitted Events' do
           end
           puts sprintf("    %-40s %s", case_type, expected_events.inspect).yellow
         end
-        actual_events =  kase.state_machine.permitted_events(user.id)
+
+        actual_events = (kase.state_machine.permitted_events(user.id) - [:request_further_clearance])
 
         if actual_events != expected_events
           puts "ERROR: Unexpected events for user #{user_type} with case #{case_type}".red

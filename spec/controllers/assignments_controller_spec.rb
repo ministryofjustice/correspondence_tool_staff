@@ -397,7 +397,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
   describe 'GET assign_to_new_team' do
 
-    let(:kase)              { create :assigned_case, :flagged, responding_team: responding_team_1 }
+    let(:kase)              { create :assigned_case, :flagged, :dacu_disclosure, responding_team: responding_team_1 }
     let(:responding_team_1) { create :responding_team }
     let(:assignment)        { kase.responder_assignment }
 
@@ -524,7 +524,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
   describe 'PATCH execute_assign_to_new_team' do
 
-    let(:kase)              { create :assigned_case, :flagged, responding_team: responding_team_1 }
+    let(:kase)              { create :assigned_case, :flagged, :dacu_disclosure, responding_team: responding_team_1 }
     let(:responding_team_1) { create :responding_team }
     let(:assignment)        { kase.responder_assignment }
     let(:bg)     { create :business_group }
