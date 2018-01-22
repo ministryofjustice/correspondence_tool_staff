@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'activerecord-session_store'
 gem 'acts_as_tree', '~> 2.6'
 gem 'awesome_print'
 gem 'aws-sdk'
