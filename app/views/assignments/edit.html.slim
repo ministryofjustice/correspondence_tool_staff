@@ -37,7 +37,7 @@ section#messages-section.case-info
   section.case-main
     = form_for [@case, @assignment], url: accept_or_reject_case_assignment_path(@case, @assignment) do |f|
       #js-assigment-actions
-        = f.radio_button_fieldset :state, choices: [:accepted, :rejected], inline: true, class: 'state'
+        = f.radio_button_fieldset :state, choices: [:accepted, :rejected], inline: true
 
       #js-rejected-reasons.panel.panel-border-narrow
         = f.text_area :reasons_for_rejection
