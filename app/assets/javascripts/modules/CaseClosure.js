@@ -77,24 +77,24 @@ moj.Modules.CaseClosure = {
   },
 
   showHideExemptionCost: function() {
-    var refusalCostExemption = this.$refusalExemptions
+    var $refusalCostExemptionOption = this.$refusalExemptions
                                 .find('input:checkbox[data-omit-for-part-refused="true"]')
-                                .closest('label');
-    var $outcomeRefusedPartlyLabel = this.$outcomeRefusedPartly.closest('label');
+                                .closest('.multiple-choice');
+    var $outcomeRefusedPartlyOption = this.$outcomeRefusedPartly.closest('.multiple-choice');
 
     var $NCNDLabel = this.$refusalNCND.closest('label');
 
-    var selectedRefusedPartly = $outcomeRefusedPartlyLabel.is(':visible')
+    var selectedRefusedPartly = $outcomeRefusedPartlyOption.is(':visible')
                                   && this.$outcomeRefusedPartly.is(':checked');
 
     var selectedNCND = $NCNDLabel.is(':visible') && this.$refusalNCND.is(':checked');
 
     if(selectedRefusedPartly || selectedNCND ) {
-      refusalCostExemption.hide();
-      this.disableOptions(refusalCostExemption);
+      $refusalCostExemptionOption.hide();
+      this.disableOptions($refusalCostExemptionOption);
     } else {
-      refusalCostExemption.show();
-      this.enableOptions(refusalCostExemption);
+      $refusalCostExemptionOption.show();
+      this.enableOptions($refusalCostExemptionOption);
     }
   },
 

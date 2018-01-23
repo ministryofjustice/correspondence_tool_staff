@@ -15,20 +15,11 @@
 //= require dropzone
 //= require govuk_date_fields
 //= require vendor/polyfills/bind
-//= require details.polyfill
-//= require govuk/selection-buttons
 //= require govuk/show-hide-content
 //= require moj
 //= require_tree ./modules
 
 
 (function () {
-  'use strict';
-
-  var buttonSelector = 'label input[type=radio], label input[type=checkbox]';
-  var selectionButtons = new GOVUK.SelectionButtons(buttonSelector);
-
-  selectionButtons.setInitialState($(buttonSelector));
-
   moj.init();
 }(GOVUK));
