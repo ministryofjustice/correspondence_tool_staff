@@ -17,11 +17,16 @@
 require 'rails_helper'
 
 RSpec.describe BusinessUnit, type: :model do
+  let(:foi)   { Category.foi }
+  let(:sar)   { Category.sar }
+
+
   it 'can be created' do
     bu = BusinessUnit.create name: 'Busy Units',
                              email: 'busy.units@localhost',
                              parent_id: 1,
-                             role: 'responder'
+                             role: 'responder',
+                             category_ids: [foi.id]
     expect(bu).to be_valid
   end
 
@@ -62,6 +67,7 @@ RSpec.describe BusinessUnit, type: :model do
 
     describe 'responding scope' do
       it 'returns only responding teams' do
+        # ap BusinessUnit.pluck(:id, :name, :role)
         expect(BusinessUnit.responding).to eq [responding_team]
       end
     end
@@ -152,4 +158,84 @@ RSpec.describe BusinessUnit, type: :model do
       end
     end
   end
+
+  context 'team category roles' do
+
+    let(:foi_cat)   { create :category, :foi }
+    let(:sar_cat)   { create :catetory, :sar }
+    let(:bu)        { create :business_unit }
+
+    describe 'set team category roles' do
+      it 'creates a new one if not already in the database' do
+        dir = create :directorate
+        bu = BusinessUnit.create(name: 'bu1', parent: dir, role: 'manager')
+        bu.set_category_roles(category_abbreviation: 'foi', roles: %w{ view manage edit })
+        expect(bu.category_roles.size).to eq 1
+        expect(bu.category_roles.first).to match_tcr_attrs(:foi, :view, :manage, :edit)
+      end
+    end
+  end
+
+
+  describe '.responding_for_category' do
+    before(:each) do
+      @bu_foi_sar = create :business_unit, category_ids: [foi.id, sar.id]
+      @bu_foi = create :business_unit, category_ids: [foi.id]
+      @bu_sar = create :business_unit, category_ids: [sar.id]
+    end
+
+    it 'only returns business units with reponding roles for the FOIs' do
+      expect(BusinessUnit.responding_for_category(Category.foi)).to match_array [ @bu_foi_sar, @bu_foi ]
+    end
+
+    it 'only returns business units with reponding roles for the SARs' do
+      expect(BusinessUnit.responding_for_category(Category.sar)).to match_array [ @bu_foi_sar, @bu_sar ]
+    end
+  end
+
+  describe '#categories' do
+    before(:each) do
+      @pq = create :category, name: 'Parliamentary Qustions', abbreviation: 'PQ'
+    end
+
+    it 'returns an array of Category objects' do
+      bu = create :business_unit, category_ids: [sar.id, foi.id]
+      create :team_category_role, :responder, team_id: bu.id, category_id: @pq.id
+      expect(bu.reload.categories.map(&:abbreviation)).to match_array ['SAR', 'FOI', 'PQ']
+    end
+  end
+
+  describe '#category_ids' do
+    it 'returns an array of category ids' do
+     @bu = create :business_unit, category_ids: [sar.id, foi.id]
+    end
+  end
+
+
+  describe 'category_ids=' do
+    let(:dir)     { create :directorate }
+    let(:foi)     { find_or_create :category, :foi }
+    let(:sar)     { find_or_create :category, :sar }
+    let(:gq)      { find_or_create :category, :gq }
+
+    it 'adds new team category role records' do
+      bu = BusinessUnit.create(name: 'bu1', parent: dir, role: 'manager')
+      expect(bu.category_roles).to be_empty
+      bu.category_ids = [ foi.id, sar.id ]
+      expect(bu.category_roles.size).to eq 2
+      foi_tcr = bu.category_roles.detect{ |r| r.category_id == foi.id }
+      sar_tcr = bu.category_roles.detect{ |r| r.category_id == sar.id }
+      expect(foi_tcr).to match_tcr_attrs(:foi, :view, :edit, :manage)
+      expect(sar_tcr).to match_tcr_attrs(:sar, :view, :edit, :manage)
+    end
+
+    it 'deletes unused and adds new team categories' do
+      bu = create :business_unit, category_ids: [foi.id, sar.id]
+      expect(bu.categories.map(&:abbreviation)).to match_array %w{ FOI SAR }
+      bu.category_ids = [ sar.id, gq.id ]
+      expect(bu.reload.categories.map(&:abbreviation)).to match_array %w{ SAR GQ }
+    end
+  end
+
+
 end

@@ -5,9 +5,14 @@
 
 = form.text_field :team_lead, label_options: { value: @team.pretty_team_lead_title }
 
-- if @team.is_a?(BusinessUnit) && @team.new_record?
+- if @team.is_a?(BusinessUnit)
 
-  = form.radio_button_fieldset :role, choices: [:responder, :approver, :manager], inline: true
+  -if @team.new_record?
+    = form.radio_button_fieldset :role, choices: [:responder, :approver, :manager], inline: true
+
+  #category-radios
+    = form.collection_check_boxes :category_ids, Category.all.order(:name),  :id, :name
+  br
 
 = form.submit @action_copy, {class: 'button'}
 

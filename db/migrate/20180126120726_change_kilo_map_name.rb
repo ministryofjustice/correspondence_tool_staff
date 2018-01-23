@@ -1,7 +1,7 @@
 class ChangeKiloMapName < ActiveRecord::Migration[5.0]
   def up
     rt = ReportType.find_by_abbr!('R006')
-    rt.full_name = "Business Unit Map"
+    rt.full_name = "Business unit map"
     rt.save!
   end
 
