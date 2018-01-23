@@ -17,9 +17,14 @@ class RequestFurtherClearanceService
       # flagged (as part of validating what state the case is in). If done the
       # other way around, this state transition will fail and this transaction
       # will be aborted.
+      #
+      # The target_team info is used when displaying who requested further
+      # clearance.
       @kase.state_machine.request_further_clearance!(
         acting_user: @user,
-        acting_team: @user.managing_teams.first
+        acting_team: @user.managing_teams.first,
+        target_team: @kase.responding_team,
+        target_user: @kase.responder
       )
 
       # Flag it for Disclosure

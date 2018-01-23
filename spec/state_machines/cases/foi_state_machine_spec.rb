@@ -908,12 +908,16 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
       expect {
         state_machine.request_further_clearance!(
           acting_user: manager,
-          acting_team: team)
+          acting_team: team,
+          target_user: accepted_case.responder,
+          target_team: accepted_case.responding_team )
       }.to trigger_the_event(:request_further_clearance)
              .on_state_machine(state_machine)
              .with_parameters(
                acting_user_id: manager.id,
-               acting_team_id: team.id)
+               acting_team_id: team.id,
+               target_user_id: accepted_case.responder.id,
+               target_team_id: accepted_case.responding_team.id)
     end
   end
 end

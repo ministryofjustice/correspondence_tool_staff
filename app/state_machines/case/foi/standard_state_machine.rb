@@ -526,10 +526,12 @@ class Case::FOI::StandardStateMachine
              event:          :extend_for_pit
   end
 
-  def request_further_clearance!(acting_user:, acting_team:)
+  def request_further_clearance!(acting_user:, acting_team:, target_user:, target_team:)
     trigger! :request_further_clearance,
              acting_user_id:    acting_user.id,
              acting_team_id:    acting_team.id,
+             target_team_id:    target_team.id,
+             target_user_id:    target_user.id,
              event:             :request_further_clearance
   end
 

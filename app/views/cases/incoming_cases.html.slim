@@ -46,7 +46,7 @@
                 .container-notices
                   = "Clearance requested by: "
                   strong
-                    = kase.transitions.further_clearance.last.target_team.name
+                    = kase.transitions.further_clearance.last.target_team.try(:name)
     = paginate @cases
 
 

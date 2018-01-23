@@ -39,6 +39,12 @@ describe RequestFurtherClearanceService do
       expect(tr.to_state).to eq 'drafting'
       expect(tr.acting_user_id).to eq manager.id
       expect(tr.acting_team_id).to eq manager.managing_teams.last.id
+      expect(tr.target_user_id).to eq accepted_case.responder.id
+      expect(tr.target_team_id).to eq accepted_case.responding_team.id
+    end
+
+    describe 'case is not assigned to responder' do
+      xit 'sets target user and team to nil'
     end
 
     it 'returns ok' do
