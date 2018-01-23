@@ -18,16 +18,4 @@ class DeviseMailer < Devise::Mailer
     mail(to: record.email)
   end
 
-  def user_does_not_exist
-    RavenContextProvider.set_context
-    set_template(Settings.user_does_not_exist_template)
-
-    set_personalisation(
-        email_subject: 'Password reset',
-        user_full_name: record.full_name,
-        edit_password_url: edit_password_url(record, reset_password_token: token)
-    )
-
-    mail(to: record.email)
-  end
 end

@@ -539,7 +539,7 @@ en:
         new:
           hint: Enter your email address and we'll send you a link to create a new password.
           title: Reset password
-          button: Reset password
+          button: Send me password reset instructions
 
       sign_in:
         title: Sign in
