@@ -397,7 +397,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
   describe 'GET assign_to_new_team' do
 
-    let(:kase)              { create :assigned_case, :flagged, responding_team: responding_team_1 }
+    let(:kase)              { create :assigned_case, :flagged, :dacu_disclosure, responding_team: responding_team_1 }
     let(:responding_team_1) { create :responding_team }
     let(:assignment)        { kase.responder_assignment }
 
@@ -524,7 +524,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
   describe 'PATCH execute_assign_to_new_team' do
 
-    let(:kase)              { create :assigned_case, :flagged, responding_team: responding_team_1 }
+    let(:kase)              { create :assigned_case, :flagged, :dacu_disclosure, responding_team: responding_team_1 }
     let(:responding_team_1) { create :responding_team }
     let(:assignment)        { kase.responder_assignment }
     let(:bg)     { create :business_group }
@@ -560,7 +560,8 @@ RSpec.describe AssignmentsController, type: :controller do
         expect(service).to receive(:call)
         expect(service).to receive(:result).and_return(:ok)
         patch :execute_assign_to_new_team, params: params.to_unsafe_hash
-        expect(response).to redirect_to root_open_cases_path
+        expect(flash[:notice]).to eq 'Case has been assigned to a new team'
+        expect(response).to redirect_to case_path kase
       end
 
       it 'sets flash and returns to assign_new_team action if service fails' do

@@ -70,11 +70,12 @@ class Case::BasePolicy < ApplicationPolicy
   def confirm_destroy?
     destroy?
   end
-
+ 
   def request_further_clearance?
     clear_failed_checks
+
     check_user_is_a_manager_for_case &&
-        check_can_trigger_event(:request_further_clearance)
+      check_can_trigger_event(:request_further_clearance)
   end
 
   def new_case_link?
@@ -84,8 +85,6 @@ class Case::BasePolicy < ApplicationPolicy
         (!self.case.awaiting_responder? &&
             check_user_is_a_responder_for_case) ||
         check_user_is_an_approver_for_case
-
-
   end
 
   def can_view_attachments?
@@ -544,6 +543,10 @@ class Case::BasePolicy < ApplicationPolicy
 
   check :escalation_deadline_has_expired do
     self.case.escalation_deadline < Date.today
+  end
+
+  check :within_escalation_deadline do
+    !check_escalation_deadline_has_expired
   end
 
   check :no_user_case_approving_assignments_are_accepted do

@@ -53,6 +53,12 @@ GEM
       activemodel (= 5.0.5)
       activesupport (= 5.0.5)
       arel (~> 7.0)
+    activerecord-session_store (1.1.0)
+      actionpack (>= 4.0, < 5.2)
+      activerecord (>= 4.0, < 5.2)
+      multi_json (~> 1.11, >= 1.11.2)
+      rack (>= 1.5.2, < 3)
+      railties (>= 4.0, < 5.2)
     activesupport (5.0.5)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (~> 0.7)
@@ -265,12 +271,12 @@ GEM
     listen (3.0.8)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
+    lograge (0.7.1)
+      actionpack (>= 4, < 5.2)
+      activesupport (>= 4, < 5.2)
+      railties (>= 4, < 5.2)
+      request_store (~> 1.0)
     logstash-event (1.2.02)
-    logstasher (1.0.1)
-      activerecord (>= 4.0)
-      activesupport (>= 4.0)
-      logstash-event (~> 1.2.0)
-      request_store
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     lumberjack (1.0.11)
@@ -529,6 +535,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-session_store
   acts_as_tree (~> 2.6)
   annotate
   awesome_print
@@ -570,7 +577,8 @@ DEPENDENCIES
   launchy
   libreconv (~> 0.9.1)
   listen (~> 3.0.5)
-  logstasher
+  lograge
+  logstash-event
   mechanize (>= 2.7.5)
   mimetype-fu (~> 0.1.2)
   paper_trail (~> 7.1)

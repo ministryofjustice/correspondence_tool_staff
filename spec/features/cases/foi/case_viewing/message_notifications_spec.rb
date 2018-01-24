@@ -1,7 +1,7 @@
 require "rails_helper"
 
 feature 'case message notifications' do
-  given(:kase)          { create :accepted_case, :flagged_accepted }
+  given(:kase)          { create :accepted_case, :flagged_accepted, :dacu_disclosure }
   given(:responder)     { kase.responder }
   given(:managing_team) { kase.managing_team }
   given(:manager)       { managing_team.managers.first }

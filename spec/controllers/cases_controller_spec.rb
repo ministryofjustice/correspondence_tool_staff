@@ -23,7 +23,8 @@ RSpec.describe CasesController, type: :controller do
                                        responding_teams: [responding_team] }
   let(:disclosure_specialist) { create :disclosure_specialist }
   let(:team_dacu_disclosure)  { find_or_create :team_dacu_disclosure }
-  let(:approver_responder)    { create :approver_responder }
+  let(:approver_responder)    { create :approver_responder,
+                                        approving_team: team_dacu_disclosure }
   let(:unassigned_case)       { create(:case) }
   let(:assigned_case)         { create :assigned_case,
                                         responding_team: responding_team }
@@ -1027,7 +1028,14 @@ RSpec.describe CasesController, type: :controller do
         allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
         expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
         do_upload_responses
-        expect(response).to redirect_to(cases_path)
+        expect(response).to redirect_to(case_path(kase))
+      end
+
+      it 'sets a flash message' do
+        allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
+        expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
+        do_upload_responses
+        expect(flash[:notice]).to eq "You have uploaded the response for this case."
       end
 
       context 'no files specified' do

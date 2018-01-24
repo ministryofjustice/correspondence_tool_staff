@@ -9,7 +9,8 @@ def approve_case_step(kase:, expected_team:, expected_status:)
   end
 
   approve_response_interstitial_page.clear_response_button.click
-  expect(open_cases_page).to be_displayed
+  expect(cases_show_page).to be_displayed(id: kase.id)
+  open_cases_page.load
   case_row = open_cases_page.case_list.detect{ |r| r.number.text == "Link to case #{kase.number}" }
   expect(case_row.who_its_with.text).to eq expected_team.name
   expect(case_row.status.text).to eq expected_status
@@ -26,7 +27,8 @@ def approve_case_with_bypass(kase:, expected_team:, expected_status:)
   approve_response_interstitial_page.bypass_press_option.bypass_reason_text.set 'No Presss office approval required'
   approve_response_interstitial_page.clear_response_button.click
 
-  expect(open_cases_page).to be_displayed
+  expect(cases_show_page).to be_displayed(id: kase.id)
+  open_cases_page.load
   case_row = open_cases_page.case_list.detect{ |r| r.number.text == "Link to case #{kase.number}" }
   expect(case_row.who_its_with.text).to eq expected_team.name
   expect(case_row.status.text).to eq expected_status
@@ -53,10 +55,10 @@ def approve_response(kase:)
     .to have_text "You have cleared case #{kase.number} - #{kase.subject}"
 end
 
-def execute_request_amends(kase:)
+def execute_request_amends
   request_amends_page.submit_button.click
-  expect(open_cases_page).to be_displayed
-  expect(open_cases_page.notices.first)
-    .to have_text "You have requested amends to case #{kase.number} - #{kase.subject}"
+  expect(cases_show_page).to be_displayed
+  expect(cases_show_page.notice)
+    .to have_text 'You have requested amends to this case\'s response.'
 end
 

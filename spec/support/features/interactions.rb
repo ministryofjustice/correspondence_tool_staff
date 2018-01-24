@@ -70,6 +70,7 @@ module Features
       cases_show_page.load(id: kase.id)
       upload_response_step file: file
       go_to_case_details_step kase: kase.reload,
+                              find_details_page: false,
                               expected_response_files: [File.basename(file)]
       logout_step if do_logout
     end

@@ -232,7 +232,7 @@ feature 'cases requiring clearance by disclosure specialist' do
     expect(page).to have_current_path(remove_clearance_case_path(kase))
     fill_in 'Reason for removing clearance', :with => "reason"
     cases_remove_clearance_form_page.submit_button.click
-    expect(cases_show_page.notice.text).to eq "Clearance removed for case #{kase.number}"
+    expect(cases_show_page.notice.text).to eq "Clearance removed for this case."
   end
 
   scenario 'upload a response and return for redraft', js: true do

@@ -61,6 +61,11 @@ FactoryGirl.define do
     end
   end
 
+  factory :case_within_escalation_deadline, parent: :case do
+    creation_time { 1.business_day.ago }
+    identifier 'unassigned case within escalation deadline'
+  end
+
   factory :awaiting_responder_case, parent: :case,
           aliases: [:assigned_case] do
     transient do
@@ -590,7 +595,7 @@ FactoryGirl.define do
 
   trait :flagged do
     transient do
-      approving_team { create :approving_team }
+      approving_team { find_or_create :approving_team }
     end
 
     after(:create) do |kase, evaluator|
@@ -739,6 +744,14 @@ FactoryGirl.define do
   trait :extended_for_pit do
     after(:create) do |kase|
       create :case_transition_extend_for_pit,
+             case: kase
+      kase.reload
+    end
+  end
+
+  trait :further_clearance_requested do
+    after(:create) do |kase|
+      create :case_transition_request_further_clearance,
              case: kase
       kase.reload
     end

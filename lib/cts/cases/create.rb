@@ -5,45 +5,11 @@ module CTS::Cases
   class Create
     attr_accessor :logger, :options, :flag
 
-    CASE_JOURNEYS = {
-      unflagged: [
-        :awaiting_responder,
-        :drafting,
-        :awaiting_dispatch,
-        :responded,
-        :closed,
-      ],
-      flagged_for_dacu_disclosure: [
-        :awaiting_responder,
-        :accepted_by_dacu_disclosure,
-        :drafting,
-        :pending_dacu_disclosure_clearance,
-        :awaiting_dispatch,
-        :responded,
-        :closed,
-      ],
-      flagged_for_press_office: [
-        :awaiting_responder,
-        :taken_on_by_press_office,
-        :accepted_by_dacu_disclosure,
-        :drafting,
-        :pending_dacu_disclosure_clearance,
-        :pending_press_office_clearance,
-      ],
-      flagged_for_private_office: [
-        :awaiting_responder,
-        :taken_on_by_private_office,
-        :accepted_by_dacu_disclosure,
-        :drafting,
-        :pending_dacu_disclosure_clearance,
-        :pending_press_office_clearance,
-        :pending_private_office_clearance,
-      ]
-    }
-
     def initialize(logger, options = {})
       @logger = logger
       @options = options
+      @klass = @options[:type].nil? ? Case::Base : @options[:type].constantize
+      @options.delete(:type)
     end
 
     def call(target_states, kase = nil)
@@ -64,8 +30,8 @@ module CTS::Cases
     end
 
     def new_case
-      foi = Category.find_by(abbreviation: 'FOI')
       name = options.fetch(:name, Faker::Name.name)
+
       created_at = if options[:created_at].present?
                      0.business_days.after(DateTime.parse(options[:created_at]))
                    else
@@ -76,22 +42,45 @@ module CTS::Cases
                       else
                         0.business_days.after(4.business_days.ago)
                       end
-      Case::FOI::Standard.new(
-        name:            name,
-        email:           options.fetch(:email, Faker::Internet.email(name)),
-        category:        foi,
-        delivery_method: options.fetch(:delivery_method, 'sent_by_email'),
-        subject:         options.fetch(:subject, Faker::Company.catch_phrase),
-        message:         options.fetch(:message,
+      @klass.new(
+        name:               name,
+        email:              options.fetch(:email, Faker::Internet.email(name)),
+        category:           determine_category,
+        subject_full_name:  determine_subject_full_name,
+        third_party:        determine_third_party,
+        subject_type:       determine_subject_type,
+        delivery_method:    options.fetch(:delivery_method, 'sent_by_email'),
+        subject:            options.fetch(:subject, Faker::Company.catch_phrase),
+        message:            options.fetch(:message,
                                        Faker::Lorem.paragraph(10, true, 10)),
-        requester_type:  options.fetch(:requester_type,
+        requester_type:     options.fetch(:requester_type,
                                        Case::Base.requester_types.keys.sample),
-        received_date:   received_date,
-        created_at:      created_at,
+        received_date:      received_date,
+        created_at:         created_at,
       )
     end
 
     private
+
+    def is_sar_case?
+      @klass.to_s.in?(%w{ Case::Base Case::SAR::NonOffender })
+    end
+
+    def determine_category
+      is_sar_case? ? Category.sar : Category.foi
+    end
+
+    def determine_subject_full_name
+      is_sar_case? ?  options.fetch(:name, Faker::Name.name) : nil
+    end
+
+    def determine_third_party
+      is_sar_case? ? true : nil
+    end
+
+    def determine_subject_type
+      is_sar_case? ? 'offender' : nil
+    end
 
     # rubocop:disable Metrics/CyclomaticComplexity
     def parse_options(options)
@@ -250,7 +239,7 @@ module CTS::Cases
 
     # rubocop:disable Metrics/CyclomaticComplexity
     def journeys_to_check
-      CASE_JOURNEYS.find_all do |name, _states|
+      CTS::Cases::Constants::CASE_JOURNEYS.find_all do |name, _states|
         @flag.blank? ||
           (@flag == 'disclosure' && name == :flagged_for_dacu_disclosure) ||
           (@flag == 'press' && name == :flagged_for_press_office) ||
@@ -302,6 +291,10 @@ module CTS::Cases
                            else
                              CTS::find_team(options[:responding_team])
                            end
+      if @responding_team.responders.none?
+        create_responder(@responding_team)
+      end
+      @responding_team
     end
 
     def press_officer
@@ -322,6 +315,14 @@ module CTS::Cases
       unless result == :ok
         raise "Could not flag case for clearance, case id: #{kase.id}, user id: #{user.id}, result: #{result}"
       end
+    end
+
+    def create_responder(responding_team)
+      name = Faker::Name.name
+      user = User.create!(full_name: name,
+                          email: Faker::Internet.email(name),
+                          password: '12345678')
+      TeamsUsersRole.create(user: user, team: responding_team, role: 'responder')
     end
   end
 end

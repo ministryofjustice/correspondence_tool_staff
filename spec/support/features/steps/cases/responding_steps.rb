@@ -5,8 +5,8 @@ def upload_response_step(file: UPLOAD_RESPONSE_DOCX_FIXTURE)
   cases_show_page.actions.upload_response.click
   cases_new_response_upload_page.drop_in_dropzone(file)
   cases_new_response_upload_page.upload_response_button.click
-  expect(open_cases_page).to be_displayed
-  expect(open_cases_page.notices.first.heading)
+  expect(cases_show_page).to be_displayed
+  expect(cases_show_page.notice)
     .to have_text 'You have uploaded the response for this case.'
 end
 

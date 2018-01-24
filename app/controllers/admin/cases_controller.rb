@@ -16,7 +16,7 @@ class Admin::CasesController < ApplicationController
       @case.responding_team = BusinessUnit.find(
         params[:case][:responding_team]
       )
-      prepare_flagged_options_for_displaying(params)
+      prepare_flagged_options_for_displaying
       @target_states = available_target_states
       @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
       render :new
@@ -28,7 +28,7 @@ class Admin::CasesController < ApplicationController
   end
 
   def new
-    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case)
+    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base)
     @case = case_creator.new_case
     @case.responding_team = BusinessUnit.responding.sample
     @case.flag_for_disclosure_specialists = 'no'
@@ -45,13 +45,16 @@ class Admin::CasesController < ApplicationController
   end
 
   def available_target_states
-    CTS::Cases::Create::CASE_JOURNEYS.values.flatten.uniq.sort
+    CTS::Cases::Constants::CASE_JOURNEYS.values.flatten.uniq.sort
   end
 
   def case_params
     params.require(:case).permit(
       :requester_type,
       :name,
+      :subject_full_name,
+      :third_party,
+      :subject_type,
       :postal_address,
       :email,
       :subject,
@@ -92,8 +95,8 @@ class Admin::CasesController < ApplicationController
   end
 
   def prepare_flagged_options_for_displaying
-    @case.approving_teams << BusinessUnit.dacu_disclosure if param_flag_for_ds
-    @case.approving_teams << BusinessUnit.press_office if param_flag_for_press
-    @case.approving_teams << BusinessUnit.private_office if param_flag_for_private
+    @case.approving_teams << BusinessUnit.dacu_disclosure if param_flag_for_ds?
+    @case.approving_teams << BusinessUnit.press_office if param_flag_for_press?
+    @case.approving_teams << BusinessUnit.private_office if param_flag_for_private?
   end
 end

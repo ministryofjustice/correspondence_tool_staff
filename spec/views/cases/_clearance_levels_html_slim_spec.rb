@@ -43,15 +43,18 @@ describe 'cases/clearance_details.html.slim', type: :view do
 
   context 'escalation_deadline not yet reached' do
     it 'just displays escalation date' do
-      kase = double Case::BaseDecorator
+      kase = create :case
       allow(kase).to receive(:escalation_deadline).and_return('13 Aug 2017')
       allow(kase).to receive(:within_escalation_deadline?).and_return(true)
 
+      allow_case_policies kase.decorate, :request_further_clearance?
+
       render partial: 'cases/clearance_levels.html.slim',
-                 locals:{ case_details: kase}
+                 locals:{ case_details: kase }
 
       partial = clearance_levels_section(rendered)
       expect(partial.escalation_deadline.text).to eq 'To be decided by  13 Aug 2017'
+      expect(partial).to have_escalate_link
     end
   end
 
@@ -63,10 +66,11 @@ describe 'cases/clearance_details.html.slim', type: :view do
 
         render partial: 'cases/clearance_levels.html.slim',
                locals:{ case_details: accepted_case.decorate }
-        partial = clearance_levels_section(rendered).basic_details
+        partial = clearance_levels_section(rendered)
 
-        expect(partial.deputy_director.data.text).to eq 'Margaret Thatcher'
-        expect(partial).to have_no_dacu_disclosure
+        expect(partial.basic_details.deputy_director.data.text).to eq 'Margaret Thatcher'
+        expect(partial.basic_details).to have_no_dacu_disclosure
+        expect(partial).to have_escalate_link
       end
     end
 
@@ -77,10 +81,11 @@ describe 'cases/clearance_details.html.slim', type: :view do
 
         render partial: 'cases/clearance_levels.html.slim',
                locals:{ case_details:unaccepted_pending_dacu_clearance_case.decorate }
-        partial = clearance_levels_section(rendered).basic_details
+        partial = clearance_levels_section(rendered)
 
-        expect(partial.deputy_director.data.text).to eq 'Margaret Thatcher'
-        expect(partial).to have_no_dacu_disclosure
+        expect(partial.basic_details.deputy_director.data.text).to eq 'Margaret Thatcher'
+        expect(partial.basic_details).to have_no_dacu_disclosure
+        expect(partial).to have_escalate_link
       end
     end
 
@@ -91,11 +96,12 @@ describe 'cases/clearance_details.html.slim', type: :view do
 
         render partial: 'cases/clearance_levels.html.slim',
                locals:{ case_details: accepted_pending_dacu_clearance_case.decorate }
-        partial = clearance_levels_section(rendered).basic_details
+        partial = clearance_levels_section(rendered)
 
-        expect(partial.deputy_director.data.text).to eq 'Margaret Thatcher'
-        expect(partial.dacu_disclosure.text).to include 'Dack Dispirito'
-        expect(partial.dacu_disclosure.text).to include 'Remove clearance'
+        expect(partial.basic_details.deputy_director.data.text).to eq 'Margaret Thatcher'
+        expect(partial.basic_details.dacu_disclosure.text).to include 'Dack Dispirito'
+        expect(partial.basic_details.dacu_disclosure.text).to include 'Remove clearance'
+        expect(partial).to have_escalate_link
       end
     end
 
@@ -106,17 +112,18 @@ describe 'cases/clearance_details.html.slim', type: :view do
 
         render partial: 'cases/clearance_levels.html.slim',
                locals:{ case_details: triple_flagged_case.decorate }
-        partial = clearance_levels_section(rendered).basic_details
+        partial = clearance_levels_section(rendered)
 
-        expect(partial.deputy_director.data.text).to eq 'Margaret Thatcher'
-        expect(partial.dacu_disclosure.text).to include 'Dack Dispirito'
-        expect(partial.dacu_disclosure.text).not_to include 'Remove clearance'
+        basic_dets = partial.basic_details
+        expect(basic_dets.deputy_director.data.text).to eq 'Margaret Thatcher'
+        expect(basic_dets.dacu_disclosure.text).to include 'Dack Dispirito'
+        expect(basic_dets.dacu_disclosure.text).not_to include 'Remove clearance'
 
-        approver_dets = partial.press_office
+        approver_dets = partial.basic_details.press_office
         expect(approver_dets.department_name.text).to eq 'Press Office'
         expect(approver_dets.approver_name.text).to eq 'Alistair Campbell'
 
-        approver_dets = partial.private_office
+        approver_dets = partial.basic_details.private_office
         expect(approver_dets.department_name.text).to eq 'Private Office'
         expect(approver_dets.approver_name.text).to eq 'Prince Johns'
       end

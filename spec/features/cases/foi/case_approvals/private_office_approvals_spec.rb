@@ -86,11 +86,12 @@ feature 'cases requiring clearance by press office' do
                    expected_action: 'requesting amends for',
                    expected_team:   dacu_disclosure,
                    expected_status: 'Pending clearance'
-    execute_request_amends kase: pending_private_clearance_case
+    execute_request_amends
     go_to_case_details_step(
-      kase:             pending_private_clearance_case,
-      expected_team:    dacu_disclosure,
-      expected_history: ["#{assigned_private_officer.full_name}#{private_office.name}Request amends"]
+      kase:              pending_private_clearance_case,
+      find_details_page: false,
+      expected_team:     dacu_disclosure,
+      expected_history:  ["#{assigned_private_officer.full_name}#{private_office.name}Request amends"]
     )
   end
 end

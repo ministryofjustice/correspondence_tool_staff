@@ -36,9 +36,9 @@ RSpec.describe CasesController, type: :controller do
                " - #{responded_trigger_case.subject}."
     end
 
-    it 'redirects to cases page' do
+    it 'redirects to case detail page' do
       patch :execute_response_approval, params: { id: responded_trigger_case }
-      expect(response).to redirect_to(cases_path)
+      expect(response).to redirect_to(case_path(responded_trigger_case))
     end
   end
 end

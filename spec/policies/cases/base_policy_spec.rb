@@ -34,10 +34,10 @@ describe Case::BasePolicy do
   let(:rejected_case)           { create :rejected_case,
                                          responding_team: responding_team }
   let(:unassigned_case)         { new_case }
-  let(:unassigned_flagged_case) { create :case, :flagged,
-                                         approving_team: dacu_disclosure }
-  let(:unassigned_trigger_case) { create :case, :flagged_accepted,
-                                         approving_team: dacu_disclosure }
+  let(:unassigned_flagged_case) { create :case, :flagged, :dacu_disclosure }
+  let(:unassigned_trigger_case) { create :case,
+                                         :flagged_accepted,
+                                         :dacu_disclosure }
   let(:case_with_response)      { create :case_with_response,
                                          responder: responder }
   let(:case_with_response_flagged) { create :case_with_response, :flagged,
@@ -600,7 +600,6 @@ describe Case::BasePolicy do
     it { should_not permit(press_officer,         case_with_response_trigger) }
     it { should_not permit(private_officer,       case_with_response_trigger) }
   end
-
 
   permissions :upload_response_and_approve_from_pending_dacu_clearance_to_awaiting_dispatch? do
     it { should_not permit(responder,             pending_dacu_clearance_case) }

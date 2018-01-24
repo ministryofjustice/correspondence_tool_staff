@@ -147,6 +147,7 @@ Run these rake tasks to prepare the database for local development.
 $ rails db:create
 $ rails db:migrate
 $ rails db:seed
+$ rails db:seed:dev:teams
 $ rails db:seed:dev:users
 ```
 
@@ -199,17 +200,17 @@ in order to speed up execution.
 
     ```bundle exec rake parallel:load_structure```
 
-    ##### To run all the tests in parallel
+##### To run all the tests in parallel
 
-    ```bundle exec rake parallel:spec```
+```bundle exec rake parallel:spec```
 
-    ##### To run only feature tests in parallel
+##### To run only feature tests in parallel
 
-    ```bundle exec rake parallel:spec:features```
+  ```bundle exec rake parallel:spec:features```
 
-    ##### To run only the non-feature tests in parallel
+##### To run only the non-feature tests in parallel
 
-    ```bundle exec rake parallel:spec:non_features```
+  ```bundle exec rake parallel:spec:non_features```
 
 ### Emails
 

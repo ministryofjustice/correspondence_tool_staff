@@ -10,7 +10,24 @@ class RequestFurtherClearanceService
 
   def call
     ActiveRecord::Base.transaction do
-      #Flag it for Disclosure
+      # Add an entry in transitions table
+      #
+      # The state transition is done before the approver assignment is made
+      # because the state machine checks to make sure the case isn't already
+      # flagged (as part of validating what state the case is in). If done the
+      # other way around, this state transition will fail and this transaction
+      # will be aborted.
+      #
+      # The target_team info is used when displaying who requested further
+      # clearance.
+      @kase.state_machine.request_further_clearance!(
+        acting_user: @user,
+        acting_team: @user.managing_teams.first,
+        target_team: responding_team_if_case_accepted,
+        target_user: @kase.responder
+      )
+
+      # Flag it for Disclosure
       CaseFlagForClearanceService.new(user: @user,
                                     kase: @kase,
                                     team: BusinessUnit.dacu_disclosure).call
@@ -18,12 +35,6 @@ class RequestFurtherClearanceService
       # update the escalation deadline to the new clearance deadline
       # Enabled press/private to view this case in their Case list
       @kase.update( escalation_deadline: DeadlineCalculator.escalation_deadline(@kase, Date.today))
-
-      #Add an entry in transitions table
-      @kase.state_machine.request_further_clearance!(acting_user: @user,
-                                         acting_team: @user.managing_teams.first,
-                                         target_team: @kase.responding_team,
-                                         target_user: @kase.responder)
 
       @result = :ok
     end
@@ -34,5 +45,15 @@ class RequestFurtherClearanceService
     Rails.logger.error err.backtrace.join("\n\t")
     @error = err
     @result = :error
+  end
+
+  private
+
+  def responding_team_if_case_accepted
+    if @kase.responder == nil
+      nil
+    else
+      @kase.responding_team
+    end
   end
 end
