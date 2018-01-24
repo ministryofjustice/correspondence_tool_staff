@@ -23,7 +23,11 @@ class RequestFurtherClearanceService
       @kase.state_machine.request_further_clearance!(
         acting_user: @user,
         acting_team: @user.managing_teams.first,
-        target_team: @kase.responding_team,
+        target_team: if @kase.responder == nil
+                        nil
+                      else
+                        @kase.responding_team
+                      end,
         target_user: @kase.responder
       )
 

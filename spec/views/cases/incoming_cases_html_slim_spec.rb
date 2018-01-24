@@ -14,10 +14,16 @@ describe 'cases/incoming_cases.html.slim', type: :view do
                        name: 'Jane Doe',
                        subject: 'Court Reform',
                        message: 'message number 2').decorate }
+   let(:further_clearance_case) { create(:assigned_case, :flagged, :further_clearance_requested,
+                                   approving_team: team_dacu_disclosure,
+                                   name: 'Questioning Jim',
+                                   subject: 'Reform Reform',
+                                   message: 'message number 3').decorate }
 
   it 'displays the cases given it' do
     case1
     case2
+    further_clearance_case
     assign(:cases, PaginatingDecorator.new(Case::Base.all.page.order(:id)))
 
     policy = double('Pundit::Policy', can_add_case?: false)
@@ -43,6 +49,15 @@ describe 'cases/incoming_cases.html.slim', type: :view do
     expect(second_case.request.message.text).to eq 'message number 2'
     expect(second_case.actions.take_on_case.text).to eq 'Take case on'
     expect(second_case.actions.de_escalate_link.text).to eq 'De-escalate'
+
+    third_case = incoming_cases_page.case_list[2]
+    expect(third_case.number.text).to eq "Link to case #{further_clearance_case.number}"
+    expect(third_case.request.name.text).to eq 'Questioning Jim | Member of the public'
+    expect(third_case.request.subject.text).to eq 'Reform Reform'
+    expect(third_case.request.message.text).to eq 'message number 3'
+    expect(third_case.actions.take_on_case.text).to eq 'Take case on'
+    expect(third_case.actions.de_escalate_link.text).to eq 'De-escalate'
+    expect(third_case.actions.requested_by.text).to eq 'Further clearance requested'
   end
 
   describe 'pagination' do
@@ -55,5 +70,9 @@ describe 'cases/incoming_cases.html.slim', type: :view do
       render
       expect(response).to have_rendered('kaminari/_paginator')
     end
+  end
+
+  describe 'displayed requested by for cases with further clearance' do
+
   end
 end

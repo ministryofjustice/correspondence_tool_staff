@@ -530,8 +530,8 @@ class Case::FOI::StandardStateMachine
     trigger! :request_further_clearance,
              acting_user_id:    acting_user.id,
              acting_team_id:    acting_team.id,
-             target_team_id:    target_team.id,
-             target_user_id:    target_user.id,
+             target_team_id:    target_team.try(:id),
+             target_user_id:    target_user.try(:id),
              event:             :request_further_clearance
   end
 
@@ -546,7 +546,7 @@ class Case::FOI::StandardStateMachine
              linked_case_id: linked_case_id,
              event:          :link_a_case
   end
-  
+
   private
 
   def notify_responder(kase, mail_type)

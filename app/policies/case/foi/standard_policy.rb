@@ -25,9 +25,9 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
   check :unflagged_case_can_be_escalated do
     !self.case.current_state.in?(%w{responded closed})
   end
-  
+
   check :ds_flagged_case_can_be_escalated do
-    self.case.outside_escalation_deadline? &&
+     self.case.outside_escalation_deadline? &&
       !self.case.current_state.in?(%w{responded closed})
   end
 end
