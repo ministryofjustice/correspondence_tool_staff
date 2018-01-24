@@ -71,8 +71,4 @@ describe 'cases/incoming_cases.html.slim', type: :view do
       expect(response).to have_rendered('kaminari/_paginator')
     end
   end
-
-  describe 'displayed requested by for cases with further clearance' do
-
-  end
 end

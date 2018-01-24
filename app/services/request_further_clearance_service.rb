@@ -23,11 +23,7 @@ class RequestFurtherClearanceService
       @kase.state_machine.request_further_clearance!(
         acting_user: @user,
         acting_team: @user.managing_teams.first,
-        target_team: if @kase.responder == nil
-                        nil
-                      else
-                        @kase.responding_team
-                      end,
+        target_team: responding_team_if_case_accepted,
         target_user: @kase.responder
       )
 
@@ -49,5 +45,15 @@ class RequestFurtherClearanceService
     Rails.logger.error err.backtrace.join("\n\t")
     @error = err
     @result = :error
+  end
+
+  private
+
+  def responding_team_if_case_accepted
+    if @kase.responder == nil
+      nil
+    else
+      @kase.responding_team
+    end
   end
 end
