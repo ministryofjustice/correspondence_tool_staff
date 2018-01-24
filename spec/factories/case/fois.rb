@@ -748,4 +748,12 @@ FactoryGirl.define do
       kase.reload
     end
   end
+
+  trait :further_clearance_requested do
+    after(:create) do |kase|
+      create :case_transition_request_further_clearance,
+             case: kase
+      kase.reload
+    end
+  end
 end

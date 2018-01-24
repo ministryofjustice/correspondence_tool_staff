@@ -147,6 +147,7 @@ Run these rake tasks to prepare the database for local development.
 $ rails db:create
 $ rails db:migrate
 $ rails db:seed
+$ rails db:seed:dev:teams
 $ rails db:seed:dev:users
 ```
 

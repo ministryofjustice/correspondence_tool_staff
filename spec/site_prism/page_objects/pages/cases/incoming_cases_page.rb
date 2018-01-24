@@ -20,6 +20,7 @@ module PageObjects
             element :undo_assign_link, '.action-success a'
             element :de_escalate_link, '.js-de-escalate-link'
             element :undo_de_escalate_link, '.js-undo-de-escalate-link'
+            element :requested_by, '.container-notices'
           end
         end
 

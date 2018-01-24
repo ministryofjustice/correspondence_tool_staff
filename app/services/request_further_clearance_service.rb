@@ -17,9 +17,14 @@ class RequestFurtherClearanceService
       # flagged (as part of validating what state the case is in). If done the
       # other way around, this state transition will fail and this transaction
       # will be aborted.
+      #
+      # The target_team info is used when displaying who requested further
+      # clearance.
       @kase.state_machine.request_further_clearance!(
         acting_user: @user,
-        acting_team: @user.managing_teams.first
+        acting_team: @user.managing_teams.first,
+        target_team: responding_team_if_case_accepted,
+        target_user: @kase.responder
       )
 
       # Flag it for Disclosure
@@ -40,5 +45,15 @@ class RequestFurtherClearanceService
     Rails.logger.error err.backtrace.join("\n\t")
     @error = err
     @result = :error
+  end
+
+  private
+
+  def responding_team_if_case_accepted
+    if @kase.responder == nil
+      nil
+    else
+      @kase.responding_team
+    end
   end
 end

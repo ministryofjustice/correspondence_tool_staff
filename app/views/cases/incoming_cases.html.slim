@@ -44,9 +44,10 @@
 
               - if kase.transitions.further_clearance.present?
                 .container-notices
-                  = "Clearance requested by: "
-                  strong
-                    = kase.transitions.further_clearance.last.target_team.name
+                  - if kase.transitions.further_clearance.last.target_team.nil?
+                    = "Further clearance requested"
+                  - else
+                    = "Clearance requested by: "
+                    strong
+                      = kase.transitions.further_clearance.last.target_team.name
     = paginate @cases
-
-
