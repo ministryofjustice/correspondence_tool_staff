@@ -97,6 +97,7 @@ ignore_unused:
   - 'event.*'
   - 'cases.index.heading_*'
   - 'devise.registrations.*'
+  - 'cases.new.correspondence_type_errors.*'
 
 
 ## Consider these keys used:
