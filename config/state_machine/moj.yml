@@ -119,14 +119,16 @@ case_types:
 
               awaiting_dispatch:
                 add_message_to_case:
+                # close:
+                #   transition_to: closed
                 destroy_case:
                 edit_case:
                 link_a_case:
 
               responded:
                 add_message_to_case:
-                close:
-                  transition_to: closed
+                # close:
+                #   transition_to: closed
                 destroy_case:
                 edit_case:
                 link_a_case:
@@ -155,8 +157,11 @@ case_types:
               drafting:
                 add_message_to_case:
                   if: Predicates#responder_is_member_of_assigned_team?
-                respond:
+                close:
                   if: Predicates#responder_is_member_of_assigned_team?
+                  transition_to: closed
+                # respond:
+                #   if: Predicates#responder_is_member_of_assigned_team?
                   transition_to: responded
                 reassign_user:
                   if: Predicates#responder_is_member_of_assigned_team?
@@ -170,9 +175,6 @@ case_types:
                   if: Predicates#responder_is_member_of_assigned_team?
                 remove_response:
                   if: Predicates#responder_is_member_of_assigned_team?
-                respond:
-                  if: Predicates#responder_is_member_of_assigned_team?
-                  transition_to: responded
 
               responded:
                 add_message_to_case:

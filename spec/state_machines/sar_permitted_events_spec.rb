@@ -58,7 +58,7 @@ describe ConfigurableStateMachine::Machine do
           k = create :responded_sar
           expect(k.current_state).to eq 'responded'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
-                                                                      :close,
+                                                                      # :close,
                                                                       :destroy_case,
                                                                       :edit_case,
                                                                       :link_a_case]
@@ -161,8 +161,8 @@ describe ConfigurableStateMachine::Machine do
           expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                         :add_responses,
                                                                         :remove_last_response,
-                                                                        :remove_response,
-                                                                        :respond]
+                                                                        :remove_response]
+                                                                        # :respond
         end
       end
 
