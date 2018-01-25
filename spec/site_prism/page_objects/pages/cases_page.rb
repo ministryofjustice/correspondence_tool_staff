@@ -35,7 +35,7 @@ module PageObjects
         element :message_notification, 'td[aria-label="Conversations"] img'
       end
 
-      element :new_case_button, 'a.button[href="/cases/new/select_type"]'
+      element :new_case_button, 'a.button[href="/cases/new/"]'
       section :service_feedback, PageObjects::Sections::ServiceFeedbackSection, '.feedback'
       section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 

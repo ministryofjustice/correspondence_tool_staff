@@ -1,6 +1,3 @@
-= GovukElementsErrorsHelper.error_summary @case,
-        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
-
 - content_for :heading
   = t('.heading')
 
@@ -9,9 +6,9 @@
 
 = render partial: 'layouts/header'
 
-= form_for @case, as: :case, url: new_case_path, method: :get do |f|
-  = f.radio_button_fieldset :type,
-              choices: [Case::FOI::Standard,
-                        Case::SAR]
+ul#create-correspondences
+  - @permitted_correspondence_types.each do |correspondence_type|
+    li style="margin-bottom: 15px"
+      = link_to(t("common.correspondence.#{correspondence_type.downcase}.name"),
+                new_case_path(correspondence_type: correspondence_type.downcase))
 
-  = f.submit t('button.next_page_new'), {class: 'button'}

@@ -17,10 +17,7 @@
 - elsif @can_add_case
   .grid-row
     .column-full.button-holder
-      - if FeatureSet.sars.enabled?
-        = link_to t('common.new_case_button'), select_type_new_case_path, class: 'button'
-      - else
-        = link_to t('common.new_case_button'), new_case_path, class: 'button'
+      = link_to t('common.new_case_button'), new_case_path, class: 'button'
 
 
 
