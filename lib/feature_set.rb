@@ -15,20 +15,24 @@ class FeatureSet
   class EnabledFeature
 
     def initialize(config)
-      @config = config
+      @env_config = config
       @host_env = HostEnv.host_env
     end
 
     def enabled?
-      @config[@host_env] || false
+      @env_config[@host_env] || false
+    end
+
+    def disabled?
+      !enabled?
     end
 
     def enable!
-      @config[@host_env] = true
+      @env_config[@host_env] = true
     end
 
     def disable!
-      @config[@host_env] = false
+      @env_config[@host_env] = false
     end
   end
 

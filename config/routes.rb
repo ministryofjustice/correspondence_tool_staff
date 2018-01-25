@@ -162,7 +162,7 @@ Rails.application.routes.draw do
 
   post '/feedback' => 'feedback#create'
 
-  resources :cases do
+  resources :cases, except: :new do
     authenticated :user, -> (u) { u.manager? }  do
       root to: redirect(gnav.default_urls.manager), as: :manager_root
     end
@@ -175,6 +175,17 @@ Rails.application.routes.draw do
       root to: redirect(gnav.default_urls.approver), as: :approver_root
     end
 
+    # Oh case, we barely new you.
+    #
+    # The following two routes are necessary to proved the paths:
+    # /cases/new                      - select the type of correspondence for the new case
+    # /cases/new/foi, /cases/new/sar  - create a new case for the given correspondence type
+    get '', action: :new, on: :new
+    get ':correspondence_type',
+        action: :new,
+        on: :new,
+        as: '',
+        defaults: { correspondence_type: '' }
     get 'close', on: :member
     get 'closed' => 'cases#closed_cases', on: :collection
     get 'confirm_destroy' => 'cases#confirm_destroy', on: :member
@@ -204,7 +215,6 @@ Rails.application.routes.draw do
     patch :request_further_clearance, on: :member
     get :new_case_link, on: :member
     post :execute_new_case_link, on: :member
-    get :select_type, on: :new
 
     resources :assignments, except: :create  do
       patch 'accept_or_reject', on: :member

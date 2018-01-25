@@ -1,5 +1,6 @@
 = form_for kase, url: cases_path do |f|
-  = f.hidden_field :type, value: 'Case::SAR'
+  = hidden_field_tag 'correspondence_type', @correspondence_type
+  = f.hidden_field :type, value: 'case/sar'
 
   = render partial: 'cases/sar/new_form_common', locals: { f: f }
   = render partial: 'cases/sar/new_form_details', locals: { f: f }
