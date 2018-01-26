@@ -39,7 +39,9 @@ describe 'cases/case_request.html.slim', type: :view do
                         message: "This is a request for information",
                         message_extract: ["This is a request for information"],
                         delivery_method: "sent_by_email",
-                        sent_by_email?: true
+                        sent_by_email?: true,
+                        is_sar?: false,
+                        is_foi?: true
     }
 
     let(:partial) do
@@ -68,7 +70,9 @@ describe 'cases/case_request.html.slim', type: :view do
                         message:  long_message,
                         message_extract: [short_message,last_part],
                         delivery_method: "sent_by_email",
-                        sent_by_email?: true
+                        sent_by_email?: true,
+                        is_sar?: false,
+                        is_foi?: true
 
     }
 
@@ -96,7 +100,7 @@ describe 'cases/case_request.html.slim', type: :view do
     let(:partial) do
       stub_s3_uploader_for_all_files!
       render partial: 'cases/case_request.html.slim',
-             locals:{ case_details: sent_by_post}
+             locals:{ case_details: sent_by_post }
 
       case_request_section(rendered)
     end
