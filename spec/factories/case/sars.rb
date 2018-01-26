@@ -12,7 +12,7 @@ FactoryGirl.define do
     requester_type                'member_of_the_public'
     sequence(:name)               { |n| "#{identifier} name #{n}" }
     email                         { Faker::Internet.email(identifier) }
-    delivery_method               'sent_by_email'
+    reply_method                  'send_by_email'
     sequence(:subject)            { |n| "#{identifier} subject #{n}" }
     sequence(:message)            { |n| "#{identifier} message #{n}" }
     received_date                 { Time.zone.today.to_s }

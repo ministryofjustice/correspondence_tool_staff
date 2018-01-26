@@ -38,9 +38,9 @@ describe Case::SAR do
     end
   end
 
-  describe 'where_to_send' do
-    it { should validate_presence_of(:where_to_send) }
-    it { should allow_values('email', 'post').for(:where_to_send) }
+  describe 'reply_method' do
+    it { should validate_presence_of(:reply_method) }
+    it { should allow_values('send_by_email', 'send_by_post').for(:reply_method) }
   end
 
   describe 'papertrail versioning', versioning: true do
