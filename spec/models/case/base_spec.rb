@@ -69,7 +69,6 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe 'mandatory attributes' do
-    it { should validate_presence_of(:name)            }
     it { should validate_presence_of(:received_date)   }
     it { should validate_presence_of(:subject)         }
     it { should validate_presence_of(:type)            }
@@ -1365,39 +1364,33 @@ RSpec.describe Case::Base, type: :model do
     end
 
     it 'returns true if the case if an FOI Compliance Review' do
-      kase = create :compliance_review
-      expect(kase.is_foi?).to eq true
+      expect(create(:compliance_review).is_foi?).to eq true
     end
 
     it 'returns true if the case if an FOI Timeliness Review' do
-      kase = create :timeliness_review
-      expect(kase.is_foi?).to eq true
+      expect(create(:timeliness_review).is_foi?).to eq true
     end
 
-    it 'returns false if the case if a SAR' do
-      kase = create :foi_case
-      expect(kase.is_sar?).to eq false
+    it 'returns false if the case s a SAR' do
+      expect(create(:sar_case).is_foi?).to eq false
     end
   end
 
   describe 'is_sar?' do
     it 'returns false if the case if a standard FOI' do
-      expect(create(:foi_case).is_foi?).to eq false
+      expect(create(:foi_case).is_sar?).to eq false
     end
 
     it 'returns false if the case if an FOI Compliance Review' do
-      kase = create :compliance_review
-      expect(kase.is_foi?).to eq false
+      expect(create(:compliance_review).is_sar?).to eq false
     end
 
     it 'returns false if the case if an FOI Timeliness Review' do
-      kase = create :timeliness_review
-      expect(kase.is_foi?).to eq false
+      expect(create(:timeliness_review).is_sar?).to eq false
     end
 
     it 'returns true if the case if a SAR' do
-      kase = create :sar_case
-      expect(kase.is_sar?).to eq true
+      expect(create(:sar_case).is_sar?).to eq true
     end
   end
 end

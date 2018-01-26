@@ -66,7 +66,17 @@ module PageObjects
             address.set kase.postal_address
             choose_delivery_method kase.delivery_method
             subject.set kase.subject
-            full_request.set kase.message if kase.delivery_method == 'sent_by_email'
+            if kase.sent_by_email?
+              full_request.set kase.message
+            elsif kase.sent_by_post?
+              kase.uploaded_request_files.each do |file|
+                drop_in_dropzone(file)
+              end
+            else
+              raise ArgumentError.new(
+                      "unrecognised case delivery method #{kase.delivery_method}"
+                    )
+            end
             choose_foi_type(type)
 
             choose_type_of_requester(kase.requester_type)
@@ -85,11 +95,6 @@ module PageObjects
               choose_flag_for_disclosure_specialists 'no'
             end
 
-            if kase.sent_by_post?
-              kase.uploaded_request_files.each do |file|
-                drop_in_dropzone(file)
-              end
-            end
             kase
           end
 
