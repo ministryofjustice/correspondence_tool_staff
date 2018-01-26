@@ -16,7 +16,7 @@ module PageObjects
 
 
         def create_link_for_correspondence(correspondence_type)
-          create_links.find { |link| link.text }
+          create_links.find { |link| link.text.match(correspondence_type) }
         end
 
         def fill_in_case_type(choice)

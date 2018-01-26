@@ -9,7 +9,6 @@ FactoryGirl.define do
     end
 
     current_state                 'unassigned'
-    requester_type                'member_of_the_public'
     sequence(:name)               { |n| "#{identifier} name #{n}" }
     email                         { Faker::Internet.email(identifier) }
     reply_method                  'send_by_email'

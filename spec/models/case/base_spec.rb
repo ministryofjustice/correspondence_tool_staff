@@ -1366,7 +1366,7 @@ RSpec.describe Case::Base, type: :model do
 
     it 'returns true if the case if an FOI Compliance Review' do
       kase = create :compliance_review
-      expect(.is_foi?).to eq true
+      expect(kase.is_foi?).to eq true
     end
 
     it 'returns true if the case if an FOI Timeliness Review' do

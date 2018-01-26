@@ -24,6 +24,7 @@ module PageObjects
         cases_close:                    'Cases::ClosePage',
         cases_new:                      'Cases::NewPage',
         cases_new_foi:                  'Cases::New::FOIPage',
+        cases_new_sar:                  'Cases::New::SARPage',
         cases_new_case_link:            'Cases::NewCaseLinkPage',
         cases_edit:                     'Cases::EditPage',
         cases_new_response_upload:      'Cases::NewResponseUploadPage',

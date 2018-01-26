@@ -18,7 +18,7 @@ module Features
                                    flag_for_disclosure: false)
       login_step user: user
 
-      kase = create_sar_case_step flag_for_disclosure: flag_for_disclosure
+      kase = create_sar_case_step
       assign_case_step business_unit: responding_team
       logout_step
       kase
