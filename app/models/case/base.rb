@@ -44,7 +44,8 @@ class Case::Base < ApplicationRecord
                  subject_type: :string,
                  third_party: :boolean,
                  requester_email: :string,
-                 requester_postal_address: :string
+                 requester_postal_address: :string,
+                 where_to_send: :string
 
   attr_accessor :flag_for_disclosure_specialists,
                 :uploaded_request_files,
