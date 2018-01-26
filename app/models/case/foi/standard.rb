@@ -37,6 +37,7 @@ class Case::FOI::Standard < Case::Base
 
   validates :email, presence: true, on: :create, if: -> { postal_address.blank? }
   validates :message, presence: true, if: -> { sent_by_email? }
+  validates_presence_of :name
   validates :postal_address,
             presence: true,
             on: :create,
