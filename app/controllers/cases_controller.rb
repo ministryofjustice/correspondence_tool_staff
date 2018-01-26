@@ -517,6 +517,7 @@ class CasesController < ApplicationController
       :subject_full_name,
       :subject_type,
       :third_party,
+      :where_to_send,
       uploaded_request_files: [],
     ).merge(type: "Case::SAR")
   end

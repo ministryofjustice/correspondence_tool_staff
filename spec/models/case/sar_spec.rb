@@ -38,6 +38,11 @@ describe Case::SAR do
     end
   end
 
+  describe 'where_to_send' do
+    it { should validate_presence_of(:where_to_send) }
+    it { should allow_values('email', 'post').for(:where_to_send) }
+  end
+
   describe 'papertrail versioning', versioning: true do
     before(:each) do
       @kase = create :sar_case,
