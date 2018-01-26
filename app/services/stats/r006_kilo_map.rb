@@ -66,6 +66,7 @@ module Stats
           process_area(area)
         end
       end
+      @result_set << line
       dir.business_units.order(:name).each { |bu| process_business_unit(bu) }
     end
 

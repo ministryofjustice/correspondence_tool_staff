@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.10
--- Dumped by pg_dump version 9.5.10
+-- Dumped from database version 9.5.6
+-- Dumped by pg_dump version 9.5.6
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -630,43 +630,6 @@ ALTER SEQUENCE sessions_id_seq OWNED BY sessions.id;
 
 
 --
--- Name: team_category_roles; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE team_category_roles (
-    id integer NOT NULL,
-    category_id integer,
-    team_id integer,
-    view boolean DEFAULT false,
-    edit boolean DEFAULT false,
-    manage boolean DEFAULT false,
-    respond boolean DEFAULT false,
-    approve boolean DEFAULT false,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: team_category_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE team_category_roles_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: team_category_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE team_category_roles_id_seq OWNED BY team_category_roles.id;
-
-
---
 -- Name: team_properties; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -944,13 +907,6 @@ ALTER TABLE ONLY sessions ALTER COLUMN id SET DEFAULT nextval('sessions_id_seq':
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY team_category_roles ALTER COLUMN id SET DEFAULT nextval('team_category_roles_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY team_properties ALTER COLUMN id SET DEFAULT nextval('team_properties_id_seq'::regclass);
 
 
@@ -1108,14 +1064,6 @@ ALTER TABLE ONLY schema_migrations
 
 ALTER TABLE ONLY sessions
     ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
-
-
---
--- Name: team_category_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY team_category_roles
-    ADD CONSTRAINT team_category_roles_pkey PRIMARY KEY (id);
 
 
 --
@@ -1320,13 +1268,6 @@ CREATE INDEX index_sessions_on_updated_at ON sessions USING btree (updated_at);
 
 
 --
--- Name: index_team_category_roles_on_category_id_and_team_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_team_category_roles_on_category_id_and_team_id ON team_category_roles USING btree (category_id, team_id);
-
-
---
 -- Name: index_team_properties_on_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1517,8 +1458,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171230113732'),
 ('20180106124709'),
 ('20180119121951'),
-('20180123164057'),
-('20180124143637'),
-('20180125100559');
+('20180125100559'),
+('20180126120726');
 
 
