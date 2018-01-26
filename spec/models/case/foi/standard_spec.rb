@@ -1,6 +1,9 @@
 require "rails_helper"
 
 describe Case::FOI::Standard do
+  describe 'name' do
+    it { should validate_presence_of(:name) }
+  end
   describe 'requester_type' do
     it { should validate_presence_of(:requester_type)  }
 
