@@ -3,10 +3,10 @@
     = t('common.case.request')
 
   .request--message
-    - if case_details.sent_by_email?
+    - if case_details.is_sar? || case_details.sent_by_email?
       p
         = show_hide_message(case_details)
-    - else
+    - elsif case_details.is_sar? || case_details.sent_by_post?
       - case_details.upload_request_groups.each do |ug|
         .case-attachments-group
           h3.case-attachments--primary

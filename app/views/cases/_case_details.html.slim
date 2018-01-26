@@ -25,17 +25,19 @@
             td
               pre
                 = case_details.postal_address
-        tr.requester-type
-          th = t('common.case.requester_type')
-          td = case_details.requester_type.humanize
+        - if case_details.is_foi?
+          tr.requester-type
+            th = t('common.case.requester_type')
+            td = case_details.requester_type.humanize
 
         tr.date-received
           th = t('common.case.received_date')
           td = l case_details.received_date, format: :default
 
-        tr.delivery-method
-          th = "Received by"
-          td = case_details.delivery_method.humanize
+        - if case_details.is_foi?
+          tr.delivery-method
+            th = "Received by"
+            td = case_details.delivery_method.humanize
 
       - if case_details.responding_team.present?
         tbody.responder-details
