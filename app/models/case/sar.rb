@@ -27,6 +27,14 @@ class Case::SAR < Case::Base
                                       message: "can't be blank" }
   validates_presence_of :subject_type
 
+  before_save :use_subject_as_requester,
+              if: -> { name.blank? }
   after_create :process_uploaded_request_files,
                if: -> { uploaded_request_files.present? }
+
+  private
+
+  def use_subject_as_requester
+    self.name = self.subject_full_name
+  end
 end

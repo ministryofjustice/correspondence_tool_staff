@@ -69,5 +69,33 @@ describe Case::SAR do
       expect(original_kase.received_date).to eq 1.day.ago.to_date
     end
   end
+
+  describe 'use_subject_as_requester callback' do
+    context 'on create' do
+      it 'does not change the requester when present' do
+        sar_case = create :sar_case, name: 'Bob', subject_full_name: 'Doug'
+        expect(sar_case.reload.name).to eq 'Bob'
+      end
+
+      it 'uses the subject as the requester if not present on update' do
+        sar_case = create :sar_case, name: '', subject_full_name: 'Doug'
+        expect(sar_case.reload.name).to eq 'Doug'
+      end
+    end
+
+    context 'on update' do
+      it 'does not change the requester when present' do
+        sar_case = create :sar_case
+        sar_case.update! name: 'Bob', subject_full_name: 'Doug'
+        expect(sar_case.name).to eq 'Bob'
+      end
+
+      it 'uses the subject as the requester if not present on update' do
+        sar_case = create :sar_case
+        sar_case.update! name: '', subject_full_name: 'Doug'
+        expect(sar_case.name).to eq 'Doug'
+      end
+    end
+  end
 end
 

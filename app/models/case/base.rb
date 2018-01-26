@@ -119,8 +119,6 @@ class Case::Base < ApplicationRecord
 
   validates :current_state, presence: true, on: :update
 
-  validates :name,presence: true
-
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates_presence_of :received_date
   validates :subject, presence: true, length: { maximum: 100 }
