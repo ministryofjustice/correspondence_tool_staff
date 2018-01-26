@@ -53,7 +53,7 @@ module CTS::Cases
         message:            options.fetch(:message,
                                           Faker::Lorem.paragraph(10, true, 10)),
         requester_type:     options.fetch(:requester_type,
-                                          Case::Base.requester_types.keys.sample),
+                                          Case::FOI::Standard.requester_types.keys.sample),
         received_date:      received_date,
         created_at:         created_at,
       )

@@ -5,7 +5,7 @@
 = f.text_area :postal_address, {rows: 4}
 
 = f.radio_button_fieldset :requester_type,
-                          choices: Case::Base.requester_types.values
+                          choices: Case::FOI::Standard.requester_types.values
 
 .form-group
   = f.gov_uk_date_field :received_date, {legend_text: t('cases.new.received_date'), form_hint_text: t('cases.new.received_date_copy'), today_button: {class: 'button-secondary'} }

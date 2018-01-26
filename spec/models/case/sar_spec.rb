@@ -23,9 +23,9 @@ describe Case::SAR do
 
     context 'invalid value' do
       it 'errors' do
-        kase = build(:sar_case, subject_type: 'plumber')
-        expect(kase).not_to be_valid
-        expect(kase.errors[:subject_type]).to eq ['is not a valid subject type']
+        expect {
+          build(:sar_case, subject_type: 'plumber')
+        }.to raise_error ArgumentError
       end
     end
 
@@ -33,10 +33,41 @@ describe Case::SAR do
       it 'errors' do
         kase = build(:sar_case, subject_type: nil)
         expect(kase).not_to be_valid
-        expect(kase.errors[:subject_type]).to eq ['is not a valid subject type']
+        expect(kase.errors[:subject_type]).to eq ["can't be blank"]
       end
     end
   end
 
+  describe 'papertrail versioning', versioning: true do
+    before(:each) do
+      @kase = create :sar_case,
+                     name: 'aaa',
+                     email: 'aa@moj.com',
+                     received_date: Date.today,
+                     subject: 'subject A'
+      @kase.update! name: 'bbb',
+                    email: 'bb@moj.com',
+                    received_date: 1.day.ago,
+                    subject: 'subject B'
+    end
+
+    xit 'saves all values in the versions object hash' do
+      version_hash = YAML.load(@kase.versions.last.object)
+      expect(version_hash['email']).to eq 'aa@moj.com'
+      expect(version_hash['received_date']).to eq Date.today
+      expect(version_hash['subject']).to eq 'subject A'
+    end
+
+    it 'can reconsititue a record from a version (except for received_date)' do
+      original_kase = @kase.versions.last.reify
+      expect(original_kase.email).to eq 'aa@moj.com'
+      expect(original_kase.subject).to eq 'subject A'
+    end
+
+    it 'does not reconstitute the received date properly because of an interaction with govuk_date_fields' do
+      original_kase = @kase.versions.last.reify
+      expect(original_kase.received_date).to eq 1.day.ago.to_date
+    end
+  end
 end
 

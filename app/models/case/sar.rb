@@ -5,12 +5,28 @@ class Case::SAR < Case::Base
     end
   end
 
-  VALID_SUBJECT_TYPES = %w{ offender staff member_of_the_public }
+  enum subject_type: {
+         offender:             'offender',
+         staff:                'staff',
+         member_of_the_public: 'member_of_the_public'
+       }
+
+  has_paper_trail only: [
+                    :name,
+                    :properties,
+                    :received_date,
+                    :requester_email,
+                    :requester_postal_address,
+                    :subject
+                  ]
 
   attr_reader :where_to_send
 
   validates :subject_full_name, presence: true
-  validates :third_party, inclusion: {in: [ true, false ], message: "can't be blank" }
-  validates :subject_type, inclusion: { in: VALID_SUBJECT_TYPES, message: 'is not a valid subject type' }
+  validates :third_party, inclusion: {in: [ true, false ],
+                                      message: "can't be blank" }
+  validates_presence_of :subject_type
 
+  after_create :process_uploaded_request_files,
+               if: -> { uploaded_request_files.present? }
 end
