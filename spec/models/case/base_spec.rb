@@ -1358,4 +1358,46 @@ RSpec.describe Case::Base, type: :model do
   #     expect(case_being_drafted_trigger.awaiting_approver?).to be_falsey
   #   end
   # end
+
+  describe 'is_foi?' do
+    it 'returns true if the case if a standard FOI' do
+      expect(create(:foi_case).is_foi?).to eq true
+    end
+
+    it 'returns true if the case if an FOI Compliance Review' do
+      kase = create :compliance_review
+      expect(.is_foi?).to eq true
+    end
+
+    it 'returns true if the case if an FOI Timeliness Review' do
+      kase = create :timeliness_review
+      expect(kase.is_foi?).to eq true
+    end
+
+    it 'returns false if the case if a SAR' do
+      kase = create :foi_case
+      expect(kase.is_sar?).to eq false
+    end
+  end
+
+  describe 'is_sar?' do
+    it 'returns false if the case if a standard FOI' do
+      expect(create(:foi_case).is_foi?).to eq false
+    end
+
+    it 'returns false if the case if an FOI Compliance Review' do
+      kase = create :compliance_review
+      expect(kase.is_foi?).to eq false
+    end
+
+    it 'returns false if the case if an FOI Timeliness Review' do
+      kase = create :timeliness_review
+      expect(kase.is_foi?).to eq false
+    end
+
+    it 'returns true if the case if a SAR' do
+      kase = create :sar_case
+      expect(kase.is_sar?).to eq true
+    end
+  end
 end

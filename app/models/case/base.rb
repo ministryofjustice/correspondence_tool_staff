@@ -471,6 +471,14 @@ class Case::Base < ApplicationRecord
     @category ||= Category.find_by!(abbreviation: type_abbreviation)
   end
 
+  def is_foi?
+    type_abbreviation == 'FOI'
+  end
+
+  def is_sar?
+    type_abbreviation == 'SAR'
+  end
+
   private
   # determines whether or not the BU responded to flagged cases in time (NOT whether the case was responded to in time!)
   # calculated as the time between the responding BU being assigned the case and the disclosure team approving it.
