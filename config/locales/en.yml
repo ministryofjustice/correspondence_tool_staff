@@ -178,7 +178,7 @@ en:
         flag_for_disclosure_specialists: Clearance required by DACU Disclosure
         type: Case type
       case_sar:
-        where_to_send_html: |
+        reply_method_html: |
           <div class="heading-medium">Where the information should be sent</div>
         flag_for_disclosure_specialists: "Clearance required by disclosure?"
         subject_type: "Type of data subject"
@@ -254,6 +254,9 @@ en:
         received_date: "Received at MOJ"
         subject: "Case summary"
         subject_full_name: "Full name of data subject"
+        reply_method:
+          send_by_email: Email
+          send_by_post: Post
       feedback:
         comment: Help make this service better
 

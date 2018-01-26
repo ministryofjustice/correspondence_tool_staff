@@ -10,9 +10,9 @@ class Case::SAR < Case::Base
          staff:                'staff',
          member_of_the_public: 'member_of_the_public'
        }
-  enum where_to_send: {
-         email: 'email',
-         post:  'post'
+  enum reply_method: {
+         send_by_post:  'send_by_post',
+         send_by_email: 'send_by_email',
        }
 
   has_paper_trail only: [
@@ -27,7 +27,7 @@ class Case::SAR < Case::Base
   validates :subject_full_name, presence: true
   validates :third_party, inclusion: {in: [ true, false ],
                                       message: "can't be blank" }
-  validates_presence_of :where_to_send
+  validates_presence_of :reply_method
   validates_presence_of :subject_type
 
   before_save :use_subject_as_requester,
