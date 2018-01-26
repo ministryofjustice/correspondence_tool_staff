@@ -24,7 +24,7 @@ class Case::SAR < Case::Base
                     :subject
                   ]
 
-  validates :subject_full_name, presence: true
+  validates_presence_of :subject_full_name
   validates :third_party, inclusion: {in: [ true, false ],
                                       message: "can't be blank" }
   validates_presence_of :reply_method

@@ -257,6 +257,9 @@ en:
         reply_method:
           send_by_email: Email
           send_by_post: Post
+        third_party:
+          true: Yes
+          false: No
       feedback:
         comment: Help make this service better
 
