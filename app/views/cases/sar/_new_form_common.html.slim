@@ -8,7 +8,10 @@ section
                             choices: Case::SAR::subject_types.keys
 
   #third-party
-    = f.radio_button_fieldset :third_party
+    = f.radio_button_fieldset :third_party,
+                              choices: {'Yes': true, 'No': false},
+                              text_method: :first,
+                              value_method: :second
 
     #case_sar_third_party_yes_content.panel.panel-border-thin.js-hidden
       = f.text_field :name
