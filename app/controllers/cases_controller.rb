@@ -259,7 +259,7 @@ class CasesController < ApplicationController
   def process_closure
     authorize @case, :can_close_case?
     @case.prepare_for_close
-    if @case.update(process_closure_params)
+    if @case.update(process_closure_params(@case.type))
       @case.close(current_user)
       set_permitted_events
       flash[:notice] = t('notices.case_closed')
@@ -482,6 +482,22 @@ class CasesController < ApplicationController
   end
 
   def process_closure_params
+    case correspondence_type
+      when 'foi' then process_foi_closure_params
+      when 'sar' then process_sar_closure_params
+    end
+  end
+
+  def process_sar_closure_params
+    params.require(:case).permit(
+      :date_responded_dd,
+      :date_responded_mm,
+      :date_responded_yyyy,
+      :refusal_reason_name
+    )
+  end
+
+  def process_foi_closure_params
     params.require(:case).permit(
       :date_responded_dd,
       :date_responded_mm,
