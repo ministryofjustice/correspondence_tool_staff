@@ -27,7 +27,7 @@ module PageObjects
       end
 
       def respond_to_missing?(method, _include_private = false)
-        method.match %r{^choose_(.+)} ? true : super
+        method.match %r{^choose_.+} ? true : super
       end
 
       # Upload a file to Dropzone.js

@@ -32,14 +32,16 @@ section
                 locals: { s3_direct_post: @s3_direct_post,
                         file_input_name: 'case[uploaded_request_files][]' }
 
-  /= f.radio_button_fieldset :flag_for_disclosure_specialists
-
   = f.hidden_field :flag_for_disclosure_specialists, value: 'no'
 
-  = f.radio_button_fieldset :reply_method, choices: [:send_by_email, :send_by_post]
+  = f.radio_button_fieldset :reply_method, choices: [:send_by_email, :send_by_post] do |fieldset|
+    - fieldset.radio_input('send_by_email',
+                           panel_id: 'reply_method_send_by_email_panel')
+    - fieldset.radio_input('send_by_post',
+                           panel_id: 'reply_method_send_by_post_panel')
 
-  #case_sar_reply_method_send_by_email_content.panel.panel-border-thin.js-hidden
-    = f.email_field :email
+    - fieldset.revealing_panel(:reply_method_send_by_email_panel) do |panel|
+      - panel.email_field :email
 
-  #case_sar_reply_method_send_by_post_content.panel.panel-border-thin.js-hidden
-    = f.text_area :postal_address, {rows: 4}
+    - fieldset.revealing_panel(:reply_method_send_by_post_panel) do |panel|
+      - panel.text_area :postal_address, {rows: 4}
