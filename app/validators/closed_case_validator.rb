@@ -2,7 +2,7 @@ class ClosedCaseValidator < ActiveModel::Validator
 
   def validate(rec)
     if rec.prepared_for_close? || rec.current_state == 'closed'
-      if validate_closure_details?(rec)
+      if validate_closure_details?(rec) && rec.class == Case::FOI
         validate_date_responded(rec)
         validate_info_held_status(rec)
         validate_outcome(rec)
