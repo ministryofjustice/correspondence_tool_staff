@@ -130,9 +130,9 @@ feature 'adding cases' do
     end
   end
 
-  context 'Case::SAR::NonOffender' do
+  xcontext 'Case::SAR' do
     scenario 'creating a drafting case' do
-      kase = create_case(case_type: 'case_type_casesarnonoffender', target_state: 'drafting')
+      kase = create_case(case_type: 'case_type_casesar', target_state: 'drafting')
       expect(kase).to be_instance_of(Case::SAR::NonOffender)
       expect(kase.current_state).to eq 'drafting'
     end

@@ -7,7 +7,7 @@ module CTS
           Case::FOI::Standard
           Case::FOI::ComplianceReview
           Case::FOI::TimelinessReview
-          Case::SAR::NonOffender
+          Case::SAR
       }
 
 
