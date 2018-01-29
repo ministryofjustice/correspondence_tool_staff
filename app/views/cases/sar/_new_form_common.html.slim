@@ -8,10 +8,10 @@ section
                             choices: Case::SAR::subject_types.keys
 
   #third-party
-    = f.radio_button_fieldset :third_party
-
-    #case_sar_third_party_yes_content.panel.panel-border-thin.js-hidden
-      = f.text_field :name
+    = f.radio_button_fieldset :third_party do |fieldset|
+      - fieldset.radio_input('yes')
+        = f.text_field :name
+      - fieldset.radio_input('no')
 
 section
   header

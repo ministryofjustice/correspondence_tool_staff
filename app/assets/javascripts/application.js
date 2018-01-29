@@ -21,5 +21,8 @@
 
 
 (function () {
+  // Show and hide toggled content
+  new GOVUK.ShowHideContent().init();
+
   moj.init();
 }(GOVUK));
