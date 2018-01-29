@@ -81,6 +81,11 @@ module PageObjects
 
             choose_type_of_requester(kase.requester_type)
 
+            determine_flag_for_disclosure_specialist kase
+            kase
+          end
+
+          def determine_flag_for_disclosure_specialist(kase)
             if kase.approving_teams.present?
               dacu_disclosure_team_name = Settings.foi_cases.default_clearance_team
               requires_disclosure_clearance = dacu_disclosure_team_name.in?(
@@ -94,8 +99,6 @@ module PageObjects
             else
               choose_flag_for_disclosure_specialists 'no'
             end
-
-            kase
           end
 
           def drop_in_dropzone(file_path)

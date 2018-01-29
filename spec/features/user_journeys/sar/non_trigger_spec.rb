@@ -26,8 +26,8 @@ feature 'Non-Offender SAR case that does not require clearance' do
   end
 
   scenario 'end-to-end journey', js: true do
-    kase = create_and_assign_sar_case user: manager,
-                                      responding_team: responding_team
+    _kase = create_and_assign_sar_case user: manager,
+                                       responding_team: responding_team
 
     # edit_case kase: kase,
     #           user: manager,
