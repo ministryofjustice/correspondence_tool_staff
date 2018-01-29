@@ -13,9 +13,7 @@ module Features
       kase
     end
 
-    def create_and_assign_sar_case(user:,
-                                   responding_team:,
-                                   flag_for_disclosure: false)
+    def create_and_assign_sar_case(user:, responding_team:)
       login_step user: user
 
       kase = create_sar_case_step
