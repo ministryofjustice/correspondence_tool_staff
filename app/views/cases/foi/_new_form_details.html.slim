@@ -8,9 +8,10 @@
       #case_foi_delivery_method_sent_by_email_content
         = f.text_area :message, { rows: 10 }
 
-      #case_foi_delivery_method_sent_by_post_content.grid-row
-        .column-two-thirds
-          div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
-            = render partial: 'shared/dropzone_form',
-                     locals: { s3_direct_post: @s3_direct_post,
-                               file_input_name: 'case_foi[uploaded_request_files][]' }
+      #case_foi_delivery_method_sent_by_post_content
+        .grid-row
+          .column-two-thirds
+            div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
+              = render partial: 'shared/dropzone_form',
+                       locals: { s3_direct_post: @s3_direct_post,
+                                 file_input_name: 'case_foi[uploaded_request_files][]' }
