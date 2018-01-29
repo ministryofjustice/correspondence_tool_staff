@@ -9,14 +9,15 @@ moj.Modules.CaseCreation = {
   init: function () {
     var self = this;
 
-    self.showHideDeliveryMethodFields();
-
-    //Bind events
-    self.$deliveryMethod.on('change', ':radio', function(){
-
+    if(self.$deliveryMethod.length > 0) {
       self.showHideDeliveryMethodFields();
 
-    });
+      //Bind events
+      self.$deliveryMethod.on('change', ':radio', function(){
+          self.showHideDeliveryMethodFields();
+      });
+    }
+
   },
 
   showHideDeliveryMethodFields: function (){
