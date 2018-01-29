@@ -1,8 +1,8 @@
 moj.Modules.CaseCreation = {
   $deliveryMethod       : $('#delivery-method'),
 
-  $deliveryMethodEmail  : $('#case_delivery_method_sent_by_email'),
-  $deliveryMethodPost   : $('#case_delivery_method_sent_by_post'),
+  $deliveryMethodEmail  : $('#case_foi_delivery_method_sent_by_email'),
+  $deliveryMethodPost   : $('#case_foi_delivery_method_sent_by_post'),
 
   $deliveryMethodFields : $('#delivery-method-fields'),
 
@@ -24,16 +24,16 @@ moj.Modules.CaseCreation = {
 
       this.$deliveryMethodFields.show();
 
-      if (this.$deliveryMethodEmail.is('checked')) {
-        $('#case_message').closest('.form-group').show();
+      if (this.$deliveryMethodEmail.is(':checked')) {
+        $('#case_foi_message').closest('.form-group').show();
       } else {
-        $('#case_message').closest('.form-group').hide();
+        $('#case_foi_message').closest('.form-group').hide();
       }
 
-      if (this.$deliveryMethodPost.is('checked')) {
+      if (this.$deliveryMethodPost.is(':checked')) {
         $('.dropzone').closest('.grid-row').show();
       } else {
-        $('.dropzone').closest('.grid-row').show();
+        $('.dropzone').closest('.grid-row').hide();
       }
 
     } else {
