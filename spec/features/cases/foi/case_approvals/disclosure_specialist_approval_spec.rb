@@ -13,24 +13,6 @@ feature 'cases requiring clearance by disclosure specialist' do
   given(:team_dacu)                   { find_or_create :team_dacu }
   given(:responder)                   { responding_team.users.first }
 
-  def create_case(flag_for_clearance: false)
-    expect(cases_new_page).to be_displayed
-    cases_new_page.fill_in_case_type('standard')
-    expect(cases_new_foi_page).to be_displayed
-    cases_new_foi_page.fill_in_case_details
-    cases_new_foi_page.choose_flag_for_disclosure_specialists(
-      flag_for_clearance ? 'yes' : 'no'
-    )
-    cases_new_foi_page.submit_button.click
-  end
-
-  def assign_case_to_team
-    expect(assignments_new_page).to be_displayed
-
-    assign_case_step business_unit: responder.responding_teams.first
-
-  end
-
   def take_case_on_as_discosure_specialist(kase:, expected_approver:)
     incoming_cases_page.load
 
@@ -72,20 +54,6 @@ feature 'cases requiring clearance by disclosure specialist' do
     expect(case_list_item).to have_no_highlight_row
     expect(kase.reload.approving_teams).to include team_dacu_disclosure
   end
-
-  # def create_flagged_case_and_assign_to_team(days_back)
-  #   login_as manager
-  #   cases_page.load
-  #   cases_page.new_case_button.click
-
-  #   create_case(flag_for_clearance: true)
-  #   assign_case_to_team
-  #   expect(cases_show_page).to be_displayed
-  #   login_as manager
-
-  #   kase = Case::Base.last
-  #   set_case_dates_back_by(kase, days_back)
-  # end
 
   def accept_case_as_kilo(kase)
     login_as responder
