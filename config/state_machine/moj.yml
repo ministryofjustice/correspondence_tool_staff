@@ -55,6 +55,7 @@ case_types:
                 accept_approver_assignment:
                 add_message_to_case:
                 flag_for_clearance:
+                reassign_user:
 
           responder:
             states:
@@ -184,4 +185,3 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
-
