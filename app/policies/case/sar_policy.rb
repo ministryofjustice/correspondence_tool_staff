@@ -26,6 +26,9 @@ class Case::SARPolicy < Case::BasePolicy
     clear_failed_checks
     check_can_trigger_event(:link_a_case) &&
       check_user_is_a_manager_for_case
+    end
+  def can_close_case?
+    clear_failed_checks
+    check_user_is_a_responder_for_case && check_case_is_in_attachable_state
   end
 end
-
