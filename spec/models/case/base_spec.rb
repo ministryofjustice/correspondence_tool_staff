@@ -8,7 +8,6 @@
 #  message              :text
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
-#  category_id          :integer
 #  received_date        :date
 #  postal_address       :string
 #  subject              :string
