@@ -57,9 +57,7 @@ class CasesController < ApplicationController
                .page(params[:page])
                .decorate
     @current_tab_name = 'all_cases'
-
-    # TODO: This needs to be true for any type of case, really.
-    @can_add_case = policy(Case::FOI::Standard).can_add_case?
+    @can_add_case = policy(Case::Base).can_add_case?
   end
 
   def closed_cases
@@ -87,9 +85,8 @@ class CasesController < ApplicationController
                .page(params[:page])
                .decorate
     @current_tab_name = 'my_cases'
+    @can_add_case = policy(Case::Base).can_add_case?
 
-    # TODO: This needs to be true for any type of case, really.
-    @can_add_case = policy(Case::FOI::Standard).can_add_case?
     render :index
   end
 
@@ -101,10 +98,9 @@ class CasesController < ApplicationController
                .page(params[:page])
                .decorate
 
-    # .by_deadline
     @current_tab_name = 'all_cases'
-    # TODO: This needs to be true for any type of case, really.
-    @can_add_case = policy(Case::FOI::Standard).can_add_case?
+    @can_add_case = policy(Case::Base).can_add_case?
+
     render :index
   end
 
