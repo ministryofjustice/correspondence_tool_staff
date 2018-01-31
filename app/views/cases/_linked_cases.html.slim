@@ -31,5 +31,5 @@
             td colspan=3
               = "No linked cases"
 
-    = action_links_for_allowed_events(case_details, :new_case_link).join(' | ').html_safe
-
+    - if policy(case_details).can_add_message_to_case?
+      = action_links_for_allowed_events(case_details, :new_case_link).join(' | ').html_safe
