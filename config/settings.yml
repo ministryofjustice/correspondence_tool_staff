@@ -177,7 +177,7 @@ smoke_tests:
 enabled_features:
   sars:
     Local: true
-    Host-dev: false
-    Host-demo: false
+    Host-dev: true
+    Host-demo: true
     Host-staging: false
     Host-production: false

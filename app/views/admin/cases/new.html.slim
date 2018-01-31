@@ -13,10 +13,9 @@
 
   = f.text_field :subject_full_name
 
-  = f.radio_button_fieldset :subject_type, choices: Case::SAR::Base::VALID_SUBJECT_TYPES
+  = f.radio_button_fieldset :subject_type, choices: Case::SAR.subject_types
 
   = f.radio_button_fieldset :third_party, choices: %w{ true false }
-
 
   = f.text_field :name
 

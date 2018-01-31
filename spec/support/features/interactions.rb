@@ -1,13 +1,22 @@
 module Features
   module Interactions
-    def create_and_assign_case(type:,
-                               user:,
-                               responding_team:,
-                               flag_for_disclosure: false)
+    def create_and_assign_foi_case(type: Case::FOI::Standard,
+                                   user:,
+                                   responding_team:,
+                                   flag_for_disclosure: false)
       login_step user: user
 
-      kase = create_case_step type: type.to_s.downcase.gsub(/\W/, ''),
-                              flag_for_disclosure: flag_for_disclosure
+      kase = create_foi_case_step type: type.to_s.demodulize.downcase,
+                                  flag_for_disclosure: flag_for_disclosure
+      assign_case_step business_unit: responding_team
+      logout_step
+      kase
+    end
+
+    def create_and_assign_sar_case(user:, responding_team:)
+      login_step user: user
+
+      kase = create_sar_case_step
       assign_case_step business_unit: responding_team
       logout_step
       kase

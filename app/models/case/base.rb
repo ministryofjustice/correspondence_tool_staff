@@ -8,7 +8,6 @@
 #  message              :text
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
-#  category_id          :integer
 #  received_date        :date
 #  postal_address       :string
 #  subject              :string
@@ -36,31 +35,16 @@ class Case::Base < ApplicationRecord
 
   default_scope { where( deleted: false) }
 
-  has_paper_trail only: %i{ name email received_date subject postal_address requester_type }
-
-
-  enum requester_type: {
-         academic_business_charity: 'academic_business_charity',
-         journalist: 'journalist',
-         member_of_the_public: 'member_of_the_public',
-         offender: 'offender',
-         solicitor: 'solicitor',
-         staff_judiciary: 'staff_judiciary',
-         what_do_they_know: 'what_do_they_know'
-       }
-
-  enum delivery_method: {
-         sent_by_post: 'sent_by_post',
-         sent_by_email: 'sent_by_email',
-       }
-
   jsonb_accessor :properties,
                  escalation_deadline: :date,
                  internal_deadline: :date,
                  external_deadline: :date,
                  subject_full_name: :string,
                  subject_type: :string,
-                 third_party: :boolean
+                 third_party: :boolean,
+                 requester_email: :string,
+                 requester_postal_address: :string,
+                 reply_method: :string
 
   attr_accessor :flag_for_disclosure_specialists,
                 :uploaded_request_files,
@@ -135,29 +119,14 @@ class Case::Base < ApplicationRecord
 
   validates :current_state, presence: true, on: :update
 
-  validates :name,presence: true
-
-  validates :email, presence: true, on: :create, if: -> { postal_address.blank? }
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
-  validates :postal_address,
-            presence: true,
-            on: :create,
-            if: -> { email.blank? || sent_by_post? }
-  validates :requester_type, :received_date, :delivery_method , presence: true
-  validates :message, presence: true, if: -> { sent_by_email? }
-  validates :uploaded_request_files,
-            presence: true,
-            on: :create,
-            if: -> { sent_by_post? }
-  validates :subject,  :category, presence: true
-  validates :subject, length: { maximum: 100 }
+  validates_presence_of :received_date
+  validates :subject, presence: true, length: { maximum: 100 }
   validates :type, presence: true, exclusion: { in: %w{Case}, message: "Case type can't be blank" }
 
   validates_with ::ClosedCaseValidator
 
   serialize :exemption_ids, Array
-
-  belongs_to :category, required: true
 
   has_many :assignments, dependent: :destroy, foreign_key: :case_id
 
@@ -269,7 +238,6 @@ class Case::Base < ApplicationRecord
                 :set_deadlines
   before_update :update_deadlines
   before_save :prevent_number_change
-  after_create :process_uploaded_request_files, if: :sent_by_post?
 
   delegate :available_events, to: :state_machine
 
@@ -432,7 +400,8 @@ class Case::Base < ApplicationRecord
   end
 
   def default_clearance_team
-    team_code = Settings.__send__("#{category.abbreviation.downcase}_cases").default_clearance_team
+    case_type = "#{type_abbreviation.downcase}_cases"
+    team_code = Settings.__send__(case_type).default_clearance_team
     Team.find_by_code team_code
   end
 
@@ -470,9 +439,9 @@ class Case::Base < ApplicationRecord
 
   def format_workflow_class_name(type_template, type_workflow_template)
     if workflow.present?
-      type_workflow_template % {type: category.abbreviation, workflow: workflow}
+      type_workflow_template % {type: type_abbreviation, workflow: workflow}
     else
-      type_template % {type: category.abbreviation}
+      type_template % {type: type_abbreviation}
     end
   end
 
@@ -490,6 +459,22 @@ class Case::Base < ApplicationRecord
 
   def is_internal_review?
     self.is_a?(Case::FOI::InternalReview)
+  end
+
+  def type_abbreviation
+    self.class.type_abbreviation
+  end
+
+  def category
+    @category ||= Category.find_by!(abbreviation: type_abbreviation)
+  end
+
+  def is_foi?
+    type_abbreviation == 'FOI'
+  end
+
+  def is_sar?
+    type_abbreviation == 'SAR'
   end
 
   private

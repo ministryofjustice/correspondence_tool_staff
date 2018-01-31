@@ -118,13 +118,6 @@ RSpec.describe CasesController, type: :controller do
 
   context "as an anonymous user" do
 
-    describe 'GET new' do
-      it "be redirected to signin if trying to start a new case" do
-        get :new
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
     describe 'GET closed_cases' do
       it "be redirected to signin if trying to update a specific case" do
         get :closed_cases
@@ -136,16 +129,6 @@ RSpec.describe CasesController, type: :controller do
   context "as an authenticated manager" do
 
     before { sign_in manager }
-
-    describe 'GET new' do
-      before {
-        get :new, params: { case: { type: 'Case::FOI::Standard' } }
-      }
-
-      it 'renders the new template' do
-        expect(response).to render_template(:new)
-      end
-    end
 
     describe 'GET closed_cases' do
       it 'renders the closed cases page' do
@@ -177,6 +160,13 @@ RSpec.describe CasesController, type: :controller do
     describe 'PATCH process_closure' do
       let(:outcome)     { create :outcome, :requires_refusal_reason }
       let(:info_held)   { create :info_status, :held }
+
+      it 'authorizes using can_close_case?' do
+        expect{
+          patch :process_closure, params: case_closure_params(responded_case)
+        }.to require_permission(:can_close_case?)
+               .with_args(manager, responded_case)
+      end
 
       it "closes a case that has been responded to" do
         patch :process_closure, params: case_closure_params(responded_case)
@@ -225,25 +215,6 @@ RSpec.describe CasesController, type: :controller do
             }
           }
         end
-      end
-
-      context 'as an authenticated responder' do
-        before { sign_in responder }
-
-        describe 'GET new' do
-          before {
-            get :new, params: { case: {type: 'Case::FOI::Standard'}}
-          }
-
-          it 'does not render the new template' do
-            expect(response).not_to render_template(:new)
-          end
-
-          it 'redirects to the application root path' do
-            expect(response).to redirect_to(responder_root_path)
-          end
-        end
-
       end
     end
   end
@@ -776,7 +747,9 @@ RSpec.describe CasesController, type: :controller do
 
       let(:params) do
         {
-          case: {
+          correspondence_type: 'foi',
+          case_foi: {
+            type: 'Standard',
             requester_type: 'member_of_the_public',
             name: 'A. Member of Public',
             postal_address: '102 Petty France',
@@ -811,9 +784,10 @@ RSpec.describe CasesController, type: :controller do
       context 'with valid params' do
         let(:params) do
           {
-            case: {
+            correspondence_type: 'foi',
+            case_foi: {
               requester_type: 'member_of_the_public',
-              type: 'Case::FOI::Standard',
+              type: 'Standard',
               name: 'A. Member of Public',
               postal_address: '102 Petty France',
               email: 'member@public.com',
@@ -850,13 +824,13 @@ RSpec.describe CasesController, type: :controller do
         end
 
         it "create a internal review for timeliness" do
-          params[:case][:type] = 'Case::FOI::TimelinessReview'
+          params[:case_foi][:type] = 'TimelinessReview'
           post :create, params: params
           expect(created_case.type).to eq 'Case::FOI::TimelinessReview'
         end
 
         it "create a internal review for compliance" do
-          params[:case][:type] = 'Case::FOI::ComplianceReview'
+          params[:case_foi][:type] = 'ComplianceReview'
           post :create, params: params
           expect(created_case.type).to eq 'Case::FOI::ComplianceReview'
         end
@@ -869,27 +843,27 @@ RSpec.describe CasesController, type: :controller do
           end
 
           it 'does not flag for clearance if parameter is not set' do
-            params[:case].delete(:flag_for_disclosure_specialists)
+            params[:case_foi].delete(:flag_for_disclosure_specialists)
             expect { post :create, params: params }
               .not_to change { Case::Base.count }
             expect(service).not_to have_received(:call)
           end
 
           it "returns an error message if parameter is not set" do
-            params[:case].delete(:flag_for_disclosure_specialists)
+            params[:case_foi].delete(:flag_for_disclosure_specialists)
             post :create, params: params
             expect(assigns(:case).errors).to have_key(:flag_for_disclosure_specialists)
             expect(response).to have_rendered(:new)
           end
 
           it "flags the case for clearance if parameter is true" do
-            params[:case][:flag_for_disclosure_specialists] = 'yes'
+            params[:case_foi][:flag_for_disclosure_specialists] = 'yes'
             post :create, params: params
             expect(service).to have_received(:call)
           end
 
           it "does not flag the case for clearance if parameter is false" do
-            params[:case][:flag_for_disclosure_specialists] = false
+            params[:case_foi][:flag_for_disclosure_specialists] = false
             post :create, params: params
             expect(service).not_to have_received(:call)
           end
@@ -1368,7 +1342,8 @@ RSpec.describe CasesController, type: :controller do
     let(:kase)                          { create :accepted_case }
     let(:edit_params) do
       ActionController::Parameters.new({
-        case:  {
+        correspondence_type: 'foi',
+        case_foi:  {
           name: 'Tony Blair',
           email: 'tb@blairco.pol',
           postal_address: '2, Vinery Way London W6 0LQ',
@@ -1395,7 +1370,6 @@ RSpec.describe CasesController, type: :controller do
        received_date_yyyy: '2017',
        subject: 'TEST case',
        message: 'Lorem ipsum dolor',
-       category_id: Category.foi.id
       }).permit(:name, :email, :postal_address, :requester_type, :received_date_dd, :received_date_mm, :received_date_yyyy, :subject, :message, :category_id)
     end
 

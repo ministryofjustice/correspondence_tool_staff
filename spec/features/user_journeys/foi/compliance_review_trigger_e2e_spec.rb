@@ -40,10 +40,10 @@ feature 'FOI compliance review case that requires clearance' do
   end
 
   scenario 'end-to-end journey', js: true do
-    kase = create_and_assign_case type: Case::FOI::ComplianceReview,
-                                  user: manager,
-                                  responding_team: responding_team,
-                                  flag_for_disclosure: true
+    kase = create_and_assign_foi_case type: Case::FOI::ComplianceReview,
+                                      user: manager,
+                                      responding_team: responding_team,
+                                      flag_for_disclosure: true
 
     take_case_on kase: kase,
                  user: disclosure_specialist,

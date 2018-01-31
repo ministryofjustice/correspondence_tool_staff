@@ -1,0 +1,9 @@
+= form_for kase, as: :case_foi, url: cases_path do |f|
+  = hidden_field_tag 'correspondence_type', @correspondence_type
+  = f.radio_button_fieldset :type, choices: @case_types, value_method: :demodulize
+  = render partial: 'cases/foi/new_form_common', locals: { f: f }
+  = render partial: 'cases/foi/new_form_details', locals: { f: f }
+
+  = f.radio_button_fieldset :flag_for_disclosure_specialists
+
+  = f.submit t('button.next_page_assign'), {class: 'button'}

@@ -57,7 +57,7 @@ class CasesController < ApplicationController
                .page(params[:page])
                .decorate
     @current_tab_name = 'all_cases'
-    @can_add_case = policy(Case::Base.new(category: Category.foi)).can_add_case?
+    @can_add_case = policy(Case::Base).can_add_case?
   end
 
   def closed_cases
@@ -85,7 +85,8 @@ class CasesController < ApplicationController
                .page(params[:page])
                .decorate
     @current_tab_name = 'my_cases'
-    @can_add_case = policy(Case::Base.new(category: Category.foi)).can_add_case?
+    @can_add_case = policy(Case::Base).can_add_case?
+
     render :index
   end
 
@@ -97,9 +98,9 @@ class CasesController < ApplicationController
                .page(params[:page])
                .decorate
 
-    # .by_deadline
     @current_tab_name = 'all_cases'
-    @can_add_case = policy(Case::Base.new(category: Category.foi)).can_add_case?
+    @can_add_case = policy(Case::Base).can_add_case?
+
     render :index
   end
 
@@ -109,27 +110,47 @@ class CasesController < ApplicationController
     redirect_to redirect_url
   end
 
-  def select_type
-    @case = Case::Base.new
-  end
-
   def new
-    if FeatureSet.sars.enabled?
-      @type = params[:case][:type]
+    @correspondence_type = if FeatureSet.sars.enabled?
+                             params[:correspondence_type]
+                           else
+                             'foi'
+                           end
+
+    if FeatureSet.sars.disabled? ||
+       @correspondence_type.in?(permitted_correspondence_types)
+
+      case_class = correspondence_types_map[@correspondence_type].first
+      @case = case_class.new
+      @case_types = correspondence_types_map[@correspondence_type].map(&:to_s)
+      @s3_direct_post = s3_uploader_for(@case, 'requests')
+      render :new
+
+    else
+
+      if @correspondence_type.present?
+        validation_result =
+          if !@correspondence_type.in?(correspondence_types_map.keys)
+            :unknown
+          else
+            :not_authorised
+          end
+        flash.now.alert =
+          helpers.t "cases.new.correspondence_type_errors.#{validation_result}",
+                    type: @correspondence_type
+      end
+      render :select_type
     end
-
-
-    authorize Case::Base.new(category: Category.foi), :can_add_case?
-
-    @case = Case::Base.new
-    @s3_direct_post = s3_uploader_for(@case, 'requests')
-    render :new
   end
 
   def create
-    authorize Case::Base.new(category: Category.foi), :can_add_case?
+    @correspondence_type = params.fetch(:correspondence_type)
 
-    service = CaseCreateService.new current_user, create_foi_params
+    case_params = create_params(@correspondence_type)
+    case_class = case_params.fetch(:type).safe_constantize
+    authorize case_class, :can_add_case?
+
+    service = CaseCreateService.new current_user, case_params
     service.call
     @case = service.case
     case service.result
@@ -139,6 +160,9 @@ class CasesController < ApplicationController
       flash[:creating_case] = true
       redirect_to new_case_assignment_path @case
     else # including :error
+      @case.type = @case.type.demodulize
+      permitted_correspondence_types
+      @case_types = correspondence_types_map[@correspondence_type].map(&:to_s)
       @s3_direct_post = s3_uploader_for @case, 'requests'
       render :new
     end
@@ -166,12 +190,12 @@ class CasesController < ApplicationController
     # do not populate if you do
     #
     @case = Case::Base.find(params[:id])
+    @correspondence_type = @case.type_abbreviation.downcase
     @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
     authorize @case
 
     render :edit
   end
-
 
   def confirm_destroy
     authorize @case
@@ -221,10 +245,12 @@ class CasesController < ApplicationController
   end
 
   def update
+    @correspondence_type = params[:correspondence_type]
     @case = Case::Base.find(params[:id])
     authorize @case
 
-    service = CaseUpdaterService.new(current_user, @case, create_foi_params)
+    case_params = edit_params(@correspondence_type)
+    service = CaseUpdaterService.new(current_user, @case, case_params)
     service.call
     if service.result != :error
       if service.result == :ok
@@ -451,8 +477,15 @@ class CasesController < ApplicationController
     )
   end
 
+  def create_params(correspondence_type)
+    case correspondence_type
+    when 'foi' then create_foi_params
+    when 'sar' then create_sar_params
+    end
+  end
+
   def create_foi_params
-    params.require(:case).permit(
+    params.require(:case_foi).permit(
       :requester_type,
       :name,
       :postal_address,
@@ -462,14 +495,47 @@ class CasesController < ApplicationController
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :delivery_method,
       :flag_for_disclosure_specialists,
-      :type,
       uploaded_request_files: [],
-    ).merge(category_id: Category.foi.id)
+    ).merge(type: "Case::FOI::#{params[:case_foi][:type]}")
   end
 
-  def edit_params
-    params.require(:case).permit(
-      :category_id
+  def create_sar_params
+    params.require(:case_sar).permit(
+      :delivery_method,
+      :email,
+      :flag_for_disclosure_specialists,
+      :message,
+      :name,
+      :postal_address,
+      :received_date_dd, :received_date_mm, :received_date_yyyy,
+      :requester_type,
+      :subject,
+      :subject_full_name,
+      :subject_type,
+      :third_party,
+      :reply_method,
+      uploaded_request_files: [],
+    ).merge(type: "Case::SAR")
+  end
+
+  def edit_params(correspondence_type)
+    case correspondence_type
+    when 'foi' then edit_foi_params
+    end
+  end
+
+  def edit_foi_params
+    params.require(:case_foi).permit(
+      :requester_type,
+      :name,
+      :postal_address,
+      :email,
+      :subject,
+      :message,
+      :received_date_dd, :received_date_mm, :received_date_yyyy,
+      :delivery_method,
+      :flag_for_disclosure_specialists,
+      uploaded_request_files: [],
     )
   end
 
@@ -526,20 +592,40 @@ class CasesController < ApplicationController
   def s3_uploader_for(kase, upload_type)
     S3Uploader.s3_direct_post_for_case(kase, upload_type)
   end
-end
 
-def set_state_selector
-
-  @state_selector = StateSelector.new(params)
-end
-
-def make_redirect_url_with_additional_params(new_params)
-  new_params[:controller] = params[:controller]
-  new_params[:action] = params[:orig_action]
-  params.keys.each do |key|
-    next if key.to_sym.in?( %i{ utf8 authenticity_token state_selector states action commit action orig_action page} )
-    new_params[key] = params[key]
+  def set_state_selector
+    @state_selector = StateSelector.new(params)
   end
-  url_for(new_params)
+
+  def make_redirect_url_with_additional_params(new_params)
+    new_params[:controller] = params[:controller]
+    new_params[:action] = params[:orig_action]
+    params.keys.each do |key|
+      next if key.to_sym.in?( %i{ utf8 authenticity_token state_selector states action commit action orig_action page} )
+      new_params[key] = params[key]
+    end
+    url_for(new_params)
+  end
+
+  # Defined here for now, but should really be configured somewhere more
+  # sensible.
+  def correspondence_types_map
+    @correspondence_types_map ||= {
+      foi: [Case::FOI::Standard,
+            Case::FOI::TimelinessReview,
+            Case::FOI::ComplianceReview],
+      sar: [Case::SAR],
+    }.with_indifferent_access
+  end
+
+  def permitted_correspondence_types
+    @permitted_correspondence_types ||= correspondence_types_map.select do |_correspondence_type, case_classes|
+      # Take the first type of case for this correspondence type and check if
+      # the user is permitted to add it. Too simple?
+      policy(case_classes.first).can_add_case?
+    end.map do |correspondence_type, _case_types|
+      correspondence_type
+    end
+  end
 end
 #rubocop:enable Metrics/ClassLength

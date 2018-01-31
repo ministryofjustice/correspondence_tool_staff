@@ -4,11 +4,11 @@
 #                           new_user_session GET    /users/sign_in(.:format)                                             devise/sessions#new
 #                               user_session POST   /users/sign_in(.:format)                                             devise/sessions#create
 #                       destroy_user_session DELETE /users/sign_out(.:format)                                            devise/sessions#destroy
-#                          new_user_password GET    /users/password/new(.:format)                                        devise/passwords#new
-#                         edit_user_password GET    /users/password/edit(.:format)                                       devise/passwords#edit
-#                              user_password PATCH  /users/password(.:format)                                            devise/passwords#update
-#                                            PUT    /users/password(.:format)                                            devise/passwords#update
-#                                            POST   /users/password(.:format)                                            devise/passwords#create
+#                          new_user_password GET    /users/password/new(.:format)                                        passwords#new
+#                         edit_user_password GET    /users/password/edit(.:format)                                       passwords#edit
+#                              user_password PATCH  /users/password(.:format)                                            passwords#update
+#                                            PUT    /users/password(.:format)                                            passwords#update
+#                                            POST   /users/password(.:format)                                            passwords#create
 #                               manager_root GET    /                                                                    redirect(301, /cases/open/in_time)
 #                             responder_root GET    /                                                                    redirect(301, /cases/open/in_time)
 #                              approver_root GET    /                                                                    redirect(301, /cases/open/in_time)
@@ -17,14 +17,16 @@
 #                         cases_manager_root GET    /cases(.:format)                                                     redirect(301, /cases/open/in_time)
 #                       cases_responder_root GET    /cases(.:format)                                                     redirect(301, /cases/open/in_time)
 #                        cases_approver_root GET    /cases(.:format)                                                     redirect(301, /cases/open/in_time)
+#                                            GET    /cases/new(.:format)                                                 cases#new
+#                                   new_case GET    /cases/new/:correspondence_type(.:format)                            cases#new {:correspondence_type=>""}
 #                                 close_case GET    /cases/:id/close(.:format)                                           cases#close
 #                               closed_cases GET    /cases/closed(.:format)                                              cases#closed_cases
 #                       confirm_destroy_case GET    /cases/:id/confirm_destroy(.:format)                                 cases#confirm_destroy
 #                             incoming_cases GET    /cases/incoming(.:format)                                            cases#incoming_cases
-#                              my_open_cases GET    /cases/my_open(.:format)                                             redirect(301, /cases/my_open/in_time)
-#                    my_open_cases_tab_cases GET    /cases/my_open/:tab(.:format)                                        cases#my_open_cases
-#                                 open_cases GET    /cases/open(.:format)                                                redirect(301, /cases/open/in_time)
-#                       open_cases_tab_cases GET    /cases/open/:tab(.:format)                                           cases#open_cases
+#                         root_my_open_cases GET    /cases/my_open(.:format)                                             redirect(301, /cases/my_open/in_time)
+#                              my_open_cases GET    /cases/my_open/:tab(.:format)                                        cases#my_open_cases
+#                            root_open_cases GET    /cases/open(.:format)                                                redirect(301, /cases/open/in_time)
+#                                 open_cases GET    /cases/open/:tab(.:format)                                           cases#open_cases
 #                       process_closure_case PATCH  /cases/:id/process_closure(.:format)                                 cases#process_closure
 #                               respond_case GET    /cases/:id/respond(.:format)                                         cases#respond
 #                       confirm_respond_case PATCH  /cases/:id/confirm_respond(.:format)                                 cases#confirm_respond
@@ -43,12 +45,15 @@
 #                        extend_for_pit_case GET    /cases/:id/extend_for_pit(.:format)                                  cases#extend_for_pit
 #                execute_extend_for_pit_case PATCH  /cases/:id/execute_extend_for_pit(.:format)                          cases#execute_extend_for_pit
 #             request_further_clearance_case PATCH  /cases/:id/request_further_clearance(.:format)                       cases#request_further_clearance
+#                         new_case_link_case GET    /cases/:id/new_case_link(.:format)                                   cases#new_case_link
+#                 execute_new_case_link_case POST   /cases/:id/execute_new_case_link(.:format)                           cases#execute_new_case_link
 #           accept_or_reject_case_assignment PATCH  /cases/:case_id/assignments/:id/accept_or_reject(.:format)           assignments#accept_or_reject
 #                     accept_case_assignment PATCH  /cases/:case_id/assignments/:id/accept(.:format)                     assignments#accept
 #                   unaccept_case_assignment PATCH  /cases/:case_id/assignments/:id/unaccept(.:format)                   assignments#unaccept
 #               take_case_on_case_assignment PATCH  /cases/:case_id/assignments/:id/take_case_on(.:format)               assignments#take_case_on
 #              reassign_user_case_assignment GET    /cases/:case_id/assignments/:id/reassign_user(.:format)              assignments#reassign_user
 #         assign_to_new_team_case_assignment GET    /cases/:case_id/assignments/:id/assign_to_new_team(.:format)         assignments#assign_to_new_team
+#               select_team_case_assignments GET    /cases/:case_id/assignments/select_team(.:format)                    assignments#select_team
 #      execute_reassign_user_case_assignment PATCH  /cases/:case_id/assignments/:id/execute_reassign_user(.:format)      assignments#execute_reassign_user
 # execute_assign_to_new_team_case_assignment PATCH  /cases/:case_id/assignments/:id/execute_assign_to_new_team(.:format) assignments#execute_assign_to_new_team
 #                           case_assignments GET    /cases/:case_id/assignments(.:format)                                assignments#index
@@ -74,7 +79,6 @@
 #                               search_cases GET    /cases/search(.:format)                                              cases#search
 #                                      cases GET    /cases(.:format)                                                     cases#index
 #                                            POST   /cases(.:format)                                                     cases#create
-#                                   new_case GET    /cases/new(.:format)                                                 cases#new
 #                                  edit_case GET    /cases/:id/edit(.:format)                                            cases#edit
 #                                       case GET    /cases/:id(.:format)                                                 cases#show
 #                                            PATCH  /cases/:id(.:format)                                                 cases#update
@@ -120,7 +124,10 @@
 #                                            PUT    /users/:id(.:format)                                                 users#update
 #                                            DELETE /users/:id(.:format)                                                 users#destroy
 #                                      stats GET    /stats(.:format)                                                     stats#index
-#                             stats_download GET    /stats/download(.:format)                                            stats#download
+#                             stats_download GET    /stats/download/:id(.:format)                                        stats#download
+#               stats_download_custom_report GET    /stats/download_custom_report/:id(.:format)                          stats#download_custom_report
+#                               stats_custom GET    /stats/custom(.:format)                                              stats#custom
+#                 stats_create_custom_report POST   /stats/create_custom_report(.:format)                                stats#create_custom_report
 #                                     search GET    /search(.:format)                                                    cases#search
 #                                       ping GET    /ping(.:format)                                                      heartbeat#ping
 #                                healthcheck GET    /healthcheck(.:format)                                               heartbeat#healthcheck
@@ -163,7 +170,7 @@ Rails.application.routes.draw do
 
   post '/feedback' => 'feedback#create'
 
-  resources :cases do
+  resources :cases, except: :new do
     authenticated :user, -> (u) { u.manager? }  do
       root to: redirect(gnav.default_urls.manager), as: :manager_root
     end
@@ -176,6 +183,17 @@ Rails.application.routes.draw do
       root to: redirect(gnav.default_urls.approver), as: :approver_root
     end
 
+    # Oh case, we barely new you.
+    #
+    # The following two routes are necessary to proved the paths:
+    # /cases/new                      - select the type of correspondence for the new case
+    # /cases/new/foi, /cases/new/sar  - create a new case for the given correspondence type
+    get '', action: :new, on: :new
+    get ':correspondence_type',
+        action: :new,
+        on: :new,
+        as: '',
+        defaults: { correspondence_type: '' }
     get 'close', on: :member
     get 'closed' => 'cases#closed_cases', on: :collection
     get 'confirm_destroy' => 'cases#confirm_destroy', on: :member
@@ -205,7 +223,6 @@ Rails.application.routes.draw do
     patch :request_further_clearance, on: :member
     get :new_case_link, on: :member
     post :execute_new_case_link, on: :member
-    get :select_type, on: :new
 
     resources :assignments, except: :create  do
       patch 'accept_or_reject', on: :member

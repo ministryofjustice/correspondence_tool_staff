@@ -1,6 +1,6 @@
 ###################################
 #
-# Non-Trigger
+# Standard FOI Non-Trigger End-to-end User Journey
 #
 ###################################
 
@@ -32,7 +32,7 @@ feature 'FOI case that does not require clearance' do
   end
 
   scenario 'end-to-end journey', js: true do
-    kase = create_and_assign_case type: Case::FOI::Standard,
+    kase = create_and_assign_foi_case type: Case::FOI::Standard,
                                   user: manager,
                                   responding_team: responding_team
 

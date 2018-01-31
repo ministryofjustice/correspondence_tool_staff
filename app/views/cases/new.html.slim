@@ -5,15 +5,8 @@
   = t('.heading')
 
 - content_for :sub_heading
-  = t('.sub_heading')
+  = t('.sub_heading', case_type: @case.type_abbreviation)
 
 = render partial: 'layouts/header'
 
-= form_for @case, as: :case, url: cases_path do |f|
-  = render partial: 'new_form_case_type', locals: { f: f }
-  = render partial: 'new_form_common', locals: { f: f }
-  = render partial: 'new_form_details', locals: { f: f }
-
-  = f.radio_button_fieldset :flag_for_disclosure_specialists
-
-  = f.submit t('button.next_page_assign'), {class: 'button'}
+= render partial: "cases/#{@case.type_abbreviation.downcase}/new", locals: { kase: @case }

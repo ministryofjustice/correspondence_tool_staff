@@ -8,7 +8,6 @@
 #  message              :text
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
-#  category_id          :integer
 #  received_date        :date
 #  postal_address       :string
 #  subject              :string
@@ -33,14 +32,9 @@ require 'rails_helper'
 RSpec.describe Case::Base, type: :model do
 
   let(:general_enquiry) do
-    build :case,
-      received_date: Date.parse('16/11/2016'),
-      category: create(:category, :gq)
+    build :case, received_date: Date.parse('16/11/2016')
   end
 
-  let(:no_postal)          { build :case, postal_address: nil             }
-  let(:no_postal_or_email) { build :case, postal_address: nil, email: nil }
-  let(:no_email)           { build :case, email: nil                      }
   let(:responding_team)    { create :responding_team                      }
   let(:responder)          { responding_team.responders.first             }
   let(:coworker)           { create :responder,
@@ -65,7 +59,6 @@ RSpec.describe Case::Base, type: :model do
 
   let(:kase) { create :case }
 
-
   describe 'has a factory' do
     it 'that produces a valid object by default' do
       Timecop.freeze non_trigger_foi.received_date + 1.day do
@@ -75,11 +68,8 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe 'mandatory attributes' do
-    it { should validate_presence_of(:name)            }
     it { should validate_presence_of(:received_date)   }
     it { should validate_presence_of(:subject)         }
-    it { should validate_presence_of(:requester_type)  }
-    it { should validate_presence_of(:delivery_method) }
     it { should validate_presence_of(:type)            }
   end
 
@@ -376,49 +366,6 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  describe 'enums' do
-    it do
-      should have_enum(:requester_type).
-        with_values(
-          [
-            'academic_business_charity',
-            'journalist',
-            'member_of_the_public',
-            'offender',
-            'solicitor',
-            'staff_judiciary',
-            'what_do_they_know'
-          ]
-        )
-
-      should have_enum(:delivery_method).
-          with_values(
-              [
-                  'sent_by_email',
-                  'sent_by_post'
-              ]
-          )
-    end
-  end
-
-  context 'without a postal or email address' do
-    it 'is invalid' do
-      expect(no_postal_or_email).not_to be_valid
-    end
-  end
-
-  context 'without a postal_address' do
-    it 'is valid with an email address' do
-      expect(no_postal).to be_valid
-    end
-  end
-
-  context 'without an email address' do
-    it 'is valid with a postal address' do
-      expect(no_email).to be_valid
-    end
-  end
-
   describe '#number' do
     let(:case_one)   { create(:case, received_date: Date.parse('11/01/2017')) }
     let(:case_two)   { create(:case, received_date: Date.parse('11/01/2017')) }
@@ -476,6 +423,11 @@ RSpec.describe Case::Base, type: :model do
 
   describe '#subject' do
     it { should validate_length_of(:subject).is_at_most(100) }
+  end
+
+  describe '#type' do
+    it { should validate_exclusion_of(:type).in_array(['Case'])
+                    .with_message("Case type can't be blank")}
   end
 
   describe '#received_date' do
@@ -600,14 +552,6 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe 'associations' do
-    describe '#category' do
-      it 'is mandatory' do
-        should validate_presence_of(:category)
-      end
-
-      it { should belong_to(:category) }
-    end
-
     describe '#assignments' do
       it { should have_many(:assignments) }
 
@@ -1164,36 +1108,6 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  describe 'papertrail versioning', versioning: true do
-
-    before(:each) do
-      @kase = create :case, name: 'aaa', email: 'aa@moj.com', received_date: Date.today, subject: 'subject A', postal_address: '10 High Street', requester_type: 'journalist'
-      @kase.update!(name: 'bbb', email: 'bb@moj.com', received_date: 1.day.ago, subject: 'subject B', postal_address: '20 Low Street', requester_type: 'offender')
-    end
-
-    it 'saves all values in the versions object hash' do
-      version_hash = YAML.load(@kase.versions.last.object)
-      expect(version_hash['email']).to eq 'aa@moj.com'
-      expect(version_hash['received_date']).to eq Date.today
-      expect(version_hash['subject']).to eq 'subject A'
-      expect(version_hash['postal_address']).to eq '10 High Street'
-      expect(version_hash['requester_type']).to eq 'journalist'
-    end
-
-    it 'can reconsititue a record from a version (except for received_date)' do
-      original_kase = @kase.versions.last.reify
-      expect(original_kase.email).to eq 'aa@moj.com'
-      expect(original_kase.subject).to eq 'subject A'
-      expect(original_kase.postal_address).to eq '10 High Street'
-      expect(original_kase.requester_type).to eq 'journalist'
-    end
-
-    it 'does not reconstitute the received date properly because of an interaction with govuk_date_fields' do
-      original_kase = @kase.versions.last.reify
-      expect(original_kase.received_date).to eq 1.day.ago.to_date
-    end
-  end
-
   describe '#add_linked_case' do
     let(:kase_1) { create :case }
     let(:kase_2) { create :case }
@@ -1407,6 +1321,25 @@ RSpec.describe Case::Base, type: :model do
   end
   #rubocop:enable Metrics/ParameterLists
 
+  describe '#type_abbreviation' do
+    it 'returns the class-defined type abbreviation' do
+      expect(kase.type_abbreviation).to eq 'FOI'
+    end
+  end
+
+  describe '#category' do
+    it 'retrieves a category object' do
+      expect(kase.category).to eq Category.foi
+    end
+
+    it 'only finds the category once' do
+      foi = Category.foi
+      allow(Category).to receive(:find_by!).and_return(foi)
+      kase.category
+      kase.category
+      expect(Category).to have_received(:find_by!).once
+    end
+  end
 
   # See note in case.rb about why this is commented out.
   #
@@ -1423,4 +1356,40 @@ RSpec.describe Case::Base, type: :model do
   #     expect(case_being_drafted_trigger.awaiting_approver?).to be_falsey
   #   end
   # end
+
+  describe 'is_foi?' do
+    it 'returns true if the case if a standard FOI' do
+      expect(create(:foi_case).is_foi?).to eq true
+    end
+
+    it 'returns true if the case if an FOI Compliance Review' do
+      expect(create(:compliance_review).is_foi?).to eq true
+    end
+
+    it 'returns true if the case if an FOI Timeliness Review' do
+      expect(create(:timeliness_review).is_foi?).to eq true
+    end
+
+    it 'returns false if the case s a SAR' do
+      expect(create(:sar_case).is_foi?).to eq false
+    end
+  end
+
+  describe 'is_sar?' do
+    it 'returns false if the case if a standard FOI' do
+      expect(create(:foi_case).is_sar?).to eq false
+    end
+
+    it 'returns false if the case if an FOI Compliance Review' do
+      expect(create(:compliance_review).is_sar?).to eq false
+    end
+
+    it 'returns false if the case if an FOI Timeliness Review' do
+      expect(create(:timeliness_review).is_sar?).to eq false
+    end
+
+    it 'returns true if the case if a SAR' do
+      expect(create(:sar_case).is_sar?).to eq true
+    end
+  end
 end

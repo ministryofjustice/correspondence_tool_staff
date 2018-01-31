@@ -17,6 +17,19 @@ module PageObjects
         end
       end
 
+      def method_missing(method, *args)
+        if method.match %r{^choose_(.+)}
+          choice = args.first
+          make_radio_button_choice("case_sar_#{$1}_#{choice}")
+        else
+          super
+        end
+      end
+
+      def respond_to_missing?(method, _include_private = false)
+        method.match(%r{^choose_.+}) ? true : super
+      end
+
       # Upload a file to Dropzone.js
       def drop_in_dropzone(file_path:, input_name:, container_selector:)
           # Generate a uploaded request file input selector

@@ -1,7 +1,7 @@
 FactoryGirl.define do
 
   factory :sar_case,
-          class: Case::SAR::NonOffender do
+          class: Case::SAR do
     transient do
       creation_time             { 4.business_days.ago }
       identifier                "new sar case"
@@ -9,11 +9,9 @@ FactoryGirl.define do
     end
 
     current_state                 'unassigned'
-    requester_type                'member_of_the_public'
     sequence(:name)               { |n| "#{identifier} name #{n}" }
     email                         { Faker::Internet.email(identifier) }
-    category                      { find_or_create :category, :sar }
-    delivery_method               'sent_by_email'
+    reply_method                  'send_by_email'
     sequence(:subject)            { |n| "#{identifier} subject #{n}" }
     sequence(:message)            { |n| "#{identifier} message #{n}" }
     received_date                 { Time.zone.today.to_s }
@@ -33,7 +31,10 @@ FactoryGirl.define do
     end
   end
 
-  factory :awaiting_responder_sar, parent: :sar_case, aliases: [:assigned_sar], class: Case::SAR::NonOffender do
+  factory :awaiting_responder_sar,
+          parent: :sar_case,
+          aliases: [:assigned_sar],
+          class: Case::SAR do
     transient do
       identifier "assigned sar"
       manager         { managing_team.managers.first }

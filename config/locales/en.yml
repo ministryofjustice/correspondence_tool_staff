@@ -156,7 +156,6 @@ en:
     assign: Assign to this unit
     close_case: Close case
     next_page_assign: Next - Assign case
-    next_page_new: Continue
     confirm: Confirm
     feedback: Send feedback
     submit: Submit
@@ -178,7 +177,12 @@ en:
         appeal_outcome_name: What was the appeal outcome?
         flag_for_disclosure_specialists: Clearance required by DACU Disclosure
         type: Case type
-
+      case_sar:
+        reply_method_html: |
+          <div class="heading-medium">Where the information should be sent</div>
+        flag_for_disclosure_specialists: "Clearance required by disclosure?"
+        subject_type: "Type of data subject"
+        third_party: "Is the information being requested on someone's behalf?"
       state_selector:
         selected_states: Filter by status
 
@@ -219,8 +223,9 @@ en:
         pending_private_office_clearance: Pending clearance - Private office
         responded: Ready to close
 
-
       case:
+        linked_case_number: Case number
+      case_foi:
         requester_type:
           academic_business_charity: Academic/Business/Charity
           staff_judiciary: Staff/Judiciary
@@ -235,11 +240,26 @@ en:
         request_amends_comment: Add amends/comments
         upload_comment: Add message (optional)
         type:
+          case/foi/timeliness_review: FOI - Internal review for timeliness
+          case/foi/compliance_review: FOI - Internal review for compliance
+          case/foi/standard: FOI
+          Case::FOI::Standard: FOI
           Case::FOI::TimelinessReview: FOI - Internal review for timeliness
           Case::FOI::ComplianceReview: FOI - Internal review for compliance
-          Case::FOI::Standard: FOI
-          Case::SAR::NonOffender: Non-Offender SAR
-        linked_case_number: Case number
+      case_sar:
+        email: "Recipient email address"
+        message: "Full case"
+        name: "Who is the requestor?"
+        postal_address: "Recipient postal address"
+        received_date: "Received at MOJ"
+        subject: "Case summary"
+        subject_full_name: "Full name of data subject"
+        reply_method:
+          send_by_email: Email
+          send_by_post: Post
+        third_party:
+          true: Yes
+          false: No
       feedback:
         comment: Help make this service better
 
@@ -331,6 +351,11 @@ en:
       clear_response: Clear response
       request_amends: Request amends
       upload_approve: 'Upload response and clear'
+    correspondence:
+      foi:
+        name: FOI - Freedom of Information Request
+      sar:
+        name: SAR - Subject Access Request
     new_case_button: Create case
     phase_banner: |
       This is a new service.
@@ -438,11 +463,14 @@ en:
       details: Details
     new:
       heading: Add case details
-      sub_heading: Create case
+      sub_heading: Create %{case_type} case
       received_date: Date received at MOJ
       received_date_copy: For example. 31 01 2017
+      correspondence_type_errors:
+        unknown: "Unknown correspondence type \"%{type}\""
+        not_authorised: "You are not authorised to create \"%{type}\" correspondences"
     select_type:
-      heading: Choose case type
+      heading: Choose correspondence type
       sub_heading: Create case
     new_case_link:
       heading: 'Link case'

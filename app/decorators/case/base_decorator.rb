@@ -140,4 +140,7 @@ class Case::BaseDecorator < Draper::Decorator
     object.internal_deadline.strftime('%Y-%m-%d')
   end
 
+  def pretty_type
+    object.class.type_abbreviation
+  end
 end
