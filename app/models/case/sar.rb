@@ -14,6 +14,8 @@ class Case::SAR < Case::Base
                  third_party: :boolean,
                  reply_method: :string
 
+  attr_accessor :missing_info 
+
   enum subject_type: {
          offender:             'offender',
          staff:                'staff',

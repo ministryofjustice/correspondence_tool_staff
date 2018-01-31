@@ -258,9 +258,11 @@ class CasesController < ApplicationController
 
   def process_closure
     authorize @case, :can_close_case?
+    puts "woof woof I'm a dog #{params}"
     @case.prepare_for_close
-    params = process_closure_params(@case.type_abbreviation)
-    if @case.update(params)
+    close_params = process_closure_params(@case.type_abbreviation)
+    puts "meow meow I'm a cat #{close_params}"
+    if @case.update(close_params)
       @case.close(current_user)
       set_permitted_events
       flash[:notice] = t('notices.case_closed')
@@ -495,13 +497,12 @@ class CasesController < ApplicationController
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
-      :refusal_reason_name #missing_info_to_tmm
-    )
+    ).merge(refusal_reason_name: missing_info_to_tmm)
   end
 
   def missing_info_to_tmm
     if params[:case][:missing_info] == "yes"
-      CaseClosure::RefusalReason.tmm
+      CaseClosure::RefusalReason.tmm.name
     else
       nil
     end
