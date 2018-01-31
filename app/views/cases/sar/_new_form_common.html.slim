@@ -9,9 +9,9 @@ section
 
   #third-party
     = f.radio_button_fieldset :third_party do |fieldset|
-      - fieldset.radio_input('yes')
+      - fieldset.radio_input(true)
         = f.text_field :name
-      - fieldset.radio_input('no')
+      - fieldset.radio_input(false)
 
 section
   header
@@ -30,7 +30,7 @@ section
       div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
         = render partial: 'shared/dropzone_form',
                 locals: { s3_direct_post: @s3_direct_post,
-                        file_input_name: 'case[uploaded_request_files][]' }
+                        file_input_name: 'case_sar[uploaded_request_files][]' }
 
   = f.hidden_field :flag_for_disclosure_specialists, value: 'no'
 

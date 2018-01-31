@@ -23,7 +23,7 @@ en:
   activerecord:
     errors:
       models:
-        case:
+        case_foi:
           attributes:
             email:
               blank: and address can't both be blank

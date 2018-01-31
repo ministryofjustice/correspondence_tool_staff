@@ -42,8 +42,6 @@ class Case::Base < ApplicationRecord
                  subject_full_name: :string,
                  subject_type: :string,
                  third_party: :boolean,
-                 requester_email: :string,
-                 requester_postal_address: :string,
                  reply_method: :string
 
   attr_accessor :flag_for_disclosure_specialists,
