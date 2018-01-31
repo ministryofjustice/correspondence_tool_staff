@@ -195,4 +195,72 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '#can_link_case?' do
+
+    let(:bmt)                   { create :team_dacu }
+    let(:other_managing_team)   { create :managing_team }
+    let(:approving_team)        { create :approving_team }
+    let(:responding_team)       { create :responding_team }
+
+    let(:dacu_team_member)      { bmt.users.first }
+    let(:other_manager)         { other_managing_team.users.first }
+    let(:approver)              { approving_team.users.first }
+    let(:responder)             { responding_team.users.first }
+
+    let(:non_sar_case)          { create :case, managing_team: bmt  }
+    let(:sar_case)              { create :sar_case, managing_team: bmt }
+
+    context 'non-sar case' do
+      context 'user in managing team' do
+        it 'returns true' do
+          expect(dacu_team_member.can_link_case?(non_sar_case)).to be true
+        end
+      end
+
+      context 'member of a managing team not handling this case' do
+        it 'returns true' do
+          expect(other_manager.can_link_case?(non_sar_case)).to be true
+        end
+      end
+
+      context 'apprοver' do
+        it 'returns true' do
+          expect(approver.can_link_case?(non_sar_case)).to be true
+        end
+      end
+
+      context 'responder' do
+        it 'returns true' do
+          expect(responder.can_link_case?(non_sar_case)).to be true
+        end
+      end
+    end
+
+    context 'sar case' do
+      context 'member of managing team' do
+        it 'returns true' do
+          expect(dacu_team_member.can_link_case?(sar_case)).to be true
+        end
+      end
+
+      context 'member of a managing team not handling this case' do
+        it 'returns false' do
+          expect(other_manager.can_link_case?(sar_case)).to be false
+        end
+      end
+
+      context 'approver' do
+        it 'returns false' do
+          expect(approver.can_link_case?(sar_case)).to be false
+        end
+      end
+
+      context 'responder' do
+        it 'returns false' do
+          expect(responder.can_link_case?(sar_case)).to be false
+        end
+      end
+    end
+  end
 end

@@ -37,24 +37,42 @@ class CaseLinkingService
   private
 
   def validate_params
+    validate_case_number_present
+    validate_linked_case_not_this_case
+    validate_linked_case_exists
+    validate_sar_case_linking
+  end
+
+  def validate_sar_case_linking
+    if @case.is_a?(Case::SAR)
+      unless @link_case.is_a?(Case::SAR)
+        @case.errors.add(:linked_case_number, "can't link a SAR case to a non-SAR case")
+        @result = :validation_error
+      end
+    else
+      if @link_case.is_a?(Case::SAR)
+        @case.errors.add(:linked_case_number, "can't link a non-SAR case to a SAR case")
+        @result = :validation_error
+      end
+    end
+    @result = :ok if @case.errors.empty?
+  end
+
+  def validate_case_number_present
     unless @link_case_number.present?
       @case.errors.add(:linked_case_number, "can't be blank")
       @result = :validation_error
     end
+  end
 
+  def validate_linked_case_not_this_case
     if @link_case_number == @case.number
       @case.errors.add(:linked_case_number, "can't link to the same case")
       @result = :validation_error
     end
-
-    unless link_case_exists?
-      @result = :validation_error
-    end
-
-    @result = :ok if @case.errors.empty?
   end
 
-  def link_case_exists?
+  def validate_linked_case_exists
     if @case.errors.empty?
       if Case::Base.where(number: @link_case_number).exists?
         @link_case = Case::Base.where(number: @link_case_number).first
@@ -64,6 +82,7 @@ class CaseLinkingService
           :linked_case_number,
           "does not exist"
         )
+        @result = :validation_error
         false
       end
     end
