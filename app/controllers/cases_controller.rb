@@ -259,7 +259,7 @@ class CasesController < ApplicationController
   def process_closure
     authorize @case, :can_close_case?
     @case.prepare_for_close
-    params = process_closure_params('sar')
+    params = process_closure_params(@case.type_abbreviation)
     if @case.update(params)
       @case.close(current_user)
       set_permitted_events
@@ -484,8 +484,8 @@ class CasesController < ApplicationController
 
   def process_closure_params(correspondence_type)
     case correspondence_type
-    when 'foi' then process_foi_closure_params
-    when 'sar' then process_sar_closure_params
+    when 'FOI' then process_foi_closure_params
+    when 'SAR' then process_sar_closure_params
     else raise 'Unknown case type'
     end
   end
@@ -495,8 +495,16 @@ class CasesController < ApplicationController
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
-      :refusal_reason_name
+      :refusal_reason_name #missing_info_to_tmm
     )
+  end
+
+  def missing_info_to_tmm
+    if params[:case][:missing_info] == "yes"
+      CaseClosure::RefusalReason.tmm
+    else
+      nil
+    end
   end
 
   def process_foi_closure_params
