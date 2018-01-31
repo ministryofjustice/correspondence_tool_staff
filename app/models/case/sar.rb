@@ -17,18 +17,23 @@ class Case::SAR < Case::Base
 
   has_paper_trail only: [
                     :name,
+                    :email,
+                    :postal_address,
                     :properties,
                     :received_date,
-                    :requester_email,
-                    :requester_postal_address,
-                    :subject
+                    :subject,
                   ]
 
   validates_presence_of :subject_full_name
   validates :third_party, inclusion: {in: [ true, false ],
-                                      message: "can't be blank" }
+                                      message: "Third party info can't be blank" }
+  validates_presence_of :name, if: -> { third_party }
   validates_presence_of :reply_method
   validates_presence_of :subject_type
+  validates_presence_of :email,          if: :send_by_email?
+  validates_presence_of :postal_address, if: :send_by_post?
+  validates_presence_of :message, unless: -> { uploaded_request_files.present? }
+  validates_presence_of :uploaded_request_files, unless: -> { message.present? }
 
   before_save :use_subject_as_requester,
               if: -> { name.blank? }
