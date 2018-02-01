@@ -181,7 +181,7 @@ class AssignmentsController < ApplicationController
       @business_units = BusinessGroup.find(params[:business_group_id])
                           .business_units.responding.order(:name)
     elsif params[:show_all].present? && params[:show_all]
-      @business_units = BusinessUnit.responding.order(:name)
+      @business_units = BusinessUnit.responding_for_category(@case.category).order(:name)
     end
   end
 

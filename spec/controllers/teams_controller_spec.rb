@@ -106,13 +106,14 @@ RSpec.describe TeamsController, type: :controller do
               'email' => 'frogs@a.com',
               'team_lead' => 'Stephen Richards',
               'parent_id' => directorate.id,
-              'role' => 'responder'
+              'role' => 'responder',
+              'category_ids' => [ Category.sar.id.to_s ]
             },
             'team_type' => 'bu',
             'commit' => 'Submit'}
         }
 
-        it 'creates a user with the given params' do
+        it 'creates a business unit with the given params' do
           post :create, params: params
 
           bu = BusinessUnit.last
@@ -121,6 +122,7 @@ RSpec.describe TeamsController, type: :controller do
           expect(bu.team_lead).to eq 'Stephen Richards'
           expect(bu.parent).to eq directorate
         end
+
         it 'records the id of the user creating' do
           post :create, params: params
           whodunnit = BusinessUnit.last.versions.last.whodunnit.to_i
@@ -279,7 +281,7 @@ RSpec.describe TeamsController, type: :controller do
         end
       end
 
-      context 'team that the repsonder is not a member of' do
+      context 'team that the responder is not a member of' do
         let(:params) do
           {
             'id' => business_unit.id,

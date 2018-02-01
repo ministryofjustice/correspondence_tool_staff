@@ -23,9 +23,10 @@ class Case::FOI::StandardStateMachine
     transition.record_state_change(kase)
   end
 
+
   # The order here is important - it governs the order of the checkboxes appear on the filter by state form
   state :awaiting_responder
-  state :unassigned, initial: true
+  state :unassigned, initial: true if initial_state.nil?
   state :drafting
   state :pending_dacu_clearance
   state :pending_press_office_clearance
@@ -33,7 +34,6 @@ class Case::FOI::StandardStateMachine
   state :awaiting_dispatch
   state :responded
   state :closed
-
 
   event :assign_responder do
     authorize :can_assign_case?

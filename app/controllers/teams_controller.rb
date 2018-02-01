@@ -146,6 +146,7 @@ class TeamsController < ApplicationController
         :email,
         :team_lead,
         :role,
+        category_ids: []
     )
   end
 
@@ -155,7 +156,8 @@ class TeamsController < ApplicationController
         :email,
         :team_lead,
         :parent_id,
-        :role
+        :role,
+        category_ids: []
     )
   end
 

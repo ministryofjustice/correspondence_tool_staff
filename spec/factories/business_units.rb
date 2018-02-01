@@ -1,22 +1,23 @@
 FactoryGirl.define do
+
+
   factory :business_unit do
     transient do
-      lead do
-        create :deputy_director
-      end
+      lead            { create :deputy_director }
     end
 
-    sequence(:name) { |n| "Business Unit #{n}" }
-    email { name.downcase.gsub(/\W/, '_') + '@localhost' }
-    role 'responder'
-
-    directorate { find_or_create :directorate }
-    properties { [find_or_create(:team_property, :area)] }
+    sequence(:name)     { |n| "Business Unit #{n}" }
+    email               { name.downcase.gsub(/\W/, '_') + '@localhost' }
+    role                'responder'
+    category_ids        { [ Category.foi.id, Category.sar.id ] }
+    directorate         { find_or_create :directorate }
+    properties          { [find_or_create(:team_property, :area)] }
 
     after :create do |bu, evaluator|
       bu.properties << evaluator.lead
     end
   end
+
 
   factory :managing_team, parent: :business_unit do
     transient do
@@ -37,11 +38,15 @@ FactoryGirl.define do
   end
 
   factory :responding_team, parent: :business_unit do
+    transient do
+      categories  { [:foi, :sar] }
+    end
     sequence(:name) { |n| "Responding Team #{n}" }
     responders { [create(:user)] }
   end
 
   factory :approving_team, parent: :business_unit do
+
     sequence(:name) { |n| "Approving Team #{n}" }
     role 'approver'
     approvers { [create(:user)] }
@@ -84,4 +89,7 @@ FactoryGirl.define do
   trait :deactivated do
     deleted_at { Time.now }
   end
+
+
+
 end

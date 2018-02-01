@@ -44,7 +44,7 @@ RSpec.describe AssignmentsController, type: :controller do
             .to match_array [responding_team_1]
       end
 
-      it 'is a list of all business units' do
+      it 'is a list of all business units which are responders for the case type in question' do
         params[:show_all] = true
         get :new, params: params, flash:{"creating_case"=> true}
         expect( assigns(:business_units))
