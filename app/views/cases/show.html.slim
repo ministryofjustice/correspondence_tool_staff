@@ -20,7 +20,7 @@
 
 div id="case-#{@case.id}"
 
-  - if (@permitted_events - [:edit_case, :destroy_case]).any?
+  - if (@filtered_permitted_events - [:edit_case, :destroy_case]).any?
     section.case-info.has-actions
       .button-holder
         - if policy(@case).execute_response_approval?
@@ -47,7 +47,7 @@ div id="case-#{@case.id}"
     = render partial: 'cases/case_status', locals: {case_details: @case}
 
   section.case-info
-    = render partial: 'cases/linked_cases', locals: { case_details: @case } if current_user.can_link_case?(@case)
+    = render partial: 'cases/linked_cases', locals: { case_details: @case, permitted_events: @permitted_events }
 
   section.case-info
     = render partial: 'cases/case_request', locals: {case_details: @case}

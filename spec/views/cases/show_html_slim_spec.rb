@@ -48,6 +48,7 @@ describe 'cases/show.html.slim', type: :view do
 
   before do
     assign(:permitted_events, [])
+    assign(:filtered_permitted_events, [])
     assign(:case_transitions, [])
   end
 

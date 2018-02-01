@@ -148,7 +148,6 @@ case_types:
                   transition_to: drafting
                 add_message_to_case:
                   if: Predicates#responder_is_member_of_assigned_team?
-                link_a_case:
                 reject_responder_assignment:
                   if: Predicates#responder_is_member_of_assigned_team?
                   transition_to: unassigned
@@ -159,7 +158,6 @@ case_types:
                 respond:
                   if: Predicates#responder_is_member_of_assigned_team?
                   transition_to: responded
-                link_a_case:
                 reassign_user:
                   if: Predicates#responder_is_member_of_assigned_team?
 
@@ -168,7 +166,6 @@ case_types:
                   if: Predicates#responder_is_member_of_assigned_team?
                 add_responses:
                   if: Predicates#responder_is_member_of_assigned_team?
-                link_a_case:
                 remove_last_response:
                   if: Predicates#responder_is_member_of_assigned_team?
                 remove_response:
@@ -178,8 +175,8 @@ case_types:
                   transition_to: responded
 
               responded:
-                link_a_case:
-
+                add_message_to_case:
+                  if: Predicates#responder_is_member_of_assigned_team?
           ########################### SAR :: STANDARD WORKFLOW :: APPROVER ########################
           approver:
             states:
