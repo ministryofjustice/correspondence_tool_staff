@@ -118,9 +118,8 @@ FactoryGirl.define do
 
   factory :closed_sar, parent: :responded_sar do
 
-    info_held_status            { find_or_create :info_status, :held }
-    outcome                     { find_or_create :outcome, :granted }
-    message                     'info held, granted'
+    refusal_reason              { find_or_create :refusal_reason, :tmm }
+    message                     'tmm'
 
     transient do
       identifier "closed sar"
