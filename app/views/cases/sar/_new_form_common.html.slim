@@ -8,10 +8,10 @@ section
                             choices: Case::SAR::subject_types.keys
 
   #third-party
-    = f.radio_button_fieldset :third_party do |fieldset|
-      - fieldset.radio_input(true)
+    = f.radio_button_fieldset(:third_party) do |fieldset|
+      - fieldset.radio_input(true, text_method: :humanize)
         = f.text_field :name
-      - fieldset.radio_input(false)
+      - fieldset.radio_input(false, text_method: :humanize)
 
 section
   header
@@ -34,7 +34,8 @@ section
 
   = f.hidden_field :flag_for_disclosure_specialists, value: 'no'
 
-  = f.radio_button_fieldset :reply_method, choices: [:send_by_email, :send_by_post] do |fieldset|
+  h2.heading-medium Where the information should be sent
+  = f.radio_button_fieldset :reply_method, choices: [:send_by_email, :send_by_post], legend_options: { class: 'visually-hidden' } do |fieldset|
     - fieldset.radio_input('send_by_email',
                            panel_id: 'reply_method_send_by_email_panel')
     - fieldset.radio_input('send_by_post',

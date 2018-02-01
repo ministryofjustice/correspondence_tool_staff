@@ -5,6 +5,15 @@ class Case::SAR < Case::Base
     end
   end
 
+  jsonb_accessor :properties,
+                 escalation_deadline: :date,
+                 internal_deadline: :date,
+                 external_deadline: :date,
+                 subject_full_name: :string,
+                 subject_type: :string,
+                 third_party: :boolean,
+                 reply_method: :string
+
   enum subject_type: {
          offender:             'offender',
          staff:                'staff',
@@ -26,7 +35,8 @@ class Case::SAR < Case::Base
 
   validates_presence_of :subject_full_name
   validates :third_party, inclusion: {in: [ true, false ],
-                                      message: "Third party info can't be blank" }
+                                       message: "can't be blank" }
+
   validates_presence_of :name, if: -> { third_party }
   validates_presence_of :reply_method
   validates_presence_of :subject_type

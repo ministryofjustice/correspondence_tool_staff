@@ -20,6 +20,7 @@ gem 'govuk_frontend_toolkit', '>= 7.2.0'
 gem 'govuk_elements_rails',   '>= 3.1.2'
 gem 'govuk_elements_form_builder', '>= 1.2.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
+gem 'humanize_boolean'
 gem 'jbuilder', '~> 2.0'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
