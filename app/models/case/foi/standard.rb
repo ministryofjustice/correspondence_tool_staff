@@ -9,6 +9,10 @@ class Case::FOI::Standard < Case::Base
     end
   end
 
+  jsonb_accessor :properties,
+                 escalation_deadline: :date,
+                 internal_deadline: :date,
+                 external_deadline: :date
 
   has_paper_trail only: [
                     :name,
@@ -43,8 +47,6 @@ class Case::FOI::Standard < Case::Base
             on: :create,
             if: -> { email.blank? || sent_by_post? }
   validates_presence_of :requester_type, :delivery_method
-  validates :subject_full_name, :subject_type, absence: true
-  validates :third_party, exclusion: { in: [true, false], message: 'must be blank' }
   validates :uploaded_request_files,
             presence: true,
             on: :create,
