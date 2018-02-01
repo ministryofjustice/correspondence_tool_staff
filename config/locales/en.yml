@@ -40,6 +40,7 @@ en:
               blank: Type of requester must be selected
             flag_for_disclosure_specialists:
               blank: Please choose yes or no.
+
         assignment:
           attributes:
             state:
@@ -177,6 +178,7 @@ en:
         appeal_outcome_name: What was the appeal outcome?
         flag_for_disclosure_specialists: Clearance required by DACU Disclosure
         type: Case type
+        name: "Who is the requestor?"
       case_sar:
         reply_method_html: |
           <div class="heading-medium">Where the information should be sent</div>
@@ -254,12 +256,6 @@ en:
         received_date: "Received at MOJ"
         subject: "Case summary"
         subject_full_name: "Full name of data subject"
-        reply_method:
-          send_by_email: Email
-          send_by_post: Post
-        third_party:
-          true: Yes
-          false: No
       feedback:
         comment: Help make this service better
 
