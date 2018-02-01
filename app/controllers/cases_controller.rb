@@ -258,10 +258,8 @@ class CasesController < ApplicationController
 
   def process_closure
     authorize @case, :can_close_case?
-    puts "woof woof I'm a dog #{params}"
     @case.prepare_for_close
     close_params = process_closure_params(@case.type_abbreviation)
-    puts "meow meow I'm a cat #{close_params}"
     if @case.update(close_params)
       @case.close(current_user)
       set_permitted_events

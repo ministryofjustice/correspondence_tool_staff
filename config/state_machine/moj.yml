@@ -160,9 +160,6 @@ case_types:
                 close:
                   if: Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
-                # respond:
-                #   if: Predicates#responder_is_member_of_assigned_team?
-                  transition_to: responded
                 reassign_user:
                   if: Predicates#responder_is_member_of_assigned_team?
 
