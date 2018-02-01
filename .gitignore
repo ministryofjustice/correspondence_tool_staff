@@ -43,5 +43,8 @@ dump.rdb
 **/*.txt
 **/*.xls
 **/*.xlsx
+
+# exceptions to the above
 !db/structure.sql
 !public/robots.txt
+!lib/assets/kilo_map.csv
