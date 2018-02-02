@@ -1,0 +1,9 @@
+tbody.responder-details
+  tr.team
+    th = t('common.case.responding_team')
+    td = case_details.responding_team.name
+
+  - if case_details.responder.present?
+    tr.responder-name
+      th = t('common.case.responders', count: 1)
+      td = case_details.responder.full_name
