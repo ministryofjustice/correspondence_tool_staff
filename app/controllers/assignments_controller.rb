@@ -179,7 +179,7 @@ class AssignmentsController < ApplicationController
   def set_business_units
     if params[:business_group_id].present?
       @business_units = BusinessGroup.find(params[:business_group_id])
-                          .business_units.responding.order(:name)
+                          .business_units.responding_for_category(@case.category).order(:name)
     elsif params[:show_all].present? && params[:show_all]
       @business_units = BusinessUnit.responding_for_category(@case.category).order(:name)
     end
