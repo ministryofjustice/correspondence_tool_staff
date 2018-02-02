@@ -12,7 +12,7 @@ describe Case::SAR do
     end
   end
 
-  context 'validation of subject type' do
+  describe '#subject_type' do
     context 'valid values' do
       it 'does not error' do
         expect(build(:sar_case, subject_type: 'offender')).to be_valid
@@ -38,9 +38,68 @@ describe Case::SAR do
     end
   end
 
-  describe 'reply_method' do
+  describe '#reply_method' do
     it { should validate_presence_of(:reply_method) }
     it { should allow_values('send_by_email', 'send_by_post').for(:reply_method) }
+  end
+
+  describe '#email' do
+    it 'validates presence of email when reply is to be sent by email' do
+      kase = build :sar_case, reply_method: :send_by_email, email: ''
+      expect(kase).not_to be_valid
+      expect(kase.errors[:email]).to eq ["can't be blank"]
+    end
+  end
+
+  describe '#postal_address' do
+    it 'validates presence of postal address when reply is to be sent by post' do
+      kase = build :sar_case, reply_method: :send_by_post, postal_address: ''
+      expect(kase).not_to be_valid
+      expect(kase.errors[:postal_address]).to eq ["can't be blank"]
+    end
+  end
+
+  describe '#name' do
+    it 'validates presence of name when third party is true' do
+      kase = build :sar_case, third_party: true, name: ''
+      expect(kase).not_to be_valid
+      expect(kase.errors[:name]).to eq ["can't be blank"]
+    end
+
+    it 'does not validates presence of name when third party is false' do
+      kase = build :sar_case, third_party: false, name: ''
+      expect(kase).to be_valid
+    end
+  end
+
+  describe '#message' do
+    it 'validates presence if uploaded_request_files is missing' do
+      kase = build :sar_case, uploaded_request_files: [], message: ''
+      expect(kase).not_to be_valid
+      expect(kase.errors[:message]).to eq ["can't be blank"]
+    end
+
+    it 'does validates presence if uploaded_request_files is present' do
+      kase = build :sar_case,
+                   uploaded_request_files: ["#{Faker::Internet.slug}.pdf"],
+                   message: ''
+      expect(kase).to be_valid
+    end
+  end
+
+  describe '#uploaded_request_files' do
+    it 'validates presence if message is missing' do
+      kase = build :sar_case, uploaded_request_files: [], message: ''
+      expect(kase).not_to be_valid
+      expect(kase.errors[:uploaded_request_files]).to eq ["can't be blank"]
+    end
+
+    it 'does validates presence if message is present' do
+      kase = build :sar_case,
+                   uploaded_request_files: [],
+                   message: 'A message'
+      expect(kase).to be_valid
+    end
   end
 
   describe 'papertrail versioning', versioning: true do
