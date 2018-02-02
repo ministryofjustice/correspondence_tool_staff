@@ -31,6 +31,10 @@ class ApplicationPolicy
     @options = {}
   end
 
+  def check(name)
+    __send__("check_#{name}")
+  end
+
   check :user_is_a_manager do
     user.manager?
   end
