@@ -113,8 +113,4 @@ class User < ApplicationRecord
     team_roles.size > 1
   end
 
-  def can_link_case?(kase)
-    return true unless kase.is_a?(Case::SAR)
-    kase.managing_team.users.include?(self)
-  end
 end
