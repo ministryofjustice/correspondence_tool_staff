@@ -45,9 +45,6 @@ module CTS::Cases
       @klass.new(
         name:               name,
         email:              options.fetch(:email, Faker::Internet.email(name)),
-        subject_full_name:  determine_subject_full_name,
-        third_party:        determine_third_party,
-        subject_type:       determine_subject_type,
         delivery_method:    options.fetch(:delivery_method, 'sent_by_email'),
         subject:            options.fetch(:subject, Faker::Company.catch_phrase),
         message:            options.fetch(:message,
