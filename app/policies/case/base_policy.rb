@@ -70,7 +70,7 @@ class Case::BasePolicy < ApplicationPolicy
   def confirm_destroy?
     destroy?
   end
- 
+
   def request_further_clearance?
     clear_failed_checks
 
