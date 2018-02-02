@@ -45,10 +45,10 @@ module PageObjects
             subject_full_name.set kase.subject_full_name
             choose_subject_type kase.subject_type
             if kase.third_party?
-              choose_third_party 'yes'
+              choose_third_party true
               requester_full_name.set kase.name
             else
-              choose_third_party 'no'
+              choose_third_party false
             end
             set_received_date kase.received_date
             subject.set kase.subject
