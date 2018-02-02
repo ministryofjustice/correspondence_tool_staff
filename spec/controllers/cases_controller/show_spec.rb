@@ -25,7 +25,7 @@ describe CasesController, type: :controller do
         get :show, params: { id: accepted_case.id }
       }.to require_permission(:show?)
              .with_args(manager, accepted_case)
-             .disallowing(:can_accept_or_reject_approver_assignment?)
+             .disallowing(:can_accept_or_reject_responder_assignment?)
     end
 
     it 'retrieves message_text error from the flash' do

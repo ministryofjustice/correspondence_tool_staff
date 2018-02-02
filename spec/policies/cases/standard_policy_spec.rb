@@ -89,4 +89,10 @@ describe Case::FOI::StandardPolicy do
     it { should_not permit(manager, responded_case) }
     it { should     permit(manager, approved_case) }
   end
+
+  permissions :show? do
+    it { should     permit(manager,             unassigned_case) }
+    it { should     permit(responder,           unassigned_case) }
+    it { should     permit(disclosure_approver, unassigned_case) }
+  end
 end

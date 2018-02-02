@@ -7,10 +7,12 @@ RSpec::Matchers.define :require_permission do |permission|
       policy = spy(policy_class)
       allow(policy).to receive(permission)
                          .with(no_args) { @permission_received = true }
-      @allowing.each do |allow_permission|
+      allowing = @allowing || []
+      allowing.each do |allow_permission|
         allow(policy).to receive(allow_permission).and_return(true)
       end
-      @disallowing.each do |disallow_permission|
+      disallowing = @disallowing || []
+      disallowing.each do |disallow_permission|
         allow(policy).to receive(disallow_permission).and_return(false)
       end
       if @with_args

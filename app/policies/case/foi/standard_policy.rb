@@ -30,4 +30,12 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
      self.case.outside_escalation_deadline? &&
       !self.case.current_state.in?(%w{responded closed})
   end
+
+  def show?
+    clear_failed_checks
+
+    # FOIs should be viewable by anyone who is logged into the system.
+    true
+  end
+
 end

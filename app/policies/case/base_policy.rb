@@ -422,6 +422,14 @@ class Case::BasePolicy < ApplicationPolicy
         check_can_trigger_event(:extend_for_pit)
   end
 
+  def show?
+    clear_failed_checks
+
+    check(:user_is_a_manager_for_case) ||
+      check(:user_is_a_responder_for_case) ||
+      check(:user_is_an_approver_for_case)
+  end
+
   private
 
   check :user_in_responding_team do
