@@ -1,11 +1,18 @@
+<<<<<<< HEAD
 require "rails_helper"
 
 describe Case::SARPolicy do
+=======
+require 'rails_helper'
 
+describe Case::SARPolicy do
+
+>>>>>>> CT-1511 Policy Specs
   subject { described_class }
 
   # Teams
   let(:managing_team)         { find_or_create :team_dacu }
+<<<<<<< HEAD
   let(:manager)               { managing_team.managers.first }
   let(:responding_team)       { create :responding_team }
   let(:responder)             { responding_team.responders.first }
@@ -13,6 +20,7 @@ describe Case::SARPolicy do
   let(:disclosure_specialist) { team_disclosure.approvers.first }
 
   let(:unassigned_case) { create :sar_case }
+=======
   let(:other_managing_team)   { create :managing_team }
   let(:responding_team)       { create :responding_team }
   let(:dacu_disclosure)      { find_or_create :team_dacu_disclosure }
@@ -30,11 +38,13 @@ describe Case::SARPolicy do
                                        managing_team: managing_team,
                                        responding_team: responding_team}
 
+>>>>>>> CT-1511 Policy Specs
 
   after(:each) do |example|
     if example.exception
       failed_checks = described_class.failed_checks rescue []
       puts "Failed CasePolicy checks: " +
+<<<<<<< HEAD
            failed_checks.map(&:first).map(&:to_s).join(', ')
     end
   end
@@ -56,6 +66,8 @@ describe Case::SARPolicy do
 
       it { should     permit(responder,             unassigned_case) }
       it { should_not permit(disclosure_specialist, unassigned_case) }
+=======
+               failed_checks.map(&:first).map(&:to_s).join(', ')
     end
   end
 
@@ -69,6 +81,7 @@ describe Case::SARPolicy do
       it { should_not permit(press_officer,       non_trigger_sar_case) }
       it { should_not permit(private_officer,     non_trigger_sar_case) }
       it { should_not permit(disclosure_approver, non_trigger_sar_case) }
+>>>>>>> CT-1511 Policy Specs
     end
   end
 end
