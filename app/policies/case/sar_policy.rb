@@ -31,4 +31,9 @@ class Case::SARPolicy < Case::BasePolicy
     clear_failed_checks
     check_user_is_a_responder_for_case && check_case_is_in_attachable_state
   end
+
+  def new_case_link?
+    clear_failed_checks
+      check_user_is_a_manager_for_case
+  end
 end

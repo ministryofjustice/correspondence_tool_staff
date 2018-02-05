@@ -31,7 +31,6 @@ feature 'Closing a sar' do
 
         cases_close_page.fill_in_date_responded(0.business_days.ago)
         cases_close_page.missing_info.yes.click
-        cases_close_page.missing_info.yes.click
 
         cases_close_page.submit_button.click
 
