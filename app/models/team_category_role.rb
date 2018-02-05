@@ -16,6 +16,8 @@ class TeamCategoryRole < ActiveRecord::Base
 
   belongs_to :category
 
+  validates :category_id, presence: true
+
   def self.new_for(team:, category:, roles:)
     params = params_from_roles(roles).merge(team_id: team.id, category_id: category.id)
     self.new(params)

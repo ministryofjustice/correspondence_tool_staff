@@ -104,7 +104,6 @@ class BusinessUnit < Team
     else
       tcr.update_roles(roles)
     end
-    save
   end
 
   # returns an array of category records
@@ -127,7 +126,7 @@ class BusinessUnit < Team
   private
   def at_least_one_category_role_is_present
     if category_roles.empty?
-      errors[:category_ids] << 'Cannot be empty'
+      errors.add(:category_ids, :blank)
     end
   end
 

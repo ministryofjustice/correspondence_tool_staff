@@ -21,8 +21,15 @@
 
 en:
   activerecord:
+    attributes:
+      business_unit:
+        category_ids: "Correspondence types"
     errors:
       models:
+        business_unit:
+          attributes:
+            category_ids:
+              blank: cannot be blank
         case:
           attributes:
             email:
@@ -190,6 +197,7 @@ en:
 
       team:
         role: What will the business unit be responsible for?
+        category_ids: Correspondence types
     hint:
       feedback:
         comment: |
