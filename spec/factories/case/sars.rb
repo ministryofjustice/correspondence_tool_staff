@@ -137,4 +137,10 @@ FactoryGirl.define do
       kase.reload
     end
   end
+
+  trait :clarification_required do
+    refusal_reason              { find_or_create :refusal_reason, :tmm }
+    missing_info                { true }
+    message                     'info held other, clarification required'
+  end
 end

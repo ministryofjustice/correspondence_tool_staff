@@ -500,9 +500,10 @@ class CasesController < ApplicationController
 
   def missing_info_to_tmm
     if params[:case][:missing_info] == "yes"
+      @case.missing_info = true
       CaseClosure::RefusalReason.tmm.name
-    else
-      nil
+    elsif params[:case][:missing_info] == "no"
+      @case.missing_info = false
     end
   end
 

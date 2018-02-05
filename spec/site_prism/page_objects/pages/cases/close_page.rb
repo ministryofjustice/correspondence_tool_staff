@@ -43,6 +43,11 @@ module PageObjects
           element :s12_exceeded_cost, :xpath, '//input[@data-omit-for-part-refused="true"]//..'
         end
 
+        section :missing_info, '.missing-info' do
+          element :yes, 'label[for="case_missing_info_yes"]'
+          element :no, 'label[for="case_missing_info_no"]'
+        end
+
         element :submit_button, '.button'
 
         def fill_in_date_responded(date)
