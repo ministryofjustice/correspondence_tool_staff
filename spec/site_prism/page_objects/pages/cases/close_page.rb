@@ -44,8 +44,8 @@ module PageObjects
         end
 
         section :missing_info, '.missing-info' do
-          element :yes, 'label[for="case_missing_info_yes"]'
-          element :no, 'label[for="case_missing_info_no"]'
+          element :yes, 'input#case_missing_info_yes'
+          element :no, 'input#case_missing_info_no'
         end
 
         element :submit_button, '.button'
