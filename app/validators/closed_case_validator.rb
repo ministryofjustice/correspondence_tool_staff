@@ -37,8 +37,8 @@ class ClosedCaseValidator < ActiveModel::Validator
   end
 
   def validate_tmm(rec)
-    if rec.refusal_reason.blank?
-      rec.errors.add(:refusal_reason, 'must be present for the specified outcome')
+    if rec.missing_info.nil?
+      rec.errors.add(:missing_info, 'must be present for the specified outcome')
     end
   end
 

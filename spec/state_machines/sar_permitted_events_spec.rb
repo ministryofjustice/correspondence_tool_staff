@@ -66,7 +66,7 @@ describe ConfigurableStateMachine::Machine do
       end
       context 'closed' do
         it "should show permitted events" do
-          k = create :closed_sar
+          k = create :closed_sar, :clarification_required
           expect(k.current_state).to eq 'closed'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:destroy_case,
                                                                       :edit_case,
@@ -120,7 +120,7 @@ describe ConfigurableStateMachine::Machine do
 
       context 'closed state' do
         it 'should show permitted events' do
-          k = create :closed_sar
+          k = create :closed_sar, :clarification_required
           expect(k.current_state).to eq 'closed'
           expect(k.state_machine.permitted_events(responder.id)).to be_empty
         end
@@ -177,7 +177,7 @@ describe ConfigurableStateMachine::Machine do
 
       context 'closed state' do
         it 'should show permitted events' do
-          k = create :closed_sar
+          k = create :closed_sar, :clarification_required
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'closed'
           expect(k.state_machine.permitted_events(responder.id)).to be_empty
