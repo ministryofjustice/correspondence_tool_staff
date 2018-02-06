@@ -14,7 +14,7 @@ feature 'Non-Offender SAR case that does not require clearance' do
   include Features::Interactions
   given(:responder)       { create :responder }
   given(:responding_team) { responder.responding_teams.first }
-  given(:manager)         { create :manager }
+  given(:manager)         { create :disclosure_bmt_user }
   given!(:sar_category)   { create(:sar_category) }
 
   before(:all) do
