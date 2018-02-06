@@ -7,6 +7,14 @@ RSpec::Matchers.define :require_permission do |permission|
       policy = spy(policy_class)
       allow(policy).to receive(permission)
                          .with(no_args) { @permission_received = true }
+      allowing = @allowing || []
+      allowing.each do |allow_permission|
+        allow(policy).to receive(allow_permission).and_return(true)
+      end
+      disallowing = @disallowing || []
+      disallowing.each do |disallow_permission|
+        allow(policy).to receive(disallow_permission).and_return(false)
+      end
       if @with_args
         allow(policy_class).to receive(:new).with(*@with_args).and_return(policy)
       else
@@ -42,6 +50,16 @@ RSpec::Matchers.define :require_permission do |permission|
 
   chain :with_args do |*args|
     @with_args = args
+  end
+
+  chain :allowing do |*args|
+    @allowing ||= []
+    @allowing += args
+  end
+
+  chain :disallowing do |*args|
+    @disallowing ||= []
+    @disallowing += args
   end
 
   supports_block_expectations

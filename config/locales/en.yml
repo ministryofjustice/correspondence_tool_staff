@@ -75,20 +75,23 @@ en:
       can_add_case?: 'You are not authorised to create new cases.'
       can_accept_or_reject_case?: 'You are not authorised to view to this assignment.'
       can_approve_case?: 'You are not authorised to approve this cases response.'
-      can_remove_attachment?: 'You are not authorised to remove attachments from this case.'
-      can_view_case_details?: 'You are not authorised to view this case.'
-      can_download_stats?: You are not authorised to view or download statistics.
       can_delete_case?: You are not authorised to delete this case.
-      edit?: You are not authorised to edit this case.
-      update?: You are not authorised to edit this case.
-      delete?: You are not authorised to delete this case.
-      new_case_link?: You are not authorised to link other cases to this case.
+      can_download_stats?: You are not authorised to view or download statistics.
+      can_remove_attachment?: 'You are not authorised to remove attachments from this case.'
       can_unflag_for_clearance?: 'You are not authorised to remove clearance from this case'
+      can_view_case_details?: 'You are not authorised to view this case.'
+      delete?: You are not authorised to delete this case.
+      edit?: You are not authorised to edit this case.
+      new_case_link?: You are not authorised to link other cases to this case.
+      show?: You are not authorised to view this case.
+      update?: You are not authorised to edit this case.
     case/foi/standard_policy:
       <<: *case_policy
     case/foi/compliance_review_policy:
       <<: *case_policy
     case/foi/timeliness_review_policy:
+      <<: *case_policy
+    case/sar_policy:
       <<: *case_policy
     team_policy:
       index?: 'You are not authorised to view a list of teams'
