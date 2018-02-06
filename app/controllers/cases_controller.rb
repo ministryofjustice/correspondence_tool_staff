@@ -111,18 +111,22 @@ class CasesController < ApplicationController
   end
 
   def new
-    @correspondence_type = if FeatureSet.sars.enabled?
-                             params[:correspondence_type]
-                           else
-                             'foi'
-                           end
+    permitted_correspondence_types
+    @correspondence_type_abbreviation = if FeatureSet.sars.enabled?
+                                          params[:correspondence_type]
+                                        else
+                                          'foi'
+                                        end
+
+
 
     if FeatureSet.sars.disabled? ||
-       @correspondence_type.in?(permitted_correspondence_types)
+        @correspondence_type_abbreviation&.upcase.in?(@permitted_correspondence_types.map(&:abbreviation))
 
-      case_class = correspondence_types_map[@correspondence_type].first
+      case_class = correspondence_types_map[@correspondence_type_abbreviation].first
       @case = case_class.new
-      @case_types = correspondence_types_map[@correspondence_type].map(&:to_s)
+      policy(@case).can_add_case?
+      @case_types = correspondence_types_map[@correspondence_type_abbreviation].map(&:to_s)
       @s3_direct_post = s3_uploader_for(@case, 'requests')
       render :new
 
@@ -130,15 +134,16 @@ class CasesController < ApplicationController
 
       if @correspondence_type.present?
         validation_result =
-          if !@correspondence_type.in?(correspondence_types_map.keys)
+          if !@correspondence_type.upcase.in?(@permitted_correspondence_types.map(&:abbreviation))
             :unknown
           else
             :not_authorised
           end
         flash.now.alert =
           helpers.t "cases.new.correspondence_type_errors.#{validation_result}",
-                    type: @correspondence_type
+                    type: @correspondence_type.abbreviation.downcase
       end
+      policy(Case::Base).can_add_case?
       render :select_type
     end
   end
@@ -620,14 +625,21 @@ class CasesController < ApplicationController
     }.with_indifferent_access
   end
 
+
   def permitted_correspondence_types
-    @permitted_correspondence_types ||= correspondence_types_map.select do |_correspondence_type, case_classes|
-      # Take the first type of case for this correspondence type and check if
-      # the user is permitted to add it. Too simple?
-      policy(case_classes.first).can_add_case?
-    end.map do |correspondence_type, _case_types|
-      correspondence_type
-    end
+    @permitted_correspondence_types ||= current_user.managing_teams.first.categories.order(:name)
   end
+
+  # def permitted_correspondence_type_abbreviations
+  #   @permitted_correspondence_type_abbreviations ||= correspondence_types_map.select do |_correspondence_type, case_classes|
+  #     # Take the first type of case for this correspondence type and check if
+  #     # the user is permitted to add it. Too simple?
+  #     policy(case_classes.first).can_add_case?
+  #   end.map do |correspondence_type, _case_types|
+  #     correspondence_type
+  #   end
+  # end
 end
 #rubocop:enable Metrics/ClassLength
+
+

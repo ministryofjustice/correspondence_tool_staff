@@ -9,6 +9,6 @@
 ul#create-correspondences
   - @permitted_correspondence_types.each do |correspondence_type|
     li style="margin-bottom: 15px"
-      = link_to(t("common.correspondence.#{correspondence_type.downcase}.name"),
-                new_case_path(correspondence_type: correspondence_type.downcase))
+      = link_to correspondence_type.abbreviation_and_name,
+                new_case_path(correspondence_type: correspondence_type.abbreviation.downcase)
 

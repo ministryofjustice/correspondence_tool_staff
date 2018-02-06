@@ -12,7 +12,7 @@ describe CasesController, type: :controller do
       it 'authorizes' do
         expect { get :new }
           .to require_permission(:can_add_case?)
-                .with_args(manager, Case::FOI::Standard)
+                .with_args(manager, Case::Base)
       end
 
       it 'renders the new template' do
@@ -23,7 +23,7 @@ describe CasesController, type: :controller do
       it 'assigns @permitted_correspondence_types' do
         get :new
         expect(assigns(:permitted_correspondence_types))
-          .to match_array ['foi', 'sar']
+          .to match_array [Category.foi, Category.sar]
       end
     end
 
