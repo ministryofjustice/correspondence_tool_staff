@@ -14,8 +14,6 @@ class Case::SARPolicy < Case::BasePolicy
       check(:responding_team_is_linked_to_case)
   end
 
-  private
-
   check :responding_team_is_linked_to_case do
     self.case.linked_cases.detect do |kase|
       kase.responding_team.in? user.responding_teams
