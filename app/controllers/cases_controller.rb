@@ -491,7 +491,7 @@ class CasesController < ApplicationController
   end
 
   def process_sar_closure_params
-    params.require(:case).permit(
+    params.require(:case_sar).permit(
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
@@ -499,16 +499,16 @@ class CasesController < ApplicationController
   end
 
   def missing_info_to_tmm
-    if params[:case][:missing_info] == "yes"
+    if params[:case_sar][:missing_info] == "yes"
       @case.missing_info = true
       CaseClosure::RefusalReason.tmm.name
-    elsif params[:case][:missing_info] == "no"
+    elsif params[:case_sar][:missing_info] == "no"
       @case.missing_info = false
     end
   end
 
   def process_foi_closure_params
-    params.require(:case).permit(
+    params.require(:case_foi).permit(
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
@@ -516,7 +516,7 @@ class CasesController < ApplicationController
       :appeal_outcome_name,
       :refusal_reason_name,
       :info_held_status_abbreviation,
-      exemption_ids: params[:case][:exemption_ids].nil? ? nil : params[:case][:exemption_ids].keys
+      exemption_ids: params[:case_foi][:exemption_ids].nil? ? nil : params[:case_foi][:exemption_ids].keys
     )
   end
 

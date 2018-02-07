@@ -17,7 +17,7 @@ describe 'cases/respond.html.slim', type: :view do
     page = cases_respond_page
 
     expect(page.page_heading.heading.text).to eq "Marking it as sent"
-    expect(page.page_heading.sub_heading.text).to eq "#{ kase.number} "
+    expect(page.page_heading.sub_heading.text).to eq "You are viewing case number #{kase.number} - FOI "
 
     expect(page).to have_reminders
 

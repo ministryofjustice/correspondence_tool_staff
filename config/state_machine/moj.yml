@@ -162,6 +162,10 @@ case_types:
                   transition_to: closed
                 reassign_user:
                   if: Predicates#responder_is_member_of_assigned_team?
+                respond:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                  transition_to: closed
+
 
               awaiting_dispatch:
                 add_message_to_case:
@@ -176,6 +180,13 @@ case_types:
               responded:
                 add_message_to_case:
                   if: Predicates#responder_is_member_of_assigned_team?
+                link_a_case:
+
+              closed:
+                add_message_to_case:
+                  if: Predicates#responder_is_member_of_assigned_team?
+
+
           ########################### SAR :: STANDARD WORKFLOW :: APPROVER ########################
           approver:
             states:

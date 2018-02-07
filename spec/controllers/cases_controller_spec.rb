@@ -178,7 +178,7 @@ RSpec.describe CasesController, type: :controller do
         date_responded = 3.days.ago
         {
           id: kase.id,
-          case: {
+          case_foi: {
             date_responded_dd: date_responded.day,
             date_responded_mm: date_responded.month,
             date_responded_yyyy: date_responded.year,
@@ -205,7 +205,7 @@ RSpec.describe CasesController, type: :controller do
           date_responded = 3.days.ago
           {
             id: internal_review.id,
-            case: {
+            case_foi: {
               date_responded_dd: date_responded.day,
               date_responded_mm: date_responded.month,
               date_responded_yyyy: date_responded.year,
@@ -240,7 +240,7 @@ RSpec.describe CasesController, type: :controller do
           date_responded = 3.days.ago
           {
             id: sar.id,
-            case: {
+            case_sar: {
               date_responded_dd: date_responded.day,
               date_responded_mm: date_responded.month,
               date_responded_yyyy: date_responded.year,
