@@ -265,6 +265,7 @@ Rails.application.routes.draw do
     delete 'destroy_business_area' => 'teams#destroy_business_area', on: :member
     patch 'update_business_area' => 'teams#update_business_area', on: :member
     get 'update_business_area_form' => 'teams#update_business_area_form', on: :member
+    get 'deactivate' => 'teams#deactivate', on: :member
 
   end
 

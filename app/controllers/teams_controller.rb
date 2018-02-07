@@ -3,6 +3,7 @@ class TeamsController < ApplicationController
   before_action :set_team, only: [:business_areas_covered,
                                   :create_business_areas_covered,
                                   :show,
+                                  :deactivate,
                                   :edit,
                                   :destroy_business_area,
                                   :update_business_area,
@@ -136,6 +137,10 @@ class TeamsController < ApplicationController
         child_type: team.child_type)
       redirect_to(team_path)
     end
+  end
+
+  def deactivate
+
   end
 
   private
