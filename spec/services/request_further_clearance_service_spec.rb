@@ -34,8 +34,7 @@ describe RequestFurtherClearanceService do
           .to change{ accepted_case
                           .transitions
                           .further_clearance.count }.by(1)
-      tr = accepted_case.transitions[-2]
-      expect(tr.event).to eq 'request_further_clearance'
+      tr = accepted_case.transitions.detect{ |t| t.event == 'request_further_clearance' }
       expect(tr.to_state).to eq 'drafting'
       expect(tr.acting_user_id).to eq manager.id
       expect(tr.acting_team_id).to eq manager.managing_teams.last.id
@@ -52,8 +51,7 @@ describe RequestFurtherClearanceService do
             .to change{ kase
                       .transitions
                       .further_clearance.count }.by(1)
-        tr = kase.transitions[-2]
-        expect(tr.event).to eq 'request_further_clearance'
+        tr = kase.transitions.detect{ |t| t.event == 'request_further_clearance' }
         expect(tr.to_state).to eq 'awaiting_responder'
         expect(tr.acting_user_id).to eq manager.id
         expect(tr.acting_team_id).to eq manager.managing_teams.last.id
