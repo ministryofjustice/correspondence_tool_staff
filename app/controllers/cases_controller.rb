@@ -463,7 +463,7 @@ class CasesController < ApplicationController
   def set_permitted_events
     @permitted_events = @case.state_machine.permitted_events(current_user.id)
     @permitted_events ||= []
-    @permitted_events = @permitted_events - [:extend_for_pit, :request_further_clearance, :link_a_case]
+    @filtered_permitted_events = @permitted_events - [:extend_for_pit, :request_further_clearance, :link_a_case]
   end
 
   def process_closure_params

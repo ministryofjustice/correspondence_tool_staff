@@ -143,7 +143,14 @@ describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq [:add_message_to_case, :assign_to_new_team, :destroy_case, :edit_case, :flag_for_clearance]
+          expect(assigns(:permitted_events)).to eq [:add_message_to_case,
+                                                    :assign_to_new_team,
+                                                    :destroy_case,
+                                                    :edit_case,
+                                                    :flag_for_clearance,
+                                                    :link_a_case,
+                                                    :request_further_clearance]
+          expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case, :assign_to_new_team, :destroy_case, :edit_case, :flag_for_clearance]
         end
 
         it 'renders the show template' do
@@ -187,7 +194,8 @@ describe CasesController, type: :controller do
         let(:user) { another_responder }
 
         it 'permitted_events to be empty' do
-          expect(assigns(:permitted_events)).to be_empty
+          expect(assigns(:permitted_events)).to match_array [:link_a_case, :request_further_clearance]
+          expect(assigns(:filtered_permitted_events)).to be_empty
         end
 
         it 'renders case details page' do
@@ -252,7 +260,8 @@ describe CasesController, type: :controller do
         let(:user) { create(:responder) }
 
         it 'permitted_events to be empty' do
-          expect(assigns(:permitted_events)).to be_empty
+          expect(assigns(:permitted_events)).to match_array [:extend_for_pit, :link_a_case, :request_further_clearance]
+          expect(assigns(:filtered_permitted_events)).to be_empty
         end
 
         it 'renders case details page' do
@@ -314,7 +323,8 @@ describe CasesController, type: :controller do
         let(:user) { create(:responder) }
 
         it 'permitted_events to be empty' do
-          expect(assigns(:permitted_events)).to be_empty
+          expect(assigns(:permitted_events)).to match_array [:extend_for_pit, :link_a_case, :request_further_clearance]
+          expect(assigns(:filtered_permitted_events)).to be_empty
         end
 
         it 'renders case details page' do
@@ -361,7 +371,8 @@ describe CasesController, type: :controller do
         let(:user) { responder }
 
         it 'permitted_events to be empty' do
-          expect(assigns(:permitted_events)).to be_empty
+          expect(assigns(:permitted_events)).to match_array [:extend_for_pit, :link_a_case]
+          expect(assigns(:filtered_permitted_events)).to be_empty
         end
 
         it 'renders case details page' do
@@ -373,7 +384,8 @@ describe CasesController, type: :controller do
         let(:user) { create(:responder) }
 
         it 'permitted_events to be empty' do
-          expect(assigns(:permitted_events)).to be_empty
+          expect(assigns(:permitted_events)).to match_array [:extend_for_pit, :link_a_case]
+          expect(assigns(:filtered_permitted_events)).to be_empty
         end
 
         it 'renders case details page' do

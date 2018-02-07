@@ -12,6 +12,7 @@ module DbHousekeeping
       team_properties
       teams
       teams_users_roles
+      team_category_roles
       users
       categories)
     tables.each do |table|

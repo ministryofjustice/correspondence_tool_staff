@@ -19,4 +19,12 @@ class Case::SARPolicy < Case::BasePolicy
       kase.responding_team.in? user.responding_teams
     end
   end
+
+
+  def new_case_link?
+    clear_failed_checks
+    check_can_trigger_event(:link_a_case) &&
+      check_user_is_a_manager_for_case
+  end
 end
+

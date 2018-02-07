@@ -90,7 +90,7 @@ describe ConfigurableStateMachine::Machine do
         it 'should show permitted events' do
           k = create :awaiting_responder_sar
           expect(k.current_state).to eq 'awaiting_responder'
-          expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case]
+          expect(k.state_machine.permitted_events(responder.id)).to be_empty
         end
       end
 
@@ -98,7 +98,7 @@ describe ConfigurableStateMachine::Machine do
         it 'should show permitted events' do
           k = create :accepted_sar
           expect(k.current_state).to eq 'drafting'
-          expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case]
+          expect(k.state_machine.permitted_events(responder.id)).to be_empty
         end
       end
 
@@ -106,7 +106,7 @@ describe ConfigurableStateMachine::Machine do
         it 'should show permitted events' do
           k = create :sar_with_response
           expect(k.current_state).to eq 'awaiting_dispatch'
-          expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case]
+          expect(k.state_machine.permitted_events(responder.id)).to be_empty
         end
       end
 
@@ -114,7 +114,7 @@ describe ConfigurableStateMachine::Machine do
         it 'should show permitted events' do
           k = create :responded_sar
           expect(k.current_state).to eq 'responded'
-          expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case]
+          expect(k.state_machine.permitted_events(responder.id)).to be_empty
         end
       end
 
@@ -138,7 +138,6 @@ describe ConfigurableStateMachine::Machine do
           expect(k.current_state).to eq 'awaiting_responder'
           expect(k.state_machine.permitted_events(responder.id)).to eq [:accept_responder_assignment,
                                                                         :add_message_to_case,
-                                                                        :link_a_case,
                                                                         :reject_responder_assignment]
         end
       end
@@ -149,7 +148,6 @@ describe ConfigurableStateMachine::Machine do
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'drafting'
           expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                        :link_a_case,
                                                                         :reassign_user,
                                                                         :respond]
         end
@@ -162,7 +160,6 @@ describe ConfigurableStateMachine::Machine do
           expect(k.current_state).to eq 'awaiting_dispatch'
           expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                         :add_responses,
-                                                                        :link_a_case,
                                                                         :remove_last_response,
                                                                         :remove_response,
                                                                         :respond]
@@ -174,7 +171,7 @@ describe ConfigurableStateMachine::Machine do
           k = create :responded_sar
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'responded'
-          expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case]
+          expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case]
         end
       end
 

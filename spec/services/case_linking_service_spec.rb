@@ -39,40 +39,78 @@ describe CaseLinkingService do
 
   describe '#call' do
 
-    before(:each)  { service.call }
+    context 'NON-SAR cases' do
 
-    it 'creates a link to the linked case' do
-      expect(kase.linked_cases).to eq [link_case]
+      before(:each)  { service.call }
+
+      it 'creates a link to the linked case' do
+        expect(kase.linked_cases).to eq [link_case]
+      end
+
+      it 'creates a link from the linked case to the linking case' do
+        expect(link_case.linked_cases).to eq [kase]
+      end
+
+      it 'sets result to :ok and returns same' do
+        result = service.call
+        expect(result).to eq :ok
+        expect(service.result).to eq :ok
+      end
+
+      it 'has created a transition on the linking case' do
+        transition = kase.transitions.last
+        expect(transition.event).to eq 'link_a_case'
+        expect(transition.to_state).to eq kase.current_state
+        expect(transition.linked_case_id).to eq link_case.id
+        expect(transition.acting_user_id).to eq manager.id
+        expect(transition.acting_team_id).to eq manager.teams.first.id
+      end
+
+      it 'has created a transition on the linked case' do
+        transition = link_case.transitions.last
+        expect(transition.event).to eq 'link_a_case'
+        expect(transition.to_state).to eq link_case.current_state
+        expect(transition.linked_case_id).to eq kase.id
+        expect(transition.acting_user_id).to eq manager.id
+        expect(transition.acting_team_id).to eq manager.teams.first.id
+      end
     end
 
-    it 'creates a link from the linked case to the linking case' do
-      expect(link_case.linked_cases).to eq [kase]
+    context 'SAR cases' do
+      let(:foi_case)        { create :case }
+      let(:sar_case_1)      { create :sar_case }
+      let(:sar_case_2)      { create :sar_case }
+
+      describe 'linking a sar case to a  non sar case' do
+        it 'errors' do
+          service = CaseLinkingService.new(manager, sar_case_1, foi_case.number)
+          service.call
+          expect(service.result).to eq :validation_error
+          expect(sar_case_1.errors[:linked_case_number]).to eq ["can't link a SAR case to a non-SAR case"]
+        end
+      end
+
+      describe 'linking a non-sar case to a sar case' do
+        it 'errors' do
+          service = CaseLinkingService.new(manager, foi_case, sar_case_1.number)
+          service.call
+          expect(service.result).to eq :validation_error
+          expect(foi_case.errors[:linked_case_number]).to eq ["can't link a non-SAR case to a SAR case"]
+        end
+      end
+
+      describe 'linking a non-sar case to a sar case' do
+        it 'does not error' do
+          service = CaseLinkingService.new(manager, sar_case_1, sar_case_2.number)
+          service.call
+          expect(service.result).to eq :ok
+          expect(sar_case_1).to be_valid
+        end
+      end
     end
 
-    it 'sets result to :ok and returns same' do
-      result = service.call
-      expect(result).to eq :ok
-      expect(service.result).to eq :ok
-    end
-
-    it 'has created a transition on the linking case' do
-      transition = kase.transitions.last
-      expect(transition.event).to eq 'link_a_case'
-      expect(transition.to_state).to eq kase.current_state
-      expect(transition.linked_case_id).to eq link_case.id
-      expect(transition.acting_user_id).to eq manager.id
-      expect(transition.acting_team_id).to eq manager.teams.first.id
-    end
-
-    it 'has created a transition on the linked case' do
-      transition = link_case.transitions.last
-      expect(transition.event).to eq 'link_a_case'
-      expect(transition.to_state).to eq link_case.current_state
-      expect(transition.linked_case_id).to eq kase.id
-      expect(transition.acting_user_id).to eq manager.id
-      expect(transition.acting_team_id).to eq manager.teams.first.id
-    end
   end
+
 
   context 'validations' do
     describe 'trying to link without a case number' do

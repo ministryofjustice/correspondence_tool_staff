@@ -112,4 +112,5 @@ class User < ApplicationRecord
   def multiple_team_member?
     team_roles.size > 1
   end
+
 end
