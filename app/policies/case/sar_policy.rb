@@ -1,10 +1,9 @@
 class Case::SARPolicy < Case::BasePolicy
 
   def can_respond?
-    false
-    # clear_failed_checks
-    # self.case.drafting? &&
-    #     user.responding_teams.include?(self.case.responding_team)
+    clear_failed_checks
+    self.case.drafting? &&
+        user.responding_teams.include?(self.case.responding_team)
   end
 
   def show?
@@ -32,8 +31,7 @@ class Case::SARPolicy < Case::BasePolicy
     check_user_is_a_responder_for_case && check_case_is_in_attachable_state
   end
 
-  def new_case_link?
-    clear_failed_checks
-      check_user_is_a_manager_for_case
+  def can_add_attachment_to_flagged_and_unflagged_cases?
+    false
   end
 end
