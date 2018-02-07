@@ -358,11 +358,6 @@ en:
       clear_response: Clear response
       request_amends: Request amends
       upload_approve: 'Upload response and clear'
-    correspondence:
-      foi:
-        name: FOI - Freedom of Information Request
-      sar:
-        name: SAR - Subject Access Request
     new_case_button: Create case
     phase_banner: |
       This is a new service.
@@ -500,8 +495,6 @@ en:
         </ul>
     confirm_respond:
       success: Response confirmed. The case is now with Disclosure BMT.
-#    update:
-#      case_updated: Case updated
     close:
       heading: Close case
       close_date: Date response sent

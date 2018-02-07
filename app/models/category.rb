@@ -31,4 +31,8 @@ class Category < ApplicationRecord
   def self.sar
     find_by!(abbreviation: 'SAR')
   end
+
+  def abbreviation_and_name
+    "#{abbreviation} - #{name}"
+  end
 end
