@@ -1,6 +1,5 @@
 task :kilo_map => :environment do
   require 'csv'
-  i = 0
   CSV.foreach(File.join(Rails.root, 'lib', 'assets', 'kilo_map.csv')) do |row|
     puts row.inspect
     next if header_row?(row)
