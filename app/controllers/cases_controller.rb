@@ -257,7 +257,12 @@ class CasesController < ApplicationController
   end
 
   def process_closure
-    authorize @case, :can_close_case?
+    case @case.type_abbreviation
+    when "SAR"
+      authorize @case, :can_mark_response_sent_and_close?
+    else
+      authorize @case, :can_close?
+    end
     @case.prepare_for_close
     close_params = process_closure_params(@case.type_abbreviation)
     if @case.update(close_params)
@@ -272,7 +277,12 @@ class CasesController < ApplicationController
   end
 
   def respond
-    authorize @case, :can_respond?
+    case @case.type_abbreviation
+    when "SAR"
+      authorize @case, :can_mark_response_sent_and_close?
+    else
+      authorize @case, :can_respond?
+    end
   end
 
   def confirm_respond

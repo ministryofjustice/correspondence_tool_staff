@@ -14,7 +14,7 @@ class Case::SAR < Case::Base
                  third_party: :boolean,
                  reply_method: :string
 
-  attr_accessor :missing_info 
+  attr_accessor :missing_info
 
   enum subject_type: {
          offender:             'offender',
@@ -51,6 +51,10 @@ class Case::SAR < Case::Base
               if: -> { name.blank? }
   after_create :process_uploaded_request_files,
                if: -> { uploaded_request_files.present? }
+
+   def close(current_user)
+     state_machine.mark_response_sent_and_close!(acting_user: current_user, acting_team: find_team(current_user))
+   end
 
   private
 
