@@ -71,6 +71,7 @@ module ConfigurableStateMachine
     private
 
     def event_present_and_triggerable?(role_state_config:, event:, user:)
+      return false if role_state_config.nil?
       config = role_state_config[event]
       return false if config.nil?
       if config.to_h.key?(:if)
