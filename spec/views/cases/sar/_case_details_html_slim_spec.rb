@@ -39,8 +39,8 @@ describe 'cases/sar/case_details.html.slim', type: :view do
 
       partial = case_details_section(rendered).sar_basic_details
 
-      expect(partial).to have_email
-      expect(partial.email.data.text).to eq "1 High Street\nAnytown\nAT1 1AA"
+      expect(partial).to have_response_address
+      expect(partial.response_address.data.text).to eq "1 High Street\nAnytown\nAT1 1AA"
     end
 
     it 'does not display the postal address if one is not provided' do
@@ -52,8 +52,8 @@ describe 'cases/sar/case_details.html.slim', type: :view do
 
       partial = case_details_section(rendered).sar_basic_details
 
-      expect(partial).to have_email
-      expect(partial.email.data.text).to eq 'john.doe@moj.com'
+      expect(partial).to have_response_address
+      expect(partial.response_address.data.text).to eq 'john.doe@moj.com'
     end
   end
 

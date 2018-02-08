@@ -57,7 +57,7 @@ module PageObjects
             element :data, 'td'
           end
 
-          section :email, 'tr.requester-email' do
+          section :response_address, 'tr.response-address' do
             element :data, 'td'
           end
 
