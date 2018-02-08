@@ -35,58 +35,60 @@ class DevTeamSeeder
 
   #rubocop:disable Metrics/MethodLength
   def add_business_units
+    @foi = CorrespondenceType.foi
+    @sar = CorrespondenceType.sar
     @bu_dacu_bmt  = BusinessUnit.create!(parent: @dir_dacu,
                                          name: 'Disclosure BMT',
                                          code: Settings.foi_cases.default_managing_team,
                                          role: 'manager',
-                                         category_ids: [Category.foi.id, Category.sar.id])
+                                         correspondence_type_ids: [@foi.id, @sar.id])
     @bu_dacu_dis  = BusinessUnit.create!(parent: @dir_dacu,
                                          name: 'Disclosure',
                                          code: Settings.foi_cases.default_clearance_team,
                                          role: 'approver',
-                                         category_ids: [Category.foi.id, Category.sar.id])
+                                         correspondence_type_ids: [@foi.id, @sar.id])
     @bu_private   = BusinessUnit.create!(parent: @dir_private,
                                          name: 'Private Office',
                                          code: Settings.private_office_team_code,
                                          role: 'approver',
-                                         category_ids: [Category.foi.id, Category.sar.id])
+                                         correspondence_type_ids: [@foi.id, @sar.id])
     @bu_press     = BusinessUnit.create!(parent: @dir_press,
                                          name: 'Press Office',
                                          code: Settings.press_office_team_code,
                                          role: 'approver',
-                                         category_ids: [Category.foi.id, Category.sar.id])
+                                         correspondence_type_ids: [@foi.id, @sar.id])
     @bu_laa       = BusinessUnit.create!(parent: @dir_laa,
                                          name: 'Legal Aid Agency (LAA)',
                                          role: 'responder',
-                                         category_ids: [Category.foi.id, Category.sar.id])
+                                         correspondence_type_ids: [@foi.id, @sar.id])
     @bu_hr        = BusinessUnit.create!(parent: @dir_hr,
                                          name: 'MoJ Human Resources (MoJ HR)',
                                          role: 'responder',
-                                         category_ids: [Category.foi.id, Category.sar.id])
+                                         correspondence_type_ids: [@foi.id, @sar.id])
     @bu_hmctsne   = BusinessUnit.create!(parent: @dir_rsus,
                                          name: 'North East Regional Support Unit (NE RSU)',
                                          role: 'responder',
-                                         category_ids: Category.foi.id)
+                                         correspondence_type_ids: @foi.id)
     @bu_prop      = BusinessUnit.create!(parent: @dir_prop,
                                          name: 'HMCTS Property Directorate',
                                          role: 'responder',
-                                         category_ids: [Category.foi.id, Category.sar.id])
+                                         correspondence_type_ids: [@foi.id, @sar.id])
     @bu_utiac     = BusinessUnit.create!(parent: @dir_trib,
                                          name: 'Upper Tribunal Asylum Chamber',
                                          role: 'responder',
-                                         category_ids: [Category.foi.id, Category.sar.id])
+                                         correspondence_type_ids: [@foi.id, @sar.id])
     @bu_utl       = BusinessUnit.create!(parent: @dir_trib,
                                          name: 'Upper Tribunal Lands (UT Lands)',
                                          role: 'responder',
-                                         category_ids: [Category.foi.id, Category.sar.id])
+                                         correspondence_type_ids: [@foi.id, @sar.id])
     @bu_uttc      = BusinessUnit.create!(parent: @dir_trib,
                                          name: 'Upper Tibunal - Tax & Chancery Chamber',
                                          role: 'responder',
-                                         category_ids: [Category.foi.id, Category.sar.id])
+                                         correspondence_type_ids: [@foi.id, @sar.id])
     @bu_candi     = BusinessUnit.create!(parent: @dir_candi,
                                          name: 'Communications and Information',
                                          role: 'responder',
-                                         category_ids: [Category.foi.id, Category.sar.id])
+                                         correspondence_type_ids: [@foi.id, @sar.id])
   end
   #rubocop:enable Metrics/MethodLength
 

@@ -58,7 +58,7 @@ module Stats
     end
 
     def default_clearance_team(kase)
-      team_code = Settings.__send__("#{kase.category.abbreviation.downcase}_cases").default_clearance_team
+      team_code = Settings.__send__("#{kase.type_abbreviation.downcase}_cases").default_clearance_team
       Team.find_by_code team_code
     end
   end

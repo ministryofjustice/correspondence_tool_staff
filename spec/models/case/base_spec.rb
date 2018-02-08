@@ -1327,17 +1327,17 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  describe '#category' do
-    it 'retrieves a category object' do
-      expect(kase.category).to eq Category.foi
+  describe '#correspondence_type' do
+    it 'retrieves a correspondence_type object' do
+      expect(kase.correspondence_type).to eq CorrespondenceType.foi
     end
 
-    it 'only finds the category once' do
-      foi = Category.foi
-      allow(Category).to receive(:find_by!).and_return(foi)
-      kase.category
-      kase.category
-      expect(Category).to have_received(:find_by!).at_least(1)
+    it 'only finds the correspondence_type once' do
+      foi = CorrespondenceType.foi
+      allow(CorrespondenceType).to receive(:find_by!).and_return(foi)
+      kase.correspondence_type
+      kase.correspondence_type
+      expect(CorrespondenceType).to have_received(:find_by!).at_least(1)
     end
   end
 

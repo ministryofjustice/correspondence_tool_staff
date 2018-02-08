@@ -133,8 +133,8 @@ RSpec.configure do |config|
 end
 
 def seed_database_for_tests
-  FactoryGirl.find_or_create :category, :foi
-  FactoryGirl.find_or_create :sar_category
+  FactoryGirl.find_or_create :foi_correspondence_type
+  FactoryGirl.find_or_create :sar_correspondence_type
   FactoryGirl.find_or_create :team_press_office
   FactoryGirl.find_or_create :team_private_office
   FactoryGirl.find_or_create :team_dacu_disclosure

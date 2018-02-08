@@ -11,7 +11,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
         team_name:          @assignment.team.name,
         case_current_state: I18n.t("state.#{kase.current_state}").downcase,
         case_number:        kase.number,
-        case_abbr:          kase.category.abbreviation,
+        case_abbr:          kase.type_abbreviation,
         case_name:          kase.name,
         case_received_date: kase.received_date.strftime(Settings.default_date_format),
         case_subject:       kase.subject,
@@ -34,7 +34,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
         approver_full_name:     recipient.full_name,
         case_number:            kase.number,
         case_subject:           kase.subject,
-        case_type:              kase.category.abbreviation,
+        case_type:              kase.type_abbreviation,
         case_name:              kase.name,
         case_received_date:     kase.received_date.strftime(Settings.default_date_format),
         case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format),
@@ -56,7 +56,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
         case_current_state:     I18n.t("state.#{kase.current_state}").downcase,
         case_number:            kase.number,
         case_subject:           kase.subject,
-        case_abbr:              kase.category.abbreviation,
+        case_abbr:              kase.type_abbreviation,
         case_name:              kase.name,
         case_received_date:     kase.received_date.strftime(Settings.default_date_format),
         case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format),
@@ -77,7 +77,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
         user_name:              recipient.full_name,
         case_number:            kase.number,
         case_subject:           kase.subject,
-        case_abbr:              kase.category.abbreviation,
+        case_abbr:              kase.type_abbreviation,
         case_name:              kase.name,
         case_received_date:     kase.received_date.strftime(Settings.default_date_format),
         case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format),
@@ -91,11 +91,11 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
   def format_subject(kase)
     translation_key = "state.#{kase.current_state}"
-    "#{I18n.t(translation_key)} - #{kase.category.abbreviation} - #{kase.number} - #{kase.subject}"
+    "#{I18n.t(translation_key)} - #{kase.type_abbreviation} - #{kase.number} - #{kase.subject}"
   end
 
   def format_subject_type(kase, type)
-    "#{type} - #{kase.category.abbreviation} - #{kase.number} - #{kase.subject}"
+    "#{type} - #{kase.type_abbreviation} - #{kase.number} - #{kase.subject}"
   end
 
   def find_template(type)

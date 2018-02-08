@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.10
--- Dumped by pg_dump version 9.5.10
+-- Dumped from database version 9.5.9
+-- Dumped by pg_dump version 9.5.9
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -425,26 +425,24 @@ ALTER SEQUENCE cases_users_transitions_trackers_id_seq OWNED BY cases_users_tran
 
 
 --
--- Name: categories; Type: TABLE; Schema: public; Owner: -
+-- Name: correspondence_types; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE categories (
+CREATE TABLE correspondence_types (
     id integer NOT NULL,
     name character varying,
     abbreviation character varying,
-    internal_time_limit integer,
-    external_time_limit integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    escalation_time_limit integer
+    properties jsonb DEFAULT '{}'::jsonb
 );
 
 
 --
--- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: correspondence_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE categories_id_seq
+CREATE SEQUENCE correspondence_types_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -453,10 +451,10 @@ CREATE SEQUENCE categories_id_seq
 
 
 --
--- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: correspondence_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE categories_id_seq OWNED BY categories.id;
+ALTER SEQUENCE correspondence_types_id_seq OWNED BY correspondence_types.id;
 
 
 --
@@ -629,12 +627,12 @@ ALTER SEQUENCE sessions_id_seq OWNED BY sessions.id;
 
 
 --
--- Name: team_category_roles; Type: TABLE; Schema: public; Owner: -
+-- Name: team_correspondence_type_roles; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE team_category_roles (
+CREATE TABLE team_correspondence_type_roles (
     id integer NOT NULL,
-    category_id integer,
+    correspondence_type_id integer,
     team_id integer,
     view boolean DEFAULT false,
     edit boolean DEFAULT false,
@@ -647,10 +645,10 @@ CREATE TABLE team_category_roles (
 
 
 --
--- Name: team_category_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: team_correspondence_type_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE team_category_roles_id_seq
+CREATE SEQUENCE team_correspondence_type_roles_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -659,10 +657,10 @@ CREATE SEQUENCE team_category_roles_id_seq
 
 
 --
--- Name: team_category_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: team_correspondence_type_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE team_category_roles_id_seq OWNED BY team_category_roles.id;
+ALTER SEQUENCE team_correspondence_type_roles_id_seq OWNED BY team_correspondence_type_roles.id;
 
 
 --
@@ -901,7 +899,7 @@ ALTER TABLE ONLY cases_users_transitions_trackers ALTER COLUMN id SET DEFAULT ne
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY categories ALTER COLUMN id SET DEFAULT nextval('categories_id_seq'::regclass);
+ALTER TABLE ONLY correspondence_types ALTER COLUMN id SET DEFAULT nextval('correspondence_types_id_seq'::regclass);
 
 
 --
@@ -943,7 +941,7 @@ ALTER TABLE ONLY sessions ALTER COLUMN id SET DEFAULT nextval('sessions_id_seq':
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY team_category_roles ALTER COLUMN id SET DEFAULT nextval('team_category_roles_id_seq'::regclass);
+ALTER TABLE ONLY team_correspondence_type_roles ALTER COLUMN id SET DEFAULT nextval('team_correspondence_type_roles_id_seq'::regclass);
 
 
 --
@@ -1054,11 +1052,11 @@ ALTER TABLE ONLY cases_users_transitions_trackers
 
 
 --
--- Name: categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: correspondence_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY categories
-    ADD CONSTRAINT categories_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY correspondence_types
+    ADD CONSTRAINT correspondence_types_pkey PRIMARY KEY (id);
 
 
 --
@@ -1110,11 +1108,11 @@ ALTER TABLE ONLY sessions
 
 
 --
--- Name: team_category_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: team_correspondence_type_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY team_category_roles
-    ADD CONSTRAINT team_category_roles_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY team_correspondence_type_roles
+    ADD CONSTRAINT team_correspondence_type_roles_pkey PRIMARY KEY (id);
 
 
 --
@@ -1312,10 +1310,10 @@ CREATE INDEX index_sessions_on_updated_at ON sessions USING btree (updated_at);
 
 
 --
--- Name: index_team_category_roles_on_category_id_and_team_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_team_correspondence_type_roles_on_type_id_and_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_team_category_roles_on_category_id_and_team_id ON team_category_roles USING btree (category_id, team_id);
+CREATE UNIQUE INDEX index_team_correspondence_type_roles_on_type_id_and_team_id ON team_correspondence_type_roles USING btree (correspondence_type_id, team_id);
 
 
 --
@@ -1507,6 +1505,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180125100559'),
 ('20180125111431'),
 ('20180126120726'),
-('20180206100800');
+('20180202171348'),
+('20180205120050'),
+('20180206100800'),
+('20180208161547');
 
 

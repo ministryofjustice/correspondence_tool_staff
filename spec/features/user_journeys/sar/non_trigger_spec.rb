@@ -12,10 +12,10 @@ require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 feature 'Non-Offender SAR case that does not require clearance' do
   include CaseDateManipulation
   include Features::Interactions
-  given(:responder)       { create :responder }
-  given(:responding_team) { responder.responding_teams.first }
-  given(:manager)         { create :disclosure_bmt_user }
-  given!(:sar_category)   { create(:sar_category) }
+  given(:responder)                { create :responder }
+  given(:responding_team)          { responder.responding_teams.first }
+  given(:manager)                  { create :disclosure_bmt_user }
+  given!(:sar_correspondence_type) { create :sar_correspondence_type }
 
   before(:all) do
     CaseClosure::MetadataSeeder.seed!(verbose: false)

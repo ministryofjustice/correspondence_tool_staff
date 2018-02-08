@@ -4,6 +4,7 @@ task :kilo_map => :environment do
     puts row.inspect
     next if header_row?(row)
     bg, bu, sar = row
+    sar_correspondence_type = CorrespondenceType.sar
     if bg.present?
       @bg = BusinessGroup.find_by_name bg
     end
@@ -16,7 +17,7 @@ task :kilo_map => :environment do
           if business_unit.nil?
             puts ">>>>>>>>>>>> unable to find BU #{bu} IN BG #{@bg.name} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
           else
-            business_unit.set_category_roles(category_abbreviation: 'sar', roles: business_unit.__send__(:category_roles_for_team))
+            business_unit.correspondence_type << sar_correspondence_type
             puts "Updating BU #{business_unit.id} #{business_unit.name}"
           end
         end

@@ -9,12 +9,12 @@ module DbHousekeeping
       case_transitions
       cases_exemptions
       feedback
+      team_correspondence_type_roles
       team_properties
       teams
       teams_users_roles
-      team_category_roles
       users
-      categories)
+      correspondence_types)
     tables.each do |table|
       ActiveRecord::Base.connection.execute("DELETE FROM #{table}")
     end

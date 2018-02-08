@@ -19,7 +19,7 @@
     p.bold-small
       = "Correspondence types "
       ul.areas-covered.list.list-bullet
-        - team.categories.each do |cat|
+        - team.correspondence_types.each do |cat|
           li= cat.name
 
 = render partial: 'shared/areas_covered_list', locals: { team: @team }

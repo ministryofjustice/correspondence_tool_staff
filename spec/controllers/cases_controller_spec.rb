@@ -52,8 +52,6 @@ RSpec.describe CasesController, type: :controller do
                                                   responder: responder }
 
 
-  before { create(:category, :foi) }
-
   describe '#set_cases' do
     before(:each) do
       user = create :responder
@@ -1370,7 +1368,18 @@ RSpec.describe CasesController, type: :controller do
        received_date_yyyy: '2017',
        subject: 'TEST case',
        message: 'Lorem ipsum dolor',
-      }).permit(:name, :email, :postal_address, :requester_type, :received_date_dd, :received_date_mm, :received_date_yyyy, :subject, :message, :category_id)
+     }).permit(
+        :name,
+        :email,
+        :postal_address,
+        :requester_type,
+        :received_date_dd,
+        :received_date_mm,
+        :received_date_yyyy,
+        :subject,
+        :message,
+        :correspondence_type_id
+      )
     end
 
     let(:date)    { Time.local(2017, 10, 3) }

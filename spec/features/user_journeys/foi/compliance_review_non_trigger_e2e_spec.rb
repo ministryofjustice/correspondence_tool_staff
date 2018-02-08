@@ -19,7 +19,6 @@ feature 'FOI compliance review case that does not require clearance' do
   given(:responder)       { create :responder }
   given(:responding_team) { responder.responding_teams.first }
   given(:manager)         { create :manager }
-  given!(:foi_category)   { create(:category, :foi) }
 
   before(:all) do
     CaseClosure::MetadataSeeder.seed!(verbose: false)

@@ -16,7 +16,6 @@ feature 'adding cases' do
     CTS.class_eval { @dacu_manager = nil; @dacu_team = nil }
     create :responding_team
     find_or_create :team_dacu
-    create :category, :foi
 
     login_as admin
   end

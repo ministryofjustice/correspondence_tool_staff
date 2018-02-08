@@ -164,23 +164,23 @@ RSpec.describe Team, type: :model do
   describe '#can_allocate?' do
     before(:each) do
       @team = create :team
-      @foi = create :category, :foi
-      @gq = create :category, :gq
+      @foi = find_or_create :foi_correspondence_type
+      @gq = find_or_create :gq_correspondence_type
       create :team_property, :can_allocate_gq, team_id: @team.id
     end
 
-    it 'returns false if there is no team property with key can_allocate for specified category' do
+    it 'returns false if there is no team property with key can_allocate for specified correspondence type' do
       expect(@team.can_allocate?(@foi)).to be false
     end
 
-    it 'returns true if there is a team property key can_allocate for specified category' do
+    it 'returns true if there is a team property key can_allocate for specified correspondence type' do
       expect(@team.can_allocate?(@gq)).to be true
     end
   end
 
   describe '#enable_allocation' do
 
-    let(:foi)   { create :category, :foi }
+    let(:foi) { find_or_create :foi_correspondence_type }
 
     it 'creates a team property record' do
       expect(TeamProperty.where(key: 'can_allocate', value: foi.abbreviation).size).to eq 0
@@ -199,7 +199,7 @@ RSpec.describe Team, type: :model do
   describe '#disable_allocation' do
     before(:each) do
       @team = create :team
-      @foi = create :category, :foi
+      @foi = find_or_create :foi_correspondence_type
       create :team_property, :can_allocate_foi, team_id: @team.id
     end
 
@@ -218,9 +218,9 @@ RSpec.describe Team, type: :model do
   end
 
   describe '.allocatable' do
-    it 'returns a collection of teams that have the can_allocate property set for the category' do
-      foi = create :category, :foi
-      gq = create :category, :gq
+    it 'returns a collection of teams that have the can_allocate property set for the correspondence type' do
+      foi = find_or_create :foi_correspondence_type
+      gq = find_or_create :gq_correspondence_type
       t1 = create :team
       t2 = create :team
       t3 = create :team

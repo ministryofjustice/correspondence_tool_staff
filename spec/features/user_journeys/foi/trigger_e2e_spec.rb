@@ -32,8 +32,6 @@ feature 'FOI case that does not require clearance' do
   given!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
   given(:team_dacu)             { find_or_create :team_dacu }
 
-  given!(:foi_category)         { create(:category, :foi) }
-
   background(:all) do
     CaseClosure::MetadataSeeder.seed!
   end

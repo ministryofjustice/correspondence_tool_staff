@@ -33,7 +33,7 @@ module CaseStates
   def instantiate_legacy_state_machine
     state_machine_class_name =
       if respond_to?(:workflow) && workflow.present?
-        "Case::#{category.abbreviation}::#{workflow}StateMachine"
+        "Case::#{type_abbreviation}::#{workflow}StateMachine"
       else
         "Case::FOI::StandardStateMachine"
       end

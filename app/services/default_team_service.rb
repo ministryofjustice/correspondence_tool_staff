@@ -41,7 +41,7 @@ class DefaultTeamService
   private
 
   def config_for_case
-    cat = @case.category.abbreviation.downcase
+    cat = @case.type_abbreviation.downcase
     Settings["#{cat}_cases"]
   end
 end
