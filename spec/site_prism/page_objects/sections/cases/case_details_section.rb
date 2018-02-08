@@ -3,7 +3,7 @@ module PageObjects
     module Cases
       class CaseDetailsSection < SitePrism::Section
 
-        section :basic_details, '.basic-details' do
+        section :foi_basic_details, '.foi-basic-details' do
 
           section :case_type, 'tr.case-type' do
             element :foi_trigger, 'td .foi-trigger'
@@ -34,6 +34,38 @@ module PageObjects
             element :data, 'td'
           end
         end
+
+        section :sar_basic_details, '.sar-basic-details' do
+          section :case_type, 'tr.case-type' do
+            element :sar_trigger, 'td .sar-trigger'
+            element :data, 'td'
+          end
+
+          section :data_subject, 'tr.data-subject' do
+            element :data, 'td'
+          end
+
+          section :data_subject_type, 'tr.data-subject-type' do
+            element :data, 'td'
+          end
+
+          section :third_party, 'tr.third-party' do
+            element :data, 'td'
+          end
+
+          section :date_received, 'tr.date-received' do
+            element :data, 'td'
+          end
+
+          section :response_address, 'tr.response-address' do
+            element :data, 'td'
+          end
+
+          section :team,  'tr.team' do
+            element :data, 'td'
+          end
+        end
+
 
 
         section :responders_details, '.responder-details' do

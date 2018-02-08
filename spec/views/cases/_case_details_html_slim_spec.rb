@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'cases/case_details.html.slim', type: :view do
+describe 'cases/foi/case_details.html.slim', type: :view do
   let(:unassigned_case)         { create(:case).decorate }
   let(:accepted_case)           { create(:accepted_case).decorate }
   let(:responded_case)          { create(:responded_case).decorate }
@@ -19,12 +19,12 @@ describe 'cases/case_details.html.slim', type: :view do
 
 
 
-  describe 'basic_details' do
+  describe 'foi_basic_details' do
     it 'displays the initial case details' do
-      render partial: 'cases/case_details.html.slim',
+      render partial: 'cases/foi/case_details.html.slim',
              locals:{ case_details: unassigned_case}
 
-      partial = case_details_section(rendered).basic_details
+      partial = case_details_section(rendered).foi_basic_details
 
       expect(partial).to be_all_there
 
@@ -55,10 +55,10 @@ describe 'cases/case_details.html.slim', type: :view do
     it 'displays a trigger badge if the case has been triggered' do
       trigger_case
 
-      render partial: 'cases/case_details.html.slim',
+      render partial: 'cases/foi/case_details.html.slim',
                    locals:{ case_details: trigger_case}
 
-      partial = case_details_section(rendered).basic_details
+      partial = case_details_section(rendered).foi_basic_details
 
       expect(partial).to be_all_there
 
@@ -70,10 +70,10 @@ describe 'cases/case_details.html.slim', type: :view do
     it 'does not display the email address if one is not provided' do
       unassigned_case.email = nil
 
-      render partial: 'cases/case_details.html.slim',
+      render partial: 'cases/foi/case_details.html.slim',
             locals:{ case_details: unassigned_case}
 
-      partial = case_details_section(rendered).basic_details
+      partial = case_details_section(rendered).foi_basic_details
 
       expect(partial).to have_no_email
       expect(partial).to have_address
@@ -82,10 +82,10 @@ describe 'cases/case_details.html.slim', type: :view do
     it 'does not display the postal address if one is not provided' do
       unassigned_case.postal_address = nil
 
-      render partial: 'cases/case_details.html.slim',
+      render partial: 'cases/foi/case_details.html.slim',
              locals:{ case_details: unassigned_case}
 
-      partial = case_details_section(rendered).basic_details
+      partial = case_details_section(rendered).foi_basic_details
 
       expect(partial).to have_no_address
       expect(partial).to have_email
@@ -94,7 +94,7 @@ describe 'cases/case_details.html.slim', type: :view do
 
   describe 'responders details' do
     it 'displays the responders team name' do
-      render partial: 'cases/case_details.html.slim',
+      render partial: 'cases/foi/case_details.html.slim',
              locals:{ case_details: accepted_case}
 
       partial = case_details_section(rendered).responders_details
@@ -109,7 +109,7 @@ describe 'cases/case_details.html.slim', type: :view do
 
     it 'displays all the case closure details' do
       closed_case
-      render partial: 'cases/case_details.html.slim',
+      render partial: 'cases/foi/case_details.html.slim',
              locals:{ case_details: closed_case}
 
       partial = case_details_section(rendered).response_details

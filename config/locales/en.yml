@@ -73,6 +73,7 @@ en:
     case_policy: &case_policy
       can_add_attachment?: 'You are not authorised to upload attachments to this case.'
       can_add_case?: 'You are not authorised to create new cases.'
+      can_assign_case?: 'Case could not be assigned'
       can_accept_or_reject_case?: 'You are not authorised to view to this assignment.'
       can_approve_case?: 'You are not authorised to approve this cases response.'
       can_delete_case?: You are not authorised to delete this case.
@@ -319,6 +320,8 @@ en:
       answered_late: Answered late
       assign: Assign to a responder
       close: Close case
+      data_subject: Data subject
+      data_subject_type: Type of data subject
       date_responded: Date sent to requester
       outcome: Outcome
       appeal_outcome: Appeal Outcome
@@ -345,7 +348,9 @@ en:
         other: Information Officers
       request: "Request"
       requester_type: "Type of requester"
+      sar_response_address: Where the information should be sent
       status: Status
+      third_party: Information requested on someone's behalf?
       time_taken: Time taken
       time_taken_result:
         one: "%{count} working day"
@@ -418,8 +423,6 @@ en:
       affirmative: 'Yes'
       negative: 'No, the response is ready to send'
       why_not: 'Why is further clearance not required?'
-    case_details:
-      edit_case: 'Edit case details'
     closed_cases:
       heading: Closed cases
       number: Case number
@@ -430,6 +433,12 @@ en:
       extend_for_pit: Extend for Public Interest Test (PIT)
       extension_date: Date of extension deadline
       extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
+    foi:
+      case_details: &case_details
+        edit_case: 'Edit case details'
+    sar:
+      case_details:
+        <<: *case_details
     index: &cases_list
       heading_search: Search
       heading_all_cases: All open cases

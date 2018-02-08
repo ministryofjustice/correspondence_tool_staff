@@ -1,0 +1,40 @@
+tbody.response-details
+  tr.date-responded
+    th = t('common.case.date_responded')
+    td = case_details.date_sent_to_requester
+
+  tr.timeliness
+    th = t('common.case.timeliness')
+    td = case_details.timeliness
+
+  tr.time-taken
+    th = t('common.case.time_taken')
+    td = case_details.time_taken
+
+  - if case_details.info_held_status.present?
+    tr.info-held
+      th = "Was the information held?"
+      td = case_details.info_held_status.name
+
+  - if case_details.appeal_outcome.present?
+    tr.appeal_outcome
+      th = t('common.case.appeal_outcome')
+      td = case_details.appeal_outcome.name
+
+  - if case_details.outcome.present?
+    tr.outcome
+      th = t('common.case.outcome')
+      td = case_details.outcome.name
+
+  - if case_details.refusal_reason.present?
+    tr.refusal-reason
+      th = t('common.case.reason_for_refusal')
+      td = case_details.refusal_reason.name
+
+  - unless case_details.exemptions.empty?
+    tr.exemptions
+      th = t('common.case.exemptions_heading')
+      td
+        ul
+          - case_details.exemptions.each do |exemption|
+            li = exemption.name

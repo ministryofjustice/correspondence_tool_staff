@@ -27,11 +27,12 @@ feature 'Closing a case' do
     expect(cases_show_page).to be_displayed
     expect(cases_show_page.notice.text).to eq 'Case updated'
     expect(cases_show_page.page_heading.heading.text).to eq 'Case subject, Aardvarks for sale'
-    expect(cases_show_page.case_details.basic_details.date_received.data.text).to eq Date.today.strftime(Settings.default_date_format)
-    expect(cases_show_page.case_details.basic_details.name.data.text).to eq 'John Doe'
-    expect(cases_show_page.case_details.basic_details.email.data.text).to eq 'john.doe@moj.com'
+    expect(cases_show_page.case_details.foi_basic_details.date_received.data.text).to eq Date.today.strftime(Settings.default_date_format)
+    expect(cases_show_page.case_details.foi_basic_details.name.data.text).to eq 'John Doe'
+    expect(cases_show_page.case_details.foi_basic_details.email.data.text).to eq 'john.doe@moj.com'
 
   end
+
 
   scenario 'editing a case with no changes' do
     kase =  create :accepted_case, received_date: 2.days.ago

@@ -45,7 +45,7 @@ module CaseClosure
 
       describe '.absolute' do
         it 'returns only records of subtype absolute' do
-          expect(Exemption.absolute).to eq([@abs_1, @abs_2])
+          expect(Exemption.absolute).to match_array([@abs_1, @abs_2])
         end
       end
 
