@@ -25,7 +25,6 @@ describe 'teams/show.html.slim', type: :view do
       login_as manager
       assign(:team, @hmpps)
       assign(:children, @hmpps.children)
-
       render
 
       teams_show_page.load(rendered)
@@ -44,6 +43,15 @@ describe 'teams/show.html.slim', type: :view do
       expect(bg.name.text).to eq 'View the details of HR'
       expect(bg.director.text).to eq 'Martin Beecroft'
       expect(bg.num_business_units.text).to eq '1'
+    end
+
+    it 'does not have a deactivate team link' do
+      login_as manager
+      assign(:team, @hmpps)
+      assign(:children, @hmpps.children)
+      render
+      teams_show_page.load(rendered)
+      expect(teams_show_page).not_to have_deactivate_team_link
     end
   end
 
@@ -92,12 +100,19 @@ describe 'teams/show.html.slim', type: :view do
       expect(bu2_row.email.text).to eq bu2.email
       expect(bu2_row.num_responders.text).to eq '2'
     end
+
+    it 'does not have a deactivate team link' do
+      render
+      teams_show_page.load(rendered)
+      expect(teams_show_page).not_to have_deactivate_team_link
+    end
   end
 
   context 'showing a business unit' do
-    let(:bu)          { create :business_unit }
-    let!(:responder1) { create :responder, responding_teams: [bu] }
-    let!(:responder2) { create :responder, responding_teams: [bu] }
+    let(:bu)              { create :business_unit }
+    let!(:responder1)     { create :responder, responding_teams: [bu] }
+    let!(:responder2)     { create :responder, responding_teams: [bu] }
+    let(:managing_team)   { create :managing_team }
 
     before do
       login_as manager
@@ -138,6 +153,25 @@ describe 'teams/show.html.slim', type: :view do
       expect(teams_show_page).to have_new_information_officer_button
       expect(teams_show_page.new_information_officer_button[:href])
         .to eq "/teams/#{bu.id}/users/new?role=responder"
+    end
+
+    context 'showing the deactivate team link' do
+      context 'responding business unit' do
+        it 'has a deactivate team link' do
+          render
+          teams_show_page.load(rendered)
+          expect(teams_show_page).to have_deactivate_team_link
+        end
+      end
+
+      context 'non-responding team' do
+        it 'does not have a deactivate team link' do
+          assign(:team, managing_team)
+          render
+          teams_show_page.load(rendered)
+          expect(teams_show_page).not_to have_deactivate_team_link
+        end
+      end
     end
   end
 

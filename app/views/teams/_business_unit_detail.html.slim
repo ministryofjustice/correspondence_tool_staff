@@ -64,3 +64,13 @@ p
                 new_team_user_path(team_id: team.id, role: team.role),
                 id: 'action--new-responder-user',
                 class: 'button')
+
+
+- if Pundit.policy(current_user, team).can_deactivate_team?
+  - if FeatureSet.team_deactivation.enabled?
+    hr
+    .grid-row
+      .column-full
+        = link_to(t('.deactivate_team'),
+                deactivate_team_path(team),
+                id: 'action--deactivate-team')

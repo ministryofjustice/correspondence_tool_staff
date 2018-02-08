@@ -520,6 +520,7 @@ en:
     business_unit_detail:
       team_members: Team members
       new_team_member: New team member
+      deactivate_team: Deactivate team
 #      new_responder_user: New Information Officer
     # business_group_detail:
     #   destroy: 'Are you sure you want to deactivate this business group?'

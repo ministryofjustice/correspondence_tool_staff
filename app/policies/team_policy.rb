@@ -13,6 +13,15 @@ class TeamPolicy < ApplicationPolicy
     check_user_is_a_manager || check_user_is_member_of_team
   end
 
+  def can_deactivate_team?
+    clear_failed_checks
+    check_user_is_a_manager &&
+        check_team_is_not_deactivated &&
+        check_team_role_is_responding
+  end
+
+
+
   def show?
     clear_failed_checks
     check_user_is_a_manager || check_user_is_member_of_team
@@ -63,6 +72,14 @@ class TeamPolicy < ApplicationPolicy
 
   check :user_is_member_of_team do
     team.in? user.teams
+  end
+
+  check :team_is_not_deactivated do
+    @team.deleted_at.nil?
+  end
+
+  check :team_role_is_responding do
+    @team.role == 'responder'
   end
 
 end

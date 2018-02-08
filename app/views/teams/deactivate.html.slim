@@ -1,0 +1,31 @@
+- content_for :heading
+  = 'Deactivate team'
+
+
+= render partial: 'layouts/header'
+
+
+p You're deactivating the team:
+p.deactivated-team-name
+  strong
+    = @team.name
+p
+
+| In order to deactivate the team, you'll need to:
+
+ul.list.list-bullet
+  li Reassign open cases to other teams
+  li Choose what to do with other cases
+
+p.alert-orange
+  strong
+    | Note!
+  br
+  br
+  | Team members will no longer see case information relating to this team. To add them to another team,
+  | please visit the team page
+
+p
+p
+
+  = link_to 'Continue', deactivate_team_path(@team), class: 'button', id: 'action--new-responder-user'
