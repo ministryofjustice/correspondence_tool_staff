@@ -157,14 +157,18 @@ case_types:
               drafting:
                 add_message_to_case:
                   if: Predicates#responder_is_member_of_assigned_team?
-                close:
+                mark_response_sent_and_close:
                   if: Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
+                # close:
+                #   if: Predicates#responder_is_member_of_assigned_team?
+                #   transition_to: closed
+                link_a_case:
                 reassign_user:
                   if: Predicates#responder_is_member_of_assigned_team?
-                respond:
-                  if: Predicates#responder_is_member_of_assigned_team?
-                  transition_to: closed
+                # respond:
+                #   if: Predicates#responder_is_member_of_assigned_team?
+                #   transition_to: closed
 
 
               awaiting_dispatch:

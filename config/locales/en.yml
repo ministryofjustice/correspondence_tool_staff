@@ -370,6 +370,12 @@ en:
       clear_response: Clear response
       request_amends: Request amends
       upload_approve: 'Upload response and clear'
+      mark_response_sent_and_close: Mark response as sent and close
+    correspondence:
+      foi:
+        name: FOI - Freedom of Information Request
+      sar:
+        name: SAR - Subject Access Request
     new_case_button: Create case
     phase_banner: |
       This is a new service.
