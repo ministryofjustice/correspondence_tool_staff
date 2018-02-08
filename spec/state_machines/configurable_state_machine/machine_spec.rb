@@ -389,6 +389,23 @@ module ConfigurableStateMachine
       end
     end
 
+    describe 'events' do
+      it 'returns a list of all events in alphabetical order' do
+        expected_events = %i{
+          add_message_to_case
+          add_response
+          assign_responder
+          destroy_case
+          edit_case
+          flag_for_clearance
+          flag_for_press
+          unflag_for_clearance
+        }
+        expect(machine.events).to eq expected_events
+      end
+    end
+
+
     describe '#trigger_event' do
       context 'invalid metadata' do
         context 'no acting user' do

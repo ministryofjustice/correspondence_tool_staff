@@ -4,6 +4,11 @@ module ConfigurableStateMachine
     def initialize(config:, kase:)
       @config = config
       @kase = kase
+      @events = nil
+    end
+
+    def events
+      @events ||= gather_all_events
     end
 
     def configurable?
@@ -200,5 +205,16 @@ module ConfigurableStateMachine
       end
       @kase.transitions.create!(attrs.merge(params))
     end
+
+    def gather_all_events
+      events = []
+      @config.to_hash[:user_roles].each do |role, role_config|
+        role_config[:states].each do |state, role_state_config|
+          events << role_state_config.keys
+        end
+      end
+      events.flatten.uniq.sort
+    end
+
   end
 end
