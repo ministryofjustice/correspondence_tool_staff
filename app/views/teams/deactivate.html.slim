@@ -5,8 +5,8 @@
 = render partial: 'layouts/header'
 
 
-| You're deactivating the team:
-p
+p You're deactivating the team:
+p.deactivated-team-name
   strong
     = @team.name
 p
@@ -28,4 +28,4 @@ p.alert-orange
 p
 p
 
-  = link_to 'Continue', deactivate_team_path(@team), class: 'button'
+  = link_to 'Continue', deactivate_team_path(@team), class: 'button', id: 'action--new-responder-user'
