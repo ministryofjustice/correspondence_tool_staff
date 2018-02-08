@@ -21,9 +21,9 @@ end
 
 def update_dates(kase, date)
   kase.created_at = kase.received_date = date
-  kase.escalation_deadline = DeadlineCalculator.escalation_deadline(kase)
-  kase.internal_deadline = DeadlineCalculator.internal_deadline(kase)
-  kase.external_deadline = DeadlineCalculator.external_deadline(kase)
+  kase.escalation_deadline = kase.deadline_calculator.escalation_deadline
+  kase.internal_deadline = kase.deadline_calculator.internal_deadline
+  kase.external_deadline = kase.deadline_calculator.external_deadline
   kase.save!
 end
 
