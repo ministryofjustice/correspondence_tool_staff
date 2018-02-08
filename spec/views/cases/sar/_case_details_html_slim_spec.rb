@@ -32,6 +32,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
     it 'does not display the email address if one is not provided' do
       unassigned_case.email = nil
       unassigned_case.postal_address = "1 High Street\nAnytown\nAT1 1AA"
+      unassigned_case.reply_method = 'send_by_post'
 
       render partial: 'cases/sar/case_details.html.slim',
              locals:{ case_details: unassigned_case}

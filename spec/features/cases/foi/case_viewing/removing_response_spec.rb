@@ -65,6 +65,7 @@ feature 'removing a response from response details' do
             .to eq "Are you sure you want to remove #{attached_response.filename}?"
           uploaded_file.first.actions.remove.click
 
+          sleep 0.25
           cases_show_page.wait_for_case_attachments nil, count: 0
           expect(cases_show_page).to have_no_case_attachments
           expect(attachment_object).to have_received(:delete)

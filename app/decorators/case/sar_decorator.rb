@@ -10,6 +10,6 @@ class Case::SARDecorator < Case::BaseDecorator
   end
 
   def sar_response_address
-    object.email.present? ? object.email : object.postal_address
+    object.send_by_email? ? object.email : object.postal_address
   end
 end
