@@ -503,7 +503,7 @@ en:
           <li>sent the response to the person who made the request</li>
         </ul>
     confirm_respond:
-      success: Response confirmed. The case is now with Disclosure BMT.
+      success: The response has been marked as sent.
     close:
       heading: Close case
       close_date: Date response sent
