@@ -35,7 +35,7 @@ FactoryGirl.define do
   sequence(:approver_responder_manager_name)  { |n| "Mgr Approver-Responder #{n}" }
 
   factory :user do
-    password '12345678'
+    password 'qwerty$123'
     sequence(:full_name) { |n| "Firstname#{n} Lastname#{n}" }
     email { Faker::Internet.email(full_name) }
 

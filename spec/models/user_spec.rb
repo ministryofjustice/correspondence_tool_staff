@@ -165,7 +165,7 @@ RSpec.describe User, type: :model do
     end
     it 'returns true for a user with mulitple teams' do
       team = create :responding_team, name: 'User Creation Team'
-      existing_user = User.new(full_name: 'danny driver', email: 'dd@moj.com', password: 'kjkjkj')
+      existing_user = User.new(full_name: 'danny driver', email: 'dd@moj.com', password: 'theresamaynotlast')
       existing_user.team_roles << TeamsUsersRole.new(team: team, role: 'responder')
       team_2 = BusinessUnit.create(name: 'UCT 2', parent_id: team.parent_id, role: 'responder')
       existing_user.team_roles << TeamsUsersRole.new(team: team_2, role: 'responder')
