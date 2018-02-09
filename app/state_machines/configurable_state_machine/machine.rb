@@ -71,11 +71,10 @@ module ConfigurableStateMachine
       method.to_s =~ /(.+)!$/ || super
     end
 
-    def self.event_name(event)
-      "XXX"
-      # if self.events.keys.include?(event.to_sym)
-      #   I18n.t("event.#{event}", default: event.to_s.humanize)
-      # end
+    def event_name(event)
+      if events.include?(event.to_sym)
+        I18n.t("event.#{event}", default: event.to_s.humanize)
+      end
     end
 
     private

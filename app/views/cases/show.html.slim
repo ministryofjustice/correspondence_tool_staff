@@ -37,7 +37,7 @@ div id="case-#{@case.id}"
         - if policy(@case).can_respond?
           = action_button_for(:respond)
 
-        - (@permitted_events - [:add_responses, :add_response_to_flagged_case, :close, :approve, :respond, :reassign_user, :upload_response_and_approve, :upload_response_and_return_for_redraft]).each do |event|
+        - (@permitted_events - [:add_responses, :add_response_to_flagged_case, :approve, :respond, :reassign_user, :upload_response_and_approve, :upload_response_and_return_for_redraft]).each do |event|
           = action_button_for(event)
 
         - if policy(@case).assignments_execute_reassign_user?

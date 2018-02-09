@@ -148,10 +148,9 @@ describe ConfigurableStateMachine::Machine do
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'drafting'
           expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                        :close,
                                                                         :link_a_case,
-                                                                        :reassign_user,
-                                                                        :respond]
+                                                                        :mark_response_sent_and_close,
+                                                                        :reassign_user]
         end
       end
 
@@ -164,7 +163,6 @@ describe ConfigurableStateMachine::Machine do
                                                                         :add_responses,
                                                                         :remove_last_response,
                                                                         :remove_response]
-                                                                        # :respond
         end
       end
 

@@ -147,6 +147,7 @@ en:
     close: Case closed
     edit_case: Case details edited
     extend_for_pit: Extended for Public Interest Test (PIT)
+    mark_response_sent_and_close: Mark response as sent and close
     reject_responder_assignment: Rejected by Business unit
     remove_last_response: File removed
     remove_response: File removed
