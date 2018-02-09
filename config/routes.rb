@@ -160,11 +160,8 @@ Rails.application.routes.draw do
     root to: redirect(gnav.default_urls.approver), as: :approver_root
   end
 
-  # TODO: Limit this to the admin users, as soon as we figure out how we
-  #       recognize them. Here's a sample of how to do this using Devise:
-  #
-  # authenticate :user, lambda { |u| u.admin? } do
-  authenticate :user do
+
+  authenticate :user, lambda { |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
   end
 
