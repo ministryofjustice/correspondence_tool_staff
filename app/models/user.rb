@@ -45,6 +45,7 @@ class User < ApplicationRecord
   has_one  :approving_team, through: :approving_team_roles, source: :team
 
   validates :full_name, presence: true
+  validate :password_blacklist
 
   scope :managers, -> {
     joins(:team_roles).where(teams_users_roles: { role: 'manager' })
@@ -111,6 +112,27 @@ class User < ApplicationRecord
 
   def multiple_team_member?
     team_roles.size > 1
+  end
+
+  def password_blacklist
+    if password.present? and password.in?(bad_passwords)
+      errors.add :password, "too easily guessable. Please use another password at least 10 characters long."
+    end
+  end
+
+  private
+  def bad_passwords
+    %w{
+        1234567890
+        qwertyuiop
+        1q2w3e4r5t
+        q1w2e3r4t5
+        password12
+        password123
+        aaaaaaaaaa
+        zzzzzzzzzz
+        1111111111
+    }
   end
 
 end

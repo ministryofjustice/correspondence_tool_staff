@@ -11,6 +11,6 @@
 - if @team.is_a?(BusinessUnit)
   = render partial: 'business_unit_detail', locals: {team: @team}
 - elsif @team.is_a?(Directorate)
-  = render partial: 'directorate_detail', locals: {teams: @team.children}
+  = render partial: 'directorate_detail', locals: {teams: @children}
 - else
   = render partial: 'business_group_detail', locals: { teams: @children}

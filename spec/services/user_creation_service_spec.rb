@@ -58,7 +58,7 @@ describe UserCreationService do
 
     context 'the user already exists in this team' do
       before(:all) do
-        @existing_user = User.new(full_name: 'danny driver', email: 'dd@moj.com', password: 'kjkjkj')
+        @existing_user = User.new(full_name: 'danny driver', email: 'dd@moj.com', password: '102pettyfrance')
         @existing_user.team_roles << TeamsUsersRole.new(team: @team, role: 'responder')
         @existing_user.save!
       end
@@ -90,7 +90,7 @@ describe UserCreationService do
     context 'when a user with the same email exists' do
       before(:each) do
         team_2 = BusinessUnit.create(name: 'UCT 2', parent_id: @team.parent_id, role: 'responder')
-        @existing_user = User.new(full_name: 'danny driver', email: 'dd@moj.com', password: 'kjkjkj')
+        @existing_user = User.new(full_name: 'danny driver', email: 'dd@moj.com', password: '102pettryfrance')
         @existing_user.team_roles << TeamsUsersRole.new(team: team_2, role: 'responder')
         @existing_user.save!
       end

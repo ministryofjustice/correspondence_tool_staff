@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe TeamsController, type: :controller do
 
   let(:bg)              { create :business_group }
+  let(:another_bg)      { create :business_group }
   let(:directorate)     { create :directorate, business_group: bg }
   let(:business_unit)   { create :business_unit, directorate: directorate, name: 'AAA' }
   let(:business_unit2)  { create :business_unit, directorate: directorate, name: 'BBB' }
@@ -14,9 +15,9 @@ RSpec.describe TeamsController, type: :controller do
       before(:each) { sign_in manager }
 
       it 'loads all business groups' do
-        expect(Team).to receive(:where).with(type: 'BusinessGroup').and_return([bg])
+        expect(Team).to receive(:where).with(type: 'BusinessGroup').and_return(BusinessGroup.order(:name))
         get :index
-        expect(assigns(:teams)).to eq [bg]
+        expect(assigns(:teams)).to eq BusinessGroup.order(:name)
       end
 
       it 'renders the index template' do
