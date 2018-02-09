@@ -26,6 +26,7 @@ module PageObjects
           element :upload_approve, '#action--upload-approve'
           element :upload_redraft, '#action--upload-redraft'
           element :reassign_user, '#action--reassign-case'
+          element :mark_as_sent_and_close, '#action--mark-response-as-sent-and-close'
         end
         element :extend_for_pit_action, '#action--extend-for-pit'
 

@@ -30,7 +30,7 @@ module CasesHelper
     when :mark_response_sent_and_close
       link_to t('common.case.mark_response_sent_and_close'),
               respond_case_path(@case),
-              id: 'action--mark-response-as-sent',
+              id: 'action--mark-response-as-sent-and-close',
               class: 'button'
     when :reassign_user
       path = nil
