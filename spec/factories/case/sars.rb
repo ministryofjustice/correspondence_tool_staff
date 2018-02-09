@@ -118,8 +118,7 @@ FactoryGirl.define do
 
   factory :closed_sar, parent: :responded_sar do
 
-    refusal_reason              { find_or_create :refusal_reason, :tmm }
-    message                     'tmm'
+    missing_info              { false }
 
     transient do
       identifier "closed sar"

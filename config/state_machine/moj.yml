@@ -172,6 +172,7 @@ case_types:
               unassigned:
                 add_message_to_case:
                   if: Predicates#responder_is_member_of_assigned_team?
+
               awaiting_responder:
                 accept_responder_assignment:
                   if: Predicates#responder_is_member_of_assigned_team?
@@ -188,7 +189,6 @@ case_types:
                 mark_response_sent_and_close:
                   if: Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
-                link_a_case:
                 reassign_user:
                   if: Predicates#responder_is_member_of_assigned_team?
 
@@ -205,7 +205,6 @@ case_types:
               responded:
                 add_message_to_case:
                   if: Predicates#responder_is_member_of_assigned_team?
-                link_a_case:
 
               closed:
                 add_message_to_case:

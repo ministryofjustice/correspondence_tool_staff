@@ -372,11 +372,6 @@ en:
       request_amends: Request amends
       upload_approve: 'Upload response and clear'
       mark_response_sent_and_close: Mark response as sent and close
-    correspondence:
-      foi:
-        name: FOI - Freedom of Information Request
-      sar:
-        name: SAR - Subject Access Request
     new_case_button: Create case
     phase_banner: |
       This is a new service.
@@ -447,12 +442,6 @@ en:
       extend_for_pit: Extend for Public Interest Test (PIT)
       extension_date: Date of extension deadline
       extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
-    foi:
-      case_details: &case_details
-        edit_case: 'Edit case details'
-    sar:
-      case_details:
-        <<: *case_details
     index: &cases_list
       heading_search: Search
       heading_all_cases: All open cases
@@ -524,10 +513,14 @@ en:
             <li>uploaded the response and any supporting documents</li>
             <li>sent the response to the person who made the request</li>
           </ul>
+      case_details: &case_details
+        edit_case: 'Edit case details'
     sar:
       mark_as_sent:
         close_date: Date response sent
         date_example: For example, 30 1 2017
+      case_details:
+        <<: *case_details
 
     remove_clearance:
       heading: 'Remove Clearance'
