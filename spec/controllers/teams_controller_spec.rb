@@ -107,7 +107,7 @@ RSpec.describe TeamsController, type: :controller do
               'team_lead' => 'Stephen Richards',
               'parent_id' => directorate.id,
               'role' => 'responder',
-              'category_ids' => [ Category.sar.id.to_s ]
+              'correspondence_type_ids' => [ CorrespondenceType.sar.id.to_s ]
             },
             'team_type' => 'bu',
             'commit' => 'Submit'}

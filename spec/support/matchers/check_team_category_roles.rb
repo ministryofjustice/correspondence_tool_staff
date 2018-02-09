@@ -1,16 +1,18 @@
 require 'rspec/expectations'
 
-RSpec::Matchers.define :match_tcr_attrs do |expected_category, *expected_methods|
+RSpec::Matchers.define :match_tcr_attrs do |expected_correspondence_type,
+                                            *expected_methods|
   match do |actual_tcr|
     permissions = set_up_permissions(expected_methods)
-    category = Category.__send__(expected_category)
-    expect(actual_tcr.category_id).to eq category.id
+    ct = CorrespondenceType.__send__(expected_correspondence_type)
+    expect(actual_tcr.correspondence_type_id).to eq ct.id
     permissions.each do |method, bool_val|
       expect(actual_tcr.__send__(method)).to eq bool_val
     end
 
     failure_message do
-      "expected that the team category role record would be for #{expected_category} with #{expected_methods}\n"
+      "expected that the team correspondence type role record would be for " +
+        "#{expected_correspondence_type} with #{expected_methods}\n"
     end
 
   end

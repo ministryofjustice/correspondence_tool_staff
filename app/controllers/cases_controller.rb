@@ -464,7 +464,7 @@ class CasesController < ApplicationController
   end
 
   def validate_correspondence_type(ct_abbr)
-    if ct_abbr.in?(Category.all.map(&:abbreviation))
+    if ct_abbr.in?(CorrespondenceType.all.map(&:abbreviation))
       if ct_abbr.in?(@permitted_correspondence_types.map(&:abbreviation))
         :ok
       else
@@ -639,9 +639,10 @@ class CasesController < ApplicationController
   def permitted_correspondence_types
     if @permitted_correspondence_types.nil?
       if FeatureSet.sars.enabled?
-        @permitted_correspondence_types = current_user.managing_teams.first.categories.order(:name)
+        @permitted_correspondence_types =
+          current_user.managing_teams.first.correspondence_types.order(:name)
       else
-        @permitted_correspondence_types = Category.where(abbreviation: 'FOI')
+        @permitted_correspondence_types = CorrespondenceType.foi
       end
     end
     @permitted_correspondence_types

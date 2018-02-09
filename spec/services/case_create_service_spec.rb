@@ -4,7 +4,6 @@ describe CaseCreateService do
   let(:manager) { create :manager, managing_teams: [ team_dacu ] }
   let!(:team_dacu) { find_or_create :team_dacu }
   let!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
-  let(:foi) { find_or_create :category, :foi }
   let(:regular_params) do
     {
       type: 'Case::FOI::Standard',

@@ -12,13 +12,13 @@ describe DefaultTeamService do
   let(:service)               { DefaultTeamService.new(kase) }
 
   describe '#managing_team' do
-    it 'returns the team names in the settings file for this category of cases' do
+    it 'returns the team names in the settings file for this type of case' do
       expect(service.managing_team).to eq team_dacu
     end
   end
 
   describe '#approving_team' do
-    it 'returns the team names in the settings file for this category of cases' do
+    it 'returns the team names in the settings file for this type of case' do
       expect(service.approving_team).to eq team_dacu_disclosure
     end
   end

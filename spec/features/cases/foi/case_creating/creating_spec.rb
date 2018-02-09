@@ -10,7 +10,6 @@ feature 'FOI Case creation by a manager' do
   background do
     responding_team
     find_or_create :team_dacu_disclosure
-    create(:category, :foi)
     login_as manager
     cases_page.load
   end

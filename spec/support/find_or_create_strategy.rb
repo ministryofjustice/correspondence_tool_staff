@@ -19,7 +19,7 @@ module FactoryGirl
 
       def get_match_attributes(evaluation)
         evaluation.hash.keep_if do |attr,_value|
-          attr.to_s.in? build_class(evaluation).attribute_names
+          attr.to_s.in? build_class(evaluation).column_names
         end
       end
 

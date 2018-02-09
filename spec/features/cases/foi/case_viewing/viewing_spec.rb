@@ -6,18 +6,6 @@ feature 'viewing details of case in the system' do
   given(:responder) { create :responder }
   given(:responding_team) { responder.responding_teams.first }
 
-  # given(:gq_category) { create(:category, :gq) }
-  # given(:gq) do
-  #   create :accepted_case,
-  #          requester_type: :journalist,
-  #          name: 'Gina GQ',
-  #          email: 'gina.gq@testing.digital.justice.gov.uk',
-  #          subject: 'this is a gq',
-  #          message: 'viewing gq details test message',
-  #          category: gq_category,
-  #          responding_team: responding_team
-  # end
-
   given(:internal_gq_deadline) do
     DeadlineCalculator.internal_deadline(gq).strftime(Settings.default_date_format)
   end
@@ -57,7 +45,6 @@ feature 'viewing details of case in the system' do
   #   expect(cases_show_page.received_date).to have_content(foi_received_date)
   # end
 
-  given(:foi_category) { create(:category) }
   given(:foi) do
     create :accepted_case,
            requester_type: :offender,

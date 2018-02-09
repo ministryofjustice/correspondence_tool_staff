@@ -9,10 +9,6 @@ feature 'Upload response' do
            responding_teams: responder.responding_teams
   end
 
-  background do
-    create(:category, :foi)
-  end
-
   context 'as the assigned responder' do
     background do
       login_as responder

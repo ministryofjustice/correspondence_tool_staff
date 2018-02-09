@@ -27,10 +27,10 @@ namespace :db do
 
       desc 'Seed categories and closure metadata'
       task :misc => :environment do
-        require File.join(Rails.root, 'db', 'seeders', 'category_seeder')
+        require File.join(Rails.root, 'db', 'seeders', 'correspondence_type_seeder')
         require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
-        puts 'Seeding Categories'
-        CategorySeeder.new.seed!
+        puts 'Seeding Correspondence Types'
+        CorrespondenceTypeSeeder.new.seed!
         puts 'Seeding Case closure metadata'
         CaseClosure::MetadataSeeder.seed!
       end

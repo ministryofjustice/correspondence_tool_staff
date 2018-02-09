@@ -11,7 +11,6 @@ feature "Top level global navigation" do
   before do
     responder
     dacu
-    create(:category, :foi)
   end
 
   scenario "Visiting the login page" do

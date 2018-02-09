@@ -54,22 +54,32 @@ class Team < ApplicationRecord
     end
   end
 
-  def can_allocate?(category)
-    properties.where(key: 'can_allocate', value: category.abbreviation).any?
+  def can_allocate?(correspondence_type)
+    properties.where(
+      key: 'can_allocate',
+      value: correspondence_type.abbreviation
+    ).any?
   end
 
-  def enable_allocation(category)
-    unless can_allocate?(category)
-      properties << TeamProperty.create!(key: 'can_allocate', value: category.abbreviation)
+  def enable_allocation(correspondence_type)
+    unless can_allocate?(correspondence_type)
+      properties << TeamProperty.create!(key: 'can_allocate',
+                                         value: correspondence_type.abbreviation)
     end
   end
 
-  def disable_allocation(category)
-    properties.where(key: 'can_allocate', value: category.abbreviation).delete_all
+  def disable_allocation(correspondence_type)
+    properties.where(
+      key: 'can_allocate',
+      value: correspondence_type.abbreviation
+    ).delete_all
   end
 
-  def self.allocatable(category)
-    Team.joins(:properties).where(team_properties: { key: 'can_allocate', value: category.abbreviation })
+  def self.allocatable(correspondence_type)
+    Team.joins(:properties).where(team_properties: {
+                                    key: 'can_allocate',
+                                    value: correspondence_type.abbreviation
+                                  })
   end
 
   def policy_class

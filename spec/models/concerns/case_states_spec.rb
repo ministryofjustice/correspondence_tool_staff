@@ -164,7 +164,7 @@ RSpec.describe Case, type: :model do
     end
 
     describe '#within_external_deadline?' do
-      let(:foi) { create :category, :foi }
+      let(:foi) { find_or_create :foi_correspondence_type }
       let(:responded_case) do
         create :responded_case,
                received_date: days_taken.business_days.ago,

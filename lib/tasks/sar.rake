@@ -25,16 +25,17 @@ namespace :sar do
 
 
   def get_sar_category
-    if Category.find_by_abbreviation("SAR").nil?
-      Category.create(
+    if CorrespondenceType.find_by_abbreviation("SAR").nil?
+      CorrespondenceType.create(
           name: 'Subject Access Request',
           abbreviation: 'SAR',
           internal_time_limit: 10,
-          external_time_limit: 20,
-          escalation_time_limit: 0
+          external_time_limit: 40,
+          escalation_time_limit: 0,
+          time_limit_type: 'calendar_days'
       )
     else
-      Category.sar
+      CorrespondenceType.sar
     end
   end
 end
