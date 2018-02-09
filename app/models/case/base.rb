@@ -468,10 +468,10 @@ class Case::Base < ApplicationRecord
   end
 
   def deadline_calculator
-    case correspondence_type.time_limit_type
-    when 'business_days' then DeadlineCalculator::BusinessDays.new(self)
-    when 'calendar_days' then DeadlineCalculator::CalendarDays.new(self)
-    end
+    klass = DeadlineCalculator.const_get(
+      correspondence_type.deadline_calculator_class
+    )
+    klass.new(self)
   end
 
   private

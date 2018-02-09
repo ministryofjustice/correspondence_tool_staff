@@ -16,11 +16,11 @@ class CorrespondenceType < ApplicationRecord
                  internal_time_limit: :integer,
                  external_time_limit: :integer,
                  escalation_time_limit: :integer,
-                 time_limit_type: :string
+                 deadline_calculator_class: :string
 
-  enum time_limit_type: {
-         business_days: 'business_days',
-         calendar_days: 'calendar_days'
+  enum deadline_calculator_class: {
+         'BusinessDays' => 'BusinessDays',
+         'CalendarDays' => 'CalendarDays',
        }
 
   validates_presence_of :name,
@@ -28,7 +28,7 @@ class CorrespondenceType < ApplicationRecord
                         :escalation_time_limit,
                         :internal_time_limit,
                         :external_time_limit,
-                        :time_limit_type,
+                        :deadline_calculator_class,
                         on: :create
 
   has_many :cases,
