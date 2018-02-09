@@ -209,6 +209,9 @@ en:
       case:
         linked_case_number: " For example 170131001"
         upload_comment: This will be added to the converstation section of the case.
+      team_property:
+        value: Please provide one area at a time and be as concise as possible
+
     label:
       bypass_approval_manager:
         press_office_approval:
@@ -270,7 +273,6 @@ en:
         subject_full_name: "Full name of data subject"
       feedback:
         comment: Help make this service better
-
       team:
         name: Business unit name
         email: Business unit group email
@@ -279,6 +281,9 @@ en:
           responder: Drafting
           approver: Clearance
           manager: Case management
+      team_property:
+        value: "Add area"
+        
 
   alerts:
     assignment_accepted_html: |
