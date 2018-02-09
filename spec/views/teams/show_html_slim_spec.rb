@@ -58,6 +58,7 @@ describe 'teams/show.html.slim', type: :view do
     before do
       login_as manager
       assign(:team, directorate)
+      assign(:children, directorate.children.order(:name))
     end
 
     it 'displays the directorate name' do
