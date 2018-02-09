@@ -34,6 +34,38 @@ case_types:
 
     workflows:
       standard:
+        # This is only necessary for FOI since not all states have been converted to use the configurab;le state Machine
+         # So a full list of all states is needed for the case transition decorator
+        permitted_events:
+          - assign_responder
+          - flag_for_clearance
+          - unflag_for_clearance
+          - take_on_for_approval
+          - reject_responder_assignment
+          - accept_approver_assignment
+          - unaccept_approver_assignment
+          - accept_responder_assignment
+          - assign_to_new_team
+          - add_responses
+          - add_response_to_flagged_case
+          - upload_response_and_return_for_redraft
+          - approve
+          - approve_and_bypass
+          - upload_response_approve_and_bypass
+          - request_amends
+          - upload_response_and_approve
+          - edit_case
+          - destroy_case
+          - reassign_user
+          - remove_response
+          - remove_last_response
+          - respond
+          - close
+          - add_message_to_case
+          - extend_for_pit
+          - request_further_clearance
+          - link_a_case
+
         initial_state: unassigned
         user_roles:
           manager:

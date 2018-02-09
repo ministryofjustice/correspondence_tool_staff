@@ -207,13 +207,16 @@ module ConfigurableStateMachine
 
     def gather_all_events
       events = []
-      @config.to_hash[:user_roles].each do |role, role_config|
-        role_config[:states].each do |state, role_state_config|
-          events << role_state_config.keys
+      if @config.to_hash[:permitted_events].present?
+        events = @config.to_hash[:permitted_events].map(&:to_sym)
+      else
+        @config.to_hash[:user_roles].each do |role, role_config|
+          role_config[:states].each do |state, role_state_config|
+            events << role_state_config.keys
+          end
         end
+        events.flatten.uniq.sort
       end
-      events.flatten.uniq.sort
     end
-
   end
 end

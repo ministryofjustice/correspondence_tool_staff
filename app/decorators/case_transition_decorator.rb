@@ -20,7 +20,7 @@ class CaseTransitionDecorator < Draper::Decorator
   private
   def event
     state_machine = object.case.state_machine
-    if object.case.type_abbreviation == 'SAR' #state_machine.is_a?(ConfigurableStateMachine::Machine)
+    if state_machine.is_a?(ConfigurableStateMachine::Machine)
       state_machine.event_name(object.event)
     else
       Case::FOI::StandardStateMachine.event_name(object.event)
