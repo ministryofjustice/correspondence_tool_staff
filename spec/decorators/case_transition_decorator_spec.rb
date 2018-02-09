@@ -84,7 +84,8 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       it 'returns the reason for extending' do
         ct = create(:case_transition_extend_for_pit,
                     acting_user: dacu_user,
-                    message: 'Too many vipers').decorate
+                    message: 'Too many vipers',
+                    case: create(:accepted_case)).decorate
         event = 'Extended for Public Interest Test (PIT)'
         details = 'Too many vipers'
         expect(ct.event_and_detail).to eq response(event, details)
@@ -93,7 +94,10 @@ RSpec.describe CaseTransitionDecorator, type: :model do
 
     context 'reject_responder_assignment' do
       it 'returns the reason for rejection' do
-        ct = create(:case_transition_reject_responder_assignment, user: laa_user, message: 'Not LAA matter').decorate
+        ct = create(:case_transition_reject_responder_assignment,
+                    user: laa_user,
+                    message: 'Not LAA matter',
+                    case: create(:assigned_case)).decorate
         event = 'Rejected by Business unit'
         details = 'Not LAA matter'
         expect(ct.event_and_detail).to eq response(event, details)
