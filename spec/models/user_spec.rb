@@ -195,4 +195,37 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  context 'password setting' do
+
+    let(:user) { build :user }
+
+    context 'in blacklist' do
+      it 'errors' do
+        user.password = 'qwertyuiop'
+        user.save
+        expect(user).not_to be_valid
+        expect(user.errors[:password]).to eq ['too easily guessable. Please use another password at least 10 characters long.']
+      end
+    end
+
+    context 'too short' do
+      it 'errrors' do
+        user.password = 'abc'
+        user.save
+        expect(user).not_to be_valid
+        expect(user.errors[:password]).to eq ['is too short (minimum is 10 characters)']
+      end
+    end
+
+    context 'long non-blackilsted password' do
+      it 'does not error and changes the encrypted password' do
+      original_encrypted_password = user.encrypted_password
+        user.password = '102pettyfrance'
+        user.save
+        expect(user).to be_valid
+        expect(user.encrypted_password).not_to eq original_encrypted_password
+      end
+    end
+  end
 end

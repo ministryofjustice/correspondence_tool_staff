@@ -116,7 +116,7 @@ class User < ApplicationRecord
 
   def password_blacklist
     if password.present? and password.in?(bad_passwords)
-      errors.add :password, "Password too easily guessable. Please use another password at least 10 characters long."
+      errors.add :password, "too easily guessable. Please use another password at least 10 characters long."
     end
   end
 
