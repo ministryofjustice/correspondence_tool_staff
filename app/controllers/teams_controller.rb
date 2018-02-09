@@ -13,7 +13,7 @@ class TeamsController < ApplicationController
                                    :create_business_areas_covered]
 
   def index
-    @teams = policy_scope(Team)
+    @teams = policy_scope(Team).order(:name)
     unless current_user.manager?
       render :teams_for_user
     else
@@ -23,7 +23,7 @@ class TeamsController < ApplicationController
 
   def show
     authorize @team
-    @children = @team.children
+    @children = @team.children.order(:name)
   end
 
   def edit
