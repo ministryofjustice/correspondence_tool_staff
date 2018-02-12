@@ -41,29 +41,7 @@ describe ConfigurableStateMachine::Machine do
                                                                       :link_a_case]
         end
       end
-
-      context "awaiting dispatch" do
-        it "should show permitted events" do
-          k = create :sar_with_response
-          expect(k.current_state).to eq 'awaiting_dispatch'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
-                                                                      :destroy_case,
-                                                                      :edit_case,
-                                                                      :link_a_case]
-        end
-      end
-
-      context 'responded' do
-        it "should show permitted events" do
-          k = create :responded_sar
-          expect(k.current_state).to eq 'responded'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
-                                                                      # :close,
-                                                                      :destroy_case,
-                                                                      :edit_case,
-                                                                      :link_a_case]
-        end
-      end
+      
       context 'closed' do
         it "should show permitted events" do
           k = create :closed_sar

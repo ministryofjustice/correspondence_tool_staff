@@ -74,7 +74,7 @@ feature 'Closing a sar' do
 
     context 'responded-to late' do
       given!(:late_case) { create :accepted_sar,
-                            received_date: 22.business_days.ago,
+                            received_date: 50.business_days.ago,
                             responder: responder }
 
       scenario 'the case is responded-to late' do
@@ -89,7 +89,7 @@ feature 'Closing a sar' do
         expect(show_page.response_details.timeliness.data.text)
           .to eq 'Answered late'
         expect(show_page.response_details.time_taken.data.text)
-          .to eq '22 working days'
+          .to eq '50 working days'
       end
     end
   end

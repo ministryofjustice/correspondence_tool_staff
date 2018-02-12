@@ -37,34 +37,34 @@ case_types:
         # This is only necessary for FOI since not all states have been converted to use the configurab;le state Machine
          # So a full list of all states is needed for the case transition decorator
         permitted_events:
-          - assign_responder
-          - flag_for_clearance
-          - unflag_for_clearance
-          - take_on_for_approval
-          - reject_responder_assignment
           - accept_approver_assignment
-          - unaccept_approver_assignment
           - accept_responder_assignment
-          - assign_to_new_team
-          - add_responses
+          - add_message_to_case
           - add_response_to_flagged_case
-          - upload_response_and_return_for_redraft
+          - add_responses
           - approve
           - approve_and_bypass
-          - upload_response_approve_and_bypass
-          - request_amends
-          - upload_response_and_approve
-          - edit_case
-          - destroy_case
-          - reassign_user
-          - remove_response
-          - remove_last_response
-          - respond
+          - assign_responder
+          - assign_to_new_team
           - close
-          - add_message_to_case
+          - destroy_case
+          - edit_case
           - extend_for_pit
-          - request_further_clearance
+          - flag_for_clearance
           - link_a_case
+          - reassign_user
+          - reject_responder_assignment
+          - remove_last_response
+          - remove_response
+          - request_amends
+          - request_further_clearance
+          - respond
+          - take_on_for_approval
+          - unaccept_approver_assignment
+          - unflag_for_clearance
+          - upload_response_and_approve
+          - upload_response_and_return_for_redraft
+          - upload_response_approve_and_bypass
 
         initial_state: unassigned
         user_roles:
@@ -114,8 +114,6 @@ case_types:
       - unassigned
       - awaiting_responder
       - drafting
-      - awaiting_dispatch
-      - responded
       - closed
 
     workflows:
@@ -145,18 +143,6 @@ case_types:
               drafting:
                 add_message_to_case:
                 assign_to_new_team:
-                destroy_case:
-                edit_case:
-                link_a_case:
-
-              awaiting_dispatch:
-                add_message_to_case:
-                destroy_case:
-                edit_case:
-                link_a_case:
-
-              responded:
-                add_message_to_case:
                 destroy_case:
                 edit_case:
                 link_a_case:
