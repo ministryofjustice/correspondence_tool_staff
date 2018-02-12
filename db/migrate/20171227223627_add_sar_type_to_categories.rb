@@ -1,3 +1,6 @@
+class Category < ActiveRecord::Base
+end
+
 class AddSarTypeToCategories < ActiveRecord::Migration[5.0]
   def up
     Category.find_or_create_by! name: 'Subject Access Request',

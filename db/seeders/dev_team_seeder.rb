@@ -68,7 +68,7 @@ class DevTeamSeeder
     @bu_hmctsne   = BusinessUnit.create!(parent: @dir_rsus,
                                          name: 'North East Regional Support Unit (NE RSU)',
                                          role: 'responder',
-                                         correspondence_type_ids: @foi.id)
+                                         correspondence_type_ids: [@foi.id])
     @bu_prop      = BusinessUnit.create!(parent: @dir_prop,
                                          name: 'HMCTS Property Directorate',
                                          role: 'responder',
