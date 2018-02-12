@@ -43,6 +43,11 @@ class TeamPolicy < ApplicationPolicy
     check_user_is_a_manager
   end
 
+  def destroy?
+    clear_failed_checks
+    check_user_is_a_manager
+  end
+
   class Scope
 
     attr_reader :user, :scope

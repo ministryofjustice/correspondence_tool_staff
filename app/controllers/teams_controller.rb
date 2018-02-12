@@ -4,6 +4,7 @@ class TeamsController < ApplicationController
                                   :create_business_areas_covered,
                                   :show,
                                   :edit,
+                                  :destroy,
                                   :destroy_business_area,
                                   :update_business_area,
                                   :update_business_area_form,
@@ -122,23 +123,20 @@ class TeamsController < ApplicationController
   end
 
   def destroy
-    authorize @user
-    team = Team.find(params[:id])
-    service = TeamDeletionService.new(params)
+    authorize @team
+    service = TeamDeletionService.new(@team)
     service.call
     case service.result
     when :ok
       flash[:notice] = I18n.t('teams.destroyed')
-      redirect_to(set_destination(team))
+      redirect_to(set_destination(@team))
     else
-      flash[:alert] = I18n.t('teams.error',
-        team_type: team.pretty_type,
-        child_type: team.child_type)
-      redirect_to(team_path)
+      render action: :show
     end
   end
 
   private
+
 
   def team_params
     params.require(:team).permit(

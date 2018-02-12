@@ -46,6 +46,8 @@ class Assignment < ApplicationRecord
   end
   scope :for_team, -> (team) { where(team: team) }
 
+  scope :pending_accepted, -> { where(state: %w[pending accepted]) }
+
   scope :last_responding, -> {
     responding.where.not(state: 'rejected').order(id: :desc).limit(1)
   }

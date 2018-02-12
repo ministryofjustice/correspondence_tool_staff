@@ -62,12 +62,8 @@ RSpec.describe TeamsController, type: :controller do
           delete :destroy, params: params
         end
 
-        it 'displays a flash alert' do
-          expect(flash[:alert]).to eq "This Directorate still has active business units. Please deactivate all business units of the Directorate before deactivating the Directorate"
-        end
-
         it 'redirects to team path' do
-          expect(response).to redirect_to(team_path(dir.id))
+          expect(response).to render_template(:show)
         end
       end
     end
@@ -80,7 +76,7 @@ RSpec.describe TeamsController, type: :controller do
       end
 
       it 'displays a flash notice' do
-        expect(flash['alert']).to eq 'You are not authorised to deactivate users'
+        expect(flash['alert']).to eq 'You are not authorised to deactivate teams'
       end
 
       it 'redirects to root' do

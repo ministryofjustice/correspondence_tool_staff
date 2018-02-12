@@ -313,7 +313,7 @@ module CTS::Cases
       name = Faker::Name.name
       user = User.create!(full_name: name,
                           email: Faker::Internet.email(name),
-                          password: '12345678')
+                          password: 'correspondence')
       TeamsUsersRole.create(user: user, team: responding_team, role: 'responder')
     end
   end

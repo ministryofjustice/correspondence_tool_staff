@@ -64,3 +64,10 @@ p
                 new_team_user_path(team_id: team.id, role: team.role),
                 id: 'action--new-responder-user',
                 class: 'button')
+hr
+
+- if @team.active?
+  = link_to "Deactivate team", team_path(@team.id),
+                       data: {:confirm => t('.destroy')},
+                       method: :delete,
+                       id: 'deactivate-team-link'
