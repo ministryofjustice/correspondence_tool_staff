@@ -186,24 +186,10 @@ case_types:
               drafting:
                 add_message_to_case:
                   if: Predicates#responder_is_member_of_assigned_team?
-                mark_response_sent_and_close:
+                close:
                   if: Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
                 reassign_user:
-                  if: Predicates#responder_is_member_of_assigned_team?
-
-              awaiting_dispatch:
-                add_message_to_case:
-                  if: Predicates#responder_is_member_of_assigned_team?
-                add_responses:
-                  if: Predicates#responder_is_member_of_assigned_team?
-                remove_last_response:
-                  if: Predicates#responder_is_member_of_assigned_team?
-                remove_response:
-                  if: Predicates#responder_is_member_of_assigned_team?
-
-              responded:
-                add_message_to_case:
                   if: Predicates#responder_is_member_of_assigned_team?
 
               closed:

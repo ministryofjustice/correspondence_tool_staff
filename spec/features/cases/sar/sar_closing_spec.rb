@@ -25,7 +25,8 @@ feature 'Closing a sar' do
 
       scenario 'A KILO has responded and an manager closes the case' do
         open_cases_page.load(timeliness: 'in_time')
-        mark_as_sent_and_close_case(fully_granted_case)
+
+        close_case(fully_granted_case)
 
         cases_respond_page.fill_in_date_responded(0.business_days.ago)
         cases_respond_page.missing_info.yes.click
@@ -53,7 +54,7 @@ feature 'Closing a sar' do
 
 
         open_cases_page.load(timeliness: 'in_time')
-        mark_as_sent_and_close_case(fully_granted_case)
+        close_case(fully_granted_case)
 
         cases_respond_page.fill_in_date_responded(0.business_days.ago)
         cases_respond_page.missing_info.no.click
@@ -78,7 +79,7 @@ feature 'Closing a sar' do
 
       scenario 'the case is responded-to late' do
         open_cases_page.load(timeliness: 'late')
-        mark_as_sent_and_close_case(late_case)
+        close_case(late_case)
 
         cases_respond_page.fill_in_date_responded(0.business_days.ago)
         cases_respond_page.missing_info.yes.click
@@ -95,13 +96,13 @@ feature 'Closing a sar' do
 
   private
 
-  def mark_as_sent_and_close_case(kase)
+  def close_case(kase)
     expect(cases_page.case_list.last.status.text).to eq 'Draft in progress'
     click_link kase.number
 
     expect(cases_show_page.actions).
-      to have_link('Mark response as sent and close', href: respond_case_path(kase))
+      to have_link('Close case', href: close_case_path(kase))
 
-    click_link 'Mark response as sent and close'
+    click_link 'Close case'
   end
 end

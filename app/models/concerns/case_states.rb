@@ -81,14 +81,10 @@ module CaseStates
   end
 
   def close(current_user)
-    state_machine.close!(acting_user: current_user, acting_team: find_team(current_user))
+    state_machine.close!(acting_user: current_user, acting_team: self.managing_team)
   end
 
   private
-
-  def find_team(current_user)
-    current_user.manager? ? self.managing_team : self.responding_team
-  end
 
   def state_machine_of_wrong_type?
     return false unless self.is_a?(Case::FOI::Standard)

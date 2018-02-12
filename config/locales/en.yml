@@ -147,7 +147,6 @@ en:
     close: Case closed
     edit_case: Case details edited
     extend_for_pit: Extended for Public Interest Test (PIT)
-    mark_response_sent_and_close: Mark response as sent and close
     reject_responder_assignment: Rejected by Business unit
     remove_last_response: File removed
     remove_response: File removed
@@ -371,7 +370,6 @@ en:
       clear_response: Clear response
       request_amends: Request amends
       upload_approve: 'Upload response and clear'
-      mark_response_sent_and_close: Mark response as sent and close
     new_case_button: Create case
     phase_banner: |
       This is a new service.
@@ -438,6 +436,8 @@ en:
       number_html: 'Case <abbr title="number">No.</abbr>'
       name-subject: Name/Subject
       view_case: Link to case
+    close:
+      heading: Close case
     extend_for_pit:
       extend_for_pit: Extend for Public Interest Test (PIT)
       extension_date: Date of extension deadline
@@ -498,29 +498,28 @@ en:
       heading: Request amends
     respond:
       heading: Marking it as sent
+      reminders_html: |
+        <strong>Make sure you have:</strong>
+        <ul class="list list-bullet">
+          <li>cleared the response with the Deputy Director</li>
+          <li>uploaded the response and any supporting documents</li>
+          <li>sent the response to the person who made the request</li>
+        </ul>
     confirm_respond:
       success: The response has been marked as sent.
-    close:
-      heading: Close case
-      close_date: Date response sent
-      date_example: For example, 30 1 2017
     foi:
-      mark_as_sent:
-        reminders_html: |
-          <strong>Make sure you have:</strong>
-          <ul class="list list-bullet">
-            <li>cleared the response with the Deputy Director</li>
-            <li>uploaded the response and any supporting documents</li>
-            <li>sent the response to the person who made the request</li>
-          </ul>
       case_details: &case_details
         edit_case: 'Edit case details'
-    sar:
-      mark_as_sent:
+      close_form:
         close_date: Date response sent
         date_example: For example, 30 1 2017
+    sar:
       case_details:
         <<: *case_details
+      close_form:
+        close_date: Date response sent
+        date_example: For example, 30 1 2017
+
 
     remove_clearance:
       heading: 'Remove Clearance'
