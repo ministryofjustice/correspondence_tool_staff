@@ -46,7 +46,7 @@ class DevUserSeeder
 
       user = User.where(email: email).first
       if user.nil?
-        user = User.create!(full_name: user_name, email: email, password: '12345678')
+        user = User.create!(full_name: user_name, email: email, password: 'correspondence')
         puts "User #{user.full_name} created with email #{user.email}"
       else
         puts "User with email #{email} already exists"
