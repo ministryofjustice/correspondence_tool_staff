@@ -1,13 +1,17 @@
-class DeadlineCalculator
+module DeadlineCalculator
+  class BusinessDays
+    attr_reader :kase
 
-  class << self
+    def initialize(kase)
+      @kase = kase
+    end
 
-    def escalation_deadline(kase, start_from=kase.created_at.to_date)
+    def escalation_deadline(start_from=kase.created_at.to_date)
       days_after_day_one = kase.correspondence_type.escalation_time_limit - 1
       days_after_day_one.business_days.after(start_date(start_from))
     end
 
-    def internal_deadline(kase)      # aka draft deadline
+    def internal_deadline      # aka draft deadline
       internal_deadline_for_date(kase.correspondence_type,
                                  start_date(kase.received_date))
     end
@@ -17,10 +21,12 @@ class DeadlineCalculator
       days_after_day_one.business_days.after(date)
     end
 
-    def external_deadline(kase)
+    def external_deadline
       days_after_day_one = kase.correspondence_type.external_time_limit - 1
       days_after_day_one.business_days.after(start_date(kase.received_date))
     end
+
+    private
 
     def start_date(received_date)
       date = received_date + 1
@@ -28,6 +34,4 @@ class DeadlineCalculator
       date
     end
   end
-
-  private_class_method :start_date
 end

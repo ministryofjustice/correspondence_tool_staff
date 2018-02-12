@@ -684,11 +684,16 @@ RSpec.describe Case::Base, type: :model do
       let(:escalation_deadline) { Date.today - 1.day }
       let(:internal_deadline) { Date.today - 2.day }
       let(:external_deadline) { Date.today - 3.day }
+      let(:deadline_calculator) do
+        double DeadlineCalculator::BusinessDays,
+               escalation_deadline: escalation_deadline,
+               internal_deadline: internal_deadline,
+               external_deadline: external_deadline
+      end
 
       before do
-        allow(DeadlineCalculator).to receive(:escalation_deadline).and_return(escalation_deadline)
-        allow(DeadlineCalculator).to receive(:internal_deadline).and_return(internal_deadline)
-        allow(DeadlineCalculator).to receive(:external_deadline).and_return(external_deadline)
+        allow(kase).to receive(:deadline_calculator)
+                         .and_return(deadline_calculator)
       end
 
       it 'is called before_create' do
@@ -698,9 +703,9 @@ RSpec.describe Case::Base, type: :model do
 
       it 'sets the deadlines deadline using DeadlineCalculator' do
         kase.__send__(:set_deadlines)
-        expect(DeadlineCalculator).to have_received(:escalation_deadline).with(kase)
-        expect(DeadlineCalculator).to have_received(:external_deadline).with(kase)
-        expect(DeadlineCalculator).to have_received(:internal_deadline).with(kase)
+        expect(deadline_calculator).to have_received(:escalation_deadline)
+        expect(deadline_calculator).to have_received(:external_deadline)
+        expect(deadline_calculator).to have_received(:internal_deadline)
         expect(kase.escalation_deadline).to eq escalation_deadline
         expect(kase.external_deadline).to eq external_deadline
         expect(kase.internal_deadline).to eq internal_deadline
@@ -1390,6 +1395,30 @@ RSpec.describe Case::Base, type: :model do
 
     it 'returns true if the case if a SAR' do
       expect(create(:sar_case).is_sar?).to eq true
+    end
+  end
+
+  describe '#deadline_calculator' do
+    context 'FOI correspondence type' do
+      let(:kase) { create :foi_case }
+
+      it 'returns business days calculator' do
+        deadline_calculator = kase.deadline_calculator
+        expect(deadline_calculator)
+          .to be_an_instance_of DeadlineCalculator::BusinessDays
+        expect(deadline_calculator.kase).to eq kase
+      end
+    end
+
+    context 'SAR correspondence type' do
+      let(:kase) { create :sar_case }
+
+      it 'returns business days calculator' do
+        deadline_calculator = kase.deadline_calculator
+        expect(deadline_calculator)
+          .to be_an_instance_of DeadlineCalculator::CalendarDays
+        expect(deadline_calculator.kase).to eq kase
+      end
     end
   end
 end

@@ -32,7 +32,7 @@ namespace :sar do
           internal_time_limit: 10,
           external_time_limit: 40,
           escalation_time_limit: 0,
-          time_limit_type: 'calendar_days'
+          deadline_calculator_class: 'CalendarDays'
       )
     else
       CorrespondenceType.sar

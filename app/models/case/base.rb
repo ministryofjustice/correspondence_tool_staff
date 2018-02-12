@@ -467,6 +467,13 @@ class Case::Base < ApplicationRecord
     type_abbreviation == 'SAR'
   end
 
+  def deadline_calculator
+    klass = DeadlineCalculator.const_get(
+      correspondence_type.deadline_calculator_class
+    )
+    klass.new(self)
+  end
+
   private
   # determines whether or not the BU responded to flagged cases in time (NOT
   # whether the case was responded to in time!) calculated as the time between
@@ -482,7 +489,7 @@ class Case::Base < ApplicationRecord
       acting_team_id: default_clearance_team.id
     ).last.created_at.to_date
 
-    internal_deadline = DeadlineCalculator.internal_deadline_for_date(
+    internal_deadline = deadline_calculator.internal_deadline_for_date(
       correspondence_type, responding_team_acceptance_date
     )
 
@@ -520,15 +527,15 @@ class Case::Base < ApplicationRecord
   end
 
   def set_deadlines
-    self.escalation_deadline = DeadlineCalculator.escalation_deadline(self)
-    self.internal_deadline = DeadlineCalculator.internal_deadline(self)
-    self.external_deadline = DeadlineCalculator.external_deadline(self)
+    self.escalation_deadline = deadline_calculator.escalation_deadline
+    self.internal_deadline = deadline_calculator.internal_deadline
+    self.external_deadline = deadline_calculator.external_deadline
   end
 
   def update_deadlines
     if changed.include?('received_date')  && !extended_for_pit?
-      self.internal_deadline = DeadlineCalculator.internal_deadline(self)
-      self.external_deadline = DeadlineCalculator.external_deadline(self)
+      self.internal_deadline = deadline_calculator.internal_deadline
+      self.external_deadline = deadline_calculator.external_deadline
     end
   end
 

@@ -15,10 +15,21 @@ class CorrespondenceType < ApplicationRecord
   jsonb_accessor :properties,
                  internal_time_limit: :integer,
                  external_time_limit: :integer,
-                 escalation_time_limit: :integer
+                 escalation_time_limit: :integer,
+                 deadline_calculator_class: :string
 
-  validates :name, :abbreviation, :escalation_time_limit, :internal_time_limit,
-    :external_time_limit, presence: true, on: :create
+  enum deadline_calculator_class: {
+         'BusinessDays' => 'BusinessDays',
+         'CalendarDays' => 'CalendarDays',
+       }
+
+  validates_presence_of :name,
+                        :abbreviation,
+                        :escalation_time_limit,
+                        :internal_time_limit,
+                        :external_time_limit,
+                        :deadline_calculator_class,
+                        on: :create
 
   has_many :cases,
            class_name: 'Case::Base'

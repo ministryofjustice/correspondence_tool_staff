@@ -6,13 +6,6 @@ feature 'viewing details of case in the system' do
   given(:responder) { create :responder }
   given(:responding_team) { responder.responding_teams.first }
 
-  given(:internal_gq_deadline) do
-    DeadlineCalculator.internal_deadline(gq).strftime(Settings.default_date_format)
-  end
-  given(:external_gq_deadline) do
-    DeadlineCalculator.external_deadline(gq).strftime(Settings.default_date_format)
-  end
-
   background do
     login_as responder
   end
@@ -65,10 +58,14 @@ feature 'viewing details of case in the system' do
     foi.received_date.strftime(Settings.default_date_format)
   end
   given(:foi_escalation_deadline) do
-    DeadlineCalculator.escalation_deadline(foi).strftime(Settings.default_date_format)
+    foi.deadline_calculator
+      .escalation_deadline
+      .strftime(Settings.default_date_format)
   end
   given(:external_foi_deadline) do
-    DeadlineCalculator.external_deadline(foi).strftime(Settings.default_date_format)
+    foi.deadline_calculator
+      .external_deadline
+      .strftime(Settings.default_date_format)
   end
 
 
