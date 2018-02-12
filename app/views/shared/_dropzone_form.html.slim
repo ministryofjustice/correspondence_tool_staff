@@ -4,7 +4,8 @@
            data-url= s3_direct_post.url
            data-host= URI.parse(s3_direct_post.url).host
            data-accepted-files=accepted_case_attachment_types
-           data-file-input-name=file_input_name }
+           data-file-input-name=file_input_name
+           data-max_filesize-in-mb=Settings.max_attachment_file_size_in_MB }
 
   .dz-default.dz-message.grid-row
     .column-one-third.arrow-icon
@@ -14,4 +15,3 @@
     .bold-normal= "or"
     .button-secondary
       = t('common.choose_file')
-
