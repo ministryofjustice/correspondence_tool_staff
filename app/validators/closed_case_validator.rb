@@ -2,12 +2,12 @@ class ClosedCaseValidator < ActiveModel::Validator
 
   VALIDATION_SELECTOR = {
                           'SAR'=> [:validate_date_responded,
-                                    :validate_tmm],
+                                   :validate_tmm],
                           'FOI'=> [:validate_date_responded,
-                                 :validate_info_held_status,
-                                 :validate_outcome,
-                                 :validate_refusal_reason,
-                                 :validate_exemptions]
+                                   :validate_info_held_status,
+                                   :validate_outcome,
+                                   :validate_refusal_reason,
+                                   :validate_exemptions]
                                }
   def validate(rec)
     if rec.prepared_for_close? || rec.current_state == 'closed'

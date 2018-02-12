@@ -148,29 +148,8 @@ describe ConfigurableStateMachine::Machine do
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'drafting'
           expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                        :mark_response_sent_and_close,
+                                                                        :close,
                                                                         :reassign_user]
-        end
-      end
-
-      context 'awaiting dispatch state' do
-        it 'should show permitted events' do
-          k = create :sar_with_response
-          responder = responder_in_assigned_team(k)
-          expect(k.current_state).to eq 'awaiting_dispatch'
-          expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                        :add_responses,
-                                                                        :remove_last_response,
-                                                                        :remove_response]
-        end
-      end
-
-      context 'responded state' do
-        it 'should show permitted events' do
-          k = create :responded_sar
-          responder = responder_in_assigned_team(k)
-          expect(k.current_state).to eq 'responded'
-          expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case]
         end
       end
 

@@ -52,8 +52,12 @@ class Case::SAR < Case::Base
   after_create :process_uploaded_request_files,
                if: -> { uploaded_request_files.present? }
 
+
+  # The method below is overiding the close method in the case_states.rb file.
+  # This is so that the case is closed with the responder's team instead of the manager's team
+
    def close(current_user)
-     state_machine.mark_response_sent_and_close!(acting_user: current_user, acting_team: find_team(current_user))
+     state_machine.close!(acting_user: current_user, acting_team: self.responding_team)
    end
 
   private

@@ -210,8 +210,8 @@ module ConfigurableStateMachine
       if @config.to_hash[:permitted_events].present?
         events = @config.to_hash[:permitted_events].map(&:to_sym)
       else
-        @config.to_hash[:user_roles].each do |role, role_config|
-          role_config[:states].each do |state, role_state_config|
+        @config.to_hash[:user_roles].each do |_role, role_config|
+          role_config[:states].each do |_state, role_state_config|
             events << role_state_config.keys
           end
         end

@@ -1,11 +1,5 @@
 class Case::SARPolicy < Case::BasePolicy
 
-  def can_mark_response_sent_and_close?
-    clear_failed_checks
-    self.case.drafting? &&
-        user.responding_teams.include?(self.case.responding_team)
-  end
-
   def show?
     clear_failed_checks
 
@@ -22,7 +16,8 @@ class Case::SARPolicy < Case::BasePolicy
 
   def can_close_case?
     clear_failed_checks
-    check_user_is_a_responder_for_case && check_case_is_in_attachable_state
+    self.case.drafting? &&
+        user.responding_teams.include?(self.case.responding_team)
   end
 
   def can_add_attachment_to_flagged_and_unflagged_cases?
