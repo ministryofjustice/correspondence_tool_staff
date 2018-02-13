@@ -423,7 +423,7 @@ class CasesController < ApplicationController
 
     service = CaseLinkingService.new current_user, @case, link_case_number
 
-    result = service.call
+    result = service.create
 
 
     if result == :ok
