@@ -306,6 +306,18 @@ class Case::FOI::StandardStateMachine
     transition from: :closed,                           to: :closed
   end
 
+  event :remove_linked_case do
+    transition from: :unassigned,                       to: :unassigned
+    transition from: :awaiting_responder,               to: :awaiting_responder
+    transition from: :drafting,                         to: :drafting
+    transition from: :awaiting_dispatch,                to: :awaiting_dispatch
+    transition from: :pending_dacu_clearance,           to: :pending_dacu_clearance
+    transition from: :pending_press_office_clearance,   to: :pending_press_office_clearance
+    transition from: :pending_private_office_clearance, to: :pending_private_office_clearance
+    transition from: :responded,                        to: :responded
+    transition from: :closed,                           to: :closed
+  end
+
   def accept_approver_assignment!(acting_user:, acting_team:)
     trigger! :accept_approver_assignment,
              acting_team_id:    acting_team.id,
@@ -544,6 +556,14 @@ class Case::FOI::StandardStateMachine
              acting_team_id: acting_team.id,
              linked_case_id: linked_case_id,
              event:          :link_a_case
+  end
+
+  def remove_linked_case!(acting_user:, acting_team:, linked_case_id:)
+    trigger! :remove_linked_case,
+             acting_user_id: acting_user.id,
+             acting_team_id: acting_team.id,
+             linked_case_id: linked_case_id,
+             event:          :remove_linked_case
   end
 
   private

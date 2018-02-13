@@ -55,6 +55,7 @@ case_types:
           - reassign_user
           - reject_responder_assignment
           - remove_last_response
+          - remove_linked_case
           - remove_response
           - request_amends
           - request_further_clearance
@@ -78,6 +79,7 @@ case_types:
                 edit_case:
                 flag_for_clearance:
                 link_a_case:
+                remove_linked_case:
                 unflag_for_clearance:
                   if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
 
@@ -131,6 +133,7 @@ case_types:
                 destroy_case:
                 edit_case:
                 link_a_case:
+                remove_linked_case:
 
               awaiting_responder:
                 add_message_to_case:
@@ -139,6 +142,7 @@ case_types:
                 edit_case:
                 flag_for_clearance:
                 link_a_case:
+                remove_linked_case:
 
               drafting:
                 add_message_to_case:
@@ -146,11 +150,13 @@ case_types:
                 destroy_case:
                 edit_case:
                 link_a_case:
+                remove_linked_case:
 
               closed:
                 destroy_case:
                 edit_case:
                 link_a_case:
+                remove_linked_case:
 
           ########################### SAR :: STANDARD WORKFLOW :: RESPONDER ########################
           responder:

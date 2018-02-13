@@ -350,6 +350,8 @@ en:
       reassign_case: "Change team member"
       remove_link_html: |
         Remove <span class="visuallyhidden">file %{filename}</span>
+      remove_linked_case_html: |
+        Remove link<span class="visuallyhidden"> to %{case_number}</span>
       responding_team: Business unit
       responders:
         one: Information Officer
