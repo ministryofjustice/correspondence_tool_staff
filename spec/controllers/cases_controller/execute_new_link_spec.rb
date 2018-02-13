@@ -11,7 +11,7 @@ describe CasesController, type: :controller do
                                  }
     }}
 
-    let(:service) { double(CaseLinkingService, call: :ok) }
+    let(:service) { double(CaseLinkingService, create: :ok) }
 
     before do
       allow(CaseLinkingService).to receive(:new).and_return(service)
@@ -25,14 +25,14 @@ describe CasesController, type: :controller do
               .with_args(manager, kase)
     end
 
-    it 'calls the CaseLinkingService' do
+    it 'calls the CaseLinkingService create method' do
       post :execute_new_case_link, params: post_params
       expect(CaseLinkingService)
         .to have_received(:new).with(manager,
                                      kase,
                                      post_params[:case][:linked_case_number])
 
-      expect(service).to have_received(:call)
+      expect(service).to have_received(:create)
     end
 
     it 'notifies the user of the success' do
@@ -42,7 +42,7 @@ describe CasesController, type: :controller do
     end
 
     context 'validation error' do
-      let(:service) { double(CaseLinkingService, call: :validation_error) }
+      let(:service) { double(CaseLinkingService, create: :validation_error) }
 
       it 'renders the new_link page' do
         post :execute_new_case_link, params: post_params
@@ -51,7 +51,7 @@ describe CasesController, type: :controller do
     end
 
     context 'failed request' do
-      let(:service) { double(CaseLinkingService, call: :error) }
+      let(:service) { double(CaseLinkingService, create: :error) }
 
       it 'notifies the user of the failure' do
         post :execute_new_case_link, params: post_params

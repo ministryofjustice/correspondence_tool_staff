@@ -9,7 +9,7 @@ class CaseLinkingService
     @result = :incomplete
   end
 
-  def call
+  def create
     if validate_params
       ActiveRecord::Base.transaction do
 
