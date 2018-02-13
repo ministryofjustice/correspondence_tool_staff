@@ -12,7 +12,6 @@ moj.Modules.Dropzone = {
       url : this.$target.data('url'),
       method : 'post',
       addRemoveLinks : true,
-      maxFilesize : 20,
       maxFilesize : this.$target.data('max_filesize-in-mb'),
       previewTemplate : this.$target.data('dz-template'),
       paramName : 'file',
