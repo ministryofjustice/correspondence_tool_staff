@@ -34,6 +34,34 @@ class CaseLinkingService
     @result = :error
   end
 
+  def destroy
+    ActiveRecord::Base.transaction do
+      # find the linked case
+      @link_case = Case::Base.where(number: @link_case_number).first
+
+      # Destroy the links
+      @case.remove_linked_case(@link_case)
+
+      # Log event in both cases
+      @case.state_machine.remove_linked_case!(acting_user: @user,
+                                       acting_team: @user.teams_for_case(@case).first,
+                                       linked_case_id: @link_case.id)
+      @link_case.state_machine.remove_linked_case!(acting_user: @user,
+                                            acting_team: @user.teams_for_case(@case).first,
+                                            linked_case_id: @case.id)
+
+      @result = :ok
+
+    end
+
+    @result
+  rescue => err
+    Rails.logger.error err.to_s
+    Rails.logger.error err.backtrace.join("\n\t")
+    @error = err
+    @result = :error
+  end
+
   private
 
   def validate_params

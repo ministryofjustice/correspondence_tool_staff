@@ -449,6 +449,16 @@ class Case::Base < ApplicationRecord
     end
   end
 
+  def remove_linked_case(linked_case)
+    ActiveRecord::Base.transaction do
+
+      self.linked_cases.destroy(linked_case)
+
+      linked_case.linked_cases.destroy(self)
+
+    end
+  end
+
   def is_internal_review?
     self.is_a?(Case::FOI::InternalReview)
   end

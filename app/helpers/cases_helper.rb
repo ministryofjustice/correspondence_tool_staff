@@ -169,6 +169,14 @@ module CasesHelper
             id: 'action--link-a-case'
   end
 
+  def action_link_for_destroy_case_link(kase, linked_case)
+    link_to t('common.case.remove_linked_case_html', case_number: linked_case.number),
+            destroy_link_on_case_path(id: kase.id,
+                                      linked_case_number: linked_case.number),
+            data: { confirm: "Are you sure?" },
+            method: :delete
+  end
+
   def request_details_html(kase)
     content_tag(:strong, "#{kase.subject} ", class: 'strong') +
         content_tag(:div, kase.name, class: 'case-name-detail')
