@@ -642,7 +642,7 @@ class CasesController < ApplicationController
         @permitted_correspondence_types =
           current_user.managing_teams.first.correspondence_types.order(:name)
       else
-        @permitted_correspondence_types = CorrespondenceType.foi
+        @permitted_correspondence_types = [CorrespondenceType.foi]
       end
     end
     @permitted_correspondence_types
