@@ -15,6 +15,7 @@ case_uploads_accepted_types:
 - image/gif
 - image/x-bitmap
 attachments_presigned_url_expiry: 900
+max_attachment_file_size_in_MB: 20
 
 # These are set in run.sh
 git_source:  Git Source Not Available
