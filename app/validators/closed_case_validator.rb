@@ -1,15 +1,21 @@
 class ClosedCaseValidator < ActiveModel::Validator
 
+  VALIDATION_SELECTOR = {
+                          'SAR'=> [:validate_date_responded,
+                                   :validate_tmm],
+                          'FOI'=> [:validate_date_responded,
+                                   :validate_info_held_status,
+                                   :validate_outcome,
+                                   :validate_refusal_reason,
+                                   :validate_exemptions]
+                               }
   def validate(rec)
     if rec.prepared_for_close? || rec.current_state == 'closed'
       if validate_closure_details?(rec)
-        validate_date_responded(rec)
-        validate_info_held_status(rec)
-        validate_outcome(rec)
-        validate_refusal_reason(rec)
-        validate_exemptions(rec)
-      else
-        validate_date_responded(rec)
+        validations = VALIDATION_SELECTOR[rec.type_abbreviation]
+        validations.each do |validation|
+          self.send(validation, rec)
+        end
       end
     end
   end
@@ -27,6 +33,12 @@ class ClosedCaseValidator < ActiveModel::Validator
   def validate_info_held_status(rec)
     if rec.info_held_status.nil?
       rec.errors.add(:info_held_status, "can't be blank")
+    end
+  end
+
+  def validate_tmm(rec)
+    if rec.missing_info.nil?
+      rec.errors.add(:missing_info, 'must be present for the specified outcome')
     end
   end
 

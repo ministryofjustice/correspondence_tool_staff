@@ -259,7 +259,8 @@ class CasesController < ApplicationController
   def process_closure
     authorize @case, :can_close_case?
     @case.prepare_for_close
-    if @case.update(process_closure_params)
+    close_params = process_closure_params(@case.type_abbreviation)
+    if @case.update(close_params)
       @case.close(current_user)
       set_permitted_events
       flash[:notice] = t('notices.case_closed')
@@ -481,8 +482,33 @@ class CasesController < ApplicationController
     @filtered_permitted_events = @permitted_events - [:extend_for_pit, :request_further_clearance, :link_a_case]
   end
 
-  def process_closure_params
-    params.require(:case).permit(
+  def process_closure_params(correspondence_type)
+    case correspondence_type
+    when 'FOI' then process_foi_closure_params
+    when 'SAR' then process_sar_closure_params
+    else raise 'Unknown case type'
+    end
+  end
+
+  def process_sar_closure_params
+    params.require(:case_sar).permit(
+      :date_responded_dd,
+      :date_responded_mm,
+      :date_responded_yyyy,
+    ).merge(refusal_reason_name: missing_info_to_tmm)
+  end
+
+  def missing_info_to_tmm
+    if params[:case_sar][:missing_info] == "yes"
+      @case.missing_info = true
+      CaseClosure::RefusalReason.tmm.name
+    elsif params[:case_sar][:missing_info] == "no"
+      @case.missing_info = false
+    end
+  end
+
+  def process_foi_closure_params
+    params.require(:case_foi).permit(
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
@@ -490,7 +516,7 @@ class CasesController < ApplicationController
       :appeal_outcome_name,
       :refusal_reason_name,
       :info_held_status_abbreviation,
-      exemption_ids: params[:case][:exemption_ids].nil? ? nil : params[:case][:exemption_ids].keys
+      exemption_ids: params[:case_foi][:exemption_ids].nil? ? nil : params[:case_foi][:exemption_ids].keys
     )
   end
 
@@ -650,5 +676,3 @@ class CasesController < ApplicationController
 
 end
 #rubocop:enable Metrics/ClassLength
-
-

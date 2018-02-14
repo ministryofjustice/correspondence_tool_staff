@@ -81,7 +81,7 @@ module CaseStates
   end
 
   def close(current_user)
-    state_machine.close!(acting_user: current_user, acting_team: managing_team)
+    state_machine.close!(acting_user: current_user, acting_team: self.managing_team)
   end
 
   private

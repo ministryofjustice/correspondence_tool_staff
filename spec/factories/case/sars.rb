@@ -118,9 +118,7 @@ FactoryGirl.define do
 
   factory :closed_sar, parent: :responded_sar do
 
-    info_held_status            { find_or_create :info_status, :held }
-    outcome                     { find_or_create :outcome, :granted }
-    message                     'info held, granted'
+    missing_info              { false }
 
     transient do
       identifier "closed sar"
@@ -137,5 +135,11 @@ FactoryGirl.define do
              target_team_id: evaluator.responding_team.id
       kase.reload
     end
+  end
+
+  trait :clarification_required do
+    refusal_reason              { find_or_create :refusal_reason, :tmm }
+    missing_info                { true }
+    message                     'info held other, clarification required'
   end
 end

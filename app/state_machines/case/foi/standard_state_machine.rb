@@ -254,7 +254,6 @@ class Case::FOI::StandardStateMachine
 
   event :close do
     authorize :can_close_case?
-
     transition from: :responded, to: :closed
   end
 

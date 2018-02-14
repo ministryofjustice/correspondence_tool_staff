@@ -389,6 +389,34 @@ module ConfigurableStateMachine
       end
     end
 
+    describe 'events' do
+      context 'permitted_events not specially specified' do
+        it 'returns a list of all events in alphabetical order' do
+          expected_events = %i{
+            add_message_to_case
+            add_response
+            assign_responder
+            destroy_case
+            edit_case
+            flag_for_clearance
+            flag_for_press
+            unflag_for_clearance
+          }
+          expect(machine.events).to eq expected_events
+        end
+      end
+      context ' permitted_events specifically specified' do
+        it 'returns a list of all events in alphabetical order' do
+          config.permitted_events =
+          [:aaa, :bbb, :ccc]
+          machine = Machine.new(config: config, kase: kase)
+          expect(machine.events).to eq [:aaa, :bbb, :ccc]
+        end
+      end
+    end
+
+
+
     describe '#trigger_event' do
       context 'invalid metadata' do
         context 'no acting user' do

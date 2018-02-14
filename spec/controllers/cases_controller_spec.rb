@@ -1,4 +1,5 @@
 require 'rails_helper'
+require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
 
 def stub_current_case_finder_cases_with(result)
@@ -177,7 +178,7 @@ RSpec.describe CasesController, type: :controller do
         date_responded = 3.days.ago
         {
           id: kase.id,
-          case: {
+          case_foi: {
             date_responded_dd: date_responded.day,
             date_responded_mm: date_responded.month,
             date_responded_yyyy: date_responded.year,
@@ -204,12 +205,46 @@ RSpec.describe CasesController, type: :controller do
           date_responded = 3.days.ago
           {
             id: internal_review.id,
-            case: {
+            case_foi: {
               date_responded_dd: date_responded.day,
               date_responded_mm: date_responded.month,
               date_responded_yyyy: date_responded.year,
               info_held_status_abbreviation: info_held.abbreviation,
               appeal_outcome_name: appeal_outcome.name
+            }
+          }
+        end
+      end
+
+      context 'SAR' do
+        let(:responder)   { create :responder }
+        let(:sar)         { create :accepted_sar, responder: responder }
+
+        before(:all) do
+          CaseClosure::MetadataSeeder.seed!
+        end
+
+        after(:all) do
+          CaseClosure::MetadataSeeder.unseed!
+        end
+
+        it "closes a case that has been responded to" do
+          sign_in responder
+          patch :process_closure, params: sar_closure_params(sar)
+          expect(Case::SAR.first.current_state).to eq 'closed'
+          expect(Case::SAR.first.refusal_reason_id).to eq CaseClosure::RefusalReason.tmm.id
+          expect(Case::SAR.first.date_responded).to eq 3.days.ago.to_date
+        end
+
+        def sar_closure_params(sar)
+          date_responded = 3.days.ago
+          {
+            id: sar.id,
+            case_sar: {
+              date_responded_dd: date_responded.day,
+              date_responded_mm: date_responded.month,
+              date_responded_yyyy: date_responded.year,
+              missing_info: 'yes'
             }
           }
         end

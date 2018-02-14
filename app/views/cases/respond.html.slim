@@ -2,7 +2,9 @@
   = t('.heading')
 
 - content_for :sub_heading
-  = @case.number
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = "#{@case.number} - #{@case.type_abbreviation}"
 
 = render partial: 'layouts/header'
 

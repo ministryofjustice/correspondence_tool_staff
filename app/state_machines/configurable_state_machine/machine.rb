@@ -4,6 +4,11 @@ module ConfigurableStateMachine
     def initialize(config:, kase:)
       @config = config
       @kase = kase
+      @events = nil
+    end
+
+    def events
+      @events ||= gather_all_events
     end
 
     def configurable?
@@ -66,7 +71,11 @@ module ConfigurableStateMachine
       method.to_s =~ /(.+)!$/ || super
     end
 
-
+    def event_name(event)
+      if events.include?(event.to_sym)
+        I18n.t("event.#{event}", default: event.to_s.humanize)
+      end
+    end
 
     private
 
@@ -194,6 +203,20 @@ module ConfigurableStateMachine
         params.delete(key)
       end
       @kase.transitions.create!(attrs.merge(params))
+    end
+
+    def gather_all_events
+      events = []
+      if @config.to_hash[:permitted_events].present?
+        events = @config.to_hash[:permitted_events].map(&:to_sym)
+      else
+        @config.to_hash[:user_roles].each do |_role, role_config|
+          role_config[:states].each do |_state, role_state_config|
+            events << role_state_config.keys
+          end
+        end
+        events.flatten.uniq.sort
+      end
     end
   end
 end

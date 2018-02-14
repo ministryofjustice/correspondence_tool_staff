@@ -2,19 +2,19 @@ moj.Modules.CaseClosure = {
 
   $infoHeldGroup : $('.js-info-held-status'),
 
-  $infoIsHeld : $('#case_info_held_status_abbreviation_held, #case_info_held_status_abbreviation_part_held'),
+  $infoIsHeld : $('#case_foi_info_held_status_abbreviation_held, #case_foi_info_held_status_abbreviation_part_held'),
 
-  $infoOther : $('#case_info_held_status_abbreviation_not_confirmed'),
+  $infoOther : $('#case_foi_info_held_status_abbreviation_not_confirmed'),
 
   $outcomeGroup : $('.js-outcome-group'),
 
-  $outcomeRefusedPartly : $('#case_outcome_name_refused_in_part'),
+  $outcomeRefusedPartly : $('#case_foi_outcome_name_refused_in_part'),
 
-  $outcomeRefused : $('#case_outcome_name_refused_in_part, #case_outcome_name_refused_fully'),
+  $outcomeRefused : $('#case_foi_outcome_name_refused_in_part, #case_foi_outcome_name_refused_fully'),
 
   $otherReasons : $('.js-other-reasons'),
 
-  $refusalNCND : $('#case_refusal_reason_name_neither_confirm_nor_deny_ncnd'),
+  $refusalNCND : $('#case_foi_refusal_reason_name_neither_confirm_nor_deny_ncnd'),
 
   $refusalExemptions : $('.js-refusal-exemptions'),
 

@@ -191,6 +191,8 @@ en:
         type: Case type
         name: "Who is the requestor?"
       case_sar:
+        missing_info: "Was the response asking for missing information (e.g. proof of ID) or
+          clarification, i.e. a TMM?"
         reply_method_html: |
           <div class="heading-medium">Where the information should be sent</div>
         flag_for_disclosure_specialists: "Clearance required by disclosure?"
@@ -434,16 +436,12 @@ en:
       number_html: 'Case <abbr title="number">No.</abbr>'
       name-subject: Name/Subject
       view_case: Link to case
+    close:
+      heading: Close case
     extend_for_pit:
       extend_for_pit: Extend for Public Interest Test (PIT)
       extension_date: Date of extension deadline
       extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
-    foi:
-      case_details: &case_details
-        edit_case: 'Edit case details'
-    sar:
-      case_details:
-        <<: *case_details
     index: &cases_list
       heading_search: Search
       heading_all_cases: All open cases
@@ -509,10 +507,20 @@ en:
         </ul>
     confirm_respond:
       success: The response has been marked as sent.
-    close:
-      heading: Close case
-      close_date: Date response sent
-      date_example: For example, 30 1 2017
+    foi:
+      case_details: &case_details
+        edit_case: 'Edit case details'
+      close_form:
+        close_date: Date response sent
+        date_example: For example, 30 1 2017
+    sar:
+      case_details:
+        <<: *case_details
+      close_form:
+        close_date: Date response sent
+        date_example: For example, 30 1 2017
+
+
     remove_clearance:
       heading: 'Remove Clearance'
       explanation: 'You are removing clearance level of Disclosure for the case:'
