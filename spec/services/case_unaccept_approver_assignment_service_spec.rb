@@ -35,7 +35,7 @@ describe CaseUnacceptApproverAssignmentService do
       end
 
       it 'triggers an event on the case' do
-        expect(assignment.case.state_machine).to receive(:unaccept_approver_assignment!).with(approver, dacu_disclosure)
+        expect(assignment.case.state_machine).to receive(:unaccept_approver_assignment!).with(acting_user: approver, acting_team: dacu_disclosure)
         service.call
       end
 
@@ -113,7 +113,7 @@ describe CaseUnacceptApproverAssignmentService do
           service.call
           expect(state_machine)
             .to have_received(:unflag_for_clearance!)
-                  .with(press_officer, press_office, press_office)
+                  .with(acting_user: press_officer, acting_team: press_office, target_team: press_office)
         end
 
         it 'triggers an unflag event on the case for private office' do
@@ -122,7 +122,7 @@ describe CaseUnacceptApproverAssignmentService do
           service.call
           expect(state_machine)
             .to have_received(:unflag_for_clearance!)
-                  .with(press_officer, press_office, private_office)
+                  .with(acting_user: press_officer, acting_team: press_office, target_team: private_office)
         end
 
         it 'triggers an unflag event on the case for dacu disclosure' do
@@ -131,7 +131,7 @@ describe CaseUnacceptApproverAssignmentService do
           service.call
           expect(state_machine)
             .to have_received(:unflag_for_clearance!)
-                  .with(press_officer, press_office, dacu_disclosure)
+                  .with(acting_user: press_officer, acting_team: press_office, target_team: dacu_disclosure)
         end
 
         it 'sets the result to ok and returns true' do
@@ -173,7 +173,7 @@ describe CaseUnacceptApproverAssignmentService do
           service.call
           expect(state_machine)
             .to have_received(:unflag_for_clearance!)
-                  .with(press_officer, press_office, press_office)
+                  .with(acting_user: press_officer, acting_team: press_office, target_team: press_office)
         end
 
         it 'does not trigger unflag event on the case for dacu disclosure' do
@@ -247,7 +247,7 @@ describe CaseUnacceptApproverAssignmentService do
           service.call
           expect(state_machine)
             .to have_received(:unflag_for_clearance!)
-                  .with(private_officer, private_office, private_office)
+                    .with(acting_user: private_officer, acting_team: private_office, target_team: private_office)
         end
 
         it 'triggers an unflag event on the case for dacu disclosure' do
@@ -256,7 +256,7 @@ describe CaseUnacceptApproverAssignmentService do
           service.call
           expect(state_machine)
             .to have_received(:unflag_for_clearance!)
-                  .with(private_officer, private_office, dacu_disclosure)
+                    .with(acting_user: private_officer, acting_team: private_office, target_team: dacu_disclosure)
         end
 
         it 'sets the result to ok and returns true' do
@@ -294,7 +294,7 @@ describe CaseUnacceptApproverAssignmentService do
           service.call
           expect(state_machine)
             .to have_received(:unflag_for_clearance!)
-                  .with(private_officer, private_office, private_office)
+                    .with(acting_user: private_officer, acting_team: private_office, target_team: private_office)
         end
 
         it 'does not trigger unflag event on the case for dacu disclosure' do
@@ -303,7 +303,7 @@ describe CaseUnacceptApproverAssignmentService do
           service.call
           expect(state_machine)
             .not_to have_received(:unflag_for_clearance!)
-                      .with(private_officer, private_office, dacu_disclosure)
+                        .with(acting_user: private_officer, acting_team: private_office, target_team: dacu_disclosure)
         end
 
         it 'sets the result to ok and returns true' do

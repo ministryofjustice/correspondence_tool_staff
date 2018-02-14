@@ -3,6 +3,13 @@ require 'rails_helper'
 #rubocop:disable Metrics/ModuleLength
 module ConfigurableStateMachine
 
+  class DummyPredicate
+
+    def can_assign_responder?
+      true
+    end
+  end
+
   describe 'ConfigValidator' do
     let(:config) { RecursiveOpenStruct.new(config_as_hash) }
     let(:config_as_hash) do
@@ -44,7 +51,7 @@ module ConfigurableStateMachine
                       },
                       drafting: {
                         edit_case: {
-                          if: 'Case::FOI::Standard.editable?'
+                          if: 'Case::FOI::StandardPolicy#show?'
                         }
                       }
                     }
@@ -326,6 +333,97 @@ module ConfigurableStateMachine
             }.to raise_error ConfigurationError, "File xxx.yml section case_types/foi/workflows/standard/user_roles/manager/states/drafting/edit_case: Unrecognised key: summarize"
           end
         end
+
+        context 'predicate' do
+          it 'does not error if no if is supplied' do
+            hash = config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.to_h
+            expect(hash.key?(:if)).to be false
+            validator = ConfigValidator.new(config, 'xxx.yml')
+            expect{validator.run}.not_to raise_error
+          end
+
+          it "does not error if 'if' value is nil" do
+            config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.if = nil
+            expect(config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.to_h[:if]).to be_nil
+            validator = ConfigValidator.new(config, 'xxx.yml')
+            expect{validator.run}.not_to raise_error
+          end
+
+          it 'raises if the predicate class doesnt exist' do
+            config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.if = 'NonExistentClass#dummy_method'
+            validator = ConfigValidator.new(config, 'xxx.yml')
+            expect{validator.run}.to raise_error ConfigurationError do |error|
+              expect(error.message).to match(/case_types\/foi\/workflows\/standard\/user_roles\/manager\/states\/unassigned\/assign_responder/)
+              expect(error.message).to match(/No such class: NonExistentClass/)
+            end
+          end
+
+          it 'does not error if specified method exists on specified object' do
+            config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.if = 'ConfigurableStateMachine::DummyPredicate#can_assign_responder?'
+            validator = ConfigValidator.new(config, 'xxx.yml')
+            expect{validator.run}.not_to raise_error
+          end
+
+          it 'raises if the specified method does not exist on the specified object' do
+            config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.if = 'ConfigurableStateMachine::DummyPredicate#can_assign_manager?'
+            validator = ConfigValidator.new(config, 'xxx.yml')
+            expect{validator.run}.to raise_error ConfigurationError do |error|
+              expect(error.message).to match(/case_types\/foi\/workflows\/standard\/user_roles\/manager\/states\/unassigned\/assign_responder/)
+              expect(error.message).to match(/No such instance method 'can_assign_manager\?' on class ConfigurableStateMachine::DummyPredicate/)
+            end
+          end
+        end
+
+        context 'switch workflow' do
+          context 'no switch workflow' do
+            it 'is valid' do
+              hash = config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.to_h
+              expect(hash.key?(:switch_workflow)).to be false
+              validator = ConfigValidator.new(config, 'xxx.yml')
+              expect{validator.run}.not_to raise_error
+            end
+          end
+
+          context 'switch workflow to nil' do
+            it 'is valid' do
+              config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.switch_workflow = nil
+              expect(config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.to_h[:switch_workflow]).to be_nil
+              validator = ConfigValidator.new(config, 'xxx.yml')
+              expect{validator.run}.not_to raise_error
+            end
+          end
+
+          context 'switching workflow to current workflow' do
+            it 'is invalid' do
+              config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.switch_workflow = 'standard'
+              validator = ConfigValidator.new(config, 'xxx.yml')
+              expect{validator.run}.to raise_error ConfigurationError do |error|
+                expect(error.message).to match(/case_types\/foi\/workflows\/standard\/user_roles\/manager\/states\/unassigned\/assign_responder/)
+                expect(error.message).to match(/Cannot switch workflow to the current workflow/)
+              end
+            end
+          end
+
+          context 'switching workflow to workflow not declared in permitted workflows' do
+            it 'is invalid' do
+              config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.switch_workflow = 'non-existent-workflow'
+              validator = ConfigValidator.new(config, 'xxx.yml')
+              expect{validator.run}.to raise_error ConfigurationError do |error|
+                expect(error.message).to match(/case_types\/foi\/workflows\/standard\/user_roles\/manager\/states\/unassigned\/assign_responder/)
+                expect(error.message).to match(/Invalid workflow: non-existent-workflow/)
+              end
+            end
+          end
+
+          context 'switching workflow to other valid workflow' do
+            it 'is valid'  do
+              config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.switch_workflow = 'review_for_compliance'
+              validator = ConfigValidator.new(config, 'xxx.yml')
+              expect{validator.run}.not_to raise_error
+            end
+          end
+        end
+
       end
     end
   end

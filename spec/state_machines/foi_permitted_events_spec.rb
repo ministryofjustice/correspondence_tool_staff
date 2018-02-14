@@ -117,7 +117,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :awaiting_responder_case
             expect(k.current_state).to eq 'awaiting_responder'
             permitted_events = k.state_machine.permitted_events(responder.id) - [:request_further_clearance]
-            expect(permitted_events).to eq [:link_a_case, :remove_linked_case]
+            expect(permitted_events).to eq [:add_message_to_case, :link_a_case, :remove_linked_case]
           end
         end
 

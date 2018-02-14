@@ -576,8 +576,8 @@ RSpec.describe CasesController, type: :controller do
       context 'as a responder of another responding team' do
         let(:user) { another_responder }
 
-        it 'permitted_events to be empty' do
-          expect(assigns(:filtered_permitted_events)).to be_empty
+        it 'permitted_events to containe add_message_to_case only' do
+          expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
         end
 
         it 'renders case details page' do

@@ -73,6 +73,11 @@ RSpec.describe Case::Base, type: :model do
     it { should validate_presence_of(:type)            }
   end
 
+
+  describe 'workflow validation' do
+    it { should validate_inclusion_of(:workflow).in_array %w{ standard trigger} }
+  end
+
   describe 'info_status_held_validation' do
     context 'active case' do
       it 'does not error if blank' do

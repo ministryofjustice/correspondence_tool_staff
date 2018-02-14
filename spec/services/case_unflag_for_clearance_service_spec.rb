@@ -31,7 +31,10 @@ describe CaseUnflagForClearanceService do
       it 'triggers an event on the case state machine' do
         expect(assigned_flagged_case.state_machine)
           .to have_received(:unflag_for_clearance!)
-                .with(approver, team_dacu, dacu_disclosure, "message")
+                .with(acting_user: approver,
+                      acting_team: team_dacu,
+                      target_team: dacu_disclosure,
+                      message: "message")
       end
       it 'removes the approving team assignment' do
         expect(assigned_flagged_case.approving_teams).to be_blank

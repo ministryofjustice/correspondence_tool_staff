@@ -20,9 +20,6 @@ class CurrentTeamAndUserService
   private
 
   def resolver_for_case(kase)
-    kase.format_workflow_class_name(
-      'CurrentTeamAndUser::%{type}',
-      'CurrentTeamAndUser::%{type}::%{workflow}'
-    ).constantize.new(kase)
+    "CurrentTeamAndUser::#{kase.type_abbreviation}::#{kase.workflow.camelize}".constantize.new(kase)
   end
 end

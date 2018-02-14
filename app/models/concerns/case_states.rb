@@ -1,21 +1,27 @@
 module CaseStates
   extend ActiveSupport::Concern
 
-  STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = [ nil, 'unassigned' ]
+  TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = [ nil, 'unassigned' ]
+  NON_TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = [ nil, 'unassigned', 'awaiting_responder' ]
 
   included do
     after_update :reset_state_machine, if: :workflow_changed?
   end
 
   def state_machine
-    if @state_machine.nil? || state_machine_of_wrong_type?
-      if state_requires_configurable_state_machine?
-        instantiate_configurable_state_machine
-      else
-        instantiate_legacy_state_machine
-      end
+    desired_state_machine_class = state_machine_class
+    if @state_machine.class != desired_state_machine_class
+      instantiate_state_machine(desired_state_machine_class)
     end
     @state_machine
+  end
+
+  def instantiate_state_machine(klass)
+    if klass == ConfigurableStateMachine::Machine
+      instantiate_configurable_state_machine
+    else
+      instantiate_legacy_state_machine
+    end
   end
 
   def instantiate_configurable_state_machine
@@ -31,13 +37,7 @@ module CaseStates
   end
 
   def instantiate_legacy_state_machine
-    state_machine_class_name =
-      if respond_to?(:workflow) && workflow.present?
-        "Case::#{type_abbreviation}::#{workflow}StateMachine"
-      else
-        "Case::FOI::StandardStateMachine"
-      end
-    @state_machine = state_machine_class_name.constantize.new(
+    @state_machine = Case::FOI::StandardStateMachine.new(
       self,
       transition_class: CaseTransition,
       association_name: :transitions
@@ -86,18 +86,16 @@ module CaseStates
 
   private
 
-  def state_machine_of_wrong_type?
-    return false unless self.is_a?(Case::FOI::Standard)
-    (current_state.in?(STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE) && !@state_machine.configurable?) ||
-      (!current_state.in?(STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE) && @state_machine.configurable?)
-
-  end
-
-  def state_requires_configurable_state_machine?
-    if self.is_a?(Case::FOI::Standard)
-      current_state.in?(STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE)
+  def state_machine_class
+    if self.type_abbreviation == 'SAR'
+      ConfigurableStateMachine::Machine
     else
-      true
+      configurable_states = workflow == 'trigger' ? TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE : NON_TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE
+      if current_state.in?(configurable_states)
+        ConfigurableStateMachine::Machine
+      else
+        Case::FOI::StandardStateMachine
+      end
     end
   end
 

@@ -107,21 +107,22 @@ module ConfigurableStateMachine
       raise ::ConfigurableStateMachine::ArgumentError.new(kase: @kase, event: event, params: params) if !params.key?(:acting_user) || !params.key?(:acting_team)
       role =  params[:acting_team].role
       user_role_config = @config.user_roles[role]
-      raise InvalidEventError.new(kase: @kase, user: params[:acting_user], event: event) if user_role_config.nil?
+      raise InvalidEventError.new(kase: @kase, user: params[:acting_user], event: event, role: role) if user_role_config.nil?
       state_config = user_role_config.states[@kase.current_state]
       if state_config.nil? || !state_config.to_hash.keys.include?(event)
-        raise InvalidEventError.new(kase: @kase, user: params[:acting_user], event: event)
+        raise InvalidEventError.new(role: role, kase: @kase, user: params[:acting_user], event: event)
       end
       event_config = state_config[event]
       if can_trigger_event?(event_name: event, metadata: params)
         ActiveRecord::Base.transaction do
           to_state = find_destination_state(event_config: event_config)
+          to_workflow = find_destination_workflow(event_config: event_config)
           CaseTransition.unset_most_recent(@kase)
-          write_transition(event: event, to_state: to_state, params: params)
-          @kase.update!(current_state: to_state)
+          write_transition(event: event, to_state: to_state, to_workflow: to_workflow, params: params)
+          @kase.update!(current_state: to_state, workflow: to_workflow)
         end
       else
-        raise InvalidEventError.new(kase: @kase, user: params[:acting_user],  event: event)
+        raise InvalidEventError.new(role: role, kase: @kase, user: params[:acting_user],  event: event)
       end
     end
     #rubocop:enable Metrics/CyclomaticComplexity
@@ -132,8 +133,10 @@ module ConfigurableStateMachine
       user = extract_user_from_metadata(metadata)
       if team.nil?
         user.roles
-      else
+      elsif user.roles_for_team(team).any?
         user.roles_for_team(team).map(&:role)
+      else
+        [team.role]
       end
     end
 
@@ -188,12 +191,17 @@ module ConfigurableStateMachine
       event_config.to_h.key?(:transition_to) ? event_config.transition_to : @kase.current_state
     end
 
-    def write_transition(event:, to_state:, params:)
+    def find_destination_workflow(event_config:)
+      event_config.to_h.key?(:switch_workflow) ? event_config.switch_workflow : @kase.workflow
+    end
+
+    def write_transition(event:, to_state:, to_workflow:, params:)
       attrs = {
         event: event,
-               to_state: to_state,
-               sort_key: CaseTransition.next_sort_key(@kase),
-               most_recent: true,
+        to_state: to_state,
+        to_workflow: to_workflow,
+        sort_key: CaseTransition.next_sort_key(@kase),
+        most_recent: true,
         acting_user_id: params[:acting_user]&.id,
         acting_team_id: params[:acting_team]&.id,
         target_user_id: params[:target_user]&.id,

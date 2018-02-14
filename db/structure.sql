@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.9
--- Dumped by pg_dump version 9.5.9
+-- Dumped from database version 9.5.6
+-- Dumped by pg_dump version 9.5.6
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -288,7 +288,8 @@ CREATE TABLE case_transitions (
     acting_user_id integer,
     acting_team_id integer,
     target_user_id integer,
-    target_team_id integer
+    target_team_id integer,
+    to_workflow character varying
 );
 
 
@@ -334,7 +335,7 @@ CREATE TABLE cases (
     current_state character varying,
     last_transitioned_at timestamp without time zone,
     delivery_method cases_delivery_methods,
-    workflow character varying,
+    workflow character varying DEFAULT 'standard'::character varying,
     deleted boolean DEFAULT false,
     info_held_status_id integer,
     type character varying,
@@ -1508,6 +1509,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180202171348'),
 ('20180205120050'),
 ('20180206100800'),
-('20180208161547');
+('20180208161547'),
+('20180214162943'),
+('20180214163355'),
+('20180222125345'),
+('20180226170900');
 
 
