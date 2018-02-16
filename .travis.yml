@@ -17,8 +17,8 @@ script:
   - bundle exec rails jasmine:ci
   - bundle exec rails db:create db:structure:load
   - cat /proc/cpuinfo
-  - bundle exec rails parallel:setup[4]
-  - bundle exec rails parallel:spec[4]
+  - bundle exec rails parallel:setup[8]
+  - bundle exec rails parallel:spec[8]
   - bundle exec codeclimate-test-reporter
 before_install:
   - "phantomjs --version"
