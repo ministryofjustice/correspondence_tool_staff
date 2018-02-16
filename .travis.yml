@@ -12,7 +12,7 @@ services:
 before_script:
   # - psql -c 'create database correspondence_platform_test;' -U postgres
   # - bundle exec rails db:create db:structure:load
-  - bundle exec rails parallel:setup[8]
+  - bundle exec rails parallel:create[8] parallel:load_structure[8]
 script:
   - bundle install
   - bundle exec rubocop
