@@ -157,8 +157,8 @@ RSpec.describe CasesController, type: :controller do
     end
 
     describe 'PATCH process_closure' do
-      let(:outcome)     { create :outcome, :requires_refusal_reason }
-      let(:info_held)   { create :info_status, :held }
+      let(:outcome)     { find_or_create :outcome, :requires_refusal_reason }
+      let(:info_held)   { find_or_create :info_status, :held }
 
       it 'authorizes using can_close_case?' do
         expect{
@@ -190,8 +190,8 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'FOI internal review' do
-        let(:appeal_outcome)    { create :appeal_outcome, :upheld }
-        let(:info_held)         { create :info_status, :not_held }
+        let(:appeal_outcome)    { find_or_create :appeal_outcome, :upheld }
+        let(:info_held)         { find_or_create :info_status, :not_held }
         let(:internal_review)   { create :responded_compliance_review }
 
         it "closes a case that has been responded to" do
