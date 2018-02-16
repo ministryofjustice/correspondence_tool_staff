@@ -17,7 +17,7 @@ script:
   - bundle install
   - bundle exec rubocop
   - bundle exec rails jasmine:ci
-  - bundle exec parallel_test -s spec/features -n 8 -o --fail-fast spec
+  - bundle exec parallel_rspec -s spec/features -n 8 -o --fail-fast spec
   - bundle exec codeclimate-test-reporter
 before_install:
   - "phantomjs --version"
