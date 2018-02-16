@@ -66,7 +66,7 @@ p
                 class: 'button')
 hr
 
-- if @team.active?
+- if Pundit.policy(current_user, team).destroy?
   = link_to "Deactivate team", team_path(@team.id),
                        data: {:confirm => t('.destroy')},
                        method: :delete,
