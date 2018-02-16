@@ -16,8 +16,8 @@
 
 class Team < ApplicationRecord
   validates :name, uniqueness: { scope: :type }
-
   validate :valid_role
+  validate :deletion_validation
 
   acts_as_tree
 
@@ -114,5 +114,26 @@ class Team < ApplicationRecord
 
   def has_active_children?
     children.active.any?
+  end
+
+  def active?
+    deleted_at.nil?
+  end
+
+  def inactive?
+    !active?
+  end
+
+  private
+
+  # this method applies to Business Groups and Directorates only.  It is overridden in BusinssUnit.
+  #
+  def deletion_validation
+    if deleted_at.present?
+      if has_active_children?
+        errors.add(:base, 'Unable to delete team: team still has active children')
+      end
+
+    end
   end
 end

@@ -43,6 +43,11 @@ class TeamPolicy < ApplicationPolicy
     check_user_is_a_manager
   end
 
+  def destroy?
+    clear_failed_checks
+    check_user_is_a_manager && check_team_is_active
+  end
+
   class Scope
 
     attr_reader :user, :scope
@@ -63,6 +68,10 @@ class TeamPolicy < ApplicationPolicy
 
   check :user_is_member_of_team do
     team.in? user.teams
+  end
+
+  check :team_is_active do
+    team.active?
   end
 
 end

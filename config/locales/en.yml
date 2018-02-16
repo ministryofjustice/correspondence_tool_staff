@@ -100,6 +100,7 @@ en:
       new?: 'You are not authorised to add new teams'
       create?: 'You are not authorised to add new teams'
       edit?: 'You are not authorised to edit this team'
+      destroy?: 'You are not authorised to deactivate teams'
     nil_class: 'Authorisation failed due to internal error.'
     user_policy:
       destroy?: 'You are not authorised to deactivate users'
@@ -540,19 +541,14 @@ en:
     business_unit_list:
       team_members: Team members
     business_unit_detail:
+      destroy: Are you sure you want to deactivate this business unit?
       team_members: Team members
       new_team_member: New team member
-#      new_responder_user: New Information Officer
-    # business_group_detail:
-    #   destroy: 'Are you sure you want to deactivate this business group?'
-    # directorate_detail:
-    #   destroy: 'Are you sure you want to deactivate this directorate?'
     edit:
       edit: Edit %{team_type}
     new:
       new: New %{team_type}
-    destroyed: This team has now been deactivated'
-    error: This %{team_type} still has active %{child_type}. Please deactivate all %{child_type} of the %{team_type} before deactivating the %{team_type}
+    destroyed: This team has now been deactivated
 
   users:
     index:

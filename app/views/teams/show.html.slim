@@ -1,3 +1,6 @@
+= GovukElementsErrorsHelper.error_summary @team,
+        "#{pluralize(@team.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
 - content_for :heading
   = @team.name
 

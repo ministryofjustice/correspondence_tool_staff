@@ -20,6 +20,7 @@ class BusinessUnit < Team
   validates :parent_id, presence: true
   validates_presence_of :correspondence_type_roles
 
+
   belongs_to :directorate, foreign_key: 'parent_id'
 
   has_one :business_group, through: :directorate
@@ -49,6 +50,17 @@ class BusinessUnit < Team
            -> { distinct },
            through: :correspondence_type_roles,
            dependent: :destroy
+
+  has_many :assignments, foreign_key: :team_id
+  has_many :pending_accepted_assignments,
+           -> { pending_accepted},
+           foreign_key: :team_id,
+           class_name: 'Assignment'
+
+  has_many :cases, through: :assignments
+
+  has_many :open_cases, -> { in_open_state }, through: :pending_accepted_assignments, source: :case
+
 
   scope :managing, -> { where(role: 'manager') }
   scope :approving, -> { where(role: 'approver') }
@@ -114,4 +126,20 @@ class BusinessUnit < Team
                                   .select(&:present?)
                                   .map { |id| CorrespondenceType.find(id) }
   end
+
+  private
+
+  def deletion_validation
+    if deleted_at.present?
+      if open_cases.any?
+        errors.add(:base, "Unable to deactivate: this business unit has open cases")
+      end
+
+      if users.any?
+        errors.add(:base, "Unable to deactivate: this business unit has team members")
+      end
+
+    end
+  end
+
 end

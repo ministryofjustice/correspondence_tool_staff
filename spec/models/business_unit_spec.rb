@@ -52,6 +52,52 @@ RSpec.describe BusinessUnit, type: :model do
                 .with_foreign_key('team_id') }
   it { should have_many(:approvers).through(:approver_user_roles) }
 
+
+  context 'cases scope' do
+    before(:all) do
+      @team_1 = create :responding_team
+      @team_2 = create :responding_team
+      
+      @unassigned_case                  = create :case, name: 'unassigned'
+      @t1_assigned_case                 = create :assigned_case, responding_team: @team_1, name: 't1-assigned'
+      @t1_accepted_case                 = create :accepted_case, responding_team: @team_1, name: 't1-accepted'
+      @t1_rejected_case                 = create :rejected_case, responding_team: @team_1, name: 't1-rejected'
+      @t1_pending_dacu_clearance_case   = create :pending_dacu_clearance_case, responding_team: @team_1, name: 't1-pending-dacu'
+      @t1_responded_case                = create :responded_case, responding_team: @team_1, name: 't1-responded'
+      @t1_closed_case                   = create :closed_case, responding_team: @team_1, name: 't1-closed'
+
+      @t2_assigned_case                 = create :assigned_case, responding_team: @team_2, name: 't2-assigned'
+      @t2_accepted_case                 = create :accepted_case, responding_team: @team_2, name: 't2-accepted'
+      @t2_rejected_case                 = create :rejected_case, responding_team: @team_2, name: 't2-rejected'
+      @t2_pending_dacu_clearance_case   = create :pending_dacu_clearance_case, responding_team: @team_2, name: 't2-pending-dacu'
+      @t2_responded_case                = create :responded_case, responding_team: @team_2, name: 't2-responded'
+      @t2_closed_case                   = create :closed_case, responding_team: @team_2, name: 't2-closed'
+    end
+
+    after(:all) { DbHousekeeping.clean }
+
+    describe 'scope cases' do
+      it 'returns all cases allocated to the team including rejected and closed' do
+        expect(@team_1.cases).to match_array([
+            @t1_assigned_case,
+            @t1_accepted_case,
+            @t1_rejected_case,
+            @t1_pending_dacu_clearance_case,
+            @t1_responded_case,
+            @t1_closed_case])
+      end
+    end
+
+    describe 'scope pending_accepted_cases' do
+      it 'does not return responded or closed cases' do
+        expect(@team_1.open_cases).to match_array([
+           @t1_assigned_case,
+           @t1_accepted_case,
+           @t1_pending_dacu_clearance_case])
+      end
+    end
+  end
+
   context 'multiple teams created' do
     let!(:managing_team)   { find_or_create :managing_team }
     let!(:responding_team) { find_or_create :responding_team }

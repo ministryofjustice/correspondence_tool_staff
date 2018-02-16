@@ -2,21 +2,19 @@ class TeamDeletionService
 
   attr_reader :result
 
-  def initialize(params)
-    @team = Team.find(params[:id])
+  def initialize(team)
+    @team = team
     @result = :incomplete
   end
 
   def call
-    unless @team.has_active_children?
-      ActiveRecord::Base.transaction do
-        begin
-          update_name
-          soft_delete
-          @result = :ok
-        rescue
-          @result = :error
-        end
+    ActiveRecord::Base.transaction do
+      begin
+        soft_delete
+        @result = :ok
+      rescue
+        @team.reload
+        @result = :error
       end
     end
   end
@@ -24,10 +22,9 @@ class TeamDeletionService
   private
 
   def soft_delete
-    @team.update_attributes!(deleted_at: Time.current)
+    @team.update_attributes!(deleted_at: Time.current,
+                             name: "DEACTIVATED #{@team.name} " + Time.now.to_s)
   end
 
-  def update_name
-    @team.update_attributes!(name: "DEACTIVATED #{@team.name} " + Time.now.to_s)
-  end
+
 end

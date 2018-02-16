@@ -73,10 +73,13 @@ class Case::Base < ApplicationRecord
                             state: states})
   end
 
+  scope :in_open_state, -> { where. not(current_state: %w[responded closed] ) }
+
   scope :accepted, -> { joins(:assignments)
                           .where(assignments: {state: ['accepted']} ) }
   scope :unaccepted, -> { joins(:assignments)
                             .where.not(assignments: {state: 'accepted'} ) }
+  scope :pending_accepted, -> { joins(:assignments).where(assignments: {state: %w[pending accepted] } ) }
 
   scope :waiting_to_be_accepted, ->(*teams) do
     includes(:assignments)
