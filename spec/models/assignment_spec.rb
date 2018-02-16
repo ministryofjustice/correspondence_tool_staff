@@ -194,4 +194,24 @@ RSpec.describe Assignment, type: :model do
       end
     end
   end
+
+  context 'unique pending responding' do
+    it 'raises an exception when two pending responders for same case' do
+      kase = create :assigned_case
+      manager = create :manager
+      expect(kase.assignments.responding.size).to eq 1
+      expect(kase.assignments.responding.first.state).to eq 'pending'
+      assignment = create_pending_responding_assignment(kase, manager)
+      expect(assignment).not_to be_valid
+      expect(assignment.errors[:state]).to eq ['responding not unique']
+    end
+
+    def create_pending_responding_assignment(kase, manager)
+      Assignment.create(state: 'pending',
+                        case_id: kase.id,
+                        team_id: kase.responding_team.id,
+                        role: 'responding',
+                        user_id: manager.id)
+    end
+  end
 end
