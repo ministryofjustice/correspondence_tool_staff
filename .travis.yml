@@ -12,11 +12,14 @@ services:
 before_script:
   - psql -c 'create database correspondence_platform_test;' -U postgres
 script:
-  - bundle  install
+  - bundle install
   - bundle exec rubocop
   - bundle exec rails jasmine:ci
   - bundle exec rails db:create db:structure:load
-  - bundle exec rails spec
+  - cat /proc/cpuinfo
+  - bundle exec rails parallel:create[4]
+  - bundle exec rails parallel:prepare[4]
+  - bundle exec rails parallel:spec[4]
   - bundle exec codeclimate-test-reporter
 before_install:
   - "phantomjs --version"
