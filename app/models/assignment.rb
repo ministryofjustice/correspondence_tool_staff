@@ -51,8 +51,6 @@ class Assignment < ApplicationRecord
     responding.where.not(state: 'rejected').order(id: :desc).limit(1)
   }
 
-  scope :pending, -> { where(state: 'pending') }
-
   attr_accessor :reasons_for_rejection
 
   def reject(rejecting_user, message)
