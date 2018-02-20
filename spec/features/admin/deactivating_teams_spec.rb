@@ -28,15 +28,19 @@ require 'rails_helper'
 feature 'deactivating business units' do
   given(:dir)             { create :directorate }
   given(:manager)         { create :manager }
-  given(:bu)              { create :business_unit, directorate: dir }
+  given!(:bu)              { create :business_unit, directorate: dir }
 
   scenario 'manager deactivates a business unit with no active children' do
     login_as manager
+
+    teams_show_page.load(id: dir.id)
+    expect(teams_show_page.row_for_business_unit(bu.name)).to be_present
 
     teams_show_page.load(id: bu.id)
     teams_show_page.deactivate_team_link.click
     expect(teams_show_page.flash_notice.text).to eq I18n.t('teams.destroyed')
 
-    expect(teams_show_page.business_units_list).not_to include bu.name
+    expect(teams_show_page).to be_displayed(id: dir.id)
+    expect(teams_show_page.row_for_business_unit(bu.name)).not_to be_present
   end
 end

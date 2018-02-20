@@ -1,11 +1,12 @@
 require 'rails_helper'
 
 describe 'assignments/new.html.slim', type: :view do
-  let(:unassigned_case)   { create :case }
-  let(:business_unit_1)   { create :responding_team}
-  let(:business_unit_2)   { create :responding_team}
-  let(:business_unit_3)   { create :responding_team}
-  let(:all_business_units){ [business_unit_1,business_unit_2,business_unit_3] }
+  let(:unassigned_case)    { create :case }
+  let(:bg)                 { create :business_group }
+  let(:dir)                { create :directorate, business_group: bg }
+  let!(:business_unit_1)   { create :responding_team, directorate: dir }
+  let!(:business_unit_2)   { create :responding_team, directorate: dir }
+  let!(:business_unit_3)   { create :responding_team, directorate: dir }
 
   it 'displays the new assignment page for a new case' do
 
@@ -37,7 +38,7 @@ describe 'assignments/new.html.slim', type: :view do
       assign(:assignment, unassigned_case.assignments.new)
       flash[:notice] = true
       assign(:creating_case, true)
-      assign(:business_units, [business_unit_1,business_unit_2,business_unit_3])
+      assign(:business_units, dir.business_units)
 
       render
 
@@ -54,7 +55,7 @@ describe 'assignments/new.html.slim', type: :view do
 
       expect(page.assign_to.team.count).to eq 3
 
-      all_business_units.each do | bu |
+      dir.business_units.each do | bu |
         page_team = page.assign_to.team.detect { |team| team.business_unit.text == bu.name }
 
         expect(page_team.areas_covered.map(&:text))
