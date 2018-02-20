@@ -204,7 +204,7 @@ RSpec.describe AssignmentsController, type: :controller do
           sign_in approver
         end
 
-        it 'uses the service', js: true do
+        it 'uses the service' do
           patch :accept, params: params, xhr: true
           expect(CaseAcceptApproverAssignmentService)
             .to have_received(:new)
@@ -316,7 +316,7 @@ RSpec.describe AssignmentsController, type: :controller do
         sign_in approver
       end
 
-      it 'uses the service', js: true do
+      it 'uses the service' do
         patch :unaccept, params: params, xhr: true
         expect(CaseUnacceptApproverAssignmentService)
           .to have_received(:new).with(assignment: assignment)
@@ -351,7 +351,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
       before(:each) { sign_in press_officer }
 
-      it 'calls CaseFlagForClearanceService', js: true do
+      it 'calls CaseFlagForClearanceService' do
         expect(CaseFlagForClearanceService).to receive(:new).with(user: press_officer, kase: assigned_case, team: press_office ).and_return(service)
         expect(service).to receive(:call).and_return(:ok)
 
