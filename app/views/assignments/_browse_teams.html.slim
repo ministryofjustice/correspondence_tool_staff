@@ -20,7 +20,7 @@ ul.business-groups.list
 
 - if defined?(@business_units)
   ul.teams
-    - @business_units.each do |team|
+    - @business_units.active.each do |team|
       li.team
         .team-details
           h3
