@@ -34,7 +34,7 @@ class TeamsController < ApplicationController
 
   def update
     authorize @team
-    
+
     if @team.update(team_params)
       redirect_to post_update_redirect_destination
     else
@@ -186,7 +186,7 @@ class TeamsController < ApplicationController
         areas_covered_by_team_path(@team)
       else
         flash[:notice] = 'Team details updated'
-        @team.type == 'BusinessGroup' ? teams_path : team_path(@team.parent_id)
+        @team.is_a?(BusinessGroup) ? teams_path : team_path(@team.parent_id)
       end
     else
       if @team.is_a?(BusinessUnit)
