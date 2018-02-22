@@ -182,7 +182,7 @@ en:
         state: What do you want to do?
         team_id: Assign to
         user_id: Choose a new team member for this case
-      case:
+      case_foi:
         info_held_status_abbreviation: Was the information held?
         requester_type: Type of requester
         refusal_reason_name: What was the outcome?
@@ -286,7 +286,7 @@ en:
           manager: Case management
       team_property:
         value: "Add area"
-        
+
 
   alerts:
     assignment_accepted_html: |
