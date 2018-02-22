@@ -21,10 +21,8 @@ require 'pundit/rspec'
 require 'aws-sdk'
 
 # Required or we'll get errors when we try to pre-sign S# direct uploads.
-Aws.config.update credentials: Aws::Credentials.new(
-                    'test_access_key_id',
-                    'test_secret_access_key'
-                  )
+ENV['AWS_ACCESS_KEY_ID']     = 'test_access_key_id'
+ENV['AWS_SECRET_ACCESS_KEY'] = 'test_secret_access_key'
 
 
 RSpec.configure do |config|

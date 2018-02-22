@@ -20,6 +20,20 @@ Capybara.javascript_driver = :poltergeist
 #                                     inspector: true)
 # end
 
+
+# Set these env variables to push screenshots for failed tests to S3.
+if ENV['S3_TEST_SCREENSHOT_ACCESS_KEY_ID'].present? &&
+   ENV['S3_TEST_SCREENSHOT_SECRET_ACCESS_KEY'].present?
+  Capybara::Screenshot.s3_configuration = {
+    s3_client_credentials: {
+      access_key_id: ENV['S3_TEST_SCREENSHOT_ACCESS_KEY_ID'],
+      secret_access_key: ENV['S3_TEST_SCREENSHOT_SECRET_ACCESS_KEY'],
+      region: 'eu-west-1'
+    },
+    bucket_name: 'correspondence-staff-travis-test-failure-screenshots',
+  }
+end
+
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end
