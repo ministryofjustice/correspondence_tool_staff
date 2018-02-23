@@ -16,7 +16,7 @@ module DbHousekeeping
       users
       correspondence_types)
     tables.each do |table|
-      ActiveRecord::Base.connection.execute("DELETE FROM #{table}")
+      ActiveRecord::Base.connection.execute("TRUNCATE #{table}")
     end
     seed_database_for_tests if seed
   end
