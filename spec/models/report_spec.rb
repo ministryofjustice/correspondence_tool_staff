@@ -59,10 +59,10 @@ RSpec.describe Report, type: :model do
   end
 
   describe '#period_end' do
-    let(:tomorrow) { build(:report, period_end: Date.tomorrow.to_s) }
-    let(:today)    { build(:report, period_start: Date.today.to_s,
+    let(:tomorrow) { build_stubbed(:report, period_end: Date.tomorrow.to_s) }
+    let(:today)    { build_stubbed(:report, period_start: Date.today.to_s,
                                     period_end: Date.today.to_s)}
-    let(:yesterday) { build(:report, period_end: Date.yesterday.to_s) }
+    let(:yesterday) { build_stubbed(:report, period_end: Date.yesterday.to_s) }
 
     it "can't be in the future" do
       expect(tomorrow).to_not be_valid
@@ -86,7 +86,7 @@ RSpec.describe Report, type: :model do
                              period_end: Date.today,
                              run: true
                            ) }
-    let(:report)         { create :r003_report }
+    let(:report)         { build_stubbed :r003_report }
 
     before do
       expect(Stats::R003BusinessUnitPerformanceReport)

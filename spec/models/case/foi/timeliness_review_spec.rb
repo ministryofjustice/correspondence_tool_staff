@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Case::FOI::TimelinessReview, type: :model, parent: :case do
 
-  let(:time_review) { create :timeliness_review }
+  let(:time_review) { build_stubbed :timeliness_review }
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do
