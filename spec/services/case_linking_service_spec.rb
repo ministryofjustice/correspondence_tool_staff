@@ -116,10 +116,10 @@ describe CaseLinkingService do
 
       before(:each)  {
         service.create
-        service.destroy
       }
 
       it 'destroys the link between the two cases' do
+        service.destroy
         expect(kase.linked_cases).to be_empty
         expect(link_case.linked_cases).to be_empty
       end
@@ -131,6 +131,7 @@ describe CaseLinkingService do
       end
 
       it 'has created a transition on the linking case' do
+        service.destroy
         transition = kase.transitions.last
         expect(transition.event).to eq 'remove_linked_case'
         expect(transition.to_state).to eq kase.current_state
@@ -140,6 +141,7 @@ describe CaseLinkingService do
       end
 
       it 'has created a transition on the linked case' do
+        service.destroy
         transition = link_case.transitions.last
         expect(transition.event).to eq 'remove_linked_case'
         expect(transition.to_state).to eq link_case.current_state
@@ -152,15 +154,16 @@ describe CaseLinkingService do
     context 'SAR cases' do
       let(:sar_case_1)      { create :sar_case }
       let(:sar_case_2)      { create :sar_case }
+      let(:service)         { CaseLinkingService.new(manager,
+                                                     sar_case_1,
+                                                     sar_case_2.number)}
 
       before(:each)  {
         service.create
-        service.destroy
       }
 
       describe 'linking a non-sar case to a sar case' do
         it 'does not error' do
-          service = CaseLinkingService.new(manager, sar_case_1, sar_case_2.number)
           service.destroy
           expect(service.result).to eq :ok
           expect(sar_case_1).to be_valid
