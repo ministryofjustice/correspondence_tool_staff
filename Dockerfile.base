@@ -1,0 +1,26 @@
+FROM ministryofjustice/ruby:2.3.1-webapp-onbuild
+
+RUN curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+    sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(bin/codename.sh)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && \
+    cat /etc/apt/sources.list.d/pgdg.list && \
+    apt-get update && \
+    apt-get install -y ca-certificates \
+                       less \
+                       libreoffice \
+                       postgresql-client-9.5 && \
+    rm -rf /var/lib/apt/lists/* && \
+    truncate -s 0 /var/log/*log
+
+
+# # install libreoffice (used by correspondence-staff to generate PDFs)
+# RUN apt-get update && apt-get install -y libreoffice && \
+#     apt-get clean && \
+#     rm -rf /var/lib/apt/lists/* && \
+#     truncate -s 0 /var/log/*log
+
+# EXPOSE $PUMA_PORT
+
+# RUN bundle exec rake assets:precompile assets:non_digested RAILS_ENV=production \
+#   SECRET_KEY_BASE=required_but_does_not_matter_for_assets
+
+# ENTRYPOINT ["./run.sh"]
