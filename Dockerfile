@@ -1,4 +1,4 @@
-FROM ministryofjustice/correspondence-staff-base
+FROM registry.service.dsd.io/correspondence-staff-base
 
 ENV PUMA_PORT 3000
 
