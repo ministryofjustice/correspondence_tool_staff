@@ -56,9 +56,7 @@ describe 'cases/linked_cases.html.slim', type: :view do
         expect(row.case_type.text).to eq 'FOI '
         expect(row.request.text)
             .to eq "#{ linked_case.subject } #{ linked_case.name }"
-
-        # annoyingly had to add \n below because of how locales using html is handled
-        expect(row.remove_link.text).to eq "Remove link to #{linked_case.number}\n"
+        expect(row.remove_link.text.strip).to eq "Remove link to #{linked_case.number}"
         expect(row.remove_link['href'])
             .to eq destroy_link_on_case_path(id: main_case.id,
                                              linked_case_number: linked_case.number)
