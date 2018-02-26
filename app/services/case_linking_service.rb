@@ -37,7 +37,7 @@ class CaseLinkingService
   def destroy
     ActiveRecord::Base.transaction do
       # find the linked case
-      @link_case = @case.linked_cases.find_by(number: @link_case_number).first
+      @link_case = @case.linked_cases.find_by(number: @link_case_number)
 
       # Destroy the links
       @case.remove_linked_case(@link_case)
