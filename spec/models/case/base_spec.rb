@@ -1427,7 +1427,7 @@ RSpec.describe Case::Base, type: :model do
 
   describe '#deadline_calculator' do
     context 'FOI correspondence type' do
-      let(:kase) { create :foi_case }
+      let(:kase) { build_stubbed :foi_case }
 
       it 'returns business days calculator' do
         deadline_calculator = kase.deadline_calculator
@@ -1438,7 +1438,7 @@ RSpec.describe Case::Base, type: :model do
     end
 
     context 'SAR correspondence type' do
-      let(:kase) { create :sar_case }
+      let(:kase) { build_stubbed :sar_case }
 
       it 'returns business days calculator' do
         deadline_calculator = kase.deadline_calculator
