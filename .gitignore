@@ -9,8 +9,8 @@
 
 # Ignore all logfiles and tempfiles.
 /tmp/*
-!tmp/parallel_runtime_rspec.log
 /log/*
+!log/parallel_runtime_rspec.log
 .idea/*
 
 # Ignore Byebug command history file.
