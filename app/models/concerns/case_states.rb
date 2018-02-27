@@ -2,7 +2,6 @@ module CaseStates
   extend ActiveSupport::Concern
 
   TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = [ nil, 'unassigned' ]
-<<<<<<< HEAD
   NON_TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = [ nil,
                                                               'unassigned',
                                                               'awaiting_responder',
@@ -10,9 +9,6 @@ module CaseStates
                                                               'awaiting_dispatch',
                                                               'responded',
                                                               'closed']
-=======
-  NON_TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = [ nil, 'unassigned', 'awaiting_responder', 'drafting' ]
->>>>>>> CT-1592 adds drafting events to config state machine
 
   included do
     after_update :reset_state_machine, if: :workflow_changed?
