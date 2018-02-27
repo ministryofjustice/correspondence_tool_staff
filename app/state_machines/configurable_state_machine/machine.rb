@@ -115,7 +115,7 @@ module ConfigurableStateMachine
       event_config = state_config[event]
       if can_trigger_event?(event_name: event, metadata: params)
         ActiveRecord::Base.transaction do
-          to_state = find_destination_state(event_config: event_config)
+          to_state = find_destination_state(event_config: event_config, user: params[:acting_user])
           to_workflow = find_destination_workflow(event_config: event_config)
           CaseTransition.unset_most_recent(@kase)
           write_transition(event: event, to_state: to_state, to_workflow: to_workflow, params: params)
@@ -187,8 +187,20 @@ module ConfigurableStateMachine
       predicate_oject.__send__(method)
     end
 
-    def find_destination_state(event_config:)
-      event_config.to_h.key?(:transition_to) ? event_config.transition_to : @kase.current_state
+    def find_destination_state(event_config:, user:)
+      if event_config.to_h.key?(:transition_to)
+        event_config.transition_to
+      elsif event_config.to_h.key?(:transition_to_using)
+        result_from_class_and_method(class_and_method: event_config.transition_to_using, user: user)
+      else
+        @kase.current_state
+      end
+    end
+
+    def result_from_class_and_method(class_and_method:, user:)
+      klass, method = class_and_method.split('#')
+      conditional_object = klass.constantize.new(user: user, kase: @kase)
+      conditional_object.__send__(method)
     end
 
     def find_destination_workflow(event_config:)

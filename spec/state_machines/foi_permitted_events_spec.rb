@@ -125,10 +125,10 @@ describe Case::FOI::StandardStateMachine do
           it 'shows events' do
             k = create :case_with_response
             expect(k.current_state).to eq 'awaiting_dispatch'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:extend_for_pit,
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
+                                                                          :extend_for_pit,
                                                                           :link_a_case,
-                                                                          :remove_linked_case,
-                                                                          :request_further_clearance]
+                                                                          :remove_linked_case]
           end
         end
 
@@ -182,10 +182,10 @@ describe Case::FOI::StandardStateMachine do
                                                                           :add_responses,
                                                                           :extend_for_pit,
                                                                           :link_a_case,
+                                                                          :reassign_user,
                                                                           :remove_last_response,
                                                                           :remove_linked_case,
                                                                           :remove_response,
-                                                                          :request_further_clearance,
                                                                           :respond]
           end
         end

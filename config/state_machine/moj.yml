@@ -111,6 +111,22 @@ case_types:
                 remove_linked_case:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
+                  switch_workflow: :trigger
+
+              awaiting_dispatch:
+                 add_message_to_case:
+                 destroy_case:
+                 edit_case:
+                 extend_for_pit:       # ?
+                 flag_for_clearance:
+                   switch_workflow: :trigger
+                 link_a_case:
+                 remove_linked_case:
+                 request_further_clearance:
+                    if: Case::FOI::StandardPolicy#can_request_further_clearance?
+                    switch_workflow: :trigger
+
+
 
           approver:
             states:
@@ -143,6 +159,13 @@ case_types:
                 take_on_for_approval:
                   switch_workflow: :trigger
 
+              awaiting_dispatch:
+                add_message_to_case:
+                link_a_case:
+                reassign_user:
+                take_on_for_approval:
+                  switch_workflow: :trigger
+
           responder:
             states:
               unassigned:
@@ -170,6 +193,24 @@ case_types:
                 reassign_user:
                   if: Predicates#responder_is_member_of_assigned_team?
                 remove_linked_case:
+
+              awaiting_dispatch:
+                 add_message_to_case:
+                 add_responses:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                 extend_for_pit:       # ?
+                 link_a_case:
+                 reassign_user:
+                   if: Predicates#responder_is_member_of_assigned_team?
+                 remove_last_response:
+                   if: Predicates#responder_is_member_of_assigned_team?
+                 remove_linked_case:
+                 remove_response:
+                   if: Predicates#responder_is_member_of_assigned_team?
+                   transition_to_using: Conditionals#remove_response
+                 respond:
+                   if: Predicates#responder_is_member_of_assigned_team?
+                   transition_to: responded
 
       trigger:
         permitted_events:

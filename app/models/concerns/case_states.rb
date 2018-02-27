@@ -2,7 +2,11 @@ module CaseStates
   extend ActiveSupport::Concern
 
   TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = [ nil, 'unassigned' ]
-  NON_TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = [ nil, 'unassigned', 'awaiting_responder', 'drafting' ]
+  NON_TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = [ nil,
+                                                              'unassigned',
+                                                              'awaiting_responder',
+                                                              'drafting',
+                                                              'awaiting_dispatch']
 
   included do
     after_update :reset_state_machine, if: :workflow_changed?
