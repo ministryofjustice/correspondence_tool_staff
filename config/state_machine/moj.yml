@@ -105,6 +105,7 @@ case_types:
                 accept_approver_assignment:
                 add_message_to_case:
                 flag_for_clearance:
+                  switch_workflow: trigger
                 reassign_user:
 
               awaiting_responder:

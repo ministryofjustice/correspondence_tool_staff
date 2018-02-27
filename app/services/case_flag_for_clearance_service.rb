@@ -25,7 +25,6 @@ class CaseFlagForClearanceService
           associate_team(associated[:team], associated[:user])
         end
       end
-      @case.set_workflow!('trigger')
     end
 
     @result = :ok
