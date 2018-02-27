@@ -26,7 +26,7 @@ RSpec.describe Case::FOI::TimelinessReview, type: :model, parent: :case do
     context 'drafting state' do
       it 'has an FOI state machine' do
         allow(time_review).to receive(:current_state).and_return('drafting')
-        expect(time_review.state_machine).to be_a Case::FOI::StandardStateMachine
+        expect(time_review.state_machine).to be_a ConfigurableStateMachine::Machine
       end
     end
 
