@@ -202,8 +202,6 @@ case_types:
                  link_a_case:
                  reassign_user:
                    if: Predicates#responder_is_member_of_assigned_team?
-                 remove_last_response:
-                   if: Predicates#responder_is_member_of_assigned_team?
                  remove_linked_case:
                  remove_response:
                    if: Predicates#responder_is_member_of_assigned_team?

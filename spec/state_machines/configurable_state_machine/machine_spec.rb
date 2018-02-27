@@ -500,6 +500,7 @@ module ConfigurableStateMachine
             edit_case
             flag_for_clearance
             flag_for_press
+            remove_response
             unflag_for_clearance
           }
           expect(machine.events).to eq expected_events

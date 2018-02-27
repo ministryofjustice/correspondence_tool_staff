@@ -313,8 +313,7 @@ describe CasesController, type: :controller do
           expect(assigns(:permitted_events)).to include :add_message_to_case,
                                                         :add_responses,
                                                         :respond,
-                                                        :remove_response,
-                                                        :remove_last_response
+                                                        :remove_response
         end
 
         it 'renders the show page' do
@@ -326,8 +325,8 @@ describe CasesController, type: :controller do
         let(:user) { create(:responder) }
 
         it 'permitted_events to be empty' do
-          expect(assigns(:permitted_events)).to match_array [:extend_for_pit, :link_a_case, :remove_linked_case, :request_further_clearance]
-          expect(assigns(:filtered_permitted_events)).to be_empty
+          expect(assigns(:permitted_events)).to match_array [:add_message_to_case, :extend_for_pit, :link_a_case, :remove_linked_case]
+          expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
         end
 
         it 'renders case details page' do

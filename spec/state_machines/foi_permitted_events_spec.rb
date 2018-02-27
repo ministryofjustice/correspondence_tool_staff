@@ -183,7 +183,6 @@ describe Case::FOI::StandardStateMachine do
                                                                           :extend_for_pit,
                                                                           :link_a_case,
                                                                           :reassign_user,
-                                                                          :remove_last_response,
                                                                           :remove_linked_case,
                                                                           :remove_response,
                                                                           :respond]

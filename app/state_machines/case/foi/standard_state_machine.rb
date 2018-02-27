@@ -391,10 +391,10 @@ class Case::FOI::StandardStateMachine
              event:             :edit_case
   end
 
-  def destroy_case!(user, team)
+  def destroy_case!(acting_user:, acting_team:)
     trigger! :destroy_case,
-             acting_team_id:    team.id,
-             acting_user_id:    user.id,
+             acting_team_id:    acting_team.id,
+             acting_user_id:    acting_user.id,
              event:             :destroy_case
   end
 

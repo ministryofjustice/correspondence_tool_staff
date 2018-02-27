@@ -64,6 +64,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
                                     responder: responder,
                                     responding_team: responding_team}
   let(:case_with_response) { create :case_with_response,
+                                    :flagged,
                                     responder: responder,
                                     responding_team: responding_team }
   let(:responded_case)     { create :responded_case,
@@ -869,7 +870,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   end
 
   context 'User edits a case' do
-    let(:kase) { create :case_with_response }
+    let(:kase) { create :case_with_response, :flagged }
     let(:manager) { create :manager }
     let(:state_machine) { kase.state_machine }
     let(:team) { manager.managing_teams.first }
@@ -893,7 +894,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   end
 
   context 'User deletes a case' do
-    let(:kase) { create :case_with_response }
+    let(:kase) { create :case_with_response, :flagged }
     let(:manager) { create :manager }
     let(:state_machine) { kase.state_machine }
     let(:team) { manager.managing_teams.first }
@@ -902,8 +903,8 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
       it 'triggers an destroy_case event' do
         expect {
           state_machine.destroy_case!(
-            manager,
-            team
+            acting_user: manager,
+            acting_team: team
           )
         }.to trigger_the_event(:destroy_case)
                .on_state_machine(state_machine)
@@ -916,7 +917,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   end
 
   describe '#notify_kilo_case_is_ready_to_send' do
-    let(:approved_case)   { create :approved_case }
+    let(:approved_case)   { create :approved_case, :flagged }
     let(:kase)            { create :case }
     let!(:service) do
       double(NotifyResponderService, call: true).tap do |svc|

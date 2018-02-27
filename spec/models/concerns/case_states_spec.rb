@@ -94,6 +94,7 @@ RSpec.describe Case, type: :model do
         end
 
         it 'does not change the state' do
+          expect(kase.attachments.size).to eq 2
           expect(kase.current_state).to eq 'awaiting_dispatch'
           kase.remove_response(responder, attachment)
           expect(kase.current_state).to eq 'awaiting_dispatch'

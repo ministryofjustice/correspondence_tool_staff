@@ -5,7 +5,7 @@ class Conditionals
   end
 
   def remove_response
-    if @kase.attachments.size == 1
+    if @kase.attachments.size == 0
       'drafting'
     else
       'awaiting_dispatch'
