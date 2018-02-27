@@ -169,8 +169,7 @@ describe Case::FOI::StandardStateMachine do
                                                                           :extend_for_pit,
                                                                           :link_a_case,
                                                                           :reassign_user,
-                                                                          :remove_linked_case,
-                                                                          :request_further_clearance]
+                                                                          :remove_linked_case]
           end
         end
 

@@ -6,13 +6,16 @@ class MessagesController < ApplicationController
     teams = current_user.teams_for_case(@case)
     weightings = { 'manager' => 100, 'approver' => 200, 'responder' => 300 }
     team = teams.sort{ |a, b| weightings[a.role] <=> weightings[b.role] }.first
+
     if @case.state_machine.configurable?
       @case.state_machine.add_message_to_case!(
                                                 acting_user: current_user,
                                                 acting_team: team,
                                                 message: params[:case][:message_text])
     else
-      @case.state_machine.add_message_to_case!(current_user, team, params[:case][:message_text])
+      @case.state_machine.add_message_to_case!(acting_user: current_user,
+                                              acting_team: team,
+                                              message: params[:case][:message_text])
     end
 
     redirect_to case_path(@case, anchor: 'messages-section')

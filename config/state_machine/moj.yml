@@ -98,6 +98,19 @@ case_types:
                 unflag_for_clearance:
                   if: Case::FOI::StandardPolicy#unflag_for_clearance_from_awaiting_responder_to_awaiting_responder?
 
+              drafting:
+                add_message_to_case:
+                assign_to_new_team:
+                  transition_to: awaiting_responder
+                destroy_case:
+                edit_case:
+                extend_for_pit:       # ?
+                flag_for_clearance:
+                  switch_workflow: trigger
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
 
           approver:
             states:
@@ -123,6 +136,13 @@ case_types:
                   switch_workflow: trigger
                 unflag_for_clearance:               # needed for press/private office to unaccept
 
+              drafting:
+                add_message_to_case:
+                link_a_case:
+                remove_linked_case:
+                take_on_for_approval:
+                  switch_workflow: :trigger
+
           responder:
             states:
               unassigned:
@@ -138,6 +158,17 @@ case_types:
                   if: Predicates#responder_is_member_of_assigned_team?
                   transition_to: unassigned
                 link_a_case:
+                remove_linked_case:
+
+              drafting:
+                add_message_to_case:
+                add_responses:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                  transition_to: awaiting_dispatch
+                extend_for_pit:       # ?
+                link_a_case:
+                reassign_user:
+                  if: Predicates#responder_is_member_of_assigned_team?
                 remove_linked_case:
 
       trigger:
