@@ -84,7 +84,11 @@ describe Case::FOI::StandardStateMachine do
         it 'shows events' do
           k = create :closed_case
           expect(k.current_state).to eq 'closed'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:destroy_case, :edit_case, :link_a_case,:remove_linked_case]
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
+                                                                      :destroy_case,
+                                                                      :edit_case,
+                                                                      :link_a_case,
+                                                                      :remove_linked_case]
         end
       end
 

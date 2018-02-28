@@ -7,7 +7,8 @@ module CaseStates
                                                               'awaiting_responder',
                                                               'drafting',
                                                               'awaiting_dispatch',
-                                                              'responded']
+                                                              'responded',
+                                                              'closed']
 
   included do
     after_update :reset_state_machine, if: :workflow_changed?

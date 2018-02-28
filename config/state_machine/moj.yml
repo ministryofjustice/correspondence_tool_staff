@@ -135,6 +135,13 @@ case_types:
                 link_a_case:
                 remove_linked_case:
 
+              closed:
+                add_message_to_case:
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+
           approver:
             states:
               unassigned:
@@ -178,6 +185,10 @@ case_types:
                  link_a_case:
                  reassign_user:
                  remove_linked_case:
+
+              closed:
+                add_message_to_case:
+                link_a_case:
 
           responder:
             states:
@@ -226,6 +237,8 @@ case_types:
                 link_a_case:
                 remove_linked_case:
 
+              closed:
+                add_message_to_case:
 
       trigger:
         permitted_events:
