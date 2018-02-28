@@ -18,4 +18,17 @@ class DeviseMailer < Devise::Mailer
     mail(to: record.email)
   end
 
+  def unlock_instructions(record, token, _opts={})
+    RavenContextProvider.set_context
+    set_template(Settings.unlock_user_account_template)
+
+    set_personalisation(
+        email_subject: 'Your CMS user account has been locked',
+        user_full_name: record.full_name,
+        edit_password_url: user_unlock_url(unlock_token: token)
+    )
+
+    mail(to: record.email)
+  end
+
 end
