@@ -153,6 +153,7 @@ case_types:
                 flag_for_clearance:
                   switch_workflow: trigger
                 reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
 
               awaiting_responder:
                 # accept approver assignment might seem an odd event to have in the standard workflow, but it is here
@@ -181,6 +182,7 @@ case_types:
                 add_message_to_case:
                 link_a_case:
                 reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
                 take_on_for_approval:
                   switch_workflow: :trigger
 
@@ -188,6 +190,7 @@ case_types:
                  add_message_to_case:
                  link_a_case:
                  reassign_user:
+                   if: Case::BasePolicy#assignments_reassign_user?
                  remove_linked_case:
 
               closed:
@@ -221,6 +224,7 @@ case_types:
                 link_a_case:
                 reassign_user:
                   if: Predicates#responder_is_member_of_assigned_team?
+                  if: Case::BasePolicy#assignments_reassign_user?
                 remove_linked_case:
 
               awaiting_dispatch:
@@ -230,6 +234,7 @@ case_types:
                  link_a_case:
                  reassign_user:
                    if: Predicates#responder_is_member_of_assigned_team?
+                   if: Case::BasePolicy#assignments_reassign_user?
                  remove_linked_case:
                  remove_response:
                    if: Predicates#responder_is_member_of_assigned_team?
@@ -302,6 +307,8 @@ case_types:
                   if: Case::BasePolicy#can_add_message_to_case?
                 flag_for_clearance:
                 reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+
 
           responder:
             states:
