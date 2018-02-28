@@ -44,17 +44,18 @@ describe RequestFurtherClearanceService do
 
     describe 'case is not assigned to responder' do
       it 'sets target user and team to nil' do
+        disclosure_bmt_user = create :disclosure_bmt_user
         kase = create :awaiting_responder_case
-        service = RequestFurtherClearanceService.new(user: manager,
-                                                    kase: kase)
+        service = RequestFurtherClearanceService.new(user: disclosure_bmt_user,
+                                                     kase: kase)
         expect { service.call }
             .to change{ kase
                       .transitions
                       .further_clearance.count }.by(1)
         tr = kase.transitions.detect{ |t| t.event == 'request_further_clearance' }
         expect(tr.to_state).to eq 'awaiting_responder'
-        expect(tr.acting_user_id).to eq manager.id
-        expect(tr.acting_team_id).to eq manager.managing_teams.last.id
+        expect(tr.acting_user_id).to eq disclosure_bmt_user.id
+        expect(tr.acting_team_id).to eq disclosure_bmt_user.managing_teams.last.id
         expect(tr.target_user_id).to eq nil
         expect(tr.target_team_id).to eq nil
       end

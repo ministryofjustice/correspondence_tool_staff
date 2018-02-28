@@ -15,6 +15,7 @@
 #  acting_team_id :integer
 #  target_user_id :integer
 #  target_team_id :integer
+#  to_workflow    :string
 #
 
 require 'rails_helper'

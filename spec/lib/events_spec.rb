@@ -95,7 +95,11 @@ describe Events do
       end
 
       it 'updates the object workflow' do
+        first_transition  = double CaseTransition
+        last_transition = double CaseTransition
         allow(resource).to receive(:update)
+        allow(resource).to receive(:transitions).and_return([first_transition, last_transition])
+        allow(last_transition).to receive(:update)
         allow(instance).to receive(:transition_to!)
         instance.trigger!(:switch_workflow)
         expect(resource).to have_received(:update)
@@ -103,7 +107,11 @@ describe Events do
       end
 
       it 'updates the object workflow only after transitioning' do
+        first_transition  = double CaseTransition
+        last_transition = double CaseTransition
         allow(instance).to receive(:transition_to!)
+        allow(resource).to receive(:transitions).and_return([first_transition, last_transition])
+        allow(last_transition).to receive(:update)
         allow(resource).to receive(:update) {
           expect(instance).to have_received(:transition_to!)
         }

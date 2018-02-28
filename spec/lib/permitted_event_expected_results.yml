@@ -87,7 +87,8 @@
 
 - - unassigned_responder
   - unflagged_awaiting_responder_case
-  - - :link_a_case
+  - - :add_message_to_case
+    - :link_a_case
     - :remove_linked_case
 
 - - unassigned_responder
@@ -122,7 +123,7 @@
 
 
 
-##################################### ASSIGNED RESPONDER #########################
+###################################### ASSIGNED RESPONDER #########################
 
 - - assigned_responder
   - unflagged_drafting_case
@@ -247,10 +248,13 @@
 
 - - unassigned_press_officer
   - unflagged_case_within_escalation_period
-  - - :flag_for_clearance                     # no button showing up for this (Thank God!)
+  - - :accept_approver_assignment
+    - :add_message_to_case
+    - :flag_for_clearance                     # no button showing up for this (Thank God!)
     - :link_a_case
     - :remove_linked_case
     - :take_on_for_approval                   # shows on /cases/incoming but not detail page
+    - :unflag_for_clearance
 
 - - unassigned_press_officer
   - pending_press_clearance_case
@@ -279,10 +283,13 @@
 
 - - unassigned_private_officer
   - unflagged_case_within_escalation_period
-  - - :flag_for_clearance                     # no button showing up for this (Thank God!)
+  - - :accept_approver_assignment
+    - :add_message_to_case
+    - :flag_for_clearance                     # no button showing up for this (Thank God!)
     - :link_a_case
     - :remove_linked_case
     - :take_on_for_approval                   # shows on /cases/incoming but not detail page
+    - :unflag_for_clearance
 
 - - unassigned_private_officer
   - pending_private_clearance_case
@@ -294,4 +301,4 @@
 
 
 
-#################################### ASSIGNED PRIVATE OFFICER #########################
+################################## ASSIGNED PRIVATE OFFICER #########################

@@ -52,14 +52,14 @@ class CaseUnacceptApproverAssignmentService
   end
 
   def unaccept_approver_assignment(assignment)
-    assignment.case.state_machine.unaccept_approver_assignment!(@user, @team)
+    assignment.case.state_machine.unaccept_approver_assignment!(acting_user: @user, acting_team: @team)
     assignment.user = nil
     assignment.pending!
     assignment.save!
   end
 
   def unassign_approver_assignment(assignment)
-    @kase.state_machine.unflag_for_clearance!(@user, @team, assignment.team)
+    @kase.state_machine.unflag_for_clearance!(acting_user: @user, acting_team: @team, target_team: assignment.team)
     assignment.destroy
   end
 end

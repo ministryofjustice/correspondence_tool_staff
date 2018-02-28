@@ -35,9 +35,9 @@ module ConfigurableStateMachine
                 drafting: {
                   add_message_to_case: {
                     if: 'Case::FOI::StandardPolicy#can_add_message_to_case?',
-                    before_transition: 'ConfigurableStateMachine::TestCallbacks#before_transition_meth',
-                    after_transition: 'ConfigurableStateMachine::TestCallbacks#before_transition_meth',
-                    switch_workflow: 'timeliness_appeal',
+                    # before_transition: 'ConfigurableStateMachine::TestCallbacks#before_transition_meth',
+                    # after_transition: 'ConfigurableStateMachine::TestCallbacks#before_transition_meth',
+                    switch_workflow: 'trigger',
                     transition_to: 'ready_to_send'
                   },
                   add_response: nil
@@ -360,6 +360,49 @@ module ConfigurableStateMachine
     end
 
 
+    context 'triggering events' do
+      context 'switching workflow' do
+        let(:kase)      { create :accepted_case }
+
+        it 'updates the workflow on the case' do
+          # given
+          expect(kase.type_abbreviation).to eq 'FOI'
+          expect(kase.current_state).to eq 'drafting'
+          expect(kase.workflow).to eq 'standard'
+
+          # when
+          machine = Machine.new(config: config, kase: kase)
+          machine.add_message_to_case!(
+              message: 'NNNN',
+              acting_team: @managing_team,
+              acting_user: @manager)
+
+          # then
+          expect(kase.workflow).to eq 'trigger'
+        end
+
+        it 'writes the new workflow to the case transition' do
+          # given
+          expect(kase.current_state).to eq 'drafting'
+
+          # when
+          machine = Machine.new(config: config, kase: kase)
+          machine.add_message_to_case!(
+              message: 'This is my message to you all',
+              acting_team: @managing_team,
+              acting_user: @manager)
+
+          # then
+          transition = kase.transitions.last
+          expect(transition.event).to eq 'add_message_to_case'
+          expect(transition.to_state).to eq 'ready_to_send'
+          expect(transition.to_workflow).to eq 'trigger'
+          expect(transition.message).to eq 'This is my message to you all'
+        end
+      end
+    end
+
+
     describe '#respond_to?' do
       context 'methods ending with a bang' do
         it 'returns true to respond_to? with a method ending in a bang' do
@@ -443,7 +486,10 @@ module ConfigurableStateMachine
             user = team.users.first
             expect {
               machine.link_a_case!({acting_user: user, acting_team: team, linked_case_id: 33})
-            }.to raise_error InvalidEventError, %(Invalid Event: 'link_a_case': case_id: #{kase.id}, user_id: #{user.id})
+            }.to raise_error InvalidEventError do |error|
+              expect(error.message).to match(/Invalid event: type: FOI/)
+              expect(error.message).to match(/event: link_a_case/)
+            end
           end
         end
 
@@ -452,15 +498,21 @@ module ConfigurableStateMachine
             allow(@unassigned_case).to receive(:current_state).and_return('pending_dacu_clearance')
             expect {
               machine.link_a_case!({acting_user: @manager, acting_team: @managing_team, linked_case_id: 33})
-            }.to raise_error InvalidEventError, %(Invalid Event: 'link_a_case': case_id: #{kase.id}, user_id: #{@manager.id})
+            }.to raise_error InvalidEventError do |error|
+              expect(error.message).to match(/Invalid event: type: FOI/)
+              expect(error.message).to match(/event: link_a_case/)
+            end
           end
         end
 
         context 'no event for this state' do
           it 'raises InvalidEventError' do
             expect {
-              machine.non_existent_event!({acting_user: @manager, acting_team: @managing_team, linked_case_id: 33})
-            }.to raise_error InvalidEventError, %(Invalid Event: 'non_existent_event': case_id: #{kase.id}, user_id: #{@manager.id})
+                machine.non_existent_event!({acting_user: @manager, acting_team: @managing_team, linked_case_id: 33})
+            }.to raise_error do |error|
+              expect(error.message).to match(/Invalid event: type: FOI/)
+              expect(error.message).to match(/event: non_existent_event/)
+            end
           end
         end
       end

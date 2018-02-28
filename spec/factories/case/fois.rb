@@ -160,6 +160,7 @@ FactoryGirl.define do
       approving_team { find_or_create :team_dacu_disclosure }
       approver       { create :disclosure_specialist }
     end
+    workflow 'trigger'
 
     after(:create) do |kase, evaluator|
       create :approver_assignment,
@@ -179,6 +180,8 @@ FactoryGirl.define do
     transient do
       approving_team { find_or_create :team_dacu_disclosure }
     end
+
+    workflow 'trigger'
 
     after(:create) do |kase, evaluator|
       create :approver_assignment,
@@ -595,6 +598,7 @@ FactoryGirl.define do
       approving_team { find_or_create :approving_team }
     end
 
+
     after(:create) do |kase, evaluator|
       create :approver_assignment,
              case: kase,
@@ -603,6 +607,7 @@ FactoryGirl.define do
       create :flag_case_for_clearance_transition,
              case: kase,
              acting_team_id: evaluator.approving_team.id
+      kase.update(workflow: 'trigger')
       kase.reload
     end
   end
@@ -613,6 +618,7 @@ FactoryGirl.define do
       approving_team { approver.approving_team }
     end
 
+
     after(:create) do |kase, evaluator|
       create :approver_assignment,
              case: kase,
@@ -622,6 +628,7 @@ FactoryGirl.define do
       create :flag_case_for_clearance_transition,
              case: kase,
              target_team_id: evaluator.approving_team.id
+      kase.update(workflow: 'trigger')
     end
   end
 

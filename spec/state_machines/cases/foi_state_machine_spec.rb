@@ -360,6 +360,44 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
                   .checking_policy(:can_request_further_clearance?) }
   end
 
+
+  describe 'switching workflows' do
+    context 'unflag  for clearance' do
+      it 'should switch the workflow on the case' do
+       # given
+       kase = flagged_accepted_case
+       expect(kase.current_state).to eq 'drafting'
+       expect(kase.workflow).to eq 'trigger'
+       expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+
+       # when
+       kase.state_machine.unflag_for_clearance!(acting_user: approver, acting_team: managing_team, target_team: approving_team, message: 'I do not need to approve this')
+
+       # then
+       expect(kase.current_state).to eq 'drafting'
+       expect(kase.workflow).to eq 'standard'
+       expect(kase.reload.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+      end
+
+      it 'should record the workflow in the transition' do
+        # given
+        kase = flagged_accepted_case
+        expect(kase.current_state).to eq 'drafting'
+        expect(kase.workflow).to eq 'trigger'
+        expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+
+        # when
+        kase.state_machine.unflag_for_clearance!(acting_user: approver, acting_team: managing_team, target_team: approving_team, message: 'I do not need to approve this')
+
+        # then
+        transition = kase.reload.transitions.last
+        expect(transition.event).to eq 'unflag_for_clearance'
+        expect(transition.to_state).to eq 'drafting'
+        expect(transition.to_workflow).to eq 'standard'
+      end
+    end
+  end
+
   describe 'trigger assign_responder!' do
     # it 'triggers an assign_responder event' do
     #   expect do
@@ -377,12 +415,12 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   describe 'trigger flag_for_clearance!' do
     it 'triggers a flag_for_clearance event' do
       expect do
-        assigned_case.state_machine.flag_for_clearance! acting_user: manager,
+        assigned_flagged_case.state_machine.flag_for_clearance! acting_user: manager,
                                                         acting_team: managing_team,
                                                         target_team: approving_team
       end
         .to trigger_the_event(:flag_for_clearance)
-              .on_state_machine(assigned_case.state_machine)
+              .on_state_machine(assigned_flagged_case.state_machine)
               .with_parameters acting_user_id: manager.id,
                                acting_team_id: managing_team.id,
                                target_team_id: approving_team.id
@@ -392,13 +430,13 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   describe 'trigger unflag_for_clearance!' do
     it 'triggers an unflag_for_clearance event' do
       expect do
-        assigned_case.state_machine.unflag_for_clearance! manager,
-                                                          managing_team,
-                                                          approving_team,
-                                                          "message"
+        assigned_flagged_case.state_machine.unflag_for_clearance!(acting_user: manager,
+                                                                  acting_team: managing_team,
+                                                                  target_team: approving_team,
+                                                                  message: "message")
       end
         .to trigger_the_event(:unflag_for_clearance)
-              .on_state_machine(assigned_case.state_machine)
+              .on_state_machine(assigned_flagged_case.state_machine)
               .with_parameters acting_user_id: manager.id,
                                acting_team_id: managing_team.id,
                                target_team_id: approving_team.id,
@@ -409,10 +447,10 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   describe 'trigger accept_approver_assignment!' do
     it 'triggers an accept_approver_assignment event' do
       expect do
-        assigned_case.state_machine.accept_approver_assignment! acting_user: approver,
+        assigned_flagged_case.state_machine.accept_approver_assignment! acting_user: approver,
                                                                 acting_team: approving_team
       end.to trigger_the_event(:accept_approver_assignment)
-               .on_state_machine(assigned_case.state_machine)
+               .on_state_machine(assigned_flagged_case.state_machine)
                .with_parameters(acting_user_id: approver.id,
                                 acting_team_id: approving_team.id)
     end
@@ -421,9 +459,11 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   describe 'trigger unaccept_approver_assignment!' do
     it 'triggers unaccept_approver_assignment event' do
       expect {
-        assigned_case.state_machine.unaccept_approver_assignment! approver, approving_team
+        assigned_flagged_case.state_machine.unaccept_approver_assignment!(
+                            acting_user: approver,
+                            acting_team: approving_team)
       }.to trigger_the_event(:unaccept_approver_assignment)
-              .on_state_machine(assigned_case.state_machine)
+              .on_state_machine(assigned_flagged_case.state_machine)
               .with_parameters(acting_user_id: approver.id, acting_team_id: approving_team.id)
     end
   end
@@ -431,10 +471,11 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   describe 'trigger accept_responder_assignment!' do
     it 'triggers an accept_responder_assignment event' do
       expect do
-        assigned_case.state_machine.accept_responder_assignment!(acting_user: responder,
-                                                                 acting_team: responding_team)
+        assigned_flagged_case.state_machine.accept_responder_assignment!(
+                            acting_user: responder,
+                            acting_team: responding_team)
       end.to trigger_the_event(:accept_responder_assignment)
-               .on_state_machine(assigned_case.state_machine)
+               .on_state_machine(assigned_flagged_case.state_machine)
                .with_parameters(acting_user_id: responder.id,
                                 acting_team_id: responding_team.id)
     end
@@ -518,14 +559,15 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
     it 'triggers a reject_responder_assignment event' do
       expect do
-        assigned_case.state_machine.reject_responder_assignment! acting_user: responder,
+        assigned_flagged_case.state_machine.reject_responder_assignment! acting_user: responder,
                                                                  acting_team: responding_team,
                                                                  message: message
       end.to trigger_the_event(:reject_responder_assignment)
-               .on_state_machine(assigned_case.state_machine)
+               .on_state_machine(assigned_flagged_case.state_machine)
                .with_parameters(acting_user_id: responder.id,
                                 acting_team_id: responding_team.id,
-                                message: message)
+                                message: message,
+                                event: :reject_responder_assignment)
     end
   end
 
@@ -651,7 +693,9 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
       let(:team)      { responded_case.managing_team }
       it ' does not call the notify responder service' do
         kase.state_machine.add_message_to_case!(
-          user, team, 'This is my message to you all')
+          acting_user: user,
+          acting_team: team,
+          message: 'This is my message to you all')
         expect(NotifyResponderService)
           .not_to have_received(:new).with(kase, 'Message received')
       end

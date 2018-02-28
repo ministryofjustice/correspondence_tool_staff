@@ -61,11 +61,11 @@ class Case::FOI::StandardStateMachine
   event :unflag_for_clearance do
     authorize_each_transition
 
-    transition from: :unassigned,             to: :unassigned
-    transition from: :awaiting_responder,     to: :awaiting_responder
-    transition from: :drafting,               to: :drafting
-    transition from: :awaiting_dispatch,      to: :awaiting_dispatch
-    transition from: :pending_dacu_clearance, to: :awaiting_dispatch
+    transition from: :unassigned,             to: :unassigned,          new_workflow: :standard
+    transition from: :awaiting_responder,     to: :awaiting_responder,  new_workflow: :standard
+    transition from: :drafting,               to: :drafting,            new_workflow: :standard
+    transition from: :awaiting_dispatch,      to: :awaiting_dispatch,   new_workflow: :standard
+    transition from: :pending_dacu_clearance, to: :awaiting_dispatch,   new_workflow: :standard
     transition from: :pending_dacu_clearance, to: :pending_dacu_clearance
   end
 
@@ -99,11 +99,11 @@ class Case::FOI::StandardStateMachine
   event :unaccept_approver_assignment do
     authorize :can_unaccept_approval_assignment?
 
-    transition from: :unassigned,             to: :unassigned
-    transition from: :awaiting_responder,     to: :awaiting_responder
-    transition from: :drafting,               to: :drafting
-    transition from: :awaiting_dispatch,      to: :awaiting_dispatch
-    transition from: :pending_dacu_clearance, to: :pending_dacu_clearance
+    transition from: :unassigned,             to: :unassigned,              new_workflow: :standard
+    transition from: :awaiting_responder,     to: :awaiting_responder,      new_workflow: :standard
+    transition from: :drafting,               to: :drafting,                new_workflow: :standard
+    transition from: :awaiting_dispatch,      to: :awaiting_dispatch,       new_workflow: :standard
+    transition from: :pending_dacu_clearance, to: :pending_dacu_clearance,  new_workflow: :standard
   end
 
   event :accept_responder_assignment do
@@ -325,10 +325,10 @@ class Case::FOI::StandardStateMachine
              event:             :accept_approver_assignment
   end
 
-  def unaccept_approver_assignment!(user, approving_team)
+  def unaccept_approver_assignment!(acting_user:, acting_team:)
     trigger! :unaccept_approver_assignment,
-             acting_team_id:    approving_team.id,
-             acting_user_id:    user.id,
+             acting_team_id:    acting_team.id,
+             acting_user_id:    acting_user.id,
              event:             :unaccept_approver_assignment
   end
 
@@ -414,21 +414,21 @@ class Case::FOI::StandardStateMachine
              event:             :flag_for_clearance
   end
 
-  def unflag_for_clearance!(user, managing_team, approving_team, message = nil)
+  def unflag_for_clearance!(acting_user:, acting_team:, target_team:, message: nil)
     trigger! :unflag_for_clearance,
-             acting_user_id:    user.id,
-             acting_team_id:    managing_team.id,
-             target_team_id:    approving_team.id,
+             acting_user_id:    acting_user.id,
+             acting_team_id:    acting_team.id,
+             target_team_id:    target_team.id,
              message:           message,
              event:             :unflag_for_clearance
     notify_responder(object, 'Ready to send') if ready_to_send?(object)
   end
 
-  def take_on_for_approval!(user, managing_team, approving_team)
+  def take_on_for_approval!(acting_user:, acting_team:, target_team:)
     trigger! :take_on_for_approval,
-             acting_user_id:    user.id,
-             acting_team_id:    managing_team.id,
-             target_team_id:    approving_team.id,
+             acting_user_id:    acting_user.id,
+             acting_team_id:    acting_team.id,
+             target_team_id:    target_team.id,
              event: :take_on_for_approval
   end
 
