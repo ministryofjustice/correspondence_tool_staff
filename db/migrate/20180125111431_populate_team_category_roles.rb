@@ -1,4 +1,4 @@
-class BusinessUnit
+class BusinessUnit << ActiveRecord::Base
   # usage:
   #   set_correspondence_type_roles(category_abbreviation: 'SAR', roles: %w{ edit manage view respond })
   # #
