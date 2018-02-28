@@ -74,6 +74,7 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 assign_responder:
                   transition_to: awaiting_responder
                 destroy_case:
@@ -87,6 +88,7 @@ case_types:
 
               awaiting_responder:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
@@ -147,6 +149,7 @@ case_types:
               unassigned:
                 accept_approver_assignment:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 flag_for_clearance:
                   switch_workflow: trigger
                 reassign_user:
@@ -158,6 +161,7 @@ case_types:
                 accept_approver_assignment:
                   switch_workflow: trigger
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -194,9 +198,11 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
 
               awaiting_responder:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 accept_responder_assignment:
                   if: Predicates#responder_is_member_of_assigned_team?
                   transition_to: drafting
@@ -277,6 +283,7 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 assign_responder:
                   transition_to: awaiting_responder
                 destroy_case:
@@ -292,6 +299,7 @@ case_types:
               unassigned:
                 accept_approver_assignment:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 flag_for_clearance:
                 reassign_user:
 
@@ -299,6 +307,7 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
 
 #########################################################################
 #                                                                       #

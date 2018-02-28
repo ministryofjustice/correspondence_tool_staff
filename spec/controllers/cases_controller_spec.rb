@@ -477,7 +477,7 @@ RSpec.describe CasesController, type: :controller do
 
 
         it 'permitted_events to be add_message_to_case' do
-          expect(assigns(:permitted_events)).to eq [:add_message_to_case]
+          expect(assigns(:permitted_events)).to be_empty
         end
 
         it 'renders case details page' do
@@ -577,7 +577,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { another_responder }
 
         it 'permitted_events to containe add_message_to_case only' do
-          expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
+          expect(assigns(:filtered_permitted_events)).to be_empty
         end
 
         it 'renders case details page' do
