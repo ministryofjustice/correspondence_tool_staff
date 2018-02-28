@@ -100,7 +100,6 @@
   - unflagged_drafting_case
   - - :add_message_to_case                  # should unassigned responders be allowed to add response?
     - :add_responses
-    - :extend_for_pit
     - :link_a_case
     - :reassign_user
     - :remove_linked_case
@@ -129,7 +128,6 @@
   - unflagged_drafting_case
   - - :add_message_to_case
     - :add_responses
-    - :extend_for_pit
     - :link_a_case
     - :reassign_user
     - :remove_linked_case

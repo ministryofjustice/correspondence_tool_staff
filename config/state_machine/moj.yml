@@ -114,19 +114,26 @@ case_types:
                   switch_workflow: :trigger
 
               awaiting_dispatch:
-                 add_message_to_case:
-                 destroy_case:
-                 edit_case:
-                 extend_for_pit:       # ?
-                 flag_for_clearance:
-                   switch_workflow: :trigger
-                 link_a_case:
-                 remove_linked_case:
-                 request_further_clearance:
-                    if: Case::FOI::StandardPolicy#can_request_further_clearance?
-                    switch_workflow: :trigger
+                add_message_to_case:
+                destroy_case:
+                edit_case:
+                extend_for_pit:       # ?
+                flag_for_clearance:
+                  switch_workflow: trigger
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+                  switch_workflow: trigger
 
-
+              responded:
+                add_message_to_case:
+                close:
+                  transition_to: closed
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
 
           approver:
             states:
@@ -166,6 +173,12 @@ case_types:
                 take_on_for_approval:
                   switch_workflow: :trigger
 
+              responded:
+                 add_message_to_case:
+                 link_a_case:
+                 reassign_user:
+                 remove_linked_case:
+
           responder:
             states:
               unassigned:
@@ -188,7 +201,6 @@ case_types:
                 add_responses:
                   if: Predicates#responder_is_member_of_assigned_team?
                   transition_to: awaiting_dispatch
-                extend_for_pit:       # ?
                 link_a_case:
                 reassign_user:
                   if: Predicates#responder_is_member_of_assigned_team?
@@ -198,7 +210,6 @@ case_types:
                  add_message_to_case:
                  add_responses:
                   if: Predicates#responder_is_member_of_assigned_team?
-                 extend_for_pit:       # ?
                  link_a_case:
                  reassign_user:
                    if: Predicates#responder_is_member_of_assigned_team?
@@ -209,6 +220,12 @@ case_types:
                  respond:
                    if: Predicates#responder_is_member_of_assigned_team?
                    transition_to: responded
+
+              responded:
+                add_message_to_case:
+                link_a_case:
+                remove_linked_case:
+
 
       trigger:
         permitted_events:

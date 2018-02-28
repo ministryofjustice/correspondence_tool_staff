@@ -263,7 +263,7 @@ describe CasesController, type: :controller do
         let(:user) { create(:responder) }
 
         it 'permitted_events to be empty' do
-          expect(assigns(:permitted_events)).to match_array [:add_message_to_case, :extend_for_pit, :link_a_case, :remove_linked_case]
+          expect(assigns(:permitted_events)).to match_array [:add_message_to_case, :link_a_case, :remove_linked_case]
           expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
         end
 
@@ -325,7 +325,7 @@ describe CasesController, type: :controller do
         let(:user) { create(:responder) }
 
         it 'permitted_events to be empty' do
-          expect(assigns(:permitted_events)).to match_array [:add_message_to_case, :extend_for_pit, :link_a_case, :remove_linked_case]
+          expect(assigns(:permitted_events)).to match_array [:add_message_to_case, :link_a_case, :remove_linked_case]
           expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
         end
 
@@ -373,8 +373,8 @@ describe CasesController, type: :controller do
         let(:user) { responder }
 
         it 'permitted_events to be empty' do
-          expect(assigns(:permitted_events)).to match_array [:extend_for_pit, :link_a_case, :remove_linked_case]
-          expect(assigns(:filtered_permitted_events)).to be_empty
+          expect(assigns(:permitted_events)).to match_array [:add_message_to_case, :link_a_case, :remove_linked_case]
+          expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
         end
 
         it 'renders case details page' do
@@ -386,8 +386,8 @@ describe CasesController, type: :controller do
         let(:user) { create(:responder) }
 
         it 'permitted_events to be empty' do
-          expect(assigns(:permitted_events)).to match_array [:extend_for_pit, :link_a_case, :remove_linked_case]
-          expect(assigns(:filtered_permitted_events)).to be_empty
+          expect(assigns(:permitted_events)).to match_array [:add_message_to_case, :link_a_case, :remove_linked_case]
+          expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
         end
 
         it 'renders case details page' do

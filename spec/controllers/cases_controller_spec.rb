@@ -750,7 +750,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { responder }
 
         it 'permitted_events to be empty' do
-          expect(assigns(:filtered_permitted_events)).to be_empty
+          expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
         end
 
         it 'renders case details page' do
@@ -762,7 +762,7 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:responder) }
 
         it 'permitted_events to be empty' do
-          expect(assigns(:filtered_permitted_events)).to be_empty
+          expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
         end
 
         it 'renders case details page' do

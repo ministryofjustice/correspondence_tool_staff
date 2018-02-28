@@ -68,8 +68,9 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
                                     responder: responder,
                                     responding_team: responding_team }
   let(:responded_case)     { create :responded_case,
-                             responder: responder,
-                             responding_team: responding_team }
+                                    :flagged,
+                                     responder: responder,
+                                     responding_team: responding_team }
   let(:closed_case)        { create :closed_case,
                              responder: responder,
                              responding_team: responding_team }

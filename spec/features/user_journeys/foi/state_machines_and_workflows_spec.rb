@@ -506,7 +506,7 @@ feature 'FOI case that does not require clearance' do
     expect(kase.current_state).to eq 'responded'
     expect(kase.workflow).to eq 'standard'
     expect(kase.transitions.size).to eq 6
-    expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+    expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
     t = kase.transitions.last
     expect(t.event).to eq 'respond'
