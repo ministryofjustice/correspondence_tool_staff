@@ -26,8 +26,13 @@ class UserCreationService
 
   def update_existing_user
     if full_names_match
+      # Add user to the teams
       @team.__send__(@role.pluralize) << @user
       @team.save!
+
+      # Remove soft delete if their account was previously deleted
+      @user.update!(deleted_at: nil) if @user.deleted_at?
+
       @result = :existing_ok
     else
       error_message = "An existing user with this email address already exists with the name: #{@user.full_name}"

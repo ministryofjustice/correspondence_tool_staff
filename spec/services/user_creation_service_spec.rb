@@ -138,6 +138,32 @@ describe UserCreationService do
 
       end
 
+      context 'deleted user rejoins the team' do
+        before do
+           @existing_user.reload.update!(deleted_at: Date.yesterday)
+           @existing_user.team_roles.delete_all
+        end
+
+        it 'it returns existing_ok' do
+          service.call
+          expect(service.result).to eq :existing_ok
+        end
+
+        it 'creates a team_user_role record' do
+          expect{ service.call }.to change{ TeamsUsersRole.count }.by(1)
+          expect(@existing_user.reload.team_roles.size).to eq 1
+          tr = @existing_user.team_roles.last
+          expect(tr.team_id).to eq @team.id
+          expect(tr.role).to eq 'responder'
+        end
+
+        it 'unlocks their account' do
+          service.call
+          expect(@existing_user.reload.deleted_at).to be_nil
+        end
+
+      end
+
       context 'when names mismatch' do
         before(:each) {
           @existing_user.reload.update!(full_name: 'Stephen Richards')
