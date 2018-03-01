@@ -73,6 +73,25 @@ describe UserDeletionService do
         service.call
         expect(responder.reload.deleted_at).to be nil
       end
+
+      context 'where one team has live cases and the other does not' do
+        let!(:kase) { create :accepted_case,
+                             responding_team: team_2,
+                             responder: responder  }
+
+        it 'returns :ok' do
+          service.call
+          expect(service.result).to eq(:ok)
+        end
+
+        it 'deletes the teams users role' do
+          expect(responder.team_roles.size).to eq 2
+          service.call
+          expect(responder.team_roles.size).to eq 1
+          expect(responder.team_roles.last.team).to eq(team_2)
+        end
+
+      end
     end
   end
 end

@@ -9,7 +9,7 @@ class UserDeletionService
   end
 
   def call
-    if @user.has_live_cases?
+    if @user.has_live_cases_for_team?(@team)
       @result = :has_live_cases
     else
       if @user.multiple_team_member?
