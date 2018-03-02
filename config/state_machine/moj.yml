@@ -147,7 +147,6 @@ case_types:
 
               closed:
                 add_message_to_case:
-                  after_transition: Predicates#notify_responder_message_received
                 destroy_case:
                 edit_case:
                 link_a_case:
@@ -198,6 +197,7 @@ case_types:
                 link_a_case:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
                 take_on_for_approval:
                   switch_workflow: :trigger
 
@@ -239,7 +239,7 @@ case_types:
                   transition_to: awaiting_dispatch
                 link_a_case:
                 reassign_user:
-                  if: Case::BasePolicy#assignments_reassign_user?
+                  if: Predicates#responder_is_member_of_assigned_team?
                 remove_linked_case:
 
               awaiting_dispatch:
