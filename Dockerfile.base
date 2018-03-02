@@ -10,3 +10,5 @@ RUN curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
                        postgresql-client-9.5 && \
     rm -rf /var/lib/apt/lists/* && \
     truncate -s 0 /var/log/*log
+
+RUN bash -c 'shopt -s extglob ; eval "rm -rf /usr/src/app/!(.|..|.bash*|.profile)"'
