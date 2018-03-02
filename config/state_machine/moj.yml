@@ -85,7 +85,7 @@ case_types:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
                   switch_workflow: :trigger
- 
+
               awaiting_responder:
                 add_message_to_case:
                 assign_to_new_team:
@@ -98,7 +98,7 @@ case_types:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
                   switch_workflow: :trigger
- 
+
               drafting:
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
@@ -352,6 +352,20 @@ case_types:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
 
+
+              awaiting_responder:
+                add_message_to_case:
+                assign_to_new_team:
+                  transition_to: awaiting_responder
+                destroy_case:
+                edit_case:
+                flag_for_clearance:
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  # if: before escaltion deadline
+                unflag_for_clearance:
+                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
 
           approver:
             states:
