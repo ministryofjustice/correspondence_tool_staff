@@ -316,6 +316,20 @@ case_types:
                 unflag_for_clearance:
                   if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
 
+              awaiting_responder:
+                add_message_to_case:
+                assign_to_new_team:
+                  transition_to: awaiting_responder
+                destroy_case:
+                edit_case:
+                flag_for_clearance:
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  # if: before escaltion deadline
+                unflag_for_clearance:
+                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
+
           approver:
             states:
               unassigned:
@@ -334,12 +348,36 @@ case_types:
                 unflag_for_clearance:
                   if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
 
+              awaiting_responder:
+                accept_approver_assignment:
+                add_message_to_case:
+                flag_for_clearance:
+                link_a_case:
+                remove_linked_case:
+                take_on_for_approval:
+                unaccept_approver_assignment:
+                  switch_workflow: standard
+                  # if they are the approver
+                unflag_for_clearance:
+                  switch_workflow: standard
 
           responder:
             states:
               unassigned:
                 add_message_to_case:
                   if: Case::BasePolicy#can_add_message_to_case?
+
+              awaiting_responder:
+                accept_responder_assignment:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                  transition_to: drafting
+                add_message_to_case:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                link_a_case:
+                remove_linked_case:
+                reject_responder_assignment:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                  transition_to: unassigned
 
 #########################################################################
 #                                                                       #

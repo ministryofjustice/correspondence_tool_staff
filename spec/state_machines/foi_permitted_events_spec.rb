@@ -450,7 +450,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :awaiting_responder_case, :flagged, :dacu_disclosure
 
             expect(k.current_state).to eq 'awaiting_responder'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,:remove_linked_case, :request_further_clearance]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,:remove_linked_case]
           end
         end
 
@@ -499,10 +499,7 @@ describe Case::FOI::StandardStateMachine do
                                                                           :add_message_to_case,
                                                                           :link_a_case,
                                                                           :reject_responder_assignment,
-                                                                          :remove_linked_case,
-                                                                          :request_further_clearance #?
-                                                                          ]
-
+                                                                          :remove_linked_case]
           end
         end
 
@@ -579,7 +576,10 @@ describe Case::FOI::StandardStateMachine do
 
             expect(k.current_state).to eq 'unassigned'
             expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
-                                                                        :flag_for_clearance]
+                                                                        :flag_for_clearance,
+                                                                        :take_on_for_approval,
+                                                                        :unaccept_approver_assignment,
+                                                                        :unflag_for_clearance]
           end
         end
 
@@ -588,11 +588,14 @@ describe Case::FOI::StandardStateMachine do
             k = create :awaiting_responder_case, :flagged, :dacu_disclosure
 
             expect(k.current_state).to eq 'awaiting_responder'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:flag_for_clearance,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
+                                                                        :add_message_to_case,
+                                                                        :flag_for_clearance,
                                                                         :link_a_case,
                                                                         :remove_linked_case,
-                                                                        :request_further_clearance,
-                                                                        :take_on_for_approval]
+                                                                        :take_on_for_approval,
+                                                                        :unaccept_approver_assignment,
+                                                                        :unflag_for_clearance]
           end
         end
 

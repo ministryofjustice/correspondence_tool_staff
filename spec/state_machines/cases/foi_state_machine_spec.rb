@@ -56,7 +56,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   let(:new_case)           { create :case }
   let(:assigned_case)      { create :assigned_case,
                                  responding_team: responding_team }
-  let(:assigned_flagged_case) { create :assigned_case, :flagged_accepted,
+  let(:assigned_flagged_case) { create :pending_dacu_clearance_case, :flagged_accepted,
                                        responding_team: responding_team,
                                        approver: approver }
   let(:case_being_drafted) { create :case_being_drafted,

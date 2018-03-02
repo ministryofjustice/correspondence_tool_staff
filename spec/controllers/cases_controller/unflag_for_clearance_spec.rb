@@ -5,7 +5,7 @@ RSpec.describe CasesController, type: :controller do
   let(:params)                { { id: flagged_case.id, message: "message"} }
   let(:manager)               { create :manager }
   let(:disclosure_specialist) { create :disclosure_specialist }
-  let(:flagged_case)          { create :assigned_case, :flagged,
+  let(:flagged_case)          { create :accepted_case, :flagged,
                                     responding_team: responding_team,
                                     approving_team: team_dacu_disclosure }
   let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
