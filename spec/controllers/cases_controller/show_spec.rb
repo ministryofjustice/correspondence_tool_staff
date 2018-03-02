@@ -60,9 +60,8 @@ describe CasesController, type: :controller do
       context 'as an anonymous user' do
         let(:user) { '' }
 
-        it 'permitted_events == nil' do
-          expect(assigns(:permitted_events)).to eq nil
-        end
+        it { should have_nil_permitted_events }
+
         it "redirects to signin" do
           expect(response).to redirect_to(new_user_session_path)
         end
@@ -71,13 +70,11 @@ describe CasesController, type: :controller do
       context 'as an authenticated manager' do
         let(:user) { create(:manager) }
 
-        it 'sets permitted_events' do
-          expect(assigns(:permitted_events)).to include :add_message_to_case,
-                                                        :assign_responder,
-                                                        :destroy_case,
-                                                        :edit_case,
-                                                        :flag_for_clearance
-        end
+        it {should have_permitted_events_including(:add_message_to_case,
+                                                   :assign_responder,
+                                                   :destroy_case,
+                                                   :edit_case,
+                                                   :flag_for_clearance )}
 
         it 'renders the show template' do
           expect(response).to render_template(:show)
@@ -87,10 +84,7 @@ describe CasesController, type: :controller do
       context 'as a responder' do
         let(:user) { create(:responder) }
 
-
-        it 'permitted_events to be add_message_to_case' do
-          expect(assigns(:permitted_events)).to be_empty
-        end
+        it { should have_no_permitted_events }
 
         it 'renders case details page' do
           expect(response).to render_template :show
@@ -109,12 +103,9 @@ describe CasesController, type: :controller do
         get :show, params: { id: flagged_accepted_case.id   }
       end
 
-      it 'sets permitted_events' do
-        expect(assigns(:permitted_events))
-          .to include :add_message_to_case,
-                      :add_response_to_flagged_case,
-                      :reassign_user
-      end
+      it { should have_permitted_events_including :add_message_to_case,
+                                                  :add_response_to_flagged_case,
+                                                  :reassign_user }
 
       it 'renders the show page' do
         expect(response).to have_rendered(:show)
@@ -131,9 +122,7 @@ describe CasesController, type: :controller do
       context 'as an anonymous user' do
         let(:user) { '' }
 
-        it 'permitted_events == nil' do
-          expect(assigns(:permitted_events)).to eq nil
-        end
+        it { should have_nil_permitted_events }
 
         it "redirects to signin" do
           expect(response).to redirect_to(new_user_session_path)
@@ -144,15 +133,17 @@ describe CasesController, type: :controller do
       context 'as an authenticated manager' do
         let(:user) { create(:manager) }
 
-        it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to eq [:add_message_to_case,
-                                                    :assign_to_new_team,
-                                                    :destroy_case,
-                                                    :edit_case,
-                                                    :flag_for_clearance,
-                                                    :link_a_case,
-                                                    :remove_linked_case,
-                                                    :request_further_clearance]
+        it {should have_permitted_events :add_message_to_case,
+                                         :assign_to_new_team,
+                                         :destroy_case,
+                                         :edit_case,
+                                         :flag_for_clearance,
+                                         :link_a_case,
+                                         :remove_linked_case,
+                                         :request_further_clearance }
+
+
+        it 'has filtered permitted events' do
           expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case, :assign_to_new_team, :destroy_case, :edit_case, :flag_for_clearance]
         end
 
@@ -172,9 +163,7 @@ describe CasesController, type: :controller do
           team_dacu_disclosure
         end
 
-        it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to be_nil
-        end
+        it { should have_nil_permitted_events }
 
         it 'renders the show template for the responder assignment' do
           responder_assignment = assigned_case.assignments.last
@@ -196,8 +185,9 @@ describe CasesController, type: :controller do
       context 'as a responder of another responding team' do
         let(:user) { another_responder }
 
-        it 'permitted_events to be empty' do
-          expect(assigns(:permitted_events)).to match_array [:link_a_case, :remove_linked_case]
+        it { should have_permitted_events :link_a_case, :remove_linked_case }
+
+        it 'has no filtered permitted events' do
           expect(assigns(:filtered_permitted_events)).to be_empty
         end
 
@@ -217,9 +207,7 @@ describe CasesController, type: :controller do
       context 'as an anonymous user' do
         let(:user) { '' }
 
-        it 'permitted_events == nil' do
-          expect(assigns(:permitted_events)).to eq nil
-        end
+        it { should have_nil_permitted_events }
 
         it "redirects to signin" do
           expect(response).to redirect_to(new_user_session_path)
@@ -229,13 +217,11 @@ describe CasesController, type: :controller do
       context 'as an authenticated manager' do
         let(:user) { create(:manager) }
 
-        it 'sets permitted_events' do
-          expect(assigns(:permitted_events)).to include :add_message_to_case,
-                                                        :assign_to_new_team,
-                                                        :destroy_case,
-                                                        :edit_case,
-                                                        :flag_for_clearance
-        end
+        it { should have_permitted_events_including :add_message_to_case,
+                                                    :assign_to_new_team,
+                                                    :destroy_case,
+                                                    :edit_case,
+                                                    :flag_for_clearance }
 
         it 'renders the show page' do
           expect(response).to have_rendered(:show)
@@ -246,12 +232,9 @@ describe CasesController, type: :controller do
         context 'unflagged case' do
           let(:user) { accepted_case.responder }
 
-          it 'sets permitted_events' do
-            expect(assigns(:permitted_events)).to include :add_message_to_case,
-                                                          :add_responses,
-                                                          :reassign_user
-            nil
-          end
+          it { should have_permitted_events_including :add_message_to_case,
+                                                      :add_responses,
+                                                      :reassign_user }
 
           it 'renders the show page' do
             expect(response).to have_rendered(:show)
@@ -262,8 +245,9 @@ describe CasesController, type: :controller do
       context 'as another responder' do
         let(:user) { create(:responder) }
 
-        it 'permitted_events to be empty' do
-          expect(assigns(:permitted_events)).to match_array [:add_message_to_case, :link_a_case, :remove_linked_case]
+        it { should have_permitted_events :add_message_to_case, :link_a_case, :remove_linked_case }
+
+        it 'has add_message to case in filtered permitted_events' do
           expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
         end
 
@@ -282,9 +266,7 @@ describe CasesController, type: :controller do
       context 'as an anonymous user' do
         let(:user) { '' }
 
-        it 'permitted_events == nil' do
-          expect(assigns(:permitted_events)).to eq nil
-        end
+        it { should have_nil_permitted_events }
 
         it "redirects to signin" do
           expect(response).to redirect_to(new_user_session_path)
@@ -294,12 +276,10 @@ describe CasesController, type: :controller do
       context 'as an authenticated manager' do
         let(:user) { create(:manager) }
 
-        it 'permitted_events == []' do
-          expect(assigns(:permitted_events)).to include :add_message_to_case,
-                                                        :destroy_case,
-                                                        :edit_case,
-                                                        :flag_for_clearance
-        end
+        it { should have_permitted_events_including :add_message_to_case,
+                                                    :destroy_case,
+                                                    :edit_case,
+                                                    :flag_for_clearance }
 
         it 'renders the show page' do
           expect(response).to have_rendered(:show)
@@ -309,12 +289,10 @@ describe CasesController, type: :controller do
       context 'as the assigned responder' do
         let(:user) { case_with_response.responder }
 
-        it 'permitted_events == [:add_responses, :respond]' do
-          expect(assigns(:permitted_events)).to include :add_message_to_case,
-                                                        :add_responses,
-                                                        :respond,
-                                                        :remove_response
-        end
+        it { should have_permitted_events_including :add_message_to_case,
+                                                    :add_responses,
+                                                    :respond,
+                                                    :remove_response }
 
         it 'renders the show page' do
           expect(response).to have_rendered(:show)
@@ -324,8 +302,9 @@ describe CasesController, type: :controller do
       context 'as another responder' do
         let(:user) { create(:responder) }
 
-        it 'permitted_events to be empty' do
-          expect(assigns(:permitted_events)).to match_array [:add_message_to_case, :link_a_case, :remove_linked_case]
+        it { should have_permitted_events :add_message_to_case, :link_a_case, :remove_linked_case }
+
+        it 'has add message to case in filtered permitted events' do
           expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
         end
 
@@ -345,9 +324,7 @@ describe CasesController, type: :controller do
       context 'as an anonymous user' do
         let(:user) { '' }
 
-        it 'permitted_events == nil' do
-          expect(assigns(:permitted_events)).to eq nil
-        end
+        it { should have_nil_permitted_events }
 
         it "redirects to signin" do
           expect(response).to redirect_to(new_user_session_path)
@@ -357,12 +334,10 @@ describe CasesController, type: :controller do
       context 'as an authenticated manager' do
         let(:user) { create(:manager) }
 
-        it 'permitted_events == [:close]' do
-          expect(assigns(:permitted_events)).to include :add_message_to_case,
-                                                        :close,
-                                                        :destroy_case,
-                                                        :edit_case
-        end
+        it { should have_permitted_events_including :add_message_to_case,
+                                                    :close,
+                                                    :destroy_case,
+                                                    :edit_case }
 
         it 'renders the show page' do
           expect(response).to have_rendered(:show)
@@ -372,8 +347,9 @@ describe CasesController, type: :controller do
       context 'as the previously assigned responder' do
         let(:user) { responder }
 
-        it 'permitted_events to be empty' do
-          expect(assigns(:permitted_events)).to match_array [:add_message_to_case, :link_a_case, :remove_linked_case]
+        it { should have_permitted_events :add_message_to_case, :link_a_case, :remove_linked_case }
+
+        it 'has add message to case in filtered permitted events' do
           expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
         end
 
@@ -385,8 +361,9 @@ describe CasesController, type: :controller do
       context 'as another responder' do
         let(:user) { create(:responder) }
 
-        it 'permitted_events to be empty' do
-          expect(assigns(:permitted_events)).to match_array [:add_message_to_case, :link_a_case, :remove_linked_case]
+        it { should have_permitted_events :add_message_to_case, :link_a_case, :remove_linked_case }
+
+        it 'has add message to case in filtered permitted events' do
           expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
         end
 
