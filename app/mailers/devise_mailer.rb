@@ -25,7 +25,7 @@ class DeviseMailer < Devise::Mailer
     set_personalisation(
         email_subject: 'Your CMS user account has been locked',
         user_full_name: record.full_name,
-        edit_password_url: user_unlock_url(unlock_token: token)
+        user_unlock_url: user_unlock_url(unlock_token: token)
     )
 
     mail(to: record.email)
