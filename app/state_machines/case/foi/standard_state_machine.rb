@@ -477,11 +477,11 @@ class Case::FOI::StandardStateMachine
     notify_responder(object, 'Ready to send') if ready_to_send?(object)
   end
 
-  def upload_response_and_return_for_redraft!(user, approving_team, filenames)
+  def upload_response_and_return_for_redraft!(acting_user:, acting_team:, filenames:)
     trigger! :upload_response_and_return_for_redraft,
-             acting_user_id:        user.id,
+             acting_user_id:        acting_user.id,
              event:                 :upload_response_and_return_for_redraft,
-             acting_team_id:        approving_team.id,
+             acting_team_id:        acting_team.id,
              message:               object.upload_comment,
              filenames:             filenames
     notify_responder(object, 'Redraft requested')

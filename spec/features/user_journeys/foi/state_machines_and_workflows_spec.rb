@@ -201,7 +201,7 @@ feature 'FOI case that does not require clearance' do
     expect(kase.current_state).to eq 'drafting'
     expect(kase.workflow).to eq 'trigger'
     expect(kase.transitions.size).to eq 13
-    expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+    expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
     t = kase.transitions.order(:sort_key).last
     expect(t.event).to eq 'accept_responder_assignment'
@@ -221,7 +221,7 @@ feature 'FOI case that does not require clearance' do
     expect(kase.current_state).to eq 'drafting'
     expect(kase.workflow).to eq 'trigger'
     expect(kase.transitions.size).to eq 14
-    expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+    expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
     t = kase.transitions.order(:sort_key).last
     expect(t.event).to eq 'add_message_to_case'
@@ -242,7 +242,7 @@ feature 'FOI case that does not require clearance' do
     expect(kase.current_state).to eq 'drafting'
     expect(kase.workflow).to eq 'trigger'
     expect(kase.transitions.size).to eq 15
-    expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+    expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
     t = kase.transitions.order(:sort_key).last
     expect(t.event).to eq 'extend_for_pit'
