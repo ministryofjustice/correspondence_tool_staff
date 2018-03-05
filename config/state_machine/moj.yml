@@ -366,6 +366,21 @@ case_types:
                   # if: before escaltion deadline
                 unflag_for_clearance:
                   if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
+                  switch_workflow: standard
+
+              drafting:
+                add_message_to_case:
+                assign_to_new_team:
+                destroy_case:
+                edit_case:
+                extend_for_pit:
+                flag_for_clearance:
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                unflag_for_clearance:
+                  switch_workflow: standard
+
 
           approver:
             states:
@@ -426,6 +441,20 @@ case_types:
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
                   switch_workflow: standard
 
+              drafting:
+                accept_approver_assignment:
+                add_message_to_case:
+                extend_for_pit:
+                flag_for_clearance:
+                link_a_case:
+                reassign_user:
+                remove_linked_case:
+                take_on_for_approval:
+                unaccept_approver_assignment:
+                  switch_workflow: standard
+                unflag_for_clearance:
+                  switch_workflow: standard
+
           responder:
             states:
               unassigned:
@@ -452,10 +481,9 @@ case_types:
                   transition_to: pending_dacu_clearance
                 link_a_case:
                 reassign_user:
-                  if: Case::BasePolicy#assignments_reassign_user?
+                  if: Predicates#responder_is_member_of_assigned_team?
                 remove_linked_case:
                 upload_responses:
-
 
 
 #########################################################################
