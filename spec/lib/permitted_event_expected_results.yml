@@ -124,6 +124,12 @@
 ###################################### ASSIGNED RESPONDER #########################
 
 - - assigned_responder
+  - unflagged_drafting_case_within_escalation_period
+  - - :add_message_to_case
+    - :link_a_case
+    - :reassign_user
+    - :remove_linked_case
+
   - unflagged_drafting_case
   - - :add_message_to_case
     - :add_responses

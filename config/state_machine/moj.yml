@@ -209,7 +209,6 @@ case_types:
                 accept_responder_assignment:
                   if: Predicates#responder_is_member_of_assigned_team?
                   transition_to: drafting
-                  transition_to: drafting
                 reject_responder_assignment:
                   if: Predicates#responder_is_member_of_assigned_team?
                   transition_to: unassigned
@@ -219,11 +218,10 @@ case_types:
               drafting:
                 add_message_to_case:
                 add_responses:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Case::BasePolicy#can_add_attachment?
                   transition_to: awaiting_dispatch
                 link_a_case:
                 reassign_user:
-                  if: Predicates#responder_is_member_of_assigned_team?
                   if: Case::BasePolicy#assignments_reassign_user?
                 remove_linked_case:
 
