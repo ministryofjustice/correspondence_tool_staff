@@ -53,20 +53,25 @@ class CaseAttachment < ActiveRecord::Base
   end
 
   def make_preview(retry_count)
-    if not_convertible_file_type?
-      self.preview_key = key
-    else
-      original_filepath = download_original_file
-      preview_filepath = make_preview_filename
-      begin
-        Libreconv.convert original_filepath, preview_filepath
-        self.preview_key = upload_preview(preview_filepath, retry_count)
-      rescue StandardError => err
-        Rails.logger.error "Error converting CaseAttachment #{self.id} to PDF"
-        Rails.logger.error "#{err.class} - #{err.message}"
-        Rails.logger.error err.backtrace
-        self.preview_key = nil
+    original_filepath = download_original_file
+    if system("clamscan #{original_filepath}")
+      if not_convertible_file_type?
+        self.preview_key = key
+      else
+        preview_filepath = make_preview_filename
+        begin
+          Libreconv.convert original_filepath, preview_filepath
+          self.preview_key = upload_preview(preview_filepath, retry_count)
+        rescue StandardError => err
+          Rails.logger.error "Error converting CaseAttachment #{self.id} to PDF"
+          Rails.logger.error "#{err.class} - #{err.message}"
+          Rails.logger.error err.backtrace
+          self.preview_key = nil
+        end
       end
+    else
+      Rails.logger.error "Virus detected in uploaded file: #{original_filepath}"
+      self.preview_key = nil
     end
     save!
   end
