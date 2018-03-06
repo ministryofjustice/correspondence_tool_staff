@@ -87,8 +87,7 @@
 
 - - unassigned_responder
   - unflagged_awaiting_responder_case
-  - - :add_message_to_case
-    - :link_a_case
+  - - :link_a_case
     - :remove_linked_case
 
 - - unassigned_responder
@@ -100,7 +99,6 @@
   - unflagged_drafting_case
   - - :add_message_to_case                  # should unassigned responders be allowed to add response?
     - :add_responses
-    - :extend_for_pit
     - :link_a_case
     - :reassign_user
     - :remove_linked_case
@@ -126,10 +124,15 @@
 ###################################### ASSIGNED RESPONDER #########################
 
 - - assigned_responder
+  - unflagged_drafting_case_within_escalation_period
+  - - :add_message_to_case
+    - :link_a_case
+    - :reassign_user
+    - :remove_linked_case
+
   - unflagged_drafting_case
   - - :add_message_to_case
     - :add_responses
-    - :extend_for_pit
     - :link_a_case
     - :reassign_user
     - :remove_linked_case
@@ -249,7 +252,6 @@
 - - unassigned_press_officer
   - unflagged_case_within_escalation_period
   - - :accept_approver_assignment
-    - :add_message_to_case
     - :flag_for_clearance                     # no button showing up for this (Thank God!)
     - :link_a_case
     - :remove_linked_case
@@ -284,7 +286,6 @@
 - - unassigned_private_officer
   - unflagged_case_within_escalation_period
   - - :accept_approver_assignment
-    - :add_message_to_case
     - :flag_for_clearance                     # no button showing up for this (Thank God!)
     - :link_a_case
     - :remove_linked_case

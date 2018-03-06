@@ -231,11 +231,13 @@ module ConfigurableStateMachine
                         path,
                         :if,
                         :transition_to,
+                        :transition_to_using,
                         :after_transition,
                         :before_transition,
                         :switch_workflow)
         validate_predicate_config(event_config, path)
         validate_switch_workflow_config(event_config, workflow_name, path)
+        validate_transition_to_using_config(event_config, path)
       else
         add_error("case_types/#{case_type_name}/workflows/#{workflow_name}/user_roles/#{user_role}/states",
           "Expected #{event_config} to be a Hash, is a #{event_config.class}")
@@ -292,6 +294,19 @@ module ConfigurableStateMachine
                   "expected at least #{min_keys} entries, found #{config.to_hash.keys.size}")
       end
     end
+
+    def validate_transition_to_using_config(event_config, path)
+      if event_config && event_config.transition_to_using.present?
+        result = validate_conditonal_transition_method(event_config.transition_to_using)
+        unless result.nil?
+          add_error(path, result)
+        end
+      end
+    end
+
+    def validate_conditonal_transition_method(conditional_transition_method)
+      validate_class_and_method(conditional_transition_method)
+    end
     
     def validate_predicate_config(event_config, path)
       if event_config && event_config.if.present?
@@ -303,10 +318,14 @@ module ConfigurableStateMachine
     end
 
     def validate_predicate_method(predicate)
+      validate_class_and_method(predicate)
+    end
+
+    def validate_class_and_method(class_and_method)
       result = nil
-      klass, method = predicate.split('#')
+      klass, method = class_and_method.split('#')
       if method.nil?
-        result = "Invalid predicate: #{predicate}"
+        result = "Invalid predicate or conditional: #{class_and_method}"
       else
         if klass.safe_constantize.nil?
           result = "No such class: #{klass}"

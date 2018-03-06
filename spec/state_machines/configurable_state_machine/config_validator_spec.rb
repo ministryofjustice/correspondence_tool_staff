@@ -334,6 +334,50 @@ module ConfigurableStateMachine
           end
         end
 
+
+
+        context 'transition_to_using' do
+          it 'does not error if no transition_to_using is supplied' do
+            hash = config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.to_h
+            expect(hash.key?(:transition_to_using)).to be false
+            validator = ConfigValidator.new(config, 'xxx.yml')
+            expect{validator.run}.not_to raise_error
+          end
+
+          it "does not error if 'transition_to_using' value is nil" do
+            config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.transition_to_using = nil
+            expect(config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.to_h[:transition_to_using]).to be_nil
+            validator = ConfigValidator.new(config, 'xxx.yml')
+            expect{validator.run}.not_to raise_error
+          end
+
+          it 'raises if the conditional class doesnt exist' do
+            config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.transition_to_using = 'NonExistentClass#dummy_method'
+            validator = ConfigValidator.new(config, 'xxx.yml')
+            expect{validator.run}.to raise_error ConfigurationError do |error|
+              expect(error.message).to match(/case_types\/foi\/workflows\/standard\/user_roles\/manager\/states\/unassigned\/assign_responder/)
+              expect(error.message).to match(/No such class: NonExistentClass/)
+            end
+          end
+
+          it 'does not error if specified method exists on specified object' do
+            config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.transition_to_using = 'ConfigurableStateMachine::DummyPredicate#can_assign_responder?'
+            validator = ConfigValidator.new(config, 'xxx.yml')
+            expect{validator.run}.not_to raise_error
+          end
+
+          it 'raises if the specified method does not exist on the specified object' do
+            config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.transition_to_using = 'ConfigurableStateMachine::DummyPredicate#can_assign_manager?'
+            validator = ConfigValidator.new(config, 'xxx.yml')
+            expect{validator.run}.to raise_error ConfigurationError do |error|
+              expect(error.message).to match(/case_types\/foi\/workflows\/standard\/user_roles\/manager\/states\/unassigned\/assign_responder/)
+              expect(error.message).to match(/No such instance method 'can_assign_manager\?' on class ConfigurableStateMachine::DummyPredicate/)
+            end
+          end
+        end
+
+
+
         context 'predicate' do
           it 'does not error if no if is supplied' do
             hash = config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.to_h

@@ -60,14 +60,17 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
                                        responding_team: responding_team,
                                        approver: approver }
   let(:case_being_drafted) { create :case_being_drafted,
+                                    :flagged,
                                     responder: responder,
-                                    responding_team: responding_team }
+                                    responding_team: responding_team}
   let(:case_with_response) { create :case_with_response,
+                                    :flagged,
                                     responder: responder,
                                     responding_team: responding_team }
   let(:responded_case)     { create :responded_case,
-                             responder: responder,
-                             responding_team: responding_team }
+                                    :flagged,
+                                     responder: responder,
+                                     responding_team: responding_team }
   let(:closed_case)        { create :closed_case,
                              responder: responder,
                              responding_team: responding_team }
@@ -376,7 +379,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
        # then
        expect(kase.current_state).to eq 'drafting'
        expect(kase.workflow).to eq 'standard'
-       expect(kase.reload.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+       expect(kase.reload.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
       end
 
       it 'should record the workflow in the transition' do
@@ -487,18 +490,18 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
       let(:kase) { case_being_drafted }
 
       it 'triggers a reassign_user'do
-        expect {
-          kase.state_machine.reassign_user!(
-              target_user: another_responder,
-              target_team: responding_team,
-              acting_user: responder,
-              acting_team: responding_team )
-        }.to trigger_the_event(:reassign_user)
-                 .on_state_machine(kase.state_machine)
-                 .with_parameters( target_user_id: another_responder.id,
-                                   target_team_id: responding_team.id,
-                                   acting_user_id: responder.id,
-                                   acting_team_id: responding_team.id)
+          expect {
+            kase.state_machine.reassign_user!(
+                target_user: other_approver,
+                target_team: approving_team,
+                acting_user: approver,
+                acting_team: approving_team )
+          }.to trigger_the_event(:reassign_user)
+                   .on_state_machine(kase.state_machine)
+                   .with_parameters( target_user_id: other_approver.id,
+                                     target_team_id: approving_team.id,
+                                     acting_user_id: approver.id,
+                                     acting_team_id: approving_team.id)
       end
 
       it 'adds a transition history record' do
@@ -644,7 +647,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
     it 'triggers the event' do
       expect{
-        responded_case.state_machine.add_message_to_case!(user, team, 'This is the message')
+        responded_case.state_machine.add_message_to_case!(acting_user: user, acting_team: team, message: 'This is the message')
       }.to trigger_the_event(:add_message_to_case)
             .on_state_machine(responded_case.state_machine)
             .with_parameters(acting_user_id: responded_case.responder.id, acting_team_id: team.id, message: 'This is the message')
@@ -653,13 +656,13 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
     it 'creates a message transition record' do
       expect {
         case_being_drafted.state_machine.add_message_to_case!(
-          user, team, 'This is my message to you all')
+          acting_user: user, acting_team: team, message: 'This is my message to you all')
       }.to change{case_being_drafted.transitions.size}.by(1)
     end
 
     it 'transition record is set up correctly' do
       case_being_drafted.state_machine.add_message_to_case!(
-        user, team, 'This is my message to you all')
+        acting_user: user, acting_team: team, message: 'This is my message to you all')
       transition = case_being_drafted.transitions.last
       expect(transition.event).to eq 'add_message_to_case'
       expect(transition.acting_user_id).to eq case_being_drafted.responder.id
@@ -669,7 +672,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
     context 'user sending message is the resonder' do
       it ' does not call the notify responder service' do
         case_being_drafted.state_machine.add_message_to_case!(
-          user, team, 'This is my message to you all')
+          acting_user: user, acting_team: team, message: 'This is my message to you all')
         expect(NotifyResponderService)
           .not_to have_received(:new).with(case_being_drafted, 'Message received')
       end
@@ -680,7 +683,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
       let(:team)      { responded_case.managing_team }
       it 'calls the notify responder service' do
         case_being_drafted.state_machine.add_message_to_case!(
-          user, team, 'This is my message to you all')
+          acting_user: user, acting_team: team, message: 'This is my message to you all')
         expect(NotifyResponderService)
           .to have_received(:new).with(case_being_drafted, 'Message received')
         expect(service).to have_received(:call)
@@ -868,7 +871,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   end
 
   context 'User edits a case' do
-    let(:kase) { create :case_with_response }
+    let(:kase) { create :case_with_response, :flagged }
     let(:manager) { create :manager }
     let(:state_machine) { kase.state_machine }
     let(:team) { manager.managing_teams.first }
@@ -892,7 +895,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   end
 
   context 'User deletes a case' do
-    let(:kase) { create :case_with_response }
+    let(:kase) { create :case_with_response, :flagged }
     let(:manager) { create :manager }
     let(:state_machine) { kase.state_machine }
     let(:team) { manager.managing_teams.first }
@@ -901,8 +904,8 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
       it 'triggers an destroy_case event' do
         expect {
           state_machine.destroy_case!(
-            manager,
-            team
+            acting_user: manager,
+            acting_team: team
           )
         }.to trigger_the_event(:destroy_case)
                .on_state_machine(state_machine)
@@ -915,7 +918,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   end
 
   describe '#notify_kilo_case_is_ready_to_send' do
-    let(:approved_case)   { create :approved_case }
+    let(:approved_case)   { create :approved_case, :flagged }
     let(:kase)            { create :case }
     let!(:service) do
       double(NotifyResponderService, call: true).tap do |svc|
@@ -949,19 +952,18 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
     let(:team) { manager.managing_teams.first }
 
     it 'triggers an request_further_clearance event' do
-      expect {
-        state_machine.request_further_clearance!(
-          acting_user: manager,
-          acting_team: team,
-          target_user: accepted_case.responder,
-          target_team: accepted_case.responding_team )
-      }.to trigger_the_event(:request_further_clearance)
-             .on_state_machine(state_machine)
-             .with_parameters(
-               acting_user_id: manager.id,
-               acting_team_id: team.id,
-               target_user_id: accepted_case.responder.id,
-               target_team_id: accepted_case.responding_team.id)
+      expect(kase.state_machine).to receive(:trigger_event).with(event: :request_further_clearance,
+                                                                params:{
+                                                                  acting_user: manager,
+                                                                  acting_team: team,
+                                                                  target_user: accepted_case.responder,
+                                                                  target_team: accepted_case.responding_team})
+      kase.state_machine.request_further_clearance!(
+        acting_user: manager,
+        acting_team: team,
+        target_user: accepted_case.responder,
+        target_team: accepted_case.responding_team )
+
     end
   end
 end

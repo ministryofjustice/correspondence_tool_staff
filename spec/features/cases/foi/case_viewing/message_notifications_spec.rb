@@ -8,9 +8,9 @@ feature 'case message notifications' do
 
   background do
     kase.state_machine.add_message_to_case!(
-      manager,
-      managing_team,
-      'Notify Me!'
+      acting_user: manager,
+      acting_team: managing_team,
+      message: 'Notify Me!'
     )
     login_as responder
   end

@@ -74,6 +74,7 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 assign_responder:
                   transition_to: awaiting_responder
                 destroy_case:
@@ -87,6 +88,7 @@ case_types:
 
               awaiting_responder:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
@@ -98,15 +100,60 @@ case_types:
                 unflag_for_clearance:
                   if: Case::FOI::StandardPolicy#unflag_for_clearance_from_awaiting_responder_to_awaiting_responder?
 
+              drafting:
+                add_message_to_case:
+                assign_to_new_team:
+                  transition_to: awaiting_responder
+                destroy_case:
+                edit_case:
+                extend_for_pit:       # ?
+                flag_for_clearance:
+                  switch_workflow: trigger
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+                  switch_workflow: :trigger
+
+              awaiting_dispatch:
+                add_message_to_case:
+                destroy_case:
+                edit_case:
+                extend_for_pit:       # ?
+                flag_for_clearance:
+                  switch_workflow: trigger
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+                  switch_workflow: trigger
+
+              responded:
+                add_message_to_case:
+                close:
+                  transition_to: closed
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+
+              closed:
+                add_message_to_case:
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
 
           approver:
             states:
               unassigned:
                 accept_approver_assignment:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 flag_for_clearance:
                   switch_workflow: trigger
                 reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
 
               awaiting_responder:
                 # accept approver assignment might seem an odd event to have in the standard workflow, but it is here
@@ -115,6 +162,7 @@ case_types:
                 accept_approver_assignment:
                   switch_workflow: trigger
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -123,22 +171,83 @@ case_types:
                   switch_workflow: trigger
                 unflag_for_clearance:               # needed for press/private office to unaccept
 
+              drafting:
+                add_message_to_case:
+                link_a_case:
+                remove_linked_case:
+                take_on_for_approval:
+                  switch_workflow: :trigger
+
+              awaiting_dispatch:
+                add_message_to_case:
+                link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                take_on_for_approval:
+                  switch_workflow: :trigger
+
+              responded:
+                 add_message_to_case:
+                 link_a_case:
+                 reassign_user:
+                   if: Case::BasePolicy#assignments_reassign_user?
+                 remove_linked_case:
+
+              closed:
+                add_message_to_case:
+                link_a_case:
+
           responder:
             states:
               unassigned:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
 
               awaiting_responder:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 accept_responder_assignment:
                   if: Predicates#responder_is_member_of_assigned_team?
-                  transition_to: drafting
                   transition_to: drafting
                 reject_responder_assignment:
                   if: Predicates#responder_is_member_of_assigned_team?
                   transition_to: unassigned
                 link_a_case:
                 remove_linked_case:
+
+              drafting:
+                add_message_to_case:
+                add_responses:
+                  if: Case::BasePolicy#can_add_attachment?
+                  transition_to: awaiting_dispatch
+                link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
+
+              awaiting_dispatch:
+                 add_message_to_case:
+                 add_responses:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                 link_a_case:
+                 reassign_user:
+                   if: Predicates#responder_is_member_of_assigned_team?
+                   if: Case::BasePolicy#assignments_reassign_user?
+                 remove_linked_case:
+                 remove_response:
+                   if: Predicates#responder_is_member_of_assigned_team?
+                   transition_to_using: Conditionals#remove_response
+                 respond:
+                   if: Predicates#responder_is_member_of_assigned_team?
+                   transition_to: responded
+
+              responded:
+                add_message_to_case:
+                link_a_case:
+                remove_linked_case:
+
+              closed:
+                add_message_to_case:
 
       trigger:
         permitted_events:
@@ -177,6 +286,7 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 assign_responder:
                   transition_to: awaiting_responder
                 destroy_case:
@@ -192,13 +302,17 @@ case_types:
               unassigned:
                 accept_approver_assignment:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 flag_for_clearance:
                 reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+
 
           responder:
             states:
               unassigned:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
 
 #########################################################################
 #                                                                       #

@@ -391,10 +391,10 @@ class Case::FOI::StandardStateMachine
              event:             :edit_case
   end
 
-  def destroy_case!(user, team)
+  def destroy_case!(acting_user:, acting_team:)
     trigger! :destroy_case,
-             acting_team_id:    team.id,
-             acting_user_id:    user.id,
+             acting_team_id:    acting_team.id,
+             acting_user_id:    acting_user.id,
              event:             :destroy_case
   end
 
@@ -518,13 +518,13 @@ class Case::FOI::StandardStateMachine
              event:          :close
   end
 
-  def add_message_to_case!(user, team, message)
+  def add_message_to_case!(acting_user:, acting_team:, message:)
     trigger! :add_message_to_case,
-             acting_user_id:    user.id,
-             acting_team_id:    team.id,
+             acting_user_id:    acting_user.id,
+             acting_team_id:    acting_team.id,
              message:           message,
              event:             :add_message_to_case
-    notify_responder(object, 'Message received') if able_to_send?(user, object)
+    notify_responder(object, 'Message received') if able_to_send?(acting_user, object)
   end
 
   def extend_for_pit!(user, new_deadline, message)

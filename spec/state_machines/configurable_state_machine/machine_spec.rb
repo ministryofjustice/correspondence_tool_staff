@@ -9,6 +9,21 @@ module ConfigurableStateMachine
     end
   end
 
+  class DummyConditional
+    def initialize(kase:, user:)
+      @kase = kase
+      @user = user
+    end
+
+    def remove_response
+      if @kase.subject == 'Testing conditionals'
+        'drafting'
+      else
+        'unassigned'
+      end
+    end
+  end
+
   describe Machine do
 
     let(:config)  do
@@ -35,12 +50,15 @@ module ConfigurableStateMachine
                 drafting: {
                   add_message_to_case: {
                     if: 'Case::FOI::StandardPolicy#can_add_message_to_case?',
-                    # before_transition: 'ConfigurableStateMachine::TestCallbacks#before_transition_meth',
-                    # after_transition: 'ConfigurableStateMachine::TestCallbacks#before_transition_meth',
                     switch_workflow: 'trigger',
                     transition_to: 'ready_to_send'
                   },
                   add_response: nil
+                },
+                awaiting_dispatch: {
+                  remove_response: {
+                    transition_to_using: 'ConfigurableStateMachine::DummyConditional#remove_response'
+                  }
                 }
               }
             },
@@ -400,6 +418,45 @@ module ConfigurableStateMachine
           expect(transition.message).to eq 'This is my message to you all'
         end
       end
+
+      context 'transition_to_using' do
+        let(:kase)    { create :case_with_response }
+
+        it 'updates the state on the case' do
+          # given
+          kase.subject = 'Testing conditionals'
+          expect(kase.current_state).to eq 'awaiting_dispatch'
+          expect(kase.workflow).to eq 'standard'
+
+          # when
+          machine = Machine.new(config: config, kase: kase)
+          machine.remove_response!(
+              acting_team: @managing_team,
+              acting_user: @manager)
+
+          # then
+          expect(kase.current_state).to eq 'drafting'
+        end
+
+        it 'updates the to_state on the transition' do
+          # given
+          kase.subject = 'Testing conditionals'
+          expect(kase.current_state).to eq 'awaiting_dispatch'
+          expect(kase.workflow).to eq 'standard'
+
+          # when
+          machine = Machine.new(config: config, kase: kase)
+          machine.remove_response!(
+              acting_team: @managing_team,
+              acting_user: @manager)
+
+          # then
+          transition = kase.reload.transitions.last
+          expect(transition.event).to eq 'remove_response'
+          expect(transition.to_state).to eq 'drafting'
+        end
+
+      end
     end
 
 
@@ -443,6 +500,7 @@ module ConfigurableStateMachine
             edit_case
             flag_for_clearance
             flag_for_press
+            remove_response
             unflag_for_clearance
           }
           expect(machine.events).to eq expected_events
