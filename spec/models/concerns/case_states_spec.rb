@@ -11,23 +11,6 @@ RSpec.describe Case, type: :model do
     let(:responder)       { create :responder }
     let(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
 
-    describe '#state_machine' do
-      it 'defaults to the Case::FOI::StandardStateMachine when no workflow is specified' do
-        expect(kase.state_machine)
-          .to be_an_instance_of(Case::FOI::StandardStateMachine)
-      end
-
-      context 'workflow is not valid' do
-        let(:kase) { create :assigned_case, workflow: 'Nonexistent' }
-
-        it 'raises an error when an nonexistant workflow is specified' do
-          expect {
-            kase.state_machine
-          }.to raise_error(NameError, /uninitialized constant Case::FOI.*/)
-        end
-      end
-    end
-
     describe '#responder_assignment_rejected' do
       let(:state_machine)   { assigned_case.state_machine }
       let(:assignment)      { assigned_case.responder_assignment }
@@ -111,6 +94,7 @@ RSpec.describe Case, type: :model do
         end
 
         it 'does not change the state' do
+          expect(kase.attachments.size).to eq 2
           expect(kase.current_state).to eq 'awaiting_dispatch'
           kase.remove_response(responder, attachment)
           expect(kase.current_state).to eq 'awaiting_dispatch'
@@ -199,7 +183,7 @@ RSpec.describe Case, type: :model do
     describe 'reset_state_machine callback' do
       it 'is called when the workflow changes' do
         expect(kase.state_machine).not_to be_nil
-        kase.update(workflow: '')
+        kase.update(workflow: 'trigger')
         expect(kase.instance_variable_get(:@state_machine)).to be_nil
       end
     end
@@ -210,6 +194,54 @@ RSpec.describe Case, type: :model do
         expect(kase.current_state).to be_nil
         kase.save!
         expect(kase.current_state).to eq 'unassigned'
+      end
+    end
+  end
+
+  context 'state_machine decisions' do
+
+    context 'SAR' do
+      it 'returns config state machine' do
+        kase = create :sar_case
+        expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
+      end
+    end
+
+    context 'FOI::Standard' do
+      context 'trigger case' do
+        context 'unassigned state' do
+          it 'returns configurable state machine' do
+            kase = create :case, :flagged, :dacu_disclosure
+            expect(kase.current_state).to eq 'unassigned'
+            expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
+          end
+        end
+
+        context 'assigned state' do
+          it 'returns legacy state machine' do
+            kase = create :assigned_case, :flagged, :dacu_disclosure
+            expect(kase.current_state).to eq 'awaiting_responder'
+            expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+          end
+        end
+      end
+
+      context 'non trigger case' do
+        context 'unassigned state' do
+          it 'returns configurable state machine' do
+            kase = create :case
+            expect(kase.current_state).to eq 'unassigned'
+            expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
+          end
+        end
+
+        context 'assigned state' do
+          it 'returns configurable state machine' do
+            kase = create :assigned_case
+            expect(kase.current_state).to eq 'awaiting_responder'
+            expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
+          end
+        end
       end
     end
   end

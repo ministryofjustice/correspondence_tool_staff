@@ -1,5 +1,6 @@
 class Case::BaseDecorator < Draper::Decorator
   delegate_all
+  decorates_association :linked_cases
 
   # if the case is with a responding team and the current user is a responder
   # in that team, display the name of the specific user it's with instead of

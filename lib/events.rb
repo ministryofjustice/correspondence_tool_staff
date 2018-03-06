@@ -42,6 +42,9 @@ module Events
     transition_to!(new_state, metadata)
     if target_state.key? :new_workflow
       object.update workflow: target_state[:new_workflow].to_s
+      object.transitions.last.update(to_workflow: target_state[:new_workflow])
+    else
+      object.transitions.last.update(to_workflow: object.workflow) if object.respond_to?(:transitions)
     end
     true
   end

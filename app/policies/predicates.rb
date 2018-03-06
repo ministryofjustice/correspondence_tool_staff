@@ -12,5 +12,9 @@ class Predicates
     end
   end
 
+  def outside_escalation_deadline?
+
+  end
+
 
 end

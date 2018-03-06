@@ -34,9 +34,8 @@ describe CaseFlagForClearanceService do
         end
 
         it 'triggers an event on the case state machine' do
+          expect(assigned_case.state_machine).to receive(:flag_for_clearance!)
           service.call
-          expect(assigned_case.state_machine)
-            .to have_received :flag_for_clearance!
         end
 
         it 'assigns DACU disclosure as the approving team to the case' do
@@ -103,9 +102,13 @@ describe CaseFlagForClearanceService do
         end
 
         it 'triggers a flag_for_clearance event on the case state machine' do
+          expect_any_instance_of(Case::FOI::StandardStateMachine).to receive(:flag_for_clearance!)
+          # until we move everything over to using the configuratble state machine, we have to use the line
+          # above in preference to the line below, becuase flagging the case will cause a different state machine
+          # to be used.
+          # #
+          # expect(assigned_case.state_machine).to receive(:flag_for_clearance!)
           service.call
-          expect(assigned_case.state_machine)
-            .to have_received :flag_for_clearance!
         end
 
         it 'returns :already_flagged if already taken on by the same team' do
@@ -215,9 +218,14 @@ describe CaseFlagForClearanceService do
         end
 
         it 'triggers a flag_for_clearance event on the case state machine' do
+
+          expect_any_instance_of(Case::FOI::StandardStateMachine).to receive(:flag_for_clearance!)
+          # until we move everything over to using the configuratble state machine, we have to use the line
+          # above in preference to the line below, becuase flagging the case will cause a different state machine
+          # to be used.
+          # #
+          # expect(assigned_case.state_machine).to receive(:flag_for_clearance!)
           service.call
-          expect(assigned_case.state_machine)
-            .to have_received :flag_for_clearance!
         end
 
         it 'returns :already_flagged if already taken on by the same team' do

@@ -19,15 +19,20 @@ describe 'cases/linked_cases.html.slim', type: :view do
                                 name:'Hello 1',
                                 subject: 'Case 1',
                                 trigger_case_marker: '',
+                                pretty_type: 'FOI',
                                 linked_cases: [])}
     let(:linked_case_2){ double(Case::Base, id: 2,
                                 number: '222222',
                                 subject: 'Case 2',
-                                name:'Hello 2', linked_cases: [])}
+                                name:'Hello 2',
+                                trigger_case_marker: '',
+                                pretty_type: 'FOI',
+                                linked_cases: [])}
     let(:main_case)    { double(Case::Base, id: 3,
                                 number: '333333',
                                 name:'Hello',
                                 subject: 'Case 3',
+                                pretty_type: 'FOI',
                                 trigger_case_marker: '',
                                 linked_cases: [linked_case_1,
                                                linked_case_2 ])}
@@ -39,7 +44,7 @@ describe 'cases/linked_cases.html.slim', type: :view do
 
       render partial: 'cases/linked_cases.html.slim',
              locals:{ case_details: main_case}
-      
+
       partial = linked_cases_section(rendered)
 
       expect(partial.section_heading.text).to eq 'Linked cases'
@@ -51,6 +56,10 @@ describe 'cases/linked_cases.html.slim', type: :view do
         expect(row.case_type.text).to eq 'FOI '
         expect(row.request.text)
             .to eq "#{ linked_case.subject } #{ linked_case.name }"
+        expect(row.remove_link.text.strip).to eq "Remove link to #{linked_case.number}"
+        expect(row.remove_link['href'])
+            .to eq destroy_link_on_case_path(id: main_case.id,
+                                             linked_case_number: linked_case.number)
       end
     end
   end

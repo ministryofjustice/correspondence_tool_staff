@@ -20,7 +20,7 @@
 #  current_state        :string
 #  last_transitioned_at :datetime
 #  delivery_method      :enum
-#  workflow             :string
+#  workflow             :string           default("standard")
 #  deleted              :boolean          default(FALSE)
 #  info_held_status_id  :integer
 #  type                 :string
@@ -71,6 +71,11 @@ RSpec.describe Case::Base, type: :model do
     it { should validate_presence_of(:received_date)   }
     it { should validate_presence_of(:subject)         }
     it { should validate_presence_of(:type)            }
+  end
+
+
+  describe 'workflow validation' do
+    it { should validate_inclusion_of(:workflow).in_array %w{ standard trigger} }
   end
 
   describe 'info_status_held_validation' do
@@ -1135,6 +1140,33 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
+
+  describe '#remove_linked_case' do
+    let(:kase_1) { create :case }
+    let(:kase_2) { create :case }
+
+    describe 'removes a link between two cases' do
+      before(:each) do
+        kase_1.linked_cases << kase_2
+        kase_2.linked_cases << kase_1
+      end
+
+      it 'removes two entries in the linked case table' do
+        kase_1.remove_linked_case(kase_2)
+        expect(kase_1.linked_cases).to be_empty
+        expect(kase_2.linked_cases).to be_empty
+      end
+
+      it 'does not fail if the links does not exist' do
+        kase_1.remove_linked_case(kase_2)
+        kase_2.remove_linked_case(kase_1)
+        expect(kase_1.linked_cases).to be_empty
+        expect(kase_2.linked_cases).to be_empty
+      end
+
+    end
+  end
+
   context 'updating deadlines after updates' do
     context 'received_date is updated' do
       context 'case has not been extended for pit' do
@@ -1400,7 +1432,7 @@ RSpec.describe Case::Base, type: :model do
 
   describe '#deadline_calculator' do
     context 'FOI correspondence type' do
-      let(:kase) { create :foi_case }
+      let(:kase) { build_stubbed :foi_case }
 
       it 'returns business days calculator' do
         deadline_calculator = kase.deadline_calculator
@@ -1411,7 +1443,7 @@ RSpec.describe Case::Base, type: :model do
     end
 
     context 'SAR correspondence type' do
-      let(:kase) { create :sar_case }
+      let(:kase) { build_stubbed :sar_case }
 
       it 'returns business days calculator' do
         deadline_calculator = kase.deadline_calculator

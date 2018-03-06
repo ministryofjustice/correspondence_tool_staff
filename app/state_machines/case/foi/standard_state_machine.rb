@@ -61,11 +61,11 @@ class Case::FOI::StandardStateMachine
   event :unflag_for_clearance do
     authorize_each_transition
 
-    transition from: :unassigned,             to: :unassigned
-    transition from: :awaiting_responder,     to: :awaiting_responder
-    transition from: :drafting,               to: :drafting
-    transition from: :awaiting_dispatch,      to: :awaiting_dispatch
-    transition from: :pending_dacu_clearance, to: :awaiting_dispatch
+    transition from: :unassigned,             to: :unassigned,          new_workflow: :standard
+    transition from: :awaiting_responder,     to: :awaiting_responder,  new_workflow: :standard
+    transition from: :drafting,               to: :drafting,            new_workflow: :standard
+    transition from: :awaiting_dispatch,      to: :awaiting_dispatch,   new_workflow: :standard
+    transition from: :pending_dacu_clearance, to: :awaiting_dispatch,   new_workflow: :standard
     transition from: :pending_dacu_clearance, to: :pending_dacu_clearance
   end
 
@@ -99,11 +99,11 @@ class Case::FOI::StandardStateMachine
   event :unaccept_approver_assignment do
     authorize :can_unaccept_approval_assignment?
 
-    transition from: :unassigned,             to: :unassigned
-    transition from: :awaiting_responder,     to: :awaiting_responder
-    transition from: :drafting,               to: :drafting
-    transition from: :awaiting_dispatch,      to: :awaiting_dispatch
-    transition from: :pending_dacu_clearance, to: :pending_dacu_clearance
+    transition from: :unassigned,             to: :unassigned,              new_workflow: :standard
+    transition from: :awaiting_responder,     to: :awaiting_responder,      new_workflow: :standard
+    transition from: :drafting,               to: :drafting,                new_workflow: :standard
+    transition from: :awaiting_dispatch,      to: :awaiting_dispatch,       new_workflow: :standard
+    transition from: :pending_dacu_clearance, to: :pending_dacu_clearance,  new_workflow: :standard
   end
 
   event :accept_responder_assignment do
@@ -306,6 +306,18 @@ class Case::FOI::StandardStateMachine
     transition from: :closed,                           to: :closed
   end
 
+  event :remove_linked_case do
+    transition from: :unassigned,                       to: :unassigned
+    transition from: :awaiting_responder,               to: :awaiting_responder
+    transition from: :drafting,                         to: :drafting
+    transition from: :awaiting_dispatch,                to: :awaiting_dispatch
+    transition from: :pending_dacu_clearance,           to: :pending_dacu_clearance
+    transition from: :pending_press_office_clearance,   to: :pending_press_office_clearance
+    transition from: :pending_private_office_clearance, to: :pending_private_office_clearance
+    transition from: :responded,                        to: :responded
+    transition from: :closed,                           to: :closed
+  end
+
   def accept_approver_assignment!(acting_user:, acting_team:)
     trigger! :accept_approver_assignment,
              acting_team_id:    acting_team.id,
@@ -313,10 +325,10 @@ class Case::FOI::StandardStateMachine
              event:             :accept_approver_assignment
   end
 
-  def unaccept_approver_assignment!(user, approving_team)
+  def unaccept_approver_assignment!(acting_user:, acting_team:)
     trigger! :unaccept_approver_assignment,
-             acting_team_id:    approving_team.id,
-             acting_user_id:    user.id,
+             acting_team_id:    acting_team.id,
+             acting_user_id:    acting_user.id,
              event:             :unaccept_approver_assignment
   end
 
@@ -379,10 +391,10 @@ class Case::FOI::StandardStateMachine
              event:             :edit_case
   end
 
-  def destroy_case!(user, team)
+  def destroy_case!(acting_user:, acting_team:)
     trigger! :destroy_case,
-             acting_team_id:    team.id,
-             acting_user_id:    user.id,
+             acting_team_id:    acting_team.id,
+             acting_user_id:    acting_user.id,
              event:             :destroy_case
   end
 
@@ -402,21 +414,21 @@ class Case::FOI::StandardStateMachine
              event:             :flag_for_clearance
   end
 
-  def unflag_for_clearance!(user, managing_team, approving_team, message = nil)
+  def unflag_for_clearance!(acting_user:, acting_team:, target_team:, message: nil)
     trigger! :unflag_for_clearance,
-             acting_user_id:    user.id,
-             acting_team_id:    managing_team.id,
-             target_team_id:    approving_team.id,
+             acting_user_id:    acting_user.id,
+             acting_team_id:    acting_team.id,
+             target_team_id:    target_team.id,
              message:           message,
              event:             :unflag_for_clearance
     notify_responder(object, 'Ready to send') if ready_to_send?(object)
   end
 
-  def take_on_for_approval!(user, managing_team, approving_team)
+  def take_on_for_approval!(acting_user:, acting_team:, target_team:)
     trigger! :take_on_for_approval,
-             acting_user_id:    user.id,
-             acting_team_id:    managing_team.id,
-             target_team_id:    approving_team.id,
+             acting_user_id:    acting_user.id,
+             acting_team_id:    acting_team.id,
+             target_team_id:    target_team.id,
              event: :take_on_for_approval
   end
 
@@ -506,13 +518,13 @@ class Case::FOI::StandardStateMachine
              event:          :close
   end
 
-  def add_message_to_case!(user, team, message)
+  def add_message_to_case!(acting_user:, acting_team:, message:)
     trigger! :add_message_to_case,
-             acting_user_id:    user.id,
-             acting_team_id:    team.id,
+             acting_user_id:    acting_user.id,
+             acting_team_id:    acting_team.id,
              message:           message,
              event:             :add_message_to_case
-    notify_responder(object, 'Message received') if able_to_send?(user, object)
+    notify_responder(object, 'Message received') if able_to_send?(acting_user, object)
   end
 
   def extend_for_pit!(user, new_deadline, message)
@@ -544,6 +556,14 @@ class Case::FOI::StandardStateMachine
              acting_team_id: acting_team.id,
              linked_case_id: linked_case_id,
              event:          :link_a_case
+  end
+
+  def remove_linked_case!(acting_user:, acting_team:, linked_case_id:)
+    trigger! :remove_linked_case,
+             acting_user_id: acting_user.id,
+             acting_team_id: acting_team.id,
+             linked_case_id: linked_case_id,
+             event:          :remove_linked_case
   end
 
   private

@@ -11,13 +11,19 @@ class CaseAcceptApproverAssignmentService
 
   def call
     return false unless validate_still_pending
-
-    @assignment.case.state_machine.accept_approver_assignment!(acting_user: @user, acting_team: @team)
-    @assignment.user = @user
-    @assignment.accepted!
-    @assignment.save!
-    @result = :ok
-    true
+    begin
+      @assignment.case.state_machine.accept_approver_assignment!(acting_user: @user, acting_team: @team)
+      @assignment.user = @user
+      @assignment.accepted!
+      @assignment.save!
+      @result = :ok
+      true
+    rescue => err
+      puts ">>>>>>>>>>>> error #{err.class} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
+      puts err.message
+      puts err.backtrace
+      raise
+    end
   end
 
   private

@@ -244,6 +244,36 @@ RSpec.describe TeamsController, type: :controller do
         whodunnit = business_unit.versions.last.whodunnit.to_i
         expect(whodunnit).to eq manager.id
       end
+
+      context 'redirects to the expected path' do
+        it 'redirect to areas covered page after updating business unit' do
+          patch :update, params: params
+          expect(response).to redirect_to(areas_covered_by_team_path(business_unit.id))
+        end
+
+        it 'redirects directorates to their parent team' do
+          patch :update, params: { id: directorate.id,
+                              team: {
+                                name: 'New Name',
+                                email: 'n00b@localhost',
+                                team_lead: 'New Team Lead',
+                              } }
+          expect(flash[:notice]).to eq 'Team details updated'
+          expect(response).to redirect_to(team_path(directorate.parent_id))
+        end
+
+        it 'redirects business groups to the team path' do
+          business_group = create :business_group
+          patch :update, params: { id: business_group.id,
+                              team: {
+                                name: 'New Name',
+                                email: 'n00b@localhost',
+                                team_lead: 'New Team Lead',
+                              } }
+          expect(flash[:notice]).to eq 'Team details updated'
+          expect(response).to redirect_to(teams_path)
+        end
+      end
     end
 
     context 'logged in as a non-manager' do

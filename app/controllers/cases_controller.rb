@@ -6,7 +6,8 @@ class CasesController < ApplicationController
                   :extend_for_pit,
                   :execute_extend_for_pit,
                   :execute_new_case_link,
-                  :new_case_link
+                  :new_case_link,
+                  :destroy_case_link
                 ]
   # As per the Draper documentation, we really shouldn't be decorating @case at
   # the beginning of controller actions (see:
@@ -423,7 +424,7 @@ class CasesController < ApplicationController
 
     service = CaseLinkingService.new current_user, @case, link_case_number
 
-    result = service.call
+    result = service.create
 
 
     if result == :ok
@@ -435,6 +436,24 @@ class CasesController < ApplicationController
       render :new_case_link
     else
       flash[:alert] = "Unable to create a link to case #{link_case_number}"
+      redirect_to case_path(@case)
+    end
+  end
+
+  def destroy_case_link
+    authorize @case, :new_case_link?
+
+    linked_case_number = params[:linked_case_number]
+
+    service = CaseLinkingService.new current_user, @case, linked_case_number
+
+    result = service.destroy
+
+    if result == :ok
+      flash[:notice] = "The link to case #{linked_case_number} has been removed."
+      redirect_to case_path(@case)
+    else
+      flash[:alert] = "Unable to remove the link to case #{linked_case_number}"
       redirect_to case_path(@case)
     end
   end
@@ -479,7 +498,7 @@ class CasesController < ApplicationController
   def set_permitted_events
     @permitted_events = @case.state_machine.permitted_events(current_user.id)
     @permitted_events ||= []
-    @filtered_permitted_events = @permitted_events - [:extend_for_pit, :request_further_clearance, :link_a_case]
+    @filtered_permitted_events = @permitted_events - [:extend_for_pit, :request_further_clearance, :link_a_case, :remove_linked_case]
   end
 
   def process_closure_params(correspondence_type)

@@ -13,6 +13,7 @@ case_types:
     name: Freedom of Information Request
     permitted_workflows:
       - standard
+      - trigger
 #      - review_for_compliance
 #      - review_for_timeliness
 
@@ -55,6 +56,7 @@ case_types:
           - reassign_user
           - reject_responder_assignment
           - remove_last_response
+          - remove_linked_case
           - remove_response
           - request_amends
           - request_further_clearance
@@ -72,12 +74,226 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
+                assign_responder:
+                  transition_to: awaiting_responder
+                destroy_case:
+                edit_case:
+                flag_for_clearance:
+                  switch_workflow: trigger
+                link_a_case:
+                remove_linked_case:
+                unflag_for_clearance:
+                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
+
+              awaiting_responder:
+                add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
+                assign_to_new_team:
+                destroy_case:
+                edit_case:
+                flag_for_clearance:
+                  switch_workflow: trigger
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                unflag_for_clearance:
+                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_awaiting_responder_to_awaiting_responder?
+
+              drafting:
+                add_message_to_case:
+                assign_to_new_team:
+                  transition_to: awaiting_responder
+                destroy_case:
+                edit_case:
+                extend_for_pit:       # ?
+                flag_for_clearance:
+                  switch_workflow: trigger
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+                  switch_workflow: :trigger
+
+              awaiting_dispatch:
+                add_message_to_case:
+                destroy_case:
+                edit_case:
+                extend_for_pit:       # ?
+                flag_for_clearance:
+                  switch_workflow: trigger
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+                  switch_workflow: trigger
+
+              responded:
+                add_message_to_case:
+                close:
+                  transition_to: closed
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+
+              closed:
+                add_message_to_case:
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+
+          approver:
+            states:
+              unassigned:
+                accept_approver_assignment:
+                add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
+                flag_for_clearance:
+                  switch_workflow: trigger
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+
+              awaiting_responder:
+                # accept approver assignment might seem an odd event to have in the standard workflow, but it is here
+                # because an approver can unaccept an trigger case, switching the workflow to standard, and then decide
+                # to accept it again.
+                accept_approver_assignment:
+                  switch_workflow: trigger
+                add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
+                flag_for_clearance:
+                  switch_workflow: trigger
+                link_a_case:
+                remove_linked_case:
+                take_on_for_approval:
+                  switch_workflow: trigger
+                unflag_for_clearance:               # needed for press/private office to unaccept
+
+              drafting:
+                add_message_to_case:
+                link_a_case:
+                remove_linked_case:
+                take_on_for_approval:
+                  switch_workflow: :trigger
+
+              awaiting_dispatch:
+                add_message_to_case:
+                link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                take_on_for_approval:
+                  switch_workflow: :trigger
+
+              responded:
+                 add_message_to_case:
+                 link_a_case:
+                 reassign_user:
+                   if: Case::BasePolicy#assignments_reassign_user?
+                 remove_linked_case:
+
+              closed:
+                add_message_to_case:
+                link_a_case:
+
+          responder:
+            states:
+              unassigned:
+                add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
+
+              awaiting_responder:
+                add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
+                accept_responder_assignment:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                  transition_to: drafting
+                reject_responder_assignment:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                  transition_to: unassigned
+                link_a_case:
+                remove_linked_case:
+
+              drafting:
+                add_message_to_case:
+                add_responses:
+                  if: Case::BasePolicy#can_add_attachment?
+                  transition_to: awaiting_dispatch
+                link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
+
+              awaiting_dispatch:
+                 add_message_to_case:
+                 add_responses:
+                  if: Predicates#responder_is_member_of_assigned_team?
+                 link_a_case:
+                 reassign_user:
+                   if: Predicates#responder_is_member_of_assigned_team?
+                   if: Case::BasePolicy#assignments_reassign_user?
+                 remove_linked_case:
+                 remove_response:
+                   if: Predicates#responder_is_member_of_assigned_team?
+                   transition_to_using: Conditionals#remove_response
+                 respond:
+                   if: Predicates#responder_is_member_of_assigned_team?
+                   transition_to: responded
+
+              responded:
+                add_message_to_case:
+                link_a_case:
+                remove_linked_case:
+
+              closed:
+                add_message_to_case:
+
+      trigger:
+        permitted_events:
+          - accept_approver_assignment
+          - accept_responder_assignment
+          - add_message_to_case
+          - add_response_to_flagged_case
+          - add_responses
+          - approve
+          - approve_and_bypass
+          - assign_responder
+          - assign_to_new_team
+          - close
+          - destroy_case
+          - edit_case
+          - extend_for_pit
+          - flag_for_clearance
+          - link_a_case
+          - reassign_user
+          - reject_responder_assignment
+          - remove_last_response
+          - remove_response
+          - request_amends
+          - request_further_clearance
+          - respond
+          - take_on_for_approval
+          - unaccept_approver_assignment
+          - unflag_for_clearance
+          - upload_response_and_approve
+          - upload_response_and_return_for_redraft
+          - upload_response_approve_and_bypass
+
+        initial_state: unassigned
+        user_roles:
+          manager:
+            states:
+              unassigned:
+                add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 assign_responder:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
                 flag_for_clearance:
                 link_a_case:
+                remove_linked_case:
                 unflag_for_clearance:
                   if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
 
@@ -86,14 +302,17 @@ case_types:
               unassigned:
                 accept_approver_assignment:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 flag_for_clearance:
                 reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+
 
           responder:
             states:
               unassigned:
                 add_message_to_case:
-
+                  if: Case::BasePolicy#can_add_message_to_case?
 
 #########################################################################
 #                                                                       #
@@ -101,7 +320,7 @@ case_types:
 #                                                                       #
 #########################################################################
   sar:
-    name: Freedom of Information Request
+    name: Subject Access Request
     permitted_workflows:
       - standard
 
@@ -131,6 +350,7 @@ case_types:
                 destroy_case:
                 edit_case:
                 link_a_case:
+                remove_linked_case:
 
               awaiting_responder:
                 add_message_to_case:
@@ -139,6 +359,7 @@ case_types:
                 edit_case:
                 flag_for_clearance:
                 link_a_case:
+                remove_linked_case:
 
               drafting:
                 add_message_to_case:
@@ -146,11 +367,13 @@ case_types:
                 destroy_case:
                 edit_case:
                 link_a_case:
+                remove_linked_case:
 
               closed:
                 destroy_case:
                 edit_case:
                 link_a_case:
+                remove_linked_case:
 
           ########################### SAR :: STANDARD WORKFLOW :: RESPONDER ########################
           responder:

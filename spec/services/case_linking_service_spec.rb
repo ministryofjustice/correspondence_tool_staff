@@ -37,11 +37,11 @@ describe CaseLinkingService do
 
   end
 
-  describe '#call' do
+  describe '#create' do
 
     context 'NON-SAR cases' do
 
-      before(:each)  { service.call }
+      before(:each)  { service.create }
 
       it 'creates a link to the linked case' do
         expect(kase.linked_cases).to eq [link_case]
@@ -52,7 +52,7 @@ describe CaseLinkingService do
       end
 
       it 'sets result to :ok and returns same' do
-        result = service.call
+        result = service.create
         expect(result).to eq :ok
         expect(service.result).to eq :ok
       end
@@ -84,7 +84,7 @@ describe CaseLinkingService do
       describe 'linking a sar case to a  non sar case' do
         it 'errors' do
           service = CaseLinkingService.new(manager, sar_case_1, foi_case.number)
-          service.call
+          service.create
           expect(service.result).to eq :validation_error
           expect(sar_case_1.errors[:linked_case_number]).to eq ["can't link a SAR case to a non-SAR case"]
         end
@@ -93,7 +93,7 @@ describe CaseLinkingService do
       describe 'linking a non-sar case to a sar case' do
         it 'errors' do
           service = CaseLinkingService.new(manager, foi_case, sar_case_1.number)
-          service.call
+          service.create
           expect(service.result).to eq :validation_error
           expect(foi_case.errors[:linked_case_number]).to eq ["can't link a non-SAR case to a SAR case"]
         end
@@ -102,7 +102,7 @@ describe CaseLinkingService do
       describe 'linking a non-sar case to a sar case' do
         it 'does not error' do
           service = CaseLinkingService.new(manager, sar_case_1, sar_case_2.number)
-          service.call
+          service.create
           expect(service.result).to eq :ok
           expect(sar_case_1).to be_valid
         end
@@ -111,6 +111,67 @@ describe CaseLinkingService do
 
   end
 
+  describe '#destroy' do
+    context 'NON-SAR cases' do
+
+      before(:each)  {
+        service.create
+      }
+
+      it 'destroys the link between the two cases' do
+        service.destroy
+        expect(kase.linked_cases).to be_empty
+        expect(link_case.linked_cases).to be_empty
+      end
+
+      it 'sets result to :ok and returns same' do
+        result = service.destroy
+        expect(result).to eq :ok
+        expect(service.result).to eq :ok
+      end
+
+      it 'has created a transition on the linking case' do
+        service.destroy
+        transition = kase.transitions.last
+        expect(transition.event).to eq 'remove_linked_case'
+        expect(transition.to_state).to eq kase.current_state
+        expect(transition.linked_case_id).to eq link_case.id
+        expect(transition.acting_user_id).to eq manager.id
+        expect(transition.acting_team_id).to eq manager.teams.first.id
+      end
+
+      it 'has created a transition on the linked case' do
+        service.destroy
+        transition = link_case.transitions.last
+        expect(transition.event).to eq 'remove_linked_case'
+        expect(transition.to_state).to eq link_case.current_state
+        expect(transition.linked_case_id).to eq kase.id
+        expect(transition.acting_user_id).to eq manager.id
+        expect(transition.acting_team_id).to eq manager.teams.first.id
+      end
+    end
+
+    context 'SAR cases' do
+      let(:sar_case_1)      { create :sar_case }
+      let(:sar_case_2)      { create :sar_case }
+      let(:service)         { CaseLinkingService.new(manager,
+                                                     sar_case_1,
+                                                     sar_case_2.number)}
+
+      before(:each)  {
+        service.create
+      }
+
+      describe 'linking a non-sar case to a sar case' do
+        it 'does not error' do
+          service.destroy
+          expect(service.result).to eq :ok
+          expect(sar_case_1).to be_valid
+        end
+      end
+    end
+
+  end
 
   context 'validations' do
     describe 'trying to link without a case number' do
@@ -119,13 +180,13 @@ describe CaseLinkingService do
                                         nil)}
 
       it 'sets result to validation error and returns same' do
-        result = service.call
+        result = service.create
         expect(result).to eq :validation_error
         expect(service.result).to eq :validation_error
       end
 
       it 'adds an error to the case' do
-        service.call
+        service.create
         expect(kase.errors[:linked_case_number])
           .to eq ["can't be blank"]
       end
@@ -137,13 +198,13 @@ describe CaseLinkingService do
                                         kase.number)}
 
       it 'sets result to :validation error and returns same' do
-        result = service.call
+        result = service.create
         expect(result).to eq :validation_error
         expect(service.result).to eq :validation_error
       end
 
       it 'adds an error to the case' do
-        service.call
+        service.create
         expect(kase.errors[:linked_case_number])
           .to eq ["can't link to the same case"]
       end
@@ -155,13 +216,13 @@ describe CaseLinkingService do
                                         11111)}
 
       it 'sets result to validation error and returns same' do
-        result = service.call
+        result = service.create
         expect(result).to eq :validation_error
         expect(service.result).to eq :validation_error
       end
 
       it 'adds an error to the case' do
-        service.call
+        service.create
         expect(kase.errors[:linked_case_number])
           .to eq ["does not exist"]
       end
@@ -171,7 +232,7 @@ describe CaseLinkingService do
   context 'when an error occurs' do
     it 'rolls back changes' do
       allow(kase).to receive(:add_linked_case).and_throw(RuntimeError)
-      service.call
+      service.create
 
       cases_transitions = kase.transitions.where(
         event: 'link_a_case'
@@ -186,9 +247,10 @@ describe CaseLinkingService do
 
     it 'sets result to :error and returns same' do
       allow(kase).to receive(:add_linked_case).and_throw(RuntimeError)
-      result = service.call
+      result = service.create
       expect(result).to eq :error
       expect(service.result).to eq :error
     end
   end
+
 end

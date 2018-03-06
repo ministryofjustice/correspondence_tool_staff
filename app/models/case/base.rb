@@ -20,7 +20,7 @@
 #  current_state        :string
 #  last_transitioned_at :datetime
 #  delivery_method      :enum
-#  workflow             :string
+#  workflow             :string           default("standard")
 #  deleted              :boolean          default(FALSE)
 #  info_held_status_id  :integer
 #  type                 :string
@@ -115,6 +115,7 @@ class Case::Base < ApplicationRecord
   validates_presence_of :received_date
   validates :subject, presence: true, length: { maximum: 100 }
   validates :type, presence: true, exclusion: { in: %w{Case}, message: "Case type can't be blank" }
+  validates :workflow, inclusion: { in: %w{ standard trigger }, message: "invalid" }
 
   validates_with ::ClosedCaseValidator
 
@@ -230,6 +231,10 @@ class Case::Base < ApplicationRecord
                 :set_deadlines
   before_update :update_deadlines
   before_save :prevent_number_change
+
+  before_save do
+    self.wokflow = 'standard' if workflow.nil?
+  end
 
   delegate :available_events, to: :state_machine
 
@@ -449,6 +454,16 @@ class Case::Base < ApplicationRecord
     end
   end
 
+  def remove_linked_case(linked_case)
+    ActiveRecord::Base.transaction do
+
+      self.linked_cases.destroy(linked_case)
+
+      linked_case.linked_cases.destroy(self)
+
+    end
+  end
+
   def is_internal_review?
     self.is_a?(Case::FOI::InternalReview)
   end
@@ -477,7 +492,12 @@ class Case::Base < ApplicationRecord
     klass.new(self)
   end
 
+  def set_workflow!(new_workflow_name)
+    update!(workflow: new_workflow_name)
+  end
+
   private
+
   # determines whether or not the BU responded to flagged cases in time (NOT
   # whether the case was responded to in time!) calculated as the time between
   # the responding BU being assigned the case and the disclosure team approving

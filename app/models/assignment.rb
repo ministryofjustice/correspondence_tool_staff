@@ -17,6 +17,7 @@ class Assignment < ApplicationRecord
   validates :case, :role, :state, :team, presence: true
   validates :reasons_for_rejection, presence: true, if: -> { self.rejected? }
   validate :approved_only_for_approvals
+  validate :unique_pending_responder
 
   enum state: {
          pending: 'pending',
@@ -72,6 +73,17 @@ class Assignment < ApplicationRecord
   end
 
   private
+
+  def unique_pending_responder
+    if self.case
+      if state == 'pending' && role == 'responding'
+        num_existing = self.case&.assignments.responding.pending.size
+        if num_existing > 1
+          errors.add(:state, 'responding not unique')
+        end
+      end
+    end
+  end
 
   def approved_only_for_approvals
     if approved? && role != 'approving'

@@ -12,18 +12,21 @@ class CaseFlagForClearanceService
   def call
     return @result unless validate_case_is_unflagged
 
-    if @team.dacu_disclosure?
-      assign_approver acting_user: @user,
-                      acting_team: @dts.managing_team,
-                      target_team: @team
+    ActiveRecord::Base.transaction do
+      if @team.dacu_disclosure?
+        assign_approver acting_user: @user,
+                        acting_team: @dts.managing_team,
+                        target_team: @team
 
-    elsif @team.press_office? || @team.private_office?
-      assign_and_accept_approver acting_user: @user, acting_team: @team,
-                                 target_team: @team
-      @dts.associated_teams(for_team: @team).each do |associated|
-        associate_team(associated[:team], associated[:user])
+      elsif @team.press_office? || @team.private_office?
+        assign_and_accept_approver acting_user: @user, acting_team: @team,
+                                   target_team: @team
+        @dts.associated_teams(for_team: @team).each do |associated|
+          associate_team(associated[:team], associated[:user])
+        end
       end
     end
+
     @result = :ok
   end
 
@@ -48,9 +51,9 @@ class CaseFlagForClearanceService
   end
 
   def assign_and_accept_approver(acting_user:, acting_team:, target_team:)
-    @case.state_machine.take_on_for_approval! acting_user,
-                                              acting_team,
-                                              target_team
+    @case.state_machine.take_on_for_approval! acting_user: acting_user,
+                                              acting_team: acting_team,
+                                              target_team: target_team
     @case.approving_teams << target_team
     @case.reload
     team_assignment = @case.approver_assignments.for_team(target_team).last

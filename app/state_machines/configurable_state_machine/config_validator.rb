@@ -226,13 +226,18 @@ module ConfigurableStateMachine
     #rubocop:disable Metrics/ParameterLists
     def validate_event(case_type_name:, workflow_name:, user_role:, state_name:, event_name:, event_config:)
       if event_config.is_a?(RecursiveOpenStruct) || event_config.nil?
+        path = "case_types/#{case_type_name}/workflows/#{workflow_name}/user_roles/#{user_role}/states/#{state_name}/#{event_name}"
         validate_keys_in(event_config,
-                        "case_types/#{case_type_name}/workflows/#{workflow_name}/user_roles/#{user_role}/states/#{state_name}/#{event_name}",
+                        path,
                         :if,
                         :transition_to,
+                        :transition_to_using,
                         :after_transition,
                         :before_transition,
                         :switch_workflow)
+        validate_predicate_config(event_config, path)
+        validate_switch_workflow_config(event_config, workflow_name, path)
+        validate_transition_to_using_config(event_config, path)
       else
         add_error("case_types/#{case_type_name}/workflows/#{workflow_name}/user_roles/#{user_role}/states",
           "Expected #{event_config} to be a Hash, is a #{event_config.class}")
@@ -288,6 +293,69 @@ module ConfigurableStateMachine
         add_error(section_name,
                   "expected at least #{min_keys} entries, found #{config.to_hash.keys.size}")
       end
+    end
+
+    def validate_transition_to_using_config(event_config, path)
+      if event_config && event_config.transition_to_using.present?
+        result = validate_conditonal_transition_method(event_config.transition_to_using)
+        unless result.nil?
+          add_error(path, result)
+        end
+      end
+    end
+
+    def validate_conditonal_transition_method(conditional_transition_method)
+      validate_class_and_method(conditional_transition_method)
+    end
+    
+    def validate_predicate_config(event_config, path)
+      if event_config && event_config.if.present?
+        result =  validate_predicate_method(event_config.if)
+        unless result.nil?
+          add_error(path, result)
+        end
+      end
+    end
+
+    def validate_predicate_method(predicate)
+      validate_class_and_method(predicate)
+    end
+
+    def validate_class_and_method(class_and_method)
+      result = nil
+      klass, method = class_and_method.split('#')
+      if method.nil?
+        result = "Invalid predicate or conditional: #{class_and_method}"
+      else
+        if klass.safe_constantize.nil?
+          result = "No such class: #{klass}"
+        else
+          unless klass.constantize.instance_methods.include?(method.to_sym)
+            result = "No such instance method '#{method}' on class #{klass}"
+          end
+        end
+      end
+      result
+    end
+
+    def validate_switch_workflow_config(event_config, current_workflow, path)
+      if event_config && event_config.switch_workflow.present?
+        result = validate_switch_workflow_param(event_config, current_workflow, path)
+        unless result.nil?
+          add_error(path, result)
+        end
+      end
+    end
+
+    def validate_switch_workflow_param(event_config, current_workflow, path)
+      new_workflow = event_config.switch_workflow.to_sym
+      if new_workflow == current_workflow
+        add_error(path, 'Cannot switch workflow to the current workflow')
+      end
+      unless new_workflow.in?(@permitted_workflows)
+        add_error(path, "Invalid workflow: #{new_workflow}")
+      end
+
     end
 
   end

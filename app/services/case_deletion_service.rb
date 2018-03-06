@@ -13,7 +13,7 @@ class CaseDeletionService
     ActiveRecord::Base.transaction do
       begin
         @kase.update(deleted: true)
-        @kase.state_machine.destroy_case!(@user, @team)
+        @kase.state_machine.destroy_case!(acting_user: @user, acting_team: @team)
         @result = :ok
       rescue
         @result = :error

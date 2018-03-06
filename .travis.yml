@@ -10,13 +10,14 @@ addons:
 services:
   - postgresql
 before_script:
-  - psql -c 'create database correspondence_platform_test;' -U postgres
+  # - psql -c 'create database correspondence_platform_test;' -U postgres
+  # - bundle exec rails db:create db:structure:load
+  - bundle exec rails parallel:create[$PARALLEL_TESTS] parallel:load_structure[$PARALLEL_TESTS]
 script:
-  - bundle  install
+  - bundle install
   - bundle exec rubocop
   - bundle exec rails jasmine:ci
-  - bundle exec rails db:create db:structure:load
-  - bundle exec rails spec
+  - bundle exec parallel_rspec -s spec/features -n $PARALLEL_TESTS -o --fail-fast spec
   - bundle exec codeclimate-test-reporter
 before_install:
   - "phantomjs --version"

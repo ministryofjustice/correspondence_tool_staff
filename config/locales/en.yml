@@ -182,14 +182,14 @@ en:
         state: What do you want to do?
         team_id: Assign to
         user_id: Choose a new team member for this case
-      case:
+      case_foi:
         info_held_status_abbreviation: Was the information held?
-        requester_type: Type of requester
+        requester_type: Requester type
         refusal_reason_name: What was the outcome?
         outcome_name: What was the outcome?
         appeal_outcome_name: What was the appeal outcome?
-        flag_for_disclosure_specialists: Clearance required by DACU Disclosure
-        type: Case type
+        flag_for_disclosure_specialists: Flag for disclosure specialists
+        type: Type
         name: "Who is the requestor?"
       case_sar:
         missing_info: "Was the response asking for missing information (e.g. proof of ID) or
@@ -350,6 +350,8 @@ en:
       reassign_case: "Change team member"
       remove_link_html: |
         Remove <span class="visuallyhidden">file %{filename}</span>
+      remove_linked_case_html: |
+        Remove link<span class="visuallyhidden"> to %{case_number}</span>
       responding_team: Business unit
       responders:
         one: Information Officer

@@ -31,6 +31,10 @@ describe 'Permitted Events' do
   let(:unflagged_case_within_escalation_period)   { create :awaiting_responder_case, received_date: 1.day.ago, created_at: 1.day.ago }
   let(:pending_press_clearance_case)              { create :pending_press_clearance_case, press_officer: assigned_press_officer }
   let(:pending_private_clearance_case)            { create :pending_private_clearance_case, private_officer: assigned_private_officer }
+  let(:unflagged_drafting_case_within_escalation_period) { create :case_being_drafted,
+                                                                  responding_team: responding_team,
+                                                                  received_date: 1.day.ago,
+                                                                  created_at: 1.day.ago }
 
   # flagged cases
   let(:flagged_unassigned_case)                   { create :case, :flagged }
@@ -43,6 +47,12 @@ describe 'Permitted Events' do
                                                                  approver: assigned_dacu_disclosure_specialist_bmt }
   let(:unaccepted_pending_dacu_clearance_case)    { create :unaccepted_pending_dacu_clearance_case,
                                                        responding_team: responding_team }
+
+  # describe 'x' do
+  #   it 'y' do
+  #     ap unflagged_drafting_case_within_escalation_period
+  #   end
+  # end
 
   describe 'permitted events for different user types and case types' do
     last_user_type = nil

@@ -9,8 +9,9 @@
 /vendor/bundle
 
 # Ignore all logfiles and tempfiles.
-/log/*
 /tmp/*
+/log/*
+!log/parallel_runtime_rspec.log
 .idea/*
 
 # Ignore Byebug command history file.

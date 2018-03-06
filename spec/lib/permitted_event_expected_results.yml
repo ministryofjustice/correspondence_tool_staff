@@ -8,6 +8,7 @@
     - :edit_case
     - :flag_for_clearance
     - :link_a_case
+    - :remove_linked_case
 
 - - manager
   - flagged_unassigned_case
@@ -17,6 +18,7 @@
     - :edit_case
     - :flag_for_clearance
     - :link_a_case
+    - :remove_linked_case
     - :unflag_for_clearance
 
 - - manager
@@ -27,6 +29,7 @@
     - :edit_case
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
     - :link_a_case
+    - :remove_linked_case
 
 - - manager
   - flagged_awaiting_responder_case
@@ -36,6 +39,7 @@
     - :edit_case
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
     - :link_a_case
+    - :remove_linked_case
     - :unflag_for_clearance
 
 - - manager
@@ -47,6 +51,7 @@
     - :extend_for_pit
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
     - :link_a_case
+    - :remove_linked_case
 
 - - manager
   - unflagged_case_with_response
@@ -56,6 +61,7 @@
     - :extend_for_pit
     - :flag_for_clearance                   # don't think this should be here, and no button is displayed for it.
     - :link_a_case
+    - :remove_linked_case
 
 - - manager
   - accepted_pending_dacu_clearance_case
@@ -64,6 +70,7 @@
     - :edit_case
     - :extend_for_pit
     - :link_a_case
+    - :remove_linked_case
     - :unflag_for_clearance                 # don't think this should be here, and no button is displayed for it.
 
 - - manager
@@ -73,6 +80,7 @@
     - :edit_case
     - :extend_for_pit
     - :link_a_case
+    - :remove_linked_case
     - :unflag_for_clearance                 # don't think this should be here, and no button is displayed for it.
 
 ##################################### UNASSIGNED RESPONDER #########################
@@ -80,18 +88,20 @@
 - - unassigned_responder
   - unflagged_awaiting_responder_case
   - - :link_a_case
+    - :remove_linked_case
 
 - - unassigned_responder
   - flagged_awaiting_responder_case
   - - :link_a_case
+    - :remove_linked_case
 
 - - unassigned_responder
   - unflagged_drafting_case
   - - :add_message_to_case                  # should unassigned responders be allowed to add response?
     - :add_responses
-    - :extend_for_pit
     - :link_a_case
     - :reassign_user
+    - :remove_linked_case
 
 - - unassigned_responder
   - unaccepted_pending_dacu_clearance_case
@@ -99,6 +109,7 @@
     - :extend_for_pit
     - :link_a_case
     - :reassign_user
+    - :remove_linked_case
 
 - - unassigned_responder
   - accepted_pending_dacu_clearance_case
@@ -106,18 +117,25 @@
     - :extend_for_pit
     - :link_a_case
     - :reassign_user
+    - :remove_linked_case
 
 
 
-##################################### ASSIGNED RESPONDER #########################
+###################################### ASSIGNED RESPONDER #########################
 
 - - assigned_responder
+  - unflagged_drafting_case_within_escalation_period
+  - - :add_message_to_case
+    - :link_a_case
+    - :reassign_user
+    - :remove_linked_case
+
   - unflagged_drafting_case
   - - :add_message_to_case
     - :add_responses
-    - :extend_for_pit
     - :link_a_case
     - :reassign_user
+    - :remove_linked_case
 
 - - assigned_responder
   - accepted_pending_dacu_clearance_case
@@ -125,6 +143,7 @@
     - :extend_for_pit
     - :link_a_case
     - :reassign_user
+    - :remove_linked_case
 
 
 
@@ -136,6 +155,7 @@
     - :add_message_to_case
     - :extend_for_pit
     - :link_a_case
+    - :remove_linked_case
     - :unflag_for_clearance                 # no button showing up for this
 
 - - unassigned_dacu_disclosure_specialist
@@ -144,6 +164,7 @@
     - :extend_for_pit
     - :link_a_case
     - :reassign_user
+    - :remove_linked_case
     - :unflag_for_clearance                 # what about take case on?
 
 
@@ -155,6 +176,7 @@
     - :add_message_to_case
     - :extend_for_pit
     - :link_a_case
+    - :remove_linked_case
     - :unflag_for_clearance                 # no button showing up for this
 
 - - assigned_dacu_disclosure_specialist
@@ -164,6 +186,7 @@
     - :extend_for_pit
     - :link_a_case
     - :reassign_user
+    - :remove_linked_case
     - :unaccept_approver_assignment
     - :unflag_for_clearance                   # no button showing up for this
     - :upload_response_and_approve
@@ -180,6 +203,7 @@
     - :edit_case
     - :extend_for_pit
     - :link_a_case
+    - :remove_linked_case
     - :unflag_for_clearance                 # no button showing up for this
 
 - - unassigned_dacu_disclosure_specialist_bmt
@@ -190,6 +214,7 @@
     - :extend_for_pit
     - :link_a_case
     - :reassign_user
+    - :remove_linked_case
     - :unflag_for_clearance                 # what about take case on?
 
 
@@ -203,6 +228,7 @@
     - :edit_case
     - :extend_for_pit
     - :link_a_case
+    - :remove_linked_case
     - :unflag_for_clearance                 # no button showing up for this
 
 - - assigned_dacu_disclosure_specialist_bmt
@@ -214,6 +240,7 @@
     - :extend_for_pit
     - :link_a_case
     - :reassign_user
+    - :remove_linked_case
     - :unaccept_approver_assignment
     - :unflag_for_clearance                   # no button showing up for this
     - :upload_response_and_approve
@@ -224,9 +251,12 @@
 
 - - unassigned_press_officer
   - unflagged_case_within_escalation_period
-  - - :flag_for_clearance                     # no button showing up for this (Thank God!)
+  - - :accept_approver_assignment
+    - :flag_for_clearance                     # no button showing up for this (Thank God!)
     - :link_a_case
+    - :remove_linked_case
     - :take_on_for_approval                   # shows on /cases/incoming but not detail page
+    - :unflag_for_clearance
 
 - - unassigned_press_officer
   - pending_press_clearance_case
@@ -234,6 +264,7 @@
     - :extend_for_pit
     - :link_a_case
     - :reassign_user
+    - :remove_linked_case
 
 
 
@@ -247,15 +278,19 @@
     - :extend_for_pit
     - :link_a_case
     - :reassign_user
+    - :remove_linked_case
     - :request_amends
 
 #################################### UNASSIGNED PRIVATE OFFICER #########################
 
 - - unassigned_private_officer
   - unflagged_case_within_escalation_period
-  - - :flag_for_clearance                     # no button showing up for this (Thank God!)
+  - - :accept_approver_assignment
+    - :flag_for_clearance                     # no button showing up for this (Thank God!)
     - :link_a_case
+    - :remove_linked_case
     - :take_on_for_approval                   # shows on /cases/incoming but not detail page
+    - :unflag_for_clearance
 
 - - unassigned_private_officer
   - pending_private_clearance_case
@@ -263,7 +298,8 @@
     - :extend_for_pit
     - :link_a_case
     - :reassign_user
+    - :remove_linked_case
 
 
 
-#################################### ASSIGNED PRIVATE OFFICER #########################
+################################## ASSIGNED PRIVATE OFFICER #########################

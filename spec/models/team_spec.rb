@@ -18,7 +18,7 @@ require 'rails_helper'
 
 RSpec.describe Team, type: :model do
 
-  let(:team) { create :team }
+  let(:team) { build_stubbed :team }
 
   it 'can be created' do
     bu = Team.create name: 'Busy Units', email: 'busy.units@localhost'
@@ -45,7 +45,7 @@ RSpec.describe Team, type: :model do
   context 'validate uniqueness of name' do
     it 'errors if not unique' do
       create :team, name: 'abc'
-      t2 = build :team, name: 'abc'
+      t2 = build_stubbed :team, name: 'abc'
       expect(t2).not_to be_valid
       expect(t2.errors[:name]).to eq ['has already been taken']
     end
@@ -163,7 +163,7 @@ RSpec.describe Team, type: :model do
 
   describe '#can_allocate?' do
     before(:each) do
-      @team = create :team
+      @team = build_stubbed :team
       @foi = find_or_create :foi_correspondence_type
       @gq = find_or_create :gq_correspondence_type
       create :team_property, :can_allocate_gq, team_id: @team.id
@@ -198,22 +198,22 @@ RSpec.describe Team, type: :model do
 
   describe '#disable_allocation' do
     before(:each) do
-      @team = create :team
+      @team = build_stubbed :team
       @foi = find_or_create :foi_correspondence_type
       create :team_property, :can_allocate_foi, team_id: @team.id
     end
 
     it 'deletes the team property' do
-      expect(TeamProperty.where(key: 'can_allocate', value: @foi.abbreviation).size).to eq 1
+      expect(@team.properties).to exist(key: 'can_allocate', value: 'FOI')
       @team.disable_allocation(@foi)
-      expect(TeamProperty.where(key: 'can_allocate', value: @foi.abbreviation).size).to eq 0
+      expect(@team.properties).not_to exist(key: 'can_allocate', value: 'FOI')
     end
 
     it 'doesnt fail if called twice' do
-      expect(TeamProperty.where(key: 'can_allocate', value: @foi.abbreviation).size).to eq 1
+      expect(@team.properties).to exist(key: 'can_allocate', value: 'FOI')
       @team.disable_allocation(@foi)
       @team.disable_allocation(@foi)
-      expect(TeamProperty.where(key: 'can_allocate', value: @foi.abbreviation).size).to eq 0
+      expect(@team.properties).not_to exist(key: 'can_allocate', value: 'FOI')
     end
   end
 
@@ -260,6 +260,7 @@ RSpec.describe Team, type: :model do
 
     context 'on create' do
       it 'updates versions' do
+        team = create :team
         expect(team.versions.length).to eq 1
         expect(team.versions.last.event).to eq 'create'
       end

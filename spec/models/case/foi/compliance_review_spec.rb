@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Case::FOI::ComplianceReview, type: :model, parent: :case do
 
-  let(:compliance_review) { create :compliance_review}
+  let(:compliance_review) { build_stubbed :compliance_review}
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do
@@ -25,7 +25,7 @@ RSpec.describe Case::FOI::ComplianceReview, type: :model, parent: :case do
     context 'drafting state' do
       it 'has an FOI state machine' do
         allow(compliance_review).to receive(:current_state).and_return('drafting')
-        expect(compliance_review.state_machine).to be_a Case::FOI::StandardStateMachine
+        expect(compliance_review.state_machine).to be_a ConfigurableStateMachine::Machine
       end
     end
 

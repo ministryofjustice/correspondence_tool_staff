@@ -7,16 +7,20 @@
 
 A simple application to allow internal staff users to answer correspondence.
 
-## Local development
+## Development
 
-### Clone this repository change to the new directory
+### Basic Setup
+
+#### Cloning This Repository
+
+Clone this repository change to the new directory
 
 ```bash
 $ git clone git@github.com:ministryofjustice/correspondence_tool_staff.git
 $ cd correspondence_tool_staff
 ```
 
-### Installing Dependencies
+#### Installing Dependencies
 
 <details>
 <summary>Latest Version of Ruby</summary>
@@ -67,14 +71,56 @@ $ brew install phantomjs
 
 </details>
 
-### Frontend local development setup
+#### DB Setup
+
+Run these rake tasks to prepare the database for local development.
+
+```
+$ rails db:create
+$ rails db:migrate
+$ rails db:seed
+$ rails db:seed:dev:teams
+$ rails db:seed:dev:users
+```
+
+The above commands will set up a minimal set of teams, roles and users.
+
+In order to populate the database with correspondence items, use the cts script as follows:
+
+```
+$ ./cts clear                          # clears all cases from the database
+$ ./cts create all                     # creates 2 cases in each state
+$ ./cts create -n4 unassigned drafting # create 4 cases each in unassigned and drafting states
+$ ./cts --help create                  # display full help text for create command
+```
+
+
+### Additional Setup
+
+#### Libreoffice
+
+Libreoffice is used to convert documents to PDF's so that they can be viewed in a browser.
+In production environments, the installation of libreoffice is taken care of during the build
+of the docker container (see the Dockerfile).
+
+In localhost dev testing environments, libreoffice needs to be installed using homebrew, and then
+the following shell script needs to created with the name ```/usr/local/bin/soffice```:
+
+
+```
+cd /Applications/LibreOffice.app/Contents/MacOS && ./soffice $1 $2 $3 $4 $5 $6
+```
+
+The above script is needed by the libreconv gem to do the conversion.
+
+#### BrowserSync Setup
 
 [BrowserSync](https://www.browsersync.io/) is setup and configured for local development
 using the [BrowserSync Rails gem](https://github.com/brunoskonrad/browser-sync-rails).
 BrowserSync helps us test across different browsers and devices and sync the
 various actions that take place.
 
-#### Dependencies
+##### Dependencies
 
 Node.js:
 Install using `brew install node` and then check its installed using `node -v` and `npm -v`
@@ -82,7 +128,7 @@ Install using `brew install node` and then check its installed using `node -v` a
 - [Team Treehouse](http://blog.teamtreehouse.com/install-node-js-npm-mac)
 - [Dy Classroom](https://www.dyclassroom.com/howto-mac/how-to-install-nodejs-and-npm-on-mac-using-homebrew)
 
-#### Installing and running:
+##### Installing and running:
 
 Bundle install as normal then
 After bundle install:
@@ -122,97 +168,7 @@ the browsers should automatically update and sync.
 
 The UI URL are there if you would like to tweak the BrowserSync server and configure it further
 
-
-### Libreoffice
-
-Libreoffice is used to convert documents to PDF's so that they can be viewed in a browser.
-In production environments, the installation of libreoffice is taken care of during the build
-of the docker container (see the Dockerfile).
-
-In localhost dev testing environments, libreoffice needs to be installed using homebrew, and then
-the following shell script needs to created with the name ```/usr/local/bin/soffice```:
-
-
-```
-cd /Applications/LibreOffice.app/Contents/MacOS && ./soffice $1 $2 $3 $4 $5 $6
-```
-
-The above script is needed by the libreconv gem to do the conversion.
-
-### DB Setup
-
-Run these rake tasks to prepare the database for local development.
-
-```
-$ rails db:create
-$ rails db:migrate
-$ rails db:seed
-$ rails db:seed:dev:teams
-$ rails db:seed:dev:users
-```
-
-The above commands will set up a minimal set of teams, roles and users.
-
-In order to populate the database with correspondence items, use the cts script as follows:
-
-```
-$ ./cts clear                          # clears all cases from the database
-$ ./cts create all                     # creates 2 cases in each state
-$ ./cts create -n4 unassigned drafting # create 4 cases each in unassigned and drafting states
-$ ./cts --help create                  # display full help text for create command
-```
-
-### Dumping the database
-
-We have functionality to create an anonymised copy of the production or staging database. This feature is to be used as a very last resort. If the copy of the database is needed for debugging please consider the following options first:
-- seeing if the issue is covered in the feature tests
-- trying to track the issue through Kibana
-- recreating the issue locally
-
-If the options above do not solve the issue you by create an anonymised dump of the database by running
-
-```rake db:dump:prod[host]```
-
-there are also options to create an anonymised version of the local database
-
-```rake db:dump:local[filename,anon]```
-
-or a standard copy
-
-```rake db:dump:local[filename,clear]```
-
-For more help with the data dump tasks run:
-
-```rake db:dump:help```
-
-### Testing in Parallel
-
-This project includes the ```parallel_tests``` gem which enables multiple CPUs to be used during testing
-in order to speed up execution.  
-
-#### To set up parallel testing
-
-1. Create the required number of extra test databases:
-
-    ```bundle exec rake parallel:create```
-
-2. Load the schema into all of the extra test databases:
-
-    ```bundle exec rake parallel:load_structure```
-
-##### To run all the tests in parallel
-
-```bundle exec rake parallel:spec```
-
-##### To run only feature tests in parallel
-
-  ```bundle exec rake parallel:spec:features```
-
-##### To run only the non-feature tests in parallel
-
-  ```bundle exec rake parallel:spec:non_features```
-
-### Emails
+#### Emails
 
 Emails are sent using
 the [GOVUK Notify service](https://www.notifications.service.gov.uk).
@@ -232,7 +188,7 @@ $ export SETTINGS__CTS_EMAIL_HOST=localhost
 $ export SETTINGS__CTS_EMAIL_PORT=5000
 ```
 
-### Uploads
+#### Uploads
 
 Responses and other case attachments are uploaded directly to S3 before being
 submitted to the application to be added to the case. Each deployed environment
@@ -266,6 +222,105 @@ testing:
 
 <a name="footnote-aws-access-key">1</a>: When following these instructions, I had to replace step 3 (Continue to Security Credentials) with clicking on *Users* on the left, selecting my account from the list there, and then clicking on "Security Credentials".
 
+#### Dumping the database
+
+We have functionality to create an anonymised copy of the production or staging database. This feature is to be used as a very last resort. If the copy of the database is needed for debugging please consider the following options first:
+- seeing if the issue is covered in the feature tests
+- trying to track the issue through Kibana
+- recreating the issue locally
+
+If the options above do not solve the issue you by create an anonymised dump of the database by running
+
+```rake db:dump:prod[host]```
+
+there are also options to create an anonymised version of the local database
+
+```rake db:dump:local[filename,anon]```
+
+or a standard copy
+
+```rake db:dump:local[filename,clear]```
+
+For more help with the data dump tasks run:
+
+```rake db:dump:help```
+
+
+### Testing
+
+#### Testing in Parallel
+
+This project includes the `parallel_tests` gem which enables multiple CPUs to be used during testing
+in order to speed up execution.  
+
+##### To set up parallel testing
+
+1. Create the required number of extra test databases:
+
+```
+bundle exec rake parallel:create
+```
+
+2. Load the schema into all of the extra test databases:
+
+```
+bundle exec rake parallel:load_structure
+```
+
+###### To run all the tests in parallel
+
+```
+bundle exec rake parallel:spec
+```
+
+###### To run only feature tests in parallel
+
+```
+bundle exec rake parallel:spec:features
+```
+
+###### To run only the non-feature tests in parallel
+
+```
+bundle exec rake parallel:spec:non_features
+```
+
+
+### Continuous Integration
+
+Continuous integration is done with Travis. These are performed in parallel
+using the same `parallel_tests` gem as is used locally, and is configured using
+environment variables set through the Travis settings for our project. Also,
+failed tests that generate a screenshot using the `capybara-screenshot` gem will
+upload the screenshot to an S3 bucket so that we can have some visibility of
+errors. These can be viewed through the [managment console]
+(https://s3.console.aws.amazon.com/s3/buckets/correspondence-staff-travis-test-failure-screenshots/?region=us-east-1&tab=overview)
+(until we sort out permissions for access to the bucket).
+
+Here are the environment variables that control these features:
+
+- *PARALLEL_TESTS* -- The number of parallel tests to run.
+- *S3_TEST_SCREENSHOT_ACCESS_KEY_ID* -- The access key id to use to upload screenshots of failed tests
+- *S3_TEST_SCREENSHOT_SECRET_ACCESS_KEY* -- The secret access key for the access key id.
+
+### Smoke Tests
+
+The smoke test runs through the process of signing into the service using a dedicated user account setup as Disclosure BMT team member.
+It checks that sign in was successful and then randomly views one case in the case list view.  
+
+To run the smoke test, set the following environment variables:
+
+```
+SETTINGS__SMOKE_TESTS__USERNAME    # the email address to use for smoke tests
+SETTINGS__SMOKE_TESTS__PASSWORD    # The password for the smoketest email account
+```
+
+and then run
+
+```
+bundle exec rails smoke
+```
+
 # Case Journey
 1. **unassigned**  
    A new case entered by a DACU user is created in this state.  It is in this state very
@@ -292,16 +347,3 @@ testing:
 1. **closed**  
    The kilo has marked the case as closed.
 
-# Smoke Tests
-
-The smoke test runs through the process of signing into the service using a dedicated user account setup as Disclosure BMT team member.
-It checks that sign in was successful and then randomly views one case in the case list view.  
-
-To run the smoke test, set the following environment variables:
-
-    SETTINGS__SMOKE_TESTS__USERNAME    # the email address to use for smoke tests
-    SETTINGS__SMOKE_TESTS__PASSWORD    # The password for the smoketest email account
-
-and then run
-
-    bundle exec rails smoke

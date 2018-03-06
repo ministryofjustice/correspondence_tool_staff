@@ -190,6 +190,7 @@ module CTS::Cases
           .new(kase, responder, BypassParamsManager.new({}), nil)
           .seed!('spec/fixtures/eon.pdf')
         kase.state_machine.add_responses!(acting_user: responder,
+                                          acting_team: kase.responding_team,
                                           filenames: kase.attachments)
       end
     end
