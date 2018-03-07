@@ -343,6 +343,7 @@ describe Case::FOI::StandardStateMachine do
                                                                   :flag_for_clearance,
                                                                   :link_a_case,
                                                                   :remove_linked_case,
+                                                                  :request_further_clearance,
                                                                   :unflag_for_clearance]
         end
       end
@@ -374,7 +375,6 @@ describe Case::FOI::StandardStateMachine do
                                                                     :assign_to_new_team,
                                                                     :destroy_case,
                                                                     :edit_case,
-                                                                    :extend_for_pit,
                                                                     :flag_for_clearance,
                                                                     :link_a_case,
                                                                     :remove_linked_case,
@@ -459,10 +459,9 @@ describe Case::FOI::StandardStateMachine do
             k = create :accepted_case, :flagged, :dacu_disclosure
 
             expect(k.current_state).to eq 'drafting'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:extend_for_pit,
-                                                                        :link_a_case,
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,
                                                                         :remove_linked_case,
-                                                                        :request_further_clearance]
+                                                                        :upload_responses]
           end
         end
 
@@ -511,12 +510,10 @@ describe Case::FOI::StandardStateMachine do
             expect(k.current_state).to eq 'drafting'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                           :add_response_to_flagged_case,
-                                                                          :extend_for_pit,
                                                                           :link_a_case,
                                                                           :reassign_user,
                                                                           :remove_linked_case,
-                                                                          :request_further_clearance]
-
+                                                                          :upload_responses]
           end
         end
 
@@ -576,6 +573,7 @@ describe Case::FOI::StandardStateMachine do
 
             expect(k.current_state).to eq 'unassigned'
             expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
+                                                                        :extend_for_pit,
                                                                         :flag_for_clearance,
                                                                         :take_on_for_approval,
                                                                         :unaccept_approver_assignment,
@@ -589,13 +587,14 @@ describe Case::FOI::StandardStateMachine do
 
             expect(k.current_state).to eq 'awaiting_responder'
             expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
-                                                                        :add_message_to_case,
-                                                                        :flag_for_clearance,
-                                                                        :link_a_case,
-                                                                        :remove_linked_case,
-                                                                        :take_on_for_approval,
-                                                                        :unaccept_approver_assignment,
-                                                                        :unflag_for_clearance]
+                                                                       :add_message_to_case,
+                                                                       :extend_for_pit,
+                                                                       :flag_for_clearance,
+                                                                       :link_a_case,
+                                                                       :reassign_user,
+                                                                       :remove_linked_case,
+                                                                       :take_on_for_approval,
+                                                                       :unflag_for_clearance]
           end
         end
 
@@ -604,12 +603,15 @@ describe Case::FOI::StandardStateMachine do
             k = create :accepted_case, :flagged, :dacu_disclosure
 
             expect(k.current_state).to eq 'drafting'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:extend_for_pit,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
+                                                                        :add_message_to_case,
+                                                                        :extend_for_pit,
                                                                         :flag_for_clearance,
                                                                         :link_a_case,
+                                                                        :reassign_user,
                                                                         :remove_linked_case,
-                                                                        :request_further_clearance,
-                                                                        :take_on_for_approval]
+                                                                        :take_on_for_approval,
+                                                                        :unflag_for_clearance]
           end
         end
 
@@ -650,69 +652,97 @@ describe Case::FOI::StandardStateMachine do
 
 ##################### APPROVER FLAGGED ############################
 
-    # context 'assigned approver' do
-    #   context 'unassigned state' do
-    #
-    #     it 'should show permitted events' do
-    #       k = create :case, :flagged
-    #       approver = approver_in_assigned_team(k)
-    #       expect(k.current_state).to eq 'unassigned'
-    #       expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
-    #                                                                   :flag_for_clearance,
-    #                                                                   :link_a_case,
-    #                                                                   :reassign_user,
-    #                                                                   :take_on_for_approval]
-    #     end
-    #   end
-    #
-    #   context 'awaiting responder state' do
-    #     it 'shows events' do
-    #       k = create :awaiting_responder_case, :flagged
-    #       approver = approver_in_assigned_team(k)
-    #       expect(k.current_state).to eq 'awaiting_responder'
-    #       expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case, :flag_for_clearance, :link_a_case, :take_on_for_approval]
-    #     end
-    #   end
-    #
-    #   context 'drafting state' do
-    #     it 'shows events' do
-    #       k = create :accepted_case, :flagged
-    #       approver = approver_in_assigned_team(k)
-    #       expect(k.current_state).to eq 'drafting'
-    #       expect(k.state_machine.permitted_events(approver.id)).to eq [:extend_for_pit, :flag_for_clearance, :link_a_case, :request_further_clearance, :take_on_for_approval]
-    #     end
-    #   end
-    #
-    #   context 'awaiting_dispatch' do
-    #     it 'shows events' do
-    #       k = create :case_with_response, :flagged
-    #       approver = approver_in_assigned_team(k)
-    #       expect(k.current_state).to eq 'awaiting_dispatch'
-    #       expect(k.state_machine.permitted_events(approver.id)).to eq [:extend_for_pit, :flag_for_clearance, :link_a_case, :request_further_clearance, :take_on_for_approval]
-    #     end
-    #   end
-    #
-    #   context 'responded' do
-    #     it 'shows events' do
-    #       k = create :responded_case, :flagged
-    #       approver = approver_in_assigned_team(k)
-    #       expect(k.current_state).to eq 'responded'
-    #       expect(k.state_machine.permitted_events(approver.id)).to eq [:extend_for_pit, :link_a_case]
-    #     end
-    #   end
-    #
-    #   context 'closed' do
-    #     it 'shows events' do
-    #       k = create :closed_case, :flagged
-    #       approver = approver_in_assigned_team(k)
-    #       expect(k.current_state).to eq 'closed'
-    #       expect(k.state_machine.permitted_events(approver.id)).to eq [:link_a_case]
-    #     end
-    #   end
-    #
-    #   def approver_in_assigned_team(k)
-    #     create :approver, approving_team: [k.approving_teams]
-    #   end
-    # end
+    context 'assigned approver' do
+      context 'unassigned state' do
+
+        it 'should show permitted events' do
+          k = create :case, :flagged
+          approver = approver_in_assigned_team(k)
+          expect(k.current_state).to eq 'unassigned'
+          expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                      :accept_approver_assignment,
+                                                                      :flag_for_clearance,
+                                                                      :link_a_case,
+                                                                      :reassign_user,
+                                                                      :remove_linked_case,
+                                                                      :take_on_for_approval,
+                                                                      :unflag_for_clearance]
+        end
+      end
+
+      context 'awaiting responder state' do
+        it 'shows events' do
+          k = create :awaiting_responder_case, :flagged
+          approver = approver_in_assigned_team(k)
+          expect(k.current_state).to eq 'awaiting_responder'
+          expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
+                                                                    :add_message_to_case,
+                                                                    :flag_for_clearance,
+                                                                    :link_a_case,
+                                                                    :reassign_user,
+                                                                    :remove_linked_case,
+                                                                    :unflag_for_clearance]
+        end
+      end
+
+      context 'drafting state' do
+        it 'shows events' do
+          k = create :accepted_case, :flagged
+          approver = approver_in_assigned_team(k)
+          expect(k.current_state).to eq 'drafting'
+          expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
+                                                                     :add_message_to_case,
+                                                                     :extend_for_pit,
+                                                                     :flag_for_clearance,
+                                                                     :link_a_case,
+                                                                     :reassign_user,
+                                                                     :remove_linked_case,
+                                                                     :unaccept_approver_assignment,
+                                                                     :unflag_for_clearance]
+        end
+      end
+
+      context 'awaiting_dispatch' do
+        it 'shows events' do
+          k = create :case_with_response, :flagged, :dacu_disclosure
+          approver = approver_in_assigned_team(k)
+          expect(k.current_state).to eq 'awaiting_dispatch'
+          expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
+                                                                      :add_message_to_case,
+                                                                      :extend_for_pit,
+                                                                      :flag_for_clearance,
+                                                                      :link_a_case,
+                                                                      :remove_linked_case,
+                                                                      :request_further_clearance,
+                                                                      :unflag_for_clearance]
+        end
+      end
+
+      context 'responded' do
+        it 'shows events' do
+          k = create :responded_case, :flagged
+          approver = approver_in_assigned_team(k)
+          expect(k.current_state).to eq 'responded'
+          expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
+                                                                     :add_message_to_case,
+                                                                     :extend_for_pit,
+                                                                     :link_a_case,
+                                                                     :remove_linked_case]
+        end
+      end
+
+      context 'closed' do
+        it 'shows events' do
+          k = create :closed_case, :flagged
+          approver = approver_in_assigned_team(k)
+          expect(k.current_state).to eq 'closed'
+          expect(k.state_machine.permitted_events(approver.id)).to eq [:link_a_case, :remove_linked_case]
+        end
+      end
+
+      def approver_in_assigned_team(k)
+        k.approving_teams.first.users.first
+      end
+    end
   end
 end

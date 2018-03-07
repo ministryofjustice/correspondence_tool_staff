@@ -49,13 +49,13 @@ class CaseApprovalService
   end
 
   def approve_and_progress_as_normal(assignment)
-    @kase.state_machine.approve!(@user, assignment)
+    @kase.state_machine.approve!(acting_user: @user, acting_team: assignment.team)
   end
 
   def bypass_press_and_private_approvals(assignment)
     bypass_approval_for_team(BusinessUnit.press_office)
     bypass_approval_for_team(BusinessUnit.private_office)
-    @kase.state_machine.approve_and_bypass!(@user, assignment, @bypass_params.message)
+    @kase.state_machine.approve_and_bypass!(acting_user: @user, acting_team: assignment.team, message: @bypass_params.message)
   end
 
   def bypass_approval_for_team(team)
