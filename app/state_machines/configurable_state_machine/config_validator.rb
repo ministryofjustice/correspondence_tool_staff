@@ -238,6 +238,7 @@ module ConfigurableStateMachine
         validate_predicate_config(event_config, path)
         validate_switch_workflow_config(event_config, workflow_name, path)
         validate_transition_to_using_config(event_config, path)
+        validate_after_transition_config(event_config, path)
       else
         add_error("case_types/#{case_type_name}/workflows/#{workflow_name}/user_roles/#{user_role}/states",
           "Expected #{event_config} to be a Hash, is a #{event_config.class}")
@@ -307,7 +308,7 @@ module ConfigurableStateMachine
     def validate_conditonal_transition_method(conditional_transition_method)
       validate_class_and_method(conditional_transition_method)
     end
-    
+
     def validate_predicate_config(event_config, path)
       if event_config && event_config.if.present?
         result =  validate_predicate_method(event_config.if)
@@ -336,6 +337,15 @@ module ConfigurableStateMachine
         end
       end
       result
+    end
+
+    def validate_after_transition_config(event_config, path)
+      if event_config && event_config.after_transition.present?
+        result =  validate_predicate_method(event_config.after_transition)
+        unless result.nil?
+          add_error(path, result)
+        end
+      end
     end
 
     def validate_switch_workflow_config(event_config, current_workflow, path)
