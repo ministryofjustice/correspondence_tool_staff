@@ -83,6 +83,9 @@ case_types:
                   switch_workflow: trigger
                 link_a_case:
                 remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+                  switch_workflow: :trigger
                 unflag_for_clearance:
                   if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
 
@@ -97,6 +100,8 @@ case_types:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+                  switch_workflow: :trigger
                 unflag_for_clearance:
                   if: Case::FOI::StandardPolicy#unflag_for_clearance_from_awaiting_responder_to_awaiting_responder?
 

@@ -636,7 +636,7 @@ class CasesController < ApplicationController
 
   def get_flash_errors_for_case(kase)
     if flash.key?(:case_errors)
-      flash[:case_errors]['message_text'].each do |error|
+      flash[:case_errors][:message_text].each do |error|
         kase.errors.add(:message_text, error)
       end
     end

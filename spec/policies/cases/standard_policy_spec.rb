@@ -68,7 +68,7 @@ describe Case::FOI::StandardPolicy do
     it { should_not permit(responder,             accepted_case) }
     it { should     permit(manager,               accepted_case) }
     it { should     permit(manager,               case_with_response)}
-    it { should_not permit(manager,               unassigned_case) }
+    it { should     permit(manager,               unassigned_case) }
     it { should_not permit(manager,               closed_case) }
     it { should_not permit(disclosure_approver,   accepted_case) }
     it { should_not permit(press_officer,         accepted_case) }

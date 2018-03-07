@@ -16,7 +16,8 @@ describe Case::FOI::StandardStateMachine do
                                                                    :edit_case,
                                                                    :flag_for_clearance,
                                                                    :link_a_case,
-                                                                   :remove_linked_case]
+                                                                   :remove_linked_case,
+                                                                   :request_further_clearance]
         end
       end
 
