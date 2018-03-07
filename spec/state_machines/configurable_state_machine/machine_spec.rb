@@ -9,21 +9,6 @@ module ConfigurableStateMachine
     end
   end
 
-  class DummyConditional
-    def initialize(kase:, user:)
-      @kase = kase
-      @user = user
-    end
-
-    def remove_response
-      if @kase.subject == 'Testing conditionals'
-        'drafting'
-      else
-        'unassigned'
-      end
-    end
-  end
-
   describe Machine do
 
     let(:config)  do
@@ -50,15 +35,13 @@ module ConfigurableStateMachine
                 drafting: {
                   add_message_to_case: {
                     if: 'Case::FOI::StandardPolicy#can_add_message_to_case?',
+                    # before_transition: 'ConfigurableStateMachine::TestCallbacks#before_transition_meth',
+                    # after_transition: 'ConfigurableStateMachine::TestCallbacks#before_transition_meth',
                     switch_workflow: 'trigger',
-                    transition_to: 'ready_to_send'
+                    transition_to: 'ready_to_send',
+                    after_transition: 'Predicates#notify_responder_message_received'
                   },
                   add_response: nil
-                },
-                awaiting_dispatch: {
-                  remove_response: {
-                    transition_to_using: 'ConfigurableStateMachine::DummyConditional#remove_response'
-                  }
                 }
               }
             },
@@ -419,43 +402,21 @@ module ConfigurableStateMachine
         end
       end
 
-      context 'transition_to_using' do
-        let(:kase)    { create :case_with_response }
+      describe 'after_transition' do
+        let(:kase)      { create :accepted_case }
 
-        it 'updates the state on the case' do
-          # given
-          kase.subject = 'Testing conditionals'
-          expect(kase.current_state).to eq 'awaiting_dispatch'
-          expect(kase.workflow).to eq 'standard'
+        it 'calls the after transition predicate' do
 
-          # when
           machine = Machine.new(config: config, kase: kase)
-          machine.remove_response!(
+          service = double NotifyResponderService, call: :ok
+          expect(NotifyResponderService).to receive(:new).with(kase, 'Message received').and_return(service)
+          expect(service).to receive(:call)
+
+          machine.add_message_to_case!(
+              message: 'NNNN',
               acting_team: @managing_team,
               acting_user: @manager)
-
-          # then
-          expect(kase.current_state).to eq 'drafting'
         end
-
-        it 'updates the to_state on the transition' do
-          # given
-          kase.subject = 'Testing conditionals'
-          expect(kase.current_state).to eq 'awaiting_dispatch'
-          expect(kase.workflow).to eq 'standard'
-
-          # when
-          machine = Machine.new(config: config, kase: kase)
-          machine.remove_response!(
-              acting_team: @managing_team,
-              acting_user: @manager)
-
-          # then
-          transition = kase.reload.transitions.last
-          expect(transition.event).to eq 'remove_response'
-          expect(transition.to_state).to eq 'drafting'
-        end
-
       end
     end
 
@@ -500,7 +461,6 @@ module ConfigurableStateMachine
             edit_case
             flag_for_clearance
             flag_for_press
-            remove_response
             unflag_for_clearance
           }
           expect(machine.events).to eq expected_events
@@ -614,6 +574,7 @@ module ConfigurableStateMachine
           end
         end
       end
+      describe
     end
   end
 end
