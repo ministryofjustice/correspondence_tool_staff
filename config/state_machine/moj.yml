@@ -75,6 +75,7 @@ case_types:
               unassigned:
                 add_message_to_case:
                   if: Case::BasePolicy#can_add_message_to_case?
+                  after_transition: Predicates#notify_responder_message_received
                 assign_responder:
                   transition_to: awaiting_responder
                 destroy_case:
@@ -83,15 +84,13 @@ case_types:
                   switch_workflow: trigger
                 link_a_case:
                 remove_linked_case:
-                request_further_clearance:
-                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
-                  switch_workflow: :trigger
                 unflag_for_clearance:
                   if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
 
               awaiting_responder:
                 add_message_to_case:
                   if: Case::BasePolicy#can_add_message_to_case?
+                  after_transition: Predicates#notify_responder_message_received
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
@@ -100,13 +99,12 @@ case_types:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
-                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
-                  switch_workflow: :trigger
                 unflag_for_clearance:
                   if: Case::FOI::StandardPolicy#unflag_for_clearance_from_awaiting_responder_to_awaiting_responder?
 
               drafting:
                 add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
                 assign_to_new_team:
                   transition_to: awaiting_responder
                 destroy_case:
@@ -122,6 +120,7 @@ case_types:
 
               awaiting_dispatch:
                 add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
                 destroy_case:
                 edit_case:
                 extend_for_pit:       # ?
@@ -135,6 +134,7 @@ case_types:
 
               responded:
                 add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
                 close:
                   transition_to: closed
                 destroy_case:
@@ -144,6 +144,7 @@ case_types:
 
               closed:
                 add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
                 destroy_case:
                 edit_case:
                 link_a_case:
@@ -155,6 +156,7 @@ case_types:
                 accept_approver_assignment:
                 add_message_to_case:
                   if: Case::BasePolicy#can_add_message_to_case?
+                  after_transition: Predicates#notify_responder_message_received
                 flag_for_clearance:
                   switch_workflow: trigger
                 reassign_user:
@@ -168,9 +170,12 @@ case_types:
                   switch_workflow: trigger
                 add_message_to_case:
                   if: Case::BasePolicy#can_add_message_to_case?
+                  after_transition: Predicates#notify_responder_message_received
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
                 remove_linked_case:
                 take_on_for_approval:
                   switch_workflow: trigger
@@ -178,28 +183,35 @@ case_types:
 
               drafting:
                 add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
                 link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
                 remove_linked_case:
                 take_on_for_approval:
                   switch_workflow: :trigger
 
               awaiting_dispatch:
                 add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
                 link_a_case:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
                 take_on_for_approval:
                   switch_workflow: :trigger
 
               responded:
-                 add_message_to_case:
-                 link_a_case:
-                 reassign_user:
-                   if: Case::BasePolicy#assignments_reassign_user?
-                 remove_linked_case:
+                add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
+                link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
 
               closed:
                 add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
                 link_a_case:
 
           responder:
@@ -207,12 +219,15 @@ case_types:
               unassigned:
                 add_message_to_case:
                   if: Case::BasePolicy#can_add_message_to_case?
+                  after_transition: Predicates#notify_responder_message_received
 
               awaiting_responder:
                 add_message_to_case:
                   if: Case::BasePolicy#can_add_message_to_case?
+                  after_transition: Predicates#notify_responder_message_received
                 accept_responder_assignment:
                   if: Predicates#responder_is_member_of_assigned_team?
+                  transition_to: drafting
                   transition_to: drafting
                 reject_responder_assignment:
                   if: Predicates#responder_is_member_of_assigned_team?
@@ -222,16 +237,19 @@ case_types:
 
               drafting:
                 add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
                 add_responses:
-                  if: Case::BasePolicy#can_add_attachment?
+                  if: Predicates#responder_is_member_of_assigned_team?
                   transition_to: awaiting_dispatch
                 link_a_case:
                 reassign_user:
+                  if: Predicates#responder_is_member_of_assigned_team?
                   if: Case::BasePolicy#assignments_reassign_user?
                 remove_linked_case:
 
               awaiting_dispatch:
                  add_message_to_case:
+                   after_transition: Predicates#notify_responder_message_received
                  add_responses:
                   if: Predicates#responder_is_member_of_assigned_team?
                  link_a_case:
@@ -248,11 +266,13 @@ case_types:
 
               responded:
                 add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
                 link_a_case:
                 remove_linked_case:
 
               closed:
                 add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
 
       trigger:
         permitted_events:
