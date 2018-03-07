@@ -355,6 +355,7 @@ case_types:
 
               awaiting_responder:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 assign_to_new_team:
                   transition_to: awaiting_responder
                 destroy_case:
@@ -363,22 +364,26 @@ case_types:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
-                  # if: before escaltion deadline
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
                 unflag_for_clearance:
                   if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
                   switch_workflow: standard
 
               drafting:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 assign_to_new_team:
+                assign_to_new_team:
+                  transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
-                extend_for_pit:
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
                 unflag_for_clearance:
+                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
                   switch_workflow: standard
 
 
@@ -443,14 +448,18 @@ case_types:
 
               drafting:
                 accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                 extend_for_pit:
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
                 take_on_for_approval:
+                  if: Case::BasePolicy#can_take_on_for_approval?
                 unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
                   switch_workflow: standard
                 unflag_for_clearance:
                   switch_workflow: standard
@@ -484,6 +493,7 @@ case_types:
                   if: Predicates#responder_is_member_of_assigned_team?
                 remove_linked_case:
                 upload_responses:
+
 
 
 #########################################################################
