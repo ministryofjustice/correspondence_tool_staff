@@ -34,7 +34,7 @@ describe CasesController, type: :controller do
       sign_in responder
 
       get :show, params: { id: accepted_case.id },
-          flash:{"case_errors"=>{"message_text"=>["can't be blank"]}}
+          flash:{"case_errors"=>{:message_text => ["can't be blank"]}}
 
       expect(assigns(:case).errors.messages[:message_text].first)
         .to eq("can't be blank")
