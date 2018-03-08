@@ -452,6 +452,7 @@ case_types:
                 add_message_to_case:
                   if: Case::BasePolicy#can_add_message_to_case?
                 extend_for_pit:
+                  if: Predicates#user_is_assigned_disclosure_specialist?
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
