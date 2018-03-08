@@ -74,7 +74,6 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
                 assign_responder:
                   transition_to: awaiting_responder
                 destroy_case:
@@ -91,7 +90,6 @@ case_types:
 
               awaiting_responder:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
@@ -144,7 +142,6 @@ case_types:
                 remove_linked_case:
 
               closed:
-                add_message_to_case:
                 destroy_case:
                 edit_case:
                 link_a_case:
@@ -185,6 +182,7 @@ case_types:
 
               drafting:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                   after_transition: Predicates#notify_responder_message_received
                 extend_for_pit:
                   if: Predicates#user_is_assigned_disclosure_specialist?
@@ -197,6 +195,7 @@ case_types:
 
               awaiting_dispatch:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                   after_transition: Predicates#notify_responder_message_received
                 extend_for_pit:
                   if: Predicates#user_is_assigned_disclosure_specialist?
@@ -209,6 +208,7 @@ case_types:
 
               responded:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                   after_transition: Predicates#notify_responder_message_received
                 extend_for_pit:
                   if: Predicates#user_is_assigned_disclosure_specialist?
@@ -218,8 +218,8 @@ case_types:
                 remove_linked_case:
 
               closed:
-                add_message_to_case:
                 link_a_case:
+                remove_linked_case:
 
           responder:
             states:
@@ -241,6 +241,7 @@ case_types:
 
               drafting:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                   after_transition: Predicates#notify_responder_message_received
                 add_responses:
                   if: Predicates#responder_is_member_of_assigned_team?
@@ -252,6 +253,7 @@ case_types:
 
               awaiting_dispatch:
                  add_message_to_case:
+                   if: Case::BasePolicy#can_add_message_to_case?
                    after_transition: Predicates#notify_responder_message_received
                  add_responses:
                   if: Predicates#responder_is_member_of_assigned_team?
@@ -269,12 +271,14 @@ case_types:
 
               responded:
                 add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
                   after_transition: Predicates#notify_responder_message_received
                 link_a_case:
                 remove_linked_case:
 
               closed:
-                add_message_to_case:
+                link_a_case:
+                remove_linked_case:
 
       trigger:
         permitted_events:

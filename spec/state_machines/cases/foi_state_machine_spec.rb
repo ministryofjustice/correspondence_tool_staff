@@ -635,7 +635,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
       expect(transition.message).to eq 'This is my message to you all'
     end
 
-    context 'user sending message is the resonder' do
+    context 'user sending message is the responder' do
       it 'does not call the notify responder service' do
         case_being_drafted.state_machine.add_message_to_case!(
           acting_user: user,

@@ -118,7 +118,7 @@ module ConfigurableStateMachine
           to_state = find_destination_state(event_config: event_config, user: params[:acting_user])
           to_workflow = find_destination_workflow(event_config: event_config)
           CaseTransition.unset_most_recent(@kase)
-          write_transition(event: event, to_state: to_state, to_workflow: to_workflow, params: params)
+          write_transition(event: event, to_state: to_state, to_workflow: to_workflow, params: params.clone)
           @kase.update!(current_state: to_state, workflow: to_workflow)
           execute_after_transition_method(event_config: event_config, user: params[:acting_user])
         end

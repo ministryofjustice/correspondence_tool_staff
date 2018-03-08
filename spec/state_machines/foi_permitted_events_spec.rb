@@ -92,8 +92,7 @@ describe Case::FOI::StandardStateMachine do
           k = create :closed_case
 
           expect(k.current_state).to eq 'closed'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
-                                                                      :destroy_case,
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:destroy_case,
                                                                       :edit_case,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
@@ -133,7 +132,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :accepted_case
 
             expect(k.current_state).to eq 'drafting'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case, :link_a_case, :remove_linked_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
         end
 
@@ -142,8 +141,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :case_with_response
 
             expect(k.current_state).to eq 'awaiting_dispatch'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                          :link_a_case,
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,
                                                                           :remove_linked_case]
           end
         end
@@ -153,7 +151,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :responded_case
 
             expect(k.current_state).to eq 'responded'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case, :link_a_case, :remove_linked_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
         end
         context 'closed state' do
@@ -161,7 +159,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :closed_case
 
             expect(k.current_state).to eq 'closed'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
         end
       end
@@ -222,7 +220,7 @@ describe Case::FOI::StandardStateMachine do
             responder = responder_in_assigned_team(k)
 
             expect(k.current_state).to eq 'responded'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case, :link_a_case, :remove_linked_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
         end
 
@@ -232,7 +230,7 @@ describe Case::FOI::StandardStateMachine do
             responder = responder_in_assigned_team(k)
 
             expect(k.current_state).to eq 'closed'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
         end
       end
@@ -279,8 +277,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :accepted_case
 
             expect(k.current_state).to eq 'drafting'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
-                                                                          :link_a_case,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [ :link_a_case,
                                                                           :remove_linked_case,
                                                                           :take_on_for_approval]
           end
@@ -291,8 +288,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :case_with_response
 
             expect(k.current_state).to eq 'awaiting_dispatch'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
-                                                                          :link_a_case,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [ :link_a_case,
                                                                           :remove_linked_case,
                                                                           :take_on_for_approval]
           end
@@ -303,7 +299,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :responded_case
 
             expect(k.current_state).to eq 'responded'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case, :link_a_case, :remove_linked_case]
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:link_a_case, :remove_linked_case]
           end
         end
 
@@ -312,7 +308,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :closed_case
 
             expect(k.current_state).to eq 'closed'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case, :link_a_case]
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:link_a_case, :remove_linked_case]
           end
         end
       end
