@@ -34,6 +34,3 @@ class Predicates
     kase.responder_assignment&.user.present?
   end
 end
-
-
-
