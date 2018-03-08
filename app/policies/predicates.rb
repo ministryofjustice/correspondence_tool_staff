@@ -13,7 +13,9 @@ class Predicates
   end
 
   def notify_responder_message_received
-    NotifyResponderService.new(@kase, 'Message received').call
+    if @user != @kase.responder_assignment&.user
+      NotifyResponderService.new(@kase, 'Message received').call
+    end
   end
   
   def user_is_assigned_disclosure_specialist?
