@@ -527,11 +527,11 @@ class Case::FOI::StandardStateMachine
     notify_responder(object, 'Message received') if able_to_send?(acting_user, object)
   end
 
-  def extend_for_pit!(acting_user:, acting_team:, deadline:, message:)
+  def extend_for_pit!(acting_user:, acting_team:, final_deadline:, message:)
     trigger! :extend_for_pit,
              acting_user_id: acting_user.id,
              acting_team_id: acting_team.id,
-             final_deadline: deadline,
+             final_deadline: final_deadline,
              message:        message,
              event:          :extend_for_pit
   end
