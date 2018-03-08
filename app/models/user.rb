@@ -23,7 +23,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable and :omniauthable
 
   devise :database_authenticatable, :timeoutable,
-    :trackable, :validatable, :recoverable
+    :trackable, :validatable, :recoverable, :lockable
 
   has_paper_trail only: [:email, :encrypted_password, :full_name, :deleted_at]
 
