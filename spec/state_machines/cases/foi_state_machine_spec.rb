@@ -486,57 +486,21 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
   describe 'trigger a reassign_user' do
 
-# a non-trigger case never has an approver assigned to them? why is this a thing?
-    # describe 'unflagged case' do
-    #   let(:kase) { case_being_drafted }
-    #
-    #   it 'triggers a reassign_user'do
-    #       expect {
-    #         kase.state_machine.reassign_user!(
-    #             target_user: other_approver,
-    #             target_team: approving_team,
-    #             acting_user: approver,
-    #             acting_team: approving_team )
-    #       }.to trigger_the_event(:reassign_user)
-    #                .on_state_machine(kase.state_machine)
-    #                .with_parameters( target_user_id: other_approver.id,
-    #                                  target_team_id: approving_team.id,
-    #                                  acting_user_id: approver.id,
-    #                                  acting_team_id: approving_team.id)
-    #   end
-    #
-    #   it 'adds a transition history record' do
-    #     kase.state_machine.reassign_user!(
-    #         target_user: another_responder,
-    #         target_team: responding_team,
-    #         acting_user: responder,
-    #         acting_team: responding_team )
-    #
-    #     transition = kase.reload.transitions.last
-    #     expect(transition.event).to eq 'reassign_user'
-    #     expect(transition.to_state).to eq 'drafting'
-    #     expect(transition.target_user_id).to eq another_responder.id
-    #     expect(transition.acting_user_id).to eq responder.id
-    #     expect(transition.target_team_id).to eq responding_team.id
-    #     expect(transition.acting_team_id).to eq responding_team.id
-    #   end
-    # end
-
     describe 'flagged case' do
       let(:kase) { flagged_accepted_case }
       it 'triggers a reassign_user'do
-        expect {
-          kase.state_machine.reassign_user!(
-              target_user: other_approver,
-              target_team: approving_team,
-              acting_user: approver,
-              acting_team: approving_team )
-        }.to trigger_the_event(:reassign_user)
-                 .on_state_machine(kase.state_machine)
-                 .with_parameters( target_user_id: other_approver.id,
-                                   target_team_id: approving_team.id,
-                                   acting_user_id: approver.id,
-                                   acting_team_id: approving_team.id)
+        expect(kase.state_machine).
+            to receive(:trigger_event).
+                with(event: :reassign_user, params: { target_user: other_approver,
+                                                      target_team: approving_team,
+                                                      acting_user: approver,
+                                                      acting_team: approving_team })
+
+        kase.state_machine.reassign_user!(
+            target_user: other_approver,
+            target_team: approving_team,
+            acting_user: approver,
+            acting_team: approving_team )
       end
 
       it 'adds a transition history record' do
@@ -579,17 +543,17 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
     let(:filenames) { ['file1.pdf', 'file2.pdf'] }
 
     it 'triggers an add_responses event' do
-      expect do
-        case_being_drafted.state_machine.add_responses! acting_user: responder,
-                                                        acting_team: case_being_drafted.responding_team,
-                                                        filenames: filenames,
-                                                        message: ' '
-      end.to trigger_the_event(:add_responses)
-               .on_state_machine(case_being_drafted.state_machine)
-               .with_parameters(acting_user_id: responder.id,
-                                acting_team_id: responding_team.id,
-                                filenames: filenames,
-                                message: ' ')
+      expect(case_being_drafted.state_machine).
+          to receive(:trigger_event).
+              with(event: :add_responses,
+                   params: {  acting_user: responder,
+                              acting_team: responding_team,
+                              filenames: filenames,
+                              message: ' ' })
+      case_being_drafted.state_machine.add_responses! acting_user: responder,
+                                                      acting_team: case_being_drafted.responding_team,
+                                                      filenames: filenames,
+                                                      message: ' '
     end
   end
 
@@ -715,7 +679,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
       expect do
         case_with_response.state_machine.extend_for_pit! acting_user: manager,
                                                          acting_team: manager.teams.first,
-                                                         deadline: new_deadline,
+                                                         final_deadline: new_deadline,
                                                          message: 'for test'
       end.to trigger_the_event(:extend_for_pit)
                .on_state_machine(case_with_response.state_machine)
