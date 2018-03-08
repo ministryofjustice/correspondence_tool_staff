@@ -439,7 +439,7 @@ feature 'FOI case that does not require clearance' do
     expect(kase.transitions.size).to eq 3
     expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
-    t = kase.transitions.last
+    t = kase.transitions.order(:sort_key).last
     expect(t.event).to eq 'accept_responder_assignment'
     expect(t.to_state).to eq 'drafting'
     expect(t.to_workflow).to eq 'standard'
@@ -462,7 +462,7 @@ feature 'FOI case that does not require clearance' do
     expect(kase.transitions.size).to eq 4
     expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
-    t = kase.transitions.last
+    t = kase.transitions.order(:sort_key).last
     expect(t.event).to eq 'add_message_to_case'
     expect(t.to_state).to eq 'drafting'
     expect(t.to_workflow).to eq 'standard'
@@ -487,7 +487,7 @@ feature 'FOI case that does not require clearance' do
     expect(kase.transitions.size).to eq 5
     expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
-    t = kase.transitions.last
+    t = kase.transitions.order(:sort_key).last
     expect(t.event).to eq 'add_responses'
     expect(t.to_state).to eq 'awaiting_dispatch'
     expect(t.to_workflow).to eq 'standard'
@@ -508,7 +508,7 @@ feature 'FOI case that does not require clearance' do
     expect(kase.transitions.size).to eq 6
     expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
-    t = kase.transitions.last
+    t = kase.transitions.order(:sort_key).last
     expect(t.event).to eq 'respond'
     expect(t.to_state).to eq 'responded'
     expect(t.to_workflow).to eq 'standard'
@@ -529,7 +529,7 @@ feature 'FOI case that does not require clearance' do
     expect(kase.transitions.size).to eq 7
     expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
-    t = kase.transitions.last
+    t = kase.transitions.order(:sort_key).last
     expect(t.event).to eq 'close'
     expect(t.to_state).to eq 'closed'
     expect(t.to_workflow).to eq 'standard'

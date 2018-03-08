@@ -23,7 +23,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable and :omniauthable
 
   devise :database_authenticatable, :timeoutable,
-    :trackable, :validatable, :recoverable
+    :trackable, :validatable, :recoverable, :lockable
 
   has_paper_trail only: [:email, :encrypted_password, :full_name, :deleted_at]
 
@@ -106,8 +106,8 @@ class User < ApplicationRecord
     super && !deleted_at
   end
 
-  def has_live_cases?
-    cases.where.not(current_state: ['closed', 'responded']).any?
+  def has_live_cases_for_team?(team)
+    cases.with_teams(team).where.not(current_state: ['closed', 'responded']).any?
   end
 
   def multiple_team_member?

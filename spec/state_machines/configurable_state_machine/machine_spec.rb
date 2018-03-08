@@ -51,7 +51,8 @@ module ConfigurableStateMachine
                   add_message_to_case: {
                     if: 'Case::FOI::StandardPolicy#can_add_message_to_case?',
                     switch_workflow: 'trigger',
-                    transition_to: 'ready_to_send'
+                    transition_to: 'ready_to_send',
+                    after_transition: 'Predicates#notify_responder_message_received'
                   },
                   add_response: nil
                 },
@@ -456,6 +457,23 @@ module ConfigurableStateMachine
           expect(transition.to_state).to eq 'drafting'
         end
 
+      end
+
+      describe 'after_transition' do
+        let(:kase)      { create :accepted_case }
+
+        it 'calls the after transition predicate' do
+
+          machine = Machine.new(config: config, kase: kase)
+          service = double NotifyResponderService, call: :ok
+          expect(NotifyResponderService).to receive(:new).with(kase, 'Message received').and_return(service)
+          expect(service).to receive(:call)
+
+          machine.add_message_to_case!(
+              message: 'NNNN',
+              acting_team: @managing_team,
+              acting_user: @manager)
+        end
       end
     end
 

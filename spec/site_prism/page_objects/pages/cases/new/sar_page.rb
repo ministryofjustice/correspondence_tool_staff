@@ -26,6 +26,9 @@ module PageObjects
           element :full_request, '#case_sar_message'
           element :dropzone_container, '.dropzone'
 
+          # only shows up when using drop_in_dropzone
+          element :uploaded_request_file_input, '#uploadedRequestFileInput'
+
           element :reply_method, :xpath,
                   '//fieldset[contains(.,"Where the information should be sent")]'
           element :email, '#case_sar_email'

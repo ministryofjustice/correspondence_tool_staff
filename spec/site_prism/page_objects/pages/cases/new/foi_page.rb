@@ -31,6 +31,9 @@ module PageObjects
 
           element :dropzone_container, '.dropzone'
 
+          # only shows up when using drop_in_dropzone
+          element :uploaded_request_file_input, '#uploadedRequestFileInput'
+
           element :submit_button, '.button'
 
           def choose_type_of_requester(requester_type)
