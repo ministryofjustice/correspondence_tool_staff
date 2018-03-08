@@ -418,6 +418,38 @@ module ConfigurableStateMachine
           end
         end
 
+        context 'after_transition' do
+          it 'does not error if no after_transition is supplied' do
+            hash = config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.to_h
+            expect(hash.key?(:after_transition)).to be false
+            validator = ConfigValidator.new(config, 'xxx.yml')
+            expect{validator.run}.not_to raise_error
+          end
+
+          it "does not error if 'after_transition' value is nil" do
+            config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.after_transition = nil
+            expect(config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.to_h[:after_transition]).to be_nil
+            validator = ConfigValidator.new(config, 'xxx.yml')
+            expect{validator.run}.not_to raise_error
+          end
+
+          it 'does not error if specified method exists on specified object' do
+            config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.after_transition = 'ConfigurableStateMachine::DummyPredicate#can_assign_responder?'
+            validator = ConfigValidator.new(config, 'xxx.yml')
+            expect{validator.run}.not_to raise_error
+          end
+
+          it 'raises if the specified method does not exist on the specified object' do
+            config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.after_transition = 'ConfigurableStateMachine::DummyPredicate#can_assign_manager?'
+            validator = ConfigValidator.new(config, 'xxx.yml')
+            expect{validator.run}.to raise_error ConfigurationError do |error|
+              expect(error.message).to match(/case_types\/foi\/workflows\/standard\/user_roles\/manager\/states\/unassigned\/assign_responder/)
+              expect(error.message).to match(/No such instance method 'can_assign_manager\?' on class ConfigurableStateMachine::DummyPredicate/)
+            end
+          end
+        end
+
+
         context 'switch workflow' do
           context 'no switch workflow' do
             it 'is valid' do

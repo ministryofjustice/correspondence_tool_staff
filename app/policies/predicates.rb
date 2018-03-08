@@ -12,9 +12,8 @@ class Predicates
     end
   end
 
-  def outside_escalation_deadline?
-
+  def notify_responder_message_received
+    NotifyResponderService.new(@kase, 'Message received').call
   end
-
 
 end
