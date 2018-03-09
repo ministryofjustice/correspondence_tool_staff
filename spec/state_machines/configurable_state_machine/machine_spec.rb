@@ -52,7 +52,7 @@ module ConfigurableStateMachine
                     if: 'Case::FOI::StandardPolicy#can_add_message_to_case?',
                     switch_workflow: 'trigger',
                     transition_to: 'ready_to_send',
-                    after_transition: 'Predicates#notify_responder_message_received'
+                    after_transition: 'Workflows::Hooks#notify_responder_message_received'
                   },
                   add_response: nil
                 },

@@ -105,7 +105,7 @@ case_types:
 
               drafting:
                 add_message_to_case:
-                  after_transition: Predicates#notify_responder_message_received
+                  after_transition: Workflows::Hooks#notify_responder_message_received
                 assign_to_new_team:
                   transition_to: awaiting_responder
                 destroy_case:
@@ -120,7 +120,7 @@ case_types:
 
               awaiting_dispatch:
                 add_message_to_case:
-                  after_transition: Predicates#notify_responder_message_received
+                  after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
                 flag_for_clearance:
@@ -133,7 +133,7 @@ case_types:
 
               responded:
                 add_message_to_case:
-                  after_transition: Predicates#notify_responder_message_received
+                  after_transition: Workflows::Hooks#notify_responder_message_received
                 close:
                   transition_to: closed
                 destroy_case:
@@ -152,7 +152,7 @@ case_types:
               unassigned:
                 accept_approver_assignment:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#approver_is_member_of_approving_teams?
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -169,7 +169,7 @@ case_types:
                 accept_approver_assignment:
                   switch_workflow: trigger
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#approver_is_member_of_approving_teams?
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -182,10 +182,10 @@ case_types:
 
               drafting:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
-                  after_transition: Predicates#notify_responder_message_received
+                  if: Workflows::Predicates#approver_is_member_of_approving_teams?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
                 extend_for_pit:
-                  if: Predicates#user_is_assigned_disclosure_specialist?
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
@@ -195,10 +195,10 @@ case_types:
 
               awaiting_dispatch:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
-                  after_transition: Predicates#notify_responder_message_received
+                  if: Workflows::Predicates#approver_is_member_of_approving_teams?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
                 extend_for_pit:
-                  if: Predicates#user_is_assigned_disclosure_specialist?
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
@@ -209,9 +209,9 @@ case_types:
               responded:
                 add_message_to_case:
                   if: Case::BasePolicy#can_add_message_to_case?
-                  after_transition: Predicates#notify_responder_message_received
+                  after_transition: Workflows::Hooks#notify_responder_message_received
                 extend_for_pit:
-                  if: Predicates#user_is_assigned_disclosure_specialist?
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
@@ -225,54 +225,54 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
 
               awaiting_responder:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 accept_responder_assignment:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: drafting
                 reject_responder_assignment:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: unassigned
                 link_a_case:
                 remove_linked_case:
 
               drafting:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
-                  after_transition: Predicates#notify_responder_message_received
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
                 add_responses:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: awaiting_dispatch
                 link_a_case:
                 reassign_user:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 remove_linked_case:
 
               awaiting_dispatch:
                  add_message_to_case:
-                   if: Case::BasePolicy#can_add_message_to_case?
-                   after_transition: Predicates#notify_responder_message_received
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                   after_transition: Workflows::Hooks#notify_responder_message_received
                  add_responses:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                  link_a_case:
                  reassign_user:
-                   if: Predicates#responder_is_member_of_assigned_team?
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                    if: Case::BasePolicy#assignments_reassign_user?
                  remove_linked_case:
                  remove_response:
-                   if: Predicates#responder_is_member_of_assigned_team?
-                   transition_to_using: Conditionals#remove_response
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                   transition_to_using: Workflows::Conditionals#remove_response
                  respond:
-                   if: Predicates#responder_is_member_of_assigned_team?
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                    transition_to: responded
 
               responded:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
-                  after_transition: Predicates#notify_responder_message_received
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
                 link_a_case:
                 remove_linked_case:
 
@@ -317,7 +317,6 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
                 assign_responder:
                   transition_to: awaiting_responder
                 destroy_case:
@@ -333,7 +332,6 @@ case_types:
 
               awaiting_responder:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
                 assign_to_new_team:
                   transition_to: awaiting_responder
                 destroy_case:
@@ -349,7 +347,6 @@ case_types:
 
               drafting:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
                 assign_to_new_team:
                 assign_to_new_team:
                   transition_to: awaiting_responder
@@ -371,7 +368,7 @@ case_types:
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#approver_is_member_of_approving_teams?
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
@@ -389,7 +386,7 @@ case_types:
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#approver_is_member_of_approving_teams?
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
@@ -406,9 +403,9 @@ case_types:
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#approver_is_member_of_approving_teams?
                 extend_for_pit:
-                  if: Predicates#user_is_assigned_disclosure_specialist?
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
@@ -429,21 +426,21 @@ case_types:
 
               awaiting_responder:
                 accept_responder_assignment:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: drafting
                 add_message_to_case:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 link_a_case:
                 remove_linked_case:
                 reject_responder_assignment:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: unassigned
 
               drafting:
                 add_message_to_case:
                   if: Case::BasePolicy#can_add_message_to_case?
                 add_response_to_flagged_case:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: pending_dacu_clearance
                 link_a_case:
                 reassign_user:
@@ -519,30 +516,30 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
 
               awaiting_responder:
                 accept_responder_assignment:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: drafting
                 add_message_to_case:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 reject_responder_assignment:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: unassigned
 
               drafting:
                 add_message_to_case:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 close:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
                 reassign_user:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
 
               closed:
                 add_message_to_case:
-                  if: Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
 
 
           ########################### SAR :: STANDARD WORKFLOW :: APPROVER ########################
@@ -550,3 +547,4 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
+                  if: Workflows::Predicates#approver_is_member_of_approving_teams?

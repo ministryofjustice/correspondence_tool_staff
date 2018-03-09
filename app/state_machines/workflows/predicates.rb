@@ -1,4 +1,4 @@
-class Predicates
+class Workflows::Predicates
   def initialize(user:, kase:)
     @user = user
     @kase = kase
@@ -14,6 +14,10 @@ class Predicates
 
   def notify_responder_message_received
     NotifyResponderService.new(@kase, 'Message received').call if able_to_send?(@user, @kase)
+  end
+
+  def approver_is_member_of_approving_teams?
+    @user.in?(@kase.approvers)
   end
 
   def user_is_assigned_disclosure_specialist?

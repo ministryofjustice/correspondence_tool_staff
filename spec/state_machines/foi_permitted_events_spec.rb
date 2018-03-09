@@ -220,7 +220,7 @@ describe Case::FOI::StandardStateMachine do
             responder = responder_in_assigned_team(k)
 
             expect(k.current_state).to eq 'responded'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case, :link_a_case, :remove_linked_case]
           end
         end
 
@@ -569,7 +569,7 @@ describe Case::FOI::StandardStateMachine do
 
             expect(k.current_state).to eq 'unassigned'
             expect(k.state_machine.permitted_events(disclosure_specialist.id)).to eq [:accept_approver_assignment,
-                                                                                      :add_message_to_case,
+                                                                                      # :add_message_to_case,
                                                                                       :flag_for_clearance,
                                                                                       :link_a_case,
                                                                                       :remove_linked_case,
@@ -583,7 +583,7 @@ describe Case::FOI::StandardStateMachine do
 
             expect(k.current_state).to eq 'awaiting_responder'
             expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
-                                                                         :add_message_to_case,
+                                                                         # :add_message_to_case,
                                                                          :flag_for_clearance,
                                                                          :link_a_case,
                                                                          :reassign_user,
@@ -598,7 +598,7 @@ describe Case::FOI::StandardStateMachine do
 
             expect(k.current_state).to eq 'drafting'
             expect(k.state_machine.permitted_events(approver.id)).to eq [ :accept_approver_assignment,
-                                                                          :add_message_to_case,
+                                                                          # :add_message_to_case,
                                                                           :flag_for_clearance,
                                                                           :link_a_case,
                                                                           :reassign_user,

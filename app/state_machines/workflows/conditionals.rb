@@ -1,4 +1,4 @@
-class Conditionals
+class Workflows::Conditionals
   def initialize(user:, kase:)
     @user = user
     @kase = kase
