@@ -60,5 +60,11 @@ Rails.application.configure do
   #
   config.lograge.keep_original_rails_log = true
   config.lograge.logger = ActiveSupport::Logger.new "#{Rails.root}/log/lograge_#{Rails.env}.log"
+
+  if defined?(BetterErrors)
+    if ENV.key? 'SHOW_BETTER_ERRORS_TO'
+      BetterErrors::Middleware.allow_ip! ENV['SHOW_BETTER_ERRORS_TO']
+    end
+  end
 end
 

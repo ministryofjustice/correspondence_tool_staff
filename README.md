@@ -231,19 +231,27 @@ We have functionality to create an anonymised copy of the production or staging 
 
 If the options above do not solve the issue you by create an anonymised dump of the database by running
 
-```rake db:dump:prod[host]```
+```
+rake db:dump:prod[host]
+```
 
 there are also options to create an anonymised version of the local database
 
-```rake db:dump:local[filename,anon]```
+```
+rake db:dump:local[filename,anon]
+```
 
 or a standard copy
 
-```rake db:dump:local[filename,clear]```
+```
+rake db:dump:local[filename,clear]
+```
 
 For more help with the data dump tasks run:
 
-```rake db:dump:help```
+```
+rake db:dump:help
+```
 
 
 ### Testing
@@ -320,6 +328,23 @@ and then run
 ```
 bundle exec rails smoke
 ```
+
+### Deploying
+
+#### Dockerfiles
+
+Docker files:
+
+```
+Dockerfile.app-base      - base image used by non-uploads containers
+  +- Dockerfile          - web application Rails process
+  +- Dockerfile.mailer   - email notifications sidekiq job
+  +- Dockerfile.reports  - reports generator sidekiq job
+
+Dockerfile.uploads-base
+  +- Dockerfile.uploads  - uploads post-processing sidekiq job
+```
+
 
 # Case Journey
 1. **unassigned**  

@@ -1,7 +1,6 @@
-FROM registry.service.dsd.io/correspondence-staff-app
+FROM registry.service.dsd.io/correspondence-staff-app-base
 
 ENV PUMA_PORT 3000
-# ENV RAILS_ENV=production
 
 EXPOSE $PUMA_PORT
 

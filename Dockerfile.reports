@@ -1,3 +1,3 @@
-FROM registry.service.dsd.io/correspondence-staff-app
+FROM registry.service.dsd.io/correspondence-staff-app-base
 
 ENTRYPOINT ["./run-reports.sh"]
