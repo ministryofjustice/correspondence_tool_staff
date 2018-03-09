@@ -263,7 +263,7 @@ feature 'FOI case that does not require clearance' do
     expect(kase.current_state).to eq 'pending_dacu_clearance'
     expect(kase.workflow).to eq 'trigger'
     expect(kase.transitions.size).to eq 16
-    expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+    expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
     t = kase.transitions.order(:sort_key).last
     expect(t.event).to eq 'add_response_to_flagged_case'

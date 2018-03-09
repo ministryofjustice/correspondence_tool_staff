@@ -377,6 +377,49 @@ describe Case::FOI::StandardStateMachine do
         end
       end
 
+      context 'pending_dacu_clearance' do
+        it 'shows events' do
+          k = create :pending_dacu_clearance_case, :flagged, :dacu_disclosure
+
+          expect(k.current_state).to eq 'pending_dacu_clearance'
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
+                                                                      :destroy_case,
+                                                                      :edit_case,
+                                                                      :link_a_case,
+                                                                      :remove_linked_case,
+                                                                      :request_further_clearance,
+                                                                      :unflag_for_clearance]
+        end
+      end
+
+      context 'pending_press_clearance' do
+        it 'shows events' do
+          k = create :pending_press_clearance_case
+
+          expect(k.current_state).to eq 'pending_press_office_clearance'
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
+                                                                      :destroy_case,
+                                                                      :edit_case,
+                                                                      :extend_for_pit,
+                                                                      :link_a_case,
+                                                                      :remove_linked_case]
+        end
+      end
+
+      context 'pending_private_clearance' do
+        it 'shows events' do
+          k = create :pending_private_clearance_case
+
+          expect(k.current_state).to eq 'pending_private_office_clearance'
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
+                                                                      :destroy_case,
+                                                                      :edit_case,
+                                                                      :extend_for_pit,
+                                                                      :link_a_case,
+                                                                      :remove_linked_case]
+        end
+      end
+
       context 'awaiting_dispatch' do
         it 'shows events' do
           k = create :case_with_response, :flagged, :dacu_disclosure
@@ -459,6 +502,34 @@ describe Case::FOI::StandardStateMachine do
           end
         end
 
+        context 'pending_dacu_clearance state' do
+          it 'shows events' do
+            k = create :pending_dacu_clearance_case
+
+            expect(k.current_state).to eq 'pending_dacu_clearance'
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,
+                                                                          :remove_linked_case]
+          end
+        end
+
+        context 'pending_press_clearance state' do
+          it 'shows events' do
+            k = create :pending_press_clearance_case
+
+            expect(k.current_state).to eq 'pending_press_office_clearance'
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:extend_for_pit, :link_a_case, :remove_linked_case]
+          end
+        end
+
+        context 'pending_private_clearance state' do
+          it 'shows events' do
+            k = create :pending_private_clearance_case
+
+            expect(k.current_state).to eq 'pending_private_office_clearance'
+            expect(k.state_machine.permitted_events(responder.id)).to eq  [:extend_for_pit, :link_a_case, :remove_linked_case]
+          end
+        end
+
         context 'awaiting_dispatch' do
           it 'shows events' do
             k = create :case_with_response, :flagged, :dacu_disclosure
@@ -508,6 +579,47 @@ describe Case::FOI::StandardStateMachine do
                                                                           :reassign_user,
                                                                           :remove_linked_case,
                                                                           :upload_responses]
+          end
+        end
+
+        context 'pending_dacu_clearance state' do
+          it 'shows events' do
+            k = create :pending_dacu_clearance_case, :flagged, :dacu_disclosure
+            responder = responder_in_assigned_team(k)
+
+            expect(k.current_state).to eq 'pending_dacu_clearance'
+            expect(k.state_machine.permitted_events(responder.id)).to eq  [:add_message_to_case,
+                                                                           :link_a_case,
+                                                                           :reassign_user,
+                                                                           :remove_linked_case]
+          end
+        end
+
+        context 'pending_press_clearance state' do
+          it 'shows events' do
+            k = create :pending_press_clearance_case
+            responder = responder_in_assigned_team(k)
+
+            expect(k.current_state).to eq 'pending_press_office_clearance'
+            expect(k.state_machine.permitted_events(responder.id)).to eq   [:add_message_to_case,
+                                                                            :extend_for_pit,
+                                                                            :link_a_case,
+                                                                            :reassign_user,
+                                                                            :remove_linked_case]
+          end
+        end
+
+        context 'pending_private_clearance state' do
+          it 'shows events' do
+            k = create :pending_private_clearance_case
+            responder = responder_in_assigned_team(k)
+
+            expect(k.current_state).to eq 'pending_private_office_clearance'
+            expect(k.state_machine.permitted_events(responder.id)).to eq   [:add_message_to_case,
+                                                                            :extend_for_pit,
+                                                                            :link_a_case,
+                                                                            :reassign_user,
+                                                                            :remove_linked_case]
           end
         end
 
@@ -607,6 +719,45 @@ describe Case::FOI::StandardStateMachine do
           end
         end
 
+        context 'pending_dacu_clearance state' do
+          it 'shows events' do
+            k = create :pending_dacu_clearance_case, :flagged, :dacu_disclosure
+
+            expect(k.current_state).to eq 'pending_dacu_clearance'
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                         :link_a_case,
+                                                                         :reassign_user,
+                                                                         :remove_linked_case,
+                                                                         :unflag_for_clearance]
+          end
+        end
+
+        context 'pending_press_clearance state' do
+          it 'shows events' do
+            k = create :pending_press_clearance_case, :flagged, :dacu_disclosure
+
+            expect(k.current_state).to eq 'pending_press_office_clearance'
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                        :extend_for_pit,
+                                                                        :link_a_case,
+                                                                        :reassign_user,
+                                                                        :remove_linked_case]
+          end
+        end
+
+        context 'pending_private_clearance state' do
+          it 'shows events' do
+            k = create :pending_private_clearance_case, :flagged, :dacu_disclosure
+
+            expect(k.current_state).to eq 'pending_private_office_clearance'
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                          :extend_for_pit,
+                                                                          :link_a_case,
+                                                                          :reassign_user,
+                                                                          :remove_linked_case]
+          end
+        end
+
         context 'awaiting_dispatch' do
           it 'shows events' do
             # this needs to be corrected when switched to config state machine - no request further clearance or extend for pit
@@ -697,6 +848,53 @@ describe Case::FOI::StandardStateMachine do
                                                                        :remove_linked_case,
                                                                        :unaccept_approver_assignment,
                                                                        :unflag_for_clearance]
+        end
+      end
+
+      context 'pending_dacu_clearance state' do
+        it 'shows events' do
+          k = create :pending_dacu_clearance_case, :flagged_accepted, :dacu_disclosure
+          approver = approver_in_assigned_team(k)
+
+          expect(k.current_state).to eq 'pending_dacu_clearance'
+          expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                      :approve,
+                                                                      :extend_for_pit,
+                                                                      :link_a_case,
+                                                                      :reassign_user,
+                                                                      :remove_linked_case,
+                                                                      :unaccept_approver_assignment,
+                                                                      :unflag_for_clearance,
+                                                                      :upload_response_and_approve,
+                                                                      :upload_response_and_return_for_redraft]
+        end
+      end
+
+      context 'pending_press_clearance state' do
+        it 'shows events' do
+          k = create :pending_press_clearance_case
+          approver = approver_in_assigned_team(k)
+
+          expect(k.current_state).to eq 'pending_press_office_clearance'
+          expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                       :extend_for_pit,
+                                                                       :link_a_case,
+                                                                       :reassign_user,
+                                                                       :remove_linked_case]
+        end
+      end
+
+      context 'pending_press_clearance state' do
+        it 'shows events' do
+          k = create :pending_private_clearance_case
+          approver = approver_in_assigned_team(k)
+
+          expect(k.current_state).to eq 'pending_private_office_clearance'
+          expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                       :extend_for_pit,
+                                                                       :link_a_case,
+                                                                       :reassign_user,
+                                                                       :remove_linked_case]
         end
       end
 

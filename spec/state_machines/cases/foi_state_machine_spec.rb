@@ -441,18 +441,18 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
   describe 'trigger unflag_for_clearance!' do
     it 'triggers an unflag_for_clearance event' do
-      expect do
-        assigned_flagged_case.state_machine.unflag_for_clearance!(acting_user: manager,
-                                                                  acting_team: managing_team,
-                                                                  target_team: approving_team,
-                                                                  message: "message")
-      end
-        .to trigger_the_event(:unflag_for_clearance)
-              .on_state_machine(assigned_flagged_case.state_machine)
-              .with_parameters acting_user_id: manager.id,
-                               acting_team_id: managing_team.id,
-                               target_team_id: approving_team.id,
-                               message: "message"
+      expect (kase.state_machine).
+        to receive(:trigger_event).
+          with(event: :unflag_for_clearance, params: { acting_user: manager,
+                                                       acting_team: managing_team,
+                                                       target_team: approving_team,
+                                                       message: "message" })
+      kase.state_machine.unflag_for_clearance!(
+         acting_user: manager,
+         acting_team: managing_team,
+         target_team: approving_team,
+         message: "message"
+      )
     end
   end
 
@@ -536,16 +536,16 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
     let(:message) { |example| "test #{example.description}" }
 
     it 'triggers a reject_responder_assignment event' do
-      expect do
-        assigned_flagged_case.state_machine.reject_responder_assignment! acting_user: responder,
-                                                                 acting_team: responding_team,
-                                                                 message: message
-      end.to trigger_the_event(:reject_responder_assignment)
-               .on_state_machine(assigned_flagged_case.state_machine)
-               .with_parameters(acting_user_id: responder.id,
-                                acting_team_id: responding_team.id,
-                                message: message,
-                                event: :reject_responder_assignment)
+      expect(kase.state_machine).
+          to receive(:trigger_event).
+              with(event: :reject_responder_assignment, params: { acting_user: responder,
+                                                                  acting_team: responding_team,
+                                                                  message: message })
+
+      kase.state_machine.reject_responder_assignment!(
+        acting_user: responder,
+        acting_team: responding_team,
+        message: message )
     end
   end
 
@@ -712,13 +712,16 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
     describe 'trigger approve!' do
       it 'triggers an approve event' do
-        expect {
-          state_machine.approve!(acting_user: approver, acting_team: kase.approver_assignments.first.team)
-        }.to trigger_the_event(:approve).on_state_machine(state_machine).with_parameters(
+        expect(kase.state_machine).
+          to receive(:trigger_event).
+            with(event: :approve, params: { acting_user_id: approver.id,
+                                            acting_team_id: team_id})
+        kase.state_machine.approve!(
           acting_user_id: approver.id,
           acting_team_id: team_id
         )
       end
+
       it 'calls the notify responder service' do
         state_machine.approve!(acting_user: approver, acting_team: kase.approver_assignments.first.team)
         expect(NotifyResponderService)
@@ -755,12 +758,23 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
     describe 'trigger upload_response_and_return_for_redraft!' do
       it 'triggers an upload_response_and_return_for_redraft event' do
+<<<<<<< HEAD
         expect {
           state_machine.upload_response_and_return_for_redraft!(acting_user: approver,
                                                                 acting_team: kase.approving_teams.first,
                                                                 message: 'Uploading....',
                                                                 filenames: filenames)
         }.to trigger_the_event(:upload_response_and_return_for_redraft).on_state_machine(state_machine).with_parameters(
+=======
+
+        expect(kase.state_machine).
+          to receive(:trigger_event).
+            with(event: :upload_response_and_return_for_redraft, params: { acting_user_id: approver.id,
+                                                                           acting_team_id: team_id,
+                                                                           filenames: filenames,
+                                                                           message: 'Uploading....' })
+        kase.state_machine.upload_response_and_return_for_redraft!(
+>>>>>>> CT-1612 adds permitted events for trigger pending dacu_clearance state_machine
           acting_user_id: approver.id,
           acting_team_id: team_id,
           filenames: filenames,

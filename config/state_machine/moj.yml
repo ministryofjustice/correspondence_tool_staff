@@ -317,6 +317,7 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
                 assign_responder:
                   transition_to: awaiting_responder
                 destroy_case:
@@ -355,7 +356,7 @@ case_types:
 
               awaiting_responder:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  after_transition: Predicates#notify_responder_message_received
                 assign_to_new_team:
                   transition_to: awaiting_responder
                 destroy_case:
@@ -371,13 +372,25 @@ case_types:
 
               drafting:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
-                assign_to_new_team:
+                  after_transition: Predicates#notify_responder_message_received
                 assign_to_new_team:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
                 flag_for_clearance:
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+                unflag_for_clearance:
+                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
+                  switch_workflow: standard
+
+              pending_dacu_clearance:
+                add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
+                destroy_case:
+                edit_case:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
@@ -394,6 +407,7 @@ case_types:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
+                  after_transition: Predicates#notify_responder_message_received
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
@@ -413,6 +427,7 @@ case_types:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
+                  after_transition: Predicates#notify_responder_message_received
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
@@ -450,6 +465,7 @@ case_types:
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
                   if: Case::BasePolicy#can_add_message_to_case?
                 extend_for_pit:
                   if: Predicates#user_is_assigned_disclosure_specialist?
@@ -465,10 +481,39 @@ case_types:
                 unflag_for_clearance:
                   switch_workflow: standard
 
+              pending_dacu_clearance:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
+                add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
+                  if: Case::BasePolicy#can_add_message_to_case?
+                approve:
+                  if: Predicates#user_is_assigned_disclosure_specialist?
+                  transition_to_using: Conditionals#flagged_for_press
+                extend_for_pit:
+                  if: Predicates#user_is_assigned_disclosure_specialist?
+                link_a_case:
+                reassign_user:
+                remove_linked_case:
+                unaccept_approver_assignment:
+                  if: Predicates#user_is_assigned_disclosure_specialist?
+                unflag_for_clearance:
+                  switch_workflow: standard
+                  transition_to: awaiting_dispatch
+                  after_transition: Predicates#notify_responder_ready_to_send
+                upload_response_and_approve:
+                  if: Predicates#user_is_assigned_disclosure_specialist?
+                  transition_to_using: Conditionals#flagged_for_press
+                upload_response_and_return_for_redraft:
+                  if: Predicates#user_is_assigned_disclosure_specialist?
+                  after_transition: Predicates#notify_responder_redraft_requested
+                  transition_to: drafting
+
           responder:
             states:
               unassigned:
                 add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
                   if: Case::BasePolicy#can_add_message_to_case?
 
               awaiting_responder:
@@ -477,6 +522,7 @@ case_types:
                   transition_to: drafting
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Predicates#notify_responder_message_received
                 link_a_case:
                 remove_linked_case:
                 reject_responder_assignment:
@@ -485,6 +531,7 @@ case_types:
 
               drafting:
                 add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
                   if: Case::BasePolicy#can_add_message_to_case?
                 add_response_to_flagged_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
@@ -495,7 +542,14 @@ case_types:
                 remove_linked_case:
                 upload_responses:
 
-
+              pending_dacu_clearance:
+                add_message_to_case:
+                  after_transition: Predicates#notify_responder_message_received
+                  if: Case::BasePolicy#can_add_message_to_case?
+                link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
 
 #########################################################################
 #                                                                       #
