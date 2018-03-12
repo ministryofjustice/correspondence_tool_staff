@@ -96,7 +96,7 @@ module CaseStates
     if self.type_abbreviation == 'SAR'
       ConfigurableStateMachine::Machine
     else
-      configurable_states = workflow == 'trigger' ? TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE : NON_TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE
+      configurable_states = workflow == 'trigger' || workflow == 'full_approval' ? TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE : NON_TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE
       if current_state.in?(configurable_states)
         ConfigurableStateMachine::Machine
       else

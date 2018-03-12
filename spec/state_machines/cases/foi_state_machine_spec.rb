@@ -441,7 +441,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
   describe 'trigger unflag_for_clearance!' do
     it 'triggers an unflag_for_clearance event' do
-      expect (kase.state_machine).
+      expect(kase.state_machine).
         to receive(:trigger_event).
           with(event: :unflag_for_clearance, params: { acting_user: manager,
                                                        acting_team: managing_team,
@@ -481,15 +481,17 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   end
 
   describe 'trigger accept_responder_assignment!' do
+    let(:assigned_flagged_case)      { create :awaiting_responder_case, :flagged }
+
     it 'triggers an accept_responder_assignment event' do
-      expect do
-        assigned_flagged_case.state_machine.accept_responder_assignment!(
-                            acting_user: responder,
-                            acting_team: responding_team)
-      end.to trigger_the_event(:accept_responder_assignment)
-               .on_state_machine(assigned_flagged_case.state_machine)
-               .with_parameters(acting_user_id: responder.id,
-                                acting_team_id: responding_team.id)
+      expect(assigned_flagged_case.state_machine).to receive(:trigger_event).with(event: :accept_responder_assignment,
+                                                                params:{
+                                                                  acting_user: responder,
+                                                                  acting_team: responding_team})
+      assigned_flagged_case.state_machine.accept_responder_assignment!(
+        acting_user: responder,
+        acting_team: responding_team )
+
     end
   end
 
@@ -733,6 +735,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
     describe 'trigger upload_response_and_approve!' do
       it 'triggers an upload_response_and_approve_event' do
+<<<<<<< HEAD
         expect {
           state_machine.upload_response_and_approve!(acting_user: approver,
                                                      acting_team: kase.approving_teams.first,
@@ -744,11 +747,26 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
           filenames: filenames,
           message: 'Uploading....'
         )
+=======
+        expect(state_machine).to receive(:trigger_event).with(event: :upload_response_and_approve,
+                                                                  params:{
+                                                                  acting_user: approver,
+                                                                  acting_team: kase.approving_teams.first,
+                                                                  filenames: filenames })
+        kase.state_machine.upload_response_and_approve!(
+          acting_user: approver,
+          acting_team: kase.approving_teams.first,
+          filenames: filenames )
+>>>>>>> CT-1612 creates full_approval workflow
       end
+
       it 'calls the notify responder service' do
         state_machine.upload_response_and_approve!(acting_user: approver,
                                                    acting_team: kase.approving_teams.first,
+<<<<<<< HEAD
                                                    message: nil,
+=======
+>>>>>>> CT-1612 creates full_approval workflow
                                                    filenames: filenames)
         expect(NotifyResponderService)
           .to have_received(:new).with(kase, 'Ready to send')
