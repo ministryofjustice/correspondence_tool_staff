@@ -29,8 +29,4 @@ class Predicates
   def notify_responder_ready_to_send
     NotifyResponderService.new(@kase, 'Ready to send').call
   end
-
-  def notify_approver_ready_for_review
-
-  end
 end

@@ -1,7 +1,6 @@
 Run options: include {:focus=>true}
 
 All examples were filtered out; ignoring {:focus=>true}
-<<<<<<< HEAD
 spec/controllers/cases_controller/destroy_case_link_spec.rb:2.076176
 spec/controllers/cases_controller/new_spec.rb:1.642964
 spec/decorators/foi_compliance_review_spec.rb:0.346423
@@ -32,41 +31,6 @@ spec/views/cases/_what_do_you_want_to_do_html_slim_spec.rb:1.778944
 spec/views/cases/respond_html_slim_spec.rb:0.750495
 spec/views/cases/sar/_new_html_slim_spec.rb:0.002865
 spec/views/layouts/_global_nav_html_slim_spec.rb:0.079233
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-spec/controllers/cases_controller/destroy_case_link_spec.rb:1.840502
-spec/controllers/cases_controller/new_spec.rb:1.404142
-spec/decorators/foi_compliance_review_spec.rb:0.290921
-spec/decorators/foi_timeliness_review_spec.rb:0.192793
-spec/decorators/user_decorator_spec.rb:2.165051
-spec/factory_specs/business_unit_factory_spec.rb:0.80883
-spec/features/admin/add_information_officer_spec.rb:2.232884
-spec/features/cases/foi/case_listing/pagination_spec.rb:8.989178
-spec/features/cases/foi/case_reassign_user/reassign_user_spec.rb:13.22835
-spec/features/cases/foi/case_request_further_clearance_spec.rb:4.86926
-spec/features/cases/foi/link_a_case_spec.rb:7.665106
-spec/helpers/cases_helper_spec.rb:5.852824
-spec/i18n_spec.rb:122.686619
-spec/jobs/report_generator_job_spec.rb:0.462717
-spec/lib/events_spec.rb:0.056016
-spec/models/case/sar_spec.rb:3.399753
-spec/models/case_attachment_upload_group_spec.rb:2.280697
-spec/policies/assignment_policy_spec.rb:6.634491
-spec/policies/case_policy_spec.rb:10.39635
-spec/policies/cases/standard_policy_spec.rb:16.670283
-spec/policies/team_policy_spec.rb:4.447524
-spec/routing/cases_routes_spec.rb:0.740268
-spec/services/state_selector_spec.rb:0.021884
-spec/services/stats/r005_monthly_performance_report_spec.rb:6.070925
-spec/services/stats/stats_collector_spec.rb:0.041527
-spec/views/cases/_case_details_html_slim_spec.rb:4.6633
-spec/views/cases/_what_do_you_want_to_do_html_slim_spec.rb:1.904545
-spec/views/cases/respond_html_slim_spec.rb:0.808979
-spec/views/cases/sar/_new_html_slim_spec.rb:0.003004
-spec/views/layouts/_global_nav_html_slim_spec.rb:0.087335
->>>>>>> CT-1612 creates full_approval workflow
 Run options: include {:focus=>true}
 
 All examples were filtered out; ignoring {:focus=>true}
@@ -252,7 +216,6 @@ spec/policies/cases/base_policy_spec.rb:276.485106
 Run options: include {:focus=>true}
 
 All examples were filtered out; ignoring {:focus=>true}
-<<<<<<< HEAD
 spec/controllers/assignments_controller_spec.rb:43.61368
 spec/controllers/cases_controller/request_further_clearance_spec.rb:3.033173
 spec/controllers/cases_controller/unflag_for_clearance_spec.rb:6.498185
@@ -286,111 +249,6 @@ spec/views/stats/custom_html_slim_spec.rb:0.037682
 spec/views/teams/show_html_slim_spec.rb:2.280159
 spec/views/users/new_html_slim_spec.rb:0.216872
 =======
-spec/controllers/assignments_controller_spec.rb:42.799479
-spec/controllers/cases_controller/request_further_clearance_spec.rb:4.015057
-spec/controllers/cases_controller/unflag_for_clearance_spec.rb:6.815773
-spec/controllers/feedback_controller_spec.rb:0.182408
-spec/controllers/heartbeat_controller_spec.rb:0.061008
-spec/controllers/stats_controller/index_spec.rb:0.951025
-spec/features/admin/business_units_spec.rb:5.721653
-spec/features/cases/foi/case_approvals/private_office_approvals_spec.rb:17.395546
-spec/features/cases/foi/case_assignment_responding_spec.rb:9.357257
-spec/features/cases/foi/case_viewing/downloading_response_spec.rb:4.488002
-spec/features/cases/foi/editing_case_spec.rb:4.252793
-spec/features/user_journeys/foi/compliance_review_trigger_e2e_spec.rb:41.037858
-spec/features/user_journeys/foi/downloading_stats_spec.rb:5.828662
-spec/features/user_journeys/foi/state_machines_and_workflows_spec.rb:83.25271
-spec/helpers/assignments_helper_spec.rb:2.913891
-spec/models/case_attachment_upload_group_collection_spec.rb:2.093479
-spec/models/case_closure/refusal_reason_spec.rb:0.065978
-spec/models/cases_users_transitions_tracker_spec.rb:3.732202
-spec/models/report_type_spec.rb:0.042445
-spec/models/team_spec.rb:3.835688
-spec/policies/user_policy_spec.rb:0.552098
-spec/routing/application_routes_spec.rb:0.650753
-spec/services/case_approval_service_spec.rb:13.603626
-spec/services/stats/case_selector_spec.rb:6.449826
-spec/services/user_creation_service_spec.rb:0.961296
-spec/state_machines/cases/foi_state_machine_spec.rb:20.187052
-spec/state_machines/configurable_state_machine/manager_spec.rb:0.10776
-spec/state_machines/sar_permitted_events_spec.rb:4.274765
-spec/views/assignments/new_page_spec.rb:0.690535
-spec/views/stats/custom_html_slim_spec.rb:0.037985
-spec/views/teams/show_html_slim_spec.rb:2.306954
-spec/views/users/new_html_slim_spec.rb:0.165186
-=======
-spec/controllers/cases_controller/destroy_spec.rb:1.328198
-spec/controllers/stats_controller/create_custom_report_spec.rb:2.271336
-spec/decorators/case_transition_decorator_spec.rb:4.296637
-spec/decorators/foi_timeliness_review_spec.rb:0.199903
-spec/features/cases/foi/case_approvals/press_office_approvals_spec.rb:18.340847
-spec/features/cases/foi/case_viewing/viewing_response_details_spec.rb:7.104671
-spec/features/cases/foi/link_a_case_spec.rb:5.074369
-spec/features/cases/sar/sar_closing_spec.rb:8.431509
-spec/features/common/feedback_spec.rb:1.557585
-spec/features/user_journeys/foi/non_trigger_e2e_spec.rb:19.788321
-spec/lib/host_env_spec.rb:0.04787
-spec/models/business_unit_spec.rb:9.118121
-spec/models/case/sar_spec.rb:2.355361
-spec/models/case_extensions_spec.rb:3.04406
-spec/models/feedback_spec.rb:0.014441
-spec/models/report_type_spec.rb:0.033729
-spec/models/team_correspondence_type_role_spec.rb:1.075463
-spec/policies/assignment_policy_spec.rb:3.892236
-spec/policies/cases/standard_policy_spec.rb:11.289866
-spec/policies/predicates_spec.rb:0.742419
-spec/routing/cases_routes_spec.rb:0.5634
-spec/services/case_accept_approver_assignment_service_spec.rb:3.660492
-spec/services/case_unaccept_approver_assignment_service_spec.rb:25.43961
-spec/services/default_team_service_spec.rb:1.355307
-spec/services/state_selector_spec.rb:0.017133
-spec/services/stats/case_selector_spec.rb:9.514224
-spec/services/stats/r004_cabinet_office_report_spec.rb:53.82287
-spec/services/team_deletion_service_spec.rb:1.904599
-spec/services/user_creation_service_spec.rb:1.409464
-spec/services/user_reassignment_service_spec.rb:5.088323
-spec/state_machines/configurable_state_machine/invalid_event_error_spec.rb:0.149613
-spec/views/assignments/reassign_user_page_spec.rb:0.395068
-spec/views/cases/_case_details_html_slim_spec.rb:3.049935
-spec/views/cases/_case_request_html_slim_spec.rb:0.767866
-spec/views/cases/_linked_cases_html_slim_spec.rb:0.10752
-spec/views/stats/index_html_slim_spec.rb:0.044631
-spec/views/teams/index_html_slim_spec.rb:0.370886
-=======
-spec/controllers/assignments_controller_spec.rb:39.461592
-spec/controllers/cases_controller/confirm_destroy_spec.rb:1.443496
-spec/decorators/foi_compliance_review_spec.rb:0.269122
-spec/decorators/foi_timeliness_review_spec.rb:0.268638
-spec/features/admin/deactivating_teams_spec.rb:2.286631
-spec/features/cases/foi/case_approvals/private_office_approvals_spec.rb:19.547743
-spec/features/cases/foi/case_request_further_clearance_spec.rb:3.800174
-spec/features/cases/foi/case_viewing/downloading_response_spec.rb:4.425611
-spec/features/cases/foi/link_a_case_spec.rb:5.863002
-spec/features/user_journeys/foi/compliance_review_non_trigger_e2e_spec.rb:22.258594
-spec/features/user_journeys/foi/compliance_review_trigger_e2e_spec.rb:36.533894
-spec/helpers/teams_helper_spec.rb:0.007724
-spec/jobs/report_generator_job_spec.rb:0.386282
-spec/lib/host_env_spec.rb:0.052758
-spec/models/case/foi/compliance_review_spec.rb:0.169662
-spec/models/case/sar_spec.rb:3.135222
-spec/models/case_attachment_upload_group_spec.rb:1.82619
-spec/models/correspondence_type_spec.rb:0.066865
-spec/models/report_type_spec.rb:0.074538
-spec/models/team_correspondence_type_role_spec.rb:1.429301
-spec/policies/assignment_policy_spec.rb:5.067404
-spec/policies/case_policy_spec.rb:9.167711
-spec/policies/team_policy_spec.rb:3.555758
-spec/routing/cases_routes_spec.rb:0.603615
-spec/services/bypass_params_manager_spec.rb:0.022504
-spec/services/case_approval_service_spec.rb:16.126737
-spec/services/deadline_calculator/calendar_days_spec.rb:0.554189
-spec/services/stats/case_selector_spec.rb:11.841312
-spec/services/stats/r005_monthly_performance_report_spec.rb:5.681984
-spec/state_machines/sar_permitted_events_spec.rb:8.678115
-spec/views/cases/_case_details_html_slim_spec.rb:4.044002
-spec/views/cases/_clearance_copy_html_slim_spec.rb:3.032106
->>>>>>> CT-1612 adds permitted events for trigger pending dacu_clearance state_machine
-=======
 spec/controllers/assignments_controller_spec.rb:40.421226
 spec/controllers/cases_controller/confirm_destroy_spec.rb:1.275332
 spec/decorators/foi_compliance_review_spec.rb:0.243397
@@ -423,7 +281,6 @@ spec/services/stats/r005_monthly_performance_report_spec.rb:6.718665
 spec/state_machines/sar_permitted_events_spec.rb:10.212463
 spec/views/cases/_case_details_html_slim_spec.rb:4.521708
 spec/views/cases/_clearance_copy_html_slim_spec.rb:3.412001
->>>>>>> CT-1612 creates full_approval workflow
 Run options: include {:focus=>true}
 
 All examples were filtered out; ignoring {:focus=>true}
@@ -601,8 +458,6 @@ spec/views/cases/sar/_new_html_slim_spec.rb:0.002204
 Run options: include {:focus=>true}
 
 All examples were filtered out; ignoring {:focus=>true}
-<<<<<<< HEAD
-<<<<<<< HEAD
 spec/controllers/cases_controller/extend_for_pit_spec.rb:1.680366
 spec/controllers/cases_controller/request_amends_spec.rb:3.352932
 spec/controllers/cases_controller/show_spec.rb:28.80392
@@ -641,89 +496,3 @@ spec/views/cases/closed_cases_html_slim_spec.rb:0.731936
 spec/views/cases/incoming_cases_html_slim_spec.rb:1.040829
 spec/views/cases/sar/_case_details_html_slim_spec.rb:0.680389
 spec/views/teams/edit_html_slim_spec.rb:0.450909
->>>>>>> CT-1568 Rebase develop
-<<<<<<< HEAD
->>>>>>> CT-1568 Rebase develop
-=======
-=======
-spec/controllers/cases_controller/execute_request_amends_spec.rb:6.197973
-spec/controllers/cases_controller/new_spec.rb:1.4782
-spec/controllers/cases_controller/state_filter_spec.rb:0.762031
-spec/controllers/heartbeat_controller_spec.rb:0.066673
-spec/controllers/stats_controller/index_spec.rb:0.959262
-spec/controllers/teams_controller_spec.rb:15.76534
-spec/features/admin/add_information_officer_spec.rb:2.301803
-spec/features/cases/foi/case_assigning_spec.rb:5.106907
-spec/features/cases/foi/case_closing_spec.rb:33.236866
-spec/features/cases/foi/case_responding/mark_as_sent_spec.rb:7.311854
-spec/features/cases/foi/case_search_spec.rb:3.94287
-spec/features/cases/foi/case_viewing/removing_response_spec.rb:19.31059
-spec/features/cases/sar/case_creating/creating_spec.rb:3.319906
-spec/features/common/feedback_spec.rb:1.771317
-spec/features/common/sign_in_spec.rb:2.646005
-spec/features/user_journeys/foi/state_machines_and_workflows_spec.rb:74.513817
-spec/features/user_journeys/foi/trigger_e2e_spec.rb:52.971069
-spec/integration/state_machine_event_transitions_spec.rb:0.084902
-spec/lib/extensions/enumerable_spec.rb:0.006265
-spec/lib/feature_set_spec.rb:0.025195
-spec/models/case/foi/standard_spec.rb:0.038395
-spec/models/case_attachment_spec.rb:3.321552
-spec/services/assign_new_team_service_spec.rb:4.526358
-spec/services/case_finder_service_spec.rb:5.492045
-spec/services/next_step_info_spec.rb:7.622714
-spec/services/stats/r003_business_unit_performance_report_spec.rb:5.997501
-spec/services/user_deletion_service_spec.rb:2.145503
-spec/views/assignments/edit_page_spec.rb:0.80661
-spec/views/assignments/show_rejected_page_spec.rb:0.530484
-spec/views/cases/new_html_slim_spec.rb:0.153884
-spec/views/stats/custom_html_slim_spec.rb:0.056876
-spec/views/teams/edit_html_slim_spec.rb:0.583909
-spec/views/teams/index_html_slim_spec.rb:0.235909
-Run options: include {:focus=>true}
-
-All examples were filtered out; ignoring {:focus=>true}
-spec/policies/cases/base_policy_spec.rb:268.204187
->>>>>>> CT-1612 adds permitted events for trigger pending dacu_clearance state_machine
-<<<<<<< HEAD
->>>>>>> CT-1612 adds permitted events for trigger pending dacu_clearance state_machine
-=======
-=======
-spec/controllers/assignments_controller/execute_reassign_user_spec.rb:2.140768
-spec/controllers/assignments_controller/new_spec.rb:4.068011
-spec/controllers/cases_controller/destroy_spec.rb:1.280574
-spec/controllers/cases_controller/new_link_spec.rb:0.9125
-spec/controllers/stats_controller/create_custom_report_spec.rb:3.02829
-spec/controllers/stats_controller/download_custom_report_spec.rb:0.666917
-spec/features/admin/deactivating_users_spec.rb:2.964626
-spec/features/cases/foi/case_approvals/disclosure_specialist_approval_spec.rb:62.231041
-spec/features/cases/foi/case_listing/incoming_cases_spec.rb:8.146523
-spec/features/cases/foi/case_listing/open_in_time_cases_spec.rb:16.523873
-spec/features/cases/sar/case_search_spec.rb:3.989105
-spec/features/common/primary_navigation_spec.rb:6.836287
-spec/features/common/sign_out_spec.rb:0.843539
-spec/lib/event_transitions_spec.rb:0.137588
-spec/mailers/action_notifications_mailer_spec.rb:12.211639
-spec/models/case/foi_spec.rb:1.095418
-spec/models/concerns/case_states_spec.rb:9.83075
-spec/models/directorate_spec.rb:0.028141
-spec/models/team_spec.rb:3.750622
-spec/models/user_spec.rb:6.364958
-spec/services/case_create_service_spec.rb:3.690779
-spec/services/case_flag_for_clearance_service_spec.rb:21.216698
-spec/services/case_unaccept_approver_assignment_service_spec.rb:37.497079
-spec/services/request_further_clearance_service_spec.rb:6.519475
-spec/services/s3_uploader_spec.rb:7.50381
-spec/services/state_selector_spec.rb:0.065757
-spec/services/stats/base_report_spec.rb:0.017021
-spec/services/stats/r006_kilo_map_spec.rb:0.085157
-spec/services/team_deletion_service_spec.rb:2.448322
-spec/state_machines/foi_permitted_events_spec.rb:47.004964
-spec/views/stats/index_html_slim_spec.rb:0.04064
-spec/views/users/index_html_slim_spec.rb:0.190051
-spec/views/users/new_html_slim_spec.rb:0.19445
-Run options: include {:focus=>true}
-
-All examples were filtered out; ignoring {:focus=>true}
-spec/policies/cases/base_policy_spec.rb:277.696067
->>>>>>> CT-1612 creates full_approval workflow
->>>>>>> CT-1612 creates full_approval workflow
