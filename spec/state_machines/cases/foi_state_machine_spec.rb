@@ -670,9 +670,11 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
     end
 
     context 'user sending message is the resonder' do
-      it ' does not call the notify responder service' do
+      it 'does not call the notify responder service' do
         case_being_drafted.state_machine.add_message_to_case!(
-          acting_user: user, acting_team: team, message: 'This is my message to you all')
+          acting_user: user,
+          acting_team: team,
+          message: 'This is my message to you all')
         expect(NotifyResponderService)
           .not_to have_received(:new).with(case_being_drafted, 'Message received')
       end
