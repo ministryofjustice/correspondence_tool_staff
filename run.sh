@@ -14,6 +14,13 @@ migrate)
     echo "running migrate"
     bundle exec rails db:migrate
     ;;
+development-setup)
+    echo "setting up db"
+    bundle exec rails db:setup
+    echo "migrating db"
+    bundle exec rails db:migrate
+    ;;
+
 reset)
     if [[ "$ENV" = staging || "$ENV" = prod ]]
     then
