@@ -3,68 +3,139 @@ require 'rails_helper'
 describe Case::BasePolicy do
   subject { described_class }
 
-  let(:managing_team)     { find_or_create :team_dacu }
-  let(:manager)           { managing_team.managers.first }
-  let(:responding_team)   { create :responding_team }
-  let(:responder)         { responding_team.responders.first }
-  let(:coworker)          { create :responder,
-                                   responding_teams: [responding_team] }
-  let(:another_responder) { create :responder}
-  let!(:dacu_disclosure)  { find_or_create :team_dacu_disclosure }
-  let(:approver)          { dacu_disclosure.approvers.first }
-  let(:disclosure_specialist) { approver }
-  let(:another_disclosure_specialist) { create :disclosure_specialist }
-  let(:press_officer)     { find_or_create :press_officer }
-  let(:private_officer)   { find_or_create :private_officer }
-  let(:co_approver)       { create :approver, approving_team: dacu_disclosure }
+  before(:all) do
+    @managing_team                 = find_or_create :team_dacu
+    @manager                       = @managing_team.managers.first
+    @responding_team               = create :responding_team
+    @responder                     = @responding_team.responders.first
+    @coworker                      = create :responder,
+                                            responding_teams: [@responding_team]
+    @another_responder             = create :responder
+    @dacu_disclosure               = find_or_create :team_dacu_disclosure
+    @approver                      = @dacu_disclosure.approvers.first
+    @disclosure_specialist         = @approver
+    @another_disclosure_specialist = create :disclosure_specialist
+    @press_officer                 = find_or_create :press_officer
+    @another_press_officer         = create :press_officer
+    @private_officer               = find_or_create :private_officer
+    @co_approver                   = create :approver,
+                                            approving_team: @dacu_disclosure
 
-  let(:new_case)                { create :case }
-  let(:accepted_case)           { create :accepted_case,
-                                         responder: responder,
-                                         manager: manager }
-  let(:flagged_accepted_case)   { create :accepted_case, :flagged,
-                                          responder: responder,
-                                          manager: manager }
-  let(:assigned_case)           { create :assigned_case,
-                                    responding_team: responding_team }
-  let(:assigned_flagged_case)   { create :assigned_case, :flagged,
-                                         approving_team: dacu_disclosure}
-  let(:assigned_trigger_case)   { create :assigned_case, :flagged_accepted,
-                                         approver: approver }
-  let(:rejected_case)           { create :rejected_case,
-                                         responding_team: responding_team }
-  let(:unassigned_case)         { new_case }
-  let(:unassigned_flagged_case) { create :case, :flagged, :dacu_disclosure }
-  let(:unassigned_trigger_case) { create :case,
+    @new_case                   = create :case
+    @accepted_case              = create :accepted_case,
+                                         responder: @responder,
+                                         manager: @manager
+    @flagged_accepted_case      = create :accepted_case, :flagged,
+                                         responder: @responder,
+                                         manager: @manager
+    @assigned_case              = create :assigned_case,
+                                         responding_team: @responding_team
+    @assigned_flagged_case      = create :assigned_case, :flagged,
+                                         approving_team: @dacu_disclosure
+    @assigned_trigger_case      = create :assigned_case, :flagged_accepted,
+                                         approver: @approver
+    @rejected_case              = create :rejected_case,
+                                         responding_team: @responding_team
+    @unassigned_case            = @new_case
+    @unassigned_flagged_case    = create :case, :flagged, :dacu_disclosure
+    @unassigned_trigger_case    = create :case,
                                          :flagged_accepted,
-                                         :dacu_disclosure }
-  let(:case_with_response)      { create :case_with_response,
-                                         responder: responder }
-  let(:case_with_response_flagged) { create :case_with_response, :flagged,
-                                            responder: responder }
-  let(:case_with_response_trigger) { create :case_with_response,
-                                            :flagged_accepted,
-                                            responder: responder }
-  let(:responded_case)          { create :responded_case,
-                                         responder: responder }
-  let(:closed_case)             { create :closed_case,
-                                         responder: responder }
+                                         :dacu_disclosure,
+                                         approver: @disclosure_specialist
+    @case_with_response         = create :case_with_response,
+                                         responder: @responder
+    @case_with_response_flagged = create :case_with_response, :flagged,
+                                         responder: @responder
+    @case_with_response_trigger = create :case_with_response,
+                                         :flagged_accepted,
+                                         responder: @responder
+    @responded_case             = create :responded_case,
+                                         responder: @responder
+    @closed_case                = create :closed_case,
+                                         responder: @responder
 
-  let(:pending_dacu_clearance_case)  { create :pending_dacu_clearance_case,
-                                              approver: approver }
-  let(:pending_press_clearance_case) { create :pending_press_clearance_case,
-                                              press_officer: press_officer }
-  let(:pending_private_clearance_case) { create :pending_private_clearance_case,
-                                                private_officer: private_officer }
-  let(:awaiting_dispatch_case)       { create :case_with_response,
-                                              responding_team: responding_team,
-                                              responder: responder }
-  let(:awaiting_dispatch_flagged_case)  { create :case_with_response, :flagged, responding_team: responding_team, responder: responder }
+    @awaiting_responder_case         = create :awaiting_responder_case
+    @awaiting_responder_flagged_case = create :awaiting_responder_case, :flagged
 
-  let(:drafting_trigger_case) { create :case_being_drafted,
-                                :flagged_accepted,
-                                approver: approver}
+    @pending_dacu_clearance_case    = create :pending_dacu_clearance_case,
+                                             responder: @responder,
+                                             approver: @approver
+    @pending_press_clearance_case   = create :pending_press_clearance_case,
+                                             press_officer: @press_officer
+    @pending_private_clearance_case = create :pending_private_clearance_case,
+                                             private_officer: @private_officer
+    @awaiting_dispatch_case         = create :case_with_response,
+                                             responding_team: @responding_team,
+                                             responder: @responder
+    @awaiting_dispatch_flagged_case = create :case_with_response,
+                                             :flagged,
+                                             responding_team: @responding_team,
+                                             responder: @responder
+    @drafting_trigger_case          = create :case_being_drafted,
+                                             :flagged_accepted,
+                                             approver: @approver
+    @press_flagged_case             = create :assigned_case,
+                                             :flagged_accepted,
+                                             :press_office
 
+    @pending_dacu_clearance_press_case =
+      create :pending_dacu_clearance_case_flagged_for_press,
+             approver: @approver
+    @pending_press_private_clearance_case =
+      create :pending_press_clearance_case, :private_office,
+             press_officer: @press_officer
+  end
+
+  after(:all) do
+    DbHousekeeping.clean
+  end
+
+  let(:managing_team)     { @managing_team }
+  let(:manager)           { @manager }
+  let(:responding_team)   { @responding_team }
+  let(:responder)         { @responder }
+  let(:coworker)          { @coworker }
+  let(:another_responder) { @another_responder }
+  let!(:dacu_disclosure)  { @dacu_disclosure }
+  let(:approver)          { @approver }
+  let(:disclosure_specialist) { @disclosure_specialist }
+  let(:another_disclosure_specialist) { @another_disclosure_specialist }
+  let(:press_officer)     { @press_officer }
+  let(:another_press_officer) { @another_press_officer }
+  let(:private_officer)   { @private_officer }
+  let(:co_approver)       { @co_approver }
+
+  let(:new_case)                { @new_case }
+  let(:accepted_case)           { @accepted_case }
+  let(:flagged_accepted_case)   { @flagged_accepted_case }
+  let(:assigned_case)           { @assigned_case }
+  let(:assigned_flagged_case)   { @assigned_flagged_case }
+  let(:assigned_trigger_case)   { @assigned_trigger_case }
+  let(:rejected_case)           { @rejected_case }
+  let(:unassigned_case)         { @unassigned_case }
+  let(:unassigned_flagged_case) { @unassigned_flagged_case }
+  let(:unassigned_trigger_case) { @unassigned_trigger_case }
+  let(:unassigned_flagged_press_private_case) { @unassigned_flagged_press_private_case }
+  let(:case_with_response)      { @case_with_response }
+  let(:case_with_response_flagged) { @case_with_response_flagged }
+  let(:case_with_response_trigger) { @case_with_response_trigger }
+  let(:responded_case)          { @responded_case }
+  let(:closed_case)             { @closed_case }
+
+  let(:awaiting_responder_case)         { @awaiting_responder_case }
+  let(:awaiting_responder_flagged_case) { @awaiting_responder_flagged_case }
+
+  let(:pending_dacu_clearance_case)  { @pending_dacu_clearance_case }
+  let(:pending_press_clearance_case) { @pending_press_clearance_case }
+  let(:pending_private_clearance_case) { @pending_private_clearance_case }
+  let(:awaiting_dispatch_case)       { @awaiting_dispatch_case }
+  let(:awaiting_dispatch_flagged_case)  { @awaiting_dispatch_flagged_case }
+
+  let(:drafting_trigger_case) { @drafting_trigger_case }
+  let(:press_flagged_case) { @press_flagged_case }
+
+  let(:pending_dacu_clearance_press_case) { @pending_dacu_clearance_press_case }
+  let(:pending_press_private_clearance_case) { @pending_press_private_clearance_case }
 
   after(:each) do |example|
     if example.exception
@@ -129,9 +200,21 @@ describe Case::BasePolicy do
   end
 
   permissions :can_unaccept_approval_assignment? do
-    it { should     permit(approver,  pending_dacu_clearance_case) }
-    it { should_not permit(manager,   pending_dacu_clearance_case) }
-    it { should_not permit(responder, pending_dacu_clearance_case) }
+    it { should_not permit(manager,               unassigned_trigger_case) }
+    it { should     permit(disclosure_specialist, unassigned_trigger_case) }
+    it { should_not permit(press_officer,         unassigned_trigger_case) }
+    it { should_not permit(private_officer,       unassigned_trigger_case) }
+    it { should_not permit(responder,             unassigned_trigger_case) }
+    it { should_not permit(manager,               unassigned_flagged_case) }
+    it { should_not permit(disclosure_specialist, unassigned_flagged_case) }
+    it { should_not permit(press_officer,         unassigned_flagged_case) }
+    it { should_not permit(private_officer,       unassigned_flagged_case) }
+    it { should_not permit(responder,             unassigned_flagged_case) }
+    it { should     permit(disclosure_specialist, pending_dacu_clearance_case) }
+    it { should_not permit(press_officer,         pending_dacu_clearance_case) }
+    it { should     permit(approver,              pending_dacu_clearance_case) }
+    it { should_not permit(manager,               pending_dacu_clearance_case) }
+    it { should_not permit(responder,             pending_dacu_clearance_case) }
   end
 
   describe  do
@@ -263,20 +346,11 @@ describe Case::BasePolicy do
   end
 
   context 'unflag for clearance event' do
-    let(:awaiting_responder_case)           { create :awaiting_responder_case }
-    let(:awaiting_responder_flagged_case)   { create :awaiting_responder_case, :flagged }
-    let(:drafting_case)                     { create :accepted_case }
-    let(:drafting_flagged_case)             { create :accepted_case, :flagged }
-    let(:awaiting_dispatch_case)            { create :case_with_response }
-    let(:awaiting_dispatch_flagged_case)    { create :case_with_response, :flagged }
-    let(:pending_dacu_clearance_press_case) { create :pending_dacu_clearance_case_flagged_for_press }
-    let(:press_flagged_case)                { create :assigned_case,
-                                                     :flagged_accepted,
-                                                     :press_office }
-
     permissions :can_unflag_for_clearance? do
-      it { should     permit(disclosure_specialist, unassigned_flagged_case) }
       it { should_not permit(manager,               unassigned_flagged_case) }
+      it { should     permit(disclosure_specialist, unassigned_flagged_case) }
+      it { should_not permit(press_officer,         unassigned_flagged_case) }
+      it { should_not permit(private_officer,       unassigned_flagged_case) }
       it { should_not permit(responder,             unassigned_flagged_case) }
       it { should_not permit(disclosure_specialist, unassigned_case) }
       it { should_not permit(disclosure_specialist, press_flagged_case) }
@@ -297,10 +371,10 @@ describe Case::BasePolicy do
     end
 
     permissions :unflag_for_clearance_from_drafting_to_drafting? do
-      it { should     permit(disclosure_specialist, drafting_flagged_case) }
-      it { should     permit(manager,               drafting_flagged_case) }
-      it { should_not permit(responder,             drafting_flagged_case) }
-      it { should_not permit(manager,               drafting_case) }
+      it { should     permit(disclosure_specialist, flagged_accepted_case) }
+      it { should     permit(manager,               flagged_accepted_case) }
+      it { should_not permit(responder,             flagged_accepted_case) }
+      it { should_not permit(manager,               accepted_case) }
     end
 
     permissions :unflag_for_clearance_from_awaiting_dispatch_to_awaiting_dispatch? do
@@ -358,7 +432,7 @@ describe Case::BasePolicy do
 
     context 'flagged case taken on' do
       it 'does not permit' do
-        should_not permit(responder , pending_dacu_clearance_case)
+        should permit(responder , pending_dacu_clearance_case)
       end
 
       it 'does permit' do
@@ -403,8 +477,8 @@ describe Case::BasePolicy do
   end
 
   permissions :can_add_message_to_case? do
-    let(:flagged_case_responder)  { pending_dacu_clearance_case.responder }
-    let(:other_responder) { create :responder }
+    # let(:flagged_case_responder)  { pending_dacu_clearance_case.responder }
+    # let(:other_responder) { create :responder }
 
     context 'closed case' do
       it { should_not permit(manager,     closed_case) }
@@ -415,8 +489,8 @@ describe Case::BasePolicy do
     context 'open case' do
       it { should     permit(manager,                   pending_dacu_clearance_case) }
       it { should     permit(approver,                  pending_dacu_clearance_case) }
-      it { should     permit(flagged_case_responder,    pending_dacu_clearance_case) }
-      it { should_not permit(other_responder,           pending_dacu_clearance_case) }
+      it { should     permit(responder,    pending_dacu_clearance_case) }
+      it { should_not permit(another_responder,         pending_dacu_clearance_case) }
     end
   end
 
@@ -519,11 +593,11 @@ describe Case::BasePolicy do
   end
 
   permissions :approve_from_pending_dacu_clearance_to_pending_press_office_clearance? do
-    let(:kase) { create :pending_dacu_clearance_case_flagged_for_press }
+    let(:kase)                           { pending_dacu_clearance_press_case }
     let(:assigned_disclosure_specialist) { kase.assigned_disclosure_specialist }
 
     it { should_not permit(responder,                       kase) }
-    it { should_not permit(disclosure_specialist,           kase) }
+    it { should_not permit(another_disclosure_specialist,   kase) }
     it { should     permit(assigned_disclosure_specialist,  kase) }
     it { should_not permit(press_officer,                   kase) }
     it { should_not permit(private_officer,                 kase) }
@@ -537,14 +611,14 @@ describe Case::BasePolicy do
   end
 
   permissions :approve_from_pending_press_office_clearance_to_pending_private_office_clearance? do
-    let(:kase) { create :pending_press_clearance_case, :private_office }
+    let(:kase)                   { pending_press_private_clearance_case }
     let(:assigned_press_officer) { kase.assigned_press_officer }
 
-    it { should_not permit(responder,               kase) }
-    it { should_not permit(disclosure_specialist,   kase) }
-    it { should_not permit(press_officer,           kase) }
-    it { should     permit(assigned_press_officer,  kase) }
-    it { should_not permit(private_officer,         kase) }
+    it { should_not permit(responder,              kase) }
+    it { should_not permit(disclosure_specialist,  kase) }
+    it { should     permit(assigned_press_officer, kase) }
+    it { should_not permit(another_press_officer,  kase) }
+    it { should_not permit(private_officer,        kase) }
   end
 
   permissions :approve_from_pending_private_office_clearance_to_awaiting_dispatch? do
@@ -656,6 +730,8 @@ describe Case::BasePolicy do
     it { should     permit(manager,               closed_case) }
     it { should_not permit(disclosure_specialist, accepted_case) }
     it { should     permit(disclosure_specialist, pending_dacu_clearance_case) }
+    it { should     permit(disclosure_specialist, unassigned_flagged_case) }
+    it { should     permit(disclosure_specialist, unassigned_trigger_case) }
     it { should_not permit(press_officer,         accepted_case) }
     it { should     permit(press_officer,         pending_press_clearance_case) }
     it { should_not permit(press_officer,         accepted_case) }
