@@ -16,7 +16,7 @@ class Predicates
     NotifyResponderService.new(@kase, 'Message received').call if able_to_send?(@user, @kase)
   end
 
-private
+  private
 
   def able_to_send?(user, kase)
     message_not_sent_by_responder?(user, kase) && case_has_responder(kase)
