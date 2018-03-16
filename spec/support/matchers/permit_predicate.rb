@@ -5,7 +5,7 @@
 # spec groups.
 
 module PermitPredicate
-  RSpec::Matchers.define :permit do |*permitted_combinations|
+  RSpec::Matchers.define :permit_only_these_combinations do |*permitted_combinations|
     match do |predicate|
       permitted_combinations.each do |user, kase|
         unless all_users.key? user
