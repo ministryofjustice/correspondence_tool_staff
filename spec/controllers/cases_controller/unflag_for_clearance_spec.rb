@@ -19,9 +19,10 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'authorises' do
-        expect_any_instance_of(Case::FOI::StandardPolicy).to receive(:can_unflag_for_clearance?)
-
-        patch :unflag_taken_on_case_for_clearance, params: params
+        expect {
+          patch :unflag_taken_on_case_for_clearance, params: params
+        } .to require_permission(:unflag_for_clearance?)
+                .with_args(disclosure_specialist, flagged_case)
       end
 
       it 'redirects to case list' do
@@ -58,7 +59,7 @@ RSpec.describe CasesController, type: :controller do
         it 'authorises' do
           expect {
             patch :unflag_for_clearance, params: params, xhr: true
-          } .to require_permission(:can_unflag_for_clearance?)
+          } .to require_permission(:unflag_for_clearance?)
                   .with_args(disclosure_specialist, flagged_case)
         end
 

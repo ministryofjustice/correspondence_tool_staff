@@ -85,9 +85,7 @@ case_types:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
                   switch_workflow: :trigger
-                unflag_for_clearance:
-                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
-
+ 
               awaiting_responder:
                 add_message_to_case:
                 assign_to_new_team:
@@ -100,9 +98,7 @@ case_types:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
                   switch_workflow: :trigger
-                unflag_for_clearance:
-                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_awaiting_responder_to_awaiting_responder?
-
+ 
               drafting:
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
@@ -152,7 +148,7 @@ case_types:
               unassigned:
                 accept_approver_assignment:
                 add_message_to_case:
-                  if: Workflows::Predicates#approver_is_member_of_approving_teams?
+                  if: Workflows::Predicates#user_is_approver_on_case?
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -163,13 +159,14 @@ case_types:
                   if: Case::BasePolicy#can_take_on_for_approval?
 
               awaiting_responder:
-                # accept approver assignment might seem an odd event to have in the standard workflow, but it is here
-                # because an approver can unaccept an trigger case, switching the workflow to standard, and then decide
-                # to accept it again.
+                # accept approver assignment might seem an odd event to have in
+                # the standard workflow, but it is here because an approver can
+                # unaccept an trigger case, switching the workflow to standard,
+                # and then decide to accept it again.
                 accept_approver_assignment:
                   switch_workflow: trigger
                 add_message_to_case:
-                  if: Workflows::Predicates#approver_is_member_of_approving_teams?
+                  if: Workflows::Predicates#user_is_approver_on_case?
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -178,11 +175,12 @@ case_types:
                 remove_linked_case:
                 take_on_for_approval:
                   switch_workflow: trigger
-                unflag_for_clearance:               # needed for press/private office to unaccept
+                unflag_for_clearance: # needed for press/private office to unaccept
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
 
               drafting:
                 add_message_to_case:
-                  if: Workflows::Predicates#approver_is_member_of_approving_teams?
+                  if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 extend_for_pit:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
@@ -192,10 +190,12 @@ case_types:
                 remove_linked_case:
                 take_on_for_approval:
                   switch_workflow: :trigger
+                unflag_for_clearance: # needed for press/private office to unaccept
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
 
               awaiting_dispatch:
                 add_message_to_case:
-                  if: Workflows::Predicates#approver_is_member_of_approving_teams?
+                  if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 extend_for_pit:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
@@ -326,9 +326,6 @@ case_types:
                 remove_linked_case:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
-                unflag_for_clearance:
-                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
-                  switch_workflow: standard
 
               awaiting_responder:
                 add_message_to_case:
@@ -341,9 +338,6 @@ case_types:
                 remove_linked_case:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
-                unflag_for_clearance:
-                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
-                  switch_workflow: standard
 
               drafting:
                 add_message_to_case:
@@ -357,9 +351,6 @@ case_types:
                 remove_linked_case:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
-                unflag_for_clearance:
-                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
-                  switch_workflow: standard
 
 
           approver:
@@ -368,7 +359,7 @@ case_types:
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
-                  if: Workflows::Predicates#approver_is_member_of_approving_teams?
+                  if: Workflows::Predicates#user_is_approver_on_case?
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
@@ -380,13 +371,14 @@ case_types:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
                   switch_workflow: standard
                 unflag_for_clearance:
-                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
+                  switch_workflow: standard
 
               awaiting_responder:
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
-                  if: Workflows::Predicates#approver_is_member_of_approving_teams?
+                  if: Workflows::Predicates#user_is_approver_on_case?
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
@@ -396,14 +388,15 @@ case_types:
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
                   switch_workflow: standard
-                unflag_for_clearance:
+                unflag_for_clearance:               # needed for press/private office to unaccept
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
                   switch_workflow: standard
 
               drafting:
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
-                  if: Workflows::Predicates#approver_is_member_of_approving_teams?
+                  if: Workflows::Predicates#user_is_approver_on_case?
                 extend_for_pit:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 flag_for_clearance:
@@ -416,6 +409,7 @@ case_types:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
                   switch_workflow: standard
                 unflag_for_clearance:
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
                   switch_workflow: standard
 
           responder:
@@ -547,4 +541,4 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
-                  if: Workflows::Predicates#approver_is_member_of_approving_teams?
+                  if: Workflows::Predicates#user_is_approver_on_case?

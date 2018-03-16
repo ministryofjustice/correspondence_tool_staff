@@ -3,7 +3,7 @@ require 'rspec/expectations'
 RSpec::Matchers.define :require_permission do |permission|
   match do |event_or_block|
     if event_or_block.respond_to? :call
-      policy_class = Pundit::PolicyFinder.new(@with_args.second).policy!
+      policy_class = Pundit::PolicyFinder.new(@object).policy!
       policy = spy(policy_class)
       allow(policy).to receive(permission)
                          .with(no_args) { @permission_received = true }
@@ -15,7 +15,7 @@ RSpec::Matchers.define :require_permission do |permission|
       disallowing.each do |disallow_permission|
         allow(policy).to receive(disallow_permission).and_return(false)
       end
-      if @with_args
+      if @with_args.present?
         allow(policy_class).to receive(:new).with(*@with_args).and_return(policy)
       else
         allow(policy_class).to receive(:new).and_return(policy)
@@ -49,6 +49,7 @@ RSpec::Matchers.define :require_permission do |permission|
   end
 
   chain :with_args do |*args|
+    @object = args.second
     @with_args = args
   end
 

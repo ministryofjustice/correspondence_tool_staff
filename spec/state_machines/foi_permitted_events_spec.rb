@@ -246,7 +246,7 @@ describe Case::FOI::StandardStateMachine do
 
     context 'approver' do
       context 'unassigned approver' do
-        let(:approver)   { create :approver}
+        let(:approver)   { create :disclosure_specialist}
 
         context 'unassigned state' do
           it 'should show permitted events' do
@@ -267,8 +267,7 @@ describe Case::FOI::StandardStateMachine do
                                                                          :flag_for_clearance,
                                                                          :link_a_case,
                                                                          :remove_linked_case,
-                                                                         :take_on_for_approval,
-                                                                         :unflag_for_clearance]
+                                                                         :take_on_for_approval]
           end
         end
 
@@ -337,8 +336,7 @@ describe Case::FOI::StandardStateMachine do
                                                                     :flag_for_clearance,
                                                                     :link_a_case,
                                                                     :remove_linked_case,
-                                                                    :request_further_clearance,
-                                                                    :unflag_for_clearance]
+                                                                    :request_further_clearance]
         end
       end
 
@@ -355,8 +353,7 @@ describe Case::FOI::StandardStateMachine do
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
-                                                                      :request_further_clearance,
-                                                                      :unflag_for_clearance]
+                                                                      :request_further_clearance]
         end
       end
 
@@ -372,8 +369,7 @@ describe Case::FOI::StandardStateMachine do
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
-                                                                      :request_further_clearance,
-                                                                      :unflag_for_clearance]
+                                                                      :request_further_clearance]
         end
       end
 

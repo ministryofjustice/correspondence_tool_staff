@@ -346,7 +346,7 @@ describe Case::BasePolicy do
   end
 
   context 'unflag for clearance event' do
-    permissions :can_unflag_for_clearance? do
+    permissions :unflag_for_clearance? do
       it { should_not permit(manager,               unassigned_flagged_case) }
       it { should     permit(disclosure_specialist, unassigned_flagged_case) }
       it { should_not permit(press_officer,         unassigned_flagged_case) }

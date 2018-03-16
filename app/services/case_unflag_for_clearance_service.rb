@@ -11,17 +11,16 @@ class CaseUnflagForClearanceService
   end
 
   def call
-    begin
-      ActiveRecord::Base.transaction do
-        @case.state_machine.unflag_for_clearance!(acting_user: @user,
-                                                  acting_team: @case.managing_team,
-                                                  target_team: @team,
-                                                  message: @message)
-        @case.approver_assignments.with_teams(@team).destroy_all
-        @result = :ok
-      end
+    ActiveRecord::Base.transaction do
+      @case.state_machine.unflag_for_clearance!(acting_user: @user,
+                                                acting_team: @user.approving_team,
+                                                target_team: @team,
+                                                message: @message)
+      @case.approver_assignments.with_teams(@team).destroy_all
+      @result = :ok
     end
   rescue
     @result = :error
+    raise
   end
 end

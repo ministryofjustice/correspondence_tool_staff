@@ -175,11 +175,9 @@ class Case::BasePolicy < ApplicationPolicy
     check_case_was_accepted_for_approval_by_user
   end
 
-  def can_unflag_for_clearance?
+  def unflag_for_clearance?
     clear_failed_checks
-    only_flagged_for_disclosure_clearance? &&
-        check_user_is_an_approver_for_case &&
-        check_case_requires_clearance
+    check_can_trigger_event(:unflag_for_clearance)
   end
 
   def can_remove_attachment?

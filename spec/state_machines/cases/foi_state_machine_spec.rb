@@ -43,7 +43,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   let(:responding_team)    { create :responding_team }
   let(:responder)          { responding_team.responders.first }
   let(:another_responder)  { responding_team.responders.first }
-  let(:approving_team)     { create :approving_team }
+  let(:approving_team)     { find_or_create :team_dacu_disclosure }
   let(:approver)           { approving_team.approvers.first }
   let(:other_approver)     {
     create :approver, approving_team: approving_team
@@ -373,7 +373,12 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
        expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
        # when
-       kase.state_machine.unflag_for_clearance!(acting_user: approver, acting_team: managing_team, target_team: approving_team, message: 'I do not need to approve this')
+       kase.state_machine.unflag_for_clearance!(
+         acting_user: approver,
+         acting_team: approving_team,
+         target_team: approving_team,
+         message: 'I do not need to approve this'
+       )
 
        # then
        expect(kase.current_state).to eq 'drafting'
@@ -389,7 +394,12 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
         expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
         # when
-        kase.state_machine.unflag_for_clearance!(acting_user: approver, acting_team: managing_team, target_team: approving_team, message: 'I do not need to approve this')
+        kase.state_machine.unflag_for_clearance!(
+          acting_user: approver,
+          acting_team: approving_team,
+          target_team: approving_team,
+          message: 'I do not need to approve this'
+        )
 
         # then
         transition = kase.reload.transitions.last

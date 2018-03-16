@@ -107,10 +107,25 @@ module ConfigurableStateMachine
       raise ::ConfigurableStateMachine::ArgumentError.new(kase: @kase, event: event, params: params) if !params.key?(:acting_user) || !params.key?(:acting_team)
       role =  params[:acting_team].role
       user_role_config = @config.user_roles[role]
-      raise InvalidEventError.new(kase: @kase, user: params[:acting_user], event: event, role: role) if user_role_config.nil?
+      if user_role_config.nil?
+        raise InvalidEventError.new(
+                kase: @kase,
+                user: params[:acting_user],
+                event: event,
+                role: role,
+                message: "No state machine config for role #{role}"
+              )
+      end
       state_config = user_role_config.states[@kase.current_state]
       if state_config.nil? || !state_config.to_hash.keys.include?(event)
-        raise InvalidEventError.new(role: role, kase: @kase, user: params[:acting_user], event: event)
+        raise InvalidEventError.new(
+                role: role,
+                kase: @kase,
+                user: params[:acting_user],
+                event: event,
+                message: "No event #{event} for role #{role} and case state " +
+                         "#{@kase.current_state}"
+              )
       end
       event_config = state_config[event]
       if can_trigger_event?(event_name: event, metadata: params)
@@ -123,7 +138,14 @@ module ConfigurableStateMachine
           execute_after_transition_method(event_config: event_config, user: params[:acting_user])
         end
       else
-        raise InvalidEventError.new(role: role, kase: @kase, user: params[:acting_user],  event: event)
+        raise InvalidEventError.new(
+                role: role,
+                kase: @kase,
+                user: params[:acting_user],
+                event: event,
+                message: "Event #{event} not permitted for role #{role} and " +
+                         "case state #{@kase.current_state}"
+              )
       end
     end
     #rubocop:enable Metrics/CyclomaticComplexity
