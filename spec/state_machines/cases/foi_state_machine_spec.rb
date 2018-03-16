@@ -76,7 +76,9 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
   let(:approved_case)   { create :approved_case }
   let(:pending_dacu_clearance_case)    { create :pending_dacu_clearance_case }
-  let(:pending_private_clearance_case) { create :pending_private_clearance_case }
+  let(:pending_private_clearance_case) { create :pending_private_clearance_case,
+                                                :flagged_accepted,
+                                                approver: approver}
   let(:disclosure_specialist)          { create :disclosure_specialist }
   let(:team_dacu_disclosure)           { find_or_create :team_dacu_disclosure }
 
@@ -786,26 +788,20 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   end
 
   context 'case flagged with press and pending dacu approval' do
-    let(:kase) { create :pending_dacu_clearance_case, :press_office }
-    let(:approver) { pending_dacu_clearance_case.approvers.first }
+    let(:kase) { create :pending_dacu_clearance_case_flagged_for_press, :flagged_accepted, :dacu_disclosure, approver: disclosure_specialist }
     let(:state_machine) { kase.state_machine }
     let(:team_id) { kase.approving_teams.first.id }
 
     describe 'trigger approve!' do
       it 'triggers an approve event' do
-        expect {
-          state_machine.approve!(
-            acting_user: approver,
-            acting_team: kase.approving_teams.first
-          )
-        }.to trigger_the_event(:approve)
-               .on_state_machine(state_machine)
-               .with_parameters(
-                 acting_user_id: approver.id,
-                 acting_team_id: team_id
-               )
+        expect(kase.state_machine).to receive(:trigger_event).with(event: :approve,
+                                                                  params:{
+                                                                    acting_user: disclosure_specialist,
+                                                                    acting_team: team_dacu_disclosure})
+        kase.state_machine.approve!(
+          acting_user: disclosure_specialist,
+          acting_team: team_dacu_disclosure )
       end
-
     end
   end
 
@@ -822,9 +818,9 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
   describe 'trigger request_amends!' do
     it 'triggers a request_amends event' do
-      state_machine = assigned_flagged_case.state_machine
-      assignment = assigned_flagged_case.approver_assignments.first
-      assigned_flagged_case.request_amends_comment = 'Never use a preposition to end a sentence with'
+      state_machine = pending_private_clearance_case.state_machine
+      assignment = pending_private_clearance_case.approver_assignments.first
+      pending_private_clearance_case.request_amends_comment = 'Never use a preposition to end a sentence with'
       expect do
         state_machine.request_amends! approver, assignment
       end.to trigger_the_event(:request_amends)
