@@ -665,6 +665,9 @@ case_types:
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
                   switch_workflow: standard
+                unflag_for_clearance:
+                  switch_workflow: trigger
+                  if: Case::BasePolicy#unflag_for_clearance_from_pending_dacu_clearance_to_pending_dacu_clearance?
 
               awaiting_responder:
                 accept_approver_assignment:
@@ -681,6 +684,9 @@ case_types:
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
                   switch_workflow: standard
+                unflag_for_clearance:
+                  switch_workflow: trigger
+                  if: Case::BasePolicy#unflag_for_clearance_from_pending_dacu_clearance_to_pending_dacu_clearance?
 
               drafting:
                 accept_approver_assignment:
@@ -699,6 +705,9 @@ case_types:
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
                   switch_workflow: standard
+                unflag_for_clearance:
+                  switch_workflow: trigger
+                  if: Case::BasePolicy#unflag_for_clearance_from_pending_dacu_clearance_to_pending_dacu_clearance?
 
               pending_dacu_clearance:
                 accept_approver_assignment:
@@ -720,8 +729,8 @@ case_types:
                 unaccept_approver_assignment:
                   if: Predicates#user_is_assigned_disclosure_specialist?
                 unflag_for_clearance:
-                  switch_workflow: standard
-                  transition_to: awaiting_dispatch
+                  switch_workflow: trigger
+                  if: Case::BasePolicy#unflag_for_clearance_from_pending_dacu_clearance_to_pending_dacu_clearance?
                   after_transition: Predicates#notify_responder_ready_to_send
                 upload_response_and_approve:
                   if: Predicates#user_is_assigned_disclosure_specialist?

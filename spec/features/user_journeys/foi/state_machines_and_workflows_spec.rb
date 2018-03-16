@@ -105,6 +105,7 @@ feature 'FOI case that does not require clearance' do
     # - re-accept
     # - take on.
     #
+
     take_case_on kase: kase,
                  user: press_officer,
                  test_undo: true
@@ -136,12 +137,12 @@ feature 'FOI case that does not require clearance' do
     t = transitions[7]
     expect(t.event).to eq 'unflag_for_clearance'
     expect(t.to_state).to eq 'awaiting_responder'
-    expect(t.to_workflow).to eq 'standard'                  # this is wrong - we don't want to change workflows when press unflags for clearance
+    expect(t.to_workflow).to eq 'trigger'                  # this is wrong - we don't want to change workflows when press unflags for clearance
     expect(t.acting_team_id).to eq press_office.id
     expect(t.acting_user_id).to eq press_officer.id
     expect(t.target_team_id).to eq private_office.id
     expect(t.target_user_id).to be_nil
-
+# WHAT IS THIS BIT???
     t = transitions[8]
     expect(t.event).to eq 'unflag_for_clearance'
     expect(t.to_state).to eq 'awaiting_responder'
@@ -381,8 +382,6 @@ feature 'FOI case that does not require clearance' do
     expect(t.target_user_id).to be_nil
   end
 
-#################################
-
   scenario 'trigger case', js: true do
     # create and assign case
     #
@@ -457,24 +456,6 @@ feature 'FOI case that does not require clearance' do
     expect(t.target_team_id).to be_nil
     expect(t.target_user_id).to be_nil
 
-    t = transitions[5]
-    expect(t.event).to eq 'unflag_for_clearance'
-    expect(t.to_state).to eq 'awaiting_responder'
-    expect(t.to_workflow).to eq 'standard'                  # this is wrong - we don't want to change workflows when press unflags for clearance
-    expect(t.acting_team_id).to eq press_office.id
-    expect(t.acting_user_id).to eq press_officer.id
-    expect(t.target_team_id).to eq private_office.id
-    expect(t.target_user_id).to be_nil
-
-    t = transitions[6]
-    expect(t.event).to eq 'unflag_for_clearance'
-    expect(t.to_state).to eq 'awaiting_responder'
-    expect(t.to_workflow).to eq 'standard'
-    expect(t.acting_team_id).to eq press_office.id
-    expect(t.acting_user_id).to eq press_officer.id
-    expect(t.target_team_id).to eq press_office.id
-    expect(t.target_user_id).to be_nil
-
     # case manager edits case
     edit_case kase: kase,
               user: manager,
@@ -505,7 +486,7 @@ feature 'FOI case that does not require clearance' do
     kase.reload
     expect(kase.current_state).to eq 'drafting'
     expect(kase.workflow).to eq 'trigger'
-    expect(kase.transitions.size).to eq 13
+    expect(kase.transitions.size).to eq 7
     expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
     t = kase.transitions.order(:sort_key).last
@@ -525,7 +506,7 @@ feature 'FOI case that does not require clearance' do
     kase.reload
     expect(kase.current_state).to eq 'drafting'
     expect(kase.workflow).to eq 'trigger'
-    expect(kase.transitions.size).to eq 14
+    expect(kase.transitions.size).to eq 8
     expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
     t = kase.transitions.order(:sort_key).last
@@ -546,7 +527,7 @@ feature 'FOI case that does not require clearance' do
 
     expect(kase.current_state).to eq 'drafting'
     expect(kase.workflow).to eq 'trigger'
-    expect(kase.transitions.size).to eq 15
+    expect(kase.transitions.size).to eq 9
     expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
     t = kase.transitions.order(:sort_key).last
@@ -567,7 +548,7 @@ feature 'FOI case that does not require clearance' do
 
     expect(kase.current_state).to eq 'pending_dacu_clearance'
     expect(kase.workflow).to eq 'trigger'
-    expect(kase.transitions.size).to eq 16
+    expect(kase.transitions.size).to eq 10
     expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
     t = kase.transitions.order(:sort_key).last
@@ -583,66 +564,21 @@ feature 'FOI case that does not require clearance' do
     #
     clear_response kase: kase,
                    user: disclosure_specialist,
-                   expected_team: press_office,
-                   expected_status: 'Pending clearance'
-
-    kase.reload
-    expect(kase.current_state).to eq 'pending_press_office_clearance'
-    expect(kase.workflow).to eq 'trigger'
-    expect(kase.transitions.size).to eq 17
-    expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
-
-    t = kase.transitions.order(:sort_key).last
-    expect(t.event).to eq 'approve'
-    expect(t.to_state).to eq 'pending_press_office_clearance'
-    expect(t.to_workflow).to eq 'trigger'
-    expect(t.acting_team_id).to eq team_dacu_disclosure.id
-    expect(t.acting_user_id).to eq disclosure_specialist.id
-    expect(t.target_team_id).to be_nil
-    expect(t.target_user_id).to be_nil
-
-
-    # press office clears response
-    #
-    clear_response kase: kase,
-                   user: press_officer,
-                   expected_team: private_office,
-                   expected_status: 'Pending clearance'
-
-    kase.reload
-    expect(kase.current_state).to eq 'pending_private_office_clearance'
-    expect(kase.workflow).to eq 'trigger'
-    expect(kase.transitions.size).to eq 18
-    expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
-
-    t = kase.transitions.order(:sort_key).last
-    expect(t.event).to eq 'approve'
-    expect(t.to_state).to eq 'pending_private_office_clearance'
-    expect(t.to_workflow).to eq 'trigger'
-    expect(t.acting_team_id).to eq press_office.id
-    expect(t.acting_user_id).to eq press_officer.id
-    expect(t.target_team_id).to be_nil
-    expect(t.target_user_id).to be_nil
-
-    # private office clears response
-    #
-    clear_response kase: kase,
-                   user: private_officer,
                    expected_team: responding_team,
                    expected_status: 'Ready to send'
 
     kase.reload
     expect(kase.current_state).to eq 'awaiting_dispatch'
     expect(kase.workflow).to eq 'trigger'
-    expect(kase.transitions.size).to eq 19
+    expect(kase.transitions.size).to eq 11
     expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
 
     t = kase.transitions.order(:sort_key).last
     expect(t.event).to eq 'approve'
     expect(t.to_state).to eq 'awaiting_dispatch'
     expect(t.to_workflow).to eq 'trigger'
-    expect(t.acting_team_id).to eq private_office.id
-    expect(t.acting_user_id).to eq private_officer.id
+    expect(t.acting_team_id).to eq team_dacu_disclosure.id
+    expect(t.acting_user_id).to eq disclosure_specialist.id
     expect(t.target_team_id).to be_nil
     expect(t.target_user_id).to be_nil
 
@@ -654,7 +590,7 @@ feature 'FOI case that does not require clearance' do
     kase.reload
     expect(kase.current_state).to eq 'responded'
     expect(kase.workflow).to eq 'trigger'
-    expect(kase.transitions.size).to eq 20
+    expect(kase.transitions.size).to eq 12
     expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
 
     t = kase.transitions.order(:sort_key).last
@@ -674,7 +610,7 @@ feature 'FOI case that does not require clearance' do
     kase.reload
     expect(kase.current_state).to eq 'closed'
     expect(kase.workflow).to eq 'trigger'
-    expect(kase.transitions.size).to eq 21
+    expect(kase.transitions.size).to eq 13
     expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
 
     t = kase.transitions.order(:sort_key).last
@@ -686,7 +622,6 @@ feature 'FOI case that does not require clearance' do
     expect(t.target_team_id).to be_nil
     expect(t.target_user_id).to be_nil
   end
-
 
   scenario 'non trigger case', js: true do
     # create and assign case

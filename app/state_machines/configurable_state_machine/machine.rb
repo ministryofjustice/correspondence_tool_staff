@@ -77,6 +77,19 @@ module ConfigurableStateMachine
       end
     end
 
+    def get_next_target_state_for_event(event_name, metadata)
+      target_states = get_event_target_states!(event_name)
+      target_states.find do |target_state|
+        call_guards_for_target_state(target_state, metadata)
+      end
+    end
+
+    def call_guards_for_target_state(target_state, metadata)
+      guards = target_state[:guards]
+      guards.blank? ||
+        guards.all? { |g| g.call(object,last_transition,metadata) }
+    end
+
     private
 
     def event_present_and_triggerable?(role_state_config:, event:, user:)
