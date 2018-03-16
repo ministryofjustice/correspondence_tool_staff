@@ -161,8 +161,12 @@ case_types:
                   if: Case::BasePolicy#can_add_message_to_case?
                 flag_for_clearance:
                   switch_workflow: trigger
+                link_a_case:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
+                take_on_for_approval:
+                  if: Case::BasePolicy#can_take_on_for_approval?
 
               awaiting_responder:
                 # accept approver assignment might seem an odd event to have in the standard workflow, but it is here
@@ -319,8 +323,16 @@ case_types:
                 add_message_to_case:
                   if: Case::BasePolicy#can_add_message_to_case?
                 flag_for_clearance:
+                link_a_case:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
+                take_on_for_approval:
+                  if: Case::BasePolicy#can_take_on_for_approval?
+                unaccept_approver_assignment:
+                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
+                unflag_for_clearance:
+                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
 
 
           responder:
