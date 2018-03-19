@@ -217,8 +217,10 @@ feature 'cases requiring clearance by disclosure specialist' do
       'Remove clearance')
     cases_show_page.clearance_levels.basic_details.dacu_disclosure.remove_clearance.click
     expect(page).to have_current_path(remove_clearance_case_path(kase))
+    save_and_open_page
     fill_in 'Reason for removing clearance', :with => "reason"
     cases_remove_clearance_form_page.submit_button.click
+    save_and_open_page
     expect(cases_show_page.notice.text).to eq "Clearance removed for this case."
   end
 

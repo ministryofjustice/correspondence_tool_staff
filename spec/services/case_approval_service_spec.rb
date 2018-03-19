@@ -26,7 +26,7 @@ describe CaseApprovalService do
 
         it 'raises state machine guard error' do
           expect(kase.current_state).to eq 'drafting'
-          expect { service.call }
+          service.call
           expect(service.result).to eq :error
         end
       end
@@ -145,7 +145,7 @@ describe CaseApprovalService do
 
         it 'raises state machine guard error' do
           expect(kase.current_state).to eq 'drafting'
-          expect { service.call }
+          service.call
           expect(service.result).to eq :error
         end
       end
