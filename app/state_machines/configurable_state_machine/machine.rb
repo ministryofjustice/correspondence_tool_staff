@@ -101,16 +101,31 @@ module ConfigurableStateMachine
     # * :acting_user (this corresponds to the current_user)
     # * :acting_team
     #
-    #rubocop:disable Metrics/CyclomaticComplexity
+    #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
     def trigger_event(event:, params:)
       event = event.to_sym
       raise ::ConfigurableStateMachine::ArgumentError.new(kase: @kase, event: event, params: params) if !params.key?(:acting_user) || !params.key?(:acting_team)
       role =  params[:acting_team].role
       user_role_config = @config.user_roles[role]
-      raise InvalidEventError.new(kase: @kase, user: params[:acting_user], event: event, role: role) if user_role_config.nil?
+      if user_role_config.nil?
+        raise InvalidEventError.new(
+                kase: @kase,
+                user: params[:acting_user],
+                event: event,
+                role: role,
+                message: "No state machine config for role #{role}"
+              )
+      end
       state_config = user_role_config.states[@kase.current_state]
       if state_config.nil? || !state_config.to_hash.keys.include?(event)
-        raise InvalidEventError.new(role: role, kase: @kase, user: params[:acting_user], event: event)
+        raise InvalidEventError.new(
+                role: role,
+                kase: @kase,
+                user: params[:acting_user],
+                event: event,
+                message: "No event #{event} for role #{role} and case state " +
+                         "#{@kase.current_state}"
+              )
       end
       event_config = state_config[event]
       if can_trigger_event?(event_name: event, metadata: params)
@@ -123,10 +138,17 @@ module ConfigurableStateMachine
           execute_after_transition_method(event_config: event_config, user: params[:acting_user])
         end
       else
-        raise InvalidEventError.new(role: role, kase: @kase, user: params[:acting_user],  event: event)
+        raise InvalidEventError.new(
+                role: role,
+                kase: @kase,
+                user: params[:acting_user],
+                event: event,
+                message: "Event #{event} not permitted for role #{role} and " +
+                         "case state #{@kase.current_state}"
+              )
       end
     end
-    #rubocop:enable Metrics/CyclomaticComplexity
+    #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 
 
     def extract_roles_from_metadata(metadata)
@@ -229,10 +251,11 @@ module ConfigurableStateMachine
         target_user_id: params[:target_user]&.id,
         target_team_id: params[:target_team]&.id,
       }
+      cloned_params = params.clone
       %i{ acting_user acting_team target_user target_team num_attachments }.each do |key|
-        params.delete(key)
+        cloned_params.delete(key)
       end
-      @kase.transitions.create!(attrs.merge(params))
+      @kase.transitions.create!(attrs.merge(cloned_params))
     end
 
     def gather_all_events

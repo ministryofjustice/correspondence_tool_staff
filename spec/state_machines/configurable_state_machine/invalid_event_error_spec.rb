@@ -7,21 +7,53 @@ module ConfigurableStateMachine
     let(:kase)  { create :case }
     let(:user)  { create :user }
 
-    it 'prints the right message' do
-      begin
-        raise InvalidEventError.new(kase: kase, user: user, event: 'My dummy event', role: 'approver')
-      rescue => err
-        expect(err).to be_instance_of(InvalidEventError)
-        expect(err.message).to eq("\nInvalid event: type: FOI\n" +
-                                  "               workflow: standard\n" +
-                                  "               role: approver\n" +
-                                  "               state: unassigned\n" +
-                                  "               event: My dummy event\n" +
-                                  "               kase_id: #{kase.id}\n" +
-                                  "               user_id: #{user.id}")
+    context 'no message provided' do
+      it 'prints the right message' do
+        begin
+          raise InvalidEventError.new(kase: kase,
+                                      user: user,
+                                      event: 'My dummy event',
+                                      role: 'approver')
+        rescue => err
+          expect(err).to be_instance_of(InvalidEventError)
+          expect(err.message).to eq(<<~EOS)
+
+            Invalid event: type: FOI
+                           workflow: standard
+                           role: approver
+                           state: unassigned
+                           event: My dummy event
+                           kase_id: #{kase.id}
+                           user_id: #{user.id}
+          EOS
+        end
       end
     end
 
+    context 'message provided' do
+      it 'prints the right message' do
+        begin
+          raise InvalidEventError.new(kase: kase,
+                                      user: user,
+                                      event: 'My dummy event',
+                                      role: 'approver',
+                                      message: 'suddenly, error')
+        rescue => err
+          expect(err).to be_instance_of(InvalidEventError)
+          expect(err.message).to eq(<<~EOS)
+
+            Invalid event: type: FOI
+                           workflow: standard
+                           role: approver
+                           state: unassigned
+                           event: My dummy event
+                           kase_id: #{kase.id}
+                           user_id: #{user.id}
+                           message: suddenly, error
+          EOS
+        end
+      end
+    end
 
   end
 end

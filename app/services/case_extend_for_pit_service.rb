@@ -12,7 +12,10 @@ class CaseExtendForPITService
   def call
     ActiveRecord::Base.transaction do
       if validate_params
-        @case.state_machine.extend_for_pit! @user, @extension_deadline, @reason
+        @case.state_machine.extend_for_pit!(acting_user: @user,
+                                            acting_team: BusinessUnit.dacu_disclosure,
+                                            final_deadline: @extension_deadline,
+                                            message: @reason)
         @case.reload.update! external_deadline: @extension_deadline
         @result = :ok
       end

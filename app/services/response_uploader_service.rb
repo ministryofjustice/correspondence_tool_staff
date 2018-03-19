@@ -56,14 +56,14 @@ class ResponseUploaderService
       when 'upload'
         @case.state_machine.add_responses!(acting_user: @current_user, acting_team: @case.responding_team, filenames: filenames)
       when 'upload-flagged'
-        @case.state_machine.add_response_to_flagged_case!(@current_user, @case.responding_team, filenames)
+        @case.state_machine.add_response_to_flagged_case!(acting_user: @current_user, acting_team: @case.responding_team, filenames: filenames)
       when 'upload-approve'
         upload_approve(filenames)
       when 'upload-redraft'
         @case.state_machine.upload_response_and_return_for_redraft!(
-                             @current_user,
-                             @case.approving_teams.with_user(@current_user).first,
-                             filenames
+                             acting_user: @current_user,
+                             acting_team: @case.approving_teams.with_user(@current_user).first,
+                             filenames: filenames
         )
       else
         raise "Unexpected action parameter: '#{@action}'"

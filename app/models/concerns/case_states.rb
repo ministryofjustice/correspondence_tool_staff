@@ -1,7 +1,7 @@
 module CaseStates
   extend ActiveSupport::Concern
 
-  TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = [ nil, 'unassigned' ]
+  TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = [ nil, 'unassigned', 'awaiting_responder', 'drafting' ]
   NON_TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = [ nil,
                                                               'unassigned',
                                                               'awaiting_responder',

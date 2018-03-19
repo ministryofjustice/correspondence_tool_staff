@@ -44,7 +44,7 @@ module ConfigurableStateMachine
                   edit_case: nil,
                   flag_for_clearance: nil,
                   unflag_for_clearance: {
-                    if: 'Case::FOI::StandardPolicy#can_unflag_for_clearance?',
+                    if: 'Case::FOI::StandardPolicy#unflag_for_clearance?'
                   }
                 },
                 drafting: {
@@ -52,7 +52,7 @@ module ConfigurableStateMachine
                     if: 'Case::FOI::StandardPolicy#can_add_message_to_case?',
                     switch_workflow: 'trigger',
                     transition_to: 'ready_to_send',
-                    after_transition: 'Predicates#notify_responder_message_received'
+                    after_transition: 'Workflows::Hooks#notify_responder_message_received'
                   },
                   add_response: nil
                 },
@@ -151,7 +151,7 @@ module ConfigurableStateMachine
             it 'returns all events' do
               policy = double Case::FOI::StandardPolicy
               expect(policy).to receive(:can_add_message_to_case?).exactly(2).and_return(true)
-              expect(policy).to receive(:can_unflag_for_clearance?).and_return(true)
+              expect(policy).to receive(:unflag_for_clearance?).and_return(true)
               expect(Case::FOI::StandardPolicy).to receive(:new).with(user: user, kase: kase).exactly(3).and_return(policy)
               expect(machine.permitted_events(user)).to eq %i{
                                   add_message_to_case

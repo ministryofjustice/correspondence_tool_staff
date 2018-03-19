@@ -621,8 +621,8 @@ RSpec.describe CasesController, type: :controller do
       context 'as another responder' do
         let(:user) { create(:responder) }
 
-        it 'permitted_events to be empty' do
-          expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
+        it 'filtered permitted_events to be empty' do
+          expect(assigns(:filtered_permitted_events)).to be_empty
         end
 
         it 'renders case details page' do
@@ -676,8 +676,8 @@ RSpec.describe CasesController, type: :controller do
       context 'as another responder' do
         let(:user) { create(:responder) }
 
-        it 'permitted_events to be empty' do
-          expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
+        it 'filtered permitted_events to be empty' do
+          expect(assigns(:filtered_permitted_events)).to be_empty
         end
 
         it 'renders case details page' do
@@ -719,8 +719,8 @@ RSpec.describe CasesController, type: :controller do
       context 'as the previously assigned responder' do
         let(:user) { responder }
 
-        it 'permitted_events to be empty' do
-          expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
+        it 'filtered permitted_events to be empty' do
+          expect(assigns(:filtered_permitted_events)).to be_empty
         end
 
         it 'renders case details page' do
@@ -731,8 +731,8 @@ RSpec.describe CasesController, type: :controller do
       context 'as another responder' do
         let(:user) { create(:responder) }
 
-        it 'permitted_events to be empty' do
-          expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
+        it 'filtered permitted_events to be empty' do
+          expect(assigns(:filtered_permitted_events)).to be_empty
         end
 
         it 'renders case details page' do

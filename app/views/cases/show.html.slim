@@ -19,10 +19,9 @@
 = render partial: 'layouts/header'
 
 div id="case-#{@case.id}"
-
-  - if (@filtered_permitted_events - [:edit_case, :destroy_case]).any?
-    section.case-info.has-actions
-      .button-holder
+  section.case-info.has-actions
+    .button-holder
+      - if (@filtered_permitted_events - [:edit_case, :destroy_case]).any?
         - if policy(@case).execute_response_approval?
           = action_button_for(:approve)
         - if policy(@case).upload_responses?

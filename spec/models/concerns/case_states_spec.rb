@@ -221,7 +221,7 @@ RSpec.describe Case, type: :model do
           it 'returns legacy state machine' do
             kase = create :assigned_case, :flagged, :dacu_disclosure
             expect(kase.current_state).to eq 'awaiting_responder'
-            expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+            expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
           end
         end
       end

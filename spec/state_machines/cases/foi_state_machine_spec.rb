@@ -43,7 +43,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   let(:responding_team)    { create :responding_team }
   let(:responder)          { responding_team.responders.first }
   let(:another_responder)  { responding_team.responders.first }
-  let(:approving_team)     { create :approving_team }
+  let(:approving_team)     { find_or_create :team_dacu_disclosure }
   let(:approver)           { approving_team.approvers.first }
   let(:other_approver)     {
     create :approver, approving_team: approving_team
@@ -56,11 +56,10 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   let(:new_case)           { create :case }
   let(:assigned_case)      { create :assigned_case,
                                  responding_team: responding_team }
-  let(:assigned_flagged_case) { create :assigned_case, :flagged_accepted,
+  let(:assigned_flagged_case) { create :pending_dacu_clearance_case, :flagged_accepted,
                                        responding_team: responding_team,
                                        approver: approver }
   let(:case_being_drafted) { create :case_being_drafted,
-                                    :flagged,
                                     responder: responder,
                                     responding_team: responding_team}
   let(:case_with_response) { create :case_with_response,
@@ -371,10 +370,15 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
        kase = flagged_accepted_case
        expect(kase.current_state).to eq 'drafting'
        expect(kase.workflow).to eq 'trigger'
-       expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+       expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
        # when
-       kase.state_machine.unflag_for_clearance!(acting_user: approver, acting_team: managing_team, target_team: approving_team, message: 'I do not need to approve this')
+       kase.state_machine.unflag_for_clearance!(
+         acting_user: approver,
+         acting_team: approving_team,
+         target_team: approving_team,
+         message: 'I do not need to approve this'
+       )
 
        # then
        expect(kase.current_state).to eq 'drafting'
@@ -387,10 +391,15 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
         kase = flagged_accepted_case
         expect(kase.current_state).to eq 'drafting'
         expect(kase.workflow).to eq 'trigger'
-        expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+        expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
         # when
-        kase.state_machine.unflag_for_clearance!(acting_user: approver, acting_team: managing_team, target_team: approving_team, message: 'I do not need to approve this')
+        kase.state_machine.unflag_for_clearance!(
+          acting_user: approver,
+          acting_team: approving_team,
+          target_team: approving_team,
+          message: 'I do not need to approve this'
+        )
 
         # then
         transition = kase.reload.transitions.last
@@ -484,58 +493,24 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
     end
   end
 
+
   describe 'trigger a reassign_user' do
-
-    describe 'unflagged case' do
-      let(:kase) { case_being_drafted }
-
-      it 'triggers a reassign_user'do
-          expect {
-            kase.state_machine.reassign_user!(
-                target_user: other_approver,
-                target_team: approving_team,
-                acting_user: approver,
-                acting_team: approving_team )
-          }.to trigger_the_event(:reassign_user)
-                   .on_state_machine(kase.state_machine)
-                   .with_parameters( target_user_id: other_approver.id,
-                                     target_team_id: approving_team.id,
-                                     acting_user_id: approver.id,
-                                     acting_team_id: approving_team.id)
-      end
-
-      it 'adds a transition history record' do
-        kase.state_machine.reassign_user!(
-            target_user: another_responder,
-            target_team: responding_team,
-            acting_user: responder,
-            acting_team: responding_team )
-
-        transition = kase.reload.transitions.last
-        expect(transition.event).to eq 'reassign_user'
-        expect(transition.to_state).to eq 'drafting'
-        expect(transition.target_user_id).to eq another_responder.id
-        expect(transition.acting_user_id).to eq responder.id
-        expect(transition.target_team_id).to eq responding_team.id
-        expect(transition.acting_team_id).to eq responding_team.id
-      end
-    end
 
     describe 'flagged case' do
       let(:kase) { flagged_accepted_case }
       it 'triggers a reassign_user'do
-        expect {
-          kase.state_machine.reassign_user!(
-              target_user: other_approver,
-              target_team: approving_team,
-              acting_user: approver,
-              acting_team: approving_team )
-        }.to trigger_the_event(:reassign_user)
-                 .on_state_machine(kase.state_machine)
-                 .with_parameters( target_user_id: other_approver.id,
-                                   target_team_id: approving_team.id,
-                                   acting_user_id: approver.id,
-                                   acting_team_id: approving_team.id)
+        expect(kase.state_machine).
+            to receive(:trigger_event).
+                with(event: :reassign_user, params: { target_user: other_approver,
+                                                      target_team: approving_team,
+                                                      acting_user: approver,
+                                                      acting_team: approving_team })
+
+        kase.state_machine.reassign_user!(
+            target_user: other_approver,
+            target_team: approving_team,
+            acting_user: approver,
+            acting_team: approving_team )
       end
 
       it 'adds a transition history record' do
@@ -578,16 +553,17 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
     let(:filenames) { ['file1.pdf', 'file2.pdf'] }
 
     it 'triggers an add_responses event' do
-      expect do
-        case_being_drafted.state_machine.add_responses! acting_user: responder,
-                                                        acting_team: case_being_drafted.responding_team,
-                                                        filenames: filenames
-      end.to trigger_the_event(:add_responses)
-               .on_state_machine(case_being_drafted.state_machine)
-               .with_parameters(acting_user_id: responder.id,
-                                acting_team_id: responding_team.id,
-                                filenames: filenames,
-                                message: nil)
+      expect(case_being_drafted.state_machine).
+          to receive(:trigger_event).
+              with(event: :add_responses,
+                   params: {  acting_user: responder,
+                              acting_team: responding_team,
+                              filenames: filenames,
+                              message: ' ' })
+      case_being_drafted.state_machine.add_responses! acting_user: responder,
+                                                      acting_team: case_being_drafted.responding_team,
+                                                      filenames: filenames,
+                                                      message: ' '
     end
   end
 
@@ -669,7 +645,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
       expect(transition.message).to eq 'This is my message to you all'
     end
 
-    context 'user sending message is the resonder' do
+    context 'user sending message is the responder' do
       it 'does not call the notify responder service' do
         case_being_drafted.state_machine.add_message_to_case!(
           acting_user: user,
@@ -711,9 +687,10 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
     it 'triggers a extend_for_pit event' do
       new_deadline = 30.business_days.from_now
       expect do
-        case_with_response.state_machine.extend_for_pit! manager,
-                                                         new_deadline,
-                                                         'for test'
+        case_with_response.state_machine.extend_for_pit! acting_user: manager,
+                                                         acting_team: manager.teams.first,
+                                                         final_deadline: new_deadline,
+                                                         message: 'for test'
       end.to trigger_the_event(:extend_for_pit)
                .on_state_machine(case_with_response.state_machine)
                .with_parameters(acting_user_id: manager.id,
@@ -736,14 +713,14 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
     describe 'trigger approve!' do
       it 'triggers an approve event' do
         expect {
-          state_machine.approve!(approver, kase.approver_assignments.first)
+          state_machine.approve!(acting_user: approver, acting_team: kase.approver_assignments.first.team)
         }.to trigger_the_event(:approve).on_state_machine(state_machine).with_parameters(
           acting_user_id: approver.id,
           acting_team_id: team_id
         )
       end
       it 'calls the notify responder service' do
-        state_machine.approve!(approver, kase.approver_assignments.first)
+        state_machine.approve!(acting_user: approver, acting_team: kase.approver_assignments.first.team)
         expect(NotifyResponderService)
           .to have_received(:new).with(kase, 'Ready to send')
         expect(service).to have_received(:call)
@@ -777,9 +754,9 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
     describe 'trigger upload_response_and_return_for_redraft!' do
       it 'triggers an upload_response_and_return_for_redraft event' do
         expect {
-          state_machine.upload_response_and_return_for_redraft!(approver,
-                                                     kase.approving_teams.first,
-                                                     filenames)
+          state_machine.upload_response_and_return_for_redraft!(acting_user: approver,
+                                                     acting_team: kase.approving_teams.first,
+                                                     filenames: filenames)
         }.to trigger_the_event(:upload_response_and_return_for_redraft).on_state_machine(state_machine).with_parameters(
           acting_user_id: approver.id,
           acting_team_id: team_id,
@@ -789,9 +766,9 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
       end
 
       it 'calls the notify responder service' do
-        state_machine.upload_response_and_return_for_redraft!(approver,
-                                                   kase.approving_teams.first,
-                                                   filenames)
+        state_machine.upload_response_and_return_for_redraft!(acting_user: approver,
+                                                   acting_team: kase.approving_teams.first,
+                                                   filenames: filenames)
         expect(NotifyResponderService)
           .to have_received(:new).with(kase, 'Redraft requested')
         expect(service).to have_received(:call)
@@ -809,8 +786,8 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
       it 'triggers an approve event' do
         expect {
           state_machine.approve!(
-            approver,
-            kase.approver_assignments.first
+            acting_user: approver,
+            acting_team: kase.approving_teams.first
           )
         }.to trigger_the_event(:approve)
                .on_state_machine(state_machine)

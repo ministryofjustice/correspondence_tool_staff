@@ -432,18 +432,18 @@ class Case::FOI::StandardStateMachine
              event: :take_on_for_approval
   end
 
-  def approve!(user, assignment)
+  def approve!(acting_user:, acting_team:)
     trigger! :approve,
-             acting_user_id:  user.id,
+             acting_user_id:  acting_user.id,
              event:           :approve,
-             acting_team_id:  assignment.team_id
+             acting_team_id:  acting_team.id
     notify_responder(object, 'Ready to send') if ready_to_send?(object)
   end
 
-  def approve_and_bypass!(user, assignment, message)
+  def approve_and_bypass!(acting_user:, acting_team:, message:)
     trigger! :approve_and_bypass,
-             acting_user_id:    user.id,
-             acting_team_id:    assignment.team_id,
+             acting_user_id:    acting_user.id,
+             acting_team_id:    acting_team.id,
              message:           message,
              event:             :approve_and_bypass
     notify_responder(object, 'Ready to send') if ready_to_send?(object)
@@ -477,11 +477,11 @@ class Case::FOI::StandardStateMachine
     notify_responder(object, 'Ready to send') if ready_to_send?(object)
   end
 
-  def upload_response_and_return_for_redraft!(user, approving_team, filenames)
+  def upload_response_and_return_for_redraft!(acting_user:, acting_team:, filenames:)
     trigger! :upload_response_and_return_for_redraft,
-             acting_user_id:        user.id,
+             acting_user_id:        acting_user.id,
              event:                 :upload_response_and_return_for_redraft,
-             acting_team_id:        approving_team.id,
+             acting_team_id:        acting_team.id,
              message:               object.upload_comment,
              filenames:             filenames
     notify_responder(object, 'Redraft requested')
@@ -527,12 +527,11 @@ class Case::FOI::StandardStateMachine
     notify_responder(object, 'Message received') if able_to_send?(acting_user, object)
   end
 
-  def extend_for_pit!(user, new_deadline, message)
-    team = object.team_for_user(user)
+  def extend_for_pit!(acting_user:, acting_team:, final_deadline:, message:)
     trigger! :extend_for_pit,
-             acting_user_id: user.id,
-             acting_team_id: team.id,
-             final_deadline: new_deadline,
+             acting_user_id: acting_user.id,
+             acting_team_id: acting_team.id,
+             final_deadline: final_deadline,
              message:        message,
              event:          :extend_for_pit
   end

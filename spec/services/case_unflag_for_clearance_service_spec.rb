@@ -32,7 +32,7 @@ describe CaseUnflagForClearanceService do
         expect(assigned_flagged_case.state_machine)
           .to have_received(:unflag_for_clearance!)
                 .with(acting_user: approver,
-                      acting_team: team_dacu,
+                      acting_team: dacu_disclosure,
                       target_team: dacu_disclosure,
                       message: "message")
       end
@@ -53,12 +53,15 @@ describe CaseUnflagForClearanceService do
                                           team: dacu_disclosure,
                                           message: "message"}
 
-      it 'raises an error when it saves and no assignments change' do
+      it 'passes through an error on saves and does not change assignments' do
         all_assignments = assigned_flagged_case.assignments
         expect(assigned_flagged_case.state_machine)
             .to receive(:unflag_for_clearance!)
                     .and_raise(RuntimeError)
-        service.call
+
+        expect do
+          service.call
+        end .to raise_error(RuntimeError)
         expect(service.result).to eq :error
         expect(assigned_flagged_case.assignments).to eq all_assignments
       end
