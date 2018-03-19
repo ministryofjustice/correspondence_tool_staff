@@ -135,9 +135,10 @@ RSpec.describe CaseTransition, type: :model do
       responder = kase.responder
       team = kase.responding_team
       approver = kase.approvers.first
+      approver_team = kase.approving_teams.first
 
       kase.state_machine.add_message_to_case! acting_user: responder, acting_team: team, message: 'Message #1 - from responder'
-      kase.state_machine.add_message_to_case! acting_user: approver,  acting_team: team,  message: 'Message #2 - from approver'
+      kase.state_machine.add_message_to_case! acting_user: approver,  acting_team: approver_team,  message: 'Message #2 - from approver'
       kase.state_machine.add_message_to_case! acting_user: responder,  acting_team: team,  message: 'Message #3 - from responder'
 
       expect(kase.transitions.messages.size).to eq 3

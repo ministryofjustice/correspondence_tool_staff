@@ -11,12 +11,4 @@ class Workflows::Conditionals
       'awaiting_dispatch'
     end
   end
-
-  def flagged_for_press
-    if @kase.approving_teams.size > 1
-      'pending_press_office_clearance'
-    else
-      'awaiting_dispatch'
-    end
-  end
 end

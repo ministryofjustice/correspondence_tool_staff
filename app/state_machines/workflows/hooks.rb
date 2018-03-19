@@ -11,4 +11,11 @@ class Workflows::Hooks
     end
   end
 
+  def notify_responder_redraft_requested
+    NotifyResponderService.new(@kase, 'Redraft requested').call
+  end
+
+  def notify_responder_ready_to_send
+    NotifyResponderService.new(@kase, 'Ready to send').call
+  end
 end

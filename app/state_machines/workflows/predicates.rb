@@ -12,10 +12,6 @@ class Workflows::Predicates
     end
   end
 
-  def notify_responder_message_received
-    NotifyResponderService.new(@kase, 'Message received').call if able_to_send?(@user, @kase)
-  end
-
   def user_is_approver_on_case?
     @user.in?(@kase.approvers)
   end
@@ -55,19 +51,5 @@ class Workflows::Predicates
 
   def user_is_assigned_disclosure_specialist?
     @kase.assignments.with_teams(BusinessUnit.dacu_disclosure).for_user(@user).present?
-  end
-
-  private
-
-  def able_to_send?(user, kase)
-    message_not_sent_by_responder?(user, kase) && case_has_responder(kase)
-  end
-
-  def message_not_sent_by_responder?(user, kase)
-    user != kase.responder_assignment&.user
-  end
-
-  def case_has_responder(kase)
-    kase.responder_assignment&.user.present?
   end
 end
