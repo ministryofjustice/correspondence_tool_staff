@@ -1,12 +1,16 @@
 .dropzone {
   border: 2px dashed black;
-  padding: $gutter * 2.5;
+  padding: $gutter * 2;
   // width: 100%;
   // min-height: 200px;
   margin-bottom: $gutter;
 
   .dz-message {
     margin-bottom: $gutter;
+  }
+
+  .dz-filename {
+    margin-bottom: $gutter-half;
   }
 
   .arrow-icon::before {
@@ -47,6 +51,9 @@
     .dz-progress {
       width: 15em;
       display: inline-block;
+      border-radius: 10px;
+      border: 1px solid black;
+      height: 15px;
       .dz-upload {
         background-color: $grass-green;
         display:inline-block;
