@@ -101,7 +101,7 @@ module ConfigurableStateMachine
     # * :acting_user (this corresponds to the current_user)
     # * :acting_team
     #
-    #rubocop:disable Metrics/CyclomaticComplexity
+    #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
     def trigger_event(event:, params:)
       event = event.to_sym
       raise ::ConfigurableStateMachine::ArgumentError.new(kase: @kase, event: event, params: params) if !params.key?(:acting_user) || !params.key?(:acting_team)
@@ -148,7 +148,7 @@ module ConfigurableStateMachine
               )
       end
     end
-    #rubocop:enable Metrics/CyclomaticComplexity
+    #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 
 
     def extract_roles_from_metadata(metadata)
