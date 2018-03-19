@@ -1,4 +1,5 @@
 module ConfigurableStateMachine
+  #rubocop:disable Metrics/ClassLength
   class Machine
 
     def initialize(config:, kase:)
@@ -90,6 +91,7 @@ module ConfigurableStateMachine
         guards.all? { |g| g.call(object,last_transition,metadata) }
     end
 
+    #rubocop:disable Metrics/CyclomaticComplexity
     def next_state_for_event(event, params)
       user = extract_user_from_metadata(params)
       if can_trigger_event?(event_name: event, metadata: params)
@@ -117,6 +119,7 @@ module ConfigurableStateMachine
                                     event: event)
       end
     end
+    #rubocop:enable Metrics/CyclomaticComplexity
 
     private
 
@@ -315,6 +318,6 @@ module ConfigurableStateMachine
       end
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end
 
-# after transtition event, be able to take new paramtres

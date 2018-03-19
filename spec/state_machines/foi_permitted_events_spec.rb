@@ -221,8 +221,8 @@ describe Case::FOI::StandardStateMachine do
 
             expect(k.current_state).to eq 'responded'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                         :link_a_case,
-                                                                         :remove_linked_case]
+                                                                          :link_a_case,
+                                                                          :remove_linked_case]
           end
         end
 
@@ -528,7 +528,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :pending_private_clearance_case
 
             expect(k.current_state).to eq 'pending_private_office_clearance'
-            expect(k.state_machine.permitted_events(responder.id)).to eq  [:extend_for_pit, :link_a_case, :remove_linked_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:extend_for_pit, :link_a_case, :remove_linked_case]
           end
         end
 
@@ -590,10 +590,10 @@ describe Case::FOI::StandardStateMachine do
             responder = responder_in_assigned_team(k)
 
             expect(k.current_state).to eq 'pending_dacu_clearance'
-            expect(k.state_machine.permitted_events(responder.id)).to eq  [:add_message_to_case,
-                                                                           :link_a_case,
-                                                                           :reassign_user,
-                                                                           :remove_linked_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
+                                                                          :link_a_case,
+                                                                          :reassign_user,
+                                                                          :remove_linked_case]
           end
         end
 
@@ -603,11 +603,11 @@ describe Case::FOI::StandardStateMachine do
             responder = responder_in_assigned_team(k)
 
             expect(k.current_state).to eq 'pending_press_office_clearance'
-            expect(k.state_machine.permitted_events(responder.id)).to eq   [:add_message_to_case,
-                                                                            :extend_for_pit,
-                                                                            :link_a_case,
-                                                                            :reassign_user,
-                                                                            :remove_linked_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
+                                                                          :extend_for_pit,
+                                                                          :link_a_case,
+                                                                          :reassign_user,
+                                                                          :remove_linked_case]
           end
         end
 
@@ -617,11 +617,11 @@ describe Case::FOI::StandardStateMachine do
             responder = responder_in_assigned_team(k)
 
             expect(k.current_state).to eq 'pending_private_office_clearance'
-            expect(k.state_machine.permitted_events(responder.id)).to eq   [:add_message_to_case,
-                                                                            :extend_for_pit,
-                                                                            :link_a_case,
-                                                                            :reassign_user,
-                                                                            :remove_linked_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
+                                                                          :extend_for_pit,
+                                                                          :link_a_case,
+                                                                          :reassign_user,
+                                                                          :remove_linked_case]
           end
         end
 
@@ -739,11 +739,11 @@ describe Case::FOI::StandardStateMachine do
             k = create :pending_press_clearance_case, :flagged, :dacu_disclosure
 
             expect(k.current_state).to eq 'pending_press_office_clearance'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
-                                                                        :extend_for_pit,
-                                                                        :link_a_case,
-                                                                        :reassign_user,
-                                                                        :remove_linked_case]
+            expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
+                                                                          :extend_for_pit,
+                                                                          :link_a_case,
+                                                                          :reassign_user,
+                                                                          :remove_linked_case]
           end
         end
 
@@ -752,7 +752,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :pending_private_clearance_case, :flagged, :dacu_disclosure
 
             expect(k.current_state).to eq 'pending_private_office_clearance'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
                                                                           :extend_for_pit,
                                                                           :link_a_case,
                                                                           :reassign_user,
@@ -859,17 +859,17 @@ describe Case::FOI::StandardStateMachine do
           approver = approver_in_assigned_team(k)
 
           expect(k.current_state).to eq 'pending_dacu_clearance'
-          expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
-                                                                      :approve,
-                                                                      :approve_and_bypass,
-                                                                      :extend_for_pit,
-                                                                      :link_a_case,
-                                                                      :reassign_user,
-                                                                      :remove_linked_case,
-                                                                      :unaccept_approver_assignment,
-                                                                      :unflag_for_clearance,
-                                                                      :upload_response_and_approve,
-                                                                      :upload_response_and_return_for_redraft]
+          expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
+                                                                        :approve,
+                                                                        :approve_and_bypass,
+                                                                        :extend_for_pit,
+                                                                        :link_a_case,
+                                                                        :reassign_user,
+                                                                        :remove_linked_case,
+                                                                        :unaccept_approver_assignment,
+                                                                        :unflag_for_clearance,
+                                                                        :upload_response_and_approve,
+                                                                        :upload_response_and_return_for_redraft]
         end
       end
 
