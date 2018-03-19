@@ -36,38 +36,6 @@ case_types:
 
     workflows:
       standard:
-        # This is only necessary for FOI since not all states have been converted to use the configurab;le state Machine
-         # So a full list of all states is needed for the case transition decorator
-        permitted_events:
-          - accept_approver_assignment
-          - accept_responder_assignment
-          - add_message_to_case
-          - add_response_to_flagged_case
-          - add_responses
-          - approve
-          - approve_and_bypass
-          - assign_responder
-          - assign_to_new_team
-          - close
-          - destroy_case
-          - edit_case
-          - extend_for_pit
-          - flag_for_clearance
-          - link_a_case
-          - reassign_user
-          - reject_responder_assignment
-          - remove_last_response
-          - remove_linked_case
-          - remove_response
-          - request_amends
-          - request_further_clearance
-          - respond
-          - take_on_for_approval
-          - unaccept_approver_assignment
-          - unflag_for_clearance
-          - upload_response_and_approve
-          - upload_response_and_return_for_redraft
-          - upload_response_approve_and_bypass
 
         initial_state: unassigned
         user_roles:
@@ -285,35 +253,6 @@ case_types:
                 remove_linked_case:
 
       trigger:
-        permitted_events:
-          - accept_approver_assignment
-          - accept_responder_assignment
-          - add_message_to_case
-          - add_response_to_flagged_case
-          - add_responses
-          - approve
-          - approve_and_bypass
-          - assign_responder
-          - assign_to_new_team
-          - close
-          - destroy_case
-          - edit_case
-          - extend_for_pit
-          - flag_for_clearance
-          - link_a_case
-          - reassign_user
-          - reject_responder_assignment
-          - remove_last_response
-          - remove_response
-          - request_amends
-          - request_further_clearance
-          - respond
-          - take_on_for_approval
-          - unaccept_approver_assignment
-          - unflag_for_clearance
-          - upload_response_and_approve
-          - upload_response_and_return_for_redraft
-          - upload_response_approve_and_bypass
 
         initial_state: unassigned
         user_roles:
@@ -370,9 +309,6 @@ case_types:
                 remove_linked_case:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
-                unflag_for_clearance:
-                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
-                  switch_workflow: standard
 
               drafting:
                 add_message_to_case:
@@ -386,9 +322,6 @@ case_types:
                 remove_linked_case:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
-                unflag_for_clearance:
-                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
-                  switch_workflow: standard
 
               pending_dacu_clearance:
                 add_message_to_case:
@@ -399,9 +332,6 @@ case_types:
                 remove_linked_case:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
-                unflag_for_clearance:
-                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
-                  switch_workflow: standard
 
 
           approver:
@@ -566,35 +496,6 @@ case_types:
 
 
       full_approval:
-        permitted_events:
-          - accept_approver_assignment
-          - accept_responder_assignment
-          - add_message_to_case
-          - add_response_to_flagged_case
-          - add_responses
-          - approve
-          - approve_and_bypass
-          - assign_responder
-          - assign_to_new_team
-          - close
-          - destroy_case
-          - edit_case
-          - extend_for_pit
-          - flag_for_clearance
-          - link_a_case
-          - reassign_user
-          - reject_responder_assignment
-          - remove_last_response
-          - remove_response
-          - request_amends
-          - request_further_clearance
-          - respond
-          - take_on_for_approval
-          - unaccept_approver_assignment
-          - unflag_for_clearance
-          - upload_response_and_approve
-          - upload_response_and_return_for_redraft
-          - upload_response_approve_and_bypass
 
         initial_state: unassigned
         user_roles:
