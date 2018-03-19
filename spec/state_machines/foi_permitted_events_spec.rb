@@ -860,7 +860,6 @@ describe Case::FOI::StandardStateMachine do
           expect(k.current_state).to eq 'pending_dacu_clearance'
           expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
                                                                         :approve,
-                                                                        :approve_and_bypass,
                                                                         :extend_for_pit,
                                                                         :link_a_case,
                                                                         :reassign_user,
