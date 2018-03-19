@@ -259,7 +259,7 @@ Rails.application.routes.draw do
       patch :execute_assign_to_new_team, on: :member
     end
 
-    resources :case_attachments, path: 'attachments'
+    resources :case_attachments, path: 'attachments', as: 'attachments'
 
     resources :messages, only: :create
 

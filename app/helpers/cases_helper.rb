@@ -125,7 +125,7 @@ module CasesHelper
 
   def attachment_download_link(kase, attachment)
     link_to t('common.case.download_link_html', filename: attachment.filename),
-            download_case_case_attachment_path(kase, attachment),
+            download_case_attachment_path(kase, attachment),
             class: 'download'
 
   end
@@ -139,7 +139,7 @@ module CasesHelper
   def attachment_preview_link(attachment)
     if attachment.preview_key != nil
       link_to "View",
-                 case_case_attachment_path(attachment.case, attachment),
+                 case_attachment_path(attachment.case, attachment),
                  {target: "_blank", class: "view"}
     else
       ''
@@ -148,7 +148,7 @@ module CasesHelper
 
   def attachment_remove_link(kase, attachment)
     link_to t('common.case.remove_link_html', filename: attachment.filename),
-            case_case_attachment_path(kase, attachment),
+            case_attachment_path(kase, attachment),
             {method: :delete, class:"delete",
             remote: true,
             data: {
