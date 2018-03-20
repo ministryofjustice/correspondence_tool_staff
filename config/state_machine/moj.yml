@@ -246,7 +246,7 @@ case_types:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 add_responses:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
                   transition_to: awaiting_dispatch
                 link_a_case:
                 reassign_user:
@@ -258,7 +258,7 @@ case_types:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?
                    after_transition: Workflows::Hooks#notify_responder_message_received
                  add_responses:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                   if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
                  link_a_case:
                  reassign_user:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?
@@ -527,7 +527,7 @@ case_types:
                   after_transition: Predicates#notify_responder_message_received
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 add_response_to_flagged_case:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
                   transition_to: pending_dacu_clearance
                 link_a_case:
                 reassign_user:
@@ -738,7 +738,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 add_response_to_flagged_case:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
                   transition_to: pending_dacu_clearance
                 link_a_case:
                 reassign_user:
