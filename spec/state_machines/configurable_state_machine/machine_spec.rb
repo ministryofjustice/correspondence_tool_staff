@@ -472,7 +472,7 @@ module ConfigurableStateMachine
       end
 
       describe 'after_transition' do
-        let(:kase)      { create :accepted_case, responder: responder }
+        let(:kase)      { create :accepted_case, responder: @responder }
 
         it 'calls the after transition predicate' do
 
@@ -490,14 +490,13 @@ module ConfigurableStateMachine
         it 'does not call the after transition predicate if user is assigned responder' do
 
           machine = Machine.new(config: config, kase: kase)
-          service = double NotifyResponderService, call: :ok
-          expect(NotifyResponderService).to receive(:new).with(kase, 'Message received').and_return(service)
-          expect(service).to receive(:call)
 
           machine.add_message_to_case!(
               message: 'NNNN',
               acting_team: @responding_team,
               acting_user: @responder)
+
+          expect(NotifyResponderService).not_to receive(:new)
         end
       end
     end
