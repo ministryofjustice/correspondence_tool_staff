@@ -20,8 +20,7 @@ describe Case::FOI::StandardStateMachine do
                                                                     :edit_case,
                                                                     :flag_for_clearance,
                                                                     :link_a_case,
-                                                                    :remove_linked_case,
-                                                                    :request_further_clearance]
+                                                                    :remove_linked_case]
         end
       end
 
@@ -37,8 +36,7 @@ describe Case::FOI::StandardStateMachine do
                                                                       :edit_case,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :request_further_clearance]
+                                                                      :remove_linked_case]
         end
       end
 
@@ -53,8 +51,7 @@ describe Case::FOI::StandardStateMachine do
                                                                       :edit_case,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :request_further_clearance]
+                                                                      :remove_linked_case]
         end
       end
 
@@ -67,8 +64,7 @@ describe Case::FOI::StandardStateMachine do
                                                                       :destroy_case,
                                                                       :edit_case,
                                                                       :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :request_further_clearance]
+                                                                      :remove_linked_case]
         end
       end
 
@@ -112,7 +108,6 @@ describe Case::FOI::StandardStateMachine do
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
-                                                                      :request_further_clearance,
                                                                       :unflag_for_clearance]
         end
       end
@@ -217,8 +212,7 @@ describe Case::FOI::StandardStateMachine do
             expect(k.current_state).to eq 'awaiting_dispatch'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:extend_for_pit,
                                                                           :link_a_case,
-                                                                          :remove_linked_case,
-                                                                          :request_further_clearance]
+                                                                          :remove_linked_case]
           end
         end
 
@@ -315,7 +309,6 @@ describe Case::FOI::StandardStateMachine do
                                                                           :remove_last_response,
                                                                           :remove_linked_case,
                                                                           :remove_response,
-                                                                          :request_further_clearance,
                                                                           :respond]
           end
         end
@@ -364,8 +357,7 @@ describe Case::FOI::StandardStateMachine do
                                                                                       :add_message_to_case,
                                                                                       :flag_for_clearance,
                                                                                       :link_a_case,
-                                                                                      :remove_linked_case,
-                                                                                      :unflag_for_clearance]
+                                                                                      :remove_linked_case]
           end
         end
 
@@ -379,8 +371,7 @@ describe Case::FOI::StandardStateMachine do
                                                                          :flag_for_clearance,
                                                                          :link_a_case,
                                                                          :reassign_user,
-                                                                         :remove_linked_case,
-                                                                         :unflag_for_clearance]
+                                                                         :remove_linked_case]
           end
         end
 
@@ -394,8 +385,7 @@ describe Case::FOI::StandardStateMachine do
                                                                           :flag_for_clearance,
                                                                           :link_a_case,
                                                                           :reassign_user,
-                                                                          :remove_linked_case,
-                                                                          :unflag_for_clearance]
+                                                                          :remove_linked_case]
           end
         end
 
@@ -404,11 +394,11 @@ describe Case::FOI::StandardStateMachine do
             k = create :pending_dacu_clearance_case, :flagged, :press_office
 
             expect(k.current_state).to eq 'pending_dacu_clearance'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
+                                                                         :add_message_to_case,
                                                                          :link_a_case,
                                                                          :reassign_user,
-                                                                         :remove_linked_case,
-                                                                         :unflag_for_clearance]
+                                                                         :remove_linked_case]
           end
         end
 
@@ -420,7 +410,6 @@ describe Case::FOI::StandardStateMachine do
             expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
                                                                           :extend_for_pit,
                                                                           :link_a_case,
-                                                                          :reassign_user,
                                                                           :remove_linked_case]
           end
         end
@@ -433,7 +422,6 @@ describe Case::FOI::StandardStateMachine do
             expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
                                                                           :extend_for_pit,
                                                                           :link_a_case,
-                                                                          :reassign_user,
                                                                           :remove_linked_case]
           end
         end
@@ -450,7 +438,6 @@ describe Case::FOI::StandardStateMachine do
                                                                          :flag_for_clearance,
                                                                          :link_a_case,
                                                                          :remove_linked_case,
-                                                                         :request_further_clearance,
                                                                          :unflag_for_clearance]
           end
         end
@@ -521,7 +508,6 @@ describe Case::FOI::StandardStateMachine do
 
           expect(k.current_state).to eq 'drafting'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
-                                                                       :extend_for_pit,
                                                                        :flag_for_clearance,
                                                                        :link_a_case,
                                                                        :reassign_user,
@@ -538,15 +524,10 @@ describe Case::FOI::StandardStateMachine do
 
           expect(k.current_state).to eq 'pending_dacu_clearance'
           expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
-                                                                        :approve,
-                                                                        :extend_for_pit,
                                                                         :link_a_case,
                                                                         :reassign_user,
                                                                         :remove_linked_case,
-                                                                        :unaccept_approver_assignment,
-                                                                        :unflag_for_clearance,
-                                                                        :upload_response_and_approve,
-                                                                        :upload_response_and_return_for_redraft]
+                                                                        :unflag_for_clearance]
         end
       end
 
@@ -588,7 +569,6 @@ describe Case::FOI::StandardStateMachine do
                                                                        :flag_for_clearance,
                                                                        :link_a_case,
                                                                        :remove_linked_case,
-                                                                       :request_further_clearance,
                                                                        :unaccept_approver_assignment,
                                                                        :unflag_for_clearance]
         end
