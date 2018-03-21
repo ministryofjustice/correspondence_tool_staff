@@ -24,6 +24,8 @@ default: &default
 development:
   <<: *default
   database: correspondence_platform_development
+  host: db
+  user: postgres
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -80,6 +82,7 @@ test:
 #
 production:
   <<: *default
-  database: correspondence_platform_production
-  username: correspondence_platform
-  password: <%= ENV['CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD'] %>
+  url: <%= ENV['DATABASE_URL'] %>
+  # database: correspondence_platform_production
+  # username: correspondence_platform
+  # password: <%= ENV['CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD'] %>

@@ -1,5 +1,20 @@
 FROM ministryofjustice/ruby:2.3.0
 
+# This file generates a base image that is used to generate the image for the
+# uploads container of the Correspondence Tool. We generate a base image because
+# installing the libreoffice package for preview generation is very slow and
+# needs to happen very rarely, if ever. Because Docker doesn't [seem to] cache
+# the installation of packages, we generate a base image and then build our
+# uploads image ontop of that, saving several minutes for each build.
+#
+
+# Normally we use the "onbuild" image as the base of our app images, but as this
+# uploads base image isn't ready to receive a copy of the source dir yet, we use
+# the non-onbuild image, copying what's done in the onbuild Dockerfile which is
+# found here:
+#
+# https://github.com/ministryofjustice/docker-templates/blob/master/ruby/2.3.0/webapp-onbuild/Dockerfile
+
 # add official nodejs repo
 RUN curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
         echo 'deb https://deb.nodesource.com/node jessie main' > /etc/apt/sources.list.d/nodesource.list

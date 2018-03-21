@@ -1,7 +1,9 @@
 version: '2'
 services:
   db:
-    image: postgres
+    image: postgres:9.5-alpine
+  redis:
+    image: redis:alpine
   web:
     build:
       context: .
@@ -15,3 +17,38 @@ services:
       - "3000:3000"
     depends_on:
       - db
+      - redis
+  mailer:
+    build:
+      context: .
+      dockerfile: Dockerfile.mailer
+    environment:
+      RAILS_ENV: development
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - db
+      - redis
+  uploads:
+    build:
+      context: .
+      dockerfile: Dockerfile.uploads
+    environment:
+      RAILS_ENV: development
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - db
+      - redis
+  reports:
+    build:
+      context: .
+      dockerfile: Dockerfile.reports
+    environment:
+      RAILS_ENV: development
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - db
+      - redis
+
