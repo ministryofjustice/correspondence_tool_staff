@@ -1,0 +1,3 @@
+FROM registry.service.dsd.io/correspondence-staff-uploads-base
+
+ENTRYPOINT ["./run-uploads.sh"]

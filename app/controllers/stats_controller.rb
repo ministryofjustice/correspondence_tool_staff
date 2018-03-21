@@ -67,7 +67,7 @@ class StatsController < ApplicationController
   end
 
   def report_is_current?(report)
-    job_config = get_job_config 'config/sidekiq-report-generator.yml',
+    job_config = get_job_config 'config/sidekiq-reports.yml',
                                 report.report_type.abbr
     scheduled_time = job_previous_run_time(job_config)
     report.created_at >= scheduled_time

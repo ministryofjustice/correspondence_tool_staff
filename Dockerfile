@@ -1,14 +1,11 @@
-FROM registry.service.dsd.io/correspondence-staff-base
+FROM registry.service.dsd.io/correspondence-staff-app
 
 ENV PUMA_PORT 3000
-
-RUN touch /etc/inittab
+ENV RAILS_ENV=production
 
 EXPOSE $PUMA_PORT
 
-COPY . /usr/src/app
-
-RUN bundle exec rake assets:precompile assets:non_digested RAILS_ENV=production \
-  SECRET_KEY_BASE=required_but_does_not_matter_for_assets
+RUN bundle exec rake assets:precompile assets:non_digested \
+      SECRET_KEY_BASE=required_but_does_not_matter_for_assets
 
 ENTRYPOINT ["./run.sh"]

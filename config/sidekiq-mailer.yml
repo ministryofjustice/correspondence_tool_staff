@@ -1,6 +1,7 @@
 ---
-:concurrency: 10
-:logfile: ./log/sidekiq.log
+:concurrency: 5
+production:
+  :concurrency: 10
+:logfile: ./log/sidekiq-mailer.log
 :queues:
   - correspondence_tool_staff_mailers
-  - correspondence_tool_staff_pdf_maker
