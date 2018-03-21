@@ -23,9 +23,7 @@ default: &default
 
 development:
   <<: *default
-  database: correspondence_platform_development
-  host: db
-  user: postgres
+  url: <%= ENV.fetch('DATABASE_URL', 'postgres://localhost/correspondence_platform_development') %>
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.

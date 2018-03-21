@@ -11,8 +11,8 @@ services:
     environment:
       RAILS_ENV: development
       REDIS_URL: redis://redis/
+      DATABASE_URL: postgres://postgres@db/correspondence_platform_development
       SHOW_BETTER_ERRORS_TO: 172.18.0.0/16
-    # command: bundle exec puma -b tcp://0.0.0.0:3000
     volumes:
       - .:/usr/src/app
       - ~/.aws:/root/.aws
