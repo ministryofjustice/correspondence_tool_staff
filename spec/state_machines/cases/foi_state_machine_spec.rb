@@ -56,7 +56,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   let(:new_case)           { create :case }
   let(:assigned_case)      { create :assigned_case,
                                  responding_team: responding_team }
-  let(:assigned_flagged_case) { create :pending_dacu_clearance_case, :flagged_accepted,
+  let(:assigned_flagged_case) { create :assigned_case, :flagged_accepted,
                                        responding_team: responding_team,
                                        approver: approver }
   let(:case_being_drafted) { create :case_being_drafted,
@@ -428,22 +428,22 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
   describe 'trigger flag_for_clearance!' do
     it 'triggers a flag_for_clearance event' do
-      expect do
-        assigned_flagged_case.state_machine.flag_for_clearance! acting_user: manager,
+       expect(kase.state_machine).
+         to receive(:trigger_event).
+           with(event: :flag_for_clearance, params: { acting_user: manager,
                                                         acting_team: managing_team,
-                                                        target_team: approving_team
-      end
-        .to trigger_the_event(:flag_for_clearance)
-              .on_state_machine(assigned_flagged_case.state_machine)
-              .with_parameters acting_user_id: manager.id,
-                               acting_team_id: managing_team.id,
-                               target_team_id: approving_team.id
+                                                        target_team: approving_team})
+       kase.state_machine.flag_for_clearance!(
+          acting_user: manager,
+          acting_team: managing_team,
+          target_team: approving_team
+       )
     end
   end
 
   describe 'trigger unflag_for_clearance!' do
     it 'triggers an unflag_for_clearance event' do
-      expect (kase.state_machine).
+      expect(kase.state_machine).
         to receive(:trigger_event).
           with(event: :unflag_for_clearance, params: { acting_user: manager,
                                                        acting_team: managing_team,
@@ -484,14 +484,24 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
   describe 'trigger accept_responder_assignment!' do
     it 'triggers an accept_responder_assignment event' do
-      expect do
-        assigned_flagged_case.state_machine.accept_responder_assignment!(
-                            acting_user: responder,
-                            acting_team: responding_team)
-      end.to trigger_the_event(:accept_responder_assignment)
-               .on_state_machine(assigned_flagged_case.state_machine)
-               .with_parameters(acting_user_id: responder.id,
-                                acting_team_id: responding_team.id)
+
+      expect(kase.state_machine).
+          to receive(:trigger_event).
+              with(event: :accept_responder_assignment, params: { acting_user: responder,
+                                                                  acting_team: responding_team })
+
+      kase.state_machine.accept_responder_assignment!(
+        acting_user: responder,
+        acting_team: responding_team)
+
+
+        expect(kase.state_machine).to receive(:trigger_event).with(event: :accept_responder_assignment,
+                                                                  params:{
+                                                                    acting_user: responder,
+                                                                    acting_team: responding_team})
+        kase.state_machine.accept_responder_assignment!(
+          acting_user: responder,
+          acting_team: responding_team )
     end
   end
 
@@ -734,18 +744,18 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
     end
 
     describe 'trigger upload_response_and_approve!' do
-      it 'triggers an upload_response_and_approve_event' do
-        expect {
-          state_machine.upload_response_and_approve!(acting_user: approver,
-                                                     acting_team: kase.approving_teams.first,
-                                                     message: 'Uploading....',
-                                                     filenames: filenames)
-        }.to trigger_the_event(:upload_response_and_approve).on_state_machine(state_machine).with_parameters(
-          acting_user_id: approver.id,
-          acting_team_id: team_id,
-          filenames: filenames,
-          message: 'Uploading....'
-        )
+        it 'triggers an upload_response_and_approve_event event' do
+          expect(kase.state_machine).to receive(:trigger_event).with(event: :upload_response_and_approve,
+                                                                    params:{
+                                                                      acting_user: approver,
+                                                                      acting_team: kase.approving_teams.first,
+                                                                      message: 'Uploading....',
+                                                                      filenames: filenames})
+          kase.state_machine.upload_response_and_approve!(
+            acting_user: approver,
+            acting_team: kase.approving_teams.first,
+            message: 'Uploading....',
+            filenames: filenames )
       end
       it 'calls the notify responder service' do
         state_machine.upload_response_and_approve!(acting_user: approver,

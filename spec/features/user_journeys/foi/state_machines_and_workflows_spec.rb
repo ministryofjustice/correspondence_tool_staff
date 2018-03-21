@@ -85,7 +85,7 @@ feature 'FOI case that does not require clearance' do
     t = transitions[3]
     expect(t.event).to eq 'unaccept_approver_assignment'
     expect(t.to_state).to eq 'awaiting_responder'
-    expect(t.to_workflow).to eq 'standard'
+    expect(t.to_workflow).to eq 'trgger'
     expect(t.acting_team_id).to eq team_dacu_disclosure.id
     expect(t.acting_user_id).to eq disclosure_specialist.id
     expect(t.target_team_id).to be_nil
@@ -441,7 +441,7 @@ feature 'FOI case that does not require clearance' do
     t = transitions[3]
     expect(t.event).to eq 'unaccept_approver_assignment'
     expect(t.to_state).to eq 'awaiting_responder'
-    expect(t.to_workflow).to eq 'standard'
+    expect(t.to_workflow).to eq 'trigger'
     expect(t.acting_team_id).to eq team_dacu_disclosure.id
     expect(t.acting_user_id).to eq disclosure_specialist.id
     expect(t.target_team_id).to be_nil
