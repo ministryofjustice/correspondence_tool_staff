@@ -7,7 +7,6 @@ FROM ministryofjustice/ruby:2.3.0
 # the installation of packages, we generate a base image and then build our
 # uploads image ontop of that, saving several minutes for each build.
 #
-
 # Normally we use the "onbuild" image as the base of our app images, but as this
 # uploads base image isn't ready to receive a copy of the source dir yet, we use
 # the non-onbuild image, copying what's done in the onbuild Dockerfile which is
@@ -19,20 +18,10 @@ FROM ministryofjustice/ruby:2.3.0
 RUN curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
         echo 'deb https://deb.nodesource.com/node jessie main' > /etc/apt/sources.list.d/nodesource.list
 
-COPY bin/codename.sh .
-
-# add official postgresql repo
-RUN curl -s https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
-    sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(./codename.sh)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && \
-    cat /etc/apt/sources.list.d/pgdg.list && \
-    rm codename.sh
-
 RUN apt-get update && \
-    apt-get install -y ca-certificates \
-                       less \
+    apt-get install -y less \
                        libreoffice \
                        nodejs \
-                       postgresql-client-9.5 \
                        runit && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && rm -fr *Release* *Sources* *Packages* && \
