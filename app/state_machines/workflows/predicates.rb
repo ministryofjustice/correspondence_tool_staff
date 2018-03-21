@@ -33,6 +33,11 @@ class Workflows::Predicates
        approver_assignments.first.pending?)
   end
 
+  def case_can_be_unflagged_for_clearance_by_press_or_private?
+    case_can_be_unflagged_for_clearance_by_press_officer? ||
+      case_can_be_unflagged_for_clearance_by_private_officer?
+  end
+
   def case_can_be_unflagged_for_clearance_by_press_officer?
     approver_assignments = @kase.assignments.approving
     press_office         = BusinessUnit.press_office
