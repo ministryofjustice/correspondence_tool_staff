@@ -52,4 +52,9 @@ class Workflows::Predicates
   def user_is_assigned_disclosure_specialist?
     @kase.assignments.with_teams(BusinessUnit.dacu_disclosure).for_user(@user).present?
   end
+
+  def case_outside_escalation_period_and_not_responded_or_closed?
+    @ase.outside_escalation_deadline? &&
+        @ase.current_state.in?(%w{responded closed})
+  end
 end

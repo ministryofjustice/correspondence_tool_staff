@@ -367,9 +367,6 @@ case_types:
                 remove_linked_case:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
-                unflag_for_clearance:
-                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
-                  switch_workflow: standard
 
               drafting:
                 add_message_to_case:
@@ -383,9 +380,6 @@ case_types:
                 remove_linked_case:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
-                unflag_for_clearance:
-                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
-                  switch_workflow: standard
 
               pending_dacu_clearance:
                 add_message_to_case:
@@ -396,10 +390,6 @@ case_types:
                 remove_linked_case:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
-                unflag_for_clearance:
-                  if: Case::FOI::StandardPolicy#unflag_for_clearance_from_unassigned_to_unassigned?
-                  switch_workflow: standard
-
 
           approver:
             states:
@@ -486,9 +476,6 @@ case_types:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                   transition_to: awaiting_dispatch
                   after_transition: Workflows::Hooks#notify_responder_ready_to_send
-                approve_and_bypass:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
-                  transition_to: awaiting_dispatch
                 extend_for_pit:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
