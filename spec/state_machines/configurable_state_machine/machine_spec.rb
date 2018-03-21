@@ -74,6 +74,16 @@ module ConfigurableStateMachine
                   }
                 }
               }
+            },
+            responder: {
+              states: {
+                drafting: {
+                  add_message_to_case: {
+                    if: 'Case::FOI::StandardPolicy#can_add_message_to_case?',
+                    after_transition: 'Workflows::Hooks#notify_responder_message_received'
+                  }
+                }
+              }
             }
           }
         })
@@ -88,6 +98,8 @@ module ConfigurableStateMachine
       @manager            = create :manager, managing_teams: [@managing_team]
       @approver           = create :approver
       @manager_approver   = create :manager_approver
+      @responder          = create :responder
+      @responding_team    = create :responding_team
 
     end
 
@@ -460,7 +472,7 @@ module ConfigurableStateMachine
       end
 
       describe 'after_transition' do
-        let(:kase)      { create :accepted_case }
+        let(:kase)      { create :accepted_case, responder: @responder }
 
         it 'calls the after transition predicate' do
 
@@ -473,6 +485,18 @@ module ConfigurableStateMachine
               message: 'NNNN',
               acting_team: @managing_team,
               acting_user: @manager)
+        end
+
+        it 'does not call the after transition predicate if user is assigned responder' do
+
+          machine = Machine.new(config: config, kase: kase)
+
+          machine.add_message_to_case!(
+              message: 'NNNN',
+              acting_team: @responding_team,
+              acting_user: @responder)
+
+          expect(NotifyResponderService).not_to receive(:new)
         end
       end
     end
