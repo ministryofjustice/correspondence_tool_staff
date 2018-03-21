@@ -460,40 +460,32 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
   describe 'trigger accept_approver_assignment!' do
     it 'triggers an accept_approver_assignment event' do
-      expect do
-        assigned_flagged_case.state_machine.accept_approver_assignment! acting_user: approver,
-                                                                acting_team: approving_team
-      end.to trigger_the_event(:accept_approver_assignment)
-               .on_state_machine(assigned_flagged_case.state_machine)
-               .with_parameters(acting_user_id: approver.id,
-                                acting_team_id: approving_team.id)
+
+      expect(kase.state_machine).to receive(:trigger_event).with(event: :accept_approver_assignment,
+                                                                params:{
+                                                                  acting_user: approver,
+                                                                  acting_team: approving_team})
+      kase.state_machine.accept_approver_assignment!(
+        acting_user: approver,
+        acting_team: approving_team )
     end
   end
 
   describe 'trigger unaccept_approver_assignment!' do
     it 'triggers unaccept_approver_assignment event' do
-      expect {
-        assigned_flagged_case.state_machine.unaccept_approver_assignment!(
-                            acting_user: approver,
-                            acting_team: approving_team)
-      }.to trigger_the_event(:unaccept_approver_assignment)
-              .on_state_machine(assigned_flagged_case.state_machine)
-              .with_parameters(acting_user_id: approver.id, acting_team_id: approving_team.id)
+
+      expect(kase.state_machine).to receive(:trigger_event).with(event: :unaccept_approver_assignment,
+                                                                params:{
+                                                                  acting_user: approver,
+                                                                  acting_team: approving_team})
+      kase.state_machine.unaccept_approver_assignment!(
+        acting_user: approver,
+        acting_team: approving_team )
     end
   end
 
   describe 'trigger accept_responder_assignment!' do
     it 'triggers an accept_responder_assignment event' do
-
-      expect(kase.state_machine).
-          to receive(:trigger_event).
-              with(event: :accept_responder_assignment, params: { acting_user: responder,
-                                                                  acting_team: responding_team })
-
-      kase.state_machine.accept_responder_assignment!(
-        acting_user: responder,
-        acting_team: responding_team)
-
 
         expect(kase.state_machine).to receive(:trigger_event).with(event: :accept_responder_assignment,
                                                                   params:{

@@ -706,10 +706,6 @@ case_types:
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
-                unaccept_approver_assignment:
-                  if: Workflows::Predicates#user_is_approver_on_case?
-                  # if not flagged for press and private?
-                  # do we want to transition straight away or is this the 'undo button' and so just needs to be given the another disclosure specialist
                 upload_response_and_approve:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                   transition_to: pending_press_office_clearance

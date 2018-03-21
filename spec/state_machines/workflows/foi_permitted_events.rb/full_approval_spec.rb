@@ -481,8 +481,7 @@ describe Case::FOI::StandardStateMachine do
                                                                         :link_a_case,
                                                                         :reassign_user,
                                                                         :remove_linked_case,
-                                                                        :unaccept_approver_assignment,
-                                                                        :unflag_for_clearance]
+                                                                        :unaccept_approver_assignment]
         end
       end
 
@@ -496,8 +495,7 @@ describe Case::FOI::StandardStateMachine do
                                                                        :link_a_case,
                                                                        :reassign_user,
                                                                        :remove_linked_case,
-                                                                       :unaccept_approver_assignment,
-                                                                       :unflag_for_clearance]
+                                                                       :unaccept_approver_assignment]
         end
       end
 
@@ -512,8 +510,7 @@ describe Case::FOI::StandardStateMachine do
                                                                        :link_a_case,
                                                                        :reassign_user,
                                                                        :remove_linked_case,
-                                                                       :unaccept_approver_assignment,
-                                                                       :unflag_for_clearance]
+                                                                       :unaccept_approver_assignment]
         end
       end
 
@@ -526,8 +523,7 @@ describe Case::FOI::StandardStateMachine do
           expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
                                                                         :link_a_case,
                                                                         :reassign_user,
-                                                                        :remove_linked_case,
-                                                                        :unflag_for_clearance]
+                                                                        :remove_linked_case]
         end
       end
 
