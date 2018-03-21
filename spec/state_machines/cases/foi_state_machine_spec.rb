@@ -731,9 +731,10 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
     describe 'trigger upload_response_and_approve!' do
       it 'triggers an upload_response_and_approve_event' do
         expect {
-          state_machine.upload_response_and_approve!(approver,
-                                                     kase.approving_teams.first,
-                                                     filenames)
+          state_machine.upload_response_and_approve!(acting_user: approver,
+                                                     acting_team: kase.approving_teams.first,
+                                                     message: 'Uploading....',
+                                                     filenames: filenames)
         }.to trigger_the_event(:upload_response_and_approve).on_state_machine(state_machine).with_parameters(
           acting_user_id: approver.id,
           acting_team_id: team_id,
@@ -742,9 +743,10 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
         )
       end
       it 'calls the notify responder service' do
-        state_machine.upload_response_and_approve!(approver,
-                                                   kase.approving_teams.first,
-                                                   filenames)
+        state_machine.upload_response_and_approve!(acting_user: approver,
+                                                   acting_team: kase.approving_teams.first,
+                                                   message: nil,
+                                                   filenames: filenames)
         expect(NotifyResponderService)
           .to have_received(:new).with(kase, 'Ready to send')
         expect(service).to have_received(:call)
@@ -755,8 +757,9 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
       it 'triggers an upload_response_and_return_for_redraft event' do
         expect {
           state_machine.upload_response_and_return_for_redraft!(acting_user: approver,
-                                                     acting_team: kase.approving_teams.first,
-                                                     filenames: filenames)
+                                                                acting_team: kase.approving_teams.first,
+                                                                message: 'Uploading....',
+                                                                filenames: filenames)
         }.to trigger_the_event(:upload_response_and_return_for_redraft).on_state_machine(state_machine).with_parameters(
           acting_user_id: approver.id,
           acting_team_id: team_id,
@@ -767,8 +770,9 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
       it 'calls the notify responder service' do
         state_machine.upload_response_and_return_for_redraft!(acting_user: approver,
-                                                   acting_team: kase.approving_teams.first,
-                                                   filenames: filenames)
+                                                              acting_team: kase.approving_teams.first,
+                                                              message: nil,
+                                                              filenames: filenames)
         expect(NotifyResponderService)
           .to have_received(:new).with(kase, 'Redraft requested')
         expect(service).to have_received(:call)

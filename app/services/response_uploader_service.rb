@@ -54,15 +54,22 @@ class ResponseUploaderService
       filenames = response_attachments.map(&:filename)
       case @action
       when 'upload'
-        @case.state_machine.add_responses!(acting_user: @current_user, acting_team: @case.responding_team, filenames: filenames)
+        @case.state_machine.add_responses!(acting_user: @current_user,
+                                           acting_team: @case.responding_team,
+                                           filenames: filenames,
+                                           message: @case.upload_comment)
       when 'upload-flagged'
-        @case.state_machine.add_response_to_flagged_case!(acting_user: @current_user, acting_team: @case.responding_team, filenames: filenames)
+        @case.state_machine.add_response_to_flagged_case!(acting_user: @current_user,
+                                                          acting_team: @case.responding_team,
+                                                          filenames: filenames,
+                                                          message: @case.upload_comment)
       when 'upload-approve'
         upload_approve(filenames)
       when 'upload-redraft'
         @case.state_machine.upload_response_and_return_for_redraft!(
                              acting_user: @current_user,
                              acting_team: @case.approving_teams.with_user(@current_user).first,
+                             message: @case.upload_comment,
                              filenames: filenames
         )
       else
@@ -103,9 +110,10 @@ class ResponseUploaderService
 
   def approve_and_progress_as_normal(filenames)
     @case.state_machine.upload_response_and_approve!(
-      @current_user,
-      @case.approving_teams.with_user(@current_user).first,
-      filenames
+      acting_user: @current_user,
+      acting_team: @case.approving_teams.with_user(@current_user).first,
+      filenames: filenames,
+      message: @case.upload_comment
     )
   end
 

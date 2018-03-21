@@ -467,22 +467,22 @@ class Case::FOI::StandardStateMachine
              acting_team_id:  assignment.team_id
   end
 
-  def upload_response_and_approve!(user, approving_team, filenames)
+  def upload_response_and_approve!(acting_user:, acting_team:, filenames:, message:)
     trigger! :upload_response_and_approve,
-             acting_user_id:        user.id,
+             acting_user_id:        acting_user.id,
              event:                 :upload_response_and_approve,
-             acting_team_id:        approving_team.id,
-             message:               object.upload_comment,
+             acting_team_id:        acting_team.id,
+             message:               message,
              filenames:             filenames
     notify_responder(object, 'Ready to send') if ready_to_send?(object)
   end
 
-  def upload_response_and_return_for_redraft!(acting_user:, acting_team:, filenames:)
+  def upload_response_and_return_for_redraft!(acting_user:, acting_team:, filenames:, message:)
     trigger! :upload_response_and_return_for_redraft,
              acting_user_id:        acting_user.id,
              event:                 :upload_response_and_return_for_redraft,
              acting_team_id:        acting_team.id,
-             message:               object.upload_comment,
+             message:               message,
              filenames:             filenames
     notify_responder(object, 'Redraft requested')
   end

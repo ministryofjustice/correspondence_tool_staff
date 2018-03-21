@@ -14,6 +14,10 @@ describe ResponseUploaderService do
                                                          user,
                                                          params,
                                                          action) }
+  let(:rus_with_message)   { ResponseUploaderService.new(kase,
+                                                         user,
+                                                         params_with_message,
+                                                         action) }
   let(:attachments)        { [instance_double(CaseAttachment,
                                               filename: filename)] }
   let(:uploader)           { instance_double(S3Uploader,
@@ -28,6 +32,19 @@ describe ResponseUploaderService do
         "id"             => kase.id.to_s,
         "controller"     => "cases",
         "action"         => "upload_responses"}
+    )
+    BypassParamsManager.new(raw_params)
+  end
+
+  let(:params_with_message) do
+    raw_params = ActionController::Parameters.new(
+        {
+            "type"           => "response",
+            "uploaded_files" => [uploads_key],
+            "upload_comment" => 'This is my upload message',
+            "id"             => kase.id.to_s,
+            "controller"     => "cases",
+            "action"         => "upload_responses"}
     )
     BypassParamsManager.new(raw_params)
   end
@@ -59,6 +76,20 @@ describe ResponseUploaderService do
       it 'gives a result of :ok' do
         rus.upload!
         expect(rus.result).to eq :ok
+      end
+
+      it 'creates a transition' do
+        rus.upload!
+        transition = kase.transitions.last
+        expect(transition.event).to eq 'add_responses'
+        expect(transition.metadata).to eq({ 'filenames' => [filename], 'message' => nil })
+      end
+
+      it 'creates a transition with a message' do
+        rus_with_message.upload!
+        transition = kase.transitions.last
+        expect(transition.event).to eq 'add_responses'
+        expect(transition.metadata).to eq({ 'filenames' => [filename], 'message' => 'This is my upload message' })
       end
 
       it 'calls add_responses! for non flagged cases' do
@@ -137,30 +168,90 @@ describe ResponseUploaderService do
   context 'action upload-flagged' do
 
     let(:action)  { 'upload-flagged' }
+    let(:kase)    { create :accepted_case, :flagged }
 
     it 'calls add_response_to_flagged_case! on state machine' do
       expect(kase.state_machine).to receive(:add_response_to_flagged_case!)
       rus.upload!
+    end
+
+    it 'creates a transition' do
+      rus.upload!
+      transition = kase.transitions.last
+      expect(transition.event).to eq 'add_response_to_flagged_case'
+      expect(transition.metadata).to eq({ 'filenames' => [filename], 'message' => nil })
+    end
+
+    it 'creates a transition with a message' do
+      rus_with_message.upload!
+      transition = kase.transitions.last
+      expect(transition.event).to eq 'add_response_to_flagged_case'
+      expect(transition.metadata).to eq({ 'filenames' => [filename], 'message' => 'This is my upload message' })
     end
   end
 
   context 'action upload-approve' do
 
     let(:action)  { 'upload-approve' }
+    let(:kase)    { create :pending_dacu_clearance_case, :flagged_accepted, :dacu_disclosure }
+    let(:user)    { kase.approvers.first }
 
     it 'calls add_response_to_flagged_case! on state machine' do
       expect(kase.state_machine).to receive(:upload_response_and_approve!)
       rus.upload!
     end
+
+    it 'creates a transition' do
+      rus.upload!
+      transition = kase.transitions.last
+      expect(transition.event).to eq 'upload_response_and_approve'
+      expect(transition.metadata).to have_key('filenames')
+      expect(transition.metadata['filenames']).to eq [ filename ]
+      expect(transition.metadata).to have_key('message')
+      expect(transition.metadata['message']).to be_nil
+    end
+
+    it 'creates a transition with a message' do
+      rus_with_message.upload!
+      transition = kase.transitions.last
+      expect(transition.event).to eq 'upload_response_and_approve'
+      expect(transition.metadata['filenames']).to eq [ filename ]
+      expect(transition.metadata).to have_key('message')
+      expect(transition.metadata['message']).to eq 'This is my upload message'
+    end
   end
 
   context 'action upload-redraft' do
     let(:action)  { 'upload-redraft' }
+    let(:kase)    { create :pending_dacu_clearance_case, :flagged_accepted, :dacu_disclosure }
+    let(:user)    { kase.approvers.first }
 
     it 'calls upload_response_and_return_for_redraft! on state_machine' do
       expect(kase.state_machine).to receive(:upload_response_and_return_for_redraft!)
       rus.upload!
     end
+
+    it 'creates a transition' do
+      rus.upload!
+      transition = kase.transitions.last
+      expect(transition.event).to eq 'upload_response_and_return_for_redraft'
+      expect(transition.metadata).to have_key('filenames')
+      expect(transition.metadata['filenames']).to eq [ filename ]
+      expect(transition.metadata).to have_key('message')
+      expect(transition.metadata['message']).to be_nil
+    end
+
+    it 'creates a transition with a message' do
+      rus_with_message.upload!
+      transition = kase.transitions.last
+      expect(transition.event).to eq 'upload_response_and_return_for_redraft'
+      expect(transition.metadata['filenames']).to eq [ filename ]
+      expect(transition.metadata).to have_key('message')
+      expect(transition.metadata['message']).to eq 'This is my upload message'
+    end
+
+
+
   end
 
   describe 'notifying approvers when a case is ready for them to clear' do
