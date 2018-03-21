@@ -9,9 +9,9 @@ services:
       context: .
       dockerfile: Dockerfile.development
     environment:
+      DATABASE_URL: postgres://postgres@db/correspondence_platform_development
       RAILS_ENV: development
       REDIS_URL: redis://redis/
-      DATABASE_URL: postgres://postgres@db/correspondence_platform_development
       SHOW_BETTER_ERRORS_TO: 172.18.0.0/16
     volumes:
       - .:/usr/src/app
@@ -26,6 +26,7 @@ services:
       context: .
       dockerfile: Dockerfile.mailer
     environment:
+      DATABASE_URL: postgres://postgres@db/correspondence_platform_development
       RAILS_ENV: development
       REDIS_URL: redis://redis/
     command: run-mailer.sh
@@ -39,6 +40,7 @@ services:
       context: .
       dockerfile: Dockerfile.uploads
     environment:
+      DATABASE_URL: postgres://postgres@db/correspondence_platform_development
       RAILS_ENV: development
       REDIS_URL: redis://redis/
     volumes:
@@ -52,6 +54,7 @@ services:
       context: .
       dockerfile: Dockerfile.reports
     environment:
+      DATABASE_URL: postgres://postgres@db/correspondence_platform_development
       RAILS_ENV: development
       REDIS_URL: redis://redis/
     volumes:

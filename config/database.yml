@@ -80,7 +80,6 @@ test:
 #
 production:
   <<: *default
-  url: <%= ENV['DATABASE_URL'] %>
-  # database: correspondence_platform_production
-  # username: correspondence_platform
-  # password: <%= ENV['CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD'] %>
+  database: correspondence_platform_production
+  username: correspondence_platform
+  password: <%= ENV['CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD'] %>
