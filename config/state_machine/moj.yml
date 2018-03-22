@@ -85,7 +85,7 @@ case_types:
                 remove_linked_case:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
-                  switch_workflow: :trigger
+                  switch_workflow: trigger
 
               awaiting_responder:
                 add_message_to_case:
@@ -98,7 +98,7 @@ case_types:
                 remove_linked_case:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
-                  switch_workflow: :trigger
+                  switch_workflow: trigger
 
               drafting:
                 add_message_to_case:
@@ -411,7 +411,7 @@ case_types:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
                 unflag_for_clearance:
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
-                  switch_workflow: standard
+                  switch_workflow_using: Workflows::Conditionals#unflag_for_clearance
 
               awaiting_responder:
                 accept_approver_assignment:
@@ -429,7 +429,7 @@ case_types:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
                 unflag_for_clearance:               # needed for press/private office to unaccept
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
-                  switch_workflow: standard
+                  switch_workflow_using: Workflows::Conditionals#unflag_for_clearance
 
               drafting:
                 accept_approver_assignment:
@@ -448,7 +448,7 @@ case_types:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
                 unflag_for_clearance:
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
-                  switch_workflow: standard
+                  switch_workflow_using: Workflows::Conditionals#unflag_for_clearance
 
               drafting:
                 accept_approver_assignment:
@@ -467,7 +467,7 @@ case_types:
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
                 unflag_for_clearance:
-                  switch_workflow: standard
+                  switch_workflow_using: Workflows::Conditionals#unflag_for_clearance
 
               pending_dacu_clearance:
                 accept_approver_assignment:
@@ -488,8 +488,8 @@ case_types:
                   # if not flagged for press and private?
                   # do we want to transition straight away or is this the 'undo button' and so just needs to be given the another disclosure specialist
                 unflag_for_clearance:
-                  switch_workflow: standard
-                  transition_to: awaiting_dispatch
+                  switch_workflow_using: Workflows::Conditionals#unflag_for_clearance
+                  transition_to_using: Workflows::Conditionals#transition_unflag_for_clearance
                   after_transition: Workflows::Hooks#notify_responder_ready_to_send
                 upload_response_and_approve:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
@@ -643,11 +643,11 @@ case_types:
                 remove_linked_case:
                 take_on_for_approval:
                   if: Case::BasePolicy#can_take_on_for_approval?
-                unaccept_approver_assignment:
-                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+#                unaccept_approver_assignment:
+#                  if: Case::BasePolicy#can_unaccept_approval_assignment?
                 unflag_for_clearance:               # needed for press/private office to unaccept
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance_by_press_or_private?
-                  switch_workflow: trigger
+                  switch_workflow_using: Workflows::Conditionals#unflag_for_clearance
 
               awaiting_responder:
                 accept_approver_assignment:
@@ -661,12 +661,11 @@ case_types:
                 remove_linked_case:
                 take_on_for_approval:
                   if: Case::BasePolicy#can_take_on_for_approval?
-                unaccept_approver_assignment:
-                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+#                unaccept_approver_assignment:
+#                  if: Case::BasePolicy#can_unaccept_approval_assignment?
                 unflag_for_clearance:               # needed for press/private office to unaccept
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance_by_press_or_private?
-                  switch_workflow: trigger
-
+                  switch_workflow_using: Workflows::Conditionals#unflag_for_clearance
 
               drafting:
                 accept_approver_assignment:
@@ -682,12 +681,11 @@ case_types:
                 remove_linked_case:
                 take_on_for_approval:
                   if: Case::BasePolicy#can_take_on_for_approval?
-                unaccept_approver_assignment:
-                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+#                unaccept_approver_assignment:
+#                  if: Case::BasePolicy#can_unaccept_approval_assignment?
                 unflag_for_clearance:               # needed for press/private office to unaccept
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance_by_press_or_private?
-                  switch_workflow: trigger
-
+                  switch_workflow_using: Workflows::Conditionals#unflag_for_clearance
 
               pending_dacu_clearance:
                 accept_approver_assignment:
@@ -706,8 +704,8 @@ case_types:
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
-                unaccept_approver_assignment:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+#                unaccept_approver_assignment:
+#                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 unflag_for_clearance:               # needed for press/private office to unaccept
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance_by_press_or_private?
                 upload_response_and_approve:

@@ -481,7 +481,6 @@ describe Case::FOI::StandardStateMachine do
                                                                         :link_a_case,
                                                                         :reassign_user,
                                                                         :remove_linked_case,
-                                                                        :unaccept_approver_assignment,
                                                                         :unflag_for_clearance]
         end
       end
@@ -496,7 +495,6 @@ describe Case::FOI::StandardStateMachine do
                                                                        :link_a_case,
                                                                        :reassign_user,
                                                                        :remove_linked_case,
-                                                                       :unaccept_approver_assignment,
                                                                        :unflag_for_clearance]
         end
       end
@@ -512,7 +510,6 @@ describe Case::FOI::StandardStateMachine do
                                                                        :link_a_case,
                                                                        :reassign_user,
                                                                        :remove_linked_case,
-                                                                       :unaccept_approver_assignment,
                                                                        :unflag_for_clearance]
         end
       end

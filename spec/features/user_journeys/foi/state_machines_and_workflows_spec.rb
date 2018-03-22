@@ -100,7 +100,7 @@ feature 'FOI case that does not require clearance' do
     expect(t.target_team_id).to be_nil
     expect(t.target_user_id).to be_nil
 
-    # take on case by press office - which will do same for press
+    # take on case by press office - which will do same for private
     # - unaccept
     # - re-accept
     # - take on.
@@ -137,16 +137,16 @@ feature 'FOI case that does not require clearance' do
     t = transitions[7]
     expect(t.event).to eq 'unflag_for_clearance'
     expect(t.to_state).to eq 'awaiting_responder'
-    expect(t.to_workflow).to eq 'trigger'                  # this is wrong - we don't want to change workflows when press unflags for clearance
+    expect(t.to_workflow).to eq 'trigger'
     expect(t.acting_team_id).to eq press_office.id
     expect(t.acting_user_id).to eq press_officer.id
     expect(t.target_team_id).to eq private_office.id
     expect(t.target_user_id).to be_nil
-# WHAT IS THIS BIT???
+
     t = transitions[8]
     expect(t.event).to eq 'unflag_for_clearance'
     expect(t.to_state).to eq 'awaiting_responder'
-    expect(t.to_workflow).to eq 'standard'
+    expect(t.to_workflow).to eq 'trigger'
     expect(t.acting_team_id).to eq press_office.id
     expect(t.acting_user_id).to eq press_officer.id
     expect(t.target_team_id).to eq press_office.id

@@ -74,6 +74,10 @@ class User < ApplicationRecord
     approving_team.present?
   end
 
+  def disclosure_specialist?
+    approving_team == BusinessUnit.dacu_disclosure
+  end
+
   def press_officer?
     approving_team == BusinessUnit.press_office
   end

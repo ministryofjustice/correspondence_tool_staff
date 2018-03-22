@@ -16,6 +16,6 @@ class Workflows::Hooks
   end
 
   def notify_responder_ready_to_send
-    NotifyResponderService.new(@kase, 'Ready to send').call
+    NotifyResponderService.new(@kase, 'Ready to send').call if @kase.awaiting_dispatch?
   end
 end
