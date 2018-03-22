@@ -32,21 +32,7 @@
 class Case::Base < ApplicationRecord
   include Statesman::Adapters::ActiveRecordQueries
 
-  def self.searchable_fields_and_ranks
-    {
-      name:                 'A',
-      number:               'A',
-      responding_team_name: 'B',
-      subject:              'C',
-      message:              'D',
-    }
-  end
-
-  def self.searchable_document_tsvector
-    'document_tsvector'
-  end
-
-  include Searchable
+  FIELDS_REQUIRING_SEARCH_INDEX_UPDATE = %w{ name message subject }
 
   self.table_name = :cases
 
@@ -625,7 +611,7 @@ class Case::Base < ApplicationRecord
   def process_uploaded_request_files
     if uploading_user.nil?
       # I really don't feel comfortable with having this special snowflake of a
-      # attribute that only ever needs to be populated when creating a new caseraisl
+      # attribute that only ever needs to be populated when creating a new case
       # that was sent by post.
       raise "Uploading user required for processing uploaded request files"
     end
