@@ -1,4 +1,6 @@
 require 'cts/cases/create'
+require 'cts/cases/constants'
+
 
 class Admin::CasesController < ApplicationController
   before_action :authorize_admin
