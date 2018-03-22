@@ -6,7 +6,7 @@ class SearchIndexUpdaterJob < ApplicationJob
     RavenContextProvider.set_context
     kases = Case::Base.where(dirty: true)
     kases.each do |kase|
-      kase.update_index if kase.dirty?
+      SearchIndex.update_document(kase)
       kase.mark_as_clean!
     end
   end
