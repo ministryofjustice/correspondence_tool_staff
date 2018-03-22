@@ -736,7 +736,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
     end
 
     describe 'trigger upload_response_and_approve!' do
-        it 'triggers an upload_response_and_approve_event event' do
+      it 'triggers an upload_response_and_approve_event event' do
           expect(kase.state_machine).to receive(:trigger_event).with(event: :upload_response_and_approve,
                                                                     params:{
                                                                       acting_user: approver,

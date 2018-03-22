@@ -671,30 +671,37 @@ module ConfigurableStateMachine
         it 'return the transition_to state' do
           kase = create :accepted_case
           machine = Machine.new(config: config, kase: kase)
+          manager = kase.managing_team.users.first
           expect(kase.current_state).to eq 'drafting'
-          next_state = machine.next_state_for_event(:add_message_to_case, acting_user_id: @manager.id)
+          next_state = machine.next_state_for_event(:add_message_to_case, acting_user_id: manager.id)
           expect(next_state).to eq 'ready_to_send'
         end
       end
 
       describe 'transition_to_using' do
         let(:kase)    { create :case_with_response }
+        let(:manager) { kase.managing_team.users.first }
         let(:machine)  { Machine.new(config: config, kase: kase) }
 
         describe 'conditonal returns drafting' do
           it 'returns the return value of conditonal' do
             allow_any_instance_of(ConfigurableStateMachine::DummyConditional).to receive(:remove_response).and_return('drafting')
             expect(kase.current_state).to eq 'awaiting_dispatch'
-            next_state = machine.next_state_for_event(:remove_response, acting_user_id: @manager.id)
+            next_state = machine.next_state_for_event(:remove_response, acting_user_id: manager.id)
             expect(next_state).to eq 'drafting'
           end
         end
       end
 
       describe 'no transition specified' do
+        let(:kase)    { create :case, managing_team: @managing_team }
+        let(:manager) { kase.managing_team.users.first }
+        let(:machine)  { Machine.new(config: config, kase: kase) }
+
+
         it 'returns the current state of the case' do
           expect(kase.current_state).to eq 'unassigned'
-          next_state = machine.next_state_for_event(:add_message_to_case, acting_user_id: @manager.id)
+          next_state = machine.next_state_for_event(:add_message_to_case, acting_user_id: manager.id)
           expect(next_state).to eq 'unassigned'
         end
       end

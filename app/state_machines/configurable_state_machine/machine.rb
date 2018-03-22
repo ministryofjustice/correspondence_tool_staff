@@ -96,8 +96,7 @@ module ConfigurableStateMachine
       user = extract_user_from_metadata(params)
       if can_trigger_event?(event_name: event, metadata: params)
         event = event.to_sym
-        # TODO work out how to determine roles
-        role = user.roles.first
+        role = first_role_that_can_trigger_event_on_case(event_name: event, metadata: params, user: user)
         user_role_config = @config.user_roles[role]
         raise InvalidEventError.new(kase: @kase, user: params[:acting_user], event: event, role: role) if user_role_config.nil?
         state_config = user_role_config.states[@kase.current_state]
@@ -122,6 +121,12 @@ module ConfigurableStateMachine
     #rubocop:enable Metrics/CyclomaticComplexity
 
     private
+
+    def first_role_that_can_trigger_event_on_case(event_name:, metadata:, user:)
+      roles = user.roles_for_case(@kase)
+      roles.delete_if { | role| !can_trigger_event?(event_name: event_name, metadata: metadata, roles: [role]) }
+      roles.first
+    end
 
     def event_present_and_triggerable?(role_state_config:, event:, user:)
       return false if role_state_config.nil?
