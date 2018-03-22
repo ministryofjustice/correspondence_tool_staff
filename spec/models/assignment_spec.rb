@@ -214,4 +214,124 @@ RSpec.describe Assignment, type: :model do
                         user_id: manager.id)
     end
   end
+
+  context 'marking case as dirty' do
+
+    let(:kase)    { create :case, :clean }
+
+    context 'responding assignment' do
+      context 'new assignment' do
+        it 'marks the case as dirty' do
+          create :assignment, :responding, case_id: kase.id
+          expect(kase.reload).to be_dirty
+        end
+
+        it 'queues the job' do
+          expect {
+            create :assignment, :responding, case_id: kase.id
+          }.to have_enqueued_job(SearchIndexUpdaterJob).at_least(1)
+        end
+      end
+
+      context 'updated assignment' do
+        before(:each) do
+          kase
+          @assignment = create :assignment, :responding, case_id: kase.id
+          @assignment.case.mark_as_clean!
+        end
+
+        context 'state changed to rejected' do
+          it 'marks the case as dirty' do
+            expect(@assignment.state).to eq 'pending'
+            @assignment.update(state: 'rejected', reasons_for_rejection: 'xxx')
+            expect(kase.reload).to be_dirty
+          end
+        end
+
+        context 'state changed to bypassed' do
+          it 'marks the case as dirty' do
+            @assignment.update(state: 'bypassed')
+            expect(kase.reload).to be_dirty
+          end
+        end
+
+        context 'state changed to accepted' do
+          it 'marks the case as dirty' do
+            expect(kase.reload).to be_clean
+            @assignment.update(state: 'accepted')
+            expect(kase.reload).to be_clean
+          end
+        end
+
+
+        it 'queues the job' do
+          expect {
+            create :assignment, :responding, case_id: kase.id
+          }.to have_enqueued_job(SearchIndexUpdaterJob).at_least(1)
+        end
+      end
+    end
+
+    context 'managing assignment' do
+      context 'new assignment' do
+        it 'does not mark the case as dirty' do
+          expect(kase).to be_clean
+          create :assignment, :managing, case_id: kase.id
+          expect(kase.reload).to be_clean
+        end
+
+        it 'does not queue the job' do
+          expect {
+            create :assignment, :responding, case_id: kase.id
+          }.not_to have_enqueued_job(SearchIndexUpdaterJob)
+        end
+      end
+
+      context 'updated assignment' do
+        it 'does not mark the case as dirty' do
+          assignment = create :assignment, :managing, case_id: kase.id
+          kase.mark_as_clean!
+          assignment.update(state: 'accepted')
+          expect(kase.reload).to be_clean
+        end
+
+        it 'does not queue the job' do
+          expect {
+            create :assignment, :responding, case_id: kase.id
+          }.not_to have_enqueued_job(SearchIndexUpdaterJob)
+        end
+      end
+    end
+
+    context 'approving assignment' do
+      context 'new assignment' do
+        it 'does not mark the case as dirty' do
+          expect(kase).to be_clean
+          create :assignment, :approving, case_id: kase.id
+          expect(kase.reload).to be_clean
+        end
+
+        it 'does not queue the job' do
+          expect {
+            create :assignment, :responding, case_id: kase.id
+          }.not_to have_enqueued_job(SearchIndexUpdaterJob)
+        end
+      end
+
+      context 'updated assignment' do
+        it 'does not mark the case as dirty' do
+          assignment = create :assignment, :approving, case_id: kase.id
+          kase.mark_as_clean!
+          assignment.update(state: 'accepted')
+          expect(kase.reload).to be_clean
+        end
+
+        it 'does not queue the job' do
+          expect {
+            create :assignment, :responding, case_id: kase.id
+          }.not_to have_enqueued_job(SearchIndexUpdaterJob)
+        end
+      end
+    end
+  end
 end

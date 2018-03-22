@@ -25,6 +25,7 @@
 #  info_held_status_id  :integer
 #  type                 :string
 #  appeal_outcome_id    :integer
+#  dirty                :boolean          default(FALSE)
 #
 
 #rubocop:disable Metrics/ClassLength
@@ -244,11 +245,14 @@ class Case::Base < ApplicationRecord
                 :set_managing_team,
                 :set_deadlines
   before_update :update_deadlines
-  before_save :prevent_number_change
+  before_save :prevent_number_change,
+              :trigger_reindexing
 
   before_save do
     self.wokflow = 'standard' if workflow.nil?
   end
+
+
 
   delegate :available_events, to: :state_machine
 
@@ -514,6 +518,19 @@ class Case::Base < ApplicationRecord
     update!(workflow: new_workflow_name)
   end
 
+  def mark_as_clean!
+    update!(dirty: false)
+  end
+
+  def mark_as_dirty!
+    update!(dirty: true)
+  end
+
+  def clean?
+    !dirty?
+  end
+
+
   private
 
   # determines whether or not the BU responded to flagged cases in time (NOT
@@ -611,5 +628,13 @@ class Case::Base < ApplicationRecord
     uploader = S3Uploader.new(self, uploading_user)
     uploader.process_files(uploaded_request_files, :request)
   end
+
+  def trigger_reindexing
+    if (self.changed & FIELDS_REQUIRING_SEARCH_INDEX_UPDATE).any?
+      self.dirty = true
+      SearchIndexUpdaterJob.set(wait: 10.seconds).perform_later
+    end
+  end
+
 end
 #rubocop:enable Metrics/ClassLength

@@ -43,10 +43,21 @@ FactoryGirl.define do
       role 'responding'
     end
 
+    trait :managing do
+      team { create :managing_team }
+      role 'managing'
+    end
+
+    trait :approving do
+      team { create :approving_team }
+      role 'approving'
+    end
+
     trait :accepted do
       state 'accepted'
       user { team_user }
     end
+
   end
 
 end

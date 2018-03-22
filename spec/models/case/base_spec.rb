@@ -25,6 +25,7 @@
 #  info_held_status_id  :integer
 #  type                 :string
 #  appeal_outcome_id    :integer
+#  dirty                :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -1490,5 +1491,45 @@ RSpec.describe Case::Base, type: :model do
         expect(deadline_calculator.kase).to eq kase
       end
     end
+  end
+
+  describe '#mark_as_clean!' do
+    it 'unsets the dirty flag' do
+      kase = create :case
+      expect(kase).to be_dirty
+      kase.mark_as_clean!
+      expect(kase).not_to be_dirty
+    end
+  end
+
+
+  describe '#trigger_reindexing' do
+    context 'creating a new record' do
+      it 'sets the dirty flag' do
+        kase = build :case
+        expect(kase).not_to be_dirty
+        kase.save!
+        expect(kase).to be_dirty
+      end
+    end
+
+    context 'updating an existing record' do
+      let(:kase)  { create :case, :clean }
+
+      context 'fields requiring search reindex not updated' do
+        it 'does not set the dirty flag' do
+          kase.update(date_responded: Date.today, workflow: 'trigger')
+          expect(kase).not_to be_dirty
+        end
+      end
+
+      context 'fields requiring search reindexing are updated' do
+        it 'sets the dirty flag' do
+          kase.update(name: 'John Smith')
+          expect(kase).to be_dirty
+        end
+      end
+    end
+
   end
 end

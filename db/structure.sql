@@ -340,6 +340,8 @@ CREATE TABLE cases (
     info_held_status_id integer,
     type character varying,
     appeal_outcome_id integer,
+    dirty boolean DEFAULT false
+    appeal_outcome_id integer,
     document_tsvector tsvector
 );
 
