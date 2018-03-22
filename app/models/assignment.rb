@@ -14,6 +14,7 @@
 #
 
 class Assignment < ApplicationRecord
+
   validates :case, :role, :state, :team, presence: true
   validates :reasons_for_rejection, presence: true, if: -> { self.rejected? }
   validate :approved_only_for_approvals
@@ -55,6 +56,8 @@ class Assignment < ApplicationRecord
 
   attr_accessor :reasons_for_rejection
 
+  before_save :mark_case_as_dirty_for_responding_assignments
+
   def reject(rejecting_user, message)
     self.reasons_for_rejection = message
     self.case.responder_assignment_rejected(rejecting_user, team, message)
@@ -73,6 +76,19 @@ class Assignment < ApplicationRecord
   end
 
   private
+
+  def mark_case_as_dirty_for_responding_assignments
+    if responding?
+      if new_record? || state_changed_to_rejected_or_bypassed?
+        self.case.mark_as_dirty!
+        SearchIndexUpdaterJob.set(wait: 10.seconds).perform_later
+      end
+    end
+  end
+
+  def state_changed_to_rejected_or_bypassed?
+    changed.include?('state') && state.in?(%w{ rejected bypassed} )
+  end
 
   def unique_pending_responder
     if self.case

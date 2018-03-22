@@ -16,6 +16,9 @@
 #  updated_at             :datetime         not null
 #  full_name              :string           not null
 #  deleted_at             :datetime
+#  failed_attempts        :integer          default(0), not null
+#  unlock_token           :string
+#  locked_at              :datetime
 #
 
 class User < ApplicationRecord
