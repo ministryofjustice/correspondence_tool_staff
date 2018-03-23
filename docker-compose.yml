@@ -6,10 +6,13 @@ services:
     image: redis:alpine
   web:
     build:
+      args:
+        development_mode: "true"
       context: .
-      dockerfile: Dockerfile.development
+    container_name: cts_web
     environment:
       DATABASE_URL: postgres://postgres@db/correspondence_platform_development
+      DOCKER_STATE: development-setup
       RAILS_ENV: development
       REDIS_URL: redis://redis/
       SHOW_BETTER_ERRORS_TO: 172.18.0.0/16
@@ -23,13 +26,16 @@ services:
       - redis
   mailer:
     build:
+      args:
+        development_mode: "true"
+        PUMA_PORT: ""
       context: .
-      dockerfile: Dockerfile.mailer
+    command: ./run-mailer.sh
+    container_name: cts_mailer
     environment:
       DATABASE_URL: postgres://postgres@db/correspondence_platform_development
       RAILS_ENV: development
       REDIS_URL: redis://redis/
-    command: run-mailer.sh
     volumes:
       - .:/usr/src/app
     depends_on:
@@ -37,8 +43,12 @@ services:
       - redis
   uploads:
     build:
+      args:
+        additional_packages: clamav clamav-daemon libreoffice
+        development_mode: "true"
       context: .
-      dockerfile: Dockerfile.uploads
+    command: ./run-uploads.sh
+    container_name: cts_uploads
     environment:
       DATABASE_URL: postgres://postgres@db/correspondence_platform_development
       RAILS_ENV: development
@@ -51,8 +61,12 @@ services:
       - redis
   reports:
     build:
+      args:
+        development_mode: "true"
+        PUMA_PORT: ""
       context: .
-      dockerfile: Dockerfile.reports
+    command: ./run-reports.sh
+    container_name: cts_reports
     environment:
       DATABASE_URL: postgres://postgres@db/correspondence_platform_development
       RAILS_ENV: development
