@@ -4,7 +4,7 @@ class Workflows::Conditionals
     @kase = kase
   end
 
-  def remove_response
+  def remove_response_next_state
     if @kase.attachments.size == 0
       'drafting'
     else
@@ -12,7 +12,7 @@ class Workflows::Conditionals
     end
   end
 
-  def unflag_for_clearance
+  def unflag_for_clearance_next_workflow
     if @user.disclosure_specialist?
       'standard'
     else
@@ -24,7 +24,7 @@ class Workflows::Conditionals
     end
   end
 
-  def transition_unflag_for_clearance
+  def unflag_for_clearance_next_state
     if @user.disclosure_specialist?
       'awaiting_dispatch'
     else

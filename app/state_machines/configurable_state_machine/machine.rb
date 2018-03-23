@@ -78,12 +78,12 @@ module ConfigurableStateMachine
       end
     end
 
-    def get_next_target_state_for_event(event_name, metadata)
-      target_states = get_event_target_states!(event_name)
-      target_states.find do |target_state|
-        call_guards_for_target_state(target_state, metadata)
-      end
-    end
+    # def get_next_target_state_for_event(event_name, metadata)
+    #   target_states = get_event_target_states!(event_name)
+    #   target_states.find do |target_state|
+    #     call_guards_for_target_state(target_state, metadata)
+    #   end
+    # end
 
     def call_guards_for_target_state(target_state, metadata)
       guards = target_state[:guards]
@@ -92,16 +92,25 @@ module ConfigurableStateMachine
     end
 
     #rubocop:disable Metrics/CyclomaticComplexity
+    #rubocop:disable Metrics/MethodLength
     def next_state_for_event(event, params)
       user = extract_user_from_metadata(params)
       if can_trigger_event?(event_name: event, metadata: params)
         event = event.to_sym
-        role = first_role_that_can_trigger_event_on_case(event_name: event, metadata: params, user: user)
+        role = first_role_that_can_trigger_event_on_case(event_name: event, metadata: params, user: user).first
         user_role_config = @config.user_roles[role]
-        raise InvalidEventError.new(kase: @kase, user: params[:acting_user], event: event, role: role) if user_role_config.nil?
+        raise InvalidEventError.new(kase: @kase,
+                                    user: params[:acting_user],
+                                    event: event,
+                                    role: role,
+                                    message: "No such role") if user_role_config.nil?  ###
         state_config = user_role_config.states[@kase.current_state]
         if state_config.nil? || !state_config.to_hash.keys.include?(event)
-          raise InvalidEventError.new(role: role, kase: @kase, user: params[:acting_user], event: event)
+          raise InvalidEventError.new(role: role,
+                                      kase: @kase,
+                                      user: params[:acting_user],
+                                      event: event,
+                                      message: "No state, or event in this state found")
         end
         event_config = state_config[event]
         if event_config.to_h.key?(:transition_to)
@@ -115,17 +124,18 @@ module ConfigurableStateMachine
         raise InvalidEventError.new(role: nil,
                                     kase: @kase,
                                     user: user,
-                                    event: event)
+                                    event: event,
+                                    message: "Not permitted to trigger event")
       end
     end
     #rubocop:enable Metrics/CyclomaticComplexity
+    #rubocop:enable Metrics/MethodLength
 
     private
 
     def first_role_that_can_trigger_event_on_case(event_name:, metadata:, user:)
       roles = user.roles_for_case(@kase)
       roles.delete_if { | role| !can_trigger_event?(event_name: event_name, metadata: metadata, roles: [role]) }
-      roles.first
     end
 
     def event_present_and_triggerable?(role_state_config:, event:, user:)
