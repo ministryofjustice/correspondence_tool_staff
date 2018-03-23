@@ -84,7 +84,7 @@ class EventTransitions
 
     if authorize
       lambda do |kase, _last_transition, options|
-        user = User.find(options[:acting_user_id])
+        user = options.key?(:acting_user) ? options[:acting_user] : User.find(options[:acting_user_id])
 
         policy_object = Pundit.policy!(user, kase)
         if policy_object.respond_to? policy
