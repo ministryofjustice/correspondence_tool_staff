@@ -85,6 +85,8 @@ module Workflows
       }
     end
 
+    after(:all) { DbHousekeeping.clean }
+
     def all_users
       # Users used by the permit_only_these_combinations matcher in combination
       # with all_cases().

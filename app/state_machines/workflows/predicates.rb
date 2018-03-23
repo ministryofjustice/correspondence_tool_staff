@@ -12,10 +12,6 @@ class Workflows::Predicates
     end
   end
 
-  def notify_responder_message_received
-    NotifyResponderService.new(@kase, 'Message received').call if able_to_send?(@user, @kase)
-  end
-
   def user_is_approver_on_case?
     @user.in?(@kase.approvers)
   end
@@ -35,6 +31,11 @@ class Workflows::Predicates
       approver_assignments.first.team == disclosure &&
       (approver_assignments.first.accepted? ||
        approver_assignments.first.pending?)
+  end
+
+  def case_can_be_unflagged_for_clearance_by_press_or_private?
+    case_can_be_unflagged_for_clearance_by_press_officer? ||
+      case_can_be_unflagged_for_clearance_by_private_officer?
   end
 
   def case_can_be_unflagged_for_clearance_by_press_officer?
@@ -57,17 +58,8 @@ class Workflows::Predicates
     @kase.assignments.with_teams(BusinessUnit.dacu_disclosure).for_user(@user).present?
   end
 
-  private
-
-  def able_to_send?(user, kase)
-    message_not_sent_by_responder?(user, kase) && case_has_responder(kase)
-  end
-
-  def message_not_sent_by_responder?(user, kase)
-    user != kase.responder_assignment&.user
-  end
-
-  def case_has_responder(kase)
-    kase.responder_assignment&.user.present?
+  def case_outside_escalation_period_and_not_responded_or_closed?
+    @ase.outside_escalation_deadline? &&
+        @ase.current_state.in?(%w{responded closed})
   end
 end

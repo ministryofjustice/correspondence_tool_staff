@@ -70,7 +70,8 @@ module ConfigurableStateMachine
                     if: 'Case::FOI::StandardPolicy#can_add_message_to_case?'
                   },
                   flag_for_press: {
-                    transition_to: 'awaiting_press_clearance'
+                    transition_to: 'awaiting_press_clearance',
+                    switch_workflow_using: 'Workflows::Conditionals#unaccept_approver_assignment'
                   }
                 }
               }
@@ -393,44 +394,60 @@ module ConfigurableStateMachine
 
     context 'triggering events' do
       context 'switching workflow' do
-        let(:kase)      { create :accepted_case }
+        context 'unconditional switch' do
+          let(:kase)      { create :accepted_case }
 
-        it 'updates the workflow on the case' do
-          # given
-          expect(kase.type_abbreviation).to eq 'FOI'
-          expect(kase.current_state).to eq 'drafting'
-          expect(kase.workflow).to eq 'standard'
+          it 'updates the workflow on the case' do
+            # given
+            expect(kase.type_abbreviation).to eq 'FOI'
+            expect(kase.current_state).to eq 'drafting'
+            expect(kase.workflow).to eq 'standard'
 
-          # when
-          machine = Machine.new(config: config, kase: kase)
-          machine.add_message_to_case!(
-              message: 'NNNN',
-              acting_team: @managing_team,
-              acting_user: @manager)
+            # when
+            machine = Machine.new(config: config, kase: kase)
+            machine.add_message_to_case!(
+                message: 'NNNN',
+                acting_team: @managing_team,
+                acting_user: @manager)
 
-          # then
-          expect(kase.workflow).to eq 'trigger'
+            # then
+            expect(kase.workflow).to eq 'trigger'
+          end
+
+          it 'writes the new workflow to the case transition' do
+            # given
+            expect(kase.current_state).to eq 'drafting'
+
+            # when
+            machine = Machine.new(config: config, kase: kase)
+            machine.add_message_to_case!(
+                message: 'This is my message to you all',
+                acting_team: @managing_team,
+                acting_user: @manager)
+
+            # then
+            transition = kase.transitions.last
+            expect(transition.event).to eq 'add_message_to_case'
+            expect(transition.to_state).to eq 'ready_to_send'
+            expect(transition.to_workflow).to eq 'trigger'
+            expect(transition.message).to eq 'This is my message to you all'
+          end
         end
 
-        it 'writes the new workflow to the case transition' do
-          # given
-          expect(kase.current_state).to eq 'drafting'
+        context 'condition switch workflow using' do
+          it 'updates the workflow on the case' do
+            kase = create :case
+            approver = find_or_create :press_officer
+            expect(kase.workflow).to eq 'standard'
 
-          # when
-          machine = Machine.new(config: config, kase: kase)
-          machine.add_message_to_case!(
-              message: 'This is my message to you all',
-              acting_team: @managing_team,
-              acting_user: @manager)
-
-          # then
-          transition = kase.transitions.last
-          expect(transition.event).to eq 'add_message_to_case'
-          expect(transition.to_state).to eq 'ready_to_send'
-          expect(transition.to_workflow).to eq 'trigger'
-          expect(transition.message).to eq 'This is my message to you all'
+            allow_any_instance_of(Workflows::Conditionals).to receive(:unaccept_approver_assignment).and_return('trigger')
+            machine = Machine.new(config: config, kase: kase)
+            machine.flag_for_press!(acting_user: approver, acting_team: approver.approving_team)
+            expect(kase.workflow).to eq 'trigger'
+          end
         end
       end
+
 
       context 'transition_to_using' do
         let(:kase)    { create :case_with_response }
@@ -654,6 +671,55 @@ module ConfigurableStateMachine
             metadata = { acting_user_id: user.id, acting_team: responding_team }
             expect(machine.__send__(:extract_roles_from_metadata, metadata)).to eq [ 'responder' ]
           end
+        end
+      end
+    end
+
+    describe '#next_state_for_event' do
+      describe 'invalid event' do
+        it 'raises' do
+          expect {
+            machine.next_state_for_event(:dummy_event, acting_user_id: @manager.id)
+          }.to raise_error ConfigurableStateMachine::InvalidEventError
+        end
+      end
+
+      describe 'transition_to' do
+        it 'return the transition_to state' do
+          kase = create :accepted_case
+          machine = Machine.new(config: config, kase: kase)
+          manager = kase.managing_team.users.first
+          expect(kase.current_state).to eq 'drafting'
+          next_state = machine.next_state_for_event(:add_message_to_case, acting_user_id: manager.id)
+          expect(next_state).to eq 'ready_to_send'
+        end
+      end
+
+      describe 'transition_to_using' do
+        let(:kase)    { create :case_with_response }
+        let(:manager) { kase.managing_team.users.first }
+        let(:machine)  { Machine.new(config: config, kase: kase) }
+
+        describe 'conditonal returns drafting' do
+          it 'returns the return value of conditonal' do
+            allow_any_instance_of(ConfigurableStateMachine::DummyConditional).to receive(:remove_response).and_return('drafting')
+            expect(kase.current_state).to eq 'awaiting_dispatch'
+            next_state = machine.next_state_for_event(:remove_response, acting_user_id: manager.id)
+            expect(next_state).to eq 'drafting'
+          end
+        end
+      end
+
+      describe 'no transition specified' do
+        let(:kase)    { create :case, managing_team: @managing_team }
+        let(:manager) { kase.managing_team.users.first }
+        let(:machine)  { Machine.new(config: config, kase: kase) }
+
+
+        it 'returns the current state of the case' do
+          expect(kase.current_state).to eq 'unassigned'
+          next_state = machine.next_state_for_event(:add_message_to_case, acting_user_id: manager.id)
+          expect(next_state).to eq 'unassigned'
         end
       end
     end

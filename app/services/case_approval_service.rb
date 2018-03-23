@@ -40,7 +40,7 @@ class CaseApprovalService
 
         @result = :ok
       end
-    rescue Statesman::GuardFailedError
+    rescue Statesman::GuardFailedError, ConfigurableStateMachine::InvalidEventError
       @result = :error
     end
 

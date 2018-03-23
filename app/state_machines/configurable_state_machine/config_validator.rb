@@ -234,9 +234,11 @@ module ConfigurableStateMachine
                         :transition_to_using,
                         :after_transition,
                         :before_transition,
-                        :switch_workflow)
+                        :switch_workflow,
+                        :switch_workflow_using)
         validate_predicate_config(event_config, path)
         validate_switch_workflow_config(event_config, workflow_name, path)
+        validate_switch_workflow_using_config(event_config, path)
         validate_transition_to_using_config(event_config, path)
         validate_after_transition_config(event_config, path)
       else
@@ -299,6 +301,15 @@ module ConfigurableStateMachine
     def validate_transition_to_using_config(event_config, path)
       if event_config && event_config.transition_to_using.present?
         result = validate_conditonal_transition_method(event_config.transition_to_using)
+        unless result.nil?
+          add_error(path, result)
+        end
+      end
+    end
+
+    def validate_switch_workflow_using_config(event_config, path)
+      if event_config && event_config.switch_workflow_using.present?
+        result = validate_conditonal_transition_method(event_config.switch_workflow_using)
         unless result.nil?
           add_error(path, result)
         end

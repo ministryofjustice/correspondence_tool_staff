@@ -74,6 +74,10 @@ class User < ApplicationRecord
     approving_team.present?
   end
 
+  def disclosure_specialist?
+    approving_team == BusinessUnit.dacu_disclosure
+  end
+
   def press_officer?
     approving_team == BusinessUnit.press_office
   end
@@ -88,6 +92,14 @@ class User < ApplicationRecord
 
   def teams_for_case(kase)
     kase.teams & teams
+  end
+
+  def roles_for_case(kase)
+    user_assignments = kase.assignments.where(user_id: self.id).map{ |a| a.team.role }
+    if self.teams.include?(kase.managing_team)
+      user_assignments << 'manager'
+    end
+    user_assignments
   end
 
   def roles_for_team(team)
