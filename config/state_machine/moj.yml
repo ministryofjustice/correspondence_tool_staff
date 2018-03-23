@@ -85,7 +85,11 @@ case_types:
                 remove_linked_case:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
+<<<<<<< HEAD
                   switch_workflow: trigger
+=======
+                  switch_workflow: :trigger
+>>>>>>> WIP
 
               awaiting_responder:
                 add_message_to_case:
@@ -98,7 +102,11 @@ case_types:
                 remove_linked_case:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
+<<<<<<< HEAD
                   switch_workflow: trigger
+=======
+                  switch_workflow: :trigger
+>>>>>>> WIP
 
               drafting:
                 add_message_to_case:

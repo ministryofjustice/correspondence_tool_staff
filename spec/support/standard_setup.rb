@@ -17,7 +17,7 @@ class StandardSetup
     @users = {
       manager: find_or_create(:disclosure_bmt_user),
       approver: find_or_create(:disclosure_specialist),
-      other_approver: create(:approver),
+      another_approver: create(:approver),
       responder: create(:responder, responding_teams:[responding_team]),
       another_responder: create(:responder),
       press_officer: find_or_create(:press_officer),
