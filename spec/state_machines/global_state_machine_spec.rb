@@ -203,13 +203,15 @@ describe 'state machine' do
     }
   end
 
-  xdescribe :add_response_to_flagged_case do
+  describe :add_response_to_flagged_case do
     it {
       should permit_event_to_be_triggered_only_by(
         [:responder, :trig_draft_foi],
+        [:responder, :trig_draft_foi_accepted],
         [:responder, :full_draft_foi],
-        [:another_responder_in_same_team, :trig_responded_foi],
-        [:another_responder_in_same_team, :full_draft_foi]
+        [:another_responder_in_same_team, :trig_draft_foi],
+        [:another_responder_in_same_team, :full_draft_foi],
+        [:another_responder_in_same_team, :trig_draft_foi_accepted]
         )}
   end
 
