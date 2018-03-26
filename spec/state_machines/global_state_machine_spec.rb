@@ -215,11 +215,13 @@ describe 'state machine' do
         )}
   end
 
-  xdescribe :add_responses do
+  describe :add_responses do
     it {
       should permit_event_to_be_triggered_only_by(
         [:responder, :std_draft_foi],
         [:responder, :std_awdis_foi],
+        [:another_responder_in_same_team, :std_draft_foi],
+        [:another_responder_in_same_team, :std_awdis_foi],
         )}
   end
 
