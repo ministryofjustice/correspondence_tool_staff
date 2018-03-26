@@ -290,12 +290,12 @@ describe 'state machine' do
         )}
   end
 
-  xdescribe :close do
+  describe :close do
     it {
       should permit_event_to_be_triggered_only_by(
-        [:manager, :std_awdis_foi],
-        [:manager, :trig_awdis_foi],
-        [:manager, :full_awdis_foi],
+        [:manager, :std_responded_foi],
+        [:manager, :trig_responded_foi],
+        [:manager, :full_responded_foi],
         )}
   end
 
