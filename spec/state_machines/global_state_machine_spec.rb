@@ -275,14 +275,17 @@ describe 'state machine' do
         )}
   end
 
-  xdescribe :assign_to_new_team do
+  describe :assign_to_new_team do
     it {
       should permit_event_to_be_triggered_only_by(
         [:manager, :std_awresp_foi],
         [:manager, :std_draft_foi],
         [:manager, :trig_awresp_foi],
+        [:manager, :trig_awresp_foi_accepted],
         [:manager, :trig_draft_foi],
+        [:manager, :trig_draft_foi_accepted],
         [:manager, :full_awresp_foi],
+        [:manager, :full_awresp_foi_accepted],
         [:manager, :full_draft_foi],
         )}
   end
