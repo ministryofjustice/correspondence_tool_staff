@@ -60,7 +60,7 @@ describe 'state machine' do
     }
   end
 
-  xdescribe :add_message_to_case do
+  describe :add_message_to_case do
     it {
       should permit_event_to_be_triggered_only_by(
         [:manager, :std_unassigned_foi],
@@ -82,18 +82,23 @@ describe 'state machine' do
         [:manager, :full_pprivate_foi],
         [:manager, :full_awdis_foi],
         [:manager, :full_responded_foi],
+        [:manager, :trig_unassigned_foi_accepted],
+        [:manager, :trig_awresp_foi_accepted],
+        [:manager, :trig_draft_foi_accepted],
+        [:manager, :trig_pdacu_foi_accepted],
+        [:manager, :full_awresp_foi_accepted],
 
-        [:approver, :std_unassigned_foi],
-        [:approver, :std_awresp_foi],
-        [:approver, :std_draft_foi],
-        [:approver, :std_awdis_foi],
-        [:approver, :std_responded_foi],
         [:approver, :trig_unassigned_foi],
         [:approver, :trig_awresp_foi],
         [:approver, :trig_draft_foi],
         [:approver, :trig_pdacu_foi],
         [:approver, :trig_awdis_foi],
         [:approver, :trig_responded_foi],
+        [:approver, :trig_unassigned_foi_accepted],
+        [:approver, :trig_awresp_foi_accepted],
+        [:approver, :trig_draft_foi_accepted],
+        [:approver, :trig_pdacu_foi_accepted],
+        [:approver, :full_awresp_foi_accepted],
         [:approver, :full_unassigned_foi],
         [:approver, :full_awresp_foi],
         [:approver, :full_draft_foi],
@@ -103,25 +108,98 @@ describe 'state machine' do
         [:approver, :full_awdis_foi],
         [:approver, :full_responded_foi],
 
-        [:responder, :std_unassigned_foi],
+
+        [:another_approver, :trig_unassigned_foi],
+        [:another_approver, :trig_awresp_foi],
+        [:another_approver, :trig_draft_foi],
+        [:another_approver, :trig_pdacu_foi],
+        # [:another_approver, :trig_awdis_foi],           # old state machine - they should be allowed
+        # [:another_approver, :trig_responded_foi],        # old state machine - they should be allowed
+        [:another_approver, :trig_unassigned_foi_accepted],
+        [:another_approver, :trig_awresp_foi_accepted],
+        [:another_approver, :trig_draft_foi_accepted],
+        [:another_approver, :trig_pdacu_foi_accepted],
+
         [:responder, :std_awresp_foi],
         [:responder, :std_draft_foi],
         [:responder, :std_awdis_foi],
         [:responder, :std_responded_foi],
-        [:responder, :trig_unassigned_foi],
         [:responder, :trig_awresp_foi],
         [:responder, :trig_draft_foi],
         [:responder, :trig_pdacu_foi],
         [:responder, :trig_awdis_foi],
-        [:responder, :trig_responded_foi],
-        [:responder, :full_unassigned_foi],
+        # [:responder, :trig_responded_foi],        # old state machine - they should be allowed
+        [:responder, :trig_awresp_foi_accepted],
+        [:responder, :trig_draft_foi_accepted],
+        [:responder, :trig_pdacu_foi_accepted],
+        [:responder, :full_awresp_foi_accepted],
         [:responder, :full_awresp_foi],
         [:responder, :full_draft_foi],
         [:responder, :full_pdacu_foi],
         [:responder, :full_ppress_foi],
         [:responder, :full_pprivate_foi],
         [:responder, :full_awdis_foi],
-        [:responder, :full_responded_foi])
+        # [:responder, :full_responded_foi],          # old state machine - they should be allowed
+
+        [:another_responder_in_same_team, :std_awresp_foi],
+        [:another_responder_in_same_team, :std_draft_foi],
+        [:another_responder_in_same_team, :std_awdis_foi],
+        [:another_responder_in_same_team, :std_responded_foi],
+        [:another_responder_in_same_team, :trig_awresp_foi],
+        [:another_responder_in_same_team, :trig_awresp_foi_accepted],
+        [:another_responder_in_same_team, :trig_draft_foi],
+        [:another_responder_in_same_team, :trig_draft_foi_accepted],
+        [:another_responder_in_same_team, :trig_pdacu_foi],
+        [:another_responder_in_same_team, :trig_pdacu_foi_accepted],
+        [:another_responder_in_same_team, :trig_awdis_foi],
+        # [:another_responder_in_same_team, :trig_responded_foi],       # old state machine - they should be allowed
+        [:another_responder_in_same_team, :full_awresp_foi],
+        [:another_responder_in_same_team, :full_awresp_foi_accepted],
+        [:another_responder_in_same_team, :full_draft_foi],
+        [:another_responder_in_same_team, :full_pdacu_foi],
+        [:another_responder_in_same_team, :full_ppress_foi],
+        [:another_responder_in_same_team, :full_pprivate_foi],
+        [:another_responder_in_same_team, :full_awdis_foi],
+        # [:another_responder_in_same_team, :full_responded_foi],        # old state machine - they should be allowed
+
+        [:press_officer, :trig_unassigned_foi],
+        [:press_officer, :trig_awresp_foi],
+        [:press_officer, :trig_draft_foi],
+        [:press_officer, :trig_pdacu_foi],
+        [:press_officer, :trig_unassigned_foi_accepted],
+        [:press_officer, :trig_awresp_foi_accepted],
+        [:press_officer, :trig_draft_foi_accepted],
+        [:press_officer, :trig_pdacu_foi_accepted],
+        [:press_officer, :full_awresp_foi_accepted],
+        [:press_officer, :full_unassigned_foi],
+        [:press_officer, :full_awresp_foi],
+        [:press_officer, :full_draft_foi],
+        [:press_officer, :full_pdacu_foi],
+        [:press_officer, :full_ppress_foi],
+        [:press_officer, :full_pprivate_foi],
+        [:press_officer, :full_awdis_foi],
+        [:press_officer, :full_responded_foi],
+
+
+        [:private_officer, :trig_unassigned_foi],
+        [:private_officer, :trig_awresp_foi],
+        [:private_officer, :trig_draft_foi],
+        [:private_officer, :trig_pdacu_foi],
+        [:private_officer, :trig_unassigned_foi_accepted],
+        [:private_officer, :trig_awresp_foi_accepted],
+        [:private_officer, :trig_draft_foi_accepted],
+        [:private_officer, :trig_pdacu_foi_accepted],
+        [:private_officer, :full_awresp_foi_accepted],
+        [:private_officer, :full_unassigned_foi],
+        [:private_officer, :full_awresp_foi],
+        [:private_officer, :full_draft_foi],
+        [:private_officer, :full_pdacu_foi],
+        [:private_officer, :full_ppress_foi],
+        [:private_officer, :full_pprivate_foi],
+        [:private_officer, :full_awdis_foi],
+        [:private_officer, :full_responded_foi],
+
+      )
     }
   end
 
