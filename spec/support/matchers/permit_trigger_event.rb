@@ -41,13 +41,13 @@ module PermitTriggerEvent
     failure_message do |event|
       unless @errors.nil? || @errors.empty?
         @error_message = "Event #{event} failed for the combinations:\n"
-        @errors.each do |user_type, team_type, kase_type, result|
+        @errors.each do |user_type, kase_type, result|
           if result
             @error_message <<
-                "  [#{user_type}, #{team_type},  #{kase_type}] did not expect it, but got true\n"
+                "  We did not expect the event to be triggerable for #{user_type} on #{kase_type} cases, but it is.\n"
           else
             @error_message <<
-                "  [#{user_type}, #{team_type},  #{kase_type}] expected true, but got false\n"
+                "  We expected the event to be triggerable for #{user_type} on #{kase_type} cases, but it is not.\n"
           end
         end
       end

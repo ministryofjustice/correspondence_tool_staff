@@ -213,6 +213,21 @@ FactoryGirl.define do
     end
   end
 
+  factory :pending_dacu_clearance_case_flagged_for_press_unaccepted_by_press, parent: :pending_dacu_clearance_case do
+    transient do
+      press_office  { find_or_create :team_press_office }
+      press_officer { find_or_create :press_officer }
+    end
+    after(:create) do |kase, evaluator|
+      create :approver_assignment,
+             case: kase,
+             team: evaluator.press_office,
+             state: 'pending'
+      kase.reload
+      kase.update(workflow: 'full_approval')
+    end
+  end
+
   factory :pending_dacu_clearance_case_flagged_for_press_and_private, parent: :pending_dacu_clearance_case_flagged_for_press do
     transient do
       private_office  { find_or_create :team_private_office }
@@ -224,6 +239,21 @@ FactoryGirl.define do
              team: evaluator.private_office,
              state: 'accepted',
              user: evaluator.private_officer
+      kase.reload
+      kase.update(workflow: 'full_approval')
+    end
+  end
+
+  factory :pending_dacu_clearance_case_flagged_for_press_and_private_unaccepted, parent: :pending_dacu_clearance_case_flagged_for_press_unaccepted_by_press do
+    transient do
+      private_office  { find_or_create :team_private_office }
+      private_officer { find_or_create :private_officer }
+    end
+    after(:create) do |kase, evaluator|
+      create :approver_assignment,
+             case: kase,
+             team: evaluator.private_office,
+             state: 'pending'
       kase.reload
       kase.update(workflow: 'full_approval')
     end
@@ -601,6 +631,7 @@ FactoryGirl.define do
   trait :flagged do
     transient do
       approving_team { find_or_create :approving_team }
+      disclosure_assignment_state { 'pending' }
     end
 
 
@@ -621,6 +652,7 @@ FactoryGirl.define do
     transient do
       approver { create :approver }
       approving_team { approver.approving_team }
+      disclosure_assignment_state { 'accepted' }
     end
 
 
@@ -652,7 +684,6 @@ FactoryGirl.define do
       approving_team              { find_or_create :team_press_office }
       disclosure_specialist       { create :disclosure_specialist }
       disclosure_team             { find_or_create :team_dacu_disclosure }
-      disclosure_assignment_state { 'pending' }
       private_officer             { create :private_officer }
       private_office              { find_or_create :team_private_office }
     end
