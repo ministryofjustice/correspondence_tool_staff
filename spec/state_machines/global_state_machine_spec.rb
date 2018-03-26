@@ -258,17 +258,18 @@ describe 'state machine' do
         )}
   end
 
-  xdescribe :approve_and_bypass do
+  describe :approve_and_bypass do
     it {
       should permit_event_to_be_triggered_only_by(
-        [:approver, :full_pdacu_foi],
+        [:approver, :full_pdacu_foi_accepted],
         )}
   end
 
-  xdescribe :assign_responder do
+  describe :assign_responder do
     it {
       should permit_event_to_be_triggered_only_by(
         [:manager, :std_unassigned_foi],
+        [:manager, :trig_unassigned_foi_accepted],
         [:manager, :trig_unassigned_foi],
         [:manager, :full_unassigned_foi],
         )}
