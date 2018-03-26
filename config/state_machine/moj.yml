@@ -148,6 +148,8 @@ case_types:
             states:
               unassigned:
                 accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
+                  switch_workflow: trigger
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                 flag_for_clearance:
@@ -166,6 +168,7 @@ case_types:
                 # unaccept an trigger case, switching the workflow to standard,
                 # and then decide to accept it again.
                 accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                   switch_workflow: trigger
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
@@ -181,6 +184,9 @@ case_types:
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
 
               drafting:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
+                  switch_workflow: trigger
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received

@@ -684,9 +684,8 @@ describe Case::BasePolicy do
   end
 
   permissions :upload_response_and_approve_from_pending_dacu_clearance_to_pending_press_office_clearance? do
-    let(:kase) { create :pending_dacu_clearance_case, :press_office,
-                                                 disclosure_assignment_state: 'accepted',
-                          disclosure_specialist:       disclosure_specialist }
+    let(:kase) { create :pending_dacu_clearance_case_flagged_for_press_and_private_unaccepted,
+                          approver:       disclosure_specialist }
     it { should_not permit(responder,             kase) }
     it { should     permit(disclosure_specialist, kase) }
     it { should_not permit(another_disclosure_specialist, kase) }
