@@ -20,11 +20,6 @@ module PermitTriggerEvent
         all_cases.each do |case_type, kase|
           user, team = user_and_team
           state_machine = kase.state_machine
-          puts ">>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<"
-          puts "#{user_type}  #{case_type} #{state_machine.class}"
-          if case_type.to_s == 'trig_awdis_foi'
-            puts ">>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<"
-          end
           result = state_machine.can_trigger_event?(event_name: event, metadata: {acting_user: user, acting_team: team})
           if [user_type, case_type].in?(permitted_combinations) ^ result
             (binding).pry if @debug_on_error && $stdout.tty?

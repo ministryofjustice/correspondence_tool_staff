@@ -45,7 +45,7 @@ describe Case::FOI::StandardStateMachine do
     }
   end
 
-  xdescribe :add_message_to_case do
+  describe :add_message_to_case do
     it {
       should permit_event_to_be_triggered_only_by(
         [:manager, :std_unassigned_foi],
@@ -110,15 +110,17 @@ describe Case::FOI::StandardStateMachine do
     }
   end
 
-  xdescribe :add_response_to_flagged_case do
+  describe :add_response_to_flagged_case do
     it {
       should permit_event_to_be_triggered_only_by(
         [:responder, :trig_draft_foi],
-        [:responder, :full_draft_foi]
+        [:responder, :full_draft_foi],
+        [:another_responder_in_same_team, :trig_responded_foi],
+        [:another_responder_in_same_team, :full_draft_foi]
         )}
   end
 
-  xdescribe :add_responses do
+  describe :add_responses do
     it {
       should permit_event_to_be_triggered_only_by(
         [:responder, :std_draft_foi],
@@ -126,7 +128,7 @@ describe Case::FOI::StandardStateMachine do
         )}
   end
 
-  xdescribe :approve do
+  describe :approve do
     it {
       should permit_event_to_be_triggered_only_by(
         [:approver, :trig_pdacu_foi],
@@ -136,14 +138,14 @@ describe Case::FOI::StandardStateMachine do
         )}
   end
 
-  xdescribe :approve_and_bypass do
+  describe :approve_and_bypass do
     it {
       should permit_event_to_be_triggered_only_by(
         [:approver, :full_pdacu_foi],
         )}
   end
 
-  xdescribe :assign_responder do
+  describe :assign_responder do
     it {
       should permit_event_to_be_triggered_only_by(
         [:manager, :std_unassigned_foi],
@@ -152,7 +154,7 @@ describe Case::FOI::StandardStateMachine do
         )}
   end
 
-  xdescribe :assign_to_new_team do
+  describe :assign_to_new_team do
     it {
       should permit_event_to_be_triggered_only_by(
         [:manager, :std_awresp_foi],
@@ -164,7 +166,7 @@ describe Case::FOI::StandardStateMachine do
         )}
   end
 
-  xdescribe :close do
+  describe :close do
     it {
       should permit_event_to_be_triggered_only_by(
         [:manager, :std_awdis_foi],
@@ -173,35 +175,7 @@ describe Case::FOI::StandardStateMachine do
         )}
   end
 
-  xdescribe :destroy_case do
-    it {
-      should permit_event_to_be_triggered_only_by(
-        [:manager, :std_unassigned_foi],
-        [:manager, :std_awresp_foi],
-        [:manager, :std_draft_foi],
-        [:manager, :std_awdis_foi],
-        [:manager, :std_responded_foi],
-        [:manager, :std_closed_foi],
-        [:manager, :trig_unassigned_foi],
-        [:manager, :trig_awresp_foi],
-        [:manager, :trig_draft_foi],
-        [:manager, :trig_pdacu_foi],
-        [:manager, :trig_awdis_foi],
-        [:manager, :trig_responded_foi],
-        [:manager, :trig_closed_foi],
-        [:manager, :full_unassigned_foi],
-        [:manager, :full_awresp_foi],
-        [:manager, :full_draft_foi],
-        [:manager, :full_pdacu_foi],
-        [:manager, :full_ppress_foi],
-        [:manager, :full_pprivate_foi],
-        [:manager, :full_awdis_foi],
-        [:manager, :full_responded_foi],
-        [:manager, :full_closed_foi]
-        )}
-  end
-
-  xdescribe :edit_case do
+  describe :destroy_case do
     it {
       should permit_event_to_be_triggered_only_by(
         [:manager, :std_unassigned_foi],
@@ -229,7 +203,35 @@ describe Case::FOI::StandardStateMachine do
         )}
   end
 
-  xdescribe :extend_for_pit do
+  describe :edit_case do
+    it {
+      should permit_event_to_be_triggered_only_by(
+        [:manager, :std_unassigned_foi],
+        [:manager, :std_awresp_foi],
+        [:manager, :std_draft_foi],
+        [:manager, :std_awdis_foi],
+        [:manager, :std_responded_foi],
+        [:manager, :std_closed_foi],
+        [:manager, :trig_unassigned_foi],
+        [:manager, :trig_awresp_foi],
+        [:manager, :trig_draft_foi],
+        [:manager, :trig_pdacu_foi],
+        [:manager, :trig_awdis_foi],
+        [:manager, :trig_responded_foi],
+        [:manager, :trig_closed_foi],
+        [:manager, :full_unassigned_foi],
+        [:manager, :full_awresp_foi],
+        [:manager, :full_draft_foi],
+        [:manager, :full_pdacu_foi],
+        [:manager, :full_ppress_foi],
+        [:manager, :full_pprivate_foi],
+        [:manager, :full_awdis_foi],
+        [:manager, :full_responded_foi],
+        [:manager, :full_closed_foi]
+        )}
+  end
+
+  describe :extend_for_pit do
     it {
       should permit_event_to_be_triggered_only_by(
         [:approver, :trig_draft_foi],
@@ -243,7 +245,7 @@ describe Case::FOI::StandardStateMachine do
         )}
   end
 
-  xdescribe :flag_for_clearance do
+  describe :flag_for_clearance do
     it {
       should permit_event_to_be_triggered_only_by(
         [:manager, :std_unassigned_foi],
@@ -269,7 +271,7 @@ describe Case::FOI::StandardStateMachine do
         )}
   end
 
-  xdescribe :link_a_case do
+  describe :link_a_case do
     it {
       should permit_event_to_be_triggered_only_by(
         [:manager, :std_unassigned_foi],
@@ -435,7 +437,7 @@ describe Case::FOI::StandardStateMachine do
     }
   end
 
-  xdescribe :reassign_user do
+  describe :reassign_user do
     it {
       should permit_event_to_be_triggered_only_by(
         [:approver, :trig_unassigned_foi],
@@ -499,7 +501,7 @@ describe Case::FOI::StandardStateMachine do
   )  }
   end
 
-  xdescribe :reject_responder_assignment do
+  describe :reject_responder_assignment do
     it {
       should permit_event_to_be_triggered_only_by(
         [:responder, :std_awresp_foi],
@@ -509,7 +511,7 @@ describe Case::FOI::StandardStateMachine do
     }
   end
 
-  xdescribe :remove_linked_case do
+  describe :remove_linked_case do
     it {
       should permit_event_to_be_triggered_only_by(
         [:manager, :std_unassigned_foi],
@@ -675,20 +677,20 @@ describe Case::FOI::StandardStateMachine do
     }
   end
 
-  xdescribe :remove_response do
+  describe :remove_response do
     it {
       should permit_event_to_be_triggered_only_by(
         [:responder, :std_awdis_foi,]
         )}
   end
 
-  xdescribe :request_amends do
+  describe :request_amends do
     it {
       should permit_event_to_be_triggered_only_by(
         [:press_officer, :press_office, :full_ppress_foi],
         [:private_officer, :private_office, :full_pprivate_foi]
       )}
-    end
+  end
 
 
   def all_user_teams
