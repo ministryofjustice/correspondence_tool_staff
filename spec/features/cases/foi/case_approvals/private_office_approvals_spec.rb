@@ -38,7 +38,7 @@ feature 'cases requiring clearance by press office' do
       .to have_text('Preston Offman Private Office Clearance level added')
 
     _case_not_for_private_office_open_cases = create :case_being_drafted,
-                                                     :flagged_accepted,
+                                                     :flagged,
                                                      :press_office
     open_cases_page.load
     expect(open_cases_page.case_list.first.number)

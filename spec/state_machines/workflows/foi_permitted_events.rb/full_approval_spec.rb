@@ -70,7 +70,7 @@ describe Case::FOI::StandardStateMachine do
 
       context 'pending_press_clearance' do
         it 'shows events' do
-          k = create :pending_press_clearance_case, :press_office
+          k = create :pending_press_clearance_case, :flagged, :press_office
 
           expect(k.current_state).to eq 'pending_press_office_clearance'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,

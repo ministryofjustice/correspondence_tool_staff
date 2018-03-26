@@ -44,6 +44,7 @@ feature 'listing open cases on the system' do
     create :assigned_case,
            :flagged_accepted,
            :press_office,
+           disclosure_assignment_state: 'pending',
            received_date: 22.business_days.ago,
            created_at: 2.business_days.ago,
            identifier: 'assigned_case_flagged_for_press_office_accepted'

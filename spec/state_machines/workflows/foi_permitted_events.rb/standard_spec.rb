@@ -255,8 +255,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :case
 
             expect(k.current_state).to eq 'unassigned'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
-                                                                         :flag_for_clearance,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:flag_for_clearance,
                                                                          :link_a_case,
                                                                          :remove_linked_case,
                                                                          :take_on_for_approval]
@@ -269,8 +268,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :awaiting_responder_case
 
             expect(k.current_state).to eq 'awaiting_responder'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
-                                                                         :flag_for_clearance,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:flag_for_clearance,
                                                                          :link_a_case,
                                                                          :remove_linked_case,
                                                                          :take_on_for_approval]

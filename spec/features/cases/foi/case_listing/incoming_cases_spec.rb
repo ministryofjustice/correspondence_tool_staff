@@ -28,6 +28,7 @@ feature 'listing incoming on the system' do
     create :assigned_case,
            :flagged_accepted,
            :press_office,
+           disclosure_assignment_state: 'pending',
            created_at: 2.business_days.ago,
            identifier: 'assigned_case_flagged_for_press_office_accepted'
   end
