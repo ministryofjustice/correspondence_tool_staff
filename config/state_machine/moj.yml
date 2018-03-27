@@ -193,6 +193,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 extend_for_pit:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                flag_for_clearance:
                 link_a_case:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
@@ -308,7 +309,6 @@ case_types:
           - destroy_case
           - edit_case
           - extend_for_pit
-          - flag_for_clearance
           - link_a_case
           - reassign_user
           - reject_responder_assignment
@@ -334,7 +334,6 @@ case_types:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
-                flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
@@ -346,7 +345,6 @@ case_types:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
-                flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
@@ -354,12 +352,38 @@ case_types:
 
               drafting:
                 add_message_to_case:
+<<<<<<< HEAD
+=======
+                assign_to_new_team:
+                  transition_to: awaiting_responder
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+
+
+              awaiting_responder:
+                add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 assign_to_new_team:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
-                flag_for_clearance:
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+
+              drafting:
+                add_message_to_case:
+>>>>>>> CT-1642 flag_for_clearance event WIP
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                assign_to_new_team:
+                  transition_to: awaiting_responder
+                destroy_case:
+                edit_case:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
@@ -381,7 +405,11 @@ case_types:
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
+<<<<<<< HEAD
                 flag_for_clearance:
+=======
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+>>>>>>> CT-1642 flag_for_clearance event WIP
                 link_a_case:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
@@ -399,7 +427,11 @@ case_types:
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
+<<<<<<< HEAD
                 flag_for_clearance:
+=======
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+>>>>>>> CT-1642 flag_for_clearance event WIP
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
@@ -419,7 +451,6 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 extend_for_pit:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
-                flag_for_clearance:
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
@@ -523,7 +554,6 @@ case_types:
           - destroy_case
           - edit_case
           - extend_for_pit
-          - flag_for_clearance
           - link_a_case
           - reassign_user
           - reject_responder_assignment
@@ -549,7 +579,6 @@ case_types:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
-                flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
@@ -561,7 +590,6 @@ case_types:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
-                flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
@@ -574,7 +602,6 @@ case_types:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
-                flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
@@ -598,7 +625,6 @@ case_types:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
                   if: Case::BasePolicy#can_add_message_to_case?
-                flag_for_clearance:
                 link_a_case:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
@@ -616,7 +642,6 @@ case_types:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
                   if: Case::BasePolicy#can_add_message_to_case?
-                flag_for_clearance:
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
@@ -636,7 +661,6 @@ case_types:
                   if: Case::BasePolicy#can_add_message_to_case?
                 extend_for_pit:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
-                flag_for_clearance:
                 link_a_case:
                 reassign_user:
                 remove_linked_case:

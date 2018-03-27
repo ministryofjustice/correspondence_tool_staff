@@ -462,29 +462,40 @@ describe 'state machine' do
         )}
   end
 
-  xdescribe :flag_for_clearance do
+  describe :flag_for_clearance do
     it {
       should permit_event_to_be_triggered_only_by(
         [:manager, :std_unassigned_foi],
         [:manager, :std_awresp_foi],
         [:manager, :std_draft_foi],
-        [:manager, :std_awdis_foi],
-        [:manager, :trig_unassigned_foi],
-        [:manager, :trig_awresp_foi],
-        [:manager, :trig_draft_foi],
-        [:manager, :trig_pdacu_foi],
-        [:manager, :trig_awdis_foi],
-        [:manager, :full_unassigned_foi],
-        [:manager, :full_awresp_foi],
-        [:manager, :full_draft_foi],
-        [:manager, :full_awdis_foi],
+        [:manager, :std_awdis_foi],               # old state machine allows it but shouldn't
+        [:manager, :trig_awdis_foi],              # old state machine allows it but shouldn't
+        [:manager, :full_awdis_foi],               # old state machine allows it but shouldn't
 
         [:approver, :std_unassigned_foi],
         [:approver, :std_awresp_foi],
         [:approver, :std_draft_foi],
-        [:approver, :trig_unassigned_foi],
-        [:approver, :trig_awresp_foi],
-        [:approver, :trig_draft_foi],
+        [:approver, :trig_awdis_foi],             # old state machine allows it but shouldn't
+        [:approver, :full_awdis_foi],             # old state machine allows it but shouldn't
+
+
+        [:another_approver, :std_unassigned_foi],
+        [:another_approver, :std_awresp_foi],
+        [:another_approver, :std_draft_foi],
+        [:another_approver, :trig_awdis_foi],     # old state machine allows it but shouldn't
+        [:another_approver, :full_awdis_foi],      # old state machine allows it but shouldn't
+
+        [:press_officer, :std_unassigned_foi],
+        [:press_officer, :std_awresp_foi],
+        [:press_officer, :std_draft_foi],
+        [:press_officer, :trig_awdis_foi],     # old state machine allows it but shouldn't
+        [:press_officer, :full_awdis_foi],     # old state machine allows it but shouldn't
+
+        [:private_officer, :std_unassigned_foi],
+        [:private_officer, :std_awresp_foi],
+        [:private_officer, :std_draft_foi],
+        [:private_officer, :trig_awdis_foi],      # old state machine allows it but shouldn't
+        [:private_officer, :full_awdis_foi],      # old state machine allows it but shouldn't
       )}
   end
 
@@ -1310,7 +1321,7 @@ describe 'state machine' do
       should permit_event_to_be_triggered_only_by(
          [:approver, :full_pdacu_foi_accepted],
        )
-      }
+    }
   end
 
 
