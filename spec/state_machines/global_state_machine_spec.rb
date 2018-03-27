@@ -371,21 +371,98 @@ describe 'state machine' do
         )}
   end
 
-  xdescribe :extend_for_pit do
+  describe :extend_for_pit do
     it {
       should permit_event_to_be_triggered_only_by(
-        [:approver, :trig_draft_foi],
-        [:approver, :trig_pdacu_foi],
+        [:approver, :trig_draft_foi_accepted],
+        [:approver, :trig_pdacu_foi_accepted],
         [:approver, :trig_awdis_foi],
         [:approver, :trig_responded_foi],
-        [:approver, :full_draft_foi],
-        [:approver, :full_pdacu_foi],
+        # [:approver, :full_draft_foi_accepted], # should we add this case in for consistency?
+        [:approver, :full_pdacu_foi_accepted],
+        [:approver, :full_ppress_foi_accepted],
+        [:approver, :full_ppress_foi],
+        [:approver, :full_pprivate_foi],
+        [:approver, :full_pprivate_foi_accepted],
         [:approver, :full_awdis_foi],
         [:approver, :full_responded_foi],
+
+        # the following combinations are allowed by the old state machine but shouldn't be allowed
+        [:manager, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:manager, :trig_responded_foi],          # old state machine - they shouldn't be allowed
+        [:manager, :full_ppress_foi],          # old state machine - they shouldn't be allowed
+        [:manager, :full_ppress_foi_accepted],          # old state machine - they shouldn't be allowed
+        [:manager, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
+        [:manager, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
+        [:manager, :full_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:manager, :full_responded_foi],          # old state machine - they shouldn't be allowed
+
+        [:another_approver, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:another_approver, :trig_responded_foi],          # old state machine - they shouldn't be allowed
+        [:another_approver, :full_ppress_foi],          # old state machine - they shouldn't be allowed
+        [:another_approver, :full_ppress_foi_accepted],          # old state machine - they shouldn't be allowed
+        [:another_approver, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
+        [:another_approver, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
+        [:another_approver, :full_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:another_approver, :full_responded_foi],          # old state machine - they shouldn't be allowed
+
+        [:responder, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:responder, :trig_responded_foi],          # old state machine - they shouldn't be allowed
+        [:responder, :full_ppress_foi],
+        [:responder, :full_ppress_foi_accepted],          # old state machine - they shouldn't be allowed
+        [:responder, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
+        [:responder, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
+        [:responder, :full_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:responder, :full_responded_foi],          # old state machine - they shouldn't be allowed
+
+        [:another_responder_in_same_team, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_same_team, :trig_responded_foi],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_same_team, :full_ppress_foi_accepted],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_same_team, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_same_team, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_same_team, :full_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_same_team, :full_responded_foi],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_same_team, :full_ppress_foi],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_same_team, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_same_team, :trig_responded_foi],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_same_team, :full_ppress_foi],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_same_team, :full_ppress_foi_accepted],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_same_team, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_same_team, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_same_team, :full_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_same_team, :full_responded_foi],          # old state machine - they shouldn't be allowed
+
+        [:another_responder_in_diff_team, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_diff_team, :trig_responded_foi],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_diff_team, :full_ppress_foi],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_diff_team, :full_ppress_foi_accepted],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_diff_team, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_diff_team, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_diff_team, :full_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:another_responder_in_diff_team, :full_responded_foi],          # old state machine - they shouldn't be allowed
+
+        [:press_officer, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:press_officer, :trig_responded_foi],          # old state machine - they shouldn't be allowed
+        [:press_officer, :full_ppress_foi],          # old state machine - they shouldn't be allowed
+        [:press_officer, :full_ppress_foi_accepted],          # old state machine - they shouldn't be allowed
+        [:press_officer, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
+        [:press_officer, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
+        [:press_officer, :full_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:press_officer, :full_responded_foi],          # old state machine - they shouldn't be allowed
+
+        [:private_officer, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:private_officer, :trig_responded_foi],          # old state machine - they shouldn't be allowed
+        [:private_officer, :full_ppress_foi],          # old state machine - they shouldn't be allowed
+        [:private_officer, :full_ppress_foi_accepted],          # old state machine - they shouldn't be allowed
+        [:private_officer, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
+        [:private_officer, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
+        [:private_officer, :full_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:private_officer, :full_responded_foi],          # old state machine - they shouldn't be allowed
+
         )}
   end
 
-  xdescribe :flag_for_clearance do
+  describe :flag_for_clearance do
     it {
       should permit_event_to_be_triggered_only_by(
         [:manager, :std_unassigned_foi],
