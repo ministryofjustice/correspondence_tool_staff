@@ -41,20 +41,6 @@ CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
 
 
---
--- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
-
-
 SET search_path = public, pg_catalog;
 
 --
@@ -1537,6 +1523,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180214162943'),
 ('20180214163355'),
 ('20180222125345'),
-('20180228174550');
+('20180228174550'),
+('20180321094200');
 
 

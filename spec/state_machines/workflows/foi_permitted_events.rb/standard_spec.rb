@@ -1,7 +1,10 @@
 require 'rails_helper'
 
 describe Case::FOI::StandardStateMachine do
-  context 'non-flagged case' do
+  context 'standard workflow' do
+
+##################### MANAGER  ############################
+
     context 'manager' do
 
       let(:manager)   { create :manager}
@@ -9,6 +12,7 @@ describe Case::FOI::StandardStateMachine do
       context 'unassigned state' do
         it 'should show permitted events' do
           k = create :case
+
           expect(k.current_state).to eq 'unassigned'
           expect(k.state_machine.permitted_events(manager)).to eq [:add_message_to_case,
                                                                    :assign_responder,
@@ -25,6 +29,7 @@ describe Case::FOI::StandardStateMachine do
       context 'awaiting responder state' do
         it 'shows events' do
           k = create :awaiting_responder_case
+
           expect(k.current_state).to eq 'awaiting_responder'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
@@ -40,12 +45,12 @@ describe Case::FOI::StandardStateMachine do
       context 'drafting state' do
         it 'shows events' do
           k = create :accepted_case
+
           expect(k.current_state).to eq 'drafting'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
                                                                       :destroy_case,
                                                                       :edit_case,
-                                                                      :extend_for_pit,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
@@ -56,11 +61,11 @@ describe Case::FOI::StandardStateMachine do
       context 'awaiting_dispatch' do
         it 'shows events' do
           k = create :case_with_response
+
           expect(k.current_state).to eq 'awaiting_dispatch'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :destroy_case,
                                                                       :edit_case,
-                                                                      :extend_for_pit,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
@@ -71,6 +76,7 @@ describe Case::FOI::StandardStateMachine do
       context 'responded' do
         it 'shows events' do
           k = create :responded_case
+
           expect(k.current_state).to eq 'responded'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :close,
@@ -84,20 +90,18 @@ describe Case::FOI::StandardStateMachine do
       context 'closed' do
         it 'shows events' do
           k = create :closed_case
+
           expect(k.current_state).to eq 'closed'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
-                                                                      :destroy_case,
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:destroy_case,
                                                                       :edit_case,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
         end
       end
-
     end
 
 
-
-
+##################### RESPONDER ############################
 
     context 'responder' do
 
@@ -108,29 +112,36 @@ describe Case::FOI::StandardStateMachine do
         context 'unassigned state' do
           it 'should show permitted events' do
             k = create :case
+
             expect(k.current_state).to eq 'unassigned'
             expect(k.state_machine.permitted_events(responder.id)).to be_empty
           end
         end
 
         context 'awaiting responder state' do
-          # Request further clearance is not permitted by the policies so has been removed
-          # from state machine permitted events check
-
           it 'shows events' do
             k = create :awaiting_responder_case
+
             expect(k.current_state).to eq 'awaiting_responder'
-            permitted_events = k.state_machine.permitted_events(responder.id) - [:request_further_clearance]
-            expect(permitted_events).to eq [:link_a_case, :remove_linked_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
+          end
+        end
+
+        context 'drafting state' do
+          it 'shows events' do
+            k = create :accepted_case
+
+            expect(k.current_state).to eq 'drafting'
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
         end
 
         context 'awaiting_dispatch' do
           it 'shows events' do
             k = create :case_with_response
+
             expect(k.current_state).to eq 'awaiting_dispatch'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                          :link_a_case,
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,
                                                                           :remove_linked_case]
           end
         end
@@ -138,8 +149,17 @@ describe Case::FOI::StandardStateMachine do
         context 'responded state' do
           it 'shows events' do
             k = create :responded_case
+
             expect(k.current_state).to eq 'responded'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case, :link_a_case, :remove_linked_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
+          end
+        end
+        context 'closed state' do
+          it 'shows events' do
+            k = create :closed_case
+
+            expect(k.current_state).to eq 'closed'
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
         end
       end
@@ -151,8 +171,9 @@ describe Case::FOI::StandardStateMachine do
           it 'shows events' do
             k = create :awaiting_responder_case
             responder = responder_in_assigned_team(k)
-            expect(k.current_state).to eq 'awaiting_responder'
             permitted_events = k.state_machine.permitted_events(responder.id) - [:request_further_clearance]
+
+            expect(k.current_state).to eq 'awaiting_responder'
             expect(permitted_events).to eq [:accept_responder_assignment,
                                             :add_message_to_case,
                                             :link_a_case,
@@ -166,12 +187,14 @@ describe Case::FOI::StandardStateMachine do
           it 'shows events' do
             k = create :accepted_case
             responder = responder_in_assigned_team(k)
+
             expect(k.current_state).to eq 'drafting'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                           :add_responses,
                                                                           :link_a_case,
                                                                           :reassign_user,
-                                                                          :remove_linked_case]
+                                                                          :remove_linked_case,
+                                                                          ]
           end
         end
 
@@ -179,6 +202,7 @@ describe Case::FOI::StandardStateMachine do
           it 'shows events' do
             k = create :case_with_response
             responder = responder_in_assigned_team(k)
+
             expect(k.current_state).to eq 'awaiting_dispatch'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                           :add_responses,
@@ -194,14 +218,105 @@ describe Case::FOI::StandardStateMachine do
           it 'shows events' do
             k = create :responded_case
             responder = responder_in_assigned_team(k)
+
             expect(k.current_state).to eq 'responded'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case, :link_a_case, :remove_linked_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
+                                                                          :link_a_case,
+                                                                          :remove_linked_case]
+          end
+        end
+
+        context 'closed state' do
+          it 'shows events' do
+            k = create :closed_case
+            responder = responder_in_assigned_team(k)
+
+            expect(k.current_state).to eq 'closed'
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
         end
       end
 
       def responder_in_assigned_team(k)
         create :responder, responding_teams: [k.responding_team]
+      end
+    end
+
+
+##################### APPROVER ############################
+
+
+    context 'approver' do
+      context 'unassigned approver' do
+        let(:approver)   { create :disclosure_specialist}
+
+        context 'unassigned state' do
+          it 'should show permitted events' do
+            k = create :case
+
+            expect(k.current_state).to eq 'unassigned'
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
+                                                                         :flag_for_clearance,
+                                                                         :link_a_case,
+                                                                         :remove_linked_case,
+                                                                         :take_on_for_approval]
+
+          end
+        end
+
+        context 'awaiting responder state' do
+          it 'shows events' do
+            k = create :awaiting_responder_case
+
+            expect(k.current_state).to eq 'awaiting_responder'
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
+                                                                         :flag_for_clearance,
+                                                                         :link_a_case,
+                                                                         :remove_linked_case,
+                                                                         :take_on_for_approval]
+          end
+        end
+
+        context 'drafting state' do
+          it 'shows events' do
+            k = create :accepted_case
+
+            expect(k.current_state).to eq 'drafting'
+            expect(k.state_machine.permitted_events(approver.id)).to eq [ :link_a_case,
+                                                                          :remove_linked_case,
+                                                                          :take_on_for_approval]
+          end
+        end
+
+        context 'awaiting_dispatch' do
+          it 'shows events' do
+            k = create :case_with_response
+
+            expect(k.current_state).to eq 'awaiting_dispatch'
+            expect(k.state_machine.permitted_events(approver.id)).to eq [ :link_a_case,
+                                                                          :remove_linked_case,
+                                                                          :take_on_for_approval]
+          end
+        end
+
+        context 'responded' do
+          it 'shows events' do
+            k = create :responded_case
+
+            expect(k.current_state).to eq 'responded'
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:link_a_case,
+                                                                         :remove_linked_case]
+          end
+        end
+
+        context 'closed' do
+          it 'shows events' do
+            k = create :closed_case
+
+            expect(k.current_state).to eq 'closed'
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:link_a_case, :remove_linked_case]
+          end
+        end
       end
     end
   end

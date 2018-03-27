@@ -115,7 +115,7 @@ class Case::Base < ApplicationRecord
   validates_presence_of :received_date
   validates :subject, presence: true, length: { maximum: 100 }
   validates :type, presence: true, exclusion: { in: %w{Case}, message: "Case type can't be blank" }
-  validates :workflow, inclusion: { in: %w{ standard trigger }, message: "invalid" }
+  validates :workflow, inclusion: { in: %w{ standard trigger full_approval }, message: "invalid" }
 
   validates_with ::ClosedCaseValidator
 

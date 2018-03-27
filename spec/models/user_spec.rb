@@ -111,6 +111,34 @@ RSpec.describe User, type: :model do
     end
   end
 
+
+  describe '#roles_for_case' do
+    context 'user has just one role for a case' do
+      it 'returns an array of one role' do
+        kase = create :pending_dacu_clearance_case
+        responder = kase.responder
+        expect(responder.roles_for_case(kase)).to eq ['responder']
+      end
+    end
+
+    context 'user has many roles for a case' do
+      it 'returns an array of all roles' do
+        user = create :manager_approver, managing_teams: [ find_or_create(:team_disclosure_bmt) ]
+        kase = create :pending_dacu_clearance_case, approver: user, manager: user
+        expect(user.roles_for_case(kase)).to match_array(%w|approver manager|)
+      end
+    end
+
+    context 'user has no roles for a case' do
+      it 'returns an empty array' do
+        kase = create :pending_dacu_clearance_case
+        user = create :user
+        expect(user.roles_for_case(kase)).to be_empty
+      end
+    end
+
+  end
+
   describe '#soft_delete' do
     it 'updates the deleted_at attribute' do
       subject.soft_delete

@@ -245,10 +245,10 @@ describe CasesController, type: :controller do
       context 'as another responder' do
         let(:user) { create(:responder) }
 
-        it { should have_permitted_events :add_message_to_case, :link_a_case, :remove_linked_case }
+        it { should have_permitted_events :link_a_case, :remove_linked_case }
 
-        it 'has add_message to case in filtered permitted_events' do
-          expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
+        it 'has no filtered permitted_events' do
+          expect(assigns(:filtered_permitted_events)).to be_empty
         end
 
         it 'renders case details page' do
@@ -302,10 +302,10 @@ describe CasesController, type: :controller do
       context 'as another responder' do
         let(:user) { create(:responder) }
 
-        it { should have_permitted_events :add_message_to_case, :link_a_case, :remove_linked_case }
+        it { should have_permitted_events :link_a_case, :remove_linked_case }
 
-        it 'has add message to case in filtered permitted events' do
-          expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
+        it 'has no filtered permitted events' do
+          expect(assigns(:filtered_permitted_events)).to be_empty
         end
 
         it 'renders case details page' do
@@ -347,10 +347,10 @@ describe CasesController, type: :controller do
       context 'as the previously assigned responder' do
         let(:user) { responder }
 
-        it { should have_permitted_events :add_message_to_case, :link_a_case, :remove_linked_case }
+        it { should have_permitted_events :link_a_case, :remove_linked_case }
 
-        it 'has add message to case in filtered permitted events' do
-          expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
+        it 'has no filtered permitted events' do
+          expect(assigns(:filtered_permitted_events)).to be_empty
         end
 
         it 'renders case details page' do
@@ -361,10 +361,10 @@ describe CasesController, type: :controller do
       context 'as another responder' do
         let(:user) { create(:responder) }
 
-        it { should have_permitted_events :add_message_to_case, :link_a_case, :remove_linked_case }
+        it { should have_permitted_events :link_a_case, :remove_linked_case }
 
-        it 'has add message to case in filtered permitted events' do
-          expect(assigns(:filtered_permitted_events)).to eq [:add_message_to_case]
+        it 'has no filtered permitted events' do
+          expect(assigns(:filtered_permitted_events)).to be_empty
         end
 
         it 'renders case details page' do

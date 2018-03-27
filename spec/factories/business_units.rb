@@ -57,14 +57,14 @@ FactoryGirl.define do
     approvers { [create(:user)] }
   end
 
-  factory :team_dacu, parent: :managing_team do
+  factory :team_disclosure_bmt, aliases: [:team_dacu], parent: :managing_team do
     name 'Disclosure BMT'
     email 'dacu@localhost'
     code Settings.foi_cases.default_managing_team
     directorate { find_or_create :dacu_directorate }
   end
 
-  factory :team_dacu_disclosure, parent: :approving_team do
+  factory :team_disclosure, aliases: [:team_dacu_disclosure], parent: :approving_team do
     name 'Disclosure'
     email 'dacu.disclosure@localhost'
     code Settings.foi_cases.default_clearance_team

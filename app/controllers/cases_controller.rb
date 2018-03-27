@@ -298,8 +298,13 @@ class CasesController < ApplicationController
     render :index
   end
 
+  def remove_clearance
+    authorize @case, :unflag_for_clearance?
+    # interstitial page for unflag_taken_on_case_for_clearance
+  end
+
   def unflag_taken_on_case_for_clearance
-    authorize @case, :can_unflag_for_clearance?
+    authorize @case, :unflag_for_clearance?
     service = CaseUnflagForClearanceService.new(user: current_user,
                                       kase: @case,
                                       team: BusinessUnit.dacu_disclosure,
@@ -312,7 +317,7 @@ class CasesController < ApplicationController
   end
 
   def unflag_for_clearance
-    authorize @case, :can_unflag_for_clearance?
+    authorize @case
     CaseUnflagForClearanceService.new(user: current_user,
                                       kase: @case,
                                       team: BusinessUnit.dacu_disclosure,

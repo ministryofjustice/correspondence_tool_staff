@@ -79,12 +79,12 @@ en:
       can_delete_case?: You are not authorised to delete this case.
       can_download_stats?: You are not authorised to view or download statistics.
       can_remove_attachment?: 'You are not authorised to remove attachments from this case.'
-      can_unflag_for_clearance?: 'You are not authorised to remove clearance from this case'
       can_view_case_details?: 'You are not authorised to view this case.'
       delete?: You are not authorised to delete this case.
       edit?: You are not authorised to edit this case.
       new_case_link?: You are not authorised to link other cases to this case.
       show?: You are not authorised to view this case.
+      unflag_for_clearance?: 'You are not authorised to remove clearance from this case'
       update?: You are not authorised to edit this case.
     case/foi/standard_policy:
       <<: *case_policy

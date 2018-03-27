@@ -209,6 +209,7 @@ FactoryGirl.define do
              state: 'accepted',
              user: evaluator.press_officer
       kase.reload
+      kase.update(workflow: 'full_approval')
     end
   end
 
@@ -224,6 +225,7 @@ FactoryGirl.define do
              state: 'accepted',
              user: evaluator.private_officer
       kase.reload
+      kase.update(workflow: 'full_approval')
     end
   end
 
@@ -248,6 +250,7 @@ FactoryGirl.define do
              case: kase,
              acting_user_id: evaluator.approver.id
       kase.reload
+      kase.update(workflow: 'full_approval')
     end
   end
 
@@ -284,6 +287,8 @@ FactoryGirl.define do
              target_user_id: evaluator.approver.id
 
       kase.reload
+      kase.update(workflow: 'full_approval')
+
     end
   end
 
@@ -669,6 +674,8 @@ FactoryGirl.define do
              team: evaluator.private_office,
              user: evaluator.private_officer,
              state: evaluator.disclosure_assignment_state
+
+      kase.update(workflow: 'full_approval')
     end
   end
 
@@ -686,6 +693,7 @@ FactoryGirl.define do
              case: kase,
              team: evaluator.disclosure_team,
              state: evaluator.disclosure_assignment_state
+      kase.update(workflow: 'full_approval')
     end
   end
 

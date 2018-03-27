@@ -252,11 +252,10 @@ describe CaseUnacceptApproverAssignmentService do
 
         it 'triggers an unflag event on the case for dacu disclosure' do
           state_machine = private_office_assignment.case.state_machine
-          allow(state_machine).to receive(:unflag_for_clearance!).with(any_args)
+          expect(state_machine).to receive(:trigger_event).with(event: :unflag_for_clearance, params: {acting_user: private_officer, acting_team: private_office, target_team: dacu_disclosure })
+          expect(state_machine).to receive(:trigger_event).with(event: :unflag_for_clearance, params: {acting_user: private_officer, acting_team: private_office, target_team: private_office })
+
           service.call
-          expect(state_machine)
-            .to have_received(:unflag_for_clearance!)
-                    .with(acting_user: private_officer, acting_team: private_office, target_team: dacu_disclosure)
         end
 
         it 'sets the result to ok and returns true' do
@@ -290,11 +289,11 @@ describe CaseUnacceptApproverAssignmentService do
 
         it 'triggers an unflag event on the case for private office' do
           state_machine = private_office_assignment.case.state_machine
-          allow(state_machine).to receive(:unflag_for_clearance!).with(any_args)
+          expect(state_machine).to receive(:trigger_event).with(event: :unflag_for_clearance,
+                                                                params: {acting_user: private_officer,
+                                                                         acting_team: private_office,
+                                                                         target_team: private_office })
           service.call
-          expect(state_machine)
-            .to have_received(:unflag_for_clearance!)
-                    .with(acting_user: private_officer, acting_team: private_office, target_team: private_office)
         end
 
         it 'does not trigger unflag event on the case for dacu disclosure' do
