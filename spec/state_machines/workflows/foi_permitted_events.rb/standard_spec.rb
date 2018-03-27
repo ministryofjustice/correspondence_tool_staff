@@ -114,7 +114,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :case
 
             expect(k.current_state).to eq 'unassigned'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
         end
 
