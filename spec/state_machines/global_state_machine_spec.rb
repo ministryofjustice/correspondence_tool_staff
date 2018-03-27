@@ -1223,10 +1223,16 @@ describe 'state machine' do
 
   )  }
   end
-  xdescribe :unaccept_approver_assignment do
-    it {
 
-    }
+  describe :unaccept_approver_assignment do
+    it {
+      should permit_event_to_be_triggered_only_by(
+        [:approver, :trig_unassigned_foi_accepted],
+        [:approver, :trig_awresp_foi_accepted],
+        [:approver, :trig_draft_foi_accepted],
+        [:approver, :trig_pdacu_foi_accepted],
+        [:approver, :trig_awdis_foi], # don't think this should be here controlledby old state_machine)
+    )}
   end
 
   xdescribe :unflag_for_clearance do
