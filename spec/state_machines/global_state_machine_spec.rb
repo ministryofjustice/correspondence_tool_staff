@@ -1235,28 +1235,80 @@ describe 'state machine' do
     )}
   end
 
-  xdescribe :unflag_for_clearance do
-    it {
 
+  # describe 'setup' do
+  #   it 'does' do
+  #     event = :approve
+  #     kase = @setup.trig_pdacu_foi_accepted
+  #     user, team = @setup.approver
+  #     puts ">>>>>>>>>> user #{__FILE__}:#{__LINE__} <<<<<<<<<<"
+  #     puts "#{user.id} #{user.full_name}"
+  #     puts ">>>>>>>>>> team #{__FILE__}:#{__LINE__} <<<<<<<<<<"
+  #     puts "#{team.id} #{team.name}"
+  #     puts ">>>>>>>>>> Case #{__FILE__}:#{__LINE__} <<<<<<<<<<"
+  #     CasePrinter.new(kase).print
+  #
+  #     machine = kase.state_machine
+  #     expect(machine.can_trigger_event?(event_name: event, metadata: {acting_user: user, acting_team: team})).to be true
+  #   end
+  # end
+
+  describe :unflag_for_clearance do
+    it {
+      should permit_event_to_be_triggered_only_by(
+        [:manager, :trig_awdis_foi],                    # old state machine allows but shouldn't
+        [:manager, :full_awdis_foi],                    # old state machine allows but shouldn't
+
+        [:approver, :trig_unassigned_foi],
+        [:approver, :trig_unassigned_foi_accepted],
+        [:approver, :trig_awresp_foi],
+        [:approver, :trig_awresp_foi_accepted],
+        [:approver, :trig_draft_foi],
+        [:approver, :trig_draft_foi_accepted],
+        [:approver, :trig_pdacu_foi],
+        [:approver, :trig_awdis_foi],                  # old state machine allows but shouldn't
+        [:approver, :trig_pdacu_foi_accepted],
+        [:approver, :full_awdis_foi],                   # old state machine allows but shouldn't
+
+        [:press_officer, :full_unassigned_foi],
+        [:press_officer, :full_awresp_foi],
+        [:press_officer, :full_awresp_foi_accepted],
+        [:press_officer, :full_draft_foi],
+        [:press_officer, :full_pdacu_foi],
+        [:press_officer, :full_pdacu_foi_accepted],
+
+        [:private_officer, :full_unassigned_foi],
+        [:private_officer, :full_awresp_foi],
+        [:private_officer, :full_awresp_foi_accepted],
+        [:private_officer, :full_draft_foi],
+        [:private_officer, :full_pdacu_foi],
+        [:private_officer, :full_pdacu_foi_accepted],
+        )
     }
   end
 
-  xdescribe :upload_response_and_approve do
+  describe :upload_response_and_approve do
     it {
-
+      should permit_event_to_be_triggered_only_by(
+       [:approver, :full_pdacu_foi_accepted],
+       [:approver, :trig_pdacu_foi_accepted],
+     )
     }
   end
 
-  xdescribe :upload_response_and_return_for_redraft do
+  describe :upload_response_and_return_for_redraft do
     it {
-
+      should permit_event_to_be_triggered_only_by(
+       [:approver, :full_pdacu_foi_accepted],
+       [:approver, :trig_pdacu_foi_accepted],
+     )
     }
   end
 
   describe :upload_response_approve_and_bypass do
     it {
       should permit_event_to_be_triggered_only_by(
-         [:approver, :full_pdacu_foi_accepted],           # we expect this to be triggerable, but the old state machine does not for some reason
+         [:approver, :full_pdacu_foi_accepted],
        )
       }
   end

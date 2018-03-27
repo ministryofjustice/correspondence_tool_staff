@@ -451,6 +451,7 @@ case_types:
                   # if not flagged for press and private?
                   # do we want to transition straight away or is this the 'undo button' and so just needs to be given the another disclosure specialist
                 unflag_for_clearance:
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
                   switch_workflow_using: Workflows::Conditionals#unflag_for_clearance_next_workflow
                   transition_to_using: Workflows::Conditionals#unflag_for_clearance_next_state
                   after_transition: Workflows::Hooks#notify_responder_ready_to_send
@@ -671,6 +672,9 @@ case_types:
                 upload_response_and_approve:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                   transition_to: pending_press_office_clearance
+                upload_response_approve_and_bypass:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  transition_to: awaiting_dispatch
                 upload_response_and_return_for_redraft:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                   after_transition: Workflows::Hooks#notify_responder_redraft_requested
