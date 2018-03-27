@@ -1159,10 +1159,16 @@ describe 'state machine' do
     }
   end
 
-  xdescribe :respond do
+  describe :respond do
     it {
-
-    }
+      should permit_event_to_be_triggered_only_by(
+      [:responder, :std_awdis_foi],
+      [:responder, :trig_awdis_foi],
+      [:responder, :full_awdis_foi],
+      [:another_responder_in_same_team, :std_awdis_foi],
+      [:another_responder_in_same_team, :trig_awdis_foi],
+      [:another_responder_in_same_team, :full_awdis_foi],
+      )}
   end
 
   xdescribe :take_on_for_approval do
