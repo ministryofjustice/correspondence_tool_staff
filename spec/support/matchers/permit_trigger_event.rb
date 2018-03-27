@@ -18,9 +18,6 @@ module PermitTriggerEvent
       @errors = []
       all_user_teams.each do |user_type, user_and_team|
         all_cases.each do |case_type, kase|
-          if user_type.to_s == 'approver' && case_type.to_s == 'full_pdacu_foi_accepted'
-            puts ">>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<"
-          end
           user, team = user_and_team
           state_machine = kase.state_machine
           result = state_machine.can_trigger_event?(event_name: event, metadata: {acting_user: user, acting_team: team})
