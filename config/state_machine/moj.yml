@@ -235,6 +235,8 @@ case_types:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 link_a_case:
+                remove_linked_case:
+
 
               awaiting_responder:
                 add_message_to_case:
@@ -465,6 +467,8 @@ case_types:
                 add_message_to_case:
                   if: Case::BasePolicy#can_add_message_to_case?
                 link_a_case:
+                remove_linked_case:
+
 
               awaiting_responder:
                 accept_responder_assignment:
@@ -676,6 +680,7 @@ case_types:
                 add_message_to_case:
                   if: Case::BasePolicy#can_add_message_to_case?
                 link_a_case:
+                remove_linked_case:
 
               awaiting_responder:
                 accept_responder_assignment:
