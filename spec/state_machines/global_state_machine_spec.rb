@@ -1171,10 +1171,57 @@ describe 'state machine' do
       )}
   end
 
-  xdescribe :take_on_for_approval do
+  describe :take_on_for_approval do
     it {
+      should permit_event_to_be_triggered_only_by(
+        [:press_officer, :std_unassigned_foi],
+        [:press_officer, :std_awresp_foi],
+        [:press_officer, :std_draft_foi],
+        [:press_officer, :std_awdis_foi],
+        [:press_officer, :trig_unassigned_foi],
+        [:press_officer, :trig_unassigned_foi_accepted],
+        [:press_officer, :trig_awresp_foi],
+        [:press_officer, :trig_awresp_foi_accepted],
+        [:press_officer, :trig_draft_foi],
+        [:press_officer, :trig_draft_foi_accepted],
+        [:press_officer, :trig_awdis_foi],
 
-    }
+        [:private_officer, :std_unassigned_foi],
+        [:private_officer, :std_awresp_foi],
+        [:private_officer, :std_draft_foi],
+        [:private_officer, :std_awdis_foi],
+        [:private_officer, :trig_unassigned_foi],
+        [:private_officer, :trig_unassigned_foi_accepted],
+        [:private_officer, :trig_awresp_foi],
+        [:private_officer, :trig_awresp_foi_accepted],
+        [:private_officer, :trig_draft_foi],
+        [:private_officer, :trig_draft_foi_accepted],
+        [:private_officer, :trig_awdis_foi],
+# another approver and approver are permitted here since the policy allows
+# any team that has not taken the case on to take it on
+        [:another_approver, :std_unassigned_foi],
+        [:another_approver, :std_awresp_foi],
+        [:another_approver, :std_draft_foi],
+        [:another_approver, :std_awdis_foi],
+        [:another_approver, :trig_unassigned_foi],
+        [:another_approver, :trig_unassigned_foi_accepted],
+        [:another_approver, :trig_awresp_foi],
+        [:another_approver, :trig_awresp_foi_accepted],
+        [:another_approver, :trig_draft_foi],
+        [:another_approver, :trig_draft_foi_accepted],
+        [:another_approver, :trig_awdis_foi],
+        [:another_approver, :full_unassigned_foi],
+        [:another_approver, :full_awresp_foi],
+        [:another_approver, :full_awresp_foi_accepted],
+        [:another_approver, :full_draft_foi],
+        [:another_approver, :full_awdis_foi],
+
+        [:approver, :std_unassigned_foi],
+        [:approver, :std_awresp_foi],
+        [:approver, :std_draft_foi],
+        [:approver, :std_awdis_foi],
+
+  )  }
   end
   xdescribe :unaccept_approver_assignment do
     it {

@@ -179,6 +179,7 @@ case_types:
                   if: Case::BasePolicy#assignments_reassign_user?
                 remove_linked_case:
                 take_on_for_approval:
+                  if: Case::BasePolicy#can_take_on_for_approval?
                   switch_workflow: full_approval
                 unflag_for_clearance:               # needed for press/private office to unaccept
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
@@ -197,6 +198,7 @@ case_types:
                   if: Case::BasePolicy#assignments_reassign_user?
                 remove_linked_case:
                 take_on_for_approval:
+                  if: Case::BasePolicy#can_take_on_for_approval?
                   switch_workflow: full_approval
                 unflag_for_clearance: # needed for press/private office to unaccept
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
@@ -212,7 +214,8 @@ case_types:
                   if: Case::BasePolicy#assignments_reassign_user?
                 remove_linked_case:
                 take_on_for_approval:
-                  switch_workflow: :full_approval
+                  if: Case::BasePolicy#can_take_on_for_approval?
+                  switch_workflow: full_approval
 
               responded:
                 add_message_to_case:
@@ -236,7 +239,6 @@ case_types:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 link_a_case:
                 remove_linked_case:
-
 
               awaiting_responder:
                 add_message_to_case:
