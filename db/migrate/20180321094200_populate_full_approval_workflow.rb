@@ -1,6 +1,6 @@
 class PopulateFullApprovalWorkflow < ActiveRecord::Migration[5.0]
 
-  class MigrateableCase < ActiveRecord::Base
+  class Case::Base < ApplicationRecord
 
     self.table_name = :cases
 
@@ -22,7 +22,7 @@ class PopulateFullApprovalWorkflow < ActiveRecord::Migration[5.0]
   end
 
   def up
-    MigrateableCase.find_each do |kase|
+    Case::Base.find_each do |kase|
       if kase.flagged_for_press_office_clearance?
         kase.update(workflow: 'full_approval')
       end
