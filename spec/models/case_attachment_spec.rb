@@ -311,4 +311,15 @@ RSpec.describe CaseAttachment, type: :model do
     end
   end
 
+  describe '#scan_for_virus' do
+    it 'runs clamav'
+    context 'on successful run (no virus)' do
+      it 'sets the state to "virus_scan_passed"'
+    end
+
+    context 'on failed run (virus found)' do
+      it 'sets the state to "virus_scan_failed"'
+      it 'removes the file in S3'
+    end
+  end
 end

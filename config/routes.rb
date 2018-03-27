@@ -259,16 +259,17 @@ Rails.application.routes.draw do
       patch :execute_assign_to_new_team, on: :member
     end
 
-    resources :case_attachments, path: 'attachments', as: 'attachments'
+    resources :case_attachments, path: 'attachments', as: 'attachments', except: [:show] do
+      get '', on: :member, action: :show, format: :json
+      post 'create_from_s3', on: :collection
+      get 'preview', on: :member
+      get 'download', on: :member
+    end
 
     resources :messages, only: :create
 
     get 'new_response_upload', on: :member
     post 'upload_responses', on: :member
-
-    resources :case_attachments, path: 'attachments', only: [:destroy] do
-      get 'download', on: :member
-    end
 
     get 'search' => 'cases#search', on: :collection
   end

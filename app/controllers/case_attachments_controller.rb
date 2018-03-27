@@ -1,14 +1,33 @@
 class CaseAttachmentsController < ApplicationController
-  before_action :set_case,       only: [:destroy, :download, :show]
-  before_action :set_attachment, only: [:destroy, :download, :show]
+  before_action :set_case,       only: [:create_from_s3,
+                                        :destroy,
+                                        :download,
+                                        :preview,
+                                        :show]
+  before_action :set_attachment, only: [:destroy, :download, :preview, :show]
+
+  def create_from_s3
+    authorize @case, :can_add_attachment?
+
+    attachment = CaseAttachment.new(create_params)
+    @case.attachments << attachment
+    @case.save!
+    VirusScanJob.perform_later(attachment.id)
+
+    redirect_to status_case_attachment_path(case_id: @case.id, id: attachment.id)
+  end
 
   def download
     redirect_to @attachment.temporary_url
   end
 
-  def show
+  def preview
     tmpfile_path = download_to_tmpfile(@attachment.preview_key)
     send_file tmpfile_path, type: File.mime_type?(@attachment.preview_key), disposition: 'inline'
+  end
+
+  def show
+    render json: @attachment.to_json
   end
 
   def destroy
@@ -27,6 +46,10 @@ class CaseAttachmentsController < ApplicationController
   end
 
   private
+
+  def create_params
+    params.require(:case_attachment).permit(:key, :type)
+  end
 
   def download_to_tmpfile(key)
     extname = File.extname(key)

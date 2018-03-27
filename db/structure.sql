@@ -190,7 +190,8 @@ CREATE TABLE public.case_attachments (
     key character varying,
     preview_key character varying,
     upload_group character varying,
-    user_id integer
+    user_id integer,
+    state character varying DEFAULT 'unprocessed'::character varying NOT NULL
 );
 
 
@@ -1619,6 +1620,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180214163355'),
 ('20180222125345'),
 ('20180228174550'),
+('20180319202822'),
 ('20180321094200'),
 ('20180322183946'),
 ('20180406145035'),

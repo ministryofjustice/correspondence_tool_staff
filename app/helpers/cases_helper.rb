@@ -139,8 +139,8 @@ module CasesHelper
   def attachment_preview_link(attachment)
     if attachment.preview_key != nil
       link_to "View",
-                 case_attachment_path(attachment.case, attachment),
-                 {target: "_blank", class: "view"}
+              preview_case_attachment_path(attachment.case, attachment),
+              {target: "_blank", class: "view"}
     else
       ''
     end

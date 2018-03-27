@@ -4,10 +4,92 @@ RSpec.describe CaseAttachmentsController, type: :controller do
   let(:responder) { kase.responder }
   let(:manager)   { create :manager }
 
-  let(:kase)       { create(:case_with_response) }
-  let(:attachment) { kase.attachments.first      }
+  describe 'POST create_from_s3' do
+    let(:kase)   { create :case_being_drafted }
+    let(:s3_key) { "uploads/#{kase.id}/request/request.pdf" }
+    let(:params) {
+      {
+        case_id: kase.id,
+        case_attachment: {
+          key: s3_key,
+          type: 'response'
+        }
+      }
+    }
+
+    before do
+      sign_in responder
+      ActiveJob::Base.queue_adapter.enqueued_jobs.clear
+    end
+
+    it 'authorises' do
+      expect {
+        post :create_from_s3, params: params
+      } .to require_permission(:can_add_attachment?)
+              .with_args(responder, kase)
+
+    end
+
+    it 'creates the attachment' do
+      post :create_from_s3, params: params
+
+      expect(kase.attachments.reload.count).to eq 1
+      expect(kase.attachments.last.key).to eq s3_key
+    end
+
+    it 'defaults the state to "unprocessed"' do
+      post :create_from_s3, params: params
+
+      expect(kase.attachments.last.state).to eq 'unprocessed'
+    end
+
+    it 'starts the virus scan job' do
+      post :create_from_s3, params: params
+
+      expect(VirusScanJob).to have_been_enqueued.exactly(:once)
+    end
+
+    it 'redirects to status page' do
+      post :create_from_s3, params: params
+
+      attachment = kase.attachments.last
+      expect(response).to redirect_to status_case_attachment_path(
+                                        case_id: kase.id,
+                                        id: attachment.id
+                                      )
+    end
+  end
+
+  describe 'GET status' do
+    it 'returns JSONified version of attachment' do
+      get :status, params: { id: kase.id}
+    end
+  end
+
+  describe 'GET preview' do
+    it 'sends the file inline'
+  end
+
+  describe 'GET show' do
+    let(:kase) { create(:case_with_response, responder: responder) }
+    let(:attachment) { kase.attachments.first }
+
+    before do
+      sign_in responder
+    end
+
+    it 'returns JSON version of object if requested' do
+      get :show, params: { case_id: kase.id, id: attachment.id }
+
+      expect(response.body).to eq attachment.to_json
+    end
+  end
 
   describe '#download' do
+    let(:kase) { create(:case_with_response, responder: responder) }
+    let(:attachment) { kase.attachments.first }
+
+
     shared_examples 'unauthorized user' do
       it 'redirect to the login or root page' do
         get :download, params: { case_id: kase.id, id: attachment.id }
