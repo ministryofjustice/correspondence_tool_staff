@@ -335,7 +335,7 @@ describe 'state machine' do
         )}
   end
 
-  xdescribe :edit_case do
+  describe :edit_case do
     it {
       should permit_event_to_be_triggered_only_by(
         [:manager, :std_unassigned_foi],
@@ -345,18 +345,26 @@ describe 'state machine' do
         [:manager, :std_responded_foi],
         [:manager, :std_closed_foi],
         [:manager, :trig_unassigned_foi],
+        [:manager, :trig_unassigned_foi_accepted],
         [:manager, :trig_awresp_foi],
+        [:manager, :trig_awresp_foi_accepted],
         [:manager, :trig_draft_foi],
+        [:manager, :trig_draft_foi_accepted],
         [:manager, :trig_pdacu_foi],
+        [:manager, :trig_pdacu_foi_accepted],
         [:manager, :trig_awdis_foi],
         [:manager, :trig_responded_foi],
         [:manager, :trig_closed_foi],
         [:manager, :full_unassigned_foi],
         [:manager, :full_awresp_foi],
+        [:manager, :full_awresp_foi_accepted],
         [:manager, :full_draft_foi],
         [:manager, :full_pdacu_foi],
+        [:manager, :full_pdacu_foi_accepted],
         [:manager, :full_ppress_foi],
+        [:manager, :full_ppress_foi_accepted],
         [:manager, :full_pprivate_foi],
+        [:manager, :full_pprivate_foi_accepted],
         [:manager, :full_awdis_foi],
         [:manager, :full_responded_foi],
         [:manager, :full_closed_foi]
