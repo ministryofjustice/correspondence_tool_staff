@@ -745,7 +745,6 @@ describe 'state machine' do
   describe :reassign_user do
     it {
       should permit_event_to_be_triggered_only_by(
-        [:approver, :trig_unassigned_foi],
         [:approver, :trig_unassigned_foi_accepted],
         [:approver, :trig_awresp_foi],
         [:approver, :trig_awresp_foi_accepted],
@@ -753,43 +752,33 @@ describe 'state machine' do
         [:approver, :trig_draft_foi_accepted],
         [:approver, :trig_pdacu_foi],
         [:approver, :trig_pdacu_foi_accepted],
-        [:approver, :full_unassigned_foi],
         [:approver, :full_awresp_foi],
         [:approver, :full_awresp_foi_accepted],
         [:approver, :full_draft_foi],
         [:approver, :full_pdacu_foi],
         [:approver, :full_pdacu_foi_accepted],
-        # [:approver, :full_ppress_foi],     ?
         [:approver, :full_ppress_foi_accepted],
-        # [:approver, :full_pprivate_foi],
         [:approver, :full_pprivate_foi_accepted],
 
-        [:another_approver, :trig_unassigned_foi],
-        [:another_approver, :trig_unassigned_foi_accepted],
         [:another_approver, :trig_awresp_foi],
         [:another_approver, :trig_awresp_foi_accepted],
         [:another_approver, :trig_draft_foi],
         [:another_approver, :trig_draft_foi_accepted],
         [:another_approver, :trig_pdacu_foi],
         [:another_approver, :trig_pdacu_foi_accepted],
-        [:another_approver, :full_unassigned_foi],
         [:another_approver, :full_awresp_foi],
         [:another_approver, :full_awresp_foi_accepted],
         [:another_approver, :full_draft_foi],
         [:another_approver, :full_pdacu_foi],
         [:another_approver, :full_pdacu_foi_accepted],
-        # [:another_approver, :full_ppress_foi], ?
-        # [:another_approver, :full_pprivate_foi], ?
 
         [:responder, :std_draft_foi],
         [:responder, :std_awdis_foi],
-        # [:responder, :std_responded_foi],
         [:responder, :trig_draft_foi],
         [:responder, :trig_draft_foi_accepted],
         [:responder, :trig_pdacu_foi],
         [:responder, :trig_pdacu_foi_accepted],
         # [:responder, :trig_awdis_foi], ?
-        # [:responder, :trig_responded_foi],
         [:responder, :full_draft_foi],
         [:responder, :full_pdacu_foi],
         [:responder, :full_pdacu_foi_accepted],
@@ -798,61 +787,54 @@ describe 'state machine' do
         [:responder, :full_pprivate_foi],
         [:responder, :full_pprivate_foi_accepted],
         # [:responder, :full_awdis_foi], ?
-        # [:responder, :full_responded_foi],
-
-
-        [:another_approver, :trig_unassigned_foi_accepted],
-        [:another_approver, :trig_awresp_foi_accepted],
-        [:another_approver, :trig_draft_foi_accepted],
-        [:another_approver, :trig_pdacu_foi_accepted],
-
 
         [:another_responder_in_same_team, :std_draft_foi],
         [:another_responder_in_same_team, :std_awdis_foi],
-        # [:another_responder_in_same_team, :std_responded_foi],
         [:another_responder_in_same_team, :trig_draft_foi],
         [:another_responder_in_same_team, :trig_draft_foi_accepted],
         [:another_responder_in_same_team, :trig_pdacu_foi],
         [:another_responder_in_same_team, :trig_pdacu_foi_accepted],
         # [:another_responder_in_same_team, :trig_awdis_foi], ?
-        [:another_responder_in_same_team, :trig_responded_foi],
         [:another_responder_in_same_team, :full_draft_foi],
         [:another_responder_in_same_team, :full_pdacu_foi],
+        [:another_responder_in_same_team, :full_pdacu_foi_accepted],
         [:another_responder_in_same_team, :full_ppress_foi],
+        [:another_responder_in_same_team, :full_ppress_foi_accepted],
         [:another_responder_in_same_team, :full_pprivate_foi],
-        [:another_responder_in_same_team, :full_awdis_foi],
-        [:another_responder_in_same_team, :full_responded_foi],
+        [:another_responder_in_same_team, :full_pprivate_foi_accepted],
+        # [:another_responder_in_same_team, :full_awdis_foi], ?
 
-
-        [:press_officer, :trig_unassigned_foi],
         [:press_officer, :trig_awresp_foi],
+        [:press_officer, :trig_awresp_foi_accepted],
         [:press_officer, :trig_draft_foi],
+        [:press_officer, :trig_draft_foi_accepted],
         [:press_officer, :trig_pdacu_foi],
-        [:press_officer, :trig_awdis_foi],
-        [:press_officer, :trig_responded_foi],
-        [:press_officer, :full_unassigned_foi],
+        [:press_officer, :trig_pdacu_foi_accepted],
+        # [:press_officer, :trig_awdis_foi], ?
         [:press_officer, :full_awresp_foi],
+        [:press_officer, :full_awresp_foi_accepted],
         [:press_officer, :full_draft_foi],
         [:press_officer, :full_pdacu_foi],
+        [:press_officer, :full_pdacu_foi_accepted],
         [:press_officer, :full_ppress_foi],
+        [:press_officer, :full_ppress_foi_accepted],
         [:press_officer, :full_pprivate_foi],
-        [:press_officer, :full_awdis_foi],
-        [:press_officer, :full_responded_foi],
+        [:press_officer, :full_pprivate_foi_accepted],
 
-        [:private_officer, :trig_unassigned_foi],
         [:private_officer, :trig_awresp_foi],
+        [:private_officer, :trig_awresp_foi_accepted],
         [:private_officer, :trig_draft_foi],
+        [:private_officer, :trig_draft_foi_accepted],
         [:private_officer, :trig_pdacu_foi],
-        [:private_officer, :trig_awdis_foi],
-        [:private_officer, :trig_responded_foi],
-        [:private_officer, :full_unassigned_foi],
+        [:private_officer, :trig_pdacu_foi_accepted],
         [:private_officer, :full_awresp_foi],
+        [:private_officer, :full_awresp_foi_accepted],
         [:private_officer, :full_draft_foi],
         [:private_officer, :full_pdacu_foi],
-        [:private_officer, :full_ppress_foi],
+        [:private_officer, :full_pdacu_foi_accepted],
+        [:private_officer, :full_ppress_foi_accepted],
         [:private_officer, :full_pprivate_foi],
-        [:private_officer, :full_awdis_foi],
-        [:private_officer, :full_responded_foi],
+        [:private_officer, :full_pprivate_foi_accepted],
   )  }
   end
 
