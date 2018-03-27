@@ -1048,6 +1048,57 @@ describe 'state machine' do
   end
 
 
+  xdescribe :request_further_clearance do
+    it {
+
+    }
+  end
+
+  xdescribe :respond do
+    it {
+
+    }
+  end
+
+  xdescribe :take_on_for_approval do
+    it {
+
+    }
+  end
+  xdescribe :unaccept_approver_assignment do
+    it {
+
+    }
+  end
+
+  xdescribe :unflag_for_clearance do
+    it {
+
+    }
+  end
+
+  xdescribe :upload_response_and_approve do
+    it {
+
+    }
+  end
+
+  xdescribe :upload_response_and_return_for_redraft do
+    it {
+
+    }
+  end
+
+  describe :upload_response_approve_and_bypass do
+    it {
+      should permit_event_to_be_triggered_only_by(
+         [:approver, :full_pdacu_foi_accepted],           # we expect this to be triggerable, but the old state machine does not for some reason
+       )
+      }
+  end
+
+
+
   def all_user_teams
     @setup.user_teams
   end
