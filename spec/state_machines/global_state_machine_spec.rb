@@ -838,12 +838,20 @@ describe 'state machine' do
   )  }
   end
 
-  xdescribe :reject_responder_assignment do
+  describe :reject_responder_assignment do
     it {
       should permit_event_to_be_triggered_only_by(
         [:responder, :std_awresp_foi],
         [:responder, :trig_awresp_foi],
-        [:responder, :full_awresp_foi]
+        [:responder, :trig_awresp_foi_accepted],
+        [:responder, :full_awresp_foi],
+        [:responder, :full_awresp_foi_accepted],
+
+        [:another_responder_in_same_team, :std_awresp_foi],
+        [:another_responder_in_same_team,:trig_awresp_foi_accepted],
+        [:another_responder_in_same_team,:trig_awresp_foi],
+        [:another_responder_in_same_team, :full_awresp_foi],
+        [:another_responder_in_same_team,:full_awresp_foi_accepted],
       )
     }
   end
