@@ -24,17 +24,11 @@ RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys B97
 RUN . /etc/os-release ; release="${VERSION#* (}" ; release="${release%)}" ; \
     echo "deb https://apt.postgresql.org/pub/repos/apt/ $release-pgdg main" > /etc/apt/sources.list.d/pgdg.list
 
-# Set this to any value ("1", "true", etc) to enable development mode.
-# e.g. docker build --build-arg development_mode=1 ...
-ARG development_mode
-
-RUN echo "development_mode=$development_mode"
-
 # Use this to add to the list of packages installed into an image. For example,
 # the uploads image should also have clamav, clamav-daemon and libreoffice
 # installed. Use this by specifying --build-arg with docker build:
 #
-#   docker build --build-args additional_pacakges='clamav clamav-daemon libreoffice'
+#   docker build --build-args additional_pacakges='clamav clamav-daemon freshclam libreoffice'
 #
 # Or by adding build args to the docker-compose file.
 ARG additional_packages
@@ -47,6 +41,12 @@ RUN apt-get update && apt-get install -y less \
     rm -rf /var/lib/apt/lists/*
 
 COPY Gemfile Gemfile.lock ./
+
+# Set this to any value ("1", "true", etc) to enable development mode.
+# e.g. docker build --build-arg development_mode=1 ...
+ARG development_mode
+
+RUN echo "development_mode=$development_mode"
 
 RUN bundle config --global frozen 1 \
     && ( [ -z "$development" ] \

@@ -20,7 +20,26 @@ $ git clone git@github.com:ministryofjustice/correspondence_tool_staff.git
 $ cd correspondence_tool_staff
 ```
 
+#### Building with Docker Compose
+
+This project is buildable with `docker-compose`. Install [Docker for
+Mac](https://docs.docker.com/docker-for-mac/) and then run this in the
+repository directory:
+
+```
+$ docker-compose up
+```
+
+This will build and run all the Docker containers locally and publish port 3000
+from the web container locally. The application will be available on
+http://localhost:3000/
+
+
 #### Installing Dependencies
+
+**NB**: The instructions below are only required if you want to run the application
+natively without Docker. Only use if necessary, otherwise use the "Building with
+Docker Compose" instructions above.
 
 <details>
 <summary>Latest Version of Ruby</summary>
@@ -202,10 +221,15 @@ it, there are two ways of doing this:
 
 #### Using credentials attached to your IAM account
 
-If you have an MoJ account in AWS IAM, you can configure the aws-sdk with your access and secret key by placing them in the `[default]` section in `.aws/credentials`:
+If you have an MoJ account in AWS IAM, you can configure the aws-sdk with your
+access and secret key by placing them in the `[default]` section in
+`.aws/credentials`:
 
 1. [Retrieve you keys from your IAM account](http://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html)<sup>[1](#user-content-footnote-aws-access-key)</sup> if you don't have them already.
 2. [Place them in `~/.aws/credentals`](http://docs.aws.amazon.com/sdk-for-ruby/v2/developer-guide/setup-config.html)
+
+When using Docker Compose your `~/.aws` will be mounted onto the containers so
+that they can use your local credentials transparently.
 
 #### Using shared credentials
 
@@ -331,19 +355,24 @@ bundle exec rails smoke
 
 ### Deploying
 
-#### Dockerfiles
+#### Dockerisation
 
-Docker files:
+Docker images are built from a single `Dockerfile` which uses build arguments to
+control aspects of the build. The available build argements are:
 
-```
-Dockerfile.app-base      - base image used by non-uploads containers
-  +- Dockerfile          - web application Rails process
-  +- Dockerfile.mailer   - email notifications sidekiq job
-  +- Dockerfile.reports  - reports generator sidekiq job
+- _*development_mode*_ enable by setting to a non-nil value/empty string to
+  install gems form the `test` and `development` groups in the `Gemfile`. Used
+  when building with `docker-compose` to build development versions of the
+  images for local development.
+- _*additional_packages*_ set to the list of additional packages to install with
+  `apt-get`. Used by the build system to add packages to the `uploads` container:
 
-Dockerfile.uploads-base
-  +- Dockerfile.uploads  - uploads post-processing sidekiq job
-```
+  ```
+      clamav clamav-daemon freshclam libreoffice
+  ```
+
+  These are required to scan the uploaded files for viruses (clamav & Co.) and
+  to generate a PDF preview (libreoffice).
 
 
 # Case Journey
