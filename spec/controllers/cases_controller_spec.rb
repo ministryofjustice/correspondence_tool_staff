@@ -472,7 +472,7 @@ RSpec.describe CasesController, type: :controller do
       context 'as a responder' do
         let(:user) { create(:responder) }
 
-        it { should have_no_permitted_events }
+        it { should have_permitted_events_including :link_a_case }
 
         it 'renders case details page' do
           expect(response).to render_template :show
