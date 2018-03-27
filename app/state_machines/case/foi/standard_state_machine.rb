@@ -43,6 +43,10 @@ class Case::FOI::StandardStateMachine
 
   event :flag_for_clearance do
     guard do |object, _last_transition, options|
+      if options.key?(:acting_user)
+        options[:acting_user_id] = options[:acting_user].id
+      end
+
       case_policy = Case::FOI::StandardStateMachine.get_policy options[:acting_user_id], object
       assignment = Assignment.new case: object, team_id: options[:target_team_id]
       assignment_policy = Case::FOI::StandardStateMachine.get_policy options[:acting_user_id],

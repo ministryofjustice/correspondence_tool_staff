@@ -62,4 +62,5 @@ class Workflows::Predicates
     @kase.outside_escalation_deadline? &&
         @kase.current_state.in?(%w{responded closed})
   end
+
 end
