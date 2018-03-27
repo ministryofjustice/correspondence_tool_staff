@@ -1121,18 +1121,41 @@ describe 'state machine' do
         )}
   end
 
-  xdescribe :request_amends do
+  describe :request_amends do
     it {
       should permit_event_to_be_triggered_only_by(
-        [:press_officer, :press_office, :full_ppress_foi],
-        [:private_officer, :private_office, :full_pprivate_foi]
+        # [:press_officer, :full_ppress_foi_accepted], should be allowed, controlled by old state_machine
+        # [:private_officer, :full_pprivate_foi_accepted] should be allowed, controlled by old state_machine
       )}
   end
 
 
-  xdescribe :request_further_clearance do
-    it {
+  describe :request_further_clearance do
+    it {should permit_event_to_be_triggered_only_by(
+      [:manager, :std_unassigned_foi],
+      [:manager, :std_awresp_foi],
+      [:manager, :std_draft_foi],
+      [:manager, :std_awdis_foi],
+      [:manager, :trig_unassigned_foi],
+      [:manager, :trig_awresp_foi],
+      [:manager, :trig_draft_foi],
+      [:manager, :trig_pdacu_foi],
+      [:manager, :trig_awdis_foi],
+      [:manager, :trig_unassigned_foi_accepted],
+      [:manager, :trig_awresp_foi_accepted],
+      [:manager, :trig_draft_foi_accepted],
+      [:manager, :trig_pdacu_foi_accepted],
 
+      # the following are permitted by the old state machine but shouldn't be
+
+      [:approver, :trig_awdis_foi],                            # old state machine - they shouldn't be allowed
+      [:another_approver, :trig_awdis_foi],                    # old state machine - they shouldn't be allowed
+      [:responder, :trig_awdis_foi],                           # old state machine - they shouldn't be allowed
+      [:another_responder_in_same_team, :trig_awdis_foi],      # old state machine - they shouldn't be allowed
+      [:another_responder_in_diff_team, :trig_awdis_foi],      # old state machine - they shouldn't be allowed
+      [:press_officer, :trig_awdis_foi],                       # old state machine - they shouldn't be allowed
+      [:private_officer, :trig_awdis_foi],                     # old state machine - they shouldn't be allowed
+    )
     }
   end
 
