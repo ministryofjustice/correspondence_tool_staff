@@ -9,6 +9,7 @@ def approve_case_step(kase:, expected_team:, expected_status:)
   end
 
   approve_response_interstitial_page.clear_response_button.click
+  save_and_open_page
   expect(cases_show_page).to be_displayed(id: kase.id)
   open_cases_page.load
   case_row = open_cases_page.case_list.detect{ |r| r.number.text == "Link to case #{kase.number}" }
