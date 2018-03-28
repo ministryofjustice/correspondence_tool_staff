@@ -402,7 +402,6 @@ class CasesController < ApplicationController
 
   def request_further_clearance
     authorize @case
-
     service = RequestFurtherClearanceService.new(user: current_user, kase: @case)
 
     result = service.call
