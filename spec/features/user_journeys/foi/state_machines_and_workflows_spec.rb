@@ -285,7 +285,7 @@ feature 'FOI case that does not require clearance' do
     expect(kase.current_state).to eq 'pending_press_office_clearance'
     expect(kase.workflow).to eq 'full_approval'
     expect(kase.transitions.size).to eq 17
-    expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+    expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
     t = kase.transitions.order(:sort_key).last
     expect(t.event).to eq 'approve'

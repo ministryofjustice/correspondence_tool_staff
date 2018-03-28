@@ -590,6 +590,17 @@ case_types:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
 
+              pending_press_office_clearance:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+
+
 
           approver:
             states:
@@ -680,6 +691,48 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_redraft_requested
                   transition_to: drafting
 
+              pending_press_office_clearance:
+                # accept_approver_assignment:
+                #   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                  if: Case::BasePolicy#can_add_message_to_case?
+                approve:
+                  if: Workflows::Predicates#user_is_assigned_press_officer?
+                  transition_to: pending_private_office_clearance
+                extend_for_pit:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                link_a_case:
+                reassign_user:
+                remove_linked_case:
+                request_amends:
+                  if: Workflows::Predicates#user_is_assigned_press_officer?
+                  transition_to: pending_dacu_clearance
+                unflag_for_clearance:               # needed for press/private office to unaccept
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance_by_press_or_private?
+                # upload_response_and_approve:
+                #   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                #   transition_to: pending_private_office_clearance
+                # upload_response_approve_and_bypass:
+                #   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                #   transition_to: awaiting_dispatch
+                # upload_response_and_return_for_redraft:
+                #   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                #   after_transition: Workflows::Hooks#notify_responder_redraft_requested
+                #   transition_to: drafting
+                      #           add_message_to_case:
+      #           approve:
+      #             if: Predicates#user_is_assigned_approver?
+      #             transition_to:
+      #           extend_for_pit:       # ?
+      #           link_a_case:
+      #           reassign_user:
+      #             if: Predicates#approver_is_member_of_assigned_team?
+      #           unflag_for_clearance:
+      #                unaccept_approver_assignment:
+      #                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+
+
           responder:
             states:
               unassigned:
@@ -721,6 +774,17 @@ case_types:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
                 remove_linked_case:
+
+              pending_press_office_clearance:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                  if: Case::BasePolicy#can_add_message_to_case?
+                link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
+
+
 
 #########################################################################
 #                                                                       #
