@@ -52,7 +52,7 @@ case_types:
           - destroy_case
           - edit_case
           - extend_for_pit
-          - flag_for_clearance:
+          - flag_for_clearance
           - link_a_case
           - reassign_user
           - reject_responder_assignment
@@ -309,6 +309,7 @@ case_types:
           - close
           - destroy_case
           - edit_case
+          - flag_for_clearance
           - extend_for_pit
           - link_a_case
           - reassign_user
@@ -523,6 +524,8 @@ case_types:
           - close
           - destroy_case
           - edit_case
+          - execute_request_amends
+          - flag_for_clearance
           - extend_for_pit
           - link_a_case
           - reassign_user
@@ -697,6 +700,9 @@ case_types:
                 request_amends:
                   if: Workflows::Predicates#user_is_assigned_press_officer?
                   transition_to: pending_dacu_clearance
+                # execute_request_amends:
+                #   if: Workflows::Predicates#user_is_assigned_press_officer?
+                #   transition_to: pending_dacu_clearance
                 unflag_for_clearance:               # needed for press/private office to unaccept
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance_by_press_or_private?
                 # upload_response_and_approve:

@@ -72,7 +72,6 @@ feature 'viewing details of case in the system' do
   context 'when the case is an assigned non-trigger foi request' do
     scenario 'displays all case content' do
       cases_show_page.load id: foi.id
-
       expect(cases_show_page).to have_page_heading
       expect(cases_show_page.page_heading.sub_heading).to have_content(foi.number)
       expect(cases_show_page.page_heading.heading.text).to have_content(foi.subject)
