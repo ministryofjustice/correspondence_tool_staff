@@ -30,8 +30,8 @@ services:
         development_mode: "true"
         PUMA_PORT: ""
       context: .
-    command: ./run-mailer.sh
     container_name: cts_mailer
+    entrypoint: ./run-mailer.sh
     environment:
       DATABASE_URL: postgres://postgres@db/correspondence_platform_development
       RAILS_ENV: development
@@ -47,8 +47,8 @@ services:
         additional_packages: clamav clamav-daemon clamav-freshclam libreoffice
         development_mode: "true"
       context: .
-    command: ./run-uploads.sh
     container_name: cts_uploads
+    entrypoint: ./run-uploads.sh
     environment:
       DATABASE_URL: postgres://postgres@db/correspondence_platform_development
       RAILS_ENV: development
@@ -65,8 +65,8 @@ services:
         development_mode: "true"
         PUMA_PORT: ""
       context: .
-    command: ./run-reports.sh
     container_name: cts_reports
+    entrypoint: ./run-reports.sh
     environment:
       DATABASE_URL: postgres://postgres@db/correspondence_platform_development
       RAILS_ENV: development
