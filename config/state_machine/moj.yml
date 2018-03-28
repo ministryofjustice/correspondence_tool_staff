@@ -52,7 +52,7 @@ case_types:
           - destroy_case
           - edit_case
           - extend_for_pit
-          - flag_for_clearance
+          - flag_for_clearance:
           - link_a_case
           - reassign_user
           - reject_responder_assignment
@@ -274,7 +274,7 @@ case_types:
                   if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
                  link_a_case:
                  reassign_user:
-                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                   # if: Workflows::Predicates#responder_is_member_of_assigned_team?
                    if: Case::BasePolicy#assignments_reassign_user?
                  remove_linked_case:
                  remove_response:
@@ -552,8 +552,6 @@ case_types:
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
-                request_further_clearance:
-                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
 
               awaiting_responder:
                 add_message_to_case:
@@ -564,8 +562,6 @@ case_types:
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
-                request_further_clearance:
-                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
 
               drafting:
                 add_message_to_case:
@@ -577,8 +573,6 @@ case_types:
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
-                request_further_clearance:
-                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
 
               pending_dacu_clearance:
                 add_message_to_case:
@@ -587,8 +581,6 @@ case_types:
                 edit_case:
                 link_a_case:
                 remove_linked_case:
-                request_further_clearance:
-                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
 
               pending_press_office_clearance:
                 add_message_to_case:
@@ -597,10 +589,6 @@ case_types:
                 edit_case:
                 link_a_case:
                 remove_linked_case:
-                request_further_clearance:
-                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
-
-
 
           approver:
             states:
@@ -704,6 +692,7 @@ case_types:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
                 remove_linked_case:
                 request_amends:
                   if: Workflows::Predicates#user_is_assigned_press_officer?
