@@ -368,7 +368,7 @@ control aspects of the build. The available build argements are:
   `apt-get`. Used by the build system to add packages to the `uploads` container:
 
   ```
-      clamav clamav-daemon freshclam libreoffice
+      clamav clamav-daemon clamav-freshclam libreoffice
   ```
 
   These are required to scan the uploaded files for viruses (clamav & Co.) and

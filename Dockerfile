@@ -28,7 +28,7 @@ RUN . /etc/os-release ; release="${VERSION#* (}" ; release="${release%)}" ; \
 # the uploads image should also have clamav, clamav-daemon and libreoffice
 # installed. Use this by specifying --build-arg with docker build:
 #
-#   docker build --build-args additional_pacakges='clamav clamav-daemon freshclam libreoffice'
+#   docker build --build-args additional_pacakges='clamav clamav-daemon clamav-freshclam libreoffice'
 #
 # Or by adding build args to the docker-compose file.
 ARG additional_packages

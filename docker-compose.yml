@@ -44,7 +44,7 @@ services:
   uploads:
     build:
       args:
-        additional_packages: clamav clamav-daemon freshclam libreoffice
+        additional_packages: clamav clamav-daemon clamav-freshclam libreoffice
         development_mode: "true"
       context: .
     command: ./run-uploads.sh
