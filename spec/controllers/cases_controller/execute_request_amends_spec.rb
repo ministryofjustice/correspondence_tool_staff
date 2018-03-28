@@ -25,7 +25,8 @@ RSpec.describe CasesController, type: :controller do
             params: { id: pending_private_clearance_case, case: {request_amends_comment: "Oh my!"} }
       expect(CaseRequestAmendsService)
         .to have_received(:new).with(user: private_officer,
-                                     kase: pending_private_clearance_case)
+                                     kase: pending_private_clearance_case,
+                                     message: "Oh my!")
       expect(service).to have_received(:call)
     end
 

@@ -819,17 +819,16 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   end
 
   describe 'trigger request_amends!' do
-    it 'triggers a request_amends event' do
-      state_machine = pending_private_clearance_case.state_machine
-      assignment = pending_private_clearance_case.approver_assignments.first
-      pending_private_clearance_case.request_amends_comment = 'Never use a preposition to end a sentence with'
-      expect do
-        state_machine.request_amends! approver, assignment
-      end.to trigger_the_event(:request_amends)
-               .on_state_machine(state_machine)
-               .with_parameters(acting_user_id: approver.id,
-                                acting_team_id: approving_team.id,
-                                message: 'Never use a preposition to end a sentence with')
+    it 'triggers an request_amends event' do
+      expect(kase.state_machine).to receive(:trigger_event).with(event: :request_amends,
+                                                                params:{
+                                                                  acting_user_id: approver.id,
+                                                                  acting_team_id: approving_team.id,
+                                                                  message: 'Never use a preposition to end a sentence with'})
+      kase.state_machine.request_amends!(
+        acting_user_id: approver.id,
+        acting_team_id: approving_team.id,
+        message: 'Never use a preposition to end a sentence with')
     end
   end
 

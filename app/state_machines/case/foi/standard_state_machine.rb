@@ -463,12 +463,12 @@ class Case::FOI::StandardStateMachine
     notify_responder(object, 'Ready to send') if ready_to_send?(object)
   end
 
-  def request_amends!(user, assignment)
+  def request_amends!(acting_user:, acting_team:, message:)
     trigger! :request_amends,
-             acting_user_id:  user.id,
+             acting_user_id:  acting_user.id,
              event:           :request_amends,
-             message:         object.request_amends_comment,
-             acting_team_id:  assignment.team_id
+             message:         message,
+             acting_team_id:  acting_team.id
   end
 
   def upload_response_and_approve!(acting_user:, acting_team:, filenames:, message:)

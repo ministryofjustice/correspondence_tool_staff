@@ -71,7 +71,6 @@ feature 'cases requiring clearance by press office' do
     cases_show_page.load(id: pending_press_clearance_case.id)
     expect(cases_show_page.case_status.details.who_its_with.text)
       .to eq 'Press Office'
-      save_and_open_page
     approve_case_step kase: pending_press_clearance_case,
                       expected_team: pending_press_clearance_case.responding_team,
                       expected_status: 'Ready to send'
