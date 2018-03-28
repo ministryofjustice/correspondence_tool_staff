@@ -55,6 +55,9 @@ namespace :db do
       end
     end
 
+    desc 'seed development teams and users'
+    task dev: %w[db:seed:dev:teams db:seed:dev:users]
+
     namespace :dev do
       desc 'Seed teams for dev environment'
       task teams: :environment do

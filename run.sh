@@ -16,9 +16,11 @@ migrate)
     ;;
 development-setup)
     echo "setting up db"
-    bundle exec rails db:setup
+    rails db:setup
     echo "migrating db"
-    bundle exec rails db:migrate
+    rails db:migrate
+    echo "seeding db for dev"
+    rails db:seed:dev
     ;;
 
 reset)
