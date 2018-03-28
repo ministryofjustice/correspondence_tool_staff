@@ -39,13 +39,13 @@ describe CaseAssignResponderService, type: :service do
       end
 
       it 'triggers an assign_responder! event' do
-        service.call
         expect(unassigned_case.state_machine)
-          .to have_received(:assign_responder!)
-                .with(
-                  acting_user: manager,
-                  acting_team: manager.managing_teams.first,
-                  target_team: responding_team)
+            .to receive(:assign_responder!)
+                    .with(
+                        acting_user: manager,
+                        acting_team: manager.managing_teams.first,
+                        target_team: responding_team)
+        service.call
       end
 
       it 'saves the assignment' do

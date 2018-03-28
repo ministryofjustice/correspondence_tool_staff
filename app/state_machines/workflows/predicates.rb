@@ -58,13 +58,19 @@ class Workflows::Predicates
     @kase.assignments.with_teams(BusinessUnit.dacu_disclosure).for_user(@user).present?
   end
 
-  def user_is_assigned_private_officer?
-    @kase.assignments.with_teams(BusinessUnit.private_office).for_user(@user).present?
+  def case_outside_escalation_period_and_not_responded_or_closed?
+    @kase.outside_escalation_deadline? &&
+        @kase.current_state.in?(%w{responded closed})
   end
 
   def user_is_assigned_press_officer?
+    # @user.approving_team == press_office &&
+    #   approver_assignments.with_teams(press_office).any?
     @kase.assignments.with_teams(BusinessUnit.press_office).for_user(@user).present?
   end
 
+  def user_is_assigned_private_officer?
+    @kase.assignments.with_teams(BusinessUnit.private_office).for_user(@user).present?
+  end
 
 end

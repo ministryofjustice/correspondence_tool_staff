@@ -5,8 +5,6 @@ preamble:
   permitted_case_types:
     foi: Freedom of information request
     sar: Subject Access Request
-#    osar: Offender subject access request
-#    nosar: Non-offender subject access request
 
 case_types:
   foi:
@@ -15,8 +13,6 @@ case_types:
       - standard
       - trigger
       - full_approval
-#      - review_for_compliance
-#      - review_for_timeliness
 
     permitted_user_roles:
       - manager
@@ -274,7 +270,7 @@ case_types:
                   if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
                  link_a_case:
                  reassign_user:
-                   if: Case::BasePolicy#assignments_reassign_user?
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                  remove_linked_case:
                  remove_response:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?
@@ -377,6 +373,34 @@ case_types:
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
 
+              awaiting_dispatch:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                destroy_case:
+                edit_case:
+                flag_for_clearance:
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+                  switch_workflow: full_approval
+
+              responded:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                close:
+                  transition_to: closed
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+
+              closed:
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+
           approver:
             states:
               unassigned:
@@ -469,6 +493,32 @@ case_types:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                   transition_to: awaiting_dispatch
 
+              awaiting_dispatch:
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                extend_for_pit:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
+                take_on_for_approval:
+                  if: Case::BasePolicy#can_take_on_for_approval?
+                  switch_workflow: full_approval
+
+              responded:
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                link_a_case:
+                remove_linked_case:
+
+              closed:
+                link_a_case:
+                remove_linked_case:
+
+
           responder:
             states:
               unassigned:
@@ -476,7 +526,6 @@ case_types:
                   if: Case::BasePolicy#can_add_message_to_case?
                 link_a_case:
                 remove_linked_case:
-
 
               awaiting_responder:
                 accept_responder_assignment:
@@ -511,6 +560,43 @@ case_types:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
                 remove_linked_case:
+
+              awaiting_dispatch:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                add_responses:
+                  if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
+                link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                remove_last_response:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                remove_linked_case:
+                remove_response:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to_using: Workflows::Conditionals#remove_response_next_state
+                respond:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: responded
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+                unflag_for_clearance:               # needed for press/private office to unaccept
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance_by_press_or_private?
+                  switch_workflow_using: Workflows::Conditionals#unflag_for_clearance_next_workflow
+
+
+              responded:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                link_a_case:
+                remove_linked_case:
+
+              closed:
+                link_a_case:
+                remove_linked_case:
+
 
 
       full_approval:
@@ -559,6 +645,8 @@ case_types:
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
 
               awaiting_responder:
                 add_message_to_case:
@@ -569,6 +657,8 @@ case_types:
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
 
               drafting:
                 add_message_to_case:
@@ -580,6 +670,8 @@ case_types:
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
 
               pending_dacu_clearance:
                 add_message_to_case:
@@ -588,6 +680,8 @@ case_types:
                 edit_case:
                 link_a_case:
                 remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
 
               pending_press_office_clearance:
                 add_message_to_case:
@@ -596,10 +690,41 @@ case_types:
                 edit_case:
                 link_a_case:
                 remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
 
               pending_private_office_clearance:
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+
+              awaiting_dispatch:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                destroy_case:
+                edit_case:
+                flag_for_clearance:
+                  switch_workflow: trigger
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+                  switch_workflow: trigger
+
+              responded:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                close:
+                  transition_to: closed
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+
+              closed:
                 destroy_case:
                 edit_case:
                 link_a_case:
@@ -742,6 +867,46 @@ case_types:
                 unflag_for_clearance:               # needed for press/private office to unaccept
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance_by_press_or_private?
 
+              awaiting_dispatch:
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                add_responses:
+                  if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
+                flag_for_clearance:
+                link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
+                remove_response:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to_using: Workflows::Conditionals#remove_response_next_state
+                respond:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: responded
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+                unflag_for_clearance:               # needed for press/private office to unaccept
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance_by_press_or_private?
+                  switch_workflow_using: Workflows::Conditionals#unflag_for_clearance_next_workflow
+
+              responded:
+                add_message_to_case:
+                  if: Case::BasePolicy#can_add_message_to_case?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                extend_for_pit:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
+
+              closed:
+                link_a_case:
+                remove_linked_case:
+
+
+
           responder:
             states:
               unassigned:
@@ -800,6 +965,34 @@ case_types:
                 link_a_case:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
+
+              awaiting_dispatch:
+                 add_message_to_case:
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                   after_transition: Workflows::Hooks#notify_responder_message_received
+                 add_responses:
+                  if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
+                 link_a_case:
+                 reassign_user:
+                   if: Case::BasePolicy#assignments_reassign_user?
+                 remove_linked_case:
+                 remove_response:
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                   transition_to_using: Workflows::Conditionals#remove_response_next_state
+                 respond:
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                   transition_to: responded
+
+              responded:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                link_a_case:
+                remove_linked_case:
+
+              closed:
+                link_a_case:
                 remove_linked_case:
 
 

@@ -151,9 +151,10 @@ class StandardSetup
                                          private_officer: private_officer_user,
                                          responder: responder_user),
        full_awdis_foi:            create(:case_with_response,
-                                        :flagged,
+                                        :flagged_accepted,
                                         :press_office,
-                                        responder: responder_user),
+                                        responder: responder_user,
+                                        approver: disclosure_specialist_user),
        full_responded_foi:        create(:responded_case,
                                         :flagged,
                                         :press_office,
@@ -163,6 +164,7 @@ class StandardSetup
                                          :press_office),
     }
   end
+
   # rubocop:enable Metrics/MethodLength
 
    def method_missing(method_name, *args)

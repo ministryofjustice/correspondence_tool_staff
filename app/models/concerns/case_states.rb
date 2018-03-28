@@ -1,39 +1,12 @@
 module CaseStates
   extend ActiveSupport::Concern
 
-  TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = [ nil,
-                                                          'unassigned',
-                                                          'awaiting_responder',
-                                                          'drafting',
-                                                          'pending_dacu_clearance',
-                                                          'pending_press_office_clearance',
-                                                          'pending_private_office_clearance']
-  NON_TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = [ nil,
-                                                              'unassigned',
-                                                              'awaiting_responder',
-                                                              'drafting',
-                                                              'awaiting_dispatch',
-                                                              'responded',
-                                                              'closed']
-
   included do
     after_update :reset_state_machine, if: :workflow_changed?
   end
 
   def state_machine
-    desired_state_machine_class = state_machine_class
-    if @state_machine.class != desired_state_machine_class
-      instantiate_state_machine(desired_state_machine_class)
-    end
-    @state_machine
-  end
-
-  def instantiate_state_machine(klass)
-    if klass == ConfigurableStateMachine::Machine
-      instantiate_configurable_state_machine
-    else
-      instantiate_legacy_state_machine
-    end
+    @state_machine ||= instantiate_configurable_state_machine
   end
 
   def instantiate_configurable_state_machine
@@ -47,15 +20,6 @@ module CaseStates
                                                                               workflow: workflow.nil? ? 'standard' : workflow,
                                                                               kase: self)
   end
-
-  def instantiate_legacy_state_machine
-    @state_machine = Case::FOI::StandardStateMachine.new(
-      self,
-      transition_class: CaseTransition,
-      association_name: :transitions
-    )
-  end
-
 
   def responder_assignment_rejected(current_user,
                                     responding_team,
