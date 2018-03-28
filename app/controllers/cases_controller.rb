@@ -357,8 +357,7 @@ class CasesController < ApplicationController
 
   def execute_request_amends
     authorize @case
-    @case.request_amends_comment = params[:case][:request_amends_comment]
-    CaseRequestAmendsService.new(user: current_user, kase: @case).call
+    CaseRequestAmendsService.new(user: current_user, kase: @case, message: params[:case][:request_amends_comment]).call
     flash[:notice] = 'You have requested amends to this case\'s response.'
     redirect_to case_path(@case)
   end
