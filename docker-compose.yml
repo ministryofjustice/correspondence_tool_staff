@@ -2,6 +2,8 @@ version: '2'
 services:
   db:
     image: postgres:9.5-alpine
+    volumes:
+      - postgresql-data-volume:/var/lib/postgresql/data
   redis:
     image: redis:alpine
   web:
@@ -77,3 +79,5 @@ services:
       - db
       - redis
 
+volumes:
+  postgresql-data-volume:

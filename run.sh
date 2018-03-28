@@ -20,6 +20,7 @@ development-setup)
     echo "migrating db"
     rails db:migrate
     echo "seeding db for dev"
+    rails db:seed
     rails db:seed:dev
     ;;
 

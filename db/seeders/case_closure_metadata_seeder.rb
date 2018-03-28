@@ -320,8 +320,6 @@ module CaseClosure
       cost.update!(name: '(s12(2)) - Exceeded cost to investigate') unless cost.nil?
     end
 
-
-
   end
 end
 #rubocop:enable Metrics/ClassLength
