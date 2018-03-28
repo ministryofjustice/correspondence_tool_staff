@@ -347,6 +347,7 @@ case_types:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
@@ -381,15 +382,7 @@ case_types:
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
-<<<<<<< HEAD
                 flag_for_clearance:
-=======
-                  after_transition: Workflows::Hooks#notify_responder_message_received
-<<<<<<< HEAD
->>>>>>> CT-1642 flag_for_clearance event WIP
-=======
-                flag_for_clearance:
->>>>>>> CT-1642 allows flag for clearance for manager and approvers
                 link_a_case:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
@@ -407,15 +400,7 @@ case_types:
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
-<<<<<<< HEAD
                 flag_for_clearance:
-=======
-                  after_transition: Workflows::Hooks#notify_responder_message_received
-<<<<<<< HEAD
->>>>>>> CT-1642 flag_for_clearance event WIP
-=======
-                flag_for_clearance:
->>>>>>> CT-1642 allows flag for clearance for manager and approvers
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
