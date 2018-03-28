@@ -268,6 +268,7 @@ describe 'state machine' do
         [:private_officer, :full_awresp_foi],
         [:private_officer, :full_draft_foi],
         [:private_officer, :full_ppress_foi],
+        [:private_officer, :full_pdacu_foi],
         [:private_officer, :full_pprivate_foi],
         [:private_officer, :full_awdis_foi],
         [:private_officer, :full_responded_foi],
