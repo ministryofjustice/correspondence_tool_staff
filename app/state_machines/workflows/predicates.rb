@@ -63,4 +63,16 @@ class Workflows::Predicates
         @kase.current_state.in?(%w{responded closed})
   end
 
+  def user_is_assigned_press_officer?
+    # @user.approving_team == press_office &&
+    #   approver_assignments.with_teams(press_office).any?
+    @kase.assignments.with_teams(BusinessUnit.press_office).for_user(@user).present?
+  end
+
+  def user_is_assigned_private_officer?
+    # @user.approving_team == private_office &&
+    #   approver_assignments.with_teams(private_office).any?
+    @kase.assignments.with_teams(BusinessUnit.private_office).for_user(@user).present?
+  end
+
 end

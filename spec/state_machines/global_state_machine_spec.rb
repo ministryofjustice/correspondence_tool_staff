@@ -472,8 +472,6 @@ describe 'state machine' do
 
         [:responder, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
         [:responder, :trig_responded_foi],          # old state machine - they shouldn't be allowed
-        [:responder, :full_ppress_foi],
-        [:responder, :full_ppress_foi_accepted],          # old state machine - they shouldn't be allowed
         [:responder, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
         [:responder, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
         [:responder, :full_awdis_foi],          # old state machine - they shouldn't be allowed
@@ -481,16 +479,12 @@ describe 'state machine' do
 
         [:another_responder_in_same_team, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
         [:another_responder_in_same_team, :trig_responded_foi],          # old state machine - they shouldn't be allowed
-        [:another_responder_in_same_team, :full_ppress_foi_accepted],          # old state machine - they shouldn't be allowed
         [:another_responder_in_same_team, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
         [:another_responder_in_same_team, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
         [:another_responder_in_same_team, :full_awdis_foi],          # old state machine - they shouldn't be allowed
         [:another_responder_in_same_team, :full_responded_foi],          # old state machine - they shouldn't be allowed
-        [:another_responder_in_same_team, :full_ppress_foi],          # old state machine - they shouldn't be allowed
         [:another_responder_in_same_team, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
         [:another_responder_in_same_team, :trig_responded_foi],          # old state machine - they shouldn't be allowed
-        [:another_responder_in_same_team, :full_ppress_foi],          # old state machine - they shouldn't be allowed
-        [:another_responder_in_same_team, :full_ppress_foi_accepted],          # old state machine - they shouldn't be allowed
         [:another_responder_in_same_team, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
         [:another_responder_in_same_team, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
         [:another_responder_in_same_team, :full_awdis_foi],          # old state machine - they shouldn't be allowed
@@ -498,8 +492,6 @@ describe 'state machine' do
 
         [:another_responder_in_diff_team, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
         [:another_responder_in_diff_team, :trig_responded_foi],          # old state machine - they shouldn't be allowed
-        [:another_responder_in_diff_team, :full_ppress_foi],          # old state machine - they shouldn't be allowed
-        [:another_responder_in_diff_team, :full_ppress_foi_accepted],          # old state machine - they shouldn't be allowed
         [:another_responder_in_diff_team, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
         [:another_responder_in_diff_team, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
         [:another_responder_in_diff_team, :full_awdis_foi],          # old state machine - they shouldn't be allowed
@@ -507,8 +499,6 @@ describe 'state machine' do
 
         [:press_officer, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
         [:press_officer, :trig_responded_foi],          # old state machine - they shouldn't be allowed
-        [:press_officer, :full_ppress_foi],          # old state machine - they shouldn't be allowed
-        [:press_officer, :full_ppress_foi_accepted],          # old state machine - they shouldn't be allowed
         [:press_officer, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
         [:press_officer, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
         [:press_officer, :full_awdis_foi],          # old state machine - they shouldn't be allowed
@@ -516,8 +506,6 @@ describe 'state machine' do
 
         [:private_officer, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
         [:private_officer, :trig_responded_foi],          # old state machine - they shouldn't be allowed
-        [:private_officer, :full_ppress_foi],          # old state machine - they shouldn't be allowed
-        [:private_officer, :full_ppress_foi_accepted],          # old state machine - they shouldn't be allowed
         [:private_officer, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
         [:private_officer, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
         [:private_officer, :full_awdis_foi],          # old state machine - they shouldn't be allowed
@@ -1342,7 +1330,7 @@ describe 'state machine' do
   describe :request_amends do
     it {
       should permit_event_to_be_triggered_only_by(
-        # [:press_officer, :full_ppress_foi_accepted], should be allowed, controlled by old state_machine
+        [:press_officer, :full_ppress_foi_accepted], #should be allowed, controlled by old state_machine
         # [:private_officer, :full_pprivate_foi_accepted] should be allowed, controlled by old state_machine
       )}
   end
