@@ -16,6 +16,7 @@ module ConfigurableStateMachine
     end
 
     def run
+      check_for_dupe_keys
       validate_configs
       if errors.any?
         raise ConfigurationError.new(@errors)
@@ -39,6 +40,14 @@ module ConfigurableStateMachine
     end
 
     private
+
+    def check_for_dupe_keys
+      detector = DuplicateKeyDetector.new(@filename)
+      detector.run
+      if detector.dupes?
+        raise ConfigurationError.new(detector.dupe_details)
+      end
+    end
 
     def add_error(section_name, message)
       @errors <<  "File #{@filename} section #{section_name}: #{message}"
