@@ -162,6 +162,7 @@ module ConfigurableStateMachine
     #
     #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
     def trigger_event(event:, params:)
+      binding.pry
       event = event.to_sym
       raise ::ConfigurableStateMachine::ArgumentError.new(kase: @kase, event: event, params: params) if !params.key?(:acting_user) || !params.key?(:acting_team)
       role =  params[:acting_team].role
@@ -342,4 +343,3 @@ module ConfigurableStateMachine
   end
   # rubocop:enable Metrics/ClassLength
 end
-

@@ -110,7 +110,6 @@ feature 'removing a response from response details' do
 
       scenario 'does not display remove button' do
         cases_show_page.load(id: responded_case.id)
-        save_and_open_page
         expect(cases_show_page.case_attachments.first.collection.first.actions)
             .to have_no_remove
       end
