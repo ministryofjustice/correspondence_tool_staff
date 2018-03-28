@@ -24,6 +24,9 @@ RSpec::Matchers.define :use_event do |event_name|
   end
 end
 
+# TODO all these tests need to be rewritten to take into account that NextStepInfo throws an error when
+# asked to execute an action which isn't available in that state
+
 describe 'NextStepInfo' do
   let(:responding_team)       { responder.responding_teams.first }
   let(:responder)             { create :responder }
@@ -84,11 +87,12 @@ describe 'NextStepInfo' do
     end
   end
 
+
   context 'when action is' do
-    let(:kase) { create :case }
+    let(:kase) { create :assigned_case }
     before do
       allow(kase.state_machine).to receive(:next_state_for_event)
-                                     .and_return('unassigned')
+                                     .and_return('drafting')
     end
     subject do
       action = RSpec.current_example.metadata[:example_group][:description]

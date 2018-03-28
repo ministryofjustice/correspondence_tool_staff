@@ -74,15 +74,10 @@ RSpec.describe MessagesController, type: :controller do
 
       before do
         sign_in responder
-        params[:case_id] = accepted_case.id
-        case_transition = build :case_transition_add_message_to_case,
-                                case: accepted_case
-        case_transition.errors.add(:message, :blank)
-        stub_find_case(accepted_case.id) do |kase|
-          allow(kase.state_machine)
-              .to receive(:add_message_to_case!)
-                      .and_raise(ActiveRecord::RecordInvalid, case_transition)
-        end
+        params = {
+          case_id: accepted_case.id.to_s,
+          case: { message_text: '' }
+        }
         post :create, params: params
       end
 

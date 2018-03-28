@@ -330,7 +330,7 @@ feature 'FOI case that does not require clearance' do
     expect(kase.current_state).to eq 'awaiting_dispatch'
     expect(kase.workflow).to eq 'full_approval'
     expect(kase.transitions.size).to eq 19
-    expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+    expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
     t = kase.transitions.order(:sort_key).last
     expect(t.event).to eq 'approve'
@@ -350,7 +350,7 @@ feature 'FOI case that does not require clearance' do
     expect(kase.current_state).to eq 'responded'
     expect(kase.workflow).to eq 'full_approval'
     expect(kase.transitions.size).to eq 20
-    expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+    expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
     t = kase.transitions.order(:sort_key).last
     expect(t.event).to eq 'respond'
@@ -370,7 +370,7 @@ feature 'FOI case that does not require clearance' do
     expect(kase.current_state).to eq 'closed'
     expect(kase.workflow).to eq 'full_approval'
     expect(kase.transitions.size).to eq 21
-    expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+    expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
     t = kase.transitions.order(:sort_key).last
     expect(t.event).to eq 'close'
@@ -571,7 +571,7 @@ feature 'FOI case that does not require clearance' do
     expect(kase.current_state).to eq 'awaiting_dispatch'
     expect(kase.workflow).to eq 'trigger'
     expect(kase.transitions.size).to eq 11
-    expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+    expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
     t = kase.transitions.order(:sort_key).last
     expect(t.event).to eq 'approve'
@@ -591,7 +591,7 @@ feature 'FOI case that does not require clearance' do
     expect(kase.current_state).to eq 'responded'
     expect(kase.workflow).to eq 'trigger'
     expect(kase.transitions.size).to eq 12
-    expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+    expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
     t = kase.transitions.order(:sort_key).last
     expect(t.event).to eq 'respond'
@@ -611,7 +611,7 @@ feature 'FOI case that does not require clearance' do
     expect(kase.current_state).to eq 'closed'
     expect(kase.workflow).to eq 'trigger'
     expect(kase.transitions.size).to eq 13
-    expect(kase.state_machine).to be_instance_of(Case::FOI::StandardStateMachine)
+    expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
 
     t = kase.transitions.order(:sort_key).last
     expect(t.event).to eq 'close'

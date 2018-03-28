@@ -80,12 +80,10 @@ describe Case::FOI::StandardStateMachine do
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :destroy_case,
                                                                       :edit_case,
-                                                                      :extend_for_pit,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
-                                                                      :request_further_clearance,
-                                                                      :unflag_for_clearance]
+                                                                      :request_further_clearance]
         end
       end
 
@@ -98,7 +96,6 @@ describe Case::FOI::StandardStateMachine do
                                                                       :close,
                                                                       :destroy_case,
                                                                       :edit_case,
-                                                                      :extend_for_pit,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
         end
@@ -169,10 +166,9 @@ describe Case::FOI::StandardStateMachine do
             k = create :case_with_response, :flagged, :dacu_disclosure
 
             expect(k.current_state).to eq 'awaiting_dispatch'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:extend_for_pit,
-                                                                          :link_a_case,
-                                                                          :remove_linked_case,
-                                                                          :request_further_clearance]
+            expect(k.workflow).to eq 'trigger'
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,
+                                                                          :remove_linked_case]
           end
         end
 
@@ -181,7 +177,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :responded_case, :flagged, :dacu_disclosure
 
             expect(k.current_state).to eq 'responded'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:extend_for_pit, :link_a_case, :remove_linked_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
         end
       end
@@ -236,12 +232,12 @@ describe Case::FOI::StandardStateMachine do
 
             expect(k.current_state).to eq 'awaiting_dispatch'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                          :extend_for_pit,            # allowed by old state machine and shuouldn't be
+                                                                          :add_responses,
                                                                           :link_a_case,
+                                                                          :reassign_user,
                                                                           :remove_last_response,
                                                                           :remove_linked_case,
                                                                           :remove_response,
-                                                                          :request_further_clearance,
                                                                           :respond]
           end
         end
@@ -252,7 +248,7 @@ describe Case::FOI::StandardStateMachine do
             responder = responder_in_assigned_team(k)
 
             expect(k.current_state).to eq 'responded'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:extend_for_pit, :link_a_case, :remove_linked_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case, :link_a_case, :remove_linked_case]
           end
         end
 
@@ -344,14 +340,9 @@ describe Case::FOI::StandardStateMachine do
             k = create :case_with_response, :flagged, :dacu_disclosure
 
             expect(k.current_state).to eq 'awaiting_dispatch'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
-                                                                         :add_message_to_case,
-                                                                         :extend_for_pit,
-                                                                         :flag_for_clearance,
-                                                                         :link_a_case,
-                                                                         :remove_linked_case,
-                                                                         :request_further_clearance,
-                                                                         :unflag_for_clearance]
+            expect(k.workflow).to eq 'trigger'
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:link_a_case,
+                                                                         :remove_linked_case]
           end
         end
 
@@ -360,10 +351,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :responded_case, :flagged, :dacu_disclosure
 
             expect(k.current_state).to eq 'responded'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
-                                                                         :add_message_to_case,
-                                                                         :extend_for_pit,
-                                                                         :link_a_case,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:link_a_case,
                                                                          :remove_linked_case]
           end
         end
@@ -455,14 +443,12 @@ describe Case::FOI::StandardStateMachine do
           k = create :case_with_response, :flagged_accepted, :dacu_disclosure
           approver = approver_in_assigned_team(k)
           expect(k.current_state).to eq 'awaiting_dispatch'
+          expect(k.workflow).to eq 'trigger'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                        :extend_for_pit,
-                                                                       :flag_for_clearance,
                                                                        :link_a_case,
-                                                                       :remove_linked_case,
-                                                                       :request_further_clearance,
-                                                                       :unaccept_approver_assignment,
-                                                                       :unflag_for_clearance]
+                                                                       :reassign_user,
+                                                                       :remove_linked_case]
         end
       end
 
@@ -472,7 +458,6 @@ describe Case::FOI::StandardStateMachine do
           approver = approver_in_assigned_team(k)
           expect(k.current_state).to eq 'responded'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
-                                                                       :extend_for_pit,
                                                                        :link_a_case,
                                                                        :remove_linked_case]
         end

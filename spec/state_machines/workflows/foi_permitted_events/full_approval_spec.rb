@@ -102,11 +102,9 @@ describe Case::FOI::StandardStateMachine do
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :destroy_case,
                                                                       :edit_case,
-                                                                      :extend_for_pit,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :unflag_for_clearance]
+                                                                      :remove_linked_case]
         end
       end
 
@@ -119,7 +117,6 @@ describe Case::FOI::StandardStateMachine do
                                                                       :close,
                                                                       :destroy_case,
                                                                       :edit_case,
-                                                                      :extend_for_pit,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
         end
@@ -208,8 +205,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :case_with_response, :flagged, :press_office
 
             expect(k.current_state).to eq 'awaiting_dispatch'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:extend_for_pit,
-                                                                          :link_a_case,
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,
                                                                           :remove_linked_case]
           end
         end
@@ -219,7 +215,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :responded_case, :flagged, :press_office
 
             expect(k.current_state).to eq 'responded'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:extend_for_pit, :link_a_case, :remove_linked_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
         end
       end
@@ -300,9 +296,9 @@ describe Case::FOI::StandardStateMachine do
 
             expect(k.current_state).to eq 'awaiting_dispatch'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                          :extend_for_pit,
+                                                                          :add_responses,
                                                                           :link_a_case,
-                                                                          :remove_last_response,
+                                                                          :reassign_user,
                                                                           :remove_linked_case,
                                                                           :remove_response,
                                                                           :respond]
@@ -315,7 +311,7 @@ describe Case::FOI::StandardStateMachine do
             responder = responder_in_assigned_team(k)
 
             expect(k.current_state).to eq 'responded'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:extend_for_pit, :link_a_case, :remove_linked_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case, :link_a_case, :remove_linked_case]
           end
         end
 
@@ -422,17 +418,12 @@ describe Case::FOI::StandardStateMachine do
 
         context 'awaiting_dispatch' do
           it 'shows events' do
-            # this needs to be corrected when switched to config state machine - no request further clearance or extend for pit
             k = create :case_with_response, :flagged, :press_office
 
             expect(k.current_state).to eq 'awaiting_dispatch'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
-                                                                         :add_message_to_case,
-                                                                         :extend_for_pit,
-                                                                         :flag_for_clearance,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:flag_for_clearance,
                                                                          :link_a_case,
-                                                                         :remove_linked_case,
-                                                                         :unflag_for_clearance]
+                                                                         :remove_linked_case]
           end
         end
 
@@ -441,9 +432,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :responded_case, :flagged, :press_office
 
             expect(k.current_state).to eq 'responded'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
-                                                                         :add_message_to_case,
-                                                                         :extend_for_pit,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                          :link_a_case,
                                                                          :remove_linked_case]
           end
@@ -556,9 +545,9 @@ describe Case::FOI::StandardStateMachine do
           approver = approver_in_assigned_team(k)
           expect(k.current_state).to eq 'awaiting_dispatch'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
-                                                                       :extend_for_pit,
                                                                        :flag_for_clearance,
                                                                        :link_a_case,
+                                                                       :reassign_user,
                                                                        :remove_linked_case,
                                                                        :unaccept_approver_assignment,
                                                                        :unflag_for_clearance]
@@ -571,7 +560,6 @@ describe Case::FOI::StandardStateMachine do
           approver = approver_in_assigned_team(k)
           expect(k.current_state).to eq 'responded'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
-                                                                       :extend_for_pit,
                                                                        :link_a_case,
                                                                        :remove_linked_case]
         end
@@ -588,6 +576,10 @@ describe Case::FOI::StandardStateMachine do
 
       def approver_in_assigned_team(k)
         k.approver_assignments.first.user
+      end
+
+      def assigned_disclosure_specialist(kase)
+        kase.approver_assignments.for_team(BusinessUnit.dacu_disclosure).first.user
       end
     end
   end

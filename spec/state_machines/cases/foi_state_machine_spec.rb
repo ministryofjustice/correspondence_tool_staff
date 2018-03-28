@@ -576,47 +576,45 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
     context 'no attachments left' do
       it 'triggers a remove_last_response event' do
-        expect do
-          case_with_response.state_machine.remove_response! acting_user: responder,
-                                                            acting_team: responding_team,
-                                                            filenames: filenames,
-                                                            num_attachments: 0
-        end.to trigger_the_event(:remove_last_response)
-                 .on_state_machine(case_with_response.state_machine)
-                 .with_parameters(acting_user_id: responder.id,
-                                  acting_team_id: responding_team.id,
-                                  filenames: filenames)
+        expect(kase.state_machine).to receive(:trigger_event).with(event: :remove_last_response,
+                                                                   params:{
+                                                                       acting_user: responder,
+                                                                       acting_team: responding_team,
+                                                                       filenames: filenames,
+                                                                       num_attachments: 0})
+        kase.state_machine.remove_last_response!(
+            acting_user: responder,
+            acting_team: responding_team,
+            filenames: filenames,
+            num_attachments: 0)
       end
     end
 
     context 'some attachments left' do
       it 'triggers a remove_last_response event' do
-      expect do
-        case_with_response.state_machine.remove_response!(
-          acting_user: responder,
-          acting_team: responding_team,
-          filenames: filenames,
-          num_attachments: 1,
-        )
-      end.to trigger_the_event(:remove_response)
-               .on_state_machine(case_with_response.state_machine)
-               .with_parameters(acting_user_id: responder.id,
-                                acting_team_id: responding_team.id,
-                                filenames: filenames)
+        expect(kase.state_machine).to receive(:trigger_event).with(event: :remove_response,
+                                                                   params:{
+                                                                       acting_user: responder,
+                                                                       acting_team: responding_team,
+                                                                       filenames: filenames})
+        kase.state_machine.remove_response!(
+            acting_user: responder,
+            acting_team: responding_team,
+            filenames: filenames)
       end
     end
   end
 
   describe 'trigger respond!' do
     it 'triggers a respond event' do
-      expect do
-        case_with_response.state_machine.respond!(
-            acting_user: responder,
-            acting_team: case_with_response.responding_team)
-      end.to trigger_the_event(:respond)
-               .on_state_machine(case_with_response.state_machine)
-               .with_parameters(acting_user_id: responder.id,
-                                acting_team_id: responding_team.id)
+
+      expect(kase.state_machine).to receive(:trigger_event).with(event: :respond,
+                                                                 params:{
+                                                                     acting_user: responder,
+                                                                     acting_team: case_with_response.responding_team})
+      kase.state_machine.respond!(
+          acting_user: responder,
+          acting_team: case_with_response.responding_team)
     end
   end
 
@@ -626,11 +624,16 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
     let(:team)      { responded_case.responding_team }
 
     it 'triggers the event' do
-      expect{
-        responded_case.state_machine.add_message_to_case!(acting_user: user, acting_team: team, message: 'This is the message')
-      }.to trigger_the_event(:add_message_to_case)
-            .on_state_machine(responded_case.state_machine)
-            .with_parameters(acting_user_id: responded_case.responder.id, acting_team_id: team.id, message: 'This is the message')
+
+      expect(kase.state_machine).to receive(:trigger_event).with(event: :add_message_to_case,
+                                                                params:{
+                                                                  acting_user: user,
+                                                                  acting_team: team,
+                                                                  message: 'This is the message'})
+      kase.state_machine.add_message_to_case!(
+      acting_user: user,
+      acting_team: team,
+      message: 'This is the message' )
     end
 
     it 'creates a message transition record' do
@@ -690,17 +693,17 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
   describe 'trigger extend_for_pit!' do
     it 'triggers a extend_for_pit event' do
       new_deadline = 30.business_days.from_now
-      expect do
-        case_with_response.state_machine.extend_for_pit! acting_user: manager,
-                                                         acting_team: manager.teams.first,
-                                                         final_deadline: new_deadline,
-                                                         message: 'for test'
-      end.to trigger_the_event(:extend_for_pit)
-               .on_state_machine(case_with_response.state_machine)
-               .with_parameters(acting_user_id: manager.id,
-                                acting_team_id: managing_team.id,
-                                final_deadline: new_deadline,
-                                message: 'for test')
+      expect(kase.state_machine).to receive(:trigger_event).with(event: :extend_for_pit,
+                                                                 params:{
+                                                                     acting_user: manager,
+                                                                     acting_team: manager.teams.first,
+                                                                     final_deadline: new_deadline,
+                                                                     message: 'for test'})
+      kase.state_machine.extend_for_pit!(
+          acting_user: manager,
+          acting_team: manager.teams.first,
+          final_deadline: new_deadline,
+          message: 'for test')
     end
 
   end
@@ -809,12 +812,20 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
   describe 'trigger close!' do
     it 'triggers a close event' do
-      expect do
-        responded_case.state_machine.close! acting_user: manager, acting_team: responded_case.managing_team
-      end.to trigger_the_event(:close)
-               .on_state_machine(responded_case.state_machine)
-               .with_parameters(acting_user_id: manager.id,
-                                acting_team_id: managing_team.id)
+      # expect do
+      #   responded_case.state_machine.close! acting_user: manager, acting_team: responded_case.managing_team
+      # end.to trigger_the_event(:close)
+      #          .on_state_machine(responded_case.state_machine)
+      #          .with_parameters(acting_user_id: manager.id,
+      #                           acting_team_id: managing_team.id)
+
+      expect(kase.state_machine).to receive(:trigger_event).with(event: :close,
+                                                                params:{
+                                                                  acting_user_id: manager.id,
+                                                                                   acting_team_id: managing_team.id})
+      kase.state_machine.close!(
+        acting_user_id: manager.id,
+                         acting_team_id: managing_team.id)
     end
   end
 
@@ -863,19 +874,14 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
     describe 'trigger edit_case!' do
       it 'triggers an edit_case event' do
-        expect {
-          state_machine.edit_case!(
+        expect(kase.state_machine).to receive(:trigger_event).with(event: :edit_case,
+                                                                   params:{
+                                                                       acting_user: manager,
+                                                                       acting_team: team })
+        kase.state_machine.edit_case!(
             acting_user: manager,
-            acting_team: team
-          )
-        }.to trigger_the_event(:edit_case)
-               .on_state_machine(state_machine)
-               .with_parameters(
-                 acting_user_id: manager.id,
-                 acting_team_id: team.id
-               )
+            acting_team: team)
       end
-
     end
   end
 
@@ -887,17 +893,13 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
     describe 'trigger destroy_case!' do
       it 'triggers an destroy_case event' do
-        expect {
-          state_machine.destroy_case!(
+        expect(kase.state_machine).to receive(:trigger_event).with(event: :destroy_case,
+                                                                   params:{
+                                                                       acting_user: manager,
+                                                                       acting_team: team })
+        kase.state_machine.destroy_case!(
             acting_user: manager,
-            acting_team: team
-          )
-        }.to trigger_the_event(:destroy_case)
-               .on_state_machine(state_machine)
-               .with_parameters(
-                 acting_user_id: manager.id,
-                 acting_team_id: team.id
-               )
+            acting_team: team)
       end
     end
   end
@@ -943,6 +945,7 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
                                                                   acting_team: team,
                                                                   target_user: accepted_case.responder,
                                                                   target_team: accepted_case.responding_team})
+
       kase.state_machine.request_further_clearance!(
         acting_user: manager,
         acting_team: team,

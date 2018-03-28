@@ -59,7 +59,6 @@ describe CaseFlagForClearanceService do
         let(:service) { described_class.new user: press_officer,
                                             kase: assigned_case,
                                             team: press_office }
-
         it 'returns ok when successful' do
           expect(service.call).to eq :ok
         end
@@ -102,12 +101,9 @@ describe CaseFlagForClearanceService do
         end
 
         it 'triggers a flag_for_clearance event on the case state machine' do
+          # we have to use expect_any_instance here because the state machine on the case is re-initialised on
+          # switch of workflow, which happens during service.call
           expect_any_instance_of(ConfigurableStateMachine::Machine).to receive(:flag_for_clearance!)
-          # until we move everything over to using the configuratble state machine, we have to use the line
-          # above in preference to the line below, becuase flagging the case will cause a different state machine
-          # to be used.
-          # #
-          # expect(assigned_case.state_machine).to receive(:flag_for_clearance!)
           service.call
         end
 
@@ -127,8 +123,7 @@ describe CaseFlagForClearanceService do
         end
 
         it 'triggers an event on the state machine' do
-          expect(assigned_case.state_machine)
-            .to receive(:take_on_for_approval!).exactly(2).times
+          expect(assigned_case.state_machine).to receive(:take_on_for_approval!).exactly(2)
           service.call
         end
       end
@@ -175,6 +170,7 @@ describe CaseFlagForClearanceService do
         let(:service) { described_class.new user: private_officer,
                                             kase: assigned_case,
                                             team: private_office }
+        let(:machine) { assigned_case.state_machine }
 
         it 'returns ok when successful' do
           expect(service.call).to eq :ok
@@ -218,13 +214,7 @@ describe CaseFlagForClearanceService do
         end
 
         it 'triggers a flag_for_clearance event on the case state machine' do
-
           expect_any_instance_of(ConfigurableStateMachine::Machine).to receive(:flag_for_clearance!)
-          # until we move everything over to using the configuratble state machine, we have to use the line
-          # above in preference to the line below, becuase flagging the case will cause a different state machine
-          # to be used.
-          # #
-          # expect(assigned_case.state_machine).to receive(:flag_for_clearance!)
           service.call
         end
 
@@ -243,11 +233,11 @@ describe CaseFlagForClearanceService do
           expect(tx.acting_team_id).to eq private_office.id
         end
 
-        it 'triggers an event on the state machine' do
-          expect(assigned_case.state_machine)
-            .to receive(:take_on_for_approval!).exactly(2).times
+        it 'triggers 2 events (1 for press, 1 for disclosure) on the state machine' do
+          expect_any_instance_of(ConfigurableStateMachine::Machine).to receive(:take_on_for_approval!).exactly(2)
           service.call
         end
+
       end
 
       context 'case is already taken on by DACU Disclosure' do
