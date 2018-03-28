@@ -49,9 +49,7 @@ ARG development_mode
 RUN echo "development_mode=$development_mode"
 
 RUN bundle config --global frozen 1 \
-    && ( [ -z "$development" ] \
-         && bundle config --global without test:development ) || true \
-    && bundle install
+    && bundle install ${development:+--with="test development"}
 
 COPY . .
 
