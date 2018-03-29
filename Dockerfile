@@ -2,8 +2,6 @@ FROM ruby:2.3
 
 WORKDIR /usr/src/app
 
-# RUN touch /etc/inittab
-
 ENV PUMA_PORT 3000
 
 EXPOSE $PUMA_PORT
