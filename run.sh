@@ -1,5 +1,5 @@
 #!/bin/bash
-export RAILS_ENV=production
+
 # Make these available via Settings in the app
 export SETTINGS__GIT_COMMIT="$APP_GIT_COMMIT"
 export SETTINGS__BUILD_DATE="$APP_BUILD_DATE"
@@ -14,6 +14,16 @@ migrate)
     echo "running migrate"
     bundle exec rails db:migrate
     ;;
+development-setup)
+    echo "setting up db"
+    rails db:setup
+    echo "migrating db"
+    rails db:migrate
+    echo "seeding db for dev"
+    rails db:seed
+    rails db:seed:dev
+    ;;
+
 reset)
     if [[ "$ENV" = staging || "$ENV" = prod ]]
     then
