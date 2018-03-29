@@ -19,6 +19,9 @@ feature 'cases requiring clearance by press office' do
   end
   given(:pending_press_clearance_case) { create :pending_press_clearance_case,
                                                 press_officer: press_officer }
+
+
+
   given(:case_available_for_taking_on) { create :case_being_drafted,
                                                 created_at: 1.business_day.ago }
 
@@ -72,11 +75,11 @@ feature 'cases requiring clearance by press office' do
     expect(cases_show_page.case_status.details.who_its_with.text)
       .to eq 'Press Office'
     approve_case_step kase: pending_press_clearance_case,
-                      expected_team: pending_press_clearance_case.responding_team,
-                      expected_status: 'Ready to send'
+                      expected_team: private_office,
+                      expected_status: 'Pending clearance'
     go_to_case_details_step(
       kase: pending_press_clearance_case,
-      expected_team: pending_press_clearance_case.responding_team
+      expected_team: private_office
     )
   end
 

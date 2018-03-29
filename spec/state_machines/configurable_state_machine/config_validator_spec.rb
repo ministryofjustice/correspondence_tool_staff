@@ -165,7 +165,7 @@ module ConfigurableStateMachine
           validator = ConfigValidator.new(config, filename)
           expect{
             validator.run
-          }.to raise_error ConfigurationError, %Q{File #{filename} section case_types/foi: Missing mandatory key: 'name'}
+          }.to raise_error ConfigurationError, %{File #{filename} section case_types/foi: Missing mandatory key: 'name'}
         end
       end
 
