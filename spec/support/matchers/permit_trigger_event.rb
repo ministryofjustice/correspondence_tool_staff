@@ -2,9 +2,8 @@ module PermitTriggerEvent
   RSpec::Matchers.define :permit_event_to_be_triggered_only_by do |*permitted_combinations|
     match do |event|
       permitted_combinations.each do |user_and_team, kase|
-        # user, team = user_and_team
         unless all_user_teams.key?(user_and_team)
-          @error_message = "User #{user} not found in all_user_teams()."
+          @error_message = "User #{user_and_team} not found in all_user_teams()."
           return false
         end
 
