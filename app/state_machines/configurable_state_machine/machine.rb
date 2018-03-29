@@ -38,8 +38,7 @@ module ConfigurableStateMachine
     # * roles:      Either a string denoting the role, or an array of roles, or nil.  If nil, the role will be determined
     #               from either the acting_team or acting_user
     #
-    def can_trigger_event?(event_name:, metadata:, roles: nil)
-      result = false
+    def can_trigger_event?(event_name:, metadata:, roles: nil) result = false
       roles = [roles] if roles.is_a?(String)
       roles = extract_roles_from_metadata(metadata) if roles.nil?
       user = extract_user_from_metadata(metadata)
@@ -168,7 +167,7 @@ module ConfigurableStateMachine
       user_role_config = @config.user_roles[role]
       if user_role_config.nil?
         raise InvalidEventError.new(
-              kase: @kase,
+                kase: @kase,
                 user: params[:acting_user],
                 event: event,
                 role: role,
