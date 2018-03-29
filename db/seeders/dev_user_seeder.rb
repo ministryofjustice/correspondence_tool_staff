@@ -1,5 +1,6 @@
 class DevUserSeeder
 
+  # rubocop:disable Metrics/MethodLength
   def initialize
     @teams = {
       'laa'           => BusinessUnit.find_by!(name: 'Legal Aid Agency (LAA)'),
@@ -38,6 +39,7 @@ class DevUserSeeder
       'Princeton Office'   => [{ team: 'privateoffice',  role: 'approver' }],
     }
   end
+  # rubocop:enable Metrics/MethodLength
 
 
   #rubocop:disable Metrics/MethodLength

@@ -120,77 +120,80 @@ class DevTeamSeeder
     TeamProperty.find_or_create_by!(team_id: @bu_candi.id,     key: 'lead', value: 'Candi Floss')
   end
 
+  # rubocop:disable Metrics/MethodLength
   def add_areas_covered
     TeamProperty.find_or_create_by!(team_id: @bu_laa.id,
-                                 key: 'area',
-                                 value: 'Operation and administration of the legal aid scheme in England and Wales')
+                                    key: 'area',
+                                    value: 'Operation and administration of the legal aid scheme in England and Wales')
     TeamProperty.find_or_create_by!(team_id: @bu_hmctsne.id,
-                                 key: 'area',
-                                 value: 'Copies ofbu. court file and documents including expert reports')
+                                    key: 'area',
+                                    value: 'Copies ofbu. court file and documents including expert reports')
     TeamProperty.find_or_create_by!(team_id: @bu_hmctsne.id,
-                                 key: 'area',
-                                 value: 'Care order/proceedings and requests for certificate of conviction')
+                                    key: 'area',
+                                    value: 'Care order/proceedings and requests for certificate of conviction')
     TeamProperty.find_or_create_by!(team_id: @bu_hmctsne.id,
-                                 key: 'area',
-                                 value: 'Listings policy')
+                                    key: 'area',
+                                    value: 'Listings policy')
     TeamProperty.find_or_create_by!(team_id: @bu_hmctsne.id,
-                                 key: 'area',
-                                 value: 'Council tax')
+                                    key: 'area',
+                                    value: 'Council tax')
     TeamProperty.find_or_create_by!(team_id: @bu_hmctsne.id,
-                                 key: 'area',
-                                 value: 'Monies received or outstanding')
+                                    key: 'area',
+                                    value: 'Monies received or outstanding')
     TeamProperty.find_or_create_by!(team_id: @bu_hmctsne.id,
-                                 key: 'area',
-                                 value: 'Confiscation of prohibited items in court buildings')
+                                    key: 'area',
+                                    value: 'Confiscation of prohibited items in court buildings')
     TeamProperty.find_or_create_by!(team_id: @bu_hmctsne.id,
-                                 key: 'area',
-                                 value: 'Info about Jurors & Justices of Peace')
+                                    key: 'area',
+                                    value: 'Info about Jurors & Justices of Peace')
     TeamProperty.find_or_create_by!(team_id: @bu_hmctsne.id,
-                                 key: 'area',
-                                 value: 'Court fines, paid and outstanding')
+                                    key: 'area',
+                                    value: 'Court fines, paid and outstanding')
     TeamProperty.find_or_create_by!(team_id: @bu_hmctsne.id,
-                                 key: 'area',
-                                 value: 'Number and nature of Criminal incidents within court buildings')
+                                    key: 'area',
+                                    value: 'Number and nature of Criminal incidents within court buildings')
     TeamProperty.find_or_create_by!(team_id: @bu_hmctsne.id,
-                                 key: 'area',
-                                 value: 'Court local policy and processes')
+                                    key: 'area',
+                                    value: 'Court local policy and processes')
     TeamProperty.find_or_create_by!(team_id: @bu_hmctsne.id,
-                                 key: 'area',
-                                 value: 'CCTV footage in court premises')
+                                    key: 'area',
+                                    value: 'CCTV footage in court premises')
     TeamProperty.find_or_create_by!(team_id: @bu_hmctsne.id,
-                                 key: 'area',
-                                 value: 'Employment tribunal cases')
+                                    key: 'area',
+                                    value: 'Employment tribunal cases')
     TeamProperty.find_or_create_by!(team_id: @bu_hmctsne.id,
-                                 key: 'area',
-                                 value: 'Judicial team (Judges Cty & Crown)')
+                                    key: 'area',
+                                    value: 'Judicial team (Judges Cty & Crown)')
     TeamProperty.find_or_create_by!(team_id: @bu_hmctsne.id,
-                                 key: 'area',
-                                 value: 'Performance (statistics)')
+                                    key: 'area',
+                                    value: 'Performance (statistics)')
     TeamProperty.find_or_create_by!(team_id: @bu_hmctsne.id,
-                                 key: 'area',
-                                 value: 'Data collection returns (including incident reports, Trade Union Time, interpreter returns, failure in service etc.)')
+                                    key: 'area',
+                                    value: 'Data collection returns (including incident reports, Trade Union Time, interpreter returns, failure in service etc.)')
     TeamProperty.find_or_create_by!(team_id: @bu_hmctsne.id,
-                                 key: 'area',
-                                 value: 'Areas covered: Cleveland, Durham, Humber Area, Northumbria, North Yorkshire, South Yorkshire, West Yorkshire, ET single Region stats')
+                                    key: 'area',
+                                    value: 'Areas covered: Cleveland, Durham, Humber Area, Northumbria, North Yorkshire, South Yorkshire, West Yorkshire, ET single Region stats')
     TeamProperty.find_or_create_by!(team_id: @bu_prop.id,
-                                 key: 'area',
-                                 value: 'Property administration')
+                                    key: 'area',
+                                    value: 'Property administration')
     TeamProperty.find_or_create_by!(team_id: @bu_utiac.id,
-                                 key: 'area',
-                                 value: 'Asylum cases')
+                                    key: 'area',
+                                    value: 'Asylum cases')
     TeamProperty.find_or_create_by!(team_id: @bu_utl.id,
-                                 key: 'area',
-                                 value: 'land ownership')
+                                    key: 'area',
+                                    value: 'land ownership')
     TeamProperty.find_or_create_by!(team_id: @bu_uttc.id,
-                                 key: 'area',
-                                 value: 'Taxing stuff')
+                                    key: 'area',
+                                    value: 'Taxing stuff')
     TeamProperty.find_or_create_by!(team_id: @bu_candi.id,
-                                 key: 'area',
-                                 value: 'Communicating')
+                                    key: 'area',
+                                    value: 'Communicating')
     TeamProperty.find_or_create_by!(team_id: @bu_candi.id,
-                                 key: 'area',
-                                 value: 'Replying to requests for information')
+                                    key: 'area',
+                                    value: 'Replying to requests for information')
   end
+  # rubocop:enable Metrics/MethodLength
+
 
   def add_allocatable
     [ @bu_laa, @bu_hmctsne, @bu_hr ].each do |business_unit|
