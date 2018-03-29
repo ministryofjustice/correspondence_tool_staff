@@ -267,14 +267,14 @@ describe 'state machine' do
         [:private_officer, :full_unassigned_foi],
         [:private_officer, :full_awresp_foi],
         [:private_officer, :full_draft_foi],
+        [:private_officer, :full_pdacu_foi],
         [:private_officer, :full_ppress_foi],
         [:private_officer, :full_pprivate_foi],
         [:private_officer, :full_awdis_foi],
         [:private_officer, :full_responded_foi],
         [:private_officer, :full_pdacu_foi_accepted],
-        [:private_officer, :full_pdacu_foi_unaccepted],
         [:private_officer, :full_ppress_foi_accepted],
-        [:private_officer, :full_pprivate_foi_accepted]
+        [:private_officer, :full_pprivate_foi_accepted],
 
       )
     }
@@ -1006,7 +1006,8 @@ describe 'state machine' do
         [:private_officer, :full_awresp_foi_accepted],
         [:private_officer, :full_draft_foi],
         [:private_officer, :full_pdacu_foi_accepted],
-        # [:private_officer, :full_ppress_foi_accepted],
+        [:private_officer, :full_ppress_foi],
+        [:private_officer, :full_ppress_foi_accepted],
         [:private_officer, :full_pprivate_foi],
         [:private_officer, :full_pprivate_foi_accepted],
   )  }
@@ -1488,7 +1489,9 @@ describe 'state machine' do
         [:private_officer, :full_awresp_foi_accepted],
         [:private_officer, :full_draft_foi],
         [:private_officer, :full_pdacu_foi_accepted],
-        [:private_officer, :full_pdacu_foi_unaccepted],
+        [:private_officer, :full_ppress_foi],
+        [:private_officer, :full_ppress_foi_accepted],
+
         )
     }
   end

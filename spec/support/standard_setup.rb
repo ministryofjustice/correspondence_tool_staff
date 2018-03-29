@@ -140,6 +140,7 @@ class StandardSetup
        full_ppress_foi_accepted:  create(:pending_press_clearance_case,
                                          approver: approver_user,
                                          press_officer: press_officer_user,
+                                         private_officer: private_officer_user,
                                          responder: responder_user),
        full_pprivate_foi:         create(:pending_private_clearance_case,
                                          approver: approver_user,

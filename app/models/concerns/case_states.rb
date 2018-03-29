@@ -2,11 +2,11 @@ module CaseStates
   extend ActiveSupport::Concern
 
   TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = [ nil,
-                                                         'unassigned',
-                                                         'awaiting_responder',
-                                                         'drafting',
-                                                         'pending_dacu_clearance',
-                                                         'pending_press_office_clearance']
+                                                          'unassigned',
+                                                          'awaiting_responder',
+                                                          'drafting',
+                                                          'pending_dacu_clearance',
+                                                          'pending_press_office_clearance']
   NON_TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE = [ nil,
                                                               'unassigned',
                                                               'awaiting_responder',

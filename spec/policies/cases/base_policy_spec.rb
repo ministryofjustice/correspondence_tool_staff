@@ -606,7 +606,7 @@ describe Case::BasePolicy do
   permissions :approve_from_pending_press_office_clearance_to_awaiting_dispatch? do
     it { should_not permit(responder,             pending_press_clearance_case) }
     it { should_not permit(disclosure_specialist, pending_press_clearance_case) }
-    it { should     permit(press_officer,         pending_press_clearance_case) }
+    it { should_not permit(press_officer,         pending_press_clearance_case) }
     it { should_not permit(private_officer,       pending_press_clearance_case) }
   end
 
