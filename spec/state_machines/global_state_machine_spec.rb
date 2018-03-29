@@ -452,6 +452,7 @@ describe 'state machine' do
 
 
         # the following combinations are allowed by the old state machine but shouldn't be allowed
+<<<<<<< HEAD
         [:disclosure_bmt, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
         [:disclosure_bmt, :trig_responded_foi],          # old state machine - they shouldn't be allowed
         [:disclosure_bmt, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
@@ -465,45 +466,44 @@ describe 'state machine' do
         [:another_disclosure_specialist, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
         [:another_disclosure_specialist, :full_awdis_foi],          # old state machine - they shouldn't be allowed
         [:another_disclosure_specialist, :full_responded_foi],          # old state machine - they shouldn't be allowed
+=======
+        [:manager, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:manager, :trig_responded_foi],          # old state machine - they shouldn't be allowed
+        [:manager, :full_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:manager, :full_responded_foi],          # old state machine - they shouldn't be allowed
+
+        [:another_approver, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:another_approver, :trig_responded_foi],          # old state machine - they shouldn't be allowed
+        [:another_approver, :full_awdis_foi],          # old state machine - they shouldn't be allowed
+        [:another_approver, :full_responded_foi],          # old state machine - they shouldn't be allowed
+>>>>>>> CT-1613 adds config state machine events for pending private clearance
 
         [:responder, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
         [:responder, :trig_responded_foi],          # old state machine - they shouldn't be allowed
-        [:responder, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
-        [:responder, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
         [:responder, :full_awdis_foi],          # old state machine - they shouldn't be allowed
         [:responder, :full_responded_foi],          # old state machine - they shouldn't be allowed
 
         [:another_responder_in_same_team, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
         [:another_responder_in_same_team, :trig_responded_foi],          # old state machine - they shouldn't be allowed
-        [:another_responder_in_same_team, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
-        [:another_responder_in_same_team, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
         [:another_responder_in_same_team, :full_awdis_foi],          # old state machine - they shouldn't be allowed
         [:another_responder_in_same_team, :full_responded_foi],          # old state machine - they shouldn't be allowed
         [:another_responder_in_same_team, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
         [:another_responder_in_same_team, :trig_responded_foi],          # old state machine - they shouldn't be allowed
-        [:another_responder_in_same_team, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
-        [:another_responder_in_same_team, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
         [:another_responder_in_same_team, :full_awdis_foi],          # old state machine - they shouldn't be allowed
         [:another_responder_in_same_team, :full_responded_foi],          # old state machine - they shouldn't be allowed
 
         [:another_responder_in_diff_team, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
         [:another_responder_in_diff_team, :trig_responded_foi],          # old state machine - they shouldn't be allowed
-        [:another_responder_in_diff_team, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
-        [:another_responder_in_diff_team, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
         [:another_responder_in_diff_team, :full_awdis_foi],          # old state machine - they shouldn't be allowed
         [:another_responder_in_diff_team, :full_responded_foi],          # old state machine - they shouldn't be allowed
 
         [:press_officer, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
         [:press_officer, :trig_responded_foi],          # old state machine - they shouldn't be allowed
-        [:press_officer, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
-        [:press_officer, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
         [:press_officer, :full_awdis_foi],          # old state machine - they shouldn't be allowed
         [:press_officer, :full_responded_foi],          # old state machine - they shouldn't be allowed
 
         [:private_officer, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
         [:private_officer, :trig_responded_foi],          # old state machine - they shouldn't be allowed
-        [:private_officer, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
-        [:private_officer, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
         [:private_officer, :full_awdis_foi],          # old state machine - they shouldn't be allowed
         [:private_officer, :full_responded_foi],          # old state machine - they shouldn't be allowed
 
@@ -1487,6 +1487,8 @@ describe 'state machine' do
         [:press_officer, :full_ppress_foi_accepted],
         [:press_officer, :full_ppress_foi],
         [:press_officer, :full_ppress_foi_accepted],
+        [:press_officer, :full_pprivate_foi],
+        [:press_officer, :full_pprivate_foi_accepted],
 
         [:private_officer, :full_unassigned_foi],
         [:private_officer, :full_awresp_foi],

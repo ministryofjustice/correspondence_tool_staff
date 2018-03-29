@@ -89,7 +89,6 @@ describe Case::FOI::StandardStateMachine do
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :destroy_case,
                                                                       :edit_case,
-                                                                      :extend_for_pit,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
         end
@@ -200,7 +199,7 @@ describe Case::FOI::StandardStateMachine do
             k = create :pending_private_clearance_case
 
             expect(k.current_state).to eq 'pending_private_office_clearance'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:extend_for_pit, :link_a_case, :remove_linked_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
         end
 
@@ -288,7 +287,6 @@ describe Case::FOI::StandardStateMachine do
 
             expect(k.current_state).to eq 'pending_private_office_clearance'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                          :extend_for_pit,
                                                                           :link_a_case,
                                                                           :reassign_user,
                                                                           :remove_linked_case]
@@ -417,7 +415,6 @@ describe Case::FOI::StandardStateMachine do
 
             expect(k.current_state).to eq 'pending_private_office_clearance'
             expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
-                                                                          :extend_for_pit,
                                                                           :link_a_case,
                                                                           :remove_linked_case]
           end
