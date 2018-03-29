@@ -236,7 +236,7 @@ describe Case::FOI::StandardStateMachine do
 
             expect(k.current_state).to eq 'awaiting_dispatch'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                          :extend_for_pit, #?
+                                                                          :extend_for_pit,            # allowed by old state machine and shuouldn't be
                                                                           :link_a_case,
                                                                           :remove_last_response,
                                                                           :remove_linked_case,
@@ -334,7 +334,6 @@ describe Case::FOI::StandardStateMachine do
                                                                          :link_a_case,
                                                                          :reassign_user,
                                                                          :remove_linked_case,]
-                                                                         # :unflag_for_clearance]
           end
         end
 
@@ -444,7 +443,6 @@ describe Case::FOI::StandardStateMachine do
                                                                         :reassign_user,
                                                                         :remove_linked_case,
                                                                         :unaccept_approver_assignment,
-                                                                        # :unflag_for_clearance,
                                                                         :upload_response_and_approve,
                                                                         :upload_response_and_return_for_redraft]
         end
