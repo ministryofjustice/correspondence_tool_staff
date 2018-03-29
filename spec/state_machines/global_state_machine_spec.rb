@@ -11,7 +11,6 @@ describe 'state machine' do
 
   describe :accept_approver_assignment do
     it {
-      expect(1).to eq 1
       should permit_event_to_be_triggered_only_by(
         [:disclosure_specialist, :trig_unassigned_foi],
         [:disclosure_specialist, :trig_awresp_foi],
