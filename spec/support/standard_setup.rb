@@ -16,9 +16,10 @@ class StandardSetup
 
 
     @users = {
-      manager_user:                         find_or_create(:disclosure_bmt_user),
-      approver_user:                        find_or_create(:disclosure_specialist),
-      another_approver_user:                create(:approver, approving_team: another_approving_team),
+      disclosure_bmt_user:                  find_or_create(:disclosure_bmt_user),
+      disclosure_specialist_user:           find_or_create(:disclosure_specialist),
+      disclosure_specialist_coworker_user:  create(:disclosure_specialist, approving_team: disclosure_team),
+      another_disclosure_specialist_user:   create(:disclosure_specialist, approving_team: another_approving_team),
       responder_user:                       create(:responder, responding_teams:[responding_team]),
       another_responder_in_same_team_user:  create(:responder, responding_teams:[responding_team]),
       another_responder_in_diff_team_user:  create(:responder),
@@ -27,9 +28,10 @@ class StandardSetup
     }
 
     @user_teams = {
-        manager:                          [ manager_user, disclosure_bmt_team ],
-        approver:                         [ approver_user, disclosure_team ],
-        another_approver:                 [ another_approver_user, another_approving_team ],
+        disclosure_bmt:                   [ disclosure_bmt_user, disclosure_bmt_team ],
+        disclosure_specialist:            [ disclosure_specialist_user, disclosure_team ],
+        disclosure_specialist_coworker:   [ disclosure_specialist_coworker_user, disclosure_team],
+        another_disclosure_specialist:    [ another_disclosure_specialist_user, another_approving_team ],
         responder:                        [ responder_user, responding_team ],
         another_responder_in_same_team:   [ another_responder_in_same_team_user, responding_team ],
         another_responder_in_diff_team:   [ another_responder_in_diff_team_user, another_responder_in_diff_team_user.responding_teams.first ],
@@ -37,6 +39,24 @@ class StandardSetup
         private_officer:                  [ private_officer_user, private_office_team ]
     }
 
+    # cases are named <workflow>_<state>_<other_info> where:
+    #
+    # * workflow:
+    #   * std - standard workflow
+    #   * trig - trigger workflow
+    #   * full = full_approval workflow
+    #
+    # * state
+    #   * unassigned - unassigned
+    #   * awdis       - awaiting_dispatch
+    #   * awresp      - awaiting_responder
+    #   * closed      - closed
+    #   * draft       - drafting
+    #   * pdacu       - pending_dacu_clearance
+    #   * ppress      - pending_press_office_clearance
+    #   * pprivate    - pending_private_office_clerance
+    #   * responded   - responded
+    #
     @cases = {
        std_unassigned_foi:        create(:case),
        std_awresp_foi:            create(:assigned_case,
@@ -51,14 +71,14 @@ class StandardSetup
        trig_unassigned_foi_accepted:       create(:case,
                                           :flagged_accepted,
                                           :dacu_disclosure,
-                                          approver: approver_user),
+                                          approver: disclosure_specialist_user),
        trig_unassigned_foi:       create(:case,
                                          :flagged,
                                          :dacu_disclosure),
        trig_awresp_foi_accepted:  create(:assigned_case,
                                           :flagged_accepted,
                                           :dacu_disclosure,
-                                          approver: approver_user,
+                                          approver: disclosure_specialist_user,
                                           responding_team: @teams[:responding_team]),
        trig_awresp_foi:           create(:assigned_case,
                                          :flagged,
@@ -68,13 +88,13 @@ class StandardSetup
                                           :flagged_accepted,
                                           :dacu_disclosure,
                                           responder: responder_user,
-                                          approver: approver_user),
+                                          approver: disclosure_specialist_user),
        trig_draft_foi:            create(:accepted_case,
                                           :flagged,
                                           :dacu_disclosure,
                                           responder: responder_user),
        trig_pdacu_foi_accepted:   create(:pending_dacu_clearance_case,
-                                         approver: approver_user,
+                                         approver: disclosure_specialist_user,
                                           responder: responder_user),
        trig_pdacu_foi:            create(:unaccepted_pending_dacu_clearance_case,
                                           responder: responder_user),
@@ -82,17 +102,17 @@ class StandardSetup
                                           :flagged_accepted,
                                           :dacu_disclosure,
                                           responder: responder_user,
-                                          approver: approver_user),
+                                          approver: disclosure_specialist_user),
        trig_responded_foi:        create(:responded_case,
                                           :flagged_accepted,
                                           :dacu_disclosure,
                                           responder: responder_user,
-                                          approver: approver_user),
+                                          approver: disclosure_specialist_user),
        trig_closed_foi:           create(:closed_case,
                                           :flagged_accepted,
                                           :dacu_disclosure,
                                           responder: responder_user,
-                                          approver: approver_user),
+                                          approver: disclosure_specialist_user),
        full_unassigned_foi:       create(:case,
                                           :flagged,
                                           :press_office,
@@ -112,7 +132,7 @@ class StandardSetup
        full_pdacu_foi:            create(:pending_dacu_clearance_case_flagged_for_press_and_private_unaccepted,
                                          responder: responder_user),
        full_pdacu_foi_accepted:   create(:pending_dacu_clearance_case_flagged_for_press_and_private,
-                                         approver: approver_user,
+                                         approver: disclosure_specialist_user,
                                          responder: responder_user),
        full_ppress_foi:           create(:pending_press_clearance_case,
                                          :flagged,
