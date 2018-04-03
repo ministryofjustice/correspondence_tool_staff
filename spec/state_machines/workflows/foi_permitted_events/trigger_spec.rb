@@ -334,6 +334,9 @@ describe Case::FOI::StandardStateMachine do
             puts k.state_machine.class
             require File.join(Rails.root, 'spec', 'support', 'case_printer')
             CasePrinter.new(k).print
+            puts ">>>>>>>>>> user roles #{__FILE__}:#{__LINE__} <<<<<<<<<<"
+            ap approver.roles
+            puts ">>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<"
 
             expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                          :link_a_case,
