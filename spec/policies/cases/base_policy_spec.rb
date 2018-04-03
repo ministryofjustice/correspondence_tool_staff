@@ -683,16 +683,6 @@ describe Case::BasePolicy do
     it { should_not permit(private_officer,       pending_dacu_clearance_case) }
   end
 
-  permissions :upload_response_and_approve_from_pending_dacu_clearance_to_pending_press_office_clearance? do
-    let(:kase) { create :pending_dacu_clearance_case_flagged_for_press_and_private_unaccepted,
-                          approver:       disclosure_specialist }
-    it { should_not permit(responder,             kase) }
-    it { should     permit(disclosure_specialist, kase) }
-    it { should_not permit(another_disclosure_specialist, kase) }
-    it { should_not permit(press_officer,         kase) }
-    it { should_not permit(private_officer,       kase) }
-  end
-
   permissions :extend_for_pit? do
     it { should_not permit(responder,             accepted_case) }
     it { should_not permit(manager,               accepted_case) }
