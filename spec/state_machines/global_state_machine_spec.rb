@@ -9,6 +9,31 @@ describe 'state machine' do
 
   after(:all) { DbHousekeeping.clean }
 
+
+  describe 'setup' do
+    describe '@setup.full_pdacu_foi_accepted' do
+      it 'accepted by all three approving teams ' do
+        kase = @setup.full_pdacu_foi_accepted
+        expect(kase.current_state).to eq 'pending_dacu_clearance'
+        expect(kase.workflow).to eq 'full_approval'
+        expect(kase.approver_assignments.for_team(@setup.disclosure_team).first.state).to eq 'accepted'
+        expect(kase.approver_assignments.for_team(@setup.press_office_team).first.state).to eq 'accepted'
+        expect(kase.approver_assignments.for_team(@setup.private_office_team).first.state).to eq 'accepted'
+      end
+    end
+
+    describe '@setup.full_dacu_foi_unaccpted' do
+      it 'accepted by press and private but not disclosure' do
+        kase = @setup.full_pdacu_foi_unaccepted
+        expect(kase.current_state).to eq 'pending_dacu_clearance'
+        expect(kase.workflow).to eq 'full_approval'
+        expect(kase.approver_assignments.for_team(@setup.disclosure_team).first.state).to eq 'pending'
+        expect(kase.approver_assignments.for_team(@setup.press_office_team).first.state).to eq 'accepted'
+        expect(kase.approver_assignments.for_team(@setup.private_office_team).first.state).to eq 'accepted'
+      end
+    end
+  end
+
   describe :accept_approver_assignment do
     it {
       should permit_event_to_be_triggered_only_by(
@@ -21,6 +46,7 @@ describe 'state machine' do
         [:disclosure_specialist, :full_draft_foi],
         [:disclosure_specialist, :full_awdis_foi],         # standard state machine wrongly allowing this - remove when converting to config state machine
         [:disclosure_specialist, :full_responded_foi],     # standard state machine wrongly allowing this - remove when converting to config state machine
+        [:disclosure_specialist, :full_pdacu_foi_unaccepted],
 
         [:disclosure_specialist_coworker, :trig_unassigned_foi],
         [:disclosure_specialist_coworker, :trig_awresp_foi],
@@ -31,6 +57,7 @@ describe 'state machine' do
         [:disclosure_specialist_coworker, :full_draft_foi],
         [:disclosure_specialist_coworker, :full_awdis_foi],         # standard state machine wrongly allowing this - remove when converting to config state machine
         [:disclosure_specialist_coworker, :full_responded_foi],     # standard state machine wrongly allowing this - remove when converting to config state machine
+        [:disclosure_specialist_coworker, :full_pdacu_foi_unaccepted],
 
         [:private_officer, :full_unassigned_foi],
         [:private_officer, :full_awresp_foi],
@@ -93,6 +120,7 @@ describe 'state machine' do
         [:disclosure_bmt, :trig_pdacu_foi_accepted],
         [:disclosure_bmt, :full_awresp_foi_accepted],
         [:disclosure_bmt, :full_pdacu_foi_accepted],
+        [:disclosure_bmt, :full_pdacu_foi_unaccepted],
         [:disclosure_bmt, :full_ppress_foi_accepted],
         [:disclosure_bmt, :full_pprivate_foi_accepted],
         
@@ -115,6 +143,7 @@ describe 'state machine' do
         [:disclosure_specialist, :full_awdis_foi],
         [:disclosure_specialist, :full_responded_foi],
         [:disclosure_specialist, :full_pdacu_foi_accepted],
+        [:disclosure_specialist, :full_pdacu_foi_unaccepted],
         [:disclosure_specialist, :full_ppress_foi_accepted],
         [:disclosure_specialist, :full_pprivate_foi_accepted],
 
@@ -137,6 +166,7 @@ describe 'state machine' do
         [:disclosure_specialist_coworker, :full_awdis_foi],
         [:disclosure_specialist_coworker, :full_responded_foi],
         [:disclosure_specialist_coworker, :full_pdacu_foi_accepted],
+        [:disclosure_specialist_coworker, :full_pdacu_foi_unaccepted],
         [:disclosure_specialist_coworker, :full_ppress_foi_accepted],
         [:disclosure_specialist_coworker, :full_pprivate_foi_accepted],
 
@@ -144,6 +174,7 @@ describe 'state machine' do
         [:another_disclosure_specialist, :trig_awresp_foi],
         [:another_disclosure_specialist, :trig_draft_foi],
         [:another_disclosure_specialist, :trig_pdacu_foi],
+
         # [:another_disclosure_specialist, :trig_awdis_foi],           # old state machine - they should be allowed
         # [:another_disclosure_specialist, :trig_responded_foi],        # old state machine - they should be allowed
         [:another_disclosure_specialist, :trig_unassigned_foi_accepted],
@@ -171,6 +202,7 @@ describe 'state machine' do
         [:responder, :full_awdis_foi],
         # [:responder, :full_responded_foi],          # old state machine - they should be allowed
         [:responder, :full_pdacu_foi_accepted],
+        [:responder, :full_pdacu_foi_unaccepted],
         [:responder, :full_ppress_foi_accepted],
         [:responder, :full_pprivate_foi_accepted],
 
@@ -195,6 +227,7 @@ describe 'state machine' do
         [:another_responder_in_same_team, :full_awdis_foi],
         # [:another_responder_in_same_team, :full_responded_foi],        # old state machine - they should be allowed
         [:another_responder_in_same_team, :full_pdacu_foi_accepted],
+        [:another_responder_in_same_team, :full_pdacu_foi_unaccepted],
         [:another_responder_in_same_team, :full_ppress_foi_accepted],
         [:another_responder_in_same_team, :full_pprivate_foi_accepted],
 
@@ -216,6 +249,7 @@ describe 'state machine' do
         [:press_officer, :full_awdis_foi],
         [:press_officer, :full_responded_foi],
         [:press_officer, :full_pdacu_foi_accepted],
+        [:press_officer, :full_pdacu_foi_unaccepted],
         [:press_officer, :full_ppress_foi_accepted],
         [:press_officer, :full_pprivate_foi_accepted],
 
@@ -238,8 +272,9 @@ describe 'state machine' do
         [:private_officer, :full_awdis_foi],
         [:private_officer, :full_responded_foi],
         [:private_officer, :full_pdacu_foi_accepted],
+        [:private_officer, :full_pdacu_foi_unaccepted],
         [:private_officer, :full_ppress_foi_accepted],
-        [:private_officer, :full_pprivate_foi_accepted],
+        [:private_officer, :full_pprivate_foi_accepted]
 
       )
     }
@@ -343,6 +378,7 @@ describe 'state machine' do
         [:disclosure_bmt, :full_awresp_foi_accepted],
         [:disclosure_bmt, :full_draft_foi],
         [:disclosure_bmt, :full_pdacu_foi_accepted],
+        [:disclosure_bmt, :full_pdacu_foi_unaccepted],
         [:disclosure_bmt, :full_ppress_foi],
         [:disclosure_bmt, :full_ppress_foi_accepted],
         [:disclosure_bmt, :full_pprivate_foi],
@@ -378,6 +414,7 @@ describe 'state machine' do
         [:disclosure_bmt, :full_awresp_foi_accepted],
         [:disclosure_bmt, :full_draft_foi],
         [:disclosure_bmt, :full_pdacu_foi_accepted],
+        [:disclosure_bmt, :full_pdacu_foi_unaccepted],
         [:disclosure_bmt, :full_ppress_foi],
         [:disclosure_bmt, :full_ppress_foi_accepted],
         [:disclosure_bmt, :full_pprivate_foi],
@@ -619,6 +656,7 @@ describe 'state machine' do
         [:disclosure_bmt, :trig_pdacu_foi_accepted],
         [:disclosure_bmt, :full_awresp_foi_accepted],
         [:disclosure_bmt, :full_pdacu_foi_accepted],
+        [:disclosure_bmt, :full_pdacu_foi_unaccepted],
         [:disclosure_bmt, :full_ppress_foi_accepted],
         [:disclosure_bmt, :full_pprivate_foi_accepted],
         [:disclosure_bmt, :std_closed_foi],
@@ -647,6 +685,7 @@ describe 'state machine' do
         [:disclosure_specialist, :full_awresp_foi_accepted],
         [:disclosure_specialist, :full_draft_foi],
         [:disclosure_specialist, :full_pdacu_foi_accepted],
+        [:disclosure_specialist, :full_pdacu_foi_unaccepted],
         [:disclosure_specialist, :full_ppress_foi],
         [:disclosure_specialist, :full_ppress_foi_accepted],
         [:disclosure_specialist, :full_pprivate_foi],
@@ -677,6 +716,7 @@ describe 'state machine' do
         [:disclosure_specialist_coworker, :full_awresp_foi_accepted],
         [:disclosure_specialist_coworker, :full_draft_foi],
         [:disclosure_specialist_coworker, :full_pdacu_foi_accepted],
+        [:disclosure_specialist_coworker, :full_pdacu_foi_unaccepted],
         [:disclosure_specialist_coworker, :full_ppress_foi],
         [:disclosure_specialist_coworker, :full_ppress_foi_accepted],
         [:disclosure_specialist_coworker, :full_pprivate_foi],
@@ -707,6 +747,7 @@ describe 'state machine' do
         [:another_disclosure_specialist, :full_awresp_foi_accepted],
         [:another_disclosure_specialist, :full_draft_foi],
         [:another_disclosure_specialist, :full_pdacu_foi_accepted],
+        [:another_disclosure_specialist, :full_pdacu_foi_unaccepted],
         [:another_disclosure_specialist, :full_ppress_foi],
         [:another_disclosure_specialist, :full_ppress_foi_accepted],
         [:another_disclosure_specialist, :full_pprivate_foi],
@@ -737,6 +778,7 @@ describe 'state machine' do
         [:responder, :full_awresp_foi_accepted],
         [:responder, :full_draft_foi],
         [:responder, :full_pdacu_foi_accepted],
+        [:responder, :full_pdacu_foi_unaccepted],
         [:responder, :full_ppress_foi],
         [:responder, :full_ppress_foi_accepted],
         [:responder, :full_pprivate_foi],
@@ -767,6 +809,7 @@ describe 'state machine' do
         [:another_responder_in_same_team, :full_awresp_foi_accepted],
         [:another_responder_in_same_team, :full_draft_foi],
         [:another_responder_in_same_team, :full_pdacu_foi_accepted],
+        [:another_responder_in_same_team, :full_pdacu_foi_unaccepted],
         [:another_responder_in_same_team, :full_ppress_foi],
         [:another_responder_in_same_team, :full_ppress_foi_accepted],
         [:another_responder_in_same_team, :full_pprivate_foi],
@@ -797,6 +840,7 @@ describe 'state machine' do
         [:another_responder_in_diff_team, :full_awresp_foi_accepted],
         [:another_responder_in_diff_team, :full_draft_foi],
         [:another_responder_in_diff_team, :full_pdacu_foi_accepted],
+        [:another_responder_in_diff_team, :full_pdacu_foi_unaccepted],
         [:another_responder_in_diff_team, :full_ppress_foi],
         [:another_responder_in_diff_team, :full_ppress_foi_accepted],
         [:another_responder_in_diff_team, :full_pprivate_foi],
@@ -827,6 +871,7 @@ describe 'state machine' do
         [:press_officer, :full_awresp_foi_accepted],
         [:press_officer, :full_draft_foi],
         [:press_officer, :full_pdacu_foi_accepted],
+        [:press_officer, :full_pdacu_foi_unaccepted],
         [:press_officer, :full_ppress_foi],
         [:press_officer, :full_ppress_foi_accepted],
         [:press_officer, :full_pprivate_foi],
@@ -857,6 +902,7 @@ describe 'state machine' do
         [:private_officer, :full_awresp_foi_accepted],
         [:private_officer, :full_draft_foi],
         [:private_officer, :full_pdacu_foi_accepted],
+        [:private_officer, :full_pdacu_foi_unaccepted],
         [:private_officer, :full_ppress_foi],
         [:private_officer, :full_ppress_foi_accepted],
         [:private_officer, :full_pprivate_foi],
@@ -882,6 +928,7 @@ describe 'state machine' do
         [:disclosure_specialist, :full_awresp_foi_accepted],
         [:disclosure_specialist, :full_draft_foi],
         [:disclosure_specialist, :full_pdacu_foi_accepted],
+        [:disclosure_specialist, :full_pdacu_foi_unaccepted],
         [:disclosure_specialist, :full_ppress_foi_accepted],
         [:disclosure_specialist, :full_pprivate_foi_accepted],
 
@@ -896,6 +943,7 @@ describe 'state machine' do
         [:disclosure_specialist_coworker, :full_awresp_foi_accepted],
         [:disclosure_specialist_coworker, :full_draft_foi],
         [:disclosure_specialist_coworker, :full_pdacu_foi_accepted],
+        [:disclosure_specialist_coworker, :full_pdacu_foi_unaccepted],
         [:disclosure_specialist_coworker, :full_ppress_foi_accepted],
         [:disclosure_specialist_coworker, :full_pprivate_foi_accepted],
 
@@ -909,6 +957,7 @@ describe 'state machine' do
         [:another_disclosure_specialist, :full_awresp_foi_accepted],
         [:another_disclosure_specialist, :full_draft_foi],
         [:another_disclosure_specialist, :full_pdacu_foi_accepted],
+        [:another_disclosure_specialist, :full_pdacu_foi_unaccepted],
 
         [:responder, :std_draft_foi],
         [:responder, :std_awdis_foi],
@@ -919,6 +968,7 @@ describe 'state machine' do
         # [:responder, :trig_awdis_foi], ?
         [:responder, :full_draft_foi],
         [:responder, :full_pdacu_foi_accepted],
+        [:responder, :full_pdacu_foi_unaccepted],
         [:responder, :full_ppress_foi],
         [:responder, :full_ppress_foi_accepted],
         [:responder, :full_pprivate_foi],
@@ -934,6 +984,7 @@ describe 'state machine' do
         # [:another_responder_in_same_team, :trig_awdis_foi], ?
         [:another_responder_in_same_team, :full_draft_foi],
         [:another_responder_in_same_team, :full_pdacu_foi_accepted],
+        [:another_responder_in_same_team, :full_pdacu_foi_unaccepted],
         [:another_responder_in_same_team, :full_ppress_foi],
         [:another_responder_in_same_team, :full_ppress_foi_accepted],
         [:another_responder_in_same_team, :full_pprivate_foi],
@@ -951,6 +1002,7 @@ describe 'state machine' do
         [:press_officer, :full_awresp_foi_accepted],
         [:press_officer, :full_draft_foi],
         [:press_officer, :full_pdacu_foi_accepted],
+        [:press_officer, :full_pdacu_foi_unaccepted],
         [:press_officer, :full_ppress_foi],
         [:press_officer, :full_ppress_foi_accepted],
         [:press_officer, :full_pprivate_foi],
@@ -966,6 +1018,7 @@ describe 'state machine' do
         [:private_officer, :full_awresp_foi_accepted],
         [:private_officer, :full_draft_foi],
         [:private_officer, :full_pdacu_foi_accepted],
+        [:private_officer, :full_pdacu_foi_unaccepted],
         [:private_officer, :full_ppress_foi_accepted],
         [:private_officer, :full_pprivate_foi],
         [:private_officer, :full_pprivate_foi_accepted],
@@ -1002,6 +1055,7 @@ describe 'state machine' do
         [:disclosure_bmt, :trig_awresp_foi],
         [:disclosure_bmt, :trig_draft_foi],
         [:disclosure_bmt, :trig_pdacu_foi],
+        [:disclosure_bmt, :trig_pdacu_foi_accepted],
         [:disclosure_bmt, :trig_awdis_foi],
         [:disclosure_bmt, :trig_responded_foi],
         [:disclosure_bmt, :full_unassigned_foi],
@@ -1014,9 +1068,9 @@ describe 'state machine' do
         [:disclosure_bmt, :trig_unassigned_foi_accepted],
         [:disclosure_bmt, :trig_awresp_foi_accepted],
         [:disclosure_bmt, :trig_draft_foi_accepted],
-        [:disclosure_bmt, :trig_pdacu_foi_accepted],
         [:disclosure_bmt, :full_awresp_foi_accepted],
         [:disclosure_bmt, :full_pdacu_foi_accepted],
+        [:disclosure_bmt, :full_pdacu_foi_unaccepted],
         [:disclosure_bmt, :full_ppress_foi_accepted],
         [:disclosure_bmt, :full_pprivate_foi_accepted],
         [:disclosure_bmt, :std_closed_foi],
@@ -1045,6 +1099,7 @@ describe 'state machine' do
         [:disclosure_specialist, :full_awresp_foi_accepted],
         [:disclosure_specialist, :full_draft_foi],
         [:disclosure_specialist, :full_pdacu_foi_accepted],
+        [:disclosure_specialist, :full_pdacu_foi_unaccepted],
         [:disclosure_specialist, :full_ppress_foi],
         [:disclosure_specialist, :full_ppress_foi_accepted],
         [:disclosure_specialist, :full_pprivate_foi],
@@ -1075,6 +1130,7 @@ describe 'state machine' do
         [:another_disclosure_specialist, :full_awresp_foi_accepted],
         [:another_disclosure_specialist, :full_draft_foi],
         [:another_disclosure_specialist, :full_pdacu_foi_accepted],
+        [:another_disclosure_specialist, :full_pdacu_foi_unaccepted],
         [:another_disclosure_specialist, :full_ppress_foi],
         [:another_disclosure_specialist, :full_ppress_foi_accepted],
         [:another_disclosure_specialist, :full_pprivate_foi],
@@ -1105,6 +1161,7 @@ describe 'state machine' do
         [:disclosure_specialist_coworker, :full_awresp_foi_accepted],
         [:disclosure_specialist_coworker, :full_draft_foi],
         [:disclosure_specialist_coworker, :full_pdacu_foi_accepted],
+        [:disclosure_specialist_coworker, :full_pdacu_foi_unaccepted],
         [:disclosure_specialist_coworker, :full_ppress_foi],
         [:disclosure_specialist_coworker, :full_ppress_foi_accepted],
         [:disclosure_specialist_coworker, :full_pprivate_foi],
@@ -1135,6 +1192,7 @@ describe 'state machine' do
         [:responder, :full_awresp_foi_accepted],
         [:responder, :full_draft_foi],
         [:responder, :full_pdacu_foi_accepted],
+        [:responder, :full_pdacu_foi_unaccepted],
         [:responder, :full_ppress_foi],
         [:responder, :full_ppress_foi_accepted],
         [:responder, :full_pprivate_foi],
@@ -1165,6 +1223,7 @@ describe 'state machine' do
         [:another_responder_in_same_team, :full_awresp_foi_accepted],
         [:another_responder_in_same_team, :full_draft_foi],
         [:another_responder_in_same_team, :full_pdacu_foi_accepted],
+        [:another_responder_in_same_team, :full_pdacu_foi_unaccepted],
         [:another_responder_in_same_team, :full_ppress_foi],
         [:another_responder_in_same_team, :full_ppress_foi_accepted],
         [:another_responder_in_same_team, :full_pprivate_foi],
@@ -1195,6 +1254,7 @@ describe 'state machine' do
         [:another_responder_in_diff_team, :full_awresp_foi_accepted],
         [:another_responder_in_diff_team, :full_draft_foi],
         [:another_responder_in_diff_team, :full_pdacu_foi_accepted],
+        [:another_responder_in_diff_team, :full_pdacu_foi_unaccepted],
         [:another_responder_in_diff_team, :full_ppress_foi],
         [:another_responder_in_diff_team, :full_ppress_foi_accepted],
         [:another_responder_in_diff_team, :full_pprivate_foi],
@@ -1225,6 +1285,7 @@ describe 'state machine' do
         [:press_officer, :full_awresp_foi_accepted],
         [:press_officer, :full_draft_foi],
         [:press_officer, :full_pdacu_foi_accepted],
+        [:press_officer, :full_pdacu_foi_unaccepted],
         [:press_officer, :full_ppress_foi],
         [:press_officer, :full_ppress_foi_accepted],
         [:press_officer, :full_pprivate_foi],
@@ -1255,6 +1316,7 @@ describe 'state machine' do
         [:private_officer, :full_awresp_foi_accepted],
         [:private_officer, :full_draft_foi],
         [:private_officer, :full_pdacu_foi_accepted],
+        [:private_officer, :full_pdacu_foi_unaccepted],
         [:private_officer, :full_ppress_foi],
         [:private_officer, :full_ppress_foi_accepted],
         [:private_officer, :full_pprivate_foi],
@@ -1399,7 +1461,6 @@ describe 'state machine' do
 
   describe :unflag_for_clearance do
     it {
-      expect(1).to eq 1
       should permit_event_to_be_triggered_only_by(
         [:disclosure_bmt, :trig_awdis_foi],                    # old state machine allows but shouldn't
         [:disclosure_bmt, :full_awdis_foi],                    # old state machine allows but shouldn't
@@ -1432,12 +1493,14 @@ describe 'state machine' do
         [:press_officer, :full_awresp_foi_accepted],
         [:press_officer, :full_draft_foi],
         [:press_officer, :full_pdacu_foi_accepted],
+        [:press_officer, :full_pdacu_foi_unaccepted],
 
         [:private_officer, :full_unassigned_foi],
         [:private_officer, :full_awresp_foi],
         [:private_officer, :full_awresp_foi_accepted],
         [:private_officer, :full_draft_foi],
         [:private_officer, :full_pdacu_foi_accepted],
+        [:private_officer, :full_pdacu_foi_unaccepted],
         )
     }
   end
