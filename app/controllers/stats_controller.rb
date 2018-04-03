@@ -80,7 +80,7 @@ class StatsController < ApplicationController
       Rails.root.join(filename)
     )
     if sidekiq_config.has_key?(Rails.env)
-      sidekiq_config = sidekiq_config[Rails.env]
+      sidekiq_config.merge! sidekiq_config[Rails.env]
     end
     sidekiq_config[:schedule].find do |_name, config|
       config['args'] == [report_type_abbr]

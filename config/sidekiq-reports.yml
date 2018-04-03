@@ -4,7 +4,7 @@ production:
   :concurrency: 4
 :logfile: ./log/sidekiq-reports.log
 :queues:
-  - correspondence_tool_staff_reports
+  - correspondence_tool_staff_report_generator
 
 
 r003_report_definition: &r003_report_definition
