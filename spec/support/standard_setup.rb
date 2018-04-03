@@ -129,8 +129,6 @@ class StandardSetup
                                           :flagged,
                                           :press_office,
                                           responder: responder_user),
-       full_pdacu_foi:            create(:pending_dacu_clearance_case_flagged_for_press_and_private_unaccepted,
-                                         responder: responder_user),
        full_pdacu_foi_accepted:   create(:pending_dacu_clearance_case_flagged_for_press_and_private,
                                          approver: disclosure_specialist_user,
                                          responder: responder_user),
