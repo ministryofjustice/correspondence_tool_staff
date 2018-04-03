@@ -5,6 +5,7 @@ gem 'acts_as_tree', '~> 2.8'
 gem 'awesome_print'
 gem 'aws-sdk'
 gem 'bank_holiday', git: 'https://github.com/ministryofjustice/bank_holiday.git', branch: 'bundler-fix'
+gem 'bootsnap', require: false
 gem 'business_time'
 gem 'config'
 gem 'devise', '~> 4.5'
