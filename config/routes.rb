@@ -73,19 +73,20 @@
 #                                            PATCH  /cases/:case_id/assignments/:id(.:format)                            assignments#update
 #                                            PUT    /cases/:case_id/assignments/:id(.:format)                            assignments#update
 #                                            DELETE /cases/:case_id/assignments/:id(.:format)                            assignments#destroy
-#                      case_case_attachments GET    /cases/:case_id/attachments(.:format)                                case_attachments#index
+#                                            GET    /cases/:case_id/attachments/:id(.:format)                            case_attachments#show
+#            create_from_s3_case_attachments POST   /cases/:case_id/attachments/create_from_s3(.:format)                 case_attachments#create_from_s3
+#                    preview_case_attachment GET    /cases/:case_id/attachments/:id/preview(.:format)                    case_attachments#preview
+#                   download_case_attachment GET    /cases/:case_id/attachments/:id/download(.:format)                   case_attachments#download
+#                           case_attachments GET    /cases/:case_id/attachments(.:format)                                case_attachments#index
 #                                            POST   /cases/:case_id/attachments(.:format)                                case_attachments#create
-#                   new_case_case_attachment GET    /cases/:case_id/attachments/new(.:format)                            case_attachments#new
-#                  edit_case_case_attachment GET    /cases/:case_id/attachments/:id/edit(.:format)                       case_attachments#edit
-#                       case_case_attachment GET    /cases/:case_id/attachments/:id(.:format)                            case_attachments#show
-#                                            PATCH  /cases/:case_id/attachments/:id(.:format)                            case_attachments#update
+#                        new_case_attachment GET    /cases/:case_id/attachments/new(.:format)                            case_attachments#new
+#                       edit_case_attachment GET    /cases/:case_id/attachments/:id/edit(.:format)                       case_attachments#edit
+#                            case_attachment PATCH  /cases/:case_id/attachments/:id(.:format)                            case_attachments#update
 #                                            PUT    /cases/:case_id/attachments/:id(.:format)                            case_attachments#update
 #                                            DELETE /cases/:case_id/attachments/:id(.:format)                            case_attachments#destroy
 #                              case_messages POST   /cases/:case_id/messages(.:format)                                   messages#create
 #                   new_response_upload_case GET    /cases/:id/new_response_upload(.:format)                             cases#new_response_upload
 #                      upload_responses_case POST   /cases/:id/upload_responses(.:format)                                cases#upload_responses
-#              download_case_case_attachment GET    /cases/:case_id/attachments/:id/download(.:format)                   case_attachments#download
-#                                            DELETE /cases/:case_id/attachments/:id(.:format)                            case_attachments#destroy
 #                               search_cases GET    /cases/search(.:format)                                              cases#search
 #                                      cases GET    /cases(.:format)                                                     cases#index
 #                                            POST   /cases(.:format)                                                     cases#create
