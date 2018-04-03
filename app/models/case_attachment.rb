@@ -33,7 +33,10 @@ class CaseAttachment < ActiveRecord::Base
 
   enum type: { response: 'response', request: 'request', ico_decision: 'ico_decision' }
 
-  enum state: { unprocessed: 'unprocessed' }
+  enum state: { unprocessed:        'unprocessed',
+                scanning_for_virus: 'scanning_for_virus',
+                virus_scan_passed:  'virus_scan_passed',
+                virus_scan_failed:  'virus_scan_failed' }
 
   def filename
     File.basename(key)
@@ -72,6 +75,18 @@ class CaseAttachment < ActiveRecord::Base
       end
     end
     save!
+  end
+
+  def scan_for_virus()
+    scanning_for_virus!
+    original_filepath = download_original_file
+    if system('clamscan', original_filepath)
+      virus_scan_passed!
+    else
+      virus_scan_failed!
+      remove_from_storage_bucket
+      Rails.logger.error "Virus detected in uploaded file: #{original_filepath}"
+    end
   end
 
   private

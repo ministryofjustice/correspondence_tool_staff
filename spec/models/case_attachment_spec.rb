@@ -313,14 +313,51 @@ RSpec.describe CaseAttachment, type: :model do
   end
 
   describe '#scan_for_virus' do
-    it 'runs clamav'
+    let(:attachment)        { create :correspondence_response }
+    let(:original_filename) { 'original_filename.txt' }
+
+    before :each do
+      allow(attachment).to receive(:system).and_return(true)
+
+      stub_s3_uploader_for_all_files!
+    end
+
+    it 'runs clamscan' do
+      allow(attachment).to receive(:download_original_file)
+                             .and_return(original_filename)
+
+      attachment.scan_for_virus
+      expect(attachment).to have_received(:system)
+                              .with('clamscan', original_filename)
+    end
+
+    it 'sets the state to scanning_for_virus on start' do
+      allow(attachment).to(receive(:system).with(any_args)) do
+        expect(attachment.state).to eq 'scanning_for_virus'
+      end
+      attachment.scan_for_virus
+    end
+
     context 'on successful run (no virus)' do
-      it 'sets the state to "virus_scan_passed"'
+      it 'sets the state to "virus_scan_passed"' do
+        attachment.scan_for_virus
+        expect(attachment.state).to eq 'virus_scan_passed'
+      end
     end
 
     context 'on failed run (virus found)' do
-      it 'sets the state to "virus_scan_failed"'
-      it 'removes the file in S3'
+      it 'sets the state to "virus_scan_failed"' do
+        allow(attachment).to receive(:system).and_return(false)
+        attachment.scan_for_virus
+        expect(attachment.state).to eq 'virus_scan_failed'
+      end
+
+      it 'removes the file in S3' do
+        allow(attachment).to receive(:system).and_return(false)
+        attachment.scan_for_virus
+        s3_object = CASE_UPLOADS_S3_BUCKET.object(attachment.key)
+        expect(s3_object).to have_received(:delete)
+      end
     end
   end
 end
