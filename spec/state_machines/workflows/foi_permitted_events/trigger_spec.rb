@@ -328,7 +328,9 @@ describe Case::FOI::StandardStateMachine do
         context 'pending_dacu_clearance state' do
           it 'shows events' do
             ENV['SPEC_DEBUG'] = '1'
+
             k = create :pending_dacu_clearance_case, :dacu_disclosure
+            unassigned_approver = create :approver
 
             expect(k.current_state).to eq 'pending_dacu_clearance'
             puts ">>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<"
@@ -336,17 +338,15 @@ describe Case::FOI::StandardStateMachine do
             require File.join(Rails.root, 'spec', 'support', 'case_printer')
             CasePrinter.new(k).print
             puts ">>>>>>>>>> user roles #{__FILE__}:#{__LINE__} <<<<<<<<<<"
-            ap approver.roles
+            ap unassigned_approver
+            ap unassigned_approver.roles
             puts ">>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<"
 
-            puts ">>>>>>>>>>>> user_is_assigned_disclosure_specialist? #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
-            puts Workflows::Predicates.new(user: approver, kase: k).user_is_assigned_disclosure_specialist?
 
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
-                                                                         :link_a_case,
-                                                                         :reassign_user,
-                                                                         :remove_linked_case,
-                                                                         :unflag_for_clearance]
+            expect(k.state_machine.permitted_events(unassigned_approver.id)).to eq [ :add_message_to_case,
+                                                                                     :link_a_case,
+                                                                                     :reassign_user,
+                                                                                     :remove_linked_case]
             ENV['SPEC_DEBUG'] = ''
           end
         end

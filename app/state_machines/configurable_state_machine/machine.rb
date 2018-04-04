@@ -270,11 +270,11 @@ module ConfigurableStateMachine
         # end
         role_state_config.to_h.keys.each do |event|
           event_config = role_state_config[event]
-          if ENV['SPEC_DEBUG'] == '1'
-            puts ">>>>>>>>>>>> event: #{event} role: #{role} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
-            ap event_config
-            puts "Event: #{event}  triggerable? #{event_triggerable_for_user?(event_config: event_config, user: user)}"
-          end
+          # if ENV['SPEC_DEBUG'] == '1'
+          #   puts ">>>>>>>>>>>> event: #{event} role: #{role} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
+          #   ap event_config
+          #   puts "Event: #{event}  triggerable? #{event_triggerable_for_user?(event_config: event_config, user: user)}"
+          # end
           events << event if event_triggerable_for_user?(event_config: event_config, user: user)
         end
       end
