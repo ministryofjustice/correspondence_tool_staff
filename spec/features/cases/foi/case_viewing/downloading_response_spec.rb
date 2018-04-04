@@ -53,17 +53,21 @@ feature 'downloading a response from response details' do
       end
 
       scenario 'when a view link is available' do
+        stub_s3_uploader_for_all_files!
         mypath = File.join(Rails.root, 'spec', 'fixtures', 'eon.pdf')
-        s3_object = instance_double(Aws::S3::Object)
-        expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).and_return(s3_object)
+        attachment = drafting_case.attachments.first
         expect(Tempfile).to receive(:new).and_return(double Tempfile, path: mypath, close: nil)
-        expect(s3_object).to receive(:get).with(response_target: mypath)
         expect_any_instance_of(CaseAttachmentsController).to receive(:send_file).
           with(mypath, {type: 'application/pdf', disposition: 'inline'}).
           and_call_original
 
         cases_show_page.load(id: drafting_case.id)
         cases_show_page.case_attachments.first.collection.first.actions.view.click
+
+        expect(response_headers['Content-Type']).to eq 'application/pdf'
+        expect(response_headers['Content-Disposition']).to eq 'inline; filename="eon.pdf"'
+        expect(CASE_UPLOADS_S3_BUCKET.object(attachment.preview_key))
+          .to have_received(:get).with(response_target: mypath)
       end
     end
   end

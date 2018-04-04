@@ -12,9 +12,7 @@ def stub_s3_uploader_for_all_files!
   end
 
   s3_object_collections = Hash.new do |hash, prefix|
-    hash[prefix] = instance_double(Aws::Resources::Collection,
-                                   each: [],
-                                   prefix: args[:prefix])
+    hash[prefix] = instance_double(Aws::Resources::Collection, each: [])
   end
 
   allow(CASE_UPLOADS_S3_BUCKET).to receive(:objects).with(any_args) do |args|

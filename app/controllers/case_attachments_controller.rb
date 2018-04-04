@@ -10,11 +10,11 @@ class CaseAttachmentsController < ApplicationController
     authorize @case, :can_add_attachment?
 
     attachment = CaseAttachment.new(create_params)
-    @case.attachments << attachment
-    @case.save!
+    attachment.case = @case
+    attachment.save
     VirusScanJob.perform_later(attachment.id)
 
-    redirect_to status_case_attachment_path(case_id: @case.id, id: attachment.id)
+    redirect_to case_attachment_path(case_id: @case.id, id: attachment.id)
   end
 
   def download

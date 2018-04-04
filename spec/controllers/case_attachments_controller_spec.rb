@@ -4,9 +4,14 @@ RSpec.describe CaseAttachmentsController, type: :controller do
   let(:responder) { kase.responder }
   let(:manager)   { create :manager }
 
+  let(:s3_key) { "uploads/#{kase.id}/request/request.pdf" }
+
+  before :each do
+    stub_s3_uploader_for_all_files!
+  end
+
   describe 'POST create_from_s3' do
     let(:kase)   { create :case_being_drafted }
-    let(:s3_key) { "uploads/#{kase.id}/request/request.pdf" }
     let(:params) {
       {
         case_id: kase.id,
@@ -53,16 +58,10 @@ RSpec.describe CaseAttachmentsController, type: :controller do
       post :create_from_s3, params: params
 
       attachment = kase.attachments.last
-      expect(response).to redirect_to status_case_attachment_path(
+      expect(response).to redirect_to case_attachment_path(
                                         case_id: kase.id,
                                         id: attachment.id
                                       )
-    end
-  end
-
-  describe 'GET status' do
-    it 'returns JSONified version of attachment' do
-      get :status, params: { id: kase.id}
     end
   end
 
@@ -139,26 +138,13 @@ RSpec.describe CaseAttachmentsController, type: :controller do
   end
 
   describe '#destroy' do
+    let(:kase)       { create :case_with_response, responder: responder }
+    let(:attachment) { kase.attachments.first }
     let(:attachment_object) do
-      instance_double(
-        Aws::S3::Object,
-        delete: instance_double(Aws::S3::Types::DeleteObjectOutput)
-      )
+      CASE_UPLOADS_S3_BUCKET.object(attachment.key)
     end
     let(:preview_object) do
-      instance_double(
-        Aws::S3::Object,
-        delete: instance_double(Aws::S3::Types::DeleteObjectOutput)
-      )
-    end
-
-    before do
-      allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
-                                         .with(attachment.key)
-                                         .and_return(attachment_object)
-      allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
-                                         .with(attachment.preview_key)
-                                         .and_return(preview_object)
+      CASE_UPLOADS_S3_BUCKET.object(attachment.preview_key)
     end
 
     shared_examples 'unauthorized user' do
