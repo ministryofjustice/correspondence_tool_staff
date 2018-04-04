@@ -327,6 +327,7 @@ describe Case::FOI::StandardStateMachine do
 
         context 'pending_dacu_clearance state' do
           it 'shows events' do
+            ENV['SPEC_DEBUG'] = '1'
             k = create :pending_dacu_clearance_case, :dacu_disclosure
 
             expect(k.current_state).to eq 'pending_dacu_clearance'
@@ -343,6 +344,7 @@ describe Case::FOI::StandardStateMachine do
                                                                          :reassign_user,
                                                                          :remove_linked_case,
                                                                          :unflag_for_clearance]
+            ENV['SPEC_DEBUG'] = ''
           end
         end
 
