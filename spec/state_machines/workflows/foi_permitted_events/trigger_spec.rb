@@ -334,8 +334,7 @@ describe Case::FOI::StandardStateMachine do
             expect(k.state_machine.permitted_events(unassigned_approver.id)).to eq [ :add_message_to_case,
                                                                                      :link_a_case,
                                                                                      :reassign_user,
-                                                                                     :remove_linked_case,
-                                                                                     :unflag_for_clearance]
+                                                                                     :remove_linked_case]
           end
         end
 
