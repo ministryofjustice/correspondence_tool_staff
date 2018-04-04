@@ -15,10 +15,9 @@ before_script:
   - bundle exec rails parallel:create[$PARALLEL_TESTS] parallel:load_structure[$PARALLEL_TESTS]
 script:
   - bundle install
-  - bundle exec rspec spec/state_machines/workflows/foi_permitted_events/trigger_spec.rb
 #  - bundle exec rubocop
 #  - bundle exec rails jasmine:ci
-#  - bundle exec parallel_rspec -s spec/features -n $PARALLEL_TESTS -o --fail-fast spec
+  - bundle exec parallel_rspec -s spec/features -n $PARALLEL_TESTS -o --fail-fast spec
 #  - bundle exec codeclimate-test-reporter
 before_install:
   - "phantomjs --version"
