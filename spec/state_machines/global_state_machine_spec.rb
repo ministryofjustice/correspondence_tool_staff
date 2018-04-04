@@ -268,7 +268,6 @@ describe 'state machine' do
         [:private_officer, :full_awresp_foi],
         [:private_officer, :full_draft_foi],
         [:private_officer, :full_ppress_foi],
-        [:private_officer, :full_pdacu_foi],
         [:private_officer, :full_ppress_foi],
         [:private_officer, :full_pprivate_foi],
         [:private_officer, :full_awdis_foi],
@@ -445,38 +444,20 @@ describe 'state machine' do
 
         [:disclosure_specialist_coworker, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
         [:disclosure_specialist_coworker, :trig_responded_foi],          # old state machine - they shouldn't be allowed
-        [:disclosure_specialist_coworker, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
-        [:disclosure_specialist_coworker, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
         [:disclosure_specialist_coworker, :full_awdis_foi],          # old state machine - they shouldn't be allowed
         [:disclosure_specialist_coworker, :full_responded_foi],          # old state machine - they shouldn't be allowed
 
 
         # the following combinations are allowed by the old state machine but shouldn't be allowed
-<<<<<<< HEAD
         [:disclosure_bmt, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
         [:disclosure_bmt, :trig_responded_foi],          # old state machine - they shouldn't be allowed
-        [:disclosure_bmt, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
-        [:disclosure_bmt, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
         [:disclosure_bmt, :full_awdis_foi],          # old state machine - they shouldn't be allowed
         [:disclosure_bmt, :full_responded_foi],          # old state machine - they shouldn't be allowed
 
         [:another_disclosure_specialist, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
         [:another_disclosure_specialist, :trig_responded_foi],          # old state machine - they shouldn't be allowed
-        [:another_disclosure_specialist, :full_pprivate_foi],          # old state machine - they shouldn't be allowed
-        [:another_disclosure_specialist, :full_pprivate_foi_accepted],          # old state machine - they shouldn't be allowed
         [:another_disclosure_specialist, :full_awdis_foi],          # old state machine - they shouldn't be allowed
         [:another_disclosure_specialist, :full_responded_foi],          # old state machine - they shouldn't be allowed
-=======
-        [:manager, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
-        [:manager, :trig_responded_foi],          # old state machine - they shouldn't be allowed
-        [:manager, :full_awdis_foi],          # old state machine - they shouldn't be allowed
-        [:manager, :full_responded_foi],          # old state machine - they shouldn't be allowed
-
-        [:another_approver, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
-        [:another_approver, :trig_responded_foi],          # old state machine - they shouldn't be allowed
-        [:another_approver, :full_awdis_foi],          # old state machine - they shouldn't be allowed
-        [:another_approver, :full_responded_foi],          # old state machine - they shouldn't be allowed
->>>>>>> CT-1613 adds config state machine events for pending private clearance
 
         [:responder, :trig_awdis_foi],          # old state machine - they shouldn't be allowed
         [:responder, :trig_responded_foi],          # old state machine - they shouldn't be allowed
@@ -1406,8 +1387,9 @@ describe 'state machine' do
         [:private_officer, :trig_draft_foi],
         [:private_officer, :trig_draft_foi_accepted],
         [:private_officer, :trig_awdis_foi],
-# another approver and approver are permitted here since the policy allows
-# any team that has not taken the case on to take it on
+
+        # another approver and approver are permitted here since the policy allows
+        # any team that has not taken the case on to take it on
         [:another_disclosure_specialist, :std_unassigned_foi],
         [:another_disclosure_specialist, :std_awresp_foi],
         [:another_disclosure_specialist, :std_draft_foi],
@@ -1498,6 +1480,8 @@ describe 'state machine' do
         [:private_officer, :full_pdacu_foi_unaccepted],
         [:private_officer, :full_ppress_foi],
         [:private_officer, :full_ppress_foi_accepted],
+        [:private_officer, :full_pprivate_foi],
+        [:private_officer, :full_pprivate_foi_accepted],
       )
     }
   end

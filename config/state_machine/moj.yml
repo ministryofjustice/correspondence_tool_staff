@@ -52,7 +52,7 @@ case_types:
           - destroy_case
           - edit_case
           - extend_for_pit
-          - flag_for_clearance:
+          - flag_for_clearance
           - link_a_case
           - reassign_user
           - reject_responder_assignment
