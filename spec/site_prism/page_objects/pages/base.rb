@@ -42,6 +42,7 @@ module PageObjects
           JS
 
           wait_for_uploaded_request_file_input
+          sleep 2
 
           # Attach the file to the uploaded request file input selector
           attach_file("uploadedRequestFileInput", file_path)
