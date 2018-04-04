@@ -25,10 +25,10 @@ module ConfigurableStateMachine
     end
 
     def permitted_events(current_user_or_id)
-      if ENV['SPEC_DEBUG'] == '1'
-        puts ">>>>>>>>>>>> permitted events #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
-        ap current_user_or_id
-      end
+      # if ENV['SPEC_DEBUG'] == '1'
+      #   puts ">>>>>>>>>>>> permitted events #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
+      #   ap current_user_or_id
+      # end
       user = current_user_or_id.instance_of?(User) ? current_user_or_id : User.find(current_user_or_id)
       events = permitted_events_for_role_and_user(user: user, state: @kase.current_state)
       events.flatten.uniq.sort
@@ -247,31 +247,31 @@ module ConfigurableStateMachine
     end
 
     def permitted_events_for_role_and_user(user:, state:)
-      if ENV['SPEC_DEBUG'] == '1'
-        puts ">>>>>>>>>>>> permitted events for role and user #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
-        ap user
-        ap state
-      end
+      # if ENV['SPEC_DEBUG'] == '1'
+      #   puts ">>>>>>>>>>>> permitted events for role and user #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
+      #   ap user
+      #   ap state
+      # end
       events = []
       user.roles.each do |role|
-        if ENV['SPEC_DEBUG'] == '1'
-          puts ">>>>>>>>>>>> for role #{role} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
-        end
+        # if ENV['SPEC_DEBUG'] == '1'
+        #   puts ">>>>>>>>>>>> for role #{role} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
+        # end
         role_config = @config.user_roles[role]
-        if ENV['SPEC_DEBUG'] == '1'
-          puts ">>>>>>>>>>>> role_config #{role} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
-          ap role_config
-        end
+        # if ENV['SPEC_DEBUG'] == '1'
+        #   puts ">>>>>>>>>>>> role_config #{role} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
+        #   ap role_config
+        # end
         next if role_config.nil?
         role_state_config = role_config.states[state]
-        if ENV['SPEC_DEBUG'] == '1'
-          puts ">>>>>>>>>>>> for role_state_config #{role} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
-          ap role_state_config
-        end
+        # if ENV['SPEC_DEBUG'] == '1'
+        #   puts ">>>>>>>>>>>> for role_state_config #{role} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
+        #   ap role_state_config
+        # end
         role_state_config.to_h.keys.each do |event|
           event_config = role_state_config[event]
           if ENV['SPEC_DEBUG'] == '1'
-            puts ">>>>>>>>>>>> event #{role} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
+            puts ">>>>>>>>>>>> event: #{event} role: #{role} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
             ap event_config
             puts "Event: #{event}  triggerable? #{event_triggerable_for_user?(event_config: event_config, user: user)}"
           end
