@@ -339,6 +339,9 @@ describe Case::FOI::StandardStateMachine do
             ap approver.roles
             puts ">>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<"
 
+            puts ">>>>>>>>>>>> user_is_assigned_disclosure_specialist? #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
+            puts Workflows::Predicates.new(user: approver, kase: k).user_is_assigned_disclosure_specialist?
+
             expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                          :link_a_case,
                                                                          :reassign_user,
