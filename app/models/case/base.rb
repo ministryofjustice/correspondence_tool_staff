@@ -423,7 +423,7 @@ class Case::Base < ApplicationRecord
   end
 
   def non_default_approver_assignments
-    approver_assignments.where.not(team: default_team_service.approving_team)
+    approver_assignments.where.not(team: default_team_service.approving_team).sort{ |a,b| a.team.name <=> b.team.name }
   end
 
   def transition_tracker_for_user(user)
