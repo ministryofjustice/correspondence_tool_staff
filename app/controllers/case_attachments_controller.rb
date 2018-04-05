@@ -9,9 +9,7 @@ class CaseAttachmentsController < ApplicationController
   def create_from_s3
     authorize @case, :can_add_attachment?
 
-    attachment = CaseAttachment.new(create_params)
-    attachment.case = @case
-    attachment.save
+    attachment = CaseAttachment.create!(create_params.merge(case: @case))
     VirusScanJob.perform_later(attachment.id)
 
     redirect_to case_attachment_path(case_id: @case.id, id: attachment.id)
