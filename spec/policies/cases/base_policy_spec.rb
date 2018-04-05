@@ -735,4 +735,34 @@ describe Case::BasePolicy do
     it { should     permit(responder,             accepted_case) }
     it { should     permit(disclosure_specialist, assigned_trigger_case) }
   end
+  
+  permissions :remove_clearance? do
+    it { should_not permit(manager,               unassigned_case) }
+    it { should_not permit(manager,               unassigned_flagged_case) }
+    it { should_not permit(manager,               assigned_case) }
+    it { should_not permit(manager,               assigned_flagged_case) }
+    it { should_not permit(manager,               case_with_response) }
+    it { should_not permit(manager,               case_with_response_flagged) }
+    it { should_not permit(manager,               responded_case) }
+    it { should_not permit(manager,               closed_case) }
+
+    it { should_not permit(disclosure_specialist, unassigned_case) }
+    it { should     permit(disclosure_specialist, unassigned_flagged_case) }
+    it { should_not permit(disclosure_specialist, assigned_case) }
+    it { should     permit(disclosure_specialist, assigned_flagged_case) }
+    it { should_not permit(disclosure_specialist, case_with_response) }
+    it { should_not permit(disclosure_specialist, case_with_response_flagged) }
+    it { should_not permit(disclosure_specialist, responded_case) }
+    it { should_not permit(disclosure_specialist, closed_case) }
+
+    it { should_not permit(responder,             unassigned_case) }
+    it { should_not permit(responder,             unassigned_flagged_case) }
+    it { should_not permit(responder,             assigned_case) }
+    it { should_not permit(responder,             assigned_flagged_case) }
+    it { should_not permit(responder,             case_with_response) }
+    it { should_not permit(responder,             case_with_response_flagged) }
+    it { should_not permit(responder,             responded_case) }
+    it { should_not permit(responder,             closed_case) }
+    
+  end
 end

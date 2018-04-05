@@ -299,7 +299,7 @@ class CasesController < ApplicationController
   end
 
   def remove_clearance
-    authorize @case, :unflag_for_clearance?
+    authorize @case
     # interstitial page for unflag_taken_on_case_for_clearance
   end
 
