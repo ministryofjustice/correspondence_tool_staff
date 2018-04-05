@@ -314,6 +314,7 @@ case_types:
           - reassign_user
           - reject_responder_assignment
           - remove_last_response
+          - remove_linked_case
           - remove_response
           - request_amends
           - request_further_clearance
@@ -533,6 +534,7 @@ case_types:
           - reassign_user
           - reject_responder_assignment
           - remove_last_response
+          - remove_linked_case
           - remove_response
           - request_amends
           - request_further_clearance
