@@ -89,11 +89,10 @@ class ResponseUploaderService
   def bypass_further_approvals(filenames)
     further_approval_assignments.each { |asgmt| asgmt.bypassed! }
     @case.state_machine.upload_response_approve_and_bypass!(
-      @current_user,
-      @case.approving_teams.with_user(@current_user).first,
-      filenames,
-      combined_message
-    )
+                        acting_user: @current_user,
+                        acting_team: @case.approving_teams.with_user(@current_user).first,
+                        filenames: filenames,
+                        message: combined_message)
   end
 
   def further_approval_assignments
