@@ -92,7 +92,8 @@ describe 'cases/clearance_details.html.slim', type: :view do
     context 'case flagged and accepted for approval by DACU disclosure only' do
       it 'displays the name of the deputy director and the name of the dacu disclosure approver' do
 
-        allow_case_policies accepted_pending_dacu_clearance_case.decorate, :request_further_clearance?
+        allow_case_policies accepted_pending_dacu_clearance_case.decorate, :request_further_clearance?, :remove_clearance?
+
 
         render partial: 'cases/clearance_levels.html.slim',
                locals:{ case_details: accepted_pending_dacu_clearance_case.decorate }

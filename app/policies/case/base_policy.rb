@@ -180,6 +180,13 @@ class Case::BasePolicy < ApplicationPolicy
     check_can_trigger_event(:unflag_for_clearance)
   end
 
+  def remove_clearance?
+    clear_failed_checks
+    check_case_workflow_is(:trigger) &&
+      check_user_is_in_default_approving_team &&
+        check_case_not_beyond_pending_dacu_clearance
+  end
+
   def can_remove_attachment?
     clear_failed_checks
     case self.case.current_state
@@ -467,6 +474,18 @@ class Case::BasePolicy < ApplicationPolicy
 
   check :user_is_an_approver_for_case do
     user.in?(self.case.approving_team_users)
+  end
+
+  check :user_is_in_default_approving_team do
+    user.in?(self.case.default_team_service.approving_team.users)
+  end
+
+  check :case_not_beyond_pending_dacu_clearance do
+    self.case.current_state.in?(%w{unassigned awaiting_responder drafting pending_dacu_clearance })
+  end
+
+  check :case_workflow_is do | workflow |
+    self.case.workflow == workflow.to_s
   end
 
   check :user_is_assigned_approver_for_case do
