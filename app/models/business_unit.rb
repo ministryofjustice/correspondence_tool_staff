@@ -52,6 +52,13 @@ class BusinessUnit < Team
            dependent: :destroy
 
   has_many :assignments, foreign_key: :team_id
+
+  has_many :responding_assignments,
+           -> { responding },
+           foreign_key: :team_id,
+           class_name: 'Assignment'
+
+
   has_many :pending_accepted_assignments,
            -> { pending_accepted},
            foreign_key: :team_id,
@@ -59,12 +66,18 @@ class BusinessUnit < Team
 
   has_many :cases, through: :assignments
 
+  has_many :responding_cases,
+           through: :responding_assignments,
+           source: :case
+
   has_many :open_cases, -> { in_open_state }, through: :pending_accepted_assignments, source: :case
 
 
   scope :managing, -> { where(role: 'manager') }
   scope :approving, -> { where(role: 'approver') }
   scope :responding, -> { where(role: 'responder') }
+
+  after_save :update_search_index
 
 
   def self.responding_for_correspondence_type(correspondence_type)
@@ -128,6 +141,12 @@ class BusinessUnit < Team
   end
 
   private
+
+  def update_search_index
+    if changed.include?('name')
+      SearchIndexUpdaterJob.set(wait: 10.seconds).perform_later(self.id)
+    end
+  end
 
   def deletion_validation
     if deleted_at.present?
