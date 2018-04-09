@@ -276,5 +276,38 @@ RSpec.describe BusinessUnit, type: :model do
     end
   end
 
+  describe '#update search index' do
+    context 'new business unit' do
+      context 'name is changed' do
+        it 'queues a job to update the search index' do
+          expect {
+            create :responding_team
+          }.to have_enqueued_job(SearchIndexUpdaterJob)
+        end
+      end
+    end
+
+    context 'update existing business unit' do
+      before(:each)  { @business_unit = create :responding_team }
+
+      context 'name is changed' do
+        it 'queues a job to update the search index' do
+          expect {
+            @business_unit.update(name: 'my new business unit')
+          }.to have_enqueued_job(SearchIndexUpdaterJob)
+        end
+      end
+
+      context 'name is not changed' do
+        it 'does not queue a job to update the search index' do
+          expect {
+            @business_unit.update(email: 'my_new_email@moj.gov.uk')
+          }.not_to have_enqueued_job(SearchIndexUpdaterJob)
+        end
+      end
+    end
+
+  end
+
 
 end
