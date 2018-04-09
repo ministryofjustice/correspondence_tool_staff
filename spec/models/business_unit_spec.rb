@@ -99,7 +99,7 @@ RSpec.describe BusinessUnit, type: :model do
   end
 
   context 'multiple teams created' do
-    let!(:managing_team)   { find_or_create :managing_team }
+    let!(:managing_team)   { find_or_create :team_dacu }
     let!(:responding_team) { find_or_create :responding_team }
     let!(:approving_team)  { find_or_create :approving_team }
 

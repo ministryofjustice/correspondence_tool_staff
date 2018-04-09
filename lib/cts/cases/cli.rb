@@ -1,8 +1,9 @@
 require 'cts'
+require 'cts/cases/constants'
 require 'cts/cases/create'
 
 module CTS::Cases
-  class CLI < Thor
+  class CLI < Thor # rubocop:disable Metrics/ClassLength
     # include Thor::Rails unless const_defined?(:SKIP_RAILS) && SKIP_RAILS
 
     default_command :list
@@ -78,7 +79,7 @@ module CTS::Cases
     Multiple states can be specified.
 
     Valid case journeys and their states:
-    #{CTS::Cases::Create::CASE_JOURNEYS.map do |j, states|
+    #{CTS::Cases::Constants::CASE_JOURNEYS.map do |j, states|
       ["    #{j}:\n",
        states.map { |s| "      #{s}\n" }]
     end .flatten.join}
@@ -99,7 +100,8 @@ module CTS::Cases
       # Press Office.
       ./cts cases create --flag-for-team=press drafting
     LONGDESC
-    option :number, aliases: 'n', type: :numeric,
+    option :type, aliases: 't', type: :string, default: 'Case::FOI::Standard'
+    option :number, aliases: 'n', type: :numeric, default: 1,
            desc: 'Number of cases to create (per state). [1]'
     option :flag_for_disclosure, aliases: :f, type: :boolean,
            desc: 'Flag case for DACU disclosure clearance.'
@@ -114,43 +116,49 @@ module CTS::Cases
            desc: 'ID or name of responder to use for case assignments.'
     option :responding_team, aliases: :t, type: :string,
            desc: 'ID or name of responding team to use for case assignments.'
-    option :created_at, type: :string
-    option :received_date, type: :string
-    #rubocop:disable Metrics/CyclomaticComplexity
-    def create(*target_states)
-      creator = CTS::Cases::Create.new(CTS, options)
-
-      puts "Creating #{options[:number]} cases in each of the following states:"
-      puts "\t" + target_states.join("\n\t")
+    option :created_at, type: :string,
+           desc: 'Change created-at.'
+    option :received_date, type: :string,
+           desc: 'Change received-date and created-at.'
+    def create(*target_states)  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
+      CTS.info "Creating #{options[:number]} cases in each of the following states:"
+      CTS.info "\t" + target_states.join("\n\t")
       if options.key? :responder
-        puts "Setting responder user to: #{options[:responder]}"
+        CTS.info "Setting responder user to: #{options[:responder]}"
       end
       if options.key? :responding_team
-        puts "Setting responding team to: #{options[:responding_team]}"
+        CTS.info "Setting responding team to: #{options[:responding_team]}"
       end
+
       if options[:flag_for_disclosure]
-        puts 'Flagging each for DACU Disclosure clearance'
+        CTS.info 'Flagging each for DACU Disclosure clearance'
       end
       if options[:flag_for_team] == 'press'
-        puts 'Flagging each for Press Office clearance'
+        CTS.info 'Flagging each for Press Office clearance'
       end
       if options[:flag_for_team] == 'private'
-        puts 'Flagging each for Private Office clearance'
+        CTS.info 'Flagging each for Private Office clearance'
       end
       if options.key? :created_at
-        puts "Setting created at to: #{options[:created_at]}"
+        CTS.info "Setting created at to: #{options[:created_at]}"
       end
       if options.key? :received_date
-        puts "Setting received date to: #{options[:received_date]}"
+        CTS.info "Setting received date to: #{options[:received_date]}"
       end
-      puts "\n"
+      CTS.info "\n"
 
-      cases = creator.call(target_states)
+      cases = []
+      options[:number].times do |n|
+        creator = CTS::Cases::Create.new(CTS, options.dup)
+
+        CTS.info "Creating #{target_states.join ', '} case(s) ##{n}"
+        cases += creator.call(target_states)
+      end
+
       unless options[:dry_run]
         tp cases, [:id, :number, :current_state, :requires_clearance?]
       end
     end
-    #rubocop:enable Metrics/CyclomaticComplexity
 
     desc 'list', 'List cases in the system.'
     long_desc <<~LONGDESC
@@ -201,6 +209,18 @@ module CTS::Cases
         }
       ]
       tp cases.order(:id), columns
+    end
+
+    desc 'delete [CASE_ID_OR_NUMBER [CASE_ID_OR_NUMBER ...]]',
+         'Delete cases from the system.'
+    def delete(*cases)
+      user = CTS::dacu_manager
+      cases.each do |case_identifier|
+        kase = CTS::find_case(case_identifier)
+        case_deletion_service = CaseDeletionService.new(user, kase)
+        case_deletion_service.call
+        CTS::info "deleted case #{kase.id} [#{kase.number}]"
+      end
     end
 
     desc 'permitted_events CASE USER',

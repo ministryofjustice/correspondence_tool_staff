@@ -14,6 +14,8 @@ module Stats
       expect(csv_lines.shift).to match directorate_line
       expect(csv_lines.shift).to match disclosure_line
       expect(csv_lines.shift).to match operations_line
+      expect(csv_lines.shift).to match dacu_directorate_line
+      expect(csv_lines.shift).to match dacu_line
       expect(csv_lines.shift).to match press_office_directorate_line
       expect(csv_lines.shift).to match press_office_line
       expect(csv_lines.shift).to match private_office_line
@@ -37,6 +39,14 @@ module Stats
 
     def operations_line
       /Operations,"","",Director General \d{1,5}/
+    end
+
+    def dacu_directorate_line
+      /"",DACU Directorate,"",Director \d{1,5}/
+    end
+
+    def dacu_line
+      /"","",Disclosure BMT,Deputy Director \d{1,5},Hammersmith,dacu@localhost,Firstname\d{1,5} Lastname\d{1,5},/
     end
 
     def press_office_directorate_line
