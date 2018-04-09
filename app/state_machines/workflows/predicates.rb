@@ -64,8 +64,6 @@ class Workflows::Predicates
   end
 
   def user_is_assigned_press_officer?
-    # @user.approving_team == press_office &&
-    #   approver_assignments.with_teams(press_office).any?
     @kase.assignments.with_teams(BusinessUnit.press_office).for_user(@user).present?
   end
 
