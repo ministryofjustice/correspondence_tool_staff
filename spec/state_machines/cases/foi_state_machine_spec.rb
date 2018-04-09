@@ -812,13 +812,6 @@ RSpec.describe Case::FOI::StandardStateMachine, type: :model do
 
   describe 'trigger close!' do
     it 'triggers a close event' do
-      # expect do
-      #   responded_case.state_machine.close! acting_user: manager, acting_team: responded_case.managing_team
-      # end.to trigger_the_event(:close)
-      #          .on_state_machine(responded_case.state_machine)
-      #          .with_parameters(acting_user_id: manager.id,
-      #                           acting_team_id: managing_team.id)
-
       expect(kase.state_machine).to receive(:trigger_event).with(event: :close,
                                                                 params:{
                                                                   acting_user_id: manager.id,
