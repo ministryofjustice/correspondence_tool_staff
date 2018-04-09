@@ -135,6 +135,10 @@ class User < ApplicationRecord
     end
   end
 
+  def deactivated?
+    !active_for_authentication?
+  end
+
   private
   def bad_passwords
     %w{
