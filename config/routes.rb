@@ -288,6 +288,7 @@ Rails.application.routes.draw do
   get '/dashboard/cases' => 'dashboard#cases'
   get '/dashboard/feedback' => 'dashboard#feedback'
   get '/dashboard/exception' => 'dashboard#exception'
+  get '/dashboard/search_queries' => 'dashboard#search_queries'
 
   root to: redirect('/users/sign_in')
 end

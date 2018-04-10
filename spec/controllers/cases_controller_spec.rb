@@ -1268,6 +1268,30 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
+  describe 'GET search' do
+    before(:each) do
+      sign_in responder
+    end
+
+    it 'renders the search template' do
+      get :search
+      expect(response).to render_template(:search)
+    end
+
+    it 'calls the CaseSearchService' do
+      params = ActionController::Parameters.new({query: "my search term", controller: "cases", action: "search"})
+      service = double CaseSearchService, query_hash: "XYZ"
+      expect(CaseSearchService).to receive(:new).with(responder, params).and_return(service)
+      expect(service).to receive(:call)
+      expect(service).to receive(:error?).and_return(false)
+      expect(service).to receive(:result_set).and_return( [ assigned_case ] )
+
+      get :search, params: params.to_unsafe_hash
+    end
+
+
+  end
+
   describe 'GET edit' do
     let(:kase) { create :accepted_case }
 

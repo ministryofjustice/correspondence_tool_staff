@@ -13,10 +13,10 @@
       = submit_tag 'Search', class: 'button button-no-margin'
 
 
-- if !@cases.nil?
+- if @cases.any?
   = render partial: 'cases/shared/case_list'
 
-- if @cases.nil? && params[:query].present?
+- if @cases.empty? && params[:query].present?
   .grid-row
     .column-full
       .search-results-summary
