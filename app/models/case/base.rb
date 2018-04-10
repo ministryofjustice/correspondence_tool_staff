@@ -36,12 +36,18 @@ class Case::Base < ApplicationRecord
 
   default_scope { where( deleted: false) }
 
-  pg_search_scope :search, against: {
+  pg_search_scope :search,
+                  against: {
                     name: 'A',
                     subject: 'B',
                     message: 'C',
                     number: 'A',
                     # responding_team_name: 'D'
+                  },
+                  associated_against: {
+                    responding_team: {
+                      name: 'D'
+                    }
                   },
                   using: { tsearch: {
                              dictionary: 'english',
