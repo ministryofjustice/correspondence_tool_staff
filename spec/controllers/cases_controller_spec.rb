@@ -1278,35 +1278,18 @@ RSpec.describe CasesController, type: :controller do
       expect(response).to render_template(:index)
     end
 
-    it 'finds a case by number' do
-      get :search, params: { query: assigned_case.number }
-      expect(assigns[:cases]).to eq [assigned_case]
+    it 'calls the CaseSearchService' do
+      params = ActionController::Parameters.new({query: "my search term", controller: "cases", action: "search"})
+      service = double CaseSearchService
+      expect(CaseSearchService).to receive(:new).with(responder, params).and_return(service)
+      expect(service).to receive(:call)
+      expect(service).to receive(:error?).and_return(false)
+      expect(service).to receive(:result_set).and_return( [ assigned_case ] )
+
+      get :search, params: params.to_unsafe_hash
     end
 
-    it 'finds a case by text' do
-      assigned_case
-      unassigned_case
-      get :search, params: { query: 'assigned' }
-      expect(assigns[:cases]).to eq [assigned_case]
-    end
 
-    it 'ignores leading or trailing whitespace' do
-      get :search, params: { query: " #{assigned_case.number} " }
-      expect(assigns[:cases]).to eq [assigned_case]
-    end
-    it 'uses the policy scope' do
-      allow(controller).to receive(:policy_scope).and_return(Case::Base.none)
-      get :search, params: { query: assigned_case.number }
-      expect(controller).to have_received(:policy_scope).with(Case::Base)
-    end
-
-    it 'passes the page param to the paginator' do
-      paged_cases = double('Paged Cases', decorate: [])
-      cases = double('Cases', page: paged_cases, empty?: true)
-      allow(Case::Base).to receive(:search).and_return(cases)
-      get :search, params: { query: assigned_case.number, page: 'our_pages' }
-      expect(cases).to have_received(:page).with('our_pages')
-    end
   end
 
   describe 'GET edit' do

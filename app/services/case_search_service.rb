@@ -4,7 +4,7 @@ class CaseSearchService
 
   def initialize(current_user, params)
     @current_user = current_user
-    @query = params[:query].strip
+    @query = params[:query]
     @page = params[:page]
     @error = false
     @error_message = nil
@@ -14,7 +14,7 @@ class CaseSearchService
 
   def call
     if @query.blank?
-      @error_message = 'Specify a query'
+      @error_message = 'Specify what you want to search for'
       @error = true
     else
       execute_search
@@ -28,6 +28,7 @@ class CaseSearchService
   private
 
   def execute_search
+    @query.strip!
     policy_scope = Pundit.policy_scope!(@current_user, Case::Base)
     @result_set = policy_scope.search(@query).page(@page).decorate
     if @result_set.empty?
