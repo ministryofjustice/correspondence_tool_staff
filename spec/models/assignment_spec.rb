@@ -227,9 +227,11 @@ RSpec.describe Assignment, type: :model do
         end
 
         it 'queues the job' do
+          t = Time.now
           expect {
+            Timecop.freeze(t)
             create :assignment, :responding, case_id: kase.id
-          }.to have_enqueued_job(SearchIndexUpdaterJob).at_least(1)
+          }.to have_enqueued_job(SearchIndexUpdaterJob).at(t + 10.seconds).at_least(1)
         end
       end
 
@@ -265,9 +267,12 @@ RSpec.describe Assignment, type: :model do
 
 
         it 'queues the job' do
+          t = Time.now
           expect {
-            create :assignment, :responding, case_id: kase.id
-          }.to have_enqueued_job(SearchIndexUpdaterJob).at_least(1)
+            Timecop.freeze(t) do
+              @assignment.update(state: 'bypassed')
+            end
+          }.to have_enqueued_job(SearchIndexUpdaterJob).at(t + 10.seconds).at_least(1)
         end
       end
     end
