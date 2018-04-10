@@ -1113,8 +1113,46 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe 'search' do
+    before :all do
+      @responding_team_a = create :responding_team, name: 'Accrediting Aptitudes'
+      @responding_team_b = create :responding_team, name: 'Bargain Basement'
+      @case_a = create :case_being_drafted,
+                       subject: 'airplanes',
+                       message: 'adulating aircraft aficionados',
+                       name: 'Al Atoll',
+                       responding_team: @responding_team_a,
+                       responder: @responding_team_a.responders.first
+      @case_b = create :case_being_drafted,
+                       subject: 'brownies',
+                       message: 'bonafide baked baskers',
+                       name: 'Brian Bush',
+                       responding_team: @responding_team_b,
+                       responder: @responding_team_b.responders.first
+
+    end
+
+    after :all do
+      DbHousekeeping.clean
+    end
+
     it 'returns case with a number that matches the query' do
       expect(Case::Base.search(accepted_case.number)).to match_array [accepted_case]
+    end
+
+    it 'returns case with a subject that matches the query' do
+      expect(Case::Base.search('airplane')).to match_array [@case_a]
+    end
+
+    it 'returns case with a message that matches the query' do
+      expect(Case::Base.search('basker')).to match_array [@case_b]
+    end
+
+    it 'returns case with a requester name that matches the query' do
+      expect(Case::Base.search('atoll')).to match_array [@case_a]
+    end
+
+    it 'returns case with a responding team that matches the query' do
+      expect(Case::Base.search('bargain')).to match_array [@case_b]
     end
   end
 
