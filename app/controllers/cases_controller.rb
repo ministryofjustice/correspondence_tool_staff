@@ -155,6 +155,9 @@ class CasesController < ApplicationController
   end
 
   def show
+    if params.key?(:hash)
+      SearchQuery.update_for_click(params)
+    end
     if policy(@case).can_accept_or_reject_responder_assignment?
       redirect_to edit_case_assignment_path @case, @case.responder_assignment.id
     else
@@ -284,13 +287,18 @@ class CasesController < ApplicationController
   end
 
   def search
-    service = CaseSearchService.new(current_user, params)
-    service.call
-    if service.error?
-      flash.now[:alert] = service.error_message
-      @cases = nil
-    else
-      @cases = service.result_set
+    @current_tab_name = 'search'
+    @cases = []
+    if params[:query]
+      service = CaseSearchService.new(current_user, params)
+      service.call
+      if service.error?
+        flash.now[:alert] = service.error_message
+      else
+        @cases = service.result_set
+        @query_hash = service.query_hash
+        @page = params[:page] || '1'
+      end
     end
     render :search
   end

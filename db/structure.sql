@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.6
--- Dumped by pg_dump version 9.5.6
+-- Dumped from database version 9.5.9
+-- Dumped by pg_dump version 9.5.9
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -596,6 +596,42 @@ CREATE TABLE schema_migrations (
 
 
 --
+-- Name: search_queries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE search_queries (
+    id integer NOT NULL,
+    query_hash character varying NOT NULL,
+    user_id integer NOT NULL,
+    query character varying NOT NULL,
+    num_results integer NOT NULL,
+    num_clicks integer DEFAULT 0 NOT NULL,
+    highest_position integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: search_queries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE search_queries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: search_queries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE search_queries_id_seq OWNED BY search_queries.id;
+
+
+--
 -- Name: sessions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -938,6 +974,13 @@ ALTER TABLE ONLY reports ALTER COLUMN id SET DEFAULT nextval('reports_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY search_queries ALTER COLUMN id SET DEFAULT nextval('search_queries_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY sessions ALTER COLUMN id SET DEFAULT nextval('sessions_id_seq'::regclass);
 
 
@@ -1101,6 +1144,14 @@ ALTER TABLE ONLY reports
 
 ALTER TABLE ONLY schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: search_queries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY search_queries
+    ADD CONSTRAINT search_queries_pkey PRIMARY KEY (id);
 
 
 --
@@ -1297,6 +1348,13 @@ CREATE UNIQUE INDEX index_report_types_on_abbr ON report_types USING btree (abbr
 --
 
 CREATE INDEX index_reports_on_report_type_id ON reports USING btree (report_type_id);
+
+
+--
+-- Name: index_search_queries_uuid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_search_queries_uuid ON search_queries USING btree (query_hash);
 
 
 --
@@ -1524,6 +1582,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180214163355'),
 ('20180222125345'),
 ('20180228174550'),
-('20180321094200');
+('20180321094200'),
+('20180410143714');
 
 

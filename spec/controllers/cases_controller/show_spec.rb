@@ -374,6 +374,31 @@ describe CasesController, type: :controller do
       end
     end
 
+    context 'recording search query click' do
+      let(:kase) {create :case}
+
+      before do
+        sign_in create(:manager)
+      end
+
+      context 'has a hash parameter' do
+        it 'records search query to record the click' do
+          params = ActionController::Parameters.new(id: kase.id.to_s, hash: "XYZ", controller: "cases", action: "show")
+          expect(SearchQuery).to receive(:update_for_click).with(params)
+          get :show, params: params.to_unsafe_hash
+        end
+      end
+
+      context 'does not have a hash parameter' do
+        it 'records search query to record the click' do
+          params = ActionController::Parameters.new(id: kase.id.to_s, controller: "cases", action: "show")
+          expect(SearchQuery).not_to receive(:update_for_click).with(params)
+          get :show, params: params.to_unsafe_hash
+        end
+
+      end
+    end
+
   end
 
 

@@ -160,5 +160,31 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
       expect(request_details).to eq '<strong class="strong">Once upon a time... </strong><div class="case-name-detail">Ray Gunn</div>'
     end
   end
+  
+  describe '#case_link_with_hash' do
+    let(:kase) {double 'case', id: 25, number: '180425001'}
 
+    context 'no query hash instance variable' do
+      it 'shows link without hash and position parameters' do
+        expected_link = "<a href=\"/cases/25\">180425001</a>"
+        expect(case_link_with_hash(kase, :number, nil, 3, 44)).to eq expected_link
+      end
+    end
+
+    context 'query hash instance variable exists' do
+      context 'page parameters exists' do
+        it 'shows link without hash and position parameters' do
+          expected_link = "<a href=\"/cases/25?hash=XYZ&amp;pos=35\">180425001</a>"
+          expect(case_link_with_hash(kase, :number, 'XYZ', 2, 14)).to eq expected_link
+        end
+      end
+
+      context 'page number does not exist' do
+        it 'shows link without hash and position parameters' do
+          expected_link = "<a href=\"/cases/25?hash=XYZ&amp;pos=15\">180425001</a>"
+          expect(case_link_with_hash(kase, :number, 'XYZ', '', 14)).to eq expected_link
+        end
+      end
+    end
+  end
 end

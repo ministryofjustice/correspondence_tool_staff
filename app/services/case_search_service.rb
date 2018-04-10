@@ -1,20 +1,26 @@
 class CaseSearchService
 
-  attr_reader :error_message, :result_set
+  attr_reader :current_user,
+              :error_message,
+              :result_set,
+              :query,
+              :query_hash,
+              :unpaginated_result_set
 
   def initialize(current_user, params)
     @current_user = current_user
-    @query = params[:query].strip
+    @query = params[:query]
     @page = params[:page]
     @error = false
     @error_message = nil
     @result_set = []
+    @query_hash = Digest::SHA256.hexdigest("#{@current_user.id}:#{Date.today}:#{@query}")
   end
 
 
   def call
     if @query.blank?
-      @error_message = 'Specify a query'
+      @error_message = 'Specify what you want to search for'
       @error = true
     else
       execute_search
@@ -28,11 +34,10 @@ class CaseSearchService
   private
 
   def execute_search
+    @query.strip!
     policy_scope = Pundit.policy_scope!(@current_user, Case::Base)
-    @result_set = policy_scope.search(@query).page(@page).decorate
-    if @result_set.empty?
-      @error = true
-      @error_message = 'No cases found'
-    end
+    @unpaginated_result_set = policy_scope.search(@query)
+    @result_set = @unpaginated_result_set.page(@page).decorate
+    SearchQuery.create_from_search_service(self)
   end
 end
