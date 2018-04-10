@@ -43,7 +43,11 @@ class Case::Base < ApplicationRecord
                     number: 'A',
                     # responding_team_name: 'D'
                   },
-                  using: { tsearch: { dictionary: 'english' } }
+                  using: { tsearch: {
+                             dictionary: 'english',
+                             any_word: true,
+                           }
+                         }
 
   def responding_team_name
     responding_team.name
