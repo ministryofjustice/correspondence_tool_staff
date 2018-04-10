@@ -1,0 +1,41 @@
+h1.bold-large Search queries
+
+.grid-row
+  .column-full.table-container.container
+    table.report.table-font-xsmall
+      colgroup
+        col
+        col
+        col
+        col
+        col
+        col
+      thead
+        tr
+          th scope='col'
+            | Date
+          th scope='col'
+            | User
+          th scope='col'
+            | Search Term
+          th scope='col'
+            | No. results
+          th scope='col'
+            | No. clicks
+          th scope='col'
+            | Position
+      tbody
+        - @queries.each do |q|
+          tr
+            td
+              = q.created_at.to_date
+            td
+              = q.user.full_name
+            td
+              = q.query
+            td
+              = q.num_results
+            td
+              = q.num_clicks
+            td
+              = q.highest_position

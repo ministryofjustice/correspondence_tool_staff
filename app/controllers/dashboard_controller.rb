@@ -16,6 +16,10 @@ class DashboardController < ApplicationController
     raise 'Intentionally raised exception'
   end
 
+  def search_queries
+    @queries = SearchQuery.order(id: :desc).includes(:user).limit(100)
+  end
+
 
 
   private
