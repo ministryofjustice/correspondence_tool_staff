@@ -66,12 +66,12 @@
             span.visually-hidden
               = t('.message_notification')
         tbody
-          - @cases.each do |kase|
+          - @cases.each_with_index do |kase, position|
             tr.case_row
               td aria-label="#{t('.number')}"
                 span.visually-hidden
                   = t('.view_case')
-                = link_to kase.number, case_path(kase.id)
+                = case_link_with_uuid(kase, :number, @search_uuid, @page, position)
               td aria-label="#{t('.type')}"
                 = "#{kase.pretty_type} "
                 = kase.trigger_case_marker

@@ -4,6 +4,15 @@ module CasesHelper
     Settings.case_uploads_accepted_types.join ','
   end
 
+  def case_link_with_uuid(kase, field, uuid, page, position)
+    if uuid.nil?
+      link_to kase.__send__(field), case_path(kase.id)
+    else
+      link_to kase.__send__(field), case_path(kase.id, uuid: uuid, pg: page, pos: position)
+    end
+
+  end
+
   #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
   def action_button_for(event)
     case event
