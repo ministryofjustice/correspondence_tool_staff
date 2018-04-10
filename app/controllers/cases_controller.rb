@@ -284,17 +284,29 @@ class CasesController < ApplicationController
   end
 
   def search
-    @query = params[:query]
-    @current_tab_name = 'search'
-    if @query.present?
-      @query.strip!
-      @cases = policy_scope(Case::Base).search(@query).page(params[:page]).decorate
-      if @cases.empty?
-        flash.now[:alert] = 'No cases found'
-      end
-    else
+    service = CaseSearchService.new(current_user, params)
+    service.call
+    if service.error?
+      flash.now[:alert] = service.error_message
       @cases = nil
+    else
+      @cases = service.result_set
     end
+
+
+
+
+    # @query = params[:query]
+    # @current_tab_name = 'search'
+    # if @query.present?
+    #   @query.strip!
+    #   @cases = policy_scope(Case::Base).search(@query).page(params[:page]).decorate
+    #   if @cases.empty?
+    #     flash.now[:alert] = 'No cases found'
+    #   end
+    # else
+    #   @cases = nil
+    # end
     render :index
   end
 
