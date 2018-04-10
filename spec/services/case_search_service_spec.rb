@@ -9,9 +9,6 @@ describe CaseSearchService do
     let(:paginated_result_set)      { double 'Paginated Result Set', decorate: decorated_result_set }
     let(:unpaginated_result_set)    { double 'Unpaginated Result Set', page: paginated_result_set }
 
-    # let(:unassigned_case)           { create :case }
-    # let(:assigned_case)             { create :assigned_case }
-
     let(:service)                   { CaseSearchService.new(user, params) }
     let(:params)                    { ActionController::Parameters.new({query: specific_query, controller: 'cases', action: 'search'}) }
 
@@ -27,6 +24,10 @@ describe CaseSearchService do
         service.call
         expect(service.error_message).to eq 'Specify what you want to search for'
       end
+
+      it 'does not record a search_query record' do
+        expect(SearchQuery.count).to eq 0
+      end
     end
 
     context 'no results' do
@@ -35,9 +36,19 @@ describe CaseSearchService do
         service.call
         expect(service.error?).to be true
       end
+
       it 'populates the error message' do
         service.call
         expect(service.error_message).to eq 'No cases found'
+      end
+
+      it 'records a search_query record' do
+        service.call
+        expect(SearchQuery.count).to eq 1
+        sq = SearchQuery.first
+        expect(sq.uuid).to eq service.uuid
+        expect(sq.query).to eq specific_query
+        expect(sq.num_results).to eq 0
       end
     end
 
@@ -66,6 +77,15 @@ describe CaseSearchService do
             service.call
             expect(service.result_set).to eq [ @assigned_case ]
           end
+
+          it 'records a search_query record' do
+            service.call
+            expect(SearchQuery.count).to eq 1
+            sq = SearchQuery.first
+            expect(sq.uuid).to eq service.uuid
+            expect(sq.query).to eq specific_query
+            expect(sq.num_results).to eq 1
+          end
         end
 
         context 'leading and trailing whitespace' do
@@ -73,6 +93,15 @@ describe CaseSearchService do
           it 'ignores leading and trailing whitespace' do
             service.call
             expect(service.result_set).to eq [ @assigned_case ]
+          end
+
+          it 'records a search_query record' do
+            service.call
+            expect(SearchQuery.count).to eq 1
+            sq = SearchQuery.first
+            expect(sq.uuid).to eq service.uuid
+            expect(sq.query).to eq specific_query
+            expect(sq.num_results).to eq 1
           end
         end
       end
@@ -93,7 +122,7 @@ describe CaseSearchService do
     context 'use of the policy scope' do
       let(:specific_query)    { 'my scoped query' }
       it 'uses the policy scope' do
-        decorated_result_set = double 'Decorated result set', empty?: true
+        decorated_result_set = double 'Decorated result set', empty?: true, size: 0
         paginated_result_set = double 'Paginated result set', decorate: decorated_result_set
         unpaginated_result_set = double 'Unaginated result set', page: paginated_result_set
         policy_scope = double 'Pundit Policy Scope'
@@ -104,5 +133,6 @@ describe CaseSearchService do
         expect(Pundit).to have_received(:policy_scope!).with(user, Case::Base)
       end
     end
+
   end
 end
