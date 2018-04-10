@@ -30,10 +30,29 @@
 #rubocop:disable Metrics/ClassLength
 class Case::Base < ApplicationRecord
   include Statesman::Adapters::ActiveRecordQueries
+  include PgSearch
 
   self.table_name = :cases
 
   default_scope { where( deleted: false) }
+
+  pg_search_scope :search,
+                  against: {
+                    name: 'A',
+                    subject: 'B',
+                    message: 'C',
+                    number: 'A',
+                  },
+                  associated_against: {
+                    responding_team: {
+                      name: 'D'
+                    }
+                  },
+                  using: { tsearch: {
+                             dictionary: 'english',
+                             any_word: true,
+                           }
+                         }
 
   attr_accessor :flag_for_disclosure_specialists,
                 :uploaded_request_files,
@@ -104,8 +123,6 @@ class Case::Base < ApplicationRecord
       Date.today
     )
   }
-
-  scope :search, ->(query) { where(number: query) }
 
   scope :appeal, -> { where('type=? OR type=?', 'Case::FOI::TimelinessReview', 'Case::FOI::ComplianceReview' )}
 

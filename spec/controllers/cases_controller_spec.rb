@@ -1283,6 +1283,13 @@ RSpec.describe CasesController, type: :controller do
       expect(assigns[:cases]).to eq [assigned_case]
     end
 
+    it 'finds a case by text' do
+      assigned_case
+      unassigned_case
+      get :search, params: { query: 'assigned' }
+      expect(assigns[:cases]).to eq [assigned_case]
+    end
+
     it 'ignores leading or trailing whitespace' do
       get :search, params: { query: " #{assigned_case.number} " }
       expect(assigns[:cases]).to eq [assigned_case]

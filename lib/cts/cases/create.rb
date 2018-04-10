@@ -18,14 +18,16 @@ module CTS::Cases
 
       target_states.map do |target_state|
         journey = find_case_journey_for_state target_state.to_sym
-        @number_to_create.times.map do |n|
-          logger.info "creating case #{target_state} ##{n}"
-          kase ||= new_case
+        logger.info "creating case in #{target_state}"
+        kase ||= new_case
+        if options[:dry_run]
+          kase.validate!
+        else
           kase.save!
-          flag_for_dacu_disclosure(kase) if @flag.present?
-          run_transitions(kase, target_state, journey, n)
-          kase
         end
+        flag_for_dacu_disclosure(kase) if @flag.present?
+        run_transitions(kase, target_state, journey)
+        kase
       end .flatten
     end
 
@@ -74,10 +76,8 @@ module CTS::Cases
       is_sar_case? ? 'offender' : nil
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
-    def parse_options(options)
+    def parse_options(options) # rubocop:disable Metrics/CyclomaticComplexity
       @target_states = []
-      @number_to_create = options.fetch(:number, 1)
       @flag = if options.key?(:flag_for_disclosure)
                 options[:flag_for_disclosure] ? 'disclosure' : nil
               elsif options.key?(:flag_for_team)
@@ -95,7 +95,6 @@ module CTS::Cases
         @received_date = @created_at
       end
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     def process_target_state_param(state)
       if state == 'all'
@@ -112,17 +111,17 @@ module CTS::Cases
       end
     end
 
-    def run_transitions(kase, target_state, journey, n)
+    def run_transitions(kase, target_state, journey)
       journey.each do |state|
         begin
           if @dry_run
-            puts "  transition to '#{state}'"
+            logger.info "  transition to '#{state}'"
           else
             __send__("transition_to_#{state}", kase)
             kase.reload
           end
         rescue => exx
-          logger.error "Error occured on case #{target_state} id:#{n}: #{exx.message}"
+          logger.error "Error occured on case #{target_state}: #{exx.message}"
           logger.error ""
           logger.error "Case unsuccessfully transitioned to #{state}:"
           logger.error "---------------------------------------"
@@ -147,8 +146,6 @@ module CTS::Cases
     end
 
     def transition_to_awaiting_responder(kase)
-      kase.responding_team = responding_team
-
       cars = CaseAssignResponderService.new team: responding_team,
                                             kase: kase,
                                             role: 'responding',
@@ -279,7 +276,7 @@ module CTS::Cases
                              if options.key?(:responder)
                                responder.responding_teams.first
                              else
-                               CTS::hmcts_team
+                               BusinessUnit.responding.sample
                              end
                            else
                              CTS::find_team(options[:responding_team])
