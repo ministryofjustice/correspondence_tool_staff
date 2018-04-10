@@ -1505,11 +1505,22 @@ RSpec.describe Case::Base, type: :model do
 
   describe '#trigger_reindexing' do
     context 'creating a new record' do
+
+      let(:kase)  { build :case }
+
       it 'sets the dirty flag' do
-        kase = build :case
         expect(kase).not_to be_dirty
         kase.save!
         expect(kase).to be_dirty
+      end
+
+      it 'queues the job' do
+        t = Time.now
+        expect {
+          Timecop.freeze(t) do
+            kase.save!
+          end
+        }.to have_enqueued_job(SearchIndexUpdaterJob).at(t + 10.seconds)
       end
     end
 
@@ -1521,12 +1532,29 @@ RSpec.describe Case::Base, type: :model do
           kase.update(date_responded: Date.today, workflow: 'trigger')
           expect(kase).not_to be_dirty
         end
+
+        it 'does not queue the job' do
+          kase            # need this here so that the job triggered by create is outside the expect block
+          expect {
+            kase.update(date_responded: Date.today, workflow: 'trigger')
+          }.not_to have_enqueued_job(SearchIndexUpdaterJob)
+        end
       end
 
       context 'fields requiring search reindexing are updated' do
         it 'sets the dirty flag' do
           kase.update(name: 'John Smith')
           expect(kase).to be_dirty
+        end
+
+        it 'queues the job' do
+          kase   # need this here so that the job triggered by create is outside the expect block
+          t = Time.now
+          expect {
+            Timecop.freeze(t) do
+              kase.update(name: 'John Smith')
+            end
+          }.to have_enqueued_job(SearchIndexUpdaterJob).at(t + 10.seconds)
         end
       end
     end

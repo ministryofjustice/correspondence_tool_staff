@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe PdfMakerJob, type: :job do
+describe SearchIndexUpdaterJob, type: :job do
   include ActiveJob::TestHelper
 
   let!(:k1)     { create :case, :clean }
