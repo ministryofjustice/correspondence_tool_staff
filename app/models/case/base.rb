@@ -42,7 +42,6 @@ class Case::Base < ApplicationRecord
                     subject: 'B',
                     message: 'C',
                     number: 'A',
-                    # responding_team_name: 'D'
                   },
                   associated_against: {
                     responding_team: {
@@ -54,10 +53,6 @@ class Case::Base < ApplicationRecord
                              any_word: true,
                            }
                          }
-
-  def responding_team_name
-    responding_team.name
-  end
 
   attr_accessor :flag_for_disclosure_specialists,
                 :uploaded_request_files,
