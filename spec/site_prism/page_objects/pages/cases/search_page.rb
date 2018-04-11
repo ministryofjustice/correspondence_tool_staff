@@ -11,7 +11,9 @@ module PageObjects
         element :search_query, 'input[type="search"]'
         element :search_button, 'input.button'
 
-        sections :case_list, '.case_row' do
+        element :search_results_count, '.search-results-summary'
+
+        sections :case_list, '.report tbody tr' do
           element :number, 'td[aria-label="Case number"]'
           element :request_detail, 'td[aria-label="Request detail"]'
           element :draft_deadline, 'td[aria-label="Draft deadline"]'
@@ -19,6 +21,8 @@ module PageObjects
           element :status, 'td[aria-label="Status"]'
           element :who_its_with, 'td[aria-label="With"]'
         end
+
+        element :found_no_results_copy, '.search-no-results'
       end
     end
   end
