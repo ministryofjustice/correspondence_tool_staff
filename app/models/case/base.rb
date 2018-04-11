@@ -32,27 +32,25 @@ class Case::Base < ApplicationRecord
   include Statesman::Adapters::ActiveRecordQueries
   include PgSearch
 
+  def self.searchable_fields_and_ranks
+    {
+      name:                 'A',
+      number:               'A',
+      responding_team_name: 'B',
+      subject:              'C',
+      message:              'D',
+    }
+  end
+
+  def self.searchable_document_tsvector
+    'document_tsvector'
+  end
+
+  include Searchable
+
   self.table_name = :cases
-  self.ignored_columns = %w[document_tsvector]
 
   default_scope { where( deleted: false) }
-
-  SEARCHABLE_FIELDS_AND_RANKS = {
-    name:                 'A',
-    number:               'A',
-    responding_team_name: 'B',
-    subject:              'C',
-    message:              'D',
-  }
-
-  pg_search_scope :search,
-                  against: SEARCHABLE_FIELDS_AND_RANKS,
-                  using: { tsearch: {
-                             any_word: true,
-                             dictionary: 'english',
-                             tsvector_column: 'document_tsvector'
-                           }
-                         }
 
   attr_accessor :flag_for_disclosure_specialists,
                 :uploaded_request_files,
@@ -515,18 +513,6 @@ class Case::Base < ApplicationRecord
 
   def set_workflow!(new_workflow_name)
     update!(workflow: new_workflow_name)
-  end
-
-  def update_index
-    tsvector = SEARCHABLE_FIELDS_AND_RANKS.map do |field_name, rank|
-      field_data = self.class.connection.quote __send__(field_name) || ''
-      "setweight(to_tsvector('english', #{field_data}), '#{rank}')"
-    end .join(' || ')
-    self.class.connection.execute <<~EOSQL
-      UPDATE #{self.class.table_name}
-             SET document_tsvector=#{tsvector}
-             WHERE id=#{id};
-    EOSQL
   end
 
   private
