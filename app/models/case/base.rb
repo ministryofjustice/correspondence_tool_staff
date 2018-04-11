@@ -30,7 +30,6 @@
 #rubocop:disable Metrics/ClassLength
 class Case::Base < ApplicationRecord
   include Statesman::Adapters::ActiveRecordQueries
-  include PgSearch
 
   def self.searchable_fields_and_ranks
     {

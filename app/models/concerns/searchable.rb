@@ -1,8 +1,11 @@
 module Searchable
   extend ActiveSupport::Concern
 
+
   included do
-    self.ignored_columns = [searchable_document_tsvector]
+    include PgSearch
+
+    self.ignored_columns = self.ignored_columns + [searchable_document_tsvector]
 
     pg_search_scope :search,
                     against: searchable_fields_and_ranks,
