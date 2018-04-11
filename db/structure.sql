@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.6
--- Dumped by pg_dump version 9.5.6
+-- Dumped from database version 9.5.9
+-- Dumped by pg_dump version 9.5.9
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -39,20 +39,6 @@ CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 --
 
 COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
-
-
---
--- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
 
 
 SET search_path = public, pg_catalog;
@@ -353,7 +339,8 @@ CREATE TABLE cases (
     deleted boolean DEFAULT false,
     info_held_status_id integer,
     type character varying,
-    appeal_outcome_id integer
+    appeal_outcome_id integer,
+    document_tsvector tsvector
 );
 
 
@@ -607,36 +594,6 @@ ALTER SEQUENCE reports_id_seq OWNED BY reports.id;
 CREATE TABLE schema_migrations (
     version character varying NOT NULL
 );
-
-
---
--- Name: search_index; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE search_index (
-    id integer NOT NULL,
-    case_id integer NOT NULL,
-    document tsvector NOT NULL
-);
-
-
---
--- Name: search_index_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE search_index_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: search_index_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE search_index_id_seq OWNED BY search_index.id;
 
 
 --
@@ -982,13 +939,6 @@ ALTER TABLE ONLY reports ALTER COLUMN id SET DEFAULT nextval('reports_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY search_index ALTER COLUMN id SET DEFAULT nextval('search_index_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY sessions ALTER COLUMN id SET DEFAULT nextval('sessions_id_seq'::regclass);
 
 
@@ -1155,14 +1105,6 @@ ALTER TABLE ONLY schema_migrations
 
 
 --
--- Name: search_index_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY search_index
-    ADD CONSTRAINT search_index_pkey PRIMARY KEY (id);
-
-
---
 -- Name: sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1216,6 +1158,13 @@ ALTER TABLE ONLY users
 
 ALTER TABLE ONLY versions
     ADD CONSTRAINT versions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cases_document_tsvector_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cases_document_tsvector_index ON cases USING gin (document_tsvector);
 
 
 --
@@ -1485,13 +1434,6 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON versions USING btree (it
 
 
 --
--- Name: search_index_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX search_index_idx ON search_index USING gin (document);
-
-
---
 -- PostgreSQL database dump complete
 --
 
@@ -1590,7 +1532,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180214163355'),
 ('20180222125345'),
 ('20180228174550'),
+('20180319202822'),
 ('20180321094200'),
-('20180322183946');
+('20180410142138');
 
 
