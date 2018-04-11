@@ -1,0 +1,42 @@
+- content_for :heading
+  = t(".heading")
+
+= render partial: 'layouts/header'
+
+.grid-row
+  .column-full.button-holder
+    = form_tag search_cases_path, method: :get
+      = label_tag :query, 'Case number, requester name or keyword', class: 'form-label-bold'
+      = search_field_tag :query, @query, class: 'form-control'
+      = submit_tag 'Search', class: 'button button-no-margin'
+
+
+- if !@cases.nil?
+  = render partial: 'cases/shared/case_list'
+
+- if @cases.nil? && params[:query].present?
+  .grid-row
+    .column-full
+      .search-results-summary
+        strong
+          | 0
+        = " cases found"
+
+  .grid-row
+    .column-full.search-no-results
+      p
+        strong
+          = "Please try "
+          span.visually-hidden
+            = "some of these options "
+      ul.list-bullet
+        li
+          = "check if you've entered in the requestor's name correctly."
+        li
+          = "searching by a case number or keyword instead."
+
+      p
+        strong.strong-block
+          = "Older cases "
+        = "Cases dating before 1 September 2017 are not stored in this system."
+

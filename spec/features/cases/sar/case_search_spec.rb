@@ -18,6 +18,7 @@ feature 'searching for SAR cases' do
       cases_search_page.search_button.click
       expect(cases_search_page).to be_displayed
       expect(cases_search_page).not_to have_notices
+      expect(cases_search_page.search_results_count.text).to eq "1 case found"
       expect(cases_search_page.case_list.count).to eq 1
       expect(cases_search_page.case_list.first.number).to have_text kase.number
     end
@@ -37,6 +38,7 @@ feature 'searching for SAR cases' do
       cases_search_page.search_button.click
       expect(cases_search_page).to be_displayed
       expect(cases_search_page).not_to have_notices
+      expect(cases_search_page.search_results_count.text).to eq "1 case found"
       expect(cases_search_page.case_list.count).to eq 1
       expect(cases_search_page.case_list.first.number).to have_text kase.number
     end
@@ -52,6 +54,8 @@ feature 'searching for SAR cases' do
       cases_search_page.search_button.click
       expect(cases_search_page).to be_displayed
       expect(cases_search_page).not_to have_notices
+      expect(cases_search_page.search_results_count.text).to eq "0 cases found"
+      expect(cases_search_page).to have_found_no_results_copy
       expect(cases_search_page.case_list.count).to eq 0
       expect(cases_search_page.case_list).not_to have_text kase.number
     end

@@ -286,7 +286,7 @@ en:
           manager: Case management
       team_property:
         value: "Add area"
-        
+
 
   alerts:
     assignment_accepted_html: |
@@ -373,6 +373,18 @@ en:
       clear_response: Clear response
       request_amends: Request amends
       upload_approve: 'Upload response and clear'
+    case_list:
+      view_case: "Link to case "
+      message_notification: Conversations
+      number: Case number
+      number_html: 'Case <abbr title="number">No.</abbr>'
+      type: 'Type'
+      request: 'Request'
+      request_detail: Request detail
+      draft_deadline: Draft deadline
+      external_deadline: Final deadline
+      status: Status
+      who_its_with: With
     new_case_button: Create case
     phase_banner: |
       This is a new service.
@@ -446,7 +458,6 @@ en:
       extension_date: Date of extension deadline
       extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
     index: &cases_list
-      heading_search: Search
       heading_all_cases: All open cases
       heading_my_cases: My open cases
       view_case: "Link to case "
@@ -522,7 +533,8 @@ en:
       close_form:
         close_date: Date response sent
         date_example: For example, 30 1 2017
-
+    search:
+      heading: Search
 
     remove_clearance:
       heading: 'Remove Clearance'

@@ -285,17 +285,14 @@ class CasesController < ApplicationController
 
   def search
     @query = params[:query]
-    @current_tab_name = 'search'
     if @query.present?
       @query.strip!
       @cases = policy_scope(Case::Base).search(@query).page(params[:page]).decorate
       if @cases.empty?
-        flash.now[:alert] = 'No cases found'
+        @cases = nil
       end
-    else
-      @cases = nil
     end
-    render :index
+    render :search
   end
 
   def remove_clearance

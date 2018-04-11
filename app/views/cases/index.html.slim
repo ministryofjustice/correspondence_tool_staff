@@ -3,25 +3,12 @@
 
 = render partial: 'layouts/header'
 
-- if current_page?(search_cases_path)
-  .grid-row
-    .column-full.button-holder
-      = form_tag search_cases_path, method: :get
-        .form-group
-          = label_tag :query, 'Case number', class: 'form-label-bold'
-          p.form-hint
-            = 'For example, 170113001'
-          = search_field_tag :query, @query, class: 'form-control'
-        = submit_tag 'Search', class: 'button'
-
-- elsif @can_add_case
+- if @can_add_case
   .grid-row
     .column-full.button-holder
       = link_to t('common.new_case_button'), new_case_path, class: 'button'
 
-
-
-= render partial: 'state_filter_form' unless (params[:action] == 'search' || request.path == '/cases/my_open')
+= render partial: 'state_filter_form' unless request.path == '/cases/my_open'
 
 - if @global_nav_manager.current_page.tabs.present?
   .grid-row
@@ -34,7 +21,7 @@
                          count: tab.cases.count),
                         tab.fullpath_with_query
 
-- if !current_page?(search_cases_path) || !@cases.nil?
+- if !@cases.nil?
   .grid-row
     .column-full.table-container.container
       table.report.table-font-xsmall

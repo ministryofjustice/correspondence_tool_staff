@@ -21,6 +21,12 @@
   margin-left: $gutter;
 }
 
+.button.button-no-margin{
+  margin: 0;
+  margin-left: 5px;
+  line-height: 1.15;
+}
+
 .secondard-action-link {
   margin-left: $gutter;
   line-height: 2.0em;
