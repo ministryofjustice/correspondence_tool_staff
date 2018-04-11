@@ -6,16 +6,15 @@ class PasswordsController < Devise::PasswordsController
     else
       user = User.find_by(email: resource_params[:email])
       if user == nil
-        flash[:notice] = t('devise.passwords.send_paranoid_instructions')
         redirect_to new_user_session_path
+        flash[:notice] = I18n.t('devise.passwords.send_paranoid_instructions')
       elsif user.deactivated?
-        ActionNotificationsMailer
-          .account_not_active(user)
-          .deliver_later
-        flash[:notice] = t('devise.passwords.send_paranoid_instructions')
+        ActionNotificationsMailer.account_not_active(user).deliver_later
         redirect_to new_user_session_path
+        flash[:notice] = I18n.t('devise.passwords.send_paranoid_instructions')
       else
         super
+        flash[:notice] = I18n.t('devise.passwords.send_paranoid_instructions')
       end
     end
   end

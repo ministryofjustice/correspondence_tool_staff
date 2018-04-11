@@ -41,6 +41,7 @@ module PageObjects
         login:                          'LoginPage',
         my_open_cases:                  'Cases::MyOpenCasesPage',
         open_cases:                     'Cases::OpenCasesPage',
+        password:                       'PasswordPage',
         request_amends:                 'Cases::RequestAmendsPage',
         reassign_user:                  'Assignments::ReassignUserPage',
         stats_index:                    'Stats::IndexPage',
