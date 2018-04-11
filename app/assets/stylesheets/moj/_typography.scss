@@ -136,3 +136,21 @@ table caption{
   @include bold-24();
   margin-bottom: $gutter-half;
 }
+
+.search-results-summary {
+  @include core-19();
+  margin-top: $gutter-half;
+  margin-bottom: $gutter;
+  strong {
+    @include bold-24();
+  }
+}
+
+.search-no-results {
+  p:first-child {
+    margin-bottom: 0;
+  }
+  ul {
+    margin-bottom: $gutter;
+  }
+}

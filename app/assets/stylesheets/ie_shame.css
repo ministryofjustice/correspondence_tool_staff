@@ -2,7 +2,7 @@
 .js-enabled .block-label.selection-button-radio::before,
 .js-enabled .block-label.selection-button-radio::after,
 .js-enabled .block-label.selection-button-checkbox::before,
-.js-enabled .block-label.selection-button-checkbox::after,{
+.js-enabled .block-label.selection-button-checkbox::after {
   display: none;
 }
 
