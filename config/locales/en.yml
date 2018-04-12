@@ -598,6 +598,8 @@ en:
       destroyed: "Team member has been deactivated"
       has_live_cases: "Team member could not be deactivated, as open cases are currently assigned to them"
       error: "Unable to deactivate."
+    passwords:
+      send_paranoid_instructions: "If your email address exists in our database, you will receive a password recovery link at your email address in a few minutes."
     users:
       password:
         edit:

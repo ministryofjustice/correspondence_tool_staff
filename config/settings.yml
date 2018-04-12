@@ -36,7 +36,7 @@ redraft_requested_notify_template: '534f0e07-007f-4a48-99e4-c46a41fbd81f'
 message_received_notify_template: '55d7abbc-9042-4646-8835-35a1b2e432c4'
 assigned_to_another_user_template: '1e26c707-e7e3-4b21-835d-1241da6ea251'
 unlock_user_account_template: '9910545b-1b46-41d1-a5e3-f8b31ff450c0'
-deactivated_user_template: '2a7531a6-49§76-4400-9478-0829d3f46cc9'
+deactivated_user_template: '2a7531a6-4976-4400-9478-0829d3f46cc9'
 
 foi_cases:
   default_managing_team: DISCLOSURE-BMT
