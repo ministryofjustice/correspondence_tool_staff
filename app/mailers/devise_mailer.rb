@@ -30,17 +30,4 @@ class DeviseMailer < Devise::Mailer
 
     mail(to: record.email)
   end
-
-  def account_not_active(record)
-    RavenContextProvider.set_context
-    set_template(Settings.deactivated_user_template)
-
-    set_personalisation(
-        email_subject: 'Your CMS user account has been deactivated',
-        user_full_name: record.full_name,
-    )
-
-    mail(to: record.email)
-  end
-
 end
