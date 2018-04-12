@@ -19,18 +19,20 @@ describe CasesController, type: :controller do
     end
 
     it 'finds a case by number' do
+      assigned_case.update_index
       get :search, params: { query: assigned_case.number }
       expect(assigns[:cases]).to eq [assigned_case]
     end
 
     it 'finds a case by text' do
-      assigned_case
-      unassigned_case
+      assigned_case.update_index
+      unassigned_case.update_index
       get :search, params: { query: 'assigned' }
       expect(assigns[:cases]).to eq [assigned_case]
     end
 
     it 'ignores leading or trailing whitespace' do
+      assigned_case.update_index
       get :search, params: { query: " #{assigned_case.number} " }
       expect(assigns[:cases]).to eq [assigned_case]
     end

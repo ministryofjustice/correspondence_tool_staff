@@ -14,6 +14,7 @@ feature 'searching for SAR cases' do
       expect(cases_search_page).to be_displayed
       expect(cases_search_page).not_to have_notices
 
+      kase.update_index
       cases_search_page.search_query.set kase.number
       cases_search_page.search_button.click
       expect(cases_search_page).to be_displayed
@@ -34,6 +35,7 @@ feature 'searching for SAR cases' do
       expect(cases_search_page).to be_displayed
       expect(cases_search_page).not_to have_notices
 
+      kase.update_index
       cases_search_page.search_query.set kase.number
       cases_search_page.search_button.click
       expect(cases_search_page).to be_displayed
@@ -50,6 +52,7 @@ feature 'searching for SAR cases' do
       expect(cases_search_page).to be_displayed
       expect(cases_search_page).not_to have_notices
 
+      kase.update_index
       cases_search_page.search_query.set other_kase.number
       cases_search_page.search_button.click
       expect(cases_search_page).to be_displayed

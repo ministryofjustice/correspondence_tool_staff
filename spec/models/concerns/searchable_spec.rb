@@ -75,7 +75,7 @@ RSpec.describe Searchable do
       allow(@searchable).to receive('id').and_return(1)
       connection = double('Connection', execute: true)
       allow(@searchable.class).to receive(:connection).and_return(connection)
-      allow(connection).to receive('quote').with(any_args) { |d| d }
+      allow(connection).to receive('quote').with(any_args) { |d| "'#{d}'" }
 
       @searchable.update_index
 

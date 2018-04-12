@@ -14,6 +14,7 @@ feature 'Searching for cases' do
     expect(cases_search_page).to be_displayed
     expect(cases_search_page).not_to have_notices
 
+    kase.update_index
     cases_search_page.search_query.set kase.number
     cases_search_page.search_button.click
     expect(cases_search_page).to be_displayed
@@ -26,6 +27,7 @@ feature 'Searching for cases' do
   scenario 'searching as a responder' do
     login_as responder
 
+    kase.update_index
     cases_page.load
     cases_page.primary_navigation.search.click
     cases_search_page.search_query.set kase.number
@@ -39,6 +41,7 @@ feature 'Searching for cases' do
   scenario 'searching as an approver' do
     login_as approver
 
+    kase.update_index
     cases_page.load
     cases_page.primary_navigation.search.click
     cases_search_page.search_query.set kase.number
