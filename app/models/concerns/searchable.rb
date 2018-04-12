@@ -1,7 +1,6 @@
 module Searchable
   extend ActiveSupport::Concern
 
-
   included do
     include PgSearch
 
@@ -15,7 +14,6 @@ module Searchable
                                tsvector_column: searchable_document_tsvector,
                              }
                            }
-
   end
 
   class_methods do
@@ -27,13 +25,14 @@ module Searchable
   def update_index
     tsvector = self.class.searchable_fields_and_ranks.map do |field_name, rank|
       field_data = self.class.connection.quote __send__(field_name) || ''
-      "setweight(to_tsvector('english', #{field_data}), '#{rank}')"
+      "setweight(to_tsvector('english', '#{field_data}'), '#{rank}')"
     end .join(' || ')
-    self.class.connection.execute <<~EOSQL
+    update_sql = <<~EOSQL
       UPDATE #{self.class.table_name}
              SET document_tsvector=#{tsvector}
              WHERE id=#{id};
     EOSQL
+    self.class.connection.execute update_sql
   end
 
 

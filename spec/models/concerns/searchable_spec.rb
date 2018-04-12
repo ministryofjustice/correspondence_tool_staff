@@ -3,13 +3,17 @@ require "rails_helper"
 RSpec.describe Searchable do
   before :each do
 
-    @searchable = Class.new do
+    @searchable_class = Class.new do
       # Setup this class to emulate how a model would be setup, and how it would
       # use the Searchable concern.
 
       class << self
         # can't create doubles otherwise
         include RSpec::Mocks::ExampleMethods
+
+        def table_name
+          'searchable'
+        end
       end
 
       # ignored_columns is provided by ActiveRecord so we emulate it here
@@ -29,7 +33,8 @@ RSpec.describe Searchable do
       # standard method that a model would need to define
       def self.searchable_fields_and_ranks
         @searchable_fields_and_ranks ||= {
-          field_a: 'A'
+          field_a: 'A',
+          field_b: 'B',
         }
       end
 
@@ -44,26 +49,43 @@ RSpec.describe Searchable do
 
       include Searchable
     end
+
+    @searchable = @searchable_class.new
   end
 
   describe 'ignored_columns' do
     it 'adds the searchable_document_tsvector to it' do
-      expect(@searchable.ignored_columns.first)
-        .to be @searchable.searchable_document_tsvector
+      expect(@searchable_class.ignored_columns.first)
+        .to be @searchable_class.searchable_document_tsvector
     end
   end
 
   describe '.update_all_indexes' do
     it 'updates all cases' do
-      @searchable.update_all_indexes
+      @searchable.class.update_all_indexes
 
-      @searchable.all.each { |obj| expect(obj).to have_received :update_index }
+      @searchable.class.all.each { |obj| expect(obj).to have_received :update_index }
     end
   end
 
   describe '#update_index' do
-    it 'indexes the searchable fields'
+    it 'updates the document_tsvector column' do
+      allow(@searchable).to receive('field_a').and_return('foobar')
+      allow(@searchable).to receive('field_b').and_return('barfoo')
+      allow(@searchable).to receive('id').and_return(1)
+      connection = double('Connection', execute: true)
+      allow(@searchable.class).to receive(:connection).and_return(connection)
+      allow(connection).to receive('quote').with(any_args) { |d| d }
 
-    it 'sets the weighting on indexed fields'
+      @searchable.update_index
+
+      update_sql = <<~EOSQL
+        UPDATE searchable
+               SET document_tsvector=setweight(to_tsvector('english', 'foobar'), 'A') || setweight(to_tsvector('english', 'barfoo'), 'B')
+               WHERE id=1;
+      EOSQL
+      expect(connection).to have_received(:execute).with(update_sql)
+    end
+
   end
 end
