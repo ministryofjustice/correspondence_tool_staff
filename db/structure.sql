@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.6
--- Dumped by pg_dump version 9.5.6
+-- Dumped from database version 9.5.9
+-- Dumped by pg_dump version 9.5.9
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -339,7 +339,8 @@ CREATE TABLE cases (
     deleted boolean DEFAULT false,
     info_held_status_id integer,
     type character varying,
-    appeal_outcome_id integer
+    appeal_outcome_id integer,
+    document_tsvector tsvector
 );
 
 
@@ -1160,6 +1161,13 @@ ALTER TABLE ONLY versions
 
 
 --
+-- Name: cases_document_tsvector_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cases_document_tsvector_index ON cases USING gin (document_tsvector);
+
+
+--
 -- Name: index_assignments_on_case_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1524,6 +1532,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180214163355'),
 ('20180222125345'),
 ('20180228174550'),
-('20180321094200');
+('20180321094200'),
+('20180410142138');
 
 

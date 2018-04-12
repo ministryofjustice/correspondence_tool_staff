@@ -1128,7 +1128,8 @@ RSpec.describe Case::Base, type: :model do
                        name: 'Brian Bush',
                        responding_team: @responding_team_b,
                        responder: @responding_team_b.responders.first
-
+      @case_a.update_index
+      @case_b.update_index
     end
 
     after :all do
@@ -1136,7 +1137,7 @@ RSpec.describe Case::Base, type: :model do
     end
 
     it 'returns case with a number that matches the query' do
-      expect(Case::Base.search(accepted_case.number)).to match_array [accepted_case]
+      expect(Case::Base.search(@case_a.number)).to match_array [@case_a]
     end
 
     it 'returns case with a subject that matches the query' do
