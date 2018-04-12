@@ -533,6 +533,10 @@ class Case::Base < ApplicationRecord
 
   private
 
+  def indexable_fields
+    @indexable_fields ||= self.class.searchable_fields_and_ranks.keys.map(&:to_s)
+  end
+
   # determines whether or not the BU responded to flagged cases in time (NOT
   # whether the case was responded to in time!) calculated as the time between
   # the responding BU being assigned the case and the disclosure team approving
@@ -621,7 +625,7 @@ class Case::Base < ApplicationRecord
   def process_uploaded_request_files
     if uploading_user.nil?
       # I really don't feel comfortable with having this special snowflake of a
-      # attribute that only ever needs to be populated when creating a new case
+      # attribute that only ever needs to be populated when creating a new caseraisl
       # that was sent by post.
       raise "Uploading user required for processing uploaded request files"
     end
@@ -630,7 +634,7 @@ class Case::Base < ApplicationRecord
   end
 
   def trigger_reindexing
-    if (self.changed & FIELDS_REQUIRING_SEARCH_INDEX_UPDATE).any?
+    if (self.changed & indexable_fields).any?
       self.dirty = true
       SearchIndexUpdaterJob.set(wait: 10.seconds).perform_later
     end

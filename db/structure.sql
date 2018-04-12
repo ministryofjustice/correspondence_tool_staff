@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.9
--- Dumped by pg_dump version 9.5.9
+-- Dumped from database version 9.5.6
+-- Dumped by pg_dump version 9.5.6
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -340,8 +340,7 @@ CREATE TABLE cases (
     info_held_status_id integer,
     type character varying,
     appeal_outcome_id integer,
-    dirty boolean DEFAULT false
-    appeal_outcome_id integer,
+    dirty boolean DEFAULT false,
     document_tsvector tsvector
 );
 
@@ -1535,6 +1534,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180222125345'),
 ('20180228174550'),
 ('20180321094200'),
+('20180406145035'),
 ('20180410142138');
 
 
