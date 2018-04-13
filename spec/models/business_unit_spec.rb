@@ -278,12 +278,10 @@ RSpec.describe BusinessUnit, type: :model do
 
   describe '#update search index' do
     context 'new business unit' do
-      context 'name is changed' do
-        it 'queues a job to update the search index' do
-          expect {
-            create :responding_team
-          }.to have_enqueued_job(SearchIndexUpdaterJob)
-        end
+      it 'queues a job to update the search index' do
+        expect {
+          create :responding_team
+        }.to have_enqueued_job(SearchIndexBuNameUpdaterJob)
       end
     end
 
@@ -294,7 +292,7 @@ RSpec.describe BusinessUnit, type: :model do
         it 'queues a job to update the search index' do
           expect {
             @business_unit.update(name: 'my new business unit')
-          }.to have_enqueued_job(SearchIndexUpdaterJob)
+          }.to have_enqueued_job(SearchIndexBuNameUpdaterJob)
         end
       end
 
@@ -302,7 +300,7 @@ RSpec.describe BusinessUnit, type: :model do
         it 'does not queue a job to update the search index' do
           expect {
             @business_unit.update(email: 'my_new_email@moj.gov.uk')
-          }.not_to have_enqueued_job(SearchIndexUpdaterJob)
+          }.not_to have_enqueued_job(SearchIndexBuNameUpdaterJob)
         end
       end
     end

@@ -6,7 +6,7 @@ class SearchIndexBuNameUpdaterJob < ApplicationJob
     RavenContextProvider.set_context
     bu = BusinessUnit.find(team_id)
     bu.responding_cases.each do | kase |
-      SearchIndex.update_document(kase)
+      kase.update_index
       kase.mark_as_clean!
     end
   end
