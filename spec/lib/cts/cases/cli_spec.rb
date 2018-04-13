@@ -19,7 +19,7 @@ RSpec.describe CTS::Cases::CLI do
                   )
   end
 
-  it 'creates a case' do
+  xit 'creates a case' do
     expect(Case::Base.count).to eq 0
     find_or_create :responding_team
     cli.create('drafting')
