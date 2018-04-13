@@ -385,17 +385,17 @@ describe CasesController, type: :controller do
       context 'has a hash parameter' do
         it 'records search query to record the click' do
           allow(controller).to receive(:flash).and_return(flash)
-          params = ActionController::Parameters.new(id: kase.id.to_s, hash: "XYZ", controller: "cases", action: "show")
-          expect(SearchQuery).to receive(:update_for_click).with(params, flash)
+          params = ActionController::Parameters.new(id: kase.id.to_s, pos: '4', controller: "cases", action: "show")
+          expect(SearchQuery).to receive(:update_for_click).with('XYZ', 4)
           get :show, params: params.to_unsafe_hash
         end
       end
 
-      context 'does not have a hash parameter' do
+      context 'no flash parameter' do
         it 'does not call search query to record the click' do
-          allow(controller).to receive(:flash).and_return(flash)
+          allow(controller).to receive(:flash).and_return( {} )
           params = ActionController::Parameters.new(id: kase.id.to_s, controller: "cases", action: "show")
-          expect(SearchQuery).not_to receive(:update_for_click).with(params, flash)
+          expect(SearchQuery).not_to receive(:update_for_click)
           get :show, params: params.to_unsafe_hash
         end
 

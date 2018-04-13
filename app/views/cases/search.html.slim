@@ -10,7 +10,29 @@
       p.form-hint
         = 'For example, 170113001, John Smith or prison meals'
       = search_field_tag :query, @query, class: 'form-control'
-      = submit_tag 'Search', class: 'button button-no-margin'
+      = submit_tag 'Search', class: 'button button-no-margin', id: 'search-button'
+
+- if FeatureSet.dummy_filter.enabled?
+  .grid-row
+    .column-full.button-holder
+      = form_tag dummy_filter_cases_path, method: :post
+        = hidden_field_tag 'filter', 'type'
+        = hidden_field_tag 'query', 'internal_review'
+        = submit_tag 'Filter: Internal Review', class: 'button button-no-margin'
+
+  .grid-row
+    .column-full.button-holder
+      = form_tag dummy_filter_cases_path, method: :post
+      = hidden_field_tag 'filter', 'type'
+      = hidden_field_tag 'query', 'compliance'
+      = submit_tag 'Filter: Compliance', class: 'button button-no-margin'
+
+  .grid-row
+    .column-full.button-holder
+      = form_tag dummy_filter_cases_path, method: :post
+      = hidden_field_tag 'filter', 'type:'
+      = hidden_field_tag 'query', 'timeliness'
+      = submit_tag 'Filter: Timeliness', class: 'button button-no-margin'
 
 
 - if @cases.any?
