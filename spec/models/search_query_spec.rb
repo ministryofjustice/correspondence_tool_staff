@@ -64,53 +64,68 @@ describe SearchQuery do
     let(:hash)             { 'XYZ' }
     let(:params)           { { hash: hash, pos: position } }
 
-    context 'user clicks for the first time' do
-      let!(:record)      { create :search_query }
+    context 'the query hash is in the flash' do
 
-      it 'records the click' do
-        SearchQuery.update_for_click(params)
-        record.reload
-        expect(record.num_clicks).to eq 1
+      let(:flash)          { { query_hash: 'XYZ' } }
+
+      context 'user clicks for the first time' do
+        let!(:record)      { create :search_query }
+
+        it 'records the click' do
+          SearchQuery.update_for_click(params, flash)
+          record.reload
+          expect(record.num_clicks).to eq 1
+        end
+
+        it 'updates the highest position' do
+          SearchQuery.update_for_click(params, flash)
+          record.reload
+          expect(record.highest_position).to eq position
+        end
       end
 
-      it 'updates the highest position' do
-        SearchQuery.update_for_click(params)
-        record.reload
-        expect(record.highest_position).to eq position
+      context 'user clicks on higher option' do
+        let!(:record)          { create :search_query, :clicked }
+        let(:position) { 1 }
+
+        it 'records the click' do
+          SearchQuery.update_for_click(params, flash)
+          record.reload
+          expect(record.num_clicks).to eq 2
+        end
+
+        it 'updates the highest position' do
+          SearchQuery.update_for_click(params, flash)
+          record.reload
+          expect(record.highest_position).to eq position
+        end
+      end
+
+      context 'user clicks on a lower position' do
+        let!(:record)          { create :search_query, :clicked }
+        let(:position)         { 33 }
+
+        it 'records the click' do
+          SearchQuery.update_for_click(params, flash)
+          record.reload
+          expect(record.num_clicks).to eq 2
+        end
+
+        it 'does not update the highest position' do
+          SearchQuery.update_for_click(params, flash)
+          record.reload
+          expect(record.highest_position).to eq 3
+        end
       end
     end
 
-    context 'user clicks on higher option' do
-      let!(:record)          { create :search_query, :clicked }
-      let(:position) { 1 }
-      
-      it 'records the click' do
-        SearchQuery.update_for_click(params)
+    context 'the query hash is not in the hash' do
+      let(:flash)   { {} }
+      it 'does not update a search_query record' do
+        record = create :search_query
+        SearchQuery.update_for_click(params, flash)
         record.reload
-        expect(record.num_clicks).to eq 2
-      end
-
-      it 'updates the highest position' do
-        SearchQuery.update_for_click(params)
-        record.reload
-        expect(record.highest_position).to eq position
-      end
-    end
-
-    context 'user clicks on a lower position' do
-      let!(:record)          { create :search_query, :clicked }
-      let(:position)         { 33 }
-
-      it 'records the click' do
-        SearchQuery.update_for_click(params)
-        record.reload
-        expect(record.num_clicks).to eq 2
-      end
-
-      it 'does not update the highest position' do
-        SearchQuery.update_for_click(params)
-        record.reload
-        expect(record.highest_position).to eq 3
+        expect(record.num_clicks).to eq 0
       end
     end
   end

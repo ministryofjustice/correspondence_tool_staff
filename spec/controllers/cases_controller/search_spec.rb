@@ -37,6 +37,13 @@ describe CasesController, type: :controller do
       expect(assigns[:cases]).to eq [assigned_case]
     end
 
+    it 'sets the query hash in the flash' do
+      assigned_case.update_index
+      allow_any_instance_of(CaseSearchService).to receive(:query_hash).and_return('ABC124')
+      get :search, params: { query: " #{assigned_case.number} " }
+      expect(controller.flash[:query_hash]).to eq 'ABC124'
+    end
+
 
     it 'passes the page param to the paginator' do
       paged_cases = double('Paged Cases', decorate: [])
