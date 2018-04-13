@@ -30,7 +30,15 @@ class SearchQuery < ApplicationRecord
   end
 
 
-  def self.update_for_click(params)
+  def self.update_for_click(params, flash)
+    if params[:hash] == flash[:query_hash]
+      record_click(params)
+    end
+  end
+
+
+
+  def self.record_click(params)
     record = SearchQuery.find_by(query_hash: params[:hash])
     unless record.nil?
       record.num_clicks +=1
@@ -40,5 +48,7 @@ class SearchQuery < ApplicationRecord
       record.save!
     end
   end
+
+  private_class_method :record_click
 
 end
