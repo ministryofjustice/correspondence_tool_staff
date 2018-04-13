@@ -32,7 +32,21 @@
 class Case::Base < ApplicationRecord
   include Statesman::Adapters::ActiveRecordQueries
 
-  FIELDS_REQUIRING_SEARCH_INDEX_UPDATE = %w{ name message subject }
+  def self.searchable_fields_and_ranks
+    {
+        name:                 'A',
+        number:               'A',
+        responding_team_name: 'B',
+        subject:              'C',
+        message:              'D',
+    }
+  end
+
+  def self.searchable_document_tsvector
+    'document_tsvector'
+  end
+
+  include Searchable
 
   self.table_name = :cases
 

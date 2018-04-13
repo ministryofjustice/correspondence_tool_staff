@@ -144,7 +144,7 @@ class BusinessUnit < Team
 
   def update_search_index
     if changed.include?('name')
-      SearchIndexUpdaterJob.set(wait: 10.seconds).perform_later(self.id)
+      SearchIndexBuNameUpdaterJob.set(wait: 10.seconds).perform_later(self.id)
     end
   end
 

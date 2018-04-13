@@ -12,15 +12,16 @@ describe SearchIndexBuNameUpdaterJob, type: :job do
 
   describe '#perform' do
     it 'updates the index for all cases responded to by responding team 1' do
-      expect(SearchIndex).to receive(:update_document).with(k1)
-      expect(SearchIndex).to receive(:update_document).with(k2)
-      expect(SearchIndex).not_to receive(:update_document).with(k3)
+      expect(BusinessUnit).to receive(:find).with(responding_team_1.id).and_return(responding_team_1)
+      expect(responding_team_1).to receive(:responding_cases).and_return( [ k1, k2 ])
+      expect(k1).to receive(:update_index)
+      expect(k2).to receive(:update_index)
+
       SearchIndexBuNameUpdaterJob.new.perform(responding_team_1.id)
     end
 
     it 'sets the clean flag on cases it has re-indexed' do
       k1; k2; k3
-      allow(SearchIndex).to receive(:update_document)
       SearchIndexBuNameUpdaterJob.new.perform(responding_team_1.id)
       expect(k1.reload).to be_clean
       expect(k2.reload).to be_clean
