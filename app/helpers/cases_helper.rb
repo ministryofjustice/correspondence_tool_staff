@@ -4,14 +4,14 @@ module CasesHelper
     Settings.case_uploads_accepted_types.join ','
   end
 
-  def case_link_with_hash(kase, field, query_hash, page, position)
+  def case_link_with_hash(kase, field, page, position)
     page = 1 if page.blank?
-    if query_hash.nil?
+    if position.nil?
       link_to kase.__send__(field), case_path(kase.id)
     else
       position += 1
       page_offset = Kaminari.config[:default_per_page] * (page.to_i - 1)
-      link_to kase.__send__(field), case_path(kase.id, hash: query_hash, pos: page_offset + position)
+      link_to kase.__send__(field), case_path(kase.id, pos: page_offset + position)
     end
 
   end

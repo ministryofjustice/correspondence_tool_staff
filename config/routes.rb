@@ -213,6 +213,7 @@ Rails.application.routes.draw do
     get :request_amends, on: :member
     patch :execute_request_amends, on: :member
     post  :filter, on: :collection
+    post  :dummy_filter, on: :collection
     get 'remove_clearance' => 'cases#remove_clearance', on: :member
     # get 'upload_response_approve' => 'cases#upload_response_approve', on: :member
     get :extend_for_pit, on: :member

@@ -9,7 +9,7 @@ module PageObjects
         end
 
         element :search_query, 'input[type="search"]'
-        element :search_button, 'input.button'
+        element :search_button, 'input.button#search-button'
 
         element :search_results_count, '.search-results-summary'
 
