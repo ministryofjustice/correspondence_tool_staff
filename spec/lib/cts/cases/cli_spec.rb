@@ -17,6 +17,7 @@ RSpec.describe CTS::Cases::CLI do
                       type: 'Case::FOI::Standard',
                     }
                   )
+    find_or_create :team_dacu
   end
 
   xit 'creates a case' do
