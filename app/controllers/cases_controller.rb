@@ -296,6 +296,7 @@ class CasesController < ApplicationController
         flash.now[:alert] = service.error_message
       else
         @cases = service.result_set
+        @query = service.query
         @query_hash = service.query_hash
         @page = params[:page] || '1'
         flash[:query_hash] = @query_hash
