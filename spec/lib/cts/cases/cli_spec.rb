@@ -31,7 +31,7 @@ RSpec.describe CTS::Cases::CLI do
 
   describe 'reindex sub-command' do
     it 'reindexes all cases' do
-      allow(Case::Base).to receive(:update_all_indexes)
+      allow(Case::Base).to receive(:update_all_indexes).and_return([])
       cli.reindex
       expect(Case::Base).to have_received(:update_all_indexes)
     end
