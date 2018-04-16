@@ -20,10 +20,20 @@ RSpec.describe CTS::Cases::CLI do
     find_or_create :team_dacu
   end
 
-  xit 'creates a case' do
-    expect(Case::Base.count).to eq 0
-    find_or_create :responding_team
-    cli.create('drafting')
-    expect(Case::Base.count).to eq 1
+  describe 'create sub-command' do
+    it 'creates a case' do
+      expect(Case::Base.count).to eq 0
+      find_or_create :responding_team
+      cli.create('drafting')
+      expect(Case::Base.count).to eq 1
+    end
+  end
+
+  describe 'reindex sub-command' do
+    it 'reindexes all cases' do
+      allow(Case::Base).to receive(:update_all_indexes).and_return([])
+      cli.reindex
+      expect(Case::Base).to have_received(:update_all_indexes)
+    end
   end
 end
