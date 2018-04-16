@@ -37,6 +37,12 @@ describe CasesController, type: :controller do
       expect(assigns[:cases]).to eq [assigned_case]
     end
 
+    it 'sets the query for the view' do
+      assigned_case.update_index
+      get :search, params: { query: assigned_case.subject }
+      expect(assigns[:query]).to eq assigned_case.subject
+    end
+
     it 'sets the query hash in the flash' do
       assigned_case.update_index
       allow_any_instance_of(CaseSearchService).to receive(:query_hash).and_return('ABC124')
