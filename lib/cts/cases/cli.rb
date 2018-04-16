@@ -238,7 +238,7 @@ module CTS::Cases
                                              kase.state_machine
                                                .next_state_for_event(
                                                  e,
-                                                 user_id: user.id
+                                                 acting_user_id: user.id
                                                )
                                            end } }
          ]
@@ -259,6 +259,12 @@ module CTS::Cases
         puts "\nAttachments:"
         tp kase.attachments, [:id, :type, :key, :preview_key]
       end
+    end
+
+    desc 'reindex', 'Reindex all the cases'
+    def reindex(*args)
+      reindexer = CTS::Cases::Reindex.new(CTS, options)
+      reindexer.call
     end
 
     private
