@@ -1,6 +1,7 @@
 require 'cts'
 require 'cts/cases/constants'
 require 'cts/cases/create'
+require 'cts/cases/reindex'
 
 module CTS::Cases
   class CLI < Thor # rubocop:disable Metrics/ClassLength
@@ -262,7 +263,7 @@ module CTS::Cases
     end
 
     desc 'reindex', 'Reindex all the cases'
-    def reindex(*args)
+    def reindex(*_args)
       reindexer = CTS::Cases::Reindex.new(CTS, options)
       reindexer.call
     end
