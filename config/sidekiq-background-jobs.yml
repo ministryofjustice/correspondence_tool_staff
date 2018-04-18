@@ -1,0 +1,28 @@
+---
+:concurrency: 5
+production:
+  :concurrency: 10
+staging:
+  :concurrency: 10
+:logfile: ./log/sidekiq-background-jobs.log
+:queues:
+  - correspondence_tool_staff_mailers
+  - correspondence_tool_staff_report_generator
+  - correspondence_tool_staff_search_index_updater
+
+r003_report_definition: &r003_report_definition
+  class: ReportGeneratorJob
+  queue: report_generator
+  args: ['R003']
+  description: This job generates the R003 YTD Bunsiness unit performance report
+
+:schedule:
+  R003 YTD Business unit performance report: 
+    <<: *r003_report_definition
+    cron: '0 0 * * * *' # Run on the hour
+
+development:
+  :schedule:
+    R003 YTD Business unit performance report:
+      <<: *r003_report_definition
+      every: ['2m', first_in: '0s']
