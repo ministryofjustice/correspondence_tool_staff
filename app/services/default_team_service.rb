@@ -22,7 +22,8 @@ class DefaultTeamService
        },
        {
          team: BusinessUnit.press_office,
-         user: User.find_by!(full_name: Settings.press_office_default_user)
+         user: BusinessUnit.press_office.users.first
+         # User.find_by!(full_name: Settings.press_office_default_user)
        }]
     when BusinessUnit.press_office
       [{
@@ -31,7 +32,8 @@ class DefaultTeamService
        },
        {
          team: BusinessUnit.private_office,
-         user: User.find_by!(full_name: Settings.private_office_default_user)
+         user: BusinessUnit.private_office.users.first
+         # User.find_by!(full_name: Settings.private_office_default_user)
        }]
     else
       []
