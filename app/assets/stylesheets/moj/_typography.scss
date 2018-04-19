@@ -145,12 +145,3 @@ table caption{
     @include bold-24();
   }
 }
-
-.search-no-results {
-  p:first-child {
-    margin-bottom: 0;
-  }
-  ul {
-    margin-bottom: $gutter;
-  }
-}
