@@ -1,12 +1,14 @@
 ---
-:concurrency: 2
+:concurrency: 5
 production:
-  :concurrency: 4
-:logfile: ./log/sidekiq-reports.log
+  :concurrency: 10
+staging:
+  :concurrency: 10
+:logfile: ./log/sidekiq-background-jobs.log
 :queues:
+  - correspondence_tool_staff_mailers
   - correspondence_tool_staff_report_generator
   - correspondence_tool_staff_search_index_updater
-
 
 r003_report_definition: &r003_report_definition
   class: ReportGeneratorJob
