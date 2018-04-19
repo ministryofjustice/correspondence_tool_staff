@@ -7,12 +7,12 @@ class SearchTestDataSeeder
   def run
     @case_count= 0
     while @case_count < 200
-      create_case(@case_count)
+      create_case
       @case_count += 1
     end
   end
 
-  def create_case(index)
+  def create_case
     params = HashWithIndifferentAccess.new({
             type: select_type,
             name: select_name,

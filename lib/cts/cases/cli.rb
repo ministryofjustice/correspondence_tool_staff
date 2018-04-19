@@ -4,7 +4,7 @@ require 'cts/cases/create'
 require 'cts/cases/reindex'
 
 module CTS::Cases
-  class CLI < Thor # rubocop:disable Metrics/ClassLength
+  class CLI < Thor
     # include Thor::Rails unless const_defined?(:SKIP_RAILS) && SKIP_RAILS
 
     default_command :list
