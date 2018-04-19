@@ -79,16 +79,6 @@ CREATE TYPE requester_type AS ENUM (
 
 
 --
--- Name: search_query_type; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE search_query_type AS ENUM (
-    'search',
-    'filter'
-);
-
-
---
 -- Name: state; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -643,12 +633,9 @@ ALTER SEQUENCE search_index_id_seq OWNED BY search_index.id;
 
 CREATE TABLE search_queries (
     id integer NOT NULL,
-    user_id integer NOT NULL,
-    parent_id integer,
-    query_type search_query_type DEFAULT 'search'::search_query_type NOT NULL,
-    filter_type character varying,
-    query character varying NOT NULL,
     query_hash character varying NOT NULL,
+    user_id integer NOT NULL,
+    query character varying NOT NULL,
     num_results integer NOT NULL,
     num_clicks integer DEFAULT 0 NOT NULL,
     highest_position integer,
