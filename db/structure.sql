@@ -643,9 +643,12 @@ ALTER SEQUENCE search_index_id_seq OWNED BY search_index.id;
 
 CREATE TABLE search_queries (
     id integer NOT NULL,
-    query_hash character varying NOT NULL,
     user_id integer NOT NULL,
+    parent_id integer,
+    query_type search_query_type DEFAULT 'search'::search_query_type NOT NULL,
+    filter_type character varying,
     query character varying NOT NULL,
+    query_hash character varying NOT NULL,
     num_results integer NOT NULL,
     num_clicks integer DEFAULT 0 NOT NULL,
     highest_position integer,
@@ -1660,7 +1663,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180322183946'),
 ('20180406145035'),
 ('20180410142138'),
+('20180410143714');
 ('20180410143714'),
+('20180419103640'),
 ('20180419130340');
 
 
