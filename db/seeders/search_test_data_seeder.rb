@@ -1,84 +1,76 @@
 class SearchTestDataSeeder
 
   def initialize
-    @responding_teams = BusinessUnit.responding.map { |team| team.id.to_s}
+    @show = CTS::Cases::Show.new
   end
 
   def run
-    @index= 0
-    while @index < 200
-      create_case(@index)
-      @index += 1
+    @case_count= 0
+    while @case_count < 200
+      create_case(@case_count)
+      @case_count += 1
     end
   end
 
   def create_case(index)
     params = HashWithIndifferentAccess.new({
-        "case"=>{
-            "type"=> chose_type,
-            "name"=> chose_name,
-            "email"=>chose_email,
-            "postal_address"=>chose_postal_address,
-            "requester_type"=>chose_requester_type,
-            received_date: chose_received_date,
-            "created_at"=>"2018-04-05 09:00:00 +0100",
-            "delivery_method"=>chose_delivery_method,
-            "subject"=>chose_subject,
-            "message"=> chose_message,
-            "flagged_for_disclosure_specialist_clearance"=>set_flagged_for_disclosure,
-            "flagged_for_press_office_clearance"=>set_flagged_for_press_and_private_office,
-            "flagged_for_private_office_clearance"=>set_flagged_for_press_and_private_office,
-            "responding_team"=>chose_responding_team,
-            "target_state"=>chose_target_state
-        },
-        "commit"=>"Create Case"
-    })
+            type: select_type,
+            name: select_name,
+            email: select_email,
+            postal_address: select_postal_address,
+            requester_type: select_requester_type,
+            received_date: select_received_date,
+            created_at: select_created_at,
+            delivery_method: select_delivery_method,
+            subject: select_subject,
+            message: select_message,
+            flag_for_team: set_flagged,
+            responding_team: select_responding_team,
+            target_state: select_target_state,
+        })
 
-     case_creator = CTS::Cases::Create.new(Rails.logger, params['case'])
-    @case = case_creator.new_case
-    @selected_state = params['case']['target_state']
-    ap params[:case]
-    if @case.valid?
-      case_creator.call([@selected_state], @case)
-      puts "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-      puts "Case created: #{@case.number}"
-      puts "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    else
-      puts @case.errors.full_messages
-      @case.responding_team = BusinessUnit.find(
-          params['case']['responding_team']
-      )
-      # prepare_flagged_options_for_displaying
-      # @target_states = available_target_states
-      # @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
+    ActiveRecord::Base.transaction do
+      case_creator = CTS::Cases::Create.new(Rails.logger, params)
+      @case = case_creator.new_case
+      selected_state = params['target_state']
+      if @case.valid?
+        case_creator.call([selected_state], @case)
+        puts "Case created: #{@case.number}"
+        @show.call(@case)
+      else
+        puts "Failed for these params: "
+        ap params
+        puts "with these errors: "
+        puts @case.errors.full_messages
+      end
     end
   end
 
-  def chose_type
+  def select_type
     types = [
               "Case::FOI::Standard",
               "Case::FOI::ComplianceReview",
               "Case::FOI::TimelinessReview",
               "Case::FOI::Standard"
             ]
-    types[@index % types.length]
+    types[@case_count % types.length]
   end
 
-  def chose_name
+  def select_name
     names = [
               "Noam Chomsky", "Bert Vaux", "Steven Pinker",
               "Edward Sapir", "Benjamin Whorf", "Ben Whorf",
               "Ludwig Wittgenstein", "Peter Ladefoged", "Jonathon Edwards",
-              "Sue Savage-Rumbaugh", "N Chomsky", "Andrew Carnie", "Kanzi"
+              "Sue Savage-Rumbaugh", "Nim Chimpsky", "Andrew Carnie", "Kanzi"
             ]
-    names[@index % names.length]
+    names[@case_count % names.length]
   end
 
-  def chose_email
-    "#{"name".gsub(/\s+/, "")}@gerlach.com"
+  def select_email
+    "#{select_name.gsub(/\s+/, "")}@gerlach.com"
   end
 
-  def chose_postal_address
+  def select_postal_address
     addresses = [
                 "10 Downing Street\r\nWestminster\r\nLondon\r\nSW1A 2AA",
                 "221B Baker Street\r\nLondon\r\n NW1 6XE",
@@ -91,10 +83,10 @@ class SearchTestDataSeeder
                 "1 Marlborough Rd,\r\n St. James's,\r\n London \r\nSW1A 1BS",
                 nil
               ]
-    addresses[@index % addresses.length]
+    addresses[@case_count % addresses.length]
   end
 
-  def chose_requester_type
+  def select_requester_type
     req_type = [
                 'academic_business_charity',
                 'journalist',
@@ -104,36 +96,36 @@ class SearchTestDataSeeder
                 'staff_judiciary',
                 'what_do_they_know'
               ]
-    req_type[@index % req_type.length]
+    req_type[@case_count % req_type.length]
   end
 
-  def chose_received_date
+  def select_received_date
     dates = [
-              Date.today - 1,
-              Date.today - 3,
-              Date.today - 5,
-              Date.today - 17,
-              Date.today - 19,
-              Date.today - 20,
-              Date.today - 29,
-              Date.today - 30,
-              Date.today - 50,
-              Date.today - 60,
-              Date.today - 70
+              1.business_days.ago,
+              3.business_days.ago,
+              5.business_days.ago,
+              20.business_days.ago,
+              50.business_days.ago,
+              70.business_days.ago,
             ]
-    dates[@index % dates.length]
+    0.business_days.after(dates[@case_count % dates.length]).to_date
   end
 
-  def chose_delivery_method
+  def select_created_at
+    0.business_days.after(select_received_date - 5.days).to_s
+  end
+
+  def select_delivery_method
+     # Sent by post needs a document uploaded on case creation which CTS does not currently handle
     delivery_method = [
                       # 'sent_by_post',
                       'sent_by_email',
                       ]
 
-    delivery_method[@index % delivery_method.length]
+    delivery_method[@case_count % delivery_method.length]
   end
 
-  def chose_subject
+  def select_subject
     subject = [
                 "Prisoner releases in the past 3 months",
                 "Cost of prison meals",
@@ -144,56 +136,45 @@ class SearchTestDataSeeder
                 "Sex offenders treatment",
                 "funding of digital"
               ]
-    subject[@index % subject.length]
+    subject[@case_count % subject.length]
   end
 
-  def chose_message
+  def select_message
     messages = [
               "I would like to know how many prisoners have been released from HM Feltham in the past 3 months from June of this year",
               "Are prison meals expensive? and how many food options do they have? Oh I do wish I knew",
               "How far back do your records of riots go?",
               "Please tell me under the FOIA what chages there were to court fees in 2015",
               "Are prisoner still released on tempory licence? if so please tell me how many have been in the past 5 years",
-              "With the rise in technology has there been a rise in the number of mobile phone seizures in prisons in England?
-                could I have the numbers of phone that have been seized across the past 20 years",
+              "With the rise in technology has there been a rise in the number of mobile phone seizures in prisons in England. Could I have the numbers of phone that have been seized across the past 20 years",
               "What treatment is offered to sex offenders in institutions across the UK",
               "How much money is spend at the MOJ digital team, specifically how much is spent on: i) coffee, ii) laptops, iii) cables"
             ]
-    messages[@index % messages.length]
+    messages[@case_count % messages.length]
   end
 
-  def set_flagged_for_disclosure
-    # [1, 0, 1][@index % 2]
-    # flag_status[@index % flag_status.length]
-    1
+  def set_flagged
+    flag_status = ["disclosure", "press", "private", nil]
+    flag_status[@case_count % flag_status.length]
   end
 
-  def set_flagged_for_press_and_private_office
-    # if set_flagged_for_disclosure[@index % 4] == 0
-    #   0
-    # else
-      # flag_status = ["0", "1"]
-      # return flag_status[@index % flag_status.length]
-    # end
-    # [1, 0][@index % 2]
-    1
+  def select_responding_team
+    @responding_teams ||= BusinessUnit.responding.map { |team| team.id.to_s}
+
+    @responding_teams.to_a[ @case_count % @responding_teams.length]
   end
 
-  def chose_responding_team
-    @responding_teams.to_a[ @index % @responding_teams.length]
-  end
-
-  def chose_target_state
-    if set_flagged_for_press_and_private_office == 1
-      chose_target_state_full
-    elsif set_flagged_for_disclosure == 1
-      chose_target_state_trigger
+  def select_target_state
+    if set_flagged == 'press' || set_flagged == 'private'
+      select_target_state_full
+    elsif set_flagged == 'disclosure'
+      select_target_state_trigger
     else
-      chose_target_state_standard
+      select_target_state_standard
     end
   end
 
-  def chose_target_state_full
+  def select_target_state_full
     states = [
               "unassigned",
               "awaiting_responder",
@@ -205,11 +186,11 @@ class SearchTestDataSeeder
               "responded",
               "closed"
             ]
-    states[@index % states.length]
+    states[@case_count % states.length]
 
   end
 
-  def chose_target_state_trigger
+  def select_target_state_trigger
     states = [
               "unassigned",
               "awaiting_responder",
@@ -219,10 +200,10 @@ class SearchTestDataSeeder
               "responded",
               "closed"
             ]
-    states[@index % states.length]
+    states[@case_count % states.length]
   end
 
-  def chose_target_state_standard
+  def select_target_state_standard
     states = [
               "unassigned",
               "awaiting_responder",
@@ -231,6 +212,6 @@ class SearchTestDataSeeder
               "responded",
               "closed"
             ]
-  states[@index % states.length]
+  states[@case_count % states.length]
   end
 end

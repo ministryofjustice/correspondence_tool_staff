@@ -3,13 +3,6 @@ require 'cts'
 module CTS::Cases
   class Show
 
-    # def initialize(logger, options = {})
-    #   @logger = logger
-    #   @options = options
-    #   # @klass = @options[:type].nil? ? Case::Base : @options[:type].constantize
-    #   # @options.delete(:type)
-    # end
-
     def call(kase)
       ap kase
 
