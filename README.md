@@ -122,6 +122,11 @@ $ ./cts create -n4 unassigned drafting # create 4 cases each in unassigned and d
 $ ./cts --help create                  # display full help text for create command
 ```
 
+To create 200 cases in various states with various responders for search testing, you can use the following rake task:
+```
+rake seed:search:data
+```
+
 
 ### Additional Setup
 
@@ -409,4 +414,3 @@ control aspects of the build. The available build argements are:
 
 1. **closed**  
    The kilo has marked the case as closed.
-
