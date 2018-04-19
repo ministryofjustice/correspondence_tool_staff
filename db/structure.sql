@@ -608,22 +608,52 @@ CREATE TABLE schema_migrations (
 
 
 --
+-- Name: search_index; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE search_index (
+    id integer NOT NULL,
+    case_id integer NOT NULL,
+    document tsvector NOT NULL
+);
+
+
+--
+-- Name: search_index_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE search_index_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: search_index_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE search_index_id_seq OWNED BY search_index.id;
+
+
+--
 -- Name: search_queries; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE search_queries (
     id integer NOT NULL,
-    user_id integer NOT NULL,
-    parent_id integer,
-    query_type search_query_type DEFAULT 'search'::search_query_type NOT NULL,
-    filter_type character varying,
-    query character varying NOT NULL,
     query_hash character varying NOT NULL,
+    user_id integer NOT NULL,
+    query character varying NOT NULL,
     num_results integer NOT NULL,
     num_clicks integer DEFAULT 0 NOT NULL,
     highest_position integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    parent_id integer,
+    query_type search_query_type DEFAULT 'search'::search_query_type NOT NULL,
+    filter_type character varying
 );
 
 
@@ -989,6 +1019,13 @@ ALTER TABLE ONLY reports ALTER COLUMN id SET DEFAULT nextval('reports_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY search_index ALTER COLUMN id SET DEFAULT nextval('search_index_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY search_queries ALTER COLUMN id SET DEFAULT nextval('search_queries_id_seq'::regclass);
 
 
@@ -1159,6 +1196,14 @@ ALTER TABLE ONLY reports
 
 ALTER TABLE ONLY schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: search_index_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY search_index
+    ADD CONSTRAINT search_index_pkey PRIMARY KEY (id);
 
 
 --
@@ -1506,6 +1551,13 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON versions USING btree (it
 
 
 --
+-- Name: search_index_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX search_index_idx ON search_index USING gin (document);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -1608,6 +1660,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180322183946'),
 ('20180406145035'),
 ('20180410142138'),
-('20180410143714');
+('20180410143714'),
+('20180419130340');
 
 
