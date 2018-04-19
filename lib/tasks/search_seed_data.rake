@@ -6,6 +6,9 @@ namespace :seed do
 
       # Rake::Task['db:reseed'].invoke
       require File.join(Rails.root, 'db', 'seeders', 'search_test_data_seeder')
+      Rake::Task['db:seed:dev:teams'].invoke
+      Rake::Task['db:seed:dev:users'].invoke
+
       SearchTestDataSeeder.new.run
 
     end
