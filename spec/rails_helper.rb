@@ -138,7 +138,7 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do
-    seed_database_for_tests
+    DbHousekeeping.clean(seed: true)
   end
 
   config.after(:suite) do

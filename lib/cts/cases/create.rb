@@ -55,6 +55,7 @@ module CTS::Cases
                                           Case::FOI::Standard.requester_types.keys.sample),
         received_date:      received_date,
         created_at:         created_at,
+        dirty:              options.fetch(:dirty, true)
       )
     end
 
@@ -202,9 +203,9 @@ module CTS::Cases
                                         BypassParamsManager.new({}),
                                         nil)
       rus.seed!('spec/fixtures/eon.pdf')
-      kase.state_machine.add_response_to_flagged_case!(responder,
-                                                       responding_team,
-                                                       kase.attachments)
+      kase.state_machine.add_response_to_flagged_case!(acting_user: responder,
+                                                       acting_team:responding_team,
+                                                       filenames: kase.attachments)
     end
 
     def transition_to_pending_press_office_clearance(kase)
@@ -293,7 +294,7 @@ module CTS::Cases
 
     def call_case_approval_service(user, kase)
       result = CaseApprovalService
-                 .new(user: user, kase: kase).call
+                 .new(user: user, kase: kase, bypass_params: nil).call
       unless result == :ok
         raise "Could not approve case response , case id: #{kase.id}, user id: #{user.id}, result: #{result}"
       end

@@ -37,15 +37,13 @@ class CaseApprovalService
         else
           approve_and_progress_as_normal(assignment)
         end
-
         @result = :ok
       end
     rescue Statesman::GuardFailedError, ConfigurableStateMachine::InvalidEventError
       @result = :error
     end
-
     notify_next_approver if @result == :ok
-
+    return result
   end
 
   def approve_and_progress_as_normal(assignment)
