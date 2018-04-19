@@ -27,10 +27,14 @@
   .grid-row
     .column-full.search-no-results
       p
-        strong
-          = "Please try "
+        strong.strong-block
+          = "Please check "
           span.visually-hidden
-            = "some of these options "
+            = "that "
+        = "You have entered either the requestor's name, case number or keyword "
+        = "correctly and fully."
+        br
+          = "For example"
       ul.list-bullet
         li
           = "check if you've entered in the requestor's name correctly."
