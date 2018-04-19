@@ -106,12 +106,6 @@ module ConfigurableStateMachine
 
     after(:all)   { DbHousekeeping.clean }
 
-    describe 'configurable?' do
-      it 'returns true' do
-        expect(machine.configurable?).to be true
-      end
-    end
-
     describe 'initial_state' do
       it 'returns unassigned' do
         expect(machine.initial_state).to eq 'unassigned'

@@ -12,10 +12,6 @@ module ConfigurableStateMachine
       @events ||= gather_all_events
     end
 
-    def configurable?
-      true
-    end
-
     def initial_state
       @config.initial_state
     end
