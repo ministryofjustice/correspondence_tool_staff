@@ -257,6 +257,10 @@ class Case::Base < ApplicationRecord
 
   include CaseStates
 
+  ConfigurableStateMachine::Machine.states.each do |state|
+    define_method("#{state}?") { current_state == state }
+  end
+
   def upload_response_groups
     CaseAttachmentUploadGroupCollection.new(self, attachments.response)
   end
