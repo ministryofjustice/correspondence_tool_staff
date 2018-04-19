@@ -17,7 +17,7 @@ class DashboardController < ApplicationController
   end
 
   def search_queries
-    @queries = SearchQuery.order(id: :desc).includes(:user).limit(100)
+    @queries = SearchQuery.where(parent_id: nil).order(id: :desc).includes(:user).limit(100)
   end
 
 
