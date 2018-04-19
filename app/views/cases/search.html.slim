@@ -30,7 +30,7 @@
   .grid-row
     .column-full.button-holder
       = form_tag dummy_filter_cases_path, method: :post
-      = hidden_field_tag 'filter', 'type:'
+      = hidden_field_tag 'filter', 'type'
       = hidden_field_tag 'query', 'timeliness'
       = submit_tag 'Filter: Timeliness', class: 'button button-no-margin'
 
