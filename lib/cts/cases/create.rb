@@ -55,6 +55,7 @@ module CTS::Cases
                                           Case::FOI::Standard.requester_types.keys.sample),
         received_date:      received_date,
         created_at:         created_at,
+        dirty:              options.fetch(:dirty, true)
       )
     end
 
