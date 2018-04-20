@@ -79,6 +79,16 @@ CREATE TYPE requester_type AS ENUM (
 
 
 --
+-- Name: search_query_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE search_query_type AS ENUM (
+    'search',
+    'filter'
+);
+
+
+--
 -- Name: state; Type: TYPE; Schema: public; Owner: -
 --
 
