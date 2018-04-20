@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 = form_for @query, url: search_cases_path, method: :get do |f|
   = hidden_field_tag('search_query[parent_id]', @parent_id)
   .grid-row
@@ -8,3 +9,37 @@
   = f.submit  "Apply filter", class: "button"
   a.acts-like-button.button-left-spacing href="#"
     = "Cancel"
+=======
+= form_tag search_cases_path, method: :get
+
+  .form-group
+    fieldset
+      legend
+        .heading-medium
+          = "Select sensitivity "
+      .multiple-choice
+        = check_box_tag 'flagged_case[]', 'non-trigger', false, id: 'flag_case_non_trigger'
+        = label_tag 'flag_case_non_trigger', 'Non-trigger'
+      .multiple-choice
+        = check_box_tag 'flagged_case[]', 'trigger', false, id: 'flag_case_trigger'
+        = label_tag 'flag_case_trigger', 'Trigger'
+
+  .form-group
+    fieldset
+      legend
+        .heading-medium
+          = "Select type"
+      .multiple-choice
+        = check_box_tag 'case_type[]', 'foi_standard', false, id: 'case_type_foi_standard'
+        = label_tag 'case_type_foi_standard' , 'FOI - Standard'
+      / .multiple-choice
+      /   = check_box_tag 'case_type[]', 'foi_trigger' , false, id: 'case_type_foi_trigger_only'
+      /   = label_tag 'case_type_foi_trigger_only', 'FOI - Trigger only'
+      .multiple-choice
+        = check_box_tag 'case_type[]', 'foi_ir_compliance', false, id: 'case_type_foi_ir_compliance'
+        = label_tag 'case_type_foi_ir_compliance', 'FOI – Internal review for compliance'
+      .multiple-choice
+        = check_box_tag 'case_type[]', 'foi_ir_timeliness', false, id: 'case_type_foi_ir_timeliness'
+        = label_tag 'case_type_foi_ir_timeliness', 'FOI – Internal review for timeliness'
+  = submit_tag  "Apply filter", class: "button"
+>>>>>>> WIP - Initial case type filters form

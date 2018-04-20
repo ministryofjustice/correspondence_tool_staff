@@ -49,6 +49,42 @@
         #ct-tab-panel-exemption.ct-tab-panel
           = render partial: 'cases/search_filters/exemptions'
 
+.grid-row
+  .column-full
+    .ct-tab-wrapper
+      .ct-tab-label
+        = "Filter by"
+
+      ul role="tablist" aria-label="Filter by" class="ct-tab-list"
+        li.ct-tab-item role="presentation"
+          a.ct-tab role="tab" tabindex="0" aria-selected="true" href="#ct-tab-panel-type"
+            = "Type"
+        li.ct-tab-item role="presentation"
+          a.ct-tab role="tab" tabindex="-1"
+            = "Status"
+        li.ct-tab-item role="presentation"
+          a.ct-tab role="tab" tabindex="-1"
+            = "Final deadline"
+        li.ct-tab-item role="presentation"
+          a.ct-tab role="tab" tabindex="-1"
+            = "Assigned to"
+        li.ct-tab-item role="presentation"
+          a.ct-tab role="tab" tabindex="-1"
+            = "Refusals & exemptions"
+
+.grid-row
+  .column-full.ct-tab-wrapper
+    .ct-tab-panels
+
+      #ct-tab-panel-type.ct-tab-panel
+        = render partial: 'cases/search_filters/case_types'
+
+        / .ct-tab-panel
+        / .ct-tab-panel
+        / .ct-tab-panel
+        / .ct-tab-panel
+        /  = submit_tag
+
 - if @cases.any?
   = render partial: 'cases/shared/case_list'
 
