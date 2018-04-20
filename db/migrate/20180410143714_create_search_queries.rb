@@ -1,8 +1,6 @@
 class CreateSearchQueries < ActiveRecord::Migration[5.0]
   def change
 
-    create_enum :search_query_type, 'search', 'filter'
-
     create_table :search_queries do |t|
       t.string :query_hash, null: false
       t.integer :user_id, null: false
