@@ -303,4 +303,3 @@ describe CaseSearchService do
     end
   end
 end
-
