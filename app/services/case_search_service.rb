@@ -77,7 +77,7 @@ class CaseSearchService
     ancestor_search_queries = SearchQuery.by_query_hash_with_ancestors!(@parent_hash)
     ancestor_search_queries.each do |search_query|
       if search_query.search?
-        @unpaginated_result_set = @policy_scope.search(search_query.query)
+        @unpaginated_result_set = @policy_scope.search(search_query.search_query)
       else
         @unpaginated_result_set = CaseFilterService.new(@unpaginated_result_set, search_query).call
       end

@@ -41,7 +41,7 @@ describe CaseSearchService do
           expect(SearchQuery.count).to eq 1
           sq = SearchQuery.first
           expect(sq.query_hash).to eq service.query_hash
-          expect(sq.query).to eq specific_query
+          expect(sq.search_query).to eq specific_query
           expect(sq.num_results).to eq 0
         end
       end
@@ -78,7 +78,7 @@ describe CaseSearchService do
               expect(SearchQuery.count).to eq 1
               sq = SearchQuery.first
               expect(sq.query_hash).to eq service.query_hash
-              expect(sq.query).to eq specific_query
+              expect(sq.search_query).to eq specific_query
               expect(sq.num_results).to eq 1
             end
           end
@@ -95,7 +95,7 @@ describe CaseSearchService do
               expect(SearchQuery.count).to eq 1
               sq = SearchQuery.first
               expect(sq.query_hash).to eq service.query_hash
-              expect(sq.query).to eq specific_query.strip
+              expect(sq.search_query).to eq specific_query.strip
               expect(sq.num_results).to eq 1
             end
           end
@@ -177,7 +177,7 @@ describe CaseSearchService do
           expect(sq.user_id).to eq user.id
           expect(sq.parent_id).to eq @sq.id
           expect(sq.filter_type).to eq 'type'
-          expect(sq.query).to eq 'internal_review'
+          expect(sq.search_query).to eq 'internal_review'
           expect(sq.num_results).to eq 4
         end
       end
@@ -221,7 +221,7 @@ describe CaseSearchService do
           expect(sq.user_id).to eq user.id
           expect(sq.parent_id).to eq @sq_parent.id
           expect(sq.filter_type).to eq 'type'
-          expect(sq.query).to eq 'compliance'
+          expect(sq.search_query).to eq 'compliance'
           expect(sq.num_results).to eq 2
         end
       end

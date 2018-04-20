@@ -102,7 +102,7 @@ describe SearchQuery do
           }.to change { SearchQuery.count }.by(1)
           sq = SearchQuery.first
           expect(sq.query_hash).to eq query_hash
-          expect(sq.query).to eq params[:query]
+          expect(sq.search_query).to eq params[:query]
           expect(sq.num_results).to eq 22
           expect(sq.num_clicks).to eq 0
         end

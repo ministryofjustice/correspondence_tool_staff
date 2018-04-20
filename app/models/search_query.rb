@@ -57,7 +57,7 @@ class SearchQuery < ApplicationRecord
               query_type:     'search',
               query_hash:     service.query_hash,
               user_id:        service.current_user.id,
-              query:          service.query,
+              query:          "{\"search\": {\"query\": \"#{service.query}\"}}",
               parent_id:      parent_search_query_id(service),
               num_results:    service.unpaginated_result_set.size
       )
@@ -75,7 +75,7 @@ class SearchQuery < ApplicationRecord
               query_hash:     service.query_hash,
               user_id:        service.current_user.id,
               parent_id:      parent_search_query_id(service),
-              query:          service.query,
+              query:          "{\"filter\": {\"query\": \"#{service.query}\"}}",
               num_results:    service.unpaginated_result_set.size
       )
     else
@@ -103,4 +103,7 @@ class SearchQuery < ApplicationRecord
     end
   end
 
+  def search_query
+    query['search']['query']
+  end
 end
