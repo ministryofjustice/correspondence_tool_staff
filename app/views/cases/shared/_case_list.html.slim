@@ -39,7 +39,7 @@
             td aria-label="#{t('common.case_list.number')}"
               span.visually-hidden
                 = t('common.case_list.view_case')
-              = case_link_with_hash(kase, :number, @query_hash, @page, position)
+              = case_link_with_hash(kase, :number, @page, position)
             td aria-label="#{t('common.case_list.type')}"
               = "#{kase.pretty_type} "
               = kase.trigger_case_marker

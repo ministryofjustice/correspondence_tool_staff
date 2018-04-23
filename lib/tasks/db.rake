@@ -29,7 +29,16 @@ namespace :db do
       conn.drop_table(table, force: :cascade)
     end
 
-    enum_types = %w(assignment_type attachment_type requester_type state user_role team_roles cases_delivery_methods)
+    enum_types = %w(
+      assignment_type
+      attachment_type
+      requester_type
+      state
+      user_role
+      team_roles
+      cases_delivery_methods
+      search_query_type
+    )
     enum_types.each do |type|
       conn.execute("DROP TYPE IF EXISTS #{type}")
     end
