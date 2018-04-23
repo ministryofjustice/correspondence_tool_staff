@@ -104,7 +104,7 @@ describe 'papertrail', versioning: true do
       expect(version_hash['received_date']).to eq Date.parse('2018-04-19')
 
       kase.update(received_date: version_hash['received_date'])
-      expect(kase.received_date).to eq  Date.parse('2018-04-19')
+      expect(kase.received_date).to eq Date.parse('2018-04-19')
     end
       
   end
