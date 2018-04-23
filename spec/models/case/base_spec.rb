@@ -640,6 +640,42 @@ RSpec.describe Case::Base, type: :model do
       end
     end
 
+    describe 'with exemption scope' do
+      before(:all) do
+        require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
+
+        CaseClosure::MetadataSeeder.seed!
+
+        @kase_1 = create_closed_case_with_exemptions('s22', 's23')          # future,  security
+        @kase_2 = create_closed_case_with_exemptions('s22', 's36')          # future,  prej
+        @kase_3 = create_closed_case_with_exemptions('s29', 's33', 's37')   # economy, audit, royals
+      end
+
+      it 'returns a list of cases which have the specified exemption' do
+        exemption = CaseClosure::Exemption.find_by(abbreviation: 'future')
+        expect(Case::Base.with_exemptions([exemption.id])).to match_array [@kase_1, @kase_2]
+        expect(Case::Base.with_exemptions([exemption.id])).not_to include @kase_3
+      end
+
+      it 'returns a list of cases which have any of the specified exemptions' do
+        exemption = CaseClosure::Exemption.find_by(abbreviation: 'prej')
+        exemption_1 = CaseClosure::Exemption.find_by(abbreviation: 'economy')
+        expect(Case::Base.with_exemptions([exemption.id, exemption_1.id])).to match_array [@kase_2, @kase_3]
+        expect(Case::Base.with_exemptions([exemption.id, exemption_1.id])).not_to include @kase_1
+      end
+
+      after(:all) { DbHousekeeping.clean }
+
+
+      def create_closed_case_with_exemptions(*args)
+        kase = create :closed_case
+        args.each do |snn|
+          kase.exemptions << CaseClosure::Exemption.__send__(snn)
+        end
+        kase
+      end
+    end
+
     describe '#responding_team' do
       it { should have_one(:responding_team) }
     end

@@ -33,9 +33,9 @@
         / li.ct-tab-item role="presentation"
         /   a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-assigned-to"
         /     = "Assigned to"
-        / li.ct-tab-item role="presentation"
-        /   a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-exemption"
-        /     = "Exemptions"
+        li.ct-tab-item role="presentation"
+          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-exemption"
+            = "Exemptions"
 
       .ct-tab-panels aria-expanded="false"
 
@@ -46,6 +46,7 @@
         #ct-tab-panel-final-deadline.ct-tab-panel
         #ct-tab-panel-assigned-to.ct-tab-panel
         #ct-tab-panel-exemption.ct-tab-panel
+          = render partial: 'cases/search_filters/exemptions'
 
 - if @cases.any?
   = render partial: 'cases/shared/case_list'

@@ -35,6 +35,8 @@ class SearchQuery < ApplicationRecord
                  filter_type: :string,
                  filter_sensitivity: [:string, array: true, default: []],
                  filter_case_type: [:string, array: true, default: []],
+                 exemption_ids: [:integer, array: true, default: []],
+                 common_exemption_ids: [:integer, array: true, default: []],
                  filter_status: [:string, array: true, default: []]
   acts_as_tree
 
@@ -57,6 +59,9 @@ class SearchQuery < ApplicationRecord
   delegate :available_sensitivities, to: CaseTypeFilter
   delegate :available_case_types, to: CaseTypeFilter
   delegate :available_statuses, to: CaseStatusFilter
+
+  delegate :available_exemptions, to: ExemptionFilter
+  delegate :available_common_exemptions, to: ExemptionFilter
 
   def results
     results = Case::BasePolicy::Scope.new(User.find(user_id), Case::Base.all).for_view_only
