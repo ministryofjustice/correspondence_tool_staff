@@ -14,7 +14,11 @@ module DbHousekeeping
       teams
       teams_users_roles
       users
-      correspondence_types)
+      correspondence_types
+      cases_users_transitions_trackers
+      linked_cases
+      search_queries
+    )
     tables.each do |table|
       ActiveRecord::Base.connection.execute("TRUNCATE #{table}")
     end

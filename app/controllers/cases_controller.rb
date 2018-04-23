@@ -111,6 +111,22 @@ class CasesController < ApplicationController
     redirect_to redirect_url
   end
 
+  def dummy_filter
+    if params[:filter]
+      service = CaseSearchService.new(current_user, params, flash[:query_hash])
+      service.call
+      if service.error?
+        flash.now[:alert] = service.error_message
+      else
+        @cases = service.result_set
+        @query_hash = service.query_hash
+        @page = params[:page] || '1'
+        flash[:query_hash] = @query_hash
+      end
+    end
+    render :search
+  end
+
 
   def new
     permitted_correspondence_types
@@ -155,8 +171,8 @@ class CasesController < ApplicationController
   end
 
   def show
-    if params.key?(:hash)
-      SearchQuery.update_for_click(params, flash)
+    if flash.key?(:query_hash)
+      SearchQuery.update_for_click(flash[:query_hash], params[:pos].to_i)
     end
 
     if policy(@case).can_accept_or_reject_responder_assignment?
@@ -290,7 +306,7 @@ class CasesController < ApplicationController
   def search
     @cases = []
     if params[:query]
-      service = CaseSearchService.new(current_user, params)
+      service = CaseSearchService.new(current_user, params, nil)
       service.call
       if service.error?
         flash.now[:alert] = service.error_message
