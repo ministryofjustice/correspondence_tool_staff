@@ -292,6 +292,33 @@ rake db:dump:help
 ```
 
 
+### Papertrail
+
+The papertrail gem is used as an auditing tool, keeping the old copies of records every time they are
+changed.  There are a couple of complexities in using this tool which are described below:
+
+## JSONB fields on the database
+The default serializer does not de-serialize the properties column correctly becuase internally it is
+held as JSON, and papertrail serializes the object in YAML.  The custom seraializer ```CtsPapertrailSerializer```
+takes care of this and reconstitutes the JSON fields correctly.  See ```/spec/lib/papertrail_spec.rb``` for 
+examples of how to reify a previous version, or get a hash of field values for the previous version.
+
+## GOV_UK_DATE_FIELDS
+
+Dates marked as gov_uk_date fields are not correctly set back to their original values when using reify.  This is
+becuase behind the scenes, Papertrail uses ```model[:attribute] =``` notation to set the values on the model, where as 
+```model.attribute =``` is the only form that will work for gov_uk_date_fields (until such time as the 
+gov_uk_date_fields gem is updated).
+
+The work-around is as follows:
+
+```
+reified_kase = kase.versions.last.reify                                # create an old version correct except for gov-uk dates
+version_hash = CtsPapertrailSerializer.load(kase.versions.last.object) # get a hash of all the old values for each field
+reified_kase.received_date = version_hash['received_date']             # update the gov_uk_date fields
+```
+
+
 ### Testing
 
 #### Testing in Parallel
