@@ -6,14 +6,6 @@ GIT
     bank_holiday (0.0.4)
       dish
 
-GIT
-  remote: https://github.com/ministryofjustice/statesman-events.git
-  revision: b4958d4855114e732acef5c884dfa941f3aede76
-  branch: add-before-event
-  specs:
-    statesman-events (0.0.1)
-      statesman (>= 1.3)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -500,7 +492,6 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    statesman (2.0.1)
     table_print (1.5.6)
     temple (0.7.7)
     term-ansicolor (1.4.0)
@@ -623,8 +614,6 @@ DEPENDENCIES
   slim-rails (~> 3.1)
   spring
   spring-watcher-listen (~> 2.0.0)
-  statesman (~> 2.0.1)
-  statesman-events!
   table_print
   thor-rails
   timecop

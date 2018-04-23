@@ -48,10 +48,7 @@ gem 'schema_plus_enums', '~> 0.1'
 gem 'sidekiq', '~> 5.0'
 gem 'sidekiq-logging-json', '~> 0.0.18'
 gem 'sidekiq-scheduler'
-gem 'statesman', '~> 2.0.1'
-# gem 'statesman-events', '~> 0.0.1'
-gem 'statesman-events', git: 'https://github.com/ministryofjustice/statesman-events.git',
-                        branch: 'add-before-event'
+
 gem 'table_print'
 gem 'thor-rails'
 gem 'timecop'
