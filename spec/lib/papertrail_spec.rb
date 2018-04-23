@@ -36,7 +36,6 @@ describe 'papertrail', versioning: true do
   describe 'reify' do
     it 'recreates the record and stores the previsou values' do
       Timecop.freeze(run_time) do
-
         kase = create_dummy_case
         expect(kase.received_date).to eq Date.parse('2018-04-19')
         expect(kase.escalation_deadline).to eq Date.parse('2018-04-25')
@@ -80,33 +79,37 @@ describe 'papertrail', versioning: true do
   
   describe 'versioning hash' do
     it 'holds the values of the attributes before the change' do
-      kase = create_dummy_case
-      update_dummy_case(kase)
-      version_hash = CtsPapertrailSerializer.load(kase.versions.last.object)
-      expect(version_hash['name']).to eq 'Stephen Richards'
-      expect(version_hash['email']).to eq 'sr@moj.com'
-      expect(version_hash['message']).to eq 'this is a message'
-      expect(version_hash['subject']).to eq 'This is the subject'
-      expect(version_hash['subject_full_name']).to eq 'John Criminal'
-      expect(version_hash['subject_type']).to eq 'offender'
-      expect(version_hash['third_party']).to eq true
-      expect(version_hash['reply_method']).to eq 'email'
-      expect(version_hash['num_clicks']).to eq 0
-      expect(version_hash['escalation_deadline']).to eq '2018-04-25'
-      expect(version_hash['internal_deadline']).to eq '2018-05-03'
-      expect(version_hash['external_deadline']).to eq '2018-05-18'
+      Timecop.freeze(run_time) do
+        kase = create_dummy_case
+        update_dummy_case(kase)
+        version_hash = CtsPapertrailSerializer.load(kase.versions.last.object)
+        expect(version_hash['name']).to eq 'Stephen Richards'
+        expect(version_hash['email']).to eq 'sr@moj.com'
+        expect(version_hash['message']).to eq 'this is a message'
+        expect(version_hash['subject']).to eq 'This is the subject'
+        expect(version_hash['subject_full_name']).to eq 'John Criminal'
+        expect(version_hash['subject_type']).to eq 'offender'
+        expect(version_hash['third_party']).to eq true
+        expect(version_hash['reply_method']).to eq 'email'
+        expect(version_hash['num_clicks']).to eq 0
+        expect(version_hash['escalation_deadline']).to eq '2018-04-25'
+        expect(version_hash['internal_deadline']).to eq '2018-05-03'
+        expect(version_hash['external_deadline']).to eq '2018-05-18'
+      end
     end
+
 
     it 'hold the CORRECT date received' do
-      kase = create_dummy_case
-      update_dummy_case(kase)
-      version_hash = CtsPapertrailSerializer.load(kase.versions.last.object)
-      expect(version_hash['received_date']).to eq Date.parse('2018-04-19')
+      Timecop.freeze(run_time) do
+        kase = create_dummy_case
+        update_dummy_case(kase)
+        version_hash = CtsPapertrailSerializer.load(kase.versions.last.object)
+        expect(version_hash['received_date']).to eq Date.parse('2018-04-19')
 
-      kase.update(received_date: version_hash['received_date'])
-      expect(kase.received_date).to eq Date.parse('2018-04-19')
+        kase.update(received_date: version_hash['received_date'])
+        expect(kase.received_date).to eq Date.parse('2018-04-19')
+      end
     end
-      
   end
 
   def create_dummy_case(options = {})
