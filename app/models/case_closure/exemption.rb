@@ -71,5 +71,9 @@ module CaseClosure
       subtype == 'ncnd'
     end
 
+    def self.most_frequently_used
+      self.unscoped.where(abbreviation: %w{ pers othermeans court future }).order(:name)
+    end
+
   end
 end

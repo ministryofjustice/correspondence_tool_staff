@@ -127,8 +127,12 @@ class Case::Base < ApplicationRecord
   }
 
   scope :appeal, -> { where('type=? OR type=?', 'Case::FOI::TimelinessReview', 'Case::FOI::ComplianceReview' )}
+
+  scope :with_exemptions, ->(exemption_ids) { includes(:cases_exemptions).where(cases_exemptions: {exemption_id: exemption_ids} ) }
+
   scope :internal_review_compliance, -> { where(type: 'Case::FOI::ComplianceReview')}
   scope :internal_review_timeliness, -> { where(type: 'Case::FOI::TimelinessReview')}
+
   validates :current_state, presence: true, on: :update
 
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
@@ -139,7 +143,7 @@ class Case::Base < ApplicationRecord
 
   validates_with ::ClosedCaseValidator
 
-  serialize :exemption_ids, Array
+  # serialize :exemption_ids, Array
 
   has_many :assignments, dependent: :destroy, foreign_key: :case_id
 
@@ -234,10 +238,15 @@ class Case::Base < ApplicationRecord
 
   belongs_to :info_held_status, class_name: 'CaseClosure::InfoHeldStatus'
 
-  has_and_belongs_to_many :exemptions,
-                          class_name: 'CaseClosure::Exemption',
-                          join_table: 'cases_exemptions',
-                          foreign_key: :case_id
+  has_many :cases_exemptions,
+           class_name: 'CaseExemption',
+           table_name: :cases_exemptions,
+           foreign_key: :case_id
+
+  has_many :exemptions,
+            class_name: 'CaseClosure::Exemption',
+            through: 'cases_exemptions',
+            foreign_key: :case_id
 
   has_and_belongs_to_many :linked_cases,
                           class_name: 'Case::Base',

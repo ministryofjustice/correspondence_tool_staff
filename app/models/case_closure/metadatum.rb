@@ -35,4 +35,11 @@ class CaseClosure::Metadatum < ApplicationRecord
     self.where(name: name).first
   end
 
+  def self.exemption_ncnd_refusal
+    where(type: 'CaseClosure::RefusalReason', abbreviation: 'ncnd') +
+        unscoped.where(type: 'CaseClosure::Exemption').where.not(subtype: 'ncnd')
+            .order(:name)
+  end
+
+
 end
