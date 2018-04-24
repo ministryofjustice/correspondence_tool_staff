@@ -1558,6 +1558,34 @@ RSpec.describe Case::Base, type: :model do
         end
       end
     end
-
   end
+
+  describe '#assigned_disclosure_specialist' do
+    it 'returns the specialist' do
+      disclosure_specialist = create :disclosure_specialist
+      kase = create :assigned_case, :flagged_accepted, approver: disclosure_specialist
+
+      expect(kase.assigned_disclosure_specialist).to eq disclosure_specialist
+    end
+  end
+
+  describe '#assigned_press_officer' do
+    it 'returns the press_officer' do
+      press_officer = create :press_officer
+      kase = create :assigned_case, :flagged_accepted, approver: press_officer
+
+      expect(kase.assigned_press_officer).to eq press_officer
+    end
+  end
+
+  describe '#assigned_private_officer' do
+    it 'returns the private_officer' do
+
+      private_officer = create :private_officer
+      kase = create :assigned_case, :flagged_accepted, approver: private_officer
+
+      expect(kase.assigned_private_officer).to eq private_officer
+    end
+  end
+
 end
