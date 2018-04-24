@@ -32,10 +32,6 @@ class CaseSearchService
       @parent = SearchQuery.by_query_hash!(@parent_hash)
     end
 
-    @query_hash = CaseSearchService.generate_query_hash(@current_user,
-                                                        @query_type,
-                                                        @filter_type,
-                                                        @query_params)
     @query_params = params.require(:search_query)
     @query_params.permit!
     @query_params.extract!(:num_results,
@@ -43,11 +39,18 @@ class CaseSearchService
                            :highest_position,
                            :created_at,
                            :update_at)
+
+    @query_hash = CaseSearchService.generate_query_hash(@current_user,
+                                                        @query_type,
+                                                        @filter_type,
+                                                        @query_params,
+                                                        @parent)
+
   end
 
-  def self.generate_query_hash(user, query_type, filter_type, query_params, date = Date.today)
+  def self.generate_query_hash(user, query_type, filter_type, query_params, parent, date = Date.today)
     Digest::SHA256.hexdigest(
-      "#{user.id}:#{date.to_date}:#{query_type}:#{filter_type}:#{query_params.to_json}"
+      "#{user.id}:#{date.to_date}:#{query_type}:#{filter_type}:#{parent&.id}:#{query_params.to_json}"
     )
   end
 
