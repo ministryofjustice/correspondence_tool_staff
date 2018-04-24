@@ -127,14 +127,14 @@ module ConfigurableStateMachine
 
     def self.states
       ['unassigned',
-      'awaiting_responder',
-      'drafting',
-      'pending_dacu_clearance',
-      'pending_press_office_clearance',
-      'pending_private_office_clearance',
-      'awaiting_dispatch',
-      'responded',
-      'closed']
+       'awaiting_responder',
+       'drafting',
+       'pending_dacu_clearance',
+       'pending_press_office_clearance',
+       'pending_private_office_clearance',
+       'awaiting_dispatch',
+       'responded',
+       'closed']
     end
     #rubocop:enable Metrics/CyclomaticComplexity
     #rubocop:enable Metrics/MethodLength
