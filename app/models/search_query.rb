@@ -17,7 +17,6 @@
 #
 
 class SearchQuery < ApplicationRecord
-
   belongs_to :user
   belongs_to :parent, class_name: 'SearchQuery'
   has_many   :children, class_name: 'SearchQuery'
@@ -27,6 +26,11 @@ class SearchQuery < ApplicationRecord
       filter: 'filter'
   }
 
+  jsonb_accessor :query,
+                 search_text: :string,
+                 filter_type: :string,
+                 filter_sensitivity: [:string, array: true, default: []],
+                 filter_case_type: [:string, array: true, default: []]
   acts_as_tree
 
   def self.by_query_hash!(query_hash)
@@ -37,52 +41,6 @@ class SearchQuery < ApplicationRecord
     record = by_query_hash!(query_hash)
     record.ancestors.reverse + [record]
   end
-
-  def self.new_from_search_service(case_search_service)
-    if case_search_service.filter?
-      new_filter_record(case_search_service)
-    else
-      new_search_record(case_search_service)
-    end
-  end
-
-  def self.create_from_search_service(case_search_service)
-    new_from_search_service(case_search_service).save!
-  end
-
-  def self.new_search_record(service)
-    search_query = SearchQuery.find_by(query_hash: service.query_hash)
-    if search_query.nil?
-      self.new(
-              query_type:     'search',
-              query_hash:     service.query_hash,
-              user_id:        service.current_user.id,
-              query:          "{\"search\": {\"query\": \"#{service.query}\"}}",
-              parent_id:      parent_search_query_id(service),
-              num_results:    service.unpaginated_result_set.size
-      )
-    else
-      search_query
-    end
-  end
-
-  def self.new_filter_record(service)
-    search_query = SearchQuery.find_by(query_hash: service.query_hash)
-    if search_query.nil?
-      self.new(
-              query_type:     'filter',
-              filter_type:    service.filter_type,
-              query_hash:     service.query_hash,
-              user_id:        service.current_user.id,
-              parent_id:      parent_search_query_id(service),
-              query:          "{\"filter\": {\"query\": \"#{service.query}\"}}",
-              num_results:    service.unpaginated_result_set.size
-      )
-    else
-      search_query
-    end
-  end
-
 
   def self.update_for_click(query_hash, position)
     record = SearchQuery.find_by(query_hash: query_hash)
@@ -103,7 +61,28 @@ class SearchQuery < ApplicationRecord
     end
   end
 
-  def search_query
-    query['search']['query']
+  def results
+    if parent.present?
+      results = parent.results
+    else
+      results = Pundit.policy_scope!(User.find(user_id), Case::Base)
+    end
+
+    if search?
+      results.search(search_text)
+    elsif filter?
+      filter_module = "#{filter_type.camelize}Filter".constantize
+      filter_module.call(self, results)
+    else
+      RuntimeError.new("Unknown search query type #{query_type}")
+    end
+  end
+
+  def inherited_attribute_value(attribute)
+    if self.__send__(attribute).present?
+      self.__send__(attribute)
+    else
+      parent.inherited_attribute_value(attribute)
+    end
   end
 end

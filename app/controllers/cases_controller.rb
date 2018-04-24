@@ -112,8 +112,10 @@ class CasesController < ApplicationController
   end
 
   def dummy_filter
-    if params[:filter]
-      service = CaseSearchService.new(current_user, params, flash[:query_hash])
+    if params[:search_query]
+      service = CaseSearchService.new(current_user,
+                                      params,
+                                      flash[:query_hash])
       service.call
       if service.error?
         flash.now[:alert] = service.error_message
@@ -121,12 +123,13 @@ class CasesController < ApplicationController
         @cases = service.result_set
         @query_hash = service.query_hash
         @page = params[:page] || '1'
+        @query = SearchQueryFilterDecorator.decorate(service.query)
+        @filter = SearchQueryFilterDecorator.decorate(service.query)
         flash[:query_hash] = @query_hash
       end
     end
     render :search
   end
-
 
   def new
     permitted_correspondence_types
@@ -306,6 +309,7 @@ class CasesController < ApplicationController
   def search
     @cases = []
     if params[:query]
+      params[:search_query] = { search_text: params[:query] }
       service = CaseSearchService.new(current_user, params, nil)
       service.call
       if service.error?
@@ -313,7 +317,8 @@ class CasesController < ApplicationController
       else
         @cases = service.result_set
         @query = service.query
-        @query_hash = service.query_hash
+        @query_hash = SearchQueryFilterDecorator.decorate(service.query)
+        @filter = SearchQueryFilterDecorator.decorate(service.query)
         @page = params[:page] || '1'
         flash[:query_hash] = @query_hash
       end

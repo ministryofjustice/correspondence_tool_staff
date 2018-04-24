@@ -103,10 +103,19 @@ class Case::Base < ApplicationRecord
                             state: ['pending']})
   end
 
+  # cases that have ever been flagged for approval
   scope :flagged_for_approval, ->(*teams) do
     joins(:assignments)
       .where(assignments: { team_id: teams.map(&:id), role: 'approving' })
   end
+  # cases that are currently considered as trigger
+  scope :trigger, -> { joins(:assignments)
+                         .where(assignments: {
+                                  role: 'approving',
+                                  state: 'accepted',
+                                } ) }
+  # cases that are NOT currently considered as trigger
+  scope :non_trigger, -> { where.not(id: trigger) }
 
   scope :in_time, -> {
     where(

@@ -9,7 +9,7 @@
       = label_tag :query, 'Case number, requester name or keyword', class: 'form-label-bold'
       p.form-hint
         = 'For example, 170113001, John Smith or prison meals'
-      = search_field_tag :query, @query, class: 'form-control'
+      = search_field_tag :query, @query.search_text, class: 'form-control'
       = submit_tag 'Search', class: 'button button-no-margin', id: 'search-button'
 
 - if FeatureSet.dummy_filter.enabled?
