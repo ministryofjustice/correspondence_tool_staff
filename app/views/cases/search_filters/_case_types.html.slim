@@ -1,4 +1,4 @@
-= form_for @filter, url: dummy_filter_cases_path, method: :get do |f|
+= form_for @filter, url: search_cases_path, method: :get do |f|
   = hidden_field_tag('search_query[filter_type]', 'case_type')
   .grid-row
     .column-half

@@ -6,11 +6,11 @@
 .grid-row
   .column-full.button-holder
     = form_tag search_cases_path, method: :get
-      = label_tag :query, class: 'form-label-bold' do
+      = label_tag 'search_query[search_text]', class: 'form-label-bold' do
         = "Case number, requester name or keyword "
         span.form-hint
           = 'For example, 170113001, John Smith or prison meals'
-      = search_field_tag :query, @query&.search_text, class: 'form-control'
+      = search_field_tag 'search_query[search_text]', @query[:search_text], class: 'form-control'
       = submit_tag 'Search', class: 'button button-no-margin'
        /= submit_tag 'Search', class: 'button button-no-margin', id: 'search-button'
 
@@ -49,7 +49,7 @@
 - if @cases.any?
   = render partial: 'cases/shared/case_list'
 
-- if @cases.empty? && @query.present?
+- if @cases.empty? && @query[:search_text].present?
   .grid-row
     .column-full
       .search-results-summary
