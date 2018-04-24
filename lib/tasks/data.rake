@@ -127,6 +127,7 @@ namespace :data do
                                                  press_office,
                                                  dacu_disclosure
         rescue  => err
+          puts err.backtrace.join("\n\t")
           puts "!!! transition error received: #{err.class} #{err.message}"
           puts "!!! BUT THAT'S OK because we've already done the assignment,"
           puts "!!! there just won't be an transition for it."

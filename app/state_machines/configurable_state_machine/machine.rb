@@ -87,9 +87,9 @@ module ConfigurableStateMachine
         guards.all? { |g| g.call(object,last_transition,metadata) }
     end
 
-    #rubocop:disable Metrics/CyclomaticComplexity
-    #rubocop:disable Metrics/MethodLength
-    def next_state_for_event(event, params)
+
+
+    def next_state_for_event(event, params)   #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
       user = extract_user_from_metadata(params)
       if can_trigger_event?(event_name: event, metadata: params)
         event = event.to_sym
@@ -136,8 +136,6 @@ module ConfigurableStateMachine
        'responded',
        'closed']
     end
-    #rubocop:enable Metrics/CyclomaticComplexity
-    #rubocop:enable Metrics/MethodLength
 
     private
 
