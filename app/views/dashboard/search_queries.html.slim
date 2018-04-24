@@ -17,6 +17,8 @@ h1.bold-large Search queries
           th scope='col'
             | User
           th scope='col'
+            | Search/Filter
+          th scope='col'
             | Search Term
           th scope='col'
             | No. results
@@ -27,15 +29,20 @@ h1.bold-large Search queries
       tbody
         - @queries.each do |q|
           tr
-            td
-              = q.created_at.to_date
-            td
-              = q.user.full_name
-            td
-              = q.query
-            td
-              = q.num_results
-            td
-              = q.num_clicks
-            td
-              = q.highest_position
+            td= q.created_at.to_date
+            td= q.user.full_name
+            td= q.query_type
+            td= q.query
+            td= q.num_results
+            td= q.num_clicks
+            td= q.highest_position
+
+          - q.descendants.each do |d|
+            tr
+              td= ''
+              td= ''
+              td= "#{d.query_type}:#{d.filter_type}"
+              td= d.query
+              td= d.num_results
+              td= d.num_clicks
+              td= d.highest_position
