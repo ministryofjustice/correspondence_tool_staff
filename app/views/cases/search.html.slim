@@ -55,35 +55,31 @@
       .ct-tab-label
         = "Filter by"
 
-      ul role="tablist" aria-label="Filter by" class="ct-tab-list"
+      ul role="tablist" aria-label="Filter by" class="ct-tab-wrapper"
         li.ct-tab-item role="presentation"
-          a.ct-tab role="tab" tabindex="0" aria-selected="true" href="#ct-tab-panel-type"
+          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-type"
             = "Type"
         li.ct-tab-item role="presentation"
-          a.ct-tab role="tab" tabindex="-1"
+          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-status"
             = "Status"
         li.ct-tab-item role="presentation"
-          a.ct-tab role="tab" tabindex="-1"
+          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-final-deadline"
             = "Final deadline"
         li.ct-tab-item role="presentation"
-          a.ct-tab role="tab" tabindex="-1"
+          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-assigned-to"
             = "Assigned to"
         li.ct-tab-item role="presentation"
-          a.ct-tab role="tab" tabindex="-1"
+          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-exemption"
             = "Refusals & exemptions"
 
-.grid-row
-  .column-full.ct-tab-wrapper
-    .ct-tab-panels
+      .ct-tab-panels aria-expanded="false"
 
-      #ct-tab-panel-type.ct-tab-panel
-        = render partial: 'cases/search_filters/case_types'
-
-        / .ct-tab-panel
-        / .ct-tab-panel
-        / .ct-tab-panel
-        / .ct-tab-panel
-        /  = submit_tag
+        #ct-tab-panel-type.ct-tab-panel
+          = render partial: 'cases/search_filters/case_types'
+        #ct-tab-panel-status.ct-tab-panel
+        #ct-tab-panel-final-deadline.ct-tab-panel
+        #ct-tab-panel-assigned-to.ct-tab-panel
+        #ct-tab-panel-exemption.ct-tab-panel
 
 - if @cases.any?
   = render partial: 'cases/shared/case_list'
