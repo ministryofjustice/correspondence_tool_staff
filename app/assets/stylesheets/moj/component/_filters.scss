@@ -8,7 +8,7 @@
    margin-right: $gutter;
 }
 
-.ct-tab-list {
+.ct-tab-wrapper {
   display: inline-block;
 
   @include media(mobile) {
@@ -28,9 +28,13 @@
   outline: none;
   padding: $tab-border-width * 3;
   background-color: $govuk-blue;
-  color: $page-colour;
+  color: $white;
   text-decoration: none;
   margin-bottom: $tab-border-width;
+
+  &:visited, &:link {
+    color: $white;
+  }
 
   @include media(mobile) {
     border-bottom-width: $tab-border-width;
@@ -40,8 +44,8 @@
     background: $focus-colour;
     color: $text-colour;
     border-color: $focus-colour;
+    outline: none;
   }
-
 
   &[aria-selected="true"] {
     color: $govuk-blue;
@@ -62,6 +66,9 @@
 
 .ct-tab-panels {
   margin-top: $tab-border-width * -2;
+  &[aria-expanded="false"] {
+    display: none;
+  }
 }
 
 .ct-tab-panel {
@@ -69,89 +76,3 @@
   padding: 1em;
 }
 
-//.mtp-tab-container--collapsed {
-//  display: inline-block;
-//
-//  .mtp-tabpanels {
-//    display: none;
-//  }
-//}
-
-//    display: inline-block;
-//  }
-//
-//.ct-tab-container {
-//  $tab-border-width: 3px;
-//
-//  .mtp-tab-wrapper {
-//    display: block;
-//
-//    @include media(mobile) {
-//      margin-bottom: $tab-border-width * 2;
-//    }
-//  }
-//
-//  .mtp-tab-item {
-//    display: inline-block;
-//  }
-//
-//  .mtp-tab {
-//    border: $tab-border-width solid $govuk-blue;
-//    border-bottom-width: 0;
-//    margin-right: $tab-border-width;
-//    display: block;
-//    outline: none;
-//    padding: $tab-border-width * 3;
-//    background-color: $govuk-blue;
-//    color: $page-colour;
-//    text-decoration: none;
-//    margin-bottom: $tab-border-width;
-//
-//    @include media(mobile) {
-//      border-bottom-width: $tab-border-width;
-//    }
-//
-//    &:focus {
-//      background: $focus-colour;
-//      color: $text-colour;
-//      border-color: $focus-colour;
-//    }
-//
-//    &.mtp-tab--selected {
-//      color: $govuk-blue;
-//      background: $page-colour;
-//      border-color: $border-colour;
-//      padding-bottom: $tab-border-width * 5;
-//
-//      @include media(mobile) {
-//        padding-bottom: $tab-border-width * 3;
-//      }
-//
-//      &:focus {
-//        background: $focus-colour;
-//        color: $text-colour;
-//      }
-//    }
-//
-//    &.error-message {
-//      color: $error-colour;
-//    }
-//  }
-//
-//  .mtp-tabpanels {
-//    margin-top: $tab-border-width * -2;
-//  }
-//
-//  .mtp-tabpanel {
-//    border: $tab-border-width solid $border-color;
-//    padding: 1em;
-//  }
-//
-//  &.mtp-tab-container--collapsed {
-//    display: inline-block;
-//
-//    .mtp-tabpanels {
-//      display: none;
-//    }
-//  }
-//}

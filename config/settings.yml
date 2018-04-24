@@ -187,6 +187,6 @@ enabled_features:
   dummy_filter:
     Local: true
     Host-dev: true
-    Host-demo: false
+    Host-demo: true
     Host-staging: false
     Host-production: false

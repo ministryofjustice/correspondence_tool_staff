@@ -3,19 +3,19 @@
 
 //var Cookies = require('js-cookie');
 
-moj.Modules.CaseCreation = {
+moj.Modules.Tabs = {
   init: function () {
     this.bindEvents($('.ct-tab'));
   },
 
   bindEvents: function ($tabButtons) {
     if ($tabButtons.length === 0) {
-      return;
+      return false;
     }
 
     var selectedIndex = 0;
     var closed = true;
-    var $tabContainer = $tabButtons.closest('.ct-tab-wrapper');
+    var $tabContainer = $tabButtons.closest('.ct-tab-container');
     var $tabPanels = $tabContainer.find('.ct-tab-panel');
     var $tabPanelContainer = $tabPanels.closest('.ct-tab-panels');
     var tabCookieName = $tabContainer.data('tab-cookie-name');
@@ -44,14 +44,18 @@ moj.Modules.CaseCreation = {
 
     $tabButtons.on('click', function (e) {
       var $tabButton = $(this);
-      var $tabPanel = $tabButton.data('ctp-tab-panel');
-      var wasSelected = $tabButton.hasClass('ct-tab--selected');
+      var $tabPanel = $tabButton.data('ct-tab-panel');
+      var wasSelected = $tabButton.attr('aria-selected');
 
       resetTabsAndPanels(wasSelected);
 
       $tabButton.focus();
-      if (wasSelected) {
+      if (wasSelected == 'true') {
         closed = true;
+        $tabButton.attr({
+          'tabindex': '0',
+          'aria-selected': false
+        })
         $tabContainer.addClass('ct-tab-wrapper--collapsed');
         $tabPanelContainer.attr('aria-expanded', 'false');
         //if (tabCookieName) {
@@ -62,7 +66,7 @@ moj.Modules.CaseCreation = {
         selectedIndex = $tabButtons.index($tabButton);
         $tabButton.attr({
           'tabindex': '0',
-          'aria-selected': 'true'
+          'aria-selected': true
         }).addClass('ct-tab--selected');
         $tabPanel.attr('aria-hidden', 'false');
         $tabPanel.show();

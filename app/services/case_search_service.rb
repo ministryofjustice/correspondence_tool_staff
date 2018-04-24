@@ -66,7 +66,7 @@ class CaseSearchService
           @query_params.merge(
             query_type: @query_type,
             user_id: current_user.id,
-            parent_id: @parent.id,
+            parent_id: @parent&.id,
             query_hash: @query_hash,
             num_clicks: 0
           )
