@@ -154,8 +154,9 @@ class CasesController < ApplicationController
   end
 
   def show
-    if flash.key?(:query_hash)
-      SearchQuery.update_for_click(flash[:query_hash], params[:pos].to_i)
+    if flash.key?(:query_id)
+      SearchQuery.find(flash[:query_id])&.update_for_click(params[:pos].to_i)
+      # SearchQuery.update_for_click(flash[:query_id], )
     end
 
     if policy(@case).can_accept_or_reject_responder_assignment?
@@ -288,18 +289,17 @@ class CasesController < ApplicationController
 
   def search
     @cases = []
+
     if params[:search_query]
-      parent_hash = params[:commit] == 'Search' ? nil : flash[:query_hash]
-      service = CaseSearchService.new(current_user, params, parent_hash)
+      service = CaseSearchService.new(current_user,
+                                      params.slice(:search_query, :page))
       service.call
       if service.error?
         flash.now[:alert] = service.error_message
       else
         @cases = service.result_set
-        @query = SearchQueryFilterDecorator.decorate(service.query)
-        @filter = SearchQueryFilterDecorator.decorate(service.query)
-        @query_hash = service.query_hash
-        flash[:query_hash] = @query_hash
+        @query = service.query
+        @parent_id = service.parent&.id || @query.id
         @page = params[:page] || '1'
       end
     else

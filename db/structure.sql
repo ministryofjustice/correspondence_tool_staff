@@ -643,7 +643,6 @@ ALTER SEQUENCE search_index_id_seq OWNED BY search_index.id;
 
 CREATE TABLE search_queries (
     id integer NOT NULL,
-    query_hash character varying NOT NULL,
     user_id integer NOT NULL,
     query jsonb NOT NULL,
     num_results integer NOT NULL,
@@ -1418,13 +1417,6 @@ CREATE INDEX index_reports_on_report_type_id ON reports USING btree (report_type
 
 
 --
--- Name: index_search_queries_uuid; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_search_queries_uuid ON search_queries USING btree (query_hash);
-
-
---
 -- Name: index_sessions_on_session_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1663,6 +1655,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180410143714'),
 ('20180419103640'),
 ('20180419130340'),
-('20180420173415');
+('20180420173415'),
+('20180424150445');
 
 

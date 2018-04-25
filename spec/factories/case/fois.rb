@@ -64,6 +64,12 @@ FactoryGirl.define do
     end
   end
 
+  trait :indexed do
+    after(:create) do | kase |
+      kase.update_index
+    end
+  end
+
   factory :case_within_escalation_deadline, parent: :case do
     creation_time { 1.business_day.ago }
     identifier 'unassigned case within escalation deadline'

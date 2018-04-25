@@ -10,14 +10,14 @@ rspec_options = {
   failed_mode: :focus,
 }
 
-guard 'livereload' do
-  watch(%r{app/views/.+\.(erb|haml|slim)})
-  watch(%r{app/helpers/.+\.rb})
-  watch(%r{public/.+\.(css|js|html)})
-  watch(%r{config/locales/.+\.yml})
-  # Rails Assets Pipeline
-  watch(%r{(app|vendor)(/assets/\w+/(.+\.(scss|js|html|haml))).*}) { |m| "/assets/#{m[3]}" }
-end
+# guard 'livereload' do
+#   watch(%r{app/views/.+\.(erb|haml|slim)})
+#   watch(%r{app/helpers/.+\.rb})
+#   watch(%r{public/.+\.(css|js|html)})
+#   watch(%r{config/locales/.+\.yml})
+#   # Rails Assets Pipeline
+#   watch(%r{(app|vendor)(/assets/\w+/(.+\.(scss|js|html|haml))).*}) { |m| "/assets/#{m[3]}" }
+# end
 
 # guard :jasmine do
 # watch(%r{^spec/javascripts/.*(?:_s|S)pec\.(coffee|js)$})
@@ -29,6 +29,10 @@ end
 guard :rspec, rspec_options do
   watch(%r{^spec/.+_spec\.rb$})
   watch(%r{^app/(.+)\.rb$}) { |m| "spec/#{m[1]}_spec.rb" }
+  watch(%r{^app/controllers/(.+)_controller\.rb}) do |m|
+    ["spec/controllers/#{m[1]}_controller_spec.rb",
+     "spec/controllers/#{m[1]}/*_spec.rb"]
+  end
   watch(%r{^app/interfaces/api/(.+)\.rb$}) { |m| "spec/api/#{m[1]}_spec.rb" }
 end
 

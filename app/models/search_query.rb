@@ -4,16 +4,15 @@
 #
 #  id               :integer          not null, primary key
 #  user_id          :integer          not null
-#  parent_id        :integer
-#  query_type       :enum             default("search"), not null
-#  filter_type      :string
-#  query            :string           not null
-#  query_hash       :string           not null
+#  query            :jsonb            not null
 #  num_results      :integer          not null
 #  num_clicks       :integer          default(0), not null
 #  highest_position :integer
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  parent_id        :integer
+#  query_type       :enum             default("search"), not null
+#  filter_type      :string
 #
 
 class SearchQuery < ApplicationRecord
@@ -33,25 +32,14 @@ class SearchQuery < ApplicationRecord
                  filter_case_type: [:string, array: true, default: []]
   acts_as_tree
 
-  def self.by_query_hash!(query_hash)
-    self.find_by!(query_hash: query_hash)
-  end
+  # def self.by_query_hash!(query_hash)
+  #   self.find_by!(query_hash: query_hash)
+  # end
 
-  def self.by_query_hash_with_ancestors!(query_hash)
-    record = by_query_hash!(query_hash)
-    record.ancestors.reverse + [record]
-  end
-
-  def self.update_for_click(query_hash, position)
-    record = SearchQuery.find_by(query_hash: query_hash)
-    unless record.nil?
-      record.num_clicks += 1
-      if record.highest_position.nil? || record.highest_position > position
-        record.highest_position = position
-      end
-      record.save!
-    end
-  end
+  # def self.by_query_hash_with_ancestors!(query_hash)
+  #   record = by_query_hash!(query_hash)
+  #   record.ancestors.reverse + [record]
+  # end
 
   def self.parent_search_query_id(case_search_service)
     if case_search_service.child?
@@ -61,28 +49,38 @@ class SearchQuery < ApplicationRecord
     end
   end
 
-  def results
-    if parent.present?
-      results = parent.results
-    else
-      results = Pundit.policy_scope!(User.find(user_id), Case::Base)
+  def update_for_click(position)
+    self.num_clicks += 1
+    if self.highest_position.nil? || self.highest_position > position
+      self.highest_position = position
     end
-
-    if search?
-      results.search(search_text)
-    elsif filter?
-      filter_module = "#{filter_type.camelize}Filter".constantize
-      filter_module.call(self, results)
-    else
-      RuntimeError.new("Unknown search query type #{query_type}")
-    end
+    save!
   end
 
-  def inherited_attribute_value(attribute)
-    if self.__send__(attribute).present?
-      self.__send__(attribute)
-    else
-      parent.inherited_attribute_value(attribute)
+  def filter_classes
+    [CaseTypeFilter]
+  end
+
+  def sensitivity_settings
+    {
+      'non-trigger' => 'Non-trigger',
+      'trigger'     => 'Trigger',
+    }
+  end
+
+  def type_settings
+    {
+      'foi-standard' => 'FOI - Standard',
+      'foi-ir-compliance' => 'FOI - Internal review for compliance',
+      'foi-ir-timeliness' => 'FOI - Internal review for timeliness',
+    }
+  end
+
+  def results
+    results = Pundit.policy_scope!(User.find(user_id), Case::Base)
+    results = results.search(search_text)
+    filter_classes.reduce(results) do |result, filter_class|
+      filter_class.new(self, result).call
     end
   end
 end

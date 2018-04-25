@@ -1,36 +1,45 @@
-module CaseTypeFilter
-  def self.call(query, records)
-    @@query = query
+class CaseTypeFilter
+  def initialize(query, records)
+    @query = query
+    @records = records
+  end
+
+  def call
+    records = @records
 
     # unless query[:filter_sensitivity].blank?
-      records = filter_sensitivity(query, records)
+      records = filter_sensitivity(records)
     # end
 
     # unless query[:filter_case_type].blank?
-      records = filter_case_type(query, records)
+      records = filter_case_type(records)
     # end
 
     records
   end
 
-  def self.filter_trigger?
-    'trigger'.in? @@query['filter_sensitivity']
+  private
+
+  def filter_trigger?
+    'trigger'.in? @query.filter_sensitivity
   end
 
-  def self.filter_non_trigger?
-    'non-trigger'.in? @@query['filter_sensitivity']
+  def filter_non_trigger?
+    'non-trigger'.in? @query.filter_sensitivity
   end
 
-  def self.filter_sensitivity(query, records)
+  def filter_sensitivity(records)
     if filter_trigger? && !filter_non_trigger?
       records.trigger
     elsif !filter_trigger? && filter_non_trigger?
       records.non_trigger
+    else
+      records
     end
   end
 
-  def self.filter_case_type(query, records)
-    filters = query['filter_case_type'].map do |filter|
+  def filter_case_type(records)
+    filters = @query.filter_case_type.map do |filter|
       case filter
       when ''                  then records
       when 'foi-standard'      then records.standard_foi
@@ -46,7 +55,7 @@ module CaseTypeFilter
         result.or(filter)
       end
     else
-      Case::Base.all
+      records
     end
   end
 end
