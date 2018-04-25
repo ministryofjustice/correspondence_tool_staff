@@ -102,4 +102,3 @@ class CaseSearchService
     search_query
   end
 end
-
