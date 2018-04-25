@@ -14,6 +14,15 @@ describe CaseSearchService do
                            }
                          ) }
 
+    context 'use of the policy scope' do
+      let(:specific_query)    { 'my scoped query' }
+      it 'uses the for_view_only policy scope' do
+        expect(Case::BasePolicy::Scope).to receive(:new).with(user, Case::Base.all).and_call_original
+        expect_any_instance_of(Case::BasePolicy::Scope).to receive(:for_view_only).and_call_original
+        service.call
+      end
+    end
+
     context 'no parent id specified' do
       let(:specific_query) { 'something' }
 
@@ -124,6 +133,7 @@ describe CaseSearchService do
         end
       end
     end
+
 
     context 'parent id specified' do
       after(:all)   { DbHousekeeping.clean }
