@@ -207,6 +207,7 @@ en:
         filter_status: "Select status"
         common_exemption_ids: Most frequently used
         exemption_ids: All exemptions
+        filter_assigned_to_ids: Matching business units
       team:
         role: What will the business unit be responsible for?
         correspondente_type_ids: Correspondence types
@@ -214,6 +215,8 @@ en:
       feedback:
         comment: |
           Let us know what you were doing and what could be improved or fixed.
+      search_query:
+        business_unit_name_filter: For example, Legal Aid Agency
       case:
         linked_case_number: " For example 170131001"
         upload_comment: This will be added to the converstation section of the case.
@@ -281,6 +284,8 @@ en:
         subject_full_name: "Full name of data subject"
       feedback:
         comment: Help make this service better
+      search_query:
+        business_unit_name_filter: Find and select a business unit
       team:
         name: Business unit name
         email: Business unit group email

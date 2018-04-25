@@ -16,10 +16,14 @@
 #
 
 class SearchQuery < ApplicationRecord
+
+  attr_accessor :business_unit_name_filter
+
   FILTER_CLASSES =     [
     CaseTypeFilter,
     CaseStatusFilter,
-    ExemptionFilter
+    ExemptionFilter,
+    AssignedBusinessUnitFilter
   ]
 
   belongs_to :user
@@ -34,6 +38,7 @@ class SearchQuery < ApplicationRecord
   jsonb_accessor :query,
                  search_text: :string,
                  filter_type: :string,
+                 filter_assigned_to_ids: [:integer, array: true, default: []],
                  filter_sensitivity: [:string, array: true, default: []],
                  filter_case_type: [:string, array: true, default: []],
                  exemption_ids: [:integer, array: true, default: []],
@@ -57,11 +62,14 @@ class SearchQuery < ApplicationRecord
     save!
   end
 
+
+
   delegate :available_sensitivities, to: CaseTypeFilter
   delegate :available_case_types, to: CaseTypeFilter
   delegate :available_statuses, to: CaseStatusFilter
   delegate :available_exemptions, to: ExemptionFilter
   delegate :available_common_exemptions, to: ExemptionFilter
+  delegate :responding_business_units, to: AssignedBusinessUnitFilter
 
   def results
     results = Case::BasePolicy::Scope.new(User.find(user_id), Case::Base.all).for_view_only

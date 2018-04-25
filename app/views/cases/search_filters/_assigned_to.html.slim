@@ -1,0 +1,10 @@
+= form_for @query, url: search_cases_path, method: :get do |f|
+  = hidden_field_tag('search_query[parent_id]', @parent_id)
+  .grid-row
+    .column-full
+      = f.text_field :business_unit_name_filter
+      .js-all-business-units
+        = f.collection_check_boxes :filter_assigned_to_ids, @query.responding_business_units, :id, :name, include_hidden: false
+  = f.submit  "Apply filter", class: "button"
+  a.acts-like-button.button-left-spacing href="#"
+    = "Cancel"
