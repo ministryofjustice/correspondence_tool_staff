@@ -3,9 +3,9 @@ require 'rails_helper'
 describe DeadlineFilter do
 
   before(:all) do
-    @kase_1 = create :case, final_deadline: Date.new(2018, 3, 11)
-    @kase_2 = create :case, final_deadline: Date.new(2018, 3, 16)
-    @kase_3 = create :case, final_deadline: Date.new(2018, 4, 21)
+    @kase_1 = create :case, received_date: Date.today
+    @kase_2 = create :case, received_date: Date.today
+    @kase_3 = create :case, received_date: Date.today
   end
 
   after(:all) { DbHousekeeping.clean }
@@ -15,18 +15,26 @@ describe DeadlineFilter do
     let(:filter)  { DeadlineFilter.new(arel, params) }
 
     context 'no cases with deadline in date range' do
-      from_date = Date.new(2017, 12, 4)
-      to_date = Date.new(2017, 12, 25)
-      let(:params) { { from: from_date, to: to_date } }
+      let(:params) { { external_deadline_from_dd: 4,
+                        external_deadline_from_mm: 12,
+                        external_deadline_from_yy: 2017,
+                        external_deadline_to_dd: 25,
+                        external_deadline_to_mm: 12,
+                        external_deadline_to_yy: 2017,
+                      } }
       it 'returns an empty collection' do
-        expect(filter.call).to be_empty
+        expect(filter.call).to eq []
       end
     end
 
     context 'case with deadline within date rang' do
-      from_date = Date.new(2018, 3, 4)
-      to_date = Date.new(2017, 4, 20)
-      let(:params) { { from: from_date, to: to_date } }
+      let(:params) { { external_deadline_from_dd: 1,
+                        external_deadline_from_mm: 4,
+                        external_deadline_from_yy: 2018,
+                        external_deadline_to_dd: 20,
+                        external_deadline_to_mm: 4,
+                        external_deadline_to_yy: 2018,
+                      } }
 
       it 'returns only cases within date range' do
         expect(filter.call).to match_array [@kase_1, @kase_2]
