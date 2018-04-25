@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.9
--- Dumped by pg_dump version 9.5.9
+-- Dumped from database version 9.5.10
+-- Dumped by pg_dump version 9.5.10
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -608,36 +608,6 @@ CREATE TABLE schema_migrations (
 
 
 --
--- Name: search_index; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE search_index (
-    id integer NOT NULL,
-    case_id integer NOT NULL,
-    document tsvector NOT NULL
-);
-
-
---
--- Name: search_index_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE search_index_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: search_index_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE search_index_id_seq OWNED BY search_index.id;
-
-
---
 -- Name: search_queries; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1018,13 +988,6 @@ ALTER TABLE ONLY reports ALTER COLUMN id SET DEFAULT nextval('reports_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY search_index ALTER COLUMN id SET DEFAULT nextval('search_index_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY search_queries ALTER COLUMN id SET DEFAULT nextval('search_queries_id_seq'::regclass);
 
 
@@ -1195,14 +1158,6 @@ ALTER TABLE ONLY reports
 
 ALTER TABLE ONLY schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
-
-
---
--- Name: search_index_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY search_index
-    ADD CONSTRAINT search_index_pkey PRIMARY KEY (id);
 
 
 --
@@ -1540,13 +1495,6 @@ CREATE UNIQUE INDEX index_users_on_unlock_token ON users USING btree (unlock_tok
 --
 
 CREATE INDEX index_versions_on_item_type_and_item_id ON versions USING btree (item_type, item_id);
-
-
---
--- Name: search_index_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX search_index_idx ON search_index USING gin (document);
 
 
 --

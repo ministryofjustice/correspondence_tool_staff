@@ -10,12 +10,40 @@ class Case::BasePolicy < ApplicationPolicy
     raise "Missing param" if @user.nil? || @case.nil?
   end
 
+
+
+
+  # PolicyScopes
+  #
+  # This inner Scope class is responsible for returning a collection of Case::Base records that the
+  # user is able to work with.  It is normally called with the line:
+  #
+  #     scope = Pundit.policy_scope(user, Case::Base.all)
+  #
+  # This actually calls Case::BasePolicy::Scope.new(user, Case::Base.all).resolve behind the scenes,
+  # and so in the case of responders, the resulting scope is limited to cases that he can work on.
+  #
+  # However, for searching, we need a wider scope, and so we use this to return a scope containing
+  # all the records that a responder is allowed to view:
+  #
+  #     scope = Case::BasePolicy::Scope.new(user, Case::Base.all).for_view_only
+  #
   class Scope
     attr_reader :user, :scope
 
     def initialize(user, scope)
       @user  = user
       @scope = scope
+    end
+
+
+    def for_view_only
+      # the base scope with no qualifiers is for viewing cases
+      if user.manager? || user.responder? || user.approver?
+        Case::Base.all
+      else
+        Case::Base.none
+      end
     end
 
     def resolve

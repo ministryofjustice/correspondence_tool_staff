@@ -12,7 +12,8 @@ class CaseSearchService
 
   def initialize(current_user, params)
     @current_user = current_user
-    @params = params.permit!
+    @policy_scope = Case::BasePolicy::Scope.new(@current_user, Case::Base.all).for_view_only
+    @query = params[:query].strip
     @page = params[:page]
     @error = false
     @error_message = nil
