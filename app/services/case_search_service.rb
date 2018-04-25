@@ -4,7 +4,8 @@ class CaseSearchService
     :filter_sensitivity,
     :filter_status,
     :exemption_ids,
-    :common_exemption_ids
+    :common_exemption_ids,
+    :filter_assigned_to_ids
   ]
   QUERY_ATTRIBUTES = [:search_text] + FILTER_ATTRIBUTES
 
