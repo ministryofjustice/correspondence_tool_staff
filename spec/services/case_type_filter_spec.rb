@@ -3,7 +3,8 @@ require "rails_helper"
 describe CaseTypeFilter do
   before :all do
     DbHousekeeping.clean
-    puts Benchmark.measure { @setup = StandardSetup.new }
+    @setup = StandardSetup.new(:std_unassigned_foi, :trig_unassigned_foi,
+    :std_unassigned_irc, :std_unassigned_irc)
 
     # @foi_standard_case = create :foi_case
     # @foi_trigger_case = create :foi_case, :trigger
