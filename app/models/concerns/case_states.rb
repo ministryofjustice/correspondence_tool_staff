@@ -62,19 +62,6 @@ module CaseStates
 
   private
 
-  def state_machine_class
-    if self.type_abbreviation == 'SAR'
-      ConfigurableStateMachine::Machine
-    else
-      configurable_states = workflow == 'trigger' || workflow == 'full_approval' ? TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE : NON_TRIGGER_STATES_REQUIRING_CONFIGURABLE_STATE_MACHINE
-      if current_state.in?(configurable_states)
-        ConfigurableStateMachine::Machine
-      else
-        Case::FOI::StandardStateMachine
-      end
-    end
-  end
-
   def reset_state_machine
     @state_machine = nil
   end

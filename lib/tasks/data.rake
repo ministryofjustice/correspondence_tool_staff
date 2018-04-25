@@ -126,10 +126,11 @@ namespace :data do
           kase.state_machine.flag_for_clearance! press_officer,
                                                  press_office,
                                                  dacu_disclosure
-        rescue Statesman::TransitionFailedError => err
-          puts "!!! transition error received: #{err.message}"
+        rescue  => err
+          puts "!!! transition error received: #{err.class} #{err.message}"
           puts "!!! BUT THAT'S OK because we've already done the assignment,"
           puts "!!! there just won't be an transition for it."
+          puts err.backtrace.join("\n\t")
         end
       end
     end

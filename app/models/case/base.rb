@@ -30,7 +30,6 @@
 
 #rubocop:disable Metrics/ClassLength
 class Case::Base < ApplicationRecord
-  include Statesman::Adapters::ActiveRecordQueries
 
   def self.searchable_fields_and_ranks
     {
@@ -256,14 +255,11 @@ class Case::Base < ApplicationRecord
 
   delegate :available_events, to: :state_machine
 
-  # weirdly, this require is needed on travis, but not anywhere else
-  require File.join(Rails.root, 'app', 'state_machines', 'case', 'foi', 'standard_state_machine')
+  include CaseStates
 
-  Case::FOI::StandardStateMachine.states.each do |state|
+  ConfigurableStateMachine::Machine.states.each do |state|
     define_method("#{state}?") { current_state == state }
   end
-
-  include CaseStates
 
   def upload_response_groups
     CaseAttachmentUploadGroupCollection.new(self, attachments.response)
@@ -529,6 +525,25 @@ class Case::Base < ApplicationRecord
   def clean?
     !dirty?
   end
+
+  def assigned_disclosure_specialist
+    ass = assignments.approving.accepted.detect{ |a| a.team_id == BusinessUnit.dacu_disclosure.id }
+    raise 'No assigned disclosure specialist' if ass.nil? || ass.user.nil?
+    ass.user
+  end
+
+  def assigned_press_officer
+    ass = assignments.approving.accepted.detect{ |a| a.team_id == BusinessUnit.press_office.id }
+    raise 'No assigned press officer' if ass.nil? || ass.user.nil?
+    ass.user
+  end
+
+  def assigned_private_officer
+    ass = assignments.approving.accepted.detect{ |a| a.team_id == BusinessUnit.private_office.id }
+    raise 'No assigned private officer' if ass.nil? || ass.user.nil?
+    ass.user
+  end
+
 
 
   private

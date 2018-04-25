@@ -39,7 +39,7 @@ class CaseApprovalService
         end
         @result = :ok
       end
-    rescue Statesman::GuardFailedError, ConfigurableStateMachine::InvalidEventError
+    rescue ConfigurableStateMachine::InvalidEventError
       @result = :error
     end
     notify_next_approver if @result == :ok

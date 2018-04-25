@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Case::FOI::StandardStateMachine do
+describe ConfigurableStateMachine::Machine do
   context 'standard workflow' do
 
 ##################### MANAGER  ############################
