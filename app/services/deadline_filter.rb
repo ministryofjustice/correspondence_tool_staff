@@ -12,18 +12,19 @@ class DeadlineFilter
 
   def call
     from_date = Date.new(@params[:external_deadline_from_yy],
-                          @params[:external_deadline_from_mm],
-                          @params[:external_deadline_from_dd])
+                         @params[:external_deadline_from_mm],
+                         @params[:external_deadline_from_dd])
 
     to_date = Date.new(@params[:external_deadline_to_yy],
-                        @params[:external_deadline_to_mm],
-                        @params[:external_deadline_to_dd])
-    @range = from_date..to_date
+                       @params[:external_deadline_to_mm],
+                       @params[:external_deadline_to_dd])
+
+    deadline_is_within_period(from_date, to_date)
   end
 
   private
 
-  def deadline_is_within_period(params)
-    @arel.where(external_deadline === @range)
+  def deadline_is_within_period(from_date, to_date)
+    @arel.where("properties->>'external_deadline' BETWEEN ? AND ?", from_date, to_date)
   end
 end
