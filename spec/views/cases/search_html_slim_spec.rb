@@ -17,6 +17,7 @@ describe 'cases/search.html.slim', type: :view do
   context 'no search query' do
     before :each do
       assign(:cases,[])
+      assign(:query, create(:search_query, search_text: ''))
       render
       cases_search_page.load(rendered)
     end
@@ -39,7 +40,7 @@ describe 'cases/search.html.slim', type: :view do
   context 'Users searches for case '
     context 'results are found' do
       before :each do
-        assign(:query, 'no search results')
+        assign(:query, create(:search_query, search_text: 'no search results'))
         assign(:cases,[])
         render
         cases_search_page.load(rendered)
@@ -61,9 +62,9 @@ describe 'cases/search.html.slim', type: :view do
 
     context 'found some results' do
       before :each do
-
-        assign(:query, 'some search term')
-        assign(:cases,Case::Base.all.decorate)
+        create :case
+        assign(:query, create(:search_query, search_text: 'some search term'))
+        assign(:cases,Case::Base.all.page(1).decorate)
         render
         cases_search_page.load(rendered)
       end

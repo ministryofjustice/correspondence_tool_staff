@@ -59,6 +59,12 @@ describe CasesController, type: :controller do
       expect(assigns[:query]).to eq search_query
     end
 
+    it 'sets the query id in the flash' do
+      get :search, params: { search_query: { search_text: assigned_case.subject } }
+      search_query = SearchQuery.last
+      expect(flash[:query_id]).to eq search_query.id
+    end
+
     context 'search does not have a parent' do
       it 'sets the parent_id to the current search_query id' do
         allow(CaseSearchService).to receive(:new).and_return(case_search_service)

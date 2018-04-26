@@ -156,7 +156,6 @@ class CasesController < ApplicationController
   def show
     if flash.key?(:query_id)
       SearchQuery.find(flash[:query_id])&.update_for_click(params[:pos].to_i)
-      # SearchQuery.update_for_click(flash[:query_id], )
     end
 
     if policy(@case).can_accept_or_reject_responder_assignment?
@@ -300,6 +299,7 @@ class CasesController < ApplicationController
         @cases = service.result_set
         @query = service.query
         @parent_id = service.parent&.id || @query.id
+        flash[:query_id] = @query.id
         @page = params[:page] || '1'
       end
     else

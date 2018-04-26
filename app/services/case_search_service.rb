@@ -12,7 +12,6 @@ class CaseSearchService
 
   def initialize(current_user, params)
     @current_user = current_user
-    @policy_scope = Pundit.policy_scope!(@current_user, Case::Base)
     @params = params.permit!
     @page = params[:page]
     @error = false
@@ -27,13 +26,13 @@ class CaseSearchService
                            :highest_position,
                            :created_at,
                            :update_at)
-
     if @query_params[:parent_id]
       @parent = SearchQuery.find(@query_params[:parent_id])
       @query_type = :filter
     else
       @parent = nil
       @query_type = :search
+      @query_params[:search_text].strip!
     end
 
     @query = find_or_initialize_query(@query_params,
@@ -71,7 +70,7 @@ class CaseSearchService
     if query_params.key? :parent_id
       @parent = SearchQuery.find(query_params[:parent_id])
       query_params = @parent.slice(*filter_attributes)
-                            .merge(query_params)
+                            .merge(query_params.to_unsafe_h)
     end
     SearchQuery.new(
       query_params.merge(

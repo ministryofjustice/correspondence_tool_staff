@@ -7,13 +7,8 @@ class CaseTypeFilter
   def call
     records = @records
 
-    # unless query[:filter_sensitivity].blank?
-      records = filter_sensitivity(records)
-    # end
-
-    # unless query[:filter_case_type].blank?
-      records = filter_case_type(records)
-    # end
+    records = filter_sensitivity(records)
+    records = filter_case_type(records)
 
     records
   end

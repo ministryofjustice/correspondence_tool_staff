@@ -32,15 +32,6 @@ class SearchQuery < ApplicationRecord
                  filter_case_type: [:string, array: true, default: []]
   acts_as_tree
 
-  # def self.by_query_hash!(query_hash)
-  #   self.find_by!(query_hash: query_hash)
-  # end
-
-  # def self.by_query_hash_with_ancestors!(query_hash)
-  #   record = by_query_hash!(query_hash)
-  #   record.ancestors.reverse + [record]
-  # end
-
   def self.parent_search_query_id(case_search_service)
     if case_search_service.child?
       self.by_query_hash!(case_search_service.parent_hash).id
