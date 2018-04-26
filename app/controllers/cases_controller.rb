@@ -288,7 +288,9 @@ class CasesController < ApplicationController
 
   def search
     @cases = []
-
+    @date_1 = Date.today
+    @date_2 = 3.business_days.from_now
+    @date_3 = 10.business_days.from_now
     if params[:search_query]
       service = CaseSearchService.new(current_user,
                                       params.slice(:search_query, :page))
