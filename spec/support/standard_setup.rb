@@ -206,7 +206,7 @@ class StandardSetup
 
   attr_reader :cases, :user_teams
 
-  def initialize(only_cases: nil) # rubocop:disable Metrics/MethodLength
+  def initialize(only_cases: nil)
     # cases are named <workflow>_<state>_<other_info> where:
     #
     # * workflow:

@@ -18,11 +18,11 @@ describe('Modules.Tabs.js', function() {
       });
     })
 
-    describe('...bindEvents', function() {
-      it('quits the call if no selectors have been passed in', function(){
-        var result = moj.Modules.Tabs.bindEvents();
-        expect(result).toBeUndefined()
-      })
-    })
+    // describe('...bindEvents', function() {
+    //   it('quits the call if no selectors have been passed in', function(){
+    //     var result = moj.Modules.Tabs.bindEvents();
+    //     expect(result).toBeUndefined()
+    //   })
+    // })
   })
 });
