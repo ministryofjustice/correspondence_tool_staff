@@ -2,9 +2,9 @@
   = hidden_field_tag('search_query[parent_id]', @parent_id)
   .grid-row
     .column-half
-      = f.collection_check_boxes :filter_case_type, @query.type_settings, :first, :second, include_hidden: false
+      = f.collection_check_boxes :filter_case_type, @query.available_case_types, :first, :second, include_hidden: false
     .column-half
-      = f.collection_check_boxes :filter_sensitivity, @query.sensitivity_settings, :first, :second, include_hidden: false
+      = f.collection_check_boxes :filter_sensitivity, @query.available_sensitivities, :first, :second, include_hidden: false
   = f.submit  "Apply filter", class: "button"
   a.acts-like-button.button-left-spacing href="#"
     = "Cancel"

@@ -56,21 +56,8 @@ class SearchQuery < ApplicationRecord
     ]
   end
 
-  def sensitivity_settings
-    {
-      'non-trigger' => 'Non-trigger',
-      'trigger'     => 'Trigger',
-    }
-  end
-
-  def type_settings
-    {
-      'foi-standard' => 'FOI - Standard',
-      'foi-ir-compliance' => 'FOI - Internal review for compliance',
-      'foi-ir-timeliness' => 'FOI - Internal review for timeliness',
-    }
-  end
-
+  delegate :available_sensitivities, to: CaseTypeFilter
+  delegate :available_case_types, to: CaseTypeFilter
   delegate :available_statuses, to: CaseStatusFilter
 
   def results
