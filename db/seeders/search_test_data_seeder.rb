@@ -10,6 +10,7 @@ class SearchTestDataSeeder
       create_case
       @case_count += 1
     end
+    Case::Base.update_all_indexes
   end
 
   def create_case
