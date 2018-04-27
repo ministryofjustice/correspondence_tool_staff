@@ -67,6 +67,7 @@ module PageObjects
       {
         cases_what_do_you_want_to_do: 'Cases::WhatDoYouWantToDoSection',
         case_status:                  'Cases::CaseStatusSection',
+        case_status_filter_panel:     'Cases::StatusFilterPanelSection',
         linked_cases:                 'Cases::LinkedCasesSection',
         case_request:                 'Cases::CaseRequestSection',
         case_details:                 'Cases::CaseDetailsSection',
