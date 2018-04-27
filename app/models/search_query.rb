@@ -68,7 +68,7 @@ class SearchQuery < ApplicationRecord
   end
 
   def results
-    results = Pundit.policy_scope!(User.find(user_id), Case::Base)
+    results = Case::BasePolicy::Scope.new(User.find(user_id), Case::Base.all).for_view_only
     results = results.search(search_text)
     filter_classes.reduce(results) do |result, filter_class|
       filter_class.new(self, result).call
