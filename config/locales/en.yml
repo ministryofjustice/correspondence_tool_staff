@@ -204,7 +204,7 @@ en:
       search_query:
         filter_sensitivity: "Select sensitivity"
         filter_case_type: "Select type"
-
+        filter_status: "Select status"
       team:
         role: What will the business unit be responsible for?
         correspondente_type_ids: Correspondence types

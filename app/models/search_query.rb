@@ -29,7 +29,8 @@ class SearchQuery < ApplicationRecord
                  search_text: :string,
                  filter_type: :string,
                  filter_sensitivity: [:string, array: true, default: []],
-                 filter_case_type: [:string, array: true, default: []]
+                 filter_case_type: [:string, array: true, default: []],
+                 filter_status: [:string, array: true, default: []]
   acts_as_tree
 
   def self.parent_search_query_id(case_search_service)
@@ -49,7 +50,10 @@ class SearchQuery < ApplicationRecord
   end
 
   def filter_classes
-    [CaseTypeFilter]
+    [
+      CaseTypeFilter,
+      CaseStatusFilter,
+    ]
   end
 
   def sensitivity_settings
@@ -66,6 +70,8 @@ class SearchQuery < ApplicationRecord
       'foi-ir-timeliness' => 'FOI - Internal review for timeliness',
     }
   end
+
+  delegate :available_statuses, to: CaseStatusFilter
 
   def results
     results = Case::BasePolicy::Scope.new(User.find(user_id), Case::Base.all).for_view_only

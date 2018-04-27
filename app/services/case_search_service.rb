@@ -60,9 +60,10 @@ class CaseSearchService
 
   def filter_attributes
     [
-        :search_text,
-        :filter_case_type,
-        :filter_sensitivity,
+      :search_text,
+      :filter_case_type,
+      :filter_sensitivity,
+      :filter_status,
     ]
   end
 

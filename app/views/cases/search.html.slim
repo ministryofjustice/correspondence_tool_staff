@@ -13,7 +13,7 @@
       = search_field_tag 'search_query[search_text]', @query.search_text, class: 'form-control'
       = submit_tag 'Search', class: 'button button-no-margin', id: 'search-button'
 
-- if @query.present? && @cases.any?
+- if @query.present?
   .grid-row
     .column-full.ct-tab-container
       .ct-tab-label
@@ -23,10 +23,10 @@
         li.ct-tab-item role="presentation"
           a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-type"
             = "Type"
+        li.ct-tab-item role="presentation"
+          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-status"
+            = "Status"
         // Uncomment the filter tabs as they get implemented
-        / li.ct-tab-item role="presentation"
-        /   a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-status"
-        /     = "Status"
         / li.ct-tab-item role="presentation"
         /   a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-final-deadline"
         /     = "Final deadline"
@@ -42,6 +42,7 @@
         #ct-tab-panel-type.ct-tab-panel
           = render partial: 'cases/search_filters/case_types'
         #ct-tab-panel-status.ct-tab-panel
+          = render partial: 'cases/search_filters/case_status'
         #ct-tab-panel-final-deadline.ct-tab-panel
         #ct-tab-panel-assigned-to.ct-tab-panel
         #ct-tab-panel-exemption.ct-tab-panel
