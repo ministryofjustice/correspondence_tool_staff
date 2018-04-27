@@ -5,6 +5,16 @@ describe CaseSearchService do
   let(:user)                      { create :manager }
 
   describe '#call' do
+    before(:all) do
+      @setup = StandardSetup.new(only_cases: [
+                                   :std_draft_foi,
+                                   :trig_closed_foi,
+                                   :std_unassigned_irc,
+                                   :std_unassigned_irt,
+                                 ])
+      Case::Base.update_all_indexes
+    end
+
     let(:service)      { CaseSearchService.new(user, params) }
     let(:params)       { ActionController::Parameters.new(
                            {
@@ -23,7 +33,7 @@ describe CaseSearchService do
       end
     end
 
-    context 'no parent id specified' do
+    context 'performing fresh search (with no existing search)' do
       let(:specific_query) { 'something' }
 
       it 'sets search_query type to search' do
@@ -62,30 +72,22 @@ describe CaseSearchService do
       end
 
       context 'with results' do
-        before(:all) do
-          @assigned_case = create :assigned_case
-          @unassigned_case = create :case
-          Case::Base.update_all_indexes
-        end
-
-        after(:all)   { DbHousekeeping.clean }
-
         context 'search by number' do
-          let(:specific_query)       { @assigned_case.number }
+          let(:specific_query)       { @setup.std_draft_foi.number }
 
           it 'finds a case by number' do
             service.call
-            expect(service.result_set).to eq [ @assigned_case ]
+            expect(service.result_set).to eq [ @setup.std_draft_foi ]
           end
 
         end
 
         context 'search by text' do
           context 'no leading or trailing whitespace' do
-            let(:specific_query)   { 'assigned' }
+            let(:specific_query)   { 'accepted' }
             it 'finds a case by text' do
               service.call
-              expect(service.result_set).to eq [ @assigned_case ]
+              expect(service.result_set).to eq [ @setup.std_draft_foi ]
             end
 
             it 'records a search_query record' do
@@ -98,10 +100,10 @@ describe CaseSearchService do
           end
 
           context 'leading and trailing whitespace' do
-            let(:specific_query)      { '   assigned  ' }
+            let(:specific_query)      { '   accepted  ' }
             it 'ignores leading and trailing whitespace' do
               service.call
-              expect(service.result_set).to eq [ @assigned_case ]
+              expect(service.result_set).to eq [ @setup.std_draft_foi ]
             end
 
             it 'records a search_query record' do
@@ -134,12 +136,11 @@ describe CaseSearchService do
       end
     end
 
-
-    context 'parent id specified' do
-      after(:all)   { DbHousekeeping.clean }
-
-      let!(:parent_search_query) { create :search_query, search_text: search_text }
-      let(:filter_case_type)     { ['foi-standard'] }
+    context 'applying filter on search results' do
+      let!(:parent_search_query) { create :search_query,
+                                          search_text: search_text,
+                                          user_id: user.id }
+      let(:filter_case_type)     { ['', 'foi-standard'] }
       let(:filter_sensitivity)   { [''] }
       let(:params) { ActionController::Parameters.new(
                        {
@@ -153,22 +154,64 @@ describe CaseSearchService do
       let(:search_text) { 'compliance' }
       let(:service)     { CaseSearchService.new(user, params) }
 
-      it 'creates a new search query' do
-        expect {
+      context 'first filter applied by user' do
+        it 'creates a new search query' do
+          expect {
+            service.call
+          }.to change(SearchQuery, :count).by(1)
+        end
+
+        describe 'created search query' do
+          before(:each) { service.call }
+          subject       { SearchQuery.last }
+
+          it { should have_attributes query_type: 'filter' }
+          it { should have_attributes user_id: user.id }
+          it { should have_attributes search_text: 'compliance' }
+          it { should have_attributes parent_id: parent_search_query.id }
+          it { should have_attributes filter_case_type: filter_case_type.grep_v('') }
+          it { should have_attributes filter_sensitivity: filter_sensitivity.grep_v('') }
+        end
+      end
+
+      context 'user has another filter applied' do
+        let!(:parent_search_query) { create :search_query,
+                                            user_id: user.id,
+                                            search_text: search_text,
+                                            filter_status: ['open'] }
+
+        it 'creates a new search query with the exesting filter' do
+          expect {
+            service.call
+          }.to change(SearchQuery, :count).by(1)
+        end
+
+        describe 'created search query' do
+          before(:each) { service.call }
+          subject       { SearchQuery.last }
+
+          it { should have_attributes query_type: 'filter' }
+          it { should have_attributes user_id: user.id }
+          it { should have_attributes search_text: 'compliance' }
+          it { should have_attributes parent_id: parent_search_query.id }
+          it { should have_attributes filter_status: ['open'] }
+          it { should have_attributes filter_case_type: filter_case_type.grep_v('') }
+          it { should have_attributes filter_sensitivity: filter_sensitivity.grep_v('') }
+        end
+      end
+
+      context 'search and filters have already been used by this user' do
+        it 'retrieves the existing SearchQuery' do
+          existing_search_query = create :search_query, :filter,
+                                         search_text: search_text,
+                                         user: user,
+                                         filter_case_type: ['foi-standard']
           service.call
-        }.to change(SearchQuery, :count).by(1)
+          expect(service.query).to eq existing_search_query
+        end
       end
 
-      describe 'created search query' do
-        before(:each) { service.call }
-        subject       { SearchQuery.last }
-
-        it { should have_attributes query_type: 'filter' }
-        it { should have_attributes user_id: user.id }
-        it { should have_attributes search_text: 'compliance' }
-      end
-
-      it 'performs the search using the SearchQuery' do
+      it 'performs the search/filter using the SearchQuery' do
         expected_results = spy('expected results')
         search_query = instance_double(SearchQuery,
                                        results: expected_results,
@@ -180,16 +223,6 @@ describe CaseSearchService do
       end
 
       describe 'search results' do
-        before(:all) do
-          @search = StandardSetup.new(only_cases: [
-                                        :std_draft_foi,
-                                        :trig_closed_foi,
-                                        :std_unassigned_irc,
-                                        :std_unassigned_irt,
-                                      ])
-          Case::Base.update_all_indexes
-        end
-
         context 'search text' do
           let(:search_text)        { 'closed'}
           let(:filter_case_type)   { [] }
@@ -198,7 +231,7 @@ describe CaseSearchService do
           it 'is used' do
             service.call
             expect(service.unpaginated_result_set)
-              .to match_array [@search.trig_closed_foi]
+              .to match_array [@setup.trig_closed_foi]
           end
         end
 
@@ -210,7 +243,7 @@ describe CaseSearchService do
           it 'is used' do
             service.call
             expect(service.unpaginated_result_set)
-              .to match_array [@search.trig_closed_foi]
+              .to match_array [@setup.trig_closed_foi]
           end
         end
 
@@ -223,8 +256,8 @@ describe CaseSearchService do
             service.call
             expect(service.unpaginated_result_set)
               .to match_array [
-                    @search.std_draft_foi,
-                    @search.trig_closed_foi,
+                    @setup.std_draft_foi,
+                    @setup.trig_closed_foi,
                   ]
           end
         end
@@ -241,7 +274,6 @@ describe CaseSearchService do
       end
 
     end
-
   end
 end
 

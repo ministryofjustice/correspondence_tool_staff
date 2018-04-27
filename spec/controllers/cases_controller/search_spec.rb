@@ -74,7 +74,7 @@ describe CasesController, type: :controller do
     end
 
     context 'search query has a parent (e.g. search query is a filter)' do
-      it 'sets the parent_id to the current parent id' do
+      it 'sets the parent_id to the created filter search query' do
         allow(CaseSearchService).to receive(:new).and_return(case_search_service)
         filter_search_query = create :search_query,
                                      :filter,
@@ -82,7 +82,7 @@ describe CasesController, type: :controller do
         allow(case_search_service).to receive(:query).and_return(filter_search_query)
         allow(case_search_service).to receive(:parent).and_return(search_query)
         get :search, params: { search_query: { filter_sensitivity: 'trigger'  } }
-        expect(assigns[:parent_id]).to eq search_query.id
+        expect(assigns[:parent_id]).to eq filter_search_query.id
       end
     end
 

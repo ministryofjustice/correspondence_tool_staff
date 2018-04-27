@@ -298,7 +298,7 @@ class CasesController < ApplicationController
         flash.now[:alert] = service.error_message
       else
         @cases = service.result_set
-        @parent_id = service.parent&.id || @query.id
+        @parent_id = @query.id
         flash[:query_id] = @query.id
         @page = params[:page] || '1'
       end

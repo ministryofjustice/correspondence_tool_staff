@@ -10,6 +10,7 @@ describe 'cases/search_filters/_case_status.html.slim', type: :view do
 
   subject { partial }
 
+  it { should have_hidden_checkbox }
   it { should have_open_checkbox }
   it { should have_closed_checkbox }
   it { should have_apply_filter_button }
