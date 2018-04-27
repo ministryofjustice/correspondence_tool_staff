@@ -9,7 +9,7 @@ feature 'deactivating users' do
     login_as manager
 
     teams_show_page.load(id: bu.id)
-    information_officer = teams_show_page.information_officers_list.last
+    information_officer = teams_show_page.row_for_information_officer(responder.email)
     information_officer.actions.click
     expect(users_show_page).to be_displayed
 

@@ -4,7 +4,40 @@ describe 'state machine' do
 
   before(:all) do
     DbHousekeeping.clean
-    @setup = StandardSetup.new
+    @setup = StandardSetup.new(
+      only_cases: [
+        :full_awdis_foi,
+        :full_awresp_foi,
+        :full_awresp_foi_accepted,
+        :full_closed_foi,
+        :full_draft_foi,
+        :full_pdacu_foi_accepted,
+        :full_pdacu_foi_unaccepted,
+        :full_ppress_foi,
+        :full_ppress_foi_accepted,
+        :full_pprivate_foi,
+        :full_pprivate_foi_accepted,
+        :full_responded_foi,
+        :full_unassigned_foi,
+        :std_awdis_foi,
+        :std_awresp_foi,
+        :std_closed_foi,
+        :std_draft_foi,
+        :std_responded_foi,
+        :std_unassigned_foi,
+        :trig_awdis_foi,
+        :trig_awresp_foi,
+        :trig_awresp_foi_accepted,
+        :trig_closed_foi,
+        :trig_draft_foi,
+        :trig_draft_foi_accepted,
+        :trig_pdacu_foi,
+        :trig_pdacu_foi_accepted,
+        :trig_responded_foi,
+        :trig_unassigned_foi,
+        :trig_unassigned_foi_accepted,
+      ]
+    )
   end
 
   after(:all) { DbHousekeeping.clean }
@@ -158,7 +191,7 @@ describe 'state machine' do
         [:disclosure_bmt, :full_pdacu_foi_unaccepted],
         [:disclosure_bmt, :full_ppress_foi_accepted],
         [:disclosure_bmt, :full_pprivate_foi_accepted],
-        
+
         [:disclosure_specialist, :trig_unassigned_foi],
         [:disclosure_specialist, :trig_awresp_foi],
         [:disclosure_specialist, :trig_draft_foi],

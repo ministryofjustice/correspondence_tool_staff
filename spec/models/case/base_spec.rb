@@ -273,6 +273,34 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
+  describe 'trigger scope' do
+    it 'returns cases that are in the trigger workflow' do
+      trigger_case = create :accepted_case, :flagged
+      _standard_case = create :accepted_case
+      expect(Case::Base.trigger).to eq [trigger_case]
+    end
+
+    it 'returns cases that are in full_approval workflow' do
+      press_office_case = create :accepted_case, :flagged, :press_office
+      _standard_case = create :accepted_case
+      expect(Case::Base.trigger).to eq [press_office_case]
+    end
+  end
+
+  describe 'non_trigger scope' do
+    it 'returns cases that are not in the trigger workflow' do
+      _trigger_case = create :accepted_case, :flagged
+      standard_case = create :accepted_case
+      expect(Case::Base.non_trigger).to eq [standard_case]
+    end
+
+    it 'returns cases that are in full_approval workflow' do
+      _press_office_case = create :accepted_case, :flagged, :press_office
+      standard_case = create :accepted_case
+      expect(Case::Base.non_trigger).to eq [standard_case]
+    end
+  end
+
   describe 'most_recent_first scope' do
     let!(:case_oldest) { create :case, received_date: 11.business_days.ago }
     let!(:case_recent) { create :case, received_date: 10.business_days.ago }
@@ -330,6 +358,21 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
+  describe 'internal_review_compliance scope' do
+    it 'returns internal review for compliance FOI cases' do
+      _standard_case      = create :accepted_case
+      ir_compliance_case = create :compliance_review
+      expect(Case::Base.internal_review_compliance).to eq [ir_compliance_case]
+    end
+  end
+
+  describe 'internal_review_timeliness scope' do
+    it 'returns internal review for timeliness FOI cases' do
+      _standard_case      = create :accepted_case
+      ir_timeliness_case = create :timeliness_review
+      expect(Case::Base.internal_review_timeliness).to eq [ir_timeliness_case]
+    end
+  end
 
   describe 'conditional validations of current state' do
     context 'new record' do

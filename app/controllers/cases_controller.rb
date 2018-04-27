@@ -111,23 +111,6 @@ class CasesController < ApplicationController
     redirect_to redirect_url
   end
 
-  def dummy_filter
-    if params[:filter]
-      service = CaseSearchService.new(current_user, params, flash[:query_hash])
-      service.call
-      if service.error?
-        flash.now[:alert] = service.error_message
-      else
-        @cases = service.result_set
-        @query_hash = service.query_hash
-        @page = params[:page] || '1'
-        flash[:query_hash] = @query_hash
-      end
-    end
-    render :search
-  end
-
-
   def new
     permitted_correspondence_types
     if params[:correspondence_type].present? || FeatureSet.sars.disabled?
@@ -171,8 +154,8 @@ class CasesController < ApplicationController
   end
 
   def show
-    if flash.key?(:query_hash)
-      SearchQuery.update_for_click(flash[:query_hash], params[:pos].to_i)
+    if flash.key?(:query_id)
+      SearchQuery.find(flash[:query_id])&.update_for_click(params[:pos].to_i)
     end
 
     if policy(@case).can_accept_or_reject_responder_assignment?
@@ -305,20 +288,23 @@ class CasesController < ApplicationController
 
   def search
     @cases = []
-    if params[:query]
-      service = CaseSearchService.new(current_user, params, nil)
+
+    if params[:search_query]
+      service = CaseSearchService.new(current_user,
+                                      params.slice(:search_query, :page))
       service.call
       if service.error?
         flash.now[:alert] = service.error_message
       else
         @cases = service.result_set
         @query = service.query
-        @query_hash = service.query_hash
+        @parent_id = service.parent&.id || @query.id
+        flash[:query_id] = @query.id
         @page = params[:page] || '1'
-        flash[:query_hash] = @query_hash
       end
+    else
+      @query = SearchQuery.new
     end
-    render :search
   end
 
   def remove_clearance

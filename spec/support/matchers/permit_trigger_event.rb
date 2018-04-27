@@ -22,7 +22,9 @@ module PermitTriggerEvent
           result = state_machine.can_trigger_event?(event_name: event, metadata: {acting_user: user, acting_team: team})
           if [user_type, case_type].in?(permitted_combinations) ^ result
             (binding).pry if @debug_on_error && $stdout.tty?
-            @errors << [user_type, case_type, result]
+            # this is handy to be able to step through what failed
+            unexpected_result = state_machine.can_trigger_event?(event_name: event, metadata: {acting_user: user, acting_team: team})
+            @errors << [user_type, case_type, unexpected_result]
           end
         end
       end

@@ -29,6 +29,10 @@ end
 guard :rspec, rspec_options do
   watch(%r{^spec/.+_spec\.rb$})
   watch(%r{^app/(.+)\.rb$}) { |m| "spec/#{m[1]}_spec.rb" }
+  watch(%r{^app/controllers/(.+)_controller\.rb}) do |m|
+    ["spec/controllers/#{m[1]}_controller_spec.rb",
+     "spec/controllers/#{m[1]}/*_spec.rb"]
+  end
   watch(%r{^app/interfaces/api/(.+)\.rb$}) { |m| "spec/api/#{m[1]}_spec.rb" }
 end
 

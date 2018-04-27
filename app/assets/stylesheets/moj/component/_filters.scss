@@ -1,0 +1,78 @@
+// tabbed panels
+  $tab-border-width: 3px;
+.ct-filter {
+
+}
+.ct-tab-label{
+  display: inline-block;
+   margin-right: $gutter;
+}
+
+.ct-tab-wrapper {
+  display: inline-block;
+
+  @include media(mobile) {
+    margin-bottom: $tab-border-width * 2;
+  }
+}
+
+.ct-tab-item {
+  display: inline-block;
+}
+
+.ct-tab {
+  border: $tab-border-width solid $govuk-blue;
+  border-bottom-width: 0;
+  margin-right: $tab-border-width;
+  display: block;
+  outline: none;
+  padding: $tab-border-width * 3;
+  background-color: $govuk-blue;
+  color: $white;
+  text-decoration: none;
+  margin-bottom: $tab-border-width;
+
+  &:visited, &:link {
+    color: $white;
+  }
+
+  @include media(mobile) {
+    border-bottom-width: $tab-border-width;
+  }
+
+  &:focus {
+    background: $focus-colour;
+    color: $text-colour;
+    border-color: $focus-colour;
+    outline: none;
+  }
+
+  &[aria-selected="true"] {
+    color: $govuk-blue;
+    background: $page-colour;
+    border-color: $border-colour;
+    padding-bottom: $tab-border-width * 5;
+
+    @include media(mobile) {
+      padding-bottom: $tab-border-width * 3;
+    }
+
+    &:focus {
+      background: $focus-colour;
+      color: $text-colour;
+    }
+  }
+}
+
+.ct-tab-panels {
+  margin-top: $tab-border-width * -2;
+  &[aria-expanded="false"] {
+    display: none;
+  }
+}
+
+.ct-tab-panel {
+  border: $tab-border-width solid $border-colour;
+  padding: 1em;
+}
+

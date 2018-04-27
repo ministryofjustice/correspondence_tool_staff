@@ -22,6 +22,11 @@ module PageObjects
           element :who_its_with, 'td[aria-label="With"]'
         end
 
+        sections :filters, '.ct-tab-container' do
+          elements :options, '.ct-tab-item'
+        end
+
+
         element :found_no_results_copy, '.search-no-results'
       end
     end

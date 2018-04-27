@@ -9,6 +9,9 @@
 #                              user_password PATCH  /users/password(.:format)                                            passwords#update
 #                                            PUT    /users/password(.:format)                                            passwords#update
 #                                            POST   /users/password(.:format)                                            passwords#create
+#                            new_user_unlock GET    /users/unlock/new(.:format)                                          devise/unlocks#new
+#                                user_unlock GET    /users/unlock(.:format)                                              devise/unlocks#show
+#                                            POST   /users/unlock(.:format)                                              devise/unlocks#create
 #                               manager_root GET    /                                                                    redirect(301, /cases/open/in_time)
 #                             responder_root GET    /                                                                    redirect(301, /cases/open/in_time)
 #                              approver_root GET    /                                                                    redirect(301, /cases/open/in_time)
@@ -47,6 +50,7 @@
 #             request_further_clearance_case PATCH  /cases/:id/request_further_clearance(.:format)                       cases#request_further_clearance
 #                         new_case_link_case GET    /cases/:id/new_case_link(.:format)                                   cases#new_case_link
 #                 execute_new_case_link_case POST   /cases/:id/execute_new_case_link(.:format)                           cases#execute_new_case_link
+#                       destroy_link_on_case DELETE /cases/:id/destroy_link/:linked_case_number(.:format)                cases#destroy_case_link
 #           accept_or_reject_case_assignment PATCH  /cases/:case_id/assignments/:id/accept_or_reject(.:format)           assignments#accept_or_reject
 #                     accept_case_assignment PATCH  /cases/:case_id/assignments/:id/accept(.:format)                     assignments#accept
 #                   unaccept_case_assignment PATCH  /cases/:case_id/assignments/:id/unaccept(.:format)                   assignments#unaccept
@@ -134,6 +138,7 @@
 #                            dashboard_cases GET    /dashboard/cases(.:format)                                           dashboard#cases
 #                         dashboard_feedback GET    /dashboard/feedback(.:format)                                        dashboard#feedback
 #                        dashboard_exception GET    /dashboard/exception(.:format)                                       dashboard#exception
+#                   dashboard_search_queries GET    /dashboard/search_queries(.:format)                                  dashboard#search_queries
 #                                       root GET    /                                                                    redirect(301, /users/sign_in)
 #
 
@@ -213,7 +218,6 @@ Rails.application.routes.draw do
     get :request_amends, on: :member
     patch :execute_request_amends, on: :member
     post  :filter, on: :collection
-    post  :dummy_filter, on: :collection
     get 'remove_clearance' => 'cases#remove_clearance', on: :member
     # get 'upload_response_approve' => 'cases#upload_response_approve', on: :member
     get :extend_for_pit, on: :member

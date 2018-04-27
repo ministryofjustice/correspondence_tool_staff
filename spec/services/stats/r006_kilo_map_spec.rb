@@ -46,7 +46,7 @@ module Stats
     end
 
     def dacu_line
-      /"","",Disclosure BMT,Deputy Director \d{1,5},Hammersmith,dacu@localhost,Firstname\d{1,5} Lastname\d{1,5},/
+      /"","",Disclosure BMT,Deputy Director \d{1,5},Hammersmith,dacu@localhost,user \d{1,5},/
     end
 
     def press_office_directorate_line
@@ -54,11 +54,11 @@ module Stats
     end
 
     def press_office_line
-      /"","",Press Office,Deputy Director \d{1,5},Hammersmith,press.office@localhost,Firstname\d{1,5} Lastname\d{1,5},/
+      /"","",Press Office,Deputy Director \d{1,5},Hammersmith,press.office@localhost,user \d{1,5},/
     end
 
     def private_office_line
-      /"","",Private Office,Deputy Director \d{1,5},Hammersmith,private.office@localhost,Firstname\d{1,5} Lastname\d{1,5},/
+      /"","",Private Office,Deputy Director \d{1,5},Hammersmith,private.office@localhost,user \d{1,5},/
     end
 
   end

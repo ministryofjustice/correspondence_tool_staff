@@ -103,10 +103,15 @@ class Case::Base < ApplicationRecord
                             state: ['pending']})
   end
 
+  # cases that have ever been flagged for approval
   scope :flagged_for_approval, ->(*teams) do
     joins(:assignments)
       .where(assignments: { team_id: teams.map(&:id), role: 'approving' })
   end
+  # cases that are currently considered as trigger
+  scope :trigger, -> { where(workflow: ['trigger', 'full_approval']) }
+  # cases that are NOT currently considered as trigger
+  scope :non_trigger, -> { where.not(id: trigger) }
 
   scope :in_time, -> {
     where(
@@ -122,7 +127,8 @@ class Case::Base < ApplicationRecord
   }
 
   scope :appeal, -> { where('type=? OR type=?', 'Case::FOI::TimelinessReview', 'Case::FOI::ComplianceReview' )}
-
+  scope :internal_review_compliance, -> { where(type: 'Case::FOI::ComplianceReview')}
+  scope :internal_review_timeliness, -> { where(type: 'Case::FOI::TimelinessReview')}
   validates :current_state, presence: true, on: :update
 
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }

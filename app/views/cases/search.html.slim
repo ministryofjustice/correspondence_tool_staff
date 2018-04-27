@@ -6,39 +6,50 @@
 .grid-row
   .column-full.button-holder
     = form_tag search_cases_path, method: :get
-      = label_tag :query, 'Case number, requester name or keyword', class: 'form-label-bold'
-      p.form-hint
-        = 'For example, 170113001, John Smith or prison meals'
-      = search_field_tag :query, @query, class: 'form-control'
+      = label_tag 'search_query[search_text]', class: 'form-label-bold' do
+        = "Case number, requester name or keyword "
+        span.form-hint
+          = 'For example, 170113001, John Smith or prison meals'
+      = search_field_tag 'search_query[search_text]', @query.search_text, class: 'form-control'
       = submit_tag 'Search', class: 'button button-no-margin', id: 'search-button'
 
-- if FeatureSet.dummy_filter.enabled?
+- if @query.present? && @cases.any?
   .grid-row
-    .column-full.button-holder
-      = form_tag dummy_filter_cases_path, method: :post
-        = hidden_field_tag 'filter', 'type'
-        = hidden_field_tag 'query', 'internal_review'
-        = submit_tag 'Filter: Internal Review', class: 'button button-no-margin'
+    .column-full.ct-tab-container
+      .ct-tab-label
+        = "Filter by"
 
-  .grid-row
-    .column-full.button-holder
-      = form_tag dummy_filter_cases_path, method: :post
-      = hidden_field_tag 'filter', 'type'
-      = hidden_field_tag 'query', 'compliance'
-      = submit_tag 'Filter: Compliance', class: 'button button-no-margin'
+      ul role="tablist" aria-label="Filter by" class="ct-tab-wrapper"
+        li.ct-tab-item role="presentation"
+          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-type"
+            = "Type"
+        // Uncomment the filter tabs as they get implemented
+        / li.ct-tab-item role="presentation"
+        /   a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-status"
+        /     = "Status"
+        / li.ct-tab-item role="presentation"
+        /   a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-final-deadline"
+        /     = "Final deadline"
+        / li.ct-tab-item role="presentation"
+        /   a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-assigned-to"
+        /     = "Assigned to"
+        / li.ct-tab-item role="presentation"
+        /   a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-exemption"
+        /     = "Exemptions"
 
-  .grid-row
-    .column-full.button-holder
-      = form_tag dummy_filter_cases_path, method: :post
-      = hidden_field_tag 'filter', 'type'
-      = hidden_field_tag 'query', 'timeliness'
-      = submit_tag 'Filter: Timeliness', class: 'button button-no-margin'
+      .ct-tab-panels aria-expanded="false"
 
+        #ct-tab-panel-type.ct-tab-panel
+          = render partial: 'cases/search_filters/case_types'
+        #ct-tab-panel-status.ct-tab-panel
+        #ct-tab-panel-final-deadline.ct-tab-panel
+        #ct-tab-panel-assigned-to.ct-tab-panel
+        #ct-tab-panel-exemption.ct-tab-panel
 
 - if @cases.any?
   = render partial: 'cases/shared/case_list'
 
-- if @cases.empty? && params[:query].present?
+- if @cases.empty? && @query[:search_text].present?
   .grid-row
     .column-full
       .search-results-summary

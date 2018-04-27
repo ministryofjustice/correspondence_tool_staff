@@ -375,19 +375,25 @@ describe CasesController, type: :controller do
     end
 
     context 'recording search query click' do
-      let(:kase)  { create :case }
-      let(:flash) { ActionDispatch::Flash::FlashHash.new({query_hash: 'XYZ'}) }
+      let(:kase)         { create :case }
+      let(:search_query) { create :search_query }
+      let(:flash)        { ActionDispatch::Flash::FlashHash
+                             .new({query_id: search_query.id}) }
 
       before do
         sign_in create(:manager)
       end
 
-      context 'has a hash parameter' do
+      context 'has a search query id' do
         it 'records search query to record the click' do
           allow(controller).to receive(:flash).and_return(flash)
           params = ActionController::Parameters.new(id: kase.id.to_s, pos: '4', controller: "cases", action: "show")
-          expect(SearchQuery).to receive(:update_for_click).with('XYZ', 4)
+          expect(SearchQuery).to receive(:find)
+                                   .with(search_query.id)
+                                   .and_return(search_query)
+          allow(search_query).to receive(:update_for_click)
           get :show, params: params.to_unsafe_hash
+          expect(search_query).to have_received(:update_for_click).with(4)
         end
       end
 
