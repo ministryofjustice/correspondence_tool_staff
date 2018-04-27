@@ -38,7 +38,7 @@ describe 'cases/search.html.slim', type: :view do
   end
 
   context 'Users searches for case '
-    context 'results are found' do
+    context 'no results are found' do
       before :each do
         assign(:query, create(:search_query, search_text: 'no search results'))
         assign(:cases,[])

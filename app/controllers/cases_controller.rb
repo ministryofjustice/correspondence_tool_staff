@@ -293,11 +293,11 @@ class CasesController < ApplicationController
       service = CaseSearchService.new(current_user,
                                       params.slice(:search_query, :page))
       service.call
+      @query = service.query
       if service.error?
         flash.now[:alert] = service.error_message
       else
         @cases = service.result_set
-        @query = service.query
         @parent_id = service.parent&.id || @query.id
         flash[:query_id] = @query.id
         @page = params[:page] || '1'

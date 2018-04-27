@@ -16,6 +16,11 @@
 #
 
 class SearchQuery < ApplicationRecord
+  FILTER_CLASSES =     [
+    CaseTypeFilter,
+    CaseStatusFilter,
+  ]
+
   belongs_to :user
   belongs_to :parent, class_name: 'SearchQuery'
   has_many   :children, class_name: 'SearchQuery'
@@ -49,13 +54,6 @@ class SearchQuery < ApplicationRecord
     save!
   end
 
-  def filter_classes
-    [
-      CaseTypeFilter,
-      CaseStatusFilter,
-    ]
-  end
-
   delegate :available_sensitivities, to: CaseTypeFilter
   delegate :available_case_types, to: CaseTypeFilter
   delegate :available_statuses, to: CaseStatusFilter
@@ -63,7 +61,7 @@ class SearchQuery < ApplicationRecord
   def results
     results = Case::BasePolicy::Scope.new(User.find(user_id), Case::Base.all).for_view_only
     results = results.search(search_text)
-    filter_classes.reduce(results) do |result, filter_class|
+    FILTER_CLASSES.reduce(results) do |result, filter_class|
       filter_class.new(self, result).call
     end
   end
