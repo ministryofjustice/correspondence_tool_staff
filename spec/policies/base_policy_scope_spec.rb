@@ -69,7 +69,7 @@ describe Case::BasePolicy::Scope do
         expect(manager_scope).to match_array(@existing_cases)
       end
 
-      it 'for responders - returns only cases assigned to their team' do
+      it 'for responders - returns all cases' do
         responder_scope = described_class.new(@responder, Case::Base.all).for_view_only
         expect(responder_scope).to match_array(@existing_cases)
       end
