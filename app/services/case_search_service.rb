@@ -12,8 +12,7 @@ class CaseSearchService
 
   def initialize(current_user, params)
     @current_user = current_user
-    @policy_scope = Case::BasePolicy::Scope.new(@current_user, Case::Base.all).for_view_only
-    @query = params[:query].strip
+    @params = params.permit!
     @page = params[:page]
     @error = false
     @error_message = nil
@@ -61,9 +60,9 @@ class CaseSearchService
 
   def filter_attributes
     [
-      :search_text,
-      :filter_case_type,
-      :filter_sensitivity,
+        :search_text,
+        :filter_case_type,
+        :filter_sensitivity,
     ]
   end
 
@@ -71,13 +70,13 @@ class CaseSearchService
     if query_params.key? :parent_id
       @parent = SearchQuery.find(query_params[:parent_id])
       query_params = @parent.slice(*filter_attributes)
-                            .merge(query_params.to_unsafe_h)
+                         .merge(query_params.to_unsafe_h)
     end
     SearchQuery.new(
-      query_params.merge(
-        query_type: query_type,
-        user_id: user_id,
-      )
+        query_params.merge(
+            query_type: query_type,
+            user_id: user_id,
+            )
     )
   end
 end
