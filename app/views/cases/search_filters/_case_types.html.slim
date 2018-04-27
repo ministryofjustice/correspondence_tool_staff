@@ -1,6 +1,5 @@
 = form_for @query, url: search_cases_path, method: :get do |f|
   = hidden_field_tag('search_query[parent_id]', @parent_id)
-  / = hidden_field_tag('search_query[filter_type]', 'case_type')
   .grid-row
     .column-half
       = f.collection_check_boxes :filter_case_type, @query.type_settings, :first, :second, include_hidden: false
