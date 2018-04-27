@@ -60,51 +60,6 @@ describe SearchQuery do
     end
   end
 
-  # describe '.create_from_search_service' do
-
-  #   let(:params)      { { query: 'cats and dogs', page: 2  } }
-  #   let(:user)        { create :manager }
-  #   let(:service)     { CaseSearchService.new(user, params) }
-  #   let(:time)        { Time.new(2018, 4, 11, 12, 33, 22) }
-  #   let(:query_hash)  { CaseSearchService.generate_query_hash(user, 'search', nil, 'cats and dogs', time) }
-
-  #   context 'no record with same query hash exists' do
-  #     it 'writes a search_query_record' do
-  #       Timecop.freeze(time) do
-  #         allow(service).to receive(:unpaginated_result_set).and_return(double "result_set", size: 22)
-  #         expect {
-  #           SearchQuery.create_from_search_service(service)
-  #         }.to change { SearchQuery.count }.by(1)
-  #         sq = SearchQuery.first
-  #         expect(sq.query_hash).to eq query_hash
-  #         expect(sq.search_query).to eq params[:query]
-  #         expect(sq.num_results).to eq 22
-  #         expect(sq.num_clicks).to eq 0
-  #       end
-  #     end
-  #   end
-
-  #   context 'record with same query hash already exists' do
-  #     it 'does not create a new record' do
-  #       Timecop.freeze(Time.new(2018, 4, 11, 12, 33, 22)) do
-  #         SearchQuery.create(
-  #                        query_hash:        query_hash,
-  #                        user_id:           user.id,
-  #                        query:             'cats and dogs',
-  #                        query_type:        'search',
-  #                        num_results:       22,
-  #                        num_clicks:        5,
-  #                        highest_position:  3)
-  #         allow(service).to receive(:unpaginated_result_set).and_return(double "result_set", size: 22)
-  #         allow(service).to receive(:query_hash).and_return(query_hash)
-  #         expect {
-  #           SearchQuery.create_from_search_service(service)
-  #         }.not_to change { SearchQuery.count }
-  #       end
-  #     end
-  #   end
-  # end
-
   describe '#update_for_click' do
 
     context 'user clicks for the first time' do
