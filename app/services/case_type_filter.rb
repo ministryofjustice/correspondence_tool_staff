@@ -36,7 +36,6 @@ class CaseTypeFilter
   def filter_case_type(records)
     filters = @query.filter_case_type.map do |filter|
       case filter
-      when ''                  then records
       when 'foi-standard'      then records.standard_foi
       when 'foi-ir-compliance' then records.internal_review_compliance
       when 'foi-ir-timeliness' then records.internal_review_timeliness

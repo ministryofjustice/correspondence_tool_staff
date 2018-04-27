@@ -140,7 +140,7 @@ describe 'state machine' do
         [:press_officer, :full_unassigned_foi],
         [:press_officer, :full_awresp_foi],
         [:press_officer, :full_draft_foi],
-      ).debug
+      )
     }
   end
 
@@ -157,7 +157,7 @@ describe 'state machine' do
         [:another_responder_in_same_team, :full_awresp_foi],
         [:another_responder_in_same_team, :trig_awresp_foi_accepted],
         [:another_responder_in_same_team, :full_awresp_foi_accepted]
-      ).debug
+      )
     }
   end
 
@@ -337,7 +337,7 @@ describe 'state machine' do
         [:private_officer, :full_ppress_foi_accepted],
         [:private_officer, :full_pprivate_foi_accepted],
 
-      ).debug
+      )
     }
   end
 
