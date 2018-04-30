@@ -5,7 +5,9 @@ class CaseSearchService
     :filter_status,
     :exemption_ids,
     :common_exemption_ids,
-    :filter_assigned_to_ids
+    :filter_assigned_to_ids,
+    :external_deadline_from,
+    :external_deadline_to,
   ]
   QUERY_ATTRIBUTES = [:search_text] + FILTER_ATTRIBUTES
 
@@ -20,6 +22,7 @@ class CaseSearchService
               :unpaginated_result_set
 
   def initialize(current_user, params)
+    binding.pry
     @current_user = current_user
     @params = params.permit!
     @page = params[:page]

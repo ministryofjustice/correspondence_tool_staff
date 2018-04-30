@@ -14,11 +14,13 @@ describe ExternalDeadlineFilter do
 
   describe '#call' do
     let(:arel)    { Case::Base.all }
-    let(:filter)  { ExternalDeadlineFilter.new(arel, params) }
+    let(:filter)  { ExternalDeadlineFilter.new(search_query, arel) }
 
     context 'no cases with deadline in date range' do
-      let(:params) { create_params(from_date:'4-12-2017',
-                                   to_date:'25-12-2017') }
+      let(:search_query) { create :search_query,
+                            external_deadline_from: Date.new(2017, 12, 4),
+                            external_deadline_to: Date.new(2017, 12, 25) }
+
 
       it 'returns an empty collection' do
         Timecop.freeze(Time.new(2018, 4, 26,14, 57, 0)) do
@@ -29,8 +31,10 @@ describe ExternalDeadlineFilter do
     end
 
     context 'case with deadline within date rang' do
-      let(:params) { create_params(from_date:'1-4-2018',
-                                   to_date:'20-4-2018') }
+
+      let(:search_query) { create :search_query,
+                            external_deadline_from: Date.new(2018, 4, 1),
+                            external_deadline_to: Date.new(2018, 4, 25) }
 
       it 'returns only cases within date range' do
         Timecop.freeze(Time.new(2018, 4, 26,14, 57, 0)) do
@@ -39,21 +43,5 @@ describe ExternalDeadlineFilter do
         end
       end
     end
-  end
-
-  private
-
-  def create_params(from_date:, to_date:)
-    from_date = from_date.split('-').map {|date| date.to_i }
-    to_date = to_date.split('-').map {|date| date.to_i }
-    { search_query:
-      { external_deadline_from_yyyy: from_date[2],
-        external_deadline_from_mm: from_date[1],
-        external_deadline_from_dd: from_date[0],
-        external_deadline_to_yyyy: to_date[2],
-        external_deadline_to_mm: to_date[1],
-        external_deadline_to_dd: to_date[0]
-      }
-    }
   end
 end

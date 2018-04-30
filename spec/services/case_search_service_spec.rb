@@ -137,17 +137,26 @@ describe CaseSearchService do
     end
 
     context 'applying filter on search results' do
-      let!(:parent_search_query) { create :search_query,
-                                          search_text: search_text,
-                                          user_id: user.id }
-      let(:filter_case_type)     { ['', 'foi-standard'] }
-      let(:filter_sensitivity)   { [''] }
+      let!(:parent_search_query)       { create :search_query,
+                                            search_text: search_text,
+                                            user_id: user.id }
+      let(:filter_case_type)           { ['', 'foi-standard'] }
+      let(:filter_sensitivity)         { [''] }
+      let(:external_deadline_from)     { 0.business_days.from_now }
+      let(:external_deadline_to)       { 10.business_days.from_now }
+
       let(:params) { ActionController::Parameters.new(
                        {
                          search_query: {
                            parent_id: parent_search_query.id,
                            filter_case_type: filter_case_type,
                            filter_sensitivity: filter_sensitivity,
+                           external_deadline_from_dd: external_deadline_from.day.to_s,
+                           external_deadline_from_mm: external_deadline_from.month.to_s,
+                           external_deadline_from_yyyy: external_deadline_from.year.to_s,
+                           external_deadline_to_dd: external_deadline_to.day.to_s,
+                           external_deadline_to_mm: external_deadline_to.month.to_s,
+                           external_deadline_to_yyyy: external_deadline_to.year.to_s,
                          },
                        }
                      ) }
@@ -171,6 +180,9 @@ describe CaseSearchService do
           it { should have_attributes parent_id: parent_search_query.id }
           it { should have_attributes filter_case_type: filter_case_type.grep_v('') }
           it { should have_attributes filter_sensitivity: filter_sensitivity.grep_v('') }
+          it { should have_attributes external_deadline_from: external_deadline_from }
+          it { should have_attributes external_deadline_to: external_deadline_to }
+
         end
       end
 
@@ -197,6 +209,8 @@ describe CaseSearchService do
           it { should have_attributes filter_status: ['open'] }
           it { should have_attributes filter_case_type: filter_case_type.grep_v('') }
           it { should have_attributes filter_sensitivity: filter_sensitivity.grep_v('') }
+          it { should have_attributes external_deadline_from: external_deadline_from }
+          it { should have_attributes external_deadline_to: external_deadline_to }
         end
       end
 

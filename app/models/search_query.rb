@@ -48,7 +48,6 @@ class SearchQuery < ApplicationRecord
                  common_exemption_ids: [:integer, array: true, default: []],
                  filter_status: [:string, array: true, default: []]
 
-
   acts_as_gov_uk_date :external_deadline_from, :external_deadline_to
 
   acts_as_tree

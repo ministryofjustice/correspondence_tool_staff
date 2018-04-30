@@ -13,7 +13,7 @@
              = "Due"
           ul.quick-link-options
             li.quick-link-option--first
-              - today = {day: @date_1.strftime("%d"), month: @date_1.strftime("%m"), year: @date_1.strftime("%Y")}.to_json
+              - today = {day: @query.available_deadlines[:today].strftime("%d"), month: @query.available_deadlines[:today].strftime("%m"), year: @query.available_deadlines[:today].strftime("%Y")}.to_json
               a { href="#"
                   aria-describeby="quick-link-label"
                   data-external-deadline-from=today
@@ -21,7 +21,7 @@
                 }
                 = "Today"
             li.quick-link-option
-              - days_3 = {day: @date_2.strftime("%d"), month: @date_2.strftime("%m"), year: @date_2.strftime("%Y")}.to_json
+              - days_3 = {day: @query.available_deadlines[:three_days].strftime("%d"), month: @query.available_deadlines[:three_days].strftime("%m"), year: @query.available_deadlines[:three_days].strftime("%Y")}.to_json
               a { href="#"
                   aria-describeby="quick-link-label"
                   data-external-deadline-from=today
@@ -29,7 +29,7 @@
                 }
                 = "In the next 3 days"
             li.quick-link-option
-              - days_10 = {day: @date_3.strftime("%d"), month: @date_3.strftime("%m"), year: @date_3.strftime("%Y")}.to_json
+              - days_10 = {day: @query.available_deadlines[:ten_days].strftime("%d"), month: @query.available_deadlines[:ten_days].strftime("%m"), year: @query.available_deadlines[:ten_days].strftime("%Y")}.to_json
               a { href="#"
                   aria-describeby="quick-link-label"
                   data-external-deadline-from=today
