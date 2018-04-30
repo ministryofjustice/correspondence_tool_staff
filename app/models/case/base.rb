@@ -143,8 +143,6 @@ class Case::Base < ApplicationRecord
 
   validates_with ::ClosedCaseValidator
 
-  # serialize :exemption_ids, Array
-
   has_many :assignments, dependent: :destroy, foreign_key: :case_id
 
   has_many :teams, through: :assignments
