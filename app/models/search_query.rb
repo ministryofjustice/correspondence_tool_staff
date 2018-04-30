@@ -19,6 +19,7 @@ class SearchQuery < ApplicationRecord
   FILTER_CLASSES =     [
     CaseTypeFilter,
     CaseStatusFilter,
+    ExemptionFilter
   ]
 
   belongs_to :user
@@ -59,7 +60,6 @@ class SearchQuery < ApplicationRecord
   delegate :available_sensitivities, to: CaseTypeFilter
   delegate :available_case_types, to: CaseTypeFilter
   delegate :available_statuses, to: CaseStatusFilter
-
   delegate :available_exemptions, to: ExemptionFilter
   delegate :available_common_exemptions, to: ExemptionFilter
 
