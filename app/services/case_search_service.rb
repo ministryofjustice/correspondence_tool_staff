@@ -74,6 +74,13 @@ class CaseSearchService
                                .slice(*FILTER_ATTRIBUTES)
                                .transform_values { |values| values.grep_v '' }
                                .transform_values { |value| value.is_a?(Array) ? value.sort : value }
+                               .transform_values do |values|
+                                 if values.respond_to?(:grep_v)
+                                   values.grep_v('')
+                                 else
+                                   values
+                                 end
+                               end
     query_params.merge(stripped_filter_values)
   end
 

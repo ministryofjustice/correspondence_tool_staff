@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe DeadlineFilter do
+describe ExternalDeadlineFilter do
 
   before(:all) do
     Timecop.freeze(Time.new(2018, 4, 26,14, 57, 0)) do
@@ -14,7 +14,7 @@ describe DeadlineFilter do
 
   describe '#call' do
     let(:arel)    { Case::Base.all }
-    let(:filter)  { DeadlineFilter.new(arel, params) }
+    let(:filter)  { ExternalDeadlineFilter.new(arel, params) }
 
     context 'no cases with deadline in date range' do
       let(:params) { create_params(from_date:'4-12-2017',
@@ -46,12 +46,14 @@ describe DeadlineFilter do
   def create_params(from_date:, to_date:)
     from_date = from_date.split('-').map {|date| date.to_i }
     to_date = to_date.split('-').map {|date| date.to_i }
-    { external_deadline_from_yy: from_date[2],
-      external_deadline_from_mm: from_date[1],
-      external_deadline_from_dd: from_date[0],
-      external_deadline_to_yy: to_date[2],
-      external_deadline_to_mm: to_date[1],
-      external_deadline_to_dd: to_date[0]
+    { search_query:
+      { external_deadline_from_yyyy: from_date[2],
+        external_deadline_from_mm: from_date[1],
+        external_deadline_from_dd: from_date[0],
+        external_deadline_to_yyyy: to_date[2],
+        external_deadline_to_mm: to_date[1],
+        external_deadline_to_dd: to_date[0]
+      }
     }
   end
 end
