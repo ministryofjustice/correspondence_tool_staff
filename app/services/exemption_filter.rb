@@ -1,6 +1,7 @@
 class ExemptionFilter
 
   def initialize(search_query_record, arel)
+    puts ">>>>>>>>>> exemption_filter #{__FILE__}:#{__LINE__} <<<<<<<<<<"
     @arel = arel
     @query = search_query_record.query
     @exemption_ids = (@query['exemption_ids'] + @query['common_exemption_ids'])

@@ -2,6 +2,7 @@ moj.Modules.ExemptionFilter = {
   init: function() {
     $('.exemption-most-used').on('click', ':checkbox', function(){
       var $elem = $(this);
+      console.log(this);
       $('.exemption-all label[for="search_query_exemption_' + $elem.val() + '"]').click();
     })
 
