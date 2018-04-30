@@ -122,6 +122,9 @@ describe SearchQuery do
     let!(:case_ir_compliance) { create :compliance_review,
                                        :indexed,
                                        subject: 'Gruffalo' }
+    let!(:case_closed)        { create :closed_case,
+                                       :indexed,
+                                       subject: 'Super Worm' }
     let(:user)    { create :manager }
 
     it 'returns the result of searching for search_text' do
@@ -145,6 +148,14 @@ describe SearchQuery do
                             search_text: 'gruffalo',
                             filter_case_type: ['foi-ir-compliance']
       expect(search_query.results).to eq [case_ir_compliance]
+    end
+
+    it 'returns the result of filtering by status' do
+      search_query = create :search_query,
+                            user_id: user.id,
+                            search_text: 'worm',
+                            filter_status: ['closed']
+      expect(search_query.results).to eq [case_closed]
     end
   end
 end

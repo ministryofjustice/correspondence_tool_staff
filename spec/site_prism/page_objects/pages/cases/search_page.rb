@@ -22,8 +22,11 @@ module PageObjects
           element :who_its_with, 'td[aria-label="With"]'
         end
 
-        sections :filters, '.ct-tab-container' do
+        section :filters, '.ct-tab-container' do
           elements :options, '.ct-tab-item'
+          section :status_filter_panel,
+                  PageObjects::Sections::Cases::StatusFilterPanelSection,
+                  '#ct-tab-panel-status'
         end
 
 

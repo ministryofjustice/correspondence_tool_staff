@@ -16,6 +16,11 @@
 #
 
 class SearchQuery < ApplicationRecord
+  FILTER_CLASSES =     [
+    CaseTypeFilter,
+    CaseStatusFilter,
+  ]
+
   belongs_to :user
   belongs_to :parent, class_name: 'SearchQuery'
   has_many   :children, class_name: 'SearchQuery'
@@ -29,7 +34,8 @@ class SearchQuery < ApplicationRecord
                  search_text: :string,
                  filter_type: :string,
                  filter_sensitivity: [:string, array: true, default: []],
-                 filter_case_type: [:string, array: true, default: []]
+                 filter_case_type: [:string, array: true, default: []],
+                 filter_status: [:string, array: true, default: []]
   acts_as_tree
 
   def self.parent_search_query_id(case_search_service)
@@ -48,29 +54,14 @@ class SearchQuery < ApplicationRecord
     save!
   end
 
-  def filter_classes
-    [CaseTypeFilter]
-  end
-
-  def sensitivity_settings
-    {
-      'non-trigger' => 'Non-trigger',
-      'trigger'     => 'Trigger',
-    }
-  end
-
-  def type_settings
-    {
-      'foi-standard' => 'FOI - Standard',
-      'foi-ir-compliance' => 'FOI - Internal review for compliance',
-      'foi-ir-timeliness' => 'FOI - Internal review for timeliness',
-    }
-  end
+  delegate :available_sensitivities, to: CaseTypeFilter
+  delegate :available_case_types, to: CaseTypeFilter
+  delegate :available_statuses, to: CaseStatusFilter
 
   def results
     results = Case::BasePolicy::Scope.new(User.find(user_id), Case::Base.all).for_view_only
     results = results.search(search_text)
-    filter_classes.reduce(results) do |result, filter_class|
+    FILTER_CLASSES.reduce(results) do |result, filter_class|
       filter_class.new(self, result).call
     end
   end

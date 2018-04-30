@@ -1,4 +1,19 @@
 class CaseTypeFilter
+  def self.available_sensitivities
+    {
+      'non-trigger' => 'Non-trigger',
+      'trigger'     => 'Trigger',
+    }
+  end
+
+  def self.available_case_types
+    {
+      'foi-standard' => 'FOI - Standard',
+      'foi-ir-compliance' => 'FOI - Internal review for compliance',
+      'foi-ir-timeliness' => 'FOI - Internal review for timeliness',
+    }
+  end
+
   def initialize(query, records)
     @query = query
     @records = records

@@ -1,4 +1,10 @@
 class CaseSearchService
+  FILTER_ATTRIBUTES = [
+    :filter_case_type,
+    :filter_sensitivity,
+    :filter_status,
+  ]
+  QUERY_ATTRIBUTES = [:search_text] + FILTER_ATTRIBUTES
 
   attr_reader :current_user,
               :error_message,
@@ -26,6 +32,8 @@ class CaseSearchService
                            :highest_position,
                            :created_at,
                            :update_at)
+    @query_params = remove_blank_filter_values(@query_params)
+
     if @query_params[:parent_id]
       @parent = SearchQuery.find(@query_params[:parent_id])
       @query_type = :filter
@@ -58,26 +66,35 @@ class CaseSearchService
 
   private
 
-  def filter_attributes
-    [
-        :search_text,
-        :filter_case_type,
-        :filter_sensitivity,
-    ]
+  def remove_blank_filter_values(query_params)
+    stripped_filter_values = query_params
+                               .slice(*FILTER_ATTRIBUTES)
+                               .transform_values { |values| values.grep_v '' }
+    query_params.merge(stripped_filter_values)
   end
 
   def find_or_initialize_query(query_params, query_type:, user_id:)
     if query_params.key? :parent_id
       @parent = SearchQuery.find(query_params[:parent_id])
-      query_params = @parent.slice(*filter_attributes)
-                         .merge(query_params.to_unsafe_h)
+      parent_query_params = @parent.slice(*QUERY_ATTRIBUTES)
+      query_params = parent_query_params.merge(query_params.to_unsafe_h)
     end
-    SearchQuery.new(
+
+    params_to_match_on = query_params.slice(*QUERY_ATTRIBUTES).to_h
+    search_query = SearchQuery
+                     .where(user_id: user_id)
+                     .where('created_at >= ? AND created_at < ?',
+                            Date.today, Date.tomorrow)
+                     .query_where(params_to_match_on).first
+    if search_query.nil?
+      search_query = SearchQuery.new(
         query_params.merge(
-            query_type: query_type,
-            user_id: user_id,
-            )
-    )
+          query_type: query_type,
+          user_id: user_id,
+        )
+      )
+    end
+    search_query
   end
 end
 
