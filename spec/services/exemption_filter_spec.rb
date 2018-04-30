@@ -21,7 +21,7 @@ describe Case::Base do
     let(:arel)    { Case::Base.all }
     let(:filter)  { ExemptionFilter.new(search_query, arel) }
 
-    context 'query contains empty exemption ids and common exemption ids' do
+    context 'query contains empty exemption ids' do
       let(:search_query)    { create :search_query, search_text: 'dogs in jail' }
       it 'returns the arel untouched' do
         expect(filter.call).to eq arel
@@ -37,21 +37,21 @@ describe Case::Base do
     end
 
     context 'cases with one specified exemption' do
-      let(:search_query) { search_query_for([], %w[s22]) }
+      let(:search_query) { search_query_for(['s22'], ['s22']) }
       it 'returns matching exemptions only' do
         expect(filter.call).to match_array [@kase_1, @kase_2]
       end
     end
 
     context 'cases with multiple specified exemption' do
-      let(:search_query) { search_query_for(%w[s22], %w[s36]) }
+      let(:search_query) { search_query_for(%w[s22 s36], ['s36']) }
       it 'returns all cases with exemptions matching any of the specified exemption ids' do
         expect(filter.call).to match_array [ @kase_2 ]
       end
     end
 
     context 'class of returning object' do
-      let(:search_query) {  search_query_for(%w[s22], %w[s36]) }
+      let(:search_query) {  search_query_for(['s22'], ['s36']) }
       it 'returns all cases with exemptions matching any of the specified abbreviations' do
         expect(filter.call).to be_instance_of Case::Base::ActiveRecord_Relation
       end
