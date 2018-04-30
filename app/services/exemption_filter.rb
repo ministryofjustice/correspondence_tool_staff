@@ -4,7 +4,6 @@ class ExemptionFilter
     @arel = arel
     @query = search_query_record.query
     @exemption_ids = @query['exemption_ids']
-    @exemption_ids&.delete('')
   end
 
   def call
