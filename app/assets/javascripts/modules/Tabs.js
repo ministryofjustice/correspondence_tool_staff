@@ -137,5 +137,23 @@ moj.Modules.Tabs = {
         $tabPanel.data('mtp-tab').click();
       }
     });
+
+
+    // Cancel button
+
+    $('.ct-tab-panels .acts-like-button')
+      .click(function(event){
+
+        var $elem = $(this).closest('.ct-tab-panel');
+        var tabID = $elem.attr('id');
+        var $container = $elem.closest('.ct-tab-container');
+        var $tabs = $container.find('.ct-tab-wrapper');
+
+        event.preventDefault();
+        resetTabsAndPanels(true);
+
+        $tabs.find('a[href="#' + tabID + '"]').focus()
+
+      })
   }
 };
