@@ -180,7 +180,7 @@ describe CaseSearchService do
                                             search_text: search_text,
                                             filter_status: ['open'] }
 
-        it 'creates a new search query with the exesting filter' do
+        it 'creates a new search query with the existing filter' do
           expect {
             service.call
           }.to change(SearchQuery, :count).by(1)
@@ -202,9 +202,11 @@ describe CaseSearchService do
 
       context 'search and filters have already been used by this user' do
         it 'retrieves the existing SearchQuery' do
+
           existing_search_query = create :search_query, :filter,
                                          search_text: search_text,
                                          user: user,
+                                         parent_id: parent_search_query.id,
                                          filter_case_type: ['foi-standard']
           service.call
           expect(service.query).to eq existing_search_query
@@ -270,6 +272,31 @@ describe CaseSearchService do
             service.call
           }.to raise_error ActiveRecord::RecordNotFound,
                            /Couldn't find SearchQuery with 'id'=\d+/
+        end
+      end
+
+      context 'different filter sensitivites exist already in the database' do
+        let(:search_text)        { 'case'}
+        let(:filter_case_type)   { ['foi-standard'] }
+        let(:filter_sensitivity) { ['trigger', 'non-trigger'] }
+        let(:params)       { ActionController::Parameters.new(
+            {
+                search_query: { search_text: 'case', filter_sensitivity: ['trigger'] },
+                controller: 'cases',
+                action: 'search'
+            }
+        ) }
+
+        it 'creates a new record' do
+          create :search_query,
+                 user_id: user.id,
+                 search_text: 'case',
+                 filter_sensitivity: ['trigger', 'non-trigger']
+
+          expect{
+            service.call
+          }.to change { SearchQuery.count }.by(1)
+
         end
       end
 
