@@ -1,5 +1,4 @@
 moj.Modules.AssignedToFilter = {
-    businessUnitsArr: '',
 
     init: function () {
 
@@ -7,16 +6,6 @@ moj.Modules.AssignedToFilter = {
             return;
         }
         var module = this;
-
-        module.businessUnitsArr = [[16,"Legal Aid Agency (LAA)"],
-            [17,"MoJ Human Resources (MoJ HR)"],
-            [18,"North East Regional Support Unit (NE RSU)"],
-            [19,"HMCTS Property Directorate"],
-            [20,"Upper Tribunal Asylum Chamber"],
-            [21,"Upper Tribunal Lands (UT Lands)"],
-            [22,"Upper Tibunal - Tax \ Chancery Chamber"],
-            [23,"Communications and Information"]];
-
 
         $('#search_query_business_unit_name_filter').on('keyup', function(){
             if(this.value !== '') {
