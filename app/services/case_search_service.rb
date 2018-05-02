@@ -4,6 +4,7 @@ class CaseSearchService
     :filter_sensitivity,
     :filter_status,
     :exemption_ids,
+    :common_exemption_ids
   ]
   QUERY_ATTRIBUTES = [:search_text] + FILTER_ATTRIBUTES
 
@@ -71,6 +72,7 @@ class CaseSearchService
     stripped_filter_values = query_params
                                .slice(*FILTER_ATTRIBUTES)
                                .transform_values { |values| values.grep_v '' }
+                               .transform_values { |value| value.is_a?(Array) ? value.sort : value }
     query_params.merge(stripped_filter_values)
   end
 
@@ -86,7 +88,8 @@ class CaseSearchService
                      .where(user_id: user_id)
                      .where('created_at >= ? AND created_at < ?',
                             Date.today, Date.tomorrow)
-                     .query_where(params_to_match_on).first
+                     .where('query = ?', params_to_match_on.to_json)
+                     .first
     if search_query.nil?
       search_query = SearchQuery.new(
         query_params.merge(
