@@ -23,13 +23,15 @@ moj.Modules.AssignedToFilter = {
           var labelText = $elem.text().replace(/[^a-z0-9+]+/gi, '');
           // Remove any character that is not alphanumeric
           var cleanedTerm = searchFor.replace(/[^a-z0-9+]+/gi, '');
+          var check = new RegExp(cleanedTerm, 'gi');
+
 
           // if checkbox label test contains any part of the search term
-          if (labelText.search(cleanedTerm, 'gi') > -1){
-              $elem.show();
+          if (check.test(labelText)){
+            $elem.show();
           }else{
-              $elem.hide();
-              $elem.find(':checkbox').prop('checked', false);
+            $elem.hide();
+            $elem.find(':checkbox').prop('checked', false);
           }
         })
     }
