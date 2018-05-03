@@ -47,4 +47,12 @@ FactoryGirl.define do
     end
   end
 
+  factory :closed_timeliness_review,
+          class: Case::FOI::TimelinessReview,
+          parent: :closed_case do
+    transient do
+      identifier 'closed foi timeliness review case'
+    end
+  end
+
 end
