@@ -6,14 +6,6 @@ GIT
     bank_holiday (0.0.4)
       dish
 
-GIT
-  remote: https://github.com/ministryofjustice/gov_uk_date_fields.git
-  revision: ec06699d0e2b7f85f298679cc41138edc59fdbda
-  branch: improve-attribute-accessor-compatibility
-  specs:
-    gov_uk_date_fields (2.1.1)
-      rails (>= 5.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -171,6 +163,8 @@ GEM
     formatador (0.2.5)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
+    gov_uk_date_fields (3.0.0)
+      rails (>= 5.0)
     govuk_elements_form_builder (1.2.0)
       govuk_elements_rails (>= 3.0.0)
       govuk_frontend_toolkit (>= 6.0.0)
@@ -566,7 +560,7 @@ DEPENDENCIES
   factory_girl_rails (~> 4.7.0)
   faker (~> 1.8.4)
   foreman (~> 0.82.0)
-  gov_uk_date_fields!
+  gov_uk_date_fields (~> 3.0)
   govuk_elements_form_builder (>= 1.2.0)
   govuk_elements_rails (>= 3.1.2)
   govuk_frontend_toolkit (>= 7.2.0)
