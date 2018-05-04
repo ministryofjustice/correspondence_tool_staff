@@ -13,7 +13,7 @@
              = "Due"
           ul.quick-link-options
             li.quick-link-option--first
-              - today = {day: @query.available_deadlines[:today].strftime("%d"), month: @query.available_deadlines[:today].strftime("%m"), year: @query.available_deadlines[:today].strftime("%Y")}.to_json
+              - today = @query.available_deadlines[:date_value_1]
               a { href="#"
                   aria-describeby="quick-link-label"
                   data-external-deadline-from=today
@@ -21,7 +21,7 @@
                 }
                 = "Today"
             li.quick-link-option
-              - days_3 = {day: @query.available_deadlines[:three_days].strftime("%d"), month: @query.available_deadlines[:three_days].strftime("%m"), year: @query.available_deadlines[:three_days].strftime("%Y")}.to_json
+              - days_3 = @query.available_deadlines[:date_value_2]
               a { href="#"
                   aria-describeby="quick-link-label"
                   data-external-deadline-from=today
@@ -29,7 +29,7 @@
                 }
                 = "In the next 3 days"
             li.quick-link-option
-              - days_10 = {day: @query.available_deadlines[:ten_days].strftime("%d"), month: @query.available_deadlines[:ten_days].strftime("%m"), year: @query.available_deadlines[:ten_days].strftime("%Y")}.to_json
+              - days_10 = @query.available_deadlines[:date_value_3]
               a { href="#"
                   aria-describeby="quick-link-label"
                   data-external-deadline-from=today
@@ -42,7 +42,7 @@
         = f.gov_uk_date_field :external_deadline_from,
                 { legend_text: t('cases.search.external_deadline_from'),
                         form_hint_text: t('cases.search.external_deadline_hint') }
-      .form-group
+
         = f.gov_uk_date_field :external_deadline_to,
                 { legend_text: t('cases.search.external_deadline_to'),
                         form_hint_text: t('cases.search.external_deadline_hint') }
