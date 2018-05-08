@@ -4,7 +4,7 @@ require 'thor'
 require 'cts'
 require 'cts/cases/cli'
 
-RSpec.describe CTS::Cases::CLI do
+RSpec.describe CTS::Cases::CLI, tag: :cli do
   let(:cli)              { CTS::Cases::CLI.new }
   let(:number_to_create) { 1 }
 
@@ -21,7 +21,7 @@ RSpec.describe CTS::Cases::CLI do
   end
 
 
-  xdescribe 'create sub-command - temporarily suspended due to failures on travis' do
+  describe 'create sub-command - temporarily suspended due to failures on travis' do
     it 'creates a case' do
       expect(Case::Base.count).to eq 0
       find_or_create :responding_team
