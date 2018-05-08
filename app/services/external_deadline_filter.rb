@@ -1,13 +1,10 @@
 class ExternalDeadlineFilter
 
   def self.available_deadlines
-    today = Date.today
-    three_days = 3.business_days.from_now
-    ten_days = 10.business_days.from_now
     {
-      date_value_1: { day: today.strftime("%d"), month: today.strftime("%m"), year: today.strftime("%Y") }.to_json,
-      date_value_2: { day: three_days.strftime("%d"), month: three_days.strftime("%m"), year: three_days.strftime("%Y") }.to_json,
-      date_value_3: { day: ten_days.strftime("%d"), month: ten_days.strftime("%m"), year: ten_days.strftime("%Y") }.to_json
+      today: { day: Date.today.strftime("%d"), month: Date.today.strftime("%m"), year: Date.today.strftime("%Y") }.to_json,
+      three_days: { day: 3.business_days.from_now.strftime("%d"), month: 3.business_days.from_now.strftime("%m"), year: 3.business_days.from_now.strftime("%Y") }.to_json,
+      ten_days: { day: 10.business_days.from_now.strftime("%d"), month: 10.business_days.from_now.strftime("%m"), year: 10.business_days.from_now.strftime("%Y") }.to_json
     }
 
   end
