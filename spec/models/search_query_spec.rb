@@ -111,6 +111,18 @@ describe SearchQuery do
 
   end
 
+  describe '.record_list' do
+    let(:user)    { create :manager }
+    let(:params)  { ActiveSupport::HashWithIndifferentAccess.new(action: 'open_cases', tab: 'in_time') }
+
+    it 'writes a record with query_type of list' do
+      rec = SearchQuery.record_list(user, '/open_cases', params)
+      expect(rec.user_id).to eq user.id
+      expect(rec.list_path).to eq '/open_cases'
+      expect(YAML.load(rec.list_params)).to eq params
+    end
+  end
+
   describe '#results' do
     let!(:case_standard)      { create :accepted_case,
                                        :indexed,

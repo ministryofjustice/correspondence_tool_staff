@@ -1,10 +1,11 @@
 require 'rails_helper'
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
-
+require File.join(Rails.root, 'spec', 'site_prism', 'support', 'helper_methods')
 
 
 feature 'filters whittle down search results' do
   include Features::Interactions
+  include PageObjects::Pages::Support
   before(:all) do
     CaseClosure::MetadataSeeder.seed!(verbose: false)
 

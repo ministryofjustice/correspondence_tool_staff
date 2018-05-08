@@ -48,33 +48,6 @@ module PageObjects
 
         element :found_no_results_copy, '.search-no-results'
 
-
-        def filter_on(filter_name, *checkboxes)
-          tab_link_name = "#{filter_name}_tab"
-          filter_tab_links.__send__(tab_link_name).click
-
-          checkboxes.each do |checkbox_name|
-            checkbox_id = "search_query_filter_#{checkbox_name}"
-            make_check_box_choice(checkbox_id)
-          end
-
-          filter_panel_name = "#{filter_name}_filter_panel"
-          filters.__send__(filter_panel_name).apply_filter_button.click
-        end
-
-        def remove_filter_on(filter_name, *checkboxes)
-          tab_link_name = "#{filter_name}_tab"
-          filter_tab_links.__send__(tab_link_name).click
-
-          checkboxes.each do |checkbox_name|
-            checkbox_id = "search_query_filter_#{checkbox_name}"
-            remove_check_box_choice(checkbox_id)
-          end
-
-          filter_panel_name = "#{filter_name}_filter_panel"
-          filters.__send__(filter_panel_name).apply_filter_button.click
-        end
-
         def filter_on_exemptions(common: nil, all: nil)
           filter_tab_links.exemption_tab.click
           if common.present?
