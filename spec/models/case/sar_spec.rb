@@ -128,9 +128,9 @@ describe Case::SAR do
       expect(original_kase.subject).to eq 'subject A'
     end
 
-    it 'does not reconstitute the received date properly because of an interaction with govuk_date_fields' do
+    it 'reconstitutes the received date properly' do
       original_kase = @kase.versions.last.reify
-      expect(original_kase.received_date).to eq 1.day.ago.to_date
+      expect(original_kase.received_date).to eq Date.today
     end
   end
 
@@ -162,4 +162,3 @@ describe Case::SAR do
     end
   end
 end
-

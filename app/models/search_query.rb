@@ -16,10 +16,15 @@
 #
 
 class SearchQuery < ApplicationRecord
+
+  attr_accessor :business_unit_name_filter
+
   FILTER_CLASSES =     [
     CaseTypeFilter,
     CaseStatusFilter,
-    ExemptionFilter
+    ExemptionFilter,
+    AssignedBusinessUnitFilter,
+    ExternalDeadlineFilter
   ]
 
   belongs_to :user
@@ -34,11 +39,17 @@ class SearchQuery < ApplicationRecord
   jsonb_accessor :query,
                  search_text: :string,
                  filter_type: :string,
+                 filter_assigned_to_ids: [:integer, array: true, default: []],
+                 external_deadline_from: :date,
+                 external_deadline_to: :date,
                  filter_sensitivity: [:string, array: true, default: []],
                  filter_case_type: [:string, array: true, default: []],
                  exemption_ids: [:integer, array: true, default: []],
                  common_exemption_ids: [:integer, array: true, default: []],
                  filter_status: [:string, array: true, default: []]
+
+  acts_as_gov_uk_date :external_deadline_from, :external_deadline_to
+
   acts_as_tree
 
   def self.parent_search_query_id(case_search_service)
@@ -57,11 +68,15 @@ class SearchQuery < ApplicationRecord
     save!
   end
 
+
+
   delegate :available_sensitivities, to: CaseTypeFilter
   delegate :available_case_types, to: CaseTypeFilter
   delegate :available_statuses, to: CaseStatusFilter
   delegate :available_exemptions, to: ExemptionFilter
   delegate :available_common_exemptions, to: ExemptionFilter
+  delegate :responding_business_units, to: AssignedBusinessUnitFilter
+  delegate :available_deadlines, to: ExternalDeadlineFilter
 
   def results
     results = Case::BasePolicy::Scope.new(User.find(user_id), Case::Base.all).for_view_only
