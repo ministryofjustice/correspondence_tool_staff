@@ -1,4 +1,3 @@
 web: bundle exec puma -C config/puma.rb
-mailer: bundle exec sidekiq -C config/sidekiq-mailer.yml
-reports: bundle exec sidekiq -C config/sidekiq-reports.yml
+background_jobs: bundle exec sidekiq -C config/sidekiq-background-jobs.yml
 uploads: bundle exec sidekiq -C config/sidekiq-uploads.yml

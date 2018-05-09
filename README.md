@@ -174,7 +174,7 @@ This will use Node.js npm (Node Package Manager(i.e similar to Bundle or Pythons
 to install BrowserSync and this command is only required once. If you run into
 problems with your setup visit the [Gems README](https://github.com/brunoskonrad/browser-sync-rails#problems).
 
-To run BrowserSync start your rails server as normal then in a seperate terminal window
+To run BrowserSync start your rails server as normal then in a separate terminal window
 run the following rake task:
 
 ```bash
@@ -298,26 +298,10 @@ The papertrail gem is used as an auditing tool, keeping the old copies of record
 changed.  There are a couple of complexities in using this tool which are described below:
 
 ## JSONB fields on the database
-The default serializer does not de-serialize the properties column correctly becuase internally it is
-held as JSON, and papertrail serializes the object in YAML.  The custom seraializer ```CtsPapertrailSerializer```
-takes care of this and reconstitutes the JSON fields correctly.  See ```/spec/lib/papertrail_spec.rb``` for 
+The default serializer does not de-serialize the properties column correctly because internally it is
+held as JSON, and papertrail serializes the object in YAML.  The custom serializer ```CtsPapertrailSerializer```
+takes care of this and reconstitutes the JSON fields correctly.  See ```/spec/lib/papertrail_spec.rb``` for
 examples of how to reify a previous version, or get a hash of field values for the previous version.
-
-## GOV_UK_DATE_FIELDS
-
-Dates marked as gov_uk_date fields are not correctly set back to their original values when using reify.  This is
-becuase behind the scenes, Papertrail uses ```model[:attribute] =``` notation to set the values on the model, where as 
-```model.attribute =``` is the only form that will work for gov_uk_date_fields (until such time as the 
-gov_uk_date_fields gem is updated).
-
-The work-around is as follows:
-
-```
-reified_kase = kase.versions.last.reify                                # create an old version correct except for gov-uk dates
-version_hash = CtsPapertrailSerializer.load(kase.versions.last.object) # get a hash of all the old values for each field
-reified_kase.received_date = version_hash['received_date']             # update the gov_uk_date fields
-```
-
 
 ### Testing
 
@@ -366,7 +350,7 @@ using the same `parallel_tests` gem as is used locally, and is configured using
 environment variables set through the Travis settings for our project. Also,
 failed tests that generate a screenshot using the `capybara-screenshot` gem will
 upload the screenshot to an S3 bucket so that we can have some visibility of
-errors. These can be viewed through the [managment console]
+errors. These can be viewed through the [management console]
 (https://s3.console.aws.amazon.com/s3/buckets/correspondence-staff-travis-test-failure-screenshots/?region=us-east-1&tab=overview)
 (until we sort out permissions for access to the bucket).
 
@@ -399,7 +383,7 @@ bundle exec rails smoke
 #### Dockerisation
 
 Docker images are built from a single `Dockerfile` which uses build arguments to
-control aspects of the build. The available build argements are:
+control aspects of the build. The available build arguments are:
 
 - _*development_mode*_ enable by setting to a non-nil value/empty string to
   install gems form the `test` and `development` groups in the `Gemfile`. Used
@@ -428,10 +412,10 @@ control aspects of the build. The available build argements are:
    A kilo in the responding business unit has accepted the case.
 
 1. **pending_dacu_clearance**
-   For cases that have an approver assignment with Dacu Disclosure, as soon as a
+   For cases that have an approver assignment with DACU Disclosure, as soon as a
    response file is uploaded, the case will transition to pending_dacu disclosure.
    The DACU disclosure team can either clear the case, in which case it goes forward to
-   awaiting dispatch, or requrest changes, in which case it goes back to drafting.
+   awaiting dispatch, or request changes, in which case it goes back to drafting.
 
 1. **awaiting_dispatch**  
    The Kilo has uploaded at least one response document.
