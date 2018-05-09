@@ -50,6 +50,12 @@
         #ct-tab-panel-exemption.ct-tab-panel
           = render partial: 'cases/search_filters/exemptions'
 
+  .grid-row
+    ul
+      - @query.filter_crumbs.each do |filter_crumb, new_filter_params|
+        = render partial: 'cases/search_filters/filter_crumbs',
+                 locals: { filter_crumb: filter_crumb, params: new_filter_params }
+
 - if @cases.any?
   = render partial: 'cases/shared/case_list'
 

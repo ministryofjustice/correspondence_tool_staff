@@ -2,8 +2,8 @@ class ExemptionFilter
 
   def initialize(search_query_record, arel)
     @arel = arel
-    @query = search_query_record.query
-    @exemption_ids = @query['exemption_ids']
+    @query = search_query_record
+    @exemption_ids = search_query_record.exemption_ids
   end
 
   def call
@@ -21,6 +21,23 @@ class ExemptionFilter
 
   def self.available_exemptions
     CaseClosure::Metadatum.exemption_ncnd_refusal
+  end
+
+  def crumbs
+    if @exemption_ids.present?
+      first_exemption = CaseClosure::Exemption.find(@exemption_ids.first)
+      crumb_text = I18n.t "filters.crumbs.exemptions",
+                          count: @exemption_ids.count,
+                          first_value: first_exemption.name,
+                          remaining_values_count: @exemption_ids.count - 1
+      params = @query.query.merge(
+        'exemption_ids' => [''],
+        'parent_id'     => @query.id,
+      )
+      [[crumb_text, params]]
+    else
+      []
+    end
   end
 
   private

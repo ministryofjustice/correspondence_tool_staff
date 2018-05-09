@@ -1,16 +1,16 @@
 class CaseTypeFilter
   def self.available_sensitivities
     {
-      'non-trigger' => 'Non-trigger',
-      'trigger'     => 'Trigger',
+      'non-trigger' => I18n.t('filters.sensitivities.non-trigger'),
+      'trigger'     => I18n.t('filters.sensitivities.trigger'),
     }
   end
 
   def self.available_case_types
     {
-      'foi-standard' => 'FOI - Standard',
-      'foi-ir-compliance' => 'FOI - Internal review for compliance',
-      'foi-ir-timeliness' => 'FOI - Internal review for timeliness',
+      'foi-standard'      => I18n.t('filters.case_types.foi-standard'),
+      'foi-ir-compliance' => I18n.t('filters.case_types.foi-ir-compliance'),
+      'foi-ir-timeliness' => I18n.t('filters.case_types.foi-ir-timeliness'),
     }
   end
 
@@ -26,6 +26,39 @@ class CaseTypeFilter
     records = filter_case_type(records)
 
     records
+  end
+
+  def crumbs
+    our_crumbs = []
+    if @query.filter_case_type.present?
+      case_type_text = I18n.t(
+        "filters.case_types.#{@query.filter_case_type.first}"
+      )
+      crumb_text = I18n.t "filters.crumbs.case_type",
+                          count: @query.filter_case_type.size,
+                          first_value: case_type_text,
+                          remaining_values_count: @query.filter_case_type.count - 1
+      params = @query.query.merge(
+        'filter_case_type' => [''],
+        'parent_id'        => @query.id
+      )
+      our_crumbs << [crumb_text, params]
+    end
+    if @query.filter_sensitivity.present?
+      sensitivity_text = I18n.t(
+        "filters.sensitivities.#{@query.filter_sensitivity.first}"
+      )
+      crumb_text = I18n.t "filters.crumbs.sensitivity",
+                          count: @query.filter_sensitivity.size,
+                          first_value: sensitivity_text,
+                          remaining_values_count: @query.filter_sensitivity.count - 1
+      params = @query.query.merge(
+        'filter_sensitivity' => [''],
+        'parent_id'          => @query.id,
+      )
+      our_crumbs << [crumb_text, params]
+    end
+    our_crumbs
   end
 
   private

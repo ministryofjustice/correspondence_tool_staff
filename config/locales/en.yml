@@ -560,6 +560,32 @@ en:
     success_html: |
       <strong>Your feedback has been submitted.</strong>
 
+  filters:
+    crumbs:
+      list_filter_type: &list_filter_type
+        one: "%{first_value}"
+        other: "%{first_value} + %{remaining_values_count} more"
+      assigned_business_units:
+        <<: *list_filter_type
+      exemptions:
+        <<: *list_filter_type
+      case_type:
+        <<: *list_filter_type
+      sensitivity:
+        <<: *list_filter_type
+      status:
+        <<: *list_filter_type
+    sensitivities:
+      non-trigger: 'Non-trigger'
+      trigger: 'Trigger'
+    statuses:
+      open: 'Open'
+      closed: 'Closed'
+    case_types:
+      foi-standard: 'FOI - Standard'
+      foi-ir-compliance: 'FOI - Internal review for compliance'
+      foi-ir-timeliness: 'FOI - Internal review for timeliness'
+
   stats:
     common:
       period_start: Date from

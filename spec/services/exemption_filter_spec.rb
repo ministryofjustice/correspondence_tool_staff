@@ -17,9 +17,10 @@ describe Case::Base do
 
   after(:all) { DbHousekeeping.clean }
 
+  let(:arel)    { Case::Base.all }
+  let(:filter)  { ExemptionFilter.new(search_query, arel) }
+
   describe '#call' do
-    let(:arel)    { Case::Base.all }
-    let(:filter)  { ExemptionFilter.new(search_query, arel) }
 
     context 'query contains empty exemption ids' do
       let(:search_query)    { create :search_query, search_text: 'dogs in jail' }
@@ -56,6 +57,57 @@ describe Case::Base do
         expect(filter.call).to be_instance_of Case::Base::ActiveRecord_Relation
       end
 
+    end
+  end
+
+  describe '#crumbs' do
+    context 'query contains no exemption ids' do
+      let(:search_query)    { create :search_query, search_text: 'dogs in jail' }
+
+      it 'returns no crumbs' do
+        expect(filter.crumbs).to be_empty
+      end
+    end
+
+    context 'a single exemption selected' do
+      let(:s22_exemption) { CaseClosure::Exemption.s22 }
+      let(:search_query)  { search_query_for(['s22'], ['s22']) }
+
+      it 'returns a crumb' do
+        expect(filter.crumbs).to have(1).items
+      end
+
+      it 'returns the name of the exemption as the crumb text' do
+        expect(filter.crumbs[0].first)
+          .to eq '(s22) - Information intended for future publication'
+      end
+
+      describe 'params that will be submitted when clicking on the crumb' do
+        subject { filter.crumbs[0].second }
+
+        it { should include 'search_text'            => "meals" }
+        it { should include 'common_exemption_ids'   => [s22_exemption.id] }
+        it { should include 'filter_assigned_to_ids' => [] }
+        it { should include 'filter_case_type'       => [] }
+        it { should include 'exemption_ids'          => [''] }
+        it { should include 'filter_sensitivity'     => [] }
+        it { should include 'filter_status'          => [] }
+        it { should include 'parent_id'              => search_query.id }
+      end
+    end
+
+    context 'multiple exemption selected' do
+      let(:s22_exemption) { CaseClosure::Exemption.s22 }
+      let(:search_query)  { search_query_for(['s22', 's26'], ['s22']) }
+
+      it 'returns a crumb' do
+        expect(filter.crumbs).to have(1).items
+      end
+
+      it 'returns the exemption name + 1 more as the crumb text' do
+        expect(filter.crumbs[0].first)
+          .to eq '(s22) - Information intended for future publication + 1 more'
+      end
     end
   end
 

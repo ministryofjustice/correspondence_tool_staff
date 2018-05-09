@@ -84,6 +84,7 @@ group :development, :test do
   gem 'parallel_tests'
   gem 'pry'
   gem 'pry-byebug'
+  gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 3.4'
   gem 'rubocop', '~> 0.49.0', require: false
   gem 'rubocop-rspec', require: false

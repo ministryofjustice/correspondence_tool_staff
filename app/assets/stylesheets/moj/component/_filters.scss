@@ -85,3 +85,11 @@
   overflow-y: scroll;
   margin-bottom: $gutter;
 }
+
+li.ct-filter-crumb {
+  list-style-type: none;
+  display: inline-block;
+  padding: 0.3em;
+  margin: 0.2em;
+  background-color: lightgrey;
+}

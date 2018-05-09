@@ -99,6 +99,7 @@ ignore_unused:
   - 'cases.index.heading_*'
   - 'devise.registrations.*'
   - 'cases.new.correspondence_type_errors.*'
+  - 'filters.crumbs.list_filter_type.*'
 
 
 ## Consider these keys used:
