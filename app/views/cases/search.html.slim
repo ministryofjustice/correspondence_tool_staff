@@ -27,9 +27,9 @@
           a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-status"
             = "Status"
         // Uncomment the filter tabs as they get implemented
-        / li.ct-tab-item role="presentation"
-        /   a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-final-deadline"
-        /     = "Final deadline"
+        li.ct-tab-item role="presentation"
+          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-final-deadline"
+            = "Final deadline"
         li.ct-tab-item role="presentation"
           a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-assigned-to"
             = "Assigned to"
@@ -44,6 +44,7 @@
         #ct-tab-panel-status.ct-tab-panel
           = render partial: 'cases/search_filters/case_status'
         #ct-tab-panel-final-deadline.ct-tab-panel
+          = render partial: 'cases/search_filters/final_deadline'
         #ct-tab-panel-assigned-to.ct-tab-panel
           = render partial: 'cases/search_filters/assigned_to'
         #ct-tab-panel-exemption.ct-tab-panel

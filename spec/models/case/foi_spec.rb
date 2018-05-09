@@ -48,9 +48,9 @@ describe Case::FOI::Standard do
       expect(original_kase.requester_type).to eq 'journalist'
     end
 
-    it 'does not reconstitute the received date properly because of an interaction with govuk_date_fields' do
+    it 'reconstitutes the received date' do
       original_kase = @kase.versions.last.reify
-      expect(original_kase.received_date).to eq 1.day.ago.to_date
+      expect(original_kase.received_date).to eq Date.today
     end
   end
 end
