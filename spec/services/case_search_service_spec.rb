@@ -137,17 +137,26 @@ describe CaseSearchService do
     end
 
     context 'applying filter on search results' do
-      let!(:parent_search_query) { create :search_query,
-                                          search_text: search_text,
-                                          user_id: user.id }
-      let(:filter_case_type)     { ['', 'foi-standard'] }
-      let(:filter_sensitivity)   { [''] }
+      let!(:parent_search_query)       { create :search_query,
+                                            search_text: search_text,
+                                            user_id: user.id }
+      let(:filter_case_type)           { ['', 'foi-standard'] }
+      let(:filter_sensitivity)         { [''] }
+      let(:external_deadline_from)     { 0.business_days.from_now.to_date }
+      let(:external_deadline_to)       { 10.business_days.from_now.to_date }
+
       let(:params) { ActionController::Parameters.new(
                        {
                          search_query: {
                            parent_id: parent_search_query.id,
                            filter_case_type: filter_case_type,
                            filter_sensitivity: filter_sensitivity,
+                           external_deadline_from_dd: external_deadline_from&.day.to_s,
+                           external_deadline_from_mm: external_deadline_from&.month.to_s,
+                           external_deadline_from_yyyy: external_deadline_from&.year.to_s,
+                           external_deadline_to_dd: external_deadline_to&.day.to_s,
+                           external_deadline_to_mm: external_deadline_to&.month.to_s,
+                           external_deadline_to_yyyy: external_deadline_to&.year.to_s,
                          },
                        }
                      ) }
@@ -171,6 +180,9 @@ describe CaseSearchService do
           it { should have_attributes parent_id: parent_search_query.id }
           it { should have_attributes filter_case_type: filter_case_type.grep_v('') }
           it { should have_attributes filter_sensitivity: filter_sensitivity.grep_v('') }
+          it { should have_attributes external_deadline_from: external_deadline_from }
+          it { should have_attributes external_deadline_to: external_deadline_to }
+
         end
       end
 
@@ -197,6 +209,8 @@ describe CaseSearchService do
           it { should have_attributes filter_status: ['open'] }
           it { should have_attributes filter_case_type: filter_case_type.grep_v('') }
           it { should have_attributes filter_sensitivity: filter_sensitivity.grep_v('') }
+          it { should have_attributes external_deadline_from: external_deadline_from }
+          it { should have_attributes external_deadline_to: external_deadline_to }
         end
       end
 
@@ -207,7 +221,9 @@ describe CaseSearchService do
                                          search_text: search_text,
                                          user: user,
                                          parent_id: parent_search_query.id,
-                                         filter_case_type: ['foi-standard']
+                                         filter_case_type: ['foi-standard'],
+                                         external_deadline_from: external_deadline_from,
+                                         external_deadline_to: external_deadline_to
           service.call
           expect(service.query).to eq existing_search_query
         end
@@ -225,10 +241,13 @@ describe CaseSearchService do
       end
 
       describe 'search results' do
+        let(:filter_case_type)       { [] }
+        let(:filter_sensitivity)     { [] }
+        let(:external_deadline_from) { nil }
+        let(:external_deadline_to)   { nil }
+
         context 'search text' do
-          let(:search_text)        { 'closed'}
-          let(:filter_case_type)   { [] }
-          let(:filter_sensitivity) { [] }
+          let(:search_text)            { 'closed'}
 
           it 'is used' do
             service.call
@@ -239,7 +258,6 @@ describe CaseSearchService do
 
         context 'filter for sensitivity' do
           let(:search_text)        { 'case'}
-          let(:filter_case_type)   { [] }
           let(:filter_sensitivity) { ['trigger'] }
 
           it 'is used' do
@@ -252,7 +270,6 @@ describe CaseSearchService do
         context 'filter for case type' do
           let(:search_text)        { 'case'}
           let(:filter_case_type)   { ['foi-standard'] }
-          let(:filter_sensitivity) { [''] }
 
           it 'is used' do
             service.call
@@ -260,6 +277,21 @@ describe CaseSearchService do
               .to match_array [
                     @setup.std_draft_foi,
                     @setup.trig_closed_foi,
+                  ]
+          end
+        end
+
+        context 'filter for external deadline' do
+          let(:search_text)            { 'case'}
+          let(:external_deadline_from) { 0.business_days.from_now.to_date }
+          let(:external_deadline_to)   { 10.business_days.from_now.to_date }
+
+          it 'is used' do
+            @setup.std_draft_foi.update(external_deadline: 2.business_days.from_now)
+            service.call
+            expect(service.unpaginated_result_set)
+              .to match_array [
+                    @setup.std_draft_foi,
                   ]
           end
         end
@@ -303,4 +335,3 @@ describe CaseSearchService do
     end
   end
 end
-

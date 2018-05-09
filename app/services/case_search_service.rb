@@ -5,7 +5,9 @@ class CaseSearchService
     :filter_status,
     :exemption_ids,
     :common_exemption_ids,
-    :filter_assigned_to_ids
+    :filter_assigned_to_ids,
+    :external_deadline_from,
+    :external_deadline_to,
   ]
   QUERY_ATTRIBUTES = [:search_text] + FILTER_ATTRIBUTES
 
@@ -72,8 +74,14 @@ class CaseSearchService
   def remove_blank_filter_values(query_params)
     stripped_filter_values = query_params
                                .slice(*FILTER_ATTRIBUTES)
-                               .transform_values { |values| values.grep_v '' }
                                .transform_values { |value| value.is_a?(Array) ? value.sort : value }
+                               .transform_values do |values|
+                                 if values.respond_to?(:grep_v)
+                                   values.grep_v('')
+                                 else
+                                   values
+                                 end
+                               end
     query_params.merge(stripped_filter_values)
   end
 
@@ -85,6 +93,9 @@ class CaseSearchService
     end
 
     params_to_match_on = query_params.slice(*QUERY_ATTRIBUTES).to_h
+    parse_date_params(query_params,params_to_match_on, :external_deadline_from)
+    parse_date_params(query_params,params_to_match_on, :external_deadline_to)
+
     search_query = SearchQuery
                      .where(user_id: user_id)
                      .where('created_at >= ? AND created_at < ?',
@@ -100,5 +111,20 @@ class CaseSearchService
       )
     end
     search_query
+  end
+
+  def parse_date_params(query_params, params_to_match_on, param_name)
+    year_param  = "#{param_name}_yyyy"
+    month_param = "#{param_name}_mm"
+    day_param   = "#{param_name}_dd"
+
+    date_params_present = query_params
+                            .values_at(year_param, month_param, day_param)
+                            .all?(&:present?)
+    if date_params_present
+      params_to_match_on[param_name] = Date.new(query_params[year_param].to_i,
+                                                query_params[month_param].to_i,
+                                                query_params[day_param].to_i)
+    end
   end
 end
