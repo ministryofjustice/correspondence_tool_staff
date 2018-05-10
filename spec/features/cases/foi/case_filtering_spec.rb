@@ -82,8 +82,10 @@ feature 'filtering cases' do
 
     # filter on unassigned should show just one case
     open_cases_page.filter_tab_links.status_tab.click
-    open_cases_page.choose_state('unassigned')
-    open_cases_page.state_filter.apply_filter_button.click
+    open_cases_page.filter_on('status', 'open_case_status_unassigned')
+
+    # open_cases_page.choose_state('unassigned')
+    # open_cases_page.state_filter.apply_filter_button.click
     expect(open_cases_page.case_numbers).to eq [ @unassigned_case.number ]
 
     # clicking on that case number should show the detail of that case

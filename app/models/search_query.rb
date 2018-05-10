@@ -24,7 +24,8 @@ class SearchQuery < ApplicationRecord
     CaseStatusFilter,
     ExemptionFilter,
     AssignedBusinessUnitFilter,
-    ExternalDeadlineFilter
+    ExternalDeadlineFilter,
+    OpenCaseStatusFilter
   ]
 
   belongs_to :user
@@ -45,6 +46,7 @@ class SearchQuery < ApplicationRecord
                  external_deadline_to: :date,
                  filter_sensitivity: [:string, array: true, default: []],
                  filter_case_type: [:string, array: true, default: []],
+                 filter_open_case_status: [:string, array: true, default: []],
                  exemption_ids: [:integer, array: true, default: []],
                  common_exemption_ids: [:integer, array: true, default: []],
                  filter_status: [:string, array: true, default: []],
@@ -87,6 +89,7 @@ class SearchQuery < ApplicationRecord
   delegate :available_common_exemptions, to: ExemptionFilter
   delegate :responding_business_units, to: AssignedBusinessUnitFilter
   delegate :available_deadlines, to: ExternalDeadlineFilter
+  delegate :available_open_case_statuses, to: OpenCaseStatusFilter
 
   def results
     if parent && parent.list_params.present?

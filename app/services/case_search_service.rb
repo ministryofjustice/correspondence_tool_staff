@@ -3,6 +3,7 @@ class CaseSearchService
     :filter_case_type,
     :filter_sensitivity,
     :filter_status,
+    :filter_open_case_status,
     :exemption_ids,
     :common_exemption_ids,
     :filter_assigned_to_ids,

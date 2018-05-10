@@ -9,6 +9,8 @@ class CasesController < ApplicationController
                   :new_case_link,
                   :destroy_case_link
                 ]
+  before_action :set_url, only: [:search, :open_cases]
+
   # As per the Draper documentation, we really shouldn't be decorating @case at
   # the beginning of controller actions (see:
   # https://github.com/drapergem/draper#when-to-decorate-objects) as we do
@@ -92,7 +94,6 @@ class CasesController < ApplicationController
   end
 
   def open_cases
-
     if params[:search_query]
       @cases = search_and_filter
     else
@@ -112,6 +113,9 @@ class CasesController < ApplicationController
   end
 
   def filter
+    puts ">>>>>>>>>>>> FILTER #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
+    pp params
+
     state_selector = StateSelector.new(params)
     redirect_url = make_redirect_url_with_additional_params(states: state_selector.states_for_url)
     redirect_to redirect_url
@@ -468,6 +472,10 @@ class CasesController < ApplicationController
   end
 
   private
+
+  def set_url
+    @action_url = request.env['PATH_INFO']
+  end
 
   def search_and_filter
     service = CaseSearchService.new(current_user,

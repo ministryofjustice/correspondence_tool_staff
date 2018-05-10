@@ -18,6 +18,7 @@ describe 'cases/search.html.slim', type: :view do
     before :each do
       assign(:cases,[])
       assign(:query, create(:search_query, search_text: ''))
+      assign(:action_url, '/cases/search')
       render
       cases_search_page.load(rendered)
     end
@@ -42,6 +43,7 @@ describe 'cases/search.html.slim', type: :view do
       before :each do
         assign(:query, create(:search_query, search_text: 'no search results'))
         assign(:cases,[])
+        assign(:action_url, '/cases/search')
         render
         cases_search_page.load(rendered)
       end
@@ -65,6 +67,7 @@ describe 'cases/search.html.slim', type: :view do
         create :case
         assign(:query, create(:search_query, search_text: 'some search term'))
         assign(:cases,Case::Base.all.page(1).decorate)
+        assign(:action_url, '/cases/search')
         render
         cases_search_page.load(rendered)
       end
