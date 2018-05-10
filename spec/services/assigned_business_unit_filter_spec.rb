@@ -48,6 +48,15 @@ describe 'AssignedBusinessUnitFilter' do
     end
   end
 
+  describe '#responding_business_units' do
+
+    it 'returns all business units' do
+      expect(AssignedBusinessUnitFilter.responding_business_units)
+          .to match_array BusinessUnit.active.responding.order(:name)
+    end
+
+  end
+
 
 
 end
