@@ -23,6 +23,21 @@ class ExternalDeadlineFilter
     end
   end
 
+  def crumbs
+    if @search_query.external_deadline_from && @search_query.external_deadline_to
+      crumb_text = I18n.t 'filters.crumbs.external_deadline',
+                          from_date: I18n.l(@search_query.external_deadline_from),
+                          to_date: I18n.l(@search_query.external_deadline_to)
+
+      params = @search_query.query.merge(
+        'external_deadline_from' => '',
+        'external_deadline_to'   => '',
+      )
+      [[crumb_text, params]]
+    else
+      []
+    end
+  end
   private
 
   def deadline_is_within_period(from_date, to_date)

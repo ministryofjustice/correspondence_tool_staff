@@ -569,6 +569,7 @@ en:
         <<: *list_filter_type
       exemptions:
         <<: *list_filter_type
+      external_deadline: "%{from_date} - %{to_date}"
       case_type:
         <<: *list_filter_type
       sensitivity:

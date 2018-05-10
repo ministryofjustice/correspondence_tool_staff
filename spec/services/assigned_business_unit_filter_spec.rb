@@ -109,14 +109,21 @@ describe 'AssignedBusinessUnitFilter' do
       describe 'params that will be submitted when clicking on the crumb' do
         subject { filter.crumbs[0].second }
 
-        it { should include 'search_text'            => "Winnie the Pooh" }
-        it { should include 'common_exemption_ids'   => [] }
-        it { should include 'filter_assigned_to_ids' => [''] }
-        it { should include 'filter_case_type'       => [] }
-        it { should include 'exemption_ids'          => [] }
-        it { should include 'filter_sensitivity'     => [] }
-        it { should include 'filter_status'          => [] }
-        it { should include 'parent_id'              => search_query.id }
+        it 'remove the assigned teams filter' do
+          expect(subject).to include 'filter_assigned_to_ids' => ['']
+        end
+
+        it 'leaves the other attributes untouched' do
+          expect(subject).to include(
+                               'search_text'            => 'Winnie the Pooh',
+                               'common_exemption_ids'   => [],
+                               'exemption_ids'          => [],
+                               'filter_case_type'       => [],
+                               'filter_sensitivity'     => [],
+                               'filter_status'          => [],
+                               'parent_id'              => search_query.id
+                             )
+        end
       end
     end
 

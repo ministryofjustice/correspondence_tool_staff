@@ -44,4 +44,54 @@ describe ExternalDeadlineFilter do
       end
     end
   end
+
+  describe '#crumbs' do
+    let(:arel)          { Case::Base.all }
+    let(:filter)        { described_class.new(search_query, arel) }
+
+    context 'no deadline from or to selected' do
+      let(:search_query)  { create :search_query,
+                                   external_deadline_from: nil,
+                                   external_deadline_to: nil }
+
+      it 'returns no crumbs' do
+        expect(filter.crumbs).to be_empty
+      end
+    end
+
+    context 'from and to date selected' do
+      let(:search_query)  { create :search_query,
+                                   external_deadline_from: Date.new(2017, 12, 4),
+                                   external_deadline_to: Date.new(2017, 12, 25) }
+
+      it 'returns a single crumb' do
+        expect(filter.crumbs).to have(1).items
+      end
+
+      it 'uses the from and to dates in the crumb text' do
+        expect(filter.crumbs[0].first).to eq '4 Dec 2017 - 25 Dec 2017'
+      end
+
+      describe 'params that will be submitted when clicking on the crumb' do
+        subject { filter.crumbs[0].second }
+
+        it 'remove the external deadline filters' do
+          expect(subject).to include 'external_deadline_from' => '',
+                                     'external_deadline_to'   => ''
+        end
+
+        it 'leaves the other attributes untouched' do
+          expect(subject).to include(
+                               'search_text'            => 'Winnie the Pooh',
+                               'common_exemption_ids'   => [],
+                               'exemption_ids'          => [],
+                               'filter_assigned_to_ids' => [],
+                               'filter_case_type'       => [],
+                               'filter_sensitivity'     => [],
+                               'filter_status'          => [],
+                             )
+        end
+      end
+    end
+  end
 end

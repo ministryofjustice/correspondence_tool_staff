@@ -32,7 +32,7 @@ class AssignedBusinessUnitFilter
       )
       [[crumb_text, params]]
     else
-      {}
+      []
     end
   end
 end
