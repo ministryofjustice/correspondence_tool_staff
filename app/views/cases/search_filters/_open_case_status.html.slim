@@ -1,11 +1,13 @@
 .state-filter
-  = form_for @state_selector, url: filter_cases_path do |f|
+  = form_for @query, url: @action_url, method: :get do |f|
 
-    = f.check_box_fieldset :selected_states, @state_selector.available_states
+    = hidden_field_tag('search_query[parent_id]', @parent_id)
 
-    - params.each do |param_key, value|
-      = hidden_field_tag((param_key == 'action' ? 'orig_action' : param_key), value)
+    = f.collection_check_boxes :filter_open_case_status, @query.available_open_case_statuses, :first, :second
 
     = f.submit "Apply filter", class: "button"
     a.acts-like-button.button-left-spacing href="#"
       = "Cancel"
+
+
+
