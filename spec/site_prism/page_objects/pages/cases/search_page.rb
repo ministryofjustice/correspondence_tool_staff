@@ -8,6 +8,9 @@ module PageObjects
           element :heading, '.notice-summary-heading'
         end
 
+        element :search_query, 'input[type="search"]'
+        element :search_button, 'input.button#search-button'
+
         section :filter_tab_links, '.ct-tab-container' do
           element :type_tab, 'a[href="#ct-tab-panel-type"]'
           element :status_tab, 'a[href="#ct-tab-panel-status"]'
@@ -15,8 +18,7 @@ module PageObjects
           element :exemption_tab, 'a[href="#ct-tab-panel-exemption"]'
         end
 
-        element :search_query, 'input[type="search"]'
-        element :search_button, 'input.button#search-button'
+        elements :filter_crumbs, '.filter-crumbs input[type="submit"]'
 
         element :search_results_count, '.search-results-summary'
 
@@ -30,7 +32,6 @@ module PageObjects
         end
 
         section :filters, '.ct-tab-container' do
-          elements :options, '.ct-tab-item'
           section :status_filter_panel,
                   PageObjects::Sections::Cases::StatusFilterPanelSection,
                   '#ct-tab-panel-status'
@@ -48,8 +49,34 @@ module PageObjects
 
         element :found_no_results_copy, '.search-no-results'
 
+        def filter_on(filter_name, *checkboxes)
+          tab_link_name = "#{filter_name}_tab"
+          filter_tab_links.__send__(tab_link_name).click
+
+          checkboxes.each do |checkbox_name|
+            checkbox_id = "search_query_filter_#{checkbox_name}"
+            make_check_box_choice(checkbox_id)
+          end
+
+          filter_panel_name = "#{filter_name}_filter_panel"
+          filters.__send__(filter_panel_name).apply_filter_button.click
+        end
+
+        def remove_filter_on(filter_name, *checkboxes)
+          tab_link_name = "#{filter_name}_tab"
+          filter_tab_links.__send__(tab_link_name).click
+
+          checkboxes.each do |checkbox_name|
+            checkbox_id = "search_query_filter_#{checkbox_name}"
+            remove_check_box_choice(checkbox_id)
+          end
+
+          filter_panel_name = "#{filter_name}_filter_panel"
+          filters.__send__(filter_panel_name).apply_filter_button.click
+        end
+
         def filter_on_exemptions(common: nil, all: nil)
-          filter_tab_links.exemption_tab.click
+          open_filter(:exemption)
           if common.present?
             common.each do |checkbox_code|
               checkbox_name = "#{checkbox_code}_checkbox"
@@ -64,6 +91,10 @@ module PageObjects
             end
           end
           filters.exemption_filter_panel.apply_filter_button.click
+        end
+
+        def filter_crumb_for(crumb_text)
+          filter_crumbs.find { |crumb| crumb.value == crumb_text }
         end
       end
     end

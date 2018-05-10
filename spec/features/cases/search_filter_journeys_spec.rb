@@ -9,16 +9,18 @@ feature 'filters whittle down search results' do
   before(:all) do
     CaseClosure::MetadataSeeder.seed!(verbose: false)
 
-    @setup = StandardSetup.new(only_cases: [
-        :std_draft_foi,
-        :std_closed_foi,
-        :trig_responded_foi,
-        :trig_closed_foi,
-        :std_unassigned_irc,
-        :std_unassigned_irt,
-        :std_closed_irc,
-        :std_closed_irt
-    ])
+    @all_cases = [
+      :std_draft_foi,
+      :std_closed_foi,
+      :trig_responded_foi,
+      :trig_closed_foi,
+      :std_unassigned_irc,
+      :std_unassigned_irt,
+      :std_closed_irc,
+      :std_closed_irt
+    ]
+
+    @setup = StandardSetup.new(only_cases: @all_cases)
 
     # add a common search term to them all
     #
@@ -42,6 +44,20 @@ feature 'filters whittle down search results' do
                                                                                   :trig_responded_foi,
                                                                                   :std_unassigned_irc,
                                                                                   :std_unassigned_irt)
+
+      cases_search_page.open_filter(:status)
+      expect(cases_search_page.filters.status_filter_panel.open_checkbox)
+        .to be_checked
+
+      cases_search_page.filter_crumb_for('Open').click
+
+      expect(cases_search_page.case_numbers)
+        .to match_array expected_case_numbers(*@all_cases)
+      cases_search_page.open_filter(:status)
+      expect(cases_search_page.filters.status_filter_panel.open_checkbox)
+        .not_to be_checked
+      expect(cases_search_page.filter_crumb_for('Open'))
+        .not_to be_present
     end
   end
 
@@ -55,6 +71,25 @@ feature 'filters whittle down search results' do
                                                                                    :std_unassigned_irt,
                                                                                    :std_closed_irc,
                                                                                    :std_closed_irt)
+
+      cases_search_page.open_filter(:type)
+      expect(cases_search_page.filters.type_filter_panel.foi_ir_compliance_checkbox)
+        .to be_checked
+      expect(cases_search_page.filters.type_filter_panel.foi_ir_timeliness_checkbox)
+        .to be_checked
+
+      crumb_text = 'FOI - Internal review for compliance + 1 more'
+      cases_search_page.filter_crumb_for(crumb_text).click
+
+      expect(cases_search_page.case_numbers)
+        .to match_array expected_case_numbers(*@all_cases)
+      cases_search_page.open_filter(:type)
+      expect(cases_search_page.filters.type_filter_panel.foi_ir_compliance_checkbox)
+        .not_to be_checked
+      expect(cases_search_page.filters.type_filter_panel.foi_ir_timeliness_checkbox)
+        .not_to be_checked
+      expect(cases_search_page.filter_crumb_for(crumb_text))
+        .not_to be_present
     end
 
     scenario 'filter by standard FOI and trigger', js: true do
@@ -62,6 +97,37 @@ feature 'filters whittle down search results' do
       search_for(search_phrase: 'prison guards', num_expected_results: 8)
       cases_search_page.filter_on('type', 'case_type_foi-standard', 'sensitivity_trigger')
       expect(cases_search_page.case_numbers).to match_array expected_case_numbers( :trig_responded_foi, :trig_closed_foi)
+
+      cases_search_page.open_filter(:type)
+      expect(cases_search_page.filters.type_filter_panel.foi_standard_checkbox)
+        .to be_checked
+      expect(cases_search_page.filters.type_filter_panel.foi_trigger_checkbox)
+        .to be_checked
+
+      expect(cases_search_page.filter_crumb_for('FOI - Standard')).to be_present
+      cases_search_page.filter_crumb_for('Trigger').click
+
+      expect(cases_search_page.case_numbers)
+        .to match_array expected_case_numbers(:trig_responded_foi,
+                                              :trig_closed_foi,
+                                              :std_draft_foi,
+                                              :std_closed_foi)
+      cases_search_page.open_filter(:type)
+      expect(cases_search_page.filters.type_filter_panel.foi_standard_checkbox)
+        .to be_checked
+      expect(cases_search_page.filter_crumb_for('Trigger'))
+        .not_to be_present
+
+      cases_search_page.filter_crumb_for('FOI - Standard').click
+
+      expect(cases_search_page.case_numbers)
+        .to match_array expected_case_numbers(*@all_cases)
+      cases_search_page.open_filter(:type)
+      expect(cases_search_page.filters.type_filter_panel.foi_standard_checkbox)
+        .not_to be_checked
+      expect(cases_search_page.filter_crumb_for('FOI - Standard'))
+        .not_to be_present
+
     end
 
     scenario 'selecting both sensitivies then going back and unchecking one of them' do
@@ -77,6 +143,9 @@ feature 'filters whittle down search results' do
                                                                                     :std_unassigned_irt,
                                                                                     :std_closed_irc,
                                                                                     :std_closed_irt)
+
+      expect(cases_search_page.filter_crumb_for('Non-trigger + 1 more'))
+        .to be_present
 
       # Now uncheck non-trigger
       cases_search_page.remove_filter_on('type', 'sensitivity_non-trigger')
@@ -102,6 +171,23 @@ feature 'filters whittle down search results' do
         search_for(search_phrase: 'prison guards', num_expected_results: 11)
         cases_search_page.filter_on_exemptions(common: %w{ s40 } )
         expect(cases_search_page.case_numbers).to match_array [ @ex2.number, @ex4.number ]
+
+        cases_search_page.open_filter(:exemption)
+
+        exemption_filter_panel = cases_search_page.filters.exemption_filter_panel
+        expect(exemption_filter_panel.most_used.checkbox_for(:s40))
+          .to be_checked
+        expect(exemption_filter_panel.exemption_all.checkbox_for(:s40))
+          .to be_checked
+
+        cases_search_page.filter_crumb_for('(s40) - Personal information').click
+        cases_search_page.open_filter(:exemption)
+
+        exemption_filter_panel = cases_search_page.filters.exemption_filter_panel
+        expect(exemption_filter_panel.most_used.checkbox_for(:s40))
+          .not_to be_checked
+        expect(exemption_filter_panel.exemption_all.checkbox_for(:s40))
+          .not_to be_checked
       end
     end
 
@@ -111,6 +197,21 @@ feature 'filters whittle down search results' do
         search_for(search_phrase: 'prison guards', num_expected_results: 11)
         cases_search_page.filter_on_exemptions(common: %w{ s21 s22 } )
         expect(cases_search_page.case_numbers).to match_array [ @ex1.number  ]
+
+        cases_search_page.open_filter(:exemption)
+
+        exemption_filter_panel = cases_search_page.filters.exemption_filter_panel
+        expect(exemption_filter_panel.most_used.checkbox_for(:s21))
+          .to be_checked
+        expect(exemption_filter_panel.most_used.checkbox_for(:s22))
+          .to be_checked
+        expect(exemption_filter_panel.exemption_all.checkbox_for(:s21))
+          .to be_checked
+        expect(exemption_filter_panel.exemption_all.checkbox_for(:s22))
+          .to be_checked
+
+        crumb_text = '(s21) - Information accessible by other means + 1 more'
+        expect(cases_search_page.filter_crumb_for(crumb_text)).to be_present
       end
     end
   end

@@ -3,6 +3,18 @@ module PageObjects
     module Cases
       class ExemptionFilterPanelSection < SitePrism::Section
         section :most_used, '.exemption-most-used' do
+          # The following checkboxes are invisible because ... govuk form
+          # elements. Check for visibility on the panel section, not the
+          # checkboxes
+
+          def checkbox_for(exemption)
+            unless exemption.is_a? CaseClosure::Exemption
+              exemption = CaseClosure::Exemption.__send__ exemption.to_s
+            end
+            find "#search_query_common_exemption_ids_#{exemption.id}",
+                 visible: false
+          end
+
           element :s21_checkbox, :xpath, '//div[@class="exemption-most-used"]//label[contains(.,"s21")]'
           element :s22_checkbox, :xpath, '//div[@class="exemption-most-used"]//label[contains(.,"s22")]'
           element :s32_checkbox, :xpath, '//div[@class="exemption-most-used"]//label[contains(.,"s32")]'
@@ -10,6 +22,18 @@ module PageObjects
         end
 
         section :exemption_all, '.exemption-all' do
+          # The following checkboxes are invisible because ... govuk form
+          # elements. Check for visibility on the panel section, not the
+          # checkboxes
+
+          def checkbox_for(exemption)
+            unless exemption.is_a? CaseClosure::Exemption
+              exemption = CaseClosure::Exemption.__send__ exemption.to_s
+            end
+            find "#search_query_exemption_ids_#{exemption.id}",
+                 visible: false
+          end
+
           element :ncnd_checkbox, :xpath, '//div[@class="exemption-all"]//label[contains(.,"`NCND`")]'
           element :s12_1_checkbox, :xpath, '//div[@class="exemption-all"]//label[contains(.,"s12(1)")]'
           element :s21_checkbox, :xpath, '//div[@class="exemption-all"]//label[contains(.,"s21")]'
@@ -37,7 +61,6 @@ module PageObjects
         end
 
         element :apply_filter_button, '.button[value="Apply filter"]'
-
       end
     end
   end
