@@ -2,6 +2,12 @@
   @include button($light-blue);
 }
 
+.filter-crumbs input[type="submit"] {
+    @include button($panel-colour);
+    margin-right: 5px;
+    margin-top: 15px;
+}
+
 .button-holder {
   @extend %contain-floats;
   @include box-sizing(border-box);

@@ -51,7 +51,7 @@
           = render partial: 'cases/search_filters/exemptions'
 
   .grid-row
-    ul
+    ul.filter-crumbs
       - @query.filter_crumbs.each do |filter_crumb, new_filter_params|
         = render partial: 'cases/search_filters/filter_crumbs',
                  locals: { filter_crumb: filter_crumb, params: new_filter_params }
