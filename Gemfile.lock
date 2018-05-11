@@ -65,7 +65,7 @@ GEM
       rake (>= 10.4, < 12.0)
     arel (7.1.4)
     ast (2.4.0)
-    awesome_print (1.7.0)
+    awesome_print (1.8.0)
     aws-sdk (2.7.3)
       aws-sdk-resources (= 2.7.3)
     aws-sdk-core (2.7.3)
