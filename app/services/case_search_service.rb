@@ -1,16 +1,4 @@
 class CaseSearchService
-  # FILTER_ATTRIBUTES = [
-  #   :filter_case_type,
-  #   :filter_sensitivity,
-  #   :filter_status,
-  #   :exemption_ids,
-  #   :common_exemption_ids,
-  #   :filter_assigned_to_ids,
-  #   :external_deadline_from,
-  #   :external_deadline_to,
-  # ]
-  # QUERY_ATTRIBUTES = [:search_text] + FILTER_ATTRIBUTES
-
   attr_reader :current_user,
               :error_message,
               :filter_type,

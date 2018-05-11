@@ -103,7 +103,7 @@ describe 'AssignedBusinessUnitFilter' do
       end
 
       it 'uses the name of the assigned team as the crumb text' do
-        expect(filter.crumbs[0].first).to eq 'Responding Team 1'
+        expect(filter.crumbs[0].first).to eq @responding_team_1.name
       end
 
       describe 'params that will be submitted when clicking on the crumb' do
@@ -138,7 +138,7 @@ describe 'AssignedBusinessUnitFilter' do
       end
 
       it 'uses the name of the assigned team + 1 more as the crumb text' do
-        expect(filter.crumbs[0].first).to eq 'Responding Team 1 + 1 more'
+        expect(filter.crumbs[0].first).to eq "#{@responding_team_1.name} + 1 more"
       end
     end
   end
