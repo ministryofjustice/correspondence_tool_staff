@@ -170,4 +170,28 @@ describe SearchQuery do
       expect(search_query.results).to eq [case_closed]
     end
   end
+
+  describe 'self.filter_attributes' do
+    it 'returns all the filter attributes' do
+      expect(SearchQuery.filter_attributes).to match_array [
+                                                 :common_exemption_ids,
+                                                 :exemption_ids,
+                                                 :external_deadline_from,
+                                                 :external_deadline_to,
+                                                 :filter_assigned_to_ids,
+                                                 :filter_case_type,
+                                                 :filter_sensitivity,
+                                                 :filter_status,
+                                               ]
+    end
+  end
+
+  describe '#params_without_filters' do
+    it 'returns all the filter attributes' do
+      search_query = create :search_query
+
+      expect(search_query.params_without_filters)
+        .to eq({ 'search_text' => 'Winnie the Pooh' })
+    end
+  end
 end

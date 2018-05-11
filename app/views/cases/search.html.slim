@@ -55,6 +55,9 @@
       - @query.filter_crumbs.each do |filter_crumb, new_filter_params|
         = render partial: 'cases/search_filters/filter_crumbs',
                  locals: { filter_crumb: filter_crumb, params: new_filter_params }
+  - if @query.filter_crumbs.present?
+    .grid-row
+      = link_to 'Clear all filters', search_query: @query.params_without_filters
 
 - if @cases.any?
   = render partial: 'cases/shared/case_list'

@@ -9,6 +9,10 @@ class ExternalDeadlineFilter
 
   end
 
+  def self.filter_attributes
+    [:external_deadline_from, :external_deadline_to]
+  end
+
   def initialize(search_query, results)
     @search_query = search_query
     @results = results
@@ -38,6 +42,11 @@ class ExternalDeadlineFilter
       []
     end
   end
+
+  def applied?
+    @search_query.external_deadline_from && @search_query.external_deadline_to
+  end
+
   private
 
   def deadline_is_within_period(from_date, to_date)

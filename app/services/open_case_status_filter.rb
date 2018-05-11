@@ -13,6 +13,9 @@ class OpenCaseStatusFilter
     }
   end
 
+  def self.filter_attributes
+    [:filter_open_case_status]
+  end
 
   def initialize(query, records)
     @query = query

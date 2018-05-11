@@ -6,6 +6,10 @@ class CaseStatusFilter
     }
   end
 
+  def self.filter_attributes
+    [:filter_status]
+  end
+
   def initialize(query, records)
     @query = query
     @records = records

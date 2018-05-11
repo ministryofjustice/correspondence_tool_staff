@@ -1,4 +1,7 @@
 class AssignedBusinessUnitFilter
+  def self.filter_attributes
+    [:filter_assigned_to_ids]
+  end
 
   def initialize(search_query_record, results)
     @results = results

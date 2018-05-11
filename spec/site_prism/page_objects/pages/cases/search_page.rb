@@ -94,6 +94,37 @@ module PageObjects
           exemption_filter_panel.apply_filter_button.click
         end
 
+        def filter_on_deadline(preset_or_args = nil)
+          if preset_or_args.respond_to? :keys
+            from_date = preset_or_args.delete(:from)
+            to_date   = preset_or_args.delete(:to)
+
+            if preset_or_args.any?
+              raise ArgumentError.new(
+                      "unrecognised parameters: #{preset_or_args.to_s}"
+                    )
+            end
+          else
+            preset = preset_or_args
+          end
+
+          self.open_filter(:deadline)
+          if preset.present?
+            self.deadline_filter_panel.click_on preset
+          elsif from_date.present? && to_date.present?
+            self.deadline_filter_panel.from_date = from_date
+            self.deadline_filter_panel.to_date   = to_date
+          else
+            raise ArgumentError.new("please provide preset or from/to")
+          end
+          self.deadline_filter_panel.click_on 'Apply filter'
+        end
+
+        def open_filter(filter_name)
+          tab_link_name = "#{filter_name}_tab"
+          filter_tab_links.__send__(tab_link_name).click
+        end
+
         def filter_crumb_for(crumb_text)
           filter_crumbs.find { |crumb| crumb.value == crumb_text }
         end

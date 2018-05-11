@@ -1,4 +1,7 @@
 class ExemptionFilter
+  def self.filter_attributes
+    [:common_exemption_ids, :exemption_ids]
+  end
 
   def initialize(search_query_record, arel)
     @arel = arel

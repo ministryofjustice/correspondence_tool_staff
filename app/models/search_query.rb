@@ -16,17 +16,16 @@
 #
 
 class SearchQuery < ApplicationRecord
-
-  attr_accessor :business_unit_name_filter
-
-  FILTER_CLASSES =     [
+  FILTER_CLASSES = [
     CaseTypeFilter,
     CaseStatusFilter,
     ExemptionFilter,
     AssignedBusinessUnitFilter,
     ExternalDeadlineFilter,
     OpenCaseStatusFilter
-  ]
+  ].freeze
+
+  attr_accessor :business_unit_name_filter
 
   belongs_to :user
   belongs_to :parent, class_name: 'SearchQuery'
@@ -63,6 +62,16 @@ class SearchQuery < ApplicationRecord
     else
       nil
     end
+  end
+
+  def self.filter_attributes
+    FILTER_CLASSES.collect_concat do |filter_class|
+      filter_class.filter_attributes
+    end
+  end
+
+  def self.query_attributes
+    [:search_text] + self.filter_attributes
   end
 
   def update_for_click(position)
@@ -122,6 +131,10 @@ class SearchQuery < ApplicationRecord
 
   end
 
+  def applied_filters
+    FILTER_CLASSES.select { |filter| filter.applied? }
+  end
+
   def filter_crumbs
     filter_crumbs = []
     FILTER_CLASSES.map do |filter_class|
@@ -130,5 +143,9 @@ class SearchQuery < ApplicationRecord
       filter_crumbs += filter.crumbs
     end
     filter_crumbs
+  end
+
+  def params_without_filters
+    query.except(*(self.class.filter_attributes.map &:to_s))
   end
 end

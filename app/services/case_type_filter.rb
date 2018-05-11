@@ -14,6 +14,10 @@ class CaseTypeFilter
     }
   end
 
+  def self.filter_attributes
+    [:filter_case_type, :filter_sensitivity]
+  end
+
   def initialize(query, records)
     @query = query
     @records = records

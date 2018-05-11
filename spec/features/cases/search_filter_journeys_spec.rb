@@ -191,7 +191,7 @@ feature 'filters whittle down search results' do
       end
     end
 
-    context 'specifying multiple exemptions' do
+    context 'specifying multiple exemptions', js: true do
       scenario 'selects only cases that match ALL specified exemption' do
         login_step user: @setup.disclosure_bmt_user
         search_for(search_phrase: 'prison guards', num_expected_results: 11)
@@ -244,6 +244,103 @@ feature 'filters whittle down search results' do
       expect(assigned_to_filter_panel.checkbox_for(main_team_name))
         .not_to be_checked
       expect(cases_search_page.filter_crumb_for(main_team_name)).not_to be_present
+    end
+  end
+
+  context 'all filters set' do
+    before do
+      login_step user: @setup.disclosure_bmt_user
+      search_for(search_phrase: 'prison guards', num_expected_results: 8)
+
+      cases_search_page.filter_on('status', 'status_open')
+      cases_search_page.filter_on('type', 'case_type_foi-standard', 'sensitivity_trigger')
+
+      cases_search_page.filter_on_exemptions(common: %w{ s40 } )
+
+      cases_search_page.filter_tab_links.assigned_to_tab.click
+      cases_search_page.assigned_to_filter_panel.business_unit_search_term.set('main')
+      cases_search_page.assigned_to_filter_panel.main_responding_team_checkbox.click
+      cases_search_page.assigned_to_filter_panel.apply_filter_button.click
+
+      cases_search_page.filter_on_deadline('Today')
+
+      @s40_exemption = '(s40) - Personal information'
+      @from_to_date = "#{I18n.l Date.today} - #{I18n.l Date.today}"
+    end
+
+    scenario 'clearing individual filters', js: true do
+      cases_search_page.filter_crumb_for('Open').click
+
+      expect(cases_search_page.filter_crumb_for('Open'                )).not_to be_present
+      expect(cases_search_page.filter_crumb_for('FOI - Standard'      )).to be_present
+      expect(cases_search_page.filter_crumb_for('Trigger'             )).to be_present
+      expect(cases_search_page.filter_crumb_for(@s40_exemption        )).to be_present
+      expect(cases_search_page.filter_crumb_for('Main responding_team')).to be_present
+      expect(cases_search_page.filter_crumb_for(@from_to_date         )).to be_present
+
+      cases_search_page.filter_crumb_for('FOI - Standard').click
+
+      expect(cases_search_page.filter_crumb_for('Open'                )).not_to be_present
+      expect(cases_search_page.filter_crumb_for('FOI - Standard'      )).not_to be_present
+      expect(cases_search_page.filter_crumb_for('Trigger'             )).to be_present
+      expect(cases_search_page.filter_crumb_for(@s40_exemption        )).to be_present
+      expect(cases_search_page.filter_crumb_for('Main responding_team')).to be_present
+      expect(cases_search_page.filter_crumb_for(@from_to_date         )).to be_present
+
+      cases_search_page.filter_crumb_for('Trigger').click
+
+      expect(cases_search_page.filter_crumb_for('Open'                )).not_to be_present
+      expect(cases_search_page.filter_crumb_for('FOI - Standard'      )).not_to be_present
+      expect(cases_search_page.filter_crumb_for('Trigger'             )).not_to be_present
+      expect(cases_search_page.filter_crumb_for(@s40_exemption        )).to be_present
+      expect(cases_search_page.filter_crumb_for('Main responding_team')).to be_present
+      expect(cases_search_page.filter_crumb_for(@from_to_date         )).to be_present
+
+      cases_search_page.filter_crumb_for(@s40_exemption).click
+
+      expect(cases_search_page.filter_crumb_for('Open'                )).not_to be_present
+      expect(cases_search_page.filter_crumb_for('FOI - Standard'      )).not_to be_present
+      expect(cases_search_page.filter_crumb_for('Trigger'             )).not_to be_present
+      expect(cases_search_page.filter_crumb_for(@s40_exemption        )).not_to be_present
+      expect(cases_search_page.filter_crumb_for('Main responding_team')).to be_present
+      expect(cases_search_page.filter_crumb_for(@from_to_date         )).to be_present
+
+      cases_search_page.filter_crumb_for('Main responding_team').click
+
+      expect(cases_search_page.filter_crumb_for('Open'                )).not_to be_present
+      expect(cases_search_page.filter_crumb_for('FOI - Standard'      )).not_to be_present
+      expect(cases_search_page.filter_crumb_for('Trigger'             )).not_to be_present
+      expect(cases_search_page.filter_crumb_for(@s40_exemption        )).not_to be_present
+      expect(cases_search_page.filter_crumb_for('Main responding_team')).not_to be_present
+      expect(cases_search_page.filter_crumb_for(@from_to_date         )).to be_present
+
+      cases_search_page.filter_on('status', 'status_open')
+      cases_search_page.filter_crumb_for(@from_to_date).click
+
+      expect(cases_search_page.filter_crumb_for('Open'                )).to be_present
+      expect(cases_search_page.filter_crumb_for('FOI - Standard'      )).not_to be_present
+      expect(cases_search_page.filter_crumb_for('Trigger'             )).not_to be_present
+      expect(cases_search_page.filter_crumb_for(@s40_exemption        )).not_to be_present
+      expect(cases_search_page.filter_crumb_for('Main responding_team')).not_to be_present
+      expect(cases_search_page.filter_crumb_for(@from_to_date         )).not_to be_present
+    end
+
+    scenario 'clearing all filters', js: true do
+      expect(cases_search_page.filter_crumb_for('Open'                )).to be_present
+      expect(cases_search_page.filter_crumb_for('FOI - Standard'      )).to be_present
+      expect(cases_search_page.filter_crumb_for('Trigger'             )).to be_present
+      expect(cases_search_page.filter_crumb_for(@s40_exemption        )).to be_present
+      expect(cases_search_page.filter_crumb_for('Main responding_team')).to be_present
+      expect(cases_search_page.filter_crumb_for(@from_to_date         )).to be_present
+
+      cases_search_page.click_on 'Clear all filters'
+
+      expect(cases_search_page.filter_crumb_for('Open'                )).not_to be_present
+      expect(cases_search_page.filter_crumb_for('FOI - Standard'      )).not_to be_present
+      expect(cases_search_page.filter_crumb_for('Trigger'             )).not_to be_present
+      expect(cases_search_page.filter_crumb_for(@s40_exemption        )).not_to be_present
+      expect(cases_search_page.filter_crumb_for('Main responding_team')).not_to be_present
+      expect(cases_search_page.filter_crumb_for(@from_to_date         )).not_to be_present
     end
   end
 
