@@ -14,6 +14,21 @@ describe CaseStatusFilter do
   let(:case_status_filter)  { CaseStatusFilter.new search_query,
                                                    Case::Base.all }
 
+  describe '#applied?' do
+    subject { case_status_filter }
+
+    context 'filter_status not present' do
+      let(:search_query)      { create :search_query }
+      it { should_not be_applied }
+    end
+
+    context 'filter_status present' do
+      let(:search_query)      { create :search_query,
+                                       filter_status: ['open'] }
+      it { should be_applied }
+    end
+  end
+
   describe '#call' do
     context 'filter not enabled' do
       let(:search_query)      { create :search_query,

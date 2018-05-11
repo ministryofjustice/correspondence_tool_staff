@@ -15,6 +15,10 @@ class CaseStatusFilter
     @records = records
   end
 
+  def applied?
+    @query.filter_status.present?
+  end
+
   def call
     filter_status(@records)
   end

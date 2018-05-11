@@ -9,6 +9,10 @@ class ExemptionFilter
     @exemption_ids = search_query_record.exemption_ids
   end
 
+  def applied?
+    @query.exemption_ids.present? || @query.common_exemption_ids.present?
+  end
+
   def call
     if @exemption_ids.any?
       kase_ids = ids_of_cases_with_all_exemptions

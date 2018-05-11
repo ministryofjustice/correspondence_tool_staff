@@ -20,6 +20,27 @@ describe Case::Base do
   let(:arel)    { Case::Base.all }
   let(:filter)  { ExemptionFilter.new(search_query, arel) }
 
+  describe '#applied?' do
+    subject { filter }
+
+    context 'no exemption present' do
+      let(:search_query)      { create :search_query }
+      it { should_not be_applied }
+    end
+
+    context 'exemption_ids present' do
+      let(:search_query)      { create :search_query,
+                                       exemption_ids: [1] }
+      it { should be_applied }
+    end
+
+    context 'common_exemption_ids present' do
+      let(:search_query)      { create :search_query,
+                                       common_exemption_ids: [1] }
+      it { should be_applied }
+    end
+  end
+
   describe '#call' do
 
     context 'query contains empty exemption ids' do

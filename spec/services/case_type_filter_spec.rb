@@ -16,6 +16,27 @@ describe CaseTypeFilter do
   let(:case_type_filter)  { CaseTypeFilter.new search_query,
                                                Case::Base }
 
+  describe '#applied?' do
+    subject { case_type_filter }
+
+    context 'filter_case_type and filter_sensitivity not present' do
+      let(:search_query)      { create :search_query }
+      it { should_not be_applied }
+    end
+
+    context 'filter_case_type present' do
+      let(:search_query)      { create :search_query,
+                                       filter_case_type: ['foi-standard'] }
+      it { should be_applied }
+    end
+
+    context 'filter_sensitivity present' do
+      let(:search_query)      { create :search_query,
+                                       filter_sensitivity: ['trigger'] }
+      it { should be_applied }
+    end
+  end
+
   describe '#call' do
     describe 'filtering for trigger cases' do
       let(:search_query)      { create :search_query,
@@ -112,7 +133,7 @@ describe CaseTypeFilter do
         end
 
         it 'leaves the other attributes untouched' do
-          subject.should include(
+          expect(subject).to include(
                            'search_text'            => 'Winnie the Pooh',
                            'common_exemption_ids'   => [],
                            'exemption_ids'          => [],

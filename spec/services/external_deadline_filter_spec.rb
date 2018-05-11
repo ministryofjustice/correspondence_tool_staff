@@ -12,6 +12,36 @@ describe ExternalDeadlineFilter do
 
   after(:all) { DbHousekeeping.clean }
 
+  describe '#applied?' do
+    subject { filter }
+
+    let(:filter)  { ExternalDeadlineFilter.new(search_query, Case::Base.all) }
+
+    context 'no external_deadline present' do
+      let(:search_query)      { create :search_query }
+      it { should_not be_applied }
+    end
+
+    context 'both from and to external_deadline present' do
+      let(:search_query)      { create :search_query,
+                                       external_deadline_from: Date.today,
+                                       external_deadline_to:   Date.today }
+      it { should be_applied }
+    end
+
+    context 'only external_deadline_from present' do
+      let(:search_query)      { create :search_query,
+                                       external_deadline_from: Date.today }
+      it { should_not be_applied }
+    end
+
+    context 'only external_deadline_to present' do
+      let(:search_query)      { create :search_query,
+                                       external_deadline_to: Date.today }
+      it { should_not be_applied }
+    end
+  end
+
   describe '#call' do
     let(:arel)    { Case::Base.all }
     let(:filter)  { ExternalDeadlineFilter.new(search_query, arel) }

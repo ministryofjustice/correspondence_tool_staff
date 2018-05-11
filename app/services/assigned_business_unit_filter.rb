@@ -9,6 +9,10 @@ class AssignedBusinessUnitFilter
     @business_unit_ids = search_query_record.filter_assigned_to_ids
   end
 
+  def applied?
+    @query.filter_assigned_to_ids.present?
+  end
+
   def call
     if @business_unit_ids.present?
       case_ids = Assignment.responding.where(team_id: @business_unit_ids).where.not(state: 'rejected').pluck(:case_id)

@@ -26,6 +26,22 @@ describe 'AssignedBusinessUnitFilter' do
 
   after(:all) { DbHousekeeping.clean }
 
+  describe '#applied?' do
+    subject { AssignedBusinessUnitFilter.new(search_query, arel) }
+    let(:arel) { Case::Base.all }
+
+    context 'filter_assigned_to_ids not present' do
+      let(:search_query)      { create :search_query }
+      it { should_not be_applied }
+    end
+
+    context 'filter_assigned_to_ids present' do
+      let(:search_query)      { create :search_query,
+                                       filter_assigned_to_ids: [1] }
+      it { should be_applied }
+    end
+  end
+
   describe '#call' do
     context 'no assigned teams selected' do
       let(:arel)          { Case::Base.all }

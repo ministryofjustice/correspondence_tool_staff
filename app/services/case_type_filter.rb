@@ -23,6 +23,10 @@ class CaseTypeFilter
     @records = records
   end
 
+  def applied?
+    @query.filter_case_type.present? || @query.filter_sensitivity.present?
+  end
+
   def call
     records = @records
 

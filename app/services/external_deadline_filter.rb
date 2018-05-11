@@ -18,7 +18,12 @@ class ExternalDeadlineFilter
     @results = results
   end
 
-  def call
+  def applied?
+    @search_query.external_deadline_from.present? &&
+      @search_query.external_deadline_to.present?
+  end
+
+ def call
     if @search_query.external_deadline_from && @search_query.external_deadline_to
       deadline_is_within_period(@search_query.external_deadline_from,
                                 @search_query.external_deadline_to)
@@ -41,10 +46,6 @@ class ExternalDeadlineFilter
     else
       []
     end
-  end
-
-  def applied?
-    @search_query.external_deadline_from && @search_query.external_deadline_to
   end
 
   private
