@@ -23,7 +23,7 @@ class StandardSetup
     @@teams = {
       disclosure_bmt_team:    -> { find_or_create(:team_dacu) },
       disclosure_team:        -> { find_or_create(:team_dacu_disclosure) },
-      responding_team:        -> { find_or_create(:responding_team, name: 'responding_team') },
+      responding_team:        -> { find_or_create(:responding_team, name: 'Main responding_team') },
       press_office_team:      -> { find_or_create(:team_press_office) },
       private_office_team:    -> { find_or_create(:team_private_office) },
       another_approving_team: -> { find_or_create(:approving_team, name: 'approving_team') },
@@ -180,8 +180,12 @@ class StandardSetup
       full_closed_foi:              -> { create(:closed_case,
                                                 :flagged,
                                                 :press_office) },
+
       std_unassigned_irc:           -> { create :compliance_review },
+      std_closed_irc:               -> { create :closed_compliance_review },
+
       std_unassigned_irt:           -> { create :timeliness_review },
+      std_closed_irt:               -> { create :closed_timeliness_review }
     }
 
     # Used when not instantiating a StandardSetup object in a before block.
@@ -204,7 +208,7 @@ class StandardSetup
     end
   end
 
-  attr_reader :cases, :user_teams
+  attr_reader :cases, :user_teams, :users
 
   def initialize(only_cases: nil)
     # cases are named <workflow>_<state>_<other_info> where:
@@ -233,6 +237,7 @@ class StandardSetup
     case_types = only_cases || @@cases.keys
     @cases = @@cases.slice(*case_types).transform_values { |kase| kase.call }
   end
+
 
   # Used when instantiating a StandardSetup object to pre-instantiate fixtures
   # in a before block (e.g. global_state_machine_spec.rb). This allows test to

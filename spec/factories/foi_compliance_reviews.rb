@@ -67,4 +67,12 @@ FactoryGirl.define do
     end
   end
 
+  factory :closed_compliance_review,
+          class: Case::FOI::ComplianceReview,
+          parent: :closed_case do
+    transient do
+      identifier 'closed foi compliance review case'
+    end
+  end
+
 end

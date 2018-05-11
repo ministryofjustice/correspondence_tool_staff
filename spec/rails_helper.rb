@@ -144,6 +144,10 @@ RSpec.configure do |config|
   config.after(:suite) do
     DbHousekeeping.clean(seed: false)
   end
+
+  config.before(:example, tag: :cli) do
+    CTS.instance_variables.each { |var| CTS.remove_instance_variable var }
+  end
 end
 
 def seed_database_for_tests
