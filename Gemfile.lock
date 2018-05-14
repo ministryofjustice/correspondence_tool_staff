@@ -173,7 +173,7 @@ GEM
       thread_safe
     erubi (1.7.0)
     erubis (2.7.0)
-    et-orbi (1.0.8)
+    et-orbi (1.1.1)
       tzinfo
     execjs (2.7.0)
     factory_girl (4.7.0)
@@ -491,7 +491,7 @@ GEM
       redis (>= 3.3.5, < 5)
     sidekiq-logging-json (0.0.18)
       sidekiq (>= 3)
-    sidekiq-scheduler (2.1.10)
+    sidekiq-scheduler (2.2.1)
       redis (>= 3, < 5)
       rufus-scheduler (~> 3.2)
       sidekiq (>= 3)
@@ -534,7 +534,7 @@ GEM
       thor
     thread (0.2.2)
     thread_safe (0.3.6)
-    tilt (2.0.5)
+    tilt (2.0.8)
     timecop (0.8.1)
     turbolinks (5.1.1)
       turbolinks-source (~> 5.1)
