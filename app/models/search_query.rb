@@ -71,7 +71,7 @@ class SearchQuery < ApplicationRecord
   end
 
   def self.query_attributes
-    [:search_text] + self.filter_attributes
+    [:search_text, :list_path, :list_params] + self.filter_attributes
   end
 
   def update_for_click(position)
@@ -111,6 +111,27 @@ class SearchQuery < ApplicationRecord
     end
   end
 
+  def filter_crumbs
+    filter_crumbs = []
+    applied_filters.map do |filter_class|
+      filter_class.new(self, Case::Base.none)
+    end.each do |filter|
+      filter_crumbs += filter.crumbs
+    end
+    filter_crumbs
+  end
+
+  def params_without_filters
+    query.except(*(self.class.filter_attributes.map(&:to_s)))
+  end
+
+  def applied_filters
+    FILTER_CLASSES.select do |filter_class|
+      filter = filter_class.new(self, Case::Base.none)
+      filter.applied?
+    end
+  end
+
   private
 
   def search_results
@@ -129,26 +150,5 @@ class SearchQuery < ApplicationRecord
                       .cases
                       .by_deadline
 
-  end
-
-  def applied_filters
-    FILTER_CLASSES.select do |filter_class|
-      filter = filter_class.new(self, Case::Base.none)
-      filter.applied?
-    end
-  end
-
-  def filter_crumbs
-    filter_crumbs = []
-    applied_filters.map do |filter_class|
-      filter_class.new(self, Case::Base.none)
-    end.each do |filter|
-      filter_crumbs += filter.crumbs
-    end
-    filter_crumbs
-  end
-
-  def params_without_filters
-    query.except(*(self.class.filter_attributes.map(&:to_s)))
   end
 end

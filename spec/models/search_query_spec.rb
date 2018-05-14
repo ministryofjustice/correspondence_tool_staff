@@ -79,6 +79,8 @@ describe SearchQuery do
     it 'returns all the query attributes' do
       expect(SearchQuery.query_attributes).to match_array [
                                                 :search_text,
+                                                :list_path,
+                                                :list_params,
                                                 :common_exemption_ids,
                                                 :exemption_ids,
                                                 :external_deadline_from,
@@ -207,7 +209,9 @@ describe SearchQuery do
       search_query = create :search_query
 
       expect(search_query.params_without_filters)
-        .to eq({ 'search_text' => 'Winnie the Pooh' })
+        .to eq({ 'search_text' => 'Winnie the Pooh',
+                 'list_params' => '',
+                 'list_path'   => '', })
     end
   end
 
