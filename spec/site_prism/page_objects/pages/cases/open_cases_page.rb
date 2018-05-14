@@ -4,6 +4,8 @@ module PageObjects
   module Pages
     module Cases
       class OpenCasesPage < PageObjects::Pages::CasesPage
+        include PageObjects::FilterMethods
+
         # This page is just a version of CasesPage, so look at that for the
         # page structure.
         set_url '/cases/open/{timeliness}'
