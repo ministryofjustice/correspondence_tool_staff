@@ -53,7 +53,7 @@ feature 'filters whittle down search results' do
                                                                                 :std_unassigned_irc,
                                                                                 :std_unassigned_irt)
 
-      open_cases_page.filter_on('status', 'unassigned')
+      open_cases_page.filter_on('status', 'open_case_status_unassigned')
       expect(open_cases_page.case_numbers).to match_array expected_case_numbers(:std_unassigned_irc, :std_unassigned_irt)
     end
   end
