@@ -113,9 +113,6 @@ class CasesController < ApplicationController
   end
 
   def filter
-    puts ">>>>>>>>>>>> FILTER #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
-    pp params
-
     state_selector = StateSelector.new(params)
     redirect_url = make_redirect_url_with_additional_params(states: state_selector.states_for_url)
     redirect_to redirect_url
