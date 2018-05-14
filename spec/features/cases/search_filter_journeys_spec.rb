@@ -135,7 +135,7 @@ feature 'filters whittle down search results' do
       search_for(search_phrase: 'prison guards', num_expected_results: 8)
       cases_search_page.filter_on('type', 'sensitivity_non-trigger', 'sensitivity_trigger')
 
-      expect(cases_search_page.case_numbers).to  match_array expected_case_numbers(  :std_draft_foi,
+      expect(cases_search_page.case_numbers).to match_array expected_case_numbers(  :std_draft_foi,
                                                                                     :std_closed_foi,
                                                                                     :trig_responded_foi,
                                                                                     :trig_closed_foi,

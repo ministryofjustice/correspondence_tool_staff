@@ -23,7 +23,7 @@ class ExternalDeadlineFilter
       @search_query.external_deadline_to.present?
   end
 
- def call
+  def call
     if @search_query.external_deadline_from && @search_query.external_deadline_to
       deadline_is_within_period(@search_query.external_deadline_from,
                                 @search_query.external_deadline_to)

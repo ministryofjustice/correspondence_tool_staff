@@ -103,7 +103,7 @@ module PageObjects
 
             if preset_or_args.any?
               raise ArgumentError.new(
-                      "unrecognised parameters: #{preset_or_args.to_s}"
+                      "unrecognised parameters: #{preset_or_args}"
                     )
             end
           else
