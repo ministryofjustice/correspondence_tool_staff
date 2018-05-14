@@ -372,6 +372,13 @@ RSpec.describe CasesController, type: :controller do
         get :open_cases, params: {tab: 'in_time'}
         expect(response).to render_template(:index)
       end
+
+      it 'writes a search query record' do
+        expect{
+          get :open_cases,
+              params:{tab: 'in_time'}
+        }.to change{SearchQuery.count}.by 1
+      end
     end
   end
 

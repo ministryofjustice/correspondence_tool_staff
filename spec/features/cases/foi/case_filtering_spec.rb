@@ -35,14 +35,14 @@ feature 'filtering cases' do
 
   scenario 'no checkboxes selected before filter applied', js: true do
     open_cases_page.load(timeliness: 'in_time')
-    open_cases_page.filters.open_case_status.click
-    open_cases_page.state_filter.apply_filter_button.click
+    open_cases_page.filter_tab_links.status_tab.click
+    open_cases_page.filters.status_filter_panel.apply_filter_button.click
     expect(open_cases_page.case_numbers).to match_array(all_case_numbers)
   end
 
   scenario 'filter just unassigned cases', js: true do
     open_cases_page.load(timeliness: 'in_time')
-    open_cases_page.filters.open_case_status.click
+    open_cases_page.filter_tab_links.status_tab.click
     open_cases_page.choose_state('unassigned')
     open_cases_page.state_filter.apply_filter_button.click
 
@@ -51,7 +51,7 @@ feature 'filtering cases' do
 
   scenario 'filter on unassigned, drafting and awaiting_dispatch cases', js: true do
     open_cases_page.load(timeliness: 'in_time')
-    open_cases_page.filters.open_case_status.click
+    open_cases_page.filter_tab_links.status_tab.click
     open_cases_page.choose_state('unassigned')
     open_cases_page.choose_state('drafting')
     open_cases_page.choose_state('awaiting_dispatch')
@@ -63,7 +63,7 @@ feature 'filtering cases' do
 
   scenario 'just pending dacu clearance', js: true do
     open_cases_page.load(timeliness: 'in_time')
-    open_cases_page.filters.open_case_status.click
+    open_cases_page.filter_tab_links.status_tab.click
     open_cases_page.choose_state('pending_dacu_clearance')
     open_cases_page.state_filter.apply_filter_button.click
 
@@ -81,7 +81,7 @@ feature 'filtering cases' do
     expect(open_cases_page.case_numbers).to match_array(all_case_numbers)
 
     # filter on unassigned should show just one case
-    open_cases_page.filters.open_case_status.click
+    open_cases_page.filter_tab_links.status_tab.click
     open_cases_page.choose_state('unassigned')
     open_cases_page.state_filter.apply_filter_button.click
     expect(open_cases_page.case_numbers).to eq [ @unassigned_case.number ]
