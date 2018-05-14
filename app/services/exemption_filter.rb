@@ -38,8 +38,9 @@ class ExemptionFilter
                           first_value: first_exemption.name,
                           remaining_values_count: @exemption_ids.count - 1
       params = @query.query.merge(
-        'exemption_ids' => [''],
-        'parent_id'     => @query.id,
+        'common_exemption_ids' => [''],
+        'exemption_ids'        => [''],
+        'parent_id'            => @query.id,
       )
       [[crumb_text, params]]
     else

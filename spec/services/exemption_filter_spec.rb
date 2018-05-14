@@ -107,7 +107,7 @@ describe Case::Base do
         subject { filter.crumbs[0].second }
 
         it { should include 'search_text'            => "meals" }
-        it { should include 'common_exemption_ids'   => [s22_exemption.id] }
+        it { should include 'common_exemption_ids'   => [''] }
         it { should include 'filter_assigned_to_ids' => [] }
         it { should include 'filter_case_type'       => [] }
         it { should include 'exemption_ids'          => [''] }

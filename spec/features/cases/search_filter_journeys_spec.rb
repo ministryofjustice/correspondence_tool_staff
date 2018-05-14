@@ -184,8 +184,8 @@ feature 'filters whittle down search results' do
         cases_search_page.open_filter(:exemption)
 
         exemption_filter_panel = cases_search_page.exemption_filter_panel
-        # expect(exemption_filter_panel.most_used.checkbox_for(:s40))
-        #   .not_to be_checked
+        expect(exemption_filter_panel.most_used.checkbox_for(:s40))
+          .not_to be_checked
         expect(exemption_filter_panel.exemption_all.checkbox_for(:s40))
           .not_to be_checked
       end
