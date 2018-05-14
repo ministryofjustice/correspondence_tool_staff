@@ -119,6 +119,7 @@ describe ExternalDeadlineFilter do
                                'filter_case_type'       => [],
                                'filter_sensitivity'     => [],
                                'filter_status'          => [],
+                               'parent_id'              => search_query.id,
                              )
         end
       end

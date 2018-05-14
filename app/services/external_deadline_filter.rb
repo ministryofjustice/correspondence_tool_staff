@@ -41,6 +41,7 @@ class ExternalDeadlineFilter
       params = @search_query.query.merge(
         'external_deadline_from' => '',
         'external_deadline_to'   => '',
+        'parent_id'              => @search_query.id
       )
       [[crumb_text, params]]
     else
