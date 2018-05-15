@@ -15,6 +15,6 @@ class AssignedBusinessUnitFilter
   end
 
   def self.responding_business_units
-    BusinessUnit.responding.limit(20).order(:name)
+    BusinessUnit.active.responding.order(:name)
   end
 end

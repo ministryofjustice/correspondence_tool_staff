@@ -125,5 +125,17 @@ module Features
       extend_for_pit_step kase: kase, new_deadline: new_deadline
       logout_step
     end
+
+
+    def search_for(search_phrase:, num_expected_results: nil)
+      cases_page.primary_navigation.search.click
+      expect(cases_search_page).to be_displayed
+      cases_search_page.search_query.set search_phrase
+      cases_search_page.search_button.click
+      unless num_expected_results.nil?
+        cases = cases_search_page.case_list
+        expect(cases.count).to eq num_expected_results
+      end
+    end
   end
 end

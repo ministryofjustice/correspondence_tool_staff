@@ -3,13 +3,14 @@ class CaseSearchService
     :filter_case_type,
     :filter_sensitivity,
     :filter_status,
+    :filter_open_case_status,
     :exemption_ids,
     :common_exemption_ids,
     :filter_assigned_to_ids,
     :external_deadline_from,
     :external_deadline_to,
   ]
-  QUERY_ATTRIBUTES = [:search_text] + FILTER_ATTRIBUTES
+  QUERY_ATTRIBUTES = [:search_text, :list_params, :list_path] + FILTER_ATTRIBUTES
 
   attr_reader :current_user,
               :error_message,
@@ -51,6 +52,7 @@ class CaseSearchService
     @query = find_or_initialize_query(@query_params,
                                       query_type: @query_type,
                                       user_id: current_user.id)
+
   end
 
   def call
@@ -107,7 +109,8 @@ class CaseSearchService
         query_params.merge(
           query_type: query_type,
           user_id: user_id,
-        )
+          num_results: 0
+        ),
       )
     end
     search_query

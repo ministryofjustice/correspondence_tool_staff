@@ -9,6 +9,8 @@ class CasesController < ApplicationController
                   :new_case_link,
                   :destroy_case_link
                 ]
+  before_action :set_url, only: [:search, :open_cases]
+
   # As per the Draper documentation, we really shouldn't be decorating @case at
   # the beginning of controller actions (see:
   # https://github.com/drapergem/draper#when-to-decorate-objects) as we do
@@ -92,16 +94,21 @@ class CasesController < ApplicationController
   end
 
   def open_cases
-    @cases = @global_nav_manager
-               .current_page_or_tab
-               .cases
-               .by_deadline
-               .page(params[:page])
-               .decorate
+    if params[:search_query]
+      @cases = search_and_filter
+    else
+      @query = SearchQuery.record_list(current_user, request.path, request.params)
+      @parent_id = @query.id
 
+      @cases = @global_nav_manager
+                 .current_page_or_tab
+                 .cases
+                 .by_deadline
+                 .page(params[:page])
+                 .decorate
+    end
     @current_tab_name = 'all_cases'
     @can_add_case = policy(Case::Base).can_add_case?
-
     render :index
   end
 
@@ -290,22 +297,13 @@ class CasesController < ApplicationController
     @cases = []
 
     if params[:search_query]
-      service = CaseSearchService.new(current_user,
-                                      params.slice(:search_query, :page))
-      service.call
-      @query = service.query
-      if service.error?
-        flash.now[:alert] = service.error_message
-      else
-        @cases = service.result_set
-        @parent_id = @query.id
-        flash[:query_id] = @query.id
-        @page = params[:page] || '1'
-      end
+      @cases = search_and_filter
     else
       @query = SearchQuery.new
     end
+
   end
+
 
   def remove_clearance
     authorize @case
@@ -471,6 +469,26 @@ class CasesController < ApplicationController
   end
 
   private
+
+  def set_url
+    @action_url = request.env['PATH_INFO']
+  end
+
+  def search_and_filter
+    service = CaseSearchService.new(current_user,
+                                    params.slice(:search_query, :page))
+    service.call
+    @query = service.query
+    if service.error?
+      flash.now[:alert] = service.error_message
+    else
+      kases = service.result_set
+      @parent_id = @query.id
+      flash[:query_id] = @query.id
+      @page = params[:page] || '1'
+    end
+    kases
+  end
 
   def prepare_select_type
     policy(Case::Base).can_add_case?
