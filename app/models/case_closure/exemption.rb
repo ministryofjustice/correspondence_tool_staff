@@ -44,8 +44,11 @@ module CaseClosure
       's41'   => 'conf',
       's42'   => 'legpriv',
       's43'   => 'comm',
-      's44'   => 'prohib'
+      's44'   => 'prohib',
+      'ncnd'  => 'ncnd'
     }.freeze
+
+    ABBREVIATIONS = SECTION_NUMBERS.invert.freeze
 
     validates :subtype, presence: true
 
@@ -75,5 +78,8 @@ module CaseClosure
       self.unscoped.where(abbreviation: %w{ pers othermeans court future }).order(:name)
     end
 
+    def self.section_number_from_id(abbreviation)
+      ABBREVIATIONS[abbreviation]
+    end
   end
 end
