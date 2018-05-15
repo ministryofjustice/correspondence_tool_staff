@@ -15,13 +15,13 @@
         = "Filter by"
 
       ul role="tablist" aria-label="Filter by" class="ct-tab-wrapper"
-        / li.ct-tab-item role="presentation"
-        /   a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-type"
-        /     = "Type"
+        li.ct-tab-item role="presentation"
+          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-type"
+            = "Type"
         li.ct-tab-item role="presentation"
           a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-status"
             = "Open case status"
-        // Uncomment the filter tabs as they get implemented
+        / Uncomment the filter tabs as they get implemented
         / li.ct-tab-item role="presentation"
         /   a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-final-deadline"
         /     = "Final deadline"
@@ -34,8 +34,8 @@
 
       .ct-tab-panels aria-expanded="false"
 
-        / #ct-tab-panel-type.ct-tab-panel
-        /   = render partial: 'cases/search_filters/case_types'
+        #ct-tab-panel-type.ct-tab-panel
+          = render partial: 'cases/search_filters/case_types'
         #ct-tab-panel-status.ct-tab-panel
           = render partial: 'cases/search_filters/open_case_status'
         / #ct-tab-panel-final-deadline.ct-tab-panel

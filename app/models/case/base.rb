@@ -31,6 +31,8 @@
 #rubocop:disable Metrics/ClassLength
 class Case::Base < ApplicationRecord
 
+  TRIGGER_WORKFLOWS = ['trigger', 'full_approval'].freeze
+
   def self.searchable_fields_and_ranks
     {
         name:                 'A',
@@ -108,10 +110,8 @@ class Case::Base < ApplicationRecord
     joins(:assignments)
       .where(assignments: { team_id: teams.map(&:id), role: 'approving' })
   end
-  # cases that are currently considered as trigger
-  scope :trigger, -> { where(workflow: ['trigger', 'full_approval']) }
-  # cases that are NOT currently considered as trigger
-  scope :non_trigger, -> { where.not(id: trigger) }
+  scope :trigger, -> { where(workflow: TRIGGER_WORKFLOWS) }
+  scope :non_trigger, -> { where.not(workflow: TRIGGER_WORKFLOWS) }
 
   scope :in_time, -> {
     where(
