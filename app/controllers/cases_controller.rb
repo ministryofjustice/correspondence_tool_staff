@@ -330,6 +330,14 @@ class CasesController < ApplicationController
                                       kase: @case,
                                       team: BusinessUnit.dacu_disclosure,
                                       message: params[:message]).call
+
+    respond_to do |format|
+      format.js { render 'cases/unflag_for_clearance.js.erb' }
+      format.html do
+        flash[:notice] = "Case has been de-escalated. #{ get_de_escalated_undo_link }".html_safe
+        redirect_to case_path(@case)
+      end
+    end
   end
 
   def flag_for_clearance
@@ -337,6 +345,12 @@ class CasesController < ApplicationController
     CaseFlagForClearanceService.new(user: current_user,
                                     kase: @case,
                                     team: BusinessUnit.dacu_disclosure).call
+    respond_to do |format|
+      format.js { render 'cases/flag_for_clearance.js.erb' }
+      format.html do
+        redirect_to case_path(@case)
+      end
+    end
   end
 
   def approve_response_interstitial
@@ -724,5 +738,12 @@ class CasesController < ApplicationController
     @permitted_correspondence_types
   end
 
+
+  def get_de_escalated_undo_link
+    unlink_path = flag_for_clearance_case_path(id: @case.id)
+    view_context.link_to "Undo",
+                         unlink_path,
+                         { method: :patch, class: 'undo-de-escalate-link'}
+  end
 end
 #rubocop:enable Metrics/ClassLength
