@@ -6,27 +6,33 @@ module PageObjects
     end
 
     def filter_on(filter_name, *checkboxes)
-      open_filter(filter_name)
+      filter_panel_name = "#{filter_name}_filter_panel"
+      unless __send__("has_#{filter_panel_name}?", visible: true)
+        open_filter(filter_name)
+      end
 
       checkboxes.each do |checkbox_name|
         checkbox_id = "search_query_filter_#{checkbox_name}"
         make_check_box_choice(checkbox_id)
       end
 
-      filter_panel_name = "#{filter_name}_filter_panel"
-      __send__(filter_panel_name).apply_filter_button.click
+      filter_panel = __send__(filter_panel_name)
+      filter_panel.apply_filter_button.click
     end
 
     def remove_filter_on(filter_name, *checkboxes)
-      open_filter(filter_name)
+      filter_panel_name = "#{filter_name}_filter_panel"
+      unless __send__("has_#{filter_panel_name}?", visible: true)
+        open_filter(filter_name)
+      end
 
       checkboxes.each do |checkbox_name|
         checkbox_id = "search_query_filter_#{checkbox_name}"
         remove_check_box_choice(checkbox_id)
       end
 
-      filter_panel_name = "#{filter_name}_filter_panel"
-      __send__(filter_panel_name).apply_filter_button.click
+      filter_panel = __send__(filter_panel_name)
+      filter_panel.apply_filter_button.click
     end
 
     def filter_on_exemptions(common: nil, all: nil)
