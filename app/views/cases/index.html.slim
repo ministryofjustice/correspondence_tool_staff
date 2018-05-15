@@ -50,7 +50,7 @@
         = render partial: 'cases/search_filters/filter_crumbs',
                  locals: { filter_crumb: filter_crumb, params: new_filter_params }
     .grid-row
-      = link_to 'Clear all filters', search_query: @query.params_without_filters
+      = link_to 'Clear all filters'
 
 - else
   = render partial: 'state_filter_form' unless request.path == '/cases/my_open'

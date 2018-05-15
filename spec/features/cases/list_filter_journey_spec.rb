@@ -95,4 +95,46 @@ feature 'filters whittle down search results' do
         .not_to be_checked
     end
   end
+
+  context 'all filters set' do
+    before do
+      login_step user: @setup.disclosure_bmt_user
+      expect(open_cases_page).to be_displayed
+
+      open_cases_page.filter_on('status', 'open_case_status_unassigned')
+      open_cases_page.filter_on('type', 'case_type_foi-standard', 'sensitivity_trigger')
+    end
+
+    scenario 'clearing individual filters', js: true do
+      open_cases_page.filter_crumb_for('Needs reassigning').click
+
+      expect(open_cases_page.filter_crumb_for('Needs reassigning')).not_to be_present
+      expect(open_cases_page.filter_crumb_for('FOI - Standard'   )).to be_present
+      expect(open_cases_page.filter_crumb_for('Trigger'          )).to be_present
+
+      open_cases_page.filter_crumb_for('FOI - Standard').click
+
+      expect(open_cases_page.filter_crumb_for('Needs reassigning')).not_to be_present
+      expect(open_cases_page.filter_crumb_for('FOI - Standard'   )).not_to be_present
+      expect(open_cases_page.filter_crumb_for('Trigger'          )).to be_present
+
+      open_cases_page.filter_crumb_for('Trigger').click
+
+      expect(open_cases_page.filter_crumb_for('Needs reassigning')).not_to be_present
+      expect(open_cases_page.filter_crumb_for('FOI - Standard'   )).not_to be_present
+      expect(open_cases_page.filter_crumb_for('Trigger'          )).not_to be_present
+    end
+
+    scenario 'clearing all filters', js: true do
+      expect(open_cases_page.filter_crumb_for('Needs reassigning')).to be_present
+      expect(open_cases_page.filter_crumb_for('FOI - Standard'   )).to be_present
+      expect(open_cases_page.filter_crumb_for('Trigger'          )).to be_present
+
+      open_cases_page.click_on 'Clear all filters'
+
+      expect(open_cases_page.filter_crumb_for('Needs reassigning')).not_to be_present
+      expect(open_cases_page.filter_crumb_for('FOI - Standard'   )).not_to be_present
+      expect(open_cases_page.filter_crumb_for('Trigger'          )).not_to be_present
+    end
+  end
 end

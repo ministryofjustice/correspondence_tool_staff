@@ -69,6 +69,7 @@ describe SearchQuery do
                                                  :external_deadline_to,
                                                  :filter_assigned_to_ids,
                                                  :filter_case_type,
+                                                 :filter_open_case_status,
                                                  :filter_sensitivity,
                                                  :filter_status,
                                                ]
@@ -87,6 +88,7 @@ describe SearchQuery do
                                                 :external_deadline_to,
                                                 :filter_assigned_to_ids,
                                                 :filter_case_type,
+                                                :filter_open_case_status,
                                                 :filter_sensitivity,
                                                 :filter_status,
                                               ]
