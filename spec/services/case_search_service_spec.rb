@@ -15,6 +15,10 @@ describe CaseSearchService do
       Case::Base.update_all_indexes
     end
 
+    after(:all) do
+      DbHousekeeping.clean
+    end
+
     let(:service)      { CaseSearchService.new(user, params) }
     let(:params)       { ActionController::Parameters.new(
                            {
@@ -400,4 +404,3 @@ describe CaseSearchService do
     end
   end
 end
-

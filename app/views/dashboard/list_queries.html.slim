@@ -40,17 +40,11 @@ h1.bold-large List queries
             td= q.num_clicks
             td= q.highest_position
 
-            / td= q.query_type
-            / td= ''
-            / td= q.num_results
-            / td= q.num_clicks
-            / td= q.highest_position
-
           - SearchQueryDecorator.decorate_collection(q.descendants).each do |d|
             tr
               td= ''
               td= ''
-              td=
+              td= ''
               td= d.query_type
               td= d.filtered_list_query_details
               td= d.num_results

@@ -33,7 +33,7 @@ class SearchQueryDecorator < Draper::Decorator
     elsif key == 'exemption_ids'
       value.map {|id| "#{CaseClosure::Metadatum.exemption_filter_abbreviation(id)}"}.join ''
     else
-      value.is_a?(Array) ? value.join(', ') : value
+      value.is_a?(Array) ? value.join(', ').humanize : value
     end
   end
 end

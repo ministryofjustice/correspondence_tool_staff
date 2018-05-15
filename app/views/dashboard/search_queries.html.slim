@@ -17,6 +17,8 @@ h1.bold-large Search queries
           th scope='col'
             | User
           th scope='col'
+            | Role
+          th scope='col'
             | Search/Filter
           th scope='col'
             | Search Term
@@ -31,6 +33,7 @@ h1.bold-large Search queries
           tr
             td= q.created_at.to_date
             td= q.user.full_name
+            td= q.user_roles
             td= q.query_type
             td= q.search_query_details
             td= q.num_results
@@ -41,7 +44,8 @@ h1.bold-large Search queries
             tr
               td= ''
               td= ''
-              td= "#{d.query_type}:#{d.filter_type}"
+              td= ''
+              td= d.query_type
               td= d.search_query_details
               td= d.num_results
               td= d.num_clicks

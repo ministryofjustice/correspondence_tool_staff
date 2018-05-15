@@ -12,10 +12,6 @@ describe SearchQueryDecorator, type: :model do
       expect(decorated_query.user_roles).to eq 'manager'
     end
 
-    it 'should display the user name' do
-      expect(decorated_query.user_name).to eq manager.full_name
-    end
-
     it 'should display the query details' do
       expect(decorated_query.search_query_details).to eq 'Search text: Winnie the Pooh'
     end
@@ -27,7 +23,7 @@ describe SearchQueryDecorator, type: :model do
     let(:decorated_query) { SearchQueryDecorator.decorate(query) }
 
     it 'should display the query details' do
-      expect(decorated_query.list_query_details).to eq '/cases/open/in_time'
+      expect(decorated_query.list_query_details).to eq ' cases open in time'
     end
   end
 
