@@ -103,6 +103,11 @@ feature 'filters whittle down search results' do
 
       open_cases_page.filter_on('status', 'open_case_status_unassigned')
       open_cases_page.filter_on('type', 'case_type_foi-standard', 'sensitivity_trigger')
+      open_cases_page.filter_on_deadline('Today')
+    end
+
+    def today_filter_text
+      Date.today.strftime('%d %b %Y - %d %b %Y')
     end
 
     scenario 'clearing individual filters', js: true do
@@ -111,30 +116,35 @@ feature 'filters whittle down search results' do
       expect(open_cases_page.filter_crumb_for('Needs reassigning')).not_to be_present
       expect(open_cases_page.filter_crumb_for('FOI - Standard'   )).to be_present
       expect(open_cases_page.filter_crumb_for('Trigger'          )).to be_present
+      expect(open_cases_page.filter_crumb_for(today_filter_text)).to be_present
 
       open_cases_page.filter_crumb_for('FOI - Standard').click
 
       expect(open_cases_page.filter_crumb_for('Needs reassigning')).not_to be_present
       expect(open_cases_page.filter_crumb_for('FOI - Standard'   )).not_to be_present
       expect(open_cases_page.filter_crumb_for('Trigger'          )).to be_present
+      expect(open_cases_page.filter_crumb_for(today_filter_text)).to be_present
 
       open_cases_page.filter_crumb_for('Trigger').click
 
       expect(open_cases_page.filter_crumb_for('Needs reassigning')).not_to be_present
       expect(open_cases_page.filter_crumb_for('FOI - Standard'   )).not_to be_present
       expect(open_cases_page.filter_crumb_for('Trigger'          )).not_to be_present
+      expect(open_cases_page.filter_crumb_for(today_filter_text)).to be_present
     end
 
     scenario 'clearing all filters', js: true do
       expect(open_cases_page.filter_crumb_for('Needs reassigning')).to be_present
       expect(open_cases_page.filter_crumb_for('FOI - Standard'   )).to be_present
       expect(open_cases_page.filter_crumb_for('Trigger'          )).to be_present
+      expect(open_cases_page.filter_crumb_for(today_filter_text)).to be_present
 
       open_cases_page.click_on 'Clear all filters'
 
       expect(open_cases_page.filter_crumb_for('Needs reassigning')).not_to be_present
       expect(open_cases_page.filter_crumb_for('FOI - Standard'   )).not_to be_present
       expect(open_cases_page.filter_crumb_for('Trigger'          )).not_to be_present
+      expect(open_cases_page.filter_crumb_for(today_filter_text)).not_to be_present
     end
   end
 end
