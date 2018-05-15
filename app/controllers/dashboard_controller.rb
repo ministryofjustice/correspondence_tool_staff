@@ -2,6 +2,10 @@ class DashboardController < ApplicationController
 
   attr_reader :queries
 
+  def index
+    
+  end
+
   def cases
     @dates = { }
     5.times do |n|

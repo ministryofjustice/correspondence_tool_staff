@@ -289,7 +289,7 @@ Rails.application.routes.draw do
 
   get 'healthcheck',    to: 'heartbeat#healthcheck',  as: 'healthcheck', format: :json
 
-
+  get 'dashboard' => 'dashboard#index'
   get '/dashboard/cases' => 'dashboard#cases'
   get '/dashboard/feedback' => 'dashboard#feedback'
   get '/dashboard/exception' => 'dashboard#exception'
