@@ -34,7 +34,7 @@ module PageObjects
         #         '#ct-tab-panel-exemption'
         # end
 
-        elements :filter_crumbs, '.filter-crumbs input[type="submit"]'
+        elements :filter_crumbs, '.filter-crumb a'
       end
     end
   end

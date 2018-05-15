@@ -13,7 +13,7 @@
       = search_field_tag 'search_query[search_text]', @query.search_text, class: 'form-control'
       = submit_tag 'Search', class: 'button button-no-margin', id: 'search-button'
 
-- if (@query.present? && @cases.any?) || @query.filter?
+- if (@query.present? && @cases&.any?) || @query.filter?
   .grid-row
     .column-full.ct-tab-container
       .ct-tab-label
@@ -51,7 +51,9 @@
           = render partial: 'cases/search_filters/exemptions'
 
 - if @query.filter_crumbs.present?
-  = render partial: 'cases/search_filters/filter_crumbs'
+  = render partial: 'cases/search_filters/filter_crumbs',
+           locals: { query: @query,
+                     clear_params: @query.params_without_filters }
 
 - if @cases.any?
   = render partial: 'cases/shared/case_list'

@@ -44,14 +44,9 @@
         /   = render partial: 'cases/search_filters/exemptions'
 
   - if @query.filter_crumbs.present?
-  .grid-row
-    ul.filter-crumbs
-      - @query.filter_crumbs.each do |filter_crumb, new_filter_params|
-        = render partial: 'cases/search_filters/filter_crumbs',
-                 locals: { filter_crumb: filter_crumb, params: new_filter_params }
-    .grid-row
-      = link_to 'Clear all filters'
-
+    = render partial: 'cases/search_filters/filter_crumbs',
+             locals: { query: @query,
+                       clear_params: {} }
 - else
   = render partial: 'state_filter_form' unless request.path == '/cases/my_open'
 

@@ -78,7 +78,7 @@ module PageObjects
     end
 
     def filter_crumb_for(crumb_text)
-      filter_crumbs.find { |crumb| crumb.value == crumb_text }
+      filter_crumbs.find { |crumb| crumb.text == "Remove #{crumb_text} filter." }
     end
   end
 end
