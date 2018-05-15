@@ -22,7 +22,7 @@ module PageObjects
                   PageObjects::Sections::Cases::TypeFilterPanelSection,
                   '#ct-tab-panel-type'
           section :status_filter_panel,
-                  PageObjects::Sections::Cases::StatusFilterPanelSection,
+                  PageObjects::Sections::Cases::OpenCaseStatusFilterPanelSection,
                   '#ct-tab-panel-status'
           # section :assigned_to_filter_panel,
           #         PageObjects::Sections::Cases::AssignedToFilterPanelSection,

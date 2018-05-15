@@ -43,4 +43,18 @@ feature 'filters whittle down search results' do
       expect(open_cases_page.case_numbers).to eq [@setup.std_draft_foi.number]
     end
   end
+
+  context 'open case status filter' do
+    scenario 'filter by unassigned status', js: true do
+      login_step user: @setup.disclosure_bmt_user
+      expect(open_cases_page).to be_displayed
+      expect(open_cases_page.case_numbers).to match_array expected_case_numbers(:std_draft_foi,
+                                                                                :trig_responded_foi,
+                                                                                :std_unassigned_irc,
+                                                                                :std_unassigned_irt)
+
+      open_cases_page.filter_on('status', 'open_case_status_unassigned')
+      expect(open_cases_page.case_numbers).to match_array expected_case_numbers(:std_unassigned_irc, :std_unassigned_irt)
+    end
+  end
 end

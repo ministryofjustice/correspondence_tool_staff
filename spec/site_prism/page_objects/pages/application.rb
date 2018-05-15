@@ -75,6 +75,7 @@ module PageObjects
         clearance_levels:             'Cases::ClearanceLevelsSection',
         case_attachments:             'Cases::CaseAttachmentSection',
         clearance_copy:               'Cases::ClearanceCopySection',
+        open_case_status_filter_panel:'Cases::OpenCaseStatusFilterPanelSection',
         pagination:                   'PaginationSection',
       }.each do |section_name, section_class|
         full_section_class = "PageObjects::Sections::#{section_class}"
