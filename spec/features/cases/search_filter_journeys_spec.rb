@@ -216,37 +216,6 @@ feature 'filters whittle down search results' do
     end
   end
 
-
-  context 'assigned business unit filter', js: true do
-    it 'returns cases assigned to the specified business units' do
-      login_step user: @setup.disclosure_bmt_user
-      search_for(search_phrase: 'prison guards', num_expected_results: 8)
-      cases_search_page.filter_tab_links.assigned_to_tab.click
-      cases_search_page.assigned_to_filter_panel.business_unit_search_term.set('main')
-      cases_search_page.assigned_to_filter_panel.main_responding_team_checkbox.click
-      cases_search_page.assigned_to_filter_panel.apply_filter_button.click
-
-      expect(cases_search_page.case_numbers).to match_array expected_case_numbers(:std_draft_foi,
-                                                                                  :trig_responded_foi,
-                                                                                  :trig_closed_foi)
-
-      cases_search_page.open_filter(:assigned_to)
-      main_team_name = 'Main responding_team'
-      assigned_to_filter_panel = cases_search_page.assigned_to_filter_panel
-      expect(assigned_to_filter_panel.checkbox_for(main_team_name))
-        .to be_checked
-
-      cases_search_page.filter_crumb_for(main_team_name).click
-
-      cases_search_page.open_filter(:assigned_to)
-      main_team_name = 'Main responding_team'
-      assigned_to_filter_panel = cases_search_page.assigned_to_filter_panel
-      expect(assigned_to_filter_panel.checkbox_for(main_team_name))
-        .not_to be_checked
-      expect(cases_search_page.filter_crumb_for(main_team_name)).not_to be_present
-    end
-  end
-
   context 'all filters set' do
     before do
       login_step user: @setup.disclosure_bmt_user

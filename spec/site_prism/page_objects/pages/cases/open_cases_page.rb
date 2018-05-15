@@ -14,7 +14,7 @@ module PageObjects
           element :type_tab, 'a[href="#ct-tab-panel-type"]'
           element :status_tab, 'a[href="#ct-tab-panel-status"]'
           element :deadline_tab, 'a[href="#ct-tab-panel-final-deadline"]'
-          # element :assigned_to_tab, 'a[href="#ct-tab-panel-assigned-to"]'
+          element :assigned_to_tab, 'a[href="#ct-tab-panel-assigned-to"]'
           # element :exemption_tab, 'a[href="#ct-tab-panel-exemption"]'
         end
 
@@ -30,9 +30,9 @@ module PageObjects
         section :deadline_filter_panel,
                 PageObjects::Sections::Cases::DeadlineFilterPanelSection,
                 '#ct-tab-panel-final-deadline'
-        # section :assigned_to_filter_panel,
-        #         PageObjects::Sections::Cases::AssignedToFilterPanelSection,
-        #         '#ct-tab-panel-assigned-to'
+        section :assigned_to_filter_panel,
+                PageObjects::Sections::Cases::AssignedToFilterPanelSection,
+                '#ct-tab-panel-assigned-to'
         # section :exemption_filter_panel,
         #         PageObjects::Sections::Cases::ExemptionFilterPanelSection,
         #         '#ct-tab-panel-exemption'
