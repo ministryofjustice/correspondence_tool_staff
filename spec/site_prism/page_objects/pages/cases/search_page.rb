@@ -21,7 +21,7 @@ module PageObjects
           element :deadline_tab, 'a[href="#ct-tab-panel-final-deadline"]'
         end
 
-        elements :filter_crumbs, '.filter-crumbs input[type="submit"]'
+        elements :filter_crumbs, '.filter-crumbs a'
 
         element :search_results_count, '.search-results-summary'
 
