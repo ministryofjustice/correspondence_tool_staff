@@ -34,18 +34,22 @@ class OpenCaseStatusFilter
   end
 
   def crumbs
-    status_text = I18n.t(
-      "filters.open_case_statuses.#{@query.filter_open_case_status.first}"
-    )
-    crumb_text = I18n.t "filters.crumbs.open_case_status",
-                        count: @query.filter_open_case_status.size,
-                        first_value: status_text,
-                        remaining_values_count: @query.filter_open_case_status.count - 1
-    params = @query.query.merge(
-      'filter_open_case_status' => [''],
-      'parent_id'               => @query.id
-    )
-    [[crumb_text, params]]
+    if applied?
+      status_text = I18n.t(
+        "filters.open_case_statuses.#{@query.filter_open_case_status.first}"
+      )
+      crumb_text = I18n.t "filters.crumbs.open_case_status",
+                          count: @query.filter_open_case_status.size,
+                          first_value: status_text,
+                          remaining_values_count: @query.filter_open_case_status.count - 1
+      params = @query.query.merge(
+        'filter_open_case_status' => [''],
+        'parent_id'               => @query.id
+      )
+      [[crumb_text, params]]
+    else
+      []
+    end
   end
 end
 

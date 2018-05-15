@@ -1,15 +1,15 @@
 module PageObjects
   module FilterMethods
     def open_filter(filter_name)
-      tab_link_name = "#{filter_name}_tab"
-      filter_tab_links.__send__(tab_link_name).click
+      unless __send__("has_#{filter_name}_filter_panel?", visible: true)
+        tab_link_name = "#{filter_name}_tab"
+        filter_tab_links.__send__(tab_link_name).click
+      end
     end
 
     def filter_on(filter_name, *checkboxes)
       filter_panel_name = "#{filter_name}_filter_panel"
-      unless __send__("has_#{filter_panel_name}?", visible: true)
-        open_filter(filter_name)
-      end
+      open_filter(filter_name)
 
       checkboxes.each do |checkbox_name|
         checkbox_id = "search_query_filter_#{checkbox_name}"
@@ -22,9 +22,7 @@ module PageObjects
 
     def remove_filter_on(filter_name, *checkboxes)
       filter_panel_name = "#{filter_name}_filter_panel"
-      unless __send__("has_#{filter_panel_name}?", visible: true)
-        open_filter(filter_name)
-      end
+      open_filter(filter_name)
 
       checkboxes.each do |checkbox_name|
         checkbox_id = "search_query_filter_#{checkbox_name}"

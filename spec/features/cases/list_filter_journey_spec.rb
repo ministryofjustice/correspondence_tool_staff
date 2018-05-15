@@ -57,13 +57,12 @@ feature 'filters whittle down search results' do
       open_cases_page.filter_crumb_for('FOI - Standard').click
 
       expect(open_cases_page.case_numbers)
-        .to match_array expected_case_numbers(:std_draft_foi,
-                                               :trig_responded_foi,
-                                               :std_unassigned_irc,
-                                               :std_unassigned_irt)
+        .to match_array expected_case_numbers :std_draft_foi,
+                                              :std_unassigned_irc,
+                                              :std_unassigned_irt
 
       open_cases_page.open_filter(:type)
-      expect(open_cases_page.filters.type_filter_panel.foi_non_trigger_checkbox)
+      expect(open_cases_page.type_filter_panel.foi_non_trigger_checkbox)
         .to be_checked
     end
   end
@@ -79,19 +78,21 @@ feature 'filters whittle down search results' do
 
       open_cases_page.filter_on('status', 'open_case_status_unassigned')
       expect(open_cases_page.case_numbers).to match_array expected_case_numbers(:std_unassigned_irc, :std_unassigned_irt)
+      open_cases_page.open_filter(:status)
+      expect(open_cases_page.status_filter_panel.unassigned_checkbox)
+        .to be_checked
+
+      open_cases_page.filter_crumb_for('Needs reassigning').click
+
+      expect(open_cases_page.case_numbers)
+        .to match_array expected_case_numbers :std_draft_foi,
+                                              :trig_responded_foi,
+                                              :std_unassigned_irc,
+                                              :std_unassigned_irt
 
       open_cases_page.open_filter(:status)
-      # expect(open_cases_page.type_filter_panel.foi_non_trigger_checkbox)
-      #   .to be_checked
-
-      # open_cases_page.filter_crumb_for('Non-trigger').click
-
-      # expect(open_cases_page.case_numbers)
-      #   .to match_array expected_case_numbers(*@all_cases)
-
-      # open_cases_page.open_filter(:type)
-      # expect(open_cases_page.filters.type_filter_panel.foi_non_trigger_checkbox)
-      #   .to be_checked
+      expect(open_cases_page.status_filter_panel.unassigned_checkbox)
+        .not_to be_checked
     end
   end
 end
