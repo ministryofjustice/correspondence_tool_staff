@@ -3,7 +3,7 @@ class DashboardController < ApplicationController
   attr_reader :queries
 
   def index
-    
+
   end
 
   def cases
@@ -28,7 +28,12 @@ class DashboardController < ApplicationController
 
   def list_queries
     parent_ids = SearchQuery.where.not(parent_id: nil).pluck(:parent_id).uniq
-    @queries = SearchQuery.where(query_type: 'list').where(id: parent_ids).order(id: :desc).includes(:user).limit(100).decorate
+    @queries = SearchQuery
+                          .where(id: parent_ids, query_type: 'list', parent_id: nil)
+                          .order(id: :desc)
+                          .includes(:user)
+                          .limit(100)
+                          .decorate
   end
 
   private
