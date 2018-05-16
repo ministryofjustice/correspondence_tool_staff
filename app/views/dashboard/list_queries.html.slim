@@ -1,5 +1,5 @@
 - content_for :heading
-  = "Search queries"
+  = "List queries"
 
 = render partial: 'layouts/header'
 
@@ -38,7 +38,7 @@
             td= q.user.full_name
             td= q.user_roles
             td= q.query_type
-            td= q.search_query_details
+            td= q.list_query_details
             td= q.num_results
             td= q.num_clicks
             td= q.highest_position
@@ -49,7 +49,7 @@
               td= ''
               td= ''
               td= d.query_type
-              td= d.search_query_details
+              td= d.filtered_list_query_details
               td= d.num_results
               td= d.num_clicks
               td= d.highest_position

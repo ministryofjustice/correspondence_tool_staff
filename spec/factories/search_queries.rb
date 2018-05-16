@@ -17,8 +17,7 @@
 
 FactoryGirl.define do
   factory :search_query do
-    user_id 3
-    # query({ search_text: 'Winnie the Pooh' })
+    user_id { find_or_create(:manager).id }
     search_text 'Winnie the Pooh'
     query_type 'search'
     parent_id nil
