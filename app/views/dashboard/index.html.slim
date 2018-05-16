@@ -1,5 +1,7 @@
-h1.bold-large Dashboard
-br
+- content_for :heading
+  = "Dashboard"
+= render partial: 'layouts/header'
+
 ul
   li
     = link_to 'Search queries dashboard', dashboard_search_queries_path
