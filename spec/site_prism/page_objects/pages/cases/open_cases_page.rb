@@ -8,7 +8,7 @@ module PageObjects
 
         # This page is just a version of CasesPage, so look at that for the
         # page structure.
-        set_url '/cases/open/{timeliness}'
+        set_url '/cases/open'
 
         section :filter_tab_links, '.ct-tab-container' do
           element :type_tab, 'a[href="#ct-tab-panel-type"]'

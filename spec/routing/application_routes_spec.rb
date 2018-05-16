@@ -13,17 +13,17 @@ describe 'application routes', type: :routing do
 
     context 'manager user' do
       let(:user) { manager }
-      it { should redirect_to '/cases/open/in_time' }
+      it { should redirect_to '/cases/open' }
     end
 
     context 'responder user' do
       let(:user) { responder }
-      it { should redirect_to '/cases/open/in_time' }
+      it { should redirect_to '/cases/open' }
     end
 
     context 'approver user' do
       let(:user) { approver }
-      it { should redirect_to '/cases/open/in_time' }
+      it { should redirect_to '/cases/open' }
     end
   end
 end
