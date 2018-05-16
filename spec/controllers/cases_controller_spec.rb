@@ -379,6 +379,17 @@ RSpec.describe CasesController, type: :controller do
               params:{tab: 'in_time'}
         }.to change{SearchQuery.count}.by 1
       end
+
+      it 'assigns to filter_crumbs' do
+        parent_query = create :search_query, :list
+        params = {
+          tab: 'in_time',
+          search_query: { filter_case_type: ['foi-standard'],
+                          parent_id: parent_query.id}
+        }
+        get :open_cases, params: params
+        expect(assigns(:filter_crumbs)[0][0]).to eq 'FOI - Standard'
+      end
     end
   end
 

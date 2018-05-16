@@ -43,6 +43,10 @@
         / #ct-tab-panel-exemption.ct-tab-panel
         /   = render partial: 'cases/search_filters/exemptions'
 
+  - if @query.filter_crumbs.present?
+    = render partial: 'cases/search_filters/filter_crumbs',
+             locals: { query: @query,
+                       clear_params: {} }
 - else
   = render partial: 'state_filter_form' unless request.path == '/cases/my_open'
 

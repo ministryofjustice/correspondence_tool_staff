@@ -1,0 +1,15 @@
+.grid-row.filter-crumbs
+  .column-full
+    ul
+      - query.filter_crumbs.each do |filter_crumb, new_filter_params|
+        li.filter-crumb
+          = link_to search_query: new_filter_params do
+            span.visually-hidden
+              = "Remove "
+            = filter_crumb
+            span.visually-hidden
+              = " filter."
+            img src=image_path('icons/close-ico.svg') class="close-icon"
+
+      li.filter-clear
+        = link_to 'Clear all filters', search_query: clear_params

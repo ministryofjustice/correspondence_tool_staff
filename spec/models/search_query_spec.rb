@@ -60,6 +60,41 @@ describe SearchQuery do
     end
   end
 
+  describe 'self.filter_attributes' do
+    it 'returns all the filter attributes' do
+      expect(SearchQuery.filter_attributes).to match_array [
+                                                 :common_exemption_ids,
+                                                 :exemption_ids,
+                                                 :external_deadline_from,
+                                                 :external_deadline_to,
+                                                 :filter_assigned_to_ids,
+                                                 :filter_case_type,
+                                                 :filter_open_case_status,
+                                                 :filter_sensitivity,
+                                                 :filter_status,
+                                               ]
+    end
+  end
+
+  describe 'self.query_attributes' do
+    it 'returns all the query attributes' do
+      expect(SearchQuery.query_attributes).to match_array [
+                                                :search_text,
+                                                :list_path,
+                                                :list_params,
+                                                :common_exemption_ids,
+                                                :exemption_ids,
+                                                :external_deadline_from,
+                                                :external_deadline_to,
+                                                :filter_assigned_to_ids,
+                                                :filter_case_type,
+                                                :filter_open_case_status,
+                                                :filter_sensitivity,
+                                                :filter_status,
+                                              ]
+    end
+  end
+
   describe '#update_for_click' do
 
     context 'user clicks for the first time' do
@@ -168,6 +203,46 @@ describe SearchQuery do
                             search_text: 'worm',
                             filter_status: ['closed']
       expect(search_query.results).to eq [case_closed]
+    end
+  end
+
+  describe '#params_without_filters' do
+    it 'returns all the filter attributes' do
+      search_query = create :search_query
+
+      expect(search_query.params_without_filters)
+        .to eq({ 'search_text' => 'Winnie the Pooh',
+                 'list_params' => '',
+                 'list_path'   => '', })
+    end
+  end
+
+  describe '#applied_filters' do
+    it 'includes case type filters' do
+      search_query = create :search_query, filter_case_type: ['foi-standard']
+      expect(search_query.applied_filters).to eq [CaseTypeFilter]
+    end
+
+    it 'includes status filters' do
+      search_query = create :search_query, filter_status: ['closed']
+      expect(search_query.applied_filters).to eq [CaseStatusFilter]
+    end
+
+    it 'includes assigned business unit filters' do
+      search_query = create :search_query, filter_assigned_to_ids: [1]
+      expect(search_query.applied_filters).to eq [AssignedBusinessUnitFilter]
+    end
+
+    it 'includes exemption filters' do
+      search_query = create :search_query, exemption_ids: [2]
+      expect(search_query.applied_filters).to eq [ExemptionFilter]
+    end
+
+    it 'includes external deadline filters' do
+      search_query = create :search_query,
+                            external_deadline_from: Date.today,
+                            external_deadline_to: Date.today
+      expect(search_query.applied_filters).to eq [ExternalDeadlineFilter]
     end
   end
 end

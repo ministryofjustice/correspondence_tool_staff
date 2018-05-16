@@ -107,6 +107,7 @@ class CasesController < ApplicationController
                  .page(params[:page])
                  .decorate
     end
+    @filter_crumbs = @query.filter_crumbs
     @current_tab_name = 'all_cases'
     @can_add_case = policy(Case::Base).can_add_case?
     render :index
@@ -301,7 +302,7 @@ class CasesController < ApplicationController
     else
       @query = SearchQuery.new
     end
-
+    @filter_crumbs = @query.filter_crumbs
   end
 
 

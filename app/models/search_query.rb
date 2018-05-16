@@ -16,17 +16,16 @@
 #
 
 class SearchQuery < ApplicationRecord
-
-  attr_accessor :business_unit_name_filter
-
-  FILTER_CLASSES =     [
+  FILTER_CLASSES = [
     CaseTypeFilter,
     CaseStatusFilter,
     ExemptionFilter,
     AssignedBusinessUnitFilter,
     ExternalDeadlineFilter,
     OpenCaseStatusFilter
-  ]
+  ].freeze
+
+  attr_accessor :business_unit_name_filter
 
   belongs_to :user
   belongs_to :parent, class_name: 'SearchQuery'
@@ -65,6 +64,16 @@ class SearchQuery < ApplicationRecord
     end
   end
 
+  def self.filter_attributes
+    FILTER_CLASSES.collect_concat do |filter_class|
+      filter_class.filter_attributes
+    end
+  end
+
+  def self.query_attributes
+    [:search_text, :list_path, :list_params] + self.filter_attributes
+  end
+
   def update_for_click(position)
     self.num_clicks += 1
     if self.highest_position.nil? || self.highest_position > position
@@ -99,6 +108,27 @@ class SearchQuery < ApplicationRecord
     end
     FILTER_CLASSES.reduce(results) do |result, filter_class|
       filter_class.new(self, result).call
+    end
+  end
+
+  def filter_crumbs
+    filter_crumbs = []
+    applied_filters.map do |filter_class|
+      filter_class.new(self, Case::Base.none)
+    end.each do |filter|
+      filter_crumbs += filter.crumbs
+    end
+    filter_crumbs
+  end
+
+  def params_without_filters
+    query.except(*(self.class.filter_attributes.map(&:to_s)))
+  end
+
+  def applied_filters
+    FILTER_CLASSES.select do |filter_class|
+      filter = filter_class.new(self, Case::Base.none)
+      filter.applied?
     end
   end
 

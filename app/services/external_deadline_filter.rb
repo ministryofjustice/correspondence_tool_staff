@@ -9,9 +9,18 @@ class ExternalDeadlineFilter
 
   end
 
+  def self.filter_attributes
+    [:external_deadline_from, :external_deadline_to]
+  end
+
   def initialize(search_query, results)
     @search_query = search_query
     @results = results
+  end
+
+  def applied?
+    @search_query.external_deadline_from.present? &&
+      @search_query.external_deadline_to.present?
   end
 
   def call
@@ -20,6 +29,23 @@ class ExternalDeadlineFilter
                                 @search_query.external_deadline_to)
     else
       @results
+    end
+  end
+
+  def crumbs
+    if @search_query.external_deadline_from && @search_query.external_deadline_to
+      crumb_text = I18n.t 'filters.crumbs.external_deadline',
+                          from_date: I18n.l(@search_query.external_deadline_from),
+                          to_date: I18n.l(@search_query.external_deadline_to)
+
+      params = @search_query.query.merge(
+        'external_deadline_from' => '',
+        'external_deadline_to'   => '',
+        'parent_id'              => @search_query.id
+      )
+      [[crumb_text, params]]
+    else
+      []
     end
   end
 

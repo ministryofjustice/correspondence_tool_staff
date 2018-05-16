@@ -1,9 +1,13 @@
 class CaseStatusFilter
   def self.available_statuses
     {
-      'open'   => 'Open',
-      'closed' => 'Closed',
+      'open'   => I18n.t('filters.statuses.open'),
+      'closed' => I18n.t('filters.statuses.closed'),
     }
+  end
+
+  def self.filter_attributes
+    [:filter_status]
   end
 
   def initialize(query, records)
@@ -11,8 +15,31 @@ class CaseStatusFilter
     @records = records
   end
 
+  def applied?
+    @query.filter_status.present?
+  end
+
   def call
     filter_status(@records)
+  end
+
+  def crumbs
+    if @query.filter_status.present?
+      status_text = I18n.t(
+        "filters.statuses.#{@query.filter_status.first}"
+      )
+      crumb_text = I18n.t "filters.crumbs.status",
+                          count: @query.filter_status.size,
+                          first_value: status_text,
+                          remaining_values_count: @query.filter_status.count - 1
+      params = @query.query.merge(
+        'filter_status' => [''],
+        'parent_id'     => @query.id
+      )
+      [[crumb_text, params]]
+    else
+      []
+    end
   end
 
   private

@@ -8,16 +8,17 @@ feature 'filters whittle down search results' do
   include PageObjects::Pages::Support
 
   before(:all) do
-    @setup = StandardSetup.new(only_cases: [
-        :std_draft_foi,
-        :std_closed_foi,
-        :trig_responded_foi,
-        :trig_closed_foi,
-        :std_unassigned_irc,
-        :std_unassigned_irt,
-        :std_closed_irc,
-        :std_closed_irt
-    ])
+    @all_cases = [
+      :std_draft_foi,
+      :std_closed_foi,
+      :trig_responded_foi,
+      :trig_closed_foi,
+      :std_unassigned_irc,
+      :std_unassigned_irt,
+      :std_closed_irc,
+      :std_closed_irt
+    ]
+    @setup = StandardSetup.new(only_cases: @all_cases)
   end
 
   after(:all) do
@@ -32,15 +33,37 @@ feature 'filters whittle down search results' do
                                                                                 :trig_responded_foi,
                                                                                 :std_unassigned_irc,
                                                                                 :std_unassigned_irt)
-
       open_cases_page.filter_on('type', 'case_type_foi-standard', 'sensitivity_trigger')
+
       expect(open_cases_page.case_numbers).to eq [@setup.trig_responded_foi.number]
+      open_cases_page.open_filter(:type)
+      expect(open_cases_page.type_filter_panel.foi_standard_checkbox)
+        .to be_checked
+      expect(open_cases_page.type_filter_panel.foi_trigger_checkbox)
+        .to be_checked
 
       # Now uncheck non-trigger and check trigger
       open_cases_page.remove_filter_on('type', 'sensitivity_trigger')
       open_cases_page.filter_on('type', 'sensitivity_non-trigger')
 
       expect(open_cases_page.case_numbers).to eq [@setup.std_draft_foi.number]
+      open_cases_page.open_filter(:type)
+      expect(open_cases_page.type_filter_panel.foi_non_trigger_checkbox)
+        .to be_checked
+      expect(open_cases_page.type_filter_panel.foi_trigger_checkbox)
+        .not_to be_checked
+
+      # Remove type filter using the crumb
+      open_cases_page.filter_crumb_for('FOI - Standard').click
+
+      expect(open_cases_page.case_numbers)
+        .to match_array expected_case_numbers :std_draft_foi,
+                                              :std_unassigned_irc,
+                                              :std_unassigned_irt
+
+      open_cases_page.open_filter(:type)
+      expect(open_cases_page.type_filter_panel.foi_non_trigger_checkbox)
+        .to be_checked
     end
   end
 
@@ -55,6 +78,63 @@ feature 'filters whittle down search results' do
 
       open_cases_page.filter_on('status', 'open_case_status_unassigned')
       expect(open_cases_page.case_numbers).to match_array expected_case_numbers(:std_unassigned_irc, :std_unassigned_irt)
+      open_cases_page.open_filter(:status)
+      expect(open_cases_page.status_filter_panel.unassigned_checkbox)
+        .to be_checked
+
+      open_cases_page.filter_crumb_for('Needs reassigning').click
+
+      expect(open_cases_page.case_numbers)
+        .to match_array expected_case_numbers :std_draft_foi,
+                                              :trig_responded_foi,
+                                              :std_unassigned_irc,
+                                              :std_unassigned_irt
+
+      open_cases_page.open_filter(:status)
+      expect(open_cases_page.status_filter_panel.unassigned_checkbox)
+        .not_to be_checked
+    end
+  end
+
+  context 'all filters set' do
+    before do
+      login_step user: @setup.disclosure_bmt_user
+      expect(open_cases_page).to be_displayed
+
+      open_cases_page.filter_on('status', 'open_case_status_unassigned')
+      open_cases_page.filter_on('type', 'case_type_foi-standard', 'sensitivity_trigger')
+    end
+
+    scenario 'clearing individual filters', js: true do
+      open_cases_page.filter_crumb_for('Needs reassigning').click
+
+      expect(open_cases_page.filter_crumb_for('Needs reassigning')).not_to be_present
+      expect(open_cases_page.filter_crumb_for('FOI - Standard'   )).to be_present
+      expect(open_cases_page.filter_crumb_for('Trigger'          )).to be_present
+
+      open_cases_page.filter_crumb_for('FOI - Standard').click
+
+      expect(open_cases_page.filter_crumb_for('Needs reassigning')).not_to be_present
+      expect(open_cases_page.filter_crumb_for('FOI - Standard'   )).not_to be_present
+      expect(open_cases_page.filter_crumb_for('Trigger'          )).to be_present
+
+      open_cases_page.filter_crumb_for('Trigger').click
+
+      expect(open_cases_page.filter_crumb_for('Needs reassigning')).not_to be_present
+      expect(open_cases_page.filter_crumb_for('FOI - Standard'   )).not_to be_present
+      expect(open_cases_page.filter_crumb_for('Trigger'          )).not_to be_present
+    end
+
+    scenario 'clearing all filters', js: true do
+      expect(open_cases_page.filter_crumb_for('Needs reassigning')).to be_present
+      expect(open_cases_page.filter_crumb_for('FOI - Standard'   )).to be_present
+      expect(open_cases_page.filter_crumb_for('Trigger'          )).to be_present
+
+      open_cases_page.click_on 'Clear all filters'
+
+      expect(open_cases_page.filter_crumb_for('Needs reassigning')).not_to be_present
+      expect(open_cases_page.filter_crumb_for('FOI - Standard'   )).not_to be_present
+      expect(open_cases_page.filter_crumb_for('Trigger'          )).not_to be_present
     end
   end
 end
