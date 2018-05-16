@@ -100,15 +100,17 @@ class SearchQuery < ApplicationRecord
   delegate :available_deadlines, to: ExternalDeadlineFilter
   delegate :available_open_case_statuses, to: OpenCaseStatusFilter
 
-  def results
-    if parent && parent.list_params.present?
-      results = list_results
-    else
-      results = search_results
+  def results(cases_list = nil)
+    if root.query_type == 'search'
+      cases_list ||= Case::BasePolicy::Scope
+                       .new(User.find(user_id), Case::Base.all)
+                       .for_view_only
+      cases_list = cases_list.search(search_text)
+    elsif cases_list.nil?
+      raise ArgumentError.new("cannot perform filters without list of cases")
     end
-    FILTER_CLASSES.reduce(results) do |result, filter_class|
-      filter_class.new(self, result).call
-    end
+
+    perform_filters(cases_list)
   end
 
   def filter_crumbs
@@ -134,21 +136,9 @@ class SearchQuery < ApplicationRecord
 
   private
 
-  def search_results
-    results = Case::BasePolicy::Scope.new(User.find(user_id), Case::Base.all).for_view_only
-    results.search(search_text)
-  end
-
-  def list_results
-    request = OpenStruct.new(path: list_path, params: YAML.load(list_params))
-    global_nav_manager = GlobalNavManager.new(
-        user,
-        request,
-        Settings.global_navigation)
-
-    global_nav_manager.current_page_or_tab
-                      .cases
-                      .by_deadline
-
+  def perform_filters(cases)
+    applied_filters.reduce(cases) do |result, filter_class|
+      filter_class.new(self, result).call
+    end
   end
 end

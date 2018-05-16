@@ -42,12 +42,12 @@ class CaseSearchService
 
   end
 
-  def call
+  def call(full_list_of_cases = nil)
     if @query_type == :search && @query_params['search_text'].blank?
       @error_message = 'Specify what you want to search for'
       @error = true
     else
-      @unpaginated_result_set = @query.results
+      @unpaginated_result_set = @query.results(full_list_of_cases)
       @query.num_results = @unpaginated_result_set.size
       @query.save!
       @result_set = @unpaginated_result_set.page(@page).decorate

@@ -204,6 +204,28 @@ describe SearchQuery do
                             filter_status: ['closed']
       expect(search_query.results).to eq [case_closed]
     end
+
+    context 'case listing' do
+      it 'uses the list of cases if provided' do
+        cases_list = Case::Base.where(id: [case_standard.id,
+                                           case_ir_compliance.id])
+
+        search_query = create :search_query, :list,
+                              user_id: user.id,
+                              filter_case_type: ['foi-standard']
+        expect(search_query.results(cases_list)).to eq [case_standard]
+      end
+    end
+
+    context 'no list of cases provided' do
+      it 'uses the list of cases if provided' do
+        search_query = create :search_query, :list,
+                              user_id: user.id,
+                              filter_case_type: ['foi-standard']
+        expect { search_query.results }.to raise_error(ArgumentError)
+      end
+
+    end
   end
 
   describe '#params_without_filters' do

@@ -94,16 +94,13 @@ class CasesController < ApplicationController
   end
 
   def open_cases
+    full_list_of_cases = @global_nav_manager.current_page_or_tab.cases
     if params[:search_query]
-      @cases = search_and_filter
+      @cases = search_and_filter full_list_of_cases
     else
       @query = SearchQuery.record_list(current_user, request.path, request.params)
       @parent_id = @query.id
-
-      @cases = @global_nav_manager
-                 .current_page_or_tab
-                 .cases
-                 .by_deadline
+      @cases = full_list_of_cases.by_deadline
                  .page(params[:page])
                  .decorate
     end
@@ -489,10 +486,10 @@ class CasesController < ApplicationController
     @action_url = request.env['PATH_INFO']
   end
 
-  def search_and_filter
+  def search_and_filter(full_list_of_cases = nil)
     service = CaseSearchService.new(current_user,
                                     params.slice(:search_query, :page))
-    service.call
+    service.call(full_list_of_cases)
     @query = service.query
     if service.error?
       flash.now[:alert] = service.error_message
