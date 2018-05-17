@@ -100,20 +100,22 @@ class AssignmentsController < ApplicationController
     end
   end
 
+  #rubocop:disable Metrics/MethodLength
   def accept
     accept_service = CaseAcceptApproverAssignmentService
                        .new(user: current_user, assignment: @assignment)
     if accept_service.call
       @success = true
-      @message = t('.success')
+      @message = I18n.t('assignments.accept.success')
     else
       if accept_service.result == :not_pending
         if @assignment.user == current_user
           @success = true
-          @message = t('.success')
+          @message = I18n.t('assignments.accept.success')
         else
           @success = false
-          @message = t('.already_accepted', name: @assignment.user.full_name)
+          @message = I18n.t('assignments.accept.already_accepted',
+                            name: @assignment.user.full_name)
         end
       else
         raise RuntimeError.new(
@@ -122,7 +124,19 @@ class AssignmentsController < ApplicationController
               )
       end
     end
+    respond_to do |format|
+      format.js { render 'assignments/accept.js.erb' }
+      format.html do
+        if @success
+          flash[:notice] = "#{ @message}. #{ get_undo_link }".html_safe
+        elsif @success == false
+          flash[:error] = @message
+        end
+        redirect_to case_path(@case)
+      end
+    end
   end
+  #rubocop:enable Metrics/MethodLength
 
   def take_case_on
     service = CaseFlagForClearanceService.new(user: current_user,
@@ -131,21 +145,36 @@ class AssignmentsController < ApplicationController
     result = service.call
     if result == :ok
       @success = true
-      @message = t('.success')
+      @message = I18n.t('assignments.take_case_on.success')
     elsif result == :already_flagged
       @success = false
-      @message = t('.already_accepted', name: service.other_user.full_name)
+      @message = I18n.t('assignments.take_case_on.already_accepted', name: service.other_user.full_name)
     else
       raise RuntimeError.new("Unknown error when accepting approver assignment: " + result.to_s)
     end
 
-    render 'assignments/accept.js.erb'
+    respond_to do |format|
+      format.js { render 'assignments/accept.js.erb' }
+      format.html do
+        if @success
+          flash[:notice] = "#{ @message}. #{ get_undo_link }".html_safe
+        elsif @success == false
+          flash[:error] = @message
+        end
+        redirect_to case_path(@case)
+      end
+    end
   end
 
   def unaccept
     unaccept_service = CaseUnacceptApproverAssignmentService
                          .new(assignment: @assignment)
     unaccept_service.call
+
+    respond_to do |format|
+      format.js { render 'assignments/unaccept.js.erb' }
+      format.html { redirect_to case_path(@case) }
+    end
   end
 
   def show_rejected
@@ -245,5 +274,14 @@ class AssignmentsController < ApplicationController
   def valid_reject?
     assignment_params[:state] == 'rejected' &&
       assignment_params[:reasons_for_rejection].match(/\S/)
+  end
+
+  def get_undo_link
+    unlink_path = unaccept_case_assignment_path(@case, @case.approver_assignments
+                                                           .with_teams(current_user.teams)
+                                                           .first)
+    view_context.link_to "Undo",
+                         unlink_path,
+                         { method: :patch, class: "undo-take-on-link"}
   end
 end
