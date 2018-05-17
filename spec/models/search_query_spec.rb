@@ -82,7 +82,6 @@ describe SearchQuery do
       expect(SearchQuery.query_attributes).to match_array [
                                                 :search_text,
                                                 :list_path,
-                                                :list_params,
                                                 :common_exemption_ids,
                                                 :exemption_ids,
                                                 :external_deadline_from,
@@ -156,7 +155,6 @@ describe SearchQuery do
       rec = SearchQuery.record_list(user, '/open_cases', params)
       expect(rec.user_id).to eq user.id
       expect(rec.list_path).to eq '/open_cases'
-      expect(YAML.load(rec.list_params)).to eq params
     end
   end
 
@@ -262,7 +260,6 @@ describe SearchQuery do
 
       expect(search_query.params_without_filters)
         .to eq({ 'search_text' => 'Winnie the Pooh',
-                 'list_params' => '',
                  'list_path'   => '', })
     end
   end

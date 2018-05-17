@@ -51,8 +51,7 @@ class SearchQuery < ApplicationRecord
                  exemption_ids: [:integer, array: true, default: []],
                  common_exemption_ids: [:integer, array: true, default: []],
                  filter_status: [:string, array: true, default: []],
-                 list_path: [:string, default: ''],
-                 list_params: [:string, default: '']
+                 list_path: [:string, default: '']
 
   acts_as_gov_uk_date :external_deadline_from, :external_deadline_to
 
@@ -73,7 +72,7 @@ class SearchQuery < ApplicationRecord
   end
 
   def self.query_attributes
-    [:search_text, :list_path, :list_params] + self.filter_attributes
+    [:search_text, :list_path] + self.filter_attributes
   end
 
   def update_for_click(position)
@@ -87,7 +86,6 @@ class SearchQuery < ApplicationRecord
   def self.record_list(user, path, params)
     self.create!(user_id: user.id,
                  list_path: path,
-                 list_params: params.to_yaml,
                  query_type: :list,
                  num_results: 0)
 

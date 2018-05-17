@@ -376,7 +376,6 @@ describe CaseSearchService do
         it { should have_attributes user_id: user.id }
         it { should have_attributes search_text: nil }
         it { should have_attributes list_path: parent_search_query.list_path }
-        it { should have_attributes list_params: parent_search_query.list_params }
         it { should have_attributes parent_id: parent_search_query.id }
         it { should have_attributes filter_case_type: filter_case_type.grep_v('') }
         it { should have_attributes filter_sensitivity: filter_sensitivity.grep_v('') }
