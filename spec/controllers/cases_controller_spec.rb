@@ -1206,15 +1206,18 @@ RSpec.describe CasesController, type: :controller do
           .to redirect_to(new_user_session_path)
       end
 
-      it 'does not call the service' do
-        patch :flag_for_clearance, params: params, xhr: true
-        expect(CaseFlagForClearanceService).not_to have_received(:new)
+      context 'calling the action from an AJAX request' do
+        it 'does not call the service' do
+          patch :flag_for_clearance, params: params, xhr: true
+          expect(CaseFlagForClearanceService).not_to have_received(:new)
+        end
+
+        it 'returns an error' do
+          patch :flag_for_clearance, params: params, xhr: true
+          expect(response).to have_http_status 401
+        end
       end
 
-      it 'returns an error' do
-        patch :flag_for_clearance, params: params, xhr: true
-        expect(response).to have_http_status 401
-      end
     end
 
     context 'as an authenticated responder' do
@@ -1240,23 +1243,46 @@ RSpec.describe CasesController, type: :controller do
         sign_in manager
       end
 
-      it 'instantiates and calls the service' do
-        patch :flag_for_clearance, params: params, xhr: true
-        expect(CaseFlagForClearanceService)
-          .to have_received(:new).with(user: manager,
-                                       kase: unflagged_case_decorated,
-                                       team: BusinessUnit.dacu_disclosure)
-        expect(service).to have_received(:call)
+      context 'calling the action from an AJAX request' do
+        it 'instantiates and calls the service' do
+          patch :flag_for_clearance, params: params, xhr: true
+          expect(CaseFlagForClearanceService)
+            .to have_received(:new).with(user: manager,
+                                         kase: unflagged_case_decorated,
+                                         team: BusinessUnit.dacu_disclosure)
+          expect(service).to have_received(:call)
+        end
+
+        it 'renders the view' do
+          patch :flag_for_clearance, params: params, xhr: true
+          expect(response).to have_rendered('cases/flag_for_clearance.js.erb')
+        end
+
+        it 'returns a success code' do
+          patch :flag_for_clearance, params: params, xhr: true
+          expect(response).to have_http_status 200
+        end
       end
 
-      it 'renders the view' do
-        patch :flag_for_clearance, params: params, xhr: true
-        expect(response).to have_rendered(:flag_for_clearance)
-      end
+      context 'calling the action from a HTTP request' do
+        it 'instantiates and calls the service' do
+          patch :flag_for_clearance, params: params
+          expect(CaseFlagForClearanceService)
+            .to have_received(:new).with(user: manager,
+                                         kase: unflagged_case_decorated,
+                                         team: BusinessUnit.dacu_disclosure)
+          expect(service).to have_received(:call)
+        end
 
-      it 'returns a success code' do
-        patch :flag_for_clearance, params: params, xhr: true
-        expect(response).to have_http_status 200
+        it 'renders the view' do
+          patch :flag_for_clearance, params: params
+          expect(response).to redirect_to(case_path(unflagged_case_decorated))
+        end
+
+        it 'returns a success code' do
+          patch :flag_for_clearance, params: params
+          expect(response).to have_http_status 302
+        end
       end
     end
 
@@ -1265,23 +1291,46 @@ RSpec.describe CasesController, type: :controller do
         sign_in disclosure_specialist
       end
 
-      it 'instantiates and calls the service' do
-        patch :flag_for_clearance, params: params, xhr: true
-        expect(CaseFlagForClearanceService)
-          .to have_received(:new).with(user: disclosure_specialist,
-                                       kase: unflagged_case_decorated,
-                                       team: BusinessUnit.dacu_disclosure)
-        expect(service).to have_received(:call)
+      context 'calls the action from an AJAX request' do
+        it 'instantiates and calls the service' do
+          patch :flag_for_clearance, params: params, xhr: true
+          expect(CaseFlagForClearanceService)
+            .to have_received(:new).with(user: disclosure_specialist,
+                                         kase: unflagged_case_decorated,
+                                         team: BusinessUnit.dacu_disclosure)
+          expect(service).to have_received(:call)
+        end
+
+        it 'renders the view' do
+          patch :flag_for_clearance, params: params, xhr: true
+          expect(response).to have_rendered('cases/flag_for_clearance.js.erb')
+        end
+
+        it 'returns success' do
+          patch :flag_for_clearance, params: params, xhr: true
+          expect(response).to have_http_status 200
+        end
       end
 
-      it 'renders the view' do
-        patch :flag_for_clearance, params: params, xhr: true
-        expect(response).to have_rendered(:flag_for_clearance)
-      end
+      context 'calls the action from a HTTP request' do
+        it 'instantiates and calls the service' do
+          patch :flag_for_clearance, params: params
+          expect(CaseFlagForClearanceService)
+            .to have_received(:new).with(user: disclosure_specialist,
+                                         kase: unflagged_case_decorated,
+                                         team: BusinessUnit.dacu_disclosure)
+          expect(service).to have_received(:call)
+        end
 
-      it 'returns success' do
-        patch :flag_for_clearance, params: params, xhr: true
-        expect(response).to have_http_status 200
+        it 'renders the view' do
+          patch :flag_for_clearance, params: params
+          expect(response).to redirect_to case_path(unflagged_case_decorated)
+        end
+
+        it 'returns success' do
+          patch :flag_for_clearance, params: params
+          expect(response).to have_http_status 302
+        end
       end
     end
   end

@@ -3,12 +3,12 @@
             accept_case_assignment_path(case_details, case_details.approver_assignments.with_teams(current_user.teams).first),
             id: "take_case_on_#{case_details.id}",
             class: 'button take-case-on-link',
-            remote: true,
+            remote: !current_page?(case_path(case_details.id)),
             method: :patch
   - unless case_details.flagged_for_press_office_clearance? || case_details.flagged_for_private_office_clearance?
     = link_to 'De-escalate',
               unflag_for_clearance_case_path(id: case_details.id),
-              remote: true,
+              remote: !current_page?(case_path(case_details.id)),
               class: 'js-de-escalate-link secondard-action-link',
               method: :patch
 
