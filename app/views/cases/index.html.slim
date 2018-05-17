@@ -27,10 +27,7 @@
         li.ct-tab-item role="presentation"
           a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-assigned-to"
             = "Assigned to"
-      / Uncomment the filter tabs as they get implemented
-        / li.ct-tab-item role="presentation"
-        /   a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-exemption"
-        /     = "Exemptions"
+
 
       .ct-tab-panels aria-expanded="false"
 
@@ -42,8 +39,6 @@
           = render partial: 'cases/search_filters/final_deadline'
         #ct-tab-panel-assigned-to.ct-tab-panel
           = render partial: 'cases/search_filters/assigned_to'
-        / #ct-tab-panel-exemption.ct-tab-panel
-        /   = render partial: 'cases/search_filters/exemptions'
 
   - if @query.filter_crumbs.present?
     = render partial: 'cases/search_filters/filter_crumbs',
