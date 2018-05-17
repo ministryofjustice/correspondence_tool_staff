@@ -15,6 +15,7 @@ module PageObjects
           element :status_tab, 'a[href="#ct-tab-panel-status"]'
           element :deadline_tab, 'a[href="#ct-tab-panel-final-deadline"]'
           element :assigned_to_tab, 'a[href="#ct-tab-panel-assigned-to"]'
+          element :timeliness_tab, 'a[href="#ct-tab-panel-timeliness"]'
         end
 
         # section :filters, '.ct-tab-container' do
@@ -32,6 +33,9 @@ module PageObjects
         section :assigned_to_filter_panel,
                 PageObjects::Sections::Cases::AssignedToFilterPanelSection,
                 '#ct-tab-panel-assigned-to'
+        section :timeliness_filter_panel,
+                PageObjects::Sections::Cases::TimelinessFilterPanelSection,
+                '#ct-tab-panel-timeliness'
 
         elements :filter_crumbs, '.filter-crumb a'
       end

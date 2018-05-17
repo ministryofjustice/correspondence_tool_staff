@@ -27,7 +27,9 @@
         li.ct-tab-item role="presentation"
           a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-assigned-to"
             = "Assigned to"
-
+        li.ct-tab-item role="presentation"
+          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-timeliness"
+            = "Timeliness"
 
       .ct-tab-panels aria-expanded="false"
 
@@ -39,6 +41,8 @@
           = render partial: 'cases/search_filters/final_deadline'
         #ct-tab-panel-assigned-to.ct-tab-panel
           = render partial: 'cases/search_filters/assigned_to'
+        #ct-tab-panel-timeliness.ct-tab-panel
+          = render partial: 'cases/search_filters/timeliness'
 
   - if @query.filter_crumbs.present?
     = render partial: 'cases/search_filters/filter_crumbs',

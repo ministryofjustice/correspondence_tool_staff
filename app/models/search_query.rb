@@ -19,10 +19,11 @@ class SearchQuery < ApplicationRecord
   FILTER_CLASSES = [
     CaseTypeFilter,
     CaseStatusFilter,
-    ExemptionFilter,
-    AssignedBusinessUnitFilter,
+    OpenCaseStatusFilter,
     ExternalDeadlineFilter,
-    OpenCaseStatusFilter
+    AssignedBusinessUnitFilter,
+    ExemptionFilter,
+    TimelinessFilter,
   ].freeze
 
   attr_accessor :business_unit_name_filter
@@ -46,6 +47,7 @@ class SearchQuery < ApplicationRecord
                  filter_sensitivity: [:string, array: true, default: []],
                  filter_case_type: [:string, array: true, default: []],
                  filter_open_case_status: [:string, array: true, default: []],
+                 filter_timeliness: [:string, array: true, default: []],
                  exemption_ids: [:integer, array: true, default: []],
                  common_exemption_ids: [:integer, array: true, default: []],
                  filter_status: [:string, array: true, default: []],
@@ -99,6 +101,7 @@ class SearchQuery < ApplicationRecord
   delegate :responding_business_units, to: AssignedBusinessUnitFilter
   delegate :available_deadlines, to: ExternalDeadlineFilter
   delegate :available_open_case_statuses, to: OpenCaseStatusFilter
+  delegate :available_timeliness, to: TimelinessFilter
 
   def results(cases_list = nil)
     if root.query_type == 'search'
