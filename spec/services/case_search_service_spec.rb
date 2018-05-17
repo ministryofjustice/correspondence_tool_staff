@@ -90,7 +90,8 @@ describe CaseSearchService do
 
           context 'search by text' do
             context 'no leading or trailing whitespace' do
-              let(:specific_query)   { 'accepted' }
+              let(:specific_query)   { 'std_draft_foi' }
+
               it 'finds a case by text' do
                 service.call
                 expect(service.result_set).to eq [ @setup.std_draft_foi ]
@@ -106,7 +107,7 @@ describe CaseSearchService do
             end
 
             context 'leading and trailing whitespace' do
-              let(:specific_query)      { '   accepted  ' }
+              let(:specific_query)      { '   std_draft_foi  ' }
               it 'ignores leading and trailing whitespace' do
                 service.call
                 expect(service.result_set).to eq [ @setup.std_draft_foi ]
@@ -253,7 +254,7 @@ describe CaseSearchService do
           let(:external_deadline_to)   { nil }
 
           context 'search text' do
-            let(:search_text)            { 'closed'}
+            let(:search_text) { 'closed'}
 
             it 'is used' do
               service.call
@@ -263,7 +264,7 @@ describe CaseSearchService do
           end
 
           context 'filter for sensitivity' do
-            let(:search_text)        { 'case'}
+            let(:search_text)        { 'foi'}
             let(:filter_sensitivity) { ['trigger'] }
 
             it 'is used' do
@@ -274,7 +275,7 @@ describe CaseSearchService do
           end
 
           context 'filter for case type' do
-            let(:search_text)        { 'case'}
+            let(:search_text)        { 'foi'}
             let(:filter_case_type)   { ['foi-standard'] }
 
             it 'is used' do
@@ -288,7 +289,7 @@ describe CaseSearchService do
           end
 
           context 'filter for external deadline' do
-            let(:search_text)            { 'case'}
+            let(:search_text)            { 'foi'}
             let(:external_deadline_from) { 0.business_days.from_now.to_date }
             let(:external_deadline_to)   { 10.business_days.from_now.to_date }
 

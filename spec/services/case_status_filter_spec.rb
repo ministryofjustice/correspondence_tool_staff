@@ -111,6 +111,7 @@ describe CaseStatusFilter do
         it { should include 'exemption_ids'          => [] }
         it { should include 'filter_sensitivity'     => [] }
         it { should include 'filter_status'          => [''] }
+        it { should include 'filter_timeliness'      => [] }
         it { should include 'parent_id'              => search_query.id }
       end
     end

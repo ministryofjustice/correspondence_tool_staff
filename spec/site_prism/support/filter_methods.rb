@@ -24,12 +24,12 @@ module PageObjects
       filter_panel_name = "#{filter_name}_filter_panel"
       open_filter(filter_name)
 
+      filter_panel = __send__(filter_panel_name)
+
       checkboxes.each do |checkbox_name|
-        checkbox_id = "search_query_filter_#{checkbox_name}"
-        remove_check_box_choice(checkbox_id)
+        filter_panel.__send__("#{checkbox_name}_checkbox").click
       end
 
-      filter_panel = __send__(filter_panel_name)
       filter_panel.apply_filter_button.click
     end
 

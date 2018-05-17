@@ -23,7 +23,7 @@ describe SearchQueryDecorator, type: :model do
     let(:decorated_query) { SearchQueryDecorator.decorate(query) }
 
     it 'should display the query details' do
-      expect(decorated_query.list_query_details).to eq ' cases open in time'
+      expect(decorated_query.list_query_details).to eq ' cases open'
     end
   end
 

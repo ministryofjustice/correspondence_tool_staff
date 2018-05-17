@@ -140,6 +140,7 @@ describe CaseTypeFilter do
                            'filter_assigned_to_ids' => [],
                            'filter_case_type'       => [],
                            'filter_status'          => [],
+                           'filter_timeliness'      => [],
                            'parent_id'              => search_query.id,
                          )
         end
@@ -181,6 +182,7 @@ describe CaseTypeFilter do
                              'filter_assigned_to_ids' => [],
                              'filter_sensitivity'     => [],
                              'filter_status'          => [],
+                             'filter_timeliness'      => [],
                              'parent_id'              => search_query.id,
                            )
           end
