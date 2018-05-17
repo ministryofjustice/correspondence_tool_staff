@@ -18,12 +18,12 @@
 class SearchQuery < ApplicationRecord
   FILTER_CLASSES = [
     CaseTypeFilter,
+    TimelinessFilter,
     CaseStatusFilter,
     OpenCaseStatusFilter,
     ExternalDeadlineFilter,
     AssignedBusinessUnitFilter,
     ExemptionFilter,
-    TimelinessFilter,
   ].freeze
 
   attr_accessor :business_unit_name_filter
