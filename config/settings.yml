@@ -57,9 +57,9 @@ private_office_team_code: PRIVATE-OFFICE
 
 global_navigation:
   default_urls:
-    approver: /cases/open/in_time
-    manager: /cases/open/in_time
-    responder: /cases/open/in_time
+    approver: /cases/open
+    manager: /cases/open
+    responder: /cases/open
 
   pages:
     incoming_cases:
@@ -78,12 +78,6 @@ global_navigation:
         approver: open_flagged_for_approval
         manager: open_cases
         responder: open_cases
-
-      tabs:
-        in_time:
-          scope: in_time_cases
-        late:
-          scope: late_cases
 
     my_open_cases:
       path: /cases/my_open
@@ -126,8 +120,6 @@ global_navigation:
     'DISCLOSURE':
       incoming_cases_dacu_disclosure: default
       open_cases:
-        in_time:
-        late:
       my_open_cases:
       closed_cases:
       search_cases:
@@ -136,8 +128,6 @@ global_navigation:
     'PRESS-OFFICE':
       incoming_cases_press_office: default
       open_cases:
-        in_time:
-        late:
       my_open_cases:
       closed_cases:
       search_cases:
@@ -146,8 +136,6 @@ global_navigation:
     'PRIVATE-OFFICE':
       incoming_cases_private_office: default
       open_cases:
-        in_time:
-        late:
       my_open_cases:
       closed_cases:
       search_cases:
@@ -155,8 +143,6 @@ global_navigation:
 
     'manager':
       open_cases:
-        in_time: default
-        late:
       my_open_cases:
       closed_cases:
       search_cases:
@@ -165,8 +151,6 @@ global_navigation:
 
     '*':
       open_cases:
-        in_time: default
-        late:
       my_open_cases:
       closed_cases:
       search_cases:

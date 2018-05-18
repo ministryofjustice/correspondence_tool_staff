@@ -13,17 +13,17 @@ describe 'cases routes', type: :routing do
 
     context 'manager user' do
       let(:user) { manager }
-      it { should redirect_to '/cases/open/in_time' }
+      it { should redirect_to '/cases/open' }
     end
 
     context 'responder user' do
       let(:user) { responder }
-      it { should redirect_to '/cases/open/in_time' }
+      it { should redirect_to '/cases/open' }
     end
 
     context 'approver user' do
       let(:user) { approver }
-      it { should redirect_to '/cases/open/in_time' }
+      it { should redirect_to '/cases/open' }
     end
   end
 
@@ -45,22 +45,6 @@ describe 'cases routes', type: :routing do
 
   describe get: '/cases/my_open/in_time' do
     it { should route_to 'cases#my_open_cases', tab: 'in_time' }
-  end
-
-  describe '/cases/open', type: :request do
-    before do
-      get '/cases/open'
-    end
-
-    it { should redirect_to '/cases/open/in_time' }
-  end
-
-  describe get: '/cases/open/in_time' do
-    it { should route_to 'cases#open_cases', tab: 'in_time' }
-  end
-
-  describe get: '/cases/open/late' do
-    it { should route_to 'cases#open_cases' , tab: 'late' }
   end
 
   describe get: '/cases/1/assignments/show_rejected' do

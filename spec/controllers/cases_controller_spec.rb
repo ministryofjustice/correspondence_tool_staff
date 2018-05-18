@@ -345,7 +345,7 @@ RSpec.describe CasesController, type: :controller do
 
     context "as an anonymous user" do
       it "be redirected to signin if trying to list of questions" do
-        get :open_cases, params: {tab: 'in_time'}
+        get :open_cases
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -357,33 +357,31 @@ RSpec.describe CasesController, type: :controller do
 
       it 'assigns the result set from the CaseFinderService' do
         stub_current_case_finder_cases_with(:open_cases_result)
-        get :open_cases, params: {tab: 'in_time'}
+        get :open_cases
         expect(assigns(:cases)).to eq :open_cases_result
       end
 
       it 'passes page param to the paginator' do
         gnm = stub_current_case_finder_cases_with(:open_cases_result)
-        get :open_cases, params: { page: 'our_page', tab: 'in_time' }
+        get :open_cases, params: { page: 'our_page' }
         expect(gnm.current_page_or_tab.cases.by_deadline)
           .to have_received(:page).with('our_page')
       end
 
       it 'renders the index template' do
-        get :open_cases, params: {tab: 'in_time'}
+        get :open_cases
         expect(response).to render_template(:index)
       end
 
       it 'writes a search query record' do
         expect{
-          get :open_cases,
-              params:{tab: 'in_time'}
+          get :open_cases
         }.to change{SearchQuery.count}.by 1
       end
 
       it 'assigns to filter_crumbs' do
         parent_query = create :search_query, :list
         params = {
-          tab: 'in_time',
           search_query: { filter_case_type: ['foi-standard'],
                           parent_id: parent_query.id}
         }

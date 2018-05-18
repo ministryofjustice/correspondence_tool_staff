@@ -38,15 +38,13 @@ FactoryGirl.define do
   trait :list do
     search_text nil
     query_type 'list'
-    list_path '/cases/open/in_time'
-    list_params ActiveSupport::HashWithIndifferentAccess.new({ controller: 'cases', action: 'open_cases', tab: 'in_time' }).to_yaml
+    list_path '/cases/open'
   end
 
   trait :filtered_list do
     search_text nil
     query_type 'filter'
     list_path '/cases/open/in_time'
-    list_params ActiveSupport::HashWithIndifferentAccess.new({ controller: 'cases', action: 'open_cases', tab: 'in_time' }).to_yaml
     filter_case_type ['foi-ir-compliance']
     filter_sensitivity []
   end

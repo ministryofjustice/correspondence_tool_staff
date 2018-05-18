@@ -24,7 +24,7 @@ feature 'Closing a sar' do
 
 
       scenario 'A KILO has responded and an manager closes the case' do
-        open_cases_page.load(timeliness: 'in_time')
+        open_cases_page.load
 
         close_case(fully_granted_case)
 
@@ -53,7 +53,7 @@ feature 'Closing a sar' do
       scenario 'A KILO has responded and an manager closes the case' do
 
 
-        open_cases_page.load(timeliness: 'in_time')
+        open_cases_page.load
         close_case(fully_granted_case)
 
         cases_respond_page.fill_in_date_responded(0.business_days.ago)
@@ -78,7 +78,7 @@ feature 'Closing a sar' do
                             responder: responder }
 
       scenario 'the case is responded-to late' do
-        open_cases_page.load(timeliness: 'late')
+        open_cases_page.load
         close_case(late_case)
 
         cases_respond_page.fill_in_date_responded(0.business_days.ago)

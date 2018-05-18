@@ -31,7 +31,7 @@ feature 'Mark response as sent' do
         to have_content('The response has been marked as sent.')
 
     login_as manager
-    open_cases_page.load(timeliness: 'in_time')
+    open_cases_page.load
     expect(open_cases_page.case_numbers).to include kase.number
   end
 

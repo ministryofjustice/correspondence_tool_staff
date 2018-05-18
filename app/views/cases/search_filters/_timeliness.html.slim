@@ -1,0 +1,9 @@
+.timeliness-filter
+  = form_for @query, url: url_for, method: :get do |f|
+    = hidden_field_tag('search_query[parent_id]', @parent_id)
+
+    = f.collection_check_boxes :filter_timeliness, @query.available_timeliness, :first, :second
+
+    = f.submit  "Apply filter", class: "button"
+    a.acts-like-button.button-left-spacing href="#"
+      = "Cancel"

@@ -90,7 +90,8 @@ describe CaseSearchService do
 
           context 'search by text' do
             context 'no leading or trailing whitespace' do
-              let(:specific_query)   { 'accepted' }
+              let(:specific_query)   { 'std_draft_foi' }
+
               it 'finds a case by text' do
                 service.call
                 expect(service.result_set).to eq [ @setup.std_draft_foi ]
@@ -106,7 +107,7 @@ describe CaseSearchService do
             end
 
             context 'leading and trailing whitespace' do
-              let(:specific_query)      { '   accepted  ' }
+              let(:specific_query)      { '   std_draft_foi  ' }
               it 'ignores leading and trailing whitespace' do
                 service.call
                 expect(service.result_set).to eq [ @setup.std_draft_foi ]
@@ -253,7 +254,7 @@ describe CaseSearchService do
           let(:external_deadline_to)   { nil }
 
           context 'search text' do
-            let(:search_text)            { 'closed'}
+            let(:search_text) { 'closed'}
 
             it 'is used' do
               service.call
@@ -263,7 +264,7 @@ describe CaseSearchService do
           end
 
           context 'filter for sensitivity' do
-            let(:search_text)        { 'case'}
+            let(:search_text)        { 'foi'}
             let(:filter_sensitivity) { ['trigger'] }
 
             it 'is used' do
@@ -274,7 +275,7 @@ describe CaseSearchService do
           end
 
           context 'filter for case type' do
-            let(:search_text)        { 'case'}
+            let(:search_text)        { 'foi'}
             let(:filter_case_type)   { ['foi-standard'] }
 
             it 'is used' do
@@ -288,7 +289,7 @@ describe CaseSearchService do
           end
 
           context 'filter for external deadline' do
-            let(:search_text)            { 'case'}
+            let(:search_text)            { 'foi'}
             let(:external_deadline_from) { 0.business_days.from_now.to_date }
             let(:external_deadline_to)   { 10.business_days.from_now.to_date }
 
@@ -346,6 +347,7 @@ describe CaseSearchService do
       let(:service)                { CaseSearchService.new(user, params) }
       let(:filter_case_type)       { ['', 'foi-standard'] }
       let(:filter_sensitivity)     { [''] }
+      let(:full_list_of_cases)     { Case::Base.all }
       let(:params)    { ActionController::Parameters.new(
           {
               search_query: {
@@ -360,21 +362,20 @@ describe CaseSearchService do
 
         it 'creates a new search query' do
           expect {
-            service.call
+            service.call(full_list_of_cases)
           }.to change(SearchQuery, :count).by(1)
           expect(SearchQuery.last.parent).to eq parent_search_query
         end
       end
 
       describe 'created search query' do
-        before(:each) { service.call }
+        before(:each) { service.call(full_list_of_cases) }
         subject       { SearchQuery.last }
 
         it { should have_attributes query_type: 'filter' }
         it { should have_attributes user_id: user.id }
         it { should have_attributes search_text: nil }
         it { should have_attributes list_path: parent_search_query.list_path }
-        it { should have_attributes list_params: parent_search_query.list_params }
         it { should have_attributes parent_id: parent_search_query.id }
         it { should have_attributes filter_case_type: filter_case_type.grep_v('') }
         it { should have_attributes filter_sensitivity: filter_sensitivity.grep_v('') }
@@ -397,9 +398,20 @@ describe CaseSearchService do
 
         it 'creates a new search query with the existing filter' do
           expect {
-            service.call
+            service.call(full_list_of_cases)
           }.to change(SearchQuery, :count).by(1)
         end
+      end
+
+      it 'uses the full_list_of_cases for filtering' do
+        @setup = StandardSetup.new only_cases: [
+                                     :std_unassigned_foi,
+                                     :std_unassigned_irt,
+                                     :std_closed_foi,
+                                     :std_closed_irt
+                                   ]
+        resulting_cases = service.call(Case::Base.in_states('unassigned'))
+        expect(resulting_cases).to eq [@setup.std_unassigned_foi]
       end
     end
   end

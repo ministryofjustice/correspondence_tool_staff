@@ -17,7 +17,7 @@ class SearchQueryDecorator < Draper::Decorator
 
   def filtered_list_query_details
     prettify(object.query.reject do |name, values|
-      values.blank? || name == 'list_path'|| name == 'list_params'
+      values.blank? || name == 'list_path'
     end)
   end
 

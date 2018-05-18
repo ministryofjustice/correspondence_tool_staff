@@ -137,6 +137,7 @@ describe 'AssignedBusinessUnitFilter' do
                                'filter_case_type'       => [],
                                'filter_sensitivity'     => [],
                                'filter_status'          => [],
+                               'filter_timeliness'      => [],
                                'parent_id'              => search_query.id
                              )
         end

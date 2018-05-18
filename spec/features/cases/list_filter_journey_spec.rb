@@ -33,7 +33,7 @@ feature 'filters whittle down search results' do
                                                                                 :trig_responded_foi,
                                                                                 :std_unassigned_irc,
                                                                                 :std_unassigned_irt)
-      open_cases_page.filter_on('type', 'case_type_foi-standard', 'sensitivity_trigger')
+      open_cases_page.filter_on('type', 'foi_standard', 'foi_trigger')
 
       expect(open_cases_page.case_numbers).to eq [@setup.trig_responded_foi.number]
       open_cases_page.open_filter(:type)
@@ -43,8 +43,8 @@ feature 'filters whittle down search results' do
         .to be_checked
 
       # Now uncheck non-trigger and check trigger
-      open_cases_page.remove_filter_on('type', 'sensitivity_trigger')
-      open_cases_page.filter_on('type', 'sensitivity_non-trigger')
+      open_cases_page.remove_filter_on('type', 'foi_trigger')
+      open_cases_page.filter_on('type', 'foi_non_trigger')
 
       expect(open_cases_page.case_numbers).to eq [@setup.std_draft_foi.number]
       open_cases_page.open_filter(:type)
@@ -76,7 +76,7 @@ feature 'filters whittle down search results' do
                                                                                 :std_unassigned_irc,
                                                                                 :std_unassigned_irt)
 
-      open_cases_page.filter_on('status', 'open_case_status_unassigned')
+      open_cases_page.filter_on('status', 'unassigned')
       expect(open_cases_page.case_numbers).to match_array expected_case_numbers(:std_unassigned_irc, :std_unassigned_irt)
       open_cases_page.open_filter(:status)
       expect(open_cases_page.status_filter_panel.unassigned_checkbox)
@@ -101,8 +101,8 @@ feature 'filters whittle down search results' do
       login_step user: @setup.disclosure_bmt_user
       expect(open_cases_page).to be_displayed
 
-      open_cases_page.filter_on('status', 'open_case_status_unassigned')
-      open_cases_page.filter_on('type', 'case_type_foi-standard', 'sensitivity_trigger')
+      open_cases_page.filter_on('status', 'unassigned')
+      open_cases_page.filter_on('type', 'foi_standard', 'foi_trigger')
       open_cases_page.filter_on_deadline('Today')
     end
 
