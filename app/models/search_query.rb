@@ -83,7 +83,7 @@ class SearchQuery < ApplicationRecord
     save!
   end
 
-  def self.record_list(user, path, params)
+  def self.record_list(user, path)
     self.create!(user_id: user.id,
                  list_path: path,
                  query_type: :list,

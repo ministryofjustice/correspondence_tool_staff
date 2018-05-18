@@ -152,7 +152,7 @@ describe SearchQuery do
     let(:params)  { ActiveSupport::HashWithIndifferentAccess.new(action: 'open_cases', tab: 'in_time') }
 
     it 'writes a record with query_type of list' do
-      rec = SearchQuery.record_list(user, '/open_cases', params)
+      rec = SearchQuery.record_list(user, '/open_cases')
       expect(rec.user_id).to eq user.id
       expect(rec.list_path).to eq '/open_cases'
     end

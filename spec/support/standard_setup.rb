@@ -1,4 +1,4 @@
-class StandardSetup
+class StandardSetup # rubocop:disable Metrics/ClassLength
 
   class << self
     extend FactoryGirl::Syntax::Methods

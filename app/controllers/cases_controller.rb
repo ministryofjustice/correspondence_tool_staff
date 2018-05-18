@@ -98,7 +98,7 @@ class CasesController < ApplicationController
     if params[:search_query]
       @cases = search_and_filter full_list_of_cases
     else
-      @query = SearchQuery.record_list(current_user, request.path, request.params)
+      @query = SearchQuery.record_list(current_user, request.path)
       @parent_id = @query.id
       @cases = full_list_of_cases.by_deadline
                  .page(params[:page])
