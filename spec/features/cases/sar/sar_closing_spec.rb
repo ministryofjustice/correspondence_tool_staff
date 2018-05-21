@@ -28,10 +28,10 @@ feature 'Closing a sar' do
 
         close_case(fully_granted_case)
 
-        cases_respond_page.fill_in_date_responded(0.business_days.ago)
-        cases_respond_page.missing_info.yes.click
+        cases_close_page.fill_in_date_responded(0.business_days.ago)
+        cases_close_page.missing_info.yes.click
 
-        cases_respond_page.submit_button.click
+        cases_close_page.submit_button.click
 
         show_page = cases_show_page.case_details
 
@@ -56,9 +56,9 @@ feature 'Closing a sar' do
         open_cases_page.load
         close_case(fully_granted_case)
 
-        cases_respond_page.fill_in_date_responded(0.business_days.ago)
-        cases_respond_page.missing_info.no.click
-        cases_respond_page.submit_button.click
+        cases_close_page.fill_in_date_responded(0.business_days.ago)
+        cases_close_page.missing_info.no.click
+        cases_close_page.submit_button.click
 
         show_page = cases_show_page.case_details
 
@@ -81,9 +81,9 @@ feature 'Closing a sar' do
         open_cases_page.load
         close_case(late_case)
 
-        cases_respond_page.fill_in_date_responded(0.business_days.ago)
-        cases_respond_page.missing_info.yes.click
-        cases_respond_page.submit_button.click
+        cases_close_page.fill_in_date_responded(0.business_days.ago)
+        cases_close_page.missing_info.yes.click
+        cases_close_page.submit_button.click
         show_page = cases_show_page.case_details
 
         expect(show_page.response_details.timeliness.data.text)

@@ -10,9 +10,9 @@ module PageObjects
                  PageObjects::Sections::Cases::CaseAttachmentSection,
                  '.case-attachments-group'
 
-        element :date_responded_day, '#case_foi_date_responded_dd'
-        element :date_responded_month, '#case_foi_date_responded_mm'
-        element :date_responded_year, '#case_foi_date_responded_yyyy'
+        element :date_responded_day, :multi_case_id, 'date_responded_dd'
+        element :date_responded_month, :multi_case_id, 'date_responded_mm'
+        element :date_responded_year, :multi_case_id, 'date_responded_yyyy'
 
         section :appeal_outcome, '.appeal-outcome-group' do
           element :upheld, 'label[for="case_foi_appeal_outcome_name_upheld"]'
@@ -43,6 +43,11 @@ module PageObjects
           element :s12_exceeded_cost, :xpath, '//input[@data-omit-for-part-refused="true"]//..'
         end
 
+        section :missing_info, '.missing-info' do
+          element :yes, 'label[for="case_sar_missing_info_yes"]'
+          element :no, 'label[for="case_sar_missing_info_no"]'
+        end
+
         element :submit_button, '.button'
 
         def fill_in_date_responded(date)
@@ -50,7 +55,6 @@ module PageObjects
           date_responded_month.set(date.month)
           date_responded_year.set(date.year)
         end
-
       end
     end
   end

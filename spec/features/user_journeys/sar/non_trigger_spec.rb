@@ -29,6 +29,10 @@ feature 'Non-Offender SAR case that does not require clearance' do
     kase = create_and_assign_sar_case user: manager,
                                       responding_team: responding_team
 
+    # edit_case kase: kase,
+    #           user: manager,
+    #           subject: 'new test subject'
+
     accept_case kase: kase,
                 user: responder,
                 do_logout: false
@@ -41,10 +45,10 @@ feature 'Non-Offender SAR case that does not require clearance' do
 
     click_link 'Close case'
 
-    cases_respond_page.fill_in_date_responded(0.business_days.ago)
-    cases_respond_page.missing_info.no.click
+    cases_close_page.fill_in_date_responded(0.business_days.ago)
+    cases_close_page.missing_info.no.click
 
-    cases_respond_page.submit_button.click
+    cases_close_page.submit_button.click
 
     show_page = cases_show_page.case_details
 
