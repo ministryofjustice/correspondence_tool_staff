@@ -10,7 +10,7 @@ feature 'Linking a case' do
   scenario 'editing a case in drafting state' do
     kase_1 =  create :accepted_case
     kase_2 =  create :accepted_case
-    open_cases_page.load(timeliness: 'in_time')
+    open_cases_page.load
     click_link kase_1.number
     expect(cases_show_page).to be_displayed
 
@@ -28,7 +28,7 @@ feature 'Linking a case' do
   scenario 'editing a case in unassigned state' do
     kase_1 =  create :case
     kase_2 =  create :case
-    open_cases_page.load(timeliness: 'in_time')
+    open_cases_page.load
     click_link kase_1.number
     expect(cases_show_page).to be_displayed
 

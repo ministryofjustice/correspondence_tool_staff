@@ -75,7 +75,7 @@ feature "Downloading stats(csv) from the system" do
   def login_as_manager
     login_as manager
 
-    open_cases_page.load(timeliness: 'in_time')
+    open_cases_page.load
   end
 
   def views_stats_home_page

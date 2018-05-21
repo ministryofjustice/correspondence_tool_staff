@@ -18,11 +18,12 @@
 class SearchQuery < ApplicationRecord
   FILTER_CLASSES = [
     CaseTypeFilter,
+    TimelinessFilter,
     CaseStatusFilter,
-    ExemptionFilter,
-    AssignedBusinessUnitFilter,
+    OpenCaseStatusFilter,
     ExternalDeadlineFilter,
-    OpenCaseStatusFilter
+    AssignedBusinessUnitFilter,
+    ExemptionFilter,
   ].freeze
 
   attr_accessor :business_unit_name_filter
@@ -46,11 +47,11 @@ class SearchQuery < ApplicationRecord
                  filter_sensitivity: [:string, array: true, default: []],
                  filter_case_type: [:string, array: true, default: []],
                  filter_open_case_status: [:string, array: true, default: []],
+                 filter_timeliness: [:string, array: true, default: []],
                  exemption_ids: [:integer, array: true, default: []],
                  common_exemption_ids: [:integer, array: true, default: []],
                  filter_status: [:string, array: true, default: []],
-                 list_path: [:string, default: ''],
-                 list_params: [:string, default: '']
+                 list_path: [:string, default: '']
 
   acts_as_gov_uk_date :external_deadline_from, :external_deadline_to
 
@@ -71,7 +72,7 @@ class SearchQuery < ApplicationRecord
   end
 
   def self.query_attributes
-    [:search_text, :list_path, :list_params] + self.filter_attributes
+    [:search_text, :list_path] + self.filter_attributes
   end
 
   def update_for_click(position)
@@ -82,10 +83,9 @@ class SearchQuery < ApplicationRecord
     save!
   end
 
-  def self.record_list(user, path, params)
+  def self.record_list(user, path)
     self.create!(user_id: user.id,
                  list_path: path,
-                 list_params: params.to_yaml,
                  query_type: :list,
                  num_results: 0)
 
@@ -99,16 +99,19 @@ class SearchQuery < ApplicationRecord
   delegate :responding_business_units, to: AssignedBusinessUnitFilter
   delegate :available_deadlines, to: ExternalDeadlineFilter
   delegate :available_open_case_statuses, to: OpenCaseStatusFilter
+  delegate :available_timeliness, to: TimelinessFilter
 
-  def results
-    if parent && parent.list_params.present?
-      results = list_results
-    else
-      results = search_results
+  def results(cases_list = nil)
+    if root.query_type == 'search'
+      cases_list ||= Case::BasePolicy::Scope
+                       .new(User.find(user_id), Case::Base.all)
+                       .for_view_only
+      cases_list = cases_list.search(search_text)
+    elsif cases_list.nil?
+      raise ArgumentError.new("cannot perform filters without list of cases")
     end
-    FILTER_CLASSES.reduce(results) do |result, filter_class|
-      filter_class.new(self, result).call
-    end
+
+    perform_filters(cases_list)
   end
 
   def filter_crumbs
@@ -134,21 +137,9 @@ class SearchQuery < ApplicationRecord
 
   private
 
-  def search_results
-    results = Case::BasePolicy::Scope.new(User.find(user_id), Case::Base.all).for_view_only
-    results.search(search_text)
-  end
-
-  def list_results
-    request = OpenStruct.new(path: list_path, params: YAML.load(list_params))
-    global_nav_manager = GlobalNavManager.new(
-        user,
-        request,
-        Settings.global_navigation)
-
-    global_nav_manager.current_page_or_tab
-                      .cases
-                      .by_deadline
-
+  def perform_filters(cases)
+    applied_filters.reduce(cases) do |result, filter_class|
+      filter_class.new(self, result).call
+    end
   end
 end

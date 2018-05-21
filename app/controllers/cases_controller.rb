@@ -94,16 +94,13 @@ class CasesController < ApplicationController
   end
 
   def open_cases
+    full_list_of_cases = @global_nav_manager.current_page_or_tab.cases
     if params[:search_query]
-      @cases = search_and_filter
+      @cases = search_and_filter full_list_of_cases
     else
-      @query = SearchQuery.record_list(current_user, request.path, request.params)
+      @query = SearchQuery.record_list(current_user, request.path)
       @parent_id = @query.id
-
-      @cases = @global_nav_manager
-                 .current_page_or_tab
-                 .cases
-                 .by_deadline
+      @cases = full_list_of_cases.by_deadline
                  .page(params[:page])
                  .decorate
     end
@@ -330,6 +327,14 @@ class CasesController < ApplicationController
                                       kase: @case,
                                       team: BusinessUnit.dacu_disclosure,
                                       message: params[:message]).call
+
+    respond_to do |format|
+      format.js { render 'cases/unflag_for_clearance.js.erb' }
+      format.html do
+        flash[:notice] = "Case has been de-escalated. #{ get_de_escalated_undo_link }".html_safe
+        redirect_to case_path(@case)
+      end
+    end
   end
 
   def flag_for_clearance
@@ -337,6 +342,12 @@ class CasesController < ApplicationController
     CaseFlagForClearanceService.new(user: current_user,
                                     kase: @case,
                                     team: BusinessUnit.dacu_disclosure).call
+    respond_to do |format|
+      format.js { render 'cases/flag_for_clearance.js.erb' }
+      format.html do
+        redirect_to case_path(@case)
+      end
+    end
   end
 
   def approve_response_interstitial
@@ -475,10 +486,10 @@ class CasesController < ApplicationController
     @action_url = request.env['PATH_INFO']
   end
 
-  def search_and_filter
+  def search_and_filter(full_list_of_cases = nil)
     service = CaseSearchService.new(current_user,
                                     params.slice(:search_query, :page))
-    service.call
+    service.call(full_list_of_cases)
     @query = service.query
     if service.error?
       flash.now[:alert] = service.error_message
@@ -724,5 +735,12 @@ class CasesController < ApplicationController
     @permitted_correspondence_types
   end
 
+
+  def get_de_escalated_undo_link
+    unlink_path = flag_for_clearance_case_path(id: @case.id)
+    view_context.link_to "Undo",
+                         unlink_path,
+                         { method: :patch, class: 'undo-de-escalate-link'}
+  end
 end
 #rubocop:enable Metrics/ClassLength

@@ -208,6 +208,7 @@ en:
         common_exemption_ids: Most frequently used
         exemption_ids: All exemptions
         filter_assigned_to_ids: Matching business units
+        filter_timeliness: "Select case timeliness"
       team:
         role: What will the business unit be responsible for?
         correspondente_type_ids: Correspondence types
@@ -578,6 +579,11 @@ en:
         <<: *list_filter_type
       status:
         <<: *list_filter_type
+      timeliness:
+        <<: *list_filter_type
+    timeliness:
+      in_time: 'In time'
+      late: 'Late'
     open_case_statuses:
       unassigned: 'Needs reassigning'
       awaiting_responder: 'To be accepted'

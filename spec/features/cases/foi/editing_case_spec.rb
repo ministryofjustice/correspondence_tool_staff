@@ -9,7 +9,7 @@ feature 'Closing a case' do
 
   scenario 'editing a case' do
     kase =  create :case, received_date: 2.days.ago
-    open_cases_page.load(timeliness: 'in_time')
+    open_cases_page.load
     click_link kase.number
     expect(cases_show_page).to be_displayed
     click_link 'Edit case details'
@@ -36,7 +36,7 @@ feature 'Closing a case' do
 
   scenario 'editing a case with no changes' do
     kase =  create :accepted_case, received_date: 2.days.ago
-    open_cases_page.load(timeliness: 'in_time')
+    open_cases_page.load
     click_link kase.number
     expect(cases_show_page).to be_displayed
     click_link 'Edit case details'

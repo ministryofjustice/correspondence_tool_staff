@@ -72,6 +72,7 @@ describe SearchQuery do
                                                  :filter_open_case_status,
                                                  :filter_sensitivity,
                                                  :filter_status,
+                                                 :filter_timeliness,
                                                ]
     end
   end
@@ -81,7 +82,6 @@ describe SearchQuery do
       expect(SearchQuery.query_attributes).to match_array [
                                                 :search_text,
                                                 :list_path,
-                                                :list_params,
                                                 :common_exemption_ids,
                                                 :exemption_ids,
                                                 :external_deadline_from,
@@ -91,6 +91,7 @@ describe SearchQuery do
                                                 :filter_open_case_status,
                                                 :filter_sensitivity,
                                                 :filter_status,
+                                                :filter_timeliness,
                                               ]
     end
   end
@@ -151,58 +152,105 @@ describe SearchQuery do
     let(:params)  { ActiveSupport::HashWithIndifferentAccess.new(action: 'open_cases', tab: 'in_time') }
 
     it 'writes a record with query_type of list' do
-      rec = SearchQuery.record_list(user, '/open_cases', params)
+      rec = SearchQuery.record_list(user, '/open_cases')
       expect(rec.user_id).to eq user.id
       expect(rec.list_path).to eq '/open_cases'
-      expect(YAML.load(rec.list_params)).to eq params
     end
   end
 
   describe '#results' do
-    let!(:case_standard)      { create :accepted_case,
-                                       :indexed,
-                                       subject: 'Winnie the Pooh' }
-    let!(:case_trigger)       { create :accepted_case,
-                                       :flagged,
-                                       :indexed,
-                                       subject: 'Tigger the tiger' }
-    let!(:case_ir_compliance) { create :compliance_review,
-                                       :indexed,
-                                       subject: 'Gruffalo' }
-    let!(:case_closed)        { create :closed_case,
-                                       :indexed,
-                                       subject: 'Super Worm' }
+    before :all do
+      @setup = StandardSetup.new(only_cases: [
+                                   :std_draft_foi,
+                                   :std_draft_foi_late,
+                                   :trig_draft_foi,
+                                   :std_draft_irt,
+                                   :std_closed_foi,
+                                 ])
+      Case::Base.update_all_indexes
+    end
+
+    after :all do
+      DbHousekeeping.clean
+    end
+
+    # let!(:case_standard)      { create :accepted_case,
+    #                                    :indexed,
+    #                                    subject: 'Winnie the Pooh' }
+    # let!(:case_trigger)       { create :accepted_case,
+    #                                    :flagged,
+    #                                    :indexed,
+    #                                    subject: 'Tigger the tiger' }
+    # let!(:case_ir_compliance) { create :compliance_review,
+    #                                    :indexed,
+    #                                    subject: 'Gruffalo' }
+    # let!(:case_closed)        { create :closed_case,
+    #                                    :indexed,
+    #                                    subject: 'Super Worm' }
     let(:user)    { create :manager }
 
-    it 'returns the result of searching for search_text' do
-      search_query = create :search_query,
-                            user_id: user.id,
-                            search_text: 'Pooh'
-      expect(search_query.results).to eq [case_standard]
+    describe 'results from using a filter' do
+      it 'returns the result of searching for search_text' do
+        search_query = create :search_query,
+                              user_id: user.id,
+                              search_text: 'std_draft_foi'
+        expect(search_query.results).to eq [@setup.std_draft_foi,
+                                            @setup.std_draft_foi_late]
+      end
+
+      it 'returns the result of filtering for sensitivity' do
+        search_query = create :search_query,
+                              user_id: user.id,
+                              search_text: 'draft',
+                              filter_sensitivity: ['trigger']
+        expect(search_query.results).to eq [@setup.trig_draft_foi]
+      end
+
+      it 'returns the result of filtering for type' do
+        search_query = create :search_query,
+                              user_id: user.id,
+                              search_text: 'draft',
+                              filter_case_type: ['foi-ir-timeliness']
+        expect(search_query.results).to eq [@setup.std_draft_irt]
+      end
+
+      it 'returns the result of filtering by status' do
+        search_query = create :search_query,
+                              user_id: user.id,
+                              search_text: 'std',
+                              filter_status: ['closed']
+        expect(search_query.results).to eq [@setup.std_closed_foi]
+      end
+
+      it 'returns the result of filtering by timeliness' do
+        search_query = create :search_query,
+                              user_id: user.id,
+                              search_text: 'draft',
+                              filter_timeliness: ['late']
+        expect(search_query.results).to eq [@setup.std_draft_foi_late]
+      end
     end
 
-    it 'returns the result of filtering for sensitivity' do
-      search_query = create :search_query,
-                            user_id: user.id,
-                            search_text: 'tigger',
-                            filter_sensitivity: ['trigger']
-      expect(search_query.results).to eq [case_trigger]
+    context 'case listing' do
+      it 'uses the list of cases if provided' do
+        cases_list = Case::Base.where(id: [@setup.std_draft_foi.id,
+                                           @setup.std_draft_irt.id])
+
+        search_query = create :search_query, :list,
+                              user_id: user.id,
+                              filter_case_type: ['foi-standard']
+        expect(search_query.results(cases_list)).to eq [@setup.std_draft_foi]
+      end
     end
 
-    it 'returns the result of filtering for type' do
-      search_query = create :search_query,
-                            user_id: user.id,
-                            search_text: 'gruffalo',
-                            filter_case_type: ['foi-ir-compliance']
-      expect(search_query.results).to eq [case_ir_compliance]
-    end
+    context 'no list of cases provided' do
+      it 'uses the list of cases if provided' do
+        search_query = create :search_query, :list,
+                              user_id: user.id,
+                              filter_case_type: ['foi-standard']
+        expect { search_query.results }.to raise_error(ArgumentError)
+      end
 
-    it 'returns the result of filtering by status' do
-      search_query = create :search_query,
-                            user_id: user.id,
-                            search_text: 'worm',
-                            filter_status: ['closed']
-      expect(search_query.results).to eq [case_closed]
     end
   end
 
@@ -212,7 +260,6 @@ describe SearchQuery do
 
       expect(search_query.params_without_filters)
         .to eq({ 'search_text' => 'Winnie the Pooh',
-                 'list_params' => '',
                  'list_path'   => '', })
     end
   end
@@ -243,6 +290,11 @@ describe SearchQuery do
                             external_deadline_from: Date.today,
                             external_deadline_to: Date.today
       expect(search_query.applied_filters).to eq [ExternalDeadlineFilter]
+    end
+
+    it 'includes timeliness filters' do
+      search_query = create :search_query, filter_timeliness: ['in_time']
+      expect(search_query.applied_filters).to eq [TimelinessFilter]
     end
   end
 end
