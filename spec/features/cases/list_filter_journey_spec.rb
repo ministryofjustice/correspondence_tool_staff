@@ -36,6 +36,7 @@ feature 'filters whittle down search results' do
       open_cases_page.filter_on('type', 'foi_standard', 'foi_trigger')
 
       expect(open_cases_page.case_numbers).to eq [@setup.trig_responded_foi.number]
+      expect(open_cases_page.search_results_count.text).to eq '1 case found'
       open_cases_page.open_filter(:type)
       expect(open_cases_page.type_filter_panel.foi_standard_checkbox)
         .to be_checked
@@ -89,6 +90,7 @@ feature 'filters whittle down search results' do
                                               :trig_responded_foi,
                                               :std_unassigned_irc,
                                               :std_unassigned_irt
+      expect(open_cases_page.search_results_count.text).to eq '4 cases found'
 
       open_cases_page.open_filter(:status)
       expect(open_cases_page.status_filter_panel.unassigned_checkbox)
@@ -120,6 +122,7 @@ feature 'filters whittle down search results' do
 
       open_cases_page.filter_crumb_for('FOI - Standard').click
 
+      expect(open_cases_page).to have_no_search_results_count
       expect(open_cases_page.filter_crumb_for('Needs reassigning')).not_to be_present
       expect(open_cases_page.filter_crumb_for('FOI - Standard'   )).not_to be_present
       expect(open_cases_page.filter_crumb_for('Trigger'          )).to be_present

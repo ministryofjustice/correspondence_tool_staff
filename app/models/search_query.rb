@@ -83,12 +83,21 @@ class SearchQuery < ApplicationRecord
     save!
   end
 
-  def self.record_list(user, path)
-    self.create!(user_id: user.id,
-                 list_path: path,
-                 query_type: :list,
-                 num_results: 0)
-
+  def self.record_list(user:, path:, count:)
+    search_query = SearchQuery
+                     .query_where(list_path: path)
+                     .where('created_at >= ? AND created_at < ?',
+                            Date.today, Date.tomorrow)
+                     .first
+    if search_query.present?
+      search_query.update(num_results: count)
+      search_query
+    else
+      self.create!(user_id: user.id,
+                   list_path: path,
+                   query_type: :list,
+                   num_results: count)
+    end
   end
 
   delegate :available_sensitivities, to: CaseTypeFilter
