@@ -43,21 +43,6 @@ feature 'Non-Offender SAR case that does not require clearance' do
                         message: 'This. Is. A. Test.',
                         do_logout: false
 
-    click_link 'Close case'
-
-    cases_close_page.fill_in_date_responded(0.business_days.ago)
-    cases_close_page.missing_info.no.click
-
-    cases_close_page.submit_button.click
-
-    show_page = cases_show_page.case_details
-
-    expect(show_page.response_details.date_responded.data.text)
-      .to eq 0.business_days.ago.strftime(Settings.default_date_format)
-    expect(show_page.response_details.timeliness.data.text)
-      .to eq 'Answered in time'
-    expect(show_page.response_details.time_taken.data.text)
-      .to eq '7 working days'
-    expect(show_page.response_details).to have_no_refusal_reason
+    close_sar_case timeliness: 'in time'
   end
 end
