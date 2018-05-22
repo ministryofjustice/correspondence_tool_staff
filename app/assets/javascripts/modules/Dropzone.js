@@ -15,6 +15,7 @@ moj.Modules.Dropzone = {
 
     this.$target.dropzone({
       url : this.$target.data('url'),
+      processFileUrl: this.$target.data('process-file-url'),
       method : 'post',
       addRemoveLinks : true,
       dictFileTooBig: "File is too big. Max file size is {{maxFilesize}}MB. We can't upload this file.",
@@ -68,6 +69,11 @@ moj.Modules.Dropzone = {
           , value: key });
 
         $(file.previewElement).append(input);
+
+        // Process the file
+        $.post(this.options.processFileUrl, { case_attachment: {key: key, type: 'response'}  },function(){
+          console.log (data)
+        })
       },
       removedfile : function(file) {
         // server-side will take care of cleaning up uploads dir

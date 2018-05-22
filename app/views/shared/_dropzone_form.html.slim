@@ -5,7 +5,8 @@
            data-host= URI.parse(s3_direct_post.url).host
            data-accepted-files=accepted_case_attachment_types
            data-file-input-name=file_input_name
-           data-max-filesize-in-mb=Settings.max_attachment_file_size_in_MB }
+           data-max-filesize-in-mb=Settings.max_attachment_file_size_in_MB
+           data-process-file-url=create_from_s3_case_attachments_path(case_id: case_id)}
 
   .dz-default.dz-message.grid-row
     .column-one-third.arrow-icon
