@@ -30,6 +30,18 @@ class Admin::CasesController < ApplicationController
   end
 
   def new
+    if params[:correspondence_type].present?
+      prepare_new_case
+    else
+    prepare_select_type
+    end
+  end
+
+  def prepare_new_case
+    @correspondence_type_abbreviation = params[:correspondence_type]
+      case_class = correspondence_types_map[@correspondence_type_abbreviation.to_sym].first
+      @case = case_class.new
+
     case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base)
     @case = case_creator.new_case
     @case.responding_team = BusinessUnit.responding.sample
@@ -38,9 +50,37 @@ class Admin::CasesController < ApplicationController
     @selected_state = 'drafting'
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
     render :new
+    # @correspondence_type_abbreviation = params[:correspondence_type]
+    #   case_class = correspondence_types_map[@correspondence_type_abbreviation.to_sym].first
+    #   @case = case_class.new
+    #   policy(@case).can_add_case?
+    #   @case_types = correspondence_types_map[@correspondence_type_abbreviation.to_sym].map(&:to_s)
+    #   @s3_direct_post = s3_uploader_for(@case, 'requests')
+    #   render :new
   end
 
+  #
+  # def new
+  #   case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base)
+  #   @case = case_creator.new_case
+  #   @case.responding_team = BusinessUnit.responding.sample
+  #   @case.flag_for_disclosure_specialists = 'no'
+  #   @target_states = available_target_states
+  #   @selected_state = 'drafting'
+  #   @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
+  #   render :new
+  # end
+
   private
+
+  def prepare_select_type
+    permitted_correspondence_types
+    render :select_type
+  end
+
+  def permitted_correspondence_types
+    @permitted_correspondence_types = current_user.managing_teams.first.correspondence_types.order(:name)
+  end
 
   def authorize_admin
     authorize Case::Base, :user_is_admin?
@@ -101,5 +141,11 @@ class Admin::CasesController < ApplicationController
     @case.approving_teams << BusinessUnit.dacu_disclosure if param_flag_for_ds?
     @case.approving_teams << BusinessUnit.press_office if param_flag_for_press?
     @case.approving_teams << BusinessUnit.private_office if param_flag_for_private?
+  end
+
+  def correspondence_types_map
+    @correspondence_types_map ||= {
+      sar: [Case::SAR],
+    }.with_indifferent_access
   end
 end

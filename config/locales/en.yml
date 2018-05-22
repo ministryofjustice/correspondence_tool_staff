@@ -431,6 +431,9 @@ en:
       new:
         heading: New Case
         create: Create Case
+      select_type:
+        heading: Choose correspondence type
+        sub_heading: Admin
 
   assignments:
     accept:
