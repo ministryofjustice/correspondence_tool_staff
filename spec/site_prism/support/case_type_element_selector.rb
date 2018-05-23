@@ -1,3 +1,3 @@
-Capybara.add_selector(:multi_case_id) do
+Capybara.add_selector(:case_form_element) do
   xpath { |id| "//*[@id=\"case_foi_#{id}\"]|//*[@id=\"case_sar_#{id}\"]" }
 end

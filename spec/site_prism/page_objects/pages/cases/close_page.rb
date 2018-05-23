@@ -10,9 +10,9 @@ module PageObjects
                  PageObjects::Sections::Cases::CaseAttachmentSection,
                  '.case-attachments-group'
 
-        element :date_responded_day, :multi_case_id, 'date_responded_dd'
-        element :date_responded_month, :multi_case_id, 'date_responded_mm'
-        element :date_responded_year, :multi_case_id, 'date_responded_yyyy'
+        element :date_responded_day, :case_form_element, 'date_responded_dd'
+        element :date_responded_month, :case_form_element, 'date_responded_mm'
+        element :date_responded_year, :case_form_element, 'date_responded_yyyy'
 
         section :appeal_outcome, '.appeal-outcome-group' do
           element :upheld, 'label[for="case_foi_appeal_outcome_name_upheld"]'
