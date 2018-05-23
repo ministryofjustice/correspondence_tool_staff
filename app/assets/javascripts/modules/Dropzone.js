@@ -71,9 +71,25 @@ moj.Modules.Dropzone = {
         $(file.previewElement).append(input);
 
         // Process the file
-        $.post(this.options.processFileUrl, { case_attachment: {key: key, type: 'response'}  },function(){
-          console.log (data)
-        })
+        $.post(this.options.processFileUrl,
+          { case_attachment: {key: key, type: 'response'}  },
+          function(data){
+            var currentState = ''
+            uploadedFile = data
+
+            function checkState () {
+              $.get(uploadedFile.path, function(data){
+                console.log('checking')
+                console.log(data)
+                if (data.state !== 'virus_scan_passed' && data.state !== 'virus_scan_failed') {
+                  setTimeout(checkState, 1000);
+                }
+              })
+            }
+
+            checkState()
+            console.log (uploadedFile)
+          })
       },
       removedfile : function(file) {
         // server-side will take care of cleaning up uploads dir

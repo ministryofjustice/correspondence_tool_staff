@@ -9,10 +9,11 @@ class CaseAttachmentsController < ApplicationController
   def create_from_s3
     authorize @case, :can_add_attachment?
 
-    # attachment = CaseAttachment.create!(create_params.merge(case: @case))
-    # VirusScanJob.perform_later(attachment.id)
+    attachment = CaseAttachment.create!(create_params.merge(case: @case))
+    VirusScanJob.perform_later(attachment.id)
 
-    render json: {path: case_attachment_path(case_id: @case.id, id: 0 )}
+    render json: {path: case_attachment_path(case_id: @case.id, id: attachment.id)},
+           status: :created, location: case_attachment_path(case_id: @case.id, id: attachment.id )
     # redirect_to case_attachment_path(case_id: @case.id, id: attachment.id )
   end
 
@@ -26,7 +27,7 @@ class CaseAttachmentsController < ApplicationController
   end
 
   def show
-    render json: @attachment.to_json
+    render json: @attachment
   end
 
   def destroy
