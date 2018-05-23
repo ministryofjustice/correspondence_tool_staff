@@ -5,3 +5,4 @@ production:
 :logfile: ./log/sidekiq-uploads.log
 :queues:
   - correspondence_tool_staff_pdf_maker
+  - correspondence_tool_staff_virus_scan
