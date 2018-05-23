@@ -2,11 +2,6 @@
     "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
     ""
 
-- content_for :heading
-  = t('.heading')
-
-= render partial: 'layouts/header'
-
 = form_for @case, as: 'case', url: admin_cases_path do |f|
 
   = f.radio_button_fieldset :type, choices: CTS::Cases::Constants::CASE_TYPES

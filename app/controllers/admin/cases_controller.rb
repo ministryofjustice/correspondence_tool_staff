@@ -42,34 +42,27 @@ class Admin::CasesController < ApplicationController
       case_class = correspondence_types_map[@correspondence_type_abbreviation.to_sym].first
       @case = case_class.new
 
-    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base)
+    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: some_method  )
     @case = case_creator.new_case
     @case.responding_team = BusinessUnit.responding.sample
     @case.flag_for_disclosure_specialists = 'no'
     @target_states = available_target_states
     @selected_state = 'drafting'
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
+
+    @case.subject_type = 'member_of_the_public'
+    @case.third_party = false
+    @case.subject_full_name = name
     render :new
-    # @correspondence_type_abbreviation = params[:correspondence_type]
-    #   case_class = correspondence_types_map[@correspondence_type_abbreviation.to_sym].first
-    #   @case = case_class.new
-    #   policy(@case).can_add_case?
-    #   @case_types = correspondence_types_map[@correspondence_type_abbreviation.to_sym].map(&:to_s)
-    #   @s3_direct_post = s3_uploader_for(@case, 'requests')
-    #   render :new
   end
 
-  #
-  # def new
-  #   case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base)
-  #   @case = case_creator.new_case
-  #   @case.responding_team = BusinessUnit.responding.sample
-  #   @case.flag_for_disclosure_specialists = 'no'
-  #   @target_states = available_target_states
-  #   @selected_state = 'drafting'
-  #   @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
-  #   render :new
-  # end
+  def some_method
+    if @correspondence_type_abbreviation == 'sar'
+      'Case::SAR'
+    else
+      'Case::FOI::Standard'
+    end
+  end
 
   private
 
@@ -79,7 +72,7 @@ class Admin::CasesController < ApplicationController
   end
 
   def permitted_correspondence_types
-    @permitted_correspondence_types = current_user.managing_teams.first.correspondence_types.order(:name)
+    @permitted_correspondence_types = [CorrespondenceType.foi, CorrespondenceType.sar]
   end
 
   def authorize_admin
@@ -87,7 +80,7 @@ class Admin::CasesController < ApplicationController
   end
 
   def available_target_states
-    CTS::Cases::Constants::CASE_JOURNEYS.values.flatten.uniq.sort
+    CTS::Cases::Constants::CASE_JOURNEYS[@correspondence_type_abbreviation.to_sym].values.flatten.uniq.sort
   end
 
   def case_params
@@ -145,6 +138,9 @@ class Admin::CasesController < ApplicationController
 
   def correspondence_types_map
     @correspondence_types_map ||= {
+      foi: [Case::FOI::Standard,
+            Case::FOI::TimelinessReview,
+            Case::FOI::ComplianceReview],
       sar: [Case::SAR],
     }.with_indifferent_access
   end
