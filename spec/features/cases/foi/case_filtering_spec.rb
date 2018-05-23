@@ -34,15 +34,15 @@ feature 'filtering cases' do
   end
 
   scenario 'no checkboxes selected before filter applied', js: true do
-    open_cases_page.load(timeliness: 'in_time')
-    open_cases_page.filters.open_case_status.click
-    open_cases_page.state_filter.apply_filter_button.click
+    open_cases_page.load
+    open_cases_page.filter_tab_links.status_tab.click
+    open_cases_page.filters.status_filter_panel.apply_filter_button.click
     expect(open_cases_page.case_numbers).to match_array(all_case_numbers)
   end
 
   scenario 'filter just unassigned cases', js: true do
-    open_cases_page.load(timeliness: 'in_time')
-    open_cases_page.filters.open_case_status.click
+    open_cases_page.load
+    open_cases_page.filter_tab_links.status_tab.click
     open_cases_page.choose_state('unassigned')
     open_cases_page.state_filter.apply_filter_button.click
 
@@ -50,8 +50,8 @@ feature 'filtering cases' do
   end
 
   scenario 'filter on unassigned, drafting and awaiting_dispatch cases', js: true do
-    open_cases_page.load(timeliness: 'in_time')
-    open_cases_page.filters.open_case_status.click
+    open_cases_page.load
+    open_cases_page.filter_tab_links.status_tab.click
     open_cases_page.choose_state('unassigned')
     open_cases_page.choose_state('drafting')
     open_cases_page.choose_state('awaiting_dispatch')
@@ -62,8 +62,8 @@ feature 'filtering cases' do
   end
 
   scenario 'just pending dacu clearance', js: true do
-    open_cases_page.load(timeliness: 'in_time')
-    open_cases_page.filters.open_case_status.click
+    open_cases_page.load
+    open_cases_page.filter_tab_links.status_tab.click
     open_cases_page.choose_state('pending_dacu_clearance')
     open_cases_page.state_filter.apply_filter_button.click
 
@@ -74,28 +74,6 @@ feature 'filtering cases' do
 
     expect(open_cases_page.case_numbers).to match_array(expected_case_nos)
   end
-
-  scenario 'filter, show case detail, all cases produces blank filter selection and all cases', js: true do
-    # open case page should show all cases
-    open_cases_page.load(timeliness: 'in_time')
-    expect(open_cases_page.case_numbers).to match_array(all_case_numbers)
-
-    # filter on unassigned should show just one case
-    open_cases_page.filters.open_case_status.click
-    open_cases_page.choose_state('unassigned')
-    open_cases_page.state_filter.apply_filter_button.click
-    expect(open_cases_page.case_numbers).to eq [ @unassigned_case.number ]
-
-    # clicking on that case number should show the detail of that case
-    open_cases_page.case_list.first.number.click
-    expect(cases_show_page).to be_displayed
-
-    # clicking on All open cases should redisplay the open cases page with no filter
-    cases_show_page.primary_navigation.all_links.first.click
-    expect(open_cases_page).to be_displayed
-    expect(open_cases_page.case_numbers).to match_array(all_case_numbers)
-  end
-
 
   def case_nos(*args)
     result = []

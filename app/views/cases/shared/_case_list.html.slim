@@ -35,7 +35,7 @@
             = t('common.case_list.message_notification')
       tbody
         - @cases.each_with_index do |kase, position|
-          tr
+          tr.case_row
             td aria-label="#{t('common.case_list.number')}"
               span.visually-hidden
                 = t('common.case_list.view_case')

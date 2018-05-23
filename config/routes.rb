@@ -12,14 +12,14 @@
 #                            new_user_unlock GET    /users/unlock/new(.:format)                                          devise/unlocks#new
 #                                user_unlock GET    /users/unlock(.:format)                                              devise/unlocks#show
 #                                            POST   /users/unlock(.:format)                                              devise/unlocks#create
-#                               manager_root GET    /                                                                    redirect(301, /cases/open/in_time)
-#                             responder_root GET    /                                                                    redirect(301, /cases/open/in_time)
-#                              approver_root GET    /                                                                    redirect(301, /cases/open/in_time)
+#                               manager_root GET    /                                                                    redirect(301, /cases/open)
+#                             responder_root GET    /                                                                    redirect(301, /cases/open)
+#                              approver_root GET    /                                                                    redirect(301, /cases/open)
 #                                sidekiq_web        /sidekiq                                                             Sidekiq::Web
 #                                   feedback POST   /feedback(.:format)                                                  feedback#create
-#                         cases_manager_root GET    /cases(.:format)                                                     redirect(301, /cases/open/in_time)
-#                       cases_responder_root GET    /cases(.:format)                                                     redirect(301, /cases/open/in_time)
-#                        cases_approver_root GET    /cases(.:format)                                                     redirect(301, /cases/open/in_time)
+#                         cases_manager_root GET    /cases(.:format)                                                     redirect(301, /cases/open)
+#                       cases_responder_root GET    /cases(.:format)                                                     redirect(301, /cases/open)
+#                        cases_approver_root GET    /cases(.:format)                                                     redirect(301, /cases/open)
 #                                            GET    /cases/new(.:format)                                                 cases#new
 #                                   new_case GET    /cases/new/:correspondence_type(.:format)                            cases#new {:correspondence_type=>""}
 #                                 close_case GET    /cases/:id/close(.:format)                                           cases#close
@@ -28,8 +28,7 @@
 #                             incoming_cases GET    /cases/incoming(.:format)                                            cases#incoming_cases
 #                         root_my_open_cases GET    /cases/my_open(.:format)                                             redirect(301, /cases/my_open/in_time)
 #                              my_open_cases GET    /cases/my_open/:tab(.:format)                                        cases#my_open_cases
-#                            root_open_cases GET    /cases/open(.:format)                                                redirect(301, /cases/open/in_time)
-#                                 open_cases GET    /cases/open/:tab(.:format)                                           cases#open_cases
+#                                 open_cases GET    /cases/open(.:format)                                                cases#open_cases
 #                       process_closure_case PATCH  /cases/:id/process_closure(.:format)                                 cases#process_closure
 #                               respond_case GET    /cases/:id/respond(.:format)                                         cases#respond
 #                       confirm_respond_case PATCH  /cases/:id/confirm_respond(.:format)                                 cases#confirm_respond
@@ -202,8 +201,7 @@ Rails.application.routes.draw do
     get 'incoming' => 'cases#incoming_cases', on: :collection
     get 'my_open', on: :collection, to: redirect('/cases/my_open/in_time'), as: :root_my_open
     get 'my_open/:tab' => 'cases#my_open_cases', on: :collection, as: :my_open
-    get 'open', on: :collection, to: redirect('/cases/open/in_time'), as: :root_open
-    get 'open/:tab' => 'cases#open_cases', on: :collection, as: :open
+    get 'open' => 'cases#open_cases', on: :collection, as: :open
     patch 'process_closure', on: :member
     get 'respond', on: :member
     patch 'confirm_respond', on: :member
@@ -289,11 +287,12 @@ Rails.application.routes.draw do
 
   get 'healthcheck',    to: 'heartbeat#healthcheck',  as: 'healthcheck', format: :json
 
-
+  get 'dashboard' => 'dashboard#index'
   get '/dashboard/cases' => 'dashboard#cases'
   get '/dashboard/feedback' => 'dashboard#feedback'
   get '/dashboard/exception' => 'dashboard#exception'
   get '/dashboard/search_queries' => 'dashboard#search_queries'
+  get '/dashboard/list_queries' => 'dashboard#list_queries'
 
   root to: redirect('/users/sign_in')
 end

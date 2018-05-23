@@ -1,16 +1,4 @@
 class CaseSearchService
-  FILTER_ATTRIBUTES = [
-    :filter_case_type,
-    :filter_sensitivity,
-    :filter_status,
-    :exemption_ids,
-    :common_exemption_ids,
-    :filter_assigned_to_ids,
-    :external_deadline_from,
-    :external_deadline_to,
-  ]
-  QUERY_ATTRIBUTES = [:search_text] + FILTER_ATTRIBUTES
-
   attr_reader :current_user,
               :error_message,
               :filter_type,
@@ -51,14 +39,15 @@ class CaseSearchService
     @query = find_or_initialize_query(@query_params,
                                       query_type: @query_type,
                                       user_id: current_user.id)
+
   end
 
-  def call
+  def call(full_list_of_cases = nil)
     if @query_type == :search && @query_params['search_text'].blank?
       @error_message = 'Specify what you want to search for'
       @error = true
     else
-      @unpaginated_result_set = @query.results
+      @unpaginated_result_set = @query.results(full_list_of_cases)
       @query.num_results = @unpaginated_result_set.size
       @query.save!
       @result_set = @unpaginated_result_set.page(@page).decorate
@@ -73,7 +62,7 @@ class CaseSearchService
 
   def remove_blank_filter_values(query_params)
     stripped_filter_values = query_params
-                               .slice(*FILTER_ATTRIBUTES)
+                               .slice(*SearchQuery.filter_attributes)
                                .transform_values { |value| value.is_a?(Array) ? value.sort : value }
                                .transform_values do |values|
                                  if values.respond_to?(:grep_v)
@@ -88,11 +77,11 @@ class CaseSearchService
   def find_or_initialize_query(query_params, query_type:, user_id:)
     if query_params.key? :parent_id
       @parent = SearchQuery.find(query_params[:parent_id])
-      parent_query_params = @parent.slice(*QUERY_ATTRIBUTES)
+      parent_query_params = @parent.slice(*SearchQuery.query_attributes)
       query_params = parent_query_params.merge(query_params.to_unsafe_h)
     end
 
-    params_to_match_on = query_params.slice(*QUERY_ATTRIBUTES).to_h
+    params_to_match_on = query_params.slice(*SearchQuery.query_attributes).to_h
     parse_date_params(query_params,params_to_match_on, :external_deadline_from)
     parse_date_params(query_params,params_to_match_on, :external_deadline_to)
 
@@ -107,7 +96,8 @@ class CaseSearchService
         query_params.merge(
           query_type: query_type,
           user_id: user_id,
-        )
+          num_results: 0
+        ),
       )
     end
     search_query

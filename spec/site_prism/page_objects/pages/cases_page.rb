@@ -57,7 +57,7 @@ module PageObjects
       end
 
       def choose_state(choice)
-        make_check_box_choice("state_selector_#{choice}")
+        make_check_box_choice("search_query_filter_open_case_status_#{choice}")
       end
 
       def row_for_case_number(number)

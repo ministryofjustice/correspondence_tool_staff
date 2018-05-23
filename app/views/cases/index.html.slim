@@ -15,34 +15,39 @@
         = "Filter by"
 
       ul role="tablist" aria-label="Filter by" class="ct-tab-wrapper"
-        / li.ct-tab-item role="presentation"
-        /   a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-type"
-        /     = "Type"
+        li.ct-tab-item role="presentation"
+          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-type"
+            = "Type"
+        li.ct-tab-item role="presentation"
+          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-timeliness"
+            = "Timeliness"
         li.ct-tab-item role="presentation"
           a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-status"
             = "Open case status"
-        // Uncomment the filter tabs as they get implemented
-        / li.ct-tab-item role="presentation"
-        /   a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-final-deadline"
-        /     = "Final deadline"
-        / li.ct-tab-item role="presentation"
-        /   a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-assigned-to"
-        /     = "Assigned to"
-        / li.ct-tab-item role="presentation"
-        /   a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-exemption"
-        /     = "Exemptions"
+        li.ct-tab-item role="presentation"
+          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-final-deadline"
+            = "Final deadline"
+        li.ct-tab-item role="presentation"
+          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-assigned-to"
+            = "Assigned to"
 
       .ct-tab-panels aria-expanded="false"
 
-        / #ct-tab-panel-type.ct-tab-panel
-        /   = render partial: 'cases/search_filters/case_types'
+        #ct-tab-panel-type.ct-tab-panel
+          = render partial: 'cases/search_filters/case_types'
+        #ct-tab-panel-timeliness.ct-tab-panel
+          = render partial: 'cases/search_filters/timeliness'
         #ct-tab-panel-status.ct-tab-panel
           = render partial: 'cases/search_filters/open_case_status'
-        / #ct-tab-panel-final-deadline.ct-tab-panel
-        / #ct-tab-panel-assigned-to.ct-tab-panel
-        / #ct-tab-panel-exemption.ct-tab-panel
-        /   = render partial: 'cases/search_filters/exemptions'
+        #ct-tab-panel-final-deadline.ct-tab-panel
+          = render partial: 'cases/search_filters/final_deadline'
+        #ct-tab-panel-assigned-to.ct-tab-panel
+          = render partial: 'cases/search_filters/assigned_to'
 
+  - if @query.filter_crumbs.present?
+    = render partial: 'cases/search_filters/filter_crumbs',
+             locals: { query: @query,
+                       clear_params: {} }
 - else
   = render partial: 'state_filter_form' unless request.path == '/cases/my_open'
 

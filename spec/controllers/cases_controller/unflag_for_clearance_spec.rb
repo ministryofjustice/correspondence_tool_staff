@@ -56,32 +56,62 @@ RSpec.describe CasesController, type: :controller do
           sign_in disclosure_specialist
         end
 
-        it 'authorises' do
-          expect {
+        context 'calling the action from an AJAX request' do
+          it 'authorises' do
+            expect {
+              patch :unflag_for_clearance, params: params, xhr: true
+            } .to require_permission(:unflag_for_clearance?)
+                    .with_args(disclosure_specialist, flagged_case)
+          end
+
+          it 'instantiates and calls the service' do
             patch :unflag_for_clearance, params: params, xhr: true
-          } .to require_permission(:unflag_for_clearance?)
-                  .with_args(disclosure_specialist, flagged_case)
+            expect(CaseUnflagForClearanceService)
+              .to have_received(:new).with(user: disclosure_specialist,
+                                           kase: flagged_case_decorated,
+                                           team: BusinessUnit.dacu_disclosure,
+                                           message: nil)
+            expect(service).to have_received(:call)
+          end
+
+          it 'renders the view' do
+            patch :unflag_for_clearance, params: params, xhr: true
+            expect(response).to have_rendered(('cases/unflag_for_clearance.js.erb'))
+          end
+
+          it 'returns success' do
+            patch :unflag_for_clearance, params: params, xhr: true
+            expect(response).to have_http_status 200
+          end
         end
 
-        it 'instantiates and calls the service' do
-          patch :unflag_for_clearance, params: params, xhr: true
-          expect(CaseUnflagForClearanceService)
-            .to have_received(:new).with(user: disclosure_specialist,
-                                         kase: flagged_case_decorated,
-                                         team: BusinessUnit.dacu_disclosure,
-                                         message: nil)
-          expect(service).to have_received(:call)
-        end
+        context 'calling the action from a HTTP request' do
+          it 'authorises' do
+            expect {
+              patch :unflag_for_clearance, params: params
+            } .to require_permission(:unflag_for_clearance?)
+                    .with_args(disclosure_specialist, flagged_case)
+          end
 
-        it 'renders the view' do
-          patch :unflag_for_clearance, params: params, xhr: true
-          expect(response).to have_rendered(:unflag_for_clearance)
-        end
+          it 'instantiates and calls the service' do
+            patch :unflag_for_clearance, params: params
+            expect(CaseUnflagForClearanceService)
+              .to have_received(:new).with(user: disclosure_specialist,
+                                           kase: flagged_case_decorated,
+                                           team: BusinessUnit.dacu_disclosure,
+                                           message: nil)
+            expect(service).to have_received(:call)
+          end
 
-        it 'returns success' do
-          patch :unflag_for_clearance, params: params, xhr: true
-          expect(response).to have_http_status 200
-          expect(response).to have_rendered(:unflag_for_clearance)
+          it 'renders the view' do
+            patch :unflag_for_clearance, params: params
+            expect(response).to redirect_to(case_path(flagged_case_decorated))
+          end
+
+          it 'returns 200 status' do
+            patch :unflag_for_clearance, params: params
+            expect(response).to have_http_status 302
+          end
         end
       end
     end

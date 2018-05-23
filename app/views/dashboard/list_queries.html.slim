@@ -1,0 +1,55 @@
+- content_for :heading
+  = "List queries"
+
+= render partial: 'layouts/header'
+
+.grid-row
+  .column-full.table-container.container
+    table.report.table-font-xsmall
+      colgroup
+        col
+        col
+        col
+        col
+        col
+        col
+      thead
+        tr
+          th scope='col'
+            | Date
+          th scope='col'
+            | User
+          th scope='col'
+            | Role
+          th scope='col'
+            | Search/Filter
+          th scope='col'
+            | Search Term
+          th scope='col'
+            | No. results
+          th scope='col'
+            | No. clicks
+          th scope='col'
+            | Position
+      tbody
+        - @queries.each do |q|
+          tr
+            td= q.created_at.to_date
+            td= q.user.full_name
+            td= q.user_roles
+            td= q.query_type
+            td= q.list_query_details
+            td= q.num_results
+            td= q.num_clicks
+            td= q.highest_position
+
+          - SearchQueryDecorator.decorate_collection(q.descendants).each do |d|
+            tr
+              td= ''
+              td= ''
+              td= ''
+              td= d.query_type
+              td= d.filtered_list_query_details
+              td= d.num_results
+              td= d.num_clicks
+              td= d.highest_position

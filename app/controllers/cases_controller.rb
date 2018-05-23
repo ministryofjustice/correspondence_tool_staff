@@ -9,6 +9,8 @@ class CasesController < ApplicationController
                   :new_case_link,
                   :destroy_case_link
                 ]
+  before_action :set_url, only: [:search, :open_cases]
+
   # As per the Draper documentation, we really shouldn't be decorating @case at
   # the beginning of controller actions (see:
   # https://github.com/drapergem/draper#when-to-decorate-objects) as we do
@@ -92,16 +94,19 @@ class CasesController < ApplicationController
   end
 
   def open_cases
-    @cases = @global_nav_manager
-               .current_page_or_tab
-               .cases
-               .by_deadline
-               .page(params[:page])
-               .decorate
-
+    full_list_of_cases = @global_nav_manager.current_page_or_tab.cases
+    if params[:search_query]
+      @cases = search_and_filter full_list_of_cases
+    else
+      @query = SearchQuery.record_list(current_user, request.path)
+      @parent_id = @query.id
+      @cases = full_list_of_cases.by_deadline
+                 .page(params[:page])
+                 .decorate
+    end
+    @filter_crumbs = @query.filter_crumbs
     @current_tab_name = 'all_cases'
     @can_add_case = policy(Case::Base).can_add_case?
-
     render :index
   end
 
@@ -290,22 +295,13 @@ class CasesController < ApplicationController
     @cases = []
 
     if params[:search_query]
-      service = CaseSearchService.new(current_user,
-                                      params.slice(:search_query, :page))
-      service.call
-      @query = service.query
-      if service.error?
-        flash.now[:alert] = service.error_message
-      else
-        @cases = service.result_set
-        @parent_id = @query.id
-        flash[:query_id] = @query.id
-        @page = params[:page] || '1'
-      end
+      @cases = search_and_filter
     else
       @query = SearchQuery.new
     end
+    @filter_crumbs = @query.filter_crumbs
   end
+
 
   def remove_clearance
     authorize @case
@@ -331,6 +327,14 @@ class CasesController < ApplicationController
                                       kase: @case,
                                       team: BusinessUnit.dacu_disclosure,
                                       message: params[:message]).call
+
+    respond_to do |format|
+      format.js { render 'cases/unflag_for_clearance.js.erb' }
+      format.html do
+        flash[:notice] = "Case has been de-escalated. #{ get_de_escalated_undo_link }".html_safe
+        redirect_to case_path(@case)
+      end
+    end
   end
 
   def flag_for_clearance
@@ -338,6 +342,12 @@ class CasesController < ApplicationController
     CaseFlagForClearanceService.new(user: current_user,
                                     kase: @case,
                                     team: BusinessUnit.dacu_disclosure).call
+    respond_to do |format|
+      format.js { render 'cases/flag_for_clearance.js.erb' }
+      format.html do
+        redirect_to case_path(@case)
+      end
+    end
   end
 
   def approve_response_interstitial
@@ -471,6 +481,26 @@ class CasesController < ApplicationController
   end
 
   private
+
+  def set_url
+    @action_url = request.env['PATH_INFO']
+  end
+
+  def search_and_filter(full_list_of_cases = nil)
+    service = CaseSearchService.new(current_user,
+                                    params.slice(:search_query, :page))
+    service.call(full_list_of_cases)
+    @query = service.query
+    if service.error?
+      flash.now[:alert] = service.error_message
+    else
+      kases = service.result_set
+      @parent_id = @query.id
+      flash[:query_id] = @query.id
+      @page = params[:page] || '1'
+    end
+    kases
+  end
 
   def prepare_select_type
     policy(Case::Base).can_add_case?
@@ -705,5 +735,12 @@ class CasesController < ApplicationController
     @permitted_correspondence_types
   end
 
+
+  def get_de_escalated_undo_link
+    unlink_path = flag_for_clearance_case_path(id: @case.id)
+    view_context.link_to "Undo",
+                         unlink_path,
+                         { method: :patch, class: 'undo-de-escalate-link'}
+  end
 end
 #rubocop:enable Metrics/ClassLength

@@ -20,8 +20,8 @@ describe 'cases/index.html.slim', type: :view do
                                  responder: responder)
                             .decorate }
   let(:request)         { instance_double ActionDispatch::Request,
-                                          path: '/cases/open/in_time',
-                                          fullpath: '/cases/open/in_time',
+                                          path: '/cases/open',
+                                          fullpath: '/cases/open',
                                           query_parameters: {},
                                           params: {}}
 
@@ -111,34 +111,6 @@ describe 'cases/index.html.slim', type: :view do
       cases_page.load(rendered)
 
       expect(cases_page).not_to have_new_case_button
-    end
-  end
-
-  describe 'in_time tab' do
-    before do
-      allow(view).to receive(:policy).and_return(spy('Pundit::Policy'))
-    end
-
-    it 'has a link to in-time open cases' do
-      assign(:cases, PaginatingDecorator.new(Case::Base.all.page))
-      assign(:state_selector, StateSelector.new( {} ))
-      render
-      cases_page.load(rendered)
-
-      expect(cases_page.tabs[0].tab_link).to have_text 'In time (0)'
-      expect(cases_page.tabs[0].tab_link[:href])
-        .to eq '/cases/open/in_time'
-    end
-
-    it 'has a count of how many in-time open cases there are' do
-      login_as(responder)
-      assigned_case
-      assign(:cases, PaginatingDecorator.new(Case::Base.all.page))
-      assign(:state_selector, StateSelector.new( {} ))
-      render
-      cases_page.load(rendered)
-
-      expect(cases_page.tabs[0].tab_link).to have_text 'In time (1)'
     end
   end
 

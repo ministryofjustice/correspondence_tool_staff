@@ -16,16 +16,17 @@
 #
 
 class SearchQuery < ApplicationRecord
+  FILTER_CLASSES = [
+    CaseTypeFilter,
+    TimelinessFilter,
+    CaseStatusFilter,
+    OpenCaseStatusFilter,
+    ExternalDeadlineFilter,
+    AssignedBusinessUnitFilter,
+    ExemptionFilter,
+  ].freeze
 
   attr_accessor :business_unit_name_filter
-
-  FILTER_CLASSES =     [
-    CaseTypeFilter,
-    CaseStatusFilter,
-    ExemptionFilter,
-    AssignedBusinessUnitFilter,
-    ExternalDeadlineFilter
-  ]
 
   belongs_to :user
   belongs_to :parent, class_name: 'SearchQuery'
@@ -33,7 +34,8 @@ class SearchQuery < ApplicationRecord
 
   enum query_type: {
       search: 'search',
-      filter: 'filter'
+      filter: 'filter',
+      list: 'list'
   }
 
   jsonb_accessor :query,
@@ -44,9 +46,12 @@ class SearchQuery < ApplicationRecord
                  external_deadline_to: :date,
                  filter_sensitivity: [:string, array: true, default: []],
                  filter_case_type: [:string, array: true, default: []],
+                 filter_open_case_status: [:string, array: true, default: []],
+                 filter_timeliness: [:string, array: true, default: []],
                  exemption_ids: [:integer, array: true, default: []],
                  common_exemption_ids: [:integer, array: true, default: []],
-                 filter_status: [:string, array: true, default: []]
+                 filter_status: [:string, array: true, default: []],
+                 list_path: [:string, default: '']
 
   acts_as_gov_uk_date :external_deadline_from, :external_deadline_to
 
@@ -60,6 +65,16 @@ class SearchQuery < ApplicationRecord
     end
   end
 
+  def self.filter_attributes
+    FILTER_CLASSES.collect_concat do |filter_class|
+      filter_class.filter_attributes
+    end
+  end
+
+  def self.query_attributes
+    [:search_text, :list_path] + self.filter_attributes
+  end
+
   def update_for_click(position)
     self.num_clicks += 1
     if self.highest_position.nil? || self.highest_position > position
@@ -68,7 +83,13 @@ class SearchQuery < ApplicationRecord
     save!
   end
 
+  def self.record_list(user, path)
+    self.create!(user_id: user.id,
+                 list_path: path,
+                 query_type: :list,
+                 num_results: 0)
 
+  end
 
   delegate :available_sensitivities, to: CaseTypeFilter
   delegate :available_case_types, to: CaseTypeFilter
@@ -77,11 +98,47 @@ class SearchQuery < ApplicationRecord
   delegate :available_common_exemptions, to: ExemptionFilter
   delegate :responding_business_units, to: AssignedBusinessUnitFilter
   delegate :available_deadlines, to: ExternalDeadlineFilter
+  delegate :available_open_case_statuses, to: OpenCaseStatusFilter
+  delegate :available_timeliness, to: TimelinessFilter
 
-  def results
-    results = Case::BasePolicy::Scope.new(User.find(user_id), Case::Base.all).for_view_only
-    results = results.search(search_text)
-    FILTER_CLASSES.reduce(results) do |result, filter_class|
+  def results(cases_list = nil)
+    if root.query_type == 'search'
+      cases_list ||= Case::BasePolicy::Scope
+                       .new(User.find(user_id), Case::Base.all)
+                       .for_view_only
+      cases_list = cases_list.search(search_text)
+    elsif cases_list.nil?
+      raise ArgumentError.new("cannot perform filters without list of cases")
+    end
+
+    perform_filters(cases_list)
+  end
+
+  def filter_crumbs
+    filter_crumbs = []
+    applied_filters.map do |filter_class|
+      filter_class.new(self, Case::Base.none)
+    end.each do |filter|
+      filter_crumbs += filter.crumbs
+    end
+    filter_crumbs
+  end
+
+  def params_without_filters
+    query.except(*(self.class.filter_attributes.map(&:to_s)))
+  end
+
+  def applied_filters
+    FILTER_CLASSES.select do |filter_class|
+      filter = filter_class.new(self, Case::Base.none)
+      filter.applied?
+    end
+  end
+
+  private
+
+  def perform_filters(cases)
+    applied_filters.reduce(cases) do |result, filter_class|
       filter_class.new(self, result).call
     end
   end

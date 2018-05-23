@@ -1,0 +1,25 @@
+.filter-crumbs ul {
+  margin-top: $gutter-half;
+}
+
+.filter-crumb {
+  display: inline-block;
+  list-style-type: none;
+}
+
+/* Style link as a button */
+.filter-crumb a {
+  @include button($panel-colour);
+  margin-right: 5px;
+  margin-top: 10px;
+}
+
+.filter-crumb .close-icon {
+  padding-left: $gutter-half;
+}
+
+.filter-clear {
+  display: block;
+  list-style-type: none;
+  margin-top: $gutter-half;
+}

@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.10
--- Dumped by pg_dump version 9.5.10
+-- Dumped from database version 9.5.9
+-- Dumped by pg_dump version 9.5.9
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -84,7 +84,8 @@ CREATE TYPE requester_type AS ENUM (
 
 CREATE TYPE search_query_type AS ENUM (
     'search',
-    'filter'
+    'filter',
+    'list'
 );
 
 
@@ -1604,4 +1605,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180419103640'),
 ('20180419130340'),
 ('20180420173415'),
-('20180424150445');
+('20180424150445'),
+('20180508131152'),
+('20180517140929');
+
+
