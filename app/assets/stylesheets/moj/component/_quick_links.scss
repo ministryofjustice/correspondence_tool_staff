@@ -1,0 +1,16 @@
+.quick-link-options {
+  display: inline-block;
+  margin-top: $gutter-half;
+}
+
+.quick-link-option {
+  display: inline-block;
+  border-left: 1px solid $border-colour;
+  padding-left: $gutter-half;
+  margin-left: $gutter-half;
+}
+
+.quick-link-option--first{
+  @extend .quick-link-option;
+  border-left: 0;
+}

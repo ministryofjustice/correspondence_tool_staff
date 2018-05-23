@@ -65,18 +65,18 @@ describe 'papertrail', versioning: true do
       end
     end
 
-    it 'does not restore the gov_uk_dates' do
+    it 'restores the gov_uk_dates' do
       Timecop.freeze(run_time) do
         kase = create_dummy_case
         expect(kase.received_date).to eq Date.parse('2018-04-19')
         update_dummy_case(kase)
         expect(kase.received_date).to eq Date.parse('2018-04-15')
         reified_kase = kase.versions.last.reify
-        expect(reified_kase.received_date).to eq Date.parse('2018-04-15')
+        expect(reified_kase.received_date).to eq Date.parse('2018-04-19')
       end
     end
   end
-  
+
   describe 'versioning hash' do
     it 'holds the values of the attributes before the change' do
       Timecop.freeze(run_time) do

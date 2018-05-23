@@ -41,5 +41,14 @@ class CaseClosure::Metadatum < ApplicationRecord
             .order(:name)
   end
 
+  def self.exemption_filter_abbreviation(id)
+    record = find(id)
+    if record.is_a?(CaseClosure::Exemption)
+      CaseClosure::Exemption.section_number_from_id(record.abbreviation)
+    else
+      record.abbreviation
+    end
+  end
+
 
 end

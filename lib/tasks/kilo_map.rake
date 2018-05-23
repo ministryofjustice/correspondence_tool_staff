@@ -1,35 +1,35 @@
-task :kilo_map => :environment do
-  require 'csv'
-  CSV.foreach(File.join(Rails.root, 'lib', 'assets', 'kilo_map.csv')) do |row|
-    puts row.inspect
-    next if header_row?(row)
-    bg, bu, sar = row
-    sar_correspondence_type = CorrespondenceType.sar
-    if bg.present?
-      @bg = BusinessGroup.find_by_name bg
-    end
-    if @bg.nil?
-      puts ">>>>>>>>>>>> UNABLE TO FIND BUSINESS GROUP #{bg} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
+namespace :kilo_map do
+
+
+  desc 'Updates business units requiring rights to respond to SARs'
+  task :load_sars, [:filename] => :environment do | _task, args|
+    if args[:filename].present?
+      require File.join(Rails.root, 'lib', 'tasks', 'rake_task_helpers', 'sars_loader.rb')
+      loader = SarsLoader.new(args[:filename])
+      loader.run
     else
-      if @bg.present?
-        if sar == 'YES'
-          business_unit = @bg.business_units.find_by_name(bu)
-          if business_unit.nil?
-            puts ">>>>>>>>>>>> unable to find BU #{bu} IN BG #{@bg.name} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
-          else
-            business_unit.correspondence_type << sar_correspondence_type
-            puts "Updating BU #{business_unit.id} #{business_unit.name}"
-          end
-        end
+      puts "ERROR! Invoke with filename, e.g. 'rake kilo_map:load_sars[filename]'"
+      exit 2
+    end
+
+  end
+
+
+
+  desc 'lists business units and what correspondence types they deal with'
+  task :audit_corr_types => :environment do
+    BusinessGroup.all.each do |bg|
+      bg.business_units.each do |bu|
+        puts sprintf('%-4d %-40s %-60s %s', bu.id, bg.name, bu.name, bu.correspondence_types.map(&:abbreviation).join(", "))
       end
     end
   end
 
+
+  def header_row?(row)
+    bg, _bu, _sar = row
+    bg == 'Business group'
+  end
 end
 
-
-def header_row?(row)
-  bg, _bu, _sar = row
-  bg == 'Business group'
-end
 

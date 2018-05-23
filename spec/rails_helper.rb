@@ -44,6 +44,7 @@ end
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 $LOAD_PATH.unshift(File.join(File.expand_path('..', __FILE__), 'site_prism'))
 require 'site_prism/page_objects/pages/application.rb'
+Dir[Rails.root.join("spec/site_prism/support/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/site_prism/page_objects/{sections,pages}/**/*.rb")].each { |f| require f }
 
 # Checks for pending migrations before tests are run.
@@ -143,6 +144,10 @@ RSpec.configure do |config|
 
   config.after(:suite) do
     DbHousekeeping.clean(seed: false)
+  end
+
+  config.before(:example, tag: :cli) do
+    CTS.instance_variables.each { |var| CTS.remove_instance_variable var }
   end
 end
 

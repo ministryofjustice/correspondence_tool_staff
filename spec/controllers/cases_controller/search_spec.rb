@@ -65,6 +65,16 @@ describe CasesController, type: :controller do
       expect(flash[:query_id]).to eq search_query.id
     end
 
+    it 'assigns to filter_crumbs' do
+      parent_query = create :search_query
+      params = {
+        search_query: { filter_sensitivity: ['trigger'],
+                        parent_id: parent_query.id}
+      }
+      get :search, params: params
+      expect(assigns(:filter_crumbs)[0][0]).to eq 'Trigger'
+    end
+
     context 'search does not have a parent' do
       it 'sets the parent_id to the current search_query id' do
         allow(CaseSearchService).to receive(:new).and_return(case_search_service)

@@ -80,7 +80,7 @@
   margin-bottom: $gutter;
 }
 .ct-tab-panel .scrolling-details {
-  height: 15em;
+  max-height: 15em;
   overflow: hidden;
   overflow-y: scroll;
   margin-bottom: $gutter;

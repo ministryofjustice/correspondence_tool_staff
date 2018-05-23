@@ -13,6 +13,7 @@ module PageObjects
       section :state_filter, '.state-filter' do
         elements :check_boxes, 'label'
         element :filter_button, 'input[value="Filter"]'
+        element :apply_filter_button, 'input[value="Apply filter"]'
       end
 
       sections :tabs, '.section-tabs .tab' do
@@ -41,6 +42,14 @@ module PageObjects
 
       section :pagination, PageObjects::Sections::PaginationSection, '.pagination'
 
+      section :filters, '.ct-tab-container' do
+          elements :options, '.ct-tab-item'
+          element :open_case_status, 'a[href="#ct-tab-panel-status"]'
+          section :status_filter_panel,
+                  PageObjects::Sections::Cases::StatusFilterPanelSection,
+                  '#ct-tab-panel-status'
+      end
+
       def case_numbers
         case_list.map do |row|
           row.number.text.delete('Link to case')
@@ -48,7 +57,7 @@ module PageObjects
       end
 
       def choose_state(choice)
-        make_check_box_choice("state_selector_#{choice}")
+        make_check_box_choice("search_query_filter_open_case_status_#{choice}")
       end
 
       def row_for_case_number(number)

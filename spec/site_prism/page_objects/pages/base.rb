@@ -17,6 +17,14 @@ module PageObjects
         end
       end
 
+      def remove_check_box_choice(choice_id)
+        if Capybara.current_driver == Capybara.javascript_driver
+          find("input##{choice_id}", visible: false).trigger("click")
+        else
+          find("input##{choice_id}").set(false)
+        end
+      end
+
       def method_missing(method, *args)
         if method.match %r{^choose_(.+)}
           choice = args.first
@@ -28,6 +36,13 @@ module PageObjects
 
       def respond_to_missing?(method, _include_private = false)
         method.match(%r{^choose_.+}) ? true : super
+      end
+
+      # for use on pages with a case list section
+      def case_numbers
+        case_list.map do |row|
+          row.number.text.delete('Link to case')
+        end
       end
 
       # Upload a file to Dropzone.js

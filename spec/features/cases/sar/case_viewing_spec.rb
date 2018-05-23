@@ -21,7 +21,7 @@ feature 'viewing SAR cases' do
       login_as responder
 
       cases_show_page.load id: kase.id
-      expect(open_cases_page).to be_displayed(timeliness: 'in_time')
+      expect(open_cases_page).to be_displayed
     end
   end
 
@@ -49,7 +49,7 @@ feature 'viewing SAR cases' do
 
       cases_show_page.load id: kase.id
 
-      expect(open_cases_page).to be_displayed(timeliness: 'in_time')
+      expect(open_cases_page).to be_displayed
     end
   end
 end

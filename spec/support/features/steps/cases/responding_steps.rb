@@ -39,3 +39,34 @@ def close_case_step(responded_date: Date.today)
 
   expect(cases_show_page.case_status.details.copy.text).to eq "Case closed"
 end
+
+def close_sar_case(timeliness: 'in time', tmm: false, time_taken: 7)
+  cases_show_page.actions.close_case.click
+
+  cases_close_page.fill_in_date_responded(0.business_days.ago)
+
+  if tmm
+    cases_close_page.missing_info.yes.click
+  else
+    cases_close_page.missing_info.no.click
+  end
+
+  cases_close_page.submit_button.click
+
+  show_page = cases_show_page.case_details
+
+  expect(show_page.response_details.date_responded.data.text)
+    .to eq 0.business_days.ago.strftime(Settings.default_date_format)
+  expect(show_page.response_details.timeliness.data.text)
+    .to eq "Answered #{timeliness}"
+  expect(show_page.response_details.time_taken.data.text)
+    .to eq "#{time_taken} working days"
+
+  if tmm
+    expect(show_page.response_details.refusal_reason.data.text)
+      .to eq '(s1(3)) - Clarification required'
+  else
+    expect(show_page.response_details).to have_no_refusal_reason
+  end
+
+end

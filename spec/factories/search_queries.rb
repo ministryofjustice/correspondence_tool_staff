@@ -17,8 +17,7 @@
 
 FactoryGirl.define do
   factory :search_query do
-    user_id 3
-    # query({ search_text: 'Winnie the Pooh' })
+    user_id { find_or_create(:manager).id }
     search_text 'Winnie the Pooh'
     query_type 'search'
     parent_id nil
@@ -34,5 +33,19 @@ FactoryGirl.define do
   trait :clicked do
     num_clicks 1
     highest_position 3
+  end
+
+  trait :list do
+    search_text nil
+    query_type 'list'
+    list_path '/cases/open'
+  end
+
+  trait :filtered_list do
+    search_text nil
+    query_type 'filter'
+    list_path '/cases/open/in_time'
+    filter_case_type ['foi-ir-compliance']
+    filter_sensitivity []
   end
 end

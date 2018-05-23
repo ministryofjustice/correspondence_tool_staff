@@ -115,7 +115,7 @@ en:
     pending_press_office_clearance: Pending clearance
     pending_private_office_clearance: Pending clearance
     responded: Ready to close
-    closed: ''
+    closed: Closed
     closed_status: Case closed
 
   roles:
@@ -207,6 +207,8 @@ en:
         filter_status: "Select status"
         common_exemption_ids: Most frequently used
         exemption_ids: All exemptions
+        filter_assigned_to_ids: Matching business units
+        filter_timeliness: "Select case timeliness"
       team:
         role: What will the business unit be responsible for?
         correspondente_type_ids: Correspondence types
@@ -214,6 +216,8 @@ en:
       feedback:
         comment: |
           Let us know what you were doing and what could be improved or fixed.
+      search_query:
+        business_unit_name_filter: For example, Legal Aid Agency
       case:
         linked_case_number: " For example 170131001"
         upload_comment: This will be added to the converstation section of the case.
@@ -281,6 +285,8 @@ en:
         subject_full_name: "Full name of data subject"
       feedback:
         comment: Help make this service better
+      search_query:
+        business_unit_name_filter: Find and select a business unit
       team:
         name: Business unit name
         email: Business unit group email
@@ -540,6 +546,9 @@ en:
         date_example: For example, 30 1 2017
     search:
       heading: Search
+      external_deadline_from: From
+      external_deadline_to: To
+      external_deadline_hint: For example. 31 01 2017
 
     remove_clearance:
       heading: 'Remove Clearance'
@@ -551,6 +560,51 @@ en:
       <strong>The following error(s) occurred:</strong>
     success_html: |
       <strong>Your feedback has been submitted.</strong>
+
+  filters:
+    crumbs:
+      list_filter_type: &list_filter_type
+        one: "%{first_value}"
+        other: "%{first_value} + %{remaining_values_count} more"
+      assigned_business_units:
+        <<: *list_filter_type
+      exemptions:
+        <<: *list_filter_type
+      external_deadline: "%{from_date} - %{to_date}"
+      case_type:
+        <<: *list_filter_type
+      open_case_status:
+        <<: *list_filter_type
+      sensitivity:
+        <<: *list_filter_type
+      status:
+        <<: *list_filter_type
+      timeliness:
+        <<: *list_filter_type
+    timeliness:
+      in_time: 'In time'
+      late: 'Late'
+    open_case_statuses:
+      unassigned: 'Needs reassigning'
+      awaiting_responder: 'To be accepted'
+      drafting: 'Draft in progress'
+      pending_dacu_clearance: 'Pending clearance - Disclosure'
+      pending_press_office_clearance: 'Pending clearance - Press office'
+      pending_private_office_clearance: 'Pending clearance - Private office'
+      awaiting_dispatch: 'Ready to send'
+      responded: 'Ready to close'
+      open: 'Open'
+      closed: 'Closed'
+    sensitivities:
+      non-trigger: 'Non-trigger'
+      trigger: 'Trigger'
+    statuses:
+      open: 'Open'
+      closed: 'Closed'
+    case_types:
+      foi-standard: 'FOI - Standard'
+      foi-ir-compliance: 'FOI - Internal review for compliance'
+      foi-ir-timeliness: 'FOI - Internal review for timeliness'
 
   stats:
     common:
