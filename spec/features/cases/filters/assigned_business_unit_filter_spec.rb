@@ -70,8 +70,8 @@ feature 'filtering by assigned business unit' do
     end
 
   end
-  
-  
+
+
   def filter_and_check_results(page, expected_cases)
     page.filter_tab_links.assigned_to_tab.click
     page.assigned_to_filter_panel.business_unit_search_term.set('main')

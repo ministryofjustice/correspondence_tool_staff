@@ -19,7 +19,19 @@ FactoryGirl.define do
   factory :search_query do
     user_id { find_or_create(:manager).id }
     search_text 'Winnie the Pooh'
+    list_path nil
     query_type 'search'
+    parent_id nil
+    num_results 33
+    num_clicks 0
+    highest_position nil
+  end
+
+  factory :list_query, class: SearchQuery do
+    user_id { find_or_create(:manager).id }
+    search_text nil
+    list_path '/cases/open'
+    query_type 'list'
     parent_id nil
     num_results 33
     num_clicks 0

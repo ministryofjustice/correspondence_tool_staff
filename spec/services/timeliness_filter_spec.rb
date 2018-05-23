@@ -105,15 +105,8 @@ describe TimelinessFilter do
       describe 'params that will be submitted when clicking on the crumb' do
         subject { filter_service.crumbs[0].second }
 
-        it { should include 'search_text'            => "Winnie the Pooh" }
-        it { should include 'common_exemption_ids'   => [] }
-        it { should include 'filter_assigned_to_ids' => [] }
-        it { should include 'filter_case_type'       => [] }
-        it { should include 'exemption_ids'          => [] }
-        it { should include 'filter_sensitivity'     => [] }
-        it { should include 'filter_status'          => [] }
-        it { should include 'filter_timeliness'      => [''] }
-        it { should include 'parent_id'              => search_query.id }
+        it { should eq 'filter_timeliness' => [''],
+                       'parent_id'         => search_query.id }
       end
     end
 
@@ -136,4 +129,11 @@ describe TimelinessFilter do
     end
   end
 
+  describe '.process_params!' do
+    it 'processes filter_timeliness, sorting and removing blanks' do
+      params = { filter_timeliness: ['', 'late', 'in-time'] }
+      described_class.process_params!(params)
+      expect(params).to eq filter_timeliness: ['in-time', 'late']
+    end
+  end
 end

@@ -1,4 +1,6 @@
 class CaseTypeFilter
+  include FilterParamParsers
+
   def self.available_sensitivities
     {
       'non-trigger' => I18n.t('filters.sensitivities.non-trigger'),
@@ -16,6 +18,11 @@ class CaseTypeFilter
 
   def self.filter_attributes
     [:filter_case_type, :filter_sensitivity]
+  end
+
+  def self.process_params!(params)
+    process_array_param(params, :filter_case_type)
+    process_array_param(params, :filter_sensitivity)
   end
 
   def initialize(query, records)
@@ -46,10 +53,10 @@ class CaseTypeFilter
                           count: @query.filter_case_type.size,
                           first_value: case_type_text,
                           remaining_values_count: @query.filter_case_type.count - 1
-      params = @query.query.merge(
+      params = {
         'filter_case_type' => [''],
         'parent_id'        => @query.id
-      )
+      }
       our_crumbs << [crumb_text, params]
     end
     if @query.filter_sensitivity.present?
@@ -60,10 +67,10 @@ class CaseTypeFilter
                           count: @query.filter_sensitivity.size,
                           first_value: sensitivity_text,
                           remaining_values_count: @query.filter_sensitivity.count - 1
-      params = @query.query.merge(
+      params = {
         'filter_sensitivity' => [''],
         'parent_id'          => @query.id,
-      )
+      }
       our_crumbs << [crumb_text, params]
     end
     our_crumbs

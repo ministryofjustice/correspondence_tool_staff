@@ -1,6 +1,13 @@
 class ExemptionFilter
+  include FilterParamParsers
+
   def self.filter_attributes
     [:common_exemption_ids, :exemption_ids]
+  end
+
+  def self.process_params!(params)
+    process_ids_param(params, 'common_exemption_ids')
+    process_ids_param(params, 'exemption_ids')
   end
 
   def initialize(search_query_record, arel)
@@ -37,11 +44,11 @@ class ExemptionFilter
                           count: @exemption_ids.count,
                           first_value: first_exemption.name,
                           remaining_values_count: @exemption_ids.count - 1
-      params = @query.query.merge(
+      params = {
         'common_exemption_ids' => [''],
         'exemption_ids'        => [''],
         'parent_id'            => @query.id,
-      )
+      }
       [[crumb_text, params]]
     else
       []

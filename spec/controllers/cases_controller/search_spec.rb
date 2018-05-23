@@ -13,7 +13,7 @@ describe CasesController, type: :controller do
     let(:case_search_service) { instance_double CaseSearchService,
                                                 call: nil,
                                                 error?: false,
-                                                result_set: [],
+                                                result_set: Case::Base.none,
                                                 query: search_query,
                                                 parent: nil }
 
@@ -45,11 +45,14 @@ describe CasesController, type: :controller do
       allow(CaseSearchService).to receive(:new).and_return(case_search_service)
       params = { search_query: { search_text: assigned_case.subject } }
       get :search, params: params
-      controller_params = ActionController::Parameters.new(
-        search_query: ActionController::Parameters.new(params[:search_query]),
-      )
+
+      expected_params = ActionController::Parameters.new(
+        params[:search_query]
+      ).permit!
       expect(CaseSearchService).to have_received(:new)
-                                     .with(responder, controller_params)
+                                     .with(user: responder,
+                                           query_type: :search,
+                                           query_params: expected_params)
       expect(case_search_service).to have_received(:call)
     end
 

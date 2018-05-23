@@ -95,15 +95,25 @@ class CasesController < ApplicationController
 
   def open_cases
     full_list_of_cases = @global_nav_manager.current_page_or_tab.cases
-    if params[:search_query]
-      @cases = search_and_filter full_list_of_cases
+
+    query_params = params.fetch(:search_query, {}).permit(filter_params).merge(
+      list_path: request.path,
+    )
+    service = CaseSearchService.new(user: current_user,
+                                    query_type: :list,
+                                    query_params: query_params)
+    service.call(full_list_of_cases)
+    @query = service.query
+    if service.error?
+      flash.now[:alert] = service.error_message
     else
-      @query = SearchQuery.record_list(current_user, request.path)
+      @page = params[:page] || '1'
+      @cases = service.result_set.by_deadline.page(@page).decorate
       @parent_id = @query.id
-      @cases = full_list_of_cases.by_deadline
-                 .page(params[:page])
-                 .decorate
+      flash[:query_id] = @query.id
     end
+
+
     @filter_crumbs = @query.filter_crumbs
     @current_tab_name = 'all_cases'
     @can_add_case = policy(Case::Base).can_add_case?
@@ -292,13 +302,20 @@ class CasesController < ApplicationController
   end
 
   def search
-    @cases = []
-
-    if params[:search_query]
-      @cases = search_and_filter
+    query_params = params.fetch(:search_query, {}).permit(filter_params)
+    service = CaseSearchService.new(user: current_user,
+                                    query_type: :search,
+                                    query_params: query_params)
+    service.call
+    @query = service.query
+    if service.error?
+      flash.now[:alert] = service.error_message
     else
-      @query = SearchQuery.new
+      @page = params[:page] || '1'
+      @parent_id = @query.id
+      flash[:query_id] = @query.id
     end
+    @cases = service.result_set.page(@page).decorate
     @filter_crumbs = @query.filter_crumbs
   end
 
@@ -484,6 +501,29 @@ class CasesController < ApplicationController
 
   def set_url
     @action_url = request.env['PATH_INFO']
+  end
+
+  def filter_params
+    [
+      :search_text,
+      :parent_id,
+      :external_deadline_from,
+      :external_deadline_from_dd,
+      :external_deadline_from_mm,
+      :external_deadline_from_yyyy,
+      :external_deadline_to,
+      :external_deadline_to_dd,
+      :external_deadline_to_mm,
+      :external_deadline_to_yyyy,
+      common_exemption_ids: [],
+      exemption_ids: [],
+      filter_assigned_to_ids: [],
+      filter_case_type: [],
+      filter_open_case_status: [],
+      filter_sensitivity: [],
+      filter_status: [],
+      filter_timeliness: [],
+    ]
   end
 
   def search_and_filter(full_list_of_cases = nil)
