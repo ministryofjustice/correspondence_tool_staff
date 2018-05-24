@@ -30,7 +30,7 @@ describe CaseSearchService do
       let(:specific_query)    { 'my scoped query' }
       it 'uses the for_view_only policy scope' do
         expect(Case::BasePolicy::Scope).to receive(:new).with(user, Case::Base.all).and_call_original
-        expect_any_instance_of(Case::BasePolicy::Scope).to receive(:for_view_only).and_call_original
+        expect_any_instance_of(Case::BasePolicy::Scope).to receive(:resolve).and_call_original
         service.call
       end
     end
