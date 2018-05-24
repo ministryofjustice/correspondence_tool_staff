@@ -115,6 +115,11 @@ class Case::BasePolicy < ApplicationPolicy
         check_user_is_an_approver_for_case
   end
 
+  def destroy_case_link?
+    # if we can make a link, we can destroy a link!
+    new_case_link?
+  end
+
   def can_view_attachments?
     clear_failed_checks
     # for flagged case, the state changes to pending_dacu_clearance as soon

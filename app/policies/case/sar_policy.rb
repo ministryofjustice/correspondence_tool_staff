@@ -14,6 +14,11 @@ class Case::SARPolicy < Case::BasePolicy
       check_user_is_a_manager_for_case
   end
 
+  def destroy_case_link?
+    # If we can make a link, we can destroy a link
+    new_case_link?
+  end
+
   def can_close_case?
     clear_failed_checks
     self.case.drafting? &&
