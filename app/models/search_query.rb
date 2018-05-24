@@ -136,9 +136,8 @@ class SearchQuery < ApplicationRecord
 
   def results(cases_list = nil)
     if root.query_type == 'search'
-      cases_list ||= Case::BasePolicy::Scope
-                       .new(User.find(user_id), Case::Base.all)
-                       .for_view_only
+
+      cases_list ||= Pundit.policy_scope(user, Case::Base.all)
       cases_list = cases_list.search(search_text)
     elsif cases_list.nil?
       raise ArgumentError.new("cannot perform filters without list of cases")
