@@ -30,7 +30,7 @@ namespace :sar do
           name: 'Subject Access Request',
           abbreviation: 'SAR',
           internal_time_limit: 10,
-          external_time_limit: 40,
+          external_time_limit: 30,
           escalation_time_limit: 0,
           deadline_calculator_class: 'CalendarDays'
       )
@@ -39,5 +39,3 @@ namespace :sar do
     end
   end
 end
-
-

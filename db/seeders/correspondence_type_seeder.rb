@@ -18,7 +18,7 @@ class CorrespondenceTypeSeeder
                 abbreviation: 'SAR',
                 escalation_time_limit: 0,
                 internal_time_limit: 10,
-                external_time_limit: 40,
+                external_time_limit: 30,
                 deadline_calculator_class: 'CalendarDays')
   end
 end
