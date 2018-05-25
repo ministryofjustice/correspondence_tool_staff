@@ -10,7 +10,7 @@ module CasesHelper
       link_to kase.__send__(field), case_path(kase.id)
     else
       position += 1
-      page_offset = Kaminari.config[:default_per_page] * (page.to_i - 1)
+      page_offset = Kaminari.config.default_per_page * (page.to_i - 1)
       link_to kase.__send__(field), case_path(kase.id, pos: page_offset + position)
     end
 
