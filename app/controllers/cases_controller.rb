@@ -96,12 +96,12 @@ class CasesController < ApplicationController
   def open_cases
     full_list_of_cases = @global_nav_manager.current_page_or_tab.cases
 
-    query_params = params.fetch(:search_query, {}).permit(filter_params).merge(
+    query_list_params = filter_params.merge(
       list_path: request.path,
     )
     service = CaseSearchService.new(user: current_user,
                                     query_type: :list,
-                                    query_params: query_params)
+                                    query_params: query_list_params)
     service.call(full_list_of_cases)
     @query = service.query
     if service.error?
@@ -112,7 +112,6 @@ class CasesController < ApplicationController
       @parent_id = @query.id
       flash[:query_id] = @query.id
     end
-
 
     @filter_crumbs = @query.filter_crumbs
     @current_tab_name = 'all_cases'
@@ -302,10 +301,9 @@ class CasesController < ApplicationController
   end
 
   def search
-    query_params = params.fetch(:search_query, {}).permit(filter_params)
     service = CaseSearchService.new(user: current_user,
                                     query_type: :search,
-                                    query_params: query_params)
+                                    query_params: filter_params)
     service.call
     @query = service.query
     if service.error?
@@ -504,7 +502,7 @@ class CasesController < ApplicationController
   end
 
   def filter_params
-    [
+    params.fetch(:search_query, {}).permit(
       :search_text,
       :parent_id,
       :external_deadline_from,
@@ -523,7 +521,7 @@ class CasesController < ApplicationController
       filter_sensitivity: [],
       filter_status: [],
       filter_timeliness: [],
-    ]
+    )
   end
 
   def search_and_filter(full_list_of_cases = nil)

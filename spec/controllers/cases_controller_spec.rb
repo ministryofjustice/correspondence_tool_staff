@@ -12,16 +12,6 @@ def stub_current_case_finder_cases_with(result)
   gnm
 end
 
-# def stub_global_nav_manager_cases_with(result)
-#   pager = double 'Kaminari Pager', decorate: result
-#   cases_by_deadline = double 'ActiveRecord Cases by Deadline', page: pager
-#   cases = double 'ActiveRecord Cases', by_deadline: cases_by_deadline
-#   page = instance_double GlobalNavManager::Page, cases: cases
-#   gnm = instance_double GlobalNavManager, current_page_or_tab: page
-#   allow(GlobalNavManager).to receive(:new).and_return gnm
-#   gnm
-# end
-
 RSpec.describe CasesController, type: :controller do
 
   let(:all_cases)             { create_list(:case, 5)   }
