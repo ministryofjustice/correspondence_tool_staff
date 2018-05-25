@@ -36,7 +36,7 @@ describe 'assignments/edit.html.slim', type: :view do
     assign(:assignment, assignment)
 
     login_as responder
-    allow_case_policies :can_add_message_to_case?, :request_further_clearance?
+    allow_case_policies :can_add_message_to_case?, :request_further_clearance?, :destroy_case_link?
     disallow_case_policies :new_case_link?
 
     render

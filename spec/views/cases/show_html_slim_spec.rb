@@ -14,6 +14,7 @@ describe 'cases/show.html.slim', type: :view do
       :can_view_attachments?,
       :can_add_message_to_case?,
       :destroy_case?,
+      :destroy_case_link?,
       :extend_for_pit?,
       :request_further_clearance?,
       :new_case_link?
