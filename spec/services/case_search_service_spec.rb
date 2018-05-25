@@ -144,7 +144,6 @@ describe CaseSearchService do
                          external_deadline_to_yyyy: external_deadline_to&.year.to_s,
                        ).permit! }
         let(:search_text) { 'compliance' }
-        # let(:service)     { CaseSearchService.new(user, params) }
 
         context 'first filter applied by user' do
           it 'creates a new search query' do

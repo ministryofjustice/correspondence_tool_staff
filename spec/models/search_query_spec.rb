@@ -23,8 +23,6 @@ describe SearchQuery do
 
     before(:each) do
       @root             = create :search_query, search_text: 'root'
-
-
       @child            = create :search_query, :filter,
                                  parent_id: @root.id,
                                  filter_case_type: ['foi-standard']
@@ -86,7 +84,7 @@ describe SearchQuery do
           :search_query,
           user:        user,
           query_type:  'search',
-          search_text: 'courts',
+          search_text: 'winnie-the-pooh',
         )
       }
       let(:existing_search_query) {
@@ -94,7 +92,7 @@ describe SearchQuery do
           :search_query,
           user:                   user,
           query_type:             'search',
-          search_text:            'courts',
+          search_text:            'winnie-the-pooh',
           parent_id:              parent_search_query.id,
           filter_case_type:       ['foi-standard'],
           filter_sensitivity:     ['trigger'],

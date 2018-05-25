@@ -68,9 +68,7 @@ feature 'filtering by assigned business unit' do
       expected_cases = [:std_draft_foi, :trig_responded_foi]
       filter_and_check_results(open_cases_page, expected_cases)
     end
-
   end
-
 
   def filter_and_check_results(page, expected_cases)
     page.filter_tab_links.assigned_to_tab.click
