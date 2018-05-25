@@ -6,52 +6,42 @@ class CaseSearchService
               :parent,
               :query,
               :query_params,
-              :search_query,
-              :unpaginated_result_set
+              :search_query
 
-  def initialize(current_user, params)
-    @current_user = current_user
-    @params = params.permit!
-    @page = params[:page]
+  def initialize(user:, query_type:, query_params:)
+    @query_params = process_params(query_params)
+    @current_user = user
+    @query_type = query_type
     @error = false
     @error_message = nil
-    @result_set = []
-    @unpaginated_result_set = []
+    @result_set = Case::Base.none
 
-    @query_params = params.require(:search_query)
-    @query_params.permit!
-    @query_params.extract!(:num_results,
-                           :num_clicks,
-                           :highest_position,
-                           :created_at,
-                           :update_at)
-    @query_params = remove_blank_filter_values(@query_params)
-
-    if @query_params[:parent_id]
-      @parent = SearchQuery.find(@query_params[:parent_id])
-      @query_type = :filter
+    if query_params.blank?
+      @query = SearchQuery.new
     else
-      @parent = nil
-      @query_type = :search
-      @query_params[:search_text].strip!
+      @query = SearchQuery.find_or_create(@query_params.merge(
+                                            user_id: @current_user.id,
+                                            query_type: @query_type,
+                                          ))
+      @parent = @query.parent
+
+      unless @query.valid?
+        @error = true
+        if @query.search_text.blank?
+          @error_message = 'Specify what you want to search for'
+        end
+      end
     end
-
-    @query = find_or_initialize_query(@query_params,
-                                      query_type: @query_type,
-                                      user_id: current_user.id)
-
   end
 
   def call(full_list_of_cases = nil)
-    if @query_type == :search && @query_params['search_text'].blank?
-      @error_message = 'Specify what you want to search for'
-      @error = true
+    if @query.valid?
+      @result_set = @query.results(full_list_of_cases)
+      @query.update num_results: @result_set.size
     else
-      @unpaginated_result_set = @query.results(full_list_of_cases)
-      @query.num_results = @unpaginated_result_set.size
-      @query.save!
-      @result_set = @unpaginated_result_set.page(@page).decorate
+      @result_set = Case::Base.none
     end
+    @result_set
   end
 
   def error?
@@ -60,61 +50,19 @@ class CaseSearchService
 
   private
 
-  def remove_blank_filter_values(query_params)
-    stripped_filter_values = query_params
-                               .slice(*SearchQuery.filter_attributes)
-                               .transform_values { |value| value.is_a?(Array) ? value.sort : value }
-                               .transform_values do |values|
-                                 if values.respond_to?(:grep_v)
-                                   values.grep_v('')
-                                 else
-                                   values
-                                 end
-                               end
-    query_params.merge(stripped_filter_values)
+  # Process the params in <tt>@query_params</tt> so that they're suitable for
+  # use by the SeachQuery model.
+  #
+  # We delegate to existing filter classes to figure out what processing is
+  # required for it's params so that we don't have to have complicated logic
+  # here that tries to guess what needs to be done for incoming params.
+  def process_params(params)
+    params[:search_text]&.strip!
+
+    SearchQuery::FILTER_CLASSES.each do |filter_class|
+      filter_class.process_params!(params)
+    end
+    params
   end
 
-  def find_or_initialize_query(query_params, query_type:, user_id:)
-    if query_params.key? :parent_id
-      @parent = SearchQuery.find(query_params[:parent_id])
-      parent_query_params = @parent.slice(*SearchQuery.query_attributes)
-      query_params = parent_query_params.merge(query_params.to_unsafe_h)
-    end
-
-    params_to_match_on = query_params.slice(*SearchQuery.query_attributes).to_h
-    parse_date_params(query_params,params_to_match_on, :external_deadline_from)
-    parse_date_params(query_params,params_to_match_on, :external_deadline_to)
-
-    search_query = SearchQuery
-                     .where(user_id: user_id)
-                     .where('created_at >= ? AND created_at < ?',
-                            Date.today, Date.tomorrow)
-                     .where('query = ?', params_to_match_on.to_json)
-                     .first
-    if search_query.nil?
-      search_query = SearchQuery.new(
-        query_params.merge(
-          query_type: query_type,
-          user_id: user_id,
-          num_results: 0
-        ),
-      )
-    end
-    search_query
-  end
-
-  def parse_date_params(query_params, params_to_match_on, param_name)
-    year_param  = "#{param_name}_yyyy"
-    month_param = "#{param_name}_mm"
-    day_param   = "#{param_name}_dd"
-
-    date_params_present = query_params
-                            .values_at(year_param, month_param, day_param)
-                            .all?(&:present?)
-    if date_params_present
-      params_to_match_on[param_name] = Date.new(query_params[year_param].to_i,
-                                                query_params[month_param].to_i,
-                                                query_params[day_param].to_i)
-    end
-  end
 end

@@ -1,6 +1,12 @@
 class AssignedBusinessUnitFilter
+  include FilterParamParsers
+
   def self.filter_attributes
     [:filter_assigned_to_ids]
+  end
+
+  def self.process_params!(params)
+    process_ids_param(params, :filter_assigned_to_ids)
   end
 
   def initialize(search_query_record, results)
@@ -33,10 +39,10 @@ class AssignedBusinessUnitFilter
                           count: @business_unit_ids.count,
                           first_value: first_business_unit.name,
                           remaining_values_count: @business_unit_ids.count - 1
-      params = @query.query.merge(
+      params = {
         'filter_assigned_to_ids' => [''],
         'parent_id'              => @query.id,
-      )
+      }
       [[crumb_text, params]]
     else
       []

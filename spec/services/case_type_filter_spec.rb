@@ -128,22 +128,8 @@ describe CaseTypeFilter do
       describe 'params that will be submitted when clicking on the crumb' do
         subject { case_type_filter.crumbs[0].second }
 
-        it 'remove the sensitivity filter' do
-          expect(subject).to include 'filter_sensitivity' => ['']
-        end
-
-        it 'leaves the other attributes untouched' do
-          expect(subject).to include(
-                           'search_text'            => 'Winnie the Pooh',
-                           'common_exemption_ids'   => [],
-                           'exemption_ids'          => [],
-                           'filter_assigned_to_ids' => [],
-                           'filter_case_type'       => [],
-                           'filter_status'          => [],
-                           'filter_timeliness'      => [],
-                           'parent_id'              => search_query.id,
-                         )
-        end
+        it { should eq 'filter_sensitivity' => [''],
+                       'parent_id'          => search_query.id }
       end
 
       context 'filtering for non-trigger cases' do
@@ -170,22 +156,8 @@ describe CaseTypeFilter do
         describe 'params that will be submitted when clicking on the crumb' do
           subject { case_type_filter.crumbs[0].second }
 
-          it 'remove the case type filter' do
-            expect(subject).to include 'filter_case_type' => ['']
-          end
-
-          it 'leaves the other attributes untouched' do
-            subject.should include(
-                             'search_text'            => 'Winnie the Pooh',
-                             'common_exemption_ids'   => [],
-                             'exemption_ids'          => [],
-                             'filter_assigned_to_ids' => [],
-                             'filter_sensitivity'     => [],
-                             'filter_status'          => [],
-                             'filter_timeliness'      => [],
-                             'parent_id'              => search_query.id,
-                           )
-          end
+          it { should eq 'filter_case_type' => [''],
+                         'parent_id'          => search_query.id }
         end
       end
 
@@ -224,6 +196,36 @@ describe CaseTypeFilter do
           expect(case_type_filter.crumbs[1].first).to eq 'Trigger'
         end
       end
+    end
+  end
+
+  describe '.process_params!' do
+    it 'processes filter_case_type, sorting and removing blanks' do
+      params = { filter_case_type: [
+                   '',
+                   'foi-standard',
+                   'foi-ir-compliance',
+                   'foi-ir-timeliness',
+                 ] }
+      CaseTypeFilter.process_params!(params)
+      expect(params).to eq filter_case_type: [
+                             'foi-ir-compliance',
+                             'foi-ir-timeliness',
+                             'foi-standard',
+                           ]
+    end
+
+    it 'processes filter_sensitivity, sorting and removing blanks' do
+      params = { filter_sensitivity: [
+                   '',
+                   'trigger',
+                   'non-trigger',
+                 ] }
+      CaseTypeFilter.process_params!(params)
+      expect(params).to eq filter_sensitivity: [
+                          'non-trigger',
+                          'trigger',
+                        ]
     end
   end
 end

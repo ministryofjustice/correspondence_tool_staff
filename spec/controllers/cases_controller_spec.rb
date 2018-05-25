@@ -4,7 +4,7 @@ require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
 def stub_current_case_finder_cases_with(result)
   pager = double 'Kaminari Pager', decorate: result
-  cases_by_deadline = double 'ActiveRecord Cases', page: pager
+  cases_by_deadline = double 'ActiveRecord Cases by Deadline', page: pager
   cases = double 'ActiveRecord Cases', by_deadline: cases_by_deadline
   page = instance_double GlobalNavManager::Page, cases: cases
   gnm = instance_double GlobalNavManager, current_page_or_tab: page
@@ -337,56 +337,6 @@ RSpec.describe CasesController, type: :controller do
         get :incoming_cases, params: { page: 'our_page' }
         expect(gnm.current_page_or_tab.cases.by_deadline)
           .to have_received(:page).with('our_page')
-      end
-    end
-  end
-
-  describe 'GET open' do
-
-    context "as an anonymous user" do
-      it "be redirected to signin if trying to list of questions" do
-        get :open_cases
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
-    context 'as an authenticated disclosure_specialist' do
-      before do
-        sign_in disclosure_specialist
-      end
-
-      it 'assigns the result set from the CaseFinderService' do
-        stub_current_case_finder_cases_with(:open_cases_result)
-        get :open_cases
-        expect(assigns(:cases)).to eq :open_cases_result
-      end
-
-      it 'passes page param to the paginator' do
-        gnm = stub_current_case_finder_cases_with(:open_cases_result)
-        get :open_cases, params: { page: 'our_page' }
-        expect(gnm.current_page_or_tab.cases.by_deadline)
-          .to have_received(:page).with('our_page')
-      end
-
-      it 'renders the index template' do
-        get :open_cases
-        expect(response).to render_template(:index)
-      end
-
-      it 'writes a search query record' do
-        expect{
-          get :open_cases
-        }.to change{SearchQuery.count}.by 1
-      end
-
-      it 'assigns to filter_crumbs' do
-        parent_query = create :search_query, :list
-        params = {
-          search_query: { filter_case_type: ['foi-standard'],
-                          parent_id: parent_query.id}
-        }
-        get :open_cases, params: params
-        expect(assigns(:filter_crumbs)[0][0]).to eq 'FOI - Standard'
       end
     end
   end

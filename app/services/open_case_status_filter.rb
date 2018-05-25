@@ -1,4 +1,5 @@
 class OpenCaseStatusFilter
+  include FilterParamParsers
 
   def self.available_open_case_statuses
     {
@@ -15,6 +16,10 @@ class OpenCaseStatusFilter
 
   def self.filter_attributes
     [:filter_open_case_status]
+  end
+
+  def self.process_params!(params)
+    process_array_param(params, :filter_open_case_status)
   end
 
   def initialize(query, records)
@@ -42,10 +47,10 @@ class OpenCaseStatusFilter
                           count: @query.filter_open_case_status.size,
                           first_value: status_text,
                           remaining_values_count: @query.filter_open_case_status.count - 1
-      params = @query.query.merge(
+      params = {
         'filter_open_case_status' => [''],
         'parent_id'               => @query.id
-      )
+      }
       [[crumb_text, params]]
     else
       []

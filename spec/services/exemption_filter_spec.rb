@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Case::Base do
+describe ExemptionFilter do
 
   before(:all) do
     require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
@@ -106,15 +106,9 @@ describe Case::Base do
       describe 'params that will be submitted when clicking on the crumb' do
         subject { filter.crumbs[0].second }
 
-        it { should include 'search_text'            => "meals" }
-        it { should include 'common_exemption_ids'   => [''] }
-        it { should include 'filter_assigned_to_ids' => [] }
-        it { should include 'filter_case_type'       => [] }
-        it { should include 'exemption_ids'          => [''] }
-        it { should include 'filter_sensitivity'     => [] }
-        it { should include 'filter_status'          => [] }
-        it { should include 'filter_timeliness'      => [] }
-        it { should include 'parent_id'              => search_query.id }
+        it { should eq 'common_exemption_ids' => [''],
+                       'exemption_ids'        => [''],
+                       'parent_id'            => search_query.id }
       end
     end
 
@@ -130,6 +124,14 @@ describe Case::Base do
         expect(filter.crumbs[0].first)
           .to eq '(s22) - Information intended for future publication + 1 more'
       end
+    end
+  end
+
+  describe '.process_params!' do
+    it 'processes exemption_ids, sorting, removing blanks and to_i' do
+      params = { exemption_ids: ['', '3', '1', '2'] }.with_indifferent_access
+      described_class.process_params!(params)
+      expect(params).to eq 'exemption_ids' => [1, 2, 3]
     end
   end
 

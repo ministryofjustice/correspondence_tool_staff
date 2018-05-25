@@ -62,60 +62,63 @@
                          count: tab.cases.count),
                         tab.fullpath_with_query
 
-- if !@cases.nil?
-  .grid-row
-    .column-full.table-container.container
-      table.report.table-font-xsmall
-        colgroup
-          col
-          col
-          col
-          col
-          col
-          col
-          col
-          col
-        thead
-          th scope='col'
-            = t('.number_html')
-          th scope='col'
-            = t('.type')
-          th scope='col'
-            = t('.request')
-          th scope='col'
-            = t('.draft_deadline')
-          th scope='col'
-            = t('.external_deadline')
-          th scope='col'
-            = t('.status')
-          th scope='col'
-            = t('.who_its_with')
-          th scope='col'
-            span.visually-hidden
-              = t('.message_notification')
-        tbody
-          - @cases.each do |kase|
-            tr.case_row
-              td aria-label="#{t('.number')}"
-                span.visually-hidden
-                  = t('.view_case')
-                = link_to kase.number, case_path(kase.id)
-              td aria-label="#{t('.type')}"
-                = "#{kase.pretty_type} "
-                = kase.trigger_case_marker
-              td aria-label="#{t('.request_detail')}"
-                = request_details_html(kase)
-              td aria-label="#{t('.draft_deadline')}"
-                = kase.internal_deadline
-              td aria-label="#{t('.external_deadline')}"
-                = kase.external_deadline
-              td aria-label="#{t('.status')}"
-                = t("state.#{kase.current_state}")
-              td aria-label="#{t('.who_its_with')}"
-                = kase.who_its_with
-              td aria-label="#{t('.message_notification')}"
-                - if kase.message_notification_visible?(current_user)
-                  img { src=image_path('icons/message-bubble.svg')
-                        class="notification-speech-bubble"
-                        alt= "New notifications for case #{kase.number}" }
-      = paginate @cases
+- if @cases.present?
+  - if request.path == '/cases/open'
+    = render partial: 'cases/shared/case_list'
+  - else
+    .grid-row
+      .column-full.table-container.container
+        table.report.table-font-xsmall
+          colgroup
+            col
+            col
+            col
+            col
+            col
+            col
+            col
+            col
+          thead
+            th scope='col'
+              = t('.number_html')
+            th scope='col'
+              = t('.type')
+            th scope='col'
+              = t('.request')
+            th scope='col'
+              = t('.draft_deadline')
+            th scope='col'
+              = t('.external_deadline')
+            th scope='col'
+              = t('.status')
+            th scope='col'
+              = t('.who_its_with')
+            th scope='col'
+              span.visually-hidden
+                = t('.message_notification')
+          tbody
+            - @cases.each do |kase|
+              tr.case_row
+                td aria-label="#{t('.number')}"
+                  span.visually-hidden
+                    = t('.view_case')
+                  = link_to kase.number, case_path(kase.id)
+                td aria-label="#{t('.type')}"
+                  = "#{kase.pretty_type} "
+                  = kase.trigger_case_marker
+                td aria-label="#{t('.request_detail')}"
+                  = request_details_html(kase)
+                td aria-label="#{t('.draft_deadline')}"
+                  = kase.internal_deadline
+                td aria-label="#{t('.external_deadline')}"
+                  = kase.external_deadline
+                td aria-label="#{t('.status')}"
+                  = t("state.#{kase.current_state}")
+                td aria-label="#{t('.who_its_with')}"
+                  = kase.who_its_with
+                td aria-label="#{t('.message_notification')}"
+                  - if kase.message_notification_visible?(current_user)
+                    img { src=image_path('icons/message-bubble.svg')
+                          class="notification-speech-bubble"
+                          alt= "New notifications for case #{kase.number}" }
+        = paginate @cases
