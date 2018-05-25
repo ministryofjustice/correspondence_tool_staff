@@ -31,20 +31,37 @@ class Admin::CasesController < ApplicationController
 
   def new
     if params[:correspondence_type].present?
-      prepare_new_case
+      @correspondence_type = params[:correspondence_type]
+      self.send("prepare_new_#{@correspondence_type}".to_sym)
     else
-    prepare_select_type
+      prepare_select_type
     end
   end
 
-  def prepare_new_case
+  def prepare_new_foi
     @correspondence_type_abbreviation = params[:correspondence_type]
       case_class = correspondence_types_map[@correspondence_type_abbreviation.to_sym].first
       @case = case_class.new
 
-    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: some_method  )
+    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::FOI::Standard' )
     @case = case_creator.new_case
-    @case.responding_team = BusinessUnit.responding.sample
+    @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.foi).sample
+    @case.flag_for_disclosure_specialists = 'no'
+    @target_states = available_target_states
+    @selected_state = 'drafting'
+    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
+
+    render :new
+  end
+
+  def prepare_new_sar
+    @correspondence_type_abbreviation = params[:correspondence_type]
+      case_class = correspondence_types_map[@correspondence_type_abbreviation.to_sym].first
+      @case = case_class.new
+
+    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::SAR' )
+    @case = case_creator.new_case
+    @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.sar).sample
     @case.flag_for_disclosure_specialists = 'no'
     @target_states = available_target_states
     @selected_state = 'drafting'
@@ -52,16 +69,10 @@ class Admin::CasesController < ApplicationController
 
     @case.subject_type = 'member_of_the_public'
     @case.third_party = false
-    @case.subject_full_name = name
+    @case.subject_full_name = "Kiwi man"
+    @case.reply_method = 'send_by_email'
+    @case.email= 'kiwi@kiwi.com'
     render :new
-  end
-
-  def some_method
-    if @correspondence_type_abbreviation == 'sar'
-      'Case::SAR'
-    else
-      'Case::FOI::Standard'
-    end
   end
 
   private
@@ -80,7 +91,7 @@ class Admin::CasesController < ApplicationController
   end
 
   def available_target_states
-    CTS::Cases::Constants::CASE_JOURNEYS[@correspondence_type_abbreviation.to_sym].values.flatten.uniq.sort
+    CTS::Cases::Constants::CASE_JOURNEYS.values.flatten.uniq.sort
   end
 
   def case_params

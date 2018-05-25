@@ -4,15 +4,11 @@
 
 = form_for @case, as: 'case', url: admin_cases_path do |f|
   = hidden_field_tag 'correspondence_type', @correspondence_type_abbreviation
-  = f.hidden_field :type, value: 'case/sar'
+  = f.hidden_field :type, value: 'Case::SAR'
 
   = render partial: 'cases/sar/new_form_common', locals: { f: f }
   = render partial: 'cases/sar/new_form_details', locals: { f: f }
-
-  h2
-    = "Please only select one."
-  / = f.check_box_fieldset :flag_for_disclosure_specialists, [:flagged_for_disclosure_specialist_clearance?]
-
+  
   = f.collection_select :responding_team, BusinessUnit.responding, :id, :name, { selected: @case.responding_team.id }
 
   = f.collection_select :target_state, @target_states, :to_s, :to_s, { selected: @selected_state }

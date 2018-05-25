@@ -437,6 +437,9 @@ en:
       foi:
         new:
           create: Create
+      sar:
+        new:
+          create: Create
 
   assignments:
     accept:
