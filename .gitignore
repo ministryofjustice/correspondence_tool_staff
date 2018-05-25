@@ -30,6 +30,7 @@ env.sh
 
 dump.rdb
 
+node_modules
 
 # Ignore original files left over from merge
 *.orig

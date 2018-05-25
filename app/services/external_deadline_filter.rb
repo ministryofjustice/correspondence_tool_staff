@@ -1,4 +1,5 @@
 class ExternalDeadlineFilter
+  include FilterParamParsers
 
   def self.available_deadlines
     {
@@ -11,6 +12,11 @@ class ExternalDeadlineFilter
 
   def self.filter_attributes
     [:external_deadline_from, :external_deadline_to]
+  end
+
+  def self.process_params!(params)
+    process_date_param(params, 'external_deadline_from')
+    process_date_param(params, 'external_deadline_to')
   end
 
   def initialize(search_query, results)
@@ -38,11 +44,11 @@ class ExternalDeadlineFilter
                           from_date: I18n.l(@search_query.external_deadline_from),
                           to_date: I18n.l(@search_query.external_deadline_to)
 
-      params = @search_query.query.merge(
+      params = {
         'external_deadline_from' => '',
         'external_deadline_to'   => '',
         'parent_id'              => @search_query.id
-      )
+      }
       [[crumb_text, params]]
     else
       []

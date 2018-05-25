@@ -120,7 +120,8 @@ describe 'cases/index.html.slim', type: :view do
     end
 
     it 'renders the paginator' do
-      assign(:cases, Case::Base.none.page.decorate)
+      assigned_case
+      assign(:cases, Case::Base.all.page.decorate)
       assign(:state_selector, StateSelector.new( {} ))
       render
       expect(response).to have_rendered('kaminari/_paginator')

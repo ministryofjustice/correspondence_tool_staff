@@ -38,6 +38,8 @@ module PageObjects
                 '#ct-tab-panel-assigned-to'
 
         elements :filter_crumbs, '.filter-crumb a'
+
+        element :search_results_count, '.search-results-summary'
       end
     end
   end

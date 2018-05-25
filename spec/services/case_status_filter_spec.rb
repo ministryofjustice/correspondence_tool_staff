@@ -104,15 +104,8 @@ describe CaseStatusFilter do
       describe 'params that will be submitted when clicking on the crumb' do
         subject { case_status_filter.crumbs[0].second }
 
-        it { should include 'search_text'            => "Winnie the Pooh" }
-        it { should include 'common_exemption_ids'   => [] }
-        it { should include 'filter_assigned_to_ids' => [] }
-        it { should include 'filter_case_type'       => [] }
-        it { should include 'exemption_ids'          => [] }
-        it { should include 'filter_sensitivity'     => [] }
-        it { should include 'filter_status'          => [''] }
-        it { should include 'filter_timeliness'      => [] }
-        it { should include 'parent_id'              => search_query.id }
+        it { should eq 'filter_status' => [''],
+                       'parent_id'     => search_query.id }
       end
     end
 
@@ -131,6 +124,14 @@ describe CaseStatusFilter do
       it 'uses "Open + 1 more" text for the crumb text' do
         expect(case_status_filter.crumbs[0].first).to eq 'Open + 1 more'
       end
+    end
+  end
+
+  describe '.process_params!' do
+    it 'processes filter_status, sorting and removing blanks' do
+      params = { filter_status: ['', 'open', 'closed'] }
+      described_class.process_params!(params)
+      expect(params).to eq filter_status: ['closed', 'open']
     end
   end
 end

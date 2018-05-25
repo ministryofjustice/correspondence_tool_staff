@@ -202,6 +202,8 @@ Rails.application.routes.draw do
     get 'my_open', on: :collection, to: redirect('/cases/my_open/in_time'), as: :root_my_open
     get 'my_open/:tab' => 'cases#my_open_cases', on: :collection, as: :my_open
     get 'open' => 'cases#open_cases', on: :collection, as: :open
+    get 'open/in_time', to: redirect('/cases/open')
+    get 'open/late',    to: redirect('/cases/open')
     patch 'process_closure', on: :member
     get 'respond', on: :member
     patch 'confirm_respond', on: :member

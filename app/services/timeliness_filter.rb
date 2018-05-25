@@ -1,4 +1,6 @@
 class TimelinessFilter
+  include FilterParamParsers
+
   def self.available_timeliness
     {
       'in_time' => I18n.t('filters.timeliness.in_time'),
@@ -8,6 +10,10 @@ class TimelinessFilter
 
   def self.filter_attributes
     [:filter_timeliness]
+  end
+
+  def self.process_params!(params)
+    process_array_param(params, :filter_timeliness)
   end
 
   def initialize(query, records)
@@ -32,10 +38,10 @@ class TimelinessFilter
                           count: @query.filter_timeliness.size,
                           first_value: timeliness_text,
                           remaining_values_count: @query.filter_timeliness.count - 1
-      params = @query.query.merge(
+      params = {
         'filter_timeliness' => [''],
-        'parent_id'     => @query.id
-      )
+        'parent_id'         => @query.id
+      }
       [[crumb_text, params]]
     else
       []

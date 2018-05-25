@@ -23,8 +23,6 @@ describe SearchQuery do
 
     before(:each) do
       @root             = create :search_query, search_text: 'root'
-
-
       @child            = create :search_query, :filter,
                                  parent_id: @root.id,
                                  filter_case_type: ['foi-standard']
@@ -74,6 +72,123 @@ describe SearchQuery do
                                                  :filter_status,
                                                  :filter_timeliness,
                                                ]
+    end
+  end
+
+  describe 'self.find_or_create' do
+    context 'search queries' do
+      let(:user) { create(:disclosure_bmt_user) }
+
+      let(:parent_search_query) {
+        create(
+          :search_query,
+          user:        user,
+          query_type:  'search',
+          search_text: 'winnie-the-pooh',
+        )
+      }
+      let(:existing_search_query) {
+        create(
+          :search_query,
+          user:                   user,
+          query_type:             'search',
+          search_text:            'winnie-the-pooh',
+          parent_id:              parent_search_query.id,
+          filter_case_type:       ['foi-standard'],
+          filter_sensitivity:     ['trigger'],
+          filter_assigned_to_ids: [12],
+          external_deadline_from: Date.new(2018, 5, 20),
+          external_deadline_to:   Date.new(2018, 5, 30),
+          filter_timeliness:      ['in-time'],
+          exemption_ids:          [21],
+          common_exemption_ids:   [21],
+          filter_status:          ['open'],
+        )
+      }
+      let(:query_params) {
+        ActionController::Parameters.new(
+          user_id:                user.id.to_s,
+          parent_id:              parent_search_query.id.to_s,
+          query_type:             'search',
+          filter_case_type:       ['foi-standard'],
+          filter_sensitivity:     ['trigger'],
+          filter_assigned_to_ids: [12],
+          external_deadline_from: Date.new(2018, 5, 20),
+          external_deadline_to:   Date.new(2018, 5, 30),
+          filter_timeliness:      ['in-time'],
+          exemption_ids:          [21],
+          common_exemption_ids:   [21],
+          filter_status:          ['open'],
+        ).permit!
+      }
+
+      it 'finds matching queries made today' do
+        existing_search_query
+        found_search_query = SearchQuery.find_or_create(query_params)
+        expect(found_search_query).to eq existing_search_query
+      end
+
+      it 'creates a child to the parent if does not match an existing query' do
+        parent_search_query
+        expect {
+          new_search_query = SearchQuery.find_or_create(query_params)
+          expect(new_search_query).to eq SearchQuery.last
+        }.to change(SearchQuery, :count).by(1)
+      end
+
+    end
+
+    context 'list queries' do
+      let(:user) { create(:disclosure_bmt_user) }
+
+      let(:parent_list_query) {
+        create(
+          :list_query,
+          user:       user,
+          query_type: 'list',
+          list_path:  '/cases/open',
+        )
+      }
+      let(:existing_list_query) {
+        create(
+          :list_query,
+          user:                    user,
+          query_type:              'list',
+          list_path:               '/cases/open',
+          parent_id:               parent_list_query.id,
+          filter_case_type:        ['foi-standard'],
+          filter_sensitivity:      ['trigger'],
+          filter_assigned_to_ids:  [12],
+          external_deadline_from:  Date.new(2018, 5, 20),
+          external_deadline_to:    Date.new(2018, 5, 30),
+          filter_timeliness:       ['in-time'],
+          exemption_ids:           [21],
+          common_exemption_ids:    [21],
+          filter_open_case_status: ['unassigned'],
+        )
+      }
+      let(:query_params) {
+        ActionController::Parameters.new(
+          user_id:                 user.id.to_s,
+          parent_id:               parent_list_query.id.to_s,
+          query_type:              'list',
+          filter_case_type:        ['foi-standard'],
+          filter_sensitivity:      ['trigger'],
+          filter_assigned_to_ids:  [12],
+          external_deadline_from:  Date.new(2018, 5, 20),
+          external_deadline_to:    Date.new(2018, 5, 30),
+          filter_timeliness:       ['in-time'],
+          exemption_ids:           [21],
+          common_exemption_ids:    [21],
+          filter_open_case_status: ['unassigned'],
+        ).permit!
+      }
+
+      it 'finds matching queries made today' do
+        existing_list_query
+        found_list_query = SearchQuery.find_or_create(query_params)
+        expect(found_list_query).to eq existing_list_query
+      end
     end
   end
 
@@ -145,17 +260,6 @@ describe SearchQuery do
       end
     end
 
-  end
-
-  describe '.record_list' do
-    let(:user)    { create :manager }
-    let(:params)  { ActiveSupport::HashWithIndifferentAccess.new(action: 'open_cases', tab: 'in_time') }
-
-    it 'writes a record with query_type of list' do
-      rec = SearchQuery.record_list(user, '/open_cases')
-      expect(rec.user_id).to eq user.id
-      expect(rec.list_path).to eq '/open_cases'
-    end
   end
 
   describe '#results' do
@@ -260,7 +364,7 @@ describe SearchQuery do
 
       expect(search_query.params_without_filters)
         .to eq({ 'search_text' => 'Winnie the Pooh',
-                 'list_path'   => '', })
+                 'list_path'   => nil, })
     end
   end
 

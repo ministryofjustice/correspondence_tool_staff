@@ -164,22 +164,36 @@ describe OpenCaseStatusFilter do
       describe 'params that will be submitted when clicking on the crumb' do
         subject { open_case_status_filter.crumbs[0].second }
 
-        it 'remove the sensitivity filter' do
-          expect(subject).to include 'filter_open_case_status' => ['']
-        end
-
-        it 'leaves the other attributes untouched' do
-          expect(subject).to include(
-                               'search_text'            => 'Winnie the Pooh',
-                               'common_exemption_ids'   => [],
-                               'exemption_ids'          => [],
-                               'filter_assigned_to_ids' => [],
-                               'filter_sensitivity'     => [],
-                               'filter_status'          => [],
-                               'parent_id'              => search_query.id,
-                             )
-        end
+        it { should eq 'filter_open_case_status' => [''],
+                       'parent_id'               => search_query.id }
       end
+    end
+  end
+
+  describe '.process_params!' do
+    it 'processes filter_open_case_status, sorting and removing blanks' do
+      params = { filter_open_case_status: [
+                   '',
+                   'unassigned',
+                   'awaiting_responder',
+                   'drafting',
+                   'pending_dacu_clearance',
+                   'pending_press_office_clearance',
+                   'pending_private_office_clearance',
+                   'awaiting_dispatch',
+                   'responded',
+                 ] }
+      described_class.process_params!(params)
+      expect(params).to eq filter_open_case_status: [
+                             'awaiting_dispatch',
+                             'awaiting_responder',
+                             'drafting',
+                             'pending_dacu_clearance',
+                             'pending_press_office_clearance',
+                             'pending_private_office_clearance',
+                             'responded',
+                             'unassigned',
+                           ]
     end
   end
 end
