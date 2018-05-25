@@ -12,8 +12,9 @@
             = 'Case type'
           th
             = 'Request'
-          th
-            = "Action"
+          - if policy(case_details).destroy_case_link?
+            th
+              = "Action"
       tbody
         - if case_details.linked_cases.any?
           - case_details.linked_cases.each do |linked_case|
