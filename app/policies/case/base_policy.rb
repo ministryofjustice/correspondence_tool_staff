@@ -443,11 +443,10 @@ class Case::BasePolicy < ApplicationPolicy
   end
 
   def show?
+    # this is just a catch-all in case we introduce a new type without a corresponding policy for the new type.
+    # For safety sake, we do not allow viewing
     clear_failed_checks
-
-    check(:user_is_a_manager_for_case) ||
-      check(:user_is_a_responder_for_case) ||
-      check(:user_is_an_approver_for_case)
+    false
   end
 
   private

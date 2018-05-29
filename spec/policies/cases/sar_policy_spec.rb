@@ -54,7 +54,7 @@ describe Case::SARPolicy do
         end
       end
 
-      it { should     permit(responder,             unassigned_case) }
+      it { should_not permit(responder,             unassigned_case) }
       it { should_not permit(disclosure_specialist, unassigned_case) }
     end
   end

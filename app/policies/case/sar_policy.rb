@@ -42,8 +42,7 @@ class Case::SARPolicy < Case::BasePolicy
     clear_failed_checks
 
     check(:user_is_a_manager_for_case) ||
-      check(:user_is_a_responder_for_case) ||
-      check(:responding_team_is_linked_to_case)
+      check(:user_is_a_responder_for_case)
   end
 
   def new_case_link?
