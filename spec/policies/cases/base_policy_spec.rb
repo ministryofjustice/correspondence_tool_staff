@@ -729,11 +729,11 @@ describe Case::BasePolicy do
   end
 
   permissions :show? do
-    it { should     permit(manager,               unassigned_case) }
+    it { should_not permit(manager,               unassigned_case) }
     it { should_not permit(responder,             unassigned_case) }
     it { should_not permit(disclosure_specialist, unassigned_case) }
-    it { should     permit(responder,             accepted_case) }
-    it { should     permit(disclosure_specialist, assigned_trigger_case) }
+    it { should_not permit(responder,             accepted_case) }
+    it { should_not permit(disclosure_specialist, assigned_trigger_case) }
   end
   
   permissions :remove_clearance? do
