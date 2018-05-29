@@ -1,27 +1,50 @@
 class ClosedCaseValidator < ActiveModel::Validator
+  # Validations applicable to cases that are closed.
+  CLOSED_VALIDATIONS = {
+    'SAR'=> [:validate_date_responded],
+    'FOI'=> [:validate_date_responded,
+             :validate_info_held_status,
+             :validate_outcome,
+             :validate_refusal_reason,
+             :validate_exemptions]
+  }
+  # Validations applicable to cases that are being processed for closure.
+  #
+  # e.g. missing_info is a virtual attribute which is only used when submitting
+  # the form to close a case, and is only required at that time.
+  PROCESSING_CLOSURE_VALIDATIONS = {
+    'SAR'=> [:validate_tmm],
+    'FOI'=> [],
+  }
 
-  VALIDATION_SELECTOR = {
-                          'SAR'=> [:validate_date_responded,
-                                   :validate_tmm],
-                          'FOI'=> [:validate_date_responded,
-                                   :validate_info_held_status,
-                                   :validate_outcome,
-                                   :validate_refusal_reason,
-                                   :validate_exemptions]
-                               }
   def validate(rec)
-    if rec.prepared_for_close? || rec.current_state == 'closed'
-      if validate_closure_details?(rec)
-        validations = VALIDATION_SELECTOR[rec.type_abbreviation]
-        validations.each do |validation|
-          self.send(validation, rec)
-        end
+    if validate_closure_details?(rec)
+      if rec.current_state == 'closed'
+        run_validations(
+          validations: CLOSED_VALIDATIONS[rec.type_abbreviation],
+          kase: rec
+        )
+      elsif rec.prepared_for_close?
+        run_validations(
+          validations: CLOSED_VALIDATIONS[rec.type_abbreviation],
+          kase: rec
+        )
+        run_validations(
+          validations: PROCESSING_CLOSURE_VALIDATIONS[rec.type_abbreviation],
+          kase: rec
+        )
       end
     end
   end
 
   private
 
+  def run_validations(validations:, kase:)
+    validations.each do |validation|
+      self.__send__(validation, kase)
+    end
+
+  end
   def validate_closure_details?(rec)
     if rec.date_responded.blank?
       true
