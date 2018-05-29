@@ -33,6 +33,7 @@ feature 'adding cases' do
 
     scenario 'creating a case with specific values' do
       admin_cases_page.load
+      
       admin_cases_page.create_case_button.click
       expect(admin_cases_new_page).to be_displayed
       admin_cases_new_page.make_radio_button_choice('case_type_casefoistandard')

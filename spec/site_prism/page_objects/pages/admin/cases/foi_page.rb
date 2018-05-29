@@ -2,8 +2,8 @@ module PageObjects
   module Pages
     module Admin
       module Cases
-        class NewPage < PageObjects::Pages::Base
-          set_url '/admin/cases/new'
+        class FOIPage < PageObjects::Pages::Base
+          set_url '/admin/cases/new/foi'
 
           sections :notices, '.notice-summary' do
             element :heading, '.notice-summary-heading'
