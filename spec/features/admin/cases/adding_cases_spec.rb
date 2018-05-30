@@ -24,28 +24,29 @@ feature 'adding cases' do
     scenario 'creating a case with the default values' do
       admin_cases_page.load
       admin_cases_page.create_case_button.click
-      expect(admin_cases_new_page).to be_displayed
-      admin_cases_new_page.make_radio_button_choice('case_type_casefoistandard')
-      admin_cases_new_page.submit_button.click
+      # expect(admin_cases_new_page).to be_displayed
+      admin_cases_new_page.create_link_for_correspondence('FOI').click
+      admin_cases_new_foi_page.submit_button.click
       expect(admin_cases_page).to be_displayed
       expect(admin_cases_page.case_list.count).to eq 1
     end
 
     scenario 'creating a case with specific values' do
       admin_cases_page.load
-      
-      admin_cases_page.create_case_button.click
-      expect(admin_cases_new_page).to be_displayed
-      admin_cases_new_page.make_radio_button_choice('case_type_casefoistandard')
-      admin_cases_new_page.full_name.set "Test Name"
-      admin_cases_new_page.email.set "test@localhost"
-      admin_cases_new_page.make_radio_button_choice('case_requester_type_journalist')
-      admin_cases_new_page.subject.set "test subject"
-      admin_cases_new_page.full_request.set "test message"
-      admin_cases_new_page.received_date.set 1.business_days.ago.to_date.to_s
-      admin_cases_new_page.created_at.set 1.business_days.ago.to_date.to_s
 
-      admin_cases_new_page.submit_button.click
+      admin_cases_page.create_case_button.click
+      # expect(admin_cases_new_page).to be_displayed
+      admin_cases_new_page.create_link_for_correspondence('FOI').click
+      expect(admin_cases_new_foi_page).to be_displayed
+      admin_cases_new_foi_page.full_name.set "Test Name"
+      admin_cases_new_foi_page.email.set "test@localhost"
+      admin_cases_new_foi_page.make_radio_button_choice('case_type_casefoistandard')
+      admin_cases_new_foi_page.subject.set "test subject"
+      admin_cases_new_foi_page.full_request.set "test message"
+      admin_cases_new_foi_page.received_date.set 1.business_days.ago.to_date.to_s
+      admin_cases_new_foi_page.created_at.set 1.business_days.ago.to_date.to_s
+
+      admin_cases_new_foi_page.submit_button.click
       expect(admin_cases_page).to be_displayed
       expect(admin_cases_page.case_list.count).to eq 1
       kase = Case::FOI::Standard.first
@@ -132,32 +133,33 @@ feature 'adding cases' do
 
   xcontext 'Case::SAR' do
     scenario 'creating a drafting case' do
-      kase = create_case(case_type: 'case_type_casesar', target_state: 'drafting')
+      kase = create_case(correspondence_type: 'SAR', case_type: 'case_type_casesar', target_state: 'drafting')
       expect(kase).to be_instance_of(Case::SAR::NonOffender)
       expect(kase.current_state).to eq 'drafting'
     end
   end
 
 
-  def create_case(case_type:, target_state:, flag: nil)
+  def create_case(correspondence_type: 'FOI', case_type:, target_state:, flag: nil)
     stub_s3_uploader_for_all_files!
     find_or_create :default_press_officer
     find_or_create :default_private_officer
     admin_cases_page.load
     admin_cases_page.create_case_button.click
-    expect(admin_cases_new_page).to be_displayed
+    # expect(admin_cases_new_page).to be_displayed
+    admin_cases_new_page.create_link_for_correspondence('FOI').click
 
-    admin_cases_new_page.make_radio_button_choice(case_type)
+    admin_cases_new_foi_page.make_radio_button_choice(case_type)
 
     case flag
       when 'disclosure'
-        admin_cases_new_page.flag_for_disclosure_specialists.set(true)
+        admin_cases_new_foi_page.flag_for_disclosure_specialists.set(true)
       when 'private'
-        admin_cases_new_page.flag_for_private_office.set(true)
+        admin_cases_new_foi_page.flag_for_private_office.set(true)
     end
 
-    admin_cases_new_page.target_state.select target_state
-    admin_cases_new_page.submit_button.click
+    admin_cases_new_foi_page.target_state.select target_state
+    admin_cases_new_foi_page.submit_button.click
     expect(admin_cases_page).to be_displayed
     expect(admin_cases_page.case_list.count).to eq 1
 
