@@ -18,6 +18,7 @@ module PageObjects
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
 
         section :actions, '.button-holder' do
+          element :assign_to_new_team, '#action--assign-new-team'
           element :upload_response, '#action--upload-response'
           element :mark_as_sent, '#action--mark-response-as-sent'
           element :close_case, '#action--close-case'
