@@ -36,10 +36,11 @@ describe Case::BasePolicy::Scope do
       @unassigned_sar_case          = create :sar_case, name: 'unassigned SAR'
       @awaiting_responder_sar_case  = create :awaiting_responder_sar, name: 'SAR awaiting responder'
       @drafting_sar_case            = create :sar_being_drafted, responder: @responder, name: 'SAR being drafted'
+      @drafting_sar_case_other_team = create :sar_being_drafted, responder: @responder_2, name: 'SAR being drafted'
 
       @all_cases                    = Case::Base.all
       @existing_foi_cases           = Case::FOI::Standard.all
-      @responder_cases              = Case::Base.all - [@unassigned_case, @accepted_case_r2, @rejected_case, @unassigned_sar_case, @awaiting_responder_sar_case]
+      @responder_cases              = Case::Base.all - [@unassigned_sar_case, @awaiting_responder_sar_case, @drafting_sar_case_other_team]
 
     end
 
@@ -55,7 +56,7 @@ describe Case::BasePolicy::Scope do
       end
 
       context 'responders' do
-        it 'returns only cases assigned to their team' do
+        it 'returns all FOI cases plus SAR cases assigned to their team' do
           responder_scope = Pundit.policy_scope(@responder, Case::Base)
           expect(responder_scope).to match_array(@responder_cases)
         end

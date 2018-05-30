@@ -16,8 +16,7 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
       end
 
       if user.responder?
-        case_ids = Assignment.with_teams(user.responding_teams).pluck(:case_id)
-        scopes << -> (inner_scope) { inner_scope.where(id: case_ids) }
+        scopes << -> (inner_scope) { inner_scope.all }
       end
 
       if user.approver?
