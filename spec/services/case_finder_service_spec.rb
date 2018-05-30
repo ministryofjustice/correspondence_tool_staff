@@ -111,11 +111,7 @@ describe CaseFinderService do
     describe '#for_user' do
       it 'returns a finder that with a finder scoped to the users cases' do
         finder = CaseFinderService.new(@responder)
-        expect(finder.for_user.scope).to match_array [
-                                           @assigned_newer_case,
-                                           @assigned_older_case,
-                                           @accepted_case
-                                         ]
+        expect(finder.for_user.scope).to match_array Case::Base.all
       end
     end
 
