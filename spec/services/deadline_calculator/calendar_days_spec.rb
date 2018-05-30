@@ -7,9 +7,9 @@ describe DeadlineCalculator::CalendarDays do
 
   context 'SAR case' do
     describe 'escalation deadline' do
-      it 'is 3 calendar days after the date of creation' do
+      it 'is 1 calendar day before creation' do
         expect(deadline_calculator.escalation_deadline)
-          .to eq 3.days.since(sar_case.created_at.to_date)
+          .to eq sar_case.created_at.to_date - 1.day
       end
     end
 

@@ -26,7 +26,7 @@ FactoryGirl.define do
   factory :sar_correspondence_type, parent: :correspondence_type do
     name 'Subject Access Request'
     abbreviation 'SAR'
-    escalation_time_limit 3
+    escalation_time_limit(-1)
     internal_time_limit 10
     external_time_limit 30
     deadline_calculator_class 'CalendarDays'

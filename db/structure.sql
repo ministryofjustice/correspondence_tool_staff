@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.9
--- Dumped by pg_dump version 9.5.9
+-- Dumped from database version 9.5.6
+-- Dumped by pg_dump version 9.5.6
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -190,8 +190,7 @@ CREATE TABLE case_attachments (
     key character varying,
     preview_key character varying,
     upload_group character varying,
-    user_id integer,
-    state character varying DEFAULT 'unprocessed'::character varying NOT NULL
+    user_id integer
 );
 
 
@@ -352,8 +351,8 @@ CREATE TABLE cases (
     info_held_status_id integer,
     type character varying,
     appeal_outcome_id integer,
-    document_tsvector tsvector,
-    dirty boolean DEFAULT false
+    dirty boolean DEFAULT false,
+    document_tsvector tsvector
 );
 
 
@@ -815,15 +814,6 @@ CREATE SEQUENCE teams_users_roles_id_seq
 --
 
 ALTER SEQUENCE teams_users_roles_id_seq OWNED BY teams_users_roles.id;
-
-
---
--- Name: test_json; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE test_json (
-    data text
-);
 
 
 --
@@ -1607,7 +1597,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180214163355'),
 ('20180222125345'),
 ('20180228174550'),
-('20180319202822'),
 ('20180321094200'),
 ('20180322183946'),
 ('20180406145035'),
@@ -1620,6 +1609,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180508131152'),
 ('20180517140929'),
 ('20180522132456'),
-('20180524132031');
+('20180524132031'),
+('20180530110444');
 
 
