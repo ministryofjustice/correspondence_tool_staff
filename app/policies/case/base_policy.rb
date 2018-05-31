@@ -172,7 +172,7 @@ class Case::BasePolicy < ApplicationPolicy
   end
 
   def can_download_stats?
-    user.manager?
+    user.manager? || user.responder?
   end
 
   def can_flag_for_clearance?
