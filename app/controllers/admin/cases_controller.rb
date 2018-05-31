@@ -7,20 +7,19 @@ class Admin::CasesController < ApplicationController
 
   def create
     @correspondence_type_abbreviation = params.fetch(:correspondence_type)
-
-    params = create_params(@correspondence_type_abbreviation)
+    case_params = params[case_and_type]
 
     prepare_flagged_options_for_creation(params)
-    case_creator = CTS::Cases::Create.new(Rails.logger, params[:case])
+    case_creator = CTS::Cases::Create.new(Rails.logger, case_params)
     @case = case_creator.new_case
-    @selected_state = params[:case][:target_state]
+    @selected_state = case_params[:target_state]
     if @case.valid?
       case_creator.call([@selected_state], @case)
       flash[:notice] = "Case created: #{@case.number}"
       redirect_to(admin_cases_path)
     else
       @case.responding_team = BusinessUnit.find(
-        params[:case][:responding_team]
+        params[:responding_team]
       )
       prepare_flagged_options_for_displaying
       @target_states = available_target_states
@@ -104,15 +103,13 @@ class Admin::CasesController < ApplicationController
       :type,
       :requester_type,
       :name,
-      :subject_full_name,
-      :third_party,
-      :subject_type,
       :postal_address,
       :email,
       :subject,
       :message,
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :delivery_method,
+      :target_state,
       :flag_for_disclosure_specialists,
       uploaded_request_files: [],
     )
@@ -133,6 +130,7 @@ class Admin::CasesController < ApplicationController
       :subject_type,
       :third_party,
       :reply_method,
+      :target_state,
       uploaded_request_files: [],
     ).merge(type: "Case::SAR")
   end
@@ -161,7 +159,7 @@ class Admin::CasesController < ApplicationController
     if param_flag_for_ds? && !param_flag_for_press? && !param_flag_for_private?
       params[:case][:flag_for_disclosure] = true
     else
-      params[:case][:flag_for_team] = gather_teams_for_flagging.join(',')
+      # params[:case][:flag_for_team] = gather_teams_for_flagging.join(',')
     end
   end
 
@@ -178,5 +176,9 @@ class Admin::CasesController < ApplicationController
             Case::FOI::ComplianceReview],
       sar: [Case::SAR],
     }.with_indifferent_access
+  end
+
+  def case_and_type
+    "case_#{@correspondence_type_abbreviation}".to_sym
   end
 end
