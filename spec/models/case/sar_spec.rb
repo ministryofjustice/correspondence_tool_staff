@@ -87,6 +87,13 @@ describe Case::SAR do
     end
   end
 
+  describe '#within_escalation_deadline?' do
+    it 'returns false' do
+      sar = build(:sar_case)
+      expect(sar.within_escalation_deadline?).to be_falsey
+    end
+  end
+
   describe '#uploaded_request_files' do
     it 'validates presence if message is missing' do
       kase = build :sar_case, uploaded_request_files: [], message: ''
