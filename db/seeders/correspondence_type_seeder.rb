@@ -16,7 +16,7 @@ class CorrespondenceTypeSeeder
     rec = CorrespondenceType.new if rec.nil?
     rec.update!(name: 'Subject Access Request',
                 abbreviation: 'SAR',
-                escalation_time_limit: 0,
+                escalation_time_limit: -1,
                 internal_time_limit: 10,
                 external_time_limit: 30,
                 deadline_calculator_class: 'CalendarDays')
