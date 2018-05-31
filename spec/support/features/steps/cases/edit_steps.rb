@@ -8,6 +8,6 @@ def edit_case_step(kase:, subject: nil)
 
   if subject
     expect(cases_show_page.page_heading.heading.text)
-      .to eq "Case subject, #{subject}"
+        .to eq "Case subject, #{subject}"
   end
 end
