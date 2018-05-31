@@ -662,7 +662,8 @@ class CasesController < ApplicationController
 
   def edit_params(correspondence_type)
     case correspondence_type
-    when 'foi' then edit_foi_params
+      when 'foi' then edit_foi_params
+      when 'sar' then edit_sar_params
     end
   end
 
@@ -678,6 +679,22 @@ class CasesController < ApplicationController
       :delivery_method,
       :flag_for_disclosure_specialists,
       uploaded_request_files: [],
+    )
+  end
+
+  def edit_sar_params
+    params.require(:case_sar).permit(
+        :subject_full_name,
+        :subject_type,
+        :third_party,
+        :name,
+        :received_date_dd, :received_date_mm, :received_date_yyyy,
+        :subject,
+        :message,
+        :flag_for_disclosure_specialists,
+        :reply_method,
+        :email,
+        :postal_address
     )
   end
 
