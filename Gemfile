@@ -45,7 +45,7 @@ gem 'sentry-raven', '~> 2.6.3'
 gem 'slim-rails', '~> 3.1'
 gem 'shell-spinner'
 gem 'schema_plus_enums', '~> 0.1'
-gem 'sidekiq', '~> 5.0'
+gem 'sidekiq', '~> 5.1'
 gem 'sidekiq-logging-json', '~> 0.0.18'
 gem 'sidekiq-scheduler'
 
