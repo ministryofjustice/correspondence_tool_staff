@@ -17,7 +17,7 @@ describe 'cases/search.html.slim', type: :view do
   context 'no search query' do
     before :each do
       assign(:cases,[])
-      assign(:query, create(:search_query, search_text: ''))
+      assign(:query, build(:search_query, search_text: ''))
       assign(:action_url, '/cases/search')
       render
       cases_search_page.load(rendered)

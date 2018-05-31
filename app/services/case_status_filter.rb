@@ -1,4 +1,6 @@
 class CaseStatusFilter
+  include FilterParamParsers
+
   def self.available_statuses
     {
       'open'   => I18n.t('filters.statuses.open'),
@@ -8,6 +10,10 @@ class CaseStatusFilter
 
   def self.filter_attributes
     [:filter_status]
+  end
+
+  def self.process_params!(params)
+    process_array_param(params, :filter_status)
   end
 
   def initialize(query, records)
@@ -32,10 +38,10 @@ class CaseStatusFilter
                           count: @query.filter_status.size,
                           first_value: status_text,
                           remaining_values_count: @query.filter_status.count - 1
-      params = @query.query.merge(
+      params = {
         'filter_status' => [''],
         'parent_id'     => @query.id
-      )
+      }
       [[crumb_text, params]]
     else
       []

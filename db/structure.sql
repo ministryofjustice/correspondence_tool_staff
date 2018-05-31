@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.9
--- Dumped by pg_dump version 9.5.9
+-- Dumped from database version 9.5.6
+-- Dumped by pg_dump version 9.5.6
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -616,7 +616,7 @@ CREATE TABLE search_queries (
     id integer NOT NULL,
     user_id integer NOT NULL,
     query jsonb NOT NULL,
-    num_results integer NOT NULL,
+    num_results integer DEFAULT 0 NOT NULL,
     num_clicks integer DEFAULT 0 NOT NULL,
     highest_position integer,
     created_at timestamp without time zone NOT NULL,
@@ -1607,6 +1607,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180420173415'),
 ('20180424150445'),
 ('20180508131152'),
-('20180517140929');
+('20180517140929'),
+('20180522132456'),
+('20180524132031');
 
 

@@ -690,7 +690,7 @@ RSpec.describe AssignmentsController, type: :controller do
         expect(response).to redirect_to case_path kase
       end
 
-      it 'sets flash and returns to assign_new_team action if service fails' do
+      it 'sets flash and returns to assign_to_new_team action if service fails' do
         service = double AssignNewTeamService
         expect(AssignNewTeamService).to receive(:new).with(manager, params).and_return(service)
         expect(service).to receive(:call)
@@ -754,7 +754,7 @@ RSpec.describe AssignmentsController, type: :controller do
         expect(response).to redirect_to open_cases_path
       end
 
-      it 'sets flash and returns to assign_new_team action if service fails' do
+      it 'sets flash and returns to assign_to_new_team action if service fails' do
         service = double CaseAssignResponderService
         expect(CaseAssignResponderService).to receive(:new).with(manager, params).and_return(service)
         expect(service).to receive(:call)

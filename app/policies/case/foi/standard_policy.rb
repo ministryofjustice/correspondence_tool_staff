@@ -1,4 +1,41 @@
 class Case::FOI::StandardPolicy < Case::BasePolicy
+
+  class Scope
+    attr_reader :user, :scope
+
+
+    def initialize(user, scope)
+      @user  = user
+      @scope = scope
+    end
+
+    def resolve
+      scopes = []
+      if user.manager?
+        scopes << ->(inner_scope) { inner_scope.all }
+      end
+
+      if user.responder?
+        scopes << -> (inner_scope) { inner_scope.all }
+      end
+
+      if user.approver?
+        scopes << ->(inner_scope) { inner_scope.all }
+      end
+
+      if scopes.present?
+        final_scope = scopes.shift.call(scope)
+        scopes.each do |scope_func|
+          final_scope.or(scope_func.call(scope))
+        end
+        final_scope
+      else
+        Case::FOI::Standard.none
+      end
+    end
+  end
+
+
   def can_request_further_clearance?
     clear_failed_checks
 

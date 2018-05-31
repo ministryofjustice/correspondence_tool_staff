@@ -17,8 +17,12 @@ feature 'SAR Case creation by a manager' do
   scenario 'creating a case that does not need clearance', js: true do
     create_sar_case_step
 
-    assign_case_step business_unit: responder.responding_teams.first
+    responding_team = responder.responding_teams.first
+    assign_case_step business_unit: responding_team
 
+    # Clearance level should display deputy director
+    expect(cases_show_page.clearance_levels.basic_details.deputy_director.text)
+      .to include responding_team.team_lead
   end
 
   # scenario 'creating a case with request attachments', js: true  do

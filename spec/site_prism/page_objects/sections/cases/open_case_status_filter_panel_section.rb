@@ -10,6 +10,10 @@ module PageObjects
                 '#search_query_filter_open_case_status_unassigned',
                 visible: false
 
+        element :responded_checkbox,
+                '#search_query_filter_open_case_status_responded',
+                visible: false
+
         element :apply_filter_button, '.button[value="Apply filter"]'
       end
     end

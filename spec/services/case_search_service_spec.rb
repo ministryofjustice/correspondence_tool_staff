@@ -19,20 +19,18 @@ describe CaseSearchService do
       DbHousekeeping.clean
     end
 
-    let(:service)      { CaseSearchService.new(user, params) }
+    let(:service)      { CaseSearchService.new(user: user,
+                                               query_type: :search,
+                                               query_params: params) }
     let(:params)       { ActionController::Parameters.new(
-                           {
-                             search_query: { search_text: specific_query },
-                             controller: 'cases',
-                             action: 'search'
-                           }
-                         ) }
+                           search_text: specific_query
+                         ).permit! }
 
     context 'use of the policy scope' do
       let(:specific_query)    { 'my scoped query' }
       it 'uses the for_view_only policy scope' do
         expect(Case::BasePolicy::Scope).to receive(:new).with(user, Case::Base.all).and_call_original
-        expect_any_instance_of(Case::BasePolicy::Scope).to receive(:for_view_only).and_call_original
+        expect_any_instance_of(Case::BasePolicy::Scope).to receive(:resolve).and_call_original
         service.call
       end
     end
@@ -122,24 +120,6 @@ describe CaseSearchService do
               end
             end
           end
-
-          context 'pagination' do
-            it 'passes the page param to the paginator' do
-              paged_cases = double('Paged Cases', decorate: [])
-              cases = double('Cases', page: paged_cases, empty?: true, size: 0)
-              allow(Case::Base).to receive(:search).and_return(cases)
-              params = ActionController::Parameters.new(
-                {
-                  search_query: { search_text: 'xx' },
-                  page: '3',
-                  controller: 'cases',
-                  action: 'search'
-                })
-              service = CaseSearchService.new(user, params)
-              service.call
-              expect(cases).to have_received(:page).with('3')
-            end
-          end
         end
       end
 
@@ -153,22 +133,17 @@ describe CaseSearchService do
         let(:external_deadline_to)       { 10.business_days.from_now.to_date }
 
         let(:params) { ActionController::Parameters.new(
-                         {
-                           search_query: {
-                             parent_id: parent_search_query.id,
-                             filter_case_type: filter_case_type,
-                             filter_sensitivity: filter_sensitivity,
-                             external_deadline_from_dd: external_deadline_from&.day.to_s,
-                             external_deadline_from_mm: external_deadline_from&.month.to_s,
-                             external_deadline_from_yyyy: external_deadline_from&.year.to_s,
-                             external_deadline_to_dd: external_deadline_to&.day.to_s,
-                             external_deadline_to_mm: external_deadline_to&.month.to_s,
-                             external_deadline_to_yyyy: external_deadline_to&.year.to_s,
-                           },
-                         }
-                       ) }
+                         parent_id: parent_search_query.id,
+                         filter_case_type: filter_case_type,
+                         filter_sensitivity: filter_sensitivity,
+                         external_deadline_from_dd: external_deadline_from&.day.to_s,
+                         external_deadline_from_mm: external_deadline_from&.month.to_s,
+                         external_deadline_from_yyyy: external_deadline_from&.year.to_s,
+                         external_deadline_to_dd: external_deadline_to&.day.to_s,
+                         external_deadline_to_mm: external_deadline_to&.month.to_s,
+                         external_deadline_to_yyyy: external_deadline_to&.year.to_s,
+                       ).permit! }
         let(:search_text) { 'compliance' }
-        let(:service)     { CaseSearchService.new(user, params) }
 
         context 'first filter applied by user' do
           it 'creates a new search query' do
@@ -181,7 +156,7 @@ describe CaseSearchService do
             before(:each) { service.call }
             subject       { SearchQuery.last }
 
-            it { should have_attributes query_type: 'filter' }
+            it { should have_attributes query_type: 'search' }
             it { should have_attributes user_id: user.id }
             it { should have_attributes search_text: 'compliance' }
             it { should have_attributes parent_id: parent_search_query.id }
@@ -209,7 +184,7 @@ describe CaseSearchService do
             before(:each) { service.call }
             subject       { SearchQuery.last }
 
-            it { should have_attributes query_type: 'filter' }
+            it { should have_attributes query_type: 'search' }
             it { should have_attributes user_id: user.id }
             it { should have_attributes search_text: 'compliance' }
             it { should have_attributes parent_id: parent_search_query.id }
@@ -224,8 +199,9 @@ describe CaseSearchService do
         context 'search and filters have already been used by this user' do
           it 'retrieves the existing SearchQuery' do
 
-            existing_search_query = create :search_query, :filter,
+            existing_search_query = create :search_query,
                                            search_text: search_text,
+                                           list_path: nil,
                                            user: user,
                                            parent_id: parent_search_query.id,
                                            filter_case_type: ['foi-standard'],
@@ -237,14 +213,12 @@ describe CaseSearchService do
         end
 
         it 'performs the search/filter using the SearchQuery' do
-          expected_results = spy('expected results')
-          search_query = instance_double(SearchQuery,
-                                         results: expected_results,
-                                         :num_results= => nil,
-                                         save!: nil)
+          expected_results = spy('expected results', size: 1)
+          search_query = create(:search_query)
+          allow(search_query).to receive(:results).and_return(expected_results)
           allow(SearchQuery).to receive(:new).and_return(search_query)
           service.call
-          expect(service.unpaginated_result_set).to eq expected_results
+          expect(service.result_set).to eq expected_results
         end
 
         describe 'search results' do
@@ -258,7 +232,7 @@ describe CaseSearchService do
 
             it 'is used' do
               service.call
-              expect(service.unpaginated_result_set)
+              expect(service.result_set)
                 .to match_array [@setup.trig_closed_foi]
             end
           end
@@ -269,7 +243,7 @@ describe CaseSearchService do
 
             it 'is used' do
               service.call
-              expect(service.unpaginated_result_set)
+              expect(service.result_set)
                 .to match_array [@setup.trig_closed_foi]
             end
           end
@@ -280,7 +254,7 @@ describe CaseSearchService do
 
             it 'is used' do
               service.call
-              expect(service.unpaginated_result_set)
+              expect(service.result_set)
                 .to match_array [
                       @setup.std_draft_foi,
                       @setup.trig_closed_foi,
@@ -296,7 +270,7 @@ describe CaseSearchService do
             it 'is used' do
               @setup.std_draft_foi.update(external_deadline: 2.business_days.from_now)
               service.call
-              expect(service.unpaginated_result_set)
+              expect(service.result_set)
                 .to match_array [
                       @setup.std_draft_foi,
                     ]
@@ -319,12 +293,9 @@ describe CaseSearchService do
           let(:filter_case_type)   { ['foi-standard'] }
           let(:filter_sensitivity) { ['trigger', 'non-trigger'] }
           let(:params)       { ActionController::Parameters.new(
-              {
-                  search_query: { search_text: 'case', filter_sensitivity: ['trigger'] },
-                  controller: 'cases',
-                  action: 'search'
-              }
-          ) }
+                                 search_text: 'case',
+                                 filter_sensitivity: ['trigger'],
+                               ).permit! }
 
           it 'creates a new record' do
             create :search_query,
@@ -344,19 +315,17 @@ describe CaseSearchService do
 
     context 'filtering on list results' do
       let!(:parent_search_query)   { create :search_query, :list }
-      let(:service)                { CaseSearchService.new(user, params) }
+      let(:service)                { CaseSearchService.new(user: user,
+                                                           query_type: :list,
+                                                           query_params: params) }
       let(:filter_case_type)       { ['', 'foi-standard'] }
       let(:filter_sensitivity)     { [''] }
       let(:full_list_of_cases)     { Case::Base.all }
       let(:params)    { ActionController::Parameters.new(
-          {
-              search_query: {
-                  parent_id: parent_search_query.id,
-                  filter_case_type: filter_case_type,
-                  filter_sensitivity: filter_sensitivity,
-              }
-          })
-      }
+                          parent_id: parent_search_query.id,
+                          filter_case_type: filter_case_type,
+                          filter_sensitivity: filter_sensitivity,
+                        ).permit! }
 
       context 'first_filter applied by user' do
 
@@ -372,7 +341,7 @@ describe CaseSearchService do
         before(:each) { service.call(full_list_of_cases) }
         subject       { SearchQuery.last }
 
-        it { should have_attributes query_type: 'filter' }
+        it { should have_attributes query_type: 'list' }
         it { should have_attributes user_id: user.id }
         it { should have_attributes search_text: nil }
         it { should have_attributes list_path: parent_search_query.list_path }
@@ -383,14 +352,10 @@ describe CaseSearchService do
 
       context 'user has another filter applied' do
         let(:params)    { ActionController::Parameters.new(
-            {
-                search_query: {
-                    parent_id: child_search_query.id,
-                    filter_case_type: filter_case_type,
-                    filter_sensitivity: filter_sensitivity,
-                }
-            })
-        }
+                            parent_id: child_search_query.id,
+                            filter_case_type: filter_case_type,
+                            filter_sensitivity: filter_sensitivity,
+                          ).permit! }
         let!(:child_search_query) { create :search_query,
                                             :filtered_list,
                                             user_id: user.id,

@@ -9,11 +9,6 @@ EXPOSE $PUMA_PORT
 RUN apt-get update && apt-get install -y apt-transport-https && \
     rm -rf /var/lib/apt/lists/*
 
-# add official nodejs repo
-RUN . /etc/os-release ; release="${VERSION#* (}" ; release="${release%)}" ; \
-    curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
-    echo "deb https://deb.nodesource.com/node $release main" > /etc/apt/sources.list.d/nodesource.list
-
 # Add the PostgreSQL PGP key to verify their Debian packages.
 # It should be the same key as https://www.postgresql.org/media/keys/ACCC4CF8.asc
 RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8

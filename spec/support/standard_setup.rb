@@ -75,187 +75,312 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
       private_officer:                -> { [ private_officer_user, private_office_team ] },
     }
 
+    # Each case is created in a lambda so that it can be conditionally created
+    # depending on how StandardSetup is instantiated (see the only_cases arg). 
     @@cases = {
-      std_unassigned_foi:           -> { create(:case,
-                                                identifier: 'std_unassigned_foi') },
-      std_awresp_foi:               -> { create(:assigned_case,
-                                                responding_team: responding_team,
-                                                identifier: 'std_awresp_foi') },
-      std_draft_foi:                -> { create(:accepted_case,
-                                                responder: responder_user,
-                                                identifier: 'std_draft_foi') },
-      std_draft_foi_late:           -> { create(:accepted_case,
-                                                responder: responder_user,
-                                                received_date: 25.business_days.ago,
-                                                identifier: 'std_draft_foi_late') },
-      std_awdis_foi:                -> { create(:case_with_response,
-                                                responder: responder_user,
-                                                identifier: 'std_awdis_foi') },
-      std_responded_foi:            -> { create(:responded_case,
-                                                responder: responder_user,
-                                                identifier: 'std_responded_foi') },
-      std_responded_foi_late:       -> { create(:responded_case,
-                                                responder: responder_user,
-                                                received_date: 25.business_days.ago,
-                                                date_responded: 1.business_days.ago,
-                                                identifier: 'std_responded_foi_late')},
-      std_closed_foi:               -> { create(:closed_case,
-                                                identifier: 'std_closed_foi') },
-      std_closed_foi_late:          -> { create(:closed_case,
-                                                received_date: 25.business_days.ago,
-                                                date_responded: 1.business_days.ago,
-                                                identifier: 'std_closed_foi_late') },
-      trig_unassigned_foi_accepted: -> { create(:case,
-                                                :flagged_accepted,
-                                                :dacu_disclosure,
-                                                approver: disclosure_specialist_user,
-                                                identifier: 'trig_unassigned_foi_accepted') },
-      trig_unassigned_foi:          -> { create(:case,
-                                                :flagged,
-                                                :dacu_disclosure,
-                                                identifier: 'trig_unassigned_foi') },
-      trig_awresp_foi_accepted:     -> { create(:assigned_case,
-                                                :flagged_accepted,
-                                                :dacu_disclosure,
-                                                approver: disclosure_specialist_user,
-                                                responding_team: responding_team,
-                                                identifier: 'trig_awresp_foi_accepted') },
-      trig_awresp_foi:              -> { create(:assigned_case,
-                                                :flagged,
-                                                :dacu_disclosure,
-                                                responding_team: responding_team,
-                                                identifier: 'trig_awresp_foi') },
-      trig_draft_foi_accepted:      -> { create(:accepted_case,
-                                                :flagged_accepted,
-                                                :dacu_disclosure,
-                                                responder: responder_user,
-                                                approver: disclosure_specialist_user,
-                                                identifier: 'trig_draft_foi_accepted') },
-      trig_draft_foi_accepted_late: -> { create(:accepted_case,
-                                                :flagged_accepted,
-                                                :dacu_disclosure,
-                                                responder: responder_user,
-                                                approver: disclosure_specialist_user,
-                                                received_date: 25.business_days.ago,
-                                                identifier: 'trig_draft_foi_accepted_late') },
-      trig_draft_foi:               -> { create(:accepted_case,
-                                                :flagged,
-                                                :dacu_disclosure,
-                                                responder: responder_user,
-                                                identifier: 'trig_draft_foi') },
-      trig_draft_foi_late:          -> { create(:accepted_case,
-                                                :flagged,
-                                                :dacu_disclosure,
-                                                responder: responder_user,
-                                                received_date: 25.business_days.ago,
-                                                identifier: 'trig_draft_foi_late') },
-      trig_pdacu_foi_accepted:      -> { create(:pending_dacu_clearance_case,
-                                                approver: disclosure_specialist_user,
-                                                responder: responder_user,
-                                                identifier: 'trig_pdacu_foi_accepted') },
-      trig_pdacu_foi:               -> { create(:unaccepted_pending_dacu_clearance_case,
-                                                responder: responder_user,
-                                                identifier: 'trig_pdacu_foi') },
-      trig_awdis_foi:               -> { create(:case_with_response,
-                                                :flagged_accepted,
-                                                :dacu_disclosure,
-                                                responder: responder_user,
-                                                approver: disclosure_specialist_user,
-                                                identifier: 'trig_awdis_foi') },
-      trig_responded_foi:           -> { create(:responded_case,
-                                                :flagged_accepted,
-                                                :dacu_disclosure,
-                                                responder: responder_user,
-                                                approver: disclosure_specialist_user,
-                                                identifier: 'trig_responded_foi') },
-      trig_closed_foi:              -> { create(:closed_case,
-                                                :flagged_accepted,
-                                                :dacu_disclosure,
-                                                responder: responder_user,
-                                                approver: disclosure_specialist_user,
-                                                identifier: 'trig_closed_foi') },
-      trig_closed_foi_late:         -> { create(:closed_case,
-                                                :flagged_accepted,
-                                                :dacu_disclosure,
-                                                responder: responder_user,
-                                                approver: disclosure_specialist_user,
-                                                received_date: 25.business_days.ago,
-                                                date_responded: 1.business_days.ago,
-                                                identifier: 'trig_closed_foi_late') },
-      full_unassigned_foi:          -> { create(:case,
-                                                :flagged,
-                                                :press_office,
-                                                responder: responder_user,
-                                                identifier: 'full_unassigned_foi') },
-      full_awresp_foi:              -> { create(:assigned_case,
-                                                :flagged,
-                                                :press_office,
-                                                responding_team: responding_team,
-                                                identifier: 'full_awresp_foi') },
-      full_awresp_foi_accepted:     -> { create(:assigned_case,
-                                                :flagged_accepted,
-                                                :press_office,
-                                                responding_team: responding_team,
-                                                identifier: 'full_awresp_foi_accepted') },
-      full_draft_foi:               -> { create(:accepted_case,
-                                                :flagged,
-                                                :press_office,
-                                                responder: responder_user,
-                                                identifier: 'full_draft_foi') },
-      full_pdacu_foi_accepted:      -> { create(:pending_dacu_clearance_case_flagged_for_press_and_private,
-                                                approver: disclosure_specialist_user,
-                                                responder: responder_user,
-                                                identifier: 'full_pdacu_foi_accepted') },
-      full_pdacu_foi_unaccepted:    -> { create(:unaccepted_pending_dacu_clearance_case_flagged_for_press_and_private,
-                                                responder: responder_user,
-                                                identifier: 'full_pdacu_foi_unaccepted') },
-      full_ppress_foi:              -> { create(:pending_press_clearance_case,
-                                                approver: disclosure_specialist_user,
-                                                responder: responder_user,
-                                                identifier: 'full_ppress_foi') },
-      full_ppress_foi_accepted:     -> { create(:pending_press_clearance_case,
-                                                approver: disclosure_specialist_user,
-                                                press_officer: press_officer_user,
-                                                private_officer: private_officer_user,
-                                                responder: responder_user,
-                                                identifier: 'full_ppress_foi_accepted') },
-      full_pprivate_foi:            -> { create(:pending_private_clearance_case,
-                                                approver: disclosure_specialist_user,
-                                                responder: responder_user,
-                                                identifier: 'full_pprivate_foi') },
-      full_pprivate_foi_accepted:   -> { create(:pending_private_clearance_case,
-                                                approver: disclosure_specialist_user,
-                                                press_officer: press_officer_user,
-                                                private_officer: private_officer_user,
-                                                responder: responder_user,
-                                                identifier: 'full_pprivate_foi_accepted') },
-      full_awdis_foi:               -> { create(:case_with_response,
-                                                :flagged_accepted,
-                                                :press_office,
-                                                responder: responder_user,
-                                                approver: disclosure_specialist_user,
-                                                identifier: 'full_awdis_foi') },
-      full_responded_foi:           -> { create(:responded_case,
-                                                :flagged,
-                                                :press_office,
-                                                responder: responder_user,
-                                                identifier: 'full_responded_foi') },
-      full_closed_foi:              -> { create(:closed_case,
-                                                :flagged,
-                                                :press_office,
-                                                identifier: 'full_closed_foi') },
+      std_unassigned_foi: ->(attributes={}) {
+        create(:case,
+               {identifier: 'std_unassigned_foi'}
+                 .merge(attributes))
+      },
+      std_awresp_foi: ->(attributes={}) {
+        create(:assigned_case,
+               {responding_team: responding_team,
+                identifier: 'std_awresp_foi'}
+                 .merge(attributes))
+      },
+      std_draft_foi: ->(attributes={}) {
+        create(:accepted_case,
+               {responder: responder_user,
+                identifier: 'std_draft_foi'}
+                 .merge(attributes))
+      },
+      std_draft_foi_late: ->(attributes={}) {
+        create(:accepted_case,
+               {responder: responder_user,
+                received_date: 25.business_days.ago,
+                identifier: 'std_draft_foi_late'}
+                 .merge(attributes))
+      },
+      std_awdis_foi: ->(attributes={}) {
+        create(:case_with_response,
+               {responder: responder_user,
+                identifier: 'std_awdis_foi'}
+                 .merge(attributes))
+      },
+      std_responded_foi: ->(attributes={}) {
+        create(:responded_case,
+               {responder: responder_user,
+                identifier: 'std_responded_foi'}
+                 .merge(attributes))
+      },
+      std_responded_foi_late: ->(attributes={}) {
+        create(:responded_case,
+               {responder: responder_user,
+                received_date: 25.business_days.ago,
+                date_responded: 1.business_days.ago,
+                identifier: 'std_responded_foi_late'}
+                 .merge(attributes))
+      },
+      std_closed_foi: ->(attributes={}) {
+        create(:closed_case,
+               {identifier: 'std_closed_foi'}
+                 .merge(attributes))
+      },
+      std_closed_foi_late: ->(attributes={}) {
+        create(:closed_case,
+               {received_date: 25.business_days.ago,
+                date_responded: 1.business_days.ago,
+                identifier: 'std_closed_foi_late'}
+                 .merge(attributes))
+      },
+      trig_unassigned_foi_accepted: ->(attributes={}) {
+        create(:case,
+               :flagged_accepted,
+               :dacu_disclosure,
+               {approver: disclosure_specialist_user,
+                identifier: 'trig_unassigned_foi_accepted'}
+                 .merge(attributes))
+      },
+      trig_unassigned_foi: ->(attributes={}) {
+        create(:case,
+               :flagged,
+               :dacu_disclosure,
+               {identifier: 'trig_unassigned_foi'}
+                 .merge(attributes))
+      },
+      trig_awresp_foi_accepted: ->(attributes={}) {
+        create(:assigned_case,
+               :flagged_accepted,
+               :dacu_disclosure,
+               {approver: disclosure_specialist_user,
+                responding_team: responding_team,
+                identifier: 'trig_awresp_foi_accepted'}
+                 .merge(attributes))
+      },
+      trig_awresp_foi: ->(attributes={}) {
+        create(:assigned_case,
+               :flagged,
+               :dacu_disclosure,
+               {responding_team: responding_team,
+                identifier: 'trig_awresp_foi'}
+                 .merge(attributes))
+      },
+      trig_draft_foi_accepted: ->(attributes={}) {
+        create(:accepted_case,
+               :flagged_accepted,
+               :dacu_disclosure,
+               {responder: responder_user,
+                approver: disclosure_specialist_user,
+                identifier: 'trig_draft_foi_accepted'}
+                 .merge(attributes))
+      },
+      trig_draft_foi_accepted_late: ->(attributes={}) {
+        create(:accepted_case,
+               :flagged_accepted,
+               :dacu_disclosure,
+               {responder: responder_user,
+                approver: disclosure_specialist_user,
+                received_date: 25.business_days.ago,
+                identifier: 'trig_draft_foi_accepted_late'}
+                 .merge(attributes))
+      },
+      trig_draft_foi: ->(attributes={}) {
+        create(:accepted_case,
+               :flagged,
+               :dacu_disclosure,
+               {responder: responder_user,
+                identifier: 'trig_draft_foi'}
+                 .merge(attributes))
+      },
+      trig_draft_foi_late: ->(attributes={}) {
+        create(:accepted_case,
+               :flagged,
+               :dacu_disclosure,
+               {responder: responder_user,
+                received_date: 25.business_days.ago,
+                identifier: 'trig_draft_foi_late'}
+                 .merge(attributes))
+      },
+      trig_pdacu_foi_accepted: ->(attributes={}) {
+        create(:pending_dacu_clearance_case,
+               {approver: disclosure_specialist_user,
+                responder: responder_user,
+                identifier: 'trig_pdacu_foi_accepted'}
+                 .merge(attributes))
+      },
+      trig_pdacu_foi: ->(attributes={}) {
+        create(:unaccepted_pending_dacu_clearance_case,
+               {responder: responder_user,
+                identifier: 'trig_pdacu_foi'}
+                 .merge(attributes))
+      },
+      trig_awdis_foi: ->(attributes={}) {
+        create(:case_with_response,
+               :flagged_accepted,
+               :dacu_disclosure,
+               {responder: responder_user,
+                approver: disclosure_specialist_user,
+                identifier: 'trig_awdis_foi'}
+                 .merge(attributes))
+      },
+      trig_responded_foi: ->(attributes={}) {
+        create(:responded_case,
+               :flagged_accepted,
+               :dacu_disclosure,
+               {responder: responder_user,
+                approver: disclosure_specialist_user,
+                identifier: 'trig_responded_foi'}
+                 .merge(attributes))
+      },
+      trig_closed_foi: ->(attributes={}) {
+        create(:closed_case,
+               :flagged_accepted,
+               :dacu_disclosure,
+               {responder: responder_user,
+                approver: disclosure_specialist_user,
+                identifier: 'trig_closed_foi'}
+                 .merge(attributes))
+      },
+      trig_closed_foi_late: ->(attributes={}) {
+        create(:closed_case,
+               :flagged_accepted,
+               :dacu_disclosure,
+               {responder: responder_user,
+                approver: disclosure_specialist_user,
+                received_date: 25.business_days.ago,
+                date_responded: 1.business_days.ago,
+                identifier: 'trig_closed_foi_late'}
+                 .merge(attributes))
+      },
+      full_unassigned_foi: ->(attributes={}) {
+        create(:case,
+               :flagged,
+               :press_office,
+               {responder: responder_user,
+                identifier: 'full_unassigned_foi'}
+                 .merge(attributes))
+      },
+      full_awresp_foi: ->(attributes={}) {
+        create(:assigned_case,
+               :flagged,
+               :press_office,
+               {responding_team: responding_team,
+                identifier: 'full_awresp_foi'}
+                 .merge(attributes))
+      },
+      full_awresp_foi_accepted: ->(attributes={}) {
+        create(:assigned_case,
+               :flagged_accepted,
+               :press_office,
+               {responding_team: responding_team,
+                identifier: 'full_awresp_foi_accepted'}
+                 .merge(attributes))
+      },
+      full_draft_foi: ->(attributes={}) {
+        create(:accepted_case,
+               :flagged,
+               :press_office,
+               {responder: responder_user,
+                identifier: 'full_draft_foi'}
+                 .merge(attributes))
+      },
+      full_pdacu_foi_accepted: ->(attributes={}) {
+        create(:pending_dacu_clearance_case_flagged_for_press_and_private,
+               {approver: disclosure_specialist_user,
+                responder: responder_user,
+                identifier: 'full_pdacu_foi_accepted'}
+                 .merge(attributes))
+      },
+      full_pdacu_foi_unaccepted: ->(attributes={}) {
+        create(:unaccepted_pending_dacu_clearance_case_flagged_for_press_and_private,
+               {responder: responder_user,
+                identifier: 'full_pdacu_foi_unaccepted'}
+                 .merge(attributes))
+      },
+      full_ppress_foi: ->(attributes={}) {
+        create(:pending_press_clearance_case,
+               {approver: disclosure_specialist_user,
+                responder: responder_user,
+                identifier: 'full_ppress_foi'}
+                 .merge(attributes))
+      },
+      full_ppress_foi_accepted: ->(attributes={}) {
+        create(:pending_press_clearance_case,
+               {approver: disclosure_specialist_user,
+                press_officer: press_officer_user,
+                private_officer: private_officer_user,
+                responder: responder_user,
+                identifier: 'full_ppress_foi_accepted'}
+                 .merge(attributes))
+      },
+      full_pprivate_foi: ->(attributes={}) {
+        create(:pending_private_clearance_case,
+               {approver: disclosure_specialist_user,
+                responder: responder_user,
+                identifier: 'full_pprivate_foi'}
+                 .merge(attributes))
+      },
+      full_pprivate_foi_accepted: ->(attributes={}) {
+        create(:pending_private_clearance_case,
+               {approver: disclosure_specialist_user,
+                press_officer: press_officer_user,
+                private_officer: private_officer_user,
+                responder: responder_user,
+                identifier: 'full_pprivate_foi_accepted'}
+                 .merge(attributes))
+      },
+      full_awdis_foi: ->(attributes={}) {
+        create(:case_with_response,
+               :flagged_accepted,
+               :press_office,
+               {responder: responder_user,
+                approver: disclosure_specialist_user,
+                identifier: 'full_awdis_foi'}
+                 .merge(attributes))
+      },
+      full_responded_foi: ->(attributes={}) {
+        create(:responded_case,
+               :flagged,
+               :press_office,
+               {responder: responder_user,
+                identifier: 'full_responded_foi'}
+                 .merge(attributes))
+      },
+      full_closed_foi: ->(attributes={}) {
+        create(:closed_case,
+               :flagged,
+               :press_office,
+               {identifier: 'full_closed_foi'}
+                 .merge(attributes))
+      },
 
-      std_unassigned_irc:           -> { create :compliance_review,
-                                                identifier: 'std_unassigned_irc' },
-      std_closed_irc:               -> { create :closed_compliance_review,
-                                                identifier: 'std_closed_irc' },
+      std_unassigned_irc: ->(attributes={}) {
+        create(:compliance_review,
+               {identifier: 'std_unassigned_irc'}
+                 .merge(attributes))
+      },
+      std_closed_irc: ->(attributes={}) {
+        create(:closed_compliance_review,
+               {identifier: 'std_closed_irc'}
+                 .merge(attributes))
+      },
 
-      std_unassigned_irt:           -> { create :timeliness_review,
-                                                identifier: 'std_unassigned_irt' },
-      std_draft_irt:                -> { create :accepted_timeliness_review,
-                                                identifier: 'std_draft_irt' },
-      std_closed_irt:               -> { create :closed_timeliness_review,
-                                                identifier: 'std_closed_irt' }
+      std_unassigned_irt: ->(attributes={}) {
+        create(:timeliness_review,
+               {identifier: 'std_unassigned_irt'}
+                 .merge(attributes))
+      },
+      std_draft_irt: ->(attributes={}) {
+        create(:accepted_timeliness_review,
+               {identifier: 'std_draft_irt'}
+                 .merge(attributes))
+      },
+      std_closed_irt: ->(attributes={}) {
+        create(:closed_timeliness_review,
+               {identifier: 'std_closed_irt'}
+                 .merge(attributes))
+      }
     }
 
     # Used when not instantiating a StandardSetup object in a before block.
@@ -304,8 +429,20 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
     @users = @@users.transform_values { |user| user.call }
     @user_teams = @@user_teams.transform_values { |user_team| user_team.call }
 
-    case_types = only_cases || @@cases.keys
-    @cases = @@cases.slice(*case_types).transform_values { |kase| kase.call }
+    if only_cases.respond_to? :keys
+      @cases = @@cases.slice(*only_cases.keys)
+      only_cases.each do |name, attrs|
+        # instantiate case by calling the blocks in @@cases and passing in any
+        # attributes defined in only_cases for this case.
+        @cases[name] = @cases[name].call(attrs)
+      end
+    else
+      case_types = only_cases || @@cases.keys
+      @cases = @@cases.slice(*case_types).transform_values do |kase|
+        # instantiate case by calling the blocks in @@cases
+        kase.call
+      end
+    end
   end
 
 
