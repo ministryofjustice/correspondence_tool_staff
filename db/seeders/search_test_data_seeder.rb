@@ -15,20 +15,20 @@ class SearchTestDataSeeder
 
   def create_case
     params = HashWithIndifferentAccess.new({
-            type: select_type,
-            name: select_name,
-            email: select_email,
-            postal_address: select_postal_address,
-            requester_type: select_requester_type,
-            received_date: select_received_date,
-            created_at: select_created_at,
-            delivery_method: select_delivery_method,
-            subject: select_subject,
-            message: select_message,
-            flag_for_team: set_flagged,
-            responding_team: select_responding_team,
-            target_state: select_target_state,
-        })
+               type: select_type,
+               name: select_name,
+               email: select_email,
+               postal_address: select_postal_address,
+               requester_type: select_requester_type,
+               delivery_method: select_delivery_method,
+               subject: select_subject,
+               message: select_message,
+               flag_for_team: set_flagged,
+               responding_team: select_responding_team,
+               target_state: select_target_state,
+           })
+    params[:received_date] = select_received_date(params[:target_state])
+    params[:created_at] = select_created_at(params[:received_date])
 
     case_creator = CTS::Cases::Create.new(Rails.logger, params)
     @case = case_creator.new_case
@@ -98,20 +98,23 @@ class SearchTestDataSeeder
     @req_type[@case_count % @req_type.length]
   end
 
-  def select_received_date
-    @dates ||= [
-                1.business_days.ago,
-                3.business_days.ago,
-                5.business_days.ago,
-                20.business_days.ago,
-                50.business_days.ago,
-                70.business_days.ago,
-              ]
-    0.business_days.after(@dates[@case_count % @dates.length]).to_date
+  def select_received_date(target_state)
+    dates ||= [
+        8.business_days.ago,
+        20.business_days.ago,
+        50.business_days.ago,
+        70.business_days.ago,
+    ]
+    if target_state_before_response_uploaded?(target_state)
+      dates << 1.business_days.ago
+      dates << 3.business_days.ago
+    end
+
+    0.business_days.after(dates[@case_count % dates.length]).to_date
   end
 
-  def select_created_at
-    0.business_days.after(select_received_date - 5.days).to_s
+  def select_created_at(received_date)
+    0.business_days.after(received_date).to_s
   end
 
   def select_delivery_method
@@ -186,7 +189,10 @@ class SearchTestDataSeeder
               "closed"
             ]
     @states[@case_count % @states.length]
+  end
 
+  def target_state_before_response_uploaded?(target_state)
+    target_state.in?( %w{ unassigned awaiting_responder drafting } )
   end
 
   def select_target_state_trigger
