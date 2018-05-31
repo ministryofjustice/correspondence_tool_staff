@@ -4,7 +4,7 @@
 #
 ###################################
 
-# Manager signs in
+# Manager/responder signs in
 # Views "Statistics" and displays stats page
 # Clicks on R003 report
 #   - expect report to download
@@ -29,8 +29,9 @@ require File.join(Rails.root, 'db', 'seeders', 'report_type_seeder')
 
 
 feature "Downloading stats(csv) from the system" do
-  given(:manager){ create :manager }
-  given(:kase)   { create :case }
+  given(:manager)  { create :manager }
+  given(:responder){ create :responder }
+  given(:kase)     { create :case }
 
   before(:all) do
     CaseClosure::MetadataSeeder.seed!(verbose: false)
@@ -44,36 +45,68 @@ feature "Downloading stats(csv) from the system" do
 
   background do
     manager
+    responder
     kase
   end
+  context 'as a manager' do
+    scenario "standard reports" do
+      # Manager creates & assigns to kilo
+      login_as_manager
+      views_stats_home_page
+      download_r002_report
+      download_r003_report
+      download_r004_report
+      download_r005_report
+    end
 
-  scenario "standard reports" do
-    # Manager creates & assigns to kilo
-    login_as_manager
-    views_stats_home_page
-    download_r002_report
-    download_r003_report
-    download_r004_report
-    download_r005_report
+    scenario "custom reports" do
+      # Manager creates & assigns to kilo
+      login_as_manager
+      views_stats_home_page
+      view_custom_report_creation_page
+      create_custom_r003_report
+      download_custom_r003_report
+      create_custom_r004_report
+      download_custom_r004_report
+
+    end
+  end
+  context 'as a responder' do
+    scenario "standard reports" do
+      # Manager creates & assigns to kilo
+      login_as_responder
+      views_stats_home_page
+      download_r002_report
+      download_r003_report
+      download_r004_report
+      download_r005_report
+    end
+
+    scenario "custom reports" do
+      # Manager creates & assigns to kilo
+      login_as_responder
+      views_stats_home_page
+      view_custom_report_creation_page
+      create_custom_r003_report
+      download_custom_r003_report
+      create_custom_r004_report
+      download_custom_r004_report
+
+    end
   end
 
-  scenario "custom reports" do
-    # Manager creates & assigns to kilo
-    login_as_manager
-    views_stats_home_page
-    view_custom_report_creation_page
-    create_custom_r003_report
-    download_custom_r003_report
-    create_custom_r004_report
-    download_custom_r004_report
-
-  end
 
 
   private
 
   def login_as_manager
     login_as manager
+
+    open_cases_page.load
+  end
+
+  def login_as_responder
+    login_as responder
 
     open_cases_page.load
   end
