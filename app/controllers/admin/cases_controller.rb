@@ -6,6 +6,10 @@ class Admin::CasesController < ApplicationController
   before_action :authorize_admin
 
   def create
+    @correspondence_type_abbreviation = params.fetch(:correspondence_type)
+
+    params = create_params(@correspondence_type_abbreviation)
+
     prepare_flagged_options_for_creation(params)
     case_creator = CTS::Cases::Create.new(Rails.logger, params[:case])
     @case = case_creator.new_case
@@ -56,22 +60,16 @@ class Admin::CasesController < ApplicationController
 
   def prepare_new_sar
     @correspondence_type_abbreviation = params[:correspondence_type]
-      case_class = correspondence_types_map[@correspondence_type_abbreviation.to_sym].first
-      @case = case_class.new
+    case_class = correspondence_types_map[@correspondence_type_abbreviation.to_sym].first
+    @case = case_class.new
 
-    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::SAR' )
+    case_creator = CTS::Cases::CreateSAR.new(Rails.logger, case_model: Case::Base, type: 'Case::SAR' )
     @case = case_creator.new_case
     @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.sar).sample
-    @case.flag_for_disclosure_specialists = 'no'
     @target_states = available_target_states
     @selected_state = 'drafting'
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
-
-    @case.subject_type = 'member_of_the_public'
-    @case.third_party = false
-    @case.subject_full_name = "Kiwi man"
     @case.reply_method = 'send_by_email'
-    @case.email= 'kiwi@kiwi.com'
     render :new
   end
 
@@ -94,8 +92,15 @@ class Admin::CasesController < ApplicationController
     CTS::Cases::Constants::CASE_JOURNEYS.values.flatten.uniq.sort
   end
 
-  def case_params
-    params.require(:case).permit(
+  def create_params(correspondence_type)
+    case correspondence_type
+    when 'foi' then create_foi_params
+    when 'sar' then create_sar_params
+    end
+  end
+
+  def create_foi_params
+    params.require(:case_foi).permit(
       :type,
       :requester_type,
       :name,
@@ -111,6 +116,25 @@ class Admin::CasesController < ApplicationController
       :flag_for_disclosure_specialists,
       uploaded_request_files: [],
     )
+  end
+
+  def create_sar_params
+    params.require(:case_sar).permit(
+      :delivery_method,
+      :email,
+      :flag_for_disclosure_specialists,
+      :message,
+      :name,
+      :postal_address,
+      :received_date_dd, :received_date_mm, :received_date_yyyy,
+      :requester_type,
+      :subject,
+      :subject_full_name,
+      :subject_type,
+      :third_party,
+      :reply_method,
+      uploaded_request_files: [],
+    ).merge(type: "Case::SAR")
   end
 
   def param_flag_for_ds?

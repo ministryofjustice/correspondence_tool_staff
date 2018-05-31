@@ -2,8 +2,8 @@
     "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
     ""
 
-= form_for @case, as: 'case', url: admin_cases_path do |f|
-
+= form_for @case, as: 'case_foi', url: admin_cases_path do |f|
+  = hidden_field_tag 'correspondence_type', @correspondence_type_abbreviation
   = f.radio_button_fieldset :type, choices: CTS::Cases::Constants::CASE_TYPES
 
   = f.text_field :name
