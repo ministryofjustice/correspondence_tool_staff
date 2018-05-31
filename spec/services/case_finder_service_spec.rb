@@ -248,6 +248,40 @@ describe CaseFinderService do
       end
     end
 
+    describe '#open_cases_scope' do
+      context 'responder' do
+        it 'only includes cases assigned to user teams' do
+          finder = CaseFinderService.new(@responder)
+          expect(finder.__send__ :open_cases_scope).to match_array [
+                                                                       @accepted_case,
+                                                                       @assigned_newer_case,
+                                                                       @assigned_older_case
+                                                                   ]
+        end
+      end
+      context 'non-responder' do
+        it 'includes all assigned cases' do
+          finder = CaseFinderService.new(@manager)
+          expect(finder.__send__ :open_cases_scope).to match_array [
+              @older_case_1,
+              @older_case_2,
+              @assigned_older_case,
+              @older_dacu_flagged_case,
+              @older_dacu_flagged_accept,
+              @case_1,
+              @case_2,
+              @newer_case_1,
+              @newer_case_2,
+              @assigned_newer_case,
+              @assigned_other_team,
+              @newer_dacu_flagged_case,
+              @newer_dacu_flagged_accept,
+              @accepted_case
+          ]
+        end
+      end
+    end
+
   end
 
   context 'mix of FOI cases including compliance review cases' do
