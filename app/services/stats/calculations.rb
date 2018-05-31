@@ -16,6 +16,9 @@ module Stats
           row[:non_trigger_total] = Calculations::sum_all_received(:non_trigger, row)
           row[:trigger_total] = Calculations::sum_all_received(:trigger, row)
           row[:overall_total] = Calculations::sum_all_received(:overall, row)
+          if row.key?(:bu_total)
+            row[:bu_total] = Calculations::sum_all_received(:bu, row)
+          end
         end
       end
 
@@ -24,6 +27,9 @@ module Stats
           row[:non_trigger_performance]  = Calculations::calculate_non_trigger(row)
           row[:trigger_performance]  = Calculations::calculate_trigger(row)
           row[:overall_performance]  = Calculations::calculate_overall_performance(row)
+          if row.key?(:bu_total)
+            row[:bu_performance] = Calculations::calculate_bu(row)
+          end
         end
       end
     end
@@ -52,14 +58,16 @@ module Stats
       row[ttl] = row[rit] + row[rl] + row[oit] + row[ol]
     end
 
-
-
     def self.calculate_non_trigger(row)
       calculate_percentage(row[:non_trigger_responded_in_time], row[:non_trigger_responded_in_time] + row[:non_trigger_responded_late] + row[:non_trigger_open_late])
     end
 
     def self.calculate_trigger(row)
       calculate_percentage(row[:trigger_responded_in_time], row[:trigger_responded_in_time] + row[:trigger_responded_late] + row[:trigger_open_late])
+    end
+
+    def self.calculate_bu(row)
+      calculate_percentage(row[:bu_responded_in_time], row[:bu_responded_in_time] + row[:bu_responded_late] + row[:bu_open_late])
     end
 
     def self.calculate_percentage(value, total)

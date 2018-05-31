@@ -7,6 +7,15 @@ module Stats
       business_unit:                   'Business unit',
       responsible:                     'Responsible'
     }
+    
+    R003_BU_PERFORMANCE_COLUMNS = {
+      bu_performance:             'Performance %',
+      bu_total:                   'Total received',
+      bu_responded_in_time:       'Responded - in time',
+      bu_responded_late:          'Responded - late',
+      bu_open_in_time:            'Open - in time',
+      bu_open_late:               'Open - late',
+    }
 
     R003_SPECIFIC_SUPERHEADINGS = {
       business_group:                  '',
@@ -14,12 +23,23 @@ module Stats
       business_unit:                   '',
       responsible:                     ''
     }
+    
+    R003_BU_PERFORMANCE_SUPERHEADINGS = {
+      bu_performance:             'Business unit',
+      bu_total:                   'Business unit',
+      bu_responded_in_time:       'Business unit',
+      bu_responded_late:          'Business unit',
+      bu_open_in_time:            'Business unit',
+      bu_open_late:               'Business unit',
+    } 
+    
 
     def initialize(period_start= Time.now.beginning_of_year, period_end=Time.now)
       super
       @period_start = period_start
       @period_end = period_end
-      @stats = StatsCollector.new(Team.hierarchy.map(&:id) + [:total], R003_SPECIFIC_COLUMNS.merge(CaseAnalyser::COMMON_COLUMNS))
+      column_headings = R003_SPECIFIC_COLUMNS.merge(CaseAnalyser::COMMON_COLUMNS).merge(R003_BU_PERFORMANCE_COLUMNS)
+      @stats = StatsCollector.new(Team.hierarchy.map(&:id) + [:total], column_headings)
       @superheadings = superheadings
       @stats.add_callback(:before_finalise, -> { roll_up_stats_callback })
       @stats.add_callback(:before_finalise, -> { populate_team_details_callback })
@@ -31,7 +51,7 @@ module Stats
     def superheadings
       [
         ["#{self.class.title} - #{reporting_period}"],
-        R003_SPECIFIC_SUPERHEADINGS.merge(CaseAnalyser::COMMON_SUPERHEADINGS).values
+        (R003_SPECIFIC_SUPERHEADINGS.merge(CaseAnalyser::COMMON_SUPERHEADINGS).merge(R003_BU_PERFORMANCE_SUPERHEADINGS)).values
       ]
     end
 
@@ -44,8 +64,12 @@ module Stats
     end
 
     def run
-      case_ids = CaseSelector.ids_for_period(@period_start, @period_end)
-      case_ids.each { |case_id| analyse_case(case_id) }
+      case_ids = CaseSelector.new(Case::Base.standard_foi).ids_for_period(@period_start, @period_end)
+      case_ids.each do |case_id|
+        kase = Case::Base.find(case_id)
+        next if kase.unassigned?
+        analyse_case(kase)
+      end
       @stats.finalise
     end
 
@@ -64,9 +88,9 @@ module Stats
         directorate_results = @stats.stats[bu.directorate.id]
         business_group_results = @stats.stats[bu.business_group.id]
         bu_results.each do |key, value|
-          directorate_results   [key] += value
+          directorate_results[key] += value
           business_group_results[key] += value
-          overall_total_results [key] += value
+          overall_total_results[key] += value
         end
       end
     end
@@ -100,11 +124,14 @@ module Stats
       @stats.stats[:total][:responsible] = ''
     end
 
-    def analyse_case(case_id)
-      kase = Case::Base.find case_id
-      return if kase.unassigned?
-      column_key = CaseAnalyser.new(kase).result
+    def analyse_case(kase)
+      analyser = CaseAnalyser.new(kase)
+      analyser.run
+      column_key = analyser.result
       @stats.record_stats(kase.responding_team.id, column_key)
+
+      business_unit_column_key = "bu_#{analyser.bu_result}".to_sym
+      @stats.record_stats(kase.responding_team.id, business_unit_column_key)
     end
 
     def add_trigger_state(kase, timeliness)
