@@ -120,8 +120,8 @@ feature 'filters whittle down search results' do
       open_cases_page.filter_on_deadline(from: Date.today,
                                          to: 15.business_days.from_now)
       @deadline_filter_text = "%s - %s" % [
-        Date.today.strftime('%d %b %Y'),
-        15.business_days.from_now.strftime('%d %b %Y')
+        Date.today.strftime('%-d %b %Y'),
+        15.business_days.from_now.strftime('%-d %b %Y')
       ]
     end
 
