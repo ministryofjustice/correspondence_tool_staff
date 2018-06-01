@@ -73,6 +73,31 @@ RSpec.describe User, type: :model do
     end
   end
 
+
+  describe '#responder_only?' do
+    it 'returns true for a user who is a reponder and not a manager or approver' do
+      expect(responder.responder_only?).to be true
+    end
+
+    it 'returns false for a responder who is also a manager and approver' do
+      user = create :approver_responder_manager
+      expect(user.responder_only?).to be false
+    end
+
+    it 'returns false for a responder who is also an approver' do
+      user = create :approver_responder
+      expect(user.responder_only?).to be false
+    end
+
+    it 'returns false for managers' do
+      expect(manager.responder_only?).to be false
+    end
+
+    it 'returns false for approvers' do
+      expect(approver.responder_only?).to be false
+    end
+  end
+
   describe '#approver?' do
     it 'returns false for a manager' do
       expect(manager.approver?).to be false

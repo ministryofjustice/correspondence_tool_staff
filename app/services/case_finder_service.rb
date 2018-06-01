@@ -55,7 +55,7 @@ class CaseFinderService
 
   def closed_cases_scope
     closed_scope = scope.closed
-    if user.responder?
+    if user.responder_only?
       case_ids = Assignment.with_teams(user.responding_teams).pluck(:case_id)
       closed_scope.where(id: case_ids).most_recent_first
     else
@@ -95,7 +95,7 @@ class CaseFinderService
       .joins(:assignments)
       .where(assignments: { state: ['pending', 'accepted']})
       .distinct('case.id')
-    if user.responder?
+    if user.responder_only?
       case_ids = Assignment.with_teams(user.responding_teams).pluck(:case_id)
       open_scope.where(id: case_ids)
     else
