@@ -73,6 +73,10 @@ class User < ApplicationRecord
     responding_teams.any?
   end
 
+  def responder_only?
+    managing_teams.none? && approving_team.blank?
+  end
+
   def approver?
     approving_team.present?
   end
