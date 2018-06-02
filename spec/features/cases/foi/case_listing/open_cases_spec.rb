@@ -68,14 +68,10 @@ feature 'listing open cases on the system' do
     visit '/cases/open'
 
     cases = cases_page.case_list
-    expect(cases.count).to eq 7
-    expect(cases[0].number).to have_text @assigned_case_late.number
-    expect(cases[1].number).to have_text @assigned_case_team_a.number
-    expect(cases[2].number).to have_text @assigned_case_coresponder_team_a.number
-    expect(cases[3].number).to have_text @assigned_case_dd_flagged.number
-    expect(cases[4].number).to have_text @assigned_case_team_b.number
-    expect(cases[5].number).to have_text @assigned_case_flagged_for_press_office_accepted.number
-    expect(cases[6].number).to have_text @unassigned_case.number
+    expect(cases.count).to eq 3
+    expect(cases[0].number).to have_text @assigned_case_team_a.number
+    expect(cases[1].number).to have_text @assigned_case_coresponder_team_a.number
+    expect(cases[2].number).to have_text @assigned_case_dd_flagged.number
   end
 
   context 'press officer' do
