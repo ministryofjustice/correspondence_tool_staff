@@ -1057,6 +1057,7 @@ case_types:
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
+                update_closure:
                 link_a_case:
                 remove_linked_case:
 

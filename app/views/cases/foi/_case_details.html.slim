@@ -24,5 +24,4 @@
       - if case_details.closed?
         = render partial: 'cases/shared/closed_case_details', locals: { case_details: case_details }
 
-    - if case_details.allow_event?(current_user, :edit_case)
-      = link_to t('.edit_case'), edit_case_path(case_details), class: "secondary-action-link"
+    = case_details_links(case_details, current_user).html_safe

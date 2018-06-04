@@ -68,6 +68,11 @@ class Case::BasePolicy < ApplicationPolicy
     edit?
   end
 
+  def update_closure?
+    clear_failed_checks
+    check_can_trigger_event(:update_closure)
+  end
+
   def destroy?
     clear_failed_checks
     user.manager?
@@ -219,67 +224,6 @@ class Case::BasePolicy < ApplicationPolicy
         user.responding_teams.include?(self.case.responding_team)
   end
 
-  def approve_from_pending_dacu_clearance_to_awaiting_dispatch?
-    clear_failed_checks
-
-    check_case_is_not_assigned_to_press_office &&
-        check_user_is_assigned_dacu_disclosure_approver
-  end
-
-  def approve_from_pending_dacu_clearance_to_pending_press_office_clearance?
-    clear_failed_checks
-
-    check_case_is_assigned_to_press_office &&
-        check_user_is_assigned_dacu_disclosure_approver
-  end
-
-  def upload_response_and_approve_from_pending_dacu_clearance_to_pending_press_office_clearance?
-    approve_from_pending_dacu_clearance_to_pending_press_office_clearance?
-  end
-
-  def upload_response_and_approve_from_pending_dacu_clearance_to_awaiting_dispatch?
-    approve_from_pending_dacu_clearance_to_awaiting_dispatch?
-  end
-
-  def upload_response_and_approve_from_pending_private_office_clearance_to_awaiting_dispatch?
-    clear_failed_checks
-    check_user_is_assigned_private_office_approver
-  end
-
-  def approve_and_bypass_from_pending_dacu_clearance_to_awaiting_dispatch?
-    clear_failed_checks
-
-    check_user_is_an_approver_for_case &&
-        check_case_is_assigned_to_press_office
-  end
-
-  def upload_response_approve_and_bypass_from_pending_dacu_clearance_to_awaiting_dispatch?
-    clear_failed_checks
-
-    check_user_is_an_approver_for_case &&
-        check_case_is_assigned_to_press_office
-  end
-
-  def approve_from_pending_press_office_clearance_to_awaiting_dispatch?
-    clear_failed_checks
-
-    check_case_is_not_assigned_to_private_office &&
-        check_user_is_assigned_press_office_approver
-  end
-
-  def approve_from_pending_press_office_clearance_to_pending_private_office_clearance?
-    clear_failed_checks
-
-    check_case_is_assigned_to_private_office &&
-        check_user_is_assigned_press_office_approver
-  end
-
-  def approve_from_pending_private_office_clearance_to_awaiting_dispatch?
-    clear_failed_checks
-
-    check_user_is_assigned_private_office_approver
-  end
-
   def can_approve_or_escalate_case?
     clear_failed_checks
     check_case_requires_clearance &&
@@ -295,54 +239,6 @@ class Case::BasePolicy < ApplicationPolicy
     clear_failed_checks
     check_user_is_an_approver_for_case &&
         check_can_trigger_event(:approve)
-  end
-
-  def unflag_for_clearance_from_unassigned_to_unassigned?
-    clear_failed_checks
-    check_case_requires_clearance &&
-        ( check_user_is_dacu_disclosure_approver ||
-            check_user_is_assigned_approver_for_case ||
-            check_user_is_a_manager
-        )
-  end
-
-  def unflag_for_clearance_from_awaiting_responder_to_awaiting_responder?
-    clear_failed_checks
-    check_case_requires_clearance &&
-        ( check_user_is_dacu_disclosure_approver ||
-            check_user_is_assigned_approver_for_case ||
-            check_user_is_a_manager
-        )
-  end
-
-  def unflag_for_clearance_from_drafting_to_drafting?
-    clear_failed_checks
-    check_case_requires_clearance &&
-        ( check_user_is_dacu_disclosure_approver ||
-            check_user_is_assigned_approver_for_case ||
-            check_user_is_a_manager
-        )
-  end
-
-  def unflag_for_clearance_from_awaiting_dispatch_to_awaiting_dispatch?
-    clear_failed_checks
-    check_case_requires_clearance &&
-        ( check_user_is_dacu_disclosure_approver ||
-            check_user_is_assigned_approver_for_case ||
-            check_user_is_a_manager
-        )
-  end
-
-  def unflag_for_clearance_from_pending_dacu_clearance_to_awaiting_dispatch?
-    clear_failed_checks
-    check_case_requires_clearance_by_dacu_only &&
-        ( check_user_is_a_manager || check_user_is_dacu_disclosure_approver )
-  end
-
-  def unflag_for_clearance_from_pending_dacu_clearance_to_pending_dacu_clearance?
-    clear_failed_checks
-    (check_case_is_assigned_to_press_office && check_user_is_press_office_approver) ||
-        (check_case_is_assigned_to_private_office && check_user_is_private_office_approver)
   end
 
   def upload_responses?
@@ -369,12 +265,6 @@ class Case::BasePolicy < ApplicationPolicy
         check_can_trigger_event(:upload_response_and_return_for_redraft)
   end
 
-  def upload_response_and_return_for_redraft_from_pending_dacu_clearance_to_drafting?
-    clear_failed_checks
-    check_case_is_assigned_to_dacu_disclosure &&
-        check_user_is_assigned_dacu_disclosure_approver
-  end
-
   def request_amends?
     clear_failed_checks
 
@@ -393,40 +283,8 @@ class Case::BasePolicy < ApplicationPolicy
             check_user_is_private_office_approver)
   end
 
-  def request_amends_from_pending_press_office_clearance_to_pending_dacu_clearance?
-    clear_failed_checks
-
-    check_case_is_assigned_to_press_office &&
-        check_user_is_assigned_press_office_approver
-  end
-
-  def request_amends_from_pending_private_office_clearance_to_pending_dacu_clearance?
-    clear_failed_checks
-
-    check_case_is_assigned_to_private_office &&
-        check_user_is_assigned_private_office_approver
-  end
-
-  def add_response_to_flagged_case_from_drafting_to_pending_dacu_clearance?
-    clear_failed_checks
-
-    check_case_requires_clearance &&
-        check_escalation_deadline_has_expired &&
-        check_user_is_a_responder_for_case && check_case_is_not_closed
-  end
-
   def user_is_admin?
     user.admin?
-  end
-
-  def assign_to_new_team_from_awaiting_responder_to_awaiting_responder?
-    clear_failed_checks
-    check_user_is_a_manager
-  end
-
-  def assign_to_new_team_from_drafting_to_awaiting_responder?
-    clear_failed_checks
-    check_user_is_a_manager
   end
 
   def only_flagged_for_disclosure_clearance?

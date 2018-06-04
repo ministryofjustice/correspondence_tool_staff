@@ -44,8 +44,8 @@ module PageObjects
         end
 
         section :missing_info, '.missing-info' do
-          element :yes, 'label[for="case_sar_missing_info_yes"]'
-          element :no, 'label[for="case_sar_missing_info_no"]'
+          element :yes, 'input#case_sar_missing_info_yes', visible: false
+          element :no,  'input#case_sar_missing_info_no', visible: false
         end
 
         element :submit_button, '.button'

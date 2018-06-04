@@ -196,4 +196,19 @@ module CasesHelper
         content_tag(:div, kase.name, class: 'case-name-detail')
 
   end
+
+  def case_details_links(kase, user)
+    links = ''
+    if kase.allow_event?(user, :edit_case)
+      links << link_to(t('helpers.links.case_details.edit_case'),
+                       edit_case_path(kase),
+                       class: "secondary-action-link")
+    end
+    if kase.allow_event?(user, :update_closure)
+      links << link_to(t('helpers.links.case_details.edit_closure'),
+                       edit_closure_case_path(kase),
+                       class: "secondary-action-link")
+    end
+    links
+  end
 end

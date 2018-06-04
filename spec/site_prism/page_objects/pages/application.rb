@@ -28,6 +28,7 @@ module PageObjects
         cases_new_sar:                  'Cases::New::SARPage',
         cases_new_case_link:            'Cases::NewCaseLinkPage',
         cases_edit:                     'Cases::EditPage',
+        cases_edit_closure:             'Cases::EditClosurePage',
         cases_new_response_upload:      'Cases::NewResponseUploadPage',
         cases_remove_clearance_form:    'Cases::RemoveClearanceFormPage',
         cases_respond:                  'Cases::RespondPage',

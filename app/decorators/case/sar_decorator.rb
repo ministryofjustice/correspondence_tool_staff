@@ -1,4 +1,7 @@
 class Case::SARDecorator < Case::BaseDecorator
+  def missing_info
+    object.refusal_reason&.abbreviation == 'tmm' ? 'yes' : 'no'
+  end
 
   def subject_type
     object.subject_type.humanize

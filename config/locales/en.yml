@@ -172,6 +172,7 @@ en:
     confirm: Confirm
     feedback: Send feedback
     submit: Submit
+    update_case_closure_details: Save changes
 
   helpers:
     fieldset:
@@ -297,7 +298,10 @@ en:
           manager: Case management
       team_property:
         value: "Add area"
-
+    links:
+      case_details:
+        edit_case: 'Edit case details'
+        edit_closure: 'Edit closure details'
 
   alerts:
     assignment_accepted_html: |
@@ -326,6 +330,7 @@ en:
 
   notices:
     case_closed: You've closed this case
+    closure_details_updated: You have updated the closure details for this case.
     response_uploaded: You have uploaded the response for this case.
 
   common:
@@ -464,6 +469,8 @@ en:
       view_case: Link to case
     close:
       heading: Close case
+    edit_closure:
+      heading: Edit case closure details
     extend_for_pit:
       extend_for_pit: Extend for Public Interest Test (PIT)
       extension_date: Date of extension deadline
@@ -533,14 +540,10 @@ en:
     confirm_respond:
       success: The response has been marked as sent.
     foi:
-      case_details: &case_details
-        edit_case: 'Edit case details'
       close_form:
         close_date: Date response sent
         date_example: For example, 30 1 2017
     sar:
-      case_details:
-        <<: *case_details
       close_form:
         close_date: Date response sent
         date_example: For example, 30 1 2017
