@@ -67,6 +67,8 @@ module PageObjects
         section :case_history,
                 PageObjects::Sections::Cases::CaseHistorySection, '#case-history'
 
+        element :delete_case, 'a:contains("Delete case")'
+
         def collection_for_case_attachment(file)
           case_attachments.each do |case_attachment|
             case_attachment.collection.each do |collection|
