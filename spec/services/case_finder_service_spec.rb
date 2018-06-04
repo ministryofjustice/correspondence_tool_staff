@@ -111,11 +111,7 @@ describe CaseFinderService do
     describe '#for_user' do
       it 'returns a finder that with a finder scoped to the users cases' do
         finder = CaseFinderService.new(@responder)
-        expect(finder.for_user.scope).to match_array [
-                                           @assigned_newer_case,
-                                           @assigned_older_case,
-                                           @accepted_case
-                                         ]
+        expect(finder.for_user.scope).to match_array Case::Base.all
       end
     end
 
@@ -248,6 +244,40 @@ describe CaseFinderService do
                   @older_dacu_flagged_case,
                   @older_dacu_flagged_accept,
                 ]
+        end
+      end
+    end
+
+    describe '#open_cases_scope' do
+      context 'responder' do
+        it 'only includes cases assigned to user teams' do
+          finder = CaseFinderService.new(@responder)
+          expect(finder.__send__ :open_cases_scope).to match_array [
+                                                                       @accepted_case,
+                                                                       @assigned_newer_case,
+                                                                       @assigned_older_case
+                                                                   ]
+        end
+      end
+      context 'non-responder' do
+        it 'includes all assigned cases' do
+          finder = CaseFinderService.new(@manager)
+          expect(finder.__send__ :open_cases_scope).to match_array [
+              @older_case_1,
+              @older_case_2,
+              @assigned_older_case,
+              @older_dacu_flagged_case,
+              @older_dacu_flagged_accept,
+              @case_1,
+              @case_2,
+              @newer_case_1,
+              @newer_case_2,
+              @assigned_newer_case,
+              @assigned_other_team,
+              @newer_dacu_flagged_case,
+              @newer_dacu_flagged_accept,
+              @accepted_case
+          ]
         end
       end
     end

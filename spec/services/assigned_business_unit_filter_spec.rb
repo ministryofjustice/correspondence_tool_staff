@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'AssignedBusinessUnitFilter' do
+describe AssignedBusinessUnitFilter do
 
   before(:all) do
     @responding_team_1 = create :responding_team
@@ -125,22 +125,8 @@ describe 'AssignedBusinessUnitFilter' do
       describe 'params that will be submitted when clicking on the crumb' do
         subject { filter.crumbs[0].second }
 
-        it 'remove the assigned teams filter' do
-          expect(subject).to include 'filter_assigned_to_ids' => ['']
-        end
-
-        it 'leaves the other attributes untouched' do
-          expect(subject).to include(
-                               'search_text'            => 'Winnie the Pooh',
-                               'common_exemption_ids'   => [],
-                               'exemption_ids'          => [],
-                               'filter_case_type'       => [],
-                               'filter_sensitivity'     => [],
-                               'filter_status'          => [],
-                               'filter_timeliness'      => [],
-                               'parent_id'              => search_query.id
-                             )
-        end
+        it { should eq 'filter_assigned_to_ids' => [''],
+                       'parent_id'              => search_query.id }
       end
     end
 
@@ -157,6 +143,14 @@ describe 'AssignedBusinessUnitFilter' do
       it 'uses the name of the assigned team + 1 more as the crumb text' do
         expect(filter.crumbs[0].first).to eq "#{@responding_team_1.name} + 1 more"
       end
+    end
+  end
+
+  describe '.process_params!' do
+    it 'processes filter_assigned_to_ids, sorting, removing blanks and to_i' do
+      params = { filter_assigned_to_ids: ['', '2', '1'] }.with_indifferent_access
+      described_class.process_params!(params)
+      expect(params).to eq 'filter_assigned_to_ids' => [1, 2]
     end
   end
 end

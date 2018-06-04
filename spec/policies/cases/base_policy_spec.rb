@@ -235,8 +235,8 @@ describe Case::BasePolicy do
 
   permissions :can_download_stats? do
     it { should     permit(manager,               assigned_case) }
-    it { should_not permit(responder,             assigned_case) }
-    it { should_not permit(another_responder,     assigned_case) }
+    it { should     permit(responder,             assigned_case) }
+    it { should     permit(another_responder,     assigned_case) }
     it { should_not permit(disclosure_specialist, assigned_case) }
   end
 
@@ -729,13 +729,13 @@ describe Case::BasePolicy do
   end
 
   permissions :show? do
-    it { should     permit(manager,               unassigned_case) }
+    it { should_not permit(manager,               unassigned_case) }
     it { should_not permit(responder,             unassigned_case) }
     it { should_not permit(disclosure_specialist, unassigned_case) }
-    it { should     permit(responder,             accepted_case) }
-    it { should     permit(disclosure_specialist, assigned_trigger_case) }
+    it { should_not permit(responder,             accepted_case) }
+    it { should_not permit(disclosure_specialist, assigned_trigger_case) }
   end
-  
+
   permissions :remove_clearance? do
     it { should_not permit(manager,               unassigned_case) }
     it { should_not permit(manager,               unassigned_flagged_case) }
@@ -763,6 +763,6 @@ describe Case::BasePolicy do
     it { should_not permit(responder,             case_with_response_flagged) }
     it { should_not permit(responder,             responded_case) }
     it { should_not permit(responder,             closed_case) }
-    
+
   end
 end

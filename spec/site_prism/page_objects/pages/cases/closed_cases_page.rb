@@ -15,7 +15,8 @@ module PageObjects
           section :table_body, 'tbody' do
             sections :closed_case_rows, 'tr' do
               element :case_number, 'td:nth-child(1)'
-              section :subject_name, 'td:nth-child(2)' do
+              element :case_type, 'td:nth-child(2)'
+              section :subject_name, 'td:nth-child(3)' do
                 element :name, 'strong'
                 element :subject, 'span'
               end

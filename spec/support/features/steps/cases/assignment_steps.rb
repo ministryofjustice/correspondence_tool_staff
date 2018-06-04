@@ -1,19 +1,25 @@
 def assign_case_step(business_unit:,
                      expected_status: 'To be accepted',
                      expected_to_be_with: '%{business_unit_name}',
-                     expected_flash_msg: 'Case successfully created')
+                     expected_flash_msg: 'Case successfully created',
+                     assigning_page: assignments_new_page)
   # Browse Business Group
-  assignments_new_page.choose_business_group(business_unit.business_group)
+  assigning_page.choose_business_group(business_unit.business_group)
 
   # Select Business Unit
-  assignments_new_page.choose_business_unit(business_unit)
+  assigning_page.choose_business_unit(business_unit)
 
   expect(cases_show_page.text).to have_content(expected_flash_msg)
 
   expect(cases_show_page.case_status.details.copy.text).to eq expected_status
 
-  expect(cases_show_page.case_status.details.who_its_with.text)
-    .to eq expected_to_be_with % { business_unit_name: business_unit.name }
+  expected_to_be_with_text = expected_to_be_with % { business_unit_name: business_unit.name }
+  unless cases_show_page.case_status.details.copy.text == 'Case closed'
+    expect(cases_show_page.case_status.details.who_its_with.text)
+      .to eq expected_to_be_with_text
+  end
+  expect(cases_show_page.case_details.responders_details.team.data.text)
+    .to eq expected_to_be_with_text
 end
 
 def accept_responder_assignment_step

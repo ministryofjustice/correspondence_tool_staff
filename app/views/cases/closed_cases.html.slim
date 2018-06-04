@@ -9,9 +9,12 @@
       colgroup
         col
         col
+        col
       thead
         th scope='col'
           = t('.number_html')
+        th scope='col'
+          = t('common.case_list.type')
         th.closed-case-heading scope='col'
           = t('.name-subject')
       tbody
@@ -22,6 +25,9 @@
                 = t('.view_case')
               = " "
               = link_to kase.number, case_path(kase.id)
+            td aria-label="#{t('common.case_list.type')}"
+              = "#{kase.pretty_type} "
+              = kase.trigger_case_marker
             td aria-label="#{t('.name-subject')}"
               strong
                 = kase.name

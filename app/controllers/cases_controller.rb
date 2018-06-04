@@ -95,15 +95,24 @@ class CasesController < ApplicationController
 
   def open_cases
     full_list_of_cases = @global_nav_manager.current_page_or_tab.cases
-    if params[:search_query]
-      @cases = search_and_filter full_list_of_cases
+
+    query_list_params = filter_params.merge(
+      list_path: request.path,
+    )
+    service = CaseSearchService.new(user: current_user,
+                                    query_type: :list,
+                                    query_params: query_list_params)
+    service.call(full_list_of_cases)
+    @query = service.query
+    if service.error?
+      flash.now[:alert] = service.error_message
     else
-      @query = SearchQuery.record_list(current_user, request.path)
+      @page = params[:page] || '1'
+      @cases = service.result_set.by_deadline.page(@page).decorate
       @parent_id = @query.id
-      @cases = full_list_of_cases.by_deadline
-                 .page(params[:page])
-                 .decorate
+      flash[:query_id] = @query.id
     end
+
     @filter_crumbs = @query.filter_crumbs
     @current_tab_name = 'all_cases'
     @can_add_case = policy(Case::Base).can_add_case?
@@ -292,13 +301,19 @@ class CasesController < ApplicationController
   end
 
   def search
-    @cases = []
-
-    if params[:search_query]
-      @cases = search_and_filter
+    service = CaseSearchService.new(user: current_user,
+                                    query_type: :search,
+                                    query_params: filter_params)
+    service.call
+    @query = service.query
+    if service.error?
+      flash.now[:alert] = service.error_message
     else
-      @query = SearchQuery.new
+      @page = params[:page] || '1'
+      @parent_id = @query.id
+      flash[:query_id] = @query.id
     end
+    @cases = service.result_set.page(@page).decorate
     @filter_crumbs = @query.filter_crumbs
   end
 
@@ -486,6 +501,29 @@ class CasesController < ApplicationController
     @action_url = request.env['PATH_INFO']
   end
 
+  def filter_params
+    params.fetch(:search_query, {}).permit(
+      :search_text,
+      :parent_id,
+      :external_deadline_from,
+      :external_deadline_from_dd,
+      :external_deadline_from_mm,
+      :external_deadline_from_yyyy,
+      :external_deadline_to,
+      :external_deadline_to_dd,
+      :external_deadline_to_mm,
+      :external_deadline_to_yyyy,
+      common_exemption_ids: [],
+      exemption_ids: [],
+      filter_assigned_to_ids: [],
+      filter_case_type: [],
+      filter_open_case_status: [],
+      filter_sensitivity: [],
+      filter_status: [],
+      filter_timeliness: [],
+    )
+  end
+
   def search_and_filter(full_list_of_cases = nil)
     service = CaseSearchService.new(current_user,
                                     params.slice(:search_query, :page))
@@ -624,7 +662,8 @@ class CasesController < ApplicationController
 
   def edit_params(correspondence_type)
     case correspondence_type
-    when 'foi' then edit_foi_params
+      when 'foi' then edit_foi_params
+      when 'sar' then edit_sar_params
     end
   end
 
@@ -640,6 +679,22 @@ class CasesController < ApplicationController
       :delivery_method,
       :flag_for_disclosure_specialists,
       uploaded_request_files: [],
+    )
+  end
+
+  def edit_sar_params
+    params.require(:case_sar).permit(
+        :subject_full_name,
+        :subject_type,
+        :third_party,
+        :name,
+        :received_date_dd, :received_date_mm, :received_date_yyyy,
+        :subject,
+        :message,
+        :flag_for_disclosure_specialists,
+        :reply_method,
+        :email,
+        :postal_address
     )
   end
 

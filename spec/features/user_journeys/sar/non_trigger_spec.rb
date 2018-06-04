@@ -26,32 +26,18 @@ feature 'Non-Offender SAR case that does not require clearance' do
   end
 
   scenario 'end-to-end journey', js: true do
-    _kase = create_and_assign_sar_case user: manager,
-                                       responding_team: responding_team
+    kase = create_and_assign_sar_case user: manager,
+                                      responding_team: responding_team
+    accept_case kase: kase,
+                user: responder,
+                do_logout: false
 
-    # edit_case kase: kase,
-    #           user: manager,
-    #           subject: 'new test subject'
+    set_case_dates_back_by(kase, 7.business_days)
 
-    # accept_case kase: kase,
-    #             user: responder,
-    #             do_logout: false
+    add_message_to_case kase: kase,
+                        message: 'This. Is. A. Test.',
+                        do_logout: false
 
-    # set_case_dates_back_by(kase, 7.business_days)
-
-    # add_message_to_case kase: kase,
-    #                     message: 'This. Is. A. Test.',
-    #                     do_logout: false
-
-    # upload_response kase: kase,
-    #                 user: responder,
-    #                 file: UPLOAD_RESPONSE_DOCX_FIXTURE,
-    #                 do_login: false
-
-    # mark_case_as_sent kase: kase,
-    #                   user: responder
-
-    # close_case kase: kase,
-    #            user: manager
+    close_sar_case timeliness: 'in time'
   end
 end

@@ -20,16 +20,17 @@ class Case::BasePolicy < ApplicationPolicy
   #
   #     scope = Pundit.policy_scope(user, Case::Base.all)
   #
-  # This actually calls Case::BasePolicy::Scope.new(user, Case::Base.all).resolve behind the scenes,
-  # and so in the case of responders, the resulting scope is limited to cases that he can work on.
+  # which is in fact shorthand for:
+  #     scope = Case::BasePolicy::Scope.new(user, Case::Base.all).resolve
   #
-  # However, for searching, we need a wider scope, and so we use this to return a scope containing
-  # all the records that a responder is allowed to view:
-  #
-  #     scope = Case::BasePolicy::Scope.new(user, Case::Base.all).for_view_only
-  #
+
   class Scope
     attr_reader :user, :scope
+
+    CASE_TYPES = [
+        Case::FOI::Standard,
+        Case::SAR
+    ]
 
     def initialize(user, scope)
       @user  = user
@@ -37,39 +38,20 @@ class Case::BasePolicy < ApplicationPolicy
     end
 
 
-    def for_view_only
-      # the base scope with no qualifiers is for viewing cases
-      if user.manager? || user.responder? || user.approver?
-        Case::Base.all
-      else
-        Case::Base.none
-      end
-    end
-
+    # We resolve the scope for Case::BasePolicy by getting the scope on each of the sub-classes
+    # and then combining them.  Unfortunately ActiveRecord::Relation#or doesn't work - we get
+    #
+    #    ArgumentError Relation passed to #or must be structurally compatible. Incompatible values: [:create_with]
+    #
+    # This appears to be a known bug, so we are getting round it by getting all the ids, and then returning
+    # a relation comprising the records with those ids.
+    #
     def resolve
-      scopes = []
-      if user.manager?
-        scopes << ->(inner_scope) { inner_scope.all }
+      ids = []
+      CASE_TYPES.each do |case_type|
+        ids << Pundit.policy_scope(user, case_type).map(&:id)
       end
-
-      if user.responder?
-        case_ids = Assignment.with_teams(user.responding_teams).pluck(:case_id)
-        scopes << -> (inner_scope) { inner_scope.where(id: case_ids) }
-      end
-
-      if user.approver?
-        scopes << ->(inner_scope) { inner_scope.all }
-      end
-
-      if scopes.present?
-        final_scope = scopes.shift.call(scope)
-        scopes.each do |scope_func|
-          final_scope.or(scope_func.call(scope))
-        end
-        final_scope
-      else
-        Case::Base.none
-      end
+      Case::Base.where(id: ids.flatten)
     end
   end
 
@@ -113,6 +95,11 @@ class Case::BasePolicy < ApplicationPolicy
         (!self.case.awaiting_responder? &&
             check_user_is_a_responder_for_case) ||
         check_user_is_an_approver_for_case
+  end
+
+  def destroy_case_link?
+    # if we can make a link, we can destroy a link!
+    new_case_link?
   end
 
   def can_view_attachments?
@@ -185,7 +172,7 @@ class Case::BasePolicy < ApplicationPolicy
   end
 
   def can_download_stats?
-    user.manager?
+    user.manager? || user.responder?
   end
 
   def can_flag_for_clearance?
@@ -456,11 +443,10 @@ class Case::BasePolicy < ApplicationPolicy
   end
 
   def show?
+    # this is just a catch-all in case we introduce a new type without a corresponding policy for the new type.
+    # For safety sake, we do not allow viewing
     clear_failed_checks
-
-    check(:user_is_a_manager_for_case) ||
-      check(:user_is_a_responder_for_case) ||
-      check(:user_is_an_approver_for_case)
+    false
   end
 
   private

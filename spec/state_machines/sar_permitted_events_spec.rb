@@ -49,7 +49,8 @@ describe ConfigurableStateMachine::Machine do
         it "should show permitted events" do
           k = create :closed_sar
           expect(k.current_state).to eq 'closed'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:destroy_case,
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:assign_to_new_team,
+                                                                      :destroy_case,
                                                                       :edit_case,
                                                                       :link_a_case,
                                                                       :remove_linked_case]

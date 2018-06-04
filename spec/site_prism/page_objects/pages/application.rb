@@ -17,6 +17,7 @@ module PageObjects
         admin_cases_new:                'Admin::Cases::NewPage',
         approve_response_interstitial:  'Cases::ApproveResponseInterstitialPage',
         approve_response:               'Cases::ApproveResponsePage',
+        assign_to_new_team:             'Assignments::AssignToNewTeamPage',
         assignments_edit:               'Assignments::EditPage',
         assignments_new:                'Assignments::NewPage',
         assignment_rejected:            'Assignments::ShowRejectedPage',

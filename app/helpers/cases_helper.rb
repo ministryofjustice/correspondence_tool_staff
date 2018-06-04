@@ -10,7 +10,7 @@ module CasesHelper
       link_to kase.__send__(field), case_path(kase.id)
     else
       position += 1
-      page_offset = Kaminari.config[:default_per_page] * (page.to_i - 1)
+      page_offset = Kaminari.config.default_per_page * (page.to_i - 1)
       link_to kase.__send__(field), case_path(kase.id, pos: page_offset + position)
     end
 
@@ -182,11 +182,13 @@ module CasesHelper
   end
 
   def action_link_for_destroy_case_link(kase, linked_case)
-    link_to t('common.case.remove_linked_case_html', case_number: linked_case.number),
-            destroy_link_on_case_path(id: kase.id,
-                                      linked_case_number: linked_case.number),
-            data: { confirm: "Are you sure?" },
-            method: :delete
+    if policy(kase).destroy_case_link?
+      link_to t('common.case.remove_linked_case_html', case_number: linked_case.number),
+              destroy_link_on_case_path(id: kase.id,
+                                        linked_case_number: linked_case.number),
+              data: { confirm: "Are you sure?" },
+              method: :delete
+    end
   end
 
   def request_details_html(kase)

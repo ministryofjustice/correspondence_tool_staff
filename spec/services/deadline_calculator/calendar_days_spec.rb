@@ -21,9 +21,9 @@ describe DeadlineCalculator::CalendarDays do
     end
 
     describe 'external deadline' do
-      it 'is 40 calendar days after the date received' do
+      it 'is 30 calendar days after the date received' do
         expect(deadline_calculator.external_deadline)
-          .to eq 40.days.since(sar_case.received_date)
+          .to eq 30.days.since(sar_case.received_date)
       end
     end
   end

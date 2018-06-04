@@ -9,10 +9,4 @@
 
 = render partial: 'layouts/header'
 
-= form_for @case, as: "case_#{@correspondence_type}", url: case_path(@case) do |f|
-
-  = hidden_field_tag 'correspondence_type', @correspondence_type
-  = render partial: 'cases/foi/new_form_common', locals: { f: f }
-  = render partial: 'edit_form_details', locals: { f: f }
-
-  = f.submit t('button.submit'), { class: 'button' }
+= render partial: "cases/#{@case.type_abbreviation.downcase}/edit", locals: { kase: @case }

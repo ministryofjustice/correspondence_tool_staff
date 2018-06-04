@@ -105,24 +105,47 @@ describe ExternalDeadlineFilter do
       describe 'params that will be submitted when clicking on the crumb' do
         subject { filter.crumbs[0].second }
 
-        it 'remove the external deadline filters' do
-          expect(subject).to include 'external_deadline_from' => '',
-                                     'external_deadline_to'   => ''
-        end
+        it { should eq 'external_deadline_from' => '',
+                       'external_deadline_to' => '',
+                       'parent_id'            => search_query.id }
+      end
+    end
+  end
 
-        it 'leaves the other attributes untouched' do
-          expect(subject).to include(
-                               'search_text'            => 'Winnie the Pooh',
-                               'common_exemption_ids'   => [],
-                               'exemption_ids'          => [],
-                               'filter_assigned_to_ids' => [],
-                               'filter_case_type'       => [],
-                               'filter_sensitivity'     => [],
-                               'filter_status'          => [],
-                               'filter_timeliness'      => [],
-                               'parent_id'              => search_query.id,
-                             )
-        end
+  describe '.process_params!' do
+    describe 'when processing external_deadline_from' do
+      it 'converts dates from govuk date fields' do
+        params = {
+          external_deadline_from_yyyy: '2018',
+          external_deadline_from_mm:   '05',
+          external_deadline_from_dd:   '27',
+        }.with_indifferent_access
+        described_class.process_params!(params)
+        expect(params[:external_deadline_from]).to eq Date.new(2018, 5, 27)
+      end
+
+      it 'clears out an empty date' do
+        params = { external_deadline_from: '' }.with_indifferent_access
+        described_class.process_params!(params)
+        expect(params[:external_deadline_from]).to be_nil
+      end
+    end
+
+    describe 'when processing external_deadline_to' do
+      it 'converts dates from govuk date fields' do
+        params = {
+          external_deadline_to_yyyy: '2018',
+          external_deadline_to_mm:   '05',
+          external_deadline_to_dd:   '27',
+        }.with_indifferent_access
+        described_class.process_params!(params)
+        expect(params[:external_deadline_to]).to eq Date.new(2018, 5, 27)
+      end
+
+      it 'clears out an empty date' do
+        params = { external_deadline_to: '' }.with_indifferent_access
+        described_class.process_params!(params)
+        expect(params[:external_deadline_to]).to be nil
       end
     end
   end
