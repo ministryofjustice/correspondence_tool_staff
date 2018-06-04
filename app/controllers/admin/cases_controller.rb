@@ -6,7 +6,6 @@ class Admin::CasesController < ApplicationController
   before_action :authorize_admin
 
   def create
-    binding.pry
     @correspondence_type_abbreviation = params.fetch(:correspondence_type)
     case_params = params[case_and_type]
 

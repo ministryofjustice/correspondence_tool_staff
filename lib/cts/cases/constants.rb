@@ -11,7 +11,6 @@ module CTS
 
 
       CASE_JOURNEYS = {
-        foi:{
           unflagged: [
               :awaiting_responder,
               :drafting,
@@ -45,14 +44,6 @@ module CTS
               :pending_press_office_clearance,
               :pending_private_office_clearance,
           ]
-        },
-        sar:{
-          unflagged:[
-            :awaiting_responder,
-            :drafting,
-            :closed
-          ]
-        }
       }
 
     end
