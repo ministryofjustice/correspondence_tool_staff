@@ -110,6 +110,7 @@ module PageObjects
         end
 
         element :edit_case, :xpath, '//a[contains(.,"Edit case details")]'
+        element :edit_closure, :xpath, '//a[contains(.,"Edit closure details")]'
       end
     end
   end

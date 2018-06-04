@@ -355,64 +355,6 @@ describe Case::BasePolicy do
       it { should_not permit(disclosure_specialist, unassigned_case) }
       it { should_not permit(disclosure_specialist, press_flagged_case) }
     end
-
-    permissions :unflag_for_clearance_from_unassigned_to_unassigned? do
-      it { should     permit(disclosure_specialist, unassigned_flagged_case) }
-      it { should     permit(manager,               unassigned_flagged_case) }
-      it { should_not permit(responder,             unassigned_flagged_case) }
-      it { should_not permit(disclosure_specialist, unassigned_case) }
-    end
-
-    permissions :unflag_for_clearance_from_awaiting_responder_to_awaiting_responder? do
-      it { should     permit(disclosure_specialist, awaiting_responder_flagged_case) }
-      it { should     permit(manager,               awaiting_responder_flagged_case) }
-      it { should_not permit(responder,             awaiting_responder_flagged_case) }
-      it { should_not permit(manager,               awaiting_responder_case) }
-    end
-
-    permissions :unflag_for_clearance_from_drafting_to_drafting? do
-      it { should     permit(disclosure_specialist, flagged_accepted_case) }
-      it { should     permit(manager,               flagged_accepted_case) }
-      it { should_not permit(responder,             flagged_accepted_case) }
-      it { should_not permit(manager,               accepted_case) }
-    end
-
-    permissions :unflag_for_clearance_from_awaiting_dispatch_to_awaiting_dispatch? do
-      it { should     permit(disclosure_specialist, awaiting_dispatch_flagged_case) }
-      it { should     permit(manager,               awaiting_dispatch_flagged_case) }
-      it { should_not permit(responder,             awaiting_dispatch_flagged_case) }
-      it { should_not permit(manager,               awaiting_dispatch_case) }
-    end
-
-    permissions :unflag_for_clearance_from_pending_dacu_clearance_to_awaiting_dispatch? do
-      context 'flagged for dacu disclosure only' do
-        it { should     permit(disclosure_specialist, pending_dacu_clearance_case) }
-        it { should     permit(manager,               pending_dacu_clearance_case) }
-        it { should_not permit(responder,             pending_dacu_clearance_case) }
-      end
-
-      context 'flagged for dacu disclosure and press office' do
-        it { should_not permit(manager,               pending_dacu_clearance_press_case) }
-        it { should_not permit(disclosure_specialist, pending_dacu_clearance_press_case) }
-        it { should_not permit(responder,             pending_dacu_clearance_press_case) }
-        it { should_not permit(press_officer,         pending_dacu_clearance_press_case) }
-      end
-    end
-
-    permissions :unflag_for_clearance_from_pending_dacu_clearance_to_pending_dacu_clearance? do
-      context 'flagged for dacu disclosure only' do
-        it { should_not permit(disclosure_specialist, pending_dacu_clearance_case) }
-        it { should_not permit(manager,               pending_dacu_clearance_case) }
-        it { should_not permit(responder,             pending_dacu_clearance_case) }
-      end
-      context 'flagged for dacu disclosure and press office' do
-        it { should_not permit(manager,               pending_dacu_clearance_press_case) }
-        it { should_not permit(disclosure_specialist, pending_dacu_clearance_press_case) }
-        it { should_not permit(responder,             pending_dacu_clearance_press_case) }
-        it { should     permit(press_officer,         pending_dacu_clearance_press_case) }
-        it { should_not permit(private_officer,       pending_dacu_clearance_press_case) }
-      end
-    end
   end
 
   permissions :assignments_reassign_user? do
@@ -578,56 +520,6 @@ describe Case::BasePolicy do
     it { should_not permit(press_officer,          pending_press_clearance_case) }
   end
 
-  permissions :upload_response_and_return_for_redraft_from_pending_dacu_clearance_to_drafting? do
-    it { should_not permit(manager,                pending_dacu_clearance_case) }
-    it { should_not permit(responder,              pending_dacu_clearance_case) }
-    it { should     permit(disclosure_specialist,  pending_dacu_clearance_case) }
-    it { should_not permit(press_officer,          pending_dacu_clearance_case) }
-  end
-
-  permissions :approve_from_pending_dacu_clearance_to_awaiting_dispatch? do
-    it { should_not permit(responder,             pending_dacu_clearance_case) }
-    it { should     permit(disclosure_specialist, pending_dacu_clearance_case) }
-    it { should_not permit(press_officer,         pending_dacu_clearance_case) }
-    it { should_not permit(private_officer,       pending_dacu_clearance_case) }
-  end
-
-  permissions :approve_from_pending_dacu_clearance_to_pending_press_office_clearance? do
-    let(:kase)                           { pending_dacu_clearance_press_case }
-    let(:assigned_disclosure_specialist) { kase.assigned_disclosure_specialist }
-
-    it { should_not permit(responder,                       kase) }
-    it { should_not permit(another_disclosure_specialist,   kase) }
-    it { should     permit(assigned_disclosure_specialist,  kase) }
-    it { should_not permit(press_officer,                   kase) }
-    it { should_not permit(private_officer,                 kase) }
-  end
-
-  permissions :approve_from_pending_press_office_clearance_to_awaiting_dispatch? do
-    it { should_not permit(responder,             pending_press_clearance_case) }
-    it { should_not permit(disclosure_specialist, pending_press_clearance_case) }
-    it { should_not permit(press_officer,         pending_press_clearance_case) }
-    it { should_not permit(private_officer,       pending_press_clearance_case) }
-  end
-
-  permissions :approve_from_pending_press_office_clearance_to_pending_private_office_clearance? do
-    let(:kase)                   { pending_press_private_clearance_case }
-    let(:assigned_press_officer) { kase.assigned_press_officer }
-
-    it { should_not permit(responder,              kase) }
-    it { should_not permit(disclosure_specialist,  kase) }
-    it { should     permit(assigned_press_officer, kase) }
-    it { should_not permit(another_press_officer,  kase) }
-    it { should_not permit(private_officer,        kase) }
-  end
-
-  permissions :approve_from_pending_private_office_clearance_to_awaiting_dispatch? do
-    it { should_not permit(responder,             pending_private_clearance_case) }
-    it { should_not permit(disclosure_specialist, pending_private_clearance_case) }
-    it { should_not permit(press_officer,         pending_private_clearance_case) }
-    it { should     permit(private_officer,       pending_private_clearance_case) }
-  end
-
   permissions :request_amends? do
     it { should_not permit(responder,             pending_press_clearance_case) }
     it { should_not permit(disclosure_specialist, pending_press_clearance_case) }
@@ -648,39 +540,6 @@ describe Case::BasePolicy do
     it { should_not permit(disclosure_specialist, pending_private_clearance_case) }
     it { should_not permit(press_officer,         pending_private_clearance_case) }
     it { should     permit(private_officer,       pending_private_clearance_case) }
-  end
-
-  permissions :request_amends_from_pending_press_office_clearance_to_pending_dacu_clearance? do
-    it { should_not permit(responder,             pending_press_clearance_case) }
-    it { should_not permit(disclosure_specialist, pending_press_clearance_case) }
-    it { should     permit(press_officer,         pending_press_clearance_case) }
-    it { should_not permit(private_officer,       pending_press_clearance_case) }
-  end
-
-  permissions :request_amends_from_pending_private_office_clearance_to_pending_dacu_clearance? do
-    it { should_not permit(responder,             pending_private_clearance_case) }
-    it { should_not permit(disclosure_specialist, pending_private_clearance_case) }
-    it { should_not permit(press_officer,         pending_private_clearance_case) }
-    it { should     permit(private_officer,       pending_private_clearance_case) }
-  end
-
-  permissions :add_response_to_flagged_case_from_drafting_to_pending_dacu_clearance? do
-    it { should     permit(responder,             case_with_response_trigger) }
-    it { should     permit(responder,             case_with_response_flagged) }
-    it { should     permit(coworker,              case_with_response_trigger) }
-    it { should_not permit(another_responder,     case_with_response_trigger) }
-    it { should_not permit(responder,             case_with_response) }
-    it { should_not permit(disclosure_specialist, case_with_response_trigger) }
-    it { should_not permit(press_officer,         case_with_response_trigger) }
-    it { should_not permit(private_officer,       case_with_response_trigger) }
-  end
-
-  permissions :upload_response_and_approve_from_pending_dacu_clearance_to_awaiting_dispatch? do
-    it { should_not permit(responder,             pending_dacu_clearance_case) }
-    it { should     permit(disclosure_specialist, pending_dacu_clearance_case) }
-    it { should_not permit(another_disclosure_specialist, pending_dacu_clearance_case) }
-    it { should_not permit(press_officer,         pending_dacu_clearance_case) }
-    it { should_not permit(private_officer,       pending_dacu_clearance_case) }
   end
 
   permissions :extend_for_pit? do
@@ -763,6 +622,25 @@ describe Case::BasePolicy do
     it { should_not permit(responder,             case_with_response_flagged) }
     it { should_not permit(responder,             responded_case) }
     it { should_not permit(responder,             closed_case) }
+  end
 
+  permissions :update_closure? do
+    it 'returns true if the event can be triggered by the state machine' do
+      allow(closed_case.state_machine).to receive(:can_trigger_event?).and_return(true)
+      should permit(manager, closed_case)
+      expect(closed_case.state_machine).to have_received(:can_trigger_event?).with(
+                                             event_name: :update_closure,
+                                             metadata: { acting_user_id: manager.id }
+                                           )
+    end
+
+    it 'returns false if the event cannot be triggered by the state machine' do
+      allow(closed_case.state_machine).to receive(:can_trigger_event?).and_return(false)
+      should_not permit(manager, closed_case)
+      expect(closed_case.state_machine).to have_received(:can_trigger_event?).with(
+                                             event_name: :update_closure,
+                                             metadata: { acting_user_id: manager.id }
+                                           )
+    end
   end
 end

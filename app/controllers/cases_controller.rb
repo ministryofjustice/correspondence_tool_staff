@@ -3,11 +3,13 @@
 class CasesController < ApplicationController
   before_action :set_case,
                 only: [
+                  :edit_closure,
                   :extend_for_pit,
                   :execute_extend_for_pit,
                   :execute_new_case_link,
                   :new_case_link,
-                  :destroy_case_link
+                  :destroy_case_link,
+                  :update_closure
                 ]
   before_action :set_url, only: [:search, :open_cases]
 
@@ -135,8 +137,6 @@ class CasesController < ApplicationController
     end
   end
 
-
-
   def create
     @correspondence_type_abbreviation = params.fetch(:correspondence_type)
 
@@ -194,7 +194,13 @@ class CasesController < ApplicationController
     @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
     authorize @case
 
+    @case = @case.decorate
     render :edit
+  end
+
+  def edit_closure
+    authorize @case, :update_closure?
+    @case = @case.decorate
   end
 
   def confirm_destroy
@@ -286,6 +292,23 @@ class CasesController < ApplicationController
     else
       set_permitted_events
       render :close
+    end
+  end
+
+  def update_closure
+    authorize @case
+
+    @case.prepare_for_close
+    close_params = process_closure_params(@case.type_abbreviation)
+    if @case.update(close_params)
+      @case.state_machine.update_closure!(acting_user: current_user,
+                                          acting_team: @case.team_for_user(current_user))
+      set_permitted_events
+      flash[:notice] = t('notices.closure_details_updated')
+      redirect_to case_path(@case)
+    else
+      @case = @case.decorate
+      render :edit_closure
     end
   end
 
@@ -724,7 +747,8 @@ class CasesController < ApplicationController
     when 'can_add_attachment?',
          /^add_response_to_flagged_case/,
          'upload_responses?',
-         'new_response_upload?'
+         'new_response_upload?',
+         'update_closure?'
       super(exception, case_path(@case))
     else
       super

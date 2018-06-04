@@ -13,7 +13,7 @@ describe 'cases/edit.html.slim', type: :view do
                                     received_date: Date.new(2016,8,13)
 
       assign(:correspondence_type, 'foi')
-      assign(:case, kase)
+      assign(:case, kase.decorate)
 
       render
 
@@ -22,7 +22,7 @@ describe 'cases/edit.html.slim', type: :view do
       page = cases_edit_page
 
       expect(page.page_heading.heading.text).to eq "Edit case details"
-      expect(page.page_heading.sub_heading.text.strip).to eq kase.number
+      expect(page.page_heading.sub_heading.text.strip).to eq "#{kase.number} - FOI"
 
       expect(page.foi_detail.date_received_day.value).to eq '13'
       expect(page.foi_detail.date_received_month.value).to eq '8'

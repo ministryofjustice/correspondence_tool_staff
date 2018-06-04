@@ -50,6 +50,9 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
       responder_user:                      -> { find_or_create(:responder,
                                                                :findable,
                                                                responding_teams:[responding_team]) },
+      sar_responder_user:                  -> { find_or_create(:responder,
+                                                               :findable,
+                                                               responding_teams:[responding_team]) },
       another_responder_in_same_team_user: -> { find_or_create(:responder,
                                                                :findable,
                                                                identifier: 'another_responder_in_same_team',
@@ -78,6 +81,29 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
     # Each case is created in a lambda so that it can be conditionally created
     # depending on how StandardSetup is instantiated (see the only_cases arg). 
     @@cases = {
+      sar_noff_unassigned: ->(attributes={}) {
+        create(:sar_case,
+               {identifier: 'sar_noff_unassigned'}
+                 .merge(attributes))
+      },
+      sar_noff_awresp: ->(attributes={}) {
+        create(:awaiting_responder_sar,
+               {responding_team: responding_team,
+                identifier: 'sar_noff_awresp'}
+                 .merge(attributes))
+      },
+      sar_noff_draft: ->(attributes={}) {
+        create(:sar_being_drafted,
+               {responder: responder_user,
+                identifier: 'sar_noff_draft'}
+                 .merge(attributes))
+      },
+      sar_noff_closed: ->(attributes={}) {
+        create(:closed_sar,
+               {identifier: 'sar_noff_closed'}
+                 .merge(attributes))
+      },
+
       std_unassigned_foi: ->(attributes={}) {
         create(:case,
                {identifier: 'std_unassigned_foi'}
