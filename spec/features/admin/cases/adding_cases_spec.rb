@@ -40,7 +40,7 @@ feature 'adding cases' do
       expect(admin_cases_new_foi_page).to be_displayed
       admin_cases_new_foi_page.full_name.set "Test Name"
       admin_cases_new_foi_page.email.set "test@localhost"
-      admin_cases_new_foi_page.make_radio_button_choice('case_type_casefoistandard')
+      admin_cases_new_foi_page.make_radio_button_choice('case_foi_type_casefoistandard')
       admin_cases_new_foi_page.subject.set "test subject"
       admin_cases_new_foi_page.full_request.set "test message"
       admin_cases_new_foi_page.received_date.set 1.business_days.ago.to_date.to_s
@@ -59,14 +59,14 @@ feature 'adding cases' do
     end
 
     scenario 'creating a case flagged for DACU disclosure' do
-      kase = create_case(case_type: 'case_type_casefoistandard', target_state: 'drafting', flag: 'disclosure')
+      kase = create_case(case_type: 'case_foi_type_casefoistandard', target_state: 'drafting', flag: 'disclosure')
       expect(kase).to be_instance_of(Case::FOI::Standard)
       expect(kase.current_state).to eq 'drafting'
       expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
     end
 
     scenario 'creating a case flagged for press office' do
-      kase = create_case(case_type: 'case_type_casefoistandard', target_state: 'drafting', flag: 'private')
+      kase = create_case(case_type: 'case_foi_type_casefoistandard', target_state: 'drafting', flag: 'private')
       expect(kase).to be_instance_of(Case::FOI::Standard)
       expect(kase.current_state).to eq 'drafting'
       expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
@@ -75,7 +75,7 @@ feature 'adding cases' do
     end
 
     scenario 'creating a case flagged for private office' do
-      kase = create_case(case_type: 'case_type_casefoistandard', target_state: 'drafting', flag: 'private')
+      kase = create_case(case_type: 'case_foi_type_casefoistandard', target_state: 'drafting', flag: 'private')
       expect(kase).to be_instance_of(Case::FOI::Standard)
       expect(kase.current_state).to eq 'drafting'
       expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
@@ -84,20 +84,20 @@ feature 'adding cases' do
     end
 
     xscenario 'creating a flagged for disclosure case that is pending ds clearance' do
-      kase = create_case(case_type: 'case_type_casefoistandard', target_state: 'pending_dacu_disclosure', flag: 'disclosure')
+      kase = create_case(case_type: 'case_foi_type_casefoistandard', target_state: 'pending_dacu_disclosure', flag: 'disclosure')
       expect(kase).to be_instance_of(Case::FOI::Standard)
       expect(kase.current_state).to eq 'pending_dacu_clearance'
       expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
     end
 
     scenario 'creating a closed case', js: true do
-      kase = create_case(case_type: 'case_type_casefoistandard', target_state: 'closed')
+      kase = create_case(case_type: 'case_foi_type_casefoistandard', target_state: 'closed')
       expect(kase).to be_instance_of(Case::FOI::Standard)
       expect(kase.current_state).to eq 'closed'
     end
 
     scenario 'creating a responded case', js: true do
-      kase = create_case(case_type: 'case_type_casefoistandard', target_state: 'responded')
+      kase = create_case(case_type: 'case_foi_type_casefoistandard', target_state: 'responded')
       expect(kase).to be_instance_of(Case::FOI::Standard)
       expect(kase.current_state).to eq 'responded'
     end
@@ -105,13 +105,13 @@ feature 'adding cases' do
 
   context 'Case::FOI::TimelinessReview' do
     scenario 'creating a closed case', js: true do
-      kase = create_case(case_type: 'case_type_casefoitimelinessreview', target_state: 'closed')
+      kase = create_case(case_type: 'case_foi_type_casefoitimelinessreview', target_state: 'closed')
       expect(kase).to be_instance_of(Case::FOI::TimelinessReview)
       expect(kase.current_state).to eq 'closed'
     end
 
     scenario 'creating a responded case' do
-      kase = create_case(case_type: 'case_type_casefoitimelinessreview', target_state: 'responded')
+      kase = create_case(case_type: 'case_foi_type_casefoitimelinessreview', target_state: 'responded')
       expect(kase).to be_instance_of(Case::FOI::TimelinessReview)
       expect(kase.current_state).to eq 'responded'
     end
@@ -119,13 +119,13 @@ feature 'adding cases' do
 
   context 'Case::FOI::ComplianceReview' do
     scenario 'creating a closed case', js: true do
-      kase = create_case(case_type: 'case_type_casefoicompliancereview', target_state: 'closed')
+      kase = create_case(case_type: 'case_foi_type_casefoicompliancereview', target_state: 'closed')
       expect(kase).to be_instance_of(Case::FOI::ComplianceReview)
       expect(kase.current_state).to eq 'closed'
     end
 
     scenario 'creating a responded case' do
-      kase = create_case(case_type: 'case_type_casefoicompliancereview', target_state: 'responded')
+      kase = create_case(case_type: 'case_foi_type_casefoicompliancereview', target_state: 'responded')
       expect(kase).to be_instance_of(Case::FOI::ComplianceReview)
       expect(kase.current_state).to eq 'responded'
     end

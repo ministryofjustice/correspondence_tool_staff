@@ -6,6 +6,7 @@ class Admin::CasesController < ApplicationController
   before_action :authorize_admin
 
   def create
+    binding.pry
     @correspondence_type_abbreviation = params.fetch(:correspondence_type)
     case_params = params[case_and_type]
 
@@ -19,7 +20,7 @@ class Admin::CasesController < ApplicationController
       redirect_to(admin_cases_path)
     else
       @case.responding_team = BusinessUnit.find(
-        params[:responding_team]
+        case_params[:responding_team]
       )
       prepare_flagged_options_for_displaying
       @target_states = available_target_states
@@ -43,8 +44,8 @@ class Admin::CasesController < ApplicationController
 
   def prepare_new_foi
     @correspondence_type_abbreviation = params[:correspondence_type]
-      case_class = correspondence_types_map[@correspondence_type_abbreviation.to_sym].first
-      @case = case_class.new
+    case_class = correspondence_types_map[@correspondence_type_abbreviation.to_sym].first
+    @case = case_class.new
 
     case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::FOI::Standard' )
     @case = case_creator.new_case
@@ -62,13 +63,14 @@ class Admin::CasesController < ApplicationController
     case_class = correspondence_types_map[@correspondence_type_abbreviation.to_sym].first
     @case = case_class.new
 
-    case_creator = CTS::Cases::CreateSAR.new(Rails.logger, case_model: Case::Base, type: 'Case::SAR' )
+    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::SAR' )
     @case = case_creator.new_case
     @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.sar).sample
     @target_states = available_target_states
     @selected_state = 'drafting'
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
     @case.reply_method = 'send_by_email'
+
     render :new
   end
 
@@ -88,7 +90,7 @@ class Admin::CasesController < ApplicationController
   end
 
   def available_target_states
-    CTS::Cases::Constants::CASE_JOURNEYS.values.flatten.uniq.sort
+    CTS::Cases::Constants::CASE_JOURNEYS[@correspondence_type_abbreviation.to_sym].values.flatten.uniq.sort
   end
 
   def create_params(correspondence_type)
@@ -117,7 +119,6 @@ class Admin::CasesController < ApplicationController
 
   def create_sar_params
     params.require(:case_sar).permit(
-      :delivery_method,
       :email,
       :flag_for_disclosure_specialists,
       :message,
@@ -136,15 +137,15 @@ class Admin::CasesController < ApplicationController
   end
 
   def param_flag_for_ds?
-    params[:case][:flagged_for_disclosure_specialist_clearance] == '1'
+    params[case_and_type][:flagged_for_disclosure_specialist_clearance] == '1'
   end
 
   def param_flag_for_press?
-    params[:case][:flagged_for_press_office_clearance] == '1'
+    params[case_and_type][:flagged_for_press_office_clearance] == '1'
   end
 
   def param_flag_for_private?
-    params[:case][:flagged_for_private_office_clearance] == '1'
+    params[case_and_type][:flagged_for_private_office_clearance] == '1'
   end
 
   def gather_teams_for_flagging
@@ -157,9 +158,9 @@ class Admin::CasesController < ApplicationController
 
   def prepare_flagged_options_for_creation(params)
     if param_flag_for_ds? && !param_flag_for_press? && !param_flag_for_private?
-      params[:case][:flag_for_disclosure] = true
+      params[case_and_type][:flag_for_disclosure] = true
     else
-      # params[:case][:flag_for_team] = gather_teams_for_flagging.join(',')
+      params[case_and_type][:flag_for_team] = gather_teams_for_flagging.join(',')
     end
   end
 
