@@ -12,7 +12,7 @@ def edit_case_step(kase:, subject: nil)
   end
 end
 
-def edit_case_closure_step(kase:, date_responded: Date.today, tmm: false)
+def edit_case_closure_step(kase:, date_responded: Date.today, tmm: false) # rubocop:disable Metrics/MethodLength
   expect(cases_show_page).to be_displayed(id: kase.id)
   expect(cases_show_page.case_details).to have_edit_closure
 
