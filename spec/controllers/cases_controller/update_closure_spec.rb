@@ -10,7 +10,7 @@ describe CasesController do
     DbHousekeeping.clean
   end
 
-  let(:manager)            { create :disclosure_bmt_user }
+  let(:manager) { create :disclosure_bmt_user }
 
   describe 'PATCH update_closure' do
     context 'SAR cases' do
