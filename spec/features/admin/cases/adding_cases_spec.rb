@@ -24,7 +24,6 @@ feature 'adding cases' do
     scenario 'creating a case with the default values' do
       admin_cases_page.load
       admin_cases_page.create_case_button.click
-      # expect(admin_cases_new_page).to be_displayed
       admin_cases_new_page.create_link_for_correspondence('FOI').click
       admin_cases_new_foi_page.submit_button.click
       expect(admin_cases_page).to be_displayed
@@ -59,14 +58,14 @@ feature 'adding cases' do
     end
 
     scenario 'creating a case flagged for DACU disclosure' do
-      kase = create_case(case_type: 'case_foi_type_casefoistandard', target_state: 'drafting', flag: 'disclosure')
+      kase = create_foi(case_type: 'case_foi_type_casefoistandard', target_state: 'drafting', flag: 'disclosure')
       expect(kase).to be_instance_of(Case::FOI::Standard)
       expect(kase.current_state).to eq 'drafting'
       expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
     end
 
     scenario 'creating a case flagged for press office' do
-      kase = create_case(case_type: 'case_foi_type_casefoistandard', target_state: 'drafting', flag: 'private')
+      kase = create_foi(case_type: 'case_foi_type_casefoistandard', target_state: 'drafting', flag: 'private')
       expect(kase).to be_instance_of(Case::FOI::Standard)
       expect(kase.current_state).to eq 'drafting'
       expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
@@ -75,7 +74,7 @@ feature 'adding cases' do
     end
 
     scenario 'creating a case flagged for private office' do
-      kase = create_case(case_type: 'case_foi_type_casefoistandard', target_state: 'drafting', flag: 'private')
+      kase = create_foi(case_type: 'case_foi_type_casefoistandard', target_state: 'drafting', flag: 'private')
       expect(kase).to be_instance_of(Case::FOI::Standard)
       expect(kase.current_state).to eq 'drafting'
       expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
@@ -84,20 +83,20 @@ feature 'adding cases' do
     end
 
     xscenario 'creating a flagged for disclosure case that is pending ds clearance' do
-      kase = create_case(case_type: 'case_foi_type_casefoistandard', target_state: 'pending_dacu_disclosure', flag: 'disclosure')
+      kase = create_foi(case_type: 'case_foi_type_casefoistandard', target_state: 'pending_dacu_disclosure', flag: 'disclosure')
       expect(kase).to be_instance_of(Case::FOI::Standard)
       expect(kase.current_state).to eq 'pending_dacu_clearance'
       expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
     end
 
     scenario 'creating a closed case', js: true do
-      kase = create_case(case_type: 'case_foi_type_casefoistandard', target_state: 'closed')
+      kase = create_foi(case_type: 'case_foi_type_casefoistandard', target_state: 'closed')
       expect(kase).to be_instance_of(Case::FOI::Standard)
       expect(kase.current_state).to eq 'closed'
     end
 
     scenario 'creating a responded case', js: true do
-      kase = create_case(case_type: 'case_foi_type_casefoistandard', target_state: 'responded')
+      kase = create_foi(case_type: 'case_foi_type_casefoistandard', target_state: 'responded')
       expect(kase).to be_instance_of(Case::FOI::Standard)
       expect(kase.current_state).to eq 'responded'
     end
@@ -105,13 +104,13 @@ feature 'adding cases' do
 
   context 'Case::FOI::TimelinessReview' do
     scenario 'creating a closed case', js: true do
-      kase = create_case(case_type: 'case_foi_type_casefoitimelinessreview', target_state: 'closed')
+      kase = create_foi(case_type: 'case_foi_type_casefoitimelinessreview', target_state: 'closed')
       expect(kase).to be_instance_of(Case::FOI::TimelinessReview)
       expect(kase.current_state).to eq 'closed'
     end
 
     scenario 'creating a responded case' do
-      kase = create_case(case_type: 'case_foi_type_casefoitimelinessreview', target_state: 'responded')
+      kase = create_foi(case_type: 'case_foi_type_casefoitimelinessreview', target_state: 'responded')
       expect(kase).to be_instance_of(Case::FOI::TimelinessReview)
       expect(kase.current_state).to eq 'responded'
     end
@@ -119,13 +118,13 @@ feature 'adding cases' do
 
   context 'Case::FOI::ComplianceReview' do
     scenario 'creating a closed case', js: true do
-      kase = create_case(case_type: 'case_foi_type_casefoicompliancereview', target_state: 'closed')
+      kase = create_foi(case_type: 'case_foi_type_casefoicompliancereview', target_state: 'closed')
       expect(kase).to be_instance_of(Case::FOI::ComplianceReview)
       expect(kase.current_state).to eq 'closed'
     end
 
     scenario 'creating a responded case' do
-      kase = create_case(case_type: 'case_foi_type_casefoicompliancereview', target_state: 'responded')
+      kase = create_foi(case_type: 'case_foi_type_casefoicompliancereview', target_state: 'responded')
       expect(kase).to be_instance_of(Case::FOI::ComplianceReview)
       expect(kase.current_state).to eq 'responded'
     end
@@ -135,7 +134,6 @@ feature 'adding cases' do
     scenario 'creating a case with the default values' do
       admin_cases_page.load
       admin_cases_page.create_case_button.click
-      # expect(admin_cases_new_page).to be_displayed
       admin_cases_new_page.create_link_for_correspondence('SAR').click
       admin_cases_new_sar_page.submit_button.click
       expect(admin_cases_page).to be_displayed
@@ -146,7 +144,6 @@ feature 'adding cases' do
       admin_cases_page.load
 
       admin_cases_page.create_case_button.click
-      # expect(admin_cases_new_page).to be_displayed
       admin_cases_new_page.create_link_for_correspondence('SAR').click
       expect(admin_cases_new_sar_page).to be_displayed
       admin_cases_new_sar_page.make_radio_button_choice('case_sar_reply_method_send_by_email')
@@ -172,13 +169,12 @@ feature 'adding cases' do
     end
   end
 
-  def create_case(correspondence_type: 'FOI', case_type:, target_state:, flag: nil)
+  def create_foi(correspondence_type: 'FOI', case_type:, target_state:, flag: nil)
     stub_s3_uploader_for_all_files!
     find_or_create :default_press_officer
     find_or_create :default_private_officer
     admin_cases_page.load
     admin_cases_page.create_case_button.click
-    # expect(admin_cases_new_page).to be_displayed
     admin_cases_new_page.create_link_for_correspondence('FOI').click
 
     admin_cases_new_foi_page.make_radio_button_choice(case_type)

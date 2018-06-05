@@ -63,7 +63,7 @@
 
   = render partial: 'cases/sar/new_form_details', locals: { f: f }
 
-  = f.collection_select :responding_team, BusinessUnit.responding, :id, :name, { selected: @case.responding_team.id }
+  = f.collection_select :responding_team, BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.sar).active, :id, :name, { selected: @case.responding_team.id }
 
   = f.collection_select :target_state, @target_states, :to_s, :to_s, { selected: @selected_state }
 

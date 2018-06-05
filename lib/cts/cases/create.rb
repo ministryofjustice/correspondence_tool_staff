@@ -41,6 +41,7 @@ module CTS::Cases
 
     def new_foi_case
       name = options.fetch(:name, Faker::Name.name)
+      @correspondence_type_abbreviation = :foi
 
       @klass.new(
         name:               name,
@@ -59,6 +60,7 @@ module CTS::Cases
 
     def new_sar_case
       subject_full_name = options.fetch(:subject_full_name, Faker::Name.name)
+      @correspondence_type_abbreviation = :sar
 
         @klass.new(
           subject_full_name:  options.fetch(:subject_full_name, Faker::Name.name),
@@ -238,16 +240,22 @@ module CTS::Cases
     end
 
     def transition_to_closed(kase)
-      kase.prepare_for_close
-      kase.update(date_responded: Date.today,
-                  info_held_status: CaseClosure::InfoHeldStatus.held,
-                  outcome_name: 'Granted in full')
-      kase.close(CTS::dacu_manager)
+      if @correspondence_type_abbreviation == :foi
+        kase.prepare_for_close
+        kase.update(date_responded: Date.today,
+                    info_held_status: CaseClosure::InfoHeldStatus.held,
+                    outcome_name: 'Granted in full')
+        kase.close(CTS::dacu_manager)
+      else
+        kase.prepare_for_close
+        kase.update(date_responded: Date.today)
+        kase.close(responder)
+      end
     end
 
     # rubocop:disable Metrics/CyclomaticComplexity
     def journeys_to_check
-      CTS::Cases::Constants::CASE_JOURNEYS.find_all do |name, _states|
+      CTS::Cases::Constants::CASE_JOURNEYS[@correspondence_type_abbreviation].find_all do |name, _states|
         @flag.blank? ||
           (@flag == 'disclosure' && name == :flagged_for_dacu_disclosure) ||
           (@flag == 'press' && name == :flagged_for_press_office) ||
@@ -267,13 +275,13 @@ module CTS::Cases
     def get_journey_for_flagged_state(flag)
       case flag
       when 'disclosure'
-        CASE_JOURNEYS[:flagged_for_dacu_displosure]
+        CASE_JOURNEYS[@correspondence_type_abbreviation][:flagged_for_dacu_displosure]
       when 'press'
-        CASE_JOURNEYS[:flagged_for_press_office]
+        CASE_JOURNEYS[@correspondence_type_abbreviation][:flagged_for_press_office]
       when 'private'
-        CASE_JOURNEYS[:flagged_for_private_office]
+        CASE_JOURNEYS[@correspondence_type_abbreviation][:flagged_for_private_office]
       else
-        CASE_JOURNEYS[:unflagged]
+        CASE_JOURNEYS[@correspondence_type_abbreviation][:unflagged]
       end
     end
 
