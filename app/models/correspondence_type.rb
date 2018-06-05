@@ -16,7 +16,9 @@ class CorrespondenceType < ApplicationRecord
                  internal_time_limit: :integer,
                  external_time_limit: :integer,
                  escalation_time_limit: :integer,
-                 deadline_calculator_class: :string
+                 deadline_calculator_class: :string,
+                 default_press_officer: :string,
+                 default_private_officer: :string
 
   enum deadline_calculator_class: {
          'BusinessDays' => 'BusinessDays',

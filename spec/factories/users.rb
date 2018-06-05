@@ -152,10 +152,11 @@ FactoryGirl.define do
 
     factory :default_press_officer do
       transient do
+        foi { find_or_create :foi_correspondence_type }
         identifier 'default press-office approving user'
       end
 
-      full_name { Settings.press_office_default_user }
+      full_name { foi.default_press_officer }
       approving_team { find_or_create(:team_press_office) }
     end
 
@@ -170,10 +171,11 @@ FactoryGirl.define do
 
     factory :default_private_officer do
       transient do
+        foi { find_or_create :foi_correspondence_type }
         identifier 'default private-office approving user'
       end
 
-      full_name { Settings.private_office_default_user }
+      full_name { foi.default_private_officer }
       approving_team { find_or_create(:team_private_office) }
     end
 
