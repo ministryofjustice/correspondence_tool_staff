@@ -172,7 +172,6 @@ en:
     confirm: Confirm
     feedback: Send feedback
     submit: Submit
-    update_case_closure_details: Save changes
 
   helpers:
     fieldset:

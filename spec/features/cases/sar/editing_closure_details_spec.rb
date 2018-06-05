@@ -19,7 +19,6 @@ feature 'editing case closure information' do
     cases_show_page.load(id: kase.id)
     edit_case_closure_step(kase: kase,
                            date_responded: 10.business_days.ago,
-                           expected_tmm: false,
                            tmm: true)
   end
 end
