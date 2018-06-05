@@ -42,16 +42,6 @@ module CTS::Cases
     def new_foi_case
       name = options.fetch(:name, Faker::Name.name)
 
-      created_at = if options[:created_at].present?
-                     0.business_days.after(DateTime.parse(options[:created_at]))
-                   else
-                     0.business_days.after(4.business_days.ago)
-                   end
-      received_date = if options.key? :received_date
-                        options[:received_date]
-                      else
-                        0.business_days.after(4.business_days.ago)
-                      end
       @klass.new(
         name:               name,
         email:              options.fetch(:email, Faker::Internet.email(name)),
@@ -61,8 +51,8 @@ module CTS::Cases
                                           Faker::Lorem.paragraph(10, true, 10)),
         requester_type:     options.fetch(:requester_type,
                                           Case::FOI::Standard.requester_types.keys.sample),
-        received_date:      received_date,
-        created_at:         created_at,
+        received_date:      set_received_date,
+        created_at:         set_created_at_date,
         dirty:              options.fetch(:dirty, true)
       )
     end
@@ -70,8 +60,6 @@ module CTS::Cases
     def new_sar_case
       subject_full_name = options.fetch(:subject_full_name, Faker::Name.name)
 
-      created_at = 0.business_days.after(4.business_days.ago)
-      received_date = 0.business_days.after(4.business_days.ago)
         @klass.new(
           subject_full_name:  options.fetch(:subject_full_name, Faker::Name.name),
           email:              options.fetch(:email, Faker::Internet.email(subject_full_name)),
@@ -81,14 +69,30 @@ module CTS::Cases
                                             Faker::Lorem.paragraph(10, true, 10)),
           subject_type:       options.fetch(:subject_type,
                                             Case::SAR.subject_types.keys.sample),
-          received_date:      received_date,
-          created_at:         created_at,
+          received_date:      set_received_date,
+          created_at:         set_created_at_date,
           reply_method:       options.fetch(:reply_method, 'send_by_email'),
           dirty:              options.fetch(:dirty, true)
         )
     end
 
     private
+
+    def set_received_date
+      if options.key? :received_date
+        options[:received_date]
+      else
+        0.business_days.after(4.business_days.ago)
+      end
+    end
+
+    def set_created_at_date
+      if options[:created_at].present?
+        0.business_days.after(DateTime.parse(options[:created_at]))
+      else
+        0.business_days.after(4.business_days.ago)
+      end
+    end
 
     def parse_options(options) # rubocop:disable Metrics/CyclomaticComplexity
       @target_states = []

@@ -18,9 +18,8 @@ module PageObjects
                   "//fieldset[contains(.,\"being requested on someone's behalf\")]"
           element :requester_full_name, '#case_sar_name'
 
-          element :date_received_day, '#case_sar_received_date_dd'
-          element :date_received_month, '#case_sar_received_date_mm'
-          element :date_received_year, '#case_sar_received_date_yyyy'
+          element :received_date, '#case_sar_received_date'
+          element :created_at, '#case_sar_created_at'
 
           element :subject, '#case_sar_subject'
           element :full_request, '#case_sar_message'

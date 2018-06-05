@@ -28,7 +28,7 @@
         = 'Received Date'
       p.form-hint id="received_date-hint"
         = 'Date correspondence was received, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"'
-      input.form-control id="case_received_date" name="case[received_date]" aria-describedby="received_date-hint" type="string" value=@case.received_date.to_s size="40"
+      input.form-control id="case_foi_received_date" name="case_foi[received_date]" aria-describedby="received_date-hint" type="string" value=@case.received_date.to_s size="40"
 
   .form-group
     fieldset.gov_uk_date
@@ -36,7 +36,7 @@
         = 'Created At'
       p.form-hint id="created_at-hint"
         = 'Date to use as creation date of case, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"'
-      input.form-control id="case_created_at" name="case[created_at]" aria-describedby="created_at-hint" type="string" value=@case.created_at.to_s size="40"
+      input.form-control id="case_foi_created_at" name="case_foi[created_at]" aria-describedby="created_at-hint" type="string" value=@case.created_at.to_s size="40"
 
   #delivery-method
     = f.radio_button_fieldset :delivery_method, choices: [:sent_by_email, :sent_by_post]

@@ -89,7 +89,7 @@ class Admin::CasesController < ApplicationController
   end
 
   def available_target_states
-    CTS::Cases::Constants::CASE_JOURNEYS[@correspondence_type_abbreviation.to_sym].values.flatten.uniq.sort
+    CTS::Cases::Constants::CASE_JOURNEYS.values.flatten.uniq.sort
   end
 
   def create_params(correspondence_type)

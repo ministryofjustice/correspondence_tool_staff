@@ -21,8 +21,8 @@ module PageObjects
                   '//fieldset[contains(.,"Type of requester")]'
           element :subject, '#case_foi_subject'
           element :full_request, '#case_foi_message'
-          element :received_date, '#case_received_date'
-          element :created_at, '#case_created_at'
+          element :received_date, '#case_foi_received_date'
+          element :created_at, '#case_foi_created_at'
 
           element :flag_for_disclosure_specialists,
                   '#case_foi_flagged_for_disclosure_specialist_clearance'
