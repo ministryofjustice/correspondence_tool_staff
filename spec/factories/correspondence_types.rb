@@ -12,15 +12,13 @@
 
 FactoryGirl.define do
   factory :correspondence_type, aliases: [:foi_correspondence_type] do
-
     name "Freedom of information request"
     abbreviation "FOI"
     escalation_time_limit 3
     internal_time_limit 10
     external_time_limit 20
     deadline_calculator_class 'BusinessDays'
-    default_press_officer 'Preston Offman'
-    default_private_officer 'Primrose Offord'
+
     initialize_with { CorrespondenceType.find_or_create_by(name: name) }
   end
 

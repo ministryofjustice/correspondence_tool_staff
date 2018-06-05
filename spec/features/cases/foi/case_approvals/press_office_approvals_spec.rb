@@ -4,12 +4,12 @@ feature 'cases requiring clearance by press office' do
   given(:dacu_disclosure)             { find_or_create :team_dacu_disclosure }
   given(:disclosure_specialist)       { create :disclosure_specialist }
   given(:other_disclosure_specialist) { create :disclosure_specialist }
-  given!(:press_officer)              { create :press_officer }
+  given!(:press_officer)              { find_or_create :default_press_officer }
   given(:other_press_officer)         { create :press_officer }
   given!(:press_office)               { find_or_create :team_press_office }
   given!(:private_office)             { find_or_create :team_private_office }
-  given!(:private_officer)            { create :private_officer,
-                                               full_name: 'Primrose Offord' }
+  given!(:private_officer)            { find_or_create :default_private_officer,
+                                                       full_name: 'Primrose Offord' }
   given(:pending_dacu_clearance_case) do
     create :pending_dacu_clearance_case,
            :flagged_accepted,

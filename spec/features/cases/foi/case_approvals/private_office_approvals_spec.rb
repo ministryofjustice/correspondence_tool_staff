@@ -5,10 +5,10 @@ feature 'cases requiring clearance by press office' do
   given(:disclosure_specialist) {create :disclosure_specialist}
   given(:other_disclosure_specialist) {create :disclosure_specialist}
   given!(:press_office) {find_or_create :team_press_office}
-  given!(:press_officer) {create :press_officer,
-                                 full_name: 'Preston Offman'}
+  given!(:press_officer) {find_or_create :default_press_officer,
+                                         full_name: 'Preston Offman'}
   given!(:private_office) {find_or_create :team_private_office}
-  given!(:private_officer) {create :private_officer}
+  given!(:private_officer) {find_or_create :default_private_officer}
   given(:other_private_officer) {create :private_officer}
   given(:case_available_for_taking_on) {create :case_being_drafted,
                                                created_at: 1.business_day.ago}

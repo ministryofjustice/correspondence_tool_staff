@@ -42,7 +42,8 @@ class DevUserSeeder
   # rubocop:enable Metrics/MethodLength
 
 
-  def seed! # rubocop:disable Metrics/MethodLength
+  def seed! # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
+    foi = CorrespondenceType.foi
     @users.each do |user_name, user_info_list|
       user_info_list.each do |user_info|
         team_abbr = user_info[:team]
@@ -72,6 +73,14 @@ class DevUserSeeder
             user.team_roles.create(role: 'admin')
           end
         end
+
+        if team == 'pressoffice' && foi.default_press_officer.blank?
+          foi.update!(default_press_officer: email)
+        end
+
+        if team == 'privateoffice' && foi.default_private_officer.blank?
+          foi.update!(default_private_officer: email)
+        end
       end
     end
 
@@ -100,11 +109,6 @@ class DevUserSeeder
     TeamsUsersRole.find_or_create_by!(team: BusinessUnit.dacu_bmt, user: smoketest_user, role: 'manager') do
       puts 'Created Team/Role link to user'
     end
-
-    first_press_officer = get_team_users('pressoffice').first
-    first_private_officer = get_team_users('privateoffice').first
-    CorrespondenceType.foi.update!(default_press_officer: first_press_officer,
-                                   default_private_officer: first_private_officer)
   end
 
   private

@@ -21,7 +21,7 @@ class DefaultTeamService
        },
        {
          team: BusinessUnit.press_office,
-         user: User.find_by!(full_name: default_press_officer)
+         user: User.find_by!(email: default_press_officer)
        }]
     when BusinessUnit.press_office
       [{
@@ -30,7 +30,7 @@ class DefaultTeamService
        },
        {
          team: BusinessUnit.private_office,
-         user: User.find_by!(full_name: default_private_officer)
+         user: User.find_by!(email: default_private_officer)
        }]
     else
       []
