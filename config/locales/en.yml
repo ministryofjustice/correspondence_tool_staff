@@ -172,7 +172,6 @@ en:
     confirm: Confirm
     feedback: Send feedback
     submit: Submit
-    update_case_closure_details: Save changes
 
   helpers:
     fieldset:
@@ -469,8 +468,10 @@ en:
       view_case: Link to case
     close:
       heading: Close case
+      submit: Close case
     edit_closure:
       heading: Edit case closure details
+      submit: Save changes
     extend_for_pit:
       extend_for_pit: Extend for Public Interest Test (PIT)
       extension_date: Date of extension deadline

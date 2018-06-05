@@ -1,4 +1,4 @@
-= form_for @case, as: :case_sar, url: form_url do |f|
+= form_for kase, as: :case_sar, url: form_url do |f|
   .form-group
     = f.gov_uk_date_field :date_responded, { legend_text: t('.close_date'),
             form_hint_text: t('.date_example'),
@@ -9,5 +9,5 @@
 
   .grid-row
     .column-two-thirds
-      = f.submit t('button.update_case_closure_details'), {class: 'button'}
-      = link_to "Return to case detail", case_path(@case.id), class:'button-secondary button-left-spacing'
+      = f.submit submit_button, {class: 'button'}
+      = link_to "Return to case detail", case_path(kase.id), class:'button-secondary button-left-spacing'

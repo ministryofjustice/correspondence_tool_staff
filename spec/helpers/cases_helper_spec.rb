@@ -160,7 +160,7 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
       expect(request_details).to eq '<strong class="strong">Once upon a time... </strong><div class="case-name-detail">Ray Gunn</div>'
     end
   end
-  
+
   describe '#case_link_with_hash' do
     let(:kase) {double 'case', id: 25, number: '180425001'}
 
@@ -178,6 +178,30 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
           expect(case_link_with_hash(kase, :number, '', 14)).to eq expected_link
         end
       end
+    end
+  end
+
+  describe '#case_details_links' do
+    it 'adds a link to edit case details if permitted' do
+      kase = create(:case_being_drafted)
+      user = create(:disclosure_bmt_user)
+      result = case_details_links(kase, user)
+      expect(result).to eq link_to('Edit case details',
+                                        "/cases/#{kase.id}/edit",
+                                        class: "secondary-action-link")
+    end
+
+    it 'adds a link to edit closure details if permitted' do
+      kase = create(:closed_sar)
+      user = create(:disclosure_bmt_user)
+      result = case_details_links(kase, user)
+      edit_case_link = link_to('Edit case details',
+                               "/cases/#{kase.id}/edit",
+                               class: "secondary-action-link")
+      edit_closure_link = link_to('Edit closure details',
+                                  "/cases/#{kase.id}/edit_closure",
+                                  class: "secondary-action-link")
+      expect(result).to eq "#{edit_case_link}#{edit_closure_link}"
     end
   end
 end
