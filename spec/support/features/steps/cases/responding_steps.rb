@@ -51,7 +51,7 @@ def close_sar_case(timeliness: 'in time', tmm: false, time_taken: 7)
     cases_close_page.missing_info.no.click
   end
 
-  cases_close_page.submit_button.click
+  cases_close_page.click_on 'Close case'
 
   show_page = cases_show_page.case_details
 
