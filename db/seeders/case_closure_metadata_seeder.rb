@@ -60,9 +60,22 @@ module CaseClosure
         abbreviation: 'notmet',
         sequence_id: 130)
 
+      # Old refusal reason, replaced by the one below.
+      #
+      # Necessary to run 'db:setup' because it looks like these refusal reasons
+      # are already created at that point, and we get the error:
+      #
+      #   ActiveRecord::RecordInvalid: Validation failed: Abbreviation has already been taken
+      #
+      # RefusalReason.find_or_create_by!(
+      #   subtype: nil,
+      #   name: '(s12) - Exceeded cost',
+      #   abbreviation: 'cost',
+      #   sequence_id: 140)
+
       RefusalReason.find_or_create_by!(
         subtype: nil,
-        name: '(s12) - Exceeded cost',
+        name: '(s12(2)) - Exceeded cost to investigate',
         abbreviation: 'cost',
         sequence_id: 140)
 
