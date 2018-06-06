@@ -36,10 +36,17 @@ class Admin::CasesController < ApplicationController
   def new
     if params[:correspondence_type].present?
       @correspondence_type = params[:correspondence_type]
-      self.send("prepare_new_#{@correspondence_type}".to_sym)
+      self.send("prepare_new_#{@correspondence_type}")
     else
-      prepare_select_type
+      select_type
     end
+  end
+
+  private
+
+  def select_type
+    permitted_correspondence_types
+    render :select_type
   end
 
   def prepare_new_foi
@@ -72,13 +79,6 @@ class Admin::CasesController < ApplicationController
     @case.reply_method = 'send_by_email'
 
     render :new
-  end
-
-  private
-
-  def prepare_select_type
-    permitted_correspondence_types
-    render :select_type
   end
 
   def permitted_correspondence_types

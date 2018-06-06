@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Admin
       module Cases
-        class SARPage < PageObjects::Pages::Base
+        class NewSARPage < PageObjects::Pages::Base
           set_url '/admin/cases/new/sar'
 
           section :primary_navigation,

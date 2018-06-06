@@ -169,7 +169,7 @@ feature 'adding cases' do
     end
   end
 
-  def create_foi(correspondence_type: 'FOI', case_type:, target_state:, flag: nil)
+  def create_foi(case_type:, target_state:, flag: nil)
     stub_s3_uploader_for_all_files!
     find_or_create :default_press_officer
     find_or_create :default_private_officer

@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Admin
       module Cases
-        class FOIPage < PageObjects::Pages::Base
+        class NewFOIPage < PageObjects::Pages::Base
           set_url '/admin/cases/new/foi'
 
           sections :notices, '.notice-summary' do

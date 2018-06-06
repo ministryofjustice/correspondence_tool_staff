@@ -15,8 +15,8 @@ module PageObjects
       {
         admin_cases:                    'Admin::CasesPage',
         admin_cases_new:                'Admin::Cases::NewPage',
-        admin_cases_new_foi:            'Admin::Cases::FOIPage',
-        admin_cases_new_sar:            'Admin::Cases::SARPage',
+        admin_cases_new_foi:            'Admin::Cases::NewFOIPage',
+        admin_cases_new_sar:            'Admin::Cases::NewSARPage',
         approve_response_interstitial:  'Cases::ApproveResponseInterstitialPage',
         approve_response:               'Cases::ApproveResponsePage',
         assign_to_new_team:             'Assignments::AssignToNewTeamPage',

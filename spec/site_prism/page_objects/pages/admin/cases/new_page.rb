@@ -11,10 +11,7 @@ module PageObjects
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-          elements :create_links, '#create-correspondences > li > a'
-
-          # element :submit_button, '.button'
-
+          elements :create_links, '#create-correspondences > li > a'          
 
           def create_link_for_correspondence(correspondence_type)
             create_links.find { |link| link.text.match(correspondence_type) }
