@@ -49,7 +49,7 @@ class Case::BasePolicy < ApplicationPolicy
     def resolve
       ids = []
       CASE_TYPES.each do |case_type|
-        ids << Pundit.policy_scope(user, case_type).map(&:id)
+        ids << Pundit.policy_scope(user, case_type).pluck(:id)
       end
       Case::Base.where(id: ids.flatten)
     end
