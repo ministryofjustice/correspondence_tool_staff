@@ -49,6 +49,10 @@ module PageObjects
             element :data, 'td'
           end
 
+          section :requester_name, 'tr.requester-name' do
+            element :data, 'td'
+          end
+
           section :third_party, 'tr.third-party' do
             element :data, 'td'
           end
