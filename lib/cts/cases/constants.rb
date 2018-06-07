@@ -53,7 +53,7 @@ module CTS
             :closed,
           ]
         }
-      }
+      }.with_indifferent_access
 
     end
   end

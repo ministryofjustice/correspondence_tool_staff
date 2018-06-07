@@ -41,7 +41,6 @@ module CTS::Cases
 
     def new_foi_case
       name = options.fetch(:name, Faker::Name.name)
-      @correspondence_type_abbreviation = :foi
 
       @klass.new(
         name:               name,
@@ -60,8 +59,6 @@ module CTS::Cases
 
     def new_sar_case
       subject_full_name = options.fetch(:subject_full_name, Faker::Name.name)
-      @correspondence_type_abbreviation = :sar
-
         @klass.new(
           subject_full_name:  options.fetch(:subject_full_name, Faker::Name.name),
           email:              options.fetch(:email, Faker::Internet.email(subject_full_name)),
@@ -240,7 +237,7 @@ module CTS::Cases
     end
 
     def transition_to_closed(kase)
-      if @correspondence_type_abbreviation == :foi
+      if get_correspondence_type_abbreviation == :foi
         kase.prepare_for_close
         kase.update(date_responded: Date.today,
                     info_held_status: CaseClosure::InfoHeldStatus.held,
@@ -255,7 +252,7 @@ module CTS::Cases
 
     # rubocop:disable Metrics/CyclomaticComplexity
     def journeys_to_check
-      CTS::Cases::Constants::CASE_JOURNEYS[@correspondence_type_abbreviation].find_all do |name, _states|
+      CTS::Cases::Constants::CASE_JOURNEYS[get_correspondence_type_abbreviation].find_all do |name, _states|
         @flag.blank? ||
           (@flag == 'disclosure' && name == :flagged_for_dacu_disclosure) ||
           (@flag == 'press' && name == :flagged_for_press_office) ||
@@ -275,13 +272,13 @@ module CTS::Cases
     def get_journey_for_flagged_state(flag)
       case flag
       when 'disclosure'
-        CASE_JOURNEYS[@correspondence_type_abbreviation][:flagged_for_dacu_displosure]
+        CASE_JOURNEYS[get_correspondence_type_abbreviation][:flagged_for_dacu_displosure]
       when 'press'
-        CASE_JOURNEYS[@correspondence_type_abbreviation][:flagged_for_press_office]
+        CASE_JOURNEYS[get_correspondence_type_abbreviation][:flagged_for_press_office]
       when 'private'
-        CASE_JOURNEYS[@correspondence_type_abbreviation][:flagged_for_private_office]
+        CASE_JOURNEYS[get_correspondence_type_abbreviation][:flagged_for_private_office]
       else
-        CASE_JOURNEYS[@correspondence_type_abbreviation][:unflagged]
+        CASE_JOURNEYS[get_correspondence_type_abbreviation][:unflagged]
       end
     end
 
@@ -339,6 +336,10 @@ module CTS::Cases
                           email: Faker::Internet.email(name),
                           password: 'correspondence')
       TeamsUsersRole.create(user: user, team: responding_team, role: 'responder')
+    end
+
+    def get_correspondence_type_abbreviation
+      @klass.type_abbreviation.downcase
     end
   end
 end
