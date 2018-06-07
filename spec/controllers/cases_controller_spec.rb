@@ -510,8 +510,8 @@ RSpec.describe CasesController, type: :controller do
         it { should have_nil_permitted_events }
 
         it 'renders the show template for the responder assignment' do
+          assigned_case.correspondence_type.reload
           responder_assignment = assigned_case.assignments.last
-          create :default_press_officer
           CaseFlagForClearanceService.new(user: press_officer, kase: assigned_case, team: press_office).call
           expect(response)
               .to redirect_to(edit_case_assignment_path(

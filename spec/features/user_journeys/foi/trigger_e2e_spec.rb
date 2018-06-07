@@ -26,8 +26,8 @@ feature 'FOI case that does not require clearance' do
   given(:disclosure_specialist) { create :disclosure_specialist }
   given!(:press_officer)        { create :press_officer }
   given(:press_office)          { press_officer.approving_team }
-  given!(:private_officer)      { create :private_officer,
-                                         full_name: Settings.private_office_default_user }
+  given(:foi)                   { create :foi_correspondence_type }
+  given!(:private_officer)      { create :default_private_officer }
   given(:private_office)        { private_officer.approving_team }
   given!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
   given(:team_dacu)             { find_or_create :team_dacu }

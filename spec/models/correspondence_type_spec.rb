@@ -20,6 +20,9 @@ describe CorrespondenceType, type: :model do
   it { should validate_presence_of(:internal_time_limit) }
   it { should validate_presence_of(:external_time_limit) }
 
+  it { should have_attributes(default_press_officer: nil,
+                              default_private_officer: nil)}
+
   describe 'deadline_calculator_class' do
     it { should validate_presence_of(:deadline_calculator_class) }
     it 'allows the value CalendarDays' do

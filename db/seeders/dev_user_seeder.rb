@@ -42,8 +42,8 @@ class DevUserSeeder
   # rubocop:enable Metrics/MethodLength
 
 
-  #rubocop:disable Metrics/MethodLength
-  def seed!
+  def seed! # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
+    foi = CorrespondenceType.foi
     @users.each do |user_name, user_info_list|
       user_info_list.each do |user_info|
         team_abbr = user_info[:team]
@@ -72,6 +72,14 @@ class DevUserSeeder
             puts "Making #{user_name} an admin."
             user.team_roles.create(role: 'admin')
           end
+        end
+
+        if team == 'pressoffice' && foi.default_press_officer.blank?
+          foi.update!(default_press_officer: email)
+        end
+
+        if team == 'privateoffice' && foi.default_private_officer.blank?
+          foi.update!(default_private_officer: email)
         end
       end
     end
@@ -102,12 +110,19 @@ class DevUserSeeder
       puts 'Created Team/Role link to user'
     end
   end
-  #rubocop:enable Metrics/MethodLength
 
   private
 
   def email_from_name(name)
     email_name = name.downcase.tr(' ', '.').gsub(/\.{2,}/, '.')
     "correspondence-staff-dev+#{email_name}@digital.justice.gov.uk"
+  end
+
+  def get_team_users(team_name)
+    @users.select do |_name, teams|
+      teams.find do |team|
+        team[:team] == team_name
+      end
+    end.map(&:first)
   end
 end

@@ -2,7 +2,6 @@ class DefaultTeamService
 
   def initialize(kase)
     @case = kase
-    @config = config_for_case
   end
 
   def managing_team
@@ -22,7 +21,7 @@ class DefaultTeamService
        },
        {
          team: BusinessUnit.press_office,
-         user: User.find_by!(full_name: Settings.press_office_default_user)
+         user: User.find_by!(email: default_press_officer)
        }]
     when BusinessUnit.press_office
       [{
@@ -31,7 +30,7 @@ class DefaultTeamService
        },
        {
          team: BusinessUnit.private_office,
-         user: User.find_by!(full_name: Settings.private_office_default_user)
+         user: User.find_by!(email: default_private_officer)
        }]
     else
       []
@@ -40,8 +39,11 @@ class DefaultTeamService
 
   private
 
-  def config_for_case
-    cat = @case.type_abbreviation.downcase
-    Settings["#{cat}_cases"]
+  def default_press_officer
+    @case.correspondence_type.default_press_officer
+  end
+
+  def default_private_officer
+    @case.correspondence_type.default_private_officer
   end
 end

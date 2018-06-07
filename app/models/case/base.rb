@@ -503,6 +503,17 @@ class Case::Base < ApplicationRecord
     self.class.type_abbreviation
   end
 
+  # Return the CorrespondenceType object for this case.
+  #
+  # The CorrespondenceType is determined by the class of this case, which must
+  # define the method <tt>type_abbreviation</tt> as a class method. This must
+  # match an abbreviation of an existing CorrespondenceType object.
+  #
+  # As this isn't expressed with Rails relationships, the CorrespondenceType
+  # object is cached inside the case object. For environments where the
+  # CorrespondenceType object can change you may need to reload this object to
+  # ensure you have the latest. For example in tests, when expecting a
+  # default_press_officer to be defined on the CorrespondenceType for this case.
   def correspondence_type
     @correspondence_type ||=
       CorrespondenceType.find_by!(abbreviation: type_abbreviation)

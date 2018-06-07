@@ -5,9 +5,9 @@ describe DefaultTeamService do
   let!(:team_dacu)            { find_or_create :team_dacu}
   let!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
   let!(:press_office)         { find_or_create :team_press_office }
-  let!(:press_officer)        { create :press_officer, full_name: 'Preston Offman' }
+  let!(:press_officer)        { find_or_create :default_press_officer }
   let!(:private_office)       { find_or_create :team_private_office }
-  let!(:private_officer)      { create :private_officer, full_name: 'Primrose Offord' }
+  let!(:private_officer)      { find_or_create :default_private_officer }
   let(:kase)                  { create :case }
   let(:service)               { DefaultTeamService.new(kase) }
 

@@ -7,9 +7,9 @@ describe CaseUnacceptApproverAssignmentService do
   let(:dacu_disclosure)         { find_or_create :team_dacu_disclosure }
   let(:assignment)              { assigned_case.approver_assignments.first }
   let(:unaccepted_assignment)   { create :approver_assignment }
-  let!(:press_officer)          { find_or_create :press_officer, full_name: 'Preston Offman' }
+  let!(:press_officer)          { find_or_create :default_press_officer }
   let!(:press_office)           { press_officer.approving_team }
-  let!(:private_officer)        { find_or_create :private_officer, full_name: 'Primrose Offord' }
+  let!(:private_officer)        { find_or_create :default_private_officer }
   let!(:private_office)         { private_officer.approving_team }
 
   describe 'call' do

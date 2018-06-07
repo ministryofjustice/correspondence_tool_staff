@@ -148,15 +148,13 @@ FactoryGirl.define do
 
       full_name      { generate(:press_officer_name) }
       approving_team { find_or_create(:team_press_office) }
+
     end
 
-    factory :default_press_officer do
-      transient do
-        identifier 'default press-office approving user'
+    factory :default_press_officer, parent: :press_officer do
+      after(:create) do |user|
+        CorrespondenceType.foi.update!(default_press_officer: user.email)
       end
-
-      full_name { Settings.press_office_default_user }
-      approving_team { find_or_create(:team_press_office) }
     end
 
     factory :private_officer do
@@ -168,13 +166,10 @@ FactoryGirl.define do
       approving_team { find_or_create(:team_private_office) }
     end
 
-    factory :default_private_officer do
-      transient do
-        identifier 'default private-office approving user'
+    factory :default_private_officer, parent: :private_officer do
+      after(:create) do |user|
+        CorrespondenceType.foi.update!(default_private_officer: user.email)
       end
-
-      full_name { Settings.private_office_default_user }
-      approving_team { find_or_create(:team_private_office) }
     end
 
     factory :deactivated_user do
