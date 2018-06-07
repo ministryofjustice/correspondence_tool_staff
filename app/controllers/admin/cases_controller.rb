@@ -36,7 +36,7 @@ class Admin::CasesController < ApplicationController
   def new
     if params[:correspondence_type].present?
       @correspondence_type = params[:correspondence_type]
-      self.send("prepare_new_#{@correspondence_type}")
+      self.__send__("prepare_new_#{@correspondence_type}")
     else
       select_type
     end
