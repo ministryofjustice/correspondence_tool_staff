@@ -15,7 +15,6 @@ module CTS::Cases
     def call(target_states, kase = nil)
       CTS::check_environment unless options[:force]
       parse_options(options)
-
       target_states.map do |target_state|
         journey = find_case_journey_for_state target_state.to_sym
         logger.info "creating case in #{target_state}"
@@ -339,7 +338,7 @@ module CTS::Cases
     end
 
     def get_correspondence_type_abbreviation
-      @klass.type_abbreviation.downcase
+      @klass.type_abbreviation.to_sym.downcase
     end
   end
 end
