@@ -9,7 +9,10 @@
         = render partial: 'cases/sar/data_subject', locals: { case_details: case_details }
         = render partial: 'cases/sar/subject_type', locals: { case_details: case_details }
         = render partial: 'cases/sar/third_party', locals: { case_details: case_details }
-        = render partial: 'cases/shared/requester_name', locals: { case_details: case_details }
+
+        - if case_details.third_party?
+          = render partial: 'cases/sar/third_party_relationship', locals: { case_details: case_details }
+
         = render partial: 'cases/shared/date_received', locals: { case_details: case_details }
         = render partial: 'cases/sar/response_address', locals: { case_details: case_details }
 

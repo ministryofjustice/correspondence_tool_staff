@@ -12,6 +12,7 @@ class Case::SAR < Case::Base
                  subject_full_name: :string,
                  subject_type: :string,
                  third_party: :boolean,
+                 third_party_relationship: :string,
                  reply_method: :string
 
   attr_accessor :missing_info
@@ -36,10 +37,9 @@ class Case::SAR < Case::Base
                   ]
 
   validates_presence_of :subject_full_name
-  validates :third_party, inclusion: {in: [ true, false ],
-                                       message: "can't be blank" }
+  validates :third_party, inclusion: {in: [ true, false ], message: "Please choose yes or no" }
 
-  validates_presence_of :name, if: -> { third_party }
+  validates_presence_of :name, :third_party_relationship, if: -> { third_party }
   validates_presence_of :reply_method
   validates_presence_of :subject_type
   validates_presence_of :email,          if: :send_by_email?
@@ -63,6 +63,11 @@ class Case::SAR < Case::Base
   def within_escalation_deadline?
     false
   end
+
+  def third_party_display
+    third_party == true ? 'Da' : 'Nyet'
+  end
+
 
   private
 

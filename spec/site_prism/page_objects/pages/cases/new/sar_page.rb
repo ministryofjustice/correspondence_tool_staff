@@ -17,6 +17,7 @@ module PageObjects
           element :third_party, :xpath,
                   "//fieldset[contains(.,\"being requested on someone's behalf\")]"
           element :requester_full_name, '#case_sar_name'
+          element :third_party_relationship, '#third_party_relationship'
 
           element :date_received_day, '#case_sar_received_date_dd'
           element :date_received_month, '#case_sar_received_date_mm'
@@ -50,6 +51,7 @@ module PageObjects
             if kase.third_party?
               choose_third_party true
               requester_full_name.set kase.name
+
             else
               choose_third_party false
             end
