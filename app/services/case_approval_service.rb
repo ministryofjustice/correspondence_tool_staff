@@ -1,6 +1,6 @@
 class CaseApprovalService
 
-  attr_accessor :result, :error_message
+  attr_accessor :result
 
   def initialize(user:, kase:, bypass_params:)
     @user = user
