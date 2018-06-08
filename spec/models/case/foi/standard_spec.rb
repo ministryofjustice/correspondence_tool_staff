@@ -457,6 +457,7 @@ describe Case::FOI::Standard do
         responder_service.call
         if assignment_times.any?
           Timecop.travel 15.minutes
+          responder_service.assignment.case.reload
           responder_service.assignment.reject(responding_team.users.first, 'XXX')
           kase.reload
         end
@@ -483,16 +484,6 @@ describe Case::FOI::Standard do
         respond_to_unflagged_case(kase, filenames)
       end
       kase.reload
-      # if kase.flagged?
-      #   kase.state_machine.add_response_to_flagged_case!(acting_user: responder,
-      #                                                    acting_team: responding_team,
-      #                                                    filenames: filenames)
-      # else
-      #   kase.state_machine.add_responses!(acting_user: responder,
-      #                                     acting_team: responding_team,
-      #                                     filenames: filenames,
-      #                                     message: 'DDDD')
-      # end
       Timecop.freeze(responded_time + 10.minutes) do
         kase.respond(kase.responder)
       end
