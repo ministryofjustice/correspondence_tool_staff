@@ -60,12 +60,12 @@ class Assignment < ApplicationRecord
 
   def reject(rejecting_user, message)
     self.reasons_for_rejection = message
-    self.case.reload.responder_assignment_rejected(rejecting_user, team, message)
+    self.case.responder_assignment_rejected(rejecting_user, team, message)
     rejected!
   end
 
   def accept(accepting_user)
-    self.case.reload.responder_assignment_accepted(accepting_user, team)
+    self.case.responder_assignment_accepted(accepting_user, team)
     self.user = accepting_user
     self.accepted!
   end

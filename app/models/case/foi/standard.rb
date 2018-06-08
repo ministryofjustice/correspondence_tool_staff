@@ -59,7 +59,7 @@ class Case::FOI::Standard < Case::Base
   # the responding BU being assigned the case and the disclosure team approving
   # it.
   def flagged_case_responded_to_in_time_for_stats_purposes?
-    responding_team_acceptance_date = transitions.where(
+    responding_team_assignment_date = transitions.where(
         event: 'assign_responder'
     ).last.created_at.to_date
 
@@ -69,7 +69,7 @@ class Case::FOI::Standard < Case::Base
     ).last.created_at.to_date
 
     internal_deadline = deadline_calculator.internal_deadline_for_date(
-        correspondence_type, responding_team_acceptance_date
+        correspondence_type, responding_team_assignment_date
     )
 
     internal_deadline >= disclosure_approval_date
@@ -84,11 +84,11 @@ class Case::FOI::Standard < Case::Base
   def business_unit_responded_in_time?
     responding_transitions = transitions.where(event: 'respond')
     if responding_transitions.any?
-      responding_team_acceptance_date = transitions.where(event: 'assign_responder').last.created_at.to_date
+      responding_team_assignment_date = transitions.where(event: 'assign_responder').last.created_at.to_date
       responding_transition = responding_transitions.last
       responding_date = responding_transition.created_at.to_date
       internal_deadline = deadline_calculator
-            .internal_deadline_for_date(correspondence_type, responding_team_acceptance_date)
+            .internal_deadline_for_date(correspondence_type, responding_team_assignment_date)
       internal_deadline >= responding_date
     else
       raise ArgumentError.new("Cannot call ##{__method__} on a case without a response (Case #{number})")
@@ -99,8 +99,8 @@ class Case::FOI::Standard < Case::Base
     if transitions.where(event: 'respond').any?
       raise ArgumentError.new("Cannot call ##{__method__} on a case for which the response has been sent")
     else
-      responding_team_acceptance_date = transitions.where(event: 'assign_responder').last.created_at.to_date
-      internal_deadline = deadline_calculator.business_unit_deadline_for_date(responding_team_acceptance_date)
+      responding_team_assignment_date = transitions.where(event: 'assign_responder').last.created_at.to_date
+      internal_deadline = deadline_calculator.business_unit_deadline_for_date(responding_team_assignment_date)
       internal_deadline < Date.today
     end
   end
