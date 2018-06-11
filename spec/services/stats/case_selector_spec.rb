@@ -49,35 +49,50 @@ module Stats
 
     after(:all) { DbHousekeeping.clean }
 
+    let(:selector)    { CaseSelector.new(Case::Base) }
+
     describe '.ids_for_cases_received_in_period' do
       it 'returns an array of all cases received in period' do
         expected_ids = [ @oos_cdp, @oos_coe, @oos_cap, @odp_cdp, @odp_coe, @odp_cap, @ooe_cap, @oos_cxx, @odp_cxx, @ooe_cxx ].map(&:id)
-        expect(CaseSelector.ids_for_cases_received_in_period(@period_start, @period_end)).to match_array(expected_ids)
+        expect(selector.ids_for_cases_received_in_period(@period_start, @period_end)).to match_array(expected_ids)
       end
     end
 
     describe '.ids_for_cases_open_during_period_still_not_closed' do
       it 'returns an array of ids of still open cases that were open during the period' do
         expected_ids = [ @obs_cxx, @oos_cxx, @odp_cxx, @ooe_cxx ].map(&:id)
-        expect(CaseSelector.ids_for_cases_open_during_period_still_not_closed(@period_start, @period_end)).to match_array(expected_ids)
+        expect(selector.ids_for_cases_open_during_period_still_not_closed(@period_start, @period_end)).to match_array(expected_ids)
       end
     end
 
     describe '.ids_for_cases_open_at_start_of_period_and_since_closed' do
       it 'returns an array of case ids that were open at the end of the period but closed since' do
         expected_ids = [ @obs_cos, @obs_cdp, @obs_coe, @obs_cap ].map(&:id)
-        expect(CaseSelector.ids_for_cases_open_at_start_of_period_and_since_closed(@period_start, @period_end)).to match_array expected_ids
+        expect(selector.ids_for_cases_open_at_start_of_period_and_since_closed(@period_start, @period_end)).to match_array expected_ids
       end
     end
 
     describe '.ids_for_period' do
-      it 'returns an array of case_ids that were received or open during period' do
-        expected_ids = [ @obs_cos, @obs_cdp, @obs_coe, @obs_cap,
-                         @oos_cdp, @oos_coe, @oos_cap,
-                         @odp_cdp, @odp_coe, @odp_cap,
-                         @ooe_cap,
-                         @obs_cxx, @oos_cxx, @odp_cxx, @ooe_cxx ].map(&:id)
-        expect(CaseSelector.ids_for_period(@period_start, @period_end)).to match_array expected_ids
+      context 'using Class name' do
+        it 'returns an array of case_ids that were received or open during period' do
+          expected_ids = [ @obs_cos, @obs_cdp, @obs_coe, @obs_cap,
+                           @oos_cdp, @oos_coe, @oos_cap,
+                           @odp_cdp, @odp_coe, @odp_cap,
+                           @ooe_cap,
+                           @obs_cxx, @oos_cxx, @odp_cxx, @ooe_cxx ].map(&:id)
+          expect(selector.ids_for_period(@period_start, @period_end)).to match_array expected_ids
+        end
+      end
+
+      context 'using scope' do
+        it 'returns an array of case_ids that were received or open during period' do
+          expected_ids = [ @obs_cos, @obs_cdp, @obs_coe, @obs_cap,
+                           @oos_cdp, @oos_coe, @oos_cap,
+                           @odp_cdp, @odp_coe, @odp_cap,
+                           @ooe_cap,
+                           @obs_cxx, @oos_cxx, @odp_cxx, @ooe_cxx ].map(&:id)
+          expect(CaseSelector.new(Case::Base.all).ids_for_period(@period_start, @period_end)).to match_array expected_ids
+        end
       end
     end
 

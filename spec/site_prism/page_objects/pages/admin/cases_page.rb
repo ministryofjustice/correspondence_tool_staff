@@ -19,7 +19,7 @@ module PageObjects
           element :link, 'a'
         end
 
-        element :create_case_button, 'a.button[href="/admin/cases/new"]'
+        element :create_case_button, 'a.button[href="/admin/cases/new/"]'
 
         sections :case_list, '.case_row' do
           element :id, 'td:nth-child(1)'

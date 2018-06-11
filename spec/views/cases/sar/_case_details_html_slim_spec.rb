@@ -26,7 +26,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       expect(partial.case_type.data.text).to eq "SAR  "
       expect(partial.date_received.data.text)
           .to eq unassigned_case.received_date.strftime(Settings.default_date_format)
-
+      expect(partial.requester_name.data.text).to eq unassigned_case.name
     end
 
     it 'does not display the email address if one is not provided' do

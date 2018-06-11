@@ -166,9 +166,10 @@ module Stats
     private
 
     def create_case(state, month)
-      k = create :case, received_date: Date.new(2017, month, 22)
+      k = create :assigned_case, received_date: Date.new(2017, month, 22)
       analyser = double CaseAnalyser
       allow(CaseAnalyser).to receive(:new).with(k).and_return(analyser)
+      expect(analyser).to receive(:run)
       expect(analyser).to receive(:result).and_return(state)
     end
 
