@@ -36,6 +36,7 @@ module CorrespondencePlatform
     Dir[config.root.join('lib', 'extensions', '**', '*.rb')].each do |file|
       require file
     end
+    config.generators.javascript_engine = :js
   end
 end
 
