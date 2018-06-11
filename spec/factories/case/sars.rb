@@ -21,6 +21,11 @@ FactoryGirl.define do
     third_party                   false
     created_at                    { creation_time }
 
+    trait :third_party do
+      third_party true
+      third_party_relationship 'Aunt'
+    end
+
     after(:build) do |_kase, evaluator|
       evaluator.managing_team
     end
