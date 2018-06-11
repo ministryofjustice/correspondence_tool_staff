@@ -85,41 +85,6 @@ FactoryGirl.define do
       kase.reload
     end
   end
-  # factory :sar_with_response, parent: :accepted_sar do
-  #   transient do
-  #     identifier "sar with response"
-  #     # creation_time { 4.business_days.ago }
-  #     responder { find_or_create :responder, full_name: 'Ivor Response' }
-  #     responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
-  #   end
-  #   after(:create) do |kase, evaluator|
-  #     kase.attachments.push(*evaluator.responses)
-  #
-  #     create :case_transition_add_responses,
-  #            case_id: kase.id,
-  #            acting_team_id: evaluator.responding_team.id,
-  #            acting_user_id: evaluator.responder.id
-  #     # filenames: [evaluator.attachment.filename]
-  #     kase.reload
-  #   end
-  # end
-
-  # factory :responded_sar, parent: :sar_with_response do
-  #   transient do
-  #     identifier "responded sar"
-  #     responder { create :responder }
-  #   end
-  #
-  #   date_responded Date.today
-  #
-  #   after(:create) do |kase, evaluator|
-  #     create :case_transition_respond,
-  #            case: kase,
-  #            acting_user_id: evaluator.responder.id,
-  #            acting_team_id: evaluator.responding_team.id
-  #     kase.reload
-  #   end
-  # end
 
   factory :pending_dacu_clearance_sar, parent: :accepted_sar do
     transient do

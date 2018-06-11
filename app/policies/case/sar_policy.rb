@@ -22,7 +22,8 @@ class Case::SARPolicy < Case::BasePolicy
       end
 
       if user.approver?
-        Case::SAR.none
+        case_ids = Assignment.with_teams(user.approving_team).pluck(:case_id)
+        scopes << -> (inner_scope) { inner_scope.where(id: case_ids) }
       end
 
       if scopes.present?
