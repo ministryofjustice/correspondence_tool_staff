@@ -430,7 +430,16 @@ en:
         Case::SAR::NonOffender: Non-offender SAR
       new:
         heading: New Case
-        create: Create Case
+        sub_heading: Admin
+      select_type:
+        heading: Choose correspondence type
+        sub_heading: Admin
+      foi:
+        new:
+          create: Create
+      sar:
+        new:
+          create: Create
 
   assignments:
     accept:
