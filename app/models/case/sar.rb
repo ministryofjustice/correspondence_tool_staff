@@ -64,11 +64,6 @@ class Case::SAR < Case::Base
     false
   end
 
-  def third_party_display
-    third_party == true ? 'Da' : 'Nyet'
-  end
-
-
   private
 
   def use_subject_as_requester
