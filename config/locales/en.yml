@@ -703,3 +703,19 @@ en:
   pagination:
     next: "Next "
     previous: "Previous "
+
+  page_title:
+    login: Login - Track-a-query
+    forgot_password: Forgot your password - Track-a-query
+    change_password: Change your password - Track-a-query
+    all_new_cases: All new cases - Track-a-query
+    admin_case_list: Admin case list - Track-a-query
+    search: Search for a case - Track-a-query
+    admin_case_creation: Admin case creation - Track-a-query
+    all_open_cases: All open cases - Track-a-query
+    #my_open_cases: My open cases - Track-a-query
+    stats: Performance statistics - Track-a-query
+    custom_report: Create a custom report - Track-a-query
+    settings_business_group: Viewing business groups - Track-a-query
+    settings_directorate: Viewing directorates - Track-a-query
+    settings_business_unit: Viewing business unit - Track-a-query
