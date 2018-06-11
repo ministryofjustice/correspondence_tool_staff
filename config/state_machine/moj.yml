@@ -135,6 +135,7 @@ case_types:
                 remove_linked_case:
 
               closed:
+                assign_to_new_team:
                 destroy_case:
                 edit_case:
                 link_a_case:
@@ -396,6 +397,7 @@ case_types:
                 remove_linked_case:
 
               closed:
+                assign_to_new_team:
                 destroy_case:
                 edit_case:
                 link_a_case:
@@ -725,6 +727,7 @@ case_types:
                 remove_linked_case:
 
               closed:
+                assign_to_new_team:
                 destroy_case:
                 edit_case:
                 link_a_case:

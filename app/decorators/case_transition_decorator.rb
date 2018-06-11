@@ -27,6 +27,8 @@ class CaseTransitionDecorator < Draper::Decorator
     case object.event
     when 'assign_responder'
       "Assigned to #{object.target_team.name}"
+    when 'assign_to_new_team'
+      "Assigned to #{object.target_team.name}"
     when 'remove_linked_case'
       "Removed the link to <strong>#{Case::Base.find(object.linked_case_id).number}</strong>"
     when 'add_responses',
