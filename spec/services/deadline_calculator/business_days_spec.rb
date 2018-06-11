@@ -8,13 +8,16 @@ describe DeadlineCalculator::BusinessDays do
                            received_date: Date.today,
                            created_at: Date.today
     }
+
     let(:deadline_calculator) { described_class.new foi_case }
 
     context 'received on a workday' do
       let(:thu_may_18) { Time.utc(2017, 5, 18, 12, 0, 0) }
       let(:tue_may_23) { Time.utc(2017, 5, 23, 12, 0, 0) }
+      let(:thu_jun_01) { Time.utc(2017, 6, 1, 12, 0, 0) }
       let(:fri_jun_02) { Time.utc(2017, 6, 2, 12, 0, 0) }
       let(:fri_jun_16) { Time.utc(2017, 6, 16, 12, 0, 0) }
+      let(:thu_jun_15) { Time.utc(2017, 6, 15, 12, 0, 0) }
 
       describe '.escalation_deadline' do
         it 'is 3 days after created date' do
@@ -39,6 +42,24 @@ describe DeadlineCalculator::BusinessDays do
           Timecop.freeze thu_may_18 do
             expect(deadline_calculator.internal_deadline)
               .to eq fri_jun_02.to_date
+          end
+        end
+      end
+
+      describe '#business_unit_deadline_for_date' do
+        context 'non-trigger case' do
+          it 'is 20 working days after specified date' do
+            deadline = deadline_calculator.business_unit_deadline_for_date(thu_may_18)
+            expect(deadline).to eq thu_jun_15.to_date
+          end
+        end
+
+        context 'trigger case' do
+          it 'is 10 working datas after specified date' do
+            allow(foi_case).to receive(:flagged?).and_return(true)
+            deadline_calculator = described_class.new(foi_case)
+            deadline = deadline_calculator.business_unit_deadline_for_date(thu_may_18)
+            expect(deadline).to eq thu_jun_01.to_date
           end
         end
       end

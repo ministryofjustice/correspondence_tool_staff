@@ -1,5 +1,6 @@
 require 'rails_helper'
 
+# rubocop:disable Metrics/ModuleLength
 module Stats
   describe R003BusinessUnitPerformanceReport do
 
@@ -39,6 +40,8 @@ module Stats
         create_case(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_c, responder: @responder_c, ident: 'case for team c - responded late')
         create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'case for team c - responded in time')
         create_case(received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'case for team d - open in time')
+        create_case(received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'case for team d - open in time', type: 'irt')
+        create_case(received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'case for team d - open in time', type: 'irc')
 
         #flagged cases
         create_case(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, flagged: true, ident: 'case for team a - responded late')
@@ -131,7 +134,13 @@ module Stats
                    overall_responded_in_time:     3,
                    overall_responded_late:        3,
                    overall_open_in_time:          4,
-                   overall_open_late:             4
+                   overall_open_late:             4,
+                   bu_performance:                0.0,
+                   bu_total:                      14,
+                   bu_responded_in_time:          0,
+                   bu_responded_late:             6,
+                   bu_open_in_time:               0,
+                   bu_open_late:                  8
                  })
       end
 
@@ -159,7 +168,13 @@ module Stats
                    overall_responded_in_time:     1,
                    overall_responded_late:        1,
                    overall_open_in_time:          1,
-                   overall_open_late:             0
+                   overall_open_late:             0,
+                   bu_performance:                0.0,
+                   bu_total:                      3,
+                   bu_responded_in_time:          0,
+                   bu_responded_late:             2,
+                   bu_open_in_time:               0,
+                   bu_open_late:                  1
                  })
       end
 
@@ -187,7 +202,13 @@ module Stats
                    overall_responded_in_time:     1,
                    overall_responded_late:        1,
                    overall_open_in_time:          0,
-                   overall_open_late:             0
+                   overall_open_late:             0,
+                   bu_performance:                0.0,
+                   bu_total:                      2,
+                   bu_responded_in_time:          0,
+                   bu_responded_late:             2,
+                   bu_open_in_time:               0,
+                   bu_open_late:                  0
                  })
       end
     end
@@ -198,8 +219,10 @@ module Stats
           super_header = %q{"","","","",} +
             %q{Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,} +
             %q{Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,} +
-            %q{Overall,Overall,Overall,Overall,Overall,Overall}
+            %q{Overall,Overall,Overall,Overall,Overall,Overall,} +
+            %q{Business unit,Business unit,Business unit,Business unit,Business unit,Business unit}
           header = %q{Business group,Directorate,Business unit,Responsible,} +
+            %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
             %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
             %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
             %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late}
@@ -207,27 +230,29 @@ module Stats
             Business unit report - 1 Jan 2017 to 30 Jun 2017
             #{super_header}
             #{header}
-            BGAB,"","",#{@bizgrp_ab.team_lead},28.6,9,2,2,2,3,33.3,5,1,1,2,1,30.0,14,3,3,4,4
-            BGAB,DRA,"",#{@dir_a.team_lead},20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2
-            BGAB,DRA,RTA,#{@team_a.team_lead},20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2
-            BGAB,DRB,"",#{@dir_b.team_lead},50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2
-            BGAB,DRB,RTB,#{@team_b.team_lead},50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2
-            BGCD,"","",#{@bizgrp_cd.team_lead},50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0
-            BGCD,DRCD,"",#{@dir_cd.team_lead},50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0
-            BGCD,DRCD,RTC,#{@team_c.team_lead},50.0,2,1,1,0,0,0.0,0,0,0,0,0,50.0,2,1,1,0,0
-            BGCD,DRCD,RTD,#{@team_d.team_lead},0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0
-            Total,"","","",33.3,12,3,3,3,3,33.3,5,1,1,2,1,33.3,17,4,4,5,4
+            BGAB,"","",#{@bizgrp_ab.team_lead},28.6,9,2,2,2,3,33.3,5,1,1,2,1,30.0,14,3,3,4,4,0.0,14,0,6,0,8
+            BGAB,DRA,"",#{@dir_a.team_lead},20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2,0.0,9,0,5,0,4
+            BGAB,DRA,RTA,#{@team_a.team_lead},20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2,0.0,9,0,5,0,4
+            BGAB,DRB,"",#{@dir_b.team_lead},50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2,0.0,5,0,1,0,4
+            BGAB,DRB,RTB,#{@team_b.team_lead},50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2,0.0,5,0,1,0,4
+            BGCD,"","",#{@bizgrp_cd.team_lead},50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0,0.0,3,0,2,0,1
+            BGCD,DRCD,"",#{@dir_cd.team_lead},50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0,0.0,3,0,2,0,1
+            BGCD,DRCD,RTC,#{@team_c.team_lead},50.0,2,1,1,0,0,0.0,0,0,0,0,0,50.0,2,1,1,0,0,0.0,2,0,2,0,0
+            BGCD,DRCD,RTD,#{@team_d.team_lead},0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0,0.0,1,0,0,0,1
+            Total,"","","",33.3,12,3,3,3,3,33.3,5,1,1,2,1,33.3,17,4,4,5,4,0.0,17,0,8,0,9
           EOCSV
           report = R003BusinessUnitPerformanceReport.new
           report.run
           actual_lines = report.to_csv.split("\n")
           expected_lines = expected_text.split("\n")
+
           (0...actual_lines.size).each do |i|
             expect(actual_lines[i]).to eq expected_lines[i]
           end
         end
       end
     end
+
 
     context 'with a case in the db that is unassigned' do
       before do
@@ -243,12 +268,23 @@ module Stats
     end
 
     # rubocop:disable Metrics/ParameterLists
-    def create_case(received:, responded:, deadline:, team:, responder:, ident:, flagged: false)
+    # rubocop:disable Metrics/CyclomaticComplexity
+    def create_case(received:, responded:, deadline:, team:, responder:, ident:, flagged: false, type: 'std')
       received_date = Date.parse(received)
       responded_date = responded.nil? ? nil : Date.parse(responded)
       kase = nil
       Timecop.freeze(received_date + 10.hours) do
-        kase = create :case_with_response, responding_team: team, responder: responder, identifier: ident
+        factory = case type
+                    when 'std'
+                      :case_with_response
+                    when 'irt'
+                      :accepted_timeliness_review
+                    when 'irc'
+                      :accepted_compliance_review
+                  end
+
+
+        kase = create factory, responding_team: team, responder: responder, identifier: ident
         kase.external_deadline = Date.parse(deadline)
         if flagged == true
           CaseFlagForClearanceService.new(user: kase.managing_team.users.first, kase: kase, team: @team_dacu_disclosure).call
@@ -265,6 +301,8 @@ module Stats
       kase
     end
     # rubocop:enable Metrics/ParameterLists
+    # rubocop:enable Metrics/CyclomaticComplexity
 
   end
 end
+# rubocop:enable Metrics/ModuleLength

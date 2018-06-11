@@ -190,7 +190,7 @@ module Stats
         kase = create case_type, responding_team: team, responder: responder, identifier: ident
         kase.external_deadline = Date.parse(deadline)
         unless responded_date.nil?
-          Timecop.freeze responded_date + 14.hours do
+          Timecop.freeze responded_date  do
             kase.state_machine.respond!(acting_user: responder, acting_team: team)
             kase.update!(date_responded: Time.now, outcome_id: @outcome.id, info_held_status: @info_held)
             kase.state_machine.close!(acting_user: kase.managing_team.users.first, acting_team: kase.managing_team)

@@ -1,0 +1,70 @@
+= GovukElementsErrorsHelper.error_summary @case,
+    "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+    ""
+
+= form_for @case, as: 'case_sar', url: admin_cases_path do |f|
+  = hidden_field_tag 'correspondence_type', @correspondence_type_abbreviation
+  = f.hidden_field :type, value: 'Case::SAR'
+
+  section
+    header
+      h2.heading-medium About the data subject
+
+    = f.text_field :subject_full_name
+
+    = f.radio_button_fieldset :subject_type,
+                              choices: Case::SAR::subject_types.keys
+
+    #third-party
+      = f.radio_button_fieldset(:third_party) do |fieldset|
+        - fieldset.radio_input(true, text_method: :humanize)
+          = f.text_field :name
+        - fieldset.radio_input(false, text_method: :humanize)
+
+  section
+    header
+      h2.heading-medium About the case
+
+      .form-group
+        fieldset.gov_uk_date
+          legend
+            = 'Received Date'
+          p.form-hint id="received_date-hint"
+            = 'Date correspondence was received, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"'
+          input.form-control id="case_sar_received_date" name="case_sar[received_date]" aria-describedby="received_date-hint" type="string" value=@case.received_date.to_s size="40"
+
+      .form-group
+        fieldset.gov_uk_date
+          legend
+            = 'Created At'
+          p.form-hint id="created_at-hint"
+            = 'Date to use as creation date of case, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"'
+          input.form-control id="case_sar_created_at" name="case_sar[created_at]" aria-describedby="created_at-hint" type="string" value=@case.created_at.to_s size="40"
+
+
+    = f.text_field :subject
+
+    = f.text_area :message, { rows: 10 }
+
+    = f.hidden_field :flag_for_disclosure_specialists, value: 'no'
+
+    h2.heading-medium Where the information should be sent
+    = f.radio_button_fieldset :reply_method, choices: [:send_by_email, :send_by_post], legend_options: { class: 'visually-hidden' } do |fieldset|
+      - fieldset.radio_input('send_by_email',
+                             panel_id: 'reply_method_send_by_email_panel')
+      - fieldset.radio_input('send_by_post',
+                             panel_id: 'reply_method_send_by_post_panel')
+
+      - fieldset.revealing_panel(:reply_method_send_by_email_panel) do |panel|
+        - panel.email_field :email
+
+      - fieldset.revealing_panel(:reply_method_send_by_post_panel) do |panel|
+        - panel.text_area :postal_address, {rows: 4}
+
+  = render partial: 'cases/sar/new_form_details', locals: { f: f }
+
+  = f.collection_select :responding_team, BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.sar).active, :id, :name, { selected: @case.responding_team.id }
+
+  = f.collection_select :target_state, @target_states, :to_s, :to_s, { selected: @selected_state }
+
+  = f.submit t('.create'), {class: 'button'}
