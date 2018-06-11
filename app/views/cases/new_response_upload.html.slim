@@ -1,3 +1,6 @@
+- content_for :page_title do
+  = t('page_title.upload_response_page', case_number: @case.number)
+
 - content_for :heading
   = t('.heading')
 - content_for :sub_heading

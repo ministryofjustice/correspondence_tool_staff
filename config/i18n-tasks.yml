@@ -100,6 +100,7 @@ ignore_unused:
   - 'devise.registrations.*'
   - 'cases.new.correspondence_type_errors.*'
   - 'filters.crumbs.list_filter_type.*'
+  - 'page_title.*_cases'
 
 
 ## Consider these keys used:
