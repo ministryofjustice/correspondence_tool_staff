@@ -1010,6 +1010,7 @@ case_types:
     name: Subject Access Request
     permitted_workflows:
       - standard
+      - trigger
 
     permitted_user_roles:
       - manager
@@ -1020,6 +1021,8 @@ case_types:
       - unassigned
       - awaiting_responder
       - drafting
+      - pending_dacu_clearance
+      - awaiting_dispatch
       - closed
 
     workflows:
@@ -1101,3 +1104,173 @@ case_types:
               unassigned:
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
+
+      trigger:
+        initial_state: unassigned
+        user_roles:
+
+        ########################### SAR :: STANDARD WORKFLOW :: MANAGER ########################
+          manager:
+            states:
+              unassigned:
+                add_message_to_case:
+                assign_responder:
+                  transition_to: awaiting_responder
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+
+              awaiting_responder:
+                add_message_to_case:
+                assign_to_new_team:
+                destroy_case:
+                edit_case:
+                flag_for_clearance:
+                link_a_case:
+                remove_linked_case:
+
+              drafting:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                assign_to_new_team:
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+
+              pending_dacu_clearance:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                assign_to_new_team:
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+
+              awaiting_dispatch:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                assign_to_new_team:
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+
+              closed:
+                assign_to_new_team:
+                destroy_case:
+                edit_case:
+                update_closure:
+                link_a_case:
+                remove_linked_case:
+
+          ########################### SAR :: STANDARD WORKFLOW :: RESPONDER ########################
+          responder:
+            states:
+              unassigned:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+
+              awaiting_responder:
+                accept_responder_assignment:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: drafting
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                reject_responder_assignment:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: unassigned
+
+              drafting:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                progress_for_clearance:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: pending_dacu_clearance
+                reassign_user:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+
+              pending_dacu_clearance:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                reassign_user:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+
+              awaiting_dispatch:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                close:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: closed
+                reassign_user:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+
+              closed:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+
+
+          ########################### SAR :: STANDARD WORKFLOW :: APPROVER ########################
+          approver:
+            states:
+              unassigned:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+
+              awaiting_responder:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+
+              drafting:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+
+              pending_dacu_clearance:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                approve:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                  transition_to: awaiting_dispatch
+                  after_transition: Workflows::Hooks#notify_responder_ready_to_send
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                unaccept_approver_assignment:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                request_redraft:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                  after_transition: Workflows::Hooks#notify_responder_redraft_requested
+                  transition_to: drafting
+
+              awaiting_dispatch:
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+
+              closed:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?

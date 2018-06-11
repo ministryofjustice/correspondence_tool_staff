@@ -86,22 +86,6 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context 'awaiting dispatch state' do
-        it 'should show permitted events' do
-          k = create :sar_with_response
-          expect(k.current_state).to eq 'awaiting_dispatch'
-          expect(k.state_machine.permitted_events(responder.id)).to be_empty
-        end
-      end
-
-      context 'responded state' do
-        it 'should show permitted events' do
-          k = create :responded_sar
-          expect(k.current_state).to eq 'responded'
-          expect(k.state_machine.permitted_events(responder.id)).to be_empty
-        end
-      end
-
       context 'closed state' do
         it 'should show permitted events' do
           k = create :closed_sar

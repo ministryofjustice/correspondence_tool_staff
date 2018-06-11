@@ -85,43 +85,103 @@ FactoryGirl.define do
       kase.reload
     end
   end
-  factory :sar_with_response, parent: :accepted_sar do
+  # factory :sar_with_response, parent: :accepted_sar do
+  #   transient do
+  #     identifier "sar with response"
+  #     # creation_time { 4.business_days.ago }
+  #     responder { find_or_create :responder, full_name: 'Ivor Response' }
+  #     responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
+  #   end
+  #   after(:create) do |kase, evaluator|
+  #     kase.attachments.push(*evaluator.responses)
+  #
+  #     create :case_transition_add_responses,
+  #            case_id: kase.id,
+  #            acting_team_id: evaluator.responding_team.id,
+  #            acting_user_id: evaluator.responder.id
+  #     # filenames: [evaluator.attachment.filename]
+  #     kase.reload
+  #   end
+  # end
+
+  # factory :responded_sar, parent: :sar_with_response do
+  #   transient do
+  #     identifier "responded sar"
+  #     responder { create :responder }
+  #   end
+  #
+  #   date_responded Date.today
+  #
+  #   after(:create) do |kase, evaluator|
+  #     create :case_transition_respond,
+  #            case: kase,
+  #            acting_user_id: evaluator.responder.id,
+  #            acting_team_id: evaluator.responding_team.id
+  #     kase.reload
+  #   end
+  # end
+
+  factory :pending_dacu_clearance_sar, parent: :accepted_sar do
     transient do
-      identifier "sar with response"
-      # creation_time { 4.business_days.ago }
-      responder { find_or_create :responder, full_name: 'Ivor Response' }
-      responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
+      approving_team { find_or_create :team_dacu_disclosure }
+      approver       { create :disclosure_specialist }
     end
-    after(:create) do |kase, evaluator|
-      kase.attachments.push(*evaluator.responses)
-
-      create :case_transition_add_responses,
-             case_id: kase.id,
-             acting_team_id: evaluator.responding_team.id,
-             acting_user_id: evaluator.responder.id
-      # filenames: [evaluator.attachment.filename]
-      kase.reload
-    end
-  end
-
-  factory :responded_sar, parent: :sar_with_response do
-    transient do
-      identifier "responded sar"
-      responder { create :responder }
-    end
-
-    date_responded Date.today
+    workflow 'trigger'
 
     after(:create) do |kase, evaluator|
-      create :case_transition_respond,
+      create :approver_assignment,
              case: kase,
-             acting_user_id: evaluator.responder.id,
-             acting_team_id: evaluator.responding_team.id
+             team: evaluator.approving_team,
+             state: 'accepted',
+             user_id: evaluator.approver.id
+
+      create :case_transition_pending_dacu_clearance,
+             case_id: kase.id,
+             acting_user_id: evaluator.responder.id
       kase.reload
     end
   end
 
-  factory :closed_sar, parent: :responded_sar do
+  factory :approved_sar, parent: :pending_dacu_clearance_sar do
+    transient do
+      approving_team { find_or_create :team_dacu_disclosure }
+      approver { create :disclosure_specialist }
+    end
+
+    after(:create) do |kase, evaluator|
+      create :case_transition_approve,
+             case: kase,
+             acting_team_id: evaluator.approving_team.id,
+             acting_user_id: evaluator.approver.id
+
+      kase.approver_assignments.each { |a| a.update approved: true }
+      kase.reload
+    end
+  end
+
+
+  factory :closed_trigger_sar, parent: :approved_sar do
+
+    missing_info              { false }
+
+    transient do
+      identifier "closed sar"
+    end
+
+    received_date { 22.business_days.ago }
+    date_responded { 4.business_days.ago }
+
+    after(:create) do |kase, evaluator|
+      create :case_transition_close,
+             case: kase,
+             acting_user_id: evaluator.manager.id,
+             acting_team_id: evaluator.managing_team.id,
+             target_team_id: evaluator.responding_team.id
+      kase.reload
+    end
+  end
+
+  factory :closed_sar, parent: :accepted_sar do
 
     missing_info              { false }
 
@@ -147,4 +207,46 @@ FactoryGirl.define do
     missing_info                { true }
     message                     'info held other, clarification required'
   end
+
+  trait :flagged_sar do
+    transient do
+      approving_team { find_or_create :approving_team }
+      disclosure_assignment_state { 'pending' }
+    end
+
+
+    after(:create) do |kase, evaluator|
+      create :approver_assignment,
+             case: kase,
+             team: evaluator.approving_team,
+             state: 'pending'
+      create :flag_case_for_clearance_transition,
+             case: kase,
+             acting_team_id: evaluator.approving_team.id
+      kase.update(workflow: 'trigger')
+      kase.reload
+    end
+  end
+
+  trait :flagged_accepted_sar do
+    transient do
+      approver { create :approver }
+      approving_team { approver.approving_team }
+      disclosure_assignment_state { 'accepted' }
+    end
+
+
+    after(:create) do |kase, evaluator|
+      create :approver_assignment,
+             case: kase,
+             user: evaluator.approver,
+             team: evaluator.approving_team,
+             state: 'accepted'
+      create :flag_case_for_clearance_transition,
+             case: kase,
+             target_team_id: evaluator.approving_team.id
+      kase.update(workflow: 'trigger')
+    end
+  end
+
 end
