@@ -431,7 +431,7 @@ class Case::Base < ApplicationRecord
 
   def responded_in_time_for_stats_purposes?
     if flagged?
-      business_unit_responded_to_flagged_case_in_time?
+      flagged_case_responded_to_in_time_for_stats_purposes?
     else
       responded_in_time?
     end
@@ -576,26 +576,9 @@ class Case::Base < ApplicationRecord
     @indexable_fields ||= self.class.searchable_fields_and_ranks.keys.map(&:to_s)
   end
 
-  # determines whether or not the BU responded to flagged cases in time (NOT
-  # whether the case was responded to in time!) calculated as the time between
-  # the responding BU being assigned the case and the disclosure team approving
-  # it.
-  def business_unit_responded_to_flagged_case_in_time?
-    responding_team_acceptance_date = transitions.where(
-      event: 'assign_responder'
-    ).last.created_at.to_date
 
-    disclosure_approval_date = transitions.where(
-      event: 'approve',
-      acting_team_id: default_clearance_team.id
-    ).last.created_at.to_date
 
-    internal_deadline = deadline_calculator.internal_deadline_for_date(
-      correspondence_type, responding_team_acceptance_date
-    )
 
-    internal_deadline >= disclosure_approval_date
-  end
 
   def received_in_acceptable_range?
     if self.new_record? || received_date_changed?
