@@ -8,6 +8,7 @@ describe AssignNewTeamService do
   let(:responding_team)     { create :responding_team }
   let(:new_responding_team) { create :responding_team}
   let(:assignment)          { kase.responder_assignment }
+  let(:notify_service)      { double(NotifyNewAssignmentService, run: true, new: true) }
 
   describe '.new' do
     it 'raises if the case responder assignment doesnt match the param' do
@@ -26,12 +27,14 @@ describe AssignNewTeamService do
   describe '#call' do
     before(:each) do
       @service = AssignNewTeamService.new(manager, {id: assignment.id, case_id: kase.id, team_id: new_responding_team.id })
-
+      allow(NotifyNewAssignmentService).to receive(:new).and_return(notify_service)
+      allow(notify_service).to receive(:run).and_return(true)
     end
 
     it 'returns ok' do
       @service.call
       expect(@service.result).to eq :ok
+      expect(notify_service).to have_received(:run)
     end
 
     it 'updates the assignment with the new team id and state' do
@@ -57,6 +60,18 @@ describe AssignNewTeamService do
       expect(tr.acting_team_id).to eq team_dacu_bmt.id
       expect(tr.target_user_id).to be_nil
       expect(tr.target_team_id).to eq new_responding_team.id
+    end
+  end
+
+  context 'closed case' do
+    it 'does not send an email' do
+      kase = create :closed_case
+      assignment = kase.responder_assignment
+      @service = AssignNewTeamService.new(manager, {id: assignment.id, case_id: kase.id, team_id: new_responding_team.id })
+      @service.call
+      expect(notify_service).not_to have_received(:run)
+
+      expect(@service.result).to eq :ok
     end
   end
 end
