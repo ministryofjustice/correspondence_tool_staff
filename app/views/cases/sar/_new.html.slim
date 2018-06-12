@@ -1,8 +1,10 @@
 = form_for kase, url: cases_path do |f|
   = hidden_field_tag 'correspondence_type', @correspondence_type_abbreviation
-  = f.hidden_field :type, value: 'case/sar'
 
   = render partial: 'cases/sar/new_form_common', locals: { f: f, dropzone: true }
   = render partial: 'cases/sar/new_form_details', locals: { f: f }
+
+  - if FeatureSet.trigger_sars.enabled?
+    = f.radio_button_fieldset :flag_for_disclosure_specialists
 
   = f.submit t('button.next_page_assign'), {class: 'button'}

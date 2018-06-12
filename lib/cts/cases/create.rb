@@ -15,7 +15,6 @@ module CTS::Cases
     def call(target_states, kase = nil)
       CTS::check_environment unless options[:force]
       parse_options(options)
-
       target_states.map do |target_state|
         journey = find_case_journey_for_state target_state.to_sym
         logger.info "creating case in #{target_state}"
@@ -32,18 +31,16 @@ module CTS::Cases
     end
 
     def new_case
+      if @klass.to_s == "Case::SAR"
+        new_sar_case
+      else
+        new_foi_case
+      end
+    end
+
+    def new_foi_case
       name = options.fetch(:name, Faker::Name.name)
 
-      created_at = if options[:created_at].present?
-                     0.business_days.after(DateTime.parse(options[:created_at]))
-                   else
-                     0.business_days.after(4.business_days.ago)
-                   end
-      received_date = if options.key? :received_date
-                        options[:received_date]
-                      else
-                        0.business_days.after(4.business_days.ago)
-                      end
       @klass.new(
         name:               name,
         email:              options.fetch(:email, Faker::Internet.email(name)),
@@ -53,28 +50,46 @@ module CTS::Cases
                                           Faker::Lorem.paragraph(10, true, 10)),
         requester_type:     options.fetch(:requester_type,
                                           Case::FOI::Standard.requester_types.keys.sample),
-        received_date:      received_date,
-        created_at:         created_at,
+        received_date:      set_received_date,
+        created_at:         set_created_at_date,
         dirty:              options.fetch(:dirty, true)
       )
     end
 
+    def new_sar_case
+      subject_full_name = options.fetch(:subject_full_name, Faker::Name.name)
+        @klass.new(
+          subject_full_name:  options.fetch(:subject_full_name, Faker::Name.name),
+          email:              options.fetch(:email, Faker::Internet.email(subject_full_name)),
+          subject:            options.fetch(:subject, Faker::Company.catch_phrase),
+          third_party:        options.fetch(:third_party, false),
+          message:            options.fetch(:message,
+                                            Faker::Lorem.paragraph(10, true, 10)),
+          subject_type:       options.fetch(:subject_type,
+                                            Case::SAR.subject_types.keys.sample),
+          received_date:      set_received_date,
+          created_at:         set_created_at_date,
+          reply_method:       options.fetch(:reply_method, 'send_by_email'),
+          dirty:              options.fetch(:dirty, true)
+        )
+    end
+
     private
 
-    def is_sar_case?
-      @klass.to_s.in?(%w{ Case::Base Case::SAR::NonOffender })
+    def set_received_date
+      if options.key? :received_date
+        options[:received_date]
+      else
+        0.business_days.after(4.business_days.ago)
+      end
     end
 
-    def determine_subject_full_name
-      is_sar_case? ?  options.fetch(:name, Faker::Name.name) : nil
-    end
-
-    def determine_third_party
-      is_sar_case? ? true : nil
-    end
-
-    def determine_subject_type
-      is_sar_case? ? 'offender' : nil
+    def set_created_at_date
+      if options[:created_at].present?
+        0.business_days.after(DateTime.parse(options[:created_at]))
+      else
+        0.business_days.after(4.business_days.ago)
+      end
     end
 
     def parse_options(options) # rubocop:disable Metrics/CyclomaticComplexity
@@ -90,7 +105,7 @@ module CTS::Cases
       @dry_run = options.fetch(:dry_run, false)
       @created_at = options[:created_at]
       if options[:received_date]
-        @recieved_date = options[:received_date]
+        @received_date = options[:received_date]
       elsif @created_at.present? &&
             DateTime.parse(@created_at) < DateTime.now
         @received_date = @created_at
@@ -221,16 +236,22 @@ module CTS::Cases
     end
 
     def transition_to_closed(kase)
-      kase.prepare_for_close
-      kase.update(date_responded: Date.today,
-                  info_held_status: CaseClosure::InfoHeldStatus.held,
-                  outcome_name: 'Granted in full')
-      kase.close(CTS::dacu_manager)
+      if get_correspondence_type_abbreviation == :foi
+        kase.prepare_for_close
+        kase.update(date_responded: Date.today,
+                    info_held_status: CaseClosure::InfoHeldStatus.held,
+                    outcome_name: 'Granted in full')
+        kase.close(CTS::dacu_manager)
+      else
+        kase.prepare_for_close
+        kase.update(date_responded: Date.today)
+        kase.close(responder)
+      end
     end
 
     # rubocop:disable Metrics/CyclomaticComplexity
     def journeys_to_check
-      CTS::Cases::Constants::CASE_JOURNEYS.find_all do |name, _states|
+      CTS::Cases::Constants::CASE_JOURNEYS[get_correspondence_type_abbreviation].find_all do |name, _states|
         @flag.blank? ||
           (@flag == 'disclosure' && name == :flagged_for_dacu_disclosure) ||
           (@flag == 'press' && name == :flagged_for_press_office) ||
@@ -250,13 +271,13 @@ module CTS::Cases
     def get_journey_for_flagged_state(flag)
       case flag
       when 'disclosure'
-        CASE_JOURNEYS[:flagged_for_dacu_displosure]
+        CASE_JOURNEYS[get_correspondence_type_abbreviation][:flagged_for_dacu_displosure]
       when 'press'
-        CASE_JOURNEYS[:flagged_for_press_office]
+        CASE_JOURNEYS[get_correspondence_type_abbreviation][:flagged_for_press_office]
       when 'private'
-        CASE_JOURNEYS[:flagged_for_private_office]
+        CASE_JOURNEYS[get_correspondence_type_abbreviation][:flagged_for_private_office]
       else
-        CASE_JOURNEYS[:unflagged]
+        CASE_JOURNEYS[get_correspondence_type_abbreviation][:unflagged]
       end
     end
 
@@ -314,6 +335,10 @@ module CTS::Cases
                           email: Faker::Internet.email(name),
                           password: 'correspondence')
       TeamsUsersRole.create(user: user, team: responding_team, role: 'responder')
+    end
+
+    def get_correspondence_type_abbreviation
+      @klass.type_abbreviation.to_sym.downcase
     end
   end
 end

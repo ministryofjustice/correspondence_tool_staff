@@ -45,19 +45,22 @@ module Stats
 
     }.freeze
 
+    attr_reader :result, :bu_result
+
     def initialize(kase)
       @kase = kase
       @result = nil
+      @bu_result = nil
     end
 
-    def result
-      analyse_case
-      @result
+    def run
+      analyse_case_for_main_stats
+      analyse_case_for_responding_business_unit
     end
 
     private
 
-    def analyse_case
+    def analyse_case_for_main_stats
       timeliness = @kase.closed? ? analyse_closed_case : analyse_open_case
       @result = add_trigger_state(timeliness)
     end
@@ -73,6 +76,18 @@ module Stats
     def add_trigger_state(timeliness)
       status = @kase.flagged? ? 'trigger_' + timeliness.to_s : 'non_trigger_' + timeliness.to_s
       status.to_sym
+    end
+
+    def analyse_case_for_responding_business_unit
+      @bu_result = @kase.responded? ? analyse_responded_case_for_responding_business_unit : analyse_open_case_for_responding_business_unit
+    end
+
+    def analyse_responded_case_for_responding_business_unit
+      @kase.business_unit_responded_in_time? ? :responded_in_time : :responded_late
+    end
+
+    def analyse_open_case_for_responding_business_unit
+      @kase.business_unit_already_late? ? :open_late : :open_in_time
     end
   end
 end

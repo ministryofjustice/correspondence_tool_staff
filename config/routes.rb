@@ -257,7 +257,13 @@ Rails.application.routes.draw do
 
   namespace :admin do
     root to: 'admin/cases', action: :index
-    resources :cases
+    resources :cases do
+      get ':correspondence_type',
+          action: :new,
+          on: :new,
+          as: '',
+          defaults: { correspondence_type: '' }
+    end
   end
 
   resources :teams do

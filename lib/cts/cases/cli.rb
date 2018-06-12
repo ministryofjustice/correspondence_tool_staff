@@ -124,6 +124,9 @@ module CTS::Cases
     def create(*target_states)  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
       CTS.info "Creating #{options[:number]} cases in each of the following states:"
       CTS.info "\t" + target_states.join("\n\t")
+      if options.key? :type
+        CTS.info "Creating #{options[:type]} case"
+      end
       if options.key? :responder
         CTS.info "Setting responder user to: #{options[:responder]}"
       end
