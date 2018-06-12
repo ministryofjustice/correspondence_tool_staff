@@ -24,6 +24,8 @@ en:
     attributes:
       business_unit:
         correspondence_type_ids: "Correspondence types"
+      case/sar:
+        third_party: ''
     errors:
       models:
         business_unit:
@@ -46,7 +48,12 @@ en:
             requester_type:
               blank: Type of requester must be selected
             flag_for_disclosure_specialists:
-              blank: Please choose yes or no.
+              blank: Please choose yes or no
+        case/sar:
+          attributes:
+            third_party:
+              inclusion: Please choose yes or no
+
 
         assignment:
           attributes:
@@ -196,13 +203,13 @@ en:
           clarification, i.e. a TMM?"
         reply_method_html: |
           <div class="heading-medium">Where the information should be sent</div>
-        flag_for_disclosure_specialists: "Clearance required by disclosure?"
-        subject_type: "Type of data subject"
-        third_party: "Is the information being requested on someone's behalf?"
+        flag_for_disclosure_specialists: Flag for disclosure specialist?
+        subject_type: Who is the person the information is being requested about?
+        third_party: Is the information being requested on someone's behalf?
       state_selector:
         selected_states: Filter by status
       search_query:
-        filter_sensitivity: "Select sensitivity"
+        filter_sensitivity: Select sensitivity
         filter_case_type: "Select type"
         filter_status: "Select status"
         common_exemption_ids: Most frequently used
@@ -223,6 +230,8 @@ en:
         upload_comment: This will be added to the converstation section of the case.
       team_property:
         value: Please provide one area at a time and be as concise as possible
+      case_sar:
+        third_party_relationship: For example, solicitor, parent or guardian
 
     label:
       bypass_approval_manager:
@@ -240,6 +249,8 @@ en:
 
       business_unit:
         id: Business Unit
+
+
 
       state_selector:
         unassigned: Needs reassigning
@@ -277,12 +288,12 @@ en:
           Case::FOI::ComplianceReview: FOI - Internal review for compliance
       case_sar:
         email: "Recipient email address"
-        message: "Full case"
-        name: "Who is the requestor?"
+        message: Full case details
+        name: "Full name of the requestor"
         postal_address: "Recipient postal address"
         received_date: "Received at MOJ"
         subject: "Case summary"
-        subject_full_name: "Full name of data subject"
+        subject_full_name: "Full name of the person about whom information is being requested (data subject)"
       feedback:
         comment: Help make this service better
       search_query:
@@ -376,6 +387,7 @@ en:
       sar_response_address: Where the information should be sent
       status: Status
       third_party: Information requested on someone's behalf?
+      third_party_relationship: Third party relationship
       time_taken: Time taken
       time_taken_result:
         one: "%{count} working day"
@@ -554,6 +566,8 @@ en:
         close_date: Date response sent
         date_example: For example, 30 1 2017
     sar:
+      new_form_common:
+        dropzone: Requestor's proof of ID and other documents
       close_form:
         close_date: Date response sent
         date_example: For example, 30 1 2017
