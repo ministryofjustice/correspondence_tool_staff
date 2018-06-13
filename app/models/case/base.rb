@@ -423,6 +423,35 @@ class Case::Base < ApplicationRecord
     date_responded <= external_deadline
   end
 
+  # determines whether or not an individual BU responded to a case in time, measured
+  # from the date the case was assigned to the business unit to the time the case was marked as responded.
+  # Note that the time limit is different for trigger cases (the internal time limit) than for non trigger
+  # (the external time limit)
+  #
+  def business_unit_responded_in_time?
+    responding_transitions = transitions.where(event: 'respond')
+    if responding_transitions.any?
+      responding_team_assignment_date = transitions.where(event: 'assign_responder').last.created_at.to_date
+      responding_transition = responding_transitions.last
+      responding_date = responding_transition.created_at.to_date
+      internal_deadline = deadline_calculator
+                              .internal_deadline_for_date(correspondence_type, responding_team_assignment_date)
+      internal_deadline >= responding_date
+    else
+      raise ArgumentError.new("Cannot call ##{__method__} on a case without a response (Case #{number})")
+    end
+  end
+
+  def business_unit_already_late?
+    if transitions.where(event: 'respond').any?
+      raise ArgumentError.new("Cannot call ##{__method__} on a case for which the response has been sent")
+    else
+      responding_team_assignment_date = transitions.where(event: 'assign_responder').last.created_at.to_date
+      internal_deadline = deadline_calculator.business_unit_deadline_for_date(responding_team_assignment_date)
+      internal_deadline < Date.today
+    end
+  end
+
   def default_clearance_team
     case_type = "#{type_abbreviation.downcase}_cases"
     team_code = Settings.__send__(case_type).default_clearance_team
