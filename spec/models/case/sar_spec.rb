@@ -8,7 +8,7 @@ describe Case::SAR do
 
       expect(kase).not_to be_valid
       expect(kase.errors[:subject_full_name]).to eq(["can't be blank"])
-      expect(kase.errors[:third_party]).to eq(["can't be blank"])
+      expect(kase.errors[:third_party]).to eq(["Please choose yes or no"])
     end
   end
 
@@ -59,16 +59,31 @@ describe Case::SAR do
     end
   end
 
-  describe '#name' do
-    it 'validates presence of name when third party is true' do
-      kase = build :sar_case, third_party: true, name: ''
-      expect(kase).not_to be_valid
-      expect(kase.errors[:name]).to eq ["can't be blank"]
+  describe 'third party details' do
+    describe '#name' do
+      it 'validates presence of name when third party is true' do
+        kase = build :sar_case, third_party: true, name: ''
+        expect(kase).not_to be_valid
+        expect(kase.errors[:name]).to eq ["can't be blank"]
+      end
+
+      it 'does not validates presence of name when third party is false' do
+        kase = build :sar_case, third_party: false, name: ''
+        expect(kase).to be_valid
+      end
     end
 
-    it 'does not validates presence of name when third party is false' do
-      kase = build :sar_case, third_party: false, name: ''
-      expect(kase).to be_valid
+    describe 'third party relationship' do
+      it 'must be persent when thrid party is true' do
+        kase = build :sar_case, third_party: true, third_party_relationship: ''
+        expect(kase).not_to be_valid
+        expect(kase.errors[:third_party_relationship]).to eq ["can't be blank"]
+      end
+
+      it 'does not validates presence of third party relationship when third party is false' do
+        kase = build :sar_case, third_party: false, third_party_relationship: ''
+        expect(kase).to be_valid
+      end
     end
   end
 

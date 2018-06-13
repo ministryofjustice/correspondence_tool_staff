@@ -3,37 +3,24 @@ module PageObjects
     module Admin
       module Cases
         class NewPage < PageObjects::Pages::Base
-          set_url '/admin/cases/new'
+          set_url 'admin/cases/new/'
 
-          sections :notices, '.notice-summary' do
-            element :heading, '.notice-summary-heading'
-          end
+          section :primary_navigation,
+                  PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-          element :case_type_foi_standard, '#case_type_casefoistandard'
+          elements :create_links, '#create-correspondences > li > a'          
 
-          element :full_name, '#case_name'
-          element :email, '#case_email'
-          element :address, '#case_postal_address'
-          element :type_of_requester, :xpath,
-                  '//fieldset[contains(.,"Type of requester")]'
-          element :subject, '#case_subject'
-          element :full_request, '#case_message'
-          element :received_date, '#case_received_date'
-          element :created_at, '#case_created_at'
+          def create_link_for_correspondence(correspondence_type)
+            create_links.find { |link| link.text.match(correspondence_type) }
+          end
 
-          element :flag_for_disclosure_specialists,
-                  '#case_flagged_for_disclosure_specialist_clearance'
-          element :flag_for_press_office,
-                  '#case_flagged_for_press_office_clearance'
-          element :flag_for_private_office,
-                  '#case_flagged_for_private_office_clearance'
-
-          element :target_state, '#case_target_state'
-
-          element :submit_button, '.button'
+          def fill_in_case_type(choice)
+            make_radio_button_choice("case_foi_type_#{choice}")
+            click_button 'Continue'
+          end
         end
       end
     end

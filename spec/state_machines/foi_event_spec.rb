@@ -399,13 +399,16 @@ describe 'state machine' do
       should permit_event_to_be_triggered_only_by(
         [:disclosure_bmt, :std_awresp_foi],
         [:disclosure_bmt, :std_draft_foi],
+        [:disclosure_bmt, :std_closed_foi],
         [:disclosure_bmt, :trig_awresp_foi],
         [:disclosure_bmt, :trig_awresp_foi_accepted],
         [:disclosure_bmt, :trig_draft_foi],
         [:disclosure_bmt, :trig_draft_foi_accepted],
+        [:disclosure_bmt, :trig_closed_foi],
         [:disclosure_bmt, :full_awresp_foi],
         [:disclosure_bmt, :full_awresp_foi_accepted],
         [:disclosure_bmt, :full_draft_foi],
+        [:disclosure_bmt, :full_closed_foi],
         )}
   end
 

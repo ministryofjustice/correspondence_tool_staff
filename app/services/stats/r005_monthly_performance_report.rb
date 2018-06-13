@@ -31,7 +31,7 @@ module Stats
     end
 
     def run
-      case_ids = CaseSelector.ids_for_cases_received_in_period(@period_start, @period_end)
+      case_ids = CaseSelector.new(Case::Base.standard_foi).ids_for_cases_received_in_period(@period_start, @period_end)
       case_ids.each { |case_id| analyse_case(case_id) }
       @stats.finalise
     end
@@ -51,10 +51,14 @@ module Stats
 
     def analyse_case(case_id)
       kase = Case::Base.find case_id
-      column_key = CaseAnalyser.new(kase).result
-      month = kase.received_date.month
-      @stats.record_stats(month, column_key)
-      @stats.record_stats(:total, column_key)
+      unless kase.unassigned?
+        analyser = CaseAnalyser.new(kase)
+        analyser.run
+        column_key = analyser.result
+        month = kase.received_date.month
+        @stats.record_stats(month, column_key)
+        @stats.record_stats(:total, column_key)
+      end
     end
 
     def array_of_month_numbers

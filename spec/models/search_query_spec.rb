@@ -5,7 +5,7 @@
 #  id               :integer          not null, primary key
 #  user_id          :integer          not null
 #  query            :jsonb            not null
-#  num_results      :integer          not null
+#  num_results      :integer          default(0), not null
 #  num_clicks       :integer          default(0), not null
 #  highest_position :integer
 #  created_at       :datetime         not null

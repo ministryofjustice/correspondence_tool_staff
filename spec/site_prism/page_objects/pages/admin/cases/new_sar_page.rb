@@ -1,9 +1,9 @@
 module PageObjects
   module Pages
-    module Cases
-      module New
-        class SARPage < PageObjects::Pages::Base
-          set_url '/cases/new/sar'
+    module Admin
+      module Cases
+        class NewSARPage < PageObjects::Pages::Base
+          set_url '/admin/cases/new/sar'
 
           section :primary_navigation,
                   PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
@@ -17,11 +17,9 @@ module PageObjects
           element :third_party, :xpath,
                   "//fieldset[contains(.,\"being requested on someone's behalf\")]"
           element :requester_full_name, '#case_sar_name'
-          element :third_party_relationship, '#third_party_relationship'
 
-          element :date_received_day, '#case_sar_received_date_dd'
-          element :date_received_month, '#case_sar_received_date_mm'
-          element :date_received_year, '#case_sar_received_date_yyyy'
+          element :received_date, '#case_sar_received_date'
+          element :created_at, '#case_sar_created_at'
 
           element :subject, '#case_sar_subject'
           element :full_request, '#case_sar_message'
@@ -51,7 +49,6 @@ module PageObjects
             if kase.third_party?
               choose_third_party true
               requester_full_name.set kase.name
-
             else
               choose_third_party false
             end

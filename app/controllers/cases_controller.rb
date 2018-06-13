@@ -678,6 +678,7 @@ class CasesController < ApplicationController
       :subject_full_name,
       :subject_type,
       :third_party,
+      :third_party_relationship,
       :reply_method,
       uploaded_request_files: [],
     ).merge(type: "Case::SAR")
@@ -710,6 +711,7 @@ class CasesController < ApplicationController
         :subject_full_name,
         :subject_type,
         :third_party,
+        :third_party_relationship,
         :name,
         :received_date_dd, :received_date_mm, :received_date_yyyy,
         :subject,
