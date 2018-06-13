@@ -23,15 +23,16 @@ module PageObjects
 
           element :subject, '#case_sar_subject'
           element :full_request, '#case_sar_message'
-          element :dropzone_container, '.dropzone'
-
-          # only shows up when using drop_in_dropzone
-          element :uploaded_request_file_input, '#uploadedRequestFileInput'
 
           element :reply_method, :xpath,
                   '//fieldset[contains(.,"Where the information should be sent")]'
           element :email, '#case_sar_email'
           element :postal_address, '#case_sar_postal_address'
+
+          element :flag_for_disclosure_specialists,
+                  '#case_sar_flagged_for_disclosure_specialist_clearance'
+
+          element :target_state, '#case_sar_target_state'
 
           element :submit_button, '.button'
 
@@ -67,12 +68,6 @@ module PageObjects
             end
 
             kase
-          end
-
-          def drop_in_dropzone(file_path)
-            super file_path: file_path,
-                  input_name: dropzone_container['data-file-input-name'],
-                  container_selector: '#delivery-method-fields'
           end
         end
       end

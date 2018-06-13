@@ -51,7 +51,16 @@ module CTS
             :awaiting_responder,
             :drafting,
             :closed,
-          ]
+          ],
+          flagged_for_dacu_disclosure: [
+              :awaiting_responder,
+              :accepted_by_dacu_disclosure,
+              :drafting,
+              :pending_dacu_disclosure_clearance,
+              :awaiting_dispatch,
+              :closed,
+          ],
+
         }
       }
 

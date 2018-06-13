@@ -587,7 +587,6 @@ case_types:
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance_by_press_or_private?
                   switch_workflow_using: Workflows::Conditionals#unflag_for_clearance_next_workflow
 
-
               responded:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
@@ -598,8 +597,6 @@ case_types:
               closed:
                 link_a_case:
                 remove_linked_case:
-
-
 
       full_approval:
         permitted_events:
@@ -908,8 +905,6 @@ case_types:
                 link_a_case:
                 remove_linked_case:
 
-
-
           responder:
             states:
               unassigned:
@@ -998,9 +993,6 @@ case_types:
                 link_a_case:
                 remove_linked_case:
 
-
-
-
 #########################################################################
 #                                                                       #
 #                               SAR                                     #
@@ -1039,6 +1031,8 @@ case_types:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                flag_for_clearance:
+                  switch_workflow: trigger
                 link_a_case:
                 remove_linked_case:
 
@@ -1047,7 +1041,6 @@ case_types:
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
-                flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
 
@@ -1105,11 +1098,14 @@ case_types:
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
 
+  ###########################TRIGGER SAR ########################
+
+
       trigger:
         initial_state: unassigned
         user_roles:
 
-        ########################### SAR :: STANDARD WORKFLOW :: MANAGER ########################
+        ########################### SAR :: TRIGGER WORKFLOW :: MANAGER ########################
           manager:
             states:
               unassigned:
@@ -1126,7 +1122,6 @@ case_types:
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
-                flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
 
@@ -1165,7 +1160,7 @@ case_types:
                 link_a_case:
                 remove_linked_case:
 
-          ########################### SAR :: STANDARD WORKFLOW :: RESPONDER ########################
+          ########################### SAR :: TRIGGER WORKFLOW :: RESPONDER ########################
           responder:
             states:
               unassigned:
@@ -1259,7 +1254,7 @@ case_types:
                   if: Case::BasePolicy#assignments_reassign_user?
                 unaccept_approver_assignment:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
-                request_redraft:
+                request_amends:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_redraft_requested
                   transition_to: drafting
@@ -1273,4 +1268,4 @@ case_types:
 
               closed:
                 add_message_to_case:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?

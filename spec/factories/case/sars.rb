@@ -124,7 +124,6 @@ FactoryGirl.define do
     end
   end
 
-
   factory :closed_trigger_sar, parent: :approved_sar do
 
     missing_info              { false }
@@ -179,7 +178,6 @@ FactoryGirl.define do
       disclosure_assignment_state { 'pending' }
     end
 
-
     after(:create) do |kase, evaluator|
       create :approver_assignment,
              case: kase,
@@ -199,7 +197,6 @@ FactoryGirl.define do
       approving_team { approver.approving_team }
       disclosure_assignment_state { 'accepted' }
     end
-
 
     after(:create) do |kase, evaluator|
       create :approver_assignment,
