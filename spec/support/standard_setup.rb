@@ -160,6 +160,11 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
                 identifier: 'std_closed_foi_late'}
                  .merge(attributes))
       },
+      std_old_closed_foi: ->(attributes={}) {
+        create(:closed_case, :old_without_info_held,
+               {identifier: 'std_old_closed_foi'}
+                 .merge(attributes))
+      },
       trig_unassigned_foi_accepted: ->(attributes={}) {
         create(:case,
                :flagged_accepted,

@@ -398,9 +398,13 @@ FactoryGirl.define do
     end
 
     trait :old_without_info_held do
-      info_held_states nil
-      refusal_reason   { find_or_create :refusal_reason, :exempt }
-      outcome          { find_or_create :outcome, :refused       }
+      message 'case closed with old closure info'
+
+      after(:create) do |kase, evaluator|
+        kase.update_attribute :info_held_status_id, nil
+        kase.update_attribute :refusal_reason, find_or_create(:refusal_reason, :exempt)
+        kase.update_attribute :outcome, find_or_create(:outcome, :refused)
+      end
     end
 
     trait :with_ncnd_exemption do
