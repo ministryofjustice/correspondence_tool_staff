@@ -14,7 +14,7 @@ describe CasesController do
         info_held_status_abbreviation: 'held',
         outcome_abbreviation: 'refused',
         refusal_reason_abbreviation: 'overturned',
-        exemption_ids: { '1' => '1', '2' => '0' }
+        exemption_ids: ['1', '2']
       }
     }
   }
@@ -70,7 +70,7 @@ describe CasesController do
       it { should_not include :outcome_abbreviation }
       it { should     include outcome_id: nil  }
       it { should     include refusal_reason_abbreviation: 'overturned' }
-      it { should     include exemption_ids: { '1' => '1', '2' => '0' } }
+      it { should     include exemption_ids: ['1', '2'] }
     end
 
     context 'when refusal reason is not required' do
@@ -81,7 +81,7 @@ describe CasesController do
       it { should     include outcome_abbreviation: 'refused' }
       it { should_not include :refusal_reason_abbreviation }
       it { should     include refusal_reason_id: nil }
-      it { should     include exemption_ids: { '1' => '1', '2' => '0' } }
+      it { should     include exemption_ids: ['1', '2'] }
     end
 
     context 'when exemption is not required' do
@@ -91,7 +91,7 @@ describe CasesController do
       it { should     include info_held_status_abbreviation: 'held' }
       it { should     include outcome_abbreviation: 'refused' }
       it { should     include refusal_reason_abbreviation: 'overturned' }
-      it { should     include exemption_ids: {} }
+      it { should     include exemption_ids: [] }
     end
 
   end

@@ -13,13 +13,26 @@ feature 'editing case closure information' do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  scenario 'bmt changes case closure information', js: true do
+  scenario 'bmt changes case from held/granted to other/tmm', js: true do
     kase = create :closed_case
 
     login_as manager
     cases_show_page.load(id: kase.id)
     edit_foi_case_closure_step(kase: kase,
                                date_responded: 10.business_days.ago)
+  end
+
+  scenario 'bmt edits case that had exemptions', js: true do
+    kase = create :closed_case, :fully_refused_exempt_s32
+
+    login_as manager
+    cases_show_page.load(id: kase.id)
+    edit_foi_case_closure_step(kase: kase,
+                               preselected_exemptions: ['court'],
+                               date_responded: 10.business_days.ago,
+                               info_held_status: 'held',
+                               outcome: 'granted',
+                               refusal_reason: nil)
   end
 
   scenario 'bmt views case details for FOI with old closure info', js: true do

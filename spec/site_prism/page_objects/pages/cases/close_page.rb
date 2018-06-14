@@ -21,21 +21,33 @@ module PageObjects
         end
 
         section :is_info_held, '.js-info-held-status' do
-          element :yes, 'input#case_foi_info_held_status_abbreviation_held', visible: false
+          element :held, 'input#case_foi_info_held_status_abbreviation_held', visible: false
+          element :yes,  'input#case_foi_info_held_status_abbreviation_held', visible: false
+
+          element :part_held,    'input#case_foi_info_held_status_abbreviation_part_held', visible: false
           element :held_in_part, 'input#case_foi_info_held_status_abbreviation_part_held', visible: false
-          element :no, 'input#case_foi_info_held_status_abbreviation_not_held', visible: false
-          element :other, 'input#case_foi_info_held_status_abbreviation_not_confirmed', visible: false
+
+          element :not_held, 'input#case_foi_info_held_status_abbreviation_not_held', visible: false
+          element :no,       'input#case_foi_info_held_status_abbreviation_not_held', visible: false
+
+          element :not_confirmed, 'input#case_foi_info_held_status_abbreviation_not_confirmed', visible: false
+          element :other,         'input#case_foi_info_held_status_abbreviation_not_confirmed', visible: false
         end
 
         section :outcome, '.js-outcome-group' do
+          element :granted,         'label[for="case_foi_outcome_abbreviation_granted"]'
           element :granted_in_full, 'label[for="case_foi_outcome_abbreviation_granted"]'
+
+          element :part,            'label[for="case_foi_outcome_abbreviation_part"]'
           element :refused_in_part, 'label[for="case_foi_outcome_abbreviation_part"]'
+
+          element :refused,       'label[for="case_foi_outcome_abbreviation_refused"]'
           element :refused_fully, 'label[for="case_foi_outcome_abbreviation_refused"]'
         end
 
         section :other_reasons, '.js-other-reasons' do
           elements :options, 'label'
-          element :clarification_required, :xpath, '//input[@value="tmm"]//..'
+          element :tmm, :xpath, '//input[@value="tmm"]//..'
           element :ncnd, :xpath, '//input[@value="ncnd"]//..'
         end
 
@@ -55,6 +67,12 @@ module PageObjects
           date_responded_day.set(date.day)
           date_responded_month.set(date.month)
           date_responded_year.set(date.year)
+        end
+
+        def get_exemption(abbreviation:)
+          exemption = CaseClosure::Exemption.find_by(abbreviation: abbreviation)
+          exemptions.find("input#case_foi_exemption_ids_#{exemption.id}",
+                          visible: false)
         end
       end
     end

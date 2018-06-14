@@ -6,9 +6,4 @@
       span.form-hint
         = hint
 
-    - exemptions.each do |ex|
-      .multiple-choice
-        input name="case_foi[exemption_ids][#{ex.id}]" type="hidden" value="0"
-        input type="checkbox" value="1" name="case_foi[exemption_ids][#{ex.id}]" id="case_foi_exemption_ids_#{ex.id}" data-omit-for-part-refused="#{ex.omit_for_part_refused}"
-        label class="#{exemptions_checkbox_selector(ex, kase)}" for="case_foi_exemption_ids_#{ex.id}"
-          = ex.name
+    = f.collection_check_boxes :exemption_ids, exemptions, :id, :name

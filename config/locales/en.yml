@@ -176,7 +176,6 @@ en:
 
   button:
     assign: Assign to this unit
-    close_case: Close case
     next_page_assign: Next - Assign case
     confirm: Confirm
     feedback: Send feedback

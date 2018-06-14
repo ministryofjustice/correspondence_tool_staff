@@ -117,7 +117,7 @@ describe CasesController do
               info_held_status_abbreviation: 'held',
               outcome_abbreviation: 'granted',
               refusal_reason_abbreviation: nil,
-              exemption_ids: {},
+              exemption_ids: [],
             }
           }
 
@@ -141,7 +141,7 @@ describe CasesController do
               info_held_status_abbreviation: 'not_held',
               outcome_abbreviation: nil,
               refusal_reason_abbreviation: nil,
-              exemption_ids: {},
+              exemption_ids: [],
             }
           }
 
@@ -160,12 +160,11 @@ describe CasesController do
         context 'being updated to be held in part and refused' do
           let(:kase) { create :closed_case, :other_vexatious }
           let(:closure_params) {
-            exemption_s12 = find_or_create(:exemption, :s12_1)
             {
               info_held_status_abbreviation: 'part_held',
               outcome_abbreviation: 'refused',
               refusal_reason_abbreviation: nil,
-              exemption_ids: { CaseClosure::Exemption.s12.id.to_s => '1' }
+              exemption_ids: [ CaseClosure::Exemption.s12.id.to_s ]
             }
           }
 
@@ -188,7 +187,7 @@ describe CasesController do
               info_held_status_abbreviation: 'not_confirmed',
               outcome_abbreviation: nil,
               refusal_reason_abbreviation: 'cost',
-              exemption_ids: {},
+              exemption_ids: [],
             }
           }
 

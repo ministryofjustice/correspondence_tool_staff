@@ -343,43 +343,12 @@ class Case::Base < ApplicationRecord
     self.outcome = CaseClosure::Outcome.by_abbreviation(abbreviation)
   end
 
-  # def outcome_name
-  #   outcome&.name
-  # end
-
-  # def outcome_name=(name)
-  #   self.outcome = CaseClosure::Outcome.by_name(name)
-  # end
-
   def refusal_reason_abbreviation
     refusal_reason&.abbreviation
   end
 
   def refusal_reason_abbreviation=(abbreviation)
     self.refusal_reason = CaseClosure::RefusalReason.by_abbreviation(abbreviation)
-  end
-
-  # def refusal_reason_name
-  #   refusal_reason&.name
-  # end
-
-  # def refusal_reason_name=(name)
-  #   self.refusal_reason = CaseClosure::RefusalReason.by_name(name)
-  # end
-
-  # returns a hash which can be used by for populating checkboxes
-  # e.g. {"10"=>"1", "11"=>"1", "12"=>"0", "13"=>"0", "14"=>"1"}
-  def exemption_ids
-    exemption_hash = {}
-    exemptions.map{ |ex| exemption_hash[ex.id.to_s] = '1' }
-    exemption_hash
-  end
-
-  # expects a hash of ids and values 1 or zero
-  # e.g. {"10"=>"1", "11"=>"1", "12"=>"0", "13"=>"0", "14"=>"1"}
-  def exemption_ids=(param_hash)
-    exemption_ids = param_hash.select { |_exemption_id, val| val == '1' }.keys
-    self.exemptions = CaseClosure::Exemption.find(exemption_ids)
   end
 
   def prepare_for_close

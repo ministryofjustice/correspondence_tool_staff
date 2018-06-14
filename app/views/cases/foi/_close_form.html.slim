@@ -25,8 +25,8 @@
       h2.form-label-bold
         = "What exemptions were applied?"
 
-      = render partial: 'exemption_checkbox_section', locals: { exemptions: CaseClosure::Exemption.absolute, heading: 'Absolute exemptions', hint: 'These have no public interest test attached', kase: @case }
+      = render partial: 'exemption_checkbox_section', locals: { exemptions: CaseClosure::Exemption.absolute, heading: 'Absolute exemptions', hint: 'These have no public interest test attached', kase: @case, f: f }
 
-      = render partial: 'exemption_checkbox_section', locals: { exemptions: CaseClosure::Exemption.qualified, heading: 'Qualified exemptions', hint: 'These are subject to a public interest test', kase: @case }
+      = render partial: 'exemption_checkbox_section', locals: { exemptions: CaseClosure::Exemption.qualified, heading: 'Qualified exemptions', hint: 'These are subject to a public interest test', kase: @case, f: f }
 
   = f.submit submit_button, {class: 'button'}

@@ -679,7 +679,7 @@ class CasesController < ApplicationController
       :appeal_outcome_name,
       :refusal_reason_abbreviation,
       :info_held_status_abbreviation,
-      exemption_ids: params[:case_foi][:exemption_ids].nil? ? nil : params[:case_foi][:exemption_ids].keys
+      exemption_ids: []
     )
 
     info_held_status = closure_params[:info_held_status_abbreviation]
@@ -699,7 +699,7 @@ class CasesController < ApplicationController
     unless ClosedCaseValidator.exemption_required?(info_held_status: info_held_status,
                                                    outcome: outcome,
                                                    refusal_reason: refusal_reason)
-      closure_params.merge!(exemption_ids: {})
+      closure_params.merge!(exemption_ids: [])
     end
 
     closure_params
