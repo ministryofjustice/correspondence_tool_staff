@@ -520,11 +520,12 @@ class CasesController < ApplicationController
 
   def progress_for_clearance
     @case = Case::Base.find(params[:id])
+    authorize @case
 
     @case.state_machine.progress_for_clearance!(acting_user: current_user,
                                                 acting_team: @case.team_for_user(current_user))
 
-    flash[:notice] = 'The Disclosure team has been notified this case is ready for clearance'
+    flash[:notice] = t('notices.progress_for_clearance')
     redirect_to case_path(@case.id)
   end
 

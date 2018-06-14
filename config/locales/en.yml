@@ -344,6 +344,7 @@ en:
     case_closed: You've closed this case
     closure_details_updated: You have updated the closure details for this case.
     response_uploaded: You have uploaded the response for this case.
+    progress_for_clearance: The Disclosure team has been notified this case is ready for clearance
 
   common:
     choose_file: Choose a file

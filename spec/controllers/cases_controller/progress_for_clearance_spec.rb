@@ -9,6 +9,13 @@ RSpec.describe CasesController, type: :controller do
       sign_in responder
     end
 
+    it 'authorizes' do
+      expect {
+        patch :progress_for_clearance, params: { id: accepted_sar.id }
+      } .to require_permission(:progress_for_clearance?)
+              .with_args(responder, accepted_sar)
+    end
+
     it 'sets @case' do
       patch :progress_for_clearance, params: { id: accepted_sar.id }
       expect(assigns(:case)).to eq accepted_sar
