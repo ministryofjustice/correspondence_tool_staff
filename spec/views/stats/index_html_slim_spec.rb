@@ -12,6 +12,7 @@ describe 'stats/index.html.slim', type: :view do
 
   it 'has a heading' do
     assign(:reports, reports)
+    allow(view).to receive(:current_user).and_return(double(User, admin?: false))
     render
     stats_index_page.load(rendered)
 
@@ -23,6 +24,7 @@ describe 'stats/index.html.slim', type: :view do
 
   it 'has a table with a list of reports' do
     assign(:reports, reports)
+    allow(view).to receive(:current_user).and_return(double(User, admin?: false))
     render
     stats_index_page.load(rendered)
 
