@@ -13,10 +13,10 @@ module Features
       kase
     end
 
-    def create_and_assign_sar_case(user:, responding_team:)
+    def create_and_assign_sar_case(user:, responding_team:, flag_for_disclosure: false)
       login_step user: user
 
-      kase = create_sar_case_step
+      kase = create_sar_case_step flag_for_disclosure: flag_for_disclosure
       assign_case_step business_unit: responding_team
       logout_step
       kase
@@ -124,6 +124,15 @@ module Features
       go_to_case_details_step kase: kase
       extend_for_pit_step kase: kase, new_deadline: new_deadline
       logout_step
+    end
+
+    def progress_to_disclosure_step(kase:, user:, do_logout: true)
+      cases_show_page.actions.progress_to_disclosure.click
+      expect(cases_show_page).to be_displayed
+      expect(cases_show_page.notice)
+        .to have_text 'The Disclosure team has been notified this case is ready for clearance'
+      expect(cases_show_page.case_status.details.copy.text).to eq 'Pending clearance'
+      logout_step if do_logout
     end
 
 

@@ -373,6 +373,7 @@ en:
       header_subject: "Case subject, "
       name: Requester
       postal_address: "Requesters postal address"
+      progress_for_clearance: "Ready for Disclosure clearance"
       received_date: Date received at MOJ
       reason_for_refusal: Outcome
       reassign_case: "Change team member"

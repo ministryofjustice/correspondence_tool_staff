@@ -68,6 +68,10 @@ class Case::SARPolicy < Case::BasePolicy
     false
   end
 
+  # def progress_for_clearance?
+  #   true
+  # end
+
   check :responding_team_is_linked_to_case do
     self.case.linked_cases.detect do |kase|
       kase.responding_team.in? user.responding_teams

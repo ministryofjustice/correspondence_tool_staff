@@ -518,6 +518,16 @@ class CasesController < ApplicationController
     end
   end
 
+  def progress_for_clearance
+    @case = Case::Base.find(params[:id])
+
+    @case.state_machine.progress_for_clearance!(acting_user: current_user,
+                                                acting_team: @case.team_for_user(current_user))
+
+    flash[:notice] = 'The Disclosure team has been notified this case is ready for clearance'
+    redirect_to case_path(@case.id)
+  end
+
   private
 
   def set_url

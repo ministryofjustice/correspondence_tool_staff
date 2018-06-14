@@ -45,6 +45,8 @@ div id="case-#{@case.id}"
         - if policy(@case).assignments_execute_reassign_user?
           = action_button_for(:reassign_user)
 
+        - action_button_for(:progress_for_clearance)
+
   section.case-info
     = render partial: 'cases/case_status', locals: {case_details: @case}
 
