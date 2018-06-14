@@ -1,0 +1,28 @@
+en:
+  page_title:
+    admin_case_creation: Admin case creation - Track-a-query
+    admin_case_list: Admin case list - Track-a-query
+    all_cases: All open cases - Track-a-query
+    all_new_cases: All new cases - Track-a-query
+    assign_case_page: Assign to business unit - %{case_number} - Track-a-query
+    change_password: Forgot your password - Track-a-query
+    choose_case_type_page: Choose correspondence type - Track-a-query
+    close_case_page: Closing case - %{case_number} - Track-a-query"
+    create_case_page: Create %{case_type} case - Track-a-query
+    custom_report: Create a custom report - Track-a-query
+    edit_assignment_page: Accept or reject case - %{case_number} - Track-a-query
+    edit_case_page: Editting case - %{case_number} - Track-a-query
+    forgot_password: Forgot your password - Track-a-query
+    login: Login - Track-a-query
+    mark_as_sent_page: Mark response as sent - %{case_number} - Track-a-query
+    my_cases: My open cases - Track-a-query
+    pit_extension_page: Extend for Public Interest Test (PIT) - %{case_number} - Track-a-query
+    reassign_user_page: Change team member - %{case_number} - Track-a-query
+    search: Search for a case - Track-a-query
+    settings: Settings - Track-a-query
+    settings_business_group: Settings - %{business_group} - Track-a-query
+    settings_directorate: Settings - %{business_group} - %{directorate} - Track-a-query
+    settings_business_unit: Settings - %{business_group} - %{directorate} - %{business_unit} - Track-a-query
+    show_case_page: Case details - %{case_number} = Track-a-query
+    stats: Performance statistics - Track-a-query
+    upload_response_page: Upload a response - %{case_number} - Track-a-query

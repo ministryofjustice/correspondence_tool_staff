@@ -77,11 +77,13 @@ en:
   pundit:
     assignment_policy:
       can_assign_to_new_team?: You are not authorised to assign this case to another team
+
     case_policy: &case_policy
       can_add_attachment?: 'You are not authorised to upload attachments to this case.'
       can_add_case?: 'You are not authorised to create new cases.'
       can_assign_case?: 'Case could not be assigned'
       can_accept_or_reject_case?: 'You are not authorised to view to this assignment.'
+      can_accept_or_reject_responder_assignment?: 'You are not authorised to view to this case assignment.'
       can_approve_case?: 'You are not authorised to approve this cases response.'
       can_delete_case?: You are not authorised to delete this case.
       can_download_stats?: You are not authorised to view or download statistics.
@@ -703,19 +705,3 @@ en:
   pagination:
     next: "Next "
     previous: "Previous "
-
-  page_title:
-    login: Login - Track-a-query
-    forgot_password: Forgot your password - Track-a-query
-    change_password: Change your password - Track-a-query
-    all_new_cases: All new cases - Track-a-query
-    admin_case_list: Admin case list - Track-a-query
-    search: Search for a case - Track-a-query
-    admin_case_creation: Admin case creation - Track-a-query
-    all_open_cases: All open cases - Track-a-query
-    #my_open_cases: My open cases - Track-a-query
-    stats: Performance statistics - Track-a-query
-    custom_report: Create a custom report - Track-a-query
-    settings_business_group: Viewing business groups - Track-a-query
-    settings_directorate: Viewing directorates - Track-a-query
-    settings_business_unit: Viewing business unit - Track-a-query
