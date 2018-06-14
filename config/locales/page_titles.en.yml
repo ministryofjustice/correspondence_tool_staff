@@ -1,3 +1,4 @@
+---
 en:
   page_title:
     admin_case_creation: Admin case creation - Track-a-query
@@ -26,8 +27,8 @@ en:
     search: Searching for a case - Track-a-query
     settings: Settings - Track-a-query
     settings_business_group: Settings - %{business_group} - Track-a-query
-    settings_directorate: Settings - %{business_group} - %{directorate} - Track-a-query
     settings_business_unit: Settings - %{business_group} - %{directorate} - %{business_unit} - Track-a-query
+    settings_directorate: Settings - %{business_group} - %{directorate} - Track-a-query
     show_case_page: Viewing case details - %{case_number} - Track-a-query
     stats: Performance statistics - Track-a-query
     upload_response_page: Uploading a response - %{case_number} - Track-a-query
