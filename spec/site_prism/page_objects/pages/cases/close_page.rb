@@ -21,21 +21,22 @@ module PageObjects
         end
 
         section :is_info_held, '.js-info-held-status' do
-          element :yes, :xpath, '//input[@value="held"]//..'
-          element :held_in_part, :xpath, '//input[@value="part_held"]//..'
-          element :no, :xpath, '//input[@value="not_held"]//..'
-          element :other, :xpath, '//input[@value="not_confirmed"]//..'
+          element :yes, 'input#case_foi_info_held_status_abbreviation_held', visible: false
+          element :held_in_part, 'input#case_foi_info_held_status_abbreviation_part_held', visible: false
+          element :no, 'input#case_foi_info_held_status_abbreviation_not_held', visible: false
+          element :other, 'input#case_foi_info_held_status_abbreviation_not_confirmed', visible: false
         end
 
         section :outcome, '.js-outcome-group' do
-          element :granted_in_full, 'label[for="case_foi_outcome_name_granted_in_full"]'
-          element :refused_in_part, 'label[for="case_foi_outcome_name_refused_in_part"]'
-          element :refused_fully, 'label[for="case_foi_outcome_name_refused_fully"]'
+          element :granted_in_full, 'label[for="case_foi_outcome_abbreviation_granted"]'
+          element :refused_in_part, 'label[for="case_foi_outcome_abbreviation_part"]'
+          element :refused_fully, 'label[for="case_foi_outcome_abbreviation_refused"]'
         end
 
         section :other_reasons, '.js-other-reasons' do
           elements :options, 'label'
-          element :ncnd, :xpath, '//input[@value="Neither confirm nor deny (NCND)"]//..'
+          element :clarification_required, :xpath, '//input[@value="tmm"]//..'
+          element :ncnd, :xpath, '//input[@value="ncnd"]//..'
         end
 
         section :exemptions, '.js-refusal-exemptions' do

@@ -249,7 +249,7 @@ module CTS::Cases
         kase.prepare_for_close
         kase.update(date_responded: Date.today,
                     info_held_status: CaseClosure::InfoHeldStatus.held,
-                    outcome_name: 'Granted in full')
+                    outcome_abbreviation: 'granted')
         kase.close(CTS::dacu_manager)
       else
         kase.prepare_for_close

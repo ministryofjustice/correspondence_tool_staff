@@ -194,8 +194,8 @@ en:
       case_foi:
         info_held_status_abbreviation: Was the information held?
         requester_type: Requester type
-        refusal_reason_name: What was the outcome?
-        outcome_name: What was the outcome?
+        refusal_reason_abbreviation: What was the outcome?
+        outcome_abbreviation: What was the outcome?
         appeal_outcome_name: What was the appeal outcome?
         flag_for_disclosure_specialists: Flag for disclosure specialists
         type: Type
@@ -566,6 +566,9 @@ en:
     confirm_respond:
       success: The response has been marked as sent.
     foi:
+      case_details:
+        cannot_update_closure: "This is an old case with closure details that can't be edited"
+
       close_form:
         close_date: Date response sent
         date_example: For example, 30 1 2017

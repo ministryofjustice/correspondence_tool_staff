@@ -397,6 +397,11 @@ FactoryGirl.define do
       kase.reload
     end
 
+    trait :old_without_info_held do
+      info_held_states nil
+      refusal_reason   { find_or_create :refusal_reason, :exempt }
+      outcome          { find_or_create :outcome, :refused       }
+    end
 
     trait :with_ncnd_exemption do
       info_held_status        { find_or_create :info_status, :ncnd }

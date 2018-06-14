@@ -17,8 +17,43 @@ class ClosedCaseValidator < ActiveModel::Validator
     'FOI'=> [],
   }
 
+  class << self
+    # Predicates to check what closure information is necessary for a case.
+    #
+    # These predicates can apply to a case or to params coming in from
+    # controllers, so they outside of a ClosedCaseValidator instance which has
+    # a case record to operate on.
+
+    def outcome_required?(info_held_status:)
+      case info_held_status
+      when 'held'          then true
+      when 'part_held'     then true
+      when 'not_held'      then false
+      when 'not_confirmed' then false
+      end
+    end
+
+    def refusal_reason_required?(info_held_status:)
+      case info_held_status
+      when 'held'          then false
+      when 'part_held'     then false
+      when 'not_held'      then false
+      when 'not_confirmed' then true
+      end
+    end
+
+    def exemption_required?(info_held_status:, refusal_reason:, outcome:)
+      case info_held_status
+      when 'held'          then outcome.in?(%w[ refused part ])
+      when 'part_held'     then outcome.in?(%w[ refused part ])
+      when 'not_held'      then false
+      when 'not_confirmed' then refusal_reason == 'ncnd'
+      end
+    end
+  end
+
   def validate(rec)
-    if validate_closure_details?(rec)
+    if closure_details_are_validatable?(rec)
       if rec.current_state == 'closed'
         run_validations(
           validations: CLOSED_VALIDATIONS[rec.type_abbreviation],
@@ -44,13 +79,6 @@ class ClosedCaseValidator < ActiveModel::Validator
       self.__send__(validation, kase)
     end
 
-  end
-  def validate_closure_details?(rec)
-    if rec.date_responded.blank?
-      true
-    else
-      rec.date_responded > Date.new(2017, 11, 7)
-    end
   end
 
   def validate_info_held_status(rec)
@@ -79,15 +107,17 @@ class ClosedCaseValidator < ActiveModel::Validator
 
 
   def validate_outcome(rec)
-    if rec.info_held_status&.held? || rec.info_held_status&.part_held?
-      rec.errors.add(:outcome, "can't be blank") if rec.outcome.blank?
-    else
-      rec.errors.add(:outcome, 'can only be present if information held or part held') if rec.outcome.present?
+    if self.class.outcome_required?(info_held_status: rec.info_held_status_abbreviation)
+      if rec.outcome.blank?
+        rec.errors.add(:outcome, "can't be blank")
+      end
+    elsif rec.outcome.present?
+      rec.errors.add(:outcome, 'can only be present if information held or part held') 
     end
   end
 
   def validate_refusal_reason(rec)
-    if rec.info_held_status&.not_confirmed?
+    if self.class.refusal_reason_required?(info_held_status: rec.info_held_status_abbreviation)
       if rec.refusal_reason.blank?
         rec.errors.add(:refusal_reason, 'must be present for the specified outcome')
       end
@@ -97,7 +127,11 @@ class ClosedCaseValidator < ActiveModel::Validator
   end
 
   def validate_exemptions(rec)
-    if exemption_required?(rec)
+    if self.class.exemption_required?(
+         info_held_status: rec.info_held_status_abbreviation,
+         refusal_reason: rec.refusal_reason_abbreviation,
+         outcome: rec.outcome_abbreviation,
+       )
       validate_at_least_one_exemption_present(rec)
       validate_cost_exemption_not_present_for_part_refused(rec)
       validate_cost_exemption_not_present_for_ncnd(rec)
@@ -106,24 +140,12 @@ class ClosedCaseValidator < ActiveModel::Validator
     end
   end
 
-  def exemption_required?(rec)
-    info_not_confirmed_and_refusal_ncnd?(rec) || info_held_and_refused_fully_or_in_part?(rec)
-  end
-
-  def info_not_confirmed_and_refusal_ncnd?(rec)
-    rec.info_held_status&.not_confirmed? && rec.refusal_reason&.ncnd?
-  end
-
-  def info_held_and_refused_fully_or_in_part?(rec)
-    info_held_or_part_held?(rec) && refused_or_part_refused?(rec)
-  end
-
-  def info_held_or_part_held?(rec)
-    rec.info_held_status&.held? || rec.info_held_status&.part_held?
-  end
-
-  def refused_or_part_refused?(rec)
-    rec.outcome&.fully_refused? || rec.outcome&.part_refused?
+  def closure_details_are_validatable?(rec)
+    if rec.date_responded.blank?
+      true
+    else
+      rec.date_responded > Date.new(2017, 11, 7)
+    end
   end
 
   def validate_exemptions_not_present(rec)
@@ -149,6 +171,4 @@ class ClosedCaseValidator < ActiveModel::Validator
       rec.errors.add(:exemptions, 'cost is not valid NCND')
     end
   end
-
-
 end

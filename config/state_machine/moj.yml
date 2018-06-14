@@ -62,6 +62,7 @@ case_types:
           - take_on_for_approval
           - unaccept_approver_assignment
           - unflag_for_clearance
+          - update_closure
           - upload_response_and_approve
           - upload_response_and_return_for_redraft
           - upload_response_approve_and_bypass
@@ -141,6 +142,8 @@ case_types:
                 edit_case:
                 link_a_case:
                 remove_linked_case:
+                update_closure:
+                  if: Workflows::Predicates#can_edit_closure
 
           approver:
             states:
@@ -320,6 +323,7 @@ case_types:
           - take_on_for_approval
           - unaccept_approver_assignment
           - unflag_for_clearance
+          - update_closure
           - upload_response_and_approve
           - upload_response_and_return_for_redraft
           - upload_response_approve_and_bypass
@@ -403,6 +407,8 @@ case_types:
                 edit_case:
                 link_a_case:
                 remove_linked_case:
+                update_closure:
+                  if: Workflows::Predicates#can_edit_closure
 
           approver:
             states:
@@ -628,6 +634,7 @@ case_types:
           - take_on_for_approval
           - unaccept_approver_assignment
           - unflag_for_clearance
+          - update_closure
           - upload_response_and_approve
           - upload_response_and_return_for_redraft
           - upload_response_approve_and_bypass
@@ -730,6 +737,8 @@ case_types:
                 edit_case:
                 link_a_case:
                 remove_linked_case:
+                update_closure:
+                  if: Workflows::Predicates#can_edit_closure
 
           approver:
             states:
@@ -745,8 +754,6 @@ case_types:
                 remove_linked_case:
                 take_on_for_approval:
                   if: Case::BasePolicy#can_take_on_for_approval?
-#                unaccept_approver_assignment:
-#                  if: Case::BasePolicy#can_unaccept_approval_assignment?
                 unflag_for_clearance:               # needed for press/private office to unaccept
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance_by_press_or_private?
                   switch_workflow_using: Workflows::Conditionals#unflag_for_clearance_next_workflow
@@ -762,8 +769,6 @@ case_types:
                 remove_linked_case:
                 take_on_for_approval:
                   if: Case::BasePolicy#can_take_on_for_approval?
-#                unaccept_approver_assignment:
-#                  if: Case::BasePolicy#can_unaccept_approval_assignment?
                 unflag_for_clearance:               # needed for press/private office to unaccept
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance_by_press_or_private?
                   switch_workflow_using: Workflows::Conditionals#unflag_for_clearance_next_workflow
@@ -782,8 +787,6 @@ case_types:
                 remove_linked_case:
                 take_on_for_approval:
                   if: Case::BasePolicy#can_take_on_for_approval?
-#                unaccept_approver_assignment:
-#                  if: Case::BasePolicy#can_unaccept_approval_assignment?
                 unflag_for_clearance:               # needed for press/private office to unaccept
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance_by_press_or_private?
                   switch_workflow_using: Workflows::Conditionals#unflag_for_clearance_next_workflow
@@ -805,8 +808,6 @@ case_types:
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
-#                unaccept_approver_assignment:
-#                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 unflag_for_clearance:               # needed for press/private office to unaccept
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance_by_press_or_private?
                 upload_response_and_approve:

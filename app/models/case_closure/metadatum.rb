@@ -35,6 +35,10 @@ class CaseClosure::Metadatum < ApplicationRecord
     self.where(name: name).first
   end
 
+  def self.by_abbreviation(abbreviation)
+    self.where(abbreviation: abbreviation).first
+  end
+
   def self.exemption_ncnd_refusal
     where(type: 'CaseClosure::RefusalReason', abbreviation: 'ncnd') +
         unscoped.where(type: 'CaseClosure::Exemption').where.not(subtype: 'ncnd')

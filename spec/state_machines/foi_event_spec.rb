@@ -1424,6 +1424,15 @@ describe 'state machine' do
   )  }
   end
 
+  describe :update_closure do
+    it {
+      should permit_event_to_be_triggered_only_by(
+               [:disclosure_bmt, :std_closed_foi],
+               [:disclosure_bmt, :trig_closed_foi],
+               [:disclosure_bmt, :full_closed_foi],
+             )}
+  end
+
   describe :unaccept_approver_assignment do
     it {
       should permit_event_to_be_triggered_only_by(
