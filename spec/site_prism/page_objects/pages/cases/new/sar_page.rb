@@ -35,6 +35,9 @@ module PageObjects
           element :email, '#case_sar_email'
           element :postal_address, '#case_sar_postal_address'
 
+          element :flag_for_disclosure_specialists, :xpath,
+                  '//fieldset[contains(.,"Flag for disclosure specialists")]'
+
           element :submit_button, '.button'
 
           def set_received_date(received_date)
@@ -76,6 +79,10 @@ module PageObjects
             super file_path: file_path,
                   input_name: dropzone_container['data-file-input-name'],
                   container_selector: '#delivery-method-fields'
+          end
+
+          def choose_flag_for_disclosure_specialists(choice = 'yes')
+            make_radio_button_choice("case_sar_flag_for_disclosure_specialists_#{choice}")
           end
         end
       end

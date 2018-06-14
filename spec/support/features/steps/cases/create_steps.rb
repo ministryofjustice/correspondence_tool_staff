@@ -28,7 +28,7 @@ def create_foi_case_step(type: 'standard',
   Case::Base.find(kase_id)
 end
 
-def create_sar_case_step
+def create_sar_case_step flag_for_disclosure: false
   # Assume we are on a case listing page
   expect(cases_page).to have_new_case_button
   cases_page.new_case_button.click
@@ -39,7 +39,11 @@ def create_sar_case_step
   expect(cases_new_sar_page).to be_displayed
 
   cases_new_sar_page.fill_in_case_details
+  cases_new_sar_page.choose_flag_for_disclosure_specialists(
+    flag_for_disclosure ? 'yes' : 'no'
+  )
   click_button 'Next - Assign case'
+
   expect(assignments_new_page).to be_displayed
 
   # Return the case we created using the params of the current  path
