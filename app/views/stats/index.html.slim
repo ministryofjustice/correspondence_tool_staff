@@ -27,15 +27,18 @@ hr
             = "Action"
       tbody
         - @reports.each do |report|
-          tr
-            th
-              = report.full_name
+          - if FeatureSet.sars.disabled? && report.abbr == 'R103'
+            next
+          - else
+            tr
+              th
+                = report.full_name
 
-            td.action-right-aligned
-              = link_to stats_download_path(id: report.id), target: '_blank' do
-                = 'Download'
-                span.visually-hidden
-                  = " #{ report.full_name }"
+              td.action-right-aligned
+                = link_to stats_download_path(id: report.id), target: '_blank' do
+                  = 'Download'
+                  span.visually-hidden
+                    = " #{ report.full_name }"
 
         - if current_user.admin?
           tr
