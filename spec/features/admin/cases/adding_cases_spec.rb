@@ -167,6 +167,30 @@ feature 'adding cases' do
       expect(kase.received_date).to eq 1.business_days.ago.to_date
       expect(kase.current_state).to eq 'drafting'
     end
+
+    scenario 'creating a trigger SAR' do
+      create_sar(flag: 'disclosure')
+      expect(admin_cases_page).to be_displayed
+      expect(admin_cases_page.case_list.count).to eq 1
+      kase = Case::SAR.first
+      expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
+    end
+
+    scenario 'creating a trigger SAR in pending_dacu_clearance' do
+      create_sar(target_state: 'pending_dacu_disclosure_clearance', flag: 'disclosure')
+      expect(admin_cases_page).to be_displayed
+      expect(admin_cases_page.case_list.count).to eq 1
+      kase = Case::SAR.first
+      expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
+    end
+
+    scenario 'creating a trigger SAR in awaiting_dispatch' do
+      create_sar(target_state: 'awaiting_dispatch', flag: 'disclosure')
+      expect(admin_cases_page).to be_displayed
+      expect(admin_cases_page.case_list.count).to eq 1
+      kase = Case::SAR.first
+      expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
+    end
   end
 
   def create_foi(case_type:, target_state:, flag: nil)
@@ -192,5 +216,19 @@ feature 'adding cases' do
     expect(admin_cases_page.case_list.count).to eq 1
 
     Case::Base.first
+  end
+
+  def create_sar(target_state: 'drafting' ,flag: nil)
+    admin_cases_page.load
+    admin_cases_page.create_case_button.click
+    admin_cases_new_page.create_link_for_correspondence('SAR').click
+    admin_cases_new_sar_page.target_state.select target_state
+    case flag
+      when 'disclosure'
+      admin_cases_new_sar_page.flag_for_disclosure_specialists.set(true)
+    end
+    admin_cases_new_sar_page.submit_button.click
+    expect(admin_cases_page).to be_displayed
+    expect(admin_cases_page.case_list.count).to eq 1
   end
 end

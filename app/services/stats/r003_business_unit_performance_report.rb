@@ -34,11 +34,17 @@ module Stats
     } 
     
 
-    def initialize(period_start= Time.now.beginning_of_year, period_end=Time.now)
-      super
+    def initialize(period_start= Time.now.beginning_of_year, period_end=Time.now, generate_bu_columns=false)
+      super(period_start, period_end)
       @period_start = period_start
       @period_end = period_end
-      column_headings = R003_SPECIFIC_COLUMNS.merge(CaseAnalyser::COMMON_COLUMNS).merge(R003_BU_PERFORMANCE_COLUMNS)
+      @generate_bu_columns = generate_bu_columns
+      column_headings = if @generate_bu_columns
+                          R003_SPECIFIC_COLUMNS.merge(CaseAnalyser::COMMON_COLUMNS).merge(R003_BU_PERFORMANCE_COLUMNS)
+                        else
+                          R003_SPECIFIC_COLUMNS.merge(CaseAnalyser::COMMON_COLUMNS)
+                        end
+
       @stats = StatsCollector.new(Team.hierarchy.map(&:id) + [:total], column_headings)
       @superheadings = superheadings
       @stats.add_callback(:before_finalise, -> { roll_up_stats_callback })
@@ -49,9 +55,14 @@ module Stats
     end
 
     def superheadings
+      headings = if @generate_bu_columns
+                   (R003_SPECIFIC_SUPERHEADINGS.merge(CaseAnalyser::COMMON_SUPERHEADINGS).merge(R003_BU_PERFORMANCE_SUPERHEADINGS)).values
+                 else
+                   (R003_SPECIFIC_SUPERHEADINGS.merge(CaseAnalyser::COMMON_SUPERHEADINGS)).values
+                 end
+
       [
-        ["#{self.class.title} - #{reporting_period}"],
-        (R003_SPECIFIC_SUPERHEADINGS.merge(CaseAnalyser::COMMON_SUPERHEADINGS).merge(R003_BU_PERFORMANCE_SUPERHEADINGS)).values
+        ["#{self.class.title} - #{reporting_period}"], headings
       ]
     end
 
@@ -130,8 +141,10 @@ module Stats
       column_key = analyser.result
       @stats.record_stats(kase.responding_team.id, column_key)
 
-      business_unit_column_key = "bu_#{analyser.bu_result}".to_sym
-      @stats.record_stats(kase.responding_team.id, business_unit_column_key)
+      if @generate_bu_columns
+        business_unit_column_key = "bu_#{analyser.bu_result}".to_sym
+        @stats.record_stats(kase.responding_team.id, business_unit_column_key)
+      end
     end
 
     def add_trigger_state(kase, timeliness)

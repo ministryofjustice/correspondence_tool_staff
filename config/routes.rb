@@ -287,6 +287,7 @@ Rails.application.routes.draw do
 
   get '/stats' => 'stats#index'
   get '/stats/download/:id' => 'stats#download', as: :stats_download
+  get '/stats/download_audit' => 'stats#download_audit', as: :stats_download_audit
   get '/stats/download_custom_report/:id' => 'stats#download_custom_report', as: :stats_download_custom_report
   get '/stats/custom' => 'stats#custom'
   post 'stats/create_custom_report' => 'stats#create_custom_report'

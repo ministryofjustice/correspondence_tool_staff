@@ -35,7 +35,7 @@ section
                   locals: { s3_direct_post: @s3_direct_post,
                           file_input_name: 'case_sar[uploaded_request_files][]' }
 
-  = f.hidden_field :flag_for_disclosure_specialists, value: 'no'
+  = f.hidden_field :flag_for_disclosure_specialists
 
   h2.heading-medium How and where should the information be sent?
   = f.radio_button_fieldset :reply_method, choices: [:send_by_email, :send_by_post], legend_options: { class: 'visually-hidden' } do |fieldset|

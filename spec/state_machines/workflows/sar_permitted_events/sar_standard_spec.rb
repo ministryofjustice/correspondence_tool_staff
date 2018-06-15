@@ -13,6 +13,7 @@ describe ConfigurableStateMachine::Machine do
                                                                       :assign_responder,
                                                                       :destroy_case,
                                                                       :edit_case,
+                                                                      :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
         end
@@ -26,7 +27,6 @@ describe ConfigurableStateMachine::Machine do
                                                                       :assign_to_new_team,
                                                                       :destroy_case,
                                                                       :edit_case,
-                                                                      :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
         end
@@ -82,22 +82,6 @@ describe ConfigurableStateMachine::Machine do
         it 'should show permitted events' do
           k = create :accepted_sar
           expect(k.current_state).to eq 'drafting'
-          expect(k.state_machine.permitted_events(responder.id)).to be_empty
-        end
-      end
-
-      context 'awaiting dispatch state' do
-        it 'should show permitted events' do
-          k = create :sar_with_response
-          expect(k.current_state).to eq 'awaiting_dispatch'
-          expect(k.state_machine.permitted_events(responder.id)).to be_empty
-        end
-      end
-
-      context 'responded state' do
-        it 'should show permitted events' do
-          k = create :responded_sar
-          expect(k.current_state).to eq 'responded'
           expect(k.state_machine.permitted_events(responder.id)).to be_empty
         end
       end

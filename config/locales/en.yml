@@ -77,11 +77,13 @@ en:
   pundit:
     assignment_policy:
       can_assign_to_new_team?: You are not authorised to assign this case to another team
+
     case_policy: &case_policy
       can_add_attachment?: 'You are not authorised to upload attachments to this case.'
       can_add_case?: 'You are not authorised to create new cases.'
       can_assign_case?: 'Case could not be assigned'
       can_accept_or_reject_case?: 'You are not authorised to view to this assignment.'
+      can_accept_or_reject_responder_assignment?: 'You are not authorised to view to this case assignment.'
       can_approve_case?: 'You are not authorised to approve this cases response.'
       can_delete_case?: You are not authorised to delete this case.
       can_download_stats?: You are not authorised to view or download statistics.

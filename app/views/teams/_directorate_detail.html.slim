@@ -1,3 +1,8 @@
+- content_for :page_title do
+  - t('page_title.settings_directorate',
+          business_group: @team.business_group.name,
+          directorate: @team.name)
+
 h2
   .bold-small
     = t('team_leads.director')

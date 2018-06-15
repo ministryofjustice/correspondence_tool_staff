@@ -25,6 +25,13 @@ feature 'SAR Case creation by a manager' do
       .to include responding_team.team_lead
   end
 
+  scenario 'creating a case that needs clearance' do
+    create_sar_case_step flag_for_disclosure: true
+
+    new_case = Case::Base.last
+    expect(new_case.requires_clearance?).to be true
+  end
+
   # scenario 'creating a case with request attachments', js: true  do
   #   stub_s3_uploader_for_all_files!
   #   request_attachment = Rails.root.join('spec', 'fixtures', 'request-1.pdf')
