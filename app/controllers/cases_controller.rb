@@ -523,7 +523,8 @@ class CasesController < ApplicationController
     authorize @case
 
     @case.state_machine.progress_for_clearance!(acting_user: current_user,
-                                                acting_team: @case.team_for_user(current_user))
+                                                acting_team: @case.team_for_user(current_user),
+                                                target_team: @case.approver_assignments.first.team)
 
     flash[:notice] = t('notices.progress_for_clearance')
     redirect_to case_path(@case.id)

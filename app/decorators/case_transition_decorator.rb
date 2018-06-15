@@ -45,6 +45,8 @@ class CaseTransitionDecorator < Draper::Decorator
       target_user = User.find(object.target_user_id)
       acting_user = User.find(object.acting_user_id)
       "#{ acting_user.full_name } re-assigned this case to <strong>#{ target_user.full_name }</strong>"
+    when 'progress_for_clearance'
+      "Progressed to #{object.target_team.name}"
     end
   end
 end
