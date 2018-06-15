@@ -127,6 +127,8 @@ module Features
     end
 
     def progress_to_disclosure_step(kase:, user:, do_logout: true)
+      login_step user: user
+      go_to_case_details_step kase: kase
       cases_show_page.actions.progress_to_disclosure.click
       expect(cases_show_page).to be_displayed
       expect(cases_show_page.notice)

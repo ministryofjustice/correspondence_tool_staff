@@ -109,16 +109,6 @@ describe CasesController, type: :controller do
                 'subject_type' => 'member_of_the_public',
                 'third_party' => 'true',
                 'name' => 'the new requestor',
-<<<<<<< HEAD
-                'received_date_dd' => '22', 
-                'received_date_mm' => '5', 
-                'received_date_yyyy' => '2018', 
-                'subject' => 'modified summary', 
-                'message' => 'moidified full case', 
-                'flag_for_disclosure_specialists' => 'no', 
-                'reply_method' => 'send_by_post', 
-                'email' => 'modified@Moj.com', 
-=======
                 'third_party_relationship' => 'Aunty',
                 'received_date_dd' => '22',
                 'received_date_mm' => '5',
@@ -128,7 +118,6 @@ describe CasesController, type: :controller do
                 'flag_for_disclosure_specialists' => 'no',
                 'reply_method' => 'send_by_post',
                 'email' => 'modified@Moj.com',
->>>>>>> CT-1754 add authorise and helper test
                 'postal_address' => 'modified address'
             },
             'commit' => 'Submit',
