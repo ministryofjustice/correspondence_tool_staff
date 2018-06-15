@@ -384,6 +384,7 @@ class CasesController < ApplicationController
       format.js { render 'cases/flag_for_clearance.js.erb' }
       format.html do
         redirect_to case_path(@case)
+        # do we need to update this so disclosure specialists who de escalate SARs do not see an error page
       end
     end
   end

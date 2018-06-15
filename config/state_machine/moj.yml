@@ -1042,6 +1042,8 @@ case_types:
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
+                flag_for_clearance:
+                  switch_workflow: trigger
                 link_a_case:
                 remove_linked_case:
 
@@ -1050,6 +1052,8 @@ case_types:
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
+                flag_for_clearance:
+                  switch_workflow: trigger
                 link_a_case:
                 remove_linked_case:
 
@@ -1098,6 +1102,16 @@ case_types:
               unassigned:
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
+                flag_for_clearance:
+                  switch_workflow: trigger
+
+              awaiting_responder:
+                flag_for_clearance:
+                  switch_workflow: trigger
+
+              drafting:
+                flag_for_clearance:
+                  switch_workflow: trigger
 
   ###########################TRIGGER SAR ########################
 
@@ -1271,7 +1285,7 @@ case_types:
                 unflag_for_clearance:
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
                   switch_workflow: standard
-
+                  transition_to: drafting
 
               awaiting_dispatch:
                 add_message_to_case:
