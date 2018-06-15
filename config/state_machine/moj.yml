@@ -1219,6 +1219,9 @@ case_types:
                   if: Case::BasePolicy#assignments_reassign_user?
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
+                unflag_for_clearance:
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
+                  switch_workflow: standard
 
               awaiting_responder:
                 accept_approver_assignment:
@@ -1229,6 +1232,9 @@ case_types:
                   if: Case::BasePolicy#assignments_reassign_user?
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
+                unflag_for_clearance:
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
+                  switch_workflow: standard
 
               drafting:
                 accept_approver_assignment:
@@ -1240,6 +1246,9 @@ case_types:
                   if: Case::BasePolicy#assignments_reassign_user?
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
+                unflag_for_clearance:
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
+                  switch_workflow: standard
 
               pending_dacu_clearance:
                 accept_approver_assignment:
@@ -1253,12 +1262,16 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_ready_to_send
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
-                unaccept_approver_assignment:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 request_amends:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_redraft_requested
                   transition_to: drafting
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+                unflag_for_clearance:
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
+                  switch_workflow: standard
+
 
               awaiting_dispatch:
                 add_message_to_case:
