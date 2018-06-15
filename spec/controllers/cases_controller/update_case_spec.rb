@@ -110,7 +110,6 @@ describe CasesController, type: :controller do
                 'third_party' => 'true',
                 'third_party_relationship' => 'Guardian',
                 'name' => 'the new requestor',
-                'third_party_relationship' => 'Aunty',
                 'received_date_dd' => '22', 
                 'received_date_mm' => '5', 
                 'received_date_yyyy' => '2018', 
