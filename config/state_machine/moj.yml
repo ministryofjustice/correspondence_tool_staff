@@ -50,6 +50,7 @@ case_types:
           - extend_for_pit
           - flag_for_clearance
           - link_a_case
+          - progress_for_clearance
           - reassign_user
           - reject_responder_assignment
           - remove_last_response
