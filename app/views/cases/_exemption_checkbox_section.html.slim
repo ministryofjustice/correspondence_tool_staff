@@ -6,4 +6,8 @@
       span.form-hint
         = hint
 
-    = f.collection_check_boxes :exemption_ids, exemptions, :id, :name
+    = collection_check_boxes(:case_foi, :exemption_ids, exemptions, :id, :name, odject: kase) do |b|
+      - content_tag :div, class: "multiple-choice" do
+        - b.check_box('data-omit-for-part-refused' => b.object.omit_for_part_refused,
+                      checked: b.object.id.in?(kase.exemption_ids)) \
+            + b.label(for: "case_foi_exemption_ids_#{b.object.id}")
