@@ -8,7 +8,7 @@
 #  updated_at :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :feedback do
     comment { Faker::Lorem.paragraph(1) }
     email {  Faker::Internet.email }

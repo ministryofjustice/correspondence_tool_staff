@@ -28,7 +28,7 @@
 #  appeal_outcome_id    :integer
 #
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :timeliness_review,
           class: Case::FOI::TimelinessReview,

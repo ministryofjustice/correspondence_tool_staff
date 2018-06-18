@@ -14,7 +14,7 @@
 #  deleted_at :datetime
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :team do
     transient do
       lead { create :team_lead }

@@ -54,7 +54,7 @@ ActiveRecord::Migration.maintain_test_schema!
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
   config.include PageObjects::Pages::Application
   config.include Rails.application.routes.url_helpers
 
@@ -152,12 +152,12 @@ RSpec.configure do |config|
 end
 
 def seed_database_for_tests
-  FactoryGirl.find_or_create :foi_correspondence_type
-  FactoryGirl.find_or_create :sar_correspondence_type
-  FactoryGirl.find_or_create :team_dacu
-  FactoryGirl.find_or_create :team_press_office
-  FactoryGirl.find_or_create :team_private_office
-  FactoryGirl.find_or_create :team_dacu_disclosure
+  FactoryBot.find_or_create :foi_correspondence_type
+  FactoryBot.find_or_create :sar_correspondence_type
+  FactoryBot.find_or_create :team_dacu
+  FactoryBot.find_or_create :team_press_office
+  FactoryBot.find_or_create :team_private_office
+  FactoryBot.find_or_create :team_dacu_disclosure
 end
 
 Shoulda::Matchers.configure do |config|

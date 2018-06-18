@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :business_group do
     transient do
       lead { create :director_general }

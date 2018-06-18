@@ -18,7 +18,7 @@
 #  to_workflow    :string
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :case_transition do
     association :case
     sort_key do

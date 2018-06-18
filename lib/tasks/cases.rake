@@ -6,7 +6,7 @@ namespace :cases do
     require File.join(Rails.root, 'lib', 'rake_task_helpers', 'host_env')
 
     HostEnv.safe do
-      FactoryGirl.create_list(:case, 10)
+      FactoryBot.create_list(:case, 10)
       puts 'Created 10 new cases'
       puts "Total cases is now: #{Case::Base.count}"
     end

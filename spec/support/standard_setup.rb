@@ -1,7 +1,7 @@
 class StandardSetup # rubocop:disable Metrics/ClassLength
 
   class << self
-    extend FactoryGirl::Syntax::Methods
+    extend FactoryBot::Syntax::Methods
 
     # Used because of some badly understood issue with Ruby class inheritance /
     # methods. The procs generated for the fixtures above require this
