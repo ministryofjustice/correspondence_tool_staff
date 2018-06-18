@@ -40,12 +40,14 @@ class CasesController < ApplicationController
                   :flag_for_clearance,
                   :new_response_upload,
                   :process_closure,
+                  :process_respond_and_close,
                   :progress_for_clearance,
                   :reassign_approver,
                   :remove_clearance,
                   :request_amends,
                   :request_further_clearance,
                   :respond,
+                  :respond_and_close,
                   :show,
                   :update,
                   :unflag_for_clearance,
@@ -279,6 +281,29 @@ class CasesController < ApplicationController
     authorize @case, :can_close_case?
     @case.date_responded = nil
     set_permitted_events
+  end
+
+  def respond_and_close
+    authorize @case
+    @case.date_responded = nil
+    set_permitted_events
+    render :close
+  end
+
+
+  def process_respond_and_close
+    authorize @case
+    @case.prepare_for_close
+    close_params = process_closure_params(@case.type_abbreviation)
+    if @case.update(close_params)
+      @case.respond_and_close(current_user)
+      set_permitted_events
+      flash[:notice] = t('notices.case_closed')
+      redirect_to case_path(@case)
+    else
+      set_permitted_events
+      render :close
+    end
   end
 
   def process_closure

@@ -2,7 +2,8 @@
   .column-full
     = render partial: 'cases/case_attachments', locals: { case_details: @case }
 
-= form_for @case, as: :case_foi, url: form_url do |f|
+- url = defined?(form_url) ? form_url : process_closure_case_path(id: @case.id)
+= form_for @case, as: :case_foi, url: url do |f|
   .form-group
     = f.gov_uk_date_field :date_responded, { legend_text: t('.close_date'), form_hint_text: t('.date_example') }
 

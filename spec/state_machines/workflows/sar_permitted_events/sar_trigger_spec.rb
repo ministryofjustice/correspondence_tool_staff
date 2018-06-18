@@ -178,8 +178,8 @@ describe ConfigurableStateMachine::Machine do
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'awaiting_dispatch'
           expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                        :close,
-                                                                        :reassign_user]
+                                                                        :reassign_user,
+                                                                        :respond_and_close]
         end
       end
 
