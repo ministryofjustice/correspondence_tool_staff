@@ -5,16 +5,15 @@ class Case::SARDecorator < Case::BaseDecorator
     end
   end
 
-  def subject_type
-    object.subject_type.humanize
-  end
-
-
-  def third_party
-    object.third_party ? 'Yes' : 'No'
-  end
-
   def sar_response_address
     object.send_by_email? ? object.email : object.postal_address
+  end
+
+  def subject_type_display
+    object.subject_type.capitalize
+  end
+
+  def third_party_display
+    object.third_party == true ? 'Yes' : 'No'
   end
 end

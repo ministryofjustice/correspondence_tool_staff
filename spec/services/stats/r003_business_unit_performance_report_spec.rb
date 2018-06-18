@@ -96,176 +96,329 @@ module Stats
       end
     end
 
-    describe '#results' do
-      before do
-        Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
-          # report = R003BusinessUnitPerformanceReport.new
-          report = R003BusinessUnitPerformanceReport.new
-          report.run
-          @results = report.results
+
+    context 'without business unit columns' do
+      describe '#results' do
+        before do
+          Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
+            report = R003BusinessUnitPerformanceReport.new
+            report.run
+            @results = report.results
+          end
+        end
+
+        it 'adds up directorate stats in each business_group' do
+          expect(@results[@bizgrp_ab.id])
+              .to eq({
+                         business_group:                @bizgrp_ab.name,
+                         directorate:                   '',
+                         business_unit:                 '',
+                         responsible:                   @bizgrp_ab.team_lead,
+                         non_trigger_performance:       28.6,
+                         non_trigger_total:             9,
+                         non_trigger_responded_in_time: 2,
+                         non_trigger_responded_late:    2,
+                         non_trigger_open_in_time:      2,
+                         non_trigger_open_late:         3,
+                         trigger_performance:           33.3,
+                         trigger_total:                 5,
+                         trigger_responded_in_time:     1,
+                         trigger_responded_late:        1,
+                         trigger_open_in_time:          2,
+                         trigger_open_late:             1,
+                         overall_performance:           30.0,
+                         overall_total:                 14,
+                         overall_responded_in_time:     3,
+                         overall_responded_late:        3,
+                         overall_open_in_time:          4,
+                         overall_open_late:             4
+                     })
+        end
+
+        it 'adds up business_unit stats in each directorate' do
+          expect(@results[@bizgrp_cd.id])
+              .to eq({
+                         business_group:                @bizgrp_cd.name,
+                         directorate:                   '',
+                         business_unit:                 '',
+                         responsible:                   @bizgrp_cd.team_lead,
+                         non_trigger_performance:       50.0,
+                         non_trigger_total:             3,
+                         non_trigger_responded_in_time: 1,
+                         non_trigger_responded_late:    1,
+                         non_trigger_open_in_time:      1,
+                         non_trigger_open_late:         0,
+                         trigger_performance:           0.0,
+                         trigger_total:                 0,
+                         trigger_responded_in_time:     0,
+                         trigger_responded_late:        0,
+                         trigger_open_in_time:          0,
+                         trigger_open_late:             0,
+                         overall_performance:           50.0,
+                         overall_total:                 3,
+                         overall_responded_in_time:     1,
+                         overall_responded_late:        1,
+                         overall_open_in_time:          1,
+                         overall_open_late:             0
+                     })
+        end
+
+        it 'adds up individual business_unit stats' do
+          expect(@results[@team_c.id])
+              .to eq({
+                         business_group:                @bizgrp_cd.name,
+                         directorate:                   @dir_cd.name,
+                         business_unit:                 @team_c.name,
+                         responsible:                   @team_c.team_lead,
+                         non_trigger_performance:       50.0,
+                         non_trigger_total:             2,
+                         non_trigger_responded_in_time: 1,
+                         non_trigger_responded_late:    1,
+                         non_trigger_open_in_time:      0,
+                         non_trigger_open_late:         0,
+                         trigger_performance:           0.0,
+                         trigger_total:                 0,
+                         trigger_responded_in_time:     0,
+                         trigger_responded_late:        0,
+                         trigger_open_in_time:          0,
+                         trigger_open_late:             0,
+                         overall_performance:           50.0,
+                         overall_total:                 2,
+                         overall_responded_in_time:     1,
+                         overall_responded_late:        1,
+                         overall_open_in_time:          0,
+                         overall_open_late:             0
+                     })
         end
       end
 
-      it 'generates hierarchy starting with business_groups' do
-        expect(@results.keys).to eq Team.hierarchy.map(&:id) + [:total]
-      end
-
-      it 'adds up directorate stats in each business_group' do
-        expect(@results[@bizgrp_ab.id])
-          .to eq({
-                   business_group:                @bizgrp_ab.name,
-                   directorate:                   '',
-                   business_unit:                 '',
-                   responsible:                   @bizgrp_ab.team_lead,
-                   non_trigger_performance:       28.6,
-                   non_trigger_total:             9,
-                   non_trigger_responded_in_time: 2,
-                   non_trigger_responded_late:    2,
-                   non_trigger_open_in_time:      2,
-                   non_trigger_open_late:         3,
-                   trigger_performance:           33.3,
-                   trigger_total:                 5,
-                   trigger_responded_in_time:     1,
-                   trigger_responded_late:        1,
-                   trigger_open_in_time:          2,
-                   trigger_open_late:             1,
-                   overall_performance:           30.0,
-                   overall_total:                 14,
-                   overall_responded_in_time:     3,
-                   overall_responded_late:        3,
-                   overall_open_in_time:          4,
-                   overall_open_late:             4,
-                   bu_performance:                0.0,
-                   bu_total:                      14,
-                   bu_responded_in_time:          0,
-                   bu_responded_late:             6,
-                   bu_open_in_time:               0,
-                   bu_open_late:                  8
-                 })
-      end
-
-      it 'adds up business_unit stats in each directorate' do
-        expect(@results[@bizgrp_cd.id])
-          .to eq({
-                   business_group:                @bizgrp_cd.name,
-                   directorate:                   '',
-                   business_unit:                 '',
-                   responsible:                   @bizgrp_cd.team_lead,
-                   non_trigger_performance:       50.0,
-                   non_trigger_total:             3,
-                   non_trigger_responded_in_time: 1,
-                   non_trigger_responded_late:    1,
-                   non_trigger_open_in_time:      1,
-                   non_trigger_open_late:         0,
-                   trigger_performance:           0.0,
-                   trigger_total:                 0,
-                   trigger_responded_in_time:     0,
-                   trigger_responded_late:        0,
-                   trigger_open_in_time:          0,
-                   trigger_open_late:             0,
-                   overall_performance:           50.0,
-                   overall_total:                 3,
-                   overall_responded_in_time:     1,
-                   overall_responded_late:        1,
-                   overall_open_in_time:          1,
-                   overall_open_late:             0,
-                   bu_performance:                0.0,
-                   bu_total:                      3,
-                   bu_responded_in_time:          0,
-                   bu_responded_late:             2,
-                   bu_open_in_time:               0,
-                   bu_open_late:                  1
-                 })
-      end
-
-      it 'adds up individual business_unit stats' do
-        expect(@results[@team_c.id])
-          .to eq({
-                   business_group:                @bizgrp_cd.name,
-                   directorate:                   @dir_cd.name,
-                   business_unit:                 @team_c.name,
-                   responsible:                   @team_c.team_lead,
-                   non_trigger_performance:       50.0,
-                   non_trigger_total:             2,
-                   non_trigger_responded_in_time: 1,
-                   non_trigger_responded_late:    1,
-                   non_trigger_open_in_time:      0,
-                   non_trigger_open_late:         0,
-                   trigger_performance:           0.0,
-                   trigger_total:                 0,
-                   trigger_responded_in_time:     0,
-                   trigger_responded_late:        0,
-                   trigger_open_in_time:          0,
-                   trigger_open_late:             0,
-                   overall_performance:           50.0,
-                   overall_total:                 2,
-                   overall_responded_in_time:     1,
-                   overall_responded_late:        1,
-                   overall_open_in_time:          0,
-                   overall_open_late:             0,
-                   bu_performance:                0.0,
-                   bu_total:                      2,
-                   bu_responded_in_time:          0,
-                   bu_responded_late:             2,
-                   bu_open_in_time:               0,
-                   bu_open_late:                  0
-                 })
-      end
-    end
-
-    describe '#to_csv' do
-      it 'outputs results as a csv lines' do
-        Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
-          super_header = %q{"","","","",} +
-            %q{Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,} +
-            %q{Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,} +
-            %q{Overall,Overall,Overall,Overall,Overall,Overall,} +
-            %q{Business unit,Business unit,Business unit,Business unit,Business unit,Business unit}
-          header = %q{Business group,Directorate,Business unit,Responsible,} +
-            %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
-            %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
-            %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
-            %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late}
-          expected_text = <<~EOCSV
+      describe '#to_csv' do
+        it 'outputs results as a csv lines' do
+          Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
+            super_header = %q{"","","","",} +
+                %q{Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,} +
+                %q{Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,} +
+                %q{Overall,Overall,Overall,Overall,Overall,Overall}
+            header = %q{Business group,Directorate,Business unit,Responsible,} +
+                %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
+                %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
+                %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late}
+            expected_text = <<~EOCSV
             Business unit report - 1 Jan 2017 to 30 Jun 2017
             #{super_header}
             #{header}
-            BGAB,"","",#{@bizgrp_ab.team_lead},28.6,9,2,2,2,3,33.3,5,1,1,2,1,30.0,14,3,3,4,4,0.0,14,0,6,0,8
-            BGAB,DRA,"",#{@dir_a.team_lead},20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2,0.0,9,0,5,0,4
-            BGAB,DRA,RTA,#{@team_a.team_lead},20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2,0.0,9,0,5,0,4
-            BGAB,DRB,"",#{@dir_b.team_lead},50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2,0.0,5,0,1,0,4
-            BGAB,DRB,RTB,#{@team_b.team_lead},50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2,0.0,5,0,1,0,4
-            BGCD,"","",#{@bizgrp_cd.team_lead},50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0,0.0,3,0,2,0,1
-            BGCD,DRCD,"",#{@dir_cd.team_lead},50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0,0.0,3,0,2,0,1
-            BGCD,DRCD,RTC,#{@team_c.team_lead},50.0,2,1,1,0,0,0.0,0,0,0,0,0,50.0,2,1,1,0,0,0.0,2,0,2,0,0
-            BGCD,DRCD,RTD,#{@team_d.team_lead},0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0,0.0,1,0,0,0,1
-            Total,"","","",33.3,12,3,3,3,3,33.3,5,1,1,2,1,33.3,17,4,4,5,4,0.0,17,0,8,0,9
-          EOCSV
-          report = R003BusinessUnitPerformanceReport.new
-          report.run
-          actual_lines = report.to_csv.split("\n")
-          expected_lines = expected_text.split("\n")
+            BGAB,"","",#{@bizgrp_ab.team_lead},28.6,9,2,2,2,3,33.3,5,1,1,2,1,30.0,14,3,3,4,4
+            BGAB,DRA,"",#{@dir_a.team_lead},20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2
+            BGAB,DRA,RTA,#{@team_a.team_lead},20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2
+            BGAB,DRB,"",#{@dir_b.team_lead},50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2
+            BGAB,DRB,RTB,#{@team_b.team_lead},50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2
+            BGCD,"","",#{@bizgrp_cd.team_lead},50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0
+            BGCD,DRCD,"",#{@dir_cd.team_lead},50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0
+            BGCD,DRCD,RTC,#{@team_c.team_lead},50.0,2,1,1,0,0,0.0,0,0,0,0,0,50.0,2,1,1,0,0
+            BGCD,DRCD,RTD,#{@team_d.team_lead},0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0
+            Total,"","","",33.3,12,3,3,3,3,33.3,5,1,1,2,1,33.3,17,4,4,5,4
+            EOCSV
+            report = R003BusinessUnitPerformanceReport.new
+            report.run
+            actual_lines = report.to_csv.split("\n")
+            expected_lines = expected_text.split("\n")
 
-          (0...actual_lines.size).each do |i|
-            expect(actual_lines[i]).to eq expected_lines[i]
+            (0...actual_lines.size).each do |i|
+              expect(actual_lines[i]).to eq expected_lines[i]
+            end
           end
         end
       end
+
+
+      context 'with a case in the db that is unassigned' do
+        before do
+          Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
+            create :case, identifier: 'unassigned case'
+          end
+        end
+
+        it 'does not raise an error' do
+          report = R003BusinessUnitPerformanceReport.new
+          expect { report.run }.not_to raise_error
+        end
+      end
     end
 
 
-    context 'with a case in the db that is unassigned' do
-      before do
-        Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
-          create :case, identifier: 'unassigned case'
+    context 'with business unit columns' do
+      describe '#results' do
+        before do
+          Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
+            # report = R003BusinessUnitPerformanceReport.new
+            report = R003BusinessUnitPerformanceReport.new(Time.now.beginning_of_year, Time.now, true)
+            report.run
+            @results = report.results
+          end
+        end
+
+        it 'generates hierarchy starting with business_groups' do
+          expect(@results.keys).to eq Team.hierarchy.map(&:id) + [:total]
+        end
+
+        it 'adds up directorate stats in each business_group' do
+          expect(@results[@bizgrp_ab.id])
+            .to eq({
+                     business_group:                @bizgrp_ab.name,
+                     directorate:                   '',
+                     business_unit:                 '',
+                     responsible:                   @bizgrp_ab.team_lead,
+                     non_trigger_performance:       28.6,
+                     non_trigger_total:             9,
+                     non_trigger_responded_in_time: 2,
+                     non_trigger_responded_late:    2,
+                     non_trigger_open_in_time:      2,
+                     non_trigger_open_late:         3,
+                     trigger_performance:           33.3,
+                     trigger_total:                 5,
+                     trigger_responded_in_time:     1,
+                     trigger_responded_late:        1,
+                     trigger_open_in_time:          2,
+                     trigger_open_late:             1,
+                     overall_performance:           30.0,
+                     overall_total:                 14,
+                     overall_responded_in_time:     3,
+                     overall_responded_late:        3,
+                     overall_open_in_time:          4,
+                     overall_open_late:             4,
+                     bu_performance:                0.0,
+                     bu_total:                      14,
+                     bu_responded_in_time:          0,
+                     bu_responded_late:             6,
+                     bu_open_in_time:               0,
+                     bu_open_late:                  8
+                   })
+        end
+
+        it 'adds up business_unit stats in each directorate' do
+          expect(@results[@bizgrp_cd.id])
+            .to eq({
+                     business_group:                @bizgrp_cd.name,
+                     directorate:                   '',
+                     business_unit:                 '',
+                     responsible:                   @bizgrp_cd.team_lead,
+                     non_trigger_performance:       50.0,
+                     non_trigger_total:             3,
+                     non_trigger_responded_in_time: 1,
+                     non_trigger_responded_late:    1,
+                     non_trigger_open_in_time:      1,
+                     non_trigger_open_late:         0,
+                     trigger_performance:           0.0,
+                     trigger_total:                 0,
+                     trigger_responded_in_time:     0,
+                     trigger_responded_late:        0,
+                     trigger_open_in_time:          0,
+                     trigger_open_late:             0,
+                     overall_performance:           50.0,
+                     overall_total:                 3,
+                     overall_responded_in_time:     1,
+                     overall_responded_late:        1,
+                     overall_open_in_time:          1,
+                     overall_open_late:             0,
+                     bu_performance:                0.0,
+                     bu_total:                      3,
+                     bu_responded_in_time:          0,
+                     bu_responded_late:             2,
+                     bu_open_in_time:               0,
+                     bu_open_late:                  1
+                   })
+        end
+
+        it 'adds up individual business_unit stats' do
+          expect(@results[@team_c.id])
+            .to eq({
+                     business_group:                @bizgrp_cd.name,
+                     directorate:                   @dir_cd.name,
+                     business_unit:                 @team_c.name,
+                     responsible:                   @team_c.team_lead,
+                     non_trigger_performance:       50.0,
+                     non_trigger_total:             2,
+                     non_trigger_responded_in_time: 1,
+                     non_trigger_responded_late:    1,
+                     non_trigger_open_in_time:      0,
+                     non_trigger_open_late:         0,
+                     trigger_performance:           0.0,
+                     trigger_total:                 0,
+                     trigger_responded_in_time:     0,
+                     trigger_responded_late:        0,
+                     trigger_open_in_time:          0,
+                     trigger_open_late:             0,
+                     overall_performance:           50.0,
+                     overall_total:                 2,
+                     overall_responded_in_time:     1,
+                     overall_responded_late:        1,
+                     overall_open_in_time:          0,
+                     overall_open_late:             0,
+                     bu_performance:                0.0,
+                     bu_total:                      2,
+                     bu_responded_in_time:          0,
+                     bu_responded_late:             2,
+                     bu_open_in_time:               0,
+                     bu_open_late:                  0
+                   })
         end
       end
 
-      it 'does not raise an error' do
-        report = R003BusinessUnitPerformanceReport.new
-        expect { report.run }.not_to raise_error
+      describe '#to_csv' do
+        it 'outputs results as a csv lines' do
+          Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
+            super_header = %q{"","","","",} +
+              %q{Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,} +
+              %q{Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,} +
+              %q{Overall,Overall,Overall,Overall,Overall,Overall,} +
+              %q{Business unit,Business unit,Business unit,Business unit,Business unit,Business unit}
+            header = %q{Business group,Directorate,Business unit,Responsible,} +
+              %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
+              %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
+              %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
+              %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late}
+            expected_text = <<~EOCSV
+              Business unit report - 1 Jan 2017 to 30 Jun 2017
+              #{super_header}
+              #{header}
+              BGAB,"","",#{@bizgrp_ab.team_lead},28.6,9,2,2,2,3,33.3,5,1,1,2,1,30.0,14,3,3,4,4,0.0,14,0,6,0,8
+              BGAB,DRA,"",#{@dir_a.team_lead},20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2,0.0,9,0,5,0,4
+              BGAB,DRA,RTA,#{@team_a.team_lead},20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2,0.0,9,0,5,0,4
+              BGAB,DRB,"",#{@dir_b.team_lead},50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2,0.0,5,0,1,0,4
+              BGAB,DRB,RTB,#{@team_b.team_lead},50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2,0.0,5,0,1,0,4
+              BGCD,"","",#{@bizgrp_cd.team_lead},50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0,0.0,3,0,2,0,1
+              BGCD,DRCD,"",#{@dir_cd.team_lead},50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0,0.0,3,0,2,0,1
+              BGCD,DRCD,RTC,#{@team_c.team_lead},50.0,2,1,1,0,0,0.0,0,0,0,0,0,50.0,2,1,1,0,0,0.0,2,0,2,0,0
+              BGCD,DRCD,RTD,#{@team_d.team_lead},0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0,0.0,1,0,0,0,1
+              Total,"","","",33.3,12,3,3,3,3,33.3,5,1,1,2,1,33.3,17,4,4,5,4,0.0,17,0,8,0,9
+            EOCSV
+            report = R003BusinessUnitPerformanceReport.new(Time.now.beginning_of_year, Time.now, true)
+            report.run
+            actual_lines = report.to_csv.split("\n")
+            expected_lines = expected_text.split("\n")
+
+            (0...actual_lines.size).each do |i|
+              expect(actual_lines[i]).to eq expected_lines[i]
+            end
+          end
+        end
+      end
+
+
+      context 'with a case in the db that is unassigned' do
+        before do
+          Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
+            create :case, identifier: 'unassigned case'
+          end
+        end
+
+        it 'does not raise an error' do
+          report = R003BusinessUnitPerformanceReport.new
+          expect { report.run }.not_to raise_error
+        end
       end
     end
+
 
     # rubocop:disable Metrics/ParameterLists
     # rubocop:disable Metrics/CyclomaticComplexity
@@ -304,5 +457,6 @@ module Stats
     # rubocop:enable Metrics/CyclomaticComplexity
 
   end
+
 end
 # rubocop:enable Metrics/ModuleLength

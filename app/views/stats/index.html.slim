@@ -1,3 +1,6 @@
+- content_for :page_title do
+  - t('page_title.stats')
+
 - content_for :heading
   | Statistics
 
@@ -34,4 +37,12 @@ hr
                 span.visually-hidden
                   = " #{ report.full_name }"
 
-
+        - if current_user.admin?
+          tr
+            th
+              = 'Audit CSV'
+            td.action-right-aligned
+              = link_to stats_download_audit_path, target: '_blank' do
+                = 'Download'
+                span.visually-hidded
+                  = " audit "

@@ -1,3 +1,9 @@
+- content_for :page_title do
+  - t('page_title.settings_business_unit',
+          business_group: @team.business_group.name,
+          directorate: @team.directorate.name,
+          business_unit: @team.name)
+
 .grid-row
   .column-two-thirds
     h2.heading-medium style='display:inline'

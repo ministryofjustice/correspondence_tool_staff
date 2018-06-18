@@ -16,9 +16,9 @@ data:
   # Locale files or `File.find` patterns where translations are read from:
   read:
     ## Default:
-    # - config/locales/%{locale}.yml
+    - config/locales/%{locale}.yml
     ## More files:
-    # - config/locales/**/*.%{locale}.yml
+    - config/locales/**/*.%{locale}.yml
     ## Another gem (replace %#= with %=):
     # - "<%#= %x[bundle show vagrant].chomp %>/templates/locales/%{locale}.yml"
 
@@ -84,6 +84,8 @@ search:
 #   api_key: "AbC-dEf5"
 
 ## Do not consider these keys missing:
+# Devise and Errors keys are excluded as those keys work only be used dynamically
+# and therefore i18n-tasks considers them to be unused.
 ignore_unused:
   # GOVUK Form Builder uses these translations
   - 'helpers.{fieldset,hint,label}.*'
@@ -97,9 +99,11 @@ ignore_unused:
   - 'pundit.nil_class'
   - 'event.*'
   - 'cases.index.heading_*'
-  - 'devise.registrations.*'
+  - 'devise.*'
+  - 'errors.*'
   - 'cases.new.correspondence_type_errors.*'
   - 'filters.crumbs.list_filter_type.*'
+  - 'page_title.*_cases'
 
 
 ## Consider these keys used:

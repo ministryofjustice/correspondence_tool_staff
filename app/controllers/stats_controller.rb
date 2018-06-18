@@ -21,6 +21,12 @@ class StatsController < ApplicationController
     send_data report.report_data, filename: report_type.filename
   end
 
+  def download_audit
+    report = Stats::R900AuditReport.new
+    report.run
+    send_data report.report_data, filename: "R900Audit.csv"
+  end
+
   def custom
     @report = Report.new
     @custom_reports = ReportType.custom.all

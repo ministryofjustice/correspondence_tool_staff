@@ -107,8 +107,9 @@ describe CasesController, type: :controller do
             'case_sar' => {
                 'subject_full_name' => 'modified subject', 
                 'subject_type' => 'member_of_the_public', 
-                'third_party' => 'true', 
-                'name' => 'the new requestor', 
+                'third_party' => 'true',
+                'third_party_relationship' => 'Guardian',
+                'name' => 'the new requestor',
                 'received_date_dd' => '22', 
                 'received_date_mm' => '5', 
                 'received_date_yyyy' => '2018', 
@@ -163,7 +164,7 @@ describe CasesController, type: :controller do
 
         it 'has error details on the record' do
           patch :update, params: params
-          expect(assigns(:case).errors.full_messages).to eq ['Received date too far in past.']
+          expect(assigns(:case).errors.full_messages).to include('Received date too far in past.')
         end
 
         it 'redisplays the edit page' do

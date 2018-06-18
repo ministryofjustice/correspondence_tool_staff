@@ -213,14 +213,20 @@ module CTS::Cases
     end
 
     def transition_to_pending_dacu_disclosure_clearance(kase)
-      rus = ResponseUploaderService.new(kase,
-                                        responder,
-                                        BypassParamsManager.new({}),
-                                        nil)
-      rus.seed!('spec/fixtures/eon.pdf')
-      kase.state_machine.add_response_to_flagged_case!(acting_user: responder,
-                                                       acting_team:responding_team,
-                                                       filenames: kase.attachments)
+      case get_correspondence_type_abbreviation
+        when :foi
+        rus = ResponseUploaderService.new(kase,
+                                          responder,
+                                          BypassParamsManager.new({}),
+                                          nil)
+        rus.seed!('spec/fixtures/eon.pdf')
+        kase.state_machine.add_response_to_flagged_case!(acting_user: responder,
+                                                         acting_team:responding_team,
+                                                         filenames: kase.attachments)
+        when :sar
+          kase.state_machine.progress_for_clearance!(acting_user: responder,
+                                                    acting_team: kase.responding_team)
+      end
     end
 
     def transition_to_pending_press_office_clearance(kase)

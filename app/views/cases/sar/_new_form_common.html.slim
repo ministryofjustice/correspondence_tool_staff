@@ -1,21 +1,20 @@
 section
   header
-    h2.heading-medium About the data subject
 
   = f.text_field :subject_full_name
-
-  = f.radio_button_fieldset :subject_type,
-                            choices: Case::SAR::subject_types.keys
 
   #third-party
     = f.radio_button_fieldset(:third_party) do |fieldset|
       - fieldset.radio_input(true, text_method: :humanize)
         = f.text_field :name
+        = f.text_field :third_party_relationship
       - fieldset.radio_input(false, text_method: :humanize)
+
+  = f.radio_button_fieldset :subject_type,
+          choices: Case::SAR::subject_types.keys
 
 section
   header
-    h2.heading-medium About the case
 
   .form-group
     = f.gov_uk_date_field :received_date, {legend_text: t('cases.new.received_date'), form_hint_text: t('cases.new.received_date_copy'), today_button: {class: 'button-secondary'} }
@@ -25,6 +24,9 @@ section
 
   = f.text_area :message, { rows: 10 }
 
+  label.form-label
+    = t('.dropzone')
+
   - if dropzone == true
     .grid-row
       .column-two-thirds
@@ -33,17 +35,17 @@ section
                   locals: { s3_direct_post: @s3_direct_post,
                           file_input_name: 'case_sar[uploaded_request_files][]' }
 
-  = f.hidden_field :flag_for_disclosure_specialists, value: 'no'
+  = f.hidden_field :flag_for_disclosure_specialists
 
-  h2.heading-medium Where the information should be sent
+  h2.heading-medium How and where should the information be sent?
   = f.radio_button_fieldset :reply_method, choices: [:send_by_email, :send_by_post], legend_options: { class: 'visually-hidden' } do |fieldset|
     - fieldset.radio_input('send_by_email',
                            panel_id: 'reply_method_send_by_email_panel')
-    - fieldset.radio_input('send_by_post',
-                           panel_id: 'reply_method_send_by_post_panel')
-
     - fieldset.revealing_panel(:reply_method_send_by_email_panel) do |panel|
       - panel.email_field :email
+
+    - fieldset.radio_input('send_by_post',
+                           panel_id: 'reply_method_send_by_post_panel')
 
     - fieldset.revealing_panel(:reply_method_send_by_post_panel) do |panel|
       - panel.text_area :postal_address, {rows: 4}

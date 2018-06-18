@@ -17,7 +17,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
 
 
   describe 'basic_details' do
-    it 'displays the initial case details' do
+    it 'displays the initial case details (non third party case' do
       render partial: 'cases/sar/case_details.html.slim',
              locals:{ case_details: unassigned_case}
 
@@ -26,7 +26,17 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       expect(partial.case_type.data.text).to eq "SAR  "
       expect(partial.date_received.data.text)
           .to eq unassigned_case.received_date.strftime(Settings.default_date_format)
-      expect(partial.requester_name.data.text).to eq unassigned_case.name
+      expect(partial.third_party.data.text).to eq 'No'
+    end
+
+    it 'displays third party details if present' do
+      third_party_case = (create :sar_case, :third_party, name: 'Rick Westor').decorate
+      render partial: 'cases/sar/case_details.html.slim',
+             locals:{ case_details: third_party_case}
+      partial = case_details_section(rendered).sar_basic_details
+      expect(partial.third_party.data.text).to eq 'Yes'
+      expect(partial.requester_name.data.text).to eq 'Rick Westor'
+
     end
 
     it 'does not display the email address if one is not provided' do
