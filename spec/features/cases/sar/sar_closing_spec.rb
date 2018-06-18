@@ -56,8 +56,7 @@ feature 'Closing a sar' do
 
         go_to_case_details_step kase: late_case
 
-        close_sar_case timeliness: 'late',
-                       time_taken: 50
+        close_sar_case timeliness: 'late'
       end
     end
   end
