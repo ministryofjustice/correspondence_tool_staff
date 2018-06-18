@@ -224,8 +224,11 @@ module CTS::Cases
                                                          acting_team:responding_team,
                                                          filenames: kase.attachments)
         when :sar
+          dts = DefaultTeamService.new(kase)
+
           kase.state_machine.progress_for_clearance!(acting_user: responder,
-                                                    acting_team: kase.responding_team)
+                                                     acting_team: kase.responding_team,
+                                                     target_team: dts.approving_team)
       end
     end
 

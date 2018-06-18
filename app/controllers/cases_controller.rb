@@ -40,6 +40,7 @@ class CasesController < ApplicationController
                   :flag_for_clearance,
                   :new_response_upload,
                   :process_closure,
+                  :progress_for_clearance,
                   :reassign_approver,
                   :remove_clearance,
                   :request_amends,
@@ -370,7 +371,11 @@ class CasesController < ApplicationController
       format.js { render 'cases/unflag_for_clearance.js.erb' }
       format.html do
         flash[:notice] = "Case has been de-escalated. #{ get_de_escalated_undo_link }".html_safe
-        redirect_to case_path(@case)
+        if @case.type_abbreviation == 'SAR'
+          redirect_to incoming_cases_path
+        else
+          redirect_to case_path(@case)
+        end
       end
     end
   end
@@ -384,7 +389,6 @@ class CasesController < ApplicationController
       format.js { render 'cases/flag_for_clearance.js.erb' }
       format.html do
         redirect_to case_path(@case)
-        # do we need to update this so disclosure specialists who de escalate SARs do not see an error page
       end
     end
   end
@@ -520,7 +524,6 @@ class CasesController < ApplicationController
   end
 
   def progress_for_clearance
-    @case = Case::Base.find(params[:id])
     authorize @case
 
     @case.state_machine.progress_for_clearance!(acting_user: current_user,
