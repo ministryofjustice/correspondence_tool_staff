@@ -86,7 +86,7 @@ RSpec.describe Report, type: :model do
                              period_end: Date.today,
                              run: true
                            ) }
-    let(:report)         { build_stubbed :r003_report }
+    let(:report)         { create :r003_report }
 
     before do
       expect(Stats::R003BusinessUnitPerformanceReport)
