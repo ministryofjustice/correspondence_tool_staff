@@ -94,6 +94,11 @@ RSpec.describe Report, type: :model do
     end
 
     it 'instantiates and runs a report' do
+      update_params = { report_data: instance_of(String),
+                        period_start: Date.yesterday,
+                        period_end: Date.today
+      }
+      expect(report).to receive(:update!).with(update_params)
       report.run(*args)
       expect(report_service).to have_received(:run)
     end
