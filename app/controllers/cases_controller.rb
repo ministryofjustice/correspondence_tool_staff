@@ -446,7 +446,11 @@ class CasesController < ApplicationController
   def execute_request_amends
     authorize @case
     CaseRequestAmendsService.new(user: current_user, kase: @case, message: params[:case][:request_amends_comment]).call
-    flash[:notice] = 'You have requested amends to this case\'s response.'
+    if @case.type_abbreviation == 'SAR'
+      flash[:notice] = 'Information Officer has been notified a redraft is needed.'
+    else
+      flash[:notice] = 'You have requested amends to this case\'s response.'
+    end
     redirect_to case_path(@case)
   end
 
