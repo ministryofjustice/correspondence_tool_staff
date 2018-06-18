@@ -566,7 +566,7 @@ en:
       success: The response has been marked as sent.
     foi:
       case_details:
-        cannot_update_closure: "This is an old case with closure details that can't be edited"
+        cannot_update_closure_html: "This is an old case with closure details that can't be edited. If you need to edit this case <a href=\"#new_feedback\">let us know</a>."
 
       close_form:
         close_date: Date response sent

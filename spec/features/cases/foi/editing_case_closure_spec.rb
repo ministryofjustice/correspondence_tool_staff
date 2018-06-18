@@ -43,6 +43,6 @@ feature 'editing case closure information' do
     cases_show_page.load(id: kase.id)
     expect(cases_show_page.case_details).not_to have_edit_closure
     expect(cases_show_page.case_details)
-      .to have_text("This is an old case with closure details that can't be edited")
+      .to have_text("This is an old case with closure details that can't be edited. If you need to edit this case let us know.")
   end
 end
