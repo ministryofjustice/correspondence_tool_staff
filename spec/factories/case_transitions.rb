@@ -252,4 +252,18 @@ FactoryGirl.define do
     acting_team_id { managing_team.id }
     target_team_id { nil }
   end
+
+  factory :case_transition_progress_for_clearance, parent: :case_transition do
+    transient do
+      responder        { create :responder }
+      responding_team  { responder.teams.first }
+      disclosure       { find_or_create :team_dacu_disclosure}
+    end
+
+    event          'progress_for_clearance'
+    to_state       { 'pending_dacu_clearance' }
+    acting_user_id { responder.id }
+    acting_team_id { responding_team.id }
+    target_team_id { disclosure.id }
+  end
 end

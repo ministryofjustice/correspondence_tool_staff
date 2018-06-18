@@ -38,6 +38,14 @@ href=\"/cases/#{@case.id}/close\">Close case</a>"
       end
     end
 
+    context 'when event == :progress_for_clearance' do
+      it 'generates HTML that links to the progress_for_clearance case action' do
+        @case = create(:accepted_sar, :flagged)
+        expect(action_button_for(:progress_for_clearance)).to eq(
+"<a id=\"action--progress-for-clearance\" class=\"button\" rel=\"nofollow\" data-method=\"patch\" href=\"/cases/#{@case.id}/progress_for_clearance\">Ready for Disclosure clearance</a>"          )
+      end
+    end
+
     context 'when event == :add_responses' do
       context 'case does not require clearance' do
         it 'generates HTML that links to the upload response page' do

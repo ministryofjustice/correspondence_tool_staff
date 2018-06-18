@@ -678,6 +678,20 @@ RSpec.describe Case::Base, type: :model do
 
     describe '#responding_team' do
       it { should have_one(:responding_team) }
+
+      context 'responding team changed after closure' do
+        it 'returns new responding team' do
+          first_responding_team = create :responding_team
+          last_responding_team = create :responding_team
+          kase = create :closed_case, responding_team: first_responding_team
+          expect(kase.responding_team).to eq first_responding_team
+
+          assignment = kase.responder_assignment
+          AssignNewTeamService.new(manager, {id: assignment.id, case_id: kase.id, team_id: last_responding_team.id }).call
+          kase.reload
+          expect(kase.responding_team).to eq last_responding_team
+        end
+      end
     end
 
     it { should have_one(:managing_assignment)
