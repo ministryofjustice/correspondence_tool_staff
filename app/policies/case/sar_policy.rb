@@ -45,10 +45,6 @@ class Case::SARPolicy < Case::BasePolicy
         user.responding_teams.include?(self.case.responding_team)
   end
 
-  def process_respond_and_close?
-    respond_and_close?
-  end
-
   def show?
     clear_failed_checks
 

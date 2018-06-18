@@ -292,7 +292,7 @@ class CasesController < ApplicationController
 
 
   def process_respond_and_close
-    authorize @case
+    authorize @case, :respond_and_close?
     @case.prepare_for_close
     close_params = process_closure_params(@case.type_abbreviation)
     if @case.update(close_params)
