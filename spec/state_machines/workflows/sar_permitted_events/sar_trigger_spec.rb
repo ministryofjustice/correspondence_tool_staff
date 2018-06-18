@@ -309,7 +309,8 @@ describe ConfigurableStateMachine::Machine do
           expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
                                                                         :approve,
                                                                         :reassign_user,
-                                                                        :request_amends]
+                                                                        :request_amends,
+                                                                        :unaccept_approver_assignment]
         end
       end
 
