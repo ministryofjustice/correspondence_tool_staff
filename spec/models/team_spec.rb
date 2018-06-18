@@ -267,8 +267,8 @@ RSpec.describe Team, type: :model do
     end
 
     context 'on update' do
-      before(:each) {team.name = 'Name Changing Unit'}
       it 'updates versions' do
+        team = create :team
         expect{team.update_attributes!(name: 'Name Changing Unit')}.to change(team.versions, :count).by 1
         expect(team.versions.last.event).to eq 'update'
       end

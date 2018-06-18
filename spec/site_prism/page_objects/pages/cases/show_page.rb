@@ -28,6 +28,7 @@ module PageObjects
           element :upload_redraft, '#action--upload-redraft'
           element :reassign_user, '#action--reassign-case'
           element :mark_as_sent_and_close, '#action--mark-response-as-sent-and-close'
+          element :progress_to_disclosure, '#action--progress-for-clearance'
         end
         element :extend_for_pit_action, '#action--extend-for-pit'
 

@@ -23,18 +23,18 @@ describe CasesController, type: :controller do
       end
       let(:params) do
           {
-              'correspondence_type'=>'foi', 
+              'correspondence_type'=>'foi',
               'case_foi' => {
-                  'name' => 'Modified name', 
-                  'email' => 'modified_email@stephenrichards.eu', 
-                  'postal_address' => 'modified address', 
-                  'requester_type' => 'what_do_they_know', 
+                  'name' => 'Modified name',
+                  'email' => 'modified_email@stephenrichards.eu',
+                  'postal_address' => 'modified address',
+                  'requester_type' => 'what_do_they_know',
                   'received_date_dd' => '26',
                   'received_date_mm' => '5',
-                  'received_date_yyyy' => '2018', 
-                  'subject' => 'modified subject', 
+                  'received_date_yyyy' => '2018',
+                  'subject' => 'modified subject',
                   'message' => 'modified full request'
-              }, 
+              },
               'commit' => 'Submit',
               'id' =>  kase.id.to_s
           }
@@ -103,24 +103,24 @@ describe CasesController, type: :controller do
       end
       let(:params) do
         {
-            'correspondence_type' => 'sar', 
+            'correspondence_type' => 'sar',
             'case_sar' => {
-                'subject_full_name' => 'modified subject', 
-                'subject_type' => 'member_of_the_public', 
+                'subject_full_name' => 'modified subject',
+                'subject_type' => 'member_of_the_public',
                 'third_party' => 'true',
-                'third_party_relationship' => 'Guardian',
                 'name' => 'the new requestor',
-                'received_date_dd' => '22', 
-                'received_date_mm' => '5', 
-                'received_date_yyyy' => '2018', 
-                'subject' => 'modified summary', 
-                'message' => 'moidified full case', 
-                'flag_for_disclosure_specialists' => 'no', 
-                'reply_method' => 'send_by_post', 
-                'email' => 'modified@Moj.com', 
+                'third_party_relationship' => 'Aunty',
+                'received_date_dd' => '22',
+                'received_date_mm' => '5',
+                'received_date_yyyy' => '2018',
+                'subject' => 'modified summary',
+                'message' => 'moidified full case',
+                'flag_for_disclosure_specialists' => 'no',
+                'reply_method' => 'send_by_post',
+                'email' => 'modified@Moj.com',
                 'postal_address' => 'modified address'
-            }, 
-            'commit' => 'Submit', 
+            },
+            'commit' => 'Submit',
             'id' => kase.id.to_s
         }
       end
