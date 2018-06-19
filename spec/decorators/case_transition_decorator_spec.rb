@@ -143,6 +143,16 @@ RSpec.describe CaseTransitionDecorator, type: :model do
 
     end
 
+    context 'progress_for_clearance' do
+      it 'returns to name of the clearance team' do
+        ct = create(:case_transition_progress_for_clearance).decorate
+        target_team = Team.find(ct.target_team_id)
+        event = "Progress for clearance"
+        details = "Progressed to #{target_team.name}"
+        expect(ct.event_and_detail).to eq response(event, details)
+      end
+    end
+
     def response(e, d)
       "<strong>#{e}</strong><br>#{d}"
     end

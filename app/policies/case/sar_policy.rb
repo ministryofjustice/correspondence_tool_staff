@@ -39,6 +39,12 @@ class Case::SARPolicy < Case::BasePolicy
 
   end
 
+  def respond_and_close?
+    clear_failed_checks
+    self.case.drafting? &&
+        user.responding_teams.include?(self.case.responding_team)
+  end
+
   def show?
     clear_failed_checks
 
@@ -66,6 +72,12 @@ class Case::SARPolicy < Case::BasePolicy
 
   def can_add_attachment_to_flagged_and_unflagged_cases?
     false
+  end
+
+  def progress_for_clearance?
+    clear_failed_checks
+    check_can_trigger_event(:progress_for_clearance) &&
+      check_user_is_a_responder_for_case
   end
 
   check :responding_team_is_linked_to_case do

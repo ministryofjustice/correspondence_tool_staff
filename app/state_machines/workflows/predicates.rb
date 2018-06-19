@@ -71,4 +71,7 @@ class Workflows::Predicates
     @kase.assignments.with_teams(BusinessUnit.private_office).for_user(@user).present?
   end
 
+  def can_edit_closure
+    @kase.info_held_status_id.present?
+  end
 end

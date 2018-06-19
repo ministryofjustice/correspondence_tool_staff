@@ -154,6 +154,7 @@ feature 'Closing a case' do
       close_page.wait_until_outcome_visible
       close_page.outcome.refused_fully.click
       close_page.wait_until_exemptions_visible
+
       expect(close_page.exemptions).to have_s12_exceeded_cost
       expect(close_page).to have_exemptions
       chosen_exemption_text =  select_random_exemption

@@ -136,6 +136,10 @@ FactoryBot.define do
     date_responded { 4.business_days.ago }
 
     after(:create) do |kase, evaluator|
+      create :case_transition_respond,
+             case: kase,
+             acting_user_id: evaluator.responder.id,
+             acting_team_id: evaluator.responding_team.id
       create :case_transition_close,
              case: kase,
              acting_user_id: evaluator.manager.id,
@@ -157,6 +161,10 @@ FactoryBot.define do
     date_responded { 4.business_days.ago }
 
     after(:create) do |kase, evaluator|
+      create :case_transition_respond,
+             case: kase,
+             acting_user_id: evaluator.responder.id,
+             acting_team_id: evaluator.responding_team.id
       create :case_transition_close,
              case: kase,
              acting_user_id: evaluator.manager.id,

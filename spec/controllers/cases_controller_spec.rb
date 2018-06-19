@@ -183,7 +183,7 @@ RSpec.describe CasesController, type: :controller do
             date_responded_mm: date_responded.month,
             date_responded_yyyy: date_responded.year,
             info_held_status_abbreviation: info_held.abbreviation,
-            outcome_name: outcome.name,
+            outcome_abbreviation: outcome.abbreviation,
             # refusal_reason_name: refusal_reason.name,
           }
         }
@@ -230,7 +230,7 @@ RSpec.describe CasesController, type: :controller do
 
         it "closes a case that has been responded to" do
           sign_in responder
-          patch :process_closure, params: sar_closure_params(sar)
+          patch :process_respond_and_close, params: sar_closure_params(sar)
           expect(Case::SAR.first.current_state).to eq 'closed'
           expect(Case::SAR.first.refusal_reason_id).to eq CaseClosure::RefusalReason.tmm.id
           expect(Case::SAR.first.date_responded).to eq 3.days.ago.to_date

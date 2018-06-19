@@ -23,7 +23,7 @@ class CaseTransitionDecorator < Draper::Decorator
     state_machine.event_name(object.event)
   end
 
-  def details
+  def details     # rubocop:disable Metrics/CyclomaticComplexity
     case object.event
     when 'assign_responder'
       "Assigned to #{object.target_team.name}"
@@ -31,6 +31,8 @@ class CaseTransitionDecorator < Draper::Decorator
       "Assigned to #{object.target_team.name}"
     when 'remove_linked_case'
       "Removed the link to <strong>#{Case::Base.find(object.linked_case_id).number}</strong>"
+    when 'progress_for_clearance'
+      "Progressed to #{object.target_team.name}"
     when 'add_responses',
          'add_response_to_flagged_case',
          'approve_and_bypass',
