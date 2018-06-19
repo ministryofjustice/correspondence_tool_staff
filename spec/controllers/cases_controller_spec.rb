@@ -183,7 +183,7 @@ RSpec.describe CasesController, type: :controller do
             date_responded_mm: date_responded.month,
             date_responded_yyyy: date_responded.year,
             info_held_status_abbreviation: info_held.abbreviation,
-            outcome_name: outcome.name,
+            outcome_abbreviation: outcome.abbreviation,
             # refusal_reason_name: refusal_reason.name,
           }
         }
