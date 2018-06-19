@@ -86,13 +86,13 @@ module Stats
 
     describe '#title' do
       it 'returns the report title' do
-        expect(R003BusinessUnitPerformanceReport.title).to eq 'Business unit report'
+        expect(R003BusinessUnitPerformanceReport.title).to eq 'Business unit report (FOIs)'
       end
     end
 
     describe '#description' do
       it 'returns the report description' do
-        expect(R003BusinessUnitPerformanceReport.description).to eq 'Shows all open cases and cases closed this month, in-time or late, by responding team'
+        expect(R003BusinessUnitPerformanceReport.description).to eq 'Shows all FOI open cases and cases closed this month, in-time or late, by responding team'
       end
     end
 
@@ -204,7 +204,7 @@ module Stats
                 %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
                 %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late}
             expected_text = <<~EOCSV
-            Business unit report - 1 Jan 2017 to 30 Jun 2017
+            Business unit report (FOIs) - 1 Jan 2017 to 30 Jun 2017
             #{super_header}
             #{header}
             BGAB,"","",#{@bizgrp_ab.team_lead},28.6,9,2,2,2,3,33.3,5,1,1,2,1,30.0,14,3,3,4,4
@@ -378,7 +378,7 @@ module Stats
               %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
               %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late}
             expected_text = <<~EOCSV
-              Business unit report - 1 Jan 2017 to 30 Jun 2017
+              Business unit report (FOIs) - 1 Jan 2017 to 30 Jun 2017
               #{super_header}
               #{header}
               BGAB,"","",#{@bizgrp_ab.team_lead},28.6,9,2,2,2,3,33.3,5,1,1,2,1,30.0,14,3,3,4,4,0.0,14,0,6,0,8

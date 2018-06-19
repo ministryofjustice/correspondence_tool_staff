@@ -68,4 +68,28 @@ feature 'cases requiring clearance by disclosure specialist' do
     de_escalate_case_as_disclosure_specialist(kase, case_list_item)
     undo_de_escalate_case_as_disclosure_specialist(kase, case_list_item)
   end
+
+  scenario 'Disclosure Specialist requests amends to a response' do
+    kase = create :pending_dacu_clearance_sar, approver: disclosure_specialist, responding_team: responding_team
+
+    login_as disclosure_specialist
+
+    cases_show_page.load(id: kase.id)
+    expect(cases_show_page.case_status.details.who_its_with.text)
+      .to eq 'Disclosure'
+
+    request_amends kase: kase,
+                   expected_action: 'requesting amends for',
+                   expected_team: responding_team,
+                   expected_status: 'Draft in progress'
+    execute_request_amends(expected_flash: "Information Officer has been notified a redraft is needed.")
+    go_to_case_details_step(
+      kase: kase,
+      find_details_page: false,
+      expected_team: responding_team,
+      expected_history: [
+        "#{disclosure_specialist.full_name}#{team_dacu_disclosure.name}Request amends"
+      ]
+    )
+  end
 end

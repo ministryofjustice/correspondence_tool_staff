@@ -35,7 +35,7 @@ module Stats
       it 'authorizes' do
         expect { post :create_custom_report, params: params }
           .to require_permission(:can_download_stats?)
-                .with_args(manager, kase)
+                .with_args(manager, Case::Base)
       end
 
       it 'runs the report' do
