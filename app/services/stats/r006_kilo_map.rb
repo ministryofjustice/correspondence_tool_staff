@@ -93,10 +93,11 @@ module Stats
         line << ''
       end
       line << bu.email
-      users = bu.users.to_a
+      users = bu.users.to_a.sort{ |a, b| a.full_name <=> b.full_name }
       if users.any?
-        line << users.shift.full_name 
-        line << users.shift&.email
+        user = users.shift
+        line << user.full_name
+        line << user&.email
       end
       @result_set << line
       process_areas_and_users(areas, users)
