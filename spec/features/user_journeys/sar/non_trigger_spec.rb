@@ -38,6 +38,7 @@ feature 'Non-Offender SAR case that does not require clearance' do
                         message: 'This. Is. A. Test.',
                         do_logout: false
 
-    close_sar_case timeliness: 'in time'
+    close_sar_case kase: kase,
+                   timeliness: 'in time'
   end
 end

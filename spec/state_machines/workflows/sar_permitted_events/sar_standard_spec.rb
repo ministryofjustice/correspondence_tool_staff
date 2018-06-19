@@ -130,7 +130,8 @@ describe ConfigurableStateMachine::Machine do
           k = create :closed_sar
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'closed'
-          expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case]
+          expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
+                                                                        :update_closure]
         end
       end
     end
