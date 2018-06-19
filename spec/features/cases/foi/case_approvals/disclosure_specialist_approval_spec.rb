@@ -127,27 +127,6 @@ feature 'cases requiring clearance by disclosure specialist' do
     undo_de_escalate_case_as_disclosure_specialist(kase, case_list_item)
   end
 
-  scenario 'approving a case as a disclosure specialist', js: true do
-    kase = create_and_assign_foi_case user: manager,
-                                      responding_team: responding_team,
-                                      flag_for_disclosure: true
-    set_case_dates_back_by kase, 5.business_days
-    accept_case_as_kilo(kase)
-    upload_response_as_kilo(kase.reload, responder)
-    login_as disclosure_specialist
-    take_case_on_as_discosure_specialist(
-      kase: kase,
-      expected_approver: disclosure_specialist
-    )
-    cases_show_page.load(id: kase.id)
-    expect(cases_show_page.actions).to have_clear_case
-    cases_show_page.actions.clear_case.click
-    expect(approve_response_interstitial_page).to be_displayed
-    expect(approve_response_interstitial_page).not_to have_bypass_press_option
-    approve_response_interstitial_page.clear_response_button.click
-    expect(kase.reload.current_state).to eq 'awaiting_dispatch'
-  end
-
   scenario 'approving a case as a disclosure specialist not assigned directly to the case', js: true do
     kase = create_and_assign_foi_case user: manager,
                                       responding_team: responding_team,

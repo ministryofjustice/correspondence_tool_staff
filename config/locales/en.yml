@@ -340,6 +340,7 @@ en:
 
 
   notices:
+    case_cleared: "The Information Officer has been notified that the response is ready to send."
     case_closed: You've closed this case
     closure_details_updated: You have updated the closure details for this case.
     response_uploaded: You have uploaded the response for this case.
