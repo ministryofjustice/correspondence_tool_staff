@@ -55,9 +55,9 @@ def approve_response(kase:)
     .to have_text "You have cleared case #{kase.number} - #{kase.subject}"
 end
 
-def execute_request_amends
+def execute_request_amends(expected_flash: 'You have requested amends to this case\'s response.')
   request_amends_page.submit_button.click
   expect(cases_show_page).to be_displayed
   expect(cases_show_page.notice)
-    .to have_text 'You have requested amends to this case\'s response.'
+    .to have_text expected_flash
 end

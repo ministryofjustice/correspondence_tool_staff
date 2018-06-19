@@ -7,40 +7,69 @@ RSpec.describe CasesController, type: :controller do
                                                          call: true) }
 
   describe 'PATCH execute_request_amends' do
-    before do
-      sign_in private_officer
-      allow(CaseRequestAmendsService).to receive(:new).and_return(service)
-    end
+    context 'Full approval FOI' do
+      before do
+        sign_in private_officer
+        allow(CaseRequestAmendsService).to receive(:new).and_return(service)
+      end
 
-    it 'authorizes' do
-      expect {
+      it 'authorizes' do
+        expect {
+          patch :execute_request_amends,
+                params: { id: pending_private_clearance_case, case: {request_amends_comment: "Oh my!"} }
+        } .to require_permission(:execute_request_amends?)
+                .with_args(private_officer, pending_private_clearance_case)
+      end
+
+      it 'calls the case request amends service' do
         patch :execute_request_amends,
               params: { id: pending_private_clearance_case, case: {request_amends_comment: "Oh my!"} }
-      } .to require_permission(:execute_request_amends?)
-              .with_args(private_officer, pending_private_clearance_case)
+        expect(CaseRequestAmendsService)
+          .to have_received(:new).with(user: private_officer,
+                                       kase: pending_private_clearance_case,
+                                       message: "Oh my!")
+        expect(service).to have_received(:call)
+      end
+
+      it 'flashes a notification' do
+        patch :execute_request_amends,
+              params: { id: pending_private_clearance_case, case: {request_amends_comment: "Oh my!"} }
+        expect(flash[:notice])
+          .to eq 'You have requested amends to this case\'s response.'
+      end
+
+      it 'redirects to case detail page' do
+        patch :execute_request_amends,
+              params: { id: pending_private_clearance_case, case: {request_amends_comment: "Oh my!"} }
+        expect(response).to redirect_to(case_path(pending_private_clearance_case))
+      end
     end
 
-    it 'calls the case request amends service' do
-      patch :execute_request_amends,
-            params: { id: pending_private_clearance_case, case: {request_amends_comment: "Oh my!"} }
-      expect(CaseRequestAmendsService)
-        .to have_received(:new).with(user: private_officer,
-                                     kase: pending_private_clearance_case,
-                                     message: "Oh my!")
-      expect(service).to have_received(:call)
-    end
+    context 'trigger SAR' do
+      let(:trigger_sar)             { create :pending_dacu_clearance_sar, approver: disclosure_specialist }
+      let(:disclosure_specialist)   { create :disclosure_specialist }
 
-    it 'flashes a notification' do
-      patch :execute_request_amends,
-            params: { id: pending_private_clearance_case, case: {request_amends_comment: "Oh my!"} }
-      expect(flash[:notice])
-        .to eq 'You have requested amends to this case\'s response.'
-    end
+      before do
+        sign_in disclosure_specialist
+        allow(CaseRequestAmendsService).to receive(:new).and_return(service)
+      end
 
-    it 'redirects to case detail page' do
-      patch :execute_request_amends,
-            params: { id: pending_private_clearance_case, case: {request_amends_comment: "Oh my!"} }
-      expect(response).to redirect_to(case_path(pending_private_clearance_case))
+      it 'calls the case request amends service with disclosure specialist' do
+        patch :execute_request_amends,
+              params: { id: trigger_sar, case: {request_amends_comment: "Sneaky puppies"} }
+        expect(CaseRequestAmendsService)
+          .to have_received(:new).with(user: disclosure_specialist,
+                                       kase: trigger_sar,
+                                       message: "Sneaky puppies")
+        expect(service).to have_received(:call)
+      end
+
+      it 'flashes a notification for SARs' do
+        patch :execute_request_amends,
+              params: { id: trigger_sar, case: {request_amends_comment: "Sneaky puppies"} }
+        expect(flash[:notice])
+          .to eq 'Information Officer has been notified a redraft is needed.'
+      end
     end
   end
 end
