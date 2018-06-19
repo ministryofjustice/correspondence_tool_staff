@@ -19,7 +19,7 @@ RSpec.describe StatsController, type: :controller do
     it 'authorizes' do
       expect { get :index }
         .to require_permission(:can_download_stats?)
-              .with_args(manager, kase)
+              .with_args(manager, Case::Base)
     end
 
     it 'sets @reports' do
