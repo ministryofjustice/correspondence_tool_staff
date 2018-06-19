@@ -265,24 +265,6 @@ class Case::BasePolicy < ApplicationPolicy
         check_can_trigger_event(:upload_response_and_return_for_redraft)
   end
 
-  def request_amends?
-    clear_failed_checks
-
-    (check_case_is_pending_press_office_clearance &&
-        check_user_is_assigned_press_office_approver) ||
-        (check_case_is_pending_private_office_clearance &&
-            check_user_is_private_office_approver)
-  end
-
-  def execute_request_amends?
-    clear_failed_checks
-
-    (check_case_is_pending_press_office_clearance &&
-        check_user_is_press_office_approver) ||
-        (check_case_is_pending_private_office_clearance &&
-            check_user_is_private_office_approver)
-  end
-
   def user_is_admin?
     user.admin?
   end

@@ -80,13 +80,6 @@ class Case::SARPolicy < Case::BasePolicy
       check_user_is_a_responder_for_case
   end
 
-  def request_amends?
-    clear_failed_checks
-
-    check_can_trigger_event(:request_amends) &&
-      check_user_is_an_approver_for_case
-  end
-
   def execute_request_amends?
     clear_failed_checks
 

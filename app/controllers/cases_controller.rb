@@ -424,7 +424,7 @@ class CasesController < ApplicationController
   end
 
   def request_amends
-    authorize @case
+    authorize @case, :execute_request_amends?
     @next_step_info = NextStepInfo.new(@case, 'request-amends', current_user)
   end
 
