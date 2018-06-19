@@ -1085,6 +1085,11 @@ case_types:
               drafting:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                respond_and_close:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: closed
+                respond:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 close:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
@@ -1210,7 +1215,7 @@ case_types:
               awaiting_dispatch:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
-                close:
+                respond_and_close:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
                 reassign_user:

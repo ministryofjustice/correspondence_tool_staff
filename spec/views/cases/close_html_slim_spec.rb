@@ -12,7 +12,6 @@ describe 'cases/close.html.slim' do
               partial: 'cases/foi/close_form',
               locals: {
                 kase: foi_being_drafted,
-                form_url: process_closure_case_path(id: foi_being_drafted.id),
                 submit_button: 'Close case'
               }
             )
@@ -30,7 +29,6 @@ describe 'cases/close.html.slim' do
               partial: 'cases/sar/close_form',
               locals: {
                 kase: sar_being_drafted,
-                form_url: process_closure_case_path(id: sar_being_drafted.id),
                 submit_button: 'Close case'
               }
             )
