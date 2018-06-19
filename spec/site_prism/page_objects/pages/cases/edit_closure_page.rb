@@ -1,3 +1,5 @@
+require 'page_objects/pages/cases/close_page'
+
 module PageObjects
   module Pages
     module Cases

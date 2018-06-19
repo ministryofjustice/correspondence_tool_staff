@@ -308,6 +308,7 @@ class CasesController < ApplicationController
 
   def process_closure
     authorize @case, :can_close_case?
+
     @case.prepare_for_close
     close_params = process_closure_params(@case.type_abbreviation)
     if @case.update(close_params)
@@ -658,29 +659,51 @@ class CasesController < ApplicationController
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
-    ).merge(refusal_reason_name: missing_info_to_tmm)
+    ).merge(refusal_reason_abbreviation: missing_info_to_tmm)
   end
 
   def missing_info_to_tmm
     if params[:case_sar][:missing_info] == "yes"
       @case.missing_info = true
-      CaseClosure::RefusalReason.tmm.name
+      CaseClosure::RefusalReason.tmm.abbreviation
     elsif params[:case_sar][:missing_info] == "no"
       @case.missing_info = false
     end
   end
 
   def process_foi_closure_params
-    params.require(:case_foi).permit(
+    closure_params = params.require(:case_foi).permit(
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
-      :outcome_name,
+      :outcome_abbreviation,
       :appeal_outcome_name,
-      :refusal_reason_name,
+      :refusal_reason_abbreviation,
       :info_held_status_abbreviation,
-      exemption_ids: params[:case_foi][:exemption_ids].nil? ? nil : params[:case_foi][:exemption_ids].keys
+      exemption_ids: []
     )
+
+    info_held_status = closure_params[:info_held_status_abbreviation]
+    outcome          = closure_params[:outcome_abbreviation]
+    refusal_reason   = closure_params[:refusal_reason_abbreviation]
+
+    unless ClosedCaseValidator.outcome_required?(info_held_status: info_held_status)
+      closure_params.merge!(outcome_id: nil)
+      closure_params.delete(:outcome_abbreviation)
+    end
+
+    unless ClosedCaseValidator.refusal_reason_required?(info_held_status: info_held_status)
+      closure_params.merge!(refusal_reason_id: nil)
+      closure_params.delete(:refusal_reason_abbreviation)
+    end
+
+    unless ClosedCaseValidator.exemption_required?(info_held_status: info_held_status,
+                                                   outcome: outcome,
+                                                   refusal_reason: refusal_reason)
+      closure_params.merge!(exemption_ids: [])
+    end
+
+    closure_params
   end
 
   def create_params(correspondence_type)
