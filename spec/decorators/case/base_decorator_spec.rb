@@ -207,6 +207,11 @@ describe Case::BaseDecorator, type: :model do
       kase = create(:case, name: 'Stepriponikas Bonstart', requester_type: 'member_of_the_public').decorate
       expect(kase.requester_name_and_type).to eq 'Stepriponikas Bonstart | Member of the public'
     end
+
+    it 'returns the name and subject type' do
+      kase = create(:sar_case, name: 'Wade Wilson', subject_type: 'staff').decorate
+      expect(kase.requester_name_and_type).to eq 'Wade Wilson | Staff'
+    end
   end
 
   describe '#message_extract' do

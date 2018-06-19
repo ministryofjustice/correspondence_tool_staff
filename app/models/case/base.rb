@@ -335,35 +335,20 @@ class Case::Base < ApplicationRecord
     "#{S3Uploader.id_for_case(self)}/#{attachment_type}"
   end
 
-  def outcome_name
-    outcome&.name
+  def outcome_abbreviation
+    outcome&.abbreviation
   end
 
-  def outcome_name=(name)
-    self.outcome = CaseClosure::Outcome.by_name(name)
+  def outcome_abbreviation=(abbreviation)
+    self.outcome = CaseClosure::Outcome.by_abbreviation(abbreviation)
   end
 
-  def refusal_reason_name
-    refusal_reason&.name
+  def refusal_reason_abbreviation
+    refusal_reason&.abbreviation
   end
 
-  def refusal_reason_name=(name)
-    self.refusal_reason = CaseClosure::RefusalReason.by_name(name)
-  end
-
-  # returns a hash which can be used by for populating checkboxes
-  # e.g. {"10"=>"1", "11"=>"1", "12"=>"0", "13"=>"0", "14"=>"1"}
-  def exemption_ids
-    exemption_hash = {}
-    exemptions.map{ |ex| exemption_hash[ex.id.to_s] = '1' }
-    exemption_hash
-  end
-
-  # expects a hash of ids and values 1 or zero
-  # e.g. {"10"=>"1", "11"=>"1", "12"=>"0", "13"=>"0", "14"=>"1"}
-  def exemption_ids=(param_hash)
-    exemption_ids = param_hash.select { |_exemption_id, val| val == '1' }.keys
-    self.exemptions = CaseClosure::Exemption.find(exemption_ids)
+  def refusal_reason_abbreviation=(abbreviation)
+    self.refusal_reason = CaseClosure::RefusalReason.by_abbreviation(abbreviation)
   end
 
   def prepare_for_close
@@ -421,6 +406,35 @@ class Case::Base < ApplicationRecord
   def responded_in_time?
     return false unless closed?
     date_responded <= external_deadline
+  end
+
+  # determines whether or not an individual BU responded to a case in time, measured
+  # from the date the case was assigned to the business unit to the time the case was marked as responded.
+  # Note that the time limit is different for trigger cases (the internal time limit) than for non trigger
+  # (the external time limit)
+  #
+  def business_unit_responded_in_time?
+    responding_transitions = transitions.where(event: 'respond')
+    if responding_transitions.any?
+      responding_team_assignment_date = transitions.where(event: 'assign_responder').last.created_at.to_date
+      responding_transition = responding_transitions.last
+      responding_date = responding_transition.created_at.to_date
+      internal_deadline = deadline_calculator
+                              .internal_deadline_for_date(correspondence_type, responding_team_assignment_date)
+      internal_deadline >= responding_date
+    else
+      raise ArgumentError.new("Cannot call ##{__method__} on a case without a response (Case #{number})")
+    end
+  end
+
+  def business_unit_already_late?
+    if transitions.where(event: 'respond').any?
+      raise ArgumentError.new("Cannot call ##{__method__} on a case for which the response has been sent")
+    else
+      responding_team_assignment_date = transitions.where(event: 'assign_responder').last.created_at.to_date
+      internal_deadline = deadline_calculator.business_unit_deadline_for_date(responding_team_assignment_date)
+      internal_deadline < Date.today
+    end
   end
 
   def default_clearance_team

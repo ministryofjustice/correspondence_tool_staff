@@ -224,8 +224,11 @@ module CTS::Cases
                                                          acting_team:responding_team,
                                                          filenames: kase.attachments)
         when :sar
+          dts = DefaultTeamService.new(kase)
+
           kase.state_machine.progress_for_clearance!(acting_user: responder,
-                                                    acting_team: kase.responding_team)
+                                                     acting_team: kase.responding_team,
+                                                     target_team: dts.approving_team)
       end
     end
 
@@ -246,7 +249,7 @@ module CTS::Cases
         kase.prepare_for_close
         kase.update(date_responded: Date.today,
                     info_held_status: CaseClosure::InfoHeldStatus.held,
-                    outcome_name: 'Granted in full')
+                    outcome_abbreviation: 'granted')
         kase.close(CTS::dacu_manager)
       else
         kase.prepare_for_close

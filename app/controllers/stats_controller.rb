@@ -57,7 +57,7 @@ class StatsController < ApplicationController
   private
 
   def authorize_user
-    authorize Case::Base.first, :can_download_stats?
+    authorize Case::Base, :can_download_stats?
   end
 
   def set_reports
