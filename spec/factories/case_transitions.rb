@@ -118,11 +118,12 @@ FactoryBot.define do
       responding_team { responder.responding_teams.first }
     end
 
-    to_state 'pending_dacu_clearance'
-    acting_user_id      { responder.id }
-    acting_team_id      { responding_team.id }
-    filenames           ['file1.pdf', 'file2.pdf']
-    event 'add_response_to_flagged_case'
+    association    :case, factory: [:case, :flagged]
+    to_state       'pending_dacu_clearance'
+    acting_user_id { responder.id }
+    acting_team_id { responding_team.id }
+    filenames      ['file1.pdf', 'file2.pdf']
+    event          'add_response_to_flagged_case'
   end
 
   factory :case_transition_approve, parent: :case_transition do
@@ -130,6 +131,7 @@ FactoryBot.define do
       approver       { self.case.approvers.first }
     end
 
+    association    :case, factory: [:case, :flagged]
     to_state       'awaiting_dispatch'
     acting_user    { approver }
     acting_team    { find_or_create :team_dacu_disclosure }
@@ -141,6 +143,7 @@ FactoryBot.define do
       approver       { self.case.approvers.first }
     end
 
+    association     :case, factory: [:case, :flagged, :press_office]
     to_state        'pending_press_office_clearance'
     acting_user     { approver }
     acting_team     { find_or_create :team_press_office }
@@ -152,6 +155,7 @@ FactoryBot.define do
       approver       { self.case.approvers.first }
     end
 
+    association     :case, factory: [:case, :flagged, :private_office]
     to_state       'pending_private_office_clearance'
     acting_user    { approver }
     acting_team    { find_or_create :team_private_office }
@@ -260,6 +264,7 @@ FactoryBot.define do
       disclosure       { find_or_create :team_dacu_disclosure}
     end
 
+    association    :case, factory: [:sar_case, :flagged]
     event          'progress_for_clearance'
     to_state       { 'pending_dacu_clearance' }
     acting_user_id { responder.id }
