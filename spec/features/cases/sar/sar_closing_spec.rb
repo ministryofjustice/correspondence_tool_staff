@@ -28,8 +28,7 @@ feature 'Closing a sar' do
 
         go_to_case_details_step kase: fully_granted_case
 
-        close_sar_case kase: fully_granted_case,
-                       tmm: true
+        close_sar_case_step tmm: true
       end
     end
 
@@ -42,7 +41,7 @@ feature 'Closing a sar' do
 
         go_to_case_details_step kase: fully_granted_case
 
-        close_sar_case kase: fully_granted_case
+        close_sar_case_step
       end
     end
 
@@ -57,8 +56,7 @@ feature 'Closing a sar' do
 
         go_to_case_details_step kase: late_case
 
-        close_sar_case kase: late_case,
-                       timeliness: 'late'
+        close_sar_case_step timeliness: 'late'
       end
     end
   end

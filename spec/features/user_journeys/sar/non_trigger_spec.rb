@@ -36,9 +36,10 @@ feature 'Non-Offender SAR case that does not require clearance' do
 
     add_message_to_case kase: kase,
                         message: 'This. Is. A. Test.',
-                        do_logout: false
+                        do_logout: true
 
-    close_sar_case kase: kase,
+    close_sar_case user: responder,
+                   kase: kase,
                    timeliness: 'in time'
   end
 end

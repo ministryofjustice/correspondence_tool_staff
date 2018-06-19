@@ -112,6 +112,12 @@ module Features
       close_case_step
     end
 
+    def close_sar_case(kase:, user:, tmm: false, timeliness:)
+      login_step user: user
+      go_to_case_details_step kase: kase
+      close_sar_case_step timeliness: timeliness, tmm: tmm
+    end
+
     def add_message_to_case(kase:, message:, do_logout: true)
       expect(cases_show_page).to be_displayed(id: kase.id)
       cases_show_page.add_message_to_case(message)

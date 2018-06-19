@@ -53,9 +53,8 @@ feature 'Non-Offender SAR case requiring clearance' do
                     expected_team: responding_team,
                     expected_status: 'Ready to send'
 
-    login_as responder
-
     close_sar_case kase: kase,
+                   user: responder,
                    timeliness: 'in time'
   end
 end
