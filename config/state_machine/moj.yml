@@ -1100,6 +1100,8 @@ case_types:
               closed:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                update_closure:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
 
 
           ########################### SAR :: STANDARD WORKFLOW :: APPROVER ########################
@@ -1219,13 +1221,19 @@ case_types:
                 respond_and_close:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
+                respond:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                close:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: closed
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
 
               closed:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
-
+                update_closure:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
 
           ########################### SAR :: STANDARD WORKFLOW :: APPROVER ########################
           approver:

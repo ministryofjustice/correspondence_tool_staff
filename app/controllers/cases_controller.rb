@@ -298,7 +298,8 @@ class CasesController < ApplicationController
     if @case.update(close_params)
       @case.respond_and_close(current_user)
       set_permitted_events
-      flash[:notice] = t('notices.case_closed')
+      @close_flash_message = t('notices.case_closed')
+      flash[:notice] = "#{@close_flash_message}. #{ get_edit_close_link }".html_safe
       redirect_to case_path(@case)
     else
       set_permitted_events
@@ -890,6 +891,13 @@ class CasesController < ApplicationController
     view_context.link_to "Undo",
                          unlink_path,
                          { method: :patch, class: 'undo-de-escalate-link'}
+  end
+
+  def get_edit_close_link
+    edit_close_link = edit_closure_case_path(@case)
+    view_context.link_to "Edit case details",
+                         edit_close_link,
+                         { class: "undo-take-on-link" }
   end
 end
 #rubocop:enable Metrics/ClassLength
