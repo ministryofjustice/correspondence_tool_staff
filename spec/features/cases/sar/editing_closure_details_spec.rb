@@ -17,8 +17,8 @@ feature 'editing case closure information' do
 
     login_as manager
     cases_show_page.load(id: kase.id)
-    edit_case_closure_step(kase: kase,
-                           date_responded: 10.business_days.ago,
-                           tmm: true)
+    edit_sar_case_closure_step(kase: kase,
+                               date_responded: 10.business_days.ago,
+                               tmm: true)
   end
 end

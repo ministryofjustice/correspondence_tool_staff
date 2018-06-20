@@ -12,7 +12,7 @@ RSpec.describe CasesController, type: :controller do
     it 'authorizes' do
       expect {
         get :request_amends, params: { id: pending_private_clearance_case.id }
-      } .to require_permission(:request_amends?)
+      } .to require_permission(:execute_request_amends?)
               .with_args(private_officer, pending_private_clearance_case)
     end
 

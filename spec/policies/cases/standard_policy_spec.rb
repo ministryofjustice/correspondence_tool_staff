@@ -4,32 +4,36 @@ describe Case::FOI::StandardPolicy do
   subject { described_class }
 
   # Teams
-  let(:managing_team)     { find_or_create :team_dacu }
-  let(:responding_team)   { create :responding_team }
-  let!(:dacu_disclosure)  { find_or_create :team_dacu_disclosure }
+  let(:managing_team)         { find_or_create :team_dacu }
+  let(:responding_team)       { create :responding_team }
+  let!(:dacu_disclosure)      { find_or_create :team_dacu_disclosure }
 
   # Users
-  let(:manager)           { managing_team.managers.first }
-  let(:responder)         { responding_team.responders.first }
-  let(:press_officer)     { find_or_create :press_officer }
-  let(:private_officer)   { find_or_create :private_officer }
-  let(:disclosure_approver)          { dacu_disclosure.approvers.first }
+  let(:manager)               { managing_team.managers.first }
+  let(:responder)             { responding_team.responders.first }
+  let(:press_officer)         { find_or_create :press_officer }
+  let(:private_officer)       { find_or_create :private_officer }
+  let(:disclosure_specialist) { dacu_disclosure.approvers.first }
 
 # Cases
   # Unflagged
-  let(:unassigned_case)         { create :case }
-  let(:accepted_case)           { create :accepted_case,
-                                        responder: responder,
-                                        manager: manager }
-  let(:pending_dacu_clearance_case)  { create :pending_dacu_clearance_case,
-                                        approver: disclosure_approver }
-  let(:responded_case)          { create :responded_case,
-                                        responder: responder }
-  let(:closed_case)             { create :closed_case,
-                                        responder: responder }
-  let(:case_with_response)      { create :case_with_response,
-                                        responder: responder }
-  let(:approved_case)           { create :approved_case }
+  let(:unassigned_case)               { create :case }
+  let(:accepted_case)                 { create :accepted_case,
+                                                responder: responder,
+                                                manager: manager }
+  let(:pending_dacu_clearance_case)   { create :pending_dacu_clearance_case,
+                                        approver: disclosure_specialist }
+  let(:pending_press_clearance_case)  { create :pending_press_clearance_case,
+                                                press_officer: press_officer }
+  let(:pending_private_clearance_case){  create :pending_private_clearance_case,
+                                                private_officer: private_officer }
+  let(:responded_case)                { create :responded_case,
+                                                responder: responder }
+  let(:closed_case)                   { create :closed_case,
+                                                responder: responder }
+  let(:case_with_response)            { create :case_with_response,
+                                                responder: responder }
+  let(:approved_case)                 { create :approved_case }
   let(:unassigned_case_within_escalation) do
     create :case_within_escalation_deadline
   end
@@ -70,7 +74,7 @@ describe Case::FOI::StandardPolicy do
     it { should     permit(manager,               case_with_response)}
     it { should     permit(manager,               unassigned_case) }
     it { should_not permit(manager,               closed_case) }
-    it { should_not permit(disclosure_approver,   accepted_case) }
+    it { should_not permit(disclosure_specialist, accepted_case) }
     it { should_not permit(press_officer,         accepted_case) }
     it { should_not permit(private_officer,       accepted_case) }
   end
@@ -90,9 +94,20 @@ describe Case::FOI::StandardPolicy do
     it { should     permit(manager, approved_case) }
   end
 
+  permissions :execute_request_amends? do
+    it { should_not permit(responder,             pending_press_clearance_case) }
+    it { should_not permit(disclosure_specialist, pending_press_clearance_case) }
+    it { should     permit(press_officer,         pending_press_clearance_case) }
+    it { should_not permit(private_officer,       pending_press_clearance_case) }
+    it { should_not permit(responder,             pending_private_clearance_case) }
+    it { should_not permit(disclosure_specialist, pending_private_clearance_case) }
+    it { should_not permit(press_officer,         pending_private_clearance_case) }
+    it { should     permit(private_officer,       pending_private_clearance_case) }
+  end
+
   permissions :show? do
-    it { should     permit(manager,             unassigned_case) }
-    it { should     permit(responder,           unassigned_case) }
-    it { should     permit(disclosure_approver, unassigned_case) }
+    it { should     permit(manager,               unassigned_case) }
+    it { should     permit(responder,             unassigned_case) }
+    it { should     permit(disclosure_specialist, unassigned_case) }
   end
 end

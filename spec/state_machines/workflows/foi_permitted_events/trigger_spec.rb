@@ -110,7 +110,8 @@ describe ConfigurableStateMachine::Machine do
                                                                       :destroy_case,
                                                                       :edit_case,
                                                                       :link_a_case,
-                                                                      :remove_linked_case]
+                                                                      :remove_linked_case,
+                                                                      :update_closure]
         end
       end
     end
