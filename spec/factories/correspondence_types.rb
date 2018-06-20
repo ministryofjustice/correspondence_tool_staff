@@ -10,7 +10,7 @@
 #  properties   :jsonb
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :correspondence_type, aliases: [:foi_correspondence_type] do
     name "Freedom of information request"
     abbreviation "FOI"

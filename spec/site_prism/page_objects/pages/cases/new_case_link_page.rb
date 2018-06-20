@@ -17,7 +17,7 @@ module PageObjects
 
         def create_a_new_case_link(kase_number = nil)
           if kase_number.nil?
-            kase = FactoryGirl.create :case, params
+            kase = FactoryBot.create :case, params
             kase_number = kase.number
           end
 

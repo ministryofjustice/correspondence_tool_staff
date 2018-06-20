@@ -10,7 +10,7 @@
 #  seq_id        :integer          not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :report_type do
     sequence(:abbr) { |n| "R#{n}" }
     sequence(:full_name) { |n| "Report #{n}" }

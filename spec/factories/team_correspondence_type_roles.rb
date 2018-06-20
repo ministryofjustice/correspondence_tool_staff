@@ -14,7 +14,7 @@
 #  updated_at             :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :team_correspondence_type_role do
     correspondence_type   { find_or_create :foi_correspondence_type }
     # team_id       BusinessUnit.first.id

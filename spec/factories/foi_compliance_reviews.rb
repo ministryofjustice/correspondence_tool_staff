@@ -28,7 +28,7 @@
 #  appeal_outcome_id    :integer
 #
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :compliance_review,
           class: Case::FOI::ComplianceReview,

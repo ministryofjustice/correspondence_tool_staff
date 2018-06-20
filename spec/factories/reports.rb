@@ -11,7 +11,7 @@
 #  updated_at     :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :report do
     report_type
     period_start { 10.business_days.ago}
