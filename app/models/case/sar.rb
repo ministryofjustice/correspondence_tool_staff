@@ -56,7 +56,8 @@ class Case::SAR < Case::Base
   # The method below is overiding the close method in the case_states.rb file.
   # This is so that the case is closed with the responder's team instead of the manager's team
 
-  def close(current_user)
+  def respond_and_close(current_user)
+    state_machine.respond!(acting_user: current_user, acting_team: self.responding_team)
     state_machine.close!(acting_user: current_user, acting_team: self.responding_team)
   end
 

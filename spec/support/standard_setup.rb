@@ -1,7 +1,7 @@
 class StandardSetup # rubocop:disable Metrics/ClassLength
 
   class << self
-    extend FactoryGirl::Syntax::Methods
+    extend FactoryBot::Syntax::Methods
 
     # Used because of some badly understood issue with Ruby class inheritance /
     # methods. The procs generated for the fixtures above require this
@@ -158,6 +158,11 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
                {received_date: 25.business_days.ago,
                 date_responded: 1.business_days.ago,
                 identifier: 'std_closed_foi_late'}
+                 .merge(attributes))
+      },
+      std_old_closed_foi: ->(attributes={}) {
+        create(:closed_case, :old_without_info_held,
+               {identifier: 'std_old_closed_foi'}
                  .merge(attributes))
       },
       trig_unassigned_foi_accepted: ->(attributes={}) {

@@ -613,33 +613,6 @@ RSpec.describe Case::Base, type: :model do
       end
     end
 
-    describe 'exemptions' do
-      before(:all) do
-        @ncnd = create :exemption, :ncnd, name: 'NCND'
-        @abs_1 = create :exemption, :absolute, name: 'Abs 1', abbreviation: 'abs1'
-        @abs_2 = create :exemption, :absolute, name: 'Abs 2', abbreviation: 'abs2'
-        @qual_1 = create :exemption, :qualified, name: 'Qualified 1', abbreviation: 'qual1'
-        @qual_2 = create :exemption, :qualified, name: 'Qualified 2', abbreviation: 'qual2'
-      end
-
-      after(:all) { CaseClosure::Metadatum.delete_all }
-
-      describe '#exemption_ids=' do
-        it 'replaces exisiting exemptions with ones specified in param hash' do
-          k = create :case, exemptions: [@ncnd, @abs_1]
-          k.exemption_ids = {@ncnd.id.to_s => "1", @abs_2.id.to_s => "1", @abs_1.id.to_s => "1"}
-          expect(k.exemptions).to eq [@ncnd, @abs_1, @abs_2]
-        end
-      end
-
-      describe '#exemption_ids' do
-        it 'returns an array of exemption_ids' do
-          k = create :case, exemptions: [@ncnd, @abs_1]
-          expect(k.exemption_ids).to eq({@ncnd.id.to_s => '1', @abs_1.id.to_s => '1'})
-        end
-      end
-    end
-
     describe 'with exemption scope' do
       before(:all) do
         require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
@@ -678,6 +651,20 @@ RSpec.describe Case::Base, type: :model do
 
     describe '#responding_team' do
       it { should have_one(:responding_team) }
+
+      context 'responding team changed after closure' do
+        it 'returns new responding team' do
+          first_responding_team = create :responding_team
+          last_responding_team = create :responding_team
+          kase = create :closed_case, responding_team: first_responding_team
+          expect(kase.responding_team).to eq first_responding_team
+
+          assignment = kase.responder_assignment
+          AssignNewTeamService.new(manager, {id: assignment.id, case_id: kase.id, team_id: last_responding_team.id }).call
+          kase.reload
+          expect(kase.responding_team).to eq last_responding_team
+        end
+      end
     end
 
     it { should have_one(:managing_assignment)

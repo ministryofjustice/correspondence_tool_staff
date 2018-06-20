@@ -13,7 +13,7 @@
 #  user_id      :integer
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :case_attachment do
     association :case, strategy: :build
     # TODO: The random hex number below isn't strictly true, we should have a

@@ -11,7 +11,7 @@ gem 'devise', '~> 4.4'
 gem 'draper', '3.0.0.pre1'
 gem 'dropzonejs-rails', '~> 0.7.3'
 gem 'foreman', '~> 0.84.0'
-gem 'factory_girl_rails', '~> 4.7.0'
+gem 'factory_bot_rails', '~> 4.10.0'
 gem 'faker', '~> 1.8.7'
 gem 'gov_uk_date_fields', '~> 3.0'
 gem 'govuk_template',         '~> 0.23.0'
@@ -99,7 +99,7 @@ group :development do
   gem 'listen', '~> 3.1.5'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'spring-watcher-listen', '~> 2.0.1'
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem 'web-console'
 end

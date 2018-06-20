@@ -520,28 +520,6 @@ describe Case::BasePolicy do
     it { should_not permit(press_officer,          pending_press_clearance_case) }
   end
 
-  permissions :request_amends? do
-    it { should_not permit(responder,             pending_press_clearance_case) }
-    it { should_not permit(disclosure_specialist, pending_press_clearance_case) }
-    it { should     permit(press_officer,         pending_press_clearance_case) }
-    it { should_not permit(private_officer,       pending_press_clearance_case) }
-    it { should_not permit(responder,             pending_private_clearance_case) }
-    it { should_not permit(disclosure_specialist, pending_private_clearance_case) }
-    it { should_not permit(press_officer,         pending_private_clearance_case) }
-    it { should     permit(private_officer,       pending_private_clearance_case) }
-  end
-
-  permissions :execute_request_amends? do
-    it { should_not permit(responder,             pending_press_clearance_case) }
-    it { should_not permit(disclosure_specialist, pending_press_clearance_case) }
-    it { should     permit(press_officer,         pending_press_clearance_case) }
-    it { should_not permit(private_officer,       pending_press_clearance_case) }
-    it { should_not permit(responder,             pending_private_clearance_case) }
-    it { should_not permit(disclosure_specialist, pending_private_clearance_case) }
-    it { should_not permit(press_officer,         pending_private_clearance_case) }
-    it { should     permit(private_officer,       pending_private_clearance_case) }
-  end
-
   permissions :extend_for_pit? do
     it { should_not permit(responder,             accepted_case) }
     it { should_not permit(manager,               accepted_case) }

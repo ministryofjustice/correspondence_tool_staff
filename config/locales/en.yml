@@ -176,7 +176,6 @@ en:
 
   button:
     assign: Assign to this unit
-    close_case: Close case
     next_page_assign: Next - Assign case
     confirm: Confirm
     feedback: Send feedback
@@ -194,8 +193,8 @@ en:
       case_foi:
         info_held_status_abbreviation: Was the information held?
         requester_type: Requester type
-        refusal_reason_name: What was the outcome?
-        outcome_name: What was the outcome?
+        refusal_reason_abbreviation: What was the outcome?
+        outcome_abbreviation: What was the outcome?
         appeal_outcome_name: What was the appeal outcome?
         flag_for_disclosure_specialists: Flag for disclosure specialists
         type: Type
@@ -344,6 +343,7 @@ en:
     case_closed: You've closed this case
     closure_details_updated: You have updated the closure details for this case.
     response_uploaded: You have uploaded the response for this case.
+    progress_for_clearance: The Disclosure team has been notified this case is ready for clearance
 
   common:
     choose_file: Choose a file
@@ -373,6 +373,7 @@ en:
       header_subject: "Case subject, "
       name: Requester
       postal_address: "Requesters postal address"
+      progress_for_clearance: "Ready for Disclosure clearance"
       received_date: Date received at MOJ
       reason_for_refusal: Outcome
       reassign_case: "Change team member"
@@ -564,6 +565,9 @@ en:
     confirm_respond:
       success: The response has been marked as sent.
     foi:
+      case_details:
+        cannot_update_closure_html: "This is an old case with closure details that can't be edited. If you need to edit this case <a href=\"#new_feedback\">let us know</a>."
+
       close_form:
         close_date: Date response sent
         date_example: For example, 30 1 2017

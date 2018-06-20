@@ -10,7 +10,9 @@ class CorrespondenceTypeSeeder
                 escalation_time_limit: 3,
                 internal_time_limit: 10,
                 external_time_limit: 20,
-                deadline_calculator_class: 'BusinessDays')
+                deadline_calculator_class: 'BusinessDays',
+                default_press_officer: 'correspondence-staff-dev+preston.offman@digital.justice.gov.uk',
+                default_private_officer: 'correspondence-staff-dev+primrose.offord@digital.justice.gov.uk')
 
     rec = CorrespondenceType.find_by(abbreviation: 'SAR')
     rec = CorrespondenceType.new if rec.nil?
@@ -19,6 +21,8 @@ class CorrespondenceTypeSeeder
                 escalation_time_limit: 0,
                 internal_time_limit: 10,
                 external_time_limit: 30,
-                deadline_calculator_class: 'CalendarDays')
+                deadline_calculator_class: 'CalendarDays',
+                default_press_officer: 'correspondence-staff-dev+preston.offman@digital.justice.gov.uk',
+                default_private_officer: 'correspondence-staff-dev+primrose.offord@digital.justice.gov.uk')
   end
 end
