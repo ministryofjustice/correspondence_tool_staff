@@ -4,9 +4,9 @@ describe 'cases/sar/_close_form.html.slim' do
   let(:closed_sar) { create :closed_sar }
 
   it 'renders the close_form partial' do
+    assign(:case, closed_sar)
     render(partial: 'cases/sar/close_form.html.slim',
            locals: { kase: closed_sar.decorate,
-                     form_url: update_closure_case_path(id: closed_sar.id),
                      submit_button: 'Save changes' })
     cases_close_page.load(rendered)
 

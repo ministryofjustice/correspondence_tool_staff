@@ -16,8 +16,8 @@ feature 'Non-Offender SAR case requiring clearance' do
   given(:responding_team)          { responder.responding_teams.first }
   given(:manager)                  { create :disclosure_bmt_user }
   given!(:sar_correspondence_type) { create :sar_correspondence_type }
-  given(:disclosure_specialist) { create :disclosure_specialist }
-  given!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
+  given(:disclosure_specialist)    { create :disclosure_specialist }
+  given!(:team_dacu_disclosure)    { find_or_create :team_dacu_disclosure }
 
 
   before(:all) do
@@ -39,6 +39,10 @@ feature 'Non-Offender SAR case requiring clearance' do
     add_message_to_case kase: kase,
                         message: 'This. Is. A. Test.',
                         do_logout: true
+
+    take_case_on kase: kase,
+                 user: disclosure_specialist,
+                 test_undo: true
 
     progress_to_disclosure_step kase: kase,
                                 user: responder,

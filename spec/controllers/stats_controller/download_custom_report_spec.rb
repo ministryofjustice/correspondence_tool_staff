@@ -20,7 +20,7 @@ RSpec.describe StatsController, type: :controller do
     it 'authorizes' do
       expect { get :download_custom_report, params: { id: report.id } }
         .to require_permission(:can_download_stats?)
-              .with_args(manager, kase)
+              .with_args(manager, Case::Base)
     end
 
     it 'responds with a csv' do
