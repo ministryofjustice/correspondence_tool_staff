@@ -15,9 +15,11 @@
 .clearance-copy
   p
     = "You are clearing the response to: "
+  p
     strong.strong-block
       = @case.subject
-
+  p
+    = t(".approve_message.#{@case.type_abbreviation.downcase}")
 
 = form_tag execute_response_approval_case_path(@case)
   - if @case.allow_event?(current_user, :approve_and_bypass)
@@ -25,3 +27,4 @@
 
   .actions
   = submit_tag 'Clear response', class: 'button'
+

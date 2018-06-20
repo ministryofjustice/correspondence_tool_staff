@@ -479,6 +479,8 @@ en:
 
   cases:
     approve_response_interstitial:
+      approve_message:
+        foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
       clear: Clear response
     bypass_approvals_form:
       press_clearance_reqd: Does Press office need to clear this response?
