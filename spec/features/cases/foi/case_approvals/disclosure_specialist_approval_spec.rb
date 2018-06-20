@@ -13,59 +13,6 @@ feature 'cases requiring clearance by disclosure specialist' do
   given(:team_dacu)                   { find_or_create :team_dacu }
   given(:responder)                   { responding_team.users.first }
 
-  def take_case_on_as_discosure_specialist(kase:, expected_approver:)
-    incoming_cases_page.load
-
-    expect(incoming_cases_page.case_list.size).to eq 1
-    expect(incoming_cases_page.case_list.first.number.text)
-      .to have_content kase.number
-
-    case_list_item = incoming_cases_page.case_list.first
-    expect(case_list_item).to have_no_highlight_row
-    case_list_item.actions.take_on_case.click
-    case_list_item.actions.wait_until_success_message_visible
-    expect(case_list_item.actions.success_message.text)
-      .to include 'Case taken on'
-    expect(case_list_item.highlight_row.size).to eq 3
-    expect(kase.reload.approvers).to include expected_approver
-    case_list_item
-  end
-
-  def undo_take_case_on_as_disclosure_specialist(kase, case_list_item)
-    expect(case_list_item.highlight_row.size).to eq 3
-    case_list_item.actions.undo_assign_link.click
-    case_list_item.actions.wait_until_take_on_case_visible
-    expect(case_list_item).to have_no_highlight_row
-    expect(kase.reload.approvers).to be_blank
-  end
-
-  def de_escalate_case_as_disclosure_specialist(kase, case_list_item)
-    expect(case_list_item).to have_no_highlight_row
-    case_list_item.actions.de_escalate_link.click
-    case_list_item.actions.wait_until_undo_de_escalate_link_visible
-    expect(case_list_item.highlight_row.size).to eq 3
-    expect(kase.reload.approver_assignments).to be_blank
-  end
-
-  def undo_de_escalate_case_as_disclosure_specialist(kase, case_list_item)
-    expect(case_list_item.highlight_row.size).to eq 3
-    case_list_item.actions.undo_de_escalate_link.click
-    case_list_item.actions.wait_until_de_escalate_link_visible
-    expect(case_list_item).to have_no_highlight_row
-    expect(kase.reload.approving_teams).to include team_dacu_disclosure
-  end
-
-  def accept_case_as_kilo(kase)
-    login_as responder
-    assignments_edit_page.load(case_id: kase.id, id: kase.responder_assignment.id)
-    assignments_edit_page.accept_radio.click
-    assignments_edit_page.confirm_button.click
-  end
-
-  def upload_response_as_kilo(kase, kilo)
-    upload_response_with_action_param(kase, kilo, 'upload-flagged')
-  end
-
   def upload_and_approve_response_as_dacu_disclosure_specialist(kase, dd_specialist)
     upload_response_with_action_param(kase, dd_specialist, 'upload-approve')
   end
@@ -94,74 +41,40 @@ feature 'cases requiring clearance by disclosure specialist' do
   end
 
   scenario 'taking_on, undoing and de-escalating a case as a disclosure specialist', js: true do
-    kase = create_and_assign_foi_case user: manager,
-                                      responding_team: responding_team,
-                                      flag_for_disclosure: true
-    set_case_dates_back_by kase, 3.business_days
+    kase = create :case_being_drafted, :flagged,
+                  approving_team: team_dacu_disclosure
 
     login_as disclosure_specialist
 
-    case_list_item = take_case_on_as_discosure_specialist(
-      kase: kase,
-      expected_approver: disclosure_specialist
-    )
-    undo_take_case_on_as_disclosure_specialist(kase, case_list_item)
-    de_escalate_case_as_disclosure_specialist(kase, case_list_item)
-    undo_de_escalate_case_as_disclosure_specialist(kase, case_list_item)
-  end
+    incoming_cases_page.load
+    expect(incoming_cases_page.case_list.size).to eq 1
 
-  scenario 'taking_on, undoing and de-escalating a case as a disclosure specialist', js: true do
-    kase = create_and_assign_foi_case user: manager,
-                                      responding_team: responding_team,
-                                      flag_for_disclosure: true
-    set_case_dates_back_by kase, 3.business_days
-
-    login_as disclosure_specialist
-
-    case_list_item = take_case_on_as_discosure_specialist(
-      kase: kase,
-      expected_approver: disclosure_specialist
-    )
-    undo_take_case_on_as_disclosure_specialist(kase, case_list_item)
-    de_escalate_case_as_disclosure_specialist(kase, case_list_item)
-    undo_de_escalate_case_as_disclosure_specialist(kase, case_list_item)
+    take_on_case_step(kase: kase)
+    undo_taking_case_on_step(kase: kase)
+    de_escalate_case_step(kase: kase)
+    expect(kase.reload.approver_assignments).to be_blank
+    undo_de_escalate_case_step(kase: kase)
   end
 
   scenario 'approving a case as a disclosure specialist not assigned directly to the case', js: true do
-    kase = create_and_assign_foi_case user: manager,
-                                      responding_team: responding_team,
-                                      flag_for_disclosure: true
-    set_case_dates_back_by kase, 5.business_days
-    accept_case_as_kilo(kase)
-    upload_response_as_kilo(kase.reload, responder)
+    kase = create :pending_dacu_clearance_case,
+                  responder: responder,
+                  responding_team: responding_team,
+                  approver: disclosure_specialist
 
     login_as other_disclosure_specialist
-    take_case_on_as_discosure_specialist(
-      kase: kase,
-      expected_approver: other_disclosure_specialist
-    )
     cases_show_page.load(id: kase.id)
-    expect(cases_show_page.actions).to have_clear_case
-    cases_show_page.actions.clear_case.click
-    expect(approve_response_interstitial_page).to be_displayed
-    expect(approve_response_interstitial_page).not_to have_bypass_press_option
-    approve_response_page.submit_button.click
-    expect(kase.reload.current_state).to eq 'awaiting_dispatch'
+    expect(cases_show_page.actions).not_to have_clear_case
   end
 
   scenario 'upload a response and approve case as a disclosure specialist', js: true do
-    kase = create_and_assign_foi_case user: manager,
-                                      responding_team: responding_team,
-                                      flag_for_disclosure: true
-    set_case_dates_back_by kase, 5.business_days
-    accept_case_as_kilo(kase)
-    upload_response_as_kilo(kase.reload, responder)
+    kase = create :pending_dacu_clearance_case,
+                  responder: responder,
+                  responding_team: responding_team,
+                  approver: disclosure_specialist
 
     login_as disclosure_specialist
-    take_case_on_as_discosure_specialist(
-      kase: kase,
-      expected_approver: disclosure_specialist
-    )
+
     cases_show_page.load(id: kase.id)
     expect(cases_show_page.actions).to have_upload_approve
     cases_show_page.actions.upload_approve.click
@@ -178,19 +91,13 @@ feature 'cases requiring clearance by disclosure specialist' do
   end
 
   scenario 'upload a response and remove clearance as a disclosure specialist', js: true do
-    kase = create_and_assign_foi_case user: manager,
-                                      responding_team: responding_team,
-                                      flag_for_disclosure: true
-    set_case_dates_back_by kase, 5.business_days
-    accept_case_as_kilo(kase)
-
-    upload_response_as_kilo(kase.reload, responder)
+    kase = create :pending_dacu_clearance_case,
+                  responder: responder,
+                  responding_team: responding_team,
+                  approver: disclosure_specialist
 
     login_as disclosure_specialist
-    take_case_on_as_discosure_specialist(
-      kase: kase,
-      expected_approver: disclosure_specialist
-    )
+
     cases_show_page.load(id: kase.id)
     expect(cases_show_page.clearance_levels.basic_details.dacu_disclosure.remove_clearance.text).to eq(
       'Remove clearance')
