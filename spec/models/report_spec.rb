@@ -86,7 +86,7 @@ RSpec.describe Report, type: :model do
                              period_end: Date.today,
                              run: true
                            ) }
-    let(:report)         { build_stubbed :r003_report }
+    let(:report)         { create :r003_report }
 
     before do
       expect(Stats::R003BusinessUnitPerformanceReport)
@@ -94,6 +94,11 @@ RSpec.describe Report, type: :model do
     end
 
     it 'instantiates and runs a report' do
+      update_params = { report_data: instance_of(String),
+                        period_start: Date.yesterday,
+                        period_end: Date.today
+      }
+      expect(report).to receive(:update!).with(update_params)
       report.run(*args)
       expect(report_service).to have_received(:run)
     end

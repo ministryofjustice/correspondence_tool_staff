@@ -8,13 +8,13 @@ moj.Modules.CaseClosure = {
 
   $outcomeGroup : $('.js-outcome-group'),
 
-  $outcomeRefusedPartly : $('#case_foi_outcome_name_refused_in_part'),
+  $outcomeRefusedPartly : $('#case_foi_outcome_abbreviation_part'),
 
-  $outcomeRefused : $('#case_foi_outcome_name_refused_in_part, #case_foi_outcome_name_refused_fully'),
+  $outcomeRefused : $('#case_foi_outcome_abbreviation_part, #case_foi_outcome_abbreviation_refused'),
 
   $otherReasons : $('.js-other-reasons'),
 
-  $refusalNCND : $('#case_foi_refusal_reason_name_neither_confirm_nor_deny_ncnd'),
+  $refusalNCND : $('#case_foi_refusal_reason_abbreviation_ncnd'),
 
   $refusalExemptions : $('.js-refusal-exemptions'),
 

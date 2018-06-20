@@ -16,7 +16,7 @@
 #  omit_for_part_refused   :boolean          default(FALSE)
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :exemption, class: CaseClosure::Exemption do
     requires_refusal_reason false
     subtype           'absolute'

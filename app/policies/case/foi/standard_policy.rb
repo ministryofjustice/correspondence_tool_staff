@@ -42,6 +42,15 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
     check_case_can_be_escalated
   end
 
+  def execute_request_amends?
+    clear_failed_checks
+
+    (check_case_is_pending_press_office_clearance &&
+        check_user_is_assigned_press_office_approver) ||
+        (check_case_is_pending_private_office_clearance &&
+            check_user_is_private_office_approver)
+  end
+
   check :case_is_not_assigned_to_press_or_private_office do
     check_case_is_not_assigned_to_private_office ||
       check_case_is_not_assigned_to_press_office

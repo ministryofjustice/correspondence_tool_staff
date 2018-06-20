@@ -75,6 +75,16 @@ module CasesHelper
               close_case_path(@case),
               id: 'action--close-case',
               class: 'button', method: :get
+    when :respond_and_close
+      link_to I18n.t('common.case.close'),
+              respond_and_close_case_path(@case),
+              id: 'action--close-case',
+              class: 'button', method: :get
+    when :progress_for_clearance
+      link_to I18n.t('common.case.progress_for_clearance'),
+              progress_for_clearance_case_path(@case),
+              id: 'action--progress-for-clearance',
+              class: 'button', method: :patch
     end
   end
   #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength

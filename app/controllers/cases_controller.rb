@@ -40,11 +40,14 @@ class CasesController < ApplicationController
                   :flag_for_clearance,
                   :new_response_upload,
                   :process_closure,
+                  :process_respond_and_close,
+                  :progress_for_clearance,
                   :reassign_approver,
                   :remove_clearance,
                   :request_amends,
                   :request_further_clearance,
                   :respond,
+                  :respond_and_close,
                   :show,
                   :update,
                   :unflag_for_clearance,
@@ -280,8 +283,33 @@ class CasesController < ApplicationController
     set_permitted_events
   end
 
+  def respond_and_close
+    authorize @case
+    @case.date_responded = nil
+    set_permitted_events
+    render :close
+  end
+
+
+  def process_respond_and_close
+    authorize @case, :respond_and_close?
+    @case.prepare_for_close
+    close_params = process_closure_params(@case.type_abbreviation)
+    if @case.update(close_params)
+      @case.respond_and_close(current_user)
+      set_permitted_events
+      @close_flash_message = t('notices.case_closed')
+      flash[:notice] = "#{@close_flash_message}. #{ get_edit_close_link }".html_safe
+      redirect_to case_path(@case)
+    else
+      set_permitted_events
+      render :close
+    end
+  end
+
   def process_closure
     authorize @case, :can_close_case?
+
     @case.prepare_for_close
     close_params = process_closure_params(@case.type_abbreviation)
     if @case.update(close_params)
@@ -370,7 +398,11 @@ class CasesController < ApplicationController
       format.js { render 'cases/unflag_for_clearance.js.erb' }
       format.html do
         flash[:notice] = "Case has been de-escalated. #{ get_de_escalated_undo_link }".html_safe
-        redirect_to case_path(@case)
+        if @case.type_abbreviation == 'SAR'
+          redirect_to incoming_cases_path
+        else
+          redirect_to case_path(@case)
+        end
       end
     end
   end
@@ -393,7 +425,7 @@ class CasesController < ApplicationController
   end
 
   def request_amends
-    authorize @case
+    authorize @case, :execute_request_amends?
     @next_step_info = NextStepInfo.new(@case, 'request-amends', current_user)
   end
 
@@ -415,7 +447,11 @@ class CasesController < ApplicationController
   def execute_request_amends
     authorize @case
     CaseRequestAmendsService.new(user: current_user, kase: @case, message: params[:case][:request_amends_comment]).call
-    flash[:notice] = 'You have requested amends to this case\'s response.'
+    if @case.type_abbreviation == 'SAR'
+      flash[:notice] = 'Information Officer has been notified a redraft is needed.'
+    else
+      flash[:notice] = 'You have requested amends to this case\'s response.'
+    end
     redirect_to case_path(@case)
   end
 
@@ -518,6 +554,17 @@ class CasesController < ApplicationController
     end
   end
 
+  def progress_for_clearance
+    authorize @case
+
+    @case.state_machine.progress_for_clearance!(acting_user: current_user,
+                                                acting_team: @case.team_for_user(current_user),
+                                                target_team: @case.approver_assignments.first.team)
+
+    flash[:notice] = t('notices.progress_for_clearance')
+    redirect_to case_path(@case.id)
+  end
+
   private
 
   def set_url
@@ -617,29 +664,51 @@ class CasesController < ApplicationController
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
-    ).merge(refusal_reason_name: missing_info_to_tmm)
+    ).merge(refusal_reason_abbreviation: missing_info_to_tmm)
   end
 
   def missing_info_to_tmm
     if params[:case_sar][:missing_info] == "yes"
       @case.missing_info = true
-      CaseClosure::RefusalReason.tmm.name
+      CaseClosure::RefusalReason.tmm.abbreviation
     elsif params[:case_sar][:missing_info] == "no"
       @case.missing_info = false
     end
   end
 
   def process_foi_closure_params
-    params.require(:case_foi).permit(
+    closure_params = params.require(:case_foi).permit(
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
-      :outcome_name,
+      :outcome_abbreviation,
       :appeal_outcome_name,
-      :refusal_reason_name,
+      :refusal_reason_abbreviation,
       :info_held_status_abbreviation,
-      exemption_ids: params[:case_foi][:exemption_ids].nil? ? nil : params[:case_foi][:exemption_ids].keys
+      exemption_ids: []
     )
+
+    info_held_status = closure_params[:info_held_status_abbreviation]
+    outcome          = closure_params[:outcome_abbreviation]
+    refusal_reason   = closure_params[:refusal_reason_abbreviation]
+
+    unless ClosedCaseValidator.outcome_required?(info_held_status: info_held_status)
+      closure_params.merge!(outcome_id: nil)
+      closure_params.delete(:outcome_abbreviation)
+    end
+
+    unless ClosedCaseValidator.refusal_reason_required?(info_held_status: info_held_status)
+      closure_params.merge!(refusal_reason_id: nil)
+      closure_params.delete(:refusal_reason_abbreviation)
+    end
+
+    unless ClosedCaseValidator.exemption_required?(info_held_status: info_held_status,
+                                                   outcome: outcome,
+                                                   refusal_reason: refusal_reason)
+      closure_params.merge!(exemption_ids: [])
+    end
+
+    closure_params
   end
 
   def create_params(correspondence_type)
@@ -822,6 +891,13 @@ class CasesController < ApplicationController
     view_context.link_to "Undo",
                          unlink_path,
                          { method: :patch, class: 'undo-de-escalate-link'}
+  end
+
+  def get_edit_close_link
+    edit_close_link = edit_closure_case_path(@case)
+    view_context.link_to "Edit case details",
+                         edit_close_link,
+                         { class: "undo-take-on-link" }
   end
 end
 #rubocop:enable Metrics/ClassLength

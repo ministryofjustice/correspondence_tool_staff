@@ -26,7 +26,7 @@ def email_from_name(name)
   "correspondence-staff-dev+#{email_name}@digital.justice.gov.uk"
 end
 
-FactoryGirl.define do
+FactoryBot.define do
   sequence(:manager_name)                     { |n| "Ms Manager #{n}" }
   sequence(:responder_name)                   { |n| "Mr Responder #{n}" }
   sequence(:approver_name)                    { |n| "Ms Approver #{n}" }

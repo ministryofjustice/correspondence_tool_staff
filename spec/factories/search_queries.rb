@@ -15,7 +15,7 @@
 #  filter_type      :string
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :search_query do
     user_id { find_or_create(:manager).id }
     search_text 'Winnie the Pooh'

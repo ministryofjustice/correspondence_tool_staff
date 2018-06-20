@@ -6,13 +6,29 @@ module Stats
   describe R006KiloMap do
 
     it 'produces a kilo map as a csv' do
+
+      dacu_disclosure = BusinessUnit.dacu_disclosure
+      dacu_disclosure.users.map(&:destroy)
+      dacu_disclosure.team_lead = 'Jeremy Corbyn'
+
+      create :manager, full_name: 'Theresa May', email: 'tm@pm.gov.uk', managing_teams: [dacu_disclosure]
+      create :manager, full_name: 'David Cameron', email: 'dc@pm.gov.uk', managing_teams: [dacu_disclosure]
+      create :manager, full_name: 'Gordon Brown', email: 'gb@pm.gov.uk', managing_teams: [dacu_disclosure]
+
       map = R006KiloMap.new
       map.run
+
+
       csv_lines = map.to_csv.split("\n")
+
+      ap csv_lines
+
       expect(csv_lines.shift).to eq header_line
       expect(csv_lines.shift).to match business_group_line
       expect(csv_lines.shift).to match directorate_line
-      expect(csv_lines.shift).to match disclosure_line
+      expect(csv_lines.shift).to eq disclosure_line_1
+      expect(csv_lines.shift).to eq disclosure_line_2
+      expect(csv_lines.shift).to eq disclosure_line_3
       expect(csv_lines.shift).to match operations_line
       expect(csv_lines.shift).to match dacu_directorate_line
       expect(csv_lines.shift).to match dacu_line
@@ -33,8 +49,16 @@ module Stats
       /"",Directorate \d{1,5},"",Director \d{1,5}/
     end
 
-    def disclosure_line
-      /"","",Disclosure,Deputy Director \d{1,5},Hammersmith,dacu.disclosure@localhost,Disclosure Specialist \d{1,5},/
+    def disclosure_line_1
+      %{"","",Disclosure,Jeremy Corbyn,Hammersmith,dacu.disclosure@localhost,David Cameron,dc@pm.gov.uk}
+    end
+
+    def disclosure_line_2
+      %{"","","","","","",Gordon Brown,gb@pm.gov.uk}
+    end
+
+    def disclosure_line_3
+      %{"","","","","","",Theresa May,tm@pm.gov.uk}
     end
 
     def operations_line

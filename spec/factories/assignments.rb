@@ -13,7 +13,7 @@
 #  approved   :boolean          default(FALSE)
 #
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :assignment do
     state 'pending'
