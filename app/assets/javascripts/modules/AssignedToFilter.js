@@ -19,7 +19,7 @@ moj.Modules.AssignedToFilter = {
     getMatchingBusinessUnits: function (searchFor) {
       // Remove any character that is not alphanumeric
       var cleanedTerm = searchFor.replace(/[^a-z0-9+]+/gi, '');
-      var check = new RegExp(cleanedTerm, 'gi');
+      var check = new RegExp(cleanedTerm, 'i');
 
       $('.js-all-business-units').find('.multiple-choice')
       .each(function (index, element) {
