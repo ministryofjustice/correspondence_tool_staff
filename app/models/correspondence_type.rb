@@ -51,7 +51,15 @@ class CorrespondenceType < ApplicationRecord
     find_by!(abbreviation: 'SAR')
   end
 
+  def self.ico_foi
+    find_by!(abbreviation: 'ICO_FOI')
+  end
+
+  def self.ico_sar
+    find_by!(abbreviation: 'ICO_SAR')
+  end
+
   def abbreviation_and_name
-    "#{abbreviation} - #{name}"
+    "#{abbreviation.tr('_', '-')} - #{name}"
   end
 end

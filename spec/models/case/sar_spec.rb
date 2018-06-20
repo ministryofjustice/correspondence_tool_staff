@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 describe Case::SAR do
+
+  it { should validate_presence_of(:subject)         }
+
+  describe '#subject' do
+    it { should validate_length_of(:subject).is_at_most(100) }
+  end
+
+
   context 'validates that SAR-specific fields are not blank' do
     it 'is not valid' do
 
@@ -181,6 +189,13 @@ describe Case::SAR do
         sar_case.update! name: '', subject_full_name: 'Doug'
         expect(sar_case.name).to eq 'Doug'
       end
+    end
+  end
+
+  describe '#requires_flag_for_disclosure_specialists?' do
+    it 'returns true' do
+      kase = create :sar_case
+      expect(kase.requires_flag_for_disclosure_specialists?).to be true
     end
   end
 end

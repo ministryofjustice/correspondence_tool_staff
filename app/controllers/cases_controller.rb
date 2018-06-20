@@ -713,8 +713,14 @@ class CasesController < ApplicationController
 
   def create_params(correspondence_type)
     case correspondence_type
-    when 'foi' then create_foi_params
-    when 'sar' then create_sar_params
+      when 'foi'
+        create_foi_params
+      when 'sar'
+        create_sar_params
+      when 'ico_foi'
+        create_ico_foi_params
+      when 'ico_sar'
+        create_ico_sar_params
     end
   end
 
@@ -751,6 +757,22 @@ class CasesController < ApplicationController
       :reply_method,
       uploaded_request_files: [],
     ).merge(type: "Case::SAR")
+  end
+
+  def create_ico_foi_params
+    params.require(:case_ico_foi).permit(
+      :name,
+      :subject,
+      :received_date_dd, :received_date_mm, :received_date_yyyy
+    ).merge(type: "Case::ICO::FOI")
+  end
+
+  def create_ico_sar_params
+    params.require(:case_ico_sar).permit(
+        :name,
+        :subject,
+        :received_date_dd, :received_date_mm, :received_date_yyyy
+    ).merge(type: "Case::ICO::SAR")
   end
 
   def edit_params(correspondence_type)
@@ -865,10 +887,12 @@ class CasesController < ApplicationController
   # sensible.
   def correspondence_types_map
     @correspondence_types_map ||= {
-      foi: [Case::FOI::Standard,
-            Case::FOI::TimelinessReview,
-            Case::FOI::ComplianceReview],
-      sar: [Case::SAR],
+      foi:      [Case::FOI::Standard,
+                 Case::FOI::TimelinessReview,
+                 Case::FOI::ComplianceReview],
+      sar:      [Case::SAR],
+      ico_foi:  [Case::ICO::FOI],
+      ico_sar:  [Case::ICO::SAR]
     }.with_indifferent_access
   end
 
@@ -881,8 +905,12 @@ class CasesController < ApplicationController
       else
         @permitted_correspondence_types = [CorrespondenceType.foi]
       end
+
+      if FeatureSet.ico.enabled?
+        @permitted_correspondence_types += current_user.managing_teams.first.correspondence_types.order(:name)
+      end
     end
-    @permitted_correspondence_types
+    @permitted_correspondence_types.uniq!.sort!
   end
 
 

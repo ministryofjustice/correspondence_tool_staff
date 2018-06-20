@@ -6,6 +6,12 @@ describe Case::FOI::Standard do
   let(:no_postal_or_email) { build :case, postal_address: nil, email: nil }
   let(:no_email)           { build :case, email: nil                      }
 
+  it { should validate_presence_of(:subject)         }
+
+  describe '#subject' do
+    it { should validate_length_of(:subject).is_at_most(100) }
+  end
+
   context 'without a postal or email address' do
     it 'is invalid' do
       expect(no_postal_or_email).not_to be_valid
