@@ -10,7 +10,7 @@
 #  updated_at :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :team_property do
     team_id       33
     key           'area'

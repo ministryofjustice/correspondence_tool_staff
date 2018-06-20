@@ -1,4 +1,4 @@
-module FactoryGirl
+module FactoryBot
   module Strategy
     class Find
       def association(runner)
@@ -32,7 +32,7 @@ module FactoryGirl
 
     class FindOrCreate
       def initialize
-        @strategy = FactoryGirl.strategy_by_name(:find).new
+        @strategy = FactoryBot.strategy_by_name(:find).new
       end
 
       delegate :association, to: :@strategy
@@ -41,7 +41,7 @@ module FactoryGirl
         found_object = @strategy.result(evaluation)
 
         if found_object.nil?
-          @strategy = FactoryGirl.strategy_by_name(:create).new
+          @strategy = FactoryBot.strategy_by_name(:create).new
           @strategy.result(evaluation)
         else
           found_object

@@ -28,7 +28,7 @@
 #  appeal_outcome_id    :integer
 #
 
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :foi_case, aliases: [:case], class: Case::FOI::Standard do
     transient do

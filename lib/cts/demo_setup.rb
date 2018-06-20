@@ -4,7 +4,7 @@ require 'timecop'
 module CTS
   class DemoSetup
 
-    include FactoryGirl::Syntax::Methods
+    include FactoryBot::Syntax::Methods
 
     def initialize(number)
       @real_time = Time.now
