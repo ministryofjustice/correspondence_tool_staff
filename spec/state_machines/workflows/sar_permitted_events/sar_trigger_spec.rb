@@ -178,7 +178,9 @@ describe ConfigurableStateMachine::Machine do
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'awaiting_dispatch'
           expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
+                                                                        :close,
                                                                         :reassign_user,
+                                                                        :respond,
                                                                         :respond_and_close]
         end
       end
@@ -188,7 +190,8 @@ describe ConfigurableStateMachine::Machine do
           k = create :closed_trigger_sar, :flagged_accepted_sar
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'closed'
-          expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case]
+          expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
+                                                                        :update_closure]
         end
       end
     end

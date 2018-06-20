@@ -41,8 +41,7 @@ class Case::SARPolicy < Case::BasePolicy
 
   def respond_and_close?
     clear_failed_checks
-    self.case.drafting? &&
-        user.responding_teams.include?(self.case.responding_team)
+      user.responding_teams.include?(self.case.responding_team)
   end
 
   def show?
