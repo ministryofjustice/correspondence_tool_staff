@@ -131,14 +131,15 @@ feature "Downloading stats(csv) from the system" do
   end
 
   def download_r004_report
-    stats_index_page.reports.fourth.action_link.click
+    save_and_open_page
+    stats_index_page.reports.fifth.action_link.click
     expect(page.response_headers['Content-Disposition'])
         .to match(/filename="r004_cabinet_office_report.csv"/)
     stats_index_page.load
   end
 
   def download_r005_report
-    stats_index_page.reports.third.action_link.click
+    stats_index_page.reports.fourth.action_link.click
     expect(page.response_headers['Content-Disposition'])
         .to match(/filename="r005_monthly_performance_report.csv"/)
     stats_index_page.load

@@ -27,9 +27,19 @@ RSpec.describe StatsController, type: :controller do
       expect(assigns(:report)).to be_new_record
     end
 
-    it 'sets @custom_reports' do
+    it 'sets @custom_reports_foi' do
       get :custom
-      expect(assigns(:custom_reports)).to eq ReportType.custom.all
+      expect(assigns(:custom_reports_foi)).to eq ReportType.custom.foi
+    end
+
+    it 'sets @custom_reports_sar' do
+      get :custom
+      expect(assigns(:custom_reports_sar)).to eq ReportType.custom.sar
+    end
+
+    it 'sets @custom_reports_sar' do
+      get :custom
+      expect(assigns(:correspondence_types)).to eq CorrespondenceType.all
     end
 
     it 'renders the template' do
