@@ -44,11 +44,11 @@ FactoryBot.define do
       approving_team { find_or_create :team_dacu_disclosure }
     end
 
-    to_state          { self.case.current_state ||  'unassigned' }
-    event             'flag_for_clearance'
-    acting_user_id    { manager.id }
-    acting_team_id    { managing_team.id }
-    target_team_id    { approving_team.id }
+    to_state       { self.case.current_state ||  'unassigned' }
+    event          'flag_for_clearance'
+    acting_user_id { manager.id }
+    acting_team_id { managing_team.id }
+    target_team_id { approving_team.id }
   end
 
   factory :unflag_case_for_clearance_transition, parent: :case_transition do
@@ -58,12 +58,11 @@ FactoryBot.define do
       approving_team { find_or_create :team_dacu_disclosure }
     end
 
-    to_state          { self.case.current_state }
-    event             'unflag_for_clearance'
-    acting_user_id           { manager.id }
-    acting_team_id    { managing_team.id }
-    target_team_id    { approving_team.id }
-
+    to_state       { self.case.current_state }
+    event          'unflag_for_clearance'
+    acting_user_id        { manager.id }
+    acting_team_id { managing_team.id }
+    target_team_id { approving_team.id }
   end
 
 
@@ -74,11 +73,11 @@ FactoryBot.define do
       responding_team { create :responding_team }
     end
 
-    to_state           'awaiting_responder'
-    event              'assign_responder'
-    acting_user_id     { manager.id }
-    acting_team_id     { managing_team.id }
-    target_team_id     { responding_team.id }
+    to_state       'awaiting_responder'
+    event          'assign_responder'
+    acting_user_id { manager.id }
+    acting_team_id { managing_team.id }
+    target_team_id { responding_team.id }
   end
 
   factory :case_transition_accept_responder_assignment, parent: :case_transition do
@@ -92,11 +91,11 @@ FactoryBot.define do
       responding_team { user.responding_teams.first }
     end
 
-    to_state           'unassigned'
-    event              'reject_responder_assignment'
-    acting_user_id     { user.id }
-    acting_team_id     { responding_team.id }
-    message            { Faker::Hipster.sentence }
+    to_state       'unassigned'
+    event          'reject_responder_assignment'
+    acting_user_id { user.id }
+    acting_team_id { responding_team.id }
+    message        { Faker::Hipster.sentence }
   end
 
   factory :case_transition_add_responses, parent: :case_transition do
@@ -105,11 +104,11 @@ FactoryBot.define do
       responding_team { responder.responding_teams.first }
     end
 
-    to_state 'awaiting_dispatch'
-    acting_user_id     { responder.id }
-    acting_team_id     { responding_team.id }
-    filenames          ['file1.pdf', 'file2.pdf']
-    event 'add_responses'
+    to_state       'awaiting_dispatch'
+    acting_user_id { responder.id }
+    acting_team_id { responding_team.id }
+    filenames      ['file1.pdf', 'file2.pdf']
+    event          'add_responses'
   end
 
   factory :case_transition_pending_dacu_clearance, parent: :case_transition do
@@ -118,11 +117,12 @@ FactoryBot.define do
       responding_team { responder.responding_teams.first }
     end
 
-    to_state 'pending_dacu_clearance'
-    acting_user_id      { responder.id }
-    acting_team_id      { responding_team.id }
-    filenames           ['file1.pdf', 'file2.pdf']
-    event 'add_response_to_flagged_case'
+    association    :case, factory: [:case, :flagged]
+    to_state       'pending_dacu_clearance'
+    acting_user_id { responder.id }
+    acting_team_id { responding_team.id }
+    filenames      ['file1.pdf', 'file2.pdf']
+    event          'add_response_to_flagged_case'
   end
 
   factory :case_transition_approve, parent: :case_transition do
@@ -130,10 +130,11 @@ FactoryBot.define do
       approver       { self.case.approvers.first }
     end
 
-    to_state       'awaiting_dispatch'
-    acting_user    { approver }
-    acting_team    { find_or_create :team_dacu_disclosure }
-    event          'approve'
+    association :case, factory: [:case, :flagged]
+    to_state    'awaiting_dispatch'
+    acting_user { approver }
+    acting_team { find_or_create :team_dacu_disclosure }
+    event       'approve'
   end
 
   factory :case_transition_approve_for_press_office, parent: :case_transition do
@@ -141,10 +142,11 @@ FactoryBot.define do
       approver       { self.case.approvers.first }
     end
 
-    to_state        'pending_press_office_clearance'
-    acting_user     { approver }
-    acting_team     { find_or_create :team_press_office }
-    event           'approve'
+    association :case, factory: [:case, :flagged, :press_office]
+    to_state    'pending_press_office_clearance'
+    acting_user { approver }
+    acting_team { find_or_create :team_press_office }
+    event       'approve'
   end
 
   factory :case_transition_approve_for_private_office, parent: :case_transition do
@@ -152,10 +154,11 @@ FactoryBot.define do
       approver       { self.case.approvers.first }
     end
 
-    to_state       'pending_private_office_clearance'
-    acting_user    { approver }
-    acting_team    { find_or_create :team_private_office }
-    event          'approve'
+    association :case, factory: [:case, :flagged, :private_office]
+    to_state    'pending_private_office_clearance'
+    acting_user { approver }
+    acting_team { find_or_create :team_private_office }
+    event       'approve'
   end
 
   factory :case_transition_respond, parent: :case_transition do
@@ -174,16 +177,16 @@ FactoryBot.define do
 
   factory :case_transition_further_clearance, parent: :case_transition do
     transient do
-      manager       { create :manager }
-      managing_team { manager.managing_teams.first }
-      responder     { create :responder }
+      manager         { create :manager }
+      managing_team   { manager.managing_teams.first }
+      responder       { create :responder }
       responding_team { responder.responding_teams.first }
     end
 
-    to_state 'drafting'
-    event 'request_further_clearance'
-    acting_user_id      { manager.id }
-    acting_team_id      { managing_team.id }
+    to_state       'drafting'
+    event          'request_further_clearance'
+    acting_user_id  { manager.id }
+    acting_team_id  { managing_team.id }
 
   end
 
@@ -193,11 +196,11 @@ FactoryBot.define do
       responding_team { responder.responding_teams.first }
     end
 
-    to_state 'awaiting_dispatch'
-    event 'remove_response'
-    acting_user_id      { responder.id }
-    acting_team_id      { responding_team.id }
-    filenames           { 'file1.txt' }
+    to_state       'awaiting_dispatch'
+    event          'remove_response'
+    acting_user_id { responder.id }
+    acting_team_id { responding_team.id }
+    filenames      { 'file1.txt' }
   end
 
   factory :case_transition_close, parent: :case_transition do
@@ -206,11 +209,11 @@ FactoryBot.define do
   end
 
   factory :case_transition_add_message_to_case, parent: :case_transition do
-    event               'add_message_to_case'
-    to_state            { self.case.current_state }
-    message             Faker::ChuckNorris.fact
-    acting_user_id      { self.case.responder.id }
-    acting_team_id      { self.case.responding_team.id }
+    event          'add_message_to_case'
+    to_state       { self.case.current_state }
+    message        Faker::ChuckNorris.fact
+    acting_user_id { self.case.responder.id }
+    acting_team_id { self.case.responding_team.id }
   end
 
   factory :case_transition_reassign_user, parent: :case_transition do
@@ -255,11 +258,12 @@ FactoryBot.define do
 
   factory :case_transition_progress_for_clearance, parent: :case_transition do
     transient do
-      responder        { create :responder }
-      responding_team  { responder.teams.first }
-      disclosure       { find_or_create :team_dacu_disclosure}
+      responder       { create :responder }
+      responding_team { responder.teams.first }
+      disclosure      { find_or_create :team_dacu_disclosure}
     end
 
+    association    :case, factory: [:sar_case, :flagged]
     event          'progress_for_clearance'
     to_state       { 'pending_dacu_clearance' }
     acting_user_id { responder.id }
