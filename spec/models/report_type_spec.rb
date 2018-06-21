@@ -31,6 +31,38 @@ RSpec.describe ReportType, type: :model do
     end
   end
 
+  describe 'foi scope' do
+
+    before do
+      ReportType.destroy_all
+    end
+
+    it 'returns only reports associated with fois' do
+      create :report_type
+      custom_report_1 = create :report_type, foi: true
+      custom_report_2 = create :report_type, foi: false
+      expect(ReportType.foi).to match_array [ custom_report_1 ]
+      expect(ReportType.foi).not_to include custom_report_2
+
+    end
+  end
+
+  describe 'sar scope' do
+
+    before do
+      ReportType.destroy_all
+    end
+
+    it 'returns only reports associated with sars' do
+      create :report_type
+      custom_report_1 = create :report_type, sar: true
+      custom_report_2 = create :report_type, sar: false
+      expect(ReportType.sar).to match_array [ custom_report_1 ]
+      expect(ReportType.sar).not_to include custom_report_2 
+
+    end
+  end
+
   describe '#class_constant' do
     it 'returns the report class name as a constant' do
       r003 = create :r003_report_type

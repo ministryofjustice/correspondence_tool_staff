@@ -72,9 +72,14 @@ module Stats
           expect(assigns(:report)).to be_new_record
 
         end
-        it 'sets @custom_reports' do
+        it 'sets @custom_reports_foi' do
           post :create_custom_report, params: params
-          expect(assigns(:custom_reports)).to eq ReportType.custom.all
+          expect(assigns(:custom_reports_foi)).to eq ReportType.custom.foi
+        end
+
+        it 'sets @custom_reports_sar' do
+          post :create_custom_report, params: params
+          expect(assigns(:custom_reports_sar)).to eq ReportType.custom.sar
         end
 
         it 'renders the template' do
