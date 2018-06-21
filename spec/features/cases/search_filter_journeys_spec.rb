@@ -66,17 +66,14 @@ feature 'filters whittle down search results' do
     scenario 'filter by internal review for compliance, timeliness', js: true do
       login_step user: @setup.disclosure_bmt_user
       search_for(search_phrase: 'prison guards', num_expected_results: 8)
-      cases_search_page.filter_on('type', 'foi_ir_compliance', 'foi_ir_timeliness')
-      expect(cases_search_page.case_numbers).to match_array expected_case_numbers( :std_unassigned_irc,
-                                                                                   :std_unassigned_irt,
-                                                                                   :std_closed_irc,
-                                                                                   :std_closed_irt)
-
-      cases_search_page.open_filter(:type)
-      expect(cases_search_page.type_filter_panel.foi_ir_compliance_checkbox)
-        .to be_checked
-      expect(cases_search_page.type_filter_panel.foi_ir_timeliness_checkbox)
-        .to be_checked
+      filter_on_type_step(page: cases_search_page,
+                          types: ['foi_ir_compliance', 'foi_ir_timeliness'],
+                          expected_cases: [
+                            @setup.std_unassigned_irc,
+                            @setup.std_unassigned_irt,
+                            @setup.std_closed_irc,
+                            @setup.std_closed_irt
+                          ])
 
       crumb_text = 'FOI - Internal review for compliance + 1 more'
       cases_search_page.filter_crumb_for(crumb_text).click
@@ -95,14 +92,13 @@ feature 'filters whittle down search results' do
     scenario 'filter by standard FOI and trigger', js: true do
       login_step user: @setup.disclosure_bmt_user
       search_for(search_phrase: 'prison guards', num_expected_results: 8)
-      cases_search_page.filter_on('type', 'foi_standard', 'foi_trigger')
-      expect(cases_search_page.case_numbers).to match_array expected_case_numbers( :trig_responded_foi, :trig_closed_foi)
-
-      cases_search_page.open_filter(:type)
-      expect(cases_search_page.type_filter_panel.foi_standard_checkbox)
-        .to be_checked
-      expect(cases_search_page.type_filter_panel.foi_trigger_checkbox)
-        .to be_checked
+      filter_on_type_step(page: cases_search_page,
+                          types: ['foi_standard'],
+                          sensitivity: ['trigger'],
+                          expected_cases: [
+                            @setup.trig_responded_foi,
+                            @setup.trig_closed_foi,
+                          ])
 
       expect(cases_search_page.filter_crumb_for('FOI - Standard')).to be_present
       cases_search_page.filter_crumb_for('Trigger').click
@@ -133,24 +129,28 @@ feature 'filters whittle down search results' do
     scenario 'selecting both sensitivies then going back and unchecking one of them', js: true do
       login_step user: @setup.disclosure_bmt_user
       search_for(search_phrase: 'prison guards', num_expected_results: 8)
-      cases_search_page.filter_on('type', 'foi_non_trigger', 'foi_trigger')
-
-      expect(cases_search_page.case_numbers).to match_array expected_case_numbers(  :std_draft_foi,
-                                                                                    :std_closed_foi,
-                                                                                    :trig_responded_foi,
-                                                                                    :trig_closed_foi,
-                                                                                    :std_unassigned_irc,
-                                                                                    :std_unassigned_irt,
-                                                                                    :std_closed_irc,
-                                                                                    :std_closed_irt)
+      filter_on_type_step(page: cases_search_page,
+                          sensitivity: ['non_trigger', 'trigger'],
+                          expected_cases: [
+                            @setup.std_draft_foi,
+                            @setup.std_closed_foi,
+                            @setup.trig_responded_foi,
+                            @setup.trig_closed_foi,
+                            @setup.std_unassigned_irc,
+                            @setup.std_unassigned_irt,
+                            @setup.std_closed_irc,
+                            @setup.std_closed_irt,
+                          ])
 
       expect(cases_search_page.filter_crumb_for('Non-trigger + 1 more'))
         .to be_present
 
       # Now uncheck non-trigger
-      cases_search_page.remove_filter_on('type', 'foi_non_trigger')
-      expect(cases_search_page.case_numbers).to  match_array expected_case_numbers( :trig_responded_foi,
-                                                                                    :trig_closed_foi)
+      cases_search_page.remove_filter_on('type', 'non_trigger')
+      expect(cases_search_page.case_numbers).to match_array expected_case_numbers(
+                                                              :trig_responded_foi,
+                                                              :trig_closed_foi
+                                                            )
 
 
     end
@@ -222,7 +222,7 @@ feature 'filters whittle down search results' do
       search_for(search_phrase: 'prison guards', num_expected_results: 8)
 
       cases_search_page.filter_on('status', 'open')
-      cases_search_page.filter_on('type', 'foi_standard', 'foi_trigger')
+      cases_search_page.filter_on('type', 'foi_standard', 'trigger')
 
       cases_search_page.filter_on_exemptions(common: %w{ s40 } )
 
@@ -290,7 +290,7 @@ feature 'filters whittle down search results' do
       expect(cases_search_page.filter_crumb_for('Main responding_team')).not_to be_present
       expect(cases_search_page.filter_crumb_for(@from_to_date         )).not_to be_present
 
-      cases_search_page.filter_on('type', 'foi_standard', 'foi_trigger')
+      cases_search_page.filter_on('type', 'foi_standard', 'trigger')
       cases_search_page.filter_crumb_for('Open').click
 
       expect(SearchQuery.count).to eq 9

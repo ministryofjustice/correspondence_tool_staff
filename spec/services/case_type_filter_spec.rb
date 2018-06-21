@@ -4,17 +4,34 @@ describe CaseTypeFilter do
   before :all do
     DbHousekeeping.clean
     @setup = StandardSetup.new(only_cases: [
-      :std_unassigned_foi,
-      :trig_unassigned_foi,
-      :std_unassigned_irc,
-      :std_unassigned_irt
-    ])
+                                 :sar_noff_unassigned,
+                                 :std_unassigned_foi,
+                                 :trig_unassigned_foi,
+                                 :std_unassigned_irc,
+                                 :std_unassigned_irt
+                               ])
   end
 
   after(:all) { DbHousekeeping.clean }
 
   let(:case_type_filter)  { CaseTypeFilter.new search_query,
                                                Case::Base }
+
+  describe '.available_case_types' do
+    subject { CaseTypeFilter.available_case_types }
+
+    it { should include 'foi-standard' => 'FOI - Standard' }
+    it { should include 'foi-ir-compliance' => 'FOI - Internal review for compliance' }
+    it { should include 'foi-ir-timeliness' => 'FOI - Internal review for timeliness' }
+    it { should include 'sar-non-offender' => 'SAR - Non-offender' }
+  end
+
+  describe '.available_sensitivities' do
+    subject { CaseTypeFilter.available_sensitivities }
+
+    it { should include 'non-trigger' => 'Non-trigger' }
+    it { should include 'trigger' => 'Trigger' }
+  end
 
   describe '#applied?' do
     subject { case_type_filter }
@@ -100,6 +117,20 @@ describe CaseTypeFilter do
                            ]
       end
     end
+
+    describe 'filtering for SAR cases' do
+      let(:search_query)      { create :search_query,
+                                       filter_case_type: ['sar-non-offender'] }
+
+      it 'returns the correct list of cases' do
+        results = case_type_filter.call
+        expect(results).to match_array [
+                             @setup.trig_unassigned_foi,
+                             @setup.std_unassigned_foi,
+                           ]
+      end
+    end
+
   end
 
   describe '#crumbs' do

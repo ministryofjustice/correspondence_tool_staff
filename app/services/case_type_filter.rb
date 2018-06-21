@@ -13,6 +13,7 @@ class CaseTypeFilter
       'foi-standard'      => I18n.t('filters.case_types.foi-standard'),
       'foi-ir-compliance' => I18n.t('filters.case_types.foi-ir-compliance'),
       'foi-ir-timeliness' => I18n.t('filters.case_types.foi-ir-timeliness'),
+      'sar-non-offender'  => I18n.t('filters.case_types.sar-non-offender'),
     }
   end
 
@@ -102,6 +103,7 @@ class CaseTypeFilter
       when 'foi-standard'      then records.standard_foi
       when 'foi-ir-compliance' then records.internal_review_compliance
       when 'foi-ir-timeliness' then records.internal_review_timeliness
+      when 'sar-non-offender'  then records.non_offender_sar
       else
         raise NameError.new("unknown case type filter '#{filter}")
       end
