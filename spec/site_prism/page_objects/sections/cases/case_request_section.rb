@@ -1,3 +1,5 @@
+require 'page_objects/sections/cases/case_attachment_section'
+
 module PageObjects
   module Sections
     module Cases

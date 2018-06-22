@@ -180,43 +180,4 @@ FactoryBot.define do
     message                     'info held other, clarification required'
   end
 
-  trait :flagged_sar do
-    transient do
-      approving_team { find_or_create :approving_team }
-      disclosure_assignment_state { 'pending' }
-    end
-
-    after(:create) do |kase, evaluator|
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.approving_team,
-             state: 'pending'
-      create :flag_case_for_clearance_transition,
-             case: kase,
-             acting_team_id: evaluator.approving_team.id
-      kase.update(workflow: 'trigger')
-      kase.reload
-    end
-  end
-
-  trait :flagged_accepted_sar do
-    transient do
-      approver { create :approver }
-      approving_team { approver.approving_team }
-      disclosure_assignment_state { 'accepted' }
-    end
-
-    after(:create) do |kase, evaluator|
-      create :approver_assignment,
-             case: kase,
-             user: evaluator.approver,
-             team: evaluator.approving_team,
-             state: 'accepted'
-      create :flag_case_for_clearance_transition,
-             case: kase,
-             target_team_id: evaluator.approving_team.id
-      kase.update(workflow: 'trigger')
-    end
-  end
-
 end

@@ -340,6 +340,7 @@ en:
 
 
   notices:
+    case_cleared: "The Information Officer has been notified that the response is ready to send."
     case_closed: You've closed this case
     closure_details_updated: You have updated the closure details for this case.
     response_uploaded: You have uploaded the response for this case.
@@ -478,6 +479,9 @@ en:
 
   cases:
     approve_response_interstitial:
+      approve_message:
+        foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
+        sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
       clear: Clear response
     bypass_approvals_form:
       press_clearance_reqd: Does Press office need to clear this response?

@@ -14,10 +14,10 @@ feature 'Non-Offender SAR case requiring clearance' do
   include Features::Interactions
   given(:responder)                { create :responder }
   given(:responding_team)          { responder.responding_teams.first }
-  given(:manager)                  { create :disclosure_bmt_user }
-  given!(:sar_correspondence_type) { create :sar_correspondence_type }
   given(:disclosure_specialist)    { create :disclosure_specialist }
+  given(:manager)                  { create :disclosure_bmt_user }
   given!(:team_dacu_disclosure)    { find_or_create :team_dacu_disclosure }
+  given!(:sar_correspondence_type) { create :sar_correspondence_type }
 
 
   before(:all) do
