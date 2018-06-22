@@ -74,6 +74,8 @@ class Case::Base < ApplicationRecord
   scope :closed, ->       { where(current_state: 'closed').order(last_transitioned_at: :desc) }
   scope :standard_foi, -> { where(type: 'Case::FOI::Standard') }
 
+  scope :non_offender_sar, -> { where(type: 'Case::SAR') }
+
   scope :with_teams, -> (teams) do
     includes(:assignments)
       .where(assignments: { team: teams,

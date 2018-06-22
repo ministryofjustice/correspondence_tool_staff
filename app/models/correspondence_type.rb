@@ -33,8 +33,11 @@ class CorrespondenceType < ApplicationRecord
                         :deadline_calculator_class,
                         on: :create
 
-  has_many :cases,
-           class_name: 'Case::Base'
+  has_many :correspondence_type_roles,
+           -> { distinct },
+           class_name: 'TeamCorrespondenceTypeRole'
+  has_many :teams,
+           through: :correspondence_type_roles
 
   def self.foi
     find_by!(abbreviation: 'FOI')
