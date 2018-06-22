@@ -90,6 +90,7 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers
   config.include Devise::Test::ControllerHelpers, type: :view
   config.include Capybara::DSL, type: :view
+  config.include ViewSpecHelpers, type: :view
   config.after(:example, type: :view) do |example|
     if example.exception
       now = DateTime.now
