@@ -83,6 +83,16 @@ feature 'filters whittle down search results' do
                           types: ['sar_non_offender'],
                           expected_cases: [@setup.sar_noff_draft])
     end
+
+    scenario 'user without sar permissions is filtering', js: true do
+      foi             = find_or_create(:foi_correspondence_type)
+      responding_team = create(:business_unit, correspondence_types: [foi])
+      user            = create(:user, responding_teams: [responding_team])
+
+      login_step user: user
+      open_cases_page.open_filter('type')
+      expect(open_cases_page.type_filter_panel).to have_no_sar_non_offender_checkbox
+    end
   end
 
   context 'open case status filter' do

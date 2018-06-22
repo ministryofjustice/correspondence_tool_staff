@@ -18,12 +18,25 @@ describe CaseTypeFilter do
                                                Case::Base }
 
   describe '.available_case_types' do
-    subject { CaseTypeFilter.available_case_types }
+    let(:user) { create :disclosure_bmt_user }
+    subject    { CaseTypeFilter.available_case_types(user) }
 
     it { should include 'foi-standard' => 'FOI - Standard' }
     it { should include 'foi-ir-compliance' => 'FOI - Internal review for compliance' }
     it { should include 'foi-ir-timeliness' => 'FOI - Internal review for timeliness' }
     it { should include 'sar-non-offender' => 'SAR - Non-offender' }
+
+    context 'for user who is assigned to a team that only handles FOIs' do
+      let(:foi)             { find_or_create(:foi_correspondence_type) }
+      let(:responding_team) { create(:business_unit, correspondence_types: [foi]) }
+      let(:user)            { create(:user, responding_teams: [responding_team]) }
+      subject    { CaseTypeFilter.available_case_types(user) }
+
+      it { should include 'foi-standard' => 'FOI - Standard' }
+      it { should include 'foi-ir-compliance' => 'FOI - Internal review for compliance' }
+      it { should include 'foi-ir-timeliness' => 'FOI - Internal review for timeliness' }
+      it { should_not include 'sar-non-offender' => 'SAR - Non-offender' }
+    end
   end
 
   describe '.available_sensitivities' do

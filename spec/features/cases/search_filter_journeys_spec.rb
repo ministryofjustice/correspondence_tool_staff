@@ -6,6 +6,7 @@ require File.join(Rails.root, 'spec', 'site_prism', 'support', 'helper_methods')
 feature 'filters whittle down search results' do
   include Features::Interactions
   include PageObjects::Pages::Support
+
   before(:all) do
     CaseClosure::MetadataSeeder.seed!(verbose: false)
 
@@ -17,7 +18,8 @@ feature 'filters whittle down search results' do
       :std_unassigned_irc,
       :std_unassigned_irt,
       :std_closed_irc,
-      :std_closed_irt
+      :std_closed_irt,
+      :sar_noff_draft
     ]
 
     @setup = StandardSetup.new(only_cases: @all_cases)
@@ -38,12 +40,15 @@ feature 'filters whittle down search results' do
   context 'status filter' do
     scenario 'filter by status: open', js: true do
       login_step user: @setup.disclosure_bmt_user
-      search_for(search_phrase: 'prison guards', num_expected_results: 8)
+      search_for(search_phrase: 'prison guards', num_expected_results: 9)
       cases_search_page.filter_on('status', 'open')
-      expect(cases_search_page.case_numbers).to match_array expected_case_numbers(:std_draft_foi,
-                                                                                  :trig_responded_foi,
-                                                                                  :std_unassigned_irc,
-                                                                                  :std_unassigned_irt)
+      expect(cases_search_page.case_numbers).to match_array expected_case_numbers(
+                                                              :std_draft_foi,
+                                                              :trig_responded_foi,
+                                                              :std_unassigned_irc,
+                                                              :std_unassigned_irt,
+                                                              :sar_noff_draft,
+                                                            )
 
       cases_search_page.open_filter(:status)
       expect(cases_search_page.status_filter_panel.open_checkbox)
@@ -65,7 +70,7 @@ feature 'filters whittle down search results' do
   context 'type filter' do
     scenario 'filter by internal review for compliance, timeliness', js: true do
       login_step user: @setup.disclosure_bmt_user
-      search_for(search_phrase: 'prison guards', num_expected_results: 8)
+      search_for(search_phrase: 'prison guards', num_expected_results: 9)
       filter_on_type_step(page: cases_search_page,
                           types: ['foi_ir_compliance', 'foi_ir_timeliness'],
                           expected_cases: [
@@ -91,7 +96,7 @@ feature 'filters whittle down search results' do
 
     scenario 'filter by standard FOI and trigger', js: true do
       login_step user: @setup.disclosure_bmt_user
-      search_for(search_phrase: 'prison guards', num_expected_results: 8)
+      search_for(search_phrase: 'prison guards', num_expected_results: 9)
       filter_on_type_step(page: cases_search_page,
                           types: ['foi_standard'],
                           sensitivity: ['trigger'],
@@ -128,7 +133,7 @@ feature 'filters whittle down search results' do
 
     scenario 'selecting both sensitivies then going back and unchecking one of them', js: true do
       login_step user: @setup.disclosure_bmt_user
-      search_for(search_phrase: 'prison guards', num_expected_results: 8)
+      search_for(search_phrase: 'prison guards', num_expected_results: 9)
       filter_on_type_step(page: cases_search_page,
                           sensitivity: ['non_trigger', 'trigger'],
                           expected_cases: [
@@ -140,6 +145,7 @@ feature 'filters whittle down search results' do
                             @setup.std_unassigned_irt,
                             @setup.std_closed_irc,
                             @setup.std_closed_irt,
+                            @setup.sar_noff_draft,
                           ])
 
       expect(cases_search_page.filter_crumb_for('Non-trigger + 1 more'))
@@ -153,6 +159,25 @@ feature 'filters whittle down search results' do
                                                             )
 
 
+    end
+
+    scenario 'filter by non-offender SAR', js: true do
+      login_step user: @setup.disclosure_bmt_user
+      search_for(search_phrase: 'prison guards', num_expected_results: 9)
+
+      filter_on_type_step(page: cases_search_page,
+                          types: ['sar_non_offender'],
+                          expected_cases: [@setup.sar_noff_draft])
+    end
+
+    scenario 'user without sar permissions is filtering', js: true do
+      foi             = find_or_create(:foi_correspondence_type)
+      responding_team = create(:business_unit, correspondence_types: [foi])
+      user            = create(:user, responding_teams: [responding_team])
+
+      login_step user: user
+      cases_search_page.open_filter('type')
+      expect(cases_search_page.type_filter_panel).to have_no_sar_non_offender_checkbox
     end
   end
 
@@ -168,7 +193,7 @@ feature 'filters whittle down search results' do
     context 'specifying one exemtpion' do
       scenario 'selects all cases closed with that exemption', js: true do
         login_step user: @setup.disclosure_bmt_user
-        search_for(search_phrase: 'prison guards', num_expected_results: 11)
+        search_for(search_phrase: 'prison guards', num_expected_results: 12)
         cases_search_page.filter_on_exemptions(common: %w{ s40 } )
         expect(cases_search_page.case_numbers).to match_array [ @ex2.number, @ex4.number ]
 
@@ -194,7 +219,7 @@ feature 'filters whittle down search results' do
     context 'specifying multiple exemptions', js: true do
       scenario 'selects only cases that match ALL specified exemption' do
         login_step user: @setup.disclosure_bmt_user
-        search_for(search_phrase: 'prison guards', num_expected_results: 11)
+        search_for(search_phrase: 'prison guards', num_expected_results: 12)
         cases_search_page.filter_on_exemptions(common: %w{ s21 s22 } )
         expect(cases_search_page.case_numbers).to match_array [ @ex1.number  ]
 
@@ -219,7 +244,7 @@ feature 'filters whittle down search results' do
   context 'all filters set' do
     before do
       login_step user: @setup.disclosure_bmt_user
-      search_for(search_phrase: 'prison guards', num_expected_results: 8)
+      search_for(search_phrase: 'prison guards', num_expected_results: 9)
 
       cases_search_page.filter_on('status', 'open')
       cases_search_page.filter_on('type', 'foi_standard', 'trigger')

@@ -8,14 +8,25 @@ class CaseTypeFilter
     }
   end
 
-  def self.available_case_types
-    types = {
-      'foi-standard'      => I18n.t('filters.case_types.foi-standard'),
-      'foi-ir-compliance' => I18n.t('filters.case_types.foi-ir-compliance'),
-      'foi-ir-timeliness' => I18n.t('filters.case_types.foi-ir-timeliness'),
-    }
-    if FeatureSet.sars.enabled?
-      types.merge!('sar-non-offender' => I18n.t('filters.case_types.sar-non-offender'))
+  def self.available_case_types(user)
+    user_types = user.teams
+                   .collect { |team| team.correspondence_types.pluck(:abbreviation) }
+                   .flatten
+                   .uniq
+    types = {}
+
+    if "FOI".in?(user_types)
+      types.merge!(
+        'foi-standard'      => I18n.t('filters.case_types.foi-standard'),
+        'foi-ir-compliance' => I18n.t('filters.case_types.foi-ir-compliance'),
+        'foi-ir-timeliness' => I18n.t('filters.case_types.foi-ir-timeliness'),
+      )
+    end
+
+    if "SAR".in?(user_types) && FeatureSet.sars.enabled?
+      types.merge!(
+        'sar-non-offender' => I18n.t('filters.case_types.sar-non-offender')
+      )
     end
 
     types
