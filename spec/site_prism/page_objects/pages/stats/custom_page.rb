@@ -13,7 +13,11 @@ module PageObjects
           element :download_link, 'a'
         end
 
-        section :report_types, '.report-types' do
+        section :report_types_foi, '.report-types-foi' do
+          elements :report, 'label'
+        end
+
+        section :report_types_sar, '.report-types-sar' do
           elements :report, 'label'
         end
 
