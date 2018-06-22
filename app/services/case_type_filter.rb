@@ -9,12 +9,16 @@ class CaseTypeFilter
   end
 
   def self.available_case_types
-    {
+    types = {
       'foi-standard'      => I18n.t('filters.case_types.foi-standard'),
       'foi-ir-compliance' => I18n.t('filters.case_types.foi-ir-compliance'),
       'foi-ir-timeliness' => I18n.t('filters.case_types.foi-ir-timeliness'),
-      'sar-non-offender'  => I18n.t('filters.case_types.sar-non-offender'),
     }
+    if FeatureSet.sars.enabled?
+      types.merge!('sar-non-offender' => I18n.t('filters.case_types.sar-non-offender'))
+    end
+
+    types
   end
 
   def self.filter_attributes
