@@ -43,7 +43,7 @@ end
 def close_sar_case_step(timeliness: 'in time', tmm: false)
   cases_show_page.actions.close_case.click
 
-  cases_close_page.fill_in_date_responded(0.business_days.ago)
+  cases_close_page.fill_in_date_responded(Date.today)
 
   if tmm
     cases_close_page.missing_info.yes.click
@@ -57,7 +57,7 @@ def close_sar_case_step(timeliness: 'in time', tmm: false)
   expect(cases_show_page.notice.text).to eq("You've closed this case. Edit case details")
 
   expect(show_page.response_details.date_responded.data.text)
-    .to eq 0.business_days.ago.strftime(Settings.default_date_format)
+    .to eq Date.today.strftime(Settings.default_date_format)
   expect(show_page.response_details.timeliness.data.text)
     .to eq "Answered #{timeliness}"
   expect(show_page.response_details.time_taken.data.text).to match(/\d+ working days/)
