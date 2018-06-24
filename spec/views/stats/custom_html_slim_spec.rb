@@ -11,7 +11,7 @@ describe 'stats/custom.html.slim', type: :view do
 
   let(:new_report) { Report.new }
 
-  xit 'has a heading' do
+  it 'has a heading' do
     assign(:report, new_report)
     assign(:custom_reports_foi, reports)
     assign(:custom_reports_sar, reports)
@@ -35,7 +35,7 @@ describe 'stats/custom.html.slim', type: :view do
 
     page = stats_custom_page
 
-    expect(page.report_types_foi.report.size).to eq reports.size
+    expect(page.report_types_foi.reports.size).to eq reports.size
   end
 
   it 'has a start/end date' do
