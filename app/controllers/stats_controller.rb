@@ -32,7 +32,9 @@ class StatsController < ApplicationController
     @custom_reports_foi = ReportType.custom.foi
     @custom_reports_sar = ReportType.custom.sar
     @correspondence_types = CorrespondenceType.all
-
+    if FeatureSet.sars.disabled?
+      @report.correspondence_type = 'FOI'
+    end
   end
 
   def create_custom_report
