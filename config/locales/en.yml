@@ -207,6 +207,9 @@ en:
         flag_for_disclosure_specialists: Flag for disclosure specialist?
         subject_type: Who is the person the information is being requested about?
         third_party: Is the information being requested on someone's behalf?
+      report:
+        correspondence_type: What type of a report do you need?
+        report_type_id: What should this report cover?
       state_selector:
         selected_states: Filter by status
       search_query:

@@ -11,16 +11,16 @@
 
 = form_for @report, url: stats_create_custom_report_path do |f|
   - if FeatureSet.sars.enabled?
-    .correspondence_types
+    #js-correspondence-types
       = f.radio_button_fieldset :correspondence_type,
               choices: @correspondence_types, value_method: :abbreviation, text_method: :name
 
-  .report-types-foi
+  #js-report-types-foi
     = f.radio_button_fieldset :report_type_id,
             choices: @custom_reports_foi, value_method: :id, text_method: :full_name
 
   - if FeatureSet.sars.enabled?
-    .report-types-sar
+    #js-report-types-sar
       = f.radio_button_fieldset :report_type_id,
               choices: @custom_reports_sar, value_method: :id, text_method: :full_name
 

@@ -13,12 +13,19 @@ module PageObjects
           element :download_link, 'a'
         end
 
-        section :report_types_foi, '.report-types-foi' do
-          elements :report, 'label'
+        section :correspondence_type, '#js-correspondence-types' do
+          elements :correspondence_types, 'label'
         end
 
-        section :report_types_sar, '.report-types-sar' do
-          elements :report, 'label'
+        element :foi_report, '#report_correspondence_type_foi'
+        element :sar_report, '#report_correspondence_type_sar'
+
+        section :report_types_foi, '#js-report-types-foi' do
+          elements :reports, 'label'
+        end
+
+        section :report_types_sar, '#js-report-types-sar' do
+          elements :reports, 'label'
         end
 
         section :period_start, '.period-start' do
@@ -48,11 +55,16 @@ module PageObjects
           period_end.year.set(date.year)
         end
 
+        def choose_type_of_correspondence(correspondence_type)
+          make_radio_button_choice("report_correspondence_type_#{correspondence_type}")
+        end
+
         def choose_type_of_report(report_id)
           make_radio_button_choice("report_report_type_id_#{report_id}")
         end
 
-        def fill_in_form(report_id, period_start_date, period_end_date )
+        def fill_in_form(correspondence_type = 'foi', report_id, period_start_date, period_end_date )
+          choose_type_of_correspondence(correspondence_type.downcase)
           choose_type_of_report(report_id)
           fill_in_period_start(period_start_date)
           fill_in_period_end(period_end_date)
