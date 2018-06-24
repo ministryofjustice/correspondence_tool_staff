@@ -23,13 +23,17 @@
     #js-report-types-sar
       = f.radio_button_fieldset :report_type_id,
               choices: @custom_reports_sar, value_method: :id, text_method: :full_name
+  fieldset
+    legend
+      .heading-small
+        = t('.timescale_copy')
 
-  .form-group.period-start
-    = f.gov_uk_date_field :period_start, {legend_text: t('stats.common.period_start'),
-            form_hint_text: t('cases.new.received_date_copy')}
+    .period-start
+      = f.gov_uk_date_field :period_start, {legend_text: t('stats.common.period_start'),
+              form_hint_text: t('cases.new.received_date_copy')}
 
-  .form-group.period-end
-    = f.gov_uk_date_field :period_end, {legend_text: t('stats.common.period_end'),
-            form_hint_text: t('cases.new.received_date_copy')}
+    .period-end
+      = f.gov_uk_date_field :period_end, {legend_text: t('stats.common.period_end'),
+              form_hint_text: t('cases.new.received_date_copy')}
 
   = f.submit 'Create custom report', class:'button'

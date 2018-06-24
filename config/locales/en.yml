@@ -651,6 +651,8 @@ en:
     common:
       period_start: Date from
       period_end: Date to
+    custom:
+      timescale_copy: Which time period should this report cover?
   teams:
     business_unit_list:
       team_members: Team members
