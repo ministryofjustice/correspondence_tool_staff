@@ -478,6 +478,11 @@ RSpec.describe Case::Base, type: :model do
     it { should_not allow_value('foobar.com').for :email  }
   end
 
+  describe '#subject' do 
+    it { should validate_length_of(:subject).is_at_most(100) }
+  end
+
+
   describe '#type' do
     it { should validate_exclusion_of(:type).in_array(['Case'])
                     .with_message("Case type can't be blank")}
