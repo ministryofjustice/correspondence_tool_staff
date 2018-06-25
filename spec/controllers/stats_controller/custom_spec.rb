@@ -48,22 +48,12 @@ RSpec.describe StatsController, type: :controller do
     end
 
     context 'setting default correspondence type' do
-      before do
-        # override whatever is in the settings file with these settings
-        Settings.enabled_features.sars = Config::Options.new({
-                                                             :"Local" => false,
-                                                             :"Host-dev" => false,
-                                                             :"Host-demo" => false,
-                                                             :"Host-staging" => false,
-                                                             :"Host-production" => false
-                                                         })
-      end
       it 'sets the correspondence type to FOI if sars is not enabled' do
+        allow(FeatureSet).to receive(:sars).and_return(double 'FeatureSet-Sars', enabled?: false, disabled?: true)
         get :custom
         expect(assigns(:report).correspondence_type).to eq 'FOI'
       end
     end
-
 
   end
 end
