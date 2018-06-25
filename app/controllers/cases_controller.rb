@@ -865,30 +865,24 @@ class CasesController < ApplicationController
   # sensible.
   def correspondence_types_map
     @correspondence_types_map ||= {
-      foi:      [Case::FOI::Standard,
-                 Case::FOI::TimelinessReview,
-                 Case::FOI::ComplianceReview],
-      sar:      [Case::SAR],
-      ico_foi:  [Case::ICO::FOI],
-      ico_sar:  [Case::ICO::SAR]
+      foi:  [Case::FOI::Standard,
+             Case::FOI::TimelinessReview,
+             Case::FOI::ComplianceReview],
+      sar:  [Case::SAR],
+      ico:  [Case::ICO],
     }.with_indifferent_access
   end
 
 
   def permitted_correspondence_types
-    if @permitted_correspondence_types.nil?
-      if FeatureSet.sars.enabled?
-        @permitted_correspondence_types =
-          current_user.managing_teams.first.correspondence_types.order(:name)
-      else
-        @permitted_correspondence_types = [CorrespondenceType.foi]
-      end
-
-      if FeatureSet.ico.enabled?
-        @permitted_correspondence_types += current_user.managing_teams.first.correspondence_types.order(:name)
-      end
-    end
-    @permitted_correspondence_types.uniq!.sort!
+    # Use the intermediary variable "types" to update
+    # @permitted_correspondence_types so that it's changed as an atomic
+    # operation ... we don't want to possibly allow SAR or ICO types to be
+    # permitted at any point.
+    types = current_user.managing_teams.first.correspondence_types.order(:name).to_a
+    types.delete(CorrespondenceType.sar) unless FeatureSet.sars.enabled?
+    types.delete(CorrespondenceType.ico) unless FeatureSet.ico.enabled?
+    @permitted_correspondence_types = types
   end
 
 

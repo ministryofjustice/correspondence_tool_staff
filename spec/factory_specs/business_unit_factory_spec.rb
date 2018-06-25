@@ -9,7 +9,7 @@ describe 'Business Unit factories' do
       it 'creates responding team with responding team correspondence_type role for FOI' do
         bu = create :business_unit
         expect(bu.role).to eq 'responder'
-        expect(bu.correspondence_type_roles.size).to eq 2
+        expect(bu.correspondence_type_roles.size).to eq 3
         tcr = bu.correspondence_type_roles.first
         expect(tcr).to match_tcr_attrs(:foi, :view, :respond)
       end
@@ -52,15 +52,21 @@ describe 'Business Unit factories' do
         bu = create :responding_team
 
         expect(bu.role).to eq 'responder'
-        expect(bu.correspondence_type_roles.size).to eq 2
+        expect(bu.correspondence_type_roles.size).to eq 3
         foi_tcr = bu.correspondence_type_roles.detect do |r|
           r.correspondence_type_id == CorrespondenceType.foi.id
         end
         expect(foi_tcr).to match_tcr_attrs(:foi, :view, :respond)
+
         sar_tcr = bu.correspondence_type_roles.detect do |r|
           r.correspondence_type_id == CorrespondenceType.sar.id
         end
         expect(sar_tcr).to match_tcr_attrs(:sar, :view, :respond)
+
+        ico_tcr = bu.correspondence_type_roles.detect do |r|
+          r.correspondence_type_id == CorrespondenceType.ico.id
+        end
+        expect(ico_tcr).to match_tcr_attrs(:ico, :view, :respond)
       end
     end
   end
