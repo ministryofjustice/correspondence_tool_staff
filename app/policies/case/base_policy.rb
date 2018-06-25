@@ -30,7 +30,8 @@ class Case::BasePolicy < ApplicationPolicy
     CASE_TYPES = [
         Case::FOI::Standard,
         Case::SAR,
-        Case::ICO::Base
+        Case::ICO::FOI,
+        Case::ICO::SAR,
     ]
 
     def initialize(user, scope)

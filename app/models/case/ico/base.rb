@@ -5,6 +5,12 @@ class Case::ICO::Base < Case::Base
                  internal_deadline: :date,
                  external_deadline: :date
 
+  class << self
+    def type_abbreviation
+      'ICO'
+    end
+  end
+
   def sent_by_email?
     true
   end
@@ -12,7 +18,4 @@ class Case::ICO::Base < Case::Base
   def requires_flag_for_disclosure_specialists?
     false
   end
-
-
-
 end

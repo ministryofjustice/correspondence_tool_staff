@@ -1,4 +1,4 @@
-= form_for kase, as: kase.param_type, url: cases_path do |f|
+= form_for kase, as: :case_ico, url: cases_path do |f|
   = hidden_field_tag 'correspondence_type', @correspondence_type_abbreviation
   = f.text_field :name
   = f.text_field :subject

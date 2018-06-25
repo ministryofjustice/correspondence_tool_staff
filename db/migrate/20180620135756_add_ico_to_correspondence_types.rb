@@ -1,27 +1,35 @@
 class AddIcoToCorrespondenceTypes < ActiveRecord::Migration[5.0]
+  class CorrespondenceType < ActiveRecord::Base
+    jsonb_accessor :properties,
+                   internal_time_limit: :integer,
+                   external_time_limit: :integer,
+                   escalation_time_limit: :integer,
+                   deadline_calculator_class: :string,
+                   default_press_officer: :string,
+                   default_private_officer: :string
+  end
+
+  class TeamCorrespondenceTypeRole < ActiveRecord::Base
+  end
+
   def up
-    require File.join(Rails.root, 'db', 'seeders', 'correspondence_type_seeder')
-    CorrespondenceTypeSeeder.new.seed!
-
-    ico_ids = [
-      CorrespondenceType.ico_foi.id,
-      CorrespondenceType.ico_sar.id
-    ]
-
+    ico = CorrespondenceType.create!(name: 'Information Commissioner Office appeal.',
+                                     abbreviation: 'ICO',
+                                     escalation_time_limit: 0,
+                                     internal_time_limit: 10,
+                                     external_time_limit: 30,
+                                     deadline_calculator_class: 'CalendarDays')
     BusinessUnit.all.each do | bu|
-      existing_correspondence_type_ids = bu.correspondence_type_ids
-      bu.correspondence_type_ids = existing_correspondence_type_ids + ico_ids
-
+      bu.correspondence_type_ids += [ico.id]
     end
   end
 
-
   def down
-    cts = CorrespondenceType.where(abbreviation: %w{ ICO_SAR ICO_FOI } )
-    if cts.any?
-      join_recs = TeamCorrespondenceTypeRole.where(correspondence_type_id: cts.map(&:id))
-      join_recs.map(&:destroy)
-    end
-    cts.map(&:destroy)
+    ico = CorrespondenceType.find_by(abbreviation: 'ICO')
+
+    join_recs = TeamCorrespondenceTypeRole.where(correspondence_type_id: [ico.id])
+    join_recs.map(&:destroy)
+
+    ico.destroy
   end
 end

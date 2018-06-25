@@ -4,11 +4,6 @@ describe Case::SAR do
 
   it { should validate_presence_of(:subject)         }
 
-  describe '#subject' do
-    it { should validate_length_of(:subject).is_at_most(100) }
-  end
-
-
   context 'validates that SAR-specific fields are not blank' do
     it 'is not valid' do
 

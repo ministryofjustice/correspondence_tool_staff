@@ -26,27 +26,15 @@ class CorrespondenceTypeSeeder
                 default_press_officer: 'correspondence-staff-dev+preston.offman@digital.justice.gov.uk',
                 default_private_officer: 'correspondence-staff-dev+primrose.offord@digital.justice.gov.uk')
 
-    rec = CorrespondenceType.find_by(abbreviation: 'ICO_FOI')
+    rec = CorrespondenceType.find_by(abbreviation: 'ICO')
     rec = CorrespondenceType.new if rec.nil?
-    rec.update!(name: 'ICO appeal for FOI case',
-                abbreviation: 'ICO_FOI',
+    rec.update!(name: 'Information Commissioner Office appeal.',
+                abbreviation: 'ICO',
                 escalation_time_limit: 0,
                 internal_time_limit: 10,
                 external_time_limit: 30,
-                deadline_calculator_class: 'CalendarDays',
-                default_press_officer: 'correspondence-staff-dev+preston.offman@digital.justice.gov.uk',
-                default_private_officer: 'correspondence-staff-dev+primrose.offord@digital.justice.gov.uk')
+                deadline_calculator_class: 'CalendarDays')
 
-    rec = CorrespondenceType.find_by(abbreviation: 'ICO_SAR')
-    rec = CorrespondenceType.new if rec.nil?
-    rec.update!(name: 'ICO appeal for SAR case',
-                abbreviation: 'ICO_SAR',
-                escalation_time_limit: 0,
-                internal_time_limit: 10,
-                external_time_limit: 30,
-                deadline_calculator_class: 'CalendarDays',
-                default_press_officer: 'correspondence-staff-dev+preston.offman@digital.justice.gov.uk',
-                default_private_officer: 'correspondence-staff-dev+primrose.offord@digital.justice.gov.uk')
   end
   #rubocop:enable Metrics/MethodLength
 end

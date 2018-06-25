@@ -70,8 +70,9 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe 'mandatory attributes' do
-    it { should validate_presence_of(:received_date)   }
-    it { should validate_presence_of(:type)            }
+    it { should validate_presence_of(:received_date) }
+    it { should validate_presence_of(:type)          }
+    it { should validate_presence_of(:subject)       }
   end
 
   describe 'workflow validation' do
