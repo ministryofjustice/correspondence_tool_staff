@@ -196,8 +196,8 @@ module Stats
         it 'outputs results as a csv lines' do
           Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
             super_header = %q{"","","","",} +
-                %q{Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,} +
-                %q{Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,} +
+                %q{Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,} +
+                %q{Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,} +
                 %q{Overall,Overall,Overall,Overall,Overall,Overall}
             header = %q{Business group,Directorate,Business unit,Responsible,} +
                 %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
@@ -368,8 +368,8 @@ module Stats
         it 'outputs results as a csv lines' do
           Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
             super_header = %q{"","","","",} +
-              %q{Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,Non-trigger FOIs,} +
-              %q{Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,Trigger FOIs,} +
+              %q{Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,} +
+              %q{Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,} +
               %q{Overall,Overall,Overall,Overall,Overall,Overall,} +
               %q{Business unit,Business unit,Business unit,Business unit,Business unit,Business unit}
             header = %q{Business group,Directorate,Business unit,Responsible,} +

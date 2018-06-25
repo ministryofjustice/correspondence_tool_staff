@@ -27,7 +27,7 @@ hr
             = "Action"
       tbody
         - @reports.each do |report|
-          - if FeatureSet.sars.disabled? && report.abbr == 'R103'
+          - if FeatureSet.sars.disabled? && report.abbr =~ /^R10\d$/   # the 100 series refer to SARS reports
             next
           - else
             tr
