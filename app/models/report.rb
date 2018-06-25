@@ -13,6 +13,8 @@
 
 class Report < ApplicationRecord
 
+  attr_accessor :correspondence_type
+
   validates_presence_of :report_type_id,
                         :period_start,
                         :period_end

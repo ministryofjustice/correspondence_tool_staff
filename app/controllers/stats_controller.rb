@@ -38,7 +38,8 @@ class StatsController < ApplicationController
   end
 
   def create_custom_report
-
+    puts ">>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<"
+    ap params
     @report = Report.new(create_custom_params)
 
     if @report.valid?
@@ -47,6 +48,10 @@ class StatsController < ApplicationController
       flash[:download] =  "Your custom report has been created. #{view_context.link_to 'Download', stats_download_custom_report_path(id: @report.id)}"
       redirect_to stats_custom_path
     else
+      if create_custom_params[:correspondence_type].blank?
+        @report.errors.add(:correspondence_type, :blank)
+        @report.errors.delete(:report_type_id)
+      end
       @correspondence_types = CorrespondenceType.all
       @custom_reports_foi = ReportType.custom.foi
       @custom_reports_sar = ReportType.custom.sar
@@ -73,6 +78,7 @@ class StatsController < ApplicationController
 
   def create_custom_params
     params.require(:report).permit(
+      :correspondence_type,
       :report_type_id,
       :period_start_dd, :period_start_mm, :period_start_yyyy,
       :period_end_dd, :period_end_mm, :period_end_yyyy,
