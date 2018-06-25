@@ -23,6 +23,17 @@ describe CorrespondenceType, type: :model do
   it { should have_attributes(default_press_officer: nil,
                               default_private_officer: nil)}
 
+  describe 'teams' do
+    it 'lists teams that can handle this correspondence type' do
+      ct1    = create(:correspondence_type, name: 'ct1', abbreviation: 'ct1')
+      ct2    = create(:correspondence_type, name: 'ct2', abbreviation: 'ct2')
+      team1a = create(:business_unit, correspondence_types: [ct1])
+      team1b = create(:business_unit, correspondence_types: [ct1])
+      _team2 = create(:business_unit, correspondence_types: [ct2])
+      expect(ct1.teams).to eq [team1a, team1b]
+    end
+  end
+
   describe 'deadline_calculator_class' do
     it { should validate_presence_of(:deadline_calculator_class) }
     it 'allows the value CalendarDays' do

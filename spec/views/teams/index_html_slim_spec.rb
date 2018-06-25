@@ -4,10 +4,6 @@ describe 'teams/index.html.slim', type: :view do
 
   let(:manager)   { create :manager }
 
-  def login_as(user)
-    allow(view).to receive(:current_user).and_return(user)
-  end
-
   before(:each) do
     @bg_2 = create :business_group, name: 'HMPPS',
                    lead: create(:team_lead, value: 'John Smith')

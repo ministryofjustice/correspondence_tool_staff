@@ -642,6 +642,7 @@ en:
       foi-standard: 'FOI - Standard'
       foi-ir-compliance: 'FOI - Internal review for compliance'
       foi-ir-timeliness: 'FOI - Internal review for timeliness'
+      sar-non-offender: 'SAR - Non-offender'
 
   stats:
     common:

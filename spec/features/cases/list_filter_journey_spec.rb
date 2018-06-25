@@ -18,6 +18,7 @@ feature 'filters whittle down search results' do
       std_unassigned_irt: { received_date: 2.business_days.ago },
       std_closed_irc:     { received_date: 17.business_days.ago },
       std_closed_irt:     { received_date: 16.business_days.ago },
+      sar_noff_draft:     { received_date: 9.business_days.ago },
     }
     @setup = StandardSetup.new(only_cases: @all_cases)
   end
@@ -30,36 +31,26 @@ feature 'filters whittle down search results' do
     scenario 'filter by internal review for compliance, timeliness', js: true do
       login_step user: @setup.disclosure_bmt_user
       expect(open_cases_page).to be_displayed
-      expect(open_cases_page.case_numbers).to eq expected_case_numbers(
-                                                   :std_draft_foi_late,
-                                                   :trig_responded_foi,
-                                                   :std_draft_foi,
-                                                   :std_unassigned_irt,
-                                                   :std_unassigned_irc,
-                                                 )
-      open_cases_page.filter_on('type', 'foi_standard', 'foi_trigger')
+      expect(open_cases_page.case_numbers).to match_array expected_case_numbers(
+                                                            :std_draft_foi_late,
+                                                            :trig_responded_foi,
+                                                            :std_draft_foi,
+                                                            :std_unassigned_irt,
+                                                            :std_unassigned_irc,
+                                                            :sar_noff_draft,
+                                                          )
 
-      expect(open_cases_page.case_numbers).to eq [@setup.trig_responded_foi.number]
-      expect(open_cases_page.search_results_count.text).to eq '1 case found'
-      open_cases_page.open_filter(:type)
-      expect(open_cases_page.type_filter_panel.foi_standard_checkbox)
-        .to be_checked
-      expect(open_cases_page.type_filter_panel.foi_trigger_checkbox)
-        .to be_checked
+      filter_on_type_step(page: open_cases_page,
+                          types: ['foi_standard'],
+                          sensitivity: ['trigger'],
+                          expected_cases: [@setup.trig_responded_foi])
 
       # Now uncheck non-trigger and check trigger
-      open_cases_page.remove_filter_on('type', 'foi_trigger')
-      open_cases_page.filter_on('type', 'foi_non_trigger')
-
-      expect(open_cases_page.case_numbers).to eq [
-                                                @setup.std_draft_foi_late.number,
-                                                @setup.std_draft_foi.number,
-                                              ]
-      open_cases_page.open_filter(:type)
-      expect(open_cases_page.type_filter_panel.foi_non_trigger_checkbox)
-        .to be_checked
-      expect(open_cases_page.type_filter_panel.foi_trigger_checkbox)
-        .not_to be_checked
+      open_cases_page.remove_filter_on('type', 'trigger')
+      filter_on_type_step(page: open_cases_page,
+                          types: ['non_trigger'],
+                          expected_cases: [@setup.std_draft_foi_late,
+                                           @setup.std_draft_foi])
 
       # Remove type filter using the crumb
       open_cases_page.filter_crumb_for('FOI - Standard').click
@@ -68,11 +59,39 @@ feature 'filters whittle down search results' do
         .to match_array expected_case_numbers :std_draft_foi,
                                               :std_draft_foi_late,
                                               :std_unassigned_irc,
-                                              :std_unassigned_irt
+                                              :std_unassigned_irt,
+                                              :sar_noff_draft
 
       open_cases_page.open_filter(:type)
-      expect(open_cases_page.type_filter_panel.foi_non_trigger_checkbox)
+      expect(open_cases_page.type_filter_panel.non_trigger_checkbox)
         .to be_checked
+    end
+
+    scenario 'filter by non-offender SAR', js: true do
+      login_step user: @setup.disclosure_bmt_user
+      expect(open_cases_page).to be_displayed
+      expect(open_cases_page.case_numbers).to match_array expected_case_numbers(
+                                                            :std_draft_foi_late,
+                                                            :trig_responded_foi,
+                                                            :std_draft_foi,
+                                                            :std_unassigned_irt,
+                                                            :std_unassigned_irc,
+                                                            :sar_noff_draft,
+                                                          )
+
+      filter_on_type_step(page: open_cases_page,
+                          types: ['sar_non_offender'],
+                          expected_cases: [@setup.sar_noff_draft])
+    end
+
+    scenario 'user without sar permissions is filtering', js: true do
+      foi             = find_or_create(:foi_correspondence_type)
+      responding_team = create(:business_unit, correspondence_types: [foi])
+      user            = create(:user, responding_teams: [responding_team])
+
+      login_step user: user
+      open_cases_page.open_filter('type')
+      expect(open_cases_page.type_filter_panel).to have_no_sar_non_offender_checkbox
     end
   end
 
@@ -86,22 +105,28 @@ feature 'filters whittle down search results' do
                                                             :trig_responded_foi,
                                                             :std_unassigned_irc,
                                                             :std_unassigned_irt,
+                                                            :sar_noff_draft,
                                                           )
       open_cases_page.filter_on('status', 'unassigned')
-      expect(open_cases_page.case_numbers).to match_array expected_case_numbers(:std_unassigned_irc, :std_unassigned_irt)
+      expect(open_cases_page.case_numbers).to match_array expected_case_numbers(
+                                                            :std_unassigned_irc,
+                                                            :std_unassigned_irt
+                                                          )
       open_cases_page.open_filter(:status)
       expect(open_cases_page.status_filter_panel.unassigned_checkbox)
         .to be_checked
 
       open_cases_page.filter_crumb_for('Needs reassigning').click
 
-      expect(open_cases_page.case_numbers)
-        .to match_array expected_case_numbers :std_draft_foi,
-                                              :std_draft_foi_late,
-                                              :trig_responded_foi,
-                                              :std_unassigned_irc,
-                                              :std_unassigned_irt
-      expect(open_cases_page.search_results_count.text).to eq '5 cases found'
+      expect(open_cases_page.case_numbers).to match_array expected_case_numbers(
+                                                            :std_draft_foi,
+                                                            :std_draft_foi_late,
+                                                            :trig_responded_foi,
+                                                            :std_unassigned_irc,
+                                                            :std_unassigned_irt,
+                                                            :sar_noff_draft,
+                                                          )
+      expect(open_cases_page.search_results_count.text).to eq '6 cases found'
 
       open_cases_page.open_filter(:status)
       expect(open_cases_page.status_filter_panel.unassigned_checkbox)
@@ -114,7 +139,7 @@ feature 'filters whittle down search results' do
       login_step user: @setup.disclosure_bmt_user
       expect(open_cases_page).to be_displayed
 
-      open_cases_page.filter_on('type', 'foi_standard', 'foi_trigger')
+      open_cases_page.filter_on('type', 'foi_standard', 'trigger')
       open_cases_page.filter_on(:timeliness, 'in_time')
       open_cases_page.filter_on('status', 'responded')
       open_cases_page.filter_on_deadline(from: Date.today,
@@ -175,7 +200,7 @@ feature 'filters whittle down search results' do
       open_cases_page.filter_crumb_for('FOI - Standard').click
 
       expect(SearchQuery.count).to eq 7
-      expect(open_cases_page.search_results_count.text).to eq '5 cases found'
+      expect(open_cases_page.search_results_count.text).to eq '6 cases found'
       expect(open_cases_page.filter_crumb_for('FOI - Standard'     )).not_to be_present
       expect(open_cases_page.filter_crumb_for('Trigger'            )).not_to be_present
       expect(open_cases_page.filter_crumb_for('In time'            )).not_to be_present
