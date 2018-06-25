@@ -49,11 +49,11 @@ module PageObjects
       def drop_in_dropzone(file_path:, input_name:, container_selector:)
           # Generate a uploaded request file input selector
           execute_script <<~JS
-            uploadedRequestFileInput = window.$('<input/>').attr(
-              { id: 'uploadedRequestFileInput',
-                name: '#{input_name}',
-                type:'file' }
-            ).appendTo('#{container_selector}');
+          uploadedRequestFileInput = window.$('<input/>').attr(
+            { id: 'uploadedRequestFileInput',
+              name: '#{input_name}',
+              type:'file' }
+          ).appendTo('#{container_selector}');
           JS
 
           wait_for_uploaded_request_file_input
@@ -64,13 +64,13 @@ module PageObjects
 
           # Add the file to a fileList array
           execute_script <<~JS
-            var fileList = [uploadedRequestFileInput.get(0).files[0]];
+          var fileList = [uploadedRequestFileInput.get(0).files[0]];
           JS
 
           # Trigger the fake drop event
           execute_script <<~JS
-            var e = jQuery.Event('drop', { dataTransfer : { files : [uploadedRequestFileInput.get(0).files[0]] } });
-            $('.dropzone')[0].dropzone.listeners[0].events.drop(e);
+          var e = jQuery.Event('drop', { dataTransfer : { files : [uploadedRequestFileInput.get(0).files[0]] } });
+          $('.dropzone')[0].dropzone.listeners[0].events.drop(e);
           JS
       end
     end
