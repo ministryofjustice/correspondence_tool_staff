@@ -14,13 +14,15 @@ module PageObjects
         element :foi_ir_timeliness_checkbox,
                 '#search_query_filter_case_type_foi-ir-timeliness',
                 visible: false
-        element :foi_non_trigger_checkbox,
+        element :sar_non_offender_checkbox,
+                '#search_query_filter_case_type_sar-non-offender',
+                visible: false
+        element :non_trigger_checkbox,
                 '#search_query_filter_sensitivity_non-trigger',
                 visible: false
-        element :foi_trigger_checkbox,
+        element :trigger_checkbox,
                 '#search_query_filter_sensitivity_trigger',
                 visible: false
-
 
         element :apply_filter_button, '.button[value="Apply filter"]'
       end

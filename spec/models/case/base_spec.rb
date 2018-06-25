@@ -49,6 +49,7 @@ RSpec.describe Case::Base, type: :model do
                                     responding_team: responding_team }
   let(:accepted_case)      { create :accepted_case,
                                     responder: responder }
+  let(:accepted_sar)       { create :accepted_sar, responder: responder }
   let(:case_being_drafted) { create :case_being_drafted }
   let(:case_being_drafted_flagged) { create :case_being_drafted, :flagged,
                                             approving_team: approving_team }
@@ -73,7 +74,6 @@ RSpec.describe Case::Base, type: :model do
     it { should validate_presence_of(:subject)         }
     it { should validate_presence_of(:type)            }
   end
-
 
   describe 'workflow validation' do
     it { should validate_inclusion_of(:workflow).in_array %w{ standard trigger} }
@@ -298,6 +298,14 @@ RSpec.describe Case::Base, type: :model do
       _press_office_case = create :accepted_case, :flagged, :press_office
       standard_case = create :accepted_case
       expect(Case::Base.non_trigger).to eq [standard_case]
+    end
+  end
+
+  describe 'non_offender_sar scope' do
+    it 'only returns SAR cases' do
+      accepted_case
+      accepted_sar
+      expect(Case::Base.non_offender_sar).to eq [accepted_sar]
     end
   end
 

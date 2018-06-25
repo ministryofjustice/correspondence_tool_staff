@@ -23,6 +23,12 @@ describe DeadlineCalculator::CalendarDays do
       end
     end
 
+    describe '#internal_deadline_for_date' do
+      it 'is 10 calendar days from the supplied date' do
+        expect(deadline_calculator.internal_deadline_for_date(sar, Date.new(2018, 6, 25))).to eq Date.new(2018, 7, 5)
+      end
+    end
+
     describe '#external deadline' do
       it 'is 30 calendar days after the date received' do
         expect(deadline_calculator.external_deadline)
