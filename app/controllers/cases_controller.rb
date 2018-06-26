@@ -895,7 +895,7 @@ class CasesController < ApplicationController
 
   def get_edit_close_link
     edit_close_link = edit_closure_case_path(@case)
-    view_context.link_to "Edit case details",
+    view_context.link_to "Edit case closure details",
                          edit_close_link,
                          { class: "undo-take-on-link" }
   end
