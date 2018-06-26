@@ -10,6 +10,6 @@ class CreateReportTypes < ActiveRecord::Migration[5.0]
       t.integer :seq_id, null: false
     end
     add_index :report_types, :abbr, unique: true
-    # ReportTypeSeeder.new.seed!
+    ReportTypeSeeder.new.seed!
   end
 end
