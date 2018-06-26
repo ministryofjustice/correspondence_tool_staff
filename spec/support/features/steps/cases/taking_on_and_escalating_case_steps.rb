@@ -20,7 +20,7 @@ end
 def de_escalate_case_step(kase:)
   row = incoming_cases_page.row_for_case_number(kase.number)
   row.actions.de_escalate_link.click
-  row.actions.wait_until_de_escalate_link_invisible(10)
+  row.actions.wait_until_de_escalate_link_invisible(20)
   expect(row.actions).to have_undo_de_escalate_link
   expect(row.actions).to have_no_take_on_case
   expect(row.actions).to have_text 'Case de-escalated Undo'
