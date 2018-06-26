@@ -55,7 +55,7 @@ module Stats
       it 'creates an entry in the database' do
         total = Report.count
         post :create_custom_report, params: params
-        expect(Report.count).to eq total + 1
+        expect(Report.count).to eq total + 10
       end
 
       context 'invalid params passed in' do

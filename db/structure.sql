@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.10
--- Dumped by pg_dump version 9.5.10
+-- Dumped from database version 9.5.6
+-- Dumped by pg_dump version 9.5.6
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -542,7 +542,9 @@ CREATE TABLE report_types (
     full_name character varying NOT NULL,
     class_name character varying NOT NULL,
     custom_report boolean DEFAULT false,
-    seq_id integer NOT NULL
+    seq_id integer NOT NULL,
+    foi boolean DEFAULT false,
+    sar boolean DEFAULT false
 );
 
 
@@ -1611,6 +1613,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180522132456'),
 ('20180524132031'),
 ('20180613141421'),
-('20180622153909');
+('20180621093054'),
+('20180621094208'),
+('20180622153909'),
+('20180625160408');
 
 
