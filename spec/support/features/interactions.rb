@@ -44,6 +44,7 @@ module Features
       take_on_case_step kase: kase
       if test_undo
         undo_taking_case_on_step kase: kase
+        sleep 1
         take_on_case_step kase: kase
       end
       go_to_incoming_cases_step expect_not_to_see_cases: [kase]
