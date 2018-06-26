@@ -38,8 +38,6 @@ class StatsController < ApplicationController
   end
 
   def create_custom_report
-    puts ">>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<"
-    ap params
     @report = Report.new(create_custom_params)
 
     if @report.valid?
