@@ -542,7 +542,9 @@ CREATE TABLE report_types (
     full_name character varying NOT NULL,
     class_name character varying NOT NULL,
     custom_report boolean DEFAULT false,
-    seq_id integer NOT NULL
+    seq_id integer NOT NULL,
+    foi boolean DEFAULT false,
+    sar boolean DEFAULT false
 );
 
 
@@ -1611,6 +1613,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180522132456'),
 ('20180524132031'),
 ('20180613141421'),
+('20180621094208'),
 ('20180622153909');
 
 
