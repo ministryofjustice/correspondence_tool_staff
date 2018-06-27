@@ -6,6 +6,7 @@ def take_on_case_step(kase:)
   # up seems to be helping this.
   row = incoming_cases_page.row_for_case_number(kase.number)
   row.wait_until_actions_visible
+  sleep 0.25
   row.actions.wait_until_take_on_case_invisible(10)
   expect(row.actions).to have_undo_assign_link
   expect(row.actions.success_message)
@@ -21,6 +22,7 @@ def undo_taking_case_on_step(kase:)
   # up seems to be helping this.
   row = incoming_cases_page.row_for_case_number(kase.number)
   row.wait_until_actions_visible
+  sleep 0.25
   row.actions.wait_until_undo_assign_link_invisible(10)
   expect(row.actions).to have_take_on_case
   expect(row.actions).to have_no_success_message
