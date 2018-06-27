@@ -14,6 +14,7 @@ create)
 migrate)
     echo "running migrate"
     bundle exec rails db:migrate
+    bundle exec rails data:migrate
     ;;
 development-setup)
     echo "setting up db"
