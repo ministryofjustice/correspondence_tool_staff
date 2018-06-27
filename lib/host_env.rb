@@ -16,6 +16,10 @@ class HostEnv
     ENV['ENV'] == 'prod'
   end
 
+  def self.local?
+    host_env == 'Local'
+  end
+
 
   def self.host_env
     if ENV['ENV'].nil? && ( Rails.env.development? || Rails.env.test? )

@@ -10,6 +10,7 @@ class ReportTypeSeeder
   #rubocop:disable Metrics/MethodLength
   #rubocop:disable Metrics/CyclomaticComplexity
   def seed!(verbose: false)
+    puts '----Seeding ReportTypes----'
     attrs = {abbr:'R002',
             full_name: 'Appeals performance report',
             class_name: 'Stats::R002AppealsPerformanceReport',
@@ -18,7 +19,7 @@ class ReportTypeSeeder
             sar: false,
             seq_id: 100}
     create_or_update!(attrs)
-    puts 'Created report R002' if verbose
+    puts '    Created report R002' if verbose
 
     attrs = {abbr:'R003',
              full_name: 'Business unit report',
@@ -28,7 +29,7 @@ class ReportTypeSeeder
              sar: false,
              seq_id: 200}
     create_or_update!(attrs)
-    puts 'Created report R003' if verbose
+    puts '    Created report R003' if verbose
 
 
     attrs = {abbr:'R004',
@@ -39,7 +40,7 @@ class ReportTypeSeeder
              sar: false,
              seq_id: 400}
     create_or_update!(attrs)
-    puts 'Created report R004' if verbose
+    puts '    Created report R004' if verbose
 
 
     attrs = {abbr:'R005',
@@ -50,7 +51,7 @@ class ReportTypeSeeder
             sar: false,
             seq_id: 300}
     create_or_update!(attrs)
-    puts 'Created report R005' if verbose
+    puts '    Created report R005' if verbose
 
     attrs = {abbr:'R006',
             full_name: 'Business unit map',
@@ -60,7 +61,7 @@ class ReportTypeSeeder
             sar: false,
             seq_id: 9999}
     create_or_update!(attrs)
-    puts 'Created report R006' if verbose
+    puts '    Created report R006' if verbose
 
     attrs = {abbr: 'R103',
             full_name: 'Business unit report (SARs)',
@@ -70,7 +71,7 @@ class ReportTypeSeeder
             sar:true,
             seq_id: 250}
     create_or_update!(attrs)
-    puts 'Created report R103' if verbose
+    puts '    Created report R103' if verbose
   end
   #rubocop:enable Metrics/MethodLength
   #rubocop:enable Metrics/CyclomaticComplexity
