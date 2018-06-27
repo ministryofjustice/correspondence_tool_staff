@@ -14,6 +14,8 @@ class ReportType < ApplicationRecord
   has_many :reports
 
   scope :custom, -> { where( custom_report: true ) }
+  scope :foi, -> { where( foi: true ) }
+  scope :sar, -> { where( sar: true ) }
 
   def class_constant
     class_name.constantize

@@ -16,7 +16,7 @@ class CorrespondenceTypeSeeder
 
     rec = CorrespondenceType.find_by(abbreviation: 'SAR')
     rec = CorrespondenceType.new if rec.nil?
-    rec.update!(name: 'Subject Access Request',
+    rec.update!(name: 'Subject access request',
                 abbreviation: 'SAR',
                 escalation_time_limit: 0,
                 internal_time_limit: 10,
