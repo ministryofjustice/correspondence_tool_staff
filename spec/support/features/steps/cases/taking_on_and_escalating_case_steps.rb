@@ -1,7 +1,7 @@
 def take_on_case_step(kase:)
   row = incoming_cases_page.row_for_case_number(kase.number)
   row.actions.take_on_case.click
-  row.actions.wait_until_take_on_case_invisible(20)
+  row.actions.wait_until_take_on_case_invisible(60)
   expect(row.actions).to have_undo_assign_link
   expect(row.actions.success_message)
     .to have_text "Case taken on Undo taking on of case #{kase.number}"
