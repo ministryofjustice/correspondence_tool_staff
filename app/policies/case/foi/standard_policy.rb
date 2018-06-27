@@ -30,7 +30,7 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
         end
         final_scope
       else
-        Case::FOI::Standard.none
+        @scope.none
       end
     end
   end

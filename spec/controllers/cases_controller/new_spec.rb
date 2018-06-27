@@ -23,7 +23,9 @@ describe CasesController, type: :controller do
       it 'assigns @permitted_correspondence_types' do
         get :new
         expect(assigns(:permitted_correspondence_types))
-          .to match_array [CorrespondenceType.foi, CorrespondenceType.sar]
+          .to match_array [CorrespondenceType.foi,
+                           CorrespondenceType.sar,
+                           CorrespondenceType.ico]
       end
     end
 

@@ -10,15 +10,13 @@ module CaseStates
   end
 
   def instantiate_configurable_state_machine
-    case_type = if self.is_a?(Case::FOI::Standard)
-                  'foi'
-                else
-                  'sar'
-                end
-    @state_machine = ConfigurableStateMachine::Manager.instance.state_machine(org: 'moj',
-                                                                              case_type: case_type,
-                                                                              workflow: workflow.nil? ? 'standard' : workflow,
-                                                                              kase: self)
+    case_type = self.type_abbreviation.downcase
+    @state_machine = ConfigurableStateMachine::Manager.instance.state_machine(
+      org: 'moj',
+      case_type: case_type,
+      workflow: workflow.nil? ? 'standard' : workflow,
+      kase: self
+    )
   end
 
   def responder_assignment_rejected(current_user,
