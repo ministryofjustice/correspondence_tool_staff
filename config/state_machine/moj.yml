@@ -1222,8 +1222,7 @@ case_types:
 
               closed:
                 add_message_to_case:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
-
+                  if: Workflows::Predicates#user_is_approver_on_case?
   ico:
     name: Information Commissioner Office appeal
     permitted_workflows:
@@ -1404,5 +1403,3 @@ case_types:
               closed:
                 link_a_case:
                 remove_linked_case:
-
-
