@@ -67,5 +67,44 @@ FactoryBot.define do
     end
   end
 
+  factory :pending_dacu_clearance_ico_foi_case, parent: :accepted_ico_foi_case do
+    transient do
+      identifier      'pending dacu clearance ICO FOI case'
+      approving_team  { find_or_create :team_dacu_disclosure }
+      approver        { create :disclosure_specialist }
+      responding_team { find_or_create(:responding_team) }
+      responder       { responding_team.users.first }
+    end
+
+    after(:create) do |kase, evaluator|
+      create :approver_assignment,
+             case: kase,
+             team: evaluator.approving_team,
+             state: 'accepted',
+             user_id: evaluator.approver.id
+
+      create :case_transition_progress_for_clearance,
+             case_id: kase.id,
+             responding_team: evaluator.responding_team,
+             responder: evaluator.responder
+      kase.reload
+    end
+  end
+
+
+  factory :responded_ico_foi_case, parent: :pending_dacu_clearance_ico_foi_case do
+    transient do
+      identifier 'responded ICO FOI case'
+    end
+
+    date_responded Date.today
+
+    after(:create) do |kase, _evaluator|
+      create :case_transition_respond_to_ico,
+             case_id: kase.id
+      kase.reload
+    end
+  end
+
 end
 

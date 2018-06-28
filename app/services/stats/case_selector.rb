@@ -23,8 +23,8 @@ module Stats
     end
 
     def ids_for_period_appeals(period_start, period_end)
-      closed_case_ids =  @scope.appeal.closed.where(date_responded: [period_start..period_end]).pluck(:id)
-      open_case_ids = @scope.appeal.opened.pluck(:id)
+      closed_case_ids =  @scope.where(date_responded: [period_start..period_end]).pluck(:id)
+      open_case_ids = @scope.opened.pluck(:id)
       (closed_case_ids + open_case_ids).uniq
     end
 

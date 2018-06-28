@@ -40,6 +40,10 @@ class Case::ICO::Base < Case::Base
     self.internal_deadline = days.before(self.external_deadline)
   end
 
+  def closed_for_reporting_purposes?
+    closed? || responded?
+  end
+
   private
 
   def default_workflow

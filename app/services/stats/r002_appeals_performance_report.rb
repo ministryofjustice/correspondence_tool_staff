@@ -1,117 +1,39 @@
 module Stats
-  class R002AppealsPerformanceReport < BaseReport
-
-    R002_SPECIFIC_COLUMNS = {
-      business_group:                  'Business group',
-      directorate:                     'Directorate',
-      business_unit:                   'Business unit',
-      responsible:                     'Responsible'
-    }
-
-    R002_SPECIFIC_SUPERHEADINGS = {
-      business_group:                  '',
-      directorate:                     '',
-      business_unit:                   '',
-      responsible:                     ''
-    }
-
-    def initialize(period_start= Time.now.beginning_of_year, period_end=Time.now)
-      super
-      @period_start = period_start
-      @period_end = period_end
-      @stats = StatsCollector.new(Team.hierarchy.map(&:id) + [:total], R002_SPECIFIC_COLUMNS.merge(AppealAnalyser::APPEAL_COLUMNS))
-      @superheadings = superheadings
-      @stats.add_callback(:before_finalise, -> { roll_up_stats_callback })
-      @stats.add_callback(:before_finalise, -> { populate_team_details_callback })
-      @stats.add_callback(:before_finalise, -> { AppealCalculations::Callbacks.calculate_total_columns(@stats) })
-      @stats.add_callback(:before_finalise, -> { AppealCalculations::Callbacks.calculate_percentages(@stats) })
-    end
+  class R002AppealsPerformanceReport < BaseAppealsPerformanceReport
 
     def superheadings
       [
         ["#{self.class.title} - #{reporting_period}"],
-        R002_SPECIFIC_SUPERHEADINGS.merge(AppealAnalyser::APPEAL_SUPERHEADINGS).values
+        R002_SPECIFIC_SUPERHEADINGS
+            .merge(AppealAnalyser::IR_APPEAL_SUPERHEADINGS)
+            .merge(AppealAnalyser::ICO_APPEAL_SUPERHEADINGS).values
       ]
     end
 
     def self.title
-      'Appeal performance stats'
+      'FOI Appeal performance stats'
     end
 
     def self.description
-      'Shows all open appeals and appeals closed this month, in-time or late, by responding team'
+      'Shows all internal reviews and ICO appeals which are open, or have been closed this month, analysed by timeliness'
     end
 
-    def run
-      case_ids = CaseSelector.new(Case::Base).ids_for_period_appeals(@period_start, @period_end)
-      case_ids.each { |case_id| analyse_case(case_id) }
-      @stats.finalise
-    end
-
-    def to_csv
-      @stats.to_csv(row_names_as_first_column: false, superheadings: superheadings)
+    def case_ids
+      ir_case_ids = CaseSelector.new(Case::FOI::InternalReview).ids_for_period_appeals(@period_start, @period_end)
+      ico_case_ids = CaseSelector.new(Case::ICO::Base).ids_for_period_appeals(@period_start, @period_end)
+      ir_case_ids + ico_case_ids
     end
 
     private
 
-    # this method is passed into the stats collector as a before_finalize callback and accesses the
-    # @stats variable  inside the stats collector to sum totals for directorates and business groups
-    def roll_up_stats_callback
-      overall_total_results = @stats.stats[:total]
-      BusinessUnit.all.each do |bu|
-        bu_results = @stats.stats[bu.id]
-        directorate_results = @stats.stats[bu.directorate.id]
-        business_group_results = @stats.stats[bu.business_group.id]
-        bu_results.each do |key, value|
-          directorate_results   [key] += value
-          business_group_results[key] += value
-          overall_total_results [key] += value
-        end
-      end
+    def appeal_types
+      %w{ ir ico }
     end
 
-    # another callback method to populate the team names from the team id column
-    def populate_team_details_callback
-      @stats.stats.except(:total).each do | team_id, result_set|
-        team = Team.find(team_id)
-        case team.class.to_s
-        when 'BusinessUnit'
-          result_set[:business_unit] = team.name
-          result_set[:directorate] = team.parent.name
-          result_set[:business_group] = team.parent.parent.name
-        when 'Directorate'
-          result_set[:business_unit] = ''
-          result_set[:directorate] = team.name
-          result_set[:business_group] = team.parent.name
-        when 'BusinessGroup'
-          result_set[:business_unit] = ''
-          result_set[:directorate] = ''
-          result_set[:business_group] = team.name
-        else
-          raise "Invalid team type"
-        end
-        result_set[:responsible] = team.team_lead
-      end
-
-      @stats.stats[:total][:business_group] = 'Total'
-      @stats.stats[:total][:directorate] = ''
-      @stats.stats[:total][:business_unit] = ''
-      @stats.stats[:total][:responsible] = ''
-    end
-
-    def analyse_case(case_id)
-      kase = Case::Base.find case_id
-      return if kase.unassigned?
-      column_key = AppealAnalyser.new(kase).result
-      @stats.record_stats(kase.responding_team.id, column_key)
-    end
-
-    def analyse_closed_case(kase)
-      kase.responded_in_time? ? 'responded_in_time' : 'responded_late'
-    end
-
-    def analyse_open_case(kase)
-      kase.already_late? ? 'open_late' : 'open_in_time'
+    def column_headings
+      R002_SPECIFIC_COLUMNS
+          .merge(AppealAnalyser::IR_APPEAL_COLUMNS)
+          .merge(AppealAnalyser::ICO_APPEAL_COLUMNS)
     end
   end
 end
