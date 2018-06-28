@@ -152,9 +152,11 @@ class CasesController < ApplicationController
     @case = service.case
     case service.result
     when :case_created
+      flash[:notice] = "#{@case.type_abbreviation} case created<br/> Case number: #{@case.number}".html_safe
       redirect_to case_path @case
     when :assign_responder
       flash[:creating_case] = true
+      flash[:notice] = "#{@case.type_abbreviation} case created<br/> Case number: #{@case.number}".html_safe
       redirect_to new_case_assignment_path @case
     else # including :error
       @case.type = @case.type.demodulize
