@@ -12,7 +12,7 @@ class CaseCreateService
 
     if !@case.valid?
       @result = :error
-    elsif params[:flag_for_disclosure_specialists].blank?
+    elsif @case.requires_flag_for_disclosure_specialists? && params[:flag_for_disclosure_specialists].blank?
       @case.valid?
       @case.errors.add(:flag_for_disclosure_specialists, :blank)
       @result = :error

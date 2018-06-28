@@ -23,6 +23,13 @@ describe CorrespondenceType, type: :model do
   it { should have_attributes(default_press_officer: nil,
                               default_private_officer: nil)}
 
+  describe '.ico' do
+    it 'finds the ICO correspondence type' do
+      ico = find_or_create :ico_correspondence_type
+      expect(described_class.ico).to eq ico
+    end
+  end
+
   describe 'teams' do
     it 'lists teams that can handle this correspondence type' do
       ct1    = create(:correspondence_type, name: 'ct1', abbreviation: 'ct1')
