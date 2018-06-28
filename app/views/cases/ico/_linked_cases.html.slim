@@ -1,0 +1,34 @@
+/ tr
+/   td
+/     a ="180001001"
+/   td
+/     = "FOI"
+/   td
+/     = "Something awesome"
+/   td
+/     a
+/       = "Remove link"
+/- if case_details.linked_cases.any?
+  - case_details.linked_cases.each do |linked_case|
+- if linked_case.present?
+  tr
+    td
+      input type="hidden" value= linked_case.id
+      = link_to case_path(linked_case.id) do
+        span.visually-hidden
+          = t('common.view_case')
+        = linked_case.number
+    td
+      = "#{linked_case.pretty_type} "
+      = linked_case.trigger_case_marker
+    td
+      = request_details_html(linked_case)
+    td
+      = "Remove"
+      /= action_link_for_destroy_case_link(case_details, linked_case)
+- else
+  tr
+    td colspan=4
+      = "No linked cases"
+
+/= action_links_for_allowed_events(case_details, :new_case_link).join(' | ').html_safe

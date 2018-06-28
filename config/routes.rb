@@ -171,6 +171,8 @@ Rails.application.routes.draw do
 
   post '/feedback' => 'feedback#create'
 
+  get '/cases/get_link_case_details' => 'cases#get_link_case_details', as: :get_link_case_details
+
   resources :cases, except: :new do
     authenticated :user, -> (u) { u.manager? }  do
       root to: redirect(gnav.default_urls.manager), as: :manager_root

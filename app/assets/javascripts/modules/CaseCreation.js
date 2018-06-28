@@ -13,14 +13,17 @@ moj.Modules.CaseCreation = {
       self.showHideDeliveryMethodFields();
 
       //Bind events
-      self.$deliveryMethod.on('change', ':radio', function(){
-          self.showHideDeliveryMethodFields();
+      self.$deliveryMethod.on('change', ':radio', function () {
+        self.showHideDeliveryMethodFields();
+      });
+
+      $('#xhr-search-button').click(function () {
+        self.getCaseDetails(this);
       });
     }
-
   },
 
-  showHideDeliveryMethodFields: function (){
+  showHideDeliveryMethodFields: function () {
     if (this.$deliveryMethod.find(':radio').is(':checked')){
 
       this.$deliveryMethodFields.show();
@@ -46,5 +49,12 @@ moj.Modules.CaseCreation = {
       $('.dropzone').closest('.grid-row').hide();
 
     }
+  },
+
+  getCaseDetails: function (button) {
+    $.ajax({
+      url: $(button).data('url'),
+      data: { 'cases[case_number]': document.getElementById('cases_case_number').value}
+    });
   }
 };

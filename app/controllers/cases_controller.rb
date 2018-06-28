@@ -587,6 +587,18 @@ class CasesController < ApplicationController
     redirect_to case_path(@case.id)
   end
 
+  def get_link_case_details
+    @case = Case::Base.where(number: params[:cases][:case_number]).first.decorate
+    respond_to do |format|
+      format.js { render 'cases/ico/case_linking/create', locals: {linked_case: @case} }
+    end
+
+    # if existing search select specific
+    # FOI
+    # SAR
+    # ICO ??
+  end
+
   private
 
   def set_url
