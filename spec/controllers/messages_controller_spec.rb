@@ -7,6 +7,10 @@ RSpec.describe MessagesController, type: :controller do
   let!(:responder)         { create :responder }
   let!(:another_responder) { create :responder }
   let!(:accepted_case)     { create :accepted_case, responder: responder }
+  let!(:closed_case)       { create :closed_case,
+                                    :flagged_accepted,
+                                    responder: responder,
+                                    approver: approver}
   let!(:flagged_case)      { create :accepted_case,
                                     :flagged_accepted,
                                     approver: approver }
@@ -37,6 +41,13 @@ RSpec.describe MessagesController, type: :controller do
         expect(response).to redirect_to(case_path(accepted_case, anchor: 'messages-section'))
       end
 
+      it 'allows them to post on a closed case' do
+
+        params[:case_id] = closed_case.id
+        post :create , params: params
+        expect(response).to redirect_to(case_path(closed_case, anchor: 'messages-section'))
+      end
+
       it "does not allow them to post to a case they are not responsible for" do
         sign_in another_responder
         post :create , params: params
@@ -52,6 +63,11 @@ RSpec.describe MessagesController, type: :controller do
         post :create , params: params
         expect(response).to redirect_to(case_path(accepted_case, anchor: 'messages-section'))
       end
+      it 'allows them to post on a closed case' do
+        params[:case_id] = closed_case.id
+        post :create , params: params
+        expect(response).to redirect_to(case_path(closed_case, anchor: 'messages-section'))
+      end
     end
 
     context "as a approver" do
@@ -60,6 +76,12 @@ RSpec.describe MessagesController, type: :controller do
       it "doesn't allow them to post messages to non-trigger cases" do
         post :create , params: params
         expect(response).to redirect_to(approver_root_path)
+      end
+
+      it 'allows them to post on a closed case' do
+        params[:case_id] = closed_case.id
+        post :create , params: params
+        expect(response).to redirect_to(case_path(closed_case, anchor: 'messages-section'))
       end
 
       it "redirects to case detail page and contains a anchor" do
