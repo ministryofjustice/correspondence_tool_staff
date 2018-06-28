@@ -202,6 +202,8 @@ en:
         flag_for_disclosure_specialists: Flag for disclosure specialists
         type: Type
         name: "Who is the requestor?"
+      case_ico:
+        type: Original Case Type
       case_sar:
         missing_info: "Was the response asking for missing information (e.g. proof of ID) or
           clarification, i.e. a TMM?"
@@ -293,6 +295,12 @@ en:
           Case::FOI::Standard: FOI
           Case::FOI::TimelinessReview: FOI - Internal review for timeliness
           Case::FOI::ComplianceReview: FOI - Internal review for compliance
+      case_ico:
+        ico_reference_number: ICO case reference number
+        message: "Case details"
+        type:
+          Case::ICO::FOI: FOI
+          Case::ICO::SAR: SAR
       case_sar:
         email: "Recipient email address"
         message: Full case details
@@ -543,13 +551,22 @@ en:
       message: Full request
       details: Details
     new:
-      heading: Add case details
-      sub_heading: Create %{case_type} case
-      received_date: Date received at MOJ
-      received_date_copy: For example. 31 01 2017
       correspondence_type_errors:
         unknown: "Unknown correspondence type \"%{type}\""
         not_authorised: "You are not authorised to create \"%{type}\" correspondences"
+      external_deadline: "Final deadline"
+      external_deadline_copy: "For example, 01 02 2018"
+      heading: Add case details
+      received_date: Date received at MOJ
+      received_date_copy: "For example, 01 02 2018"
+      sub_heading: Create %{case_type} case
+      uploaded_request_files_hint: |
+        You can upload different file types such as Word, Excel,
+        PDF and JPEG up to 20MB per file.
+
+    ico:
+      new_form:
+        uploaded_request_files: Upload relevant files (optional)
     select_type:
       heading: Choose correspondence type
       sub_heading: Create case

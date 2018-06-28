@@ -132,8 +132,13 @@ class CasesController < ApplicationController
 
   def new
     permitted_correspondence_types
-    if params[:correspondence_type].present? || FeatureSet.sars.disabled?
-      params[:correspondence_type] = 'foi' unless params[:correspondence_type].present?
+    display_only_one_type = FeatureSet.sars.disabled? &&
+                            FeatureSet.ico.disabled?
+    if params[:correspondence_type].present? || display_only_one_type
+      unless params[:correspondence_type].present?
+        params[:correspondence_type] = 'foi'
+      end
+
       prepare_new_case
     else
       prepare_select_type
@@ -610,37 +615,53 @@ class CasesController < ApplicationController
   end
 
   def prepare_select_type
-    policy(Case::Base).can_add_case?
+    authorize Case::Base, :can_add_case?
     render :select_type
   end
 
   def prepare_new_case
-    @correspondence_type_abbreviation = params[:correspondence_type]
-    validation_result = validate_correspondence_type(@correspondence_type_abbreviation.upcase)
+    correspondence_type_abbreviation = params[:correspondence_type]
+    validation_result = validate_correspondence_type(
+      correspondence_type_abbreviation.upcase
+    )
     if validation_result == :ok
-      case_class = correspondence_types_map[@correspondence_type_abbreviation.to_sym].first
-      @case = case_class.new
-      policy(@case).can_add_case?
-      @case_types = correspondence_types_map[@correspondence_type_abbreviation.to_sym].map(&:to_s)
+      @correspondence_type = CorrespondenceType.find_by_abbreviation(
+        correspondence_type_abbreviation.upcase
+      )
+      default_subclass = @correspondence_type.sub_classes.first
+
+      # Check user's authorisation
+      #
+      # We don't know what kind of case type (FOI Standard, IR Timeliness, etc)
+      # they want to create yet, but we need to authenticate them against some
+      # kind of case class, so pick the first subclass available to them. This
+      # could be improved by making case_subclasses a list of the case types
+      # they are permitted to create, and when that list is empty rejecting
+      # authorisation.
+      authorize default_subclass, :can_add_case?
+
+      @case = default_subclass.new
+      @case_types = @correspondence_type.sub_classes.map(&:to_s)
       @s3_direct_post = s3_uploader_for(@case, 'requests')
       render :new
     else
       flash.alert =
           helpers.t "cases.new.correspondence_type_errors.#{validation_result}",
-                    type: @correspondence_type_abbreviation.downcase
+                    type: correspondence_type_abbreviation.downcase
       redirect_to new_case_path
     end
   end
 
   def validate_correspondence_type(ct_abbr)
-    if ct_abbr.in?(CorrespondenceType.all.map(&:abbreviation))
-      if ct_abbr.in?(@permitted_correspondence_types.map(&:abbreviation))
-        :ok
-      else
-        :not_authorised
-      end
-    else
+    ct_exists    = ct_abbr.in?(CorrespondenceType.pluck(:abbreviation))
+    ct_permitted = ct_abbr.in?(@permitted_correspondence_types.map(&:abbreviation))
+
+    if ct_exists && ct_permitted
+      :ok
+    elsif !ct_exists
       :unknown
+    else
+      :not_authorised
     end
   end
 
@@ -714,6 +735,7 @@ class CasesController < ApplicationController
     case correspondence_type
       when 'foi' then create_foi_params
       when 'sar' then create_sar_params
+      when 'ico' then create_ico_params
     end
   end
 
@@ -859,19 +881,6 @@ class CasesController < ApplicationController
     end
     url_for(new_params)
   end
-
-  # Defined here for now, but should really be configured somewhere more
-  # sensible.
-  def correspondence_types_map
-    @correspondence_types_map ||= {
-      foi:  [Case::FOI::Standard,
-             Case::FOI::TimelinessReview,
-             Case::FOI::ComplianceReview],
-      sar:  [Case::SAR],
-      ico:  [Case::ICO],
-    }.with_indifferent_access
-  end
-
 
   def permitted_correspondence_types
     # Use the intermediary variable "types" to update
