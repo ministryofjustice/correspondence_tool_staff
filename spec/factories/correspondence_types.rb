@@ -18,6 +18,7 @@ FactoryBot.define do
     internal_time_limit 10
     external_time_limit 20
     deadline_calculator_class 'BusinessDays'
+    report_category_name 'FOI report'
 
     initialize_with { CorrespondenceType.find_or_create_by(name: name) }
   end
@@ -29,6 +30,7 @@ FactoryBot.define do
     internal_time_limit 10
     external_time_limit 30
     deadline_calculator_class 'CalendarDays'
+    report_category_name 'SAR report'
 
 
     initialize_with { CorrespondenceType.find_or_create_by(name: name) }
@@ -40,6 +42,7 @@ FactoryBot.define do
     escalation_time_limit 0
     external_time_limit 15
     deadline_calculator_class 'BusinessDays'
+    report_category_name ''
 
     initialize_with { CorrespondenceType.find_or_create_by(name: name) }
   end
@@ -50,6 +53,7 @@ FactoryBot.define do
     escalation_time_limit 0
     external_time_limit 15
     deadline_calculator_class 'CalendarDays'
+    report_category_name ''
   end
 
   trait :business_days do

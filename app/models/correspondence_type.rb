@@ -23,7 +23,9 @@ class CorrespondenceType < ApplicationRecord
                  escalation_time_limit: :integer,
                  deadline_calculator_class: :string,
                  default_press_officer: :string,
-                 default_private_officer: :string
+                 default_private_officer: :string,
+                 report_category_name: [:string, default: '']
+
 
   enum deadline_calculator_class: {
          'BusinessDays' => 'BusinessDays',
@@ -43,6 +45,10 @@ class CorrespondenceType < ApplicationRecord
            class_name: 'TeamCorrespondenceTypeRole'
   has_many :teams,
            through: :correspondence_type_roles
+
+  def self.by_report_category
+    CorrespondenceType.properties_where_not(report_category_name: '').properties_order(:report_category_name)
+  end
 
   def self.foi
     find_by!(abbreviation: 'FOI')
