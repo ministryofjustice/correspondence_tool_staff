@@ -44,6 +44,14 @@ FactoryBot.define do
     initialize_with { CorrespondenceType.find_or_create_by(name: name) }
   end
 
+  factory :ico_correspondence_type, parent: :correspondence_type do
+    name 'ICO'
+    abbreviation 'ICO'
+    escalation_time_limit 0
+    external_time_limit 15
+    deadline_calculator_class 'CalendarDays'
+  end
+
   trait :business_days do
     deadline_calculator_class 'BusinessDays'
   end

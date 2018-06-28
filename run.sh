@@ -9,10 +9,12 @@ case ${DOCKER_STATE} in
 create)
     echo "running create"
     bundle exec rails db:setup
+    bundle exec rails data:migrate
     ;;
 migrate)
     echo "running migrate"
     bundle exec rails db:migrate
+    bundle exec rails data:migrate
     ;;
 development-setup)
     echo "setting up db"
