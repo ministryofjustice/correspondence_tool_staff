@@ -1,0 +1,31 @@
+/ = f.radio_button_fieldset :type, choices: case_types, value_method: :demodulize
+
+= f.text_field :ico_reference_number
+
+.form-group
+  = f.gov_uk_date_field :received_date, { legend_text: t('cases.new.received_date'),
+                                          form_hint_text: t('cases.new.received_date_copy'),
+                                          today_button: {class: 'button-secondary'} }
+
+.form-group
+  = f.gov_uk_date_field :external_deadline, { legend_text: t('cases.new.external_deadline'),
+                                              form_hint_text: t('cases.new.external_deadline_copy'),
+                                              today_button: {class: 'button-secondary'} }
+
+= f.text_field :subject
+
+= f.text_area :message, { rows: 10 }
+
+#uploaded-request-files-fields
+  .grid-row
+    .column-two-thirds
+      span.form-label-bold
+        = t('.uploaded_request_files')
+      span.form-hint
+        = t('cases.new.uploaded_request_files_hint')
+  .grid-row
+    .column-two-thirds
+      div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
+        = render partial: 'shared/dropzone_form',
+                 locals: { s3_direct_post: @s3_direct_post,
+                           file_input_name: 'case_ico[uploaded_request_files][]' }
