@@ -103,6 +103,7 @@ case_types:
                 remove_linked_case:
 
               closed:
+                add_message_to_case:
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
@@ -198,6 +199,7 @@ case_types:
                 remove_linked_case:
 
               closed:
+                add_message_to_case:
                 link_a_case:
                 remove_linked_case:
 
@@ -258,6 +260,7 @@ case_types:
                 remove_linked_case:
 
               closed:
+                add_message_to_case:
                 link_a_case:
                 remove_linked_case:
 
@@ -336,6 +339,7 @@ case_types:
                 remove_linked_case:
 
               closed:
+                add_message_to_case:
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
@@ -458,6 +462,7 @@ case_types:
                 remove_linked_case:
 
               closed:
+                add_message_to_case:
                 link_a_case:
                 remove_linked_case:
 
@@ -536,6 +541,7 @@ case_types:
                 remove_linked_case:
 
               closed:
+                add_message_to_case:
                 link_a_case:
                 remove_linked_case:
 
@@ -633,6 +639,7 @@ case_types:
                 remove_linked_case:
 
               closed:
+                add_message_to_case:
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
@@ -805,6 +812,7 @@ case_types:
                 remove_linked_case:
 
               closed:
+                add_message_to_case:
                 link_a_case:
                 remove_linked_case:
 
@@ -893,6 +901,7 @@ case_types:
                 remove_linked_case:
 
               closed:
+                add_message_to_case:
                 link_a_case:
                 remove_linked_case:
 
@@ -960,6 +969,7 @@ case_types:
                 remove_linked_case:
 
               closed:
+                add_message_to_case:
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
@@ -1077,6 +1087,7 @@ case_types:
                 remove_linked_case:
 
               closed:
+                add_message_to_case:
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
@@ -1211,8 +1222,7 @@ case_types:
 
               closed:
                 add_message_to_case:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
-
+                  if: Workflows::Predicates#user_is_approver_on_case?
   ico:
     name: Information Commissioner Office appeal
     permitted_workflows:
@@ -1393,5 +1403,3 @@ case_types:
               closed:
                 link_a_case:
                 remove_linked_case:
-
-

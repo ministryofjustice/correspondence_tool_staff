@@ -106,7 +106,8 @@ describe ConfigurableStateMachine::Machine do
           k = create :closed_case, :flagged, :dacu_disclosure
 
           expect(k.current_state).to eq 'closed'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:assign_to_new_team,
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
+                                                                      :assign_to_new_team,
                                                                       :destroy_case,
                                                                       :edit_case,
                                                                       :link_a_case,
@@ -260,7 +261,9 @@ describe ConfigurableStateMachine::Machine do
             responder = responder_in_assigned_team(k)
 
             expect(k.current_state).to eq 'closed'
-            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
+                                                                          :link_a_case,
+                                                                          :remove_linked_case]
           end
         end
       end
@@ -363,7 +366,9 @@ describe ConfigurableStateMachine::Machine do
             k = create :closed_case, :flagged, :dacu_disclosure
 
             expect(k.current_state).to eq 'closed'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:link_a_case, :remove_linked_case]
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                         :link_a_case,
+                                                                         :remove_linked_case]
           end
         end
       end
@@ -470,7 +475,9 @@ describe ConfigurableStateMachine::Machine do
           k = create :closed_case, :flagged_accepted, :dacu_disclosure
           approver = approver_in_assigned_team(k)
           expect(k.current_state).to eq 'closed'
-          expect(k.state_machine.permitted_events(approver.id)).to eq [:link_a_case, :remove_linked_case]
+          expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                       :link_a_case,
+                                                                       :remove_linked_case]
         end
       end
 
