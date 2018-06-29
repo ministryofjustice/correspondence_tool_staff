@@ -7,32 +7,46 @@ require 'spec_helper'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'capybara/rails'
-require 'capybara/poltergeist'
+# Add additional requires below this line. Rails is not loaded until this point!
+require 'capybara/rspec'
+require 'selenium-webdriver'
+
 require 'rails-controller-testing'
 require 'paper_trail/frameworks/rspec'
 
+Capybara.default_max_wait_time = 4
 
-Capybara.javascript_driver = :poltergeist
-# Capybara.register_driver :poltergeist do |app|
-#   Capybara::Poltergeist::Driver.new(app,
-#                                     js_errors: true,
-#                                     phantomjs_logger: STDERR,
-#                                     inspector: true)
-# end
+Capybara.asset_host = 'http://localhost:3000'
+
+Capybara.register_driver :chrome do |app|
+  Capybara::Selenium::Driver.new(app, browser: :chrome)
+end
+
+Capybara.register_driver :headless_chrome do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: { args: %w(headless disable-gpu) }
+  )
+
+  Capybara::Selenium::Driver.new app,
+    browser: :chrome,
+    desired_capabilities: capabilities
+end
+
+Capybara.javascript_driver = :headless_chrome
 
 
 # Set these env variables to push screenshots for failed tests to S3.
-if ENV['S3_TEST_SCREENSHOT_ACCESS_KEY_ID'].present? &&
-   ENV['S3_TEST_SCREENSHOT_SECRET_ACCESS_KEY'].present?
-  Capybara::Screenshot.s3_configuration = {
-    s3_client_credentials: {
-      access_key_id: ENV['S3_TEST_SCREENSHOT_ACCESS_KEY_ID'],
-      secret_access_key: ENV['S3_TEST_SCREENSHOT_SECRET_ACCESS_KEY'],
-      region: 'eu-west-1'
-    },
-    bucket_name: 'correspondence-staff-travis-test-failure-screenshots',
-  }
-end
+# if ENV['S3_TEST_SCREENSHOT_ACCESS_KEY_ID'].present? &&
+#    ENV['S3_TEST_SCREENSHOT_SECRET_ACCESS_KEY'].present?
+#   Capybara::Screenshot.s3_configuration = {
+#     s3_client_credentials: {
+#       access_key_id: ENV['S3_TEST_SCREENSHOT_ACCESS_KEY_ID'],
+#       secret_access_key: ENV['S3_TEST_SCREENSHOT_SECRET_ACCESS_KEY'],
+#       region: 'eu-west-1'
+#     },
+#     bucket_name: 'correspondence-staff-travis-test-failure-screenshots',
+#   }
+# end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
