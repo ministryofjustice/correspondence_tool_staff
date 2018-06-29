@@ -41,6 +41,7 @@ module Features
         expect(incoming_cases_page.user_card.greetings)
           .to have_content user.full_name
       end
+      sleep 1
       take_on_case_step kase: kase
       if test_undo
         undo_taking_case_on_step kase: kase

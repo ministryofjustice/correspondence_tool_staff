@@ -54,7 +54,7 @@ def close_sar_case_step(timeliness: 'in time', tmm: false)
   cases_close_page.click_on 'Close case'
 
   show_page = cases_show_page.case_details
-  expect(cases_show_page.notice.text).to eq("You've closed this case. Edit case details")
+  expect(cases_show_page.notice.text).to eq("You've closed this case. Edit case closure details")
 
   expect(show_page.response_details.date_responded.data.text)
     .to eq Date.today.strftime(Settings.default_date_format)
