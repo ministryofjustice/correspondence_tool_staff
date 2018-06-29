@@ -82,20 +82,20 @@ feature 'adding cases' do
       expect(BusinessUnit.private_office).to be_in(kase.approving_teams)
     end
 
-    xscenario 'creating a flagged for disclosure case that is pending ds clearance' do
+    scenario 'creating a flagged for disclosure case that is pending ds clearance' do
       kase = create_foi(case_type: 'case_foi_type_casefoistandard', target_state: 'pending_dacu_disclosure', flag: 'disclosure')
       expect(kase).to be_instance_of(Case::FOI::Standard)
       expect(kase.current_state).to eq 'pending_dacu_clearance'
       expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
     end
 
-    scenario 'creating a closed case', js: true do
+    scenario 'creating a closed case' do
       kase = create_foi(case_type: 'case_foi_type_casefoistandard', target_state: 'closed')
       expect(kase).to be_instance_of(Case::FOI::Standard)
       expect(kase.current_state).to eq 'closed'
     end
 
-    scenario 'creating a responded case', js: true do
+    scenario 'creating a responded case' do
       kase = create_foi(case_type: 'case_foi_type_casefoistandard', target_state: 'responded')
       expect(kase).to be_instance_of(Case::FOI::Standard)
       expect(kase.current_state).to eq 'responded'
@@ -103,7 +103,7 @@ feature 'adding cases' do
   end
 
   context 'Case::FOI::TimelinessReview' do
-    scenario 'creating a closed case', js: true do
+    scenario 'creating a closed case' do
       kase = create_foi(case_type: 'case_foi_type_casefoitimelinessreview', target_state: 'closed')
       expect(kase).to be_instance_of(Case::FOI::TimelinessReview)
       expect(kase.current_state).to eq 'closed'
@@ -117,7 +117,7 @@ feature 'adding cases' do
   end
 
   context 'Case::FOI::ComplianceReview' do
-    scenario 'creating a closed case', js: true do
+    scenario 'creating a closed case' do
       kase = create_foi(case_type: 'case_foi_type_casefoicompliancereview', target_state: 'closed')
       expect(kase).to be_instance_of(Case::FOI::ComplianceReview)
       expect(kase.current_state).to eq 'closed'
