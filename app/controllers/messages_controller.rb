@@ -3,7 +3,7 @@ class MessagesController < ApplicationController
   def create
     @case = Case::Base.find params[:case_id]
     authorize(@case, :can_add_message_to_case?)
-    if teams = current_user.teams_for_case(@case).nil?
+    if current_user.teams_for_case(@case).any?
       teams = current_user.teams_for_case(@case)
     else
       teams = current_user.teams
