@@ -46,13 +46,23 @@ module PageObjects
         element :deactivate_team_link, 'a#deactivate-team-link'
 
         def row_for_directorate(name)
-          directorates_list.find { |row|
-             row.name.text == "View the details of #{name}"
-          }
+          begin
+            Capybara.ignore_hidden_elements = false
+            directorates_list.find { |row|
+              row.name.text == "View the details of #{name}"
+            }
+          ensure
+            Capybara.ignore_hidden_elements = true
+          end
         end
 
         def row_for_business_unit(name)
-          business_units_list.find { |row| row.name.text == name }
+          begin
+            Capybara.ignore_hidden_elements = false
+            business_units_list.find { |row| row.name.text == name }
+          ensure
+            Capybara.ignore_hidden_elements = true
+          end
         end
 
         def row_for_information_officer(name_or_email)
