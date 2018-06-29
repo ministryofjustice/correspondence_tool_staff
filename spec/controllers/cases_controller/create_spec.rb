@@ -140,8 +140,8 @@ describe CasesController do
       let(:params) do
         {
           correspondence_type: 'ico',
-          case_foi: {
-            original_request_type: 'FOI',
+          case_ico: {
+            original_case_type: 'FOI',
             ico_reference_number: 'ICOREF1',
             subject: 'ICO appeal for an FOI subject',
             message: 'ICO appeal for an FOI message',
@@ -162,7 +162,7 @@ describe CasesController do
         it 'authorises with can_add_case? policy and Case::ICO::Base' do
           sign_in manager
           expect{ subject }.to require_permission(:can_add_case?)
-                                 .with_args(manager, Case::ICO::Base)
+                                 .with_args(manager, Case::ICO::FOI)
         end
 
         it 'does not create a case when authentication fails' do
@@ -199,7 +199,7 @@ describe CasesController do
           expect(created_case.subject).to eq 'ICO appeal for an FOI subject'
           expect(created_case.message).to eq 'ICO appeal for an FOI message'
           expect(created_case.received_date).to eq Time.zone.today
-          expect(created_case.external_deadline).to eq 20.business_days.from_now.day.to_s
+          expect(created_case.external_deadline).to eq 20.business_days.from_now.to_date
         end
       end
     end

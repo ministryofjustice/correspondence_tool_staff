@@ -54,10 +54,10 @@ module PageObjects
             original_case_type = params.delete(:original_case_type)
             kase = FactoryBot.build :ico_foi_case, params
 
-            # choose_original_case_type(original_case_type)
+            choose_original_case_type(original_case_type.downcase)
 
             set_received_date(kase.received_date)
-            set_final_deadline_date(kase.external_deadline_date)
+            set_final_deadline_date(kase.external_deadline)
 
             ico_reference_number.set kase.ico_reference_number
             subject.set kase.subject

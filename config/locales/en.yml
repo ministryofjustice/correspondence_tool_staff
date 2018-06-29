@@ -298,7 +298,7 @@ en:
       case_ico:
         ico_reference_number: ICO case reference number
         message: "Case details"
-        type:
+        original_case_type:
           Case::ICO::FOI: FOI
           Case::ICO::SAR: SAR
       case_sar:

@@ -3,7 +3,7 @@
     ""
 
 = form_for @case, as: 'case_sar', url: admin_cases_path do |f|
-  = hidden_field_tag 'correspondence_type', @correspondence_type.abbreviation
+  = hidden_field_tag 'correspondence_type', @correspondence_type_abbreviation
   = f.hidden_field :type, value: 'Case::SAR'
 
   section

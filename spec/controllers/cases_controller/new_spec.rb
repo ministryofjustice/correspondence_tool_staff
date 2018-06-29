@@ -69,7 +69,7 @@ describe CasesController, type: :controller do
 
       it 'assigns @correspondence_type' do
         get :new, params: params
-        expect(assigns(:correspondence_type)).to eq CorrespondenceType.ico
+        expect(assigns(:correspondence_type)).to eq CorrespondenceType.foi
       end
     end
 

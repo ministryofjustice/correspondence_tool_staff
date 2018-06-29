@@ -8,6 +8,12 @@ class Case::ICO::Base < Case::Base
 
   validates_presence_of :ico_reference_number
 
+  validates :uploaded_request_files,
+            presence: true,
+            on: :create
+
+  after_create :process_uploaded_request_files
+
   class << self
     def type_abbreviation
       'ICO'

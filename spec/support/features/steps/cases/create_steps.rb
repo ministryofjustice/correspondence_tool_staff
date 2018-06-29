@@ -40,13 +40,13 @@ def create_ico_case_step(original_case_type: nil,
   expect(cases_new_ico_page).to be_displayed
 
   cases_new_ico_page.fill_in_case_details(
-    # original_case_type: original_case_type,
+    original_case_type: original_case_type,
     uploaded_request_files: uploaded_request_files
   )
 
   click_button 'Next - Assign case'
 
-  # expect(assignments_new_page).to be_displayed
+  expect(assignments_new_page).to be_displayed
 
   # # Return the case we created using the params of the current  path
   # kase_id = Rails.application.routes.recognize_path(current_path)[:case_id]

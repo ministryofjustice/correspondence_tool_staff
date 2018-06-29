@@ -1,5 +1,5 @@
 = form_for kase, as: :case_ico, url: cases_path do |f|
-  = hidden_field_tag 'correspondence_type', @correspondence_type.abbreviation.downcase
+  = hidden_field_tag 'correspondence_type', @correspondence_type_abbreviation
 
   = render partial: 'cases/ico/new_form', locals: { case_types: @case_types,
                                                     kase: kase,

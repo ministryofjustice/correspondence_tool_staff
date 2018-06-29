@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'FOI Case creation by a manager' do
+feature 'ICO case creation' do
 
   given(:responder)       { create(:responder) }
   given(:responding_team) { create :responding_team, responders: [responder] }
@@ -19,14 +19,14 @@ feature 'FOI Case creation by a manager' do
     request_attachment = Rails.root.join('spec', 'fixtures', 'request-1.pdf')
 
     new_case = create_ico_case_step(
-      # original_case_type: 'foi',
+      original_case_type: 'FOI',
       uploaded_request_files: [request_attachment]
     )
 
     # new_case = Case::Base.last
-    # request_attachment = new_case.attachments.request.first
-    # expect(request_attachment.key).to match %{/request-1.pdf$}
+    request_attachment = new_case.attachments.request.first
+    expect(request_attachment.key).to match %{/request-1.pdf$}
 
-    # assign_case_step business_unit: responder.responding_teams.first
+    assign_case_step business_unit: responder.responding_teams.first
   end
 end
