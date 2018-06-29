@@ -1,6 +1,8 @@
 = form_for kase, as: :case_foi, url: cases_path do |f|
-  = hidden_field_tag 'correspondence_type', @correspondence_type_abbreviation
-  = f.radio_button_fieldset :type, choices: @case_types, value_method: :demodulize
+  = hidden_field_tag 'correspondence_type', @correspondence_type.abbreviation
+  = f.radio_button_fieldset :type,
+                            choices: @case_types,
+                            value_method: :demodulize
   = render partial: 'cases/foi/new_form_common', locals: { f: f }
   = render partial: 'cases/foi/new_form_details', locals: { f: f }
 

@@ -28,6 +28,31 @@ def create_foi_case_step(type: 'standard',
   Case::Base.find(kase_id)
 end
 
+def create_ico_case_step(original_case_type: nil,
+                         uploaded_request_files: [])
+  # Assume we are on a case listing page
+  expect(cases_page).to have_new_case_button
+  cases_page.new_case_button.click
+
+  expect(cases_new_page).to be_displayed
+
+  cases_new_page.create_link_for_correspondence('ICO').click
+  expect(cases_new_ico_page).to be_displayed
+
+  cases_new_ico_page.fill_in_case_details(
+    # original_case_type: original_case_type,
+    uploaded_request_files: uploaded_request_files
+  )
+
+  click_button 'Next - Assign case'
+
+  # expect(assignments_new_page).to be_displayed
+
+  # # Return the case we created using the params of the current  path
+  # kase_id = Rails.application.routes.recognize_path(current_path)[:case_id]
+  # Case::Base.find(kase_id)
+end
+
 def create_sar_case_step flag_for_disclosure: false
   # Assume we are on a case listing page
   expect(cases_page).to have_new_case_button

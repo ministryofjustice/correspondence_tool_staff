@@ -11,7 +11,12 @@
 #
 
 class CorrespondenceType < ApplicationRecord
-
+  # Deadlines should really get their own table and be parameterised on:
+  #   correspondence_type_id
+  #   name - (e.g. internal, external, final)
+  #   days - number of days from the from_date
+  #   from date - the date to calculate from, e.g. created, received, day_after_created, day_after_received, external_deadline
+  #   business/calendar days - whether to calculate in business days or calendar days
   jsonb_accessor :properties,
                  internal_time_limit: :integer,
                  external_time_limit: :integer,
@@ -39,6 +44,22 @@ class CorrespondenceType < ApplicationRecord
   has_many :teams,
            through: :correspondence_type_roles
 
+  # Mapping of correspondence type to the available sub-classes that may be
+  # created when creating that type of correspondence. e.g. when creating an
+  # FOI they may choose between Standard, Timeliness review and Compliance
+  # review.
+  #
+  # Defined here for now, but should really be configured somewhere more
+  # sensible, like as a JSON property.
+  SUB_CLASSES_MAP = {
+    FOI: [Case::FOI::Standard,
+          Case::FOI::TimelinessReview,
+          Case::FOI::ComplianceReview],
+    SAR: [Case::SAR],
+    ICO: [Case::ICO::FOI,
+          Case::ICO::SAR],
+  }.with_indifferent_access.freeze
+
   def self.foi
     find_by!(abbreviation: 'FOI')
   end
@@ -57,5 +78,9 @@ class CorrespondenceType < ApplicationRecord
 
   def abbreviation_and_name
     "#{abbreviation.tr('_', '-')} - #{name}"
+  end
+
+  def sub_classes
+    SUB_CLASSES_MAP[abbreviation]
   end
 end
