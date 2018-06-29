@@ -3,7 +3,11 @@ class MessagesController < ApplicationController
   def create
     @case = Case::Base.find params[:case_id]
     authorize(@case, :can_add_message_to_case?)
-    teams = current_user.teams_for_case(@case)
+    if teams = current_user.teams_for_case(@case).nil?
+      teams = current_user.teams_for_case(@case)
+    else
+      teams = current_user.teams
+    end
     weightings = { 'manager' => 100, 'approver' => 200, 'responder' => 300 }
     team = teams.sort{ |a, b| weightings[a.role] <=> weightings[b.role] }.first
 
