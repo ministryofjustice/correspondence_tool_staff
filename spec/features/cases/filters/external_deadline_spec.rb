@@ -54,7 +54,8 @@ feature 'filtering by external deadline' do
 
     context 'filtering on the open cases page' do
       before do
-        login_step user: @setup.disclosure_bmt_user
+        login_as @setup.disclosure_bmt_user
+        open_cases_page.load
       end
 
       scenario 'filtering for today' do
@@ -76,8 +77,11 @@ feature 'filtering by external deadline' do
 
     context 'filtering on the search page' do
       before do
-        login_step user: @setup.disclosure_bmt_user
-        search_for(search_phrase: 'prison guards', num_expected_results: 5)
+        login_as @setup.disclosure_bmt_user
+        cases_search_page.load
+        search_for_phrase(page: cases_search_page,
+                          search_phrase: 'prison guards',
+                          num_expected_results: 5)
       end
 
       scenario 'filtering for today' do
@@ -148,7 +152,7 @@ feature 'filtering by external deadline' do
       expect(page.deadline_filter_panel.from_date).to be_nil
       expect(page.deadline_filter_panel.to_date).to be_nil
     end
-    
+
     def filter_next_ten_days_and_expect_correct_results(page, case_numbers)
       from_date = Date.today
       to_date   = 10.business_days.from_now.to_date
@@ -174,7 +178,7 @@ feature 'filtering by external deadline' do
       expect(page.deadline_filter_panel.from_date).to be_nil
       expect(page.deadline_filter_panel.to_date).to be_nil
     end
-    
+
     def filter_custom_dates_and_expect_correct_results(page, case_numbers)
       from_date = 5.business_days.from_now.to_date
       to_date   = 12.business_days.from_now.to_date

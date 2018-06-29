@@ -46,8 +46,11 @@ feature 'filtering by assigned business unit' do
   context 'from search page' do
 
     before(:each) do
-      login_step user: @setup.disclosure_bmt_user
-      search_for(search_phrase: 'prison guards', num_expected_results: 8)
+      login_as @setup.disclosure_bmt_user
+      cases_search_page.load
+      search_for_phrase(page: cases_search_page,
+                        search_phrase: 'prison guards',
+                        num_expected_results: 8)
     end
 
     it 'returns cases assigned to the specified business units', js: true do
@@ -58,8 +61,8 @@ feature 'filtering by assigned business unit' do
 
   context 'from open cases page' do
     before(:each) do
-      login_step user: @setup.disclosure_bmt_user
-      expect(open_cases_page).to be_displayed
+      login_as @setup.disclosure_bmt_user
+      open_cases_page.load
       cases = open_cases_page.case_list
       expect(cases.count).to eq @open_cases.size
     end
@@ -83,7 +86,6 @@ feature 'filtering by assigned business unit' do
     assigned_to_filter_panel = page.assigned_to_filter_panel
     expect(assigned_to_filter_panel.checkbox_for(main_team_name))
         .to be_checked
-
     page.filter_crumb_for(main_team_name).click
 
     page.open_filter(:assigned_to)
