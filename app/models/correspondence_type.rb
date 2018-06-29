@@ -11,7 +11,12 @@
 #
 
 class CorrespondenceType < ApplicationRecord
-
+  # Deadlines should really get their own table and be parameterised on:
+  #   correspondence_type_id
+  #   name - (e.g. internal, external, final)
+  #   days - number of days from the from_date
+  #   from date - the date to calculate from, e.g. created, received, day_after_created, day_after_received, external_deadline
+  #   business/calendar days - whether to calculate in business days or calendar days
   jsonb_accessor :properties,
                  internal_time_limit: :integer,
                  external_time_limit: :integer,
