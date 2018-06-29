@@ -16,6 +16,10 @@ class Workflows::Predicates
     @user.in?(@kase.approvers)
   end
 
+  def user_is_in_approving_team_for_case?
+    @user.in?(@kase.approving_team_users)
+  end
+
   def case_can_be_unflagged_for_clearance?
     case_can_be_unflagged_for_clearance_by_disclosure_specialist? ||
       case_can_be_unflagged_for_clearance_by_press_officer? ||
