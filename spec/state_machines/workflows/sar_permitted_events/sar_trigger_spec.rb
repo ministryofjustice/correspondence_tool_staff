@@ -74,7 +74,8 @@ describe ConfigurableStateMachine::Machine do
         it "should show permitted events" do
           k = create :closed_trigger_sar, :flagged_accepted
           expect(k.current_state).to eq 'closed'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:assign_to_new_team,
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
+                                                                      :assign_to_new_team,
                                                                       :destroy_case,
                                                                       :edit_case,
                                                                       :link_a_case,
@@ -333,7 +334,7 @@ describe ConfigurableStateMachine::Machine do
           k = create :closed_trigger_sar, :flagged_accepted
           approver = approver_in_assigned_team(k)
           expect(k.current_state).to eq 'closed'
-          expect(k.state_machine.permitted_events(approver.id)).to be_empty
+          expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case ]
         end
       end
 

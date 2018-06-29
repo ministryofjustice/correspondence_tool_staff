@@ -136,10 +136,9 @@ class Case::Base < ApplicationRecord
   scope :internal_review_timeliness, -> { where(type: 'Case::FOI::TimelinessReview')}
   scope :deadline_within, -> (from_date, to_date) { where("properties->>'external_deadline' BETWEEN ? AND ?", from_date, to_date) }
   validates :current_state, presence: true, on: :update
-
+  validates :subject, presence: true, length: { maximum: 100 }
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates_presence_of :received_date
-  validates :subject, presence: true, length: { maximum: 100 }
   validates :type, presence: true, exclusion: { in: %w{Case}, message: "Case type can't be blank" }
   validates :workflow, inclusion: { in: %w{ standard trigger full_approval }, message: "invalid" }
 
@@ -584,7 +583,9 @@ class Case::Base < ApplicationRecord
     ass.user
   end
 
-
+  def requires_flag_for_disclosure_specialists?
+    true
+  end
 
   private
 
