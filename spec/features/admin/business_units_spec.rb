@@ -4,6 +4,7 @@ feature 'editing teams' do
   given(:manager) { create :manager }
   given(:bu)      { create :business_unit }
 
+  # Needs JS to add business areas covered which uses ajax
   scenario 'editing a business unit', js: true do
     bu
     login_as manager
@@ -14,14 +15,12 @@ feature 'editing teams' do
     expect(business_group_row).to be_present
     business_group_row.name.click
     expect(teams_show_page.heading)
-      .to have_text "You are viewing Business group #{bu.business_group.name}"
-
+      .to have_copy "You are viewing Business group #{bu.business_group.name}"
     directorate_row = teams_show_page.row_for_directorate bu.directorate.name
     expect(directorate_row).to be_present
     directorate_row.name.click
     expect(teams_show_page.heading)
-      .to have_text "You are viewing Directorate #{bu.directorate.name}"
-
+      .to have_copy "You are viewing Directorate #{bu.directorate.name}"
     business_unit_row = teams_show_page.row_for_business_unit bu.name
     expect(business_unit_row).to be_present
     business_unit_row.edit.click
@@ -41,11 +40,9 @@ feature 'editing teams' do
     teams_areas_page.add_area_field.set 'This is another area'
     teams_areas_page.add_button.click
     teams_areas_page.wait_for_existing_areas nil, count: 2
-
     expect(teams_areas_page.descriptions).to include 'This is another area'
 
     teams_areas_page.create.click
-
 
     expect(teams_show_page.page_heading.heading.text).to eq new_name
     expect(teams_show_page.team_email.text).to eq new_email
