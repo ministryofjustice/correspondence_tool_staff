@@ -78,7 +78,10 @@ module PageObjects
     end
 
     def filter_crumb_for(crumb_text)
-      filter_crumbs.find { |crumb| crumb.text == "Remove #{crumb_text} filter." }
+      Capybara.ignore_hidden_elements = false
+      result = filter_crumbs.find { |crumb| crumb.text == "Remove #{crumb_text} filter." }
+      Capybara.ignore_hidden_elements = true
+      result
     end
   end
 end
