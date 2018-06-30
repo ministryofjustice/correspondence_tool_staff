@@ -39,7 +39,7 @@ RSpec.describe StatsController, type: :controller do
 
     it 'sets @custom_reports_sar' do
       get :custom
-      expect(assigns(:correspondence_types)).to eq CorrespondenceType.all
+      expect(assigns(:correspondence_types)).to eq CorrespondenceType.by_report_category
     end
 
     it 'renders the template' do
