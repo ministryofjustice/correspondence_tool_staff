@@ -82,7 +82,7 @@ feature "Downloading stats(csv) from the system" do
       download_r005_report
     end
 
-    scenario "custom reports" do
+    scenario "custom reports", js: true do
       # Manager creates & assigns to kilo
       login_as_responder
       views_stats_home_page
@@ -131,14 +131,14 @@ feature "Downloading stats(csv) from the system" do
   end
 
   def download_r004_report
-    stats_index_page.reports.fourth.action_link.click
+    stats_index_page.reports.fifth.action_link.click
     expect(page.response_headers['Content-Disposition'])
         .to match(/filename="r004_cabinet_office_report.csv"/)
     stats_index_page.load
   end
 
   def download_r005_report
-    stats_index_page.reports.third.action_link.click
+    stats_index_page.reports.fourth.action_link.click
     expect(page.response_headers['Content-Disposition'])
         .to match(/filename="r005_monthly_performance_report.csv"/)
     stats_index_page.load
@@ -152,9 +152,8 @@ feature "Downloading stats(csv) from the system" do
 
   def create_custom_r003_report
     r003 = ReportType.where(abbr:'R003').first
-    stats_custom_page.fill_in_form(r003.id, Date.yesterday, Date.today)
+    stats_custom_page.fill_in_form('foi', r003.id, Date.yesterday, Date.today)
     stats_custom_page.submit_button.click
-
     expect(stats_custom_page.success_message).to have_download_link
   end
 
@@ -168,7 +167,7 @@ feature "Downloading stats(csv) from the system" do
 
   def create_custom_r004_report
     r005 = ReportType.where(abbr:'R005').first
-    stats_custom_page.fill_in_form(r005.id, Date.yesterday, Date.today)
+    stats_custom_page.fill_in_form('foi', r005.id, Date.yesterday, Date.today)
     stats_custom_page.submit_button.click
 
     expect(stats_custom_page.success_message).to have_download_link

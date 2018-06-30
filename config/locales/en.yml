@@ -26,6 +26,8 @@ en:
         correspondence_type_ids: "Correspondence types"
       case/sar:
         third_party: ''
+      report:
+        correspondence_type: Case type
     errors:
       models:
         business_unit:
@@ -54,7 +56,6 @@ en:
             third_party:
               inclusion: Please choose yes or no
 
-
         assignment:
           attributes:
             state:
@@ -68,6 +69,8 @@ en:
               invalid_url: "url is invalid for file: %{filename}"
         report:
           attributes:
+            correspondence_type:
+              blank: "can't be blank"
             period_start:
               in_future: "can't be in the future."
             period_end:
@@ -207,6 +210,9 @@ en:
         flag_for_disclosure_specialists: Flag for disclosure specialist?
         subject_type: Who is the person the information is being requested about?
         third_party: Is the information being requested on someone's behalf?
+      report:
+        correspondence_type: Which type of cases do you want to report on?
+        report_type_id: What should this report cover?
       state_selector:
         selected_states: Filter by status
       search_query:
@@ -648,6 +654,8 @@ en:
     common:
       period_start: Date from
       period_end: Date to
+    custom:
+      timescale_copy: Which time period should this report cover?
   teams:
     business_unit_list:
       team_members: Team members

@@ -23,6 +23,13 @@ describe CorrespondenceType, type: :model do
   it { should have_attributes(default_press_officer: nil,
                               default_private_officer: nil)}
 
+  describe '.ico' do
+    it 'finds the ICO correspondence type' do
+      ico = find_or_create :ico_correspondence_type
+      expect(described_class.ico).to eq ico
+    end
+  end
+
   describe 'teams' do
     it 'lists teams that can handle this correspondence type' do
       ct1    = create(:correspondence_type, name: 'ct1', abbreviation: 'ct1')
@@ -65,6 +72,20 @@ describe CorrespondenceType, type: :model do
                                external_time_limit: 1,
                                deadline_calculator_class: 'Invalid Class'
       }.to raise_error(ArgumentError)
+    end
+  end
+
+  describe '.by_report_category' do
+
+    let(:cts)  { CorrespondenceType.by_report_category }
+
+    it 'returns only those correspondence types where report_category_name is pressent' do
+      expect(CorrespondenceType.all.size).to eq 3
+      expect(cts.size).to eq 2
+    end
+
+    it 'returns them in alphabetic order of report category name' do
+      expect(cts.map(&:report_category_name)).to eq [ 'FOI report', 'SAR report' ]
     end
   end
 end

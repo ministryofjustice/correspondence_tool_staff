@@ -15,6 +15,11 @@ module DeadlineCalculator
       kase.received_date + kase.correspondence_type.internal_time_limit.days
     end
 
+    def internal_deadline_for_date(correspondence_type, date)
+      days = correspondence_type.internal_time_limit.days
+      date + days
+    end
+
     def external_deadline
       kase.received_date + kase.correspondence_type.external_time_limit.days
     end

@@ -33,7 +33,7 @@ class Case::SARPolicy < Case::BasePolicy
         end
         final_scope
       else
-        Case::SAR.none
+        @scope.none
       end
     end
 
