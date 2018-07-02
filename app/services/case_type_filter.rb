@@ -26,6 +26,12 @@ class CaseTypeFilter
       )
     end
 
+    if 'ICO'.in?(user_types) && FeatureSet.ico.enabled?
+      types.merge!(
+        'ico-appeal' => 'ICO appeals'
+      )
+    end
+
     types
   end
 
@@ -116,11 +122,16 @@ class CaseTypeFilter
       when 'foi-ir-compliance' then records.internal_review_compliance
       when 'foi-ir-timeliness' then records.internal_review_timeliness
       when 'sar-non-offender'  then records.non_offender_sar
+      when 'ico-appeal'        then records.ico_appeal
       else
         raise NameError.new("unknown case type filter '#{filter}")
       end
     end
+    execute_filters(filters, records)
+  end
 
+
+  def execute_filters(filters, records)
     if filters.present?
       filters.reduce(Case::Base.none) do |result, filter|
         result.or(filter)
