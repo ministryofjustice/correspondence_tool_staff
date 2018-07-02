@@ -15,7 +15,6 @@ RSpec.describe Case::FOI::TimelinessReview, type: :model, parent: :case do
   describe 'mandatory attributes' do
     it { should validate_presence_of(:name)            }
     it { should validate_presence_of(:received_date)   }
-    it { should validate_presence_of(:subject)         }
     it { should validate_presence_of(:requester_type)  }
     it { should validate_presence_of(:delivery_method) }
     it { should validate_presence_of(:type)            }

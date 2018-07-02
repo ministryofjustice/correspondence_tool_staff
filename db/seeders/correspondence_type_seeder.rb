@@ -16,7 +16,7 @@ class CorrespondenceTypeSeeder
 
     rec = CorrespondenceType.find_by(abbreviation: 'SAR')
     rec = CorrespondenceType.new if rec.nil?
-    rec.update!(name: 'Subject Access Request',
+    rec.update!(name: 'Subject access request',
                 abbreviation: 'SAR',
                 escalation_time_limit: 0,
                 internal_time_limit: 10,
@@ -24,5 +24,15 @@ class CorrespondenceTypeSeeder
                 deadline_calculator_class: 'CalendarDays',
                 default_press_officer: 'correspondence-staff-dev+preston.offman@digital.justice.gov.uk',
                 default_private_officer: 'correspondence-staff-dev+primrose.offord@digital.justice.gov.uk')
+
+    rec = CorrespondenceType.find_by(abbreviation: 'ICO')
+    rec = CorrespondenceType.new if rec.nil?
+    rec.update!(name: 'Information Commissioner Office appeal.',
+                abbreviation: 'ICO',
+                escalation_time_limit: 0,
+                internal_time_limit: 10,
+                external_time_limit: 30,
+                deadline_calculator_class: 'CalendarDays')
+
   end
 end

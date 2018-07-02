@@ -100,7 +100,7 @@ GEM
     capybara-screenshot (1.0.21)
       capybara (>= 1.0, < 4)
       launchy
-    childprocess (0.5.9)
+    childprocess (0.9.0)
       ffi (~> 1.0, >= 1.0.11)
     cliver (0.3.2)
     codeclimate-test-reporter (1.0.8)
@@ -127,7 +127,7 @@ GEM
     docile (1.1.5)
     domain_name (0.5.20180417)
       unf (>= 0.0.5, < 1.0.0)
-    draper (3.0.0.pre1)
+    draper (3.0.1)
       actionpack (~> 5.0)
       activemodel (~> 5.0)
       activemodel-serializers-xml (~> 1.0)
@@ -393,6 +393,8 @@ GEM
       actionpack (~> 5.x, >= 5.0.1)
       actionview (~> 5.x, >= 5.0.1)
       activesupport (~> 5.x)
+    rails-data-migrations (1.1.0)
+      rails (>= 4.0.0)
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
@@ -471,10 +473,9 @@ GEM
       activerecord (>= 4.2, < 5.1)
       its-it (~> 1.2)
       schema_plus_core
-    selenium-webdriver (2.53.4)
+    selenium-webdriver (3.12.0)
       childprocess (~> 0.5)
-      rubyzip (~> 1.0)
-      websocket (~> 1.0)
+      rubyzip (~> 1.2)
     sentry-raven (2.6.3)
       faraday (>= 0.7.6, < 1.0)
     shell-spinner (1.0.4)
@@ -516,7 +517,7 @@ GEM
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
       spring (>= 1.2, < 3.0)
-    sprockets (3.7.1)
+    sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
     sprockets-rails (3.2.1)
@@ -554,7 +555,6 @@ GEM
       bindex (>= 0.4.0)
       railties (>= 5.0)
     webrobots (0.1.2)
-    websocket (1.2.3)
     websocket-driver (0.6.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.3)
@@ -582,7 +582,7 @@ DEPENDENCIES
   colorize
   config
   devise (~> 4.4)
-  draper (= 3.0.0.pre1)
+  draper (= 3.0.1)
   dropzonejs-rails (~> 0.7.3)
   factory_bot_rails (~> 4.10.0)
   faker (~> 1.8.7)
@@ -623,6 +623,7 @@ DEPENDENCIES
   pundit (~> 1.1)
   rails (~> 5.0)
   rails-controller-testing
+  rails-data-migrations (~> 1.1.0)
   recursive-open-struct
   rspec-collection_matchers
   rspec-rails (~> 3.4)

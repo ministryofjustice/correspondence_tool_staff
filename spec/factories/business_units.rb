@@ -11,7 +11,8 @@ FactoryBot.define do
     email               { name.downcase.gsub(/\W/, '_') + '@localhost' }
     role                'responder'
     correspondence_types { [find_or_create(:foi_correspondence_type),
-                            find_or_create(:sar_correspondence_type)] }
+                            find_or_create(:sar_correspondence_type),
+                            find_or_create(:ico_correspondence_type),] }
     directorate         { find_or_create :directorate }
     properties          { [find_or_create(:team_property, :area)] }
 

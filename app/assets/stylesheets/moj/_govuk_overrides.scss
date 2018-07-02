@@ -41,3 +41,7 @@ strong {
 table.basic-details th, td{
   vertical-align: top;
 }
+
+legend .heading-small{
+  margin-bottom: $gutter;
+}

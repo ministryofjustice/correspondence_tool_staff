@@ -1,7 +1,7 @@
 def assign_case_step(business_unit:,
                      expected_status: 'To be accepted',
                      expected_to_be_with: '%{business_unit_name}',
-                     expected_flash_msg: 'Case successfully created',
+                     expected_flash_msg: "Case assigned to #{business_unit.name}",
                      assigning_page: assignments_new_page)
   # Browse Business Group
   assigning_page.choose_business_group(business_unit.business_group)
@@ -9,7 +9,7 @@ def assign_case_step(business_unit:,
   # Select Business Unit
   assigning_page.choose_business_unit(business_unit)
 
-  expect(cases_show_page.text).to have_content(expected_flash_msg)
+  expect(cases_show_page.notice.text).to have_content(expected_flash_msg)
 
   expect(cases_show_page.case_status.details.copy.text).to eq expected_status
 

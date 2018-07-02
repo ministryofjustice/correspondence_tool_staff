@@ -11,14 +11,21 @@
 #
 
 class CorrespondenceType < ApplicationRecord
-
+  # Deadlines should really get their own table and be parameterised on:
+  #   correspondence_type_id
+  #   name - (e.g. internal, external, final)
+  #   days - number of days from the from_date
+  #   from date - the date to calculate from, e.g. created, received, day_after_created, day_after_received, external_deadline
+  #   business/calendar days - whether to calculate in business days or calendar days
   jsonb_accessor :properties,
                  internal_time_limit: :integer,
                  external_time_limit: :integer,
                  escalation_time_limit: :integer,
                  deadline_calculator_class: :string,
                  default_press_officer: :string,
-                 default_private_officer: :string
+                 default_private_officer: :string,
+                 report_category_name: [:string, default: '']
+
 
   enum deadline_calculator_class: {
          'BusinessDays' => 'BusinessDays',
@@ -33,8 +40,15 @@ class CorrespondenceType < ApplicationRecord
                         :deadline_calculator_class,
                         on: :create
 
-  has_many :cases,
-           class_name: 'Case::Base'
+  has_many :correspondence_type_roles,
+           -> { distinct },
+           class_name: 'TeamCorrespondenceTypeRole'
+  has_many :teams,
+           through: :correspondence_type_roles
+
+  def self.by_report_category
+    CorrespondenceType.properties_where_not(report_category_name: '').properties_order(:report_category_name)
+  end
 
   def self.foi
     find_by!(abbreviation: 'FOI')
@@ -48,7 +62,11 @@ class CorrespondenceType < ApplicationRecord
     find_by!(abbreviation: 'SAR')
   end
 
+  def self.ico
+    find_by!(abbreviation: 'ICO')
+  end
+
   def abbreviation_and_name
-    "#{abbreviation} - #{name}"
+    "#{abbreviation.tr('_', '-')} - #{name}"
   end
 end

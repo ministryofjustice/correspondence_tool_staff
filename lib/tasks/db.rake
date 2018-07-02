@@ -11,14 +11,9 @@ namespace :db do
   task :reseed => :clear do
     ENV['RESEEDING_DATABASE'] = '1'
     Rake::Task['db:migrate'].invoke
-    Rake::Task['db:seed'].invoke
+    Rake::Task['data:migrate'].invoke
     Rake::Task['db:seed:dev:teams'].invoke
     Rake::Task['db:seed:dev:users'].invoke
-  end
-
-
-  task :anon => :environment do
-    Anonymizer.new.run
   end
 
   def clear_database

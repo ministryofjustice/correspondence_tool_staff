@@ -39,7 +39,7 @@ class AssignmentsController < ApplicationController
     service.call
     @assignment = service.assignment
     if service.result == :ok
-      flash[:notice] = flash[:creating_case] ? t('.case_created') : t('.case_assigned')
+      flash[:notice] = flash[:creating_case] ? t('.case_created', business_unit_name: team.name) : t('.case_assigned')
       redirect_to case_path @case.id
     else
       render :new

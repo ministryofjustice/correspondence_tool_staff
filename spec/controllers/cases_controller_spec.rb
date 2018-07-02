@@ -791,6 +791,11 @@ RSpec.describe CasesController, type: :controller do
           expect(created_case.received_date).to eq Time.zone.today
         end
 
+        it 'diplays a flash message' do
+          post :create, params: params
+          expect(flash[:notice]).to eq "#{created_case.type_abbreviation} case created<br/>Case number: #{created_case.number}"
+        end
+
         it "create a internal review for timeliness" do
           params[:case_foi][:type] = 'TimelinessReview'
           post :create, params: params

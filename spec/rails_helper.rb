@@ -90,6 +90,7 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers
   config.include Devise::Test::ControllerHelpers, type: :view
   config.include Capybara::DSL, type: :view
+  config.include ViewSpecHelpers, type: :view
   config.after(:example, type: :view) do |example|
     if example.exception
       now = DateTime.now
@@ -154,6 +155,7 @@ end
 def seed_database_for_tests
   FactoryBot.find_or_create :foi_correspondence_type
   FactoryBot.find_or_create :sar_correspondence_type
+  FactoryBot.find_or_create :ico_correspondence_type
   FactoryBot.find_or_create :team_dacu
   FactoryBot.find_or_create :team_press_office
   FactoryBot.find_or_create :team_private_office

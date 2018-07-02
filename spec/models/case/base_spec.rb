@@ -49,6 +49,7 @@ RSpec.describe Case::Base, type: :model do
                                     responding_team: responding_team }
   let(:accepted_case)      { create :accepted_case,
                                     responder: responder }
+  let(:accepted_sar)       { create :accepted_sar, responder: responder }
   let(:case_being_drafted) { create :case_being_drafted }
   let(:case_being_drafted_flagged) { create :case_being_drafted, :flagged,
                                             approving_team: approving_team }
@@ -69,11 +70,10 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe 'mandatory attributes' do
-    it { should validate_presence_of(:received_date)   }
-    it { should validate_presence_of(:subject)         }
-    it { should validate_presence_of(:type)            }
+    it { should validate_presence_of(:received_date) }
+    it { should validate_presence_of(:type)          }
+    it { should validate_presence_of(:subject)       }
   end
-
 
   describe 'workflow validation' do
     it { should validate_inclusion_of(:workflow).in_array %w{ standard trigger} }
@@ -301,6 +301,14 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
+  describe 'non_offender_sar scope' do
+    it 'only returns SAR cases' do
+      accepted_case
+      accepted_sar
+      expect(Case::Base.non_offender_sar).to eq [accepted_sar]
+    end
+  end
+
   describe 'most_recent_first scope' do
     let!(:case_oldest) { create :case, received_date: 11.business_days.ago }
     let!(:case_recent) { create :case, received_date: 10.business_days.ago }
@@ -470,9 +478,10 @@ RSpec.describe Case::Base, type: :model do
     it { should_not allow_value('foobar.com').for :email  }
   end
 
-  describe '#subject' do
+  describe '#subject' do 
     it { should validate_length_of(:subject).is_at_most(100) }
   end
+
 
   describe '#type' do
     it { should validate_exclusion_of(:type).in_array(['Case'])
@@ -1653,5 +1662,13 @@ RSpec.describe Case::Base, type: :model do
       expect(kase.assigned_private_officer).to eq private_officer
     end
   end
+
+  describe '#requires_flag_for_disclosure_specialists?' do
+    it 'returns true' do
+      expect(kase.requires_flag_for_disclosure_specialists?).to be true
+    end
+  end
+
+
 
 end

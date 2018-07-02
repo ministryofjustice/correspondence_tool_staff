@@ -26,6 +26,8 @@ en:
         correspondence_type_ids: "Correspondence types"
       case/sar:
         third_party: ''
+      report:
+        correspondence_type: Case type
     errors:
       models:
         business_unit:
@@ -54,7 +56,6 @@ en:
             third_party:
               inclusion: Please choose yes or no
 
-
         assignment:
           attributes:
             state:
@@ -68,6 +69,8 @@ en:
               invalid_url: "url is invalid for file: %{filename}"
         report:
           attributes:
+            correspondence_type:
+              blank: "can't be blank"
             period_start:
               in_future: "can't be in the future."
             period_end:
@@ -207,6 +210,9 @@ en:
         flag_for_disclosure_specialists: Flag for disclosure specialist?
         subject_type: Who is the person the information is being requested about?
         third_party: Is the information being requested on someone's behalf?
+      report:
+        correspondence_type: Which type of cases do you want to report on?
+        report_type_id: What should this report cover?
       state_selector:
         selected_states: Filter by status
       search_query:
@@ -340,6 +346,7 @@ en:
 
 
   notices:
+    case_cleared: "The Information Officer has been notified that the response is ready to send."
     case_closed: You've closed this case
     closure_details_updated: You have updated the closure details for this case.
     response_uploaded: You have uploaded the response for this case.
@@ -464,7 +471,7 @@ en:
       heading: 'Assign to new team'
     assign_to_team:
       case_assigned: Case successfully assigned
-      case_created: Case successfully created
+      case_created: Case assigned to %{business_unit_name}
     new:
       heading: Assign case
       new_assignment: Create case
@@ -478,6 +485,9 @@ en:
 
   cases:
     approve_response_interstitial:
+      approve_message:
+        foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
+        sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
       clear: Clear response
     bypass_approvals_form:
       press_clearance_reqd: Does Press office need to clear this response?
@@ -638,11 +648,14 @@ en:
       foi-standard: 'FOI - Standard'
       foi-ir-compliance: 'FOI - Internal review for compliance'
       foi-ir-timeliness: 'FOI - Internal review for timeliness'
+      sar-non-offender: 'SAR - Non-offender'
 
   stats:
     common:
       period_start: Date from
       period_end: Date to
+    custom:
+      timescale_copy: Which time period should this report cover?
   teams:
     business_unit_list:
       team_members: Team members

@@ -36,7 +36,7 @@ module ConfigurableStateMachine
         expect(machine).to be_instance_of(Machine)
         config = machine.instance_variable_get(:@config)
         expect(config).to be_instance_of(RecursiveOpenStruct)
-        expect(config.to_h.keys).to eq [:permitted_events, :initial_state, :user_roles]
+        expect(config.to_h.keys).to eq [:initial_state, :user_roles]
       end
     end
 

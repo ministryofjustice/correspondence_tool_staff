@@ -21,8 +21,6 @@ module Stats
 
       csv_lines = map.to_csv.split("\n")
 
-      ap csv_lines
-
       expect(csv_lines.shift).to eq header_line
       expect(csv_lines.shift).to match business_group_line
       expect(csv_lines.shift).to match directorate_line

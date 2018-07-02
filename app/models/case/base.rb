@@ -74,6 +74,8 @@ class Case::Base < ApplicationRecord
   scope :closed, ->       { where(current_state: 'closed').order(last_transitioned_at: :desc) }
   scope :standard_foi, -> { where(type: 'Case::FOI::Standard') }
 
+  scope :non_offender_sar, -> { where(type: 'Case::SAR') }
+
   scope :with_teams, -> (teams) do
     includes(:assignments)
       .where(assignments: { team: teams,
@@ -134,10 +136,9 @@ class Case::Base < ApplicationRecord
   scope :internal_review_timeliness, -> { where(type: 'Case::FOI::TimelinessReview')}
   scope :deadline_within, -> (from_date, to_date) { where("properties->>'external_deadline' BETWEEN ? AND ?", from_date, to_date) }
   validates :current_state, presence: true, on: :update
-
+  validates :subject, presence: true, length: { maximum: 100 }
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates_presence_of :received_date
-  validates :subject, presence: true, length: { maximum: 100 }
   validates :type, presence: true, exclusion: { in: %w{Case}, message: "Case type can't be blank" }
   validates :workflow, inclusion: { in: %w{ standard trigger full_approval }, message: "invalid" }
 
@@ -582,7 +583,9 @@ class Case::Base < ApplicationRecord
     ass.user
   end
 
-
+  def requires_flag_for_disclosure_specialists?
+    true
+  end
 
   private
 
@@ -625,6 +628,12 @@ class Case::Base < ApplicationRecord
   end
 
   def set_deadlines
+    # Deadlines should really get their own table and be parameterised on:
+    #   correspondence_type_id
+    #   name - (e.g. internal, external, final)
+    #   days - number of days from the from_date
+    #   from date - the date to calculate from, e.g. created, received, day_after_created, day_after_received, external_deadline
+    #   business/calendar days - whether to calculate in business days or calendar days
     self.escalation_deadline = deadline_calculator.escalation_deadline
     self.internal_deadline = deadline_calculator.internal_deadline
     self.external_deadline = deadline_calculator.external_deadline

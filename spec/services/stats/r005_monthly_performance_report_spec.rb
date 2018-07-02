@@ -5,7 +5,7 @@ module Stats
 
     describe '.title' do
       it 'returns the title' do
-        expect(R005MonthlyPerformanceReport.title).to eq 'Monthly report'
+        expect(R005MonthlyPerformanceReport.title).to eq 'Monthly report (FOI)'
       end
     end
 
@@ -17,6 +17,11 @@ module Stats
           3.times { create_case(:trigger_responded_in_time, 4) }
           2.times { create_case(:non_trigger_open_in_time, 4) }
           1.times { create_case(:non_trigger_open_late, 4) }
+
+          # these should be ignored
+          create :compliance_review
+          create :timeliness_review
+          create :sar_case
 
           @expected_results = {
             'March' => {
@@ -91,16 +96,27 @@ module Stats
         end
       end
 
+      context '#case_scope' do
+        it 'only selects FOI non compliance cases' do
+          Timecop.freeze(Time.local(2017, 12, 7, 12,33,44)) do
+            report = R005MonthlyPerformanceReport.new
+            expect(report.case_scope.map(&:type).uniq).to eq ['Case::FOI::Standard']
+          end
+        end
+
+      end
+
+
       it 'contains report name and reporting period in row 1 column 1' do
         row_1 = @results.first
-        expect(row_1.first).to eq 'Monthly report - 1 Jan 2017 to 2 May 2017'
+        expect(row_1.first).to eq 'Monthly report (FOI) - 1 Jan 2017 to 2 May 2017'
       end
 
       it 'contains expected superheadings in row 2' do
         row_2 = @results[1]
         expect(row_2[0]).to eq ''
-        (1..6).each { |i| expect(row_2[i]).to eq 'Non-trigger FOIs' }
-        (7..12).each { |i| expect(row_2[i]).to eq 'Trigger FOIs'}
+        (1..6).each { |i| expect(row_2[i]).to eq 'Non-trigger cases' }
+        (7..12).each { |i| expect(row_2[i]).to eq 'Trigger cases'}
         (13..18).each { |i| expect(row_2[i]).to eq 'Overall'}
       end
 

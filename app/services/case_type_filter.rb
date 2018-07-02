@@ -8,12 +8,28 @@ class CaseTypeFilter
     }
   end
 
-  def self.available_case_types
-    {
-      'foi-standard'      => I18n.t('filters.case_types.foi-standard'),
-      'foi-ir-compliance' => I18n.t('filters.case_types.foi-ir-compliance'),
-      'foi-ir-timeliness' => I18n.t('filters.case_types.foi-ir-timeliness'),
-    }
+  def self.available_case_types(user)
+    user_types = user.teams
+                   .collect { |team| team.correspondence_types.pluck(:abbreviation) }
+                   .flatten
+                   .uniq
+    types = {}
+
+    if "FOI".in?(user_types)
+      types.merge!(
+        'foi-standard'      => I18n.t('filters.case_types.foi-standard'),
+        'foi-ir-compliance' => I18n.t('filters.case_types.foi-ir-compliance'),
+        'foi-ir-timeliness' => I18n.t('filters.case_types.foi-ir-timeliness'),
+      )
+    end
+
+    if "SAR".in?(user_types) && FeatureSet.sars.enabled?
+      types.merge!(
+        'sar-non-offender' => I18n.t('filters.case_types.sar-non-offender')
+      )
+    end
+
+    types
   end
 
   def self.filter_attributes
@@ -102,6 +118,7 @@ class CaseTypeFilter
       when 'foi-standard'      then records.standard_foi
       when 'foi-ir-compliance' then records.internal_review_compliance
       when 'foi-ir-timeliness' then records.internal_review_timeliness
+      when 'sar-non-offender'  then records.non_offender_sar
       else
         raise NameError.new("unknown case type filter '#{filter}")
       end
