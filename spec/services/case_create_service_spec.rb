@@ -25,7 +25,7 @@ describe CaseCreateService do
     let(:params) do
       regular_params.merge flag_for_disclosure_specialists: 'no'
     end
-    let(:ccs) { CaseCreateService.new(manager, params) }
+    let(:ccs) { CaseCreateService.new(manager, Case::FOI::Standard, params) }
 
     it 'creates a case' do
       expect { ccs.call }.to change { Case::Base.count }.by 1
@@ -58,7 +58,7 @@ describe CaseCreateService do
     let(:params) do
       regular_params.merge flag_for_disclosure_specialists: 'yes'
     end
-    let(:ccs) { CaseCreateService.new(manager, params) }
+    let(:ccs) { CaseCreateService.new(manager, Case::FOI::Standard, params) }
 
     it 'creates a case' do
       expect { ccs.call }.to change { Case::Base.count }.by 1
@@ -98,7 +98,7 @@ describe CaseCreateService do
     let(:params) do
       regular_params.merge name: nil
     end
-    let(:ccs) { CaseCreateService.new(manager, params) }
+    let(:ccs) { CaseCreateService.new(manager, Case::FOI::Standard, params) }
 
     it 'sets the result to "error"' do
       ccs.call
@@ -114,7 +114,7 @@ describe CaseCreateService do
     let(:params) do
       regular_params.merge name: nil
     end
-    let(:ccs) { CaseCreateService.new(manager, params) }
+    let(:ccs) { CaseCreateService.new(manager, Case::FOI::Standard, params) }
 
     it 'sets the result to "error"' do
       ccs.call

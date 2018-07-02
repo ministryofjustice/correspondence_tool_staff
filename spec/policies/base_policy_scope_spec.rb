@@ -46,7 +46,6 @@ describe Case::BasePolicy::Scope do
                                                         @awaiting_responder_sar_case,
                                                         @drafting_sar_case_other_team,
                                                         @ico_sar_case]
-
     end
 
     after(:all)  { DbHousekeeping.clean }

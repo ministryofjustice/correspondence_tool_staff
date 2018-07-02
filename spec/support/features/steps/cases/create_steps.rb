@@ -48,9 +48,9 @@ def create_ico_case_step(original_case_type: nil,
 
   expect(assignments_new_page).to be_displayed
 
-  # # Return the case we created using the params of the current  path
-  # kase_id = Rails.application.routes.recognize_path(current_path)[:case_id]
-  # Case::Base.find(kase_id)
+  # Return the case we created using the params of the current  path
+  kase_id = Rails.application.routes.recognize_path(current_path)[:case_id]
+  Case::Base.find(kase_id)
 end
 
 def create_sar_case_step flag_for_disclosure: false

@@ -3,7 +3,7 @@
     h2.request--heading
       = "Clearance levels"
 
-    - if case_details.within_escalation_deadline?
+    - if case_details.has_attribute?(:escalation_deadline) && case_details.within_escalation_deadline?
       p.escalation-deadline
         | To be decided by &nbsp;
         strong = case_details.escalation_deadline

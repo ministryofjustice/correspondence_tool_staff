@@ -279,6 +279,7 @@ class CasesController < ApplicationController
       @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
       redirect_to case_path(@case)
     else
+      @case = @case.decorate
       render :edit
     end
   end

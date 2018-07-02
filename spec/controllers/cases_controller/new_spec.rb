@@ -32,7 +32,7 @@ describe CasesController, type: :controller do
     it 'assigns @s3_direct_post when rendering new case page' do
       sign_in manager
       get :new, params: { correspondence_type: 'foi' }
-      expect(assigns(:s3_direct_post)).to be_a Aws::S3::PresignedPost
+      expect(assigns(:s3_direct_post)).to be_present
     end
 
     context 'new foi case' do

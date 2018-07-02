@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'cases/ico/new.html.slim', type: :view do
   it 'displays the new case page' do
-    kase = Case::ICO::Base.new
+    kase = build(:ico_foi_case)
     assign(:case, kase)
     assign(:correspondence_type, kase.correspondence_type)
     assign(:case_types, ['Case::ICO::FOI', 'Case::ICO::SAR'])
