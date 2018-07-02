@@ -84,7 +84,7 @@ feature "Downloading stats(csv) from the system" do
       download_r005_report
     end
 
-    scenario "custom reports", js: true do
+    scenario "custom reports" do
       # Manager creates & assigns to kilo
       login_as_responder
       views_stats_home_page

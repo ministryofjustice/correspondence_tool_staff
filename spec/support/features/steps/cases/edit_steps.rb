@@ -7,8 +7,8 @@ def edit_case_step(kase:, subject: nil)
   cases_edit_page.submit_button.click
 
   if subject
-    expect(cases_show_page.page_heading.heading.text)
-        .to eq "Case subject, #{subject}"
+    expect(cases_show_page.page_heading.heading)
+        .to have_copy "Case subject, #{subject}"
   end
 end
 
