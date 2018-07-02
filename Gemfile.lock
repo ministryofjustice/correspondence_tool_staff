@@ -236,7 +236,7 @@ GEM
       domain_name (~> 0.5)
     humanize_boolean (0.0.2)
       i18n
-    i18n (0.9.5)
+    i18n (1.0.1)
       concurrent-ruby (~> 1.0)
     i18n-tasks (0.9.21)
       activesupport (>= 4.0.2)
@@ -431,7 +431,7 @@ GEM
     rspec-mocks (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.5.0)
-    rspec-rails (3.5.1)
+    rspec-rails (3.5.2)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
@@ -626,7 +626,7 @@ DEPENDENCIES
   rails-data-migrations (~> 1.1.0)
   recursive-open-struct
   rspec-collection_matchers
-  rspec-rails (~> 3.4)
+  rspec-rails (~> 3.5)
   rubocop (~> 0.57.2)
   rubocop-rspec
   ruby-progressbar
