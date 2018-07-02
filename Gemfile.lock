@@ -127,7 +127,7 @@ GEM
     docile (1.1.5)
     domain_name (0.5.20180417)
       unf (>= 0.0.5, < 1.0.0)
-    draper (3.0.0.pre1)
+    draper (3.0.1)
       actionpack (~> 5.0)
       activemodel (~> 5.0)
       activemodel-serializers-xml (~> 1.0)
@@ -582,7 +582,7 @@ DEPENDENCIES
   colorize
   config
   devise (~> 4.4)
-  draper (= 3.0.0.pre1)
+  draper (= 3.0.1)
   dropzonejs-rails (~> 0.7.3)
   factory_bot_rails (~> 4.10.0)
   faker (~> 1.8.7)
