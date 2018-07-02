@@ -74,4 +74,18 @@ describe CorrespondenceType, type: :model do
       }.to raise_error(ArgumentError)
     end
   end
+
+  describe '.by_report_category' do
+
+    let(:cts)  { CorrespondenceType.by_report_category }
+
+    it 'returns only those correspondence types where report_category_name is pressent' do
+      expect(CorrespondenceType.all.size).to eq 3
+      expect(cts.size).to eq 2
+    end
+
+    it 'returns them in alphabetic order of report category name' do
+      expect(cts.map(&:report_category_name)).to eq [ 'FOI report', 'SAR report' ]
+    end
+  end
 end

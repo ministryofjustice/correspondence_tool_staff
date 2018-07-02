@@ -31,7 +31,7 @@ class StatsController < ApplicationController
     @report = Report.new
     @custom_reports_foi = ReportType.custom.foi
     @custom_reports_sar = ReportType.custom.sar
-    @correspondence_types = CorrespondenceType.all
+    @correspondence_types = CorrespondenceType.by_report_category
     if FeatureSet.sars.disabled?
       @report.correspondence_type = 'FOI'
     end

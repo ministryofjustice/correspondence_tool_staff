@@ -765,4 +765,36 @@ RSpec.describe AssignmentsController, type: :controller do
       end
     end
   end
+
+  context 'with standard FOI' do
+    let(:kase)    { create :case }
+    let(:bu)      { create :responding_team }
+    let(:params) do
+      ActionController::Parameters.new(
+        {
+          :action     => 'assign_to_team',
+          :controller => 'assignments',
+          :team_id    => bu.id.to_s,
+          :case_id    => kase.id.to_s
+        }
+      )
+    end
+
+    it 'displays a flash message' do
+      sign_in manager
+      patch :assign_to_team, params: params.to_unsafe_hash
+      expect(flash[:notice]).to eq 'Case successfully assigned'
+    end
+
+    context 'after creating case' do
+      let(:flash)   { MockFlash.new(creating_case: true)}
+
+      it 'displays a flash message' do
+        sign_in manager
+        allow_any_instance_of(AssignmentsController).to receive(:flash).and_return(flash)
+        patch :assign_to_team, params: params.to_unsafe_hash
+        expect(flash[:notice]).to eq "Case assigned to #{bu.name}"
+      end
+    end
+  end
 end

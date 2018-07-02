@@ -151,10 +151,9 @@ class CasesController < ApplicationController
     service.call
     @case = service.case
     case service.result
-    when :case_created
-      redirect_to case_path @case
     when :assign_responder
       flash[:creating_case] = true
+      flash[:notice] = "#{@case.type_abbreviation} case created<br/>Case number: #{@case.number}".html_safe
       redirect_to new_case_assignment_path @case
     else # including :error
       @case.type = @case.type.demodulize
@@ -895,7 +894,7 @@ class CasesController < ApplicationController
 
   def get_edit_close_link
     edit_close_link = edit_closure_case_path(@case)
-    view_context.link_to "Edit case details",
+    view_context.link_to "Edit case closure details",
                          edit_close_link,
                          { class: "undo-take-on-link" }
   end

@@ -234,7 +234,7 @@ class Case::BasePolicy < ApplicationPolicy
 
   def can_add_message_to_case?
     clear_failed_checks
-    check_case_is_not_closed && (check_user_is_a_manager || check_user_is_an_approver_for_case || check_user_is_a_responder_for_case)
+    check_can_trigger_event(:add_message_to_case)
   end
 
   def execute_response_approval?

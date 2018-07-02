@@ -189,7 +189,7 @@ case_types:
 
               responded:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 extend_for_pit:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
@@ -354,6 +354,7 @@ case_types:
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
@@ -471,7 +472,7 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 link_a_case:
                 remove_linked_case:
 
@@ -490,7 +491,7 @@ case_types:
               drafting:
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 add_response_to_flagged_case:
                   if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
                   transition_to: pending_dacu_clearance
@@ -503,7 +504,7 @@ case_types:
               pending_dacu_clearance:
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 link_a_case:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
@@ -654,7 +655,7 @@ case_types:
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
@@ -670,7 +671,7 @@ case_types:
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
@@ -686,7 +687,7 @@ case_types:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 extend_for_pit:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 flag_for_clearance:
@@ -704,7 +705,7 @@ case_types:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 approve:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                   transition_to: pending_press_office_clearance
@@ -734,7 +735,7 @@ case_types:
                 #   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 approve:
                   if: Workflows::Predicates#user_is_assigned_press_officer?
                   transition_to: pending_private_office_clearance
@@ -758,7 +759,7 @@ case_types:
                 #   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 approve:
                   if: Workflows::Predicates#user_is_assigned_private_officer?
                   transition_to: awaiting_dispatch
@@ -802,7 +803,7 @@ case_types:
 
               responded:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 extend_for_pit:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
@@ -820,7 +821,7 @@ case_types:
             states:
               unassigned:
                 add_message_to_case:
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 link_a_case:
                 remove_linked_case:
 
@@ -839,7 +840,7 @@ case_types:
               drafting:
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 add_response_to_flagged_case:
                   if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
                   transition_to: pending_dacu_clearance
@@ -852,7 +853,7 @@ case_types:
               pending_dacu_clearance:
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 link_a_case:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
@@ -861,7 +862,7 @@ case_types:
               pending_press_office_clearance:
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 link_a_case:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?
@@ -870,7 +871,7 @@ case_types:
               pending_private_office_clearance:
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                  if: Case::BasePolicy#can_add_message_to_case?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 link_a_case:
                 reassign_user:
                   if: Case::BasePolicy#assignments_reassign_user?

@@ -423,9 +423,9 @@ describe Case::BasePolicy do
     # let(:other_responder) { create :responder }
 
     context 'closed case' do
-      it { should_not permit(manager,     closed_case) }
-      it { should_not permit(approver,    closed_case) }
-      it { should_not permit(responder,   closed_case) }
+      it { should     permit(manager,     closed_case) }
+      it { should     permit(approver,    closed_case) }
+      it { should     permit(responder,   closed_case) }
     end
 
     context 'open case' do

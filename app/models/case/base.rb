@@ -628,6 +628,12 @@ class Case::Base < ApplicationRecord
   end
 
   def set_deadlines
+    # Deadlines should really get their own table and be parameterised on:
+    #   correspondence_type_id
+    #   name - (e.g. internal, external, final)
+    #   days - number of days from the from_date
+    #   from date - the date to calculate from, e.g. created, received, day_after_created, day_after_received, external_deadline
+    #   business/calendar days - whether to calculate in business days or calendar days
     self.escalation_deadline = deadline_calculator.escalation_deadline
     self.internal_deadline = deadline_calculator.internal_deadline
     self.external_deadline = deadline_calculator.external_deadline

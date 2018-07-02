@@ -165,6 +165,12 @@ enabled_features:
     Local: true
     Host-dev: true
     Host-demo: true
+    Host-staging: true
+    Host-production: true
+  sars_reporting:
+    Local: true
+    Host-dev: false
+    Host-demo: false
     Host-staging: false
     Host-production: false
   trigger_sars:

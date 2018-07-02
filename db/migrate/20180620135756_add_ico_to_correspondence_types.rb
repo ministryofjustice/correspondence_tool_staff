@@ -15,10 +15,10 @@ class AddIcoToCorrespondenceTypes < ActiveRecord::Migration[5.0]
   def up
     ico = CorrespondenceType.create!(name: 'Information Commissioner Office appeal.',
                                      abbreviation: 'ICO',
-                                     escalation_time_limit: 0,
+                                     escalation_time_limit: nil,
                                      internal_time_limit: 10,
-                                     external_time_limit: 30,
-                                     deadline_calculator_class: 'CalendarDays')
+                                     external_time_limit: nil,
+                                     deadline_calculator_class: nil)
     BusinessUnit.all.each do | bu|
       bu.correspondence_type_ids += [ico.id]
     end

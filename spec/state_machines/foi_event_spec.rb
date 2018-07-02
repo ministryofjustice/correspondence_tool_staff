@@ -253,12 +253,10 @@ describe 'state machine' do
                  [:disclosure_specialist_coworker, :full_closed_foi],
 
                  [:another_disclosure_specialist, :std_closed_foi],
-                 [:another_disclosure_specialist, :trig_unassigned_foi],
                  [:another_disclosure_specialist, :trig_awresp_foi],
                  [:another_disclosure_specialist, :trig_draft_foi],
                  [:another_disclosure_specialist, :trig_pdacu_foi],
                  [:another_disclosure_specialist, :trig_closed_foi],
-                 [:another_disclosure_specialist, :trig_unassigned_foi_accepted],
                  [:another_disclosure_specialist, :trig_awresp_foi_accepted],
                  [:another_disclosure_specialist, :trig_draft_foi_accepted],
                  [:another_disclosure_specialist, :trig_pdacu_foi_accepted],
@@ -326,11 +324,9 @@ describe 'state machine' do
 
 
                  [:press_officer, :std_closed_foi],
-                 [:press_officer, :trig_unassigned_foi],
                  [:press_officer, :trig_awresp_foi],
                  [:press_officer, :trig_draft_foi],
                  [:press_officer, :trig_pdacu_foi],
-                 [:press_officer, :trig_unassigned_foi_accepted],
                  [:press_officer, :trig_awresp_foi_accepted],
                  [:press_officer, :trig_draft_foi_accepted],
                  [:press_officer, :trig_pdacu_foi_accepted],
@@ -350,11 +346,9 @@ describe 'state machine' do
 
 
                  [:private_officer, :std_closed_foi],
-                 [:private_officer, :trig_unassigned_foi],
                  [:private_officer, :trig_awresp_foi],
                  [:private_officer, :trig_draft_foi],
                  [:private_officer, :trig_pdacu_foi],
-                 [:private_officer, :trig_unassigned_foi_accepted],
                  [:private_officer, :trig_awresp_foi_accepted],
                  [:private_officer, :trig_draft_foi_accepted],
                  [:private_officer, :trig_pdacu_foi_accepted],
