@@ -177,8 +177,8 @@ enabled_features:
     Local: true
     Host-dev: true
     Host-demo: true
-    Host-staging: false
-    Host-production: false
+    Host-staging: true
+    Host-production: true
   ico:
     Local: true
     Host-dev: true
