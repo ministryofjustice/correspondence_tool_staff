@@ -15,8 +15,4 @@ module CasesFOI
       uploaded_request_files: [],
     )
   end
-
-  def get_foi_case_class_from_params(params)
-    "Case::FOI::#{params[:case_foi].fetch(:type)}".safe_constantize
-  end
 end

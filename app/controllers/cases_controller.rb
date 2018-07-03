@@ -138,36 +138,53 @@ class CasesController < ApplicationController
     permitted_correspondence_types
     if FeatureSet.sars.disabled? && FeatureSet.ico.disabled?
       set_correspondence_type('foi')
-      prepare_new_case
+      prepare_new_case()
+      render :new
     elsif params[:correspondence_type].present?
       set_correspondence_type(params[:correspondence_type])
-      prepare_new_case
+      prepare_new_case()
+      render :new
     else
       # set_creatable_correspondence_types
-      prepare_select_type
+      prepare_select_type()
+      render :select_type
     end
   end
 
   def create
     set_correspondence_type(params.fetch(:correspondence_type))
-
-    case_class = get_case_class_from_params(params)
-    authorize case_class, :can_add_case?
-
     case_params = create_params(@correspondence_type_abbreviation)
-    service = CaseCreateService.new current_user, case_class, case_params
-    service.call
-    @case = service.case
-    case service.result
-    when :assign_responder
-      flash[:creating_case] = true
-      flash[:notice] = "#{@case.type_abbreviation} case created<br/>Case number: #{@case.number}".html_safe
-      redirect_to new_case_assignment_path @case
-    else # including :error
-      @case.type = @case.type.demodulize
-      @case_types = @correspondence_type.sub_classes.map(&:to_s)
-      @s3_direct_post = s3_uploader_for @case, 'requests'
-      render :new
+
+    case_class_service = GetCaseClassFromParamsService.new(
+      type: @correspondence_type,
+      params: params["case_#{@correspondence_type_abbreviation}"]
+    )
+    case_class_service.call()
+    if case_class_service.error?
+      permitted_correspondence_types
+      prepare_new_case()
+      @case.assign_attributes(case_params)
+      case_class_service.set_error_on_case(@case)
+      render(:new)
+    else
+      case_class = case_class_service.case_class
+      authorize case_class, :can_add_case?
+
+      service = CaseCreateService.new current_user, case_class, case_params
+      service.call
+      @case = service.case
+      case service.result
+      when :assign_responder
+        flash[:creating_case] = true
+        flash[:notice] = "#{@case.type_abbreviation} case created<br/>Case number: #{@case.number}".html_safe
+        redirect_to new_case_assignment_path @case
+      else # including :error
+        # @case.original_case_type = case_params[:original_case_type]
+        @case.type = @case.type.demodulize
+        @case_types = @correspondence_type.sub_classes.map(&:to_s)
+        @s3_direct_post = s3_uploader_for @case, 'requests'
+        render :new
+      end
     end
 
   rescue ActiveRecord::RecordNotUnique
@@ -619,7 +636,6 @@ class CasesController < ApplicationController
 
   def prepare_select_type
     authorize Case::Base, :can_add_case?
-    render :select_type
   end
 
   def prepare_new_case
@@ -641,20 +657,11 @@ class CasesController < ApplicationController
       @case = default_subclass.new
       @case_types = @correspondence_type.sub_classes.map(&:to_s)
       @s3_direct_post = s3_uploader_for(@case, 'requests')
-      render :new
     else
       flash.alert =
           helpers.t "cases.new.correspondence_type_errors.#{validation_result}",
                     type: @correspondence_type_abbreviation
       redirect_to new_case_path
-    end
-  end
-
-  def get_case_class_from_params(params)
-    case @correspondence_type_abbreviation
-    when 'foi' then get_foi_case_class_from_params(params)
-    when 'ico' then get_ico_case_class_from_params(params)
-    when 'sar' then get_sar_case_class_from_params(params)
     end
   end
 

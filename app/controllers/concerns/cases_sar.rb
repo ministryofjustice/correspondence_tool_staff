@@ -20,8 +20,4 @@ module CasesSAR
       uploaded_request_files: [],
     )
   end
-
-  def get_sar_case_class_from_params(_params)
-    Case::SAR
-  end
 end

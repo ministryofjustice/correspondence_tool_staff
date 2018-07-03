@@ -4,5 +4,5 @@ class Case::ICO::FOI < Case::ICO::Base
     Case::ICO::FOIDecorator
   end
 
-  def original_case_type; 'foi' end
+  def original_case_type; 'FOI' end
 end

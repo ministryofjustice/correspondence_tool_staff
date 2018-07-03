@@ -1,5 +1,5 @@
 class CaseCreateService
-  attr_reader :case, :case_class, :params, :result, :user
+  attr_reader :case, :params, :result, :user
 
   def initialize(user, case_class, params)
     @user       = user
@@ -8,7 +8,7 @@ class CaseCreateService
   end
 
   def call
-    @case = case_class.new(params.merge(uploading_user: user))
+    @case = @case_class.new(params.merge(uploading_user: user))
 
     if !@case.valid?
       @result = :error
