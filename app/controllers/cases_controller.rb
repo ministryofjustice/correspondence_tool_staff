@@ -151,7 +151,7 @@ class CasesController < ApplicationController
     end
   end
 
-  def create
+  def create #rubocop:disable Metrics/MethodLength
     set_correspondence_type(params.fetch(:correspondence_type))
     case_params = create_params(@correspondence_type_abbreviation)
 
@@ -162,7 +162,7 @@ class CasesController < ApplicationController
     case_class_service.call()
     if case_class_service.error?
       permitted_correspondence_types
-      prepare_new_case()
+      prepare_new_case
       @case.assign_attributes(case_params)
       case_class_service.set_error_on_case(@case)
       render(:new)
@@ -179,8 +179,6 @@ class CasesController < ApplicationController
         flash[:notice] = "#{@case.type_abbreviation} case created<br/>Case number: #{@case.number}".html_safe
         redirect_to new_case_assignment_path @case
       else # including :error
-        # @case.original_case_type = case_params[:original_case_type]
-        @case.type = @case.type.demodulize
         @case_types = @correspondence_type.sub_classes.map(&:to_s)
         @s3_direct_post = s3_uploader_for @case, 'requests'
         render :new

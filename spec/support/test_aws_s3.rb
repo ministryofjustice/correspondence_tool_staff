@@ -14,7 +14,7 @@ class TestAWSS3
     def objects(options = {})
       if options.key? :prefix
         @objects
-          .select { |path, obj| path.start_with? options[:prefix] }
+          .select { |path, _obj| path.start_with? options[:prefix] }
           .values
       else
         @objects.values

@@ -12,14 +12,14 @@ class GetCaseClassFromParamsService
   def call()
     if validate_params()
       @case_class = case @type_key
-                   when 'foi' then get_foi_case_class_from_params
-                   when 'ico' then get_ico_case_class_from_params
-                   when 'sar' then get_sar_case_class_from_params
-                   else
-                     raise RuntimeError.new(
-                             "Unknown case type #{@type_key}"
-                           )
-                   end
+                    when 'foi' then get_foi_case_class_from_params
+                    when 'ico' then get_ico_case_class_from_params
+                    when 'sar' then get_sar_case_class_from_params
+                    else
+                      raise RuntimeError.new(
+                              "Unknown case type #{@type_key}"
+                            )
+                    end
     end
   end
 

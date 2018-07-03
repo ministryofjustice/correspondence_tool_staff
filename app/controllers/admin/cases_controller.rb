@@ -191,8 +191,8 @@ class Admin::CasesController < ApplicationController
 
   def set_correspondence_type
     if params[:correspondence_type].present?
-      @correspondence_type = CorrespondenceType.find_by_abbreviation(
-        params[:correspondence_type].upcase
+      @correspondence_type = CorrespondenceType.find_by(
+        abbreviation: params[:correspondence_type].upcase
       )
     end
   end
