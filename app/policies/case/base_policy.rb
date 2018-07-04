@@ -10,6 +10,13 @@ class Case::BasePolicy < ApplicationPolicy
     raise "Missing param" if @user.nil? || @case.nil?
   end
 
+  # Use this as a standard way to re-use an existing policy in another policy
+  # class, for example ICO SARs policies which can re-use the same login that's
+  # in the SAR policies.
+  def defer_to_existing_policy(policy_class, policy_name)
+    policy_class.new(@user, @case).__send__(policy_name)
+  end
+
 
 
 
@@ -139,7 +146,15 @@ class Case::BasePolicy < ApplicationPolicy
 
   def can_add_case?
     clear_failed_checks
+
     user.manager?
+    # if self.case.type_abbreviation.nil?
+    #   user.manager?
+    # else
+    #   managing_correspondence_type_abbreviations =
+    #     user.managing_teams.collect(&:correspondence_types).flatten.map(&:abbreviation).uniq
+    #   self.case.type_abbreviation.in?(managing_correspondence_type_abbreviations)
+    # end
   end
 
   def can_assign_case?
@@ -285,10 +300,10 @@ class Case::BasePolicy < ApplicationPolicy
   end
 
   def show?
-    # this is just a catch-all in case we introduce a new type without a corresponding policy for the new type.
-    # For safety sake, we do not allow viewing
-    clear_failed_checks
-    false
+    # This is just a catch-all in case we introduce a new type without a
+    # corresponding policy for the new type. For safety sake, we do not allow
+    # viewing
+    raise Pundit::NotDefinedError.new("Please define 'show?' method in #{self.class}")
   end
 
   private
