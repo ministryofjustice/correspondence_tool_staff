@@ -33,4 +33,4 @@ fieldset.form-group
             th
               = "Action"
         tbody
-          = render partial: 'cases/ico/linked_cases', locals: {linked_case: linked_case}
+          = render partial: 'cases/ico/linked_cases', locals: {linked_case: linked_case, errors: @linked_case_errors}

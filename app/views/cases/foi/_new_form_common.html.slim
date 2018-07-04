@@ -7,8 +7,7 @@
 = f.radio_button_fieldset :requester_type,
                           choices: Case::FOI::Standard.requester_types.values
 
-= render partial: 'cases/ico/new_case_link_form', locals: {linked_case: nil}
+= render partial: 'cases/ico/new_case_link_form', locals: {linked_case: nil, linked_case_errors: @linked_case_errors}
 
 .form-group
   = f.gov_uk_date_field :received_date, {legend_text: t('cases.new.received_date'), form_hint_text: t('cases.new.received_date_copy'), today_button: {class: ''} }
-

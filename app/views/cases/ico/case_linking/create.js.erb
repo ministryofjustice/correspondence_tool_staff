@@ -7,11 +7,7 @@
 // If they have added one case
  // set as original
 $('.case-linking .column-full tbody')
-.append(" <%= j render partial: 'cases/ico/linked_cases', locals: { linked_case: linked_case } %>")
+.append(" <%= j render partial: 'cases/ico/linked_cases', locals: { linked_case: linked_case, linked_case_errors: linked_case_errors } %>")
 
 
 // if they have move than one search then related cases
-
-
-
-

@@ -9,7 +9,10 @@
 /     a
 /       = "Remove link"
 /- if case_details.linked_cases.any?
-  - case_details.linked_cases.each do |linked_case|
+/ - case_details.linked_cases.each do |linked_case|
+- if defined?(linked_case_errors) && linked_case_errors.present?
+  tr
+    td= linked_case_errors
 - if linked_case.present?
   tr
     td

@@ -136,6 +136,7 @@ class CasesController < ApplicationController
 
   def new
     permitted_correspondence_types
+    @linked_case_errors = nil
     if FeatureSet.sars.disabled? && FeatureSet.ico.disabled?
       set_correspondence_type('foi')
       prepare_new_case
@@ -153,6 +154,7 @@ class CasesController < ApplicationController
 
   def create #rubocop:disable Metrics/MethodLength
     set_correspondence_type(params.fetch(:correspondence_type))
+    @linked_case_errors = nil
     case_params = create_params(@correspondence_type_key)
 
     case_class_service = GetCaseClassFromParamsService.new(
@@ -588,18 +590,39 @@ class CasesController < ApplicationController
   end
 
   def get_link_case_details
-    @case = Case::Base.where(number: params[:cases][:case_number]).first.decorate
-    respond_to do |format|
-      format.js { render 'cases/ico/case_linking/create', locals: {linked_case: @case} }
+    @linked_case_number = params[:cases][:case_number].strip
+    if validate_params
+      @linked_case = Case::Base.where(number: @linked_case_number).first.decorate
     end
-
-    # if existing search select specific
-    # FOI
-    # SAR
-    # ICO ??
+    respond_to do |format|
+      format.js { render 'cases/ico/case_linking/create', locals: {linked_case: @linked_case, linked_case_errors: @linked_case_errors} }
+    end
   end
 
   private
+
+  def validate_params
+    validate_case_number_present
+    validate_linked_case_exists
+  end
+
+  def validate_case_number_present
+    if @linked_case_number.present?
+      true
+    else
+      @linked_case_errors = "NO CASE NUMBER"
+      false
+    end
+  end
+
+  def validate_linked_case_exists
+    if Case::Base.where(number: @linked_case_number).exists?
+      true
+    else
+       @linked_case_errors = "CASE AIN'T THERE"
+       false
+    end
+  end
 
   def set_url
     @action_url = request.env['PATH_INFO']
