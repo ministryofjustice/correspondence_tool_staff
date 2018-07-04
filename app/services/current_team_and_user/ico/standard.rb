@@ -1,6 +1,6 @@
 module CurrentTeamAndUser
   module ICO
-    class SAR < ::CurrentTeamAndUser::Base
+    class Standard < ::CurrentTeamAndUser::Base
     end
   end
 end

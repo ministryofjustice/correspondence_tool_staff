@@ -1,6 +1,7 @@
-= form_for @case, as: "case_#{@correspondence_type}", url: case_path(@case) do |f|
+= form_for @case, as: "case_#{@correspondence_type_abbreviation}",
+                  url: case_path(@case) do |f|
 
-  = hidden_field_tag 'correspondence_type', @correspondence_type
+  = hidden_field_tag 'correspondence_type', @correspondence_type_abbreviation
   = render partial: 'cases/foi/new_form_common', locals: { f: f }
   = render partial: 'cases/foi/edit_form_details', locals: { f: f }
 

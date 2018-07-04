@@ -143,6 +143,16 @@ class User < ApplicationRecord
     !active_for_authentication?
   end
 
+  def permitted_correspondence_types
+    types = self.teams
+              .collect(&:correspondence_types)
+              .flatten
+              .uniq
+    types.delete(CorrespondenceType.sar) unless FeatureSet.sars.enabled?
+    types.delete(CorrespondenceType.ico) unless FeatureSet.ico.enabled?
+    types
+  end
+
   private
   def bad_passwords
     %w{

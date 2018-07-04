@@ -9,10 +9,7 @@ class CaseTypeFilter
   end
 
   def self.available_case_types(user)
-    user_types = user.teams
-                   .collect { |team| team.correspondence_types.pluck(:abbreviation) }
-                   .flatten
-                   .uniq
+    user_types = user.permitted_correspondence_types.map(&:abbreviation)
     types = {}
 
     if "FOI".in?(user_types)

@@ -6,7 +6,16 @@ class Case::ICO::Base < Case::Base
 
   acts_as_gov_uk_date :received_date, :date_responded, :external_deadline
 
-  validates_presence_of :ico_reference_number
+  # Used by the controller to drive the views which ask the user to select the
+  # "original case type"
+  attr_accessor :original_case_type
+
+  validates :ico_reference_number, presence: true
+  validates :message, presence: true
+  validates :external_deadline, presence: true
+
+  after_create :process_uploaded_request_files,
+               if: -> { uploaded_request_files.present? }
 
   class << self
     def type_abbreviation
