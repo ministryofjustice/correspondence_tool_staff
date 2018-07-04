@@ -5,6 +5,11 @@ class Case::SAR < Case::Base
     end
   end
 
+  before_save do
+    self.wokflow = 'standard' if workflow.nil?
+  end
+
+
   jsonb_accessor :properties,
                  escalation_deadline: :date,
                  internal_deadline: :date,

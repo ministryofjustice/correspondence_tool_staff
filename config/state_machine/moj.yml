@@ -1227,7 +1227,7 @@ case_types:
   ico:
     name: Information Commissioner Office appeal
     permitted_workflows:
-      - standard
+      - trigger
 
     permitted_user_roles:
       - manager
@@ -1243,7 +1243,7 @@ case_types:
       - closed
 
     workflows:
-      standard:
+      trigger:
         initial_state: unassigned
         user_roles:
           manager:
@@ -1254,6 +1254,7 @@ case_types:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
 

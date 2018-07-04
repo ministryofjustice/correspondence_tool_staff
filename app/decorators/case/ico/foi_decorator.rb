@@ -4,4 +4,8 @@ class Case::ICO::FOIDecorator < Case::BaseDecorator
     'ICO appeal for FOI case'
   end
 
+  def requester_name_and_type
+    pretty_type
+  end
+
 end

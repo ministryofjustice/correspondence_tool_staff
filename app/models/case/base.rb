@@ -262,11 +262,6 @@ class Case::Base < ApplicationRecord
   before_save :prevent_number_change,
               :trigger_reindexing
 
-  before_save do
-    self.wokflow = 'standard' if workflow.nil?
-  end
-
-
 
   delegate :available_events, to: :state_machine
 

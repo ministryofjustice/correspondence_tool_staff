@@ -14,6 +14,10 @@ class Case::ICO::Base < Case::Base
   validates :message, presence: true
   validates :external_deadline, presence: true
 
+  before_save do
+    self.workflow = 'trigger' if self.workflow.nil?
+  end
+
   after_create :process_uploaded_request_files,
                if: -> { uploaded_request_files.present? }
 
