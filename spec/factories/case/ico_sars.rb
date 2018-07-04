@@ -4,6 +4,7 @@ FactoryBot.define do
 
   factory :ico_sar_case, class: Case::ICO::SAR do
     transient do
+      creation_time   { 4.business_days.ago }
       identifier    "new ICO SAR case"
       managing_team { find_or_create :team_dacu }
     end
@@ -67,7 +68,7 @@ FactoryBot.define do
   factory :ico_sar_case_with_response, parent: :accepted_ico_sar_case do
     transient do
       identifier "case with response"
-      # creation_time { 4.business_days.ago }
+      creation_time { 4.business_days.ago }
       responder { find_or_create :responder, full_name: 'Ivor Response' }
       responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
     end

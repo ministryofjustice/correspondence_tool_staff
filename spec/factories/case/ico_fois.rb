@@ -14,7 +14,7 @@ FactoryBot.define do
     sequence(:subject)     { |n| "#{identifier} subject #{n}" }
     sequence(:message)     { |n| "#{identifier} message #{n}" }
     ico_reference_number   { generate :ico_foi_reference_number }
-    received_date          { 0.business_days.from_now }
+    # received_date          { 0.business_days.from_now }
     external_deadline      { 20.business_days.from_now.to_date }
     uploaded_request_files { ["#{Faker::Internet.slug}.pdf"] }
     uploading_user         { find_or_create :manager }
