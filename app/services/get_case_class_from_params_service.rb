@@ -77,7 +77,7 @@ class GetCaseClassFromParamsService
       @error_field = :original_case_type
       @error_message = :blank
       false
-    elsif !@params[:type].in?(['Standard', 'Timeliness', 'Compliance'])
+    elsif !@params[:type].in?(['Standard', 'TimelinessReview', 'ComplianceReview'])
       @error_field = :type
       @error_message = :invalid
       false

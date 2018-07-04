@@ -10,6 +10,7 @@ FactoryBot.define do
 
     current_state          'unassigned'
     sequence(:subject)     { |n| "#{identifier} subject #{n}" }
+    sequence(:message)     { |n| "#{identifier} message #{n}" }
     ico_reference_number   { generate :ico_foi_reference_number }
     received_date          { 0.business_days.from_now }
     external_deadline      { 20.business_days.from_now.to_date }
