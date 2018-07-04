@@ -10,7 +10,7 @@ class CaseCreateService
   def call
     @case = @case_class.new(params.merge(uploading_user: user))
 
-    if !@case.valid?
+    if @case.invalid?
       @result = :error
     elsif @case.requires_flag_for_disclosure_specialists? && params[:flag_for_disclosure_specialists].blank?
       @case.valid?

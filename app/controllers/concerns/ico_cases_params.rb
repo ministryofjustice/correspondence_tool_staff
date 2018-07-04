@@ -1,4 +1,4 @@
-module CasesICO
+module ICOCasesParams
   extend ActiveSupport::Concern
 
   def create_ico_params

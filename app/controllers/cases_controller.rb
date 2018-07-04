@@ -1,9 +1,9 @@
 #rubocop:disable Metrics/ClassLength
 
 class CasesController < ApplicationController
-  include CasesFOI
-  include CasesICO
-  include CasesSAR
+  include FOICasesParams
+  include ICOCasesParams
+  include SARCasesParams
 
   before_action :set_case,
                 only: [
@@ -138,15 +138,15 @@ class CasesController < ApplicationController
     permitted_correspondence_types
     if FeatureSet.sars.disabled? && FeatureSet.ico.disabled?
       set_correspondence_type('foi')
-      prepare_new_case()
+      prepare_new_case
       render :new
     elsif params[:correspondence_type].present?
       set_correspondence_type(params[:correspondence_type])
-      prepare_new_case()
+      prepare_new_case
       render :new
     else
       # set_creatable_correspondence_types
-      prepare_select_type()
+      prepare_select_type
       render :select_type
     end
   end
