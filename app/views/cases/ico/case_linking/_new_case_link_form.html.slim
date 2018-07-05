@@ -1,0 +1,14 @@
+#js-search-for-case.form-group
+  = label_tag 'cases[case_number]', class: 'form-label-bold' do
+    = "Original case number"
+    span.form-hint
+      = 'Enter original case  reference number. For example 170131001.'
+    span.error-message
+
+  = search_field_tag 'cases[case_number]', nil, class: 'form-control'
+.form-group
+  = button_tag 'Link case', type: 'button', class: 'button-secondary', id: 'xhr-search-button', data: { url: get_link_case_details_path }
+
+.js-original-case-and-friends
+  = render partial: 'cases/ico/case_linking/linked_original_case', locals: { original_case: nil, linked_case_errors: nil}
+

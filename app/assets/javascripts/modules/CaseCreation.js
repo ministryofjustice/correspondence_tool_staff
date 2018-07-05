@@ -16,11 +16,27 @@ moj.Modules.CaseCreation = {
       self.$deliveryMethod.on('change', ':radio', function () {
         self.showHideDeliveryMethodFields();
       });
-
-      $('#xhr-search-button').click(function () {
-        self.getCaseDetails(this);
-      });
     }
+
+    // For linking to original case
+    $('#xhr-search-button').click(function () {
+      self.getCaseDetails(this);
+    });
+
+    $('#cases_case_number').on('keypress', function(e){
+      if (e.keyCode === 13 ) {
+        e.preventDefault()
+        self.getCaseDetails(document.getElementById('xhr-search-button'));
+      }
+    })
+
+    // Undo actions
+    $('.js-original-case-and-friends')
+    .on('click','.js-remove-original', function (e) {
+      self.removeOriginalCase(e);
+    }).on('click', 'a.js-exclude-case', function (e){
+      self.excludeOtherRelatedCase(e);
+    })
   },
 
   showHideDeliveryMethodFields: function () {
@@ -56,5 +72,31 @@ moj.Modules.CaseCreation = {
       url: $(button).data('url'),
       data: { 'cases[case_number]': document.getElementById('cases_case_number').value}
     });
+  },
+
+  excludeOtherRelatedCase: function (event) {
+    event.preventDefault();
+    var $tr = $(event.target).closest('tr');
+    var $tbody = $tr.closest('tbody');
+    var $otherCasesSection = $tr.closest('.grid-row.form-group');
+
+    //Remove the specific row
+    $tr.remove();
+
+    // Hide the table if there is no other rows
+    if ($tbody.children().length === 0) {
+      $otherCasesSection.remove();
+    }
+  },
+
+  removeOriginalCase: function (event) {
+    event.preventDefault()
+    var results = document.querySelector('.js-original-case-and-friends');
+    var message = 'This will remove the original case and any related cases below.\nDo you wish to continue?';
+
+    if (confirm( message )) {
+      results.innerHTML = '';
+      document.getElementById('cases_case_number').focus();
+    }
   }
 };

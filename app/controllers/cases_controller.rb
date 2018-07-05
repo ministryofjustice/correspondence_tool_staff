@@ -590,12 +590,15 @@ class CasesController < ApplicationController
   end
 
   def get_link_case_details
-    @linked_case_number = params[:cases][:case_number].strip
+    @original_case_number = params[:cases][:case_number].strip
+    @linked_case_errors = nil
     if validate_params
-      @linked_case = Case::Base.where(number: @linked_case_number).first.decorate
+      @original_case = Case::Base.where(number: @original_case_number).first.decorate
     end
     respond_to do |format|
-      format.js { render 'cases/ico/case_linking/create', locals: {linked_case: @linked_case, linked_case_errors: @linked_case_errors} }
+      format.js { render 'cases/ico/case_linking/show_original_case_and_other_cases',
+                         locals: { original_case: @original_case,
+                                   linked_case_errors: @linked_case_errors} }
     end
   end
 
@@ -607,7 +610,7 @@ class CasesController < ApplicationController
   end
 
   def validate_case_number_present
-    if @linked_case_number.present?
+    if @original_case_number.present?
       true
     else
       @linked_case_errors = "NO CASE NUMBER"
@@ -616,7 +619,7 @@ class CasesController < ApplicationController
   end
 
   def validate_linked_case_exists
-    if Case::Base.where(number: @linked_case_number).exists?
+    if Case::Base.where(number: @original_case_number).exists?
       true
     else
        @linked_case_errors = "CASE AIN'T THERE"

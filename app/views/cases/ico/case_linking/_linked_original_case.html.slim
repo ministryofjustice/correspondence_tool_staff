@@ -1,0 +1,70 @@
+- if linked_case_errors.present?
+  tr
+    td= linked_case_errors
+
+- if original_case.present?
+  .grid-row.form-group
+    .column-full
+      h2.request--heading
+        = "Original case"
+
+      table
+        thead
+          tr
+            th
+              = 'Case no.'
+            th
+              = 'Case type'
+            th
+              = 'Request'
+            th
+              = "Action"
+        tbody
+          tr
+            td
+              input type="hidden" value= original_case.id name="cases[original_case]"
+              = link_to case_path(original_case.id) do
+                span.visually-hidden
+                  = t('common.view_case')
+                = original_case.number
+            td
+              = "#{original_case.pretty_type} "
+              = original_case.trigger_case_marker
+            td
+              = request_details_html(original_case)
+            td
+              a.js-remove-original href="#" Undo
+
+  .grid-row.form-group
+    .column-full
+      h2.request--heading
+        = "Other related cases linked to the original case"
+
+      table
+        thead
+          tr
+            th
+              = 'Case no.'
+            th
+              = 'Case type'
+            th
+              = 'Request'
+            th
+              = "Action"
+        tbody
+          - if original_case.linked_cases.any?
+            - original_case.linked_cases.each do | other_linked_case|
+              tr
+                td
+                  input type="hidden" value= other_linked_case.id name="cases[cases_linked_to_orginal][]"
+                  = link_to case_path(other_linked_case.id) do
+                    span.visually-hidden
+                      = t('common.view_case')
+                    = other_linked_case.number
+                td
+                  = "#{other_linked_case.pretty_type} "
+                  = other_linked_case.trigger_case_marker
+                td
+                  = request_details_html(other_linked_case)
+                td
+                  a.js-exclude-case href="#" Exclude case
