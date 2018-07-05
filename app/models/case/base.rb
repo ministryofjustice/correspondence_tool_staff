@@ -254,6 +254,10 @@ class Case::Base < ApplicationRecord
                           foreign_key: :case_id,
                           association_foreign_key: :linked_case_id
 
+  after_initialize do
+    self.workflow = default_workflow if self.workflow.nil?
+  end
+
   before_create :set_initial_state,
                 :set_number,
                 :set_managing_team,
@@ -262,9 +266,9 @@ class Case::Base < ApplicationRecord
   before_save :prevent_number_change,
               :trigger_reindexing
 
-  before_save do
-    self.workflow = 'standard' if workflow.nil?
-  end
+  # before_save do
+  #   self.workflow = 'standard' if workflow.nil?
+  # end
 
 
   delegate :available_events, to: :state_machine
@@ -588,6 +592,10 @@ class Case::Base < ApplicationRecord
   end
 
   private
+
+  def default_workflow
+    'standard'
+  end
 
   def indexable_fields
     @indexable_fields ||= self.class.searchable_fields_and_ranks.keys.map(&:to_s)

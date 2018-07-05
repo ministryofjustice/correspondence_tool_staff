@@ -39,4 +39,10 @@ class Case::ICO::Base < Case::Base
     days = correspondence_type.internal_time_limit.business_days
     self.internal_deadline = days.before(self.external_deadline)
   end
+
+  private
+
+  def default_workflow
+    'trigger'
+  end
 end
