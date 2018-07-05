@@ -253,8 +253,8 @@ module CTS::Cases
         kase.close(CTS::dacu_manager)
       else
         kase.prepare_for_close
-        kase.update(date_responded: Date.today)
-        kase.close(responder)
+        kase.update(date_responded: Date.today, missing_info: false)
+        kase.respond_and_close(responder)
       end
     end
 
