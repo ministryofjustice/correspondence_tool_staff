@@ -121,7 +121,7 @@ describe CaseCreateService do
       expect(created_case).to be_instance_of(Case::ICO::FOI)
       expect(created_case.ico_reference_number).to eq 'ABC1344422'
       expect(created_case.external_deadline).to eq deadline.to_date
-      expect(created_case.internal_deadline).to eq(10.business_days.before(deadline)).to_date
+      expect(created_case.internal_deadline).to eq(10.business_days.before(deadline).to_date)
       expect(created_case.message).to eq 'AAAAA'
       expect(created_case.subject).to eq 'ICO FOI deadlines'
       expect(created_case.current_state).to eq 'unassigned'

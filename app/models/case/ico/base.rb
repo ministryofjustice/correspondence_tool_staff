@@ -15,7 +15,7 @@ class Case::ICO::Base < Case::Base
   validates :external_deadline, presence: true
 
   before_save do
-    self.workflow = 'trigger' if self.workflow.nil?
+    self.workflow = 'trigger'
   end
 
   after_create :process_uploaded_request_files,
