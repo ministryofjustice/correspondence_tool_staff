@@ -73,6 +73,7 @@ class Case::Base < ApplicationRecord
   scope :opened, ->       { where.not(current_state: 'closed') }
   scope :closed, ->       { where(current_state: 'closed').order(last_transitioned_at: :desc) }
   scope :standard_foi, -> { where(type: 'Case::FOI::Standard') }
+  scope :ico_appeal, ->   { where(type: ['Case::ICO::FOI', 'Case::ICO::SAR'])}
 
   scope :non_offender_sar, -> { where(type: 'Case::SAR') }
 

@@ -81,6 +81,29 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
     # Each case is created in a lambda so that it can be conditionally created
     # depending on how StandardSetup is instantiated (see the only_cases arg). 
     @@cases = {
+      ico_foi_unassigned: ->(attributes={}) {
+        create :ico_foi_case, {identifier: 'ico_foi_unassigned'}.merge(attributes)
+      },
+      ico_foi_awaiting_responder: ->(attributes={}) {
+        create :awaiting_responder_ico_foi_case, {identifier: 'ico_foi_awaiting_responder'}.merge(attributes)
+      },
+      ico_foi_accepted: ->(attributes={}) {
+        create :accepted_ico_foi_case, {identifier: 'ico_foi_accepted'}.merge(attributes)
+      },
+
+      ico_sar_unassigned: ->(attributes={}) {
+        create :ico_sar_case, {identifier: 'ico_sar_unassigned'}.merge(attributes)
+      },
+      ico_sar_awaiting_responder: ->(attributes={}) {
+        create :awaiting_responder_ico_sar_case, {identifier: 'ico_sar_awaiting_responder'}.merge(attributes)
+      },
+      ico_sar_accepted: ->(attributes={}) {
+        create :accepted_ico_sar_case, {identifier: 'ico_sar_accepted'}.merge(attributes)
+      },
+      ico_sar_pending_dacu_clearance: ->(attributes={}) {
+        create :pending_dacu_clearance_ico_sar_case, {identifier: 'ico_sar_pending_dacu_clearance'}.merge(attributes)
+      },
+
       sar_noff_unassigned: ->(attributes={}) {
         create(:sar_case,
                {identifier: 'sar_noff_unassigned'}

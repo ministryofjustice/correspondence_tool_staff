@@ -10,7 +10,7 @@ class ReportTypeSeeder
   #rubocop:disable Metrics/MethodLength
   #rubocop:disable Metrics/CyclomaticComplexity
   def seed!(verbose: false)
-    puts '----Seeding ReportTypes----'
+    puts '----Seeding ReportTypes----' if verbose
     attrs = {abbr:'R002',
             full_name: 'Appeals performance report',
             class_name: 'Stats::R002AppealsPerformanceReport',

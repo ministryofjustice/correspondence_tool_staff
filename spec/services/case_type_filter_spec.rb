@@ -8,7 +8,9 @@ describe CaseTypeFilter do
                                  :std_unassigned_foi,
                                  :trig_unassigned_foi,
                                  :std_unassigned_irc,
-                                 :std_unassigned_irt
+                                 :std_unassigned_irt,
+                                 :ico_foi_unassigned,
+                                 :ico_sar_unassigned
                                ])
   end
 
@@ -25,6 +27,7 @@ describe CaseTypeFilter do
     it { should include 'foi-ir-compliance' => 'FOI - Internal review for compliance' }
     it { should include 'foi-ir-timeliness' => 'FOI - Internal review for timeliness' }
     it { should include 'sar-non-offender' => 'SAR - Non-offender' }
+    it { should include 'ico-appeal' =>'ICO appeals' }
 
     context 'for user who is assigned to a team that only handles FOIs' do
       let(:foi)             { find_or_create(:foi_correspondence_type) }
@@ -36,6 +39,7 @@ describe CaseTypeFilter do
       it { should include 'foi-ir-compliance' => 'FOI - Internal review for compliance' }
       it { should include 'foi-ir-timeliness' => 'FOI - Internal review for timeliness' }
       it { should_not include 'sar-non-offender' => 'SAR - Non-offender' }
+      it { should_not include 'ico-appeal' =>'ICO appeals' }
     end
   end
 
@@ -91,6 +95,8 @@ describe CaseTypeFilter do
                              @setup.std_unassigned_foi,
                              @setup.std_unassigned_irc,
                              @setup.std_unassigned_irt,
+                             @setup.ico_foi_unassigned,
+                             @setup.ico_sar_unassigned,
                            ]
       end
     end
@@ -142,6 +148,15 @@ describe CaseTypeFilter do
       end
     end
 
+    describe 'filtering for ICO cases' do
+      let(:search_query)      { create :search_query, filter_case_type: ['ico-appeal']}
+
+      it 'returns ICO FOI and ICO SAR cases' do
+        results = case_type_filter.call
+        expected_results = [@setup.ico_foi_unassigned, @setup.ico_sar_unassigned]
+        expect(results).to match_array expected_results
+      end
+    end
   end
 
   describe '#crumbs' do

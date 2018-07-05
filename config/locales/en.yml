@@ -666,6 +666,7 @@ en:
       foi-ir-compliance: 'FOI - Internal review for compliance'
       foi-ir-timeliness: 'FOI - Internal review for timeliness'
       sar-non-offender: 'SAR - Non-offender'
+      ico-appeal: 'ICO appeals'
 
   stats:
     common:
