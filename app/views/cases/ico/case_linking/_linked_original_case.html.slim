@@ -22,7 +22,8 @@
         tbody
           tr
             td
-              input type="hidden" value= original_case.id name="cases[original_case]"
+              = hidden_field_tag "case_#{@correspondence_type_key}[original_case_id]",
+                                 original_case.id
               = link_to case_path(original_case.id) do
                 span.visually-hidden
                   = t('common.view_case')

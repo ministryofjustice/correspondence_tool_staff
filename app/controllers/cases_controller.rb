@@ -590,7 +590,8 @@ class CasesController < ApplicationController
   end
 
   def get_link_case_details
-    @original_case_number = params[:cases][:case_number].strip
+    set_correspondence_type(params.fetch(:correspondence_type))
+    @original_case_number = params[:original_case_number].strip
     @linked_case_errors = nil
     if validate_params
       @original_case = Case::Base.where(number: @original_case_number).first.decorate
@@ -598,6 +599,7 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.js { render 'cases/ico/case_linking/show_original_case_and_other_cases',
                          locals: { original_case: @original_case,
+                                   correspondence_type_key: @correspondence_type_key,
                                    linked_case_errors: @linked_case_errors} }
     end
   end

@@ -8,7 +8,7 @@ class Case::ICO::Base < Case::Base
 
   # Used by the controller to drive the views which ask the user to select the
   # "original case type"
-  attr_accessor :original_case_type
+  attr_accessor :original_case_id
 
   validates :ico_reference_number, presence: true
   validates :message, presence: true

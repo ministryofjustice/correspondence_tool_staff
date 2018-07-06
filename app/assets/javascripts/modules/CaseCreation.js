@@ -69,8 +69,10 @@ moj.Modules.CaseCreation = {
 
   getCaseDetails: function (button) {
     $.ajax({
-      url: $(button).data('url'),
-      data: { 'cases[case_number]': document.getElementById('cases_case_number').value}
+        url: $(button).data('url'),
+        data: { 'original_case_number': document.getElementById('original_case_number').value,
+                'correspondence_type': document.getElementById('correspondence_type').value,
+              }
     });
   },
 
