@@ -12,7 +12,7 @@ describe 'cases/edit.html.slim', type: :view do
                                     message: 'Can I keep a ferret in jail',
                                     received_date: Date.new(2016,8,13)
 
-      assign(:correspondence_type_abbreviation, 'foi')
+      assign(:correspondence_type_key, 'foi')
       assign(:case, kase.decorate)
 
       render

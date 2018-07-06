@@ -1,5 +1,49 @@
 class StandardSetup # rubocop:disable Metrics/ClassLength
 
+  # Class that instantiates standard case factories.
+  #
+  # Instantiate the class with:
+  #
+  #   @setup = StandardSetup.new(only_cases: [:std_draft_foi])
+  #
+  # And then you can access the cases with:
+  #
+  #   @setup.std_draft_foi
+  #
+  # The class will also instantiate teams and users as required, that may be
+  # accessed:
+  #
+  #   @setup.disclosure_bmt_user
+  #
+  # If you want to customise aspects of the cases, pass in a <tt>Hash</tt> for
+  # the <tt>only_cases</tt> parameter:
+  #
+  #  @setup = StandardSetup.new(only_cases: {
+  #             std_draft_foi: received_date: 2.days.ago
+  #           })
+  #
+  # The naming scheme for cases is:
+  #
+  #   <workflow>_<state>_<other_info>
+  #
+  # where:
+  #
+  # * workflow:
+  #   * std - standard workflow
+  #   * trig - trigger workflow
+  #   * full = full_approval workflow
+  #
+  # * state
+  #   * unassigned - unassigned
+  #   * awdis       - awaiting_dispatch
+  #   * awresp      - awaiting_responder
+  #   * closed      - closed
+  #   * draft       - drafting
+  #   * pdacu       - pending_dacu_clearance
+  #   * ppress      - pending_press_office_clearance
+  #   * pprivate    - pending_private_office_clerance
+  #   * responded   - responded
+  #
   class << self
     extend FactoryBot::Syntax::Methods
 
@@ -460,25 +504,6 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
   attr_reader :cases, :user_teams, :users
 
   def initialize(only_cases: nil)
-    # cases are named <workflow>_<state>_<other_info> where:
-    #
-    # * workflow:
-    #   * std - standard workflow
-    #   * trig - trigger workflow
-    #   * full = full_approval workflow
-    #
-    # * state
-    #   * unassigned - unassigned
-    #   * awdis       - awaiting_dispatch
-    #   * awresp      - awaiting_responder
-    #   * closed      - closed
-    #   * draft       - drafting
-    #   * pdacu       - pending_dacu_clearance
-    #   * ppress      - pending_press_office_clearance
-    #   * pprivate    - pending_private_office_clerance
-    #   * responded   - responded
-    #
-
     @teams = @@teams.transform_values { |team| team.call }
     @users = @@users.transform_values { |user| user.call }
     @user_teams = @@user_teams.transform_values { |user_team| user_team.call }

@@ -30,11 +30,6 @@ class GetCaseClassFromParamsService
   def set_error_on_case(kase)
     if error?
       kase.errors.add(@error_field, @error_message)
-      # case @type_key
-      # when 'foi' then set_error_on_foi_case(kase)
-      # when 'ico' then set_error_on_ico_case(kase)
-      # when 'sar' then set_error_on_sar_case(kase)
-      # end
     else
       raise RuntimeError.new("No error present")
     end
@@ -74,7 +69,7 @@ class GetCaseClassFromParamsService
 
   def validate_foi_case_class_params()
     if @params[:type].blank?
-      @error_field = :original_case_type
+      @error_field = :type
       @error_message = :blank
       false
     elsif !@params[:type].in?(['Standard', 'TimelinessReview', 'ComplianceReview'])

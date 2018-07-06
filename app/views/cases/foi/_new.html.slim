@@ -1,5 +1,5 @@
 = form_for kase, as: :case_foi, url: cases_path do |f|
-  = hidden_field_tag 'correspondence_type', @correspondence_type_abbreviation
+  = hidden_field_tag 'correspondence_type', @correspondence_type_key
   = f.radio_button_fieldset :type,
                             choices: @case_types,
                             value_method: :demodulize

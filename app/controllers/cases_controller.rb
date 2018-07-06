@@ -153,11 +153,11 @@ class CasesController < ApplicationController
 
   def create #rubocop:disable Metrics/MethodLength
     set_correspondence_type(params.fetch(:correspondence_type))
-    case_params = create_params(@correspondence_type_abbreviation)
+    case_params = create_params(@correspondence_type_key)
 
     case_class_service = GetCaseClassFromParamsService.new(
       type: @correspondence_type,
-      params: params["case_#{@correspondence_type_abbreviation}"]
+      params: params["case_#{@correspondence_type_key}"]
     )
     case_class_service.call()
     if case_class_service.error?
@@ -279,7 +279,7 @@ class CasesController < ApplicationController
     @case = Case::Base.find(params[:id])
     authorize @case
 
-    case_params = edit_params(@correspondence_type_abbreviation)
+    case_params = edit_params(@correspondence_type_key)
     service = CaseUpdaterService.new(current_user, @case, case_params)
     service.call
     if service.result != :error
@@ -658,7 +658,7 @@ class CasesController < ApplicationController
     else
       flash.alert =
           helpers.t "cases.new.correspondence_type_errors.#{validation_result}",
-                    type: @correspondence_type_abbreviation
+                    type: @correspondence_type_key
       redirect_to new_case_path
     end
   end
@@ -690,14 +690,6 @@ class CasesController < ApplicationController
     end
   end
 
-  def process_sar_closure_params
-    params.require(:case_sar).permit(
-      :date_responded_dd,
-      :date_responded_mm,
-      :date_responded_yyyy,
-    ).merge(refusal_reason_abbreviation: missing_info_to_tmm)
-  end
-
   def missing_info_to_tmm
     if params[:case_sar][:missing_info] == "yes"
       @case.missing_info = true
@@ -705,41 +697,6 @@ class CasesController < ApplicationController
     elsif params[:case_sar][:missing_info] == "no"
       @case.missing_info = false
     end
-  end
-
-  def process_foi_closure_params
-    closure_params = params.require(:case_foi).permit(
-      :date_responded_dd,
-      :date_responded_mm,
-      :date_responded_yyyy,
-      :outcome_abbreviation,
-      :appeal_outcome_name,
-      :refusal_reason_abbreviation,
-      :info_held_status_abbreviation,
-      exemption_ids: []
-    )
-
-    info_held_status = closure_params[:info_held_status_abbreviation]
-    outcome          = closure_params[:outcome_abbreviation]
-    refusal_reason   = closure_params[:refusal_reason_abbreviation]
-
-    unless ClosedCaseValidator.outcome_required?(info_held_status: info_held_status)
-      closure_params.merge!(outcome_id: nil)
-      closure_params.delete(:outcome_abbreviation)
-    end
-
-    unless ClosedCaseValidator.refusal_reason_required?(info_held_status: info_held_status)
-      closure_params.merge!(refusal_reason_id: nil)
-      closure_params.delete(:refusal_reason_abbreviation)
-    end
-
-    unless ClosedCaseValidator.exemption_required?(info_held_status: info_held_status,
-                                                   outcome: outcome,
-                                                   refusal_reason: refusal_reason)
-      closure_params.merge!(exemption_ids: [])
-    end
-
-    closure_params
   end
 
   def create_params(correspondence_type)
@@ -756,38 +713,6 @@ class CasesController < ApplicationController
       when 'foi' then edit_foi_params
       when 'sar' then edit_sar_params
     end
-  end
-
-  def edit_foi_params
-    params.require(:case_foi).permit(
-      :requester_type,
-      :name,
-      :postal_address,
-      :email,
-      :subject,
-      :message,
-      :received_date_dd, :received_date_mm, :received_date_yyyy,
-      :delivery_method,
-      :flag_for_disclosure_specialists,
-      uploaded_request_files: [],
-    )
-  end
-
-  def edit_sar_params
-    params.require(:case_sar).permit(
-        :subject_full_name,
-        :subject_type,
-        :third_party,
-        :third_party_relationship,
-        :name,
-        :received_date_dd, :received_date_mm, :received_date_yyyy,
-        :subject,
-        :message,
-        :flag_for_disclosure_specialists,
-        :reply_method,
-        :email,
-        :postal_address
-    )
   end
 
   def set_decorated_case
@@ -847,17 +772,7 @@ class CasesController < ApplicationController
 
   def set_correspondence_type(type)
     @correspondence_type = CorrespondenceType.find_by_abbreviation(type.upcase)
-    @correspondence_type_abbreviation = type
-
-    # abbreviation = type.upcase
-    # # set_creatable_correspondence_types
-    # permitted_correspondence_types
-
-    # validation_result = validate_correspondence_type(abbreviation)
-    # if validation_result == :ok
-    #   @correspondence_type = CorrespondenceType.find_by_abbreviation(abbreviation)
-    #   @correspondence_type_abbreviation = type
-    # end
+    @correspondence_type_key = type
   end
 
   def set_state_selector
@@ -874,17 +789,20 @@ class CasesController < ApplicationController
     url_for(new_params)
   end
 
-  # TODO: WIP
-  def set_creatable_correspondence_types
-    current_user.permitted_correspondence_types.find_all do |type|
-      case type
-      when CorrespondenceType.sar then
-        Pundit.policy(current_user, type) && FeatureSet.sars.enabled?
-      when CorrespondenceType.ico then FeatureSet.ico.enabled?
-      end
-    end
-  end
+  # This is how we should be building @permitted_correspondence_types, but it
+  # is missing policies on CorrespondenceType
+  # def permitted_correspondence_types
+  #   @permitted_correspondence_types = current_user
+  #                                       .permitted_correspondence_types
+  #                                       .find_all do |type|
+  #     Pundit.policy(current_user, type).can_add_case?
+  #   end
+  # end
 
+  # See the commented-out method above, that should be our replacement. We just
+  # assume that whatever managing team we're on will give us create
+  # permissions, but that isn't strictly true, we should let the policy decide
+  # that.
   def permitted_correspondence_types
     # Use the intermediary variable "types" to update
     # @permitted_correspondence_types so that it's changed as an atomic

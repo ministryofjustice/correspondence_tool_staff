@@ -12,4 +12,8 @@ class Case::ICO::FOIPolicy < Case::ICO::BasePolicy
       @policy_scope.resolve
     end
   end
+
+  def show?
+    defer_to_existing_policy(Case::FOI::StandardPolicy, :show?)
+  end
 end

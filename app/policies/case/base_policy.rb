@@ -148,13 +148,6 @@ class Case::BasePolicy < ApplicationPolicy
     clear_failed_checks
 
     user.manager?
-    # if self.case.type_abbreviation.nil?
-    #   user.manager?
-    # else
-    #   managing_correspondence_type_abbreviations =
-    #     user.managing_teams.collect(&:correspondence_types).flatten.map(&:abbreviation).uniq
-    #   self.case.type_abbreviation.in?(managing_correspondence_type_abbreviations)
-    # end
   end
 
   def can_assign_case?
