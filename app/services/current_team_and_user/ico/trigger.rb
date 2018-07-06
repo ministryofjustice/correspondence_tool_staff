@@ -1,6 +1,6 @@
 module CurrentTeamAndUser
   module ICO
-    class Standard < ::CurrentTeamAndUser::Base
+    class Trigger < ::CurrentTeamAndUser::Base
     end
   end
 end

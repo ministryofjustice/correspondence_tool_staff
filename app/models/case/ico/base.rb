@@ -14,6 +14,10 @@ class Case::ICO::Base < Case::Base
   validates :message, presence: true
   validates :external_deadline, presence: true
 
+  before_save do
+    self.workflow = 'trigger'
+  end
+
   after_create :process_uploaded_request_files,
                if: -> { uploaded_request_files.present? }
 
@@ -34,5 +38,11 @@ class Case::ICO::Base < Case::Base
   def set_deadlines
     days = correspondence_type.internal_time_limit.business_days
     self.internal_deadline = days.before(self.external_deadline)
+  end
+
+  private
+
+  def default_workflow
+    'trigger'
   end
 end

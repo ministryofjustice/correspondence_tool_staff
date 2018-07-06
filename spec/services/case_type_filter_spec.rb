@@ -80,6 +80,8 @@ describe CaseTypeFilter do
         results = case_type_filter.call
         expect(results).to match_array [
                              @setup.trig_unassigned_foi,
+                             @setup.ico_foi_unassigned,
+                             @setup.ico_sar_unassigned,
                            ]
       end
     end
@@ -95,8 +97,6 @@ describe CaseTypeFilter do
                              @setup.std_unassigned_foi,
                              @setup.std_unassigned_irc,
                              @setup.std_unassigned_irt,
-                             @setup.ico_foi_unassigned,
-                             @setup.ico_sar_unassigned,
                            ]
       end
     end

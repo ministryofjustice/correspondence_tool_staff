@@ -345,7 +345,7 @@ CREATE TABLE public.cases (
     current_state character varying,
     last_transitioned_at timestamp without time zone,
     delivery_method public.cases_delivery_methods,
-    workflow character varying DEFAULT 'standard'::character varying,
+    workflow character varying,
     deleted boolean DEFAULT false,
     info_held_status_id integer,
     type character varying,
@@ -1614,6 +1614,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180613141421'),
 ('20180620135756'),
 ('20180621094208'),
-('20180622153909');
+('20180622153909'),
+('20180705184513');
 
 

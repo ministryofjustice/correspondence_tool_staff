@@ -25,8 +25,19 @@ class CaseCreateService
           team: BusinessUnit.dacu_disclosure
         ).call
       end
+      flag_for_disclosure if @case.is_a?(Case::ICO::Base)
       @result = :assign_responder
     end
     @result != :error
+  end
+
+  private
+
+  def flag_for_disclosure
+    service = CaseFlagForClearanceService.new(user: @user,
+                                              kase: @case,
+                                              team: BusinessUnit.dacu_disclosure)
+    result = service.call
+    raise "Unable to Flag ICO case for disclosure: #{result}" unless result == :ok
   end
 end
