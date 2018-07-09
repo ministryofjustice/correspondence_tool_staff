@@ -54,7 +54,6 @@ module PageObjects
             if kase.third_party?
               choose_third_party true
               requester_full_name.set kase.name
-
             else
               choose_third_party false
             end
@@ -78,7 +77,7 @@ module PageObjects
           def drop_in_dropzone(file_path)
             super file_path: file_path,
                   input_name: dropzone_container['data-file-input-name'],
-                  container_selector: '#delivery-method-fields'
+                  container_selector: '.dropzone'
           end
 
           def choose_flag_for_disclosure_specialists(choice = 'yes')
