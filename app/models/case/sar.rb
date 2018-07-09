@@ -49,14 +49,13 @@ class Case::SAR < Case::Base
   validates_presence_of :subject_type
   validates_presence_of :email,          if: :send_by_email?
   validates_presence_of :postal_address, if: :send_by_post?
-  validates_presence_of :message, unless: -> { uploaded_request_files.present? }
-  validates_presence_of :uploaded_request_files, unless: -> { message.present? }
+  validate :validate_message_or_uploaded_request_files, on: :create
+  validate :validate_message_or_attached_request_files, on: :update
 
   before_save :use_subject_as_requester,
               if: -> { name.blank? }
   after_create :process_uploaded_request_files,
                if: -> { uploaded_request_files.present? }
-
 
   # The method below is overiding the close method in the case_states.rb file.
   # This is so that the case is closed with the responder's team instead of the manager's team
@@ -75,4 +74,25 @@ class Case::SAR < Case::Base
   def use_subject_as_requester
     self.name = self.subject_full_name
   end
+
+  def validate_message_or_uploaded_request_files
+    if message.blank? && uploaded_request_files.blank?
+      errors.add(:message,
+                 :blank,
+                 message: "can't be blank if no request files attached")
+      errors.add(:uploaded_request_files,
+                 :blank,
+                 message: "can't be blank if no case details entered")
+    end
+  end
+
+  def validate_message_or_attached_request_files
+    if message.blank? && attachments.request.blank?
+      errors.add(:message,
+                 :blank,
+                 message: "can't be blank if no request files attached")
+    end
+  end
+
+
 end
