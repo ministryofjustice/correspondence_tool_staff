@@ -53,7 +53,9 @@ def create_ico_case_step(original_case_type: nil,
   Case::Base.find(kase_id)
 end
 
-def create_sar_case_step flag_for_disclosure: false
+def create_sar_case_step(params={})
+  flag_for_disclosure = params.delete(:flag_for_disclosure) { false }
+
   # Assume we are on a case listing page
   expect(cases_page).to have_new_case_button
   cases_page.new_case_button.click
@@ -63,7 +65,7 @@ def create_sar_case_step flag_for_disclosure: false
   cases_new_page.create_link_for_correspondence('SAR').click
   expect(cases_new_sar_page).to be_displayed
 
-  cases_new_sar_page.fill_in_case_details
+  cases_new_sar_page.fill_in_case_details(params)
   cases_new_sar_page.choose_flag_for_disclosure_specialists(
     flag_for_disclosure ? 'yes' : 'no'
   )

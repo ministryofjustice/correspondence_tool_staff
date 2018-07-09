@@ -25,6 +25,20 @@ feature 'SAR Case creation by a manager' do
       .to include responding_team.team_lead
   end
 
+  scenario 'creating a non-trigger SAR case with only uploaded files', js: true do
+    request_attachment = Rails.root.join('spec', 'fixtures', 'request-1.pdf')
+
+    create_sar_case_step(message: '',
+                         uploaded_request_files: [request_attachment])
+
+    responding_team = responder.responding_teams.first
+    assign_case_step business_unit: responding_team
+
+    # Clearance level should display deputy director
+    expect(cases_show_page.clearance_levels.basic_details.deputy_director.text)
+      .to include responding_team.team_lead
+  end
+
   scenario 'creating a case that needs clearance' do
     create_sar_case_step flag_for_disclosure: true
 
