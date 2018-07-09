@@ -10,7 +10,6 @@ FactoryBot.define do
     end
 
     current_state          'unassigned'
-    sequence(:name)        { |n| "#{identifier} name #{n}" }
     sequence(:subject)     { |n| "#{identifier} subject #{n}" }
     sequence(:message)     { |n| "#{identifier} message #{n}" }
     ico_reference_number   { generate :ico_sar_reference_number }
