@@ -495,11 +495,8 @@ class Case::Base < ApplicationRecord
   def add_linked_case(linked_case)
     ActiveRecord::Base.transaction do
       unless self.linked_cases.include? linked_case
-        self.linked_cases << linked_case
-      end
-
-      unless linked_case.linked_cases.include? self
-        linked_case.linked_cases << self
+        LinkedCase.create(case_id: self.id, linked_case_id: linked_case.id)
+        self.linked_cases.reload
       end
     end
   end

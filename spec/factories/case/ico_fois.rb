@@ -4,9 +4,10 @@ FactoryBot.define do
 
   factory :ico_foi_case, class: Case::ICO::FOI do
     transient do
-      creation_time   { 4.business_days.ago }
-      identifier      "new ICO FOI case"
-      managing_team   { find_or_create :team_dacu }
+      creation_time { 4.business_days.ago }
+      identifier    "new ICO FOI case"
+      managing_team { find_or_create :team_dacu }
+      original_case { find_or_create :closed_case }
     end
 
     current_state          'unassigned'
@@ -19,6 +20,10 @@ FactoryBot.define do
     uploaded_request_files { ["#{Faker::Internet.slug}.pdf"] }
     uploading_user         { find_or_create :manager }
     created_at             { creation_time }
+
+    after(:create) do |kase, evaluator|
+      kase.add_linked_case(evaluator.original_case)
+    end
   end
 
   factory :awaiting_responder_ico_foi_case, parent: :ico_foi_case do

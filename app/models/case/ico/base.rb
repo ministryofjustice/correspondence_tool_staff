@@ -6,6 +6,16 @@ class Case::ICO::Base < Case::Base
 
   acts_as_gov_uk_date :received_date, :date_responded, :external_deadline
 
+  has_paper_trail only: [
+                    :date_responded,
+                    :external_deadline,
+                    :ico_reference_number,
+                    :message,
+                    :properties,
+                    :received_date,
+                    :subject,
+                  ]
+
   # Used by the controller to drive the views which ask the user to select the
   # "original case type"
   attr_accessor :original_case_id
@@ -20,6 +30,7 @@ class Case::ICO::Base < Case::Base
 
   after_create :process_uploaded_request_files,
                if: -> { uploaded_request_files.present? }
+  after_create :link_original_and_related_cases
 
   class << self
     def type_abbreviation
@@ -48,5 +59,12 @@ class Case::ICO::Base < Case::Base
 
   def default_workflow
     'trigger'
+  end
+
+  def link_original_and_related_cases
+    if original_case_id.present?
+      original_case = Case::Base.find(original_case_id)
+      add_linked_case(original_case)
+    end
   end
 end

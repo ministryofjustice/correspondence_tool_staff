@@ -10,10 +10,14 @@ module PageObjects
 
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
-          element :original_case_type, :xpath,
-                  '//fieldset[contains(.,"Type")]'
 
           element :ico_reference_number, '#case_ico_ico_reference_number'
+
+          element :original_case_number, '#original_case_number'
+          section :original_case,
+                  PageObjects::Sections::Cases::LinkedCasesSection,
+                  '.js-original-case-and-friends .grid-row:first-child'
+          element :link_original_case, :xpath, '//button[contains(.,"Link original case")]'
 
           element :date_received_day, '#case_ico_received_date_dd'
           element :date_received_month, '#case_ico_received_date_mm'
@@ -45,21 +49,25 @@ module PageObjects
             external_deadline_year.set(final_deadline_date.year)
           end
 
-          def choose_original_case_type(original_case_type)
-            css_class = "case_ico_original_case_type_#{original_case_type}"
-            make_radio_button_choice(css_class)
+          def set_original_case_number(original_case_number)
+            self.original_case_number.set original_case_number
+            link_original_case.click
           end
 
           def fill_in_case_details(params={})
-            original_case_type = params.delete(:original_case_type)
+            # We can't rely on the factory to link original case since we only
+            # build the kase below (factory relies on after-create hook) and
+            # the point of this function is to exercise the front-end so we
+            # should be linking by adding the linked cases through it.
+            original_case = params.delete(:original_case)
             kase = FactoryBot.build :ico_foi_case, params
-
-            choose_original_case_type(original_case_type.downcase)
 
             set_received_date(kase.received_date)
             set_final_deadline_date(kase.external_deadline)
 
             ico_reference_number.set kase.ico_reference_number
+            set_original_case_number(original_case.number)
+
             subject.set kase.subject
             case_details.set kase.message
             kase.uploaded_request_files.each do |file|

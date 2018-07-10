@@ -1,5 +1,3 @@
-= f.radio_button_fieldset :original_case_type, choices: case_types, value_method: :demodulize
-
 = f.text_field :ico_reference_number
 
 = render partial: 'cases/ico/case_linking/new_case_link_form', locals: {linked_case: nil, linked_case_errors: @linked_case_errors}

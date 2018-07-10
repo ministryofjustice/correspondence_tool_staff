@@ -300,9 +300,6 @@ en:
       case_ico:
         ico_reference_number: ICO case reference number
         message: "Case details"
-        original_case_type:
-          Case::ICO::FOI: FOI
-          Case::ICO::SAR: SAR
       case_sar:
         email: "Recipient email address"
         message: Full case details
