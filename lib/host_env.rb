@@ -17,7 +17,8 @@ class HostEnv
   end
 
   def self.test?
-    ENV['ENV'] == 'test'
+    Rails.env.test?
+    # ENV['ENV'] == 'test'
   end
 
   def self.local?

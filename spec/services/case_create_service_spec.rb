@@ -6,7 +6,6 @@ describe CaseCreateService do
   let!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
   let(:regular_params) do
     {
-      type: 'Case::FOI::Standard',
       requester_type: 'member_of_the_public',
       name: 'A. Member of Public',
       postal_address: '102 Petty France',
