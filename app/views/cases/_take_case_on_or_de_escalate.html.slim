@@ -5,7 +5,7 @@
             class: 'button take-case-on-link',
             remote: !current_page?(case_path(case_details.id)),
             method: :patch
-  - unless case_details.flagged_for_press_office_clearance? || case_details.flagged_for_private_office_clearance?
+  - if policy(case_details).unflag_for_clearance?
     = link_to 'De-escalate',
               unflag_for_clearance_case_path(id: case_details.id),
               remote: !current_page?(case_path(case_details.id)),
