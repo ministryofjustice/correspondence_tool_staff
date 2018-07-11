@@ -25,7 +25,9 @@ describe 'cases/incoming_cases.html.slim', type: :view do
     case2
     further_clearance_case
     assign(:cases, PaginatingDecorator.new(Case::Base.all.page.order(:id)))
-    allow(view).to receive(:policy).and_return(spy('Pundit::Policy'))
+
+    policy = double('Pundit::Policy', can_add_case?: false, unflag_for_clearance?: true)
+    allow(view).to receive(:policy).and_return(policy)
 
     sign_in disclosure_specialist
 
