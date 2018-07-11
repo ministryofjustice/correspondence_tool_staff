@@ -201,6 +201,7 @@ describe CasesController do
 
         it 'does not create a case when authentication fails' do
           sign_in responder
+          foi_case_for_ico
           expect{ subject }.not_to change { Case::Base.count }
         end
 
@@ -217,7 +218,7 @@ describe CasesController do
           find_or_create :team_dacu_disclosure
         end
 
-        let(:created_case) { Case::Base.first }
+        let(:created_case) { Case::Base.last }
 
         it 'makes a DB entry' do
           expect { post :create, params: ico_params }.

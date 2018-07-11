@@ -92,14 +92,17 @@ describe CaseCreateService do
       expect(ccs.call).to eq true
     end
   end
-  
+
   context 'ICO case' do
     let(:received)    { Date.today }
     let(:deadline)    { 1.month.from_now.beginning_of_day + 10.hours }
+    let(:received) { Date.today }
+    let(:deadline) { 1.month.from_now }
+    let(:foi)      { create :closed_case }
     let(:params) do
       {
-          'type'                    => 'Case::ICO::FOI',
-          'original_case_type'      => 'FOI',
+          # 'type'                    => 'Case::ICO::FOI',
+          'original_case_id'        => foi.id,
           'ico_reference_number'    => 'ABC1344422',
           'received_date_dd'        => received.day.to_s,
           'received_date_mm'        => received.month.to_s,
@@ -112,30 +115,27 @@ describe CaseCreateService do
       }
     end
     let(:ccs) { CaseCreateService.new(manager, Case::ICO::FOI, params) }
+    let(:created_ico_case) { Case::ICO::FOI.last }
 
     it 'uses the params provided' do
       ccs.call
 
-      created_case = Case::Base.first
-      expect(created_case).to be_instance_of(Case::ICO::FOI)
-      expect(created_case.ico_reference_number).to eq 'ABC1344422'
-      expect(created_case.external_deadline).to eq deadline.to_date
-      expect(created_case.internal_deadline).to eq(10.business_days.before(deadline).to_date)
-      expect(created_case.message).to eq 'AAAAA'
-      expect(created_case.subject).to eq 'ICO FOI deadlines'
-      expect(created_case.current_state).to eq 'unassigned'
+      expect(created_ico_case.ico_reference_number).to eq 'ABC1344422'
+      expect(created_ico_case.external_deadline).to eq deadline.to_date
+      expect(created_ico_case.internal_deadline).to eq(10.business_days.before(deadline).to_date)
+      expect(created_ico_case.message).to eq 'AAAAA'
+      expect(created_ico_case.subject).to eq 'ICO FOI deadlines'
+      expect(created_ico_case.current_state).to eq 'unassigned'
     end
 
     it 'sets the workflow to trigger' do
       ccs.call
-      created_case = Case::Base.first
-      expect(created_case.workflow).to eq 'trigger'
+      expect(created_ico_case.workflow).to eq 'trigger'
     end
 
     it 'assigns the case to disclosure for approval' do
       ccs.call
-      created_case = Case::Base.first
-      approving_assignments = created_case.assignments.approving
+      approving_assignments = created_ico_case.assignments.approving
       expect(approving_assignments.size).to eq 1
       assignment = approving_assignments.first
       expect(assignment.state).to eq 'pending'
