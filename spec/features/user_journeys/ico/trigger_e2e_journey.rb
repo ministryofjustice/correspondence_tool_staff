@@ -1,6 +1,6 @@
 ###################################
 #
-# Non-Offender Trigger SAR End-to-end User Journey
+# ICO FOI case End-to-end User Journey
 #
 ###################################
 
@@ -9,7 +9,7 @@ require 'rails_helper'
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
 
-feature 'Non-Offender SAR case requiring clearance' do
+feature 'ICO FOI case requiring clearance' do
   include CaseDateManipulation
   include Features::Interactions
   given(:responder)                { create :responder }

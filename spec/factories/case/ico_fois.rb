@@ -91,7 +91,6 @@ FactoryBot.define do
     end
   end
 
-
   factory :responded_ico_foi_case, parent: :pending_dacu_clearance_ico_foi_case do
     transient do
       identifier 'responded ICO FOI case'
@@ -107,4 +106,3 @@ FactoryBot.define do
   end
 
 end
-
