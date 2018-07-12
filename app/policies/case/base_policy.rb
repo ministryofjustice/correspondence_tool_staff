@@ -426,8 +426,7 @@ class Case::BasePolicy < ApplicationPolicy
 
   # check case_is_in_responder_attachable_state
   check :case_is_in_attachable_state do
-    (self.case.drafting? || self.case.awaiting_dispatch?) &&
-        self.case.assignments.approving.approved.none?
+    self.case.drafting? || self.case.awaiting_dispatch?
   end
 
   check :escalation_deadline_has_expired do

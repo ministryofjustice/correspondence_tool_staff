@@ -25,7 +25,7 @@ feature 'Upload response' do
     scenario 'restrict upload more responses to an approved case' do
       cases_show_page.load(id: approved_case.id)
 
-      expect(cases_show_page.actions).to have_no_upload_response
+      expect(cases_show_page.actions).to have_upload_response
     end
 
   end
