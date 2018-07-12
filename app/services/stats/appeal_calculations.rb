@@ -23,29 +23,29 @@ module Stats
     end
 
     def self.calculate_overall_performance(row, appeal_type)
-      rit = "#{appeal_type}_appeal_responded_in_time".to_sym
-      rl = "#{appeal_type}_appeal_responded_late".to_sym
-      ol = "#{appeal_type}_appeal_open_late".to_sym
+      responded_in_time = "#{appeal_type}_appeal_responded_in_time".to_sym
+      responded_late    = "#{appeal_type}_appeal_responded_late".to_sym
+      open_late         = "#{appeal_type}_appeal_open_late".to_sym
 
-      value = row[rit]
-      total = row[rit] + row[rl] + row[ol]
+      value = row[responded_in_time]
+      total = row[responded_in_time] + row[responded_late] + row[open_late]
       calculate_percentage(value, total)
     end
 
     def self.sum_all_received(row, appeal_type)
-      ttl = "#{appeal_type}_appeal_total".to_sym
-      rit = "#{appeal_type}_appeal_responded_in_time".to_sym
-      rl  = "#{appeal_type}_appeal_responded_late".to_sym
-      oit = "#{appeal_type}_appeal_open_in_time".to_sym
-      ol  = "#{appeal_type}_appeal_open_late".to_sym
-      row[ttl] = row[rit] + row[rl] + row[oit] + row[ol]
+      total             = "#{appeal_type}_appeal_total".to_sym
+      responded_in_time = "#{appeal_type}_appeal_responded_in_time".to_sym
+      responded_late    = "#{appeal_type}_appeal_responded_late".to_sym
+      open_in_time      = "#{appeal_type}_appeal_open_in_time".to_sym
+      open_late         = "#{appeal_type}_appeal_open_late".to_sym
+      row[total]        = row[responded_in_time] + row[responded_late] + row[open_in_time] + row[open_late]
     end
 
     def self.calculate_appeal(row, appeal_type)
-      rit = "#{appeal_type}_appeal_responded_in_time".to_sym
-      rl = "#{appeal_type}appeal_responded_late".to_sym
-      ol = "#{appeal_type}appeal_open_late".to_sym
-      calculate_percentage(row[rit], row[rit] + row[rl] + row[ol])
+      responded_in_time = "#{appeal_type}_appeal_responded_in_time".to_sym
+      responded_late    = "#{appeal_type}appeal_responded_late".to_sym
+      open_late         = "#{appeal_type}appeal_open_late".to_sym
+      calculate_percentage(row[responded_in_time], row[responded_in_time] + row[responded_late] + row[open_late])
     end
 
     def self.calculate_percentage(value, total)
