@@ -409,7 +409,7 @@ class Case::Base < ApplicationRecord
   end
 
   def responded_in_time?
-    return false unless closed?
+    return false unless closed_for_reporting_purposes?
     date_responded <= external_deadline
   end
 
@@ -589,6 +589,10 @@ class Case::Base < ApplicationRecord
 
   def requires_flag_for_disclosure_specialists?
     true
+  end
+
+  def closed_for_reporting_purposes?
+    closed?
   end
 
   private
