@@ -77,6 +77,13 @@ describe Case::BasePolicy do
     @press_flagged_case             = create :assigned_case,
                                              :flagged_accepted,
                                              :press_office
+    @redrafting_case                = create :redrafting_case,
+                                             :flagged_accepted,
+                                             :press_office,
+                                             approving_team: @dacu_disclosure,
+                                             approver: @disclosure_specialist,
+                                             responder: @responder
+
 
     @pending_dacu_clearance_press_case =
       create :pending_dacu_clearance_case_flagged_for_press,
@@ -133,6 +140,7 @@ describe Case::BasePolicy do
 
   let(:drafting_trigger_case) { @drafting_trigger_case }
   let(:press_flagged_case) { @press_flagged_case }
+  let(:redrafting_case)    { @redrafting_case }
 
   let(:pending_dacu_clearance_press_case) { @pending_dacu_clearance_press_case }
   let(:pending_press_private_clearance_case) { @pending_press_private_clearance_case }
@@ -290,6 +298,13 @@ describe Case::BasePolicy do
         it { should_not permit(coworker,          pending_dacu_clearance_case) }
         it { should_not permit(another_responder, pending_dacu_clearance_case) }
         it { should     permit(approver,          pending_dacu_clearance_case) }
+      end
+
+      context 'case being re-drafted after approval' do
+        it { should     permit(responder,         redrafting_case) }
+        it { should     permit(coworker,          redrafting_case) }
+        it { should_not permit(manager,           redrafting_case) }
+        it { should_not permit(another_responder, redrafting_case) }
       end
     end
   end
