@@ -202,6 +202,9 @@
                  remove_response:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?
                    transition_to_using: Workflows::Conditionals#remove_response_next_state
+                 respond:
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                   transition_to: responded
 
               responded:
                 add_message_to_case:
@@ -213,4 +216,3 @@
               closed:
                 link_a_case:
                 remove_linked_case:
-      ####################### THE END #######################

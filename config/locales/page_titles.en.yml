@@ -12,6 +12,7 @@ en:
     close_case_page: Closing a case - %{case_number} - Track-a-query
     closed_cases_page: All closed cases - Track-a-query
     create_case_page: Creating a %{case_type} case - Track-a-query
+    create_overturned_ico_page: Creating an overturned ICO appeal case - Track-a-query
     custom_report: Creating a custom report - Track-a-query
     destroy_case_page: Deleting a case - %{case_number} - Track-a-query
     edit_assignment_page: Accepting or rejecting a case - %{case_number} - Track-a-query

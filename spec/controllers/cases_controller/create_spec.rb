@@ -238,7 +238,7 @@ describe CasesController do
           expect(created_case.external_deadline).to eq 20.business_days.from_now.to_date
         end
 
-        it 'diplays a flash message' do
+        it 'displays a flash message' do
           post :create, params: ico_params
           expect(flash[:notice]).to eq "ICO case created<br/>Case number: #{created_case.number}"
         end

@@ -6,7 +6,7 @@ class Case::SAR < Case::Base
   end
 
   before_save do
-    self.wokflow = 'standard' if workflow.nil?
+    self.workflow = 'standard' if workflow.nil?
   end
 
   jsonb_accessor :properties,

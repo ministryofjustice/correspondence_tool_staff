@@ -75,6 +75,18 @@ en:
             does_not_match_original: >-
               You've linked a SAR case as the original for this appeal. You
               can now only link other SAR cases as related to this cases.
+        case/overturned_ico/sar:
+          attributes:
+            received_date:
+              future: cannot be in the future
+              past: is too far in the past
+            external_deadline:
+              past: cannot be in the past
+              future: is too far in the future
+            original_ico_appeal:
+              not_ico_sar: is not an ICO appeal for a SAR case
+            original_case:
+              not_sar: is not a SAR case
         case/sar:
           attributes:
             third_party:
@@ -144,6 +156,8 @@ en:
     nil_class: 'Authorisation failed due to internal error.'
     user_policy:
       destroy?: 'You are not authorised to deactivate users'
+    case/overturned_ico/base_policy:
+      new_overturned_ico?: 'You are not authorised to create an overturned ICO case'
 
   state: &state_translations
     unassigned: Needs reassigning
@@ -211,6 +225,7 @@ en:
     assign: Assign to this unit
     next_page_assign: Create case
     confirm: Confirm
+    create_case: Create case
     feedback: Send feedback
     submit: Submit
 
@@ -233,6 +248,7 @@ en:
         type: Type
         name: "Who is the requestor?"
       case_ico:
+        delivery_method: How and where should the information be sent?
         type: Original Case Type
       case_sar:
         missing_info: "Was the response asking for missing information (e.g. proof of ID) or
@@ -334,6 +350,11 @@ en:
         ico_reference_number: "ICO case reference number"
         message: "ICO's request details"
         related_case_number: "Link a related case"
+        email: "Recipient email address"
+        original_case_type:
+          Case::ICO::FOI: FOI
+          Case::ICO::SAR: SAR
+        postal_address: "Recipient postal address"
       case_sar:
         email: "Recipient email address"
         message: Full case details
@@ -613,6 +634,11 @@ en:
       uploaded_request_files_hint: |
         You can upload different file types such as Word, Excel,
         PDF and JPEG up to 20MB per file.
+    overturned_ico:
+      new_form:
+        sub_heading: Create an ICO Overturned case
+        heading: Add case details
+        overturned_case_for: 'ICO Overturned case for:'
 
     ico:
       new_form:
@@ -672,6 +698,7 @@ en:
       Case::ICO::FOI: ICO Appeal - FOI
       Case::ICO::SAR: ICO Appeal - SAR
       Case::SAR: Non-offender SAR
+      Case::OverturnedICO::SAR: Overturned ICO appeal for non-offender SAR
 
   feedback:
     error_html: |

@@ -21,7 +21,9 @@ class LinkedCase < ApplicationRecord
   enum type: {
          related: 'related',
          original: 'original',
+         original_appeal: 'original_appeal'
        }
+
   before_validation :find_linked_case_by_number
   after_create :create_reverse_link
   after_destroy :destroy_reverse_link
