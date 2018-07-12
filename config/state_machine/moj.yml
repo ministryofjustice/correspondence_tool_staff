@@ -1238,6 +1238,7 @@ case_types:
       - unassigned
       - awaiting_responder
       - drafting
+      - pending_dacu_clearance
       - awaiting_dispatch
       - responded
       - closed
@@ -1306,26 +1307,38 @@ case_types:
           approver:
             states:
               unassigned:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
 
               awaiting_responder:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
 
               drafting:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
 
               awaiting_dispatch:
                 add_message_to_case:
@@ -1371,7 +1384,7 @@ case_types:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 add_responses:
-                  if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
+                  if: Case::ICO::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
                   transition_to: awaiting_dispatch
                 link_a_case:
                 reassign_user:
@@ -1383,7 +1396,7 @@ case_types:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?
                    after_transition: Workflows::Hooks#notify_responder_message_received
                  add_responses:
-                  if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
+                  if: Case::ICO::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
                  link_a_case:
                  reassign_user:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?

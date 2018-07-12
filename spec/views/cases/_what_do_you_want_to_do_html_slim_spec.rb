@@ -19,6 +19,8 @@ describe 'cases/_what_do_you_want_to_do.html.slim', type: :view do
 
   before do
     login_as approver
+    policy = double('Pundit::Policy', unflag_for_clearance?: true)
+    allow(view).to receive(:policy).and_return(policy)
   end
 
   it 'has a link to take the case on' do
