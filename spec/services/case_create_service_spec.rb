@@ -95,7 +95,7 @@ describe CaseCreateService do
   
   context 'ICO case' do
     let(:received)    { Date.today }
-    let(:deadline)    { 1.month.from_now }
+    let(:deadline)    { 1.month.from_now.beginning_of_day + 10.hours }
     let(:params) do
       {
           'type'                    => 'Case::ICO::FOI',
