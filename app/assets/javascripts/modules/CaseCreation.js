@@ -94,7 +94,7 @@ moj.Modules.CaseCreation = {
           'original_case_number': document.getElementById('case_ico_original_case_number').value,
           'related_case_numbers': relatedCaseNumbers,
           'correspondence_type': document.getElementById('correspondence_type').value,
-          'link_to': $(button).data('link-to')
+          'link_type': $(button).data('link-type')
         }
     });
   },

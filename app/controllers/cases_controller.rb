@@ -590,7 +590,6 @@ class CasesController < ApplicationController
   end
 
   def new_linked_cases_for
-    link_to = params[:link_to].strip
     set_correspondence_type(params.fetch(:correspondence_type))
 
     @original_case_number = params[:original_case_number].strip
@@ -599,22 +598,17 @@ class CasesController < ApplicationController
     if validate_params
       @original_case = Case::Base.where(number: @original_case_number).first.decorate
     end
+    @link_type = params[:link_type].strip
 
     respond_to do |format|
       format.js do
-        if validate_params
-          case link_to
-          when 'original'
-            render 'cases/ico/case_linking/show_original_case',
-                   locals: { original_case: @original_case }
-          when 'related'
-            render 'cases/ico/case_linking/show_related_case',
-                   locals: { related_cases: @original_case }
-          end
+        if process_new_linked_cases_for_params
+          render "cases/#{@correspondence_type_key}/case_linking/show_#{@link_type}_case",
+                   locals: { "#{@link_type}_linked_cases" => @linked_cases }
         else
-          render 'cases/ico/case_linking/show_error',
+          render "cases/#{@correspondence_type_key}/case_linking/show_error",
                  locals: { linked_case_error: @linked_case_error,
-                           link_to: link_to }
+                           link_type: @link_type }
         end
       end
     end
