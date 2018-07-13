@@ -591,16 +591,26 @@ class CasesController < ApplicationController
 
   def get_link_case_details
     set_correspondence_type(params.fetch(:correspondence_type))
+    link_to = params[:link_to].strip
     @original_case_number = params[:original_case_number].strip
     @linked_case_errors = nil
     if validate_params
       @original_case = Case::Base.where(number: @original_case_number).first.decorate
     end
     respond_to do |format|
-      format.js { render 'cases/ico/case_linking/show_original_case_and_other_cases',
-                         locals: { original_case: @original_case,
-                                   correspondence_type_key: @correspondence_type_key,
-                                   linked_case_errors: @linked_case_errors} }
+      format.js do
+        render 'cases/ico/case_linking/show_original_case',
+               locals: { original_case: @original_case,
+                         correspondence_type_key: @correspondence_type_key,
+                         linked_case_errors: @linked_case_errors}  if link_to == 'original'
+
+        render 'cases/ico/case_linking/show_related_case',
+               locals: { original_case: @original_case,
+                         correspondence_type_key: @correspondence_type_key,
+                         linked_case_errors: @linked_case_errors} if link_to == 'related'
+
+      end
+
     end
   end
 
@@ -692,7 +702,7 @@ class CasesController < ApplicationController
       # authorisation.
       authorize default_subclass, :can_add_case?
 
-      @case = default_subclass.new
+      @case = default_subclass.new.decorate
       @case_types = @correspondence_type.sub_classes.map(&:to_s)
       @s3_direct_post = s3_uploader_for(@case, 'requests')
     else

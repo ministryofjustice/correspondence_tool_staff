@@ -243,7 +243,11 @@ en:
         value: Please provide one area at a time and be as concise as possible
       case_sar:
         third_party_relationship: For example, solicitor, parent or guardian
-
+      case_ico:
+        original_case_number_html: |
+          Enter original case  reference number to link to.  For example 170131001.<br>
+          We'll use the original case title for the appeal title.
+        related_case_number:  Enter related case  reference number, for example 170131001.
     label:
       bypass_approval_manager:
         press_office_approval:
@@ -300,6 +304,7 @@ en:
       case_ico:
         ico_reference_number: ICO case reference number
         message: "Case details"
+        related_case_number: Link a related case
       case_sar:
         email: "Recipient email address"
         message: Full case details

@@ -1,21 +1,29 @@
 #js-search-for-case.form-group
-  = label_tag 'cases[case_number]', class: 'form-label-bold' do
-    = "Original case number"
-    span.form-hint
-      = 'Enter original case reference number. For example 170131001.'
-    span.error-message
+  .js-original-case
+    = f.text_field :original_case_number, class: ['form-control-1-8']
+    .form-group
+      = button_tag 'Link original case',
+              type: 'button',
+              class: 'button-secondary',
+              id: 'xhr-search-original-case-button',
+              data: { url: get_link_case_details_cases_path,
+                      correspondence_type: @correspondence_type_key,
+                      link_to: 'original'}
 
-  = hidden_field_tag 'correspondence_type', @correspondence_type_key
-  = search_field_tag 'original_case_number', nil, class: 'form-control'
-.form-group
-  = button_tag 'Link original case',
-               type: 'button',
-               class: 'button-secondary',
-               id: 'xhr-search-button',
-               data: { url: get_link_case_details_cases_path,
-                       correspondence_type: @correspondence_type_key }
+  .js-related-case.js-hidden
+    = f.text_field :related_case_number, class: ['form-control-1-8']
+    .form-group
+      = button_tag 'Link related case',
+              type: 'button',
+              class: 'button-secondary',
+              id: 'xhr-search-related-case-button',
+              data: { url: get_link_case_details_cases_path,
+                      correspondence_type: @correspondence_type_key,
+                      link_to: 'related' }
+
 
 .js-original-case-and-friends
-  = render partial: 'cases/ico/case_linking/linked_original_case',
+  .js-original-case-report
+    = render partial: 'cases/ico/case_linking/linked_original_case',
            locals: { original_case: nil, linked_case_errors: nil}
 

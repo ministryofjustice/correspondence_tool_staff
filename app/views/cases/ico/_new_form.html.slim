@@ -1,6 +1,6 @@
 = f.text_field :ico_reference_number
 
-= render partial: 'cases/ico/case_linking/new_case_link_form', locals: {linked_case: nil, linked_case_errors: @linked_case_errors}
+= render partial: 'cases/ico/case_linking/new_case_link_form', locals: {f: f, linked_case: nil, linked_case_errors: @linked_case_errors}
 
 .form-group
   = f.gov_uk_date_field :received_date, { legend_text: t('cases.new.received_date'),

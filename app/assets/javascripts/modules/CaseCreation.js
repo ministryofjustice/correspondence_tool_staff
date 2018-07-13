@@ -6,6 +6,11 @@ moj.Modules.CaseCreation = {
 
   $deliveryMethodFields : $('#delivery-method-fields'),
 
+  $originalCaseFields: $('#js-search-for-case .js-original-case'),
+  $relatedCaseFields: $('#js-search-for-case .js-related-case'),
+  $searchOriginCaseButton: $('#xhr-search-original-case-button'),
+
+
   init: function () {
     var self = this;
 
@@ -19,14 +24,17 @@ moj.Modules.CaseCreation = {
     }
 
     // For linking to original case
-    $('#xhr-search-button').click(function () {
+    self.$searchOriginCaseButton.click(function () {
       self.getCaseDetails(this);
+      self.showRelatedCaseField(self);
+
     });
 
-    $('#cases_case_number').on('keypress', function(e){
+    $('#case_ico_original_case_number').on('keypress', function(e){
       if (e.keyCode === 13 ) {
         e.preventDefault()
-        self.getCaseDetails(document.getElementById('xhr-search-button'));
+        self.getCaseDetails(document.getElementById('xhr-search-original-case-button'));
+        self.showRelatedCaseField(self);
       }
     })
 
@@ -70,8 +78,9 @@ moj.Modules.CaseCreation = {
   getCaseDetails: function (button) {
     $.ajax({
         url: $(button).data('url'),
-        data: { 'original_case_number': document.getElementById('original_case_number').value,
+        data: { 'original_case_number': document.getElementById('case_ico_original_case_number').value,
                 'correspondence_type': document.getElementById('correspondence_type').value,
+                'link_to': $(button).data('link-to')
               }
     });
   },
@@ -92,13 +101,21 @@ moj.Modules.CaseCreation = {
   },
 
   removeOriginalCase: function (event) {
-    event.preventDefault()
-    var results = document.querySelector('.js-original-case-and-friends');
-    var message = 'This will remove the original case and any related cases below.\nDo you wish to continue?';
+    event.preventDefault();
+    moj.Modules.CaseCreation.insertOriginalCaseReport('');
+    $('#js-search-for-case .js-related-case').addClass('js-hidden');
+    $('#js-search-for-case .js-original-case')
+      .removeClass('js-hidden')
+      .find(':text').focus();
+  },
 
-    if (confirm( message )) {
-      results.innerHTML = '';
-      document.getElementById('cases_case_number').focus();
-    }
+  insertOriginalCaseReport: function (originalCase){
+    document.querySelector('.js-original-case-report').innerHTML = originalCase;
+  },
+
+  showRelatedCaseField: function (self) {
+    self.$originalCaseFields.addClass('js-hidden');
+    self.$relatedCaseFields.removeClass('js-hidden')
+      .removeClass('js-hidden').find(':text').focus();
   }
 };
