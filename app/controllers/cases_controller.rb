@@ -596,12 +596,16 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.js do
         if process_new_linked_cases_for_params
+          @linked_cases.each { |kase| authorize kase, :show? }
+
           render "cases/#{@correspondence_type_key}/case_linking/show_#{@link_type}_case",
-                   locals: { linked_cases: @linked_cases.map(&:decorate)}
+                   locals: { linked_cases: @linked_cases.map(&:decorate) }
         else
           render "cases/#{@correspondence_type_key}/case_linking/show_error",
-                 locals: { linked_case_error: @linked_case_error,
-                           link_type: @link_type }
+                 locals: {
+                   linked_case_error: @linked_case_error,
+                   link_type: @link_type
+                 }
         end
       end
     end

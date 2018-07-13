@@ -13,7 +13,7 @@ module PageObjects
 
           element :ico_reference_number, '#case_ico_ico_reference_number'
 
-          element :original_case_number, '#original_case_number'
+          element :original_case_number, '#case_ico_original_case_number'
           section :original_case,
                   PageObjects::Sections::Cases::LinkedCasesSection,
                   '.js-original-case-and-friends .grid-row:first-child'

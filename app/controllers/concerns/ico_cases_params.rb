@@ -35,10 +35,10 @@ module ICOCasesParams
       return false
     end
 
-    original_case = Case::Base.where(number: params[:original_case_number]).first.decorate
+    original_case = Case::Base.where(number: params[:original_case_number]).first
     unless original_case.present?
       @linked_case_error = "Original case not found"
-      false
+      return false
     end
 
     @linked_cases = [original_case]
@@ -65,9 +65,9 @@ module ICOCasesParams
       return false
     end
 
-    if params.fetch(:related_case_ids) != ''
-      @linked_cases = Case::Base.find(params.fetch(:related_case_ids))
-      @linked_cases += related_case
+    if params.fetch(:related_case_ids).present?
+      @linked_cases = Case::Base.find(params[:related_case_ids])
+      @linked_cases += [related_case]
     else
       @linked_cases = [related_case]
     end
