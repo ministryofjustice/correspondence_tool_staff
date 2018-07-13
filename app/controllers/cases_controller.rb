@@ -591,13 +591,6 @@ class CasesController < ApplicationController
 
   def new_linked_cases_for
     set_correspondence_type(params.fetch(:correspondence_type))
-
-    @original_case_number = params[:original_case_number].strip
-    @linked_case_error = nil
-
-    if validate_params
-      @original_case = Case::Base.where(number: @original_case_number).first.decorate
-    end
     @link_type = params[:link_type].strip
 
     respond_to do |format|

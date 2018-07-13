@@ -13,25 +13,61 @@ module ICOCasesParams
     )
   end
 
-  def validate_ico_linked_cases_for_params
-    if params[:link_to] == 'original'
-      validate_ico_linked_cases_for_original_params
+
+  def process_new_linked_cases_for_params
+    case @correspondence_type_key
+    when 'ico' then process_new_linked_cases_for_ico_params
+    else raise "Unknown case type: #{@correspondence_type_key}"
     end
   end
 
-  def validate_ico_linked_cases_for_original_params
-      if params.key?(:original_case_number)
-        @original_case = Case::Base.where(number: params[:original_case_number]).first
-        if @original_case.present?
-          true
-        else
-          @linked_case_errors = "Original case not found"
-          false
-        end
-      else
-        @linked_case_errors = "Enter original case number"
-        false
+  def process_new_linked_cases_for_ico_params
+    case @link_type
+    when 'original' then process_new_linked_cases_for_ico_original_params
+    when 'related'  then process_new_linked_cases_for_ico_related_params
+    else raise "unknown link type: '#{@link_type}"
     end
+  end
+
+  def process_new_linked_cases_for_ico_original_params
+    if params.key?(:original_case_number).nil?
+      @linked_case_errors = "Enter original case number"
+      return false
+    end
+
+    original_case = Case::Base.where(number: params[:original_case_number]).first.decorate
+    unless original_case.present?
+      @linked_case_errors = "Original case not found"
+      false
+    end
+
+    @linked_cases = [original_case]
+    true
+  end
+
+  def process_new_linked_cases_for_ico_related_params
+    if params.key?(:related_case_number).nil?
+      @linked_case_errors = "Enter related case number"
+      return false
+    end
+
+    related_case = Case::Base.where(number: params[:related_case_number]).first
+    unless related_case.present?
+      @linked_case_errors = "Related case not found"
+      return false
+    end
+
+    original_case = Case::Base.find_by(number: params.fetch(:original_case_number))
+    if related_case.correspondence_type != original_case.correspondence_type
+      @linked_case_errors =
+        "Related case type #{related_case.type_abbreviation} does not match " +
+        "that of the original case type #{original_case.type_abbreviation}"
+      return false
+    end
+
+    @linked_cases = Case::Base.find(params.fetch(:related_case_ids))
+    @linked_cases += related_case
+    true
   end
 
 end
