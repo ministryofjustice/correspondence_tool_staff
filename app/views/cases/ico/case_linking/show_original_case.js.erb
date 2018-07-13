@@ -1,13 +1,7 @@
 // inject the content into the page
 <% content = j render partial: 'cases/ico/case_linking/linked_original_case' ,
-                      locals: { original_case: @linked_cases.first}%>
-
-//clear any previous errors
-$('#js-search-for-case')
-.removeClass('form-group-error')
-.find('.error-message')
-.html('');
+                      locals: { original_case: linked_cases.first} %>
 
 // inject the content into the page
-  moj.Modules.CaseCreation.insertOriginalCaseReport("<%= content %>")
+  moj.Modules.CaseCreation.insertOriginalCaseReport("<%= content %>");
 
