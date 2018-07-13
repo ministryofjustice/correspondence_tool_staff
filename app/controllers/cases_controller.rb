@@ -597,7 +597,7 @@ class CasesController < ApplicationController
       format.js do
         if process_new_linked_cases_for_params
           render "cases/#{@correspondence_type_key}/case_linking/show_#{@link_type}_case",
-                   locals: { "#{@link_type}_linked_cases" => @linked_cases }
+                   locals: { linked_cases: @linked_cases.map(&:decorate)}
         else
           render "cases/#{@correspondence_type_key}/case_linking/show_error",
                  locals: { linked_case_error: @linked_case_error,
