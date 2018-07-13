@@ -65,8 +65,13 @@ module ICOCasesParams
       return false
     end
 
-    @linked_cases = Case::Base.find(params.fetch(:related_case_ids))
-    @linked_cases += related_case
+    if params.fetch(:related_case_ids) != ''
+      @linked_cases = Case::Base.find(params.fetch(:related_case_ids))
+      @linked_cases += related_case
+    else
+      @linked_cases = [related_case]
+    end
+
     true
   end
 
