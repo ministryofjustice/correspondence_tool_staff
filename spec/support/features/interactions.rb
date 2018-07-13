@@ -165,5 +165,30 @@ module Features
         expect(cases.count).to eq num_expected_results
       end
     end
+
+    def go_to_case_reassign(expected_users:)
+      cases_show_page.actions.reassign_user.click
+      unless expected_users.nil?
+        expect(reassign_user_page.reassign_to.users.size).to eq expected_users.count
+        expected_user_names = expected_users.map do |u|
+          if u.respond_to? :full_name
+            u.full_name
+          else
+            u.to_s
+          end
+          # u.respond_to? :full_name ? u.full_name : u.to_s
+        end
+        expect(reassign_user_page.reassign_to.users.map(&:text))
+          .to match_array expected_user_names
+      end
+    end
+
+    def do_case_reassign_to(user)
+      reassign_user_page.choose_assignment_user user
+      reassign_user_page.confirm_button.click
+      expect(cases_show_page).to be_displayed
+      expect(cases_show_page.case_history.entries.first)
+        .to have_text("re-assigned this case to #{user.full_name}")
+    end
   end
 end
