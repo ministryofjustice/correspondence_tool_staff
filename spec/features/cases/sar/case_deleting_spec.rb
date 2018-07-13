@@ -1,6 +1,6 @@
 require "rails_helper"
 
-feature 'deleteing SAR cases' do
+feature 'deleting SAR cases' do
 
   given(:manager) { create :disclosure_bmt_user }
 
