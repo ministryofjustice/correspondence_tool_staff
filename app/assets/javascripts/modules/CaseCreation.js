@@ -84,15 +84,18 @@ moj.Modules.CaseCreation = {
 
   getCaseDetails: function (button) {
 
-    var relatedCaseNumbers = $(button).data('linked-related-case-numbers').value
-                            + ' '
-                            + document.getElementById('case_ico_related_case_number').value;
+    var related_case_ids = '';
+
+    if($(button).data('related-case-id')){
+      related_case_ids = $(button).data('related-case-id').value;
+    }
 
     $.ajax({
         url: $(button).data('url'),
         data: {
           'original_case_number': document.getElementById('case_ico_original_case_number').value,
-          'related_case_numbers': relatedCaseNumbers,
+          'related_case_number' : document.getElementById('case_ico_related_case_number').value,
+          'related_case_ids': related_case_ids,
           'correspondence_type': document.getElementById('correspondence_type').value,
           'link_type': $(button).data('link-type')
         }
