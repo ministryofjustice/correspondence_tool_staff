@@ -589,28 +589,34 @@ class CasesController < ApplicationController
     redirect_to case_path(@case.id)
   end
 
-  def get_link_case_details
-    set_correspondence_type(params.fetch(:correspondence_type))
+  def new_linked_cases_for
     link_to = params[:link_to].strip
+    set_correspondence_type(params.fetch(:correspondence_type))
+
     @original_case_number = params[:original_case_number].strip
-    @linked_case_errors = nil
+    @linked_case_error = nil
+
     if validate_params
       @original_case = Case::Base.where(number: @original_case_number).first.decorate
     end
+
     respond_to do |format|
       format.js do
-        render 'cases/ico/case_linking/show_original_case',
-               locals: { original_case: @original_case,
-                         correspondence_type_key: @correspondence_type_key,
-                         linked_case_errors: @linked_case_errors}  if link_to == 'original'
-
-        render 'cases/ico/case_linking/show_related_case',
-               locals: { original_case: @original_case,
-                         correspondence_type_key: @correspondence_type_key,
-                         linked_case_errors: @linked_case_errors} if link_to == 'related'
-
+        if validate_params
+          case link_to
+          when 'original'
+            render 'cases/ico/case_linking/show_original_case',
+                   locals: { original_case: @original_case }
+          when 'related'
+            render 'cases/ico/case_linking/show_related_case',
+                   locals: { related_cases: @original_case }
+          end
+        else
+          render 'cases/ico/case_linking/show_error',
+                 locals: { linked_case_error: @linked_case_error,
+                           link_to: link_to }
+        end
       end
-
     end
   end
 

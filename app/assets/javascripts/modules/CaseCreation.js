@@ -9,6 +9,7 @@ moj.Modules.CaseCreation = {
   $originalCaseFields: $('#js-search-for-case .js-original-case'),
   $relatedCaseFields: $('#js-search-for-case .js-related-case'),
   $searchOriginCaseButton: $('#xhr-search-original-case-button'),
+  $searchRelatedCaseButton: $('#xhr-search-related-case-button'),
 
 
   init: function () {
@@ -24,10 +25,16 @@ moj.Modules.CaseCreation = {
     }
 
     // For linking to original case
-    self.$searchOriginCaseButton.click(function () {
-      self.getCaseDetails(this);
-      self.showRelatedCaseField(self);
+    self.$searchOriginCaseButton.add(self.$searchRelatedCaseButton)
+      .click(function () {
+        self.getCaseDetails(this);
+        self.showRelatedCaseField(self);
+      });
 
+    $('#xhr-search-related-case-button'). click(function (){
+
+       self.getCaseDetails(this);
+       self.showRelatedCaseField(self);
     });
 
     $('#case_ico_original_case_number').on('keypress', function(e){
@@ -76,12 +83,19 @@ moj.Modules.CaseCreation = {
   },
 
   getCaseDetails: function (button) {
+
+    var relatedCaseNumbers = $(button).data('linked-related-case-numbers').value
+                            + ' '
+                            + document.getElementById('case_ico_related_case_number').value;
+
     $.ajax({
         url: $(button).data('url'),
-        data: { 'original_case_number': document.getElementById('case_ico_original_case_number').value,
-                'correspondence_type': document.getElementById('correspondence_type').value,
-                'link_to': $(button).data('link-to')
-              }
+        data: {
+          'original_case_number': document.getElementById('case_ico_original_case_number').value,
+          'related_case_numbers': relatedCaseNumbers,
+          'correspondence_type': document.getElementById('correspondence_type').value,
+          'link_to': $(button).data('link-to')
+        }
     });
   },
 

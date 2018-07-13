@@ -6,9 +6,10 @@
               type: 'button',
               class: 'button-secondary',
               id: 'xhr-search-original-case-button',
-              data: { url: get_link_case_details_cases_path,
+              data: { url: new_linked_cases_for_cases_path,
                       correspondence_type: @correspondence_type_key,
-                      link_to: 'original'}
+                      link_to: 'original',
+                      linked_related_case_numbers: ''}
 
   .js-related-case.js-hidden
     = f.text_field :related_case_number, class: ['form-control-1-8']
@@ -17,9 +18,10 @@
               type: 'button',
               class: 'button-secondary',
               id: 'xhr-search-related-case-button',
-              data: { url: get_link_case_details_cases_path,
+              data: { url: new_linked_cases_for_cases_path,
                       correspondence_type: @correspondence_type_key,
-                      link_to: 'related' }
+                      link_to: 'related',
+                      linked_related_case_numbers: '' }
 
 
 .js-original-case-and-friends

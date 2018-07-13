@@ -170,7 +170,6 @@ Rails.application.routes.draw do
   end
 
   post '/feedback' => 'feedback#create'
-  # get '/cases/get_link_case_details' => 'cases#get_link_case_details', as: :get_link_case_details
 
 
   resources :cases, except: :new do
@@ -197,7 +196,7 @@ Rails.application.routes.draw do
         on: :new,
         as: '',
         defaults: { correspondence_type: '' }
-    get 'get_link_case_details', on: :collection
+    get 'new_linked_cases_for', on: :collection
 
     get 'close', on: :member
     get 'respond_and_close', on: :member

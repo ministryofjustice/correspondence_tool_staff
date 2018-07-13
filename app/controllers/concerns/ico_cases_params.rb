@@ -12,4 +12,26 @@ module ICOCasesParams
       uploaded_request_files: [],
     )
   end
+
+  def validate_ico_linked_cases_for_params
+    if params[:link_to] == 'original'
+      validate_ico_linked_cases_for_original_params
+    end
+  end
+
+  def validate_ico_linked_cases_for_original_params
+      if params.key?(:original_case_number)
+        @original_case = Case::Base.where(number: params[:original_case_number]).first
+        if @original_case.present?
+          true
+        else
+          @linked_case_errors = "Original case not found"
+          false
+        end
+      else
+        @linked_case_errors = "Enter original case number"
+        false
+    end
+  end
+
 end

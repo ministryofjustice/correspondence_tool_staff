@@ -2,7 +2,7 @@
   .grid-row.form-group
     .column-full
       h2.request--heading
-        = 'Original case'
+        = 'Related case'
 
       table
         thead
@@ -18,8 +18,8 @@
         tbody
           tr
             td
-              = hidden_field_tag "case_#{@correspondence_type_key}[original_case_id]",
-                                 original_case.id
+              = hidden_field_tag "case_#{@correspondence_type_key}[related_case_id]",
+                                 related_case.id
               = link_to case_path(original_case.id) do
                 span.visually-hidden
                   = t('common.view_case')
