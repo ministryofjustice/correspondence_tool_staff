@@ -130,6 +130,10 @@ moj.Modules.CaseCreation = {
     document.querySelector('.js-original-case-report').innerHTML = originalCase;
   },
 
+  insertRelatedCaseReport: function (relatedCase){
+    document.querySelector('.js-related-case-report').innerHTML = relatedCase;
+  },
+
   showRelatedCaseField: function (self) {
     self.$originalCaseFields.addClass('js-hidden');
     self.$relatedCaseFields.removeClass('js-hidden')

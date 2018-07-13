@@ -27,5 +27,8 @@
 .js-original-case-and-friends
   .js-original-case-report
     = render partial: 'cases/ico/case_linking/linked_original_case',
-           locals: { original_case: nil, linked_case_errors: nil}
+           locals: { original_case: nil }
 
+  .js-related-case-report
+    = render partial: 'cases/ico/case_linking/linked_related_cases',
+            locals: { related_linked_cases: nil }
