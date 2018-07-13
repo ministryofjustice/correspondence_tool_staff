@@ -190,5 +190,32 @@ module Features
       expect(cases_show_page.case_history.entries.first)
         .to have_text("re-assigned this case to #{user.full_name}")
     end
+
+    def upload_and_approve_response_as_dacu_disclosure_specialist(kase, dd_specialist)
+      upload_response_with_action_param(kase, dd_specialist, 'upload-approve')
+    end
+
+    def upload_response_and_send_for_redraft_as_disclosure_specialist(kase, dd_specialist)
+      upload_response_with_action_param(kase, dd_specialist, 'upload-redraft')
+    end
+
+    def upload_response_with_action_param(kase, user, action)
+      uploads_key = "uploads/#{kase.id}/responses/#{Faker::Internet.slug}.jpg"
+      raw_params = ActionController::Parameters.new(
+        {
+          "type"=>"response",
+          "uploaded_files"=>[uploads_key],
+          "id"=>kase.id.to_s,
+          "controller"=>"cases",
+          "upload_comment" => "I've uploaded it",
+          "action"=>"upload_responses"}
+      )
+      params = BypassParamsManager.new(raw_params)
+      rus = ResponseUploaderService.new(kase, user, params, action)
+      uploader = rus.instance_variable_get :@uploader
+      allow(uploader).to receive(:move_uploaded_file)
+      allow(uploader).to receive(:remove_leftover_upload_files)
+      rus.upload!
+    end
   end
 end
