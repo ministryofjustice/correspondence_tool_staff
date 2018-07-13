@@ -350,8 +350,8 @@ CREATE TABLE public.cases (
     info_held_status_id integer,
     type character varying,
     appeal_outcome_id integer,
-    dirty boolean DEFAULT false,
-    document_tsvector tsvector
+    document_tsvector tsvector,
+    dirty boolean DEFAULT false
 );
 
 
@@ -517,7 +517,8 @@ ALTER SEQUENCE public.feedback_id_seq OWNED BY public.feedback.id;
 CREATE TABLE public.linked_cases (
     id integer NOT NULL,
     case_id integer NOT NULL,
-    linked_case_id integer NOT NULL
+    linked_case_id integer NOT NULL,
+    type character varying DEFAULT 'related'::character varying
 );
 
 
@@ -1633,4 +1634,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180621094208'),
 ('20180622153909'),
 ('20180705184513'),
-('20180716150951');
+('20180716150951'),
+('20180711151118');

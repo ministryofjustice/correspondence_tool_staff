@@ -1,7 +1,13 @@
 class LinkedCase < ApplicationRecord
+  self.inheritance_column = :_unused
+
   belongs_to :case, class_name: 'Case::Base'
   belongs_to :linked_case, class_name: 'Case::Base'
 
+  enum type: {
+         related: 'related',
+         original: 'original',
+       }
   after_create :create_reverse_link
 
   def create_reverse_link

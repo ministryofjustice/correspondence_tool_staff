@@ -248,11 +248,11 @@ class Case::Base < ApplicationRecord
             through: 'cases_exemptions',
             foreign_key: :case_id
 
-  has_and_belongs_to_many :linked_cases,
-                          class_name: 'Case::Base',
-                          join_table: 'linked_cases',
-                          foreign_key: :case_id,
-                          association_foreign_key: :linked_case_id
+  has_many :case_links, class_name: LinkedCase, foreign_key: :case_id
+  has_many :linked_cases,
+           through: :case_links,
+           class_name: 'Case::Base',
+           foreign_key: :case_id
 
   after_initialize do
     self.workflow = default_workflow if self.workflow.nil?
@@ -493,11 +493,8 @@ class Case::Base < ApplicationRecord
   end
 
   def add_linked_case(linked_case)
-    ActiveRecord::Base.transaction do
-      unless self.linked_cases.include? linked_case
-        LinkedCase.create(case_id: self.id, linked_case_id: linked_case.id)
-        self.linked_cases.reload
-      end
+    unless self.linked_cases.include? linked_case
+      linked_cases << linked_case
     end
   end
 

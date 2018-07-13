@@ -101,7 +101,6 @@ describe CaseCreateService do
     let(:foi)      { create :closed_case }
     let(:params) do
       {
-          # 'type'                    => 'Case::ICO::FOI',
           'original_case_id'        => foi.id,
           'ico_reference_number'    => 'ABC1344422',
           'received_date_dd'        => received.day.to_s,

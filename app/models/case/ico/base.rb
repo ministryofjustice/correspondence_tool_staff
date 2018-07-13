@@ -20,6 +20,14 @@ class Case::ICO::Base < Case::Base
   # "original case type"
   attr_accessor :original_case_id
 
+  has_one :original_case_link,
+          -> { original },
+          class_name: 'LinkedCase',
+          foreign_key: :case_id
+  has_one :original_case,
+          through: :original_case_link,
+          source: :linked_case
+
   validates :ico_reference_number, presence: true
   validates :message, presence: true
   validates :external_deadline, presence: true
@@ -30,7 +38,7 @@ class Case::ICO::Base < Case::Base
 
   after_create :process_uploaded_request_files,
                if: -> { uploaded_request_files.present? }
-  after_create :link_original_and_related_cases
+  after_create :link_original_case
 
   class << self
     def type_abbreviation
@@ -61,10 +69,9 @@ class Case::ICO::Base < Case::Base
     'trigger'
   end
 
-  def link_original_and_related_cases
+  def link_original_case
     if original_case_id.present?
-      original_case = Case::Base.find(original_case_id)
-      add_linked_case(original_case)
+      self.original_case = Case::Base.find(original_case_id)
     end
   end
 end

@@ -719,34 +719,28 @@ RSpec.describe Case::Base, type: :model do
     it { should have_many(:users_transitions_trackers)
                   .class_name('CasesUsersTransitionsTracker') }
 
+    it { should have_many(:case_links)
+                  .class_name('LinkedCase')
+                  .with_foreign_key('case_id') }
+
     describe 'linked_cases' do
       before(:all) do
         @case_1 = create :case
         @case_2 = create :case
-        @case_3 = create :case
+        # @case_3 = create :case
 
         #link cases
-        @case_1.linked_cases << [@case_2, @case_3]
-        @case_3.linked_cases << [@case_1]
+        @case_1.linked_cases << @case_2
+        # @case_3.linked_cases << [@case_1]
       end
 
       after(:all) { DbHousekeeping.clean }
 
-      it 'should show case 1 having two links' do
-        expect(@case_1.linked_cases).to include @case_2 ,@case_3
-        expect(@case_1.linked_cases.size).to eq 2
-      end
-
-      it 'should show case 2 having no links' do
-        expect(@case_2.linked_cases).to be_empty
-      end
-
-      it 'should show case 3 having one links' do
-        expect(@case_3.linked_cases).to include @case_1
-        expect(@case_3.linked_cases.size).to eq 1
+      it 'should show case 1 to be linked to case 2' do
+        expect(@case_1.linked_cases).to include @case_2
+        expect(@case_1.linked_cases.size).to eq 1
       end
     end
-
   end
 
   describe 'callbacks' do
@@ -1263,7 +1257,6 @@ RSpec.describe Case::Base, type: :model do
     describe 'removes a link between two cases' do
       before(:each) do
         kase_1.linked_cases << kase_2
-        kase_2.linked_cases << kase_1
       end
 
       it 'removes two entries in the linked case table' do

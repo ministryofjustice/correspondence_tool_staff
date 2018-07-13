@@ -12,7 +12,7 @@ describe 'cases/ico/new.html.slim', type: :view do
 
     cases_new_ico_page.load(rendered)
     expect(cases_new_ico_page).to have_ico_reference_number
-    expect(cases_new_ico_page).to have_original_case_input
+    expect(cases_new_ico_page).to have_original_case_number
 
     expect(cases_new_ico_page).to have_date_received_day
     expect(cases_new_ico_page).to have_date_received_month

@@ -23,11 +23,10 @@ feature 'ICO case creation' do
       uploaded_request_files: [request_attachment]
     )
 
-    # new_case = Case::Base.last
     request_attachment = new_case.attachments.request.first
     expect(request_attachment.key).to match %{/request-1.pdf$}
 
-    expect(new_case.linked_cases).to include original_foi
+    expect(new_case.original_case).to eq original_foi
 
     assign_case_step business_unit: responder.responding_teams.first
   end
