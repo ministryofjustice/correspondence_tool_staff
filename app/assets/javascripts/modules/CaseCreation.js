@@ -7,9 +7,13 @@ moj.Modules.CaseCreation = {
   $deliveryMethodFields : $('#delivery-method-fields'),
 
   $originalCaseFields: $('#js-search-for-case .js-original-case'),
+  $originalCaseInput: $('#case_ico_original_case_number'),
   $relatedCaseFields: $('#js-search-for-case .js-related-case'),
   $searchOriginCaseButton: $('#xhr-search-original-case-button'),
   $searchRelatedCaseButton: $('#xhr-search-related-case-button'),
+
+  originalCaseReport: document.querySelector('.js-original-case-report'),
+  relatedCaseReport : document.querySelector('.js-related-case-report'),
 
 
   init: function () {
@@ -27,28 +31,30 @@ moj.Modules.CaseCreation = {
     // For linking to original case
     self.$searchOriginCaseButton.add(self.$searchRelatedCaseButton)
       .click(function () {
-        self.getCaseDetails(this);
-        self.showRelatedCaseField(self);
+        self.getCaseDetails(this)
+          .done(function(data) {
+            if (data.link_type === 'original') {
+              // insert the original case report
+              self.originalCaseReport.innerHTML = data.content;
+              // Switch fields so user can type in related cases
+              self.showRelatedCaseField(self);
+            } else {
+              self.relatedCaseReport.innerHTML = data.content;
+            }
+          });
       });
-
-    $('#xhr-search-related-case-button'). click(function (){
-
-       self.getCaseDetails(this);
-       self.showRelatedCaseField(self);
-    });
 
     $('#case_ico_original_case_number').on('keypress', function(e){
       if (e.keyCode === 13 ) {
         e.preventDefault()
-        self.getCaseDetails(document.getElementById('xhr-search-original-case-button'));
-        self.showRelatedCaseField(self);
+        $(self.$searchOriginCaseButton).trigger('click');
       }
-    })
+    });
 
     // Undo actions
     $('.js-original-case-and-friends')
     .on('click','.js-remove-original', function (e) {
-      self.removeOriginalCase(e);
+      self.removeOriginalCase(e,self);
     }).on('click', 'a.js-exclude-case', function (e){
       self.excludeOtherRelatedCase(e);
     })
@@ -90,16 +96,13 @@ moj.Modules.CaseCreation = {
       related_case_ids = $(button).data('related-case-id').value;
     }
 
-    $.ajax({
-        url: $(button).data('url'),
-        data: {
+    return $.getJSON($(button).data('url'), {
           'original_case_number': document.getElementById('case_ico_original_case_number').value,
           'related_case_number' : document.getElementById('case_ico_related_case_number').value,
           'related_case_ids': related_case_ids,
           'correspondence_type': document.getElementById('correspondence_type').value,
           'link_type': $(button).data('link-type')
-        }
-    });
+        });
   },
 
   excludeOtherRelatedCase: function (event) {
@@ -117,21 +120,14 @@ moj.Modules.CaseCreation = {
     }
   },
 
-  removeOriginalCase: function (event) {
+  removeOriginalCase: function (event,self) {
     event.preventDefault();
-    moj.Modules.CaseCreation.insertOriginalCaseReport('');
+    self.originalCaseReport.innerHTML = '';
+
     $('#js-search-for-case .js-related-case').addClass('js-hidden');
-    $('#js-search-for-case .js-original-case')
-      .removeClass('js-hidden')
-      .find(':text').focus();
-  },
+    $('#js-search-for-case .js-original-case').removeClass('js-hidden');
 
-  insertOriginalCaseReport: function (originalCase){
-    document.querySelector('.js-original-case-report').innerHTML = originalCase;
-  },
-
-  insertRelatedCaseReport: function (relatedCase){
-    document.querySelector('.js-related-case-report').innerHTML = relatedCase;
+    self.$originalCaseInput.focus();
   },
 
   showRelatedCaseField: function (self) {

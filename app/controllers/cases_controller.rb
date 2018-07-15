@@ -598,43 +598,25 @@ class CasesController < ApplicationController
         if process_new_linked_cases_for_params
           @linked_cases.each { |kase| authorize kase, :show? }
 
-          render "cases/#{@correspondence_type_key}/case_linking/show_#{@link_type}_case",
-                   locals: { linked_cases: @linked_cases.map(&:decorate) }
+          if @link_type == 'original'
+            response = render_to_string partial: "cases/#{ @correspondence_type_key }/case_linking/linked_#{ @link_type }_case",
+                                        locals: { original_case: @linked_cases.map(&:decorate)}
+          else
+            response = render_to_string partial: "cases/#{ @correspondence_type_key }/case_linking/linked_#{ @link_type }_cases",
+                                        locals: { related_linked_cases: @linked_cases.map(&:decorate)}
+          end
+
+          render status: :ok, json: { content: response, link_type: @link_type }.to_json
+
         else
-          render "cases/#{@correspondence_type_key}/case_linking/show_error",
-                 locals: {
-                   linked_case_error: @linked_case_error,
-                   link_type: @link_type
-                 }
+          render status: :bad_request, json: { linked_case_error: @linked_case_error,
+                         link_type: @link_type }.to_json
         end
       end
     end
   end
 
   private
-
-  def validate_params
-    validate_case_number_present
-    validate_linked_case_exists
-  end
-
-  def validate_case_number_present
-    if @original_case_number.present?
-      true
-    else
-      @linked_case_errors = "NO CASE NUMBER"
-      false
-    end
-  end
-
-  def validate_linked_case_exists
-    if Case::Base.where(number: @original_case_number).exists?
-      true
-    else
-       @linked_case_errors = "CASE AIN'T THERE"
-       false
-    end
-  end
 
   def set_url
     @action_url = request.env['PATH_INFO']

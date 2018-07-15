@@ -1,8 +1,0 @@
-  // inject the content into the page
-  <% content = j render partial: 'cases/ico/case_linking/linked_related_cases' ,
-                        locals: { related_linked_cases: linked_cases }%>
-
-  // inject the content into the page
-  moj.Modules.CaseCreation.insertRelatedCaseReport("<%= content %>")
-
-

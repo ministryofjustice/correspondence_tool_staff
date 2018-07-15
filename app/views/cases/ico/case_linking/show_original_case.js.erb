@@ -1,7 +1,0 @@
-// inject the content into the page
-<% content = j render partial: 'cases/ico/case_linking/linked_original_case' ,
-                      locals: { original_case: linked_cases.first} %>
-
-// inject the content into the page
-  moj.Modules.CaseCreation.insertOriginalCaseReport("<%= content %>");
-
