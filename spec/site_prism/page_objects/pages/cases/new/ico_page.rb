@@ -14,12 +14,14 @@ module PageObjects
           element :ico_reference_number, '#case_ico_ico_reference_number'
 
           element :original_case_number, '#case_ico_original_case_number'
+          element :original_case_number_error, '.js-original-case .error-message'
           section :original_case,
                   PageObjects::Sections::Cases::LinkedCasesSection,
                   '.js-original-case-and-friends .grid-row:first-child'
           element :link_original_case, :xpath, '//button[contains(.,"Link original case")]'
 
           element :related_case_number, '#case_ico_related_case_number'
+          element :related_case_number_error, '.js-related-case .error-message'
           section :related_cases,
                   PageObjects::Sections::Cases::LinkedCasesSection,
                   '.js-related-case-report'
