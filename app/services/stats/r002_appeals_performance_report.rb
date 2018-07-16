@@ -11,11 +11,11 @@ module Stats
     end
 
     def self.title
-      'FOI Appeal performance stats'
+      'Appeals report (FOI)'
     end
 
     def self.description
-      'Shows all internal reviews and ICO appeals which are open, or have been closed this month, analysed by timeliness'
+      'Shows all internal reviews and ICO appeals for FOIs which are open, or have been closed this month, analysed by timeliness'
     end
 
     def case_ids

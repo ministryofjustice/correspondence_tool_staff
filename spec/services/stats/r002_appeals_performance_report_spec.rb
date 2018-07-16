@@ -95,13 +95,13 @@ module Stats
 
     describe '#title' do
       it 'returns the report title' do
-        expect(R002AppealsPerformanceReport.title).to eq 'FOI Appeal performance stats'
+        expect(R002AppealsPerformanceReport.title).to eq 'Appeals report (FOI)'
       end
     end
 
     describe '#description' do
       it 'returns the report description' do
-        expect(R002AppealsPerformanceReport.description).to eq 'Shows all internal reviews and ICO appeals which are open, or have been closed this month, analysed by timeliness'
+        expect(R002AppealsPerformanceReport.description).to eq 'Shows all internal reviews and ICO appeals for FOIs which are open, or have been closed this month, analysed by timeliness'
       end
     end
 
@@ -195,7 +195,7 @@ module Stats
             %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
             %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late}
           expected_text = <<~EOCSV
-            FOI Appeal performance stats - 1 Jan 2017 to 30 Jun 2017
+            Appeals report (FOI) - 1 Jan 2017 to 30 Jun 2017
             #{super_header}
             #{header}
             BGAB,"","",#{@bizgrp_ab.team_lead},28.6,9,2,2,2,3,28.6,18,4,4,4,6
