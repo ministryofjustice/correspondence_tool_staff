@@ -3,7 +3,7 @@
   .form-group
     = f.gov_uk_date_field :date_responded, { legend_text: t('.close_date'),
             form_hint_text: t('.date_example'),
-            today_button: {class: 'button-secondary'} }
+            today_button: {class: 'acts-like-button'} }
 
   .missing-info
     = f.radio_button_fieldset :missing_info
