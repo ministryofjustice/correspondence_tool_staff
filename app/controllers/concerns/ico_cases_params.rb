@@ -9,6 +9,7 @@ module ICOCasesParams
       :original_case_id,
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :external_deadline_dd, :external_deadline_mm, :external_deadline_yyyy,
+      related_case_ids: [],
       uploaded_request_files: [],
     )
   end
@@ -66,7 +67,7 @@ module ICOCasesParams
     end
 
     if params.fetch(:related_case_ids).present?
-      @linked_cases = Case::Base.find(params[:related_case_ids])
+      @linked_cases = Case::Base.where(id: params[:related_case_ids].split())
       @linked_cases += [related_case]
     else
       @linked_cases = [related_case]

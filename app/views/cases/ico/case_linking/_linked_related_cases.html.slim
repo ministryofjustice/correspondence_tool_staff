@@ -18,7 +18,7 @@
           - related_linked_cases.each do |related_linked_case|
             tr
               td
-                = hidden_field_tag "case_#{@correspondence_type_key}[related_case_id]",
+                = hidden_field_tag "case_#{@correspondence_type_key}[related_case_ids][]",
                                    related_linked_case.id
                 = link_to case_path(related_linked_case.id) do
                   span.visually-hidden

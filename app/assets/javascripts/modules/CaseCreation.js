@@ -30,17 +30,28 @@ moj.Modules.CaseCreation = {
 
     // For linking to original case
     self.$searchOriginCaseButton.add(self.$searchRelatedCaseButton)
-      .click(function () {
+      .click(function (e) {
+        e.preventDefault();
+
         self.getCaseDetails(this)
-          .done(function(data) {
-            if (data.link_type === 'original') {
+          .done(function(json) {
+            self.removeErrorMessage();
+
+            if (json.link_type === 'original') {
+
               // insert the original case report
-              self.originalCaseReport.innerHTML = data.content;
+              self.originalCaseReport.innerHTML = json.content;
               // Switch fields so user can type in related cases
               self.showRelatedCaseField(self);
+
             } else {
-              self.relatedCaseReport.innerHTML = data.content;
+
+              self.relatedCaseReport.innerHTML = json.content;
+
             }
+          })
+          .fail(function(jqxhr){
+            self.displayErrorMessage(jqxhr.responseJSON);
           });
       });
 
@@ -92,9 +103,17 @@ moj.Modules.CaseCreation = {
 
     var related_case_ids = '';
 
-    if($(button).data('related-case-id')){
-      related_case_ids = $(button).data('related-case-id').value;
-    }
+    //if($(button).data('related-case-id')){
+      related_case_ids = $( moj.Modules.CaseCreation.relatedCaseReport)
+                            .find(':hidden[name="case_ico[related_case_ids][]"]')
+                            .map(function() {
+                              return this.value;
+                            })
+                            .get()
+                            .join(' ');
+    //}
+
+
 
     return $.getJSON($(button).data('url'), {
           'original_case_number': document.getElementById('case_ico_original_case_number').value,
@@ -134,5 +153,37 @@ moj.Modules.CaseCreation = {
     self.$originalCaseFields.addClass('js-hidden');
     self.$relatedCaseFields.removeClass('js-hidden')
       .removeClass('js-hidden').find(':text').focus();
+  },
+
+  displayErrorMessage: function (data) {
+    var $searchForCase = $('#js-search-for-case');
+    var $currentField = $searchForCase.find(':text:visible');
+    var $formGroup = $currentField.closest('.form-group');
+
+    // Add Red border
+    $formGroup
+      .addClass('form-group-error');
+
+    // Find remove previous errors and then add new error
+    $formGroup.find('label')
+      .find('.error-message')
+      .remove()
+      .end()
+      .append('<span class="error-message">' + data.linked_case_error + '</span>');
+  },
+
+  removeErrorMessage: function (data) {
+    var $searchForCase = $('#js-search-for-case');
+    var $currentField = $searchForCase.find(':text:visible');
+    var $formGroup = $currentField.closest('.form-group');
+
+    // Add Red border
+    $formGroup
+      .removeClass('form-group-error');
+
+    // Find remove previous errors and then add new error
+    $formGroup.find('label')
+      .find('.error-message')
+      .remove();
   }
 };

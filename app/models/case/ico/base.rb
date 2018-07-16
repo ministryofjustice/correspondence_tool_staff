@@ -28,6 +28,15 @@ class Case::ICO::Base < Case::Base
           through: :original_case_link,
           source: :linked_case
 
+  has_many :related_case_links,
+           -> { related },
+           class_name: 'LinkedCase',
+           foreign_key: :case_id
+  has_many :related_cases,
+           through: :related_case_links,
+           source: :linked_case
+
+
   validates :ico_reference_number, presence: true
   validates :message, presence: true
   validates :external_deadline, presence: true

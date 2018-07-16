@@ -19,6 +19,14 @@ module PageObjects
                   '.js-original-case-and-friends .grid-row:first-child'
           element :link_original_case, :xpath, '//button[contains(.,"Link original case")]'
 
+          element :related_case_number, '#case_ico_related_case_number'
+          section :related_cases,
+                  PageObjects::Sections::Cases::LinkedCasesSection,
+                  '.js-related-case-report'
+          element :link_related_case, :xpath, '//button[contains(.,"Link related case")]'
+
+
+
           element :date_received_day, '#case_ico_received_date_dd'
           element :date_received_month, '#case_ico_received_date_mm'
           element :date_received_year, '#case_ico_received_date_yyyy'
@@ -54,12 +62,18 @@ module PageObjects
             link_original_case.click
           end
 
+          def add_related_case(case_number)
+            self.related_case_number.set case_number
+            link_related_case.click
+          end
+
           def fill_in_case_details(params={})
             # We can't rely on the factory to link original case since we only
             # build the kase below (factory relies on after-create hook) and
             # the point of this function is to exercise the front-end so we
             # should be linking by adding the linked cases through it.
             original_case = params.delete(:original_case)
+            related_cases = params.delete(:related_cases)
             kase = FactoryBot.build :ico_foi_case, params
 
             set_received_date(kase.received_date)
@@ -67,6 +81,7 @@ module PageObjects
 
             ico_reference_number.set kase.ico_reference_number
             set_original_case_number(original_case.number)
+            related_cases.each { |kase| add_related_case(kase.number) }
 
             subject.set kase.subject
             case_details.set kase.message

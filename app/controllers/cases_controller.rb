@@ -181,6 +181,7 @@ class CasesController < ApplicationController
         flash[:notice] = "#{@case.type_abbreviation} case created<br/>Case number: #{@case.number}".html_safe
         redirect_to new_case_assignment_path @case
       else # including :error
+        @case = @case.decorate
         @case_types = @correspondence_type.sub_classes.map(&:to_s)
         @s3_direct_post = s3_uploader_for @case, 'requests'
         render :new
@@ -666,8 +667,8 @@ class CasesController < ApplicationController
   end
 
   def prepare_new_case
-    validation_result = validate_correspondence_type(params[:correspondence_type].upcase)
-    if validation_result == :ok
+    valid_type = validate_correspondence_type(params[:correspondence_type].upcase)
+    if valid_type == :ok
       set_correspondence_type(params[:correspondence_type])
       default_subclass = @correspondence_type.sub_classes.first
 
