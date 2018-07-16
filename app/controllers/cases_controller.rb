@@ -136,7 +136,7 @@ class CasesController < ApplicationController
 
   def new
     permitted_correspondence_types
-    @linked_case_errors = nil
+
     if FeatureSet.sars.disabled? && FeatureSet.ico.disabled?
       set_correspondence_type('foi')
       prepare_new_case
@@ -154,7 +154,6 @@ class CasesController < ApplicationController
 
   def create #rubocop:disable Metrics/MethodLength
     set_correspondence_type(params.fetch(:correspondence_type))
-    @linked_case_errors = nil
     case_params = create_params(@correspondence_type_key)
 
     case_class_service = GetCaseClassFromParamsService.new(
