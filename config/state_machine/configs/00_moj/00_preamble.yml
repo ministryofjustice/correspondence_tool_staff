@@ -1,0 +1,10 @@
+preamble:
+  organisation: Ministry of Justice
+  organisation_abbreviation: moj
+
+  permitted_case_types:
+    foi: Freedom of information request
+    sar: Subject Access Request
+    ico: Information Commissioner Office appeal
+
+case_types:

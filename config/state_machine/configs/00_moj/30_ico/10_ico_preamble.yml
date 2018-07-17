@@ -1,0 +1,21 @@
+
+  ico:
+    name: Information Commissioner Office appeal
+    permitted_workflows:
+      - trigger
+
+    permitted_user_roles:
+      - manager
+      - approver
+      - responder
+
+    permitted_states:
+      - unassigned
+      - awaiting_responder
+      - drafting
+      - pending_dacu_clearance
+      - awaiting_dispatch
+      - responded
+      - closed
+
+    workflows:

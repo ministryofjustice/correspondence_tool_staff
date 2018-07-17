@@ -21,6 +21,8 @@ module ConfigurableStateMachine
       @errors = []
       @state_machines = RecursiveOpenStruct.new
       Dir[File.join(config_dir, '*.yml')].each do |config_file|
+        puts ">>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<"
+        puts config_file
         config = RecursiveOpenStruct.new(YAML.load_file(config_file))
         ConfigValidator.new(config, config_file).run
         org = config.preamble.organisation_abbreviation

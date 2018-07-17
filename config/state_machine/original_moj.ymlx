@@ -1033,9 +1033,9 @@ case_types:
                 flag_for_clearance:
                   switch_workflow: trigger
 
+  ###########################TRIGGER SAR ########################
 
 
-      ###########################TRIGGER SAR ########################
       trigger:
         initial_state: unassigned
         user_roles:
@@ -1463,4 +1463,3 @@ case_types:
               closed:
                 link_a_case:
                 remove_linked_case:
-      ####################### THGE END ###########
