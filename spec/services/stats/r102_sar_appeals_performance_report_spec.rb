@@ -29,38 +29,39 @@ module Stats
         @outcome = find_or_create :outcome, :granted
         @info_held = find_or_create :info_status, :held
 
-        # standard FOIs and IRs which should be ignored by report
-        create_case(received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'case for team d - open in time', case_type: :case_with_response)
-        create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'case for team c - responded in time', case_type: :case_with_response)
-        create_case(received: '20170607', responded: '20170620', deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'case for team b - responded in time', case_type: :case_with_response)
-        create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_a, responder: @responder_a, ident: 'case for team a - responded in time', case_type: :case_with_response)
-        create_case(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - responded late', case_type: :compliance_review_with_response)
-        create_case(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - responded late', case_type: :compliance_review_with_response)
-        create_case(received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - open late', case_type: :compliance_review_with_response)
-        create_case(received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - open late', case_type: :compliance_review_with_response)
-        create_case(received: '20170605', responded: nil,        deadline: '20170702', team: @team_a, responder: @responder_a, ident: 'case for team a - open in time', case_type: :compliance_review_with_response)
-        create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_a, responder: @responder_a, ident: 'case for team a - responded in time', case_type: :compliance_review_with_response)
-        create_case(received: '20170605', responded: nil,        deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'case for team b - open late', case_type: :compliance_review_with_response)
-        create_case(received: '20170605', responded: nil,        deadline: '20170702', team: @team_b, responder: @responder_b, ident: 'case for team b - open in time', case_type: :compliance_review_with_response)
-        create_case(received: '20170607', responded: '20170620', deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'case for team b - responded in time', case_type: :compliance_review_with_response)
-        create_case(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_c, responder: @responder_c, ident: 'case for team c - responded late', case_type: :compliance_review_with_response)
-        create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'case for team c - responded in time', case_type: :compliance_review_with_response)
-        create_case(received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'case for team d - open in time', case_type: :compliance_review_with_response)
+        # standard SARs and IRs which should be ignored by report
+        create_sar(received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'case for team d - open in time', case_type: :accepted_sar)
+        create_sar(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'case for team c - responded in time', case_type: :accepted_sar)
+        create_sar(received: '20170607', responded: '20170620', deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'case for team b - responded in time', case_type: :accepted_sar)
+        create_sar(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_a, responder: @responder_a, ident: 'case for team a - responded in time', case_type: :accepted_sar)
+        create_interal_review(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - responded late', case_type: :compliance_review_with_response)
+        create_interal_review(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - responded late', case_type: :compliance_review_with_response)
+        create_interal_review(received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - open late', case_type: :compliance_review_with_response)
+        create_interal_review(received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - open late', case_type: :compliance_review_with_response)
+        create_interal_review(received: '20170605', responded: nil,        deadline: '20170702', team: @team_a, responder: @responder_a, ident: 'case for team a - open in time', case_type: :compliance_review_with_response)
+        create_interal_review(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_a, responder: @responder_a, ident: 'case for team a - responded in time', case_type: :compliance_review_with_response)
+        create_interal_review(received: '20170605', responded: nil,        deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'case for team b - open late', case_type: :compliance_review_with_response)
+        create_interal_review(received: '20170605', responded: nil,        deadline: '20170702', team: @team_b, responder: @responder_b, ident: 'case for team b - open in time', case_type: :compliance_review_with_response)
+        create_interal_review(received: '20170607', responded: '20170620', deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'case for team b - responded in time', case_type: :compliance_review_with_response)
+        create_interal_review(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_c, responder: @responder_c, ident: 'case for team c - responded late', case_type: :compliance_review_with_response)
+        create_interal_review(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'case for team c - responded in time', case_type: :compliance_review_with_response)
+        create_interal_review(received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'case for team d - open in time', case_type: :compliance_review_with_response)
 
-        # ICO (FOIs and SARs) based on today's date of 30/6/2017
-        # create_ico(type: :foi, received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico foi for team a - responded late')
-        # create_ico(type: :foi, received: '20170604', responded: '20170629', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico foi for team a - responded late')
-        # create_ico(type: :foi, received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico foi for team a - open late')
-        # create_ico(type: :foi, received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico foi for team a - open late')
-        # create_ico(type: :foi, received: '20170605', responded: nil,        deadline: '20170702', team: @team_a, responder: @responder_a, ident: 'ico foi for team a - open in time')
-        # create_ico(type: :foi, received: '20170606', responded: '20170625', deadline: '20170630', team: @team_a, responder: @responder_a, ident: 'ico foi for team a - responded in time')
-        # create_ico(type: :foi, received: '20170605', responded: nil,        deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'ico foi for team b - open late')
-        # create_ico(type: :foi, received: '20170605', responded: nil,        deadline: '20170702', team: @team_b, responder: @responder_b, ident: 'ico foi for team b - open in time')
-        # create_ico(type: :foi, received: '20170607', responded: '20170620', deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'ico foi for team b - responded in time')
-        # create_ico(type: :foi, received: '20170604', responded: '20170629', deadline: '20170625', team: @team_c, responder: @responder_c, ident: 'ico foi for team c - responded late')
-        # create_ico(type: :foi, received: '20170606', responded: '20170625', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'ico foi for team c - responded in time')
-        # create_ico(type: :foi, received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'ico foi for team d - open in time')
+        # ICO FOIs that should be ignored based on today's date of 30/6/2017
+        create_ico(type: :foi, received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico foi for team a - responded late')
+        create_ico(type: :foi, received: '20170604', responded: '20170629', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico foi for team a - responded late')
+        create_ico(type: :foi, received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico foi for team a - open late')
+        create_ico(type: :foi, received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico foi for team a - open late')
+        create_ico(type: :foi, received: '20170605', responded: nil,        deadline: '20170702', team: @team_a, responder: @responder_a, ident: 'ico foi for team a - open in time')
+        create_ico(type: :foi, received: '20170606', responded: '20170625', deadline: '20170630', team: @team_a, responder: @responder_a, ident: 'ico foi for team a - responded in time')
+        create_ico(type: :foi, received: '20170605', responded: nil,        deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'ico foi for team b - open late')
+        create_ico(type: :foi, received: '20170605', responded: nil,        deadline: '20170702', team: @team_b, responder: @responder_b, ident: 'ico foi for team b - open in time')
+        create_ico(type: :foi, received: '20170607', responded: '20170620', deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'ico foi for team b - responded in time')
+        create_ico(type: :foi, received: '20170604', responded: '20170629', deadline: '20170625', team: @team_c, responder: @responder_c, ident: 'ico foi for team c - responded late')
+        create_ico(type: :foi, received: '20170606', responded: '20170625', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'ico foi for team c - responded in time')
+        create_ico(type: :foi, received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'ico foi for team d - open in time')
 
+        # ICO SARs based on today's date of 30/6/2017
         create_ico(type: :sar, received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico sar for team a - responded late')
         create_ico(type: :sar, received: '20170604', responded: '20170629', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico sar for team a - responded late')
         create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico sar for team a - open late')
@@ -70,18 +71,12 @@ module Stats
         create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'ico sar for team b - open late')
         create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170702', team: @team_b, responder: @responder_b, ident: 'ico sar for team b - open in time')
         create_ico(type: :sar, received: '20170607', responded: '20170620', deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'ico sar for team b - responded in time')
+
         create_ico(type: :sar, received: '20170604', responded: '20170629', deadline: '20170625', team: @team_c, responder: @responder_c, ident: 'ico sar for team c - responded late')
         create_ico(type: :sar, received: '20170606', responded: '20170625', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'ico sar for team c - responded in time')
         create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'ico sar for team d - open in time')
       end
 
-
-      ###############
-      # TODO Find a way not to create the extraneous teams in the first place
-      ##############
-
-
-      # delete extraneous teams
       required_teams = [@bizgrp_ab, @dir_a, @dir_b, @bizgrp_cd, @dir_cd, @team_dacu_disclosure, @team_dacu_bmt, @team_a, @team_b, @team_c, @team_d]
       Team.where.not(id: required_teams.map(&:id)).destroy_all
     end
@@ -123,11 +118,11 @@ module Stats
                    business_unit:                 '',
                    responsible:                   @bizgrp_ab.team_lead,
                    ico_appeal_performance:        28.6,
-                   ico_appeal_total:              18,
-                   ico_appeal_responded_in_time:  4,
-                   ico_appeal_responded_late:     4,
-                   ico_appeal_open_in_time:       4,
-                   ico_appeal_open_late:          6,
+                   ico_appeal_total:              9,
+                   ico_appeal_responded_in_time:  2,
+                   ico_appeal_responded_late:     2,
+                   ico_appeal_open_in_time:       2,
+                   ico_appeal_open_late:          3,
                  })
       end
 
@@ -139,10 +134,10 @@ module Stats
                    business_unit:                 '',
                    responsible:                   @bizgrp_cd.team_lead,
                    ico_appeal_performance:        50.0,
-                   ico_appeal_total:              6,
-                   ico_appeal_responded_in_time:  2,
-                   ico_appeal_responded_late:     2,
-                   ico_appeal_open_in_time:       2,
+                   ico_appeal_total:              3,
+                   ico_appeal_responded_in_time:  1,
+                   ico_appeal_responded_late:     1,
+                   ico_appeal_open_in_time:       1,
                    ico_appeal_open_late:          0,
                  })
       end
@@ -155,9 +150,9 @@ module Stats
                    business_unit:                 @team_c.name,
                    responsible:                   @team_c.team_lead,
                    ico_appeal_performance:        50.0,
-                   ico_appeal_total:              4,
-                   ico_appeal_responded_in_time:  2,
-                   ico_appeal_responded_late:     2,
+                   ico_appeal_total:              2,
+                   ico_appeal_responded_in_time:  1,
+                   ico_appeal_responded_late:     1,
                    ico_appeal_open_in_time:       0,
                    ico_appeal_open_late:          0,
                  })
@@ -170,22 +165,21 @@ module Stats
           super_header = %q{"","","","",} +
             %q{ICO appeals,ICO appeals,ICO appeals,ICO appeals,ICO appeals,ICO appeals}
           header = %q{Business group,Directorate,Business unit,Responsible,} +
-            %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
             %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late}
           expected_text = <<~EOCSV
             SAR Appeal performance stats - 1 Jan 2017 to 30 Jun 2017
             #{super_header}
             #{header}
-            BGAB,"","",#{@bizgrp_ab.team_lead},28.6,9,2,2,2,3,28.6,18,4,4,4,6
-            BGAB,DRA,"",#{@dir_a.team_lead},20.0,6,1,2,1,2,20.0,12,2,4,2,4
-            BGAB,DRA,RTA,#{@team_a.team_lead},20.0,6,1,2,1,2,20.0,12,2,4,2,4
-            BGAB,DRB,"",#{@dir_b.team_lead},50.0,3,1,0,1,1,50.0,6,2,0,2,2
-            BGAB,DRB,RTB,#{@team_b.team_lead},50.0,3,1,0,1,1,50.0,6,2,0,2,2
-            BGCD,"","",#{@bizgrp_cd.team_lead},50.0,3,1,1,1,0,50.0,6,2,2,2,0
-            BGCD,DRCD,"",#{@dir_cd.team_lead},50.0,3,1,1,1,0,50.0,6,2,2,2,0
-            BGCD,DRCD,RTC,#{@team_c.team_lead},50.0,2,1,1,0,0,50.0,4,2,2,0,0
-            BGCD,DRCD,RTD,#{@team_d.team_lead},0.0,1,0,0,1,0,0.0,2,0,0,2,0
-            Total,"","","",33.3,12,3,3,3,3,33.3,24,6,6,6,6
+            BGAB,"","",#{@bizgrp_ab.team_lead},28.6,9,2,2,2,3
+            BGAB,DRA,"",#{@dir_a.team_lead},20.0,6,1,2,1,2
+            BGAB,DRA,RTA,#{@team_a.team_lead},20.0,6,1,2,1,2
+            BGAB,DRB,"",#{@dir_b.team_lead},50.0,3,1,0,1,1
+            BGAB,DRB,RTB,#{@team_b.team_lead},50.0,3,1,0,1,1
+            BGCD,"","",#{@bizgrp_cd.team_lead},50.0,3,1,1,1,0
+            BGCD,DRCD,"",#{@dir_cd.team_lead},50.0,3,1,1,1,0
+            BGCD,DRCD,RTC,#{@team_c.team_lead},50.0,2,1,1,0,0
+            BGCD,DRCD,RTD,#{@team_d.team_lead},0.0,1,0,0,1,0
+            Total,"","","",33.3,12,3,3,3,3
           EOCSV
           report = R102SarAppealsPerformanceReport.new
           report.run
@@ -212,7 +206,25 @@ module Stats
     end
 
     # rubocop:disable Metrics/ParameterLists
-    def create_case(received:, responded:, deadline:, team:, responder:, ident:, case_type:)
+    def create_sar(received:, responded:, deadline:, team:, responder:, ident:, case_type:)
+      received_date = Date.parse(received)
+      responded_date = responded.nil? ? nil : Date.parse(responded)
+      kase = nil
+      Timecop.freeze(received_date + 10.hours) do
+        kase = create case_type, responding_team: team, responder: responder, identifier: ident
+        kase.external_deadline = Date.parse(deadline)
+        unless responded_date.nil?
+          Timecop.freeze responded_date  do
+            kase.update!(date_responded: Time.now, outcome_id: @outcome.id, info_held_status: @info_held)
+            kase.state_machine.respond_and_close!(acting_user: responder, acting_team: team)
+          end
+        end
+      end
+      kase.save!
+      kase
+    end
+
+    def create_interal_review(received:, responded:, deadline:, team:, responder:, ident:, case_type:)
       received_date = Date.parse(received)
       responded_date = responded.nil? ? nil : Date.parse(responded)
       kase = nil
@@ -230,7 +242,6 @@ module Stats
       kase.save!
       kase
     end
-
 
     def create_ico(type:, received:, responded:, deadline:, team:, responder:, ident:)
       received_date = Date.parse(received)
