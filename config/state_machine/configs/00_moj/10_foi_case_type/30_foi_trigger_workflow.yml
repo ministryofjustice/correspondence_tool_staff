@@ -1,0 +1,282 @@
+
+      trigger:
+        initial_state: unassigned
+        user_roles:
+          manager:
+            states:
+              unassigned:
+                add_message_to_case:
+                assign_responder:
+                  transition_to: awaiting_responder
+                destroy_case:
+                edit_case:
+                flag_for_clearance:
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+
+              awaiting_responder:
+                add_message_to_case:
+                assign_to_new_team:
+                  transition_to: awaiting_responder
+                destroy_case:
+                edit_case:
+                flag_for_clearance:
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+
+              drafting:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                assign_to_new_team:
+                  transition_to: awaiting_responder
+                destroy_case:
+                edit_case:
+                flag_for_clearance:
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+
+              pending_dacu_clearance:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+
+              awaiting_dispatch:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                destroy_case:
+                edit_case:
+                flag_for_clearance:
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::FOI::StandardPolicy#can_request_further_clearance?
+                  switch_workflow: full_approval
+
+              responded:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                close:
+                  transition_to: closed
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+
+              closed:
+                add_message_to_case:
+                assign_to_new_team:
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+                update_closure:
+                  if: Workflows::Predicates#can_edit_closure
+
+          approver:
+            states:
+              unassigned:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
+                flag_for_clearance:
+                link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
+                take_on_for_approval:
+                  if: Case::BasePolicy#can_take_on_for_approval?
+                  switch_workflow: full_approval
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+                unflag_for_clearance:
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
+                  switch_workflow_using: Workflows::Conditionals#unflag_for_clearance_next_workflow
+
+              awaiting_responder:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
+                add_message_to_case:
+                flag_for_clearance:
+                link_a_case:
+                reassign_user:
+                remove_linked_case:
+                take_on_for_approval:
+                  if: Case::BasePolicy#can_take_on_for_approval?
+                  switch_workflow: full_approval
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+                unflag_for_clearance:               # needed for press/private office to unaccept
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
+                  switch_workflow_using: Workflows::Conditionals#unflag_for_clearance_next_workflow
+
+              drafting:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                extend_for_pit:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                flag_for_clearance:
+                link_a_case:
+                reassign_user:
+                remove_linked_case:
+                take_on_for_approval:
+                  if: Case::BasePolicy#can_take_on_for_approval?
+                  switch_workflow: full_approval
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+                unflag_for_clearance:
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
+                  switch_workflow_using: Workflows::Conditionals#unflag_for_clearance_next_workflow
+
+              pending_dacu_clearance:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                approve:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  transition_to: awaiting_dispatch
+                  after_transition: Workflows::Hooks#notify_responder_ready_to_send
+                extend_for_pit:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                link_a_case:
+                reassign_user:
+                remove_linked_case:
+                unaccept_approver_assignment:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  # if not flagged for press and private?
+                  # do we want to transition straight away or is this the 'undo button' and so just needs to be given the another disclosure specialist
+                unflag_for_clearance:
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
+                  switch_workflow_using: Workflows::Conditionals#unflag_for_clearance_next_workflow
+                  transition_to_using: Workflows::Conditionals#unflag_for_clearance_next_state
+                  after_transition: Workflows::Hooks#notify_responder_ready_to_send
+                upload_response_and_approve:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  transition_to: awaiting_dispatch
+                  after_transition: Workflows::Hooks#notify_responder_ready_to_send
+                upload_response_and_return_for_redraft:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  after_transition: Workflows::Hooks#notify_responder_redraft_requested
+                  transition_to: drafting
+                upload_response_approve_and_bypass:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  transition_to: awaiting_dispatch
+
+              awaiting_dispatch:
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                extend_for_pit:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
+                take_on_for_approval:
+                  if: Case::BasePolicy#can_take_on_for_approval?
+                  switch_workflow: full_approval
+
+              responded:
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                link_a_case:
+                remove_linked_case:
+
+              closed:
+                add_message_to_case:
+                link_a_case:
+                remove_linked_case:
+
+
+          responder:
+            states:
+              unassigned:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                link_a_case:
+                remove_linked_case:
+
+              awaiting_responder:
+                accept_responder_assignment:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: drafting
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                link_a_case:
+                remove_linked_case:
+                reject_responder_assignment:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: unassigned
+
+              drafting:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                add_response_to_flagged_case:
+                  if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
+                  transition_to: pending_dacu_clearance
+                link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
+                upload_responses:
+
+              pending_dacu_clearance:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
+
+              awaiting_dispatch:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                add_responses:
+                  if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
+                link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                remove_last_response:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                remove_linked_case:
+                remove_response:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to_using: Workflows::Conditionals#remove_response_next_state
+                respond:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: responded
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+                unflag_for_clearance:               # needed for press/private office to unaccept
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance_by_press_or_private?
+                  switch_workflow_using: Workflows::Conditionals#unflag_for_clearance_next_workflow
+
+              responded:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                link_a_case:
+                remove_linked_case:
+
+              closed:
+                add_message_to_case:
+                link_a_case:
+                remove_linked_case:
