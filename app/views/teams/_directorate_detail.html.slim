@@ -3,7 +3,7 @@
           business_group: @team.business_group.name,
           directorate: @team.name)
 
-h2
+h2.head-of-team
   .bold-small
     = t('team_leads.director')
   = @team.team_lead
@@ -12,39 +12,6 @@ h2.heading-medium
   = t('team_types.business_unit').pluralize
 
 = render partial: 'business_unit_list', locals: { teams: teams }
-
-/.grid-row
-/  .column-full.table-container.container
-/    table.report.table-font-xsmall
-/      colgroup
-/        col
-/        col
-/        col
-/        col
-/      thead
-/        th scope='col'
-/          | Name
-/        th scope='col'
-/          = t('team_leads.deputy_director')
-/        th scope='col'
-/          | Group email
-/        th scope='col'
-/          = t('.team_members')
-/        th scope='col'
-/          | Actions
-/      tbody
-/        - teams.each do |team|
-/          tr
-/            td aria-label="Name"
-/              = link_to team.name, team_path(team)
-/            td aria-label="#{ t('team_leads.deputy_director') }"
-/              = team.team_lead
-/            td aria-label="Email"
-/              = team.email
-/            td aria-label="#{ t('roles.responders') }"
-/              = team.users.size
-/            td aria-label="Actions"
-/              = link_to 'Edit', edit_team_path(team, team_type: 'bu'), { class: 'action--edit' }
 
 p
 p

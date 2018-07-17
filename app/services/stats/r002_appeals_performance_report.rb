@@ -18,6 +18,10 @@ module Stats
       'Shows all internal reviews and ICO appeals for FOIs which are open, or have been closed this month, analysed by timeliness'
     end
 
+    def report_type
+      ReportType.r002
+    end
+
     def case_ids
       ir_case_ids = CaseSelector.new(Case::FOI::InternalReview).ids_for_period_appeals(@period_start, @period_end)
       ico_case_ids = CaseSelector.new(Case::ICO::Base).ids_for_period_appeals(@period_start, @period_end)

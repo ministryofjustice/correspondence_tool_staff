@@ -13,6 +13,8 @@ module Stats
       Case::Base.standard_foi
     end
 
-
+    def report_type
+      ReportType.r003
+    end
   end
 end

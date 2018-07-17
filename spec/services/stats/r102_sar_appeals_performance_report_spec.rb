@@ -6,6 +6,9 @@ module Stats
 
     before(:all) do
       DbHousekeeping.clean
+
+      create :report_type, :r102
+
       Team.all.map(&:destroy)
       Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
         @bizgrp_ab = create :business_group, name: 'BGAB'
@@ -83,6 +86,7 @@ module Stats
 
     after(:all) do
       DbHousekeeping.clean
+      ReportType.r102.destroy
     end
 
     describe '#title' do

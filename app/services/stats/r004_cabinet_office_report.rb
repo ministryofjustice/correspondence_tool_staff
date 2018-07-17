@@ -7,10 +7,8 @@ module Stats
       value:  "Value"
     }
 
-    def initialize(period_start= Time.now.beginning_of_quarter, period_end=Time.now)
+    def initialize(period_start = nil, period_end = nil)
       super
-      @period_start = period_start
-      @period_end = period_end
       # @today = Time.now
       @stats = StatsCollector.new(report_lines.keys, COLUMNS)
       @first_column_heading = self.class.title
@@ -23,7 +21,7 @@ module Stats
     end
 
     def self.description
-      'Provides various statistics for submitting to Cabinet Office'
+      'Includes performance data about how we are meeting statutory deadlines and how we are using exemptions.'
     end
 
     def run
@@ -32,6 +30,10 @@ module Stats
         populate_category(category)
       end
       self
+    end
+
+    def report_type
+      ReportType.r004
     end
 
     private

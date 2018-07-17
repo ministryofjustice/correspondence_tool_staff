@@ -11,11 +11,27 @@ module PageObjects
 
         element :report_caption, 'table caption'
 
-        sections :reports, '.stats-report tbody tr' do
-          element :name, 'th'
-          element :action_column, 'td'
-          element :action_link, 'td a'
 
+        section :foi, 'section:nth-of-type(1)' do
+          element :type_name, 'h2'
+          sections :reports, 'ul.report-list li' do
+            element :name, 'h3'
+            element :description, '.report-description'
+            element :report_period, '.report-period'
+            element :download, '.report-list-download'
+            element :download_link, '.report-list-download a'
+          end
+        end
+
+        section :sar, 'section:nth-of-type(2)' do
+          element :type_name, 'h2'
+          sections :reports, 'ul.report-list li' do
+            element :name, 'h3'
+            element :description, '.report-description'
+            element :report_period, '.report-period'
+            element :download, '.report-list-download'
+            element :download_link, '.report-list-download a'
+          end
         end
 
         element :custom_reports, '.button'

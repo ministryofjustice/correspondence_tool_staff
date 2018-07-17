@@ -6,8 +6,6 @@
 
 # Manager/responder signs in
 # Views "Statistics" and displays stats page
-# Clicks on R003 report
-#   - expect report to download
 # Clicks on R004 report
 #   - expect report to download
 # Clicks on R005 report
@@ -35,7 +33,14 @@ feature "Downloading stats(csv) from the system" do
 
   before(:all) do
     CaseClosure::MetadataSeeder.seed!(verbose: false)
-    ReportTypeSeeder.new.seed!
+
+    create :report_type, :r002
+    create :report_type, :r003
+    create :report_type, :r004
+    create :report_type, :r005
+    create :report_type, :r102
+    create :report_type, :r103
+    create :r105_report_type
   end
 
   after(:all) do
@@ -53,8 +58,7 @@ feature "Downloading stats(csv) from the system" do
       # Manager creates & assigns to kilo
       login_as_manager
       views_stats_home_page
-      download_r002_report
-      download_r003_report
+      download_r105_report
       download_r004_report
       download_r005_report
     end
@@ -76,8 +80,6 @@ feature "Downloading stats(csv) from the system" do
       # Manager creates & assigns to kilo
       login_as_responder
       views_stats_home_page
-      download_r002_report
-      download_r003_report
       download_r004_report
       download_r005_report
     end
@@ -116,34 +118,28 @@ feature "Downloading stats(csv) from the system" do
     expect(stats_index_page).to be_displayed
   end
 
-  def download_r002_report
-    stats_index_page.reports.first.action_link.click
-    expect(page.response_headers['Content-Disposition'])
-        .to match(/filename="r002_appeals_performance_report\.csv"/)
-    stats_index_page.load
-  end
-
-  def download_r003_report
-    stats_index_page.reports.second.action_link.click
-    expect(page.response_headers['Content-Disposition'])
-        .to match(/filename="r003_business_unit_performance_report\.csv"/)
-    stats_index_page.load
-  end
-
   def download_r004_report
-    stats_index_page.reports[5].action_link.click
+    report = stats_index_page.foi.reports.detect { |r| r.download_link.text =~ /Cabinet Office report/ }
+    report.download_link.click
     expect(page.response_headers['Content-Disposition'])
         .to match(/filename="r004_cabinet_office_report.csv"/)
     stats_index_page.load
   end
 
   def download_r005_report
-    stats_index_page.reports.fourth.action_link.click
+    report = stats_index_page.foi.reports.detect { |r| r.download_link.text =~ /Monthly report/ }
+    report.download_link.click
     expect(page.response_headers['Content-Disposition'])
         .to match(/filename="r005_monthly_performance_report.csv"/)
     stats_index_page.load
   end
 
+  def download_r105_report
+    stats_index_page.sar.reports.last.download_link.click
+    expect(page.response_headers['Content-Disposition'])
+        .to match(/filename="r105_sar_monthly_performance_report.csv"/)
+    stats_index_page.load
+  end
 
   def view_custom_report_creation_page
     stats_index_page.custom_reports.click
@@ -166,8 +162,8 @@ feature "Downloading stats(csv) from the system" do
   end
 
   def create_custom_r004_report
-    r005 = ReportType.where(abbr:'R005').first
-    stats_custom_page.fill_in_form('foi', r005.id, Date.yesterday, Date.today)
+    r004 = ReportType.r004
+    stats_custom_page.fill_in_form('foi', r004.id, Date.yesterday, Date.today)
     stats_custom_page.submit_button.click
 
     expect(stats_custom_page.success_message).to have_download_link
@@ -176,7 +172,7 @@ feature "Downloading stats(csv) from the system" do
   def download_custom_r004_report
     stats_custom_page.success_message.download_link.click
     expect(page.response_headers['Content-Disposition'])
-        .to match(/filename="r005_monthly_performance_report\.csv"/)
+        .to match(/filename="r004_cabinet_office_report\.csv"/)
 
     stats_custom_page.load
   end

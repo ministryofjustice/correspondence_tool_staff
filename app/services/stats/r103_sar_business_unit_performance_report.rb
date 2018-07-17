@@ -14,5 +14,9 @@ module Stats
       Case::SAR.where('refusal_reason_id IS NULL OR refusal_reason_id != ?', tmm.id)
     end
 
+    def report_type
+      ReportType.r103
+    end
+
   end
 end

@@ -34,10 +34,11 @@ module Stats
     } 
     
 
-    def initialize(period_start= Time.now.beginning_of_year, period_end=Time.now, generate_bu_columns=false)
+    def initialize(period_start = nil, period_end = nil, generate_bu_columns=false)
       super(period_start, period_end)
-      @period_start = period_start
-      @period_end = period_end
+      # super(period_start, period_end)
+      # @period_start = period_start
+      # @period_end = period_end
       @generate_bu_columns = generate_bu_columns
       column_headings = if @generate_bu_columns
                           R003_SPECIFIC_COLUMNS.merge(CaseAnalyser::COMMON_COLUMNS).merge(R003_BU_PERFORMANCE_COLUMNS)
@@ -76,6 +77,10 @@ module Stats
 
     def self.description
       raise RuntimeError.new('description() class method must be defined in derived class')
+    end
+
+    def self.reporting_period
+      "#{@period_start} - #{@period_end}"
     end
 
     def run

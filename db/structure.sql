@@ -471,6 +471,15 @@ ALTER SEQUENCE public.correspondence_types_id_seq OWNED BY public.correspondence
 
 
 --
+-- Name: data_migrations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_migrations (
+    version character varying NOT NULL
+);
+
+
+--
 -- Name: feedback; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -544,7 +553,9 @@ CREATE TABLE public.report_types (
     custom_report boolean DEFAULT false,
     seq_id integer NOT NULL,
     foi boolean DEFAULT false,
-    sar boolean DEFAULT false
+    sar boolean DEFAULT false,
+    standard_report boolean DEFAULT false NOT NULL,
+    default_reporting_period character varying DEFAULT 'year_to_date'::character varying
 );
 
 
@@ -1124,10 +1135,18 @@ ALTER TABLE ONLY public.correspondence_types
 
 
 --
+-- Name: data_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_migrations
+    ADD CONSTRAINT data_migrations_pkey PRIMARY KEY (version);
+
+
+--
 -- Name: feedback_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.feedback
+ALTER TABLE ONLY feedback
     ADD CONSTRAINT feedback_pkey PRIMARY KEY (id);
 
 
@@ -1615,9 +1634,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180613141421'),
 ('20180620135756'),
 ('20180621094208'),
-('20180622153909'),
 ('20180705184513'),
 ('20180711151118'),
-('20180716150951');
+('20180717211105');
 
 

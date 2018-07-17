@@ -2,50 +2,23 @@
   - t('page_title.stats')
 
 - content_for :heading
-  | Statistics
+  | Performance reports
 
 = render partial: 'layouts/header'
 
 .grid-row
   .column-full.button-holder
-    = link_to t('common.stats_custom_button'), stats_custom_path, class: 'button'
+    p
+      = "Create a report by specifying the report type and the time period it covers."
 
+    = link_to t('common.stats_custom_button'), stats_custom_path, class: 'button'
 
 hr
 
-.grid-row
-  .column-full.table-container.container
-    table.stats-report
-      caption
-        .table-captions
-          = "Reports for this year"
-      thead
-        tr.visually-hidden
-          th
-            = "Report name"
-          th
-            = "Action"
-      tbody
-        - @reports.each do |report|
-          - if FeatureSet.sars_reporting.disabled? && report.abbr =~ /^R10\d$/   # the 100 series refer to SARS reports
-            next
-          - else
-            tr
-              th
-                = report.full_name
+= render partial: 'stats/report',
+         locals: {correspondence_type: 'Standard FOI reports',
+                  reports: @foi_reports}
 
-              td.action-right-aligned
-                = link_to stats_download_path(id: report.id), target: '_blank' do
-                  = 'Download'
-                  span.visually-hidden
-                    = " #{ report.full_name }"
-
-        - if current_user.admin?
-          tr
-            th
-              = 'Audit CSV'
-            td.action-right-aligned
-              = link_to stats_download_audit_path, target: '_blank' do
-                = 'Download'
-                span.visually-hidded
-                  = " audit "
+= render partial: 'stats/report',
+        locals: { correspondence_type: 'Standard SAR reports',
+                reports: @sar_reports }
