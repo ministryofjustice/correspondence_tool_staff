@@ -29,6 +29,10 @@ moj.Modules.CaseCreation = {
       });
     }
 
+    if (self.originalCaseReport) {
+      self.toggleFields(self);
+    }
+
     // For linking to original case
     self.$searchOriginCaseButton.add(self.$searchRelatedCaseButton)
       .click(function (e) {
@@ -48,7 +52,7 @@ moj.Modules.CaseCreation = {
             } else {
 
               self.relatedCaseReport.innerHTML = json.content;
-              self.$relateCaseInput.val('').focus();
+              self.$relatedCaseInput.val('').focus();
             }
           })
           .fail(function(jqxhr){
@@ -143,19 +147,17 @@ moj.Modules.CaseCreation = {
     event.preventDefault();
     self.originalCaseReport.innerHTML = '';
 
-    $('#js-search-for-case .js-related-case').addClass('js-hidden');
-    $('#js-search-for-case .js-original-case').removeClass('js-hidden');
+    self.toggleFields(self);
 
     self.$originalCaseInput.focus();
   },
 
   showRelatedCaseField: function (self) {
-    self.$originalCaseFields.addClass('js-hidden');
-    self.$relatedCaseFields.removeClass('js-hidden')
-      .removeClass('js-hidden').find(':text').focus();
+    self.toggleFields(self);
+    self.$relatedCaseInput.focus();
   },
 
-  displayErrorMessage: function (data) {
+  displayErrorMessage: function (errorObject) {
     var $searchForCase = $('#js-search-for-case');
     var $currentField = $searchForCase.find(':text:visible');
     var $formGroup = $currentField.closest('.form-group');
@@ -169,10 +171,10 @@ moj.Modules.CaseCreation = {
       .find('.error-message')
       .remove()
       .end()
-      .append('<span class="error-message">' + data.linked_case_error + '</span>');
+      .append('<span class="error-message">' + errorObject.linked_case_error + '</span>');
   },
 
-  removeErrorMessage: function (data) {
+  removeErrorMessage: function () {
     var $searchForCase = $('#js-search-for-case');
     var $currentField = $searchForCase.find(':text:visible');
     var $formGroup = $currentField.closest('.form-group');
@@ -185,5 +187,18 @@ moj.Modules.CaseCreation = {
     $formGroup.find('label')
       .find('.error-message')
       .remove();
+  },
+
+  toggleFields: function (self) {
+
+    if (self.originalCaseReport.innerHTML === '') {
+
+      self.$relatedCaseFields.addClass('js-hidden');
+      self.$originalCaseFields.removeClass('js-hidden');
+
+    } else {
+      self.$relatedCaseFields.removeClass('js-hidden');
+      self.$originalCaseFields.addClass('js-hidden');
+    }
   }
 };

@@ -97,7 +97,7 @@ describe CaseTypeFilter do
                              @setup.std_unassigned_foi,
                              @setup.std_unassigned_irc,
                              @setup.std_unassigned_irt,
-                             @setup.ico_foi_unassigned.
+                             @setup.ico_foi_unassigned
                            ]
       end
     end
