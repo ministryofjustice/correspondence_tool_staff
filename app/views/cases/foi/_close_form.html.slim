@@ -7,7 +7,7 @@
   .form-group
     = f.gov_uk_date_field :date_responded, { legend_text: t('.close_date'),
             form_hint_text: t('.date_example'),
-            today_button: {class: 'acts-like-button'} }
+            today_button: {class: ''} }
 
 
   - if @case.is_internal_review?
