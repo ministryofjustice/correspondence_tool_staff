@@ -115,8 +115,7 @@ module CasesHelper
   end
 
   def show_remove_clearance_link(kase)
-    policy = Case::BasePolicy.new(current_user, kase)
-    if policy.remove_clearance?
+    if policy(kase).remove_clearance?
       link_to('Remove clearance', remove_clearance_case_path(id: kase.id))
     end
   end
