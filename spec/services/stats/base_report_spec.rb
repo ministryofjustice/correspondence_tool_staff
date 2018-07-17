@@ -2,9 +2,16 @@ require 'rails_helper'
 
 module Stats
 
-  class DummyReport < BaseReport;end
+  class DummyReport < BaseReport
+    def report_type
+      ReportType.first
+    end
+  end
 
   describe BaseReport do
+
+    before(:all)  { create :report_type }
+    after(:all)   { ReportType.delete_all }
 
     describe '.new' do
       it 'raises if BaseReport is instantiated' do
@@ -13,7 +20,7 @@ module Stats
         }.to raise_error RuntimeError, "Cannot instantiate Stats::BaseReport - use derived class instead"
       end
 
-      it 'does not raise if dervied class instantiated' do
+      it 'does not raise if derived class instantiated' do
         expect{
           DummyReport.new
         }.not_to raise_error

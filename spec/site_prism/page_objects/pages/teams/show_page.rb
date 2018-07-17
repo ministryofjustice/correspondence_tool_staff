@@ -15,8 +15,8 @@ module PageObjects
 
         element :heading, 'h1.page-heading'
         element :deputy_director, '.team-lead-title'
-        element :director, 'h2:first'
-        element :director_general, 'h2:first'
+        element :director, 'h2.head-of-team'
+        element :director_general, 'h2:nth-of-type(2)'
         element :team_email, '.team-email'
 
 

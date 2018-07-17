@@ -21,6 +21,10 @@ module Stats
       CaseSelector.new(Case::ICO::SAR).ids_for_period_appeals(@period_start, @period_end)
     end
 
+    def report_type
+      ReportType.r102
+    end
+
     private
 
     def column_headings

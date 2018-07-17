@@ -2,7 +2,9 @@ require 'rails_helper'
 
 describe 'teams/index.html.slim', type: :view do
 
-  let(:manager)   { create :manager }
+  let(:manager)      { create :manager }
+  let(:business_map) { build_stubbed(:r006_business_unit_map) }
+  let(:reports)      { [business_map] }
 
   before(:each) do
     @bg_2 = create :business_group, name: 'HMPPS',
@@ -17,6 +19,7 @@ describe 'teams/index.html.slim', type: :view do
   it 'displays all business groups' do
     login_as manager
     assign(:teams, BusinessGroup.all)
+    assign(:reports, reports)
 
     render
 

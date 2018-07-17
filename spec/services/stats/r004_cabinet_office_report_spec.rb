@@ -5,9 +5,13 @@ require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 module Stats
   describe R004CabinetOfficeReport do
 
+    before(:all)    { create :report_type, :r004 }
+    after(:all)     { ReportType.r004.destroy }
+
     context 'sections 1, 2, 3' do
 
       before(:all) do
+
         @frozen_time = Time.new 2017, 6, 14, 11, 20, 45
 
         CaseClosure::MetadataSeeder.seed!
@@ -83,12 +87,14 @@ module Stats
 
       end
 
-      after(:all) { DbHousekeeping.clean }
+      after(:all) do
+        DbHousekeeping.clean
+      end
 
       context '1.A' do
         it 'records the total number' do
           expect(@results['1.A'][:desc]).to eq 'Total number of FOI requests received this quarter'
-          expect(@results['1.A'][:value]).to eq 81
+          expect(@results['1.A'][:value]).to eq 82
         end
       end
 
@@ -101,7 +107,7 @@ module Stats
       context '1.B' do
         it 'records  the stat' do
           expect(@results['1.B'][:desc]).to eq 'Number of requests that have been created but not closed in this quarter'
-          expect(@results['1.B'][:value]).to eq 11
+          expect(@results['1.B'][:value]).to eq 12
         end
       end
 
@@ -122,7 +128,7 @@ module Stats
       context '1.Biii' do
         it 'records the stat' do
           expect(@results['1.Biii'][:desc]).to eq 'Number of requests created this quarter, that are yet to be closed, that have gone over the 20 day deadline'
-          expect(@results['1.Biii'][:value]).to eq 3
+          expect(@results['1.Biii'][:value]).to eq 4
         end
       end
 

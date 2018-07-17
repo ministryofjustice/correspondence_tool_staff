@@ -20,10 +20,10 @@ FactoryBot.define do
   end
 
   factory :r003_report, parent: :report do
-    report_type { find_or_create(:r003_report_type) }
+    report_type { find_or_create(:report_type, :r003) }
   end
 
   factory :r004_report, parent: :report do
-    report_type { find_or_create(:r004_report_type) }
+    report_type { find_or_create(:report_type, :r004) }
   end
 end

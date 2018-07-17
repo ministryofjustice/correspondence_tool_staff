@@ -2,7 +2,9 @@ require 'rails_helper'
 
 describe 'teams/show.html.slim', type: :view do
 
-  let(:manager)   { create :manager }
+  let(:manager)      { create :manager }
+  let(:business_map) { build_stubbed(:r006_business_unit_map) }
+  let(:reports)      { [business_map] }
 
   def login_as(user)
     allow(view).to receive(:current_user).and_return(user)
@@ -25,6 +27,7 @@ describe 'teams/show.html.slim', type: :view do
       login_as manager
       assign(:team, @hmpps)
       assign(:children, @hmpps.children)
+      assign(:reports, reports)
 
       render
 
@@ -59,6 +62,7 @@ describe 'teams/show.html.slim', type: :view do
       login_as manager
       assign(:team, directorate)
       assign(:children, directorate.children.order(:name))
+      assign(:reports, reports)
     end
 
     it 'displays the directorate name' do
@@ -103,6 +107,7 @@ describe 'teams/show.html.slim', type: :view do
     before do
       login_as manager
       assign(:team, bu)
+      assign(:reports, reports)
     end
 
     it 'displays the business unit name' do

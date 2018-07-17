@@ -459,7 +459,7 @@ en:
       This is a new service.
     service_name: Track a query
     signout: Sign out
-    stats_custom_button: Create custom report
+    stats_custom_button: Create report
     summary_error: 'prevented this form from being submitted:'
 
   admin:
@@ -733,21 +733,6 @@ en:
     form:
       destroy: "If you deactivate this team member, they will no longer be able to sign in and take action on cases. Are you sure you want to continue?"
 
-  nav:
-    pages:
-      closed_cases: Closed cases
-      incoming_cases: New cases
-      my_open_cases: My open cases
-      open_cases: All open cases
-      search_cases: Search
-      settings: Settings
-      stats: Statistics
-      system_admin: Admin
-    tabs:
-      in_time_html: |
-        <span class="visuallyhidden">View tab </span>In time (%{count})
-      late_html: |
-        <span class="visuallyhidden">View tab </span>Late (%{count})
   devise:
     registrations:
       destroyed: "Team member has been deactivated"
