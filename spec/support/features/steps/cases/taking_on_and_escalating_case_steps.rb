@@ -22,7 +22,7 @@ def undo_taking_case_on_step(kase:)
   # up seems to be helping this.
   row = incoming_cases_page.row_for_case_number(kase.number)
   row.wait_until_actions_visible
-  sleep 0.25
+  sleep 0.5
   row.actions.wait_until_undo_assign_link_invisible(10)
   expect(row.actions).to have_take_on_case
   expect(row.actions).to have_no_success_message
@@ -57,5 +57,3 @@ def undo_de_escalate_case_step(kase:)
   expect(row.actions).to have_take_on_case
   expect(row).to have_no_highlight_row
 end
-
-
