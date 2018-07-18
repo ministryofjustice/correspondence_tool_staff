@@ -1242,10 +1242,9 @@ case_types:
       - awaiting_responder
       - drafting
       - pending_dacu_clearance
-      - awaiting_dispatch
+      - awaiting_dispatch_to_ico
       - responded
       - closed
-
     workflows:
 
       trigger:
@@ -1289,7 +1288,7 @@ case_types:
                 link_a_case:
                 remove_linked_case:
 
-              awaiting_dispatch:
+              awaiting_dispatch_to_ico:
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
@@ -1359,7 +1358,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 approve:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
-                  transition_to: awaiting_dispatch
+                  transition_to: awaiting_dispatch_to_ico
                   after_transition: Workflows::Hooks#notify_responder_ready_to_send
                 link_a_case:
                 reassign_user:
@@ -1368,7 +1367,7 @@ case_types:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 upload_response_and_approve:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
-                  transition_to: awaiting_dispatch
+                  transition_to: awaiting_dispatch_to_ico
                   after_transition: Workflows::Hooks#notify_responder_ready_to_send
                 upload_response_and_return_for_redraft:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
@@ -1376,9 +1375,9 @@ case_types:
                   transition_to: drafting
                 upload_response_approve_and_bypass:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
-                  transition_to: awaiting_dispatch
+                  transition_to: awaiting_dispatch_to_ico
 
-              awaiting_dispatch:
+              awaiting_dispatch_to_ico:
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
@@ -1438,7 +1437,7 @@ case_types:
                   if: Case::BasePolicy#assignments_reassign_user?
                 remove_linked_case:
 
-              awaiting_dispatch:
+              awaiting_dispatch_to_ico:
                  add_message_to_case:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?
                    after_transition: Workflows::Hooks#notify_responder_message_received
@@ -1465,4 +1464,4 @@ case_types:
               closed:
                 link_a_case:
                 remove_linked_case:
-      ####################### THGE END ###########
+      ####################### THE END ###########
