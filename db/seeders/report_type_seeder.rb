@@ -53,6 +53,16 @@ class ReportTypeSeeder
     create_or_update!(attrs)
     puts '    Created report R005' if verbose
 
+    attrs = {abbr: 'R105',
+            full_name: 'Monthly report (SARs)',
+            class_name: 'Stats::R105SarMonthlyPerformanceReport',
+            custom_report: false,
+            foi: false,
+            sar:true,
+            seq_id: 310}
+    create_or_update!(attrs)
+    puts '    Created report R105' if verbose
+
     attrs = {abbr:'R006',
             full_name: 'Business unit map',
             class_name: 'Stats::R006KiloMap',
