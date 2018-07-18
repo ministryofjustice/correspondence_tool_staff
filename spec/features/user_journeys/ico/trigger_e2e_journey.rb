@@ -48,11 +48,11 @@ feature 'ICO FOI case requiring clearance' do
      upload_response kase: kase,
                      user: responder,
                      file: UPLOAD_RESPONSE_DOCX_FIXTURE
-    
+
     clear_response kase: kase,
                     user: disclosure_specialist,
                     expected_team: responding_team,
-                    expected_status: 'Ready to send'
+                    expected_status: 'Ready to send to ICO'
     #
     # close_sar_case kase: kase,
     #                user: responder,

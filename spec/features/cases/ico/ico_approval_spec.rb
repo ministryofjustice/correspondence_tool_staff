@@ -39,11 +39,11 @@ feature 'cases requiring clearance by disclosure specialist' do
       .to eq 'Disclosure'
 
     approve_case_step(kase: kase,
-                      expected_team: responding_team,
-                      expected_status: 'Ready to send')
+                      expected_team: team_dacu_disclosure,
+                      expected_status: 'Ready to send to ICO')
     go_to_case_details_step(
       kase: kase,
-      expected_team: responding_team,
+      expected_team: team_dacu_disclosure,
       expected_history: [
         "#{disclosure_specialist.full_name} #{team_dacu_disclosure.name} Response cleared"
       ]
@@ -80,7 +80,7 @@ feature 'cases requiring clearance by disclosure specialist' do
     upload_and_approve_response_as_dacu_disclosure_specialist(kase.reload, disclosure_specialist)
 
     cases_show_page.load(id: kase.id)
-    expect(cases_show_page.case_status.details.copy.text).to eq 'Ready to send'
-    expect(cases_show_page.case_status.details.who_its_with.text).to eq kase.responding_team.name
+    expect(cases_show_page.case_status.details.copy.text).to eq 'Ready to send to ICO'
+    expect(cases_show_page.case_status.details.who_its_with.text).to eq team_dacu_disclosure.name
   end
 end
