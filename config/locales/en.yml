@@ -42,7 +42,7 @@ en:
               not_in_future: can't be in the future.
               past: too far in past.
             postal_address:
-              blank: and email can't both be blank
+              blank: "and email can't both be blank"
             number:
               duplication: |
                 An error has occurred and your case could not be created.
@@ -51,6 +51,8 @@ en:
               blank: Type of requester must be selected
             flag_for_disclosure_specialists:
               blank: Please choose yes or no
+        case/ico/base:
+          original_case_already_related: 'already linked as the original case'
         case/sar:
           attributes:
             third_party:
@@ -67,6 +69,10 @@ en:
             url:
               bad_file_type: "unnacceptable type %{type} for file: %{filename}"
               invalid_url: "url is invalid for file: %{filename}"
+        linked_case:
+          references_self: 'cannot be linked to itself'
+          self_referencing: 'cannot be linked to itself'
+          wrong_type: "case '%{linked_case_class}' cannot be linked to '%{case_class}' as '%{type}' case"
         report:
           attributes:
             correspondence_type:

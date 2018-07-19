@@ -14,7 +14,7 @@ class CaseLinkingService
       ActiveRecord::Base.transaction do
 
         #Create the links
-        @case.add_linked_case(@link_case)
+        @case.related_cases << @link_case
 
         # Log event in both cases
         @case.state_machine.link_a_case!(acting_user: @user,
@@ -37,10 +37,10 @@ class CaseLinkingService
   def destroy
     ActiveRecord::Base.transaction do
       # find the linked case
-      @link_case = @case.linked_cases.find_by(number: @link_case_number)
+      @link_case = @case.related_cases.find_by(number: @link_case_number)
 
       # Destroy the links
-      @case.remove_linked_case(@link_case)
+      @case.related_cases.destroy(@link_case)
 
       # Log event in both cases
       @case.state_machine.remove_linked_case!(acting_user: @user,

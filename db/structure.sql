@@ -1371,10 +1371,10 @@ CREATE INDEX index_linked_cases_on_case_id ON public.linked_cases USING btree (c
 
 
 --
--- Name: index_linked_cases_on_case_id_and_linked_case_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_linked_cases_on_case_id_and_linked_case_id_and_type; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_linked_cases_on_case_id_and_linked_case_id ON public.linked_cases USING btree (case_id, linked_case_id);
+CREATE UNIQUE INDEX index_linked_cases_on_case_id_and_linked_case_id_and_type ON public.linked_cases USING btree (case_id, linked_case_id, type);
 
 
 --

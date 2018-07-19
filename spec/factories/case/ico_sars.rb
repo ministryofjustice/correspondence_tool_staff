@@ -8,7 +8,6 @@ FactoryBot.define do
       creation_time   { 4.business_days.ago }
       identifier      "new ICO SAR case"
       managing_team   { find_or_create :team_dacu }
-      original_case { find_or_create :closed_sar }
     end
 
     current_state          'unassigned'
@@ -16,16 +15,13 @@ FactoryBot.define do
     sequence(:subject)     { |n| "#{identifier} subject #{n}" }
     sequence(:message)     { |n| "#{identifier} message #{n}" }
     ico_reference_number   { generate :ico_sar_reference_number }
+    association :original_case, factory: :closed_sar
 
     received_date          { 0.business_days.from_now }
     external_deadline      { 20.business_days.from_now.to_date }
     uploaded_request_files { ["#{Faker::Internet.slug}.pdf"] }
     uploading_user         { find_or_create :manager }
     created_at             { creation_time }
-
-    after(:create) do |kase, evaluator|
-      kase.add_linked_case(evaluator.original_case)
-    end
   end
 
   factory :awaiting_responder_ico_sar_case, parent: :ico_sar_case do

@@ -743,6 +743,38 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
+  describe 'related_cases association' do
+    it { should have_many(:related_cases)
+                  .through(:related_case_links)
+                  .source(:linked_case) }
+
+    it 'validates related cases' do
+      linked_case = create(:case)
+      allow(CaseLinkTypeValidator).to receive(:classes_can_be_linked_with_type?)
+                                    .and_return(true)
+      kase = create(:case, related_cases: [linked_case])
+      expect(CaseLinkTypeValidator)
+        .to have_received(:classes_can_be_linked_with_type?).at_least(1).times
+    end
+
+    it 'add a type error if related case cannot be linked' do
+      linked_case = create(:case)
+      allow(CaseLinkTypeValidator).to receive(:classes_can_be_linked_with_type?)
+                                    .and_return(false)
+      kase = build(:case, related_cases: [linked_case])
+      expect(kase).not_to be_valid
+      expect(kase.errors[:related_cases])
+        .to eq ["case 'Case::FOI::Standard' cannot be linked to " \
+                "'Case::FOI::Standard' as 'related' case"]
+    end
+  end
+
+  describe 'related_case_links association' do
+    it { should have_many(:related_case_links)
+                  .class_name('LinkedCase')
+                  .with_foreign_key(:case_id) }
+  end
+
   describe 'callbacks' do
 
     describe '#prevent_number_change' do
@@ -1224,54 +1256,6 @@ RSpec.describe Case::Base, type: :model do
 
     it 'returns case with a responding team that matches the query' do
       expect(Case::Base.search('bargain')).to match_array [@case_b]
-    end
-  end
-
-  describe '#add_linked_case' do
-    let(:kase_1) { create :case }
-    let(:kase_2) { create :case }
-
-    describe 'creates a link between two cases' do
-
-      it 'creates two entries in the linked case table' do
-        kase_1.add_linked_case(kase_2)
-        expect(kase_1.linked_cases.first.id).to eq kase_2.id
-        expect(kase_2.linked_cases.first.id).to eq kase_1.id
-      end
-
-      it 'does not fail if the links already exist' do
-        kase_1.add_linked_case(kase_2)
-        kase_1.add_linked_case(kase_2)
-        expect(kase_1.linked_cases.first.id).to eq kase_2.id
-        expect(kase_2.linked_cases.first.id).to eq kase_1.id
-      end
-
-    end
-  end
-
-
-  describe '#remove_linked_case' do
-    let(:kase_1) { create :case }
-    let(:kase_2) { create :case }
-
-    describe 'removes a link between two cases' do
-      before(:each) do
-        kase_1.linked_cases << kase_2
-      end
-
-      it 'removes two entries in the linked case table' do
-        kase_1.remove_linked_case(kase_2)
-        expect(kase_1.linked_cases).to be_empty
-        expect(kase_2.linked_cases).to be_empty
-      end
-
-      it 'does not fail if the links does not exist' do
-        kase_1.remove_linked_case(kase_2)
-        kase_2.remove_linked_case(kase_1)
-        expect(kase_1.linked_cases).to be_empty
-        expect(kase_2.linked_cases).to be_empty
-      end
-
     end
   end
 

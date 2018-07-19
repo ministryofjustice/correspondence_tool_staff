@@ -41,13 +41,13 @@ describe CaseLinkingService do
 
     context 'NON-SAR cases' do
 
-      before(:each)  { service.create }
-
       it 'creates a link to the linked case' do
+        service.create
         expect(kase.linked_cases).to eq [link_case]
       end
 
       it 'creates a link from the linked case to the linking case' do
+        service.create
         expect(link_case.linked_cases).to eq [kase]
       end
 
@@ -58,6 +58,7 @@ describe CaseLinkingService do
       end
 
       it 'has created a transition on the linking case' do
+        service.create
         transition = kase.transitions.last
         expect(transition.event).to eq 'link_a_case'
         expect(transition.to_state).to eq kase.current_state
@@ -67,6 +68,7 @@ describe CaseLinkingService do
       end
 
       it 'has created a transition on the linked case' do
+        service.create
         transition = link_case.transitions.last
         expect(transition.event).to eq 'link_a_case'
         expect(transition.to_state).to eq link_case.current_state
@@ -231,7 +233,8 @@ describe CaseLinkingService do
 
   context 'when an error occurs' do
     it 'rolls back changes' do
-      allow(kase).to receive(:add_linked_case).and_throw(RuntimeError)
+      allow(kase.related_cases).to receive(:<<)
+                                     .and_throw(ActiveRecord::RecordInvalid)
       service.create
 
       cases_transitions = kase.transitions.where(
@@ -246,7 +249,8 @@ describe CaseLinkingService do
     end
 
     it 'sets result to :error and returns same' do
-      allow(kase).to receive(:add_linked_case).and_throw(RuntimeError)
+      allow(kase.related_cases).to receive(:<<)
+                                     .and_throw(ActiveRecord::RecordInvalid)
       result = service.create
       expect(result).to eq :error
       expect(service.result).to eq :error

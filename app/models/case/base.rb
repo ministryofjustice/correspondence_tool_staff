@@ -143,6 +143,9 @@ class Case::Base < ApplicationRecord
   validates :type, presence: true, exclusion: { in: %w{Case}, message: "Case type can't be blank" }
   validates :workflow, inclusion: { in: %w{ standard trigger full_approval }, message: "invalid" }
 
+  validate :validate_related_cases
+  validates_associated :case_links
+
   validates_with ::ClosedCaseValidator
 
   has_many :assignments, dependent: :destroy, foreign_key: :case_id
@@ -248,11 +251,35 @@ class Case::Base < ApplicationRecord
             through: 'cases_exemptions',
             foreign_key: :case_id
 
-  has_many :case_links, class_name: LinkedCase, foreign_key: :case_id
+  has_many :case_links,
+           -> { readonly },
+           class_name: 'LinkedCase',
+           foreign_key: :case_id do
+    def <<(_record)
+      raise ActiveRecord::ActiveRecordError.new("association is readonly")
+    end
+
+    def create(_attributes = {})
+      raise ActiveRecord::ActiveRecordError.new("association is readonly")
+    end
+
+    def create!(_attributes = {})
+      raise ActiveRecord::ActiveRecordError.new("association is readonly")
+    end
+  end
   has_many :linked_cases,
            through: :case_links,
            class_name: 'Case::Base',
            foreign_key: :case_id
+
+  has_many :related_case_links,
+           -> { related },
+           class_name: 'LinkedCase',
+           foreign_key: :case_id
+  has_many :related_cases,
+           through: :related_case_links,
+           source: :linked_case
+
 
   after_initialize do
     self.workflow = default_workflow if self.workflow.nil?
@@ -492,22 +519,6 @@ class Case::Base < ApplicationRecord
     end
   end
 
-  def add_linked_case(linked_case)
-    unless self.linked_cases.include? linked_case
-      linked_cases << linked_case
-    end
-  end
-
-  def remove_linked_case(linked_case)
-    ActiveRecord::Base.transaction do
-
-      self.linked_cases.destroy(linked_case)
-
-      linked_case.linked_cases.destroy(self)
-
-    end
-  end
-
   def is_internal_review?
     self.is_a?(Case::FOI::InternalReview)
   end
@@ -691,5 +702,29 @@ class Case::Base < ApplicationRecord
     end
   end
 
+  def validate_related_cases
+    self.related_cases.each do |kase|
+      validate_case_link(:related, kase, :related_cases)
+    end
+  end
+
+  def validate_case_link(type, linked_case, attribute)
+    if not CaseLinkTypeValidator.classes_can_be_linked_with_type?(
+             klass: self.class.to_s,
+             linked_klass: linked_case.class.to_s,
+             type: type,
+           )
+
+      errors.add(
+        attribute,
+        :wrong_type,
+        message: I18n.t('activerecord.errors.models.linked_case.wrong_type',
+                        type: type,
+                        case_class: self.class.to_s,
+                        linked_case_class: linked_case.class.to_s)
+      )
+
+    end
+  end
 end
 #rubocop:enable Metrics/ClassLength

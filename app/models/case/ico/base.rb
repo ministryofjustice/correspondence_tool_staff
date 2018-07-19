@@ -28,18 +28,12 @@ class Case::ICO::Base < Case::Base
           through: :original_case_link,
           source: :linked_case
 
-  has_many :related_case_links,
-           -> { related },
-           class_name: 'LinkedCase',
-           foreign_key: :case_id
-  has_many :related_cases,
-           through: :related_case_links,
-           source: :linked_case
-
-
   validates :ico_reference_number, presence: true
   validates :message, presence: true
   validates :external_deadline, presence: true
+  validate :validate_original_case
+  validate :validate_original_case_not_already_related
+  validates_presence_of :original_case
 
   before_save do
     self.workflow = 'trigger'
@@ -47,7 +41,6 @@ class Case::ICO::Base < Case::Base
 
   after_create :process_uploaded_request_files,
                if: -> { uploaded_request_files.present? }
-  after_create :link_original_case
 
   class << self
     def type_abbreviation
@@ -72,15 +65,25 @@ class Case::ICO::Base < Case::Base
     closed? || responded?
   end
 
+  def original_case_id=(case_id)
+    self.original_case = Case::Base.find(case_id)
+  end
+
   private
 
   def default_workflow
     'trigger'
   end
 
-  def link_original_case
-    if original_case_id.present?
-      self.original_case = Case::Base.find(original_case_id)
+  def validate_original_case
+    if self.original_case
+      validate_case_link(:original, original_case, :original_case)
+    end
+  end
+
+  def validate_original_case_not_already_related
+    if original_case.in?(related_cases)
+      self.errors.add(:linked_cases, :original_case_already_related)
     end
   end
 end
