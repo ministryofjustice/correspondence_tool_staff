@@ -122,7 +122,6 @@ en:
     awaiting_responder: To be accepted
     awaiting_responder_email: Waiting to be accepted
     awaiting_dispatch: Ready to send
-    awaiting_dispatch_to_ico: Ready to send to ICO
     drafting: Draft in progress
     pending_dacu_clearance: Pending clearance
     pending_press_office_clearance: Pending clearance
@@ -130,6 +129,8 @@ en:
     responded: Ready to close
     closed: Closed
     closed_status: Case closed
+    case/ico:
+      awaiting_dispatch: Ready to send to ICO
 
   roles:
     responders: Information officers

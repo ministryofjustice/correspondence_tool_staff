@@ -19,6 +19,7 @@ def approve_case_step(kase:,
   end
 
   open_cases_page.load
+  save_and_open_page
   case_row = open_cases_page.case_list.detect{ |r| r.number.text == "Link to case #{kase.number}" }
   expect(case_row.who_its_with.text).to eq expected_team.name
   expect(case_row.status.text).to eq expected_status
