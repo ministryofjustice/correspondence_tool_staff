@@ -70,11 +70,7 @@ module ICOCasesParams
     if case_link.valid?
       related_case = case_link.linked_case
 
-      @linked_cases = if params.fetch(:related_case_ids).present?
-                        Case::Base.where(id: params[:related_case_ids].split()).to_a
-                      else
-                        []
-                      end
+      @linked_cases = process_ico_related_case_ids_param
 
       if validate_ico_related_case(related_case)
         @linked_cases << related_case
@@ -140,6 +136,14 @@ module ICOCasesParams
     end
 
     true
+  end
+
+  def process_ico_related_case_ids_param
+    if params.fetch(:related_case_ids).present?
+      Case::Base.where(id: params[:related_case_ids].split()).to_a
+    else
+      []
+    end
   end
 
   # Use Becca's translation_for_case when it comes available
