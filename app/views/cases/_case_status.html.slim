@@ -12,6 +12,12 @@
           = t('common.case.who_its_with')
         .case-status__data
           = case_details.who_its_with
+    - if case_details.type_abbreviation == 'ICO'
+      .case-status__group.ico-reference
+        .case-status__heading
+          = t('common.case.ico_case_number')
+        .case-status__data
+          = case_details.ico_reference_number
 
   .case-status__deadline
     - if case_details.internal_deadline.present?
