@@ -415,6 +415,7 @@ en:
       extend_for_pit: Extend for Public Interest Test
       external_deadline: Final deadline
       internal_deadline: Draft deadline
+      ico_case_number: ICO case reference number
       filename: File name
       header_case_number: "You are viewing case number "
       header_subject: "Case subject, "

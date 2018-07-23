@@ -11,6 +11,10 @@ module PageObjects
                   '.who_its_with .case-status__heading'
           element :who_its_with,
                   '.who_its_with .case-status__data'
+          element :ico_ref_number_label,
+                  '.ico-reference .case-status__heading'
+          element :ico_ref_number,
+                  '.ico-reference .case-status__data'
         end
 
         section :deadlines , '.case-status__deadline' do
