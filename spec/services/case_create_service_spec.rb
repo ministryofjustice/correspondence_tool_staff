@@ -94,10 +94,8 @@ describe CaseCreateService do
   end
 
   context 'ICO case' do
-    let(:received)    { Date.today }
-    let(:deadline)    { 1.month.from_now.beginning_of_day + 10.hours }
-    let(:received) { Date.today }
-    let(:deadline) { 1.month.from_now }
+    let(:received) { 0.business_days.from_now }
+    let(:deadline) { 28.business_days.from_now }
     let(:foi)      { create :closed_case }
     let(:params) do
       {

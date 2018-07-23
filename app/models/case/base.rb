@@ -715,13 +715,15 @@ class Case::Base < ApplicationRecord
              type: type,
            )
 
+      case_class_name = I18n.t("cases.types.#{self.class}")
+      linked_class_name = I18n.t("cases.types.#{linked_case.class}")
       errors.add(
         attribute,
         :wrong_type,
         message: I18n.t('activerecord.errors.models.linked_case.wrong_type',
                         type: type,
-                        case_class: self.class.to_s,
-                        linked_case_class: linked_case.class.to_s)
+                        case_class: case_class_name,
+                        linked_case_class: linked_class_name)
       )
 
     end

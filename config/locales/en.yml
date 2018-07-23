@@ -51,6 +51,20 @@ en:
               blank: Type of requester must be selected
             flag_for_disclosure_specialists:
               blank: Please choose yes or no
+        case/ico:
+          original_case_number:
+            blank: "Enter original case number"
+            missing: "Original case not found"
+            not_authorised: "Not authorised to view case"
+            wrong_type: "Original case must be FOI or SAR"
+          related_case_number:
+            already_linked: "Case is already linked"
+            blank: "Enter related case number"
+            does_not_match_original: >-
+              Related case type %{related} does not match that of the original
+              case type %{original}
+            missing: "Related case not found"
+            not_authorised: "Not authorised to view case"
         case/ico/base:
           original_case_already_related: 'already linked as the original case'
         case/sar:
@@ -70,9 +84,9 @@ en:
               bad_file_type: "unnacceptable type %{type} for file: %{filename}"
               invalid_url: "url is invalid for file: %{filename}"
         linked_case:
-          references_self: 'cannot be linked to itself'
-          self_referencing: 'cannot be linked to itself'
-          wrong_type: "case '%{linked_case_class}' cannot be linked to '%{case_class}' as '%{type}' case"
+          missing: "doesn't exist"
+          references_self: "can't link to the same case"
+          wrong_type: "can't link a %{case_class} case to a %{linked_case_class} as a %{type} case"
         report:
           attributes:
             correspondence_type:
@@ -610,7 +624,7 @@ en:
         date_example: For example, 30 1 2017
     sar:
       new_form_common:
-        dropzone: Requestor's proof of ID and other documents
+        dropzone: "Requestor's proof of ID and other documents"
       close_form:
         close_date: Date response sent
         date_example: For example, 30 1 2017
@@ -624,6 +638,14 @@ en:
       heading: 'Remove Clearance'
       explanation: 'You are removing clearance level of Disclosure for the case:'
       why: 'Reason for removing clearance'
+
+    types:
+      Case::FOI::Standard: FOI
+      Case::FOI::TimelinessReview: FOI - Internal review for timeliness
+      Case::FOI::ComplianceReview: FOI - Internal review for compliance
+      Case::ICO::FOI: ICO Appeal - FOI
+      Case::ICO::SAR: ICO Appeal - SAR
+      Case::SAR: Non-offender SAR
 
   feedback:
     error_html: |

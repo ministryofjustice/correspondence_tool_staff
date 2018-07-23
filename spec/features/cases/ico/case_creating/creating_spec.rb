@@ -26,30 +26,18 @@ feature 'ICO case creation' do
 
   context 'creating an ICO appeal' do
     scenario ' - linking Original case', js: true do
-
       cases_new_ico_page.load
 
       cases_new_ico_page.original_case_number.set ''
-
       cases_new_ico_page.link_original_case.click
-
-      expect(cases_new_ico_page.original_case_number_error.text).to eq 'Original case not found'
-
-      cases_new_ico_page.original_case_number.set 'abcd13'
-
-      cases_new_ico_page.link_original_case.click
-
-      expect(cases_new_ico_page.original_case_number_error.text).to eq 'Original case not found'
+      expect(cases_new_ico_page.original_case_number_error.text)
+        .to eq 'Enter original case number'
 
       cases_new_ico_page.original_case_number.set original_foi.number
-
       cases_new_ico_page.link_original_case.click
-
-      cases_new_ico_page.wait_until_original_case_number_error_invisible
-
       expect(cases_new_ico_page).to have_no_original_case_number_error
-
-      cases_new_ico_page.wait_until_related_case_number_visible
+      expect(cases_new_ico_page.original_case.linked_records.first.link)
+        .to have_text "Link to case #{original_foi.number}"
     end
 
     scenario ' - removing Original case', js: true do
@@ -57,23 +45,13 @@ feature 'ICO case creation' do
       cases_new_ico_page.load
 
       cases_new_ico_page.original_case_number.set original_foi.number
-
       cases_new_ico_page.link_original_case.click
 
-      cases_new_ico_page.wait_until_original_case_visible
-
-      kase = cases_new_ico_page.original_case.linked_records.first
-
-      kase.remove_link.click
-
-      cases_new_ico_page.wait_until_original_case_invisible
+      cases_new_ico_page.original_case.linked_records.first.remove_link.click
 
       expect(cases_new_ico_page).to have_no_original_case
-
       expect(cases_new_ico_page.original_case_number).to be_visible
-
       expect(cases_new_ico_page).to have_no_related_case_number
-
     end
 
     scenario ' - linking relate case', js: true do
@@ -81,60 +59,40 @@ feature 'ICO case creation' do
       cases_new_ico_page.load
 
       cases_new_ico_page.original_case_number.set original_foi.number
-
       cases_new_ico_page.link_original_case.click
 
-      cases_new_ico_page.wait_until_related_case_number_visible
-
-      cases_new_ico_page.related_case_number.set ''
-
-      cases_new_ico_page.link_related_case.click
-
-      expect(cases_new_ico_page.related_case_number_error.text).to eq 'Related case not found'
-
       cases_new_ico_page.related_case_number.set 'abcd13'
-
       cases_new_ico_page.link_related_case.click
-
-      expect(cases_new_ico_page.related_case_number_error.text).to eq 'Related case not found'
+      expect(cases_new_ico_page.related_case_number_error.text)
+        .to eq 'Related case not found'
 
       cases_new_ico_page.related_case_number.set related_foi.number
-
       cases_new_ico_page.link_related_case.click
-
-      cases_new_ico_page.wait_until_related_case_number_visible
+      expect(cases_new_ico_page).to have_related_cases
+      expect(cases_new_ico_page.related_cases).to have_linked_records
+      expect(cases_new_ico_page.related_cases.linked_records.first.link)
+        .to have_text "Link to case #{related_foi.number}"
     end
 
 
     scenario ' - removing related case', js: true do
-
       cases_new_ico_page.load
+
       cases_new_ico_page.original_case_number.set original_foi.number
       cases_new_ico_page.link_original_case.click
-      cases_new_ico_page.wait_until_related_case_number_visible
-
 
       cases_new_ico_page.related_case_number.set related_foi.number
       cases_new_ico_page.link_related_case.click
-      cases_new_ico_page.wait_until_related_cases_visible
-
-      sleep 0.25
-
       expect(cases_new_ico_page.related_cases).to have_linked_records(count: 1)
-      cases_new_ico_page.related_case_number.set another_related_foi.number
+
+      cases_new_ico_page.related_case_number.set another_related_foi.number 
       cases_new_ico_page.link_related_case.click
-      cases_new_ico_page.wait_until_related_cases_visible
-
-      sleep 0.25
-
       expect(cases_new_ico_page.related_cases).to have_linked_records(count: 2)
 
-      kase = cases_new_ico_page.related_cases.linked_records.first
-      kase.remove_link.click
+      cases_new_ico_page.related_cases.linked_records.first.remove_link.click
       expect(cases_new_ico_page.related_cases).to have_linked_records(count: 1)
 
-      kase = cases_new_ico_page.related_cases.linked_records.first
-      kase.remove_link.click
+       cases_new_ico_page.related_cases.linked_records.first.remove_link.click
       expect(cases_new_ico_page.related_cases).to have_no_linked_records
 
     end

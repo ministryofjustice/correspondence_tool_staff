@@ -10,9 +10,9 @@ module PageObjects
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-        section :removal_detail do
-          element :removal_info, 'div'
-        end
+        # section :removal_detail do
+        #   element :removal_info, 'div'
+        # end
 
         element :label, '.label.form-label'
         element :textarea, 'form-control#unflag_for_clearance_message'

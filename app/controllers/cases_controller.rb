@@ -543,7 +543,6 @@ class CasesController < ApplicationController
     link_case_number = params[:case][:linked_case_number]
 
     service = CaseLinkingService.new current_user, @case, link_case_number
-
     result = service.create
 
 
@@ -596,8 +595,6 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.js do
         if process_new_linked_cases_for_params
-          @linked_cases.each { |kase| authorize kase, :show? }
-
           if @link_type == 'original'
             response = render_to_string partial: "cases/#{ @correspondence_type_key }/case_linking/linked_#{ @link_type }_case",
                                         locals: { original_case: @linked_cases.map(&:decorate)}
@@ -609,7 +606,8 @@ class CasesController < ApplicationController
           render status: :ok, json: { content: response, link_type: @link_type }.to_json
 
         else
-          render status: :bad_request, json: { linked_case_error: @linked_case_error,
+          render status: :bad_request,
+                 json: { linked_case_error: @linked_case_error,
                          link_type: @link_type }.to_json
         end
       end

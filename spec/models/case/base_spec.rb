@@ -764,8 +764,7 @@ RSpec.describe Case::Base, type: :model do
       kase = build(:case, related_cases: [linked_case])
       expect(kase).not_to be_valid
       expect(kase.errors[:related_cases])
-        .to eq ["case 'Case::FOI::Standard' cannot be linked to " \
-                "'Case::FOI::Standard' as 'related' case"]
+        .to eq ["can't link a FOI case to a FOI as a related case"]
     end
   end
 

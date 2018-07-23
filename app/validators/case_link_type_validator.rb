@@ -39,20 +39,28 @@ class CaseLinkTypeValidator < ActiveModel::Validator
   end
 
   # Validate whether type of case link is valid or not for a pair of cases.
-  def validate(record)
+  def validate(case_link)
+    unless case_link.linked_case.present?
+      return
+    end
+
+    case_class = case_link.case.class
+    linked_class = case_link.linked_case.class
     if not self.class.classes_can_be_linked_with_type?(
-             type: record.type,
-             klass: record.case.class,
-             linked_klass: record.linked_case.class
+             type: case_link.type,
+             klass: case_class,
+             linked_klass: linked_class
            )
 
-      record.errors.add(
+      case_class_name = I18n.t("cases.types.#{case_class}")
+      linked_class_name = I18n.t("cases.types.#{linked_class}")
+      case_link.errors.add(
         :linked_case,
         :wrong_type,
         message: I18n.t('activerecord.errors.models.linked_case.wrong_type',
-                        type: record.type,
-                        case_class: record.case.class.to_s,
-                        linked_case_class: record.linked_case.class.to_s)
+                        type: case_link.type,
+                        case_class: case_class_name,
+                        linked_case_class: linked_class_name)
       )
 
     end
