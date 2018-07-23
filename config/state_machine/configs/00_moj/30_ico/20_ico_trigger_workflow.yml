@@ -136,6 +136,8 @@
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
+                respond:
+                  transition_to: responded
 
               responded:
                 add_message_to_case:

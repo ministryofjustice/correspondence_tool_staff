@@ -44,8 +44,13 @@ module CaseStates
   end
 
   def respond(current_user)
+    teams = current_user.teams_for_case(self)
+
+    weightings = { 'manager' => 100, 'approver' => 200, 'responder' => 300 }
+    team = teams.sort{ |a, b| weightings[a.role] <=> weightings[b.role] }.first
+
     ActiveRecord::Base.transaction do
-      state_machine.respond!(acting_user: current_user, acting_team: self.responding_team)
+      state_machine.respond!(acting_user: current_user, acting_team: team)
 
       # pre-populate the date_responded field with the date the user
       # marked the case as sent
