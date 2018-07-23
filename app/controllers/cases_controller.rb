@@ -595,13 +595,14 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.js do
         if process_new_linked_cases_for_params
-          if @link_type == 'original'
-            response = render_to_string partial: "cases/#{ @correspondence_type_key }/case_linking/linked_#{ @link_type }_case",
-                                        locals: { original_case: @linked_cases.map(&:decorate)}
-          else
-            response = render_to_string partial: "cases/#{ @correspondence_type_key }/case_linking/linked_#{ @link_type }_cases",
-                                        locals: { related_linked_cases: @linked_cases.map(&:decorate)}
-          end
+          response = render_to_string(
+            partial: "cases/#{ @correspondence_type_key }/case_linking/" \
+                     "linked_cases",
+            locals: {
+              linked_cases: @linked_cases.map(&:decorate),
+              link_type: @link_type,
+            }
+          )
 
           render status: :ok, json: { content: response, link_type: @link_type }.to_json
 

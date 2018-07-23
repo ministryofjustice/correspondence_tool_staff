@@ -24,9 +24,11 @@
 
 .js-original-case-and-friends
   .js-original-case-report
-    = render partial: 'cases/ico/case_linking/linked_original_case',
-           locals: { original_case: Case::Base.where(id: [@case.original_case_id]).map(&:decorate) }
+    = render partial: 'cases/ico/case_linking/linked_cases',
+             locals: { linked_cases: Case::Base.where(id: [@case.original_case_id]).map(&:decorate),
+                       link_type: 'original' }
 
   .js-related-case-report
-    = render partial: 'cases/ico/case_linking/linked_related_cases',
-            locals: { related_linked_cases: Case::Base.where(id: [@case.related_case_ids]).map(&:decorate) }
+    = render partial: 'cases/ico/case_linking/linked_cases',
+             locals: { linked_cases: Case::Base.where(id: [@case.related_case_ids]).map(&:decorate),
+                       link_type: 'related' }
