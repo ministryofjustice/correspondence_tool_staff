@@ -27,7 +27,7 @@ feature 'cases requiring clearance by disclosure specialist' do
     undo_taking_case_on_step(kase: kase)
   end
 
-  scenario 'Disclosure Specialist clears a response response', js: true do
+  scenario 'Disclosure Specialist clears a response', js: true do
     kase = create :pending_dacu_clearance_ico_foi_case,
                   approver: disclosure_specialist,
                   responding_team: responding_team
