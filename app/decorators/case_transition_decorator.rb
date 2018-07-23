@@ -20,6 +20,9 @@ class CaseTransitionDecorator < Draper::Decorator
   private
   def event
     state_machine = object.case.state_machine
+  # when 'respond'
+  #   translation_for_case(object, "event", 'respond')
+
     state_machine.event_name(object.event)
   end
 
@@ -48,5 +51,23 @@ class CaseTransitionDecorator < Draper::Decorator
       acting_user = User.find(object.acting_user_id)
       "#{ acting_user.full_name } re-assigned this case to <strong>#{ target_user.full_name }</strong>"
     end
+  end
+
+  def translation_for_case(kase, path, key, options = {})
+    translation_path = translation_path(kase.class.to_s.underscore)
+    default = translation_path.map { |case_path| :"#{path}.#{case_path}.#{key}" } + [:"#{path}.#{key}"]
+    options.merge(default: default)
+    I18n.t("#{path}.#{translation_path.shift}.#{key}",
+      default: default)
+  end
+
+  def translation_path(case_type)
+    case_type_segments = case_type.split("/")
+    paths = []
+    while case_type_segments.any?
+      paths << case_type_segments.join("/")
+      case_type_segments.pop
+    end
+    return paths
   end
 end

@@ -108,7 +108,8 @@ ignore_unused:
   - 'cases.new*.sub_heading'
   - '*.case/*'
   - 'cases.show.case.attachments_heading'
-
+  - 'state.case/ico.responded'
+  - 'common.case/ico.respond'
 
 ## Consider these keys used:
 # ignore_unused:

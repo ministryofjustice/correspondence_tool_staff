@@ -173,6 +173,7 @@ en:
     closed_status: Case closed
     case/ico:
       awaiting_dispatch: Ready to send to ICO
+      responded: Awaiting ICO decision
 
   roles:
     responders: Information officers
@@ -213,6 +214,8 @@ en:
     unflag_for_clearance: Clearance level removed
     upload_response_and_approve: Response uploaded and cleared
     upload_response_and_return_for_redraft: Changes uploaded for redraft
+    case/ico:
+      respond: Response sent to ICO
 
   date:
     formats:
@@ -474,6 +477,8 @@ en:
       clear_response: Clear response
       request_amends: Request amends
       upload_approve: 'Upload response and clear'
+    case/ico:
+      respond: Mark as sent to ICO
     case_list:
       view_case: "Link to case "
       message_notification: Conversations

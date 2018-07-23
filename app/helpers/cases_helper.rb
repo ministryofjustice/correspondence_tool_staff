@@ -35,7 +35,7 @@ module CasesHelper
               id: 'action--upload-response',
               class: 'button'
     when :respond
-      link_to t('common.case.respond'),
+      link_to translation_for_case(@case, "common", 'respond'),
               respond_case_path(@case),
               id: 'action--mark-response-as-sent',
               class: 'button'
