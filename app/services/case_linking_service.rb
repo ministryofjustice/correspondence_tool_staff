@@ -32,14 +32,8 @@ class CaseLinkingService
                                                 linked_case_id: @case.id)
         @result = :ok
       else
+        extract_case_link_errors_to_case(@case_link, @case)
         @result = :validation_error
-        if @case_link.errors[:linked_case_number].present?
-          @case.errors.add(:linked_case_number,
-                           @case_link.errors[:linked_case_number].first)
-        elsif @case_link.errors[:linked_case].present?
-          @case.errors.add(:linked_case_number,
-                           @case_link.errors[:linked_case].first)
-        end
       end
     end
     @result
@@ -48,6 +42,16 @@ class CaseLinkingService
     Rails.logger.error err.backtrace.join("\n\t")
     @error = err
     @result = :error
+  end
+
+  def add_case_link_to_case(case_link, kase)
+    if case_link.errors[:linked_case_number].present?
+      kase.errors.add(:linked_case_number,
+                      case_link.errors[:linked_case_number].first)
+    elsif case_link.errors[:linked_case].present?
+      kase.errors.add(:linked_case_number,
+                       case_link.errors[:linked_case].first)
+    end
   end
 
   def destroy

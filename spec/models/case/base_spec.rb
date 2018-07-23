@@ -752,7 +752,7 @@ RSpec.describe Case::Base, type: :model do
       linked_case = create(:case)
       allow(CaseLinkTypeValidator).to receive(:classes_can_be_linked_with_type?)
                                     .and_return(true)
-      kase = create(:case, related_cases: [linked_case])
+      create(:case, related_cases: [linked_case])
       expect(CaseLinkTypeValidator)
         .to have_received(:classes_can_be_linked_with_type?).at_least(1).times
     end

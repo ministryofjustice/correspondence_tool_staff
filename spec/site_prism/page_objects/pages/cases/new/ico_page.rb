@@ -83,7 +83,7 @@ module PageObjects
 
             ico_reference_number.set kase.ico_reference_number
             set_original_case_number(original_case.number)
-            related_cases.each { |kase| add_related_case(kase.number) }
+            related_cases.each { |c| add_related_case(c.number) }
 
             subject.set kase.subject
             case_details.set kase.message

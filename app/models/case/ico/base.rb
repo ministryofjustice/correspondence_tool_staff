@@ -65,10 +65,6 @@ class Case::ICO::Base < Case::Base
     closed? || responded?
   end
 
-  def original_case_id=(case_id)
-    self.original_case = Case::Base.find(case_id)
-  end
-
   private
 
   def default_workflow
