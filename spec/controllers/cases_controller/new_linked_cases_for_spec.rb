@@ -43,7 +43,7 @@ describe CasesController do
 
             expect(response).to have_http_status 200
             expect(response).to render_template(
-                                  "cases/ico/case_linking/_linked_original_case"
+                                  "cases/ico/case_linking/_linked_cases"
                                 )
             expect(assigns[:linked_cases]).to eq [foi_case]
           end
@@ -101,7 +101,7 @@ describe CasesController do
 
             expect(response).to have_http_status 200
             expect(response).to render_template(
-                                  "cases/ico/case_linking/_linked_related_cases"
+                                  "cases/ico/case_linking/_linked_cases"
                                 )
             expect(assigns[:linked_cases]).to eq [foi_case2]
           end
@@ -175,7 +175,7 @@ describe CasesController do
 
               expect(response).to have_http_status 200
               expect(response).to render_template(
-                                    "cases/ico/case_linking/_linked_related_cases"
+                                    "cases/ico/case_linking/_linked_cases"
                                   )
               expect(assigns[:linked_cases]).not_to include(sar_case)
             end
