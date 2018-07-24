@@ -137,6 +137,7 @@
                 reassign_user:
                 remove_linked_case:
                 respond:
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                   transition_to: responded
 
               responded:

@@ -143,5 +143,3 @@ class CaseFinderService
       .distinct('case.id')
   end
 end
-
-
