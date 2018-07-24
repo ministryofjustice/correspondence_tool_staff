@@ -62,11 +62,15 @@ module PageObjects
           def set_original_case_number(original_case_number)
             self.original_case_number.set original_case_number
             link_original_case.click
+            has_original_case?
           end
 
           def add_related_case(case_number)
+            before_count = related_cases.linked_records.count
             self.related_case_number.set case_number
             link_related_case.click
+            has_related_cases?
+            related_cases.has_linked_records(count: before_count + 1)
           end
 
           def fill_in_case_details(params={})

@@ -16,10 +16,6 @@ class Case::ICO::Base < Case::Base
                     :subject,
                   ]
 
-  # Used by the controller to drive the views which ask the user to select the
-  # "original case type"
-  attr_accessor :original_case_id
-
   has_one :original_case_link,
           -> { original },
           class_name: 'LinkedCase',
@@ -63,6 +59,14 @@ class Case::ICO::Base < Case::Base
 
   def closed_for_reporting_purposes?
     closed? || responded?
+  end
+
+  def original_case_id=(case_id)
+    self.original_case = Case::Base.find(case_id)
+  end
+
+  def original_case_id
+    self.original_case&.id
   end
 
   private

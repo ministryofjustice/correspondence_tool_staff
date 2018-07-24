@@ -28,7 +28,7 @@ def create_foi_case_step(type: 'standard',
   Case::Base.find(kase_id)
 end
 
-def create_ico_case_step(original_case:, related_cases:, uploaded_request_files: [])
+def create_ico_case_step(original_case:, related_cases: [], uploaded_request_files: [])
   # Assume we are on a case listing page
   expect(cases_page).to have_new_case_button
   cases_page.new_case_button.click

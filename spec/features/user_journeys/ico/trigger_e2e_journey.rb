@@ -18,7 +18,8 @@ feature 'ICO FOI case requiring clearance' do
   given(:manager)                  { create :disclosure_bmt_user }
   given!(:team_dacu_disclosure)    { find_or_create :team_dacu_disclosure }
   given!(:ico_correspondence_type) { create :ico_correspondence_type }
-
+  given(:original_foi_case)        { create :closed_case,
+                                            responding_team: responding_team }
 
   before(:all) do
     CaseClosure::MetadataSeeder.seed!(verbose: false)
@@ -31,7 +32,7 @@ feature 'ICO FOI case requiring clearance' do
   scenario 'end-to-end journey', js: true do
     kase = create_and_assign_ico_case user: manager,
                                       responding_team: responding_team,
-                                      original_case_type: 'FOI'
+                                      original_case: original_foi_case
 
     accept_case kase: kase,
                 user: responder,

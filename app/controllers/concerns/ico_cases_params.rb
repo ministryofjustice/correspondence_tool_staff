@@ -4,7 +4,13 @@ module ICOCasesParams
   private
 
   def create_ico_params
-    params.require(:case_ico).permit(
+    case_params = params.require(:case_ico)
+
+    if case_params[:original_case_ids].present?
+      case_params[:original_case_id] = case_params.delete(:original_case_ids).first
+    end
+
+    case_params.permit(
       :ico_reference_number,
       :subject,
       :message,
