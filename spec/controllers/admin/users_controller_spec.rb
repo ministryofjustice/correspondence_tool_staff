@@ -1,7 +1,7 @@
 require "rails_helper"
 
-describe Admin::CasesController do
-  describe '#index' do
+describe Admin::UsersController do
+  describe 'GET index' do
     let(:admin)   { create :admin }
     let(:manager) { create :manager }
     let(:dacu)    { find_or_create :team_dacu }
@@ -9,16 +9,16 @@ describe Admin::CasesController do
     context 'authenticated admin' do
       before { sign_in admin }
 
-      it 'retrieves all cases' do
+      it 'retrieves all the users' do
         get :index
 
-        expect(assigns(:cases)).to match_array Case::Base.all
+        expect(assigns(:users)).to match_array User.all
       end
 
       it 'renders the index view' do
         get :index
 
-        expect(response).to have_rendered('admin/cases/index')
+        expect(response).to have_rendered('admin/users/index')
       end
     end
 

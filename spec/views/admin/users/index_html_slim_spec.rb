@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-describe 'users/index.html.slim', type: :view do
+describe 'admin/users/index.html.slim', type: :view do
   it 'displays the users provided' do
     responder = create :responder
     approver = create :approver
-    assign(:users, [responder, approver])
+    assign(:users, User.where(id: [responder.id, approver.id]).page(1).decorate)
 
     render
     users_index_page.load(rendered)
