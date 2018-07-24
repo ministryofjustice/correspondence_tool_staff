@@ -11,6 +11,7 @@ module ICOCasesParams
     end
 
     case_params.permit(
+      :ico_officer_name,
       :ico_reference_number,
       :subject,
       :message,

@@ -8,6 +8,10 @@ describe Case::ICO::Base do
     it { should eq 'ICO' }
   end
 
+  describe 'ico_officer_name attribute' do
+    it { should validate_presence_of(:ico_officer_name) }
+  end
+
   describe 'ico_reference_number attribute' do
     it { should validate_presence_of(:ico_reference_number) }
   end
@@ -80,6 +84,31 @@ describe Case::ICO::Base do
     it 'returns false' do
       kase = create :ico_foi_case
       expect(kase.requires_flag_for_disclosure_specialists?).to be false
+    end
+  end
+
+  describe 'search' do
+    before :all do
+      @case_a = create :accepted_ico_foi_case,
+                       ico_reference_number: 'ICOREF1',
+                       ico_officer_name: 'Bryan Adams'
+      @case_b = create :accepted_ico_foi_case,
+                       ico_reference_number: 'ICOREF2',
+                       ico_officer_name: 'Douglas Adams'
+      @case_a.update_index
+      @case_b.update_index
+    end
+
+    after :all do
+      DbHousekeeping.clean
+    end
+
+    it 'returns case with the matching ICO reference number' do
+      expect(Case::Base.search('ICOREF1')).to match_array [@case_a]
+    end
+
+    it 'returns case with with the matching ICO officer' do
+      expect(Case::Base.search('Douglas')).to match_array [@case_b]
     end
   end
 end

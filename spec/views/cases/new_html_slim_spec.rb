@@ -86,6 +86,7 @@ describe 'cases/new.html.slim', type: :view do
 
       page = cases_new_ico_page
 
+      expect(page).to have_ico_officer_name
       expect(page).to have_ico_reference_number
       expect(page).to have_original_case_number
 

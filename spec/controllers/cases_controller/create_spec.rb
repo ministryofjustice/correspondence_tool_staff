@@ -29,6 +29,7 @@ describe CasesController do
       correspondence_type: 'ico',
       case_ico: {
         original_case_id: foi_case_for_ico.id,
+        ico_officer_name: 'Ian C. Oldman',
         ico_reference_number: 'ICOREF1',
         subject: 'ICO appeal for an FOI subject',
         message: 'ICO appeal for an FOI message',
@@ -231,6 +232,7 @@ describe CasesController do
           created_case = Case::ICO::FOI.last
           expect(created_case.type).to eq 'Case::ICO::FOI'
           expect(created_case.ico_reference_number).to eq 'ICOREF1'
+          expect(created_case.ico_officer_name).to eq 'Ian C. Oldman'
           expect(created_case.subject).to eq 'ICO appeal for an FOI subject'
           expect(created_case.message).to eq 'ICO appeal for an FOI message'
           expect(created_case.received_date).to eq Time.zone.today

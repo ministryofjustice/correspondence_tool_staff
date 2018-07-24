@@ -330,6 +330,7 @@ en:
           Case::FOI::TimelinessReview: FOI - Internal review for timeliness
           Case::FOI::ComplianceReview: FOI - Internal review for compliance
       case_ico:
+        ico_officer_name: ICO Information Officer
         ico_reference_number: ICO case reference number
         message: "Case details"
         related_case_number: Link a related case

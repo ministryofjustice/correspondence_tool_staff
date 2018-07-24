@@ -1,5 +1,6 @@
 class Case::ICO::Base < Case::Base
   jsonb_accessor :properties,
+                 ico_officer_name: :string,
                  ico_reference_number: :string,
                  internal_deadline: :date,
                  external_deadline: :date
@@ -24,6 +25,7 @@ class Case::ICO::Base < Case::Base
           through: :original_case_link,
           source: :linked_case
 
+  validates :ico_officer_name, presence: true
   validates :ico_reference_number, presence: true
   validates :message, presence: true
   validates :external_deadline, presence: true
@@ -39,6 +41,15 @@ class Case::ICO::Base < Case::Base
                if: -> { uploaded_request_files.present? }
 
   class << self
+    def searchable_fields_and_ranks
+      super.merge(
+        {
+          ico_officer_name:     'C',
+          ico_reference_number: 'B',
+        }
+      )
+    end
+
     def type_abbreviation
       'ICO'
     end

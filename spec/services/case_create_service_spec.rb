@@ -100,6 +100,7 @@ describe CaseCreateService do
     let(:params) do
       {
           'original_case_id'        => foi.id,
+          'ico_officer_name'        => 'Ian C. Oldman',
           'ico_reference_number'    => 'ABC1344422',
           'received_date_dd'        => received.day.to_s,
           'received_date_mm'        => received.month.to_s,
@@ -117,6 +118,7 @@ describe CaseCreateService do
     it 'uses the params provided' do
       ccs.call
 
+      expect(created_ico_case.ico_officer_name).to eq 'Ian C. Oldman'
       expect(created_ico_case.ico_reference_number).to eq 'ABC1344422'
       expect(created_ico_case.external_deadline).to eq deadline.to_date
       expect(created_ico_case.internal_deadline).to eq(10.business_days.before(deadline).to_date)

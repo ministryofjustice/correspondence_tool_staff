@@ -9,17 +9,18 @@ FactoryBot.define do
       managing_team { find_or_create :team_dacu }
     end
 
-    current_state          'unassigned'
-    sequence(:name)        { |n| "#{identifier} name #{n}" }
-    sequence(:subject)     { |n| "#{identifier} subject #{n}" }
-    sequence(:message)     { |n| "#{identifier} message #{n}" }
-    ico_reference_number   { generate :ico_foi_reference_number }
+    current_state               'unassigned'
+    sequence(:name)             { |n| "#{identifier} name #{n}" }
+    sequence(:subject)          { |n| "#{identifier} subject #{n}" }
+    sequence(:message)          { |n| "#{identifier} message #{n}" }
+    ico_reference_number        { generate :ico_foi_reference_number }
+    sequence(:ico_officer_name) { |n| "#{identifier} ico officer name #{n}" }
     association :original_case, factory: :closed_case
-    received_date          { 0.business_days.from_now }
-    external_deadline      { 20.business_days.from_now.to_date }
-    uploaded_request_files { ["#{Faker::Internet.slug}.pdf"] }
-    uploading_user         { find_or_create :manager }
-    created_at             { creation_time }
+    received_date               { 0.business_days.from_now }
+    external_deadline           { 20.business_days.from_now.to_date }
+    uploaded_request_files      { ["#{Faker::Internet.slug}.pdf"] }
+    uploading_user              { find_or_create :manager }
+    created_at                  { creation_time }
 
   end
 
