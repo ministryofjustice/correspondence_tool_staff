@@ -32,7 +32,7 @@ class CaseLinkingService
                                                 linked_case_id: @case.id)
         @result = :ok
       else
-        extract_case_link_errors_to_case(@case_link, @case)
+        add_case_link_errors_to_case(@case_link, @case)
         @result = :validation_error
       end
     end
@@ -44,7 +44,7 @@ class CaseLinkingService
     @result = :error
   end
 
-  def add_case_link_to_case(case_link, kase)
+  def add_case_link_errors_to_case(case_link, kase)
     if case_link.errors[:linked_case_number].present?
       kase.errors.add(:linked_case_number,
                       case_link.errors[:linked_case_number].first)
