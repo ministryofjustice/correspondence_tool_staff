@@ -3,6 +3,9 @@
 
 - content_for :heading
   = t('.heading')
+  br
+  = @case.subject
+
 
 - content_for :sub_heading
   span.visually-hidden
@@ -11,14 +14,22 @@
 
 = render partial: 'layouts/header'
 
-.grid-row
-  .column-two-thirds
-    .reminders
-      = t('.reminders_html')
+- if @case.type_abbreviation == 'ICO'
+  .form-group
+    = form_for @case, url: confirm_respond_case_path(id: @case.id) do |f|
+      .form-group
+        = f.gov_uk_date_field :date_responded, { legend_text: t('.respond_date'),
+                form_hint_text: t('.date_example'),
+                today_button: {class: ''} }
+- else
+  .grid-row
+    .column-two-thirds
+      .reminders
+        = t('.reminders_html')
 
-.grid-row
-  .column-two-thirds
-    = t('alerts.respond_point_of_no_return_html')
+  .grid-row
+    .column-two-thirds
+      = t('alerts.respond_point_of_no_return_html')
 
 .grid-row
   .column-two-thirds
