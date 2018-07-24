@@ -7,12 +7,11 @@
 .form-group
   = f.gov_uk_date_field :received_date, { legend_text: t('cases.new.received_date'),
                                           form_hint_text: t('cases.new.received_date_copy'),
-                                          today_button: {class: 'button-secondary'} }
+                                          today_button: {class: ''} }
 
 .form-group
   = f.gov_uk_date_field :external_deadline, { legend_text: t('cases.new.external_deadline'),
-                                              form_hint_text: t('cases.new.external_deadline_copy'),
-                                              today_button: {class: 'button-secondary'} }
+                                              form_hint_text: translation_for_case(kase, 'cases.new', 'external_deadline_copy') }
 
 = f.text_field :subject
 
