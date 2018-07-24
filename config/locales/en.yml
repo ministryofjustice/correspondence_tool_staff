@@ -592,6 +592,8 @@ en:
       heading: Add case details
       received_date: Date received at MOJ
       received_date_copy: "For example, 01 02 2018"
+      case/ico:
+        sub_heading: Create an ICO Appeal case
       sub_heading: Create %{case_type} case
       uploaded_request_files_hint: |
         You can upload different file types such as Word, Excel,
