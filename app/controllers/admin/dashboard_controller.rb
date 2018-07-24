@@ -1,18 +1,5 @@
-class DashboardController < ApplicationController
-
+class Admin::DashboardController < AdminController
   attr_reader :queries
-
-  def index
-
-  end
-
-  def cases
-    @dates = { }
-    5.times do |n|
-      date = n.business_days.ago.to_date
-      @dates[date] = count_cases_created_on(date)
-    end
-  end
 
   def feedback
     @feedbacks = Feedback.order(id: :desc).limit(20)

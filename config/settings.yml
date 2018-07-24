@@ -103,7 +103,7 @@ global_navigation:
         - manager
         - responder
     system_admin:
-      path: /admin/cases
+      path: /admin
       visibility:
         - admin
 

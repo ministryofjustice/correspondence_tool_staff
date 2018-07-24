@@ -1,0 +1,20 @@
+
+= content_for :tab_content do
+  .grid-row
+    .column-full
+      nav.section-tabs
+        ul
+          li class="tab #{active_link_class('/admin/cases')}"
+            = link_to "Cases", admin_cases_path
+          li class="tab #{active_link_class('/admin/users')}"
+            = link_to "Users", admin_users_path
+          li class="tab #{active_link_class('/admin/dashboard/feedback')}"
+            = link_to "Feedback", admin_dashboard_feedback_path
+          li class="tab #{active_link_class('/admin/dashboard/list_queries')}"
+            = link_to "List Queries", admin_dashboard_list_queries_path
+          li class="tab #{active_link_class('/admin/dashboard/search_queries')}"
+            = link_to "Search Queries", admin_dashboard_search_queries_path
+  = yield
+
+= render template: "layouts/application"
+

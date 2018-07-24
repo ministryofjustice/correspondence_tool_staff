@@ -479,7 +479,7 @@ en:
         created_at: Created
         draft_deadline: Draft Deadline
         external_deadline: External Deadline
-        heading: System Cases
+        heading: Cases
         id: ID
         number: Case No
         case_type: Case Type
@@ -493,6 +493,8 @@ en:
         Case::FOI::ComplianceReview: FOI Compliance Review
         Case::FOI::TimelinessReview: FOI Timeliness Review
         Case::SAR::NonOffender: Non-offender SAR
+        Case::ICO::FOI: ICO FOI Appeal
+        Case::ICO::SAR: ICO SAR Appeal
       new:
         heading: New Case
         sub_heading: Admin
@@ -505,6 +507,13 @@ en:
       sar:
         new:
           create: Create
+    users:
+      index:
+        cases: Cases
+        email: Email
+        full_name: Name
+        heading: Users
+        teams: Teams
 
   assignments:
     accept:
@@ -737,10 +746,6 @@ en:
     destroyed: This team has now been deactivated
 
   users:
-    index:
-      email: Email
-      full_name: Name
-      heading: Users
     new:
       create: Create user
       heading: "New team member"

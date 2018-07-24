@@ -273,14 +273,22 @@ Rails.application.routes.draw do
     get 'search' => 'cases#search', on: :collection
   end
 
-  namespace :admin do
-    root to: 'admin/cases', action: :index
-    resources :cases do
-      get ':correspondence_type',
-          action: :new,
-          on: :new,
-          as: '',
-          defaults: { correspondence_type: '' }
+  authenticate :user, lambda { |u| u.admin? } do
+    namespace :admin do
+      root to: redirect('/admin/cases')
+      resources :cases do
+        get ':correspondence_type',
+            action: :new,
+            on: :new,
+            as: '',
+            defaults: { correspondence_type: '' }
+      end
+      get 'users' => 'users#index'
+      get '/dashboard/cases' => 'dashboard#cases'
+      get '/dashboard/feedback' => 'dashboard#feedback'
+      get '/dashboard/exception' => 'dashboard#exception'
+      get '/dashboard/search_queries' => 'dashboard#search_queries'
+      get '/dashboard/list_queries' => 'dashboard#list_queries'
     end
   end
 
@@ -316,12 +324,6 @@ Rails.application.routes.draw do
 
   get 'healthcheck',    to: 'heartbeat#healthcheck',  as: 'healthcheck', format: :json
 
-  get 'dashboard' => 'dashboard#index'
-  get '/dashboard/cases' => 'dashboard#cases'
-  get '/dashboard/feedback' => 'dashboard#feedback'
-  get '/dashboard/exception' => 'dashboard#exception'
-  get '/dashboard/search_queries' => 'dashboard#search_queries'
-  get '/dashboard/list_queries' => 'dashboard#list_queries'
 
   root to: redirect('/users/sign_in')
 end
