@@ -32,7 +32,7 @@
                     = link_to team.name, team_path(team.id)
             td aria-label="#{t('.cases')}"
                 ul
-                  - user.cases.each do |kase|
+                  - user.cases.opened.each do |kase|
                     li
                       = link_to kase.number, case_path(kase.id)
 
