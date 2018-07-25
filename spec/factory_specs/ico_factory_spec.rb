@@ -107,6 +107,26 @@ describe 'ICO cases factory' do
       end
     end
 
+    describe :approved_ico_foi_case do
+      it 'creates a case in responded state' do
+        kase = create :approved_ico_foi_case,
+                      responding_team: responding_team,
+                      responder: responder,
+                      approver: disclosure_specialist
+
+        expect(kase.current_state).to eq 'awaiting_dispatch'
+        expect(kase.assignments.size).to eq 3
+
+        expect(kase.transitions.size).to eq 4
+        transition = kase.transitions.last
+        expect(transition.event).to eq 'approve'
+        expect(transition.acting_team_id).to eq disclosure_team.id
+        expect(transition.acting_user_id).to eq disclosure_specialist.id
+        expect(transition.target_team_id).to be_nil
+        expect(transition.target_user_id).to be_nil
+        expect(transition.to_workflow).to be_nil
+      end
+    end
 
     describe :responded_ico_foi_case do
       it 'creates a case in responded state' do
@@ -118,7 +138,7 @@ describe 'ICO cases factory' do
         expect(kase.assignments.size).to eq 3
         expect(kase.date_responded).to eq Date.today
 
-        expect(kase.transitions.size).to eq 4
+        expect(kase.transitions.size).to eq 5
         transition = kase.transitions.last
         expect(transition.event).to eq 'respond'
         expect(transition.acting_team_id).to eq disclosure_team.id

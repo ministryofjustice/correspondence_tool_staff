@@ -91,7 +91,25 @@ FactoryBot.define do
     end
   end
 
-  factory :responded_ico_foi_case, parent: :pending_dacu_clearance_ico_foi_case do
+  factory :approved_ico_foi_case, parent: :pending_dacu_clearance_ico_foi_case do
+    transient do
+      identifier 'approved ICO FOI case'
+      approving_team { find_or_create :team_dacu_disclosure }
+      approver { create :disclosure_specialist }
+    end
+
+    after(:create) do |kase, evaluator|
+      create :case_transition_approve,
+             case: kase,
+             acting_team_id: evaluator.approving_team.id,
+             acting_user_id: evaluator.approver.id
+
+      kase.approver_assignments.each { |a| a.update approved: true }
+      kase.reload
+    end
+  end
+
+  factory :responded_ico_foi_case, parent: :approved_ico_foi_case do
     transient do
       identifier 'responded ICO FOI case'
     end

@@ -129,6 +129,8 @@ en:
     responded: Ready to close
     closed: Closed
     closed_status: Case closed
+    case/ico:
+      awaiting_dispatch: Ready to send to ICO
 
   roles:
     responders: Information officers
