@@ -40,7 +40,7 @@ feature 'filters whittle down search results' do
   context 'status filter' do
     scenario 'filter by status: open', js: true do
       login_step user: @setup.disclosure_bmt_user
-      search_for(search_phrase: 'prison guards', num_expected_results: 9)
+      search_for(page: open_cases_page, search_phrase: 'prison guards', num_expected_results: 9)
       cases_search_page.filter_on('status', 'open')
       expect(cases_search_page.case_numbers).to match_array expected_case_numbers(
                                                               :std_draft_foi,
@@ -70,7 +70,7 @@ feature 'filters whittle down search results' do
   context 'type filter' do
     scenario 'filter by internal review for compliance, timeliness', js: true do
       login_step user: @setup.disclosure_bmt_user
-      search_for(search_phrase: 'prison guards', num_expected_results: 9)
+      search_for(page: open_cases_page, search_phrase: 'prison guards', num_expected_results: 9)
       filter_on_type_step(page: cases_search_page,
                           types: ['foi_ir_compliance', 'foi_ir_timeliness'],
                           expected_cases: [
@@ -96,7 +96,7 @@ feature 'filters whittle down search results' do
 
     scenario 'filter by standard FOI and trigger', js: true do
       login_step user: @setup.disclosure_bmt_user
-      search_for(search_phrase: 'prison guards', num_expected_results: 9)
+      search_for(page: open_cases_page, search_phrase: 'prison guards', num_expected_results: 9)
       filter_on_type_step(page: cases_search_page,
                           types: ['foi_standard'],
                           sensitivity: ['trigger'],
@@ -133,7 +133,7 @@ feature 'filters whittle down search results' do
 
     scenario 'selecting both sensitivies then going back and unchecking one of them', js: true do
       login_step user: @setup.disclosure_bmt_user
-      search_for(search_phrase: 'prison guards', num_expected_results: 9)
+      search_for(page: open_cases_page, search_phrase: 'prison guards', num_expected_results: 9)
       filter_on_type_step(page: cases_search_page,
                           sensitivity: ['non_trigger', 'trigger'],
                           expected_cases: [
@@ -163,7 +163,7 @@ feature 'filters whittle down search results' do
 
     scenario 'filter by non-offender SAR', js: true do
       login_step user: @setup.disclosure_bmt_user
-      search_for(search_phrase: 'prison guards', num_expected_results: 9)
+      search_for(page: open_cases_page, search_phrase: 'prison guards', num_expected_results: 9)
 
       filter_on_type_step(page: cases_search_page,
                           types: ['sar_non_offender'],
@@ -193,7 +193,7 @@ feature 'filters whittle down search results' do
     context 'specifying one exemtpion' do
       scenario 'selects all cases closed with that exemption', js: true do
         login_step user: @setup.disclosure_bmt_user
-        search_for(search_phrase: 'prison guards', num_expected_results: 12)
+        search_for(page: open_cases_page, search_phrase: 'prison guards', num_expected_results: 12)
         cases_search_page.filter_on_exemptions(common: %w{ s40 } )
         expect(cases_search_page.case_numbers).to match_array [ @ex2.number, @ex4.number ]
 
@@ -219,7 +219,7 @@ feature 'filters whittle down search results' do
     context 'specifying multiple exemptions', js: true do
       scenario 'selects only cases that match ALL specified exemption' do
         login_step user: @setup.disclosure_bmt_user
-        search_for(search_phrase: 'prison guards', num_expected_results: 12)
+        search_for(page: open_cases_page, search_phrase: 'prison guards', num_expected_results: 12)
         cases_search_page.filter_on_exemptions(common: %w{ s21 s22 } )
         expect(cases_search_page.case_numbers).to match_array [ @ex1.number  ]
 
@@ -244,7 +244,7 @@ feature 'filters whittle down search results' do
   context 'all filters set' do
     before do
       login_step user: @setup.disclosure_bmt_user
-      search_for(search_phrase: 'prison guards', num_expected_results: 9)
+      search_for(page: open_cases_page, search_phrase: 'prison guards', num_expected_results: 9)
 
       cases_search_page.filter_on('status', 'open')
       cases_search_page.filter_on('type', 'foi_standard', 'trigger')
