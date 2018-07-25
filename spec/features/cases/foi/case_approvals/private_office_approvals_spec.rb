@@ -33,7 +33,10 @@ feature 'cases requiring clearance by press office' do
     case_row.actions.take_on_case.click
     expect(case_row.actions.success_message).to have_text 'Case taken on'
 
-    case_row.number.click
+    case_row.number_link.click
+
+    expect(cases_show_page).to be_displayed(id: case_available_for_taking_on.id)
+
     expect(cases_show_page.case_history.entries.first)
       .to have_text('Preston Offman Private Office Clearance level added')
 

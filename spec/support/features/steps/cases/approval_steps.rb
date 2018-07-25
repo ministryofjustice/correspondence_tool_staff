@@ -19,9 +19,9 @@ def approve_case_step(kase:,
   end
 
   open_cases_page.load
-  case_row = open_cases_page.case_list.detect do |r|
-    "Link to case #{r.number.text}" == "Link to case #{kase.number}"
-  end
+
+  expect(open_cases_page).to be_displayed
+  case_row = open_cases_page.row_for_case_number(kase.number)
   expect(case_row.who_its_with.text).to eq expected_team.name
   expect(case_row.status.text).to eq expected_status
 end
@@ -39,7 +39,7 @@ def approve_case_with_bypass(kase:, expected_team:, expected_status:)
 
   expect(cases_show_page).to be_displayed(id: kase.id)
   open_cases_page.load
-  case_row = open_cases_page.case_list.detect{ |r| r.number.text == "Link to case #{kase.number}" }
+  case_row = open_cases_page.row_for_case_number(kase.number)
   expect(case_row.who_its_with.text).to eq expected_team.name
   expect(case_row.status.text).to eq expected_status
 end
