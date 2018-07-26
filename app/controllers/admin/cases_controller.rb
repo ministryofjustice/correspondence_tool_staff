@@ -62,7 +62,7 @@ class Admin::CasesController < ApplicationController
 
     case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::FOI::Standard' )
     @case = case_creator.new_case
-    @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.foi).sample
+    @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.foi).active.sample
     @case.flag_for_disclosure_specialists = 'no'
     @target_states = available_target_states
     @selected_state = 'drafting'
@@ -78,7 +78,7 @@ class Admin::CasesController < ApplicationController
 
     case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::SAR' )
     @case = case_creator.new_case
-    @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.sar).sample
+    @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.sar).active.sample
     @target_states = available_target_states
     @selected_state = 'drafting'
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
