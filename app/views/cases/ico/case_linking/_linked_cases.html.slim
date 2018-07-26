@@ -1,0 +1,33 @@
+- if linked_cases.present?
+  .grid-row.form-group
+    .column-full
+      h2.request--heading
+        = "#{link_type.humanize} case"
+      table
+        thead
+          tr
+            th
+              = 'Case no.'
+            th
+              = 'Case type'
+            th
+              = 'Request'
+            th
+              = 'Action'
+        tbody
+          - linked_cases.each do |linked_case|
+            tr
+              td
+                = hidden_field_tag "case_#{@correspondence_type_key}[#{link_type}_case_ids][]",
+                                   linked_case.id
+                = link_to case_path(linked_case.id) do
+                  span.visually-hidden
+                    = t('common.view_case')
+                  = linked_case.number
+              td
+                = "#{linked_case.pretty_type} "
+                = linked_case.trigger_case_marker
+              td
+                = request_details_html(linked_case)
+              td
+                a[class="js-remove-#{link_type}" href="#"] Remove link

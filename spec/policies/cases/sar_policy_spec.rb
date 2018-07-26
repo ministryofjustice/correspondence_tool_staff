@@ -49,8 +49,7 @@ describe Case::SARPolicy do
     context 'linked case' do
       let!(:linked_case) do
         create(:closed_sar, responding_team: responding_team).tap do |kase|
-          unassigned_case.add_linked_case kase
-          unassigned_case.save!
+          unassigned_case.related_cases << kase
         end
       end
 

@@ -63,10 +63,13 @@ describe GetCaseClassFromParamsService do
   end
 
   context 'ICOs' do
+    let(:foi_case) { create(:foi_case) }
+    let(:sar_case) { create(:sar_case) }
+
     it 'succeeds with Case::ICO::FOI' do
       get_case_class_service = GetCaseClassFromParamsService.new(
         type: ico,
-        params: { original_case_type: 'FOI' }
+        params: { original_case_id: foi_case.id.to_s }
       )
 
       get_case_class_service.call
@@ -76,7 +79,7 @@ describe GetCaseClassFromParamsService do
     it 'succeeds with Case::ICO::SAR' do
       get_case_class_service = GetCaseClassFromParamsService.new(
         type: ico,
-        params: { original_case_type: 'SAR' }
+        params: { original_case_id: sar_case.id.to_s }
       )
 
       get_case_class_service.call
@@ -86,12 +89,12 @@ describe GetCaseClassFromParamsService do
     it 'gets error with non-existant ICO types' do
       get_case_class_service = GetCaseClassFromParamsService.new(
         type: ico,
-        params: { type: 'Unknown' }
+        params: { original_case_id: 'invalid' }
       )
 
-      get_case_class_service.call
-      expect(get_case_class_service.error?).to be_truthy
-      expect(get_case_class_service.case_class).to eq nil
+      expect {
+        get_case_class_service.call
+      }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end

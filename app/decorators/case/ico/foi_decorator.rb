@@ -1,4 +1,4 @@
-class Case::ICO::FOIDecorator < Case::BaseDecorator
+class Case::ICO::FOIDecorator < Case::ICO::BaseDecorator
 
   def pretty_type
     'ICO appeal for FOI case'

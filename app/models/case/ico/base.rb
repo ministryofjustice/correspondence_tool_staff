@@ -6,13 +6,30 @@ class Case::ICO::Base < Case::Base
 
   acts_as_gov_uk_date :received_date, :date_responded, :external_deadline
 
-  # Used by the controller to drive the views which ask the user to select the
-  # "original case type"
-  attr_accessor :original_case_type
+  has_paper_trail only: [
+                    :date_responded,
+                    :external_deadline,
+                    :ico_reference_number,
+                    :message,
+                    :properties,
+                    :received_date,
+                    :subject,
+                  ]
+
+  has_one :original_case_link,
+          -> { original },
+          class_name: 'LinkedCase',
+          foreign_key: :case_id
+  has_one :original_case,
+          through: :original_case_link,
+          source: :linked_case
 
   validates :ico_reference_number, presence: true
   validates :message, presence: true
   validates :external_deadline, presence: true
+  validate :validate_original_case
+  validate :validate_original_case_not_already_related
+  validates_presence_of :original_case
 
   before_save do
     self.workflow = 'trigger'
@@ -44,9 +61,29 @@ class Case::ICO::Base < Case::Base
     closed? || responded?
   end
 
+  def original_case_id=(case_id)
+    self.original_case = Case::Base.find(case_id)
+  end
+
+  def original_case_id
+    self.original_case&.id
+  end
+
   private
 
   def default_workflow
     'trigger'
+  end
+
+  def validate_original_case
+    if self.original_case
+      validate_case_link(:original, original_case, :original_case)
+    end
+  end
+
+  def validate_original_case_not_already_related
+    if original_case.in?(related_cases)
+      self.errors.add(:linked_cases, :original_case_already_related)
+    end
   end
 end

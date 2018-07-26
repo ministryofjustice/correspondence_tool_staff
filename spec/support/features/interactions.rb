@@ -22,10 +22,14 @@ module Features
       kase
     end
 
-    def create_and_assign_ico_case(user:, responding_team:, original_case_type:)
+    def create_and_assign_ico_case(user:,
+                                   responding_team:,
+                                   original_case:,
+                                   related_cases: [])
       login_step user: user
 
-      kase = create_ico_case_step(original_case_type: original_case_type)
+      kase = create_ico_case_step(original_case: original_case,
+                                  related_cases: related_cases)
       assign_case_step business_unit: responding_team
       logout_step
       kase

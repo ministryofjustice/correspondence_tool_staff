@@ -1,7 +1,7 @@
 - content_for :page_title do
   = t('page_title.create_case_page',case_type: @case.type_abbreviation)
 
-= GovukElementsErrorsHelper.error_summary @case,
+= GovukElementsErrorsHelper.error_summary @case.object,
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 - content_for :heading

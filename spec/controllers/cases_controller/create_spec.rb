@@ -23,11 +23,12 @@ describe CasesController do
       }
     }
   end
+  let(:foi_case_for_ico) { create :closed_case }
   let(:ico_params) do
     {
       correspondence_type: 'ico',
       case_ico: {
-        original_case_type: 'FOI',
+        original_case_id: foi_case_for_ico.id,
         ico_reference_number: 'ICOREF1',
         subject: 'ICO appeal for an FOI subject',
         message: 'ICO appeal for an FOI message',
@@ -200,6 +201,7 @@ describe CasesController do
 
         it 'does not create a case when authentication fails' do
           sign_in responder
+          foi_case_for_ico
           expect{ subject }.not_to change { Case::Base.count }
         end
 
@@ -216,7 +218,7 @@ describe CasesController do
           find_or_create :team_dacu_disclosure
         end
 
-        let(:created_case) { Case::Base.first }
+        let(:created_case) { Case::Base.last }
 
         it 'makes a DB entry' do
           expect { post :create, params: ico_params }.
@@ -240,10 +242,10 @@ describe CasesController do
           expect(flash[:notice]).to eq "ICO case created<br/>Case number: #{created_case.number}"
         end
 
-        context 'type not set' do
+        context 'original case not linked' do
           let(:invalid_ico_params) {
             ico_params.tap do |p|
-              p[:case_ico][:original_case_type] = nil
+              p[:case_ico].delete(:original_case_id)
             end
           }
 

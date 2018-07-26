@@ -136,6 +136,7 @@ class CasesController < ApplicationController
 
   def new
     permitted_correspondence_types
+
     if FeatureSet.sars.disabled? && FeatureSet.ico.disabled?
       set_correspondence_type('foi')
       prepare_new_case
@@ -179,6 +180,7 @@ class CasesController < ApplicationController
         flash[:notice] = "#{@case.type_abbreviation} case created<br/>Case number: #{@case.number}".html_safe
         redirect_to new_case_assignment_path @case
       else # including :error
+        @case = @case.decorate
         @case_types = @correspondence_type.sub_classes.map(&:to_s)
         @s3_direct_post = s3_uploader_for @case, 'requests'
         render :new
@@ -541,7 +543,6 @@ class CasesController < ApplicationController
     link_case_number = params[:case][:linked_case_number]
 
     service = CaseLinkingService.new current_user, @case, link_case_number
-
     result = service.create
 
 
@@ -585,6 +586,33 @@ class CasesController < ApplicationController
 
     flash[:notice] = t('notices.progress_for_clearance')
     redirect_to case_path(@case.id)
+  end
+
+  def new_linked_cases_for
+    set_correspondence_type(params.fetch(:correspondence_type))
+    @link_type = params[:link_type].strip
+
+    respond_to do |format|
+      format.js do
+        if process_new_linked_cases_for_params
+          response = render_to_string(
+            partial: "cases/#{ @correspondence_type_key }/case_linking/" \
+                     "linked_cases",
+            locals: {
+              linked_cases: @linked_cases.map(&:decorate),
+              link_type: @link_type,
+            }
+          )
+
+          render status: :ok, json: { content: response, link_type: @link_type }.to_json
+
+        else
+          render status: :bad_request,
+                 json: { linked_case_error: @linked_case_error,
+                         link_type: @link_type }.to_json
+        end
+      end
+    end
   end
 
   private
@@ -637,8 +665,8 @@ class CasesController < ApplicationController
   end
 
   def prepare_new_case
-    validation_result = validate_correspondence_type(params[:correspondence_type].upcase)
-    if validation_result == :ok
+    valid_type = validate_correspondence_type(params[:correspondence_type].upcase)
+    if valid_type == :ok
       set_correspondence_type(params[:correspondence_type])
       default_subclass = @correspondence_type.sub_classes.first
 
@@ -652,7 +680,7 @@ class CasesController < ApplicationController
       # authorisation.
       authorize default_subclass, :can_add_case?
 
-      @case = default_subclass.new
+      @case = default_subclass.new.decorate
       @case_types = @correspondence_type.sub_classes.map(&:to_s)
       @s3_direct_post = s3_uploader_for(@case, 'requests')
     else

@@ -1,4 +1,4 @@
-class Case::ICO::SARDecorator < Case::BaseDecorator
+class Case::ICO::SARDecorator < Case::ICO::BaseDecorator
 
   def pretty_type
     'ICO appeal for SAR case'

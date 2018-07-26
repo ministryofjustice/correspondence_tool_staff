@@ -154,3 +154,7 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+SitePrism.configure do |config|
+  config.use_implicit_waits = true
+end

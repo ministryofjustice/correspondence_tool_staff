@@ -1,6 +1,6 @@
-= f.radio_button_fieldset :original_case_type, choices: case_types, value_method: :demodulize
-
 = f.text_field :ico_reference_number
+
+= render partial: 'cases/ico/case_linking/new_case_link_form', locals: {f: f}
 
 .form-group
   = f.gov_uk_date_field :received_date, { legend_text: t('cases.new.received_date'),

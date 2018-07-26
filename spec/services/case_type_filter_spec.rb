@@ -97,6 +97,8 @@ describe CaseTypeFilter do
                              @setup.std_unassigned_foi,
                              @setup.std_unassigned_irc,
                              @setup.std_unassigned_irt,
+                             @setup.ico_foi_unassigned.original_case,
+                             @setup.ico_sar_unassigned.original_case,
                            ]
       end
     end
@@ -110,6 +112,7 @@ describe CaseTypeFilter do
         expect(results).to match_array [
                              @setup.trig_unassigned_foi,
                              @setup.std_unassigned_foi,
+                             @setup.ico_foi_unassigned.original_case,
                            ]
       end
     end
@@ -144,7 +147,8 @@ describe CaseTypeFilter do
 
       it 'returns the correct list of cases' do
         results = case_type_filter.call
-        expect(results).to match_array [@setup.sar_noff_unassigned]
+        expect(results).to match_array [@setup.sar_noff_unassigned,
+                                        @setup.ico_sar_unassigned.original_case,]
       end
     end
 

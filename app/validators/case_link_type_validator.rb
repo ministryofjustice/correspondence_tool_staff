@@ -1,0 +1,68 @@
+class CaseLinkTypeValidator < ActiveModel::Validator
+  ALLOWED_LINKS_BY_TYPE = {
+    related: {
+      'Case::FOI::Standard'         => ['Case::FOI::Standard',
+                                        'Case::FOI::ComplianceReview',
+                                        'Case::FOI::TimelinessReview',
+                                        'Case::ICO::FOI'],
+      'Case::FOI::TimelinessReview' => ['Case::FOI::Standard',
+                                        'Case::FOI::ComplianceReview',
+                                        'Case::FOI::TimelinessReview',
+                                        'Case::ICO::FOI'],
+      'Case::FOI::ComplianceReview' => ['Case::FOI::Standard',
+                                        'Case::FOI::ComplianceReview',
+                                        'Case::FOI::TimelinessReview',
+                                        'Case::ICO::FOI'],
+      'Case::ICO::FOI'              => ['Case::FOI::Standard',
+                                        'Case::FOI::ComplianceReview',
+                                        'Case::FOI::TimelinessReview',
+                                        'Case::ICO::FOI'],
+      'Case::SAR'                   => ['Case::SAR',
+                                        'Case::ICO::SAR'],
+      'Case::ICO::SAR'              => ['Case::SAR',
+                                        'Case::ICO::SAR'],
+    },
+    original: {
+      'Case::ICO::FOI' => ['Case::FOI::Standard'],
+      'Case::ICO::SAR' => ['Case::SAR'],
+    },
+  }.with_indifferent_access
+
+  class << self
+    def classes_can_be_linked_with_type?(type:, klass:, linked_klass:)
+      if klass.to_s.in?(ALLOWED_LINKS_BY_TYPE[type])
+        linked_klass.to_s.in?(ALLOWED_LINKS_BY_TYPE[type][klass.to_s])
+      else
+        false
+      end
+    end
+  end
+
+  # Validate whether type of case link is valid or not for a pair of cases.
+  def validate(case_link)
+    unless case_link.linked_case.present?
+      return
+    end
+
+    case_class = case_link.case.class
+    linked_class = case_link.linked_case.class
+    if not self.class.classes_can_be_linked_with_type?(
+             type: case_link.type,
+             klass: case_class,
+             linked_klass: linked_class
+           )
+
+      case_class_name = I18n.t("cases.types.#{case_class}")
+      linked_class_name = I18n.t("cases.types.#{linked_class}")
+      case_link.errors.add(
+        :linked_case,
+        :wrong_type,
+        message: I18n.t('activerecord.errors.models.linked_case.wrong_type',
+                        type: case_link.type,
+                        case_class: case_class_name,
+                        linked_case_class: linked_class_name)
+      )
+
+    end
+  end
+end

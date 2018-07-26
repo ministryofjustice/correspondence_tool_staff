@@ -42,7 +42,7 @@ en:
               not_in_future: can't be in the future.
               past: too far in past.
             postal_address:
-              blank: and email can't both be blank
+              blank: "and email can't both be blank"
             number:
               duplication: |
                 An error has occurred and your case could not be created.
@@ -51,6 +51,22 @@ en:
               blank: Type of requester must be selected
             flag_for_disclosure_specialists:
               blank: Please choose yes or no
+        case/ico:
+          original_case_number:
+            blank: "Enter original case number"
+            missing: "Original case not found"
+            not_authorised: "Not authorised to view case"
+            wrong_type: "Original case must be FOI or SAR"
+          related_case_number:
+            already_linked: "Case is already linked"
+            blank: "Enter related case number"
+            does_not_match_original: >-
+              Related case type %{related} does not match that of the original
+              case type %{original}
+            missing: "Related case not found"
+            not_authorised: "Not authorised to view case"
+        case/ico/base:
+          original_case_already_related: 'already linked as the original case'
         case/sar:
           attributes:
             third_party:
@@ -67,6 +83,10 @@ en:
             url:
               bad_file_type: "unnacceptable type %{type} for file: %{filename}"
               invalid_url: "url is invalid for file: %{filename}"
+        linked_case:
+          missing: "doesn't exist"
+          references_self: "can't link to the same case"
+          wrong_type: "can't link a %{case_class} case to a %{linked_case_class} as a %{type} case"
         report:
           attributes:
             correspondence_type:
@@ -243,7 +263,11 @@ en:
         value: Please provide one area at a time and be as concise as possible
       case_sar:
         third_party_relationship: For example, solicitor, parent or guardian
-
+      case_ico:
+        original_case_number_html: |
+          Enter original case  reference number to link to.  For example 170131001.<br>
+          We'll use the original case title for the appeal title.
+        related_case_number:  Enter related case  reference number, for example 170131001.
     label:
       bypass_approval_manager:
         press_office_approval:
@@ -300,9 +324,7 @@ en:
       case_ico:
         ico_reference_number: ICO case reference number
         message: "Case details"
-        original_case_type:
-          Case::ICO::FOI: FOI
-          Case::ICO::SAR: SAR
+        related_case_number: Link a related case
       case_sar:
         email: "Recipient email address"
         message: Full case details
@@ -602,7 +624,7 @@ en:
         date_example: For example, 30 1 2017
     sar:
       new_form_common:
-        dropzone: Requestor's proof of ID and other documents
+        dropzone: "Requestor's proof of ID and other documents"
       close_form:
         close_date: Date response sent
         date_example: For example, 30 1 2017
@@ -616,6 +638,14 @@ en:
       heading: 'Remove Clearance'
       explanation: 'You are removing clearance level of Disclosure for the case:'
       why: 'Reason for removing clearance'
+
+    types:
+      Case::FOI::Standard: FOI
+      Case::FOI::TimelinessReview: FOI - Internal review for timeliness
+      Case::FOI::ComplianceReview: FOI - Internal review for compliance
+      Case::ICO::FOI: ICO Appeal - FOI
+      Case::ICO::SAR: ICO Appeal - SAR
+      Case::SAR: Non-offender SAR
 
   feedback:
     error_html: |
