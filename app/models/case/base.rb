@@ -20,7 +20,7 @@
 #  current_state        :string
 #  last_transitioned_at :datetime
 #  delivery_method      :enum
-#  workflow             :string           default("standard")
+#  workflow             :string
 #  deleted              :boolean          default(FALSE)
 #  info_held_status_id  :integer
 #  type                 :string

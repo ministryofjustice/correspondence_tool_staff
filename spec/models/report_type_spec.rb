@@ -8,6 +8,8 @@
 #  class_name    :string           not null
 #  custom_report :boolean          default(FALSE)
 #  seq_id        :integer          not null
+#  foi           :boolean          default(FALSE)
+#  sar           :boolean          default(FALSE)
 #
 
 require 'rails_helper'

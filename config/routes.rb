@@ -22,14 +22,21 @@
 #                        cases_approver_root GET    /cases(.:format)                                                     redirect(301, /cases/open)
 #                                            GET    /cases/new(.:format)                                                 cases#new
 #                                   new_case GET    /cases/new/:correspondence_type(.:format)                            cases#new {:correspondence_type=>""}
+#                 new_linked_cases_for_cases GET    /cases/new_linked_cases_for(.:format)                                cases#new_linked_cases_for
 #                                 close_case GET    /cases/:id/close(.:format)                                           cases#close
+#                     respond_and_close_case GET    /cases/:id/respond_and_close(.:format)                               cases#respond_and_close
 #                               closed_cases GET    /cases/closed(.:format)                                              cases#closed_cases
 #                       confirm_destroy_case GET    /cases/:id/confirm_destroy(.:format)                                 cases#confirm_destroy
+#                          edit_closure_case GET    /cases/:id/edit_closure(.:format)                                    cases#edit_closure
 #                             incoming_cases GET    /cases/incoming(.:format)                                            cases#incoming_cases
 #                         root_my_open_cases GET    /cases/my_open(.:format)                                             redirect(301, /cases/my_open/in_time)
 #                              my_open_cases GET    /cases/my_open/:tab(.:format)                                        cases#my_open_cases
 #                                 open_cases GET    /cases/open(.:format)                                                cases#open_cases
+#                          case_open_in_time GET    /cases/:case_id/open/in_time(.:format)                               redirect(301, /cases/open)
+#                             case_open_late GET    /cases/:case_id/open/late(.:format)                                  redirect(301, /cases/open)
 #                       process_closure_case PATCH  /cases/:id/process_closure(.:format)                                 cases#process_closure
+#             process_respond_and_close_case PATCH  /cases/:id/process_respond_and_close(.:format)                       cases#process_respond_and_close
+#                        update_closure_case PATCH  /cases/:id/update_closure(.:format)                                  cases#update_closure
 #                               respond_case GET    /cases/:id/respond(.:format)                                         cases#respond
 #                       confirm_respond_case PATCH  /cases/:id/confirm_respond(.:format)                                 cases#confirm_respond
 #             case_assignments_show_rejected GET    /cases/:case_id/assignments/show_rejected(.:format)                  assignments#show_rejected
@@ -50,6 +57,7 @@
 #                         new_case_link_case GET    /cases/:id/new_case_link(.:format)                                   cases#new_case_link
 #                 execute_new_case_link_case POST   /cases/:id/execute_new_case_link(.:format)                           cases#execute_new_case_link
 #                       destroy_link_on_case DELETE /cases/:id/destroy_link/:linked_case_number(.:format)                cases#destroy_case_link
+#                progress_for_clearance_case PATCH  /cases/:id/progress_for_clearance(.:format)                          cases#progress_for_clearance
 #           accept_or_reject_case_assignment PATCH  /cases/:case_id/assignments/:id/accept_or_reject(.:format)           assignments#accept_or_reject
 #                     accept_case_assignment PATCH  /cases/:case_id/assignments/:id/accept(.:format)                     assignments#accept
 #                   unaccept_case_assignment PATCH  /cases/:case_id/assignments/:id/unaccept(.:format)                   assignments#unaccept
@@ -88,9 +96,10 @@
 #                                            PUT    /cases/:id(.:format)                                                 cases#update
 #                                            DELETE /cases/:id(.:format)                                                 cases#destroy
 #                                 admin_root GET    /admin(.:format)                                                     admin#index
+#                             new_admin_case GET    /admin/cases/new/:correspondence_type(.:format)                      admin/cases#new {:correspondence_type=>""}
 #                                admin_cases GET    /admin/cases(.:format)                                               admin/cases#index
 #                                            POST   /admin/cases(.:format)                                               admin/cases#create
-#                             new_admin_case GET    /admin/cases/new(.:format)                                           admin/cases#new
+#                                            GET    /admin/cases/new(.:format)                                           admin/cases#new
 #                            edit_admin_case GET    /admin/cases/:id/edit(.:format)                                      admin/cases#edit
 #                                 admin_case GET    /admin/cases/:id(.:format)                                           admin/cases#show
 #                                            PATCH  /admin/cases/:id(.:format)                                           admin/cases#update
@@ -128,16 +137,19 @@
 #                                            DELETE /users/:id(.:format)                                                 users#destroy
 #                                      stats GET    /stats(.:format)                                                     stats#index
 #                             stats_download GET    /stats/download/:id(.:format)                                        stats#download
+#                       stats_download_audit GET    /stats/download_audit(.:format)                                      stats#download_audit
 #               stats_download_custom_report GET    /stats/download_custom_report/:id(.:format)                          stats#download_custom_report
 #                               stats_custom GET    /stats/custom(.:format)                                              stats#custom
 #                 stats_create_custom_report POST   /stats/create_custom_report(.:format)                                stats#create_custom_report
 #                                     search GET    /search(.:format)                                                    cases#search
 #                                       ping GET    /ping(.:format)                                                      heartbeat#ping
 #                                healthcheck GET    /healthcheck(.:format)                                               heartbeat#healthcheck
+#                                  dashboard GET    /dashboard(.:format)                                                 dashboard#index
 #                            dashboard_cases GET    /dashboard/cases(.:format)                                           dashboard#cases
 #                         dashboard_feedback GET    /dashboard/feedback(.:format)                                        dashboard#feedback
 #                        dashboard_exception GET    /dashboard/exception(.:format)                                       dashboard#exception
 #                   dashboard_search_queries GET    /dashboard/search_queries(.:format)                                  dashboard#search_queries
+#                     dashboard_list_queries GET    /dashboard/list_queries(.:format)                                    dashboard#list_queries
 #                                       root GET    /                                                                    redirect(301, /users/sign_in)
 #
 

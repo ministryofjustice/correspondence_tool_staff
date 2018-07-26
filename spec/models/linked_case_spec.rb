@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: linked_cases
+#
+#  id             :integer          not null, primary key
+#  case_id        :integer          not null
+#  linked_case_id :integer          not null
+#  type           :string           default("related")
+#
+
 require 'rails_helper'
 
 describe LinkedCase do
