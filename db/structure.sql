@@ -1146,7 +1146,7 @@ ALTER TABLE ONLY public.data_migrations
 -- Name: feedback_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY feedback
+ALTER TABLE ONLY public.feedback
     ADD CONSTRAINT feedback_pkey PRIMARY KEY (id);
 
 
