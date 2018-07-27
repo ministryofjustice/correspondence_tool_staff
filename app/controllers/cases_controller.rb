@@ -310,8 +310,8 @@ class CasesController < ApplicationController
   end
 
   def close
+    # prepopulate date if it was entered by the KILO
     authorize @case, :can_close_case?
-    @case.date_responded = nil
     set_permitted_events
   end
 
@@ -374,13 +374,44 @@ class CasesController < ApplicationController
 
   def respond
     authorize @case, :can_respond?
+    set_correspondence_type(@case.type_abbreviation.downcase)
   end
 
   def confirm_respond
     authorize @case, :can_respond?
-    @case.respond(current_user)
-    flash[:notice] = t('.success')
-    redirect_to case_path(@case)
+    params = respond_params(@case.type_abbreviation)
+    if @case.update(params)
+      @case.respond(current_user)
+      flash[:notice] = t('.success')
+      redirect_to case_path(@case)
+    else
+      flash[:alert] = "RAAAAR"
+      redirect_to respond_case_path(@case)
+    end
+  end
+
+  def respond_params(correspondence_type)
+    case correspondence_type
+    when 'FOI' then respond_foi_params
+    when 'ICO' then respond_ico_params
+    else raise 'Unknown case type'
+    end
+  end
+
+  def respond_foi_params
+    params.require(:case_foi).permit(
+      :date_responded_dd,
+      :date_responded_mm,
+      :date_responded_yyyy,
+    )
+  end
+
+  def respond_ico_params
+    params.require(:case_ico).permit(
+      :date_responded_dd,
+      :date_responded_mm,
+      :date_responded_yyyy,
+    )
   end
 
   def search

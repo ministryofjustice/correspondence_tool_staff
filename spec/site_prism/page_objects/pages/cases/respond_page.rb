@@ -11,8 +11,8 @@ module PageObjects
 
         element :reminders,    '.reminders'
         element :alert,        '.notice'
-        element :mark_as_sent_button, 'a.button'
-        element :back_link,  'a.button-secondary'
+        element :mark_as_sent_button, '.button'
+        element :back_link,  'a.acts-like-button'
 
         element :submit_button, '.button'
 

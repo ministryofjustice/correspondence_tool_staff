@@ -938,16 +938,29 @@ RSpec.describe CasesController, type: :controller do
 
   describe 'PATCH confirm_respond' do
     let(:another_responder)  { create(:responder) }
+    let(:params) do
+      {
+        correspondence_type: 'foi',
+        case_foi:  {
+          date_responded_dd: 5,
+          date_responded_mm: 7,
+          date_responded_yyyy: 2018,
+        },
+        commit: 'Submit',
+        id:  case_with_response.id.to_s
+      }
+    end
+
 
     context 'as an anonymous user' do
       it 'redirects to sign_in' do
-        expect(patch :confirm_respond, params: { id: case_with_response.id }).
+        expect(patch :confirm_respond, params: params).
           to redirect_to(new_user_session_path)
       end
 
       it 'does not transition current_state' do
         expect(case_with_response.current_state).to eq 'awaiting_dispatch'
-        patch :confirm_respond, params: { id: case_with_response.id }
+        patch :confirm_respond, params: params
         expect(case_with_response.current_state).to eq 'awaiting_dispatch'
       end
     end
@@ -957,13 +970,13 @@ RSpec.describe CasesController, type: :controller do
       before { sign_in manager }
 
       it 'redirects to the application root' do
-        expect(patch :confirm_respond, params: { id: case_with_response.id }).
+        expect(patch :confirm_respond, params: params).
             to redirect_to(manager_root_path)
       end
 
       it 'does not transition current_state' do
         expect(case_with_response.current_state).to eq 'awaiting_dispatch'
-        patch :confirm_respond, params: { id: case_with_response.id }
+        patch :confirm_respond, params: params
         expect(case_with_response.current_state).to eq 'awaiting_dispatch'
       end
     end
@@ -976,13 +989,19 @@ RSpec.describe CasesController, type: :controller do
         stub_find_case(case_with_response.id) do |kase|
           expect(kase).to receive(:respond).with(responder)
         end
-        patch :confirm_respond, params: { id: case_with_response }
+        patch :confirm_respond, params: params
       end
 
       it 'redirects to the case list view' do
-        expect(patch :confirm_respond, params: { id: case_with_response.id }).
+        expect(patch :confirm_respond, params: params).
             to redirect_to(case_path(case_with_response))
       end
+
+      # it 'redirects to the case list view' do
+      #   patch :confirm_respond, params: params
+      #   expect(case_with_response.date_responded).to eq Date.today
+      # end
+
     end
 
     context 'as another responder' do
@@ -990,13 +1009,13 @@ RSpec.describe CasesController, type: :controller do
       before { sign_in another_responder }
 
       it 'redirects to the application root' do
-        expect(patch :confirm_respond, params: { id: case_with_response.id }).
+        expect(patch :confirm_respond, params: params).
               to redirect_to(responder_root_path)
       end
 
       it 'does not transition current_state' do
         expect(case_with_response.current_state).to eq 'awaiting_dispatch'
-        patch :confirm_respond, params: { id: case_with_response.id }
+        patch :confirm_respond, params: params
         expect(case_with_response.current_state).to eq 'awaiting_dispatch'
       end
     end
