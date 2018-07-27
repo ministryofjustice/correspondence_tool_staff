@@ -54,7 +54,7 @@ class CaseFinderService
   end
 
   def closed_cases_scope
-    closed_scope = scope.closed
+    closed_scope = scope.closed.or(scope.where(type: ['Case::ICO::FOI', "Case::ICO::SAR"], current_state: [:responded, :closed]))
     if user.responder_only?
       case_ids = Assignment.with_teams(user.responding_teams).pluck(:case_id)
       closed_scope.where(id: case_ids).most_recent_first

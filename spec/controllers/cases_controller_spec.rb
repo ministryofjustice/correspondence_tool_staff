@@ -12,6 +12,16 @@ def stub_current_case_finder_cases_with(result)
   gnm
 end
 
+def closed_stub_current_case_finder_cases_with(result)
+  pager = double 'Kaminari Pager', decorate: result
+  cases_by_last_transitioned_date = double 'ActiveRecord Cases by last transitioned', page: pager
+  cases = double 'ActiveRecord Cases', by_last_transitioned_date: cases_by_last_transitioned_date
+  page = instance_double GlobalNavManager::Page, cases: cases
+  gnm = instance_double GlobalNavManager, current_page_or_tab: page
+  allow(GlobalNavManager).to receive(:new).and_return gnm
+  gnm
+end
+
 RSpec.describe CasesController, type: :controller do
 
   let(:all_cases)             { create_list(:case, 5)   }
@@ -136,15 +146,15 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'assigns cases returned by CaseFinderService' do
-        stub_current_case_finder_cases_with(:closed_cases_result)
+        closed_stub_current_case_finder_cases_with(:closed_cases_result)
         get :closed_cases
         expect(assigns(:cases)).to eq :closed_cases_result
       end
 
       it 'passes page param to the paginator' do
-        gnm = stub_current_case_finder_cases_with(:closed_cases_result)
+        gnm = closed_stub_current_case_finder_cases_with(:closed_cases_result)
         get :closed_cases, params: { page: 'our_page' }
-        expect(gnm.current_page_or_tab.cases.by_deadline)
+        expect(gnm.current_page_or_tab.cases.by_last_transitioned_date)
           .to have_received(:page).with('our_page')
       end
     end

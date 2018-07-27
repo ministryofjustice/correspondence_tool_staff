@@ -9,8 +9,10 @@ module PageObjects
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-        element :reminders,    '.reminders'
-        element :alert,        '.notice'
+        element :date_responded_day, :case_form_element, 'date_responded_dd'
+        element :date_responded_month, :case_form_element, 'date_responded_mm'
+        element :date_responded_year, :case_form_element, 'date_responded_yyyy'
+
         element :mark_as_sent_button, '.button'
         element :back_link,  'a.acts-like-button'
 
