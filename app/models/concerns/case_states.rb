@@ -55,7 +55,6 @@ module CaseStates
 
       # pre-populate the date_responded field with the date the user
       # marked the case as sent
-      self.update(date_responded: Date.today)
     end
 
   end

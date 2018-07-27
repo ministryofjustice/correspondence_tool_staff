@@ -14,24 +14,25 @@
 
 = render partial: 'layouts/header'
 
-- if @case.type_abbreviation == 'ICO'
-  .form-group
-    = form_for @case, url: confirm_respond_case_path(id: @case.id) do |f|
-      .form-group
-        = f.gov_uk_date_field :date_responded, { legend_text: t('.respond_date'),
-                form_hint_text: t('.date_example'),
-                today_button: {class: ''} }
-- else
-  .grid-row
-    .column-two-thirds
-      .reminders
-        = t('.reminders_html')
+.form-group
+  = form_for @case, as: "case_#{@correspondence_type_key}",
+                    url: confirm_respond_case_path(id: @case.id) do |f|
+    .form-group
+      = f.gov_uk_date_field :date_responded, { legend_text: t('.respond_date'),
+              form_hint_text: t('.date_example'),
+              today_button: {class: ''} }
 
-  .grid-row
-    .column-two-thirds
-      = t('alerts.respond_point_of_no_return_html')
+    .grid-row
+      .column-two-thirds
+        = f.submit t('common.case.respond'), { class: 'button' }
+        = link_to "Return to case detail", case_path(@case.id), class:'acts-like-button button-left-spacing'
 
-.grid-row
-  .column-two-thirds
-    = link_to t('common.case.respond'), confirm_respond_case_path(@case), class: 'button', method: :patch
-    = link_to "Return to case detail", case_path(@case.id), class:'button-secondary button-left-spacing'
+        / - else
+        /   .grid-row
+        /     .column-two-thirds
+        /       .reminders
+        /         = t('.reminders_html')
+        /
+        /   .grid-row
+        /     .column-two-thirds
+        /       = t('alerts.respond_point_of_no_return_html')
