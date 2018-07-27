@@ -11,8 +11,8 @@ module PageObjects
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-          element :ico_officer_name, '#case_ico_ico_officer_name'
           element :ico_reference_number, '#case_ico_ico_reference_number'
+          element :ico_officer_name, '#case_ico_ico_officer_name'
 
           element :original_case_number, '#case_ico_original_case_number'
           element :original_case_number_error, '.js-original-case .error-message'

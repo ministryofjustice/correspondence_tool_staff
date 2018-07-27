@@ -209,7 +209,7 @@ en:
 
   button:
     assign: Assign to this unit
-    next_page_assign: Next - Assign case
+    next_page_assign: Create case
     confirm: Confirm
     feedback: Send feedback
     submit: Submit
@@ -330,10 +330,10 @@ en:
           Case::FOI::TimelinessReview: FOI - Internal review for timeliness
           Case::FOI::ComplianceReview: FOI - Internal review for compliance
       case_ico:
-        ico_officer_name: ICO Information Officer
-        ico_reference_number: ICO case reference number
-        message: "Case details"
-        related_case_number: Link a related case
+        ico_officer_name: "Name of the ICO information officer who's handling this case"
+        ico_reference_number: "ICO case reference number"
+        message: "ICO's request details"
+        related_case_number: "Link a related case"
       case_sar:
         email: "Recipient email address"
         message: Full case details

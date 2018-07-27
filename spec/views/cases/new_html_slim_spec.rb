@@ -34,7 +34,7 @@ describe 'cases/new.html.slim', type: :view do
 
       expect(page).to have_submit_button
 
-      expect(page.submit_button.value).to eq "Next - Assign case"
+      expect(page.submit_button.value).to eq "Create case"
 
     end
   end
@@ -73,7 +73,7 @@ describe 'cases/new.html.slim', type: :view do
 
       expect(page).to have_submit_button
 
-      expect(page.submit_button.value).to eq "Next - Assign case"
+      expect(page.submit_button.value).to eq "Create case"
     end
   end
 
