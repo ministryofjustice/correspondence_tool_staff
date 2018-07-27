@@ -68,6 +68,9 @@ class Case::Base < ApplicationRecord
     select("\"cases\".*, (properties ->> 'external_deadline')::timestamp with time zone, cases.id")
       .order("(properties ->> 'external_deadline')::timestamp with time zone ASC, cases.id")
   }
+  scope :by_last_transitioned_date, -> { reorder(last_transitioned_at: :desc) }
+
+
   scope :most_recent_first, -> {reorder("(properties ->> 'external_deadline')::timestamp with time zone DESC, cases.id") }
 
   scope :opened, ->       { where.not(current_state: 'closed') }

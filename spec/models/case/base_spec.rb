@@ -196,12 +196,12 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe 'closed scope' do
-    it 'returns only closed cases in most recently closed first' do
+    it 'returns only closed cases' do
       create :case
       create :responded_case
       closed_case_1 = create :closed_case, last_transitioned_at: 2.days.ago
       closed_case_2 = create :closed_case, last_transitioned_at: 1.day.ago
-      expect(Case::Base.closed).to eq [ closed_case_2, closed_case_1 ]
+      expect(Case::Base.closed).to match_array [ closed_case_1, closed_case_2]
     end
   end
 

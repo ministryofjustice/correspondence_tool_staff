@@ -165,4 +165,12 @@ module ICOCasesParams
       options
     )
   end
+
+  def respond_ico_params
+    params.require(:case_ico).permit(
+      :date_responded_dd,
+      :date_responded_mm,
+      :date_responded_yyyy,
+    )
+  end
 end

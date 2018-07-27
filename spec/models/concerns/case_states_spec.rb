@@ -125,7 +125,6 @@ RSpec.describe Case, type: :model do
                                      .with(acting_user: case_with_response.responder,
                                            acting_team: case_with_response.responding_team)
         expect(state_machine).not_to have_received(:respond)
-        expect(case_with_response.date_responded).to eq Date.today
       end
     end
 

@@ -76,7 +76,7 @@ class CasesController < ApplicationController
     @cases = @global_nav_manager
                .current_page_or_tab
                .cases
-               .by_deadline
+               .by_last_transitioned_date
                .page(params[:page])
                .decorate
   end
@@ -388,30 +388,6 @@ class CasesController < ApplicationController
       flash[:alert] = "RAAAAR"
       redirect_to respond_case_path(@case)
     end
-  end
-
-  def respond_params(correspondence_type)
-    case correspondence_type
-    when 'FOI' then respond_foi_params
-    when 'ICO' then respond_ico_params
-    else raise 'Unknown case type'
-    end
-  end
-
-  def respond_foi_params
-    params.require(:case_foi).permit(
-      :date_responded_dd,
-      :date_responded_mm,
-      :date_responded_yyyy,
-    )
-  end
-
-  def respond_ico_params
-    params.require(:case_ico).permit(
-      :date_responded_dd,
-      :date_responded_mm,
-      :date_responded_yyyy,
-    )
   end
 
   def search
@@ -781,6 +757,14 @@ class CasesController < ApplicationController
     case correspondence_type
       when 'foi' then edit_foi_params
       when 'sar' then edit_sar_params
+    end
+  end
+
+  def respond_params(correspondence_type)
+    case correspondence_type
+    when 'FOI' then respond_foi_params
+    when 'ICO' then respond_ico_params
+    else raise 'Unknown case type'
     end
   end
 
