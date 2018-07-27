@@ -13,7 +13,6 @@ module ICOCasesParams
     case_params.permit(
       :ico_officer_name,
       :ico_reference_number,
-      :subject,
       :message,
       :original_case_id,
       :received_date_dd, :received_date_mm, :received_date_yyyy,

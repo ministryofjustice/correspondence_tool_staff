@@ -72,7 +72,6 @@ RSpec.describe Case::Base, type: :model do
   describe 'mandatory attributes' do
     it { should validate_presence_of(:received_date) }
     it { should validate_presence_of(:type)          }
-    it { should validate_presence_of(:subject)       }
   end
 
   describe 'workflow validation' do
@@ -477,11 +476,6 @@ RSpec.describe Case::Base, type: :model do
     it { should allow_value('foo@bar.com').for :email     }
     it { should_not allow_value('foobar.com').for :email  }
   end
-
-  describe '#subject' do 
-    it { should validate_length_of(:subject).is_at_most(100) }
-  end
-
 
   describe '#type' do
     it { should validate_exclusion_of(:type).in_array(['Case'])

@@ -108,7 +108,6 @@ describe CaseCreateService do
           'external_deadline_dd'    => deadline.day.to_s,
           'external_deadline_mm'    => deadline.month.to_s,
           'external_deadline_yyyy'  => deadline.year.to_s,
-          'subject'                 => 'ICO FOI deadlines',
           'message'                 => 'AAAAA'
       }
     end
@@ -123,7 +122,7 @@ describe CaseCreateService do
       expect(created_ico_case.external_deadline).to eq deadline.to_date
       expect(created_ico_case.internal_deadline).to eq(10.business_days.before(deadline).to_date)
       expect(created_ico_case.message).to eq 'AAAAA'
-      expect(created_ico_case.subject).to eq 'ICO FOI deadlines'
+      expect(created_ico_case.subject).to eq foi.subject
       expect(created_ico_case.current_state).to eq 'unassigned'
     end
 
