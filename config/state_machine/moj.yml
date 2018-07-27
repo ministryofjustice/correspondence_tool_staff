@@ -7,6 +7,7 @@ preamble:
     sar: Subject Access Request
     ico: Information Commissioner Office appeal
 
+
 case_types:
   foi:
     name: Freedom of Information Request
@@ -30,6 +31,7 @@ case_types:
       - awaiting_dispatch
       - responded
       - closed
+
 
     workflows:
       standard:
@@ -1033,9 +1035,9 @@ case_types:
                 flag_for_clearance:
                   switch_workflow: trigger
 
-  ###########################TRIGGER SAR ########################
 
 
+      ###########################TRIGGER SAR ########################
       trigger:
         initial_state: unassigned
         user_roles:
@@ -1224,10 +1226,11 @@ case_types:
               closed:
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
+
   ico:
     name: Information Commissioner Office appeal
     permitted_workflows:
-      - standard
+      - trigger
 
     permitted_user_roles:
       - manager
@@ -1238,12 +1241,13 @@ case_types:
       - unassigned
       - awaiting_responder
       - drafting
+      - pending_dacu_clearance
       - awaiting_dispatch
       - responded
       - closed
-
     workflows:
-      standard:
+
+      trigger:
         initial_state: unassigned
         user_roles:
           manager:
@@ -1254,6 +1258,7 @@ case_types:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
 
@@ -1270,6 +1275,14 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 assign_to_new_team:
                   transition_to: awaiting_responder
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+
+              pending_dacu_clearance:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
                 link_a_case:
@@ -1305,26 +1318,64 @@ case_types:
           approver:
             states:
               unassigned:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
 
               awaiting_responder:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
 
               drafting:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+
+              pending_dacu_clearance:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                approve:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  transition_to: awaiting_dispatch
+                  after_transition: Workflows::Hooks#notify_responder_ready_to_send
+                link_a_case:
+                reassign_user:
+                remove_linked_case:
+                unaccept_approver_assignment:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                upload_response_and_approve:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  transition_to: awaiting_dispatch
+                  after_transition: Workflows::Hooks#notify_responder_ready_to_send
+                upload_response_and_return_for_redraft:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  after_transition: Workflows::Hooks#notify_responder_redraft_requested
+                  transition_to: drafting
+                upload_response_approve_and_bypass:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  transition_to: awaiting_dispatch
 
               awaiting_dispatch:
                 add_message_to_case:
@@ -1369,30 +1420,36 @@ case_types:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                add_responses:
-                  if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
-                  transition_to: awaiting_dispatch
+                add_response_to_flagged_case:
+                  if: Case::ICO::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
+                  transition_to: pending_dacu_clearance
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 remove_linked_case:
 
+              pending_dacu_clearance:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                link_a_case:
+                reassign_user:
+                  if: Case::BasePolicy#assignments_reassign_user?
+                remove_linked_case:
+
               awaiting_dispatch:
-                 add_message_to_case:
-                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
-                   after_transition: Workflows::Hooks#notify_responder_message_received
-                 add_responses:
-                  if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
-                 link_a_case:
-                 reassign_user:
-                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
-                 remove_linked_case:
-                 remove_response:
-                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
-                   transition_to_using: Workflows::Conditionals#remove_response_next_state
-                 respond:
-                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
-                   transition_to: responded
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                add_response_to_flagged_case:
+                  if: Case::ICO::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
+                link_a_case:
+                reassign_user:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                remove_linked_case:
+                remove_response:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to_using: Workflows::Conditionals#remove_response_next_state
 
               responded:
                 add_message_to_case:
@@ -1404,3 +1461,4 @@ case_types:
               closed:
                 link_a_case:
                 remove_linked_case:
+      ####################### THE END ###########

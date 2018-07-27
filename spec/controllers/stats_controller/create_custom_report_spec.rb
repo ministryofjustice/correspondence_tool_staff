@@ -6,7 +6,8 @@ module Stats
 
     let!(:kase)       { create :case }
     let(:manager)     { create :disclosure_bmt_user }
-    let(:report_type) { find_or_create :r003_report_type }
+    let(:report_type) { find_or_create :report_type, :r003 }
+
 
     let(:params)      {{report: {
                         correspondence_type: 'FOI',
@@ -21,10 +22,6 @@ module Stats
                               period_start: Date.yesterday,
                               period_end: Date.today }
 
-    before(:all) do
-      require File.join(Rails.root, 'db', 'seeders', 'report_type_seeder')
-      ReportTypeSeeder.new.seed!
-    end
 
     after(:all) { ReportType.delete_all }
 

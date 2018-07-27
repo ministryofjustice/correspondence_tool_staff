@@ -15,10 +15,10 @@ describe 'cases/new_case_link.html.slim', type: :view do
 
     expect(page.page_heading.heading.text).to eq "Link case"
     expect(page.page_heading.sub_heading.text)
-        .to eq "You are viewing case number #{kase.number} "
+      .to eq "You are viewing case number #{kase.number} "
 
     expect(page.linked_case_number_label.text)
-        .to eq "Case number For example 170131001"
+      .to eq "Case number For example 170131001"
     expect(page).to have_linked_case_number_field
     expect(page).to have_submit_button
   end

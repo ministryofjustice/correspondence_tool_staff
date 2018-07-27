@@ -1,0 +1,24 @@
+  foi:
+    name: Freedom of Information Request
+    permitted_workflows:
+      - standard
+      - trigger
+      - full_approval
+
+    permitted_user_roles:
+      - manager
+      - approver
+      - responder
+
+    permitted_states:
+      - unassigned
+      - awaiting_responder
+      - drafting
+      - pending_dacu_clearance
+      - pending_press_office_clearance
+      - pending_private_office_clearance
+      - awaiting_dispatch
+      - responded
+      - closed
+
+

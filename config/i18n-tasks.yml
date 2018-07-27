@@ -104,6 +104,7 @@ ignore_unused:
   - 'cases.new.correspondence_type_errors.*'
   - 'filters.crumbs.list_filter_type.*'
   - 'page_title.*_cases'
+  - 'state.case/ico.awaiting_dispatch'
 
 
 ## Consider these keys used:

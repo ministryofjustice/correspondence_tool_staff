@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 describe ReportGeneratorJob do
-  let!(:r003_report_type) { find_or_create(:r003_report_type) }
-  let!(:r004_report_type) { find_or_create(:r004_report_type) }
+  let!(:r003_report_type) { find_or_create(:report_type, :r003) }
+  let!(:r004_report_type) { find_or_create(:report_type, :r004) }
 
   it 'sets the Raven context' do
     expect(RavenContextProvider).to receive(:set_context)

@@ -28,7 +28,6 @@ feature 'FOI Case creation by a manager' do
   end
 
   scenario 'creating a case with request attachments', js: true  do
-    stub_s3_uploader_for_all_files!
     request_attachment = Rails.root.join('spec', 'fixtures', 'request-1.pdf')
 
     create_foi_case_step delivery_method: :sent_by_post,

@@ -13,33 +13,6 @@ feature 'cases requiring clearance by disclosure specialist' do
   given(:team_dacu)                   { find_or_create :team_dacu }
   given(:responder)                   { responding_team.users.first }
 
-  def upload_and_approve_response_as_dacu_disclosure_specialist(kase, dd_specialist)
-    upload_response_with_action_param(kase, dd_specialist, 'upload-approve')
-  end
-
-  def upload_response_and_send_for_redraft_as_disclosure_specialist(kase, dd_specialist)
-    upload_response_with_action_param(kase, dd_specialist, 'upload-redraft')
-  end
-
-  def upload_response_with_action_param(kase, user, action)
-    uploads_key = "uploads/#{kase.id}/responses/#{Faker::Internet.slug}.jpg"
-    raw_params = ActionController::Parameters.new(
-      {
-        "type"=>"response",
-        "uploaded_files"=>[uploads_key],
-        "id"=>kase.id.to_s,
-        "controller"=>"cases",
-        "upload_comment" => "I've uploaded it",
-        "action"=>"upload_responses"}
-    )
-    params = BypassParamsManager.new(raw_params)
-    rus = ResponseUploaderService.new(kase, user, params, action)
-    uploader = rus.instance_variable_get :@uploader
-    allow(uploader).to receive(:move_uploaded_file)
-    allow(uploader).to receive(:remove_leftover_upload_files)
-    rus.upload!
-  end
-
   scenario 'taking_on, undoing and de-escalating a case as a disclosure specialist', js: true do
     kase = create :case_being_drafted, :flagged,
                   approving_team: team_dacu_disclosure

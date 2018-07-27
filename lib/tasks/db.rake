@@ -9,13 +9,20 @@ namespace :db do
 
   desc 'Clear the database, run migrations and basic seeds (not users, teams, roles)'
   task :reseed => :clear do
-    ENV['RESEEDING_DATABASE'] = '1'
-    Rake::Task['db:migrate'].invoke
+    # ENV['RESEEDING_DATABASE'] = '1'
+    # Rake::Task['db:migrate'].invoke
+    Rake::Task['db:structure_load'].invoke
     Rake::Task['data:migrate'].invoke
     Rake::Task['db:seed:dev:teams'].invoke
     Rake::Task['db:seed:dev:users'].invoke
   end
-
+  
+  task :structure_load => :environment do
+    structure_file = "#{Rails.root}/db/structure.sql"
+    command = "psql -d correspondence_platform_development < #{structure_file}"
+    system command
+  end
+ 
   def clear_database
     conn = ActiveRecord::Base.connection
     tables = conn.tables

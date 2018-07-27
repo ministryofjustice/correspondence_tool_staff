@@ -5,8 +5,14 @@ require 'cts/cases/constants'
 class Admin::CasesController < ApplicationController
   before_action :authorize_admin
 
+  before_action :set_correspondence_type,
+                only: [
+                  :create,
+                  :new,
+                ]
+
   def create
-    @correspondence_type_abbreviation = params.fetch(:correspondence_type)
+    @correspondence_type_key = params.fetch(:correspondence_type).downcase
     case_params = params[case_and_type]
 
     prepare_flagged_options_for_creation(params)
@@ -35,8 +41,8 @@ class Admin::CasesController < ApplicationController
 
   def new
     if params[:correspondence_type].present?
-      @correspondence_type = params[:correspondence_type]
-      self.__send__("prepare_new_#{@correspondence_type}")
+      @correspondence_type_key = params[:correspondence_type].downcase
+      self.__send__("prepare_new_#{@correspondence_type_key}")
     else
       select_type
     end
@@ -50,8 +56,8 @@ class Admin::CasesController < ApplicationController
   end
 
   def prepare_new_foi
-    @correspondence_type_abbreviation = params[:correspondence_type]
-    case_class = correspondence_types_map[@correspondence_type_abbreviation.to_sym].first
+    @correspondence_type_key = params[:correspondence_type]
+    case_class = correspondence_types_map[@correspondence_type_key.to_sym].first
     @case = case_class.new
 
     case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::FOI::Standard' )
@@ -66,8 +72,8 @@ class Admin::CasesController < ApplicationController
   end
 
   def prepare_new_sar
-    @correspondence_type_abbreviation = params[:correspondence_type]
-    case_class = correspondence_types_map[@correspondence_type_abbreviation.to_sym].first
+    @correspondence_type_key = params[:correspondence_type]
+    case_class = correspondence_types_map[@correspondence_type_key.to_sym].first
     @case = case_class.new
 
     case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::SAR' )
@@ -90,7 +96,7 @@ class Admin::CasesController < ApplicationController
   end
 
   def available_target_states
-    CTS::Cases::Constants::CASE_JOURNEYS[@correspondence_type_abbreviation.to_sym].values.flatten.uniq.sort
+    CTS::Cases::Constants::CASE_JOURNEYS[@correspondence_type_key.to_sym].values.flatten.uniq.sort
   end
 
   def create_params(correspondence_type)
@@ -180,6 +186,15 @@ class Admin::CasesController < ApplicationController
   end
 
   def case_and_type
-    "case_#{@correspondence_type_abbreviation}".to_sym
+    "case_#{@correspondence_type_key}".to_sym
   end
+
+  def set_correspondence_type
+    if params[:correspondence_type].present?
+      @correspondence_type = CorrespondenceType.find_by(
+        abbreviation: params[:correspondence_type].upcase
+      )
+    end
+  end
+
 end

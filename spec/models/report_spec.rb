@@ -26,7 +26,7 @@ RSpec.describe Report, type: :model do
 
   describe '#report_type_abbr=' do
     it 'finds a report_type by abbreviation' do
-      r003_report_type = find_or_create(:r003_report_type)
+      r003_report_type = find_or_create(:report_type, :r003)
       report = Report.new(report_type_abbr: 'R003')
       expect(report.report_type_id).to eq r003_report_type.id
     end

@@ -1,9 +1,8 @@
 = form_for kase, as: :case_ico, url: cases_path do |f|
-  = hidden_field_tag 'correspondence_type', @correspondence_type_abbreviation
-  = f.text_field :name
-  = f.text_field :subject
-  .form-group
-    = f.gov_uk_date_field :received_date, {legend_text: t('cases.new.received_date'), form_hint_text: t('cases.new.received_date_copy'), today_button: {class: 'button-secondary'}}
+  = hidden_field_tag 'correspondence_type', @correspondence_type_key
 
+  = render partial: 'cases/ico/new_form', locals: { case_types: @case_types,
+                                                    kase: kase,
+                                                    f: f }
 
   = f.submit t('button.next_page_assign'), {class: 'button'}

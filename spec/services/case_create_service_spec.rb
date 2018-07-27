@@ -6,7 +6,6 @@ describe CaseCreateService do
   let!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
   let(:regular_params) do
     {
-      type: 'Case::FOI::Standard',
       requester_type: 'member_of_the_public',
       name: 'A. Member of Public',
       postal_address: '102 Petty France',
@@ -25,7 +24,7 @@ describe CaseCreateService do
     let(:params) do
       regular_params.merge flag_for_disclosure_specialists: 'no'
     end
-    let(:ccs) { CaseCreateService.new(manager, params) }
+    let(:ccs) { CaseCreateService.new(manager, Case::FOI::Standard, params) }
 
     it 'creates a case' do
       expect { ccs.call }.to change { Case::Base.count }.by 1
@@ -58,7 +57,7 @@ describe CaseCreateService do
     let(:params) do
       regular_params.merge flag_for_disclosure_specialists: 'yes'
     end
-    let(:ccs) { CaseCreateService.new(manager, params) }
+    let(:ccs) { CaseCreateService.new(manager, Case::FOI::Standard, params) }
 
     it 'creates a case' do
       expect { ccs.call }.to change { Case::Base.count }.by 1
@@ -94,11 +93,58 @@ describe CaseCreateService do
     end
   end
 
+  context 'ICO case' do
+    let(:received) { 0.business_days.from_now }
+    let(:deadline) { 28.business_days.from_now }
+    let(:foi)      { create :closed_case }
+    let(:params) do
+      {
+          'original_case_id'        => foi.id,
+          'ico_reference_number'    => 'ABC1344422',
+          'received_date_dd'        => received.day.to_s,
+          'received_date_mm'        => received.month.to_s,
+          'received_date_yyyy'      => received.year.to_s,
+          'external_deadline_dd'    => deadline.day.to_s,
+          'external_deadline_mm'    => deadline.month.to_s,
+          'external_deadline_yyyy'  => deadline.year.to_s,
+          'subject'                 => 'ICO FOI deadlines',
+          'message'                 => 'AAAAA'
+      }
+    end
+    let(:ccs) { CaseCreateService.new(manager, Case::ICO::FOI, params) }
+    let(:created_ico_case) { Case::ICO::FOI.last }
+
+    it 'uses the params provided' do
+      ccs.call
+
+      expect(created_ico_case.ico_reference_number).to eq 'ABC1344422'
+      expect(created_ico_case.external_deadline).to eq deadline.to_date
+      expect(created_ico_case.internal_deadline).to eq(10.business_days.before(deadline).to_date)
+      expect(created_ico_case.message).to eq 'AAAAA'
+      expect(created_ico_case.subject).to eq 'ICO FOI deadlines'
+      expect(created_ico_case.current_state).to eq 'unassigned'
+    end
+
+    it 'sets the workflow to trigger' do
+      ccs.call
+      expect(created_ico_case.workflow).to eq 'trigger'
+    end
+
+    it 'assigns the case to disclosure for approval' do
+      ccs.call
+      approving_assignments = created_ico_case.assignments.approving
+      expect(approving_assignments.size).to eq 1
+      assignment = approving_assignments.first
+      expect(assignment.state).to eq 'pending'
+      expect(assignment.team).to eq BusinessUnit.dacu_disclosure
+    end
+  end
+
   context 'invalid case params' do
     let(:params) do
       regular_params.merge name: nil
     end
-    let(:ccs) { CaseCreateService.new(manager, params) }
+    let(:ccs) { CaseCreateService.new(manager, Case::FOI::Standard, params) }
 
     it 'sets the result to "error"' do
       ccs.call
@@ -114,7 +160,7 @@ describe CaseCreateService do
     let(:params) do
       regular_params.merge name: nil
     end
-    let(:ccs) { CaseCreateService.new(manager, params) }
+    let(:ccs) { CaseCreateService.new(manager, Case::FOI::Standard, params) }
 
     it 'sets the result to "error"' do
       ccs.call

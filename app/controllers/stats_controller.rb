@@ -71,7 +71,8 @@ class StatsController < ApplicationController
   end
 
   def set_reports
-    @reports = ReportType.all.order(:seq_id)
+    @foi_reports = ReportType.standard.foi.order(:full_name)
+    @sar_reports = ReportType.standard.sar.order(:full_name)
   end
 
   def create_custom_params

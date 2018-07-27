@@ -3,6 +3,10 @@ require 'rails_helper'
 module Stats
   describe R005MonthlyPerformanceReport do
 
+    before(:all) { create :report_type, :r005 }
+
+    after(:all)   { ReportType.r005.destroy }
+
     describe '.title' do
       it 'returns the title' do
         expect(R005MonthlyPerformanceReport.title).to eq 'Monthly report (FOI)'

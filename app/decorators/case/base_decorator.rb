@@ -98,7 +98,7 @@ class Case::BaseDecorator < Draper::Decorator
 
   def status
     if current_state != 'closed'
-      I18n.t("state.#{current_state}")
+      translation_for_case(object, "state", object.current_state)
     else
       I18n.t("state.#{current_state}_status")
     end
@@ -151,5 +151,25 @@ class Case::BaseDecorator < Draper::Decorator
 
   def pretty_type
     object.class.type_abbreviation
+  end
+
+  private
+
+  def translation_for_case(kase, path, key, options = {})
+    translation_path = translation_path(kase.class.to_s.underscore)
+    default = translation_path.map { |case_path| :"#{path}.#{case_path}.#{key}" } + [:"#{path}.#{key}"]
+    options.merge(default: default)
+    I18n.t("#{path}.#{translation_path.shift}.#{key}",
+      default: default)
+  end
+
+  def translation_path(case_type)
+    case_type_segments = case_type.split("/")
+    paths = []
+    while case_type_segments.any?
+      paths << case_type_segments.join("/")
+      case_type_segments.pop
+    end
+    return paths
   end
 end

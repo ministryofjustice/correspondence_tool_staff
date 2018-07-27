@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe StatsController, type: :controller do
   let!(:kase)             { create :case }
-  let!(:r003_report_type) { create :r003_report_type }
+  let!(:r003_report_type) { create :report_type, :r003 }
   let(:manager)           { create :disclosure_bmt_user }
 
   describe '#download' do
@@ -30,7 +30,7 @@ RSpec.describe StatsController, type: :controller do
     end
 
     context 'there is no already-generated report' do
-      let(:report_type) { find_or_create :r003_report_type }
+      let(:report_type) { find_or_create :report_type, :r003 }
 
       it 'generates a new report' do
         existing_count = Report.count
@@ -50,7 +50,7 @@ RSpec.describe StatsController, type: :controller do
     end
 
     context 'there is an old already-generated report' do
-      let(:report_type) { find_or_create :r003_report_type }
+      let(:report_type) { find_or_create :report_type, :r003 }
 
       before do
         create :r003_report, created_at: 1.days.ago
@@ -75,7 +75,7 @@ RSpec.describe StatsController, type: :controller do
     end
 
     context 'there is no scheduled job for the given report' do
-      let(:report_type) { find_or_create :r003_report_type }
+      let(:report_type) { find_or_create :report_type, :r003 }
 
       before do
         allow(YAML).to receive(:load_file).and_return <<~EOYML

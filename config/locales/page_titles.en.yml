@@ -30,5 +30,5 @@ en:
     settings_business_unit: Settings - %{business_group} - %{directorate} - %{business_unit} - Track-a-query
     settings_directorate: Settings - %{business_group} - %{directorate} - Track-a-query
     show_case_page: Viewing case details - %{case_number} - Track-a-query
-    stats: Performance statistics - Track-a-query
+    stats: Performance Reports - Track-a-query
     upload_response_page: Uploading a response - %{case_number} - Track-a-query

@@ -92,7 +92,7 @@ feature "Top level global navigation" do
       expect(nav_links[3]).to have_text('Closed cases')
       expect(nav_links[4]).to have_text('Search')
       expect(nav_links[5]).to have_text('Settings')
-      expect(nav_links[6]).to have_text('Statistics')
+      expect(nav_links[6]).to have_text('Performance')
     end
 
     scenario "open in-time page has nav entries" do
@@ -107,7 +107,7 @@ feature "Top level global navigation" do
       expect(nav_links[3]).to have_text('Closed cases')
       expect(nav_links[4]).to have_text('Search')
       expect(nav_links[5]).to have_text('Settings')
-      expect(nav_links[6]).to have_text('Statistics')
+      expect(nav_links[6]).to have_text('Performance')
     end
   end
 end

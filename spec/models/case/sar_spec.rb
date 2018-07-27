@@ -91,16 +91,36 @@ describe Case::SAR do
   end
 
   describe '#message' do
-    it 'validates presence if uploaded_request_files is missing' do
+    it 'validates presence if uploaded_request_files is missing on create' do
       kase = build :sar_case, uploaded_request_files: [], message: ''
       expect(kase).not_to be_valid
-      expect(kase.errors[:message]).to eq ["can't be blank"]
+      expect(kase.errors[:message])
+        .to eq ["can't be blank if no request files attached"]
     end
 
-    it 'does validates presence if uploaded_request_files is present' do
+    it 'validates presence if attached request files is missing on update' do
+      kase = create :sar_case, uploaded_request_files: [], message: 'foo'
+      expect(kase).to be_valid
+      kase.update_attributes(message: '')
+      expect(kase).not_to be_valid
+      expect(kase.errors[:message])
+        .to eq ["can't be blank if no request files attached"]
+    end
+
+    it 'can be empty on create if uploaded_request_files is present' do
       kase = build :sar_case,
                    uploaded_request_files: ["#{Faker::Internet.slug}.pdf"],
                    message: ''
+      expect(kase).to be_valid
+    end
+
+    it 'can be empty on update if attached request files is present' do
+      kase = create :sar_case,
+                    uploaded_request_files: ["#{Faker::Internet.slug}.pdf"],
+                    uploading_user: create(:manager),
+                    message: 'foo'
+      expect(kase).to be_valid
+      kase.update_attributes(message: '')
       expect(kase).to be_valid
     end
   end
@@ -116,7 +136,8 @@ describe Case::SAR do
     it 'validates presence if message is missing' do
       kase = build :sar_case, uploaded_request_files: [], message: ''
       expect(kase).not_to be_valid
-      expect(kase.errors[:uploaded_request_files]).to eq ["can't be blank"]
+      expect(kase.errors[:uploaded_request_files])
+        .to eq ["can't be blank if no case details entered"]
     end
 
     it 'does validates presence if message is present' do
