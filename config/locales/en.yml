@@ -60,13 +60,21 @@ en:
           related_case_number:
             already_linked: "Case is already linked"
             blank: "Enter related case number"
-            does_not_match_original: >-
-              Related case type %{related} does not match that of the original
-              case type %{original}
             missing: "Related case not found"
             not_authorised: "Not authorised to view case"
         case/ico/base:
           original_case_already_related: 'already linked as the original case'
+        case/ico/foi:
+          related_case_number:
+            does_not_match_original: >-
+              You've linked an FOI case as the original for this appeal. You
+              can now only link other FOI cases or internal reviews as related
+              to this cases.
+        case/ico/sar:
+          related_case_number:
+            does_not_match_original: >-
+              You've linked a SAR case as the original for this appeal. You
+              can now only link other SAR cases as related to this cases.
         case/sar:
           attributes:
             third_party:
