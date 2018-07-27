@@ -1,22 +1,22 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentsController, type: :controller do
-  let(:responding_team)   { accepted_case.responding_team }
-  let(:responder)         { responding_team.responders.first }
-  let(:another_responder) { create :responder, responding_teams: [responding_team] }
+  let(:responding_team)       { accepted_case.responding_team }
+  let(:responder)             { responding_team.responders.first }
+  let(:another_responder)     { create :responder, responding_teams: [responding_team] }
 
-  let(:accepted_case) { create :accepted_case }
+  let(:accepted_case)         { create :accepted_case }
 
-  let(:assignment) { accepted_case.responder_assignment }
+  let(:assignment)            { accepted_case.responder_assignment }
 
-  let(:service)    { instance_double UserReassignmentService }
+  let(:service)               { instance_double UserReassignmentService }
 
-  let(:params)     { { case_id: accepted_case.id,
-                       id: assignment.id,
-                       assignment: {
-                         user_id: another_responder.id
-                       }
-                     } }
+  let(:params)                { { case_id: accepted_case.id,
+                                   id: assignment.id,
+                                   assignment: {
+                                     user_id: another_responder.id
+                                   }
+                                 } }
 
 
   describe 'PATCH execute_reassign_user' do
@@ -34,20 +34,47 @@ RSpec.describe AssignmentsController, type: :controller do
               .with_args(responder, accepted_case)
     end
 
+    context 'foi case' do
+      it 'calls UserReassignmentService' do
+        patch :execute_reassign_user, params: params
+        expect(UserReassignmentService).to have_received(:new).with(
+                                             acting_user: responder,
+                                             target_user: another_responder,
+                                             assignment: assignment
+                                           )
+        expect(service).to have_received(:call)
+      end
 
-    it 'calls UserReassignmentService' do
-      patch :execute_reassign_user, params: params
-      expect(UserReassignmentService).to have_received(:new).with(
-                                           acting_user: responder,
-                                           target_user: another_responder,
-                                           assignment: assignment
-                                         )
-      expect(service).to have_received(:call)
+      it 'redirects to new_user_session_path' do
+        patch :execute_reassign_user, params: params
+        expect(response).to redirect_to case_path(id: accepted_case.id)
+      end
     end
 
-    it 'redirects to new_user_session_path' do
-      patch :execute_reassign_user, params: params
-      expect(response).to redirect_to case_path(id: accepted_case.id)
+    context 'foi ico case' do
+      let(:accepted_ico_foi_case) { create :accepted_ico_foi_case, responding_team: responding_team }
+      let(:assignment)            { accepted_ico_foi_case.responder_assignment }
+      let(:params)                { { case_id: accepted_ico_foi_case.id,
+                                       id: assignment.id,
+                                       assignment: {
+                                         user_id: another_responder.id
+                                       }
+                                     } }
+
+      it 'calls UserReassignmentService' do
+        patch :execute_reassign_user, params: params
+        expect(UserReassignmentService).to have_received(:new).with(
+                                             acting_user: responder,
+                                             target_user: another_responder,
+                                             assignment: assignment
+                                           )
+        expect(service).to have_received(:call)
+      end
+
+      it 'redirects to new_user_session_path' do
+        patch :execute_reassign_user, params: params
+        expect(response).to redirect_to case_path(id: accepted_ico_foi_case.id)
+      end
     end
   end
 end

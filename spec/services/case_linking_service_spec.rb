@@ -41,13 +41,13 @@ describe CaseLinkingService do
 
     context 'NON-SAR cases' do
 
-      before(:each)  { service.create }
-
       it 'creates a link to the linked case' do
+        service.create
         expect(kase.linked_cases).to eq [link_case]
       end
 
       it 'creates a link from the linked case to the linking case' do
+        service.create
         expect(link_case.linked_cases).to eq [kase]
       end
 
@@ -58,6 +58,7 @@ describe CaseLinkingService do
       end
 
       it 'has created a transition on the linking case' do
+        service.create
         transition = kase.transitions.last
         expect(transition.event).to eq 'link_a_case'
         expect(transition.to_state).to eq kase.current_state
@@ -67,6 +68,7 @@ describe CaseLinkingService do
       end
 
       it 'has created a transition on the linked case' do
+        service.create
         transition = link_case.transitions.last
         expect(transition.event).to eq 'link_a_case'
         expect(transition.to_state).to eq link_case.current_state
@@ -81,12 +83,13 @@ describe CaseLinkingService do
       let(:sar_case_1)      { create :sar_case }
       let(:sar_case_2)      { create :sar_case }
 
-      describe 'linking a sar case to a  non sar case' do
+      describe 'linking a sar case to a non-sar case' do
         it 'errors' do
           service = CaseLinkingService.new(manager, sar_case_1, foi_case.number)
           service.create
           expect(service.result).to eq :validation_error
-          expect(sar_case_1.errors[:linked_case_number]).to eq ["can't link a SAR case to a non-SAR case"]
+          expect(sar_case_1.errors[:linked_case_number])
+            .to eq ["can't link a Non-offender SAR case to a FOI as a related case"]
         end
       end
 
@@ -95,11 +98,12 @@ describe CaseLinkingService do
           service = CaseLinkingService.new(manager, foi_case, sar_case_1.number)
           service.create
           expect(service.result).to eq :validation_error
-          expect(foi_case.errors[:linked_case_number]).to eq ["can't link a non-SAR case to a SAR case"]
+          expect(foi_case.errors[:linked_case_number])
+            .to eq ["can't link a FOI case to a Non-offender SAR as a related case"]
         end
       end
 
-      describe 'linking a non-sar case to a sar case' do
+      describe 'linking a sar case to a sar case' do
         it 'does not error' do
           service = CaseLinkingService.new(manager, sar_case_1, sar_case_2.number)
           service.create
@@ -193,9 +197,9 @@ describe CaseLinkingService do
     end
 
     describe 'trying to link to the same case' do
-      let(:service)  { CaseLinkingService.new(manager,
-                                        kase,
-                                        kase.number)}
+      let(:service) { CaseLinkingService.new(manager,
+                                             kase,
+                                             kase.number)}
 
       it 'sets result to :validation error and returns same' do
         result = service.create
@@ -211,9 +215,9 @@ describe CaseLinkingService do
     end
 
     describe 'trying to link a case that does not exist' do
-      let(:service)  { CaseLinkingService.new(manager,
-                                        kase,
-                                        11111)}
+      let(:service) { CaseLinkingService.new(manager,
+                                             kase,
+                                             11111)}
 
       it 'sets result to validation error and returns same' do
         result = service.create
@@ -224,14 +228,15 @@ describe CaseLinkingService do
       it 'adds an error to the case' do
         service.create
         expect(kase.errors[:linked_case_number])
-          .to eq ["does not exist"]
+          .to eq ["doesn't exist"]
       end
     end
   end
 
   context 'when an error occurs' do
     it 'rolls back changes' do
-      allow(kase).to receive(:add_linked_case).and_throw(RuntimeError)
+      allow(kase.related_case_links)
+        .to receive(:<<).and_throw(ActiveRecord::RecordInvalid)
       service.create
 
       cases_transitions = kase.transitions.where(
@@ -246,11 +251,22 @@ describe CaseLinkingService do
     end
 
     it 'sets result to :error and returns same' do
-      allow(kase).to receive(:add_linked_case).and_throw(RuntimeError)
+      allow(kase.related_case_links)
+        .to receive(:<<).and_throw(ActiveRecord::RecordInvalid)
       result = service.create
       expect(result).to eq :error
       expect(service.result).to eq :error
     end
   end
 
+  context 'messy input' do
+    let(:service)  { CaseLinkingService.new(manager,
+                                            kase,
+                                            "  #{link_case.number}  ")}
+    it 'strips whitespace out from the case number' do
+      service.create
+      expect(service.result).to eq :ok
+      expect(kase.linked_cases.first).to eq link_case
+    end
+  end
 end

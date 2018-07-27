@@ -13,5 +13,9 @@ module Stats
       Case::SAR.where(created_at: @period_start..@period_end)
     end
 
+    def report_type
+      ReportType.r105
+    end
+
   end
 end

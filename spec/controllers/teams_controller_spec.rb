@@ -8,6 +8,9 @@ RSpec.describe TeamsController, type: :controller do
   let(:business_unit)   { create :business_unit, directorate: directorate, name: 'AAA' }
   let(:business_unit2)  { create :business_unit, directorate: directorate, name: 'BBB' }
   let(:manager)         { create :manager }
+  let(:business_map)    { create :r006_business_unit_map }
+  let(:reports)         { [ business_map ]}
+
 
   describe 'GET index' do
     context 'logged in as a manager' do
@@ -34,6 +37,7 @@ RSpec.describe TeamsController, type: :controller do
       it 'loads all teams the the responder is a member of' do
         get :index
         expect(assigns(:teams)).to eq [ business_unit, business_unit2 ]
+        expect(assigns(:reports)).to eq reports
       end
 
       it 'renders the index template' do
@@ -53,10 +57,11 @@ RSpec.describe TeamsController, type: :controller do
         @dir_2 = create :directorate, business_group: @bg
       end
 
-      it 'loads the team and children' do
+      it 'loads the team, children and business map' do
         get :show, params: { id: @bg.id }
         expect(assigns(:team)).to eq @bg
         expect(assigns(:children)).to match_array [@dir_1, @dir_2]
+        expect(assigns(:reports)).to eq reports
       end
 
       it 'renders the show template' do
@@ -83,6 +88,7 @@ RSpec.describe TeamsController, type: :controller do
           get :show, params: { id: business_unit.id }
           expect(assigns(:team)).to eq business_unit
           expect(assigns(:children)).to be_empty
+          expect(assigns(:reports)).to eq reports
         end
 
         it 'renders the show template' do

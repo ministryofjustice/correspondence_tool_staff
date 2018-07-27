@@ -37,16 +37,17 @@ describe Case::BasePolicy::Scope do
       @awaiting_responder_sar_case  = create :awaiting_responder_sar, name: 'SAR awaiting responder'
       @drafting_sar_case            = create :sar_being_drafted, responder: @responder, name: 'SAR being drafted'
       @drafting_sar_case_other_team = create :sar_being_drafted, responder: @responder_2, name: 'SAR being drafted'
-      @ico_foi_case                 = create :ico_foi_case
-      @ico_sar_case                 = create :ico_sar_case
+      @closed_sar                   = create :closed_sar
+      @ico_foi_case                 = create :ico_foi_case, original_case: @rejected_case
+      @ico_sar_case                 = create :ico_sar_case, original_case: @closed_sar
 
       @all_cases                    = Case::Base.all
       @existing_foi_cases           = Case::FOI::Standard.all + Case::ICO::FOI.all
       @responder_cases              = Case::Base.all - [@unassigned_sar_case,
                                                         @awaiting_responder_sar_case,
                                                         @drafting_sar_case_other_team,
-                                                        @ico_sar_case]
-
+                                                        @ico_sar_case,
+                                                        @closed_sar]
     end
 
     after(:all)  { DbHousekeeping.clean }

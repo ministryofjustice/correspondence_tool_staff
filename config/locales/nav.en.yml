@@ -1,0 +1,16 @@
+en:
+  nav:
+    pages:
+      closed_cases: Closed cases
+      incoming_cases: New cases
+      my_open_cases: My open cases
+      open_cases: All open cases
+      search_cases: Search
+      settings: Settings
+      stats: Performance
+      system_admin: Admin
+    tabs:
+      in_time_html: |
+        <span class="visuallyhidden">View tab </span>In time (%{count})
+      late_html: |
+        <span class="visuallyhidden">View tab </span>Late (%{count})

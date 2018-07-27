@@ -14,6 +14,12 @@ module Stats
         'Team member email'
     ]
 
+    def self.description
+      'Includes a list of all teams and users that respond to requests for information'
+    end
+
+
+
     def initialize
       @result_set = []
       @result_set << COLUMN_HEADINGS

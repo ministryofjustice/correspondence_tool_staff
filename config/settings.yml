@@ -166,23 +166,23 @@ enabled_features:
     Host-dev: true
     Host-demo: true
     Host-staging: true
-    Host-production: true
+    Host-prod: true
   sars_reporting:
     Local: true
-    Host-dev: false
+    Host-dev: true
     Host-demo: false
     Host-staging: false
-    Host-production: false
+    Host-prod: false
   trigger_sars:
     Local: true
     Host-dev: true
     Host-demo: true
-    Host-staging: false
-    Host-production: false
+    Host-staging: true
+    Host-prod: true
   ico:
     Local: true
     Host-dev: true
     Host-demo: true
     Host-staging: false
-    Host-production: false
+    Host-prod: false
 

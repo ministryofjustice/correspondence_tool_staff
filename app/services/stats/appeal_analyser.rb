@@ -1,25 +1,42 @@
 module Stats
 
   class AppealAnalyser < CaseAnalyser
-    APPEAL_COLUMNS = {
-      appeal_performance:         'Performance %',
-      appeal_total:               'Total received',
-      appeal_responded_in_time:   'Responded - in time',
-      appeal_responded_late:      'Responded - late',
-      appeal_open_in_time:        'Open - in time',
-      appeal_open_late:           'Open - late',
-
+    IR_APPEAL_COLUMNS = {
+      ir_appeal_performance:         'Performance %',
+      ir_appeal_total:               'Total received',
+      ir_appeal_responded_in_time:   'Responded - in time',
+      ir_appeal_responded_late:      'Responded - late',
+      ir_appeal_open_in_time:        'Open - in time',
+      ir_appeal_open_late:           'Open - late',
     }.freeze
 
-    APPEAL_SUPERHEADINGS = {
-      appeal_performance:         'Internal reviews',
-      appeal_total:               'Internal reviews',
-      appeal_responded_in_time:   'Internal reviews',
-      appeal_responded_late:      'Internal reviews',
-      appeal_open_in_time:        'Internal reviews',
-      appeal_open_late:           'Internal reviews',
-
+    IR_APPEAL_SUPERHEADINGS = {
+      ir_appeal_performance:         'Internal reviews',
+      ir_appeal_total:               'Internal reviews',
+      ir_appeal_responded_in_time:   'Internal reviews',
+      ir_appeal_responded_late:      'Internal reviews',
+      ir_appeal_open_in_time:        'Internal reviews',
+      ir_appeal_open_late:           'Internal reviews',
     }.freeze
+
+    ICO_APPEAL_COLUMNS = {
+      ico_appeal_performance:         'Performance %',
+      ico_appeal_total:               'Total received',
+      ico_appeal_responded_in_time:   'Responded - in time',
+      ico_appeal_responded_late:      'Responded - late',
+      ico_appeal_open_in_time:        'Open - in time',
+      ico_appeal_open_late:           'Open - late',
+    }.freeze
+
+    ICO_APPEAL_SUPERHEADINGS = {
+      ico_appeal_performance:         'ICO appeals',
+      ico_appeal_total:               'ICO appeals',
+      ico_appeal_responded_in_time:   'ICO appeals',
+      ico_appeal_responded_late:      'ICO appeals',
+      ico_appeal_open_in_time:        'ICO appeals',
+      ico_appeal_open_late:           'ICO appeals',
+    }.freeze
+    
 
     def initialize(kase)
       @kase = kase
@@ -34,7 +51,7 @@ module Stats
     private
 
     def analyse_case
-      timeliness = @kase.closed? ? analyse_closed_case : analyse_open_case
+      timeliness = @kase.closed_for_reporting_purposes? ? analyse_closed_case : analyse_open_case
       @result = add_type(timeliness)
     end
 
@@ -47,8 +64,10 @@ module Stats
     end
 
     def add_type(timeliness)
-      status = 'appeal_' + timeliness.to_s
+      appeal_type = @kase.is_a?(Case::ICO::Base) ? 'ico' : 'ir'
+      status = "#{appeal_type}_appeal_#{timeliness}"
       status.to_sym
     end
+
   end
 end

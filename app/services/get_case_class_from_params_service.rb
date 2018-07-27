@@ -1,0 +1,75 @@
+class GetCaseClassFromParamsService
+  attr_accessor :case_class
+
+  def initialize(type:, params:)
+    @type = type
+    @type_key = @type.abbreviation.downcase
+    @params = params
+    @error_field = nil
+    @error_message = nil
+  end
+
+  def call()
+    @case_class = case @type_key
+                  when 'foi' then get_foi_case_class_from_params
+                  when 'ico' then get_ico_case_class_from_params
+                  when 'sar' then get_sar_case_class_from_params
+                  else
+                    raise RuntimeError.new(
+                            "Unknown case type #{@type_key}"
+                          )
+                  end
+  end
+
+  def error?
+    @error_field.present?
+  end
+
+  def set_error_on_case(kase)
+    if error?
+      kase.errors.add(@error_field, @error_message)
+    else
+      raise RuntimeError.new("No error present")
+    end
+  end
+
+  private
+
+  def get_foi_case_class_from_params()
+    if @params[:type].blank?
+      @error_field = :type
+      @error_message = :blank
+      nil
+    elsif @params[:type].in?(['Standard', 'TimelinessReview', 'ComplianceReview'])
+      "Case::FOI::#{@params.fetch(:type)}".safe_constantize
+    else
+      @error_field = :type
+      @error_message = :invalid
+      nil
+    end
+  end
+
+  def get_ico_case_class_from_params()
+    if !@params.key?(:original_case_id)
+      @error_field = :original_case_id
+      @error_message = :blank
+      nil
+    else
+      original_case_id = @params.fetch(:original_case_id)
+      original_case = Case::Base.find(original_case_id)
+      case original_case.type_abbreviation
+      when 'FOI' then Case::ICO::FOI
+      when 'SAR' then Case::ICO::SAR
+      else
+        @error_field = :original_case_number
+        @error_message = :invalid
+      end
+    end
+
+  end
+
+  def get_sar_case_class_from_params()
+    Case::SAR
+  end
+end
+

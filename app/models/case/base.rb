@@ -20,7 +20,7 @@
 #  current_state        :string
 #  last_transitioned_at :datetime
 #  delivery_method      :enum
-#  workflow             :string           default("standard")
+#  workflow             :string
 #  deleted              :boolean          default(FALSE)
 #  info_held_status_id  :integer
 #  type                 :string
@@ -73,6 +73,7 @@ class Case::Base < ApplicationRecord
   scope :opened, ->       { where.not(current_state: 'closed') }
   scope :closed, ->       { where(current_state: 'closed').order(last_transitioned_at: :desc) }
   scope :standard_foi, -> { where(type: 'Case::FOI::Standard') }
+  scope :ico_appeal, ->   { where(type: ['Case::ICO::FOI', 'Case::ICO::SAR'])}
 
   scope :non_offender_sar, -> { where(type: 'Case::SAR') }
 
@@ -141,6 +142,9 @@ class Case::Base < ApplicationRecord
   validates_presence_of :received_date
   validates :type, presence: true, exclusion: { in: %w{Case}, message: "Case type can't be blank" }
   validates :workflow, inclusion: { in: %w{ standard trigger full_approval }, message: "invalid" }
+
+  validate :validate_related_cases
+  validates_associated :case_links
 
   validates_with ::ClosedCaseValidator
 
@@ -247,11 +251,39 @@ class Case::Base < ApplicationRecord
             through: 'cases_exemptions',
             foreign_key: :case_id
 
-  has_and_belongs_to_many :linked_cases,
-                          class_name: 'Case::Base',
-                          join_table: 'linked_cases',
-                          foreign_key: :case_id,
-                          association_foreign_key: :linked_case_id
+  has_many :case_links,
+           -> { readonly },
+           class_name: 'LinkedCase',
+           foreign_key: :case_id do
+    def <<(_record)
+      raise ActiveRecord::ActiveRecordError.new("association is readonly")
+    end
+
+    def create(_attributes = {})
+      raise ActiveRecord::ActiveRecordError.new("association is readonly")
+    end
+
+    def create!(_attributes = {})
+      raise ActiveRecord::ActiveRecordError.new("association is readonly")
+    end
+  end
+  has_many :linked_cases,
+           through: :case_links,
+           class_name: 'Case::Base',
+           foreign_key: :case_id
+
+  has_many :related_case_links,
+           -> { related },
+           class_name: 'LinkedCase',
+           foreign_key: :case_id
+  has_many :related_cases,
+           through: :related_case_links,
+           source: :linked_case
+
+
+  after_initialize do
+    self.workflow = default_workflow if self.workflow.nil?
+  end
 
   before_create :set_initial_state,
                 :set_number,
@@ -261,10 +293,9 @@ class Case::Base < ApplicationRecord
   before_save :prevent_number_change,
               :trigger_reindexing
 
-  before_save do
-    self.wokflow = 'standard' if workflow.nil?
-  end
-
+  # before_save do
+  #   self.workflow = 'standard' if workflow.nil?
+  # end
 
 
   delegate :available_events, to: :state_machine
@@ -405,7 +436,7 @@ class Case::Base < ApplicationRecord
   end
 
   def responded_in_time?
-    return false unless closed?
+    return false unless closed_for_reporting_purposes?
     date_responded <= external_deadline
   end
 
@@ -488,28 +519,6 @@ class Case::Base < ApplicationRecord
     end
   end
 
-  def add_linked_case(linked_case)
-    ActiveRecord::Base.transaction do
-      unless self.linked_cases.include? linked_case
-        self.linked_cases << linked_case
-      end
-
-      unless linked_case.linked_cases.include? self
-        linked_case.linked_cases << self
-      end
-    end
-  end
-
-  def remove_linked_case(linked_case)
-    ActiveRecord::Base.transaction do
-
-      self.linked_cases.destroy(linked_case)
-
-      linked_case.linked_cases.destroy(self)
-
-    end
-  end
-
   def is_internal_review?
     self.is_a?(Case::FOI::InternalReview)
   end
@@ -587,7 +596,15 @@ class Case::Base < ApplicationRecord
     true
   end
 
+  def closed_for_reporting_purposes?
+    closed?
+  end
+
   private
+
+  def default_workflow
+    'standard'
+  end
 
   def indexable_fields
     @indexable_fields ||= self.class.searchable_fields_and_ranks.keys.map(&:to_s)
@@ -685,5 +702,31 @@ class Case::Base < ApplicationRecord
     end
   end
 
+  def validate_related_cases
+    self.related_cases.each do |kase|
+      validate_case_link(:related, kase, :related_cases)
+    end
+  end
+
+  def validate_case_link(type, linked_case, attribute)
+    if not CaseLinkTypeValidator.classes_can_be_linked_with_type?(
+             klass: self.class.to_s,
+             linked_klass: linked_case.class.to_s,
+             type: type,
+           )
+
+      case_class_name = I18n.t("cases.types.#{self.class}")
+      linked_class_name = I18n.t("cases.types.#{linked_case.class}")
+      errors.add(
+        attribute,
+        :wrong_type,
+        message: I18n.t('activerecord.errors.models.linked_case.wrong_type',
+                        type: type,
+                        case_class: case_class_name,
+                        linked_case_class: linked_class_name)
+      )
+
+    end
+  end
 end
 #rubocop:enable Metrics/ClassLength

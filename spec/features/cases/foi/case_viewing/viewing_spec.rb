@@ -96,9 +96,33 @@ feature 'viewing details of case in the system' do
       cases_show_page.load id: old_foi.id
       expect(cases_show_page).to have_no_escalation_notice
     end
-
   end
 
+  context 'FOI case with both full case details and attachment' do
+    given(:request_file) { "#{Faker::Internet.slug}.pdf" }
+    given(:foi) do
+      create :accepted_case, :sent_by_post,
+             requester_type: :offender,
+             name: 'Freddie FOI',
+             email: 'freddie.foi@testing.digital.justice.gov.uk',
+             subject: 'this is a foi',
+             message: 'viewing foi details test message',
+             responding_team: responding_team,
+             uploaded_request_files: [request_file]
+    end
+
+    scenario 'displaying case details' do
+      cases_show_page.load id: foi.id
+
+      expect(cases_show_page.request).to have_message
+      expect(cases_show_page.request.message.text)
+        .to eq 'viewing foi details test message'
+      expect(cases_show_page.request).to have_attachments
+      expect(cases_show_page.request.attachments.count).to eq 1
+      expect(cases_show_page.request.attachments[0].collection[0].filename.text)
+        .to eq request_file
+    end
+  end
 
   context 'viewing case request with a long message' do
 

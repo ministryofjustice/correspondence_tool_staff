@@ -9,10 +9,7 @@ class CaseTypeFilter
   end
 
   def self.available_case_types(user)
-    user_types = user.teams
-                   .collect { |team| team.correspondence_types.pluck(:abbreviation) }
-                   .flatten
-                   .uniq
+    user_types = user.permitted_correspondence_types.map(&:abbreviation)
     types = {}
 
     if "FOI".in?(user_types)
@@ -26,6 +23,12 @@ class CaseTypeFilter
     if "SAR".in?(user_types) && FeatureSet.sars.enabled?
       types.merge!(
         'sar-non-offender' => I18n.t('filters.case_types.sar-non-offender')
+      )
+    end
+
+    if 'ICO'.in?(user_types) && FeatureSet.ico.enabled?
+      types.merge!(
+        'ico-appeal' => 'ICO appeals'
       )
     end
 
@@ -119,11 +122,16 @@ class CaseTypeFilter
       when 'foi-ir-compliance' then records.internal_review_compliance
       when 'foi-ir-timeliness' then records.internal_review_timeliness
       when 'sar-non-offender'  then records.non_offender_sar
+      when 'ico-appeal'        then records.ico_appeal
       else
         raise NameError.new("unknown case type filter '#{filter}")
       end
     end
+    execute_filters(filters, records)
+  end
 
+
+  def execute_filters(filters, records)
     if filters.present?
       filters.reduce(Case::Base.none) do |result, filter|
         result.or(filter)

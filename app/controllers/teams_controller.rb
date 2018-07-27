@@ -15,6 +15,7 @@ class TeamsController < ApplicationController
 
   def index
     @teams = policy_scope(Team).order(:name)
+    @reports = ReportType.where(full_name: 'Business unit map')
     unless current_user.manager?
       render :teams_for_user
     else
@@ -24,6 +25,7 @@ class TeamsController < ApplicationController
 
   def show
     authorize @team
+    @reports = ReportType.where(full_name: 'Business unit map')
     @children = @team.children.order(:name)
   end
 

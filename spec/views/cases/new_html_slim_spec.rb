@@ -4,7 +4,7 @@ describe 'cases/new.html.slim', type: :view do
 
   context 'FOIs' do
     it 'displays the new case page' do
-      kase = Case::FOI::Standard.new
+      kase = Case::FOI::Standard.new.decorate
       assign(:case_types, ['Standard', 'ComplianceReview', 'TimelinessReview'])
       assign(:correspondence_type, 'foi')
       assign(:case, kase)
@@ -70,6 +70,38 @@ describe 'cases/new.html.slim', type: :view do
       expect(page).to have_submit_button
 
       expect(page.submit_button.value).to eq "Next - Assign case"
+    end
+  end
+
+  context 'ICOs' do
+    it 'displays the new case page' do
+      kase = build(:ico_foi_case).decorate
+      assign(:case, kase)
+      assign(:correspondence_type, kase.correspondence_type)
+      assign(:s3_direct_post, S3Uploader.s3_direct_post_for_case(kase, :request))
+
+      render
+
+      cases_new_ico_page.load(rendered)
+
+      page = cases_new_ico_page
+
+      expect(page).to have_ico_reference_number
+      expect(page).to have_original_case_number
+
+      expect(page).to have_date_received_day
+      expect(page).to have_date_received_month
+      expect(page).to have_date_received_year
+
+      expect(page).to have_external_deadline_day
+      expect(page).to have_external_deadline_month
+      expect(page).to have_external_deadline_year
+
+      expect(page).to have_subject
+      expect(page).to have_case_details
+
+      expect(page).to have_dropzone_container
+      expect(page.dropzone_container['data-max-filesize-in-mb']).to eq Settings.max_attachment_file_size_in_MB.to_s
     end
   end
 end

@@ -42,34 +42,35 @@ class DevTeamSeeder
   def add_business_units
     @foi = CorrespondenceType.foi
     @sar = CorrespondenceType.sar
+    @ico = CorrespondenceType.ico
     @bu_dacu_bmt  = find_or_create_business_unit(parent: @dir_dacu,
                                                  name: 'Disclosure BMT',
                                                  code: Settings.foi_cases.default_managing_team,
                                                  role: 'manager',
-                                                 correspondence_type_ids: [@foi.id, @sar.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
     @bu_dacu_dis  = find_or_create_business_unit(parent: @dir_dacu,
                                                  name: 'Disclosure',
                                                  code: Settings.foi_cases.default_clearance_team,
                                                  role: 'approver',
-                                                 correspondence_type_ids: [@foi.id, @sar.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
     @bu_private   = find_or_create_business_unit(parent: @dir_private,
                                                  name: 'Private Office',
                                                  code: Settings.private_office_team_code,
                                                  role: 'approver',
-                                                 correspondence_type_ids: [@foi.id, @sar.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
     @bu_press     = find_or_create_business_unit(parent: @dir_press,
                                                  name: 'Press Office',
                                                  code: Settings.press_office_team_code,
                                                  role: 'approver',
-                                                 correspondence_type_ids: [@foi.id, @sar.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
     @bu_laa       = find_or_create_business_unit(parent: @dir_laa,
                                                  name: 'Legal Aid Agency (LAA)',
                                                  role: 'responder',
-                                                 correspondence_type_ids: [@foi.id, @sar.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
     @bu_hr        = find_or_create_business_unit(parent: @dir_hr,
                                                  name: 'MoJ Human Resources (MoJ HR)',
                                                  role: 'responder',
-                                                 correspondence_type_ids: [@foi.id, @sar.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
     @bu_hmctsne   = find_or_create_business_unit(parent: @dir_rsus,
                                                  name: 'North East Regional Support Unit (NE RSU)',
                                                  role: 'responder',
@@ -77,11 +78,11 @@ class DevTeamSeeder
     @bu_prop      = find_or_create_business_unit(parent: @dir_prop,
                                                  name: 'HMCTS Property Directorate',
                                                  role: 'responder',
-                                                 correspondence_type_ids: [@foi.id, @sar.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
     @bu_utiac     = find_or_create_business_unit(parent: @dir_trib,
                                                  name: 'Upper Tribunal Asylum Chamber',
                                                  role: 'responder',
-                                                 correspondence_type_ids: [@foi.id, @sar.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
     @bu_utl       = find_or_create_business_unit(parent: @dir_trib,
                                                  name: 'Upper Tribunal Lands (UT Lands)',
                                                  role: 'responder',
@@ -93,7 +94,7 @@ class DevTeamSeeder
     @bu_candi     = find_or_create_business_unit(parent: @dir_candi,
                                                  name: 'Communications and Information',
                                                  role: 'responder',
-                                                 correspondence_type_ids: [@foi.id, @sar.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
   end
   #rubocop:enable Metrics/MethodLength
 

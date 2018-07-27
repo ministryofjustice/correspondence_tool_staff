@@ -29,7 +29,6 @@ describe HostEnv do
       end
     end
 
-
     describe 'safe' do
       before(:each) { @yielded = false }
       it 'yields to the block' do
@@ -53,6 +52,12 @@ describe HostEnv do
     describe 'HostEnv.dev?' do
       it 'returns true' do
         expect(HostEnv.dev?).to be false
+      end
+    end
+
+    describe '.test?' do
+      it 'returns true' do
+        expect(HostEnv.test?).to be true
       end
     end
 

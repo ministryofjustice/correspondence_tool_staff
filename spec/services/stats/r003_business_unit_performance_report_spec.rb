@@ -6,6 +6,8 @@ module Stats
 
     before(:all) do
       DbHousekeeping.clean
+      create :report_type, :r003
+
       Team.all.map(&:destroy)
       Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
         @bizgrp_ab = create :business_group, name: 'BGAB'
@@ -62,6 +64,7 @@ module Stats
 
     after(:all) do
       DbHousekeeping.clean
+      ReportType.r003.destroy
     end
 
     context 'defining the period' do
@@ -251,7 +254,7 @@ module Stats
         before do
           Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
             # report = R003BusinessUnitPerformanceReport.new
-            report = R003BusinessUnitPerformanceReport.new(Time.now.beginning_of_year, Time.now, true)
+            report = R003BusinessUnitPerformanceReport.new(Date.today.beginning_of_year, Date.today, true)
             report.run
             @results = report.results
           end
@@ -392,7 +395,7 @@ module Stats
               BGCD,DRCD,RTD,#{@team_d.team_lead},0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0,0.0,1,0,0,0,1
               Total,"","","",33.3,12,3,3,3,3,33.3,5,1,1,2,1,33.3,17,4,4,5,4,0.0,17,0,8,0,9
             EOCSV
-            report = R003BusinessUnitPerformanceReport.new(Time.now.beginning_of_year, Time.now, true)
+            report = R003BusinessUnitPerformanceReport.new(Date.today.beginning_of_year, Date.today, true)
             report.run
             actual_lines = report.to_csv.split("\n")
             expected_lines = expected_text.split("\n")

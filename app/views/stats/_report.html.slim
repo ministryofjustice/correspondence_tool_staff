@@ -1,0 +1,22 @@
+section
+  h2.heading-large
+    = correspondence_type
+  ul.report-list
+    - reports.each do | report |
+      li
+        h3.bold-medium
+          = report.full_name
+        .grid-row
+          .column-two-thirds
+            .report-description
+              = report.class_name.constantize.description
+            .report-period
+              span.bold-small
+                = "Reporting period: "
+              = report.default_reporting_period_text
+            .report-list-download
+              = link_to stats_download_path(id: report.id), target: '_blank' do
+                = 'Download report'
+                span.visually-hidden
+                  = " - #{ report.full_name }"
+              = ' (.csv file)'

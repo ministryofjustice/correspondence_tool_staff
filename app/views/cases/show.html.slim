@@ -5,7 +5,7 @@
   .alert-green
     = t('alerts.assignment_accepted_html', case_list_url: cases_path)
 
-- if @case.within_escalation_deadline?
+- if @case.has_attribute?(:escalation_deadline) && @case.within_escalation_deadline?
   .alert-orange
     = t('alerts.escalation_warning_html', escalation_deadline: @case.escalation_deadline)
 

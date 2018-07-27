@@ -22,6 +22,19 @@ module Features
       kase
     end
 
+    def create_and_assign_ico_case(user:,
+                                   responding_team:,
+                                   original_case:,
+                                   related_cases: [])
+      login_step user: user
+
+      kase = create_ico_case_step(original_case: original_case,
+                                  related_cases: related_cases)
+      assign_case_step business_unit: responding_team
+      logout_step
+      kase
+    end
+
     def assign_unassigned_case(user:, responding_team:)
       login_step user: user
       assign_case_step business_unit: responding_team
@@ -155,6 +168,58 @@ module Features
         cases = cases_search_page.case_list
         expect(cases.count).to eq num_expected_results
       end
+    end
+
+    def go_to_case_reassign(expected_users:)
+      cases_show_page.actions.reassign_user.click
+      unless expected_users.nil?
+        expect(reassign_user_page.reassign_to.users.size).to eq expected_users.count
+        expected_user_names = expected_users.map do |u|
+          if u.respond_to? :full_name
+            u.full_name
+          else
+            u.to_s
+          end
+          # u.respond_to? :full_name ? u.full_name : u.to_s
+        end
+        expect(reassign_user_page.reassign_to.users.map(&:text))
+          .to match_array expected_user_names
+      end
+    end
+
+    def do_case_reassign_to(user)
+      reassign_user_page.choose_assignment_user user
+      reassign_user_page.confirm_button.click
+      expect(cases_show_page).to be_displayed
+      expect(cases_show_page.case_history.entries.first)
+        .to have_text("re-assigned this case to #{user.full_name}")
+    end
+
+    def upload_and_approve_response_as_dacu_disclosure_specialist(kase, dd_specialist)
+      upload_response_with_action_param(kase, dd_specialist, 'upload-approve')
+    end
+
+    def upload_response_and_send_for_redraft_as_disclosure_specialist(kase, dd_specialist)
+      upload_response_with_action_param(kase, dd_specialist, 'upload-redraft')
+    end
+
+    def upload_response_with_action_param(kase, user, action)
+      uploads_key = "uploads/#{kase.id}/responses/#{Faker::Internet.slug}.jpg"
+      raw_params = ActionController::Parameters.new(
+        {
+          "type"=>"response",
+          "uploaded_files"=>[uploads_key],
+          "id"=>kase.id.to_s,
+          "controller"=>"cases",
+          "upload_comment" => "I've uploaded it",
+          "action"=>"upload_responses"}
+      )
+      params = BypassParamsManager.new(raw_params)
+      rus = ResponseUploaderService.new(kase, user, params, action)
+      uploader = rus.instance_variable_get :@uploader
+      allow(uploader).to receive(:move_uploaded_file)
+      allow(uploader).to receive(:remove_leftover_upload_files)
+      rus.upload!
     end
   end
 end

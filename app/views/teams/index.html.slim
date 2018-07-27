@@ -39,5 +39,25 @@
             td aria-label="Actions"
               = link_to 'Edit', edit_team_path(team, team_type: 'bg'), { class: 'action--edit' }
 
-br
-= link_to 'Add new business group', new_team_path(team_type: 'bg'), class: 'button'
+    br
+    = link_to 'Add new business group', new_team_path(team_type: 'bg'), class: 'button'
+
+
+section
+  h2.heading-large
+    = "Business unit maps"
+  ul.report-list
+    - @reports.each do |report|
+      li
+        h3.bold-medium
+          = report.full_name
+        .grid-row
+          .column-two-thirds
+            div
+              = report.class_name.constantize.description
+            .report-list-download
+              = link_to stats_download_path(id: report.id), target: '_blank' do
+                = 'Download report'
+                span.visually-hidden
+                  = " - #{ report.full_name }"
+              = ' (.csv file)'

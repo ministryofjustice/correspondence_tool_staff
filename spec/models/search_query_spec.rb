@@ -264,13 +264,21 @@ describe SearchQuery do
 
   describe '#results' do
     before :all do
-      @setup = StandardSetup.new(only_cases: [
-                                   :std_draft_foi,
-                                   :std_draft_foi_late,
-                                   :trig_draft_foi,
-                                   :std_draft_irt,
-                                   :std_closed_foi,
-                                 ])
+      @responding_team = create :responding_team
+      @setup = StandardSetup.new(only_cases: {
+                                   std_draft_foi:                   {},
+                                   std_draft_foi_late:              {},
+                                   trig_draft_foi:                  {},
+                                   std_draft_irt:                   {},
+                                   std_closed_foi:                  {},
+                                   ico_foi_unassigned:              {},
+                                   ico_foi_awaiting_responder:      {responding_team: @responding_team},
+                                   ico_foi_accepted:                {responding_team: @responding_team},
+                                   ico_sar_unassigned:              {},
+                                   ico_sar_awaiting_responder:      {responding_team: @responding_team},
+                                   ico_sar_accepted:                {responding_team: @responding_team},
+                                   ico_sar_pending_dacu_clearance:  {responding_team: @responding_team},
+                                })
       Case::Base.update_all_indexes
     end
 
@@ -278,19 +286,6 @@ describe SearchQuery do
       DbHousekeeping.clean
     end
 
-    # let!(:case_standard)      { create :accepted_case,
-    #                                    :indexed,
-    #                                    subject: 'Winnie the Pooh' }
-    # let!(:case_trigger)       { create :accepted_case,
-    #                                    :flagged,
-    #                                    :indexed,
-    #                                    subject: 'Tigger the tiger' }
-    # let!(:case_ir_compliance) { create :compliance_review,
-    #                                    :indexed,
-    #                                    subject: 'Gruffalo' }
-    # let!(:case_closed)        { create :closed_case,
-    #                                    :indexed,
-    #                                    subject: 'Super Worm' }
     let(:user)    { create :manager }
 
     describe 'results from using a filter' do
@@ -310,13 +305,97 @@ describe SearchQuery do
         expect(search_query.results).to eq [@setup.trig_draft_foi]
       end
 
-      it 'returns the result of filtering for type' do
-        search_query = create :search_query,
-                              user_id: user.id,
-                              search_text: 'draft',
-                              filter_case_type: ['foi-ir-timeliness']
-        expect(search_query.results).to eq [@setup.std_draft_irt]
+      describe 'filtering by type' do
+        context 'filtering by FOI Internal review for timeliness' do
+          it 'returns the result of filtering for type' do
+            search_query = create :search_query,
+                                  user_id: user.id,
+                                  search_text: 'draft',
+                                  filter_case_type: ['foi-ir-timeliness']
+            expect(search_query.results).to eq [@setup.std_draft_irt]
+          end
+        end
+
+        context 'filtering by ICO' do
+          context 'manager' do
+            it 'returns ICO appeals for both FOIs and SARs' do
+              search_query = create :search_query,
+                                    user_id: user.id,
+                                    search_text: 'ico',
+                                    filter_case_type: ['ico-appeal']
+              expect(search_query.results).to eq [@setup.ico_foi_unassigned,
+                                                  @setup.ico_foi_awaiting_responder,
+                                                  @setup.ico_foi_accepted,
+                                                  @setup.ico_sar_unassigned,
+                                                  @setup.ico_sar_awaiting_responder,
+                                                  @setup.ico_sar_accepted,
+                                                  @setup.ico_sar_pending_dacu_clearance,
+                                                 ]
+            end
+          end
+
+          context 'responder in a team that the ICO SARs are not assigned to'  do
+            it 'doesnt show the ICO SAR' do
+              responder = create :responder
+              search_query = create :search_query,
+                                    user_id: responder.id,
+                                    search_text: 'ico',
+                                    filter_case_type: ['ico-appeal']
+              expect(search_query.results).to eq [@setup.ico_foi_unassigned,
+                                                  @setup.ico_foi_awaiting_responder,
+                                                  @setup.ico_foi_accepted,
+                                                 ]
+            end
+          end
+
+          context 'responder in a team that the ICO SARs have been assigned to' do
+            it 'returns only those ico sars that are assigned to the responders team' do
+              responder = @responding_team.users.first
+              search_query = create :search_query,
+                                    user_id: responder.id,
+                                    search_text: 'ico',
+                                    filter_case_type: ['ico-appeal']
+              expect(search_query.results).to eq [@setup.ico_foi_unassigned,
+                                                  @setup.ico_foi_awaiting_responder,
+                                                  @setup.ico_foi_accepted,
+                                                  @setup.ico_sar_awaiting_responder,
+                                                  @setup.ico_sar_accepted,
+                                                  @setup.ico_sar_pending_dacu_clearance,
+                                                 ]
+            end
+          end
+
+          context 'disclosure specialist' do
+            it 'returns ICO appeals for both FOIs and SARs' do
+              disclosure_specialist = find_or_create :disclosure_specialist
+              search_query = create :search_query,
+                                    user_id: disclosure_specialist.id,
+                                    search_text: 'ico',
+                                    filter_case_type: ['ico-appeal']
+              expect(search_query.results).to eq [@setup.ico_foi_unassigned,
+                                                  @setup.ico_foi_awaiting_responder,
+                                                  @setup.ico_foi_accepted,
+                                                  @setup.ico_sar_pending_dacu_clearance
+                                                 ]
+            end
+          end
+
+          context 'press officer' do
+            it 'doesnt show the ICO SAR' do
+              press_officer = create :press_officer
+              search_query = create :search_query,
+                                    user_id: press_officer.id,
+                                    search_text: 'ico',
+                                    filter_case_type: ['ico-appeal']
+              expect(search_query.results).to eq [@setup.ico_foi_unassigned,
+                                                  @setup.ico_foi_awaiting_responder,
+                                                  @setup.ico_foi_accepted,
+                                                 ]
+            end
+          end
+        end
       end
+
 
       it 'returns the result of filtering by status' do
         search_query = create :search_query,
@@ -333,6 +412,7 @@ describe SearchQuery do
                               filter_timeliness: ['late']
         expect(search_query.results).to eq [@setup.std_draft_foi_late]
       end
+
     end
 
     context 'case listing' do

@@ -44,6 +44,9 @@ RSpec.describe User, type: :model do
   let(:approver)        { create :approver }
   let(:press_officer)   { create :press_officer }
   let(:deactivated_user){ create :deactivated_user }
+  let(:foi) { create(:foi_correspondence_type) }
+  let(:ico) { create(:ico_correspondence_type) }
+  let(:sar) { create(:sar_correspondence_type) }
 
   describe '#manager?' do
     it 'returns true for a manager' do
@@ -227,6 +230,27 @@ RSpec.describe User, type: :model do
       existing_user.team_roles << TeamsUsersRole.new(team: team_2, role: 'responder')
       existing_user.save!
       expect(existing_user.multiple_team_member?).to be true
+    end
+  end
+
+  describe '#permitted_correspondence_types' do
+    it 'returns any correspondence types associated with users teams' do
+      expect(manager.permitted_correspondence_types)
+        .to match_array([foi, ico, sar])
+    end
+
+    it 'does not include SAR if that feature is disabled' do
+      disable_feature(:sars)
+
+      expect(manager.permitted_correspondence_types)
+        .to match_array([foi, ico])
+    end
+
+    it 'does not include ICO if that feature is disabled' do
+      disable_feature(:ico)
+
+      expect(manager.permitted_correspondence_types)
+        .to match_array([foi, sar])
     end
   end
 

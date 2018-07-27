@@ -13,6 +13,9 @@
 require 'rails_helper'
 
 describe CorrespondenceType, type: :model do
+  let(:foi) { create(:foi_correspondence_type) }
+  let(:ico) { create(:ico_correspondence_type) }
+  let(:sar) { create(:sar_correspondence_type) }
 
   it { should validate_presence_of(:name) }
   it { should validate_presence_of(:abbreviation) }
@@ -86,6 +89,23 @@ describe CorrespondenceType, type: :model do
 
     it 'returns them in alphabetic order of report category name' do
       expect(cts.map(&:report_category_name)).to eq [ 'FOI report', 'SAR report' ]
+    end
+  end
+
+  describe '#sub_classes' do
+    it 'returns FOI sub-classes' do
+      expect(foi.sub_classes).to eq [Case::FOI::Standard,
+                                     Case::FOI::TimelinessReview,
+                                     Case::FOI::ComplianceReview]
+    end
+
+    it 'returns ICO sub-classes' do
+      expect(ico.sub_classes).to eq [Case::ICO::FOI,
+                                     Case::ICO::SAR]
+    end
+
+    it 'returns SAR sub-classes' do
+      expect(sar.sub_classes).to eq [Case::SAR]
     end
   end
 end

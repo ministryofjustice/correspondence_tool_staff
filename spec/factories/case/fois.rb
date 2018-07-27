@@ -341,6 +341,18 @@ FactoryBot.define do
     end
   end
 
+  factory :redrafting_case, parent: :pending_private_clearance_case do
+    after(:create) do |kase, _evaluator|
+      team_dacu_disclosure = find_or_create :team_dacu_disclosure
+      disclosure_approval  = kase.assignments.approving.where(team_id: team_dacu_disclosure.id).first
+      disclosure_approval.update(approved: true)
+
+      kase.update(current_state: 'drafting')
+      kase.reload
+    end
+
+  end
+
   factory :approved_case, parent: :pending_dacu_clearance_case do
     transient do
       approving_team { find_or_create :team_dacu_disclosure }

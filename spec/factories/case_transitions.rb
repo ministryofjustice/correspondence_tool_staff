@@ -270,4 +270,12 @@ FactoryBot.define do
     acting_team_id { responding_team.id }
     target_team_id { disclosure.id }
   end
+
+  factory :case_transition_respond_to_ico, parent: :case_transition do
+    association         :case, factory: [:ico_foi_case]
+    event               'respond'
+    to_state            { 'responded' }
+    acting_user_id      { find_or_create(:team_dacu_disclosure).users.first.id }
+    acting_team_id       { find_or_create(:team_dacu_disclosure).id }
+  end
 end

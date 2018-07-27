@@ -35,25 +35,24 @@ describe 'cases/case_request.html.slim', type: :view do
 
 
   describe 'Displaying a short request' do
-    let(:kase) { double Case::BaseDecorator,
-                        message: "This is a request for information",
-                        message_extract: ["This is a request for information"],
-                        delivery_method: "sent_by_email",
-                        sent_by_email?: true,
-                        is_sar?: false,
-                        is_foi?: true
-    }
+    let(:kase) { create(:case_being_drafted,
+                        message: "This is a request for information") }
+    let(:decorated_case) do
+      kase.decorate.tap do |c|
+        allow(c).to receive(:message_extract)
+                      .and_return(["This is a request for information"])
+      end
+    end
 
     let(:partial) do
       render partial: 'cases/case_request.html.slim',
-             locals:{ case_details: kase}
+             locals:{ case_details: decorated_case }
 
       case_request_section(rendered)
     end
 
     it 'displays the full request for a short request ' do
-      expect(partial.message.text)
-          .to eq kase.message
+      expect(partial.message.text).to eq kase.message
     end
 
     it 'does not have a collapsed request' do
@@ -66,19 +65,16 @@ describe 'cases/case_request.html.slim', type: :view do
 
 
   describe 'displaying a long request and collapsing content' do
-    let(:kase) { double Case::BaseDecorator,
-                        message:  long_message,
-                        message_extract: [short_message,last_part],
-                        delivery_method: "sent_by_email",
-                        sent_by_email?: true,
-                        is_sar?: false,
-                        is_foi?: true
-
-    }
+    let(:kase) { create(:case_being_drafted, message: long_message) }
+    let(:decorated_case) do
+      kase.decorate.tap do |c|
+        allow(c).to receive(:message_extract).and_return([short_message,last_part])
+      end
+    end
 
     let(:partial) do
       render partial: 'cases/case_request.html.slim',
-             locals:{ case_details: kase}
+             locals:{ case_details: decorated_case}
 
       case_request_section(rendered)
     end
@@ -96,11 +92,15 @@ describe 'cases/case_request.html.slim', type: :view do
 
   describe 'displays request attachments for postal FOI' do
     let(:sent_by_post) { create :case, :sent_by_post }
+    let(:decorated_case) do
+      sent_by_post.decorate.tap do |c|
+        allow(c).to receive(:message_extract).and_return([sent_by_post.message, ''])
+      end
+    end
 
     let(:partial) do
-      stub_s3_uploader_for_all_files!
       render partial: 'cases/case_request.html.slim',
-             locals:{ case_details: sent_by_post }
+             locals:{ case_details: decorated_case }
 
       case_request_section(rendered)
     end

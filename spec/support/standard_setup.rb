@@ -1,5 +1,49 @@
 class StandardSetup # rubocop:disable Metrics/ClassLength
 
+  # Class that instantiates standard case factories.
+  #
+  # Instantiate the class with:
+  #
+  #   @setup = StandardSetup.new(only_cases: [:std_draft_foi])
+  #
+  # And then you can access the cases with:
+  #
+  #   @setup.std_draft_foi
+  #
+  # The class will also instantiate teams and users as required, that may be
+  # accessed:
+  #
+  #   @setup.disclosure_bmt_user
+  #
+  # If you want to customise aspects of the cases, pass in a <tt>Hash</tt> for
+  # the <tt>only_cases</tt> parameter:
+  #
+  #  @setup = StandardSetup.new(only_cases: {
+  #             std_draft_foi: received_date: 2.days.ago
+  #           })
+  #
+  # The naming scheme for cases is:
+  #
+  #   <workflow>_<state>_<other_info>
+  #
+  # where:
+  #
+  # * workflow:
+  #   * std - standard workflow
+  #   * trig - trigger workflow
+  #   * full = full_approval workflow
+  #
+  # * state
+  #   * unassigned - unassigned
+  #   * awdis       - awaiting_dispatch
+  #   * awresp      - awaiting_responder
+  #   * closed      - closed
+  #   * draft       - drafting
+  #   * pdacu       - pending_dacu_clearance
+  #   * ppress      - pending_press_office_clearance
+  #   * pprivate    - pending_private_office_clerance
+  #   * responded   - responded
+  #
   class << self
     extend FactoryBot::Syntax::Methods
 
@@ -81,6 +125,29 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
     # Each case is created in a lambda so that it can be conditionally created
     # depending on how StandardSetup is instantiated (see the only_cases arg). 
     @@cases = {
+      ico_foi_unassigned: ->(attributes={}) {
+        create :ico_foi_case, {identifier: 'ico_foi_unassigned'}.merge(attributes)
+      },
+      ico_foi_awaiting_responder: ->(attributes={}) {
+        create :awaiting_responder_ico_foi_case, {identifier: 'ico_foi_awaiting_responder'}.merge(attributes)
+      },
+      ico_foi_accepted: ->(attributes={}) {
+        create :accepted_ico_foi_case, {identifier: 'ico_foi_accepted'}.merge(attributes)
+      },
+
+      ico_sar_unassigned: ->(attributes={}) {
+        create :ico_sar_case, {identifier: 'ico_sar_unassigned'}.merge(attributes)
+      },
+      ico_sar_awaiting_responder: ->(attributes={}) {
+        create :awaiting_responder_ico_sar_case, {identifier: 'ico_sar_awaiting_responder'}.merge(attributes)
+      },
+      ico_sar_accepted: ->(attributes={}) {
+        create :accepted_ico_sar_case, {identifier: 'ico_sar_accepted'}.merge(attributes)
+      },
+      ico_sar_pending_dacu_clearance: ->(attributes={}) {
+        create :pending_dacu_clearance_ico_sar_case, {identifier: 'ico_sar_pending_dacu_clearance'}.merge(attributes)
+      },
+
       sar_noff_unassigned: ->(attributes={}) {
         create(:sar_case,
                {identifier: 'sar_noff_unassigned'}
@@ -437,25 +504,6 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
   attr_reader :cases, :user_teams, :users
 
   def initialize(only_cases: nil)
-    # cases are named <workflow>_<state>_<other_info> where:
-    #
-    # * workflow:
-    #   * std - standard workflow
-    #   * trig - trigger workflow
-    #   * full = full_approval workflow
-    #
-    # * state
-    #   * unassigned - unassigned
-    #   * awdis       - awaiting_dispatch
-    #   * awresp      - awaiting_responder
-    #   * closed      - closed
-    #   * draft       - drafting
-    #   * pdacu       - pending_dacu_clearance
-    #   * ppress      - pending_press_office_clearance
-    #   * pprivate    - pending_private_office_clerance
-    #   * responded   - responded
-    #
-
     @teams = @@teams.transform_values { |team| team.call }
     @users = @@users.transform_values { |user| user.call }
     @user_teams = @@user_teams.transform_values { |user_team| user_team.call }
