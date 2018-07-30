@@ -1,4 +1,7 @@
 class AddR006ToReportTypes < ActiveRecord::Migration[5.0]
+  class ReportType < ActiveRecord::Base
+  end
+
   def up
     rt = ReportType.find_by(abbr: 'R006')
     if rt.nil?

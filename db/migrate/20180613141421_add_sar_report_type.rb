@@ -1,4 +1,7 @@
 class AddSarReportType < ActiveRecord::Migration[5.0]
+  class ReportType < ActiveRecord::Base
+  end
+
   def up
     ReportType.create!(
                   abbr: 'R103',
