@@ -11,26 +11,30 @@ describe 'cases/sar/case_details.html.slim', type: :view do
     super(user)
   end
 
-
   before(:each) { login_as bmt_manager }
-
-
 
   describe 'basic_details' do
     it 'displays the initial case details (non third party case' do
+      assign(:case, unassigned_case)
       render partial: 'cases/sar/case_details.html.slim',
              locals:{ case_details: unassigned_case}
 
       partial = case_details_section(rendered).sar_basic_details
+
+      expect(case_details_section(rendered).section_heading.text).to eq 'Case details'
+
       expect(partial.case_type).to have_no_sar_trigger
       expect(partial.case_type.data.text).to eq "SAR  "
       expect(partial.date_received.data.text)
           .to eq unassigned_case.received_date.strftime(Settings.default_date_format)
+      expect(partial.external_deadline.data.text)
+          .to eq unassigned_case.external_deadline
       expect(partial.third_party.data.text).to eq 'No'
     end
 
     it 'displays third party details if present' do
       third_party_case = (create :sar_case, :third_party, name: 'Rick Westor').decorate
+      assign(:case, third_party_case)
       render partial: 'cases/sar/case_details.html.slim',
              locals:{ case_details: third_party_case}
       partial = case_details_section(rendered).sar_basic_details
@@ -44,6 +48,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       unassigned_case.postal_address = "1 High Street\nAnytown\nAT1 1AA"
       unassigned_case.reply_method = 'send_by_post'
 
+      assign(:case, unassigned_case)
       render partial: 'cases/sar/case_details.html.slim',
              locals:{ case_details: unassigned_case}
 
@@ -57,6 +62,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       unassigned_case.postal_address = nil
       unassigned_case.email = 'john.doe@moj.com'
 
+      assign(:case, unassigned_case)
       render partial: 'cases/sar/case_details.html.slim',
              locals:{ case_details: unassigned_case}
 
@@ -69,6 +75,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
 
   describe 'responders details' do
     it 'displays the responders team name' do
+      assign(:case, accepted_case)
       render partial: 'cases/sar/case_details.html.slim',
              locals:{ case_details: accepted_case}
 
@@ -80,6 +87,28 @@ describe 'cases/sar/case_details.html.slim', type: :view do
     end
   end
 
+  describe 'original case details' do
+    let(:ico_case) { create :ico_sar_case}
+
+    it 'displays as original case' do
+      assign(:case, ico_case)
+      render partial: 'cases/sar/case_details.html.slim',
+               locals:{ case_details: ico_case.original_case.decorate}
+
+      partial = case_details_section(rendered)
+      expect(partial.section_heading.text).to eq "Original case details"
+    end
+
+    it 'displays a link to original case' do
+      assign(:case, ico_case)
+      render partial: 'cases/sar/case_details.html.slim',
+               locals:{ case_details: ico_case.original_case.decorate}
+
+      partial = case_details_section(rendered)
+      expect(partial).to have_view_original_case_link
+    end
+
+  end
 
 
 end

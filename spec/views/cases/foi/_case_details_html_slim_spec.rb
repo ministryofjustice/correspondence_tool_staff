@@ -21,10 +21,13 @@ describe 'cases/foi/case_details.html.slim', type: :view do
 
   describe 'foi_basic_details' do
     it 'displays the initial case details' do
+      assign(:case, unassigned_case)
       render partial: 'cases/foi/case_details.html.slim',
              locals:{ case_details: unassigned_case}
 
       partial = case_details_section(rendered).foi_basic_details
+
+      expect(case_details_section(rendered).section_heading.text).to eq 'Case details'
 
       expect(partial).to be_all_there
 
@@ -54,7 +57,7 @@ describe 'cases/foi/case_details.html.slim', type: :view do
 
     it 'displays a trigger badge if the case has been triggered' do
       trigger_case
-
+      assign(:case, trigger_case)
       render partial: 'cases/foi/case_details.html.slim',
                    locals:{ case_details: trigger_case}
 
@@ -69,7 +72,7 @@ describe 'cases/foi/case_details.html.slim', type: :view do
 
     it 'does not display the email address if one is not provided' do
       unassigned_case.email = nil
-
+      assign(:case, unassigned_case)
       render partial: 'cases/foi/case_details.html.slim',
             locals:{ case_details: unassigned_case}
 
@@ -81,7 +84,7 @@ describe 'cases/foi/case_details.html.slim', type: :view do
 
     it 'does not display the postal address if one is not provided' do
       unassigned_case.postal_address = nil
-
+      assign(:case, unassigned_case)
       render partial: 'cases/foi/case_details.html.slim',
              locals:{ case_details: unassigned_case}
 
@@ -94,6 +97,7 @@ describe 'cases/foi/case_details.html.slim', type: :view do
 
   describe 'responders details' do
     it 'displays the responders team name' do
+      assign(:case, accepted_case)
       render partial: 'cases/foi/case_details.html.slim',
              locals:{ case_details: accepted_case}
 
@@ -109,6 +113,7 @@ describe 'cases/foi/case_details.html.slim', type: :view do
 
     it 'displays all the case closure details' do
       closed_case
+      assign(:case, closed_case)
       render partial: 'cases/foi/case_details.html.slim',
              locals:{ case_details: closed_case}
 
@@ -121,5 +126,26 @@ describe 'cases/foi/case_details.html.slim', type: :view do
 
   end
 
+  describe 'original case details' do
+    let(:ico_case) { create :ico_foi_case}
 
+    it 'displays as original case' do
+      assign(:case, ico_case)
+      render partial: 'cases/foi/case_details.html.slim',
+               locals:{ case_details: ico_case.original_case.decorate}
+
+      partial = case_details_section(rendered)
+      expect(partial.section_heading.text).to eq "Original case details"
+    end
+
+    it 'displays a link to original case' do
+      assign(:case, ico_case)
+      render partial: 'cases/foi/case_details.html.slim',
+               locals:{ case_details: ico_case.original_case.decorate}
+
+      partial = case_details_section(rendered)
+      expect(partial).to have_view_original_case_link
+    end
+
+  end
 end
