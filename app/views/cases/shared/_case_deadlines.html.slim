@@ -1,0 +1,9 @@
+- if case_details.internal_deadline.present?
+  tr.case-internal-deadline
+    th = t('common.case.internal_deadline')
+    td = case_details.internal_deadline
+
+- if case_details.external_deadline.present?
+  tr.case-external-deadline
+    th = t('common.case.external_deadline')
+    td = case_details.external_deadline

@@ -81,5 +81,10 @@ div id="case-#{@case.id}"
     section.case-info.has-page-break
       = render partial: 'cases/case_history', locals: { case_transitions: @case_transitions }
 
+  - if @case.type_abbreviation == 'ICO'
+    section.case-info
+      = render partial: "cases/#{@case.original_case.type_abbreviation.downcase}/case_details",
+              locals: { case_details: @case.original_case.decorate }
+
   section.case-info
     = action_links_for_allowed_events(@case, :extend_for_pit, :destroy_case).join(' | ').html_safe

@@ -1,7 +1,10 @@
 .grid-row
   .column-full.case-details
     h2.request--heading
-      = "Case details"
+      - if @case.type_abbreviation != case_details.type_abbreviation
+        = "Original case details"
+      - else
+        = "Case details"
 
     table
       tbody.foi-basic-details
@@ -16,6 +19,7 @@
 
         = render partial: 'cases/shared/requester_type', locals: { case_details: case_details }
         = render partial: 'cases/shared/date_received', locals: { case_details: case_details }
+        = render partial: 'cases/shared/case_deadlines', locals: { case_details: case_details }
         = render partial: 'cases/shared/delivery_method', locals: { case_details: case_details }
 
       - if case_details.responding_team.present?
@@ -24,8 +28,12 @@
       - if case_details.closed?
         = render partial: 'cases/shared/closed_case_details', locals: { case_details: case_details }
 
-    / display links to edit case and/or closure details
-    = case_details_links(case_details, current_user).html_safe
+    - if @case.type_abbreviation != case_details.type_abbreviation
+      = link_to 'See full original case details (opens in a new tab)',
+              case_path(case_details.id), {target:"blank", class: 'secondary-action-link'}
+    - else
+      / display links to edit case and/or closure details
+      = case_details_links(case_details, current_user).html_safe
 
     - if case_details.closed? && !case_details.allow_event?(current_user, :update_closure)
       p
