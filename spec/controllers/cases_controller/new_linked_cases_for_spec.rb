@@ -131,8 +131,9 @@ describe CasesController do
 
             expect(response).to have_http_status 400
             expect(json_response['linked_case_error'])
-              .to eq "Related case type SAR does not match that of the " \
-                     "original case type FOI"
+              .to eq "You've linked an FOI case as the original for this " \
+                     "appeal. You can now only link other FOI cases or " \
+                     "internal reviews as related to this cases."
           end
 
           it "doesn't allow re-linking of original case as also related case" do

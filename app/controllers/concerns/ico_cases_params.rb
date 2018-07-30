@@ -152,8 +152,17 @@ module ICOCasesParams
     end
   end
 
-  # Use Becca's translation_for_case when it comes available
   def ico_error(attribute, error, options = {})
-    I18n.t("activerecord.errors.models.case/ico.#{attribute}.#{error}", options)
+    klass = case options[:original]
+            when 'FOI' then Case::ICO::FOI
+            when 'SAR' then Case::ICO::SAR
+            else Case::ICO::Base
+            end
+    helpers.translate_for_case(
+      klass,
+      'activerecord.errors.models',
+      "#{attribute}.#{error}",
+      options
+    )
   end
 end

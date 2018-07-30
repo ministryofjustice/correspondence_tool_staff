@@ -220,4 +220,30 @@ module CasesHelper
     end
     links
   end
+
+  def translate_for_case(kase_or_klass, path, key, options = {})
+    if kase_or_klass.is_a? Class
+      klass = kase_or_klass
+    elsif kase_or_klass.respond_to?(:decorated?) && kase_or_klass.decorated?
+      klass = kase_or_klass.object.class
+    else
+      klass = kase_or_klass.class
+    end
+    translation_paths = get_translation_paths(klass.to_s.underscore)
+    default = translation_paths
+                .map { |case_path| :"#{path}.#{case_path}.#{key}" }
+                .concat([:"#{path}.#{key}"])
+    t(default.shift, options.merge(default: default))
+  end
+  alias t4c translate_for_case
+
+  def get_translation_paths(case_type)
+    case_type_segments = case_type.split("/")
+    paths = []
+    while case_type_segments.any?
+      paths << case_type_segments.join("/")
+      case_type_segments.pop
+    end
+    return paths
+  end
 end
