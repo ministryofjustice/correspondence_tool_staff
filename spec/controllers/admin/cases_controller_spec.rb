@@ -21,15 +21,5 @@ describe Admin::CasesController do
         expect(response).to have_rendered('admin/cases/index')
       end
     end
-
-    context 'non-admin user' do
-      before { sign_in manager }
-
-      it 'redirects away' do
-        get :index
-
-        expect(response).to redirect_to('/')
-      end
-    end
   end
 end

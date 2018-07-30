@@ -3,8 +3,6 @@ require 'cts/cases/constants'
 
 
 class Admin::CasesController < AdminController
-  before_action :authorize_admin
-
   before_action :set_correspondence_type,
                 only: [
                   :create,

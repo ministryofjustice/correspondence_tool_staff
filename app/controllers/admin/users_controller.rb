@@ -1,6 +1,4 @@
 class Admin::UsersController < AdminController
-  before_action :authorize_admin
-
   def index
     if @team.present?
       @users = @team.users

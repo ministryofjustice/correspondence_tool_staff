@@ -273,7 +273,7 @@ Rails.application.routes.draw do
     get 'search' => 'cases#search', on: :collection
   end
 
-  authenticate :user, lambda { |u| u.admin? } do
+  authenticated :user, ->(u) { u.admin? } do
     namespace :admin do
       root to: redirect('/admin/cases')
       resources :cases do
