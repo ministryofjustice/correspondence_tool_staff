@@ -68,7 +68,7 @@ group :test do
   gem 'poltergeist'
   gem 'rails-controller-testing', require: false
   gem 'selenium-webdriver'
-  gem 'shoulda-matchers', '~> 3.1', '>= 3.1.1'
+  gem 'shoulda-matchers', '~> 3.1'
   gem 'site_prism'
 end
 

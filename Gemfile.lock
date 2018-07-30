@@ -485,7 +485,7 @@ GEM
     shell-spinner (1.0.4)
       colorize
     shellany (0.0.1)
-    shoulda-matchers (3.1.1)
+    shoulda-matchers (3.1.2)
       activesupport (>= 4.0.0)
     sidekiq (5.1.3)
       concurrent-ruby (~> 1.0)
@@ -639,7 +639,7 @@ DEPENDENCIES
   selenium-webdriver
   sentry-raven (~> 2.6.3)
   shell-spinner
-  shoulda-matchers (~> 3.1, >= 3.1.1)
+  shoulda-matchers (~> 3.1)
   sidekiq (~> 5.1)
   sidekiq-logging-json (~> 0.0.18)
   sidekiq-scheduler
