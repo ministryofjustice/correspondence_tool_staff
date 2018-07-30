@@ -1,0 +1,58 @@
+- if case_details.original_case.present?
+  .grid-row.form-group.original-linked-case
+    .column-full
+      h2.request--heading
+        = "Original case"
+      table
+        thead
+          tr
+            th
+              = 'Case no.'
+            th style="width:25%"
+              = 'Case type'
+            th style="width:60%"
+              = 'Request'
+        tbody
+          tr
+            td
+              = link_to case_path( case_details.original_case.id) do
+                span.visually-hidden
+                  = t('common.view_case')
+                =  case_details.original_case.number
+            td
+              = "#{ case_details.original_case.pretty_type} "
+              =  case_details.original_case.trigger_case_marker
+            td
+              = request_details_html(case_details.original_case)
+
+
+.grid-row.form-group.related-linked-cases
+  .column-full
+    h2.request--heading
+      = "Related case"
+    table
+      thead
+        tr
+          th
+            = 'Case no.'
+          th style="width:25%"
+            = 'Case type'
+          th style="width:60%"
+            = 'Request'
+      tbody
+        - if case_details.related_cases.present?
+          - case_details.related_cases.each do |linked_case|
+            tr
+              td
+                = link_to case_path(linked_case.id) do
+                  span.visually-hidden
+                    = t('common.view_case')
+                  = linked_case.number
+              td
+                = "#{linked_case.pretty_type} "
+                = linked_case.trigger_case_marker
+              td
+                = request_details_html(linked_case)
+        - else
+          td colspan="3"
+            = "No related cases have been added"
