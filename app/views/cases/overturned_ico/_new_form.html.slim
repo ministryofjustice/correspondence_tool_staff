@@ -19,7 +19,7 @@ section
   .heading-medium
     = "#{@case.subject} "
     span.no-break
-      = link_to "ICO appeal (FOI) #{ Case::Base.find(@case.original_case_id).number}",
+      = link_to @case.original_case_description,
               case_path(@case.original_case_id)
 
 hr
