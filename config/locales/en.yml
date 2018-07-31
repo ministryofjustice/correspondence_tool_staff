@@ -209,7 +209,7 @@ en:
 
   button:
     assign: Assign to this unit
-    next_page_assign: Next - Assign case
+    next_page_assign: Create case
     confirm: Confirm
     feedback: Send feedback
     submit: Submit
@@ -330,9 +330,10 @@ en:
           Case::FOI::TimelinessReview: FOI - Internal review for timeliness
           Case::FOI::ComplianceReview: FOI - Internal review for compliance
       case_ico:
-        ico_reference_number: ICO case reference number
-        message: "Case details"
-        related_case_number: Link a related case
+        ico_officer_name: "Name of the ICO information officer who's handling this case"
+        ico_reference_number: "ICO case reference number"
+        message: "ICO's request details"
+        related_case_number: "Link a related case"
       case_sar:
         email: "Recipient email address"
         message: Full case details
@@ -416,6 +417,7 @@ en:
       external_deadline: Final deadline
       internal_deadline: Draft deadline
       ico_case_number: ICO case reference number
+      ico_officer_name: ICO officer name
       filename: File name
       header_case_number: "You are viewing case number "
       header_subject: "Case subject, "
@@ -592,6 +594,12 @@ en:
       heading: Add case details
       received_date: Date received at MOJ
       received_date_copy: "For example, 01 02 2018"
+      case/ico:
+        external_deadline_copy: >-
+          We'll use this date to set the draft deadline, calculated as 20
+          working days before the final deadline.<br>
+          You will be able to change both dates later.
+        sub_heading: Create an ICO Appeal case
       sub_heading: Create %{case_type} case
       uploaded_request_files_hint: |
         You can upload different file types such as Word, Excel,
