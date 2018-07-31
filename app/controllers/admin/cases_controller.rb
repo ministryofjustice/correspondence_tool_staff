@@ -2,9 +2,7 @@ require 'cts/cases/create'
 require 'cts/cases/constants'
 
 
-class Admin::CasesController < ApplicationController
-  before_action :authorize_admin
-
+class Admin::CasesController < AdminController
   before_action :set_correspondence_type,
                 only: [
                   :create,
@@ -36,6 +34,11 @@ class Admin::CasesController < ApplicationController
   end
 
   def index
+    @dates = { }
+    5.times do |n|
+      date = n.business_days.ago.to_date
+      @dates[date] = count_cases_created_on(date)
+    end
     @cases = Case::Base.all.order(id: :desc).page(params[:page]).decorate
   end
 
@@ -49,6 +52,10 @@ class Admin::CasesController < ApplicationController
   end
 
   private
+
+  def count_cases_created_on(date)
+    Case::Base.where(created_at:  date.beginning_of_day..date.end_of_day).count
+  end
 
   def select_type
     permitted_correspondence_types
@@ -89,10 +96,6 @@ class Admin::CasesController < ApplicationController
 
   def permitted_correspondence_types
     @permitted_correspondence_types = [CorrespondenceType.foi, CorrespondenceType.sar]
-  end
-
-  def authorize_admin
-    authorize Case::Base, :user_is_admin?
   end
 
   def available_target_states

@@ -136,26 +136,6 @@ RSpec.describe UsersController, type: :controller do
 
   end
 
-  describe 'GET index' do
-    let(:responder!) { create :responder }
-
-    before { sign_in manager }
-
-    it 'retrieves all the users' do
-      get :index
-      expect(assigns(:users)).to match_array User.all
-    end
-
-    context 'with a team_id param' do
-      let(:params) { { team_id: dacu.id } }
-
-      it 'retrieves the teams users' do
-        get :index, params: params
-        expect(assigns(:users)).to match_array dacu.users
-      end
-    end
-  end
-
   describe 'GET new' do
     let(:params) { { team_id: dacu.id,
                      role: 'manager' } }
