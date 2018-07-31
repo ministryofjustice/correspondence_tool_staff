@@ -50,25 +50,37 @@ class CaseCreateService
 
     if @case.invalid?
       @result = :error
-    elsif @case.requires_flag_for_disclosure_specialists? && @permitted_params[:flag_for_disclosure_specialists].blank?
-      @case.valid?
-      @case.errors.add(:flag_for_disclosure_specialists, :blank)
-      @result = :error
+    elsif flagged_for_disclosure_specialists_mismatch?
+      set_flagged_for_disclosure_errors
     else
-      @case.save!
-      @flash_notice = "#{@case.type_abbreviation} case created<br/>Case number: #{@case.number}".html_safe
+      flag_for_disclosure_if_required
+    end
+    @result != :error
+  end
 
-      if @permitted_params[:flag_for_disclosure_specialists] == 'yes'
-        CaseFlagForClearanceService.new(
+  def flagged_for_disclosure_specialists_mismatch?
+    @case.requires_flag_for_disclosure_specialists? && @permitted_params[:flag_for_disclosure_specialists].blank?
+  end
+
+  def set_flagged_for_disclosure_errors
+    @case.valid?
+    @case.errors.add(:flag_for_disclosure_specialists, :blank)
+    @result = :error
+  end
+
+  def flag_for_disclosure_if_required
+    @case.save!
+    @flash_notice = "#{@case.type_abbreviation} case created<br/>Case number: #{@case.number}".html_safe
+
+    if @permitted_params[:flag_for_disclosure_specialists] == 'yes'
+      CaseFlagForClearanceService.new(
           user: @user,
           kase: @case,
           team: BusinessUnit.dacu_disclosure
-        ).call
-      end
-      flag_for_disclosure if @case.is_a?(Case::ICO::Base)
-      @result = :assign_responder
+      ).call
     end
-    @result != :error
+    flag_for_disclosure if @case.is_a?(Case::ICO::Base)
+    @result = :assign_responder
   end
 
 
