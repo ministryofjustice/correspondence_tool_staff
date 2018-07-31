@@ -79,4 +79,12 @@ class Case::FOI::Standard < Case::Base
 
     internal_deadline >= disclosure_approval_date
   end
+
+  def foi?
+    true
+  end
+
+  def foi_standard?
+    true
+  end
 end

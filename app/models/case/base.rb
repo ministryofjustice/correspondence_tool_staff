@@ -600,6 +600,19 @@ class Case::Base < ApplicationRecord
     closed?
   end
 
+  # predicate methods
+  #
+  def foi?;                 false;  end
+  def foi_standard?;        false;  end
+  def foi_ir_timeliness?;   false;  end
+  def foi_ir_compliance?;   false;  end
+  def sar?;                 false;  end
+  def ico?;                 false;  end
+  def overturned_ico?;      false;  end
+  def overturned_ico_sar?;  false;  end
+  def overturned_ico_foi?;  false;  end
+
+
   private
 
   def default_workflow
