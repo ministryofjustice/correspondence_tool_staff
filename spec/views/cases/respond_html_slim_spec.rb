@@ -31,7 +31,7 @@ describe 'cases/respond.html.slim', type: :view do
     # expect(page.alert.text)
     #     .to eq("\n  \n    Important\n  \n  You can't update a response after marking it as sent.\n")
 
-    expect(page).to have_mark_as_sent_button
+    expect(page).to have_submit_button
 
     expect(page).to have_back_link
   end

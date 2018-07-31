@@ -1,23 +1,14 @@
 require 'rails_helper'
 
 feature 'Mark response as sent' do
-  given(:responder)    { create(:responder) }
+  given(:approver)     { create(:disclosure_specialist) }
   given(:manager)      { create(:manager) }
-  given(:kase)         { create(:case_with_response,
-                                responder: responder,
+  given(:kase)         { create(:approved_ico_foi_case,
+                                approver: approver,
                                 received_date: 10.business_days.ago) }
-  given(:another_kase) { create(:case_with_response,
-                                responder: responder,
-                                received_date: 10.business_days.ago) }
-  given(:responder_teammate) do
-    create :responder,
-           responding_teams: responder.responding_teams
-  end
-
   before do
     kase
-    another_kase
-    login_as responder
+    login_as approver
   end
 
   scenario 'the assigned KILO has uploaded a response' do
@@ -32,9 +23,12 @@ feature 'Mark response as sent' do
     expect(cases_show_page).
         to have_content('The response has been marked as sent.')
 
+    expect(cases_show_page.case_details.response_details.date_responded.data.text)
+      .to eq 0.business_days.ago.strftime(Settings.default_date_format)
+
     login_as manager
     open_cases_page.load
-    expect(open_cases_page.case_numbers).to include kase.number
+    # expect(open_cases_page.case_numbers).to include kase.number
   end
 
   scenario 'the assigned KILO has uploaded a response but decides not to mark as sent' do
@@ -48,17 +42,4 @@ feature 'Mark response as sent' do
 
   end
 
-  context 'as a responder on the same team' do
-    background do
-      login_as responder_teammate
-    end
-
-    scenario 'marking the case as sent' do
-      cases_show_page.load(id: kase.id)
-
-      cases_show_page.actions.mark_as_sent.click
-
-      expect(cases_respond_page).to be_displayed(kase.id)
-    end
-  end
 end

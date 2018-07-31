@@ -380,13 +380,14 @@ class CasesController < ApplicationController
   def confirm_respond
     authorize @case, :can_respond?
     params = respond_params(@case.type_abbreviation)
-    if @case.update(params)
+    if params[:date_responded_dd].blank? || params[:date_responded_mm].blank? || params[:date_responded_yyyy].blank?
+      flash[:alert] = 'There was a problem updating this case'
+      redirect_to respond_case_path(@case)
+    else
+      @case.update(params)
       @case.respond(current_user)
       flash[:notice] = t('.success')
       redirect_to case_path(@case)
-    else
-      flash[:alert] = 'There was a problem updating this case'
-      redirect_to respond_case_path(@case)
     end
   end
 
