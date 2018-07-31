@@ -103,7 +103,7 @@ It can be set to any value you like.
 Examples:
 
 ```
-$ CHROME_BEBUG=1 bundle exec rspec
+$ CHROME_DEBUG=1 bundle exec rspec
 ```
 
 When you have set `CHROME_DEBUG`, you should notice chrome start up and appear on your
