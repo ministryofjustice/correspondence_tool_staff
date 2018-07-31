@@ -2,11 +2,11 @@ module Stats
   class R105SarMonthlyPerformanceReport < BaseMonthlyPerformanceReport
 
     def self.title
-      'Monthly report (SAR)'
+      'Monthly report'
     end
 
     def self.description
-      'Shows number of SAR cases in each state by month'
+      'Includes performance data about SAR requests we received and responded to from the beginning of the year by month.'
     end
 
     def case_scope

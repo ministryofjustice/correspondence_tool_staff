@@ -44,7 +44,7 @@ describe 'stats/index.html.slim', type: :view do
                 .to eq "Includes performance data about how we are meeting statutory deadlines and how we are using exemptions."
           else
             expect(report.description.text)
-                .to eq "Shows number of FOI cases in each state by month"
+                .to eq 'Includes performance data about FOI requests we received and responded to from the beginning of the year by month.'
           end
 
           expect(report.report_period.text).to eq "Reporting period: 1 Jan 2018 to #{today}"
@@ -67,7 +67,7 @@ describe 'stats/index.html.slim', type: :view do
         page.sar.reports.each_with_index  do | report, index |
           expect(report.name.text).to eq sar_reports[index].full_name
           expect(report.description.text)
-              .to eq "Shows number of SAR cases in each state by month"
+              .to eq "Includes performance data about SAR requests we received and responded to from the beginning of the year by month."
 
           expect(report.report_period.text).to eq "Reporting period: 1 Jan 2018 to #{today}"
           expect(report.download).to have_link("Download report - #{sar_reports[index].full_name}",  href: stats_download_path(id: sar_reports[index].id))
