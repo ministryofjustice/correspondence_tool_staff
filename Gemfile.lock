@@ -286,6 +286,8 @@ GEM
       kaminari-core (= 1.1.1)
     kaminari-core (1.1.1)
     key_struct (0.4.2)
+    knapsack (1.16.0)
+      rake
     launchy (2.4.3)
       addressable (~> 2.3)
     libreconv (0.9.1)
@@ -608,6 +610,7 @@ DEPENDENCIES
   jquery-ui-rails
   jsonb_accessor (~> 1.0.0.beta.1)
   kaminari
+  knapsack
   launchy
   libreconv (~> 0.9.1)
   listen (~> 3.1.5)
@@ -656,4 +659,4 @@ DEPENDENCIES
   web-console
 
 BUNDLED WITH
-   1.16.0
+   1.16.3
