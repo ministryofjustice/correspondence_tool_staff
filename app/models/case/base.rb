@@ -69,13 +69,11 @@ class Case::Base < ApplicationRecord
       .order("(properties ->> 'external_deadline')::timestamp with time zone ASC, cases.id")
   }
   scope :by_last_transitioned_date, -> { reorder(last_transitioned_at: :desc) }
-
-
   scope :most_recent_first, -> {reorder("(properties ->> 'external_deadline')::timestamp with time zone DESC, cases.id") }
 
   scope :opened, ->       { where.not(current_state: 'closed') }
-  # scope :closed, ->       { where(current_state: 'closed').order(last_transitioned_at: :desc) }
   scope :closed, ->       { where(current_state: 'closed')}
+  scope :closed_incl_responded_icos, -> { where(current_state: 'closed').or(where(type: ['Case::ICO::FOI', "Case::ICO::SAR"], current_state: [:responded, :closed])) }
   scope :standard_foi, -> { where(type: 'Case::FOI::Standard') }
   scope :ico_appeal, ->   { where(type: ['Case::ICO::FOI', 'Case::ICO::SAR'])}
 

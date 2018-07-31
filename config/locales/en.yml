@@ -401,14 +401,6 @@ en:
       Don't send out the response until <strong>after %{escalation_deadline}</strong>.
     response_upload_error: Errors detected with uploaded files.
     response_upload_blank?: Please select the file(s) you used in your response.
-    # respond_point_of_no_return_html: |
-    #   <p class="notice">
-    #     <i class="icon icon-important">
-    #       <span class="visually-hidden">Important</span>
-    #     </i>
-    #     <strong>You can't update a response after marking it as sent.</strong>
-    #   </p>
-
 
   notices:
     case_cleared: "The Information Officer has been notified that the response is ready to send."
@@ -668,13 +660,6 @@ en:
       heading: Request amends
     respond:
       heading: Mark as sent
-      # reminders_html: |
-      #   <strong>Make sure you have:</strong>
-      #   <ul class="list list-bullet">
-      #     <li>cleared the response with the Deputy Director</li>
-      #     <li>uploaded the response and any supporting documents</li>
-      #     <li>sent the response to the person who made the request</li>
-      #   </ul>
       respond_date: Add date this response was sent to ICO
       date_example: For example, 30 1 2017
 

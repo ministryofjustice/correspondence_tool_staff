@@ -195,6 +195,18 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
+  describe 'closed_incl_responded_icos scope' do
+    it 'returns only closed cases and responded and closed icos' do
+      create :case
+      create :responded_case
+      closed_case_1 = create :closed_case, last_transitioned_at: 2.days.ago
+      closed_case_2 = create :closed_case, last_transitioned_at: 1.day.ago
+      responded_ico = create :responded_ico_foi_case, last_transitioned_at: 1.day.ago
+
+      expect(Case::Base.closed_incl_responded_icos).to match_array [ closed_case_1, closed_case_2, responded_ico, responded_ico.original_case ]
+    end
+  end
+
   describe 'closed scope' do
     it 'returns only closed cases' do
       create :case
@@ -1638,7 +1650,5 @@ RSpec.describe Case::Base, type: :model do
       expect(kase.requires_flag_for_disclosure_specialists?).to be true
     end
   end
-
-
 
 end

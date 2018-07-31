@@ -47,7 +47,7 @@ module CaseStates
     # this isn't the right way of doing this
     teams = current_user.teams_for_case(self)
 
-    weightings = { 'manager' => 100, 'approver' => 200, 'responder' => 300 }
+    weightings = { 'approver' => 200, 'responder' => 300 }
     team = teams.sort{ |a, b| weightings[a.role] <=> weightings[b.role] }.first
 
     ActiveRecord::Base.transaction do

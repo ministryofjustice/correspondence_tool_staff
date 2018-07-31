@@ -1,15 +1,18 @@
 tbody.response-details
-  tr.date-responded
-    th = t('common.case.date_responded')
-    td = case_details.date_sent_to_requester
+  - if case_details.date_responded.present?
+    tr.date-responded
+      th = t('common.case.date_responded')
+      td = case_details.date_sent_to_requester
 
-  tr.timeliness
-    th = t('common.case.timeliness')
-    td = case_details.timeliness
+  - if case_details.closed?
+    tr.timeliness
+      th = t('common.case.timeliness')
+      td = case_details.timeliness
 
-  tr.time-taken
-    th = t('common.case.time_taken')
-    td = case_details.time_taken
+  - if case_details.closed?
+    tr.time-taken
+      th = t('common.case.time_taken')
+      td = case_details.time_taken
 
   - if case_details.info_held_status.present?
     tr.info-held
