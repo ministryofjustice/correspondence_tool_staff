@@ -26,13 +26,3 @@
       .column-two-thirds
         = f.submit t('common.case.respond'), { class: 'button' }
         = link_to "Return to case detail", case_path(@case.id), class:'acts-like-button button-left-spacing'
-
-        / - else
-        /   .grid-row
-        /     .column-two-thirds
-        /       .reminders
-        /         = t('.reminders_html')
-        /
-        /   .grid-row
-        /     .column-two-thirds
-        /       = t('alerts.respond_point_of_no_return_html')

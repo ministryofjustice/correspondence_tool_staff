@@ -385,7 +385,7 @@ class CasesController < ApplicationController
       flash[:notice] = t('.success')
       redirect_to case_path(@case)
     else
-      flash[:alert] = "RAAAAR"
+      flash[:alert] = 'There was a problem updating this case'
       redirect_to respond_case_path(@case)
     end
   end
