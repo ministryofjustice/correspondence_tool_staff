@@ -37,6 +37,7 @@ def de_escalate_case_step(kase:)
   # up seems to be helping this.
   row = incoming_cases_page.row_for_case_number(kase.number)
   row.wait_until_actions_visible
+  sleep 0.5
   row.actions.wait_until_de_escalate_link_invisible(10)
   expect(row.actions).to have_undo_de_escalate_link
   expect(row.actions).to have_no_take_on_case
