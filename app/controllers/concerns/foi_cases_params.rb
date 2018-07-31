@@ -3,7 +3,6 @@ module FOICasesParams
 
   def create_foi_params
     params.require(:case_foi).permit(
-      :correspondence_type,
       :requester_type,
       :name,
       :postal_address,

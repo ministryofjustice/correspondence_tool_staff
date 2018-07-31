@@ -3,7 +3,6 @@ module SARCasesParams
 
   def create_sar_params
     params.require(:case_sar).permit(
-      :correspondence_type,
       :delivery_method,
       :email,
       :flag_for_disclosure_specialists,

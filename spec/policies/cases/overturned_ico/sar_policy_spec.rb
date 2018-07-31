@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Case::OverturnedICO::BasePolicy do
+RSpec.describe Case::OverturnedICO::SARPolicy do
   subject { described_class }
   let(:manager)     { create :manager }
   let(:approver)    { create :disclosure_specialist }

@@ -357,9 +357,7 @@ describe CasesController do
             post :create, params: overturned_ico_params
             expect(response).to render_template(:new)
           end
-
         end
-
       end
 
     end

@@ -1,5 +1,18 @@
 class Case::OverturnedICO::SAR < Case::OverturnedICO::Base
 
+  has_paper_trail only: [
+      :ico_reference,
+      :escalation_deadline,
+      :external_deadline,
+      :internal_deadline,
+      :reply_method,
+      :email,
+      :post_address,
+      :original_ico_appeal,
+      :original_case,
+      :date_received
+  ]
+
   def self.type_abbreviation
     'OVERTURNED_SAR'
   end

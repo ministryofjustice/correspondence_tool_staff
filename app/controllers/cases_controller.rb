@@ -176,9 +176,19 @@ class CasesController < ApplicationController
     end
   end
 
+
+  # The new action for overturned ICO cases is a separate action because it is a bit different
+  #
+  # from the other case types:
+  #
+  #   - it takes parameter (the id of the ICO appeal from which it is to be created)
+  #
+  # We can consider merging it back in to the generalised new, and having logic there to work out what to do
+  # and what page to show, but am leaving it for now.
+  #
   def new_overturned_ico
-    authorize Case::OverturnedICO::Base
-    # expects to have params id relating to the original ICO appeal
+    overturned_case_class = determine_overturned_ico_class(params[:id])
+    authorize overturned_case_class
     service = CreateOverturnedICOCaseService.new(params[:id])
     service.call
     if service.error?
@@ -614,6 +624,17 @@ class CasesController < ApplicationController
   end
 
   private
+  def determine_overturned_ico_class(original_appeal_id)
+    original_appeal_case = Case::ICO::Base.find original_appeal_id
+    case original_appeal_case.type
+      when 'Case::ICO::FOI'
+        Case::OverturnedICO::FOI
+      when 'Case::ICO::SAR'
+        Case::OverturnedICO::SAR
+      else
+        raise ArgumentError.new 'Invalid case type for original ICO appeal'
+    end
+  end
 
   def set_url
     @action_url = request.env['PATH_INFO']
