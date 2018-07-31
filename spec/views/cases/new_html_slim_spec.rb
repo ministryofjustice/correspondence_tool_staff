@@ -105,7 +105,7 @@ describe 'cases/new.html.slim', type: :view do
       expect(page).to have_external_deadline_month
       expect(page).to have_external_deadline_year
 
-      expect(page).not_to have_subject
+      expect(page).to have_no_subject
       expect(page).to have_case_details
 
       expect(page).to have_dropzone_container
