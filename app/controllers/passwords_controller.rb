@@ -4,7 +4,7 @@ class PasswordsController < Devise::PasswordsController
     if !resource_params[:email].present?
       super
     else
-      user = User.find_by(email: resource_params[:email])
+      user = User.find_by(email: resource_params[:email].downcase)
       if user == nil
         redirect_to new_user_session_path
       elsif user.deactivated?
