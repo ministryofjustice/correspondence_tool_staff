@@ -76,6 +76,7 @@ group :development, :test do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'byebug', platform: :mri
+  gem 'chromedriver-helper'
   gem 'colorize'
   gem 'guard-jasmine'
   gem 'launchy'
