@@ -8,6 +8,7 @@ describe 'cases/case_status.html.slim', type: :view do
                    internal_deadline: DateTime.now.strftime(Settings.default_date_format),
                    external_deadline: (DateTime.now + 10.days).strftime(Settings.default_date_format),
                    current_state: 'drafting',
+                   type_abbreviation: 'FOI',
                    who_its_with: 'DACU'
 
 
@@ -37,6 +38,7 @@ describe 'cases/case_status.html.slim', type: :view do
                              internal_deadline: DateTime.now.strftime(Settings.default_date_format) ,
                              external_deadline: (DateTime.now + 10.days).strftime(Settings.default_date_format),
                              current_state: 'closed',
+                             type_abbreviation: 'FOI',
                              who_its_with: ''
 
     render partial: 'cases/case_status.html.slim',
@@ -59,6 +61,7 @@ describe 'cases/case_status.html.slim', type: :view do
                              external_deadline: (DateTime.now + 10.days).strftime(Settings.default_date_format),
                              internal_deadline: nil,
                              current_state: 'drafting',
+                             type_abbreviation: 'FOI',
                              who_its_with: 'DACU'
 
     render partial: 'cases/case_status.html.slim',
@@ -74,4 +77,62 @@ describe 'cases/case_status.html.slim', type: :view do
     expect(partial.deadlines.final.text)
         .to eq non_trigger_case.external_deadline
   end
+
+  context 'ICO case reference number' do
+    it 'does not show ICO case reference number for foi cases' do
+      non_trigger_case = double Case::BaseDecorator,
+                               status: "Needs reassigning",
+                               external_deadline: (DateTime.now + 10.days).strftime(Settings.default_date_format),
+                               internal_deadline: nil,
+                               current_state: 'drafting',
+                               type_abbreviation: 'FOI',
+                               who_its_with: 'DACU'
+
+      render partial: 'cases/case_status.html.slim',
+             locals:{ case_details: non_trigger_case}
+
+      partial = case_status_section(rendered)
+
+      expect(partial.details.copy.text).to eq non_trigger_case.status
+      expect(partial.details.who_its_with.text)
+          .to eq non_trigger_case.who_its_with
+
+      expect(partial.deadlines).to have_no_draft
+      expect(partial.deadlines.final.text)
+          .to eq non_trigger_case.external_deadline
+
+      expect(partial.details).to have_no_ico_ref_number_label
+      expect(partial.details).to have_no_ico_ref_number
+    end
+
+    it 'displays ICO case reference number for ico appeal cases' do
+      ico_case = double Case::ICO::BaseDecorator,
+                               status: "Needs reassigning",
+                               external_deadline: (DateTime.now + 10.days).strftime(Settings.default_date_format),
+                               ico_reference_number: '123456789ABC',
+                               internal_deadline: nil,
+                               current_state: 'drafting',
+                               type_abbreviation: 'ICO',
+                               who_its_with: 'DACU'
+
+
+      render partial: 'cases/case_status.html.slim',
+             locals:{ case_details: ico_case}
+
+      partial = case_status_section(rendered)
+
+      expect(partial.details.copy.text).to eq ico_case.status
+      expect(partial.details.who_its_with.text)
+          .to eq ico_case.who_its_with
+
+      expect(partial.deadlines).to have_no_draft
+      expect(partial.deadlines.final.text)
+          .to eq ico_case.external_deadline
+
+      expect(partial.details.ico_ref_number_label.text).to eq 'ICO case reference number'
+      expect(partial.details.ico_ref_number.text).to eq ico_case.ico_reference_number
+
+    end
+  end
+
 end
