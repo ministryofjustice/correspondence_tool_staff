@@ -9,7 +9,14 @@ module Stats
 
     describe '.title' do
       it 'returns the title' do
-        expect(R005MonthlyPerformanceReport.title).to eq 'Monthly report (FOI)'
+        expect(R005MonthlyPerformanceReport.title).to eq 'Monthly report'
+      end
+    end
+
+    describe '.description' do
+      it 'returns correct description' do
+        expect(R005MonthlyPerformanceReport.description)
+          .to eq 'Includes performance data about FOI requests we received and responded to from the beginning of the year by month.'
       end
     end
 
@@ -113,7 +120,7 @@ module Stats
 
       it 'contains report name and reporting period in row 1 column 1' do
         row_1 = @results.first
-        expect(row_1.first).to eq 'Monthly report (FOI) - 1 Jan 2017 to 2 May 2017'
+        expect(row_1.first).to eq 'Monthly report - 1 Jan 2017 to 2 May 2017'
       end
 
       it 'contains expected superheadings in row 2' do

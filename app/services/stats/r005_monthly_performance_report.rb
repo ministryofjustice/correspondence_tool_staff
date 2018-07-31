@@ -2,11 +2,11 @@ module Stats
   class R005MonthlyPerformanceReport < BaseMonthlyPerformanceReport
 
     def self.title
-      'Monthly report (FOI)'
+      'Monthly report'
     end
 
     def self.description
-      'Shows number of FOI cases in each state by month'
+      'Includes performance data about FOI requests we received and responded to from the beginning of the year by month.'
     end
 
     def case_scope

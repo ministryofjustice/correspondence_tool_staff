@@ -5,13 +5,14 @@ module Stats
 
     describe '.title' do
       it 'returns correct title' do
-        expect(R105SarMonthlyPerformanceReport.title).to eq 'Monthly report (SAR)'
+        expect(R105SarMonthlyPerformanceReport.title).to eq 'Monthly report'
       end
     end
 
     describe '.description' do
       it 'returns correct description' do
-        expect(R105SarMonthlyPerformanceReport.description).to eq 'Shows number of SAR cases in each state by month'
+        expect(R105SarMonthlyPerformanceReport.description)
+          .to eq 'Includes performance data about SAR requests we received and responded to from the beginning of the year by month.'
       end
     end
 
