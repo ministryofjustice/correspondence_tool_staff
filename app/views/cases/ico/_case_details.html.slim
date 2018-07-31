@@ -10,6 +10,7 @@
       tbody.ico-appeal-basic-details
         = render partial: 'cases/shared/case_type', locals: { case_details: case_details }
         = render partial: 'cases/shared/ico_reference', locals: { case_details: case_details }
+        = render partial: 'cases/shared/ico_officer_name', locals: { case_details: case_details }
         = render partial: 'cases/shared/date_received', locals: { case_details: case_details }
         = render partial: 'cases/shared/case_deadlines', locals: { case_details: case_details }
 

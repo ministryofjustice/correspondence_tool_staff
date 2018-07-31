@@ -417,6 +417,7 @@ en:
       external_deadline: Final deadline
       internal_deadline: Draft deadline
       ico_case_number: ICO case reference number
+      ico_officer_name: ICO officer name
       filename: File name
       header_case_number: "You are viewing case number "
       header_subject: "Case subject, "
