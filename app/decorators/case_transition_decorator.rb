@@ -20,11 +20,7 @@ class CaseTransitionDecorator < Draper::Decorator
   private
   def event
     state_machine = object.case.state_machine
-    if object.event == 'respond' && object.case.class == Case::ICO::FOI || object.case.class == Case::ICO::SAR
-      I18n.t('event.case/ico.respond')
-    else
-      state_machine.event_name(object.event)
-    end
+    state_machine.event_name(object.event)
   end
 
   def details     # rubocop:disable Metrics/CyclomaticComplexity

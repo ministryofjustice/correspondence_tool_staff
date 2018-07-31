@@ -82,7 +82,11 @@ module ConfigurableStateMachine
 
     def event_name(event)
       if events.include?(event.to_sym)
-        I18n.t("event.#{event}", default: event.to_s.humanize)
+        if event == 'respond' && @kase.class == Case::ICO::FOI || @kase.class == Case::ICO::SAR
+          I18n.t('event.case/ico.respond')
+        else
+          I18n.t("event.#{event}", default: event.to_s.humanize)
+        end
       end
     end
 

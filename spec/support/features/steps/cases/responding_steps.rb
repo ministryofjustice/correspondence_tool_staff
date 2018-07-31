@@ -10,16 +10,18 @@ def upload_response_step(file: UPLOAD_RESPONSE_DOCX_FIXTURE)
     .to have_text 'You have uploaded the response for this case.'
 end
 
-def mark_case_as_sent_step
+def mark_case_as_sent_step(responded_date:, expected_status:)
   cases_show_page.actions.mark_as_sent.click
 
-  cases_respond_page.mark_as_sent_button.click
+  cases_respond_page.fill_in_date_responded(responded_date)
+
+  cases_respond_page.submit_button.click
 
   expect(open_cases_page)
     .to have_content("The response has been marked as sent.")
   expect(cases_show_page.case_status.details.who_its_with.text)
     .to eq 'Disclosure BMT'
-  expect(cases_show_page.case_status.details.copy.text).to eq 'Ready to close'
+  expect(cases_show_page.case_status.details.copy.text).to eq expected_status
 end
 
 def close_case_step(responded_date: Date.today)

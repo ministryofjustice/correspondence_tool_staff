@@ -52,8 +52,12 @@ feature 'ICO FOI case requiring clearance' do
 
     clear_response kase: kase,
                     user: disclosure_specialist,
-                    expected_team: responding_team,
+                    expected_team: team_dacu_disclosure,
                     expected_status: 'Ready to send to ICO'
+
+    mark_case_as_sent kase: kase,
+                      user: disclosure_specialist,
+                      expected_status: 'Awaiting ICO decision'
     #
     # close_sar_case kase: kase,
     #                user: responder,

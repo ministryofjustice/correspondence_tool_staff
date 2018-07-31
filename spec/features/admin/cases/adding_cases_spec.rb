@@ -198,6 +198,7 @@ feature 'adding cases' do
     find_or_create :default_press_officer
     find_or_create :default_private_officer
     admin_cases_page.load
+    # save_and_open_page
     admin_cases_page.create_case_button.click
     admin_cases_new_page.create_link_for_correspondence('FOI').click
 

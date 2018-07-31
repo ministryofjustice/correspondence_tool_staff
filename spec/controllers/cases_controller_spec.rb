@@ -12,7 +12,7 @@ def stub_current_case_finder_cases_with(result)
   gnm
 end
 
-def closed_stub_current_case_finder_cases_with(result)
+def stub_current_case_finder_for_closed_cases_with(result)
   pager = double 'Kaminari Pager', decorate: result
   cases_by_last_transitioned_date = double 'ActiveRecord Cases by last transitioned', page: pager
   cases = double 'ActiveRecord Cases', by_last_transitioned_date: cases_by_last_transitioned_date
@@ -146,13 +146,13 @@ RSpec.describe CasesController, type: :controller do
       end
 
       it 'assigns cases returned by CaseFinderService' do
-        closed_stub_current_case_finder_cases_with(:closed_cases_result)
+        stub_current_case_finder_for_closed_cases_with(:closed_cases_result)
         get :closed_cases
         expect(assigns(:cases)).to eq :closed_cases_result
       end
 
       it 'passes page param to the paginator' do
-        gnm = closed_stub_current_case_finder_cases_with(:closed_cases_result)
+        gnm = stub_current_case_finder_for_closed_cases_with(:closed_cases_result)
         get :closed_cases, params: { page: 'our_page' }
         expect(gnm.current_page_or_tab.cases.by_last_transitioned_date)
           .to have_received(:page).with('our_page')
@@ -1007,15 +1007,31 @@ RSpec.describe CasesController, type: :controller do
             to redirect_to(case_path(case_with_response))
       end
 
-      # it 'redirects to the case list view' do
-      #   patch :confirm_respond, params: params
-      #   expect(case_with_response.date_responded).to eq Date.today
-      # end
-
+      context 'with invalid params' do
+        let(:params) do
+          {
+            correspondence_type: 'foi',
+            case_foi:  {
+              date_responded_dd: '',
+              date_responded_mm: '',
+              date_responded_yyyy: '',
+            },
+            commit: 'Submit',
+            id:  case_with_response.id.to_s
+          }
+        end
+        it 'redirects to the respond page' do
+          expect(patch :confirm_respond, params: params).
+            to redirect_to(respond_case_path(case_with_response))
+        end
+        it 'sets the flash message' do
+          patch :confirm_respond, params: params
+          expect(flash[:alert]).to eq 'There was a problem updating this case'
+        end
+      end
     end
 
     context 'as another responder' do
-
       before { sign_in another_responder }
 
       it 'redirects to the application root' do
@@ -1029,7 +1045,41 @@ RSpec.describe CasesController, type: :controller do
         expect(case_with_response.current_state).to eq 'awaiting_dispatch'
       end
     end
+
+    context 'for ICO cases' do
+      let(:approved_ico)    { create(:approved_ico_foi_case, approver: approver) }
+      let(:approver)        { create(:disclosure_specialist) }
+      let(:params) do
+        {
+          correspondence_type: 'ico',
+          case_ico:  {
+            date_responded_dd: 5,
+            date_responded_mm: 7,
+            date_responded_yyyy: 2018,
+          },
+          commit: 'Submit',
+          id:  approved_ico.id.to_s
+        }
+      end
+
+      context 'as the assigned approver' do
+
+      before { sign_in approver }
+
+      it 'transitions current_state to "responded"' do
+        stub_find_case(approved_ico.id) do |kase|
+          expect(kase).to receive(:respond).with(approver)
+        end
+        patch :confirm_respond, params: params
+      end
+
+      it 'redirects to the case list view' do
+        expect(patch :confirm_respond, params: params).
+          to redirect_to(case_path(approved_ico))
+      end
+    end
   end
+end
 
   describe 'PATCH flag_for_clearance' do
     let!(:service) do

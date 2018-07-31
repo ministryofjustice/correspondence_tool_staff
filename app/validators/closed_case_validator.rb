@@ -6,7 +6,8 @@ class ClosedCaseValidator < ActiveModel::Validator
              :validate_info_held_status,
              :validate_outcome,
              :validate_refusal_reason,
-             :validate_exemptions]
+             :validate_exemptions],
+    'ICO'=> [:validate_date_responded]
   }
   # Validations applicable to cases that are being processed for closure.
   #
@@ -15,6 +16,7 @@ class ClosedCaseValidator < ActiveModel::Validator
   PROCESSING_CLOSURE_VALIDATIONS = {
     'SAR'=> [:validate_tmm],
     'FOI'=> [],
+    'ICO'=> [:validate_date_responded]
   }
 
   class << self
@@ -112,7 +114,7 @@ class ClosedCaseValidator < ActiveModel::Validator
         rec.errors.add(:outcome, "can't be blank")
       end
     elsif rec.outcome.present?
-      rec.errors.add(:outcome, 'can only be present if information held or part held') 
+      rec.errors.add(:outcome, 'can only be present if information held or part held')
     end
   end
 
