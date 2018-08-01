@@ -78,20 +78,20 @@ class CaseFinderService
   end
 
   def my_open_cases_scope
-    scope.joins(:assignments).opened
+    scope.joins(:assignments).open_excl_responded_icos
       .with_user(user)
       .distinct('case.id')
   end
 
   def my_open_flagged_for_approval_cases_scope
-    scope.opened
+    scope.open_excl_responded_icos
       .flagged_for_approval(*user.approving_team)
       .with_user(user, states: ['accepted'])
       .distinct('case.id')
   end
 
   def open_cases_scope
-    open_scope = scope.opened
+    open_scope = scope.open_excl_responded_icos
       .joins(:assignments)
       .where(assignments: { state: ['pending', 'accepted']})
       .distinct('case.id')
@@ -104,7 +104,7 @@ class CaseFinderService
   end
 
   def open_flagged_for_approval_scope
-    scope.opened
+    scope.open_excl_responded_icos
       .flagged_for_approval(*user.approving_team)
       .where(assignments: { state: ['accepted']})
       .distinct('case.id')

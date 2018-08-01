@@ -72,6 +72,7 @@ class Case::Base < ApplicationRecord
   scope :most_recent_first, -> {reorder("(properties ->> 'external_deadline')::timestamp with time zone DESC, cases.id") }
 
   scope :opened, ->       { where.not(current_state: 'closed') }
+  scope :open_excl_responded_icos, -> { where(closed_incl_responded_icos) }
   scope :closed, ->       { where(current_state: 'closed')}
   scope :closed_incl_responded_icos, -> { where(current_state: 'closed').or(where(type: ['Case::ICO::FOI', "Case::ICO::SAR"], current_state: [:responded, :closed])) }
   scope :standard_foi, -> { where(type: 'Case::FOI::Standard') }
