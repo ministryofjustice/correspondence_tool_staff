@@ -69,4 +69,27 @@ describe LinkedCase do
       expect(case_link.linked_case).to eq other_foi
     end
   end
+
+  context 'soft deleted cases' do
+    let(:foi)         { create :case, name: 'foi' }
+    let(:second_foi)  { create :case, name: 'second_foi' }
+    let(:third_foi)   { create :case, name: 'third_foi' }
+    let(:manager)     { create :manager }
+
+    before(:each) do
+      LinkedCase.create(case: foi, linked_case: second_foi)
+      LinkedCase.create(case: foi, linked_case: third_foi)
+    end
+
+    it 'does not return linked cases which have been soft deleted' do
+      expect(foi.linked_cases).to match_array( [second_foi, third_foi] )
+      CaseDeletionService.new(manager, second_foi).call
+      expect(foi.reload.linked_cases).to eq [ third_foi ]
+    end
+
+    it 'is still valid even after a linked case has been deleted' do
+      CaseDeletionService.new(manager, second_foi).call
+      expect(foi).to be_valid
+    end
+  end
 end
