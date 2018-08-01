@@ -1,6 +1,8 @@
 class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
   def new_assignment(assignment, recipient)
+    puts ">>>>>>>>>> new_assignment mail #{__FILE__}:#{__LINE__} <<<<<<<<<<"
+    Rails.logger.debug ">>>>>>>>>> new_assignment mail #{__FILE__}:#{__LINE__} <<<<<<<<<<"
     RavenContextProvider.set_context
     @assignment = assignment
     kase = @assignment.case
