@@ -3,6 +3,8 @@ module PageObjects
     module Cases
       class CaseAttachmentSection < SitePrism::Section
 
+        element :section_heading, 'h2.request--heading'
+
         sections :collection, '.case-attachments-report tbody tr' do
 
           element :filename, 'td[aria-label="File name"]'
