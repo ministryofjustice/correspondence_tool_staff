@@ -21,6 +21,7 @@ class Case::ICO::Base < Case::Base
                     :received_date,
                   ]
 
+  validates :ico_officer_name, presence: true
   validates :ico_reference_number, presence: true
   validates :message, presence: true
   validates :external_deadline, presence: true
@@ -50,6 +51,12 @@ class Case::ICO::Base < Case::Base
 
   def closed_for_reporting_purposes?
     closed? || responded?
+  end
+
+  def name=(_new_name)
+    raise StandardError.new(
+            'name attribute is read-only for ICO cases'
+      )
   end
 
   def requires_flag_for_disclosure_specialists?
