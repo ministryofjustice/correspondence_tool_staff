@@ -90,7 +90,7 @@ describe 'cases/case_attachments.html.slim', type: :view do
 
       partial =  case_attachments_section(rendered)
 
-      partial.collection.each_with_index do |row, index|
+      partial.collection.each do |row|
         expect(row.actions).to have_view
         expect(row.actions).to have_download
       end
@@ -106,7 +106,7 @@ describe 'cases/case_attachments.html.slim', type: :view do
 
         partial =  case_attachments_section(rendered)
 
-        partial.collection.each_with_index do |row, index|
+        partial.collection.each do |row|
           expect(row.actions).to have_remove
         end
       end
@@ -119,7 +119,7 @@ describe 'cases/case_attachments.html.slim', type: :view do
 
         partial =  case_attachments_section(rendered)
 
-        partial.collection.each_with_index do |row, index|
+        partial.collection.each do |row|
           expect(row.actions).to have_no_remove
         end
       end
