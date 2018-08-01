@@ -75,7 +75,7 @@ div id="case-#{@case.id}"
   section.case-info
     = render partial: 'cases/clearance_levels', locals: { case_details: @case }
 
-  - if @case.type_abbreviation != 'ICO'
+  - if @case.ico? === false
     - if case_attachments_visible_for_case?
       section.case-info
         = render partial: 'cases/case_attachments', locals: {case_details: @case}
@@ -91,7 +91,7 @@ div id="case-#{@case.id}"
     section.case-info.has-page-break
       = render partial: 'cases/case_history', locals: { case_transitions: @case_transitions }
 
-  - if @case.type_abbreviation == 'ICO'
+  - if @case.ico?
     section.case-info
       = render partial: "cases/#{@case.original_case.type_abbreviation.downcase}/case_details",
               locals: { case_details: @case.original_case.decorate }
