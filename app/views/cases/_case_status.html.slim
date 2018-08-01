@@ -14,7 +14,7 @@
           = t('common.case.who_its_with')
         .case-status__data
           = case_details.who_its_with
-    - if case_details.type_abbreviation == 'ICO'
+    - if case_details.ico?
       .case-status__group.ico-reference
         .case-status__heading
           = t('common.case.ico_case_number')
