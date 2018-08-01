@@ -28,7 +28,6 @@ class LinkedCase < ApplicationRecord
   after_create :create_reverse_link
   after_destroy :destroy_reverse_link
 
-  validates :linked_case, presence: true
   validates :linked_case_number,
             presence: true,
             if: -> { linked_case_id.nil? }
