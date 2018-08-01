@@ -1,5 +1,6 @@
 .case-attachments
-  h2.request--heading Response
+  h2.request--heading
+    = translate_for_case(case_details,'cases.show', 'attachments_heading')
   .request--message
     - case_details.upload_response_groups.each do |ug|
       .case-attachments-group

@@ -55,7 +55,11 @@ div id="case-#{@case.id}"
 
   section.case-info
     = render partial: 'cases/case_status', locals: {case_details: @case}
-  - if @case.type_abbreviation == 'ICO'
+
+  - if @case.ico?
+    - if case_attachments_visible_for_case?
+      section.case-info
+        = render partial: 'cases/case_attachments', locals: { case_details: @case }
     section.case-info
       = render partial: 'cases/ico/show_linked_cases', locals: { case_details: @case }
   - else
@@ -71,9 +75,10 @@ div id="case-#{@case.id}"
   section.case-info
     = render partial: 'cases/clearance_levels', locals: { case_details: @case }
 
-  - if case_attachments_visible_for_case?
-    section.case-info
-      = render partial: 'cases/case_attachments', locals: {case_details: @case}
+  - if @case.type_abbreviation != 'ICO'
+    - if case_attachments_visible_for_case?
+      section.case-info
+        = render partial: 'cases/case_attachments', locals: {case_details: @case}
 
   - if policy(@case).can_accept_or_reject_approver_assignment?
     section.case-info
