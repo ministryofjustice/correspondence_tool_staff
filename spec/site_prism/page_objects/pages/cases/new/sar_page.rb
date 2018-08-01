@@ -13,11 +13,11 @@ module PageObjects
 
           element :subject_full_name, '#case_sar_subject_full_name'
           element :subject_type, :xpath,
-                  '//fieldset[contains(.,"Type of data subject")]'
+                  '//fieldset[contains(.,"Who is the person the information is being requested about?")]'
           element :third_party, :xpath,
                   "//fieldset[contains(.,\"being requested on someone's behalf\")]"
           element :requester_full_name, '#case_sar_name'
-          element :third_party_relationship, '#third_party_relationship'
+          element :third_party_relationship, '#case_sar_third_party_relationship'
 
           element :date_received_day, '#case_sar_received_date_dd'
           element :date_received_month, '#case_sar_received_date_mm'
@@ -36,7 +36,7 @@ module PageObjects
           element :postal_address, '#case_sar_postal_address'
 
           element :flag_for_disclosure_specialists, :xpath,
-                  '//fieldset[contains(.,"Flag for disclosure specialists")]'
+                  '//fieldset[contains(.,"Flag for disclosure specialist")]'
 
           element :submit_button, '.button'
 

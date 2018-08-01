@@ -105,6 +105,8 @@ ignore_unused:
   - 'filters.crumbs.list_filter_type.*'
   - 'page_title.*_cases'
   - 'state.case/ico.awaiting_dispatch'
+  - 'cases.new*.external_deadline_copy'
+  - 'cases.new*.sub_heading'
 
 
 ## Consider these keys used:

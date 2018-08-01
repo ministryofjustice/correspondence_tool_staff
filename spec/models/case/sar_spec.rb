@@ -2,8 +2,6 @@ require 'rails_helper'
 
 describe Case::SAR do
 
-  it { should validate_presence_of(:subject)         }
-
   context 'validates that SAR-specific fields are not blank' do
     it 'is not valid' do
 
@@ -13,6 +11,11 @@ describe Case::SAR do
       expect(kase.errors[:subject_full_name]).to eq(["can't be blank"])
       expect(kase.errors[:third_party]).to eq(["Please choose yes or no"])
     end
+  end
+
+  describe 'subject attribute' do
+    it { should validate_presence_of(:subject) }
+    it { should validate_length_of(:subject).is_at_most(100) }
   end
 
   describe '#subject_type' do

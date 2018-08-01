@@ -39,7 +39,7 @@
     .column-full
       main#content
         = render partial: 'layouts/flashes' unless flash.empty?
-        = yield
+        = content_for?(:tab_content) ? yield(:tab_content) : yield
         = render partial: 'feedback/new' if controller_name != 'sessions'
 
 - content_for :body_end do

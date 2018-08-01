@@ -19,6 +19,7 @@ describe 'ICO cases factory' do
           expect(kase).to be_instance_of(Case::ICO::FOI)
           expect(kase.created_at).to eq Time.local(2018, 7, 3, 10, 35, 22)
           expect(kase.ico_reference_number).to match(/^ICOFOIREFNUM\d{3}$/)
+          expect(kase.ico_officer_name).to match(/ ico officer name \d+$/)
           expect(kase.current_state).to eq 'unassigned'
           expect(kase.external_deadline).to eq Date.new(2018, 8, 6)
           expect(kase.internal_deadline).to eq Date.new(2018, 7, 23)
@@ -159,6 +160,7 @@ describe 'ICO cases factory' do
           expect(kase).to be_instance_of(Case::ICO::SAR)
           expect(kase.created_at).to eq Time.local(2018, 7, 3, 10, 35, 22)
           expect(kase.ico_reference_number).to match(/^ICOSARREFNUM\d{3}$/)
+          expect(kase.ico_officer_name).to match(/ ico officer name \d+$/)
           expect(kase.current_state).to eq 'unassigned'
           expect(kase.external_deadline).to eq Date.new(2018, 8, 6)
           expect(kase.internal_deadline).to eq Date.new(2018, 7, 23)

@@ -52,6 +52,7 @@ class Case::FOI::Standard < Case::Base
             on: :create,
             if: -> { email.blank? || sent_by_post? }
   validates_presence_of :requester_type, :delivery_method
+  validates :subject, presence: true, length: { maximum: 100 }
   validates :uploaded_request_files,
             presence: true,
             on: :create,

@@ -8,12 +8,29 @@
 
 .grid-row
   .column-full.button-holder
-    = link_to t('common.new_case_button'), new_admin_case_path, class: 'button'
-  = link_to 'Dashboards', dashboard_path, class: 'button-left-spacing'
+    h2.heading-medium No of Cases created over the past week
 
+    table
+      tr
+        th Date
+        th No. of Cases
+      - @dates.each do |date, count|
+        tr
+          td = date.strftime('%a %d %b %Y')
+          td = count
+
+.grid-row
+  .column-full.button-holder
+    = link_to 'Download Audit CSV File', stats_download_audit_path, target: '_blank'
+
+.grid-row
+  .column-full.button-holder
+    = link_to t('common.new_case_button'), new_admin_case_path, class: 'button'
 
 .grid-row
   .column-full.table-container.container
+    h2.heading-medium Existing cases
+
     table.report.table-font-xsmall
       colgroup
         col

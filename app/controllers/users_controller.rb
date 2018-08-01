@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  before_action :set_team, only: [:create, :index, :new, :edit, :update]
+  before_action :set_team, only: [:create, :new, :edit, :update]
 
   def create
     service = UserCreationService.new(team: @team, params: create_user_params)
@@ -16,15 +16,6 @@ class UsersController < ApplicationController
     else
       render :new
     end
-  end
-
-  def index
-    if @team.present?
-      @users = @team.users
-    else
-      @users = User.all
-    end
-
   end
 
   def new
