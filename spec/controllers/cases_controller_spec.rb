@@ -1026,7 +1026,7 @@ RSpec.describe CasesController, type: :controller do
         end
         it 'sets the flash message' do
           patch :confirm_respond, params: params
-          expect(flash[:alert]).to eq 'There was a problem updating this case'
+          expect(flash[:alert]).to eq 'Please enter the date this response was sent out'
         end
       end
     end

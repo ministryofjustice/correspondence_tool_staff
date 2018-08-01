@@ -381,7 +381,7 @@ class CasesController < ApplicationController
     authorize @case, :can_respond?
     params = respond_params(@case.type_abbreviation)
     if params[:date_responded_dd].blank? || params[:date_responded_mm].blank? || params[:date_responded_yyyy].blank?
-      flash[:alert] = 'There was a problem updating this case'
+      flash[:alert] = 'Please enter the date this response was sent out'
       redirect_to respond_case_path(@case)
     else
       @case.update(params)
