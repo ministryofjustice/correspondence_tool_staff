@@ -646,6 +646,13 @@ en:
     select_type:
       heading: Choose correspondence type
       sub_heading: Create case
+    show:
+      case/ico:
+        attachments_heading: Appeal response
+      case/sar:
+        attachments_heading: Response
+      case/foi:
+        attachments_heading: Response
     new_case_link:
       heading: 'Link case'
     new_response_upload:
