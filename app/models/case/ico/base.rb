@@ -27,6 +27,8 @@ class Case::ICO::Base < Case::Base
   validates :external_deadline, presence: true
   validates_presence_of :original_case
 
+  validates_with ::RespondedICOValidator
+
   before_save do
     self.workflow = 'trigger'
   end
@@ -82,6 +84,14 @@ class Case::ICO::Base < Case::Base
 
   def ico?
     true
+  end
+
+  def prepare_for_respond
+    @preparing_for_respond = true
+  end
+
+  def prepared_for_respond?
+    @preparing_for_respond == true
   end
 
   private
