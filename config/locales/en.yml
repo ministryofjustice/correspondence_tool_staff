@@ -65,6 +65,10 @@ en:
         case/ico/base:
           original_case_already_related: 'already linked as the original case'
         case/ico/foi:
+          attributes:
+            date_responded:
+              before_received: can't be before date recieved
+              future: can't be in the future
           related_case_number:
             does_not_match_original: >-
               You've linked an FOI case as the original for this appeal. You

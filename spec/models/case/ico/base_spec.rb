@@ -159,4 +159,25 @@ describe Case::ICO::Base do
       expect(Case::Base.search('8888')).to eq [ico]
     end
   end
+
+  describe '#prepared_for_respond?' do
+
+    let(:foi)   { create(:foi_case) }
+    let(:ico)   { create(:ico_foi_case, original_case: foi)}
+
+    context 'default state' do
+      it 'is false' do
+        expect(ico.prepared_for_respond?).to be false
+      end
+    end
+
+    context 'after being set to true' do
+      it 'is true' do
+        ico.prepare_for_respond
+        expect(ico.prepared_for_respond?).to be true
+      end
+    end
+  end
+
+
 end
