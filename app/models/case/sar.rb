@@ -94,5 +94,9 @@ class Case::SAR < Case::Base
     end
   end
 
+  def sar?
+    true
+  end
+
 
 end

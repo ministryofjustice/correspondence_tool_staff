@@ -94,6 +94,10 @@ class Case::ICO::Base < Case::Base
           )
   end
 
+  def ico?
+    true
+  end
+
   private
 
   def default_workflow
