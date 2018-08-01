@@ -12,6 +12,7 @@ module PageObjects
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
           element :ico_reference_number, '#case_ico_ico_reference_number'
+          element :ico_officer_name, '#case_ico_ico_officer_name'
 
           element :original_case_number, '#case_ico_original_case_number'
           element :original_case_number_error, '.js-original-case .error-message'
@@ -85,6 +86,7 @@ module PageObjects
             set_received_date(kase.received_date)
             set_final_deadline_date(kase.external_deadline)
 
+            ico_officer_name.set kase.ico_officer_name
             ico_reference_number.set kase.ico_reference_number
             set_original_case_number(original_case.number)
             related_cases.each { |c| add_related_case(c.number) }

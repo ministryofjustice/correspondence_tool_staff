@@ -33,4 +33,12 @@ class Case::FOI::ComplianceReview < Case::FOI::InternalReview
   def self.decorator_class
     Case::FOI::ComplianceReviewDecorator
   end
+
+  def foi?
+    true
+  end
+
+  def foi_ir_compliance?
+    true
+  end
 end

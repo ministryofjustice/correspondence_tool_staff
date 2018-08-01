@@ -35,11 +35,11 @@ class Case::Base < ApplicationRecord
 
   def self.searchable_fields_and_ranks
     {
-        name:                 'A',
-        number:               'A',
-        responding_team_name: 'B',
-        subject:              'C',
-        message:              'D',
+      name:                 'A',
+      number:               'A',
+      responding_team_name: 'B',
+      subject:              'C',
+      message:              'D',
     }
   end
 
@@ -137,7 +137,6 @@ class Case::Base < ApplicationRecord
   scope :internal_review_timeliness, -> { where(type: 'Case::FOI::TimelinessReview')}
   scope :deadline_within, -> (from_date, to_date) { where("properties->>'external_deadline' BETWEEN ? AND ?", from_date, to_date) }
   validates :current_state, presence: true, on: :update
-  validates :subject, presence: true, length: { maximum: 100 }
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates_presence_of :received_date
   validates :type, presence: true, exclusion: { in: %w{Case}, message: "Case type can't be blank" }
@@ -599,6 +598,19 @@ class Case::Base < ApplicationRecord
   def closed_for_reporting_purposes?
     closed?
   end
+
+  # predicate methods
+  #
+  def foi?;                 false;  end
+  def foi_standard?;        false;  end
+  def foi_ir_timeliness?;   false;  end
+  def foi_ir_compliance?;   false;  end
+  def sar?;                 false;  end
+  def ico?;                 false;  end
+  def overturned_ico?;      false;  end
+  def overturned_ico_sar?;  false;  end
+  def overturned_ico_foi?;  false;  end
+
 
   private
 

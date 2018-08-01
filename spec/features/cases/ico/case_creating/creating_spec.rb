@@ -41,7 +41,6 @@ feature 'ICO case creation' do
     end
 
     scenario ' - removing Original case', js: true do
-
       cases_new_ico_page.load
 
       cases_new_ico_page.original_case_number.set original_foi.number
@@ -55,7 +54,6 @@ feature 'ICO case creation' do
     end
 
     scenario ' - linking relate case', js: true do
-
       cases_new_ico_page.load
 
       cases_new_ico_page.original_case_number.set original_foi.number

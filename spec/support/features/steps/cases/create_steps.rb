@@ -21,7 +21,7 @@ def create_foi_case_step(type: 'standard',
   cases_new_foi_page.choose_flag_for_disclosure_specialists(
     flag_for_disclosure ? 'yes' : 'no'
   )
-  click_button 'Next - Assign case'
+  click_button 'Create case'
 
   # Return the case we created using the params of the current  path
   kase_id = Rails.application.routes.recognize_path(current_path)[:case_id]
@@ -44,7 +44,7 @@ def create_ico_case_step(original_case:, related_cases: [], uploaded_request_fil
     uploaded_request_files: uploaded_request_files
   )
 
-  click_button 'Next - Assign case'
+  click_button 'Create case'
 
   expect(assignments_new_page).to be_displayed
 
@@ -69,7 +69,7 @@ def create_sar_case_step(params={})
   cases_new_sar_page.choose_flag_for_disclosure_specialists(
     flag_for_disclosure ? 'yes' : 'no'
   )
-  click_button 'Next - Assign case'
+  click_button 'Create case'
 
   expect(assignments_new_page).to be_displayed
 

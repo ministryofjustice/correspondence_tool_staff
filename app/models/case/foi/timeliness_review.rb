@@ -35,4 +35,11 @@ class Case::FOI::TimelinessReview < Case::FOI::InternalReview
     Case::FOI::TimelinessReviewDecorator
   end
 
+  def foi?
+    true
+  end
+
+  def foi_ir_timeliness?
+    true
+  end
 end

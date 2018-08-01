@@ -3,6 +3,8 @@ module ApplicationHelper
     #home page
     if current_page?(url)
       'active'
+    elsif request.fullpath.start_with?(url)
+      'active'
     else
       ''
     end

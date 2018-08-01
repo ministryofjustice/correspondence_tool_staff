@@ -49,4 +49,8 @@ class Case::FOI::InternalReview < Case::FOI::Standard
   def appeal_outcome_name=(name)
     self.appeal_outcome = CaseClosure::AppealOutcome.by_name(name)
   end
+
+  def foi_standard?
+    false
+  end
 end

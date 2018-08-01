@@ -91,6 +91,9 @@ module PageObjects
             element :data, 'td'
           end
 
+          section :ico_officer_name, 'tr.ico-officer-name' do
+            element :data, 'td'
+          end
 
           section :date_received, 'tr.date-received' do
             element :data, 'td'

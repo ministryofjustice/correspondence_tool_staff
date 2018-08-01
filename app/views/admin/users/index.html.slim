@@ -14,6 +14,10 @@
           = t('.full_name')
         th scope='col'
           = t('.email')
+        th scope='col'
+          = t('.teams')
+        th scope='col'
+          = t('.cases')
       tbody
         - @users.each do |user|
           tr.user_row
@@ -21,4 +25,15 @@
               = user.full_name
             td aria-label="#{t('.email')}"
               = user.email
+            td aria-label="#{t('.teams')}"
+              ul
+                - user.teams.each do |team|
+                  li
+                    = link_to team.name, team_path(team.id)
+            td aria-label="#{t('.cases')}"
+                ul
+                  - user.cases.opened.each do |kase|
+                    li
+                      = link_to kase.number, case_path(kase.id)
 
+= paginate @users

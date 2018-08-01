@@ -27,7 +27,7 @@ class CorrespondenceTypeSeeder
 
     rec = CorrespondenceType.find_by(abbreviation: 'ICO')
     rec = CorrespondenceType.new if rec.nil?
-    rec.update!(name: 'Information Commissioner Office appeal.',
+    rec.update!(name: 'Information commissioner office appeal',
                 abbreviation: 'ICO',
                 escalation_time_limit: 0,
                 internal_time_limit: 10,
