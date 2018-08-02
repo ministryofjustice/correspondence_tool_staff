@@ -379,15 +379,15 @@ class CasesController < ApplicationController
 
   def confirm_respond
     authorize @case, :can_respond?
+    @case.prepare_for_respond
     params = respond_params(@case.type_abbreviation)
-    if params[:date_responded_dd].blank? || params[:date_responded_mm].blank? || params[:date_responded_yyyy].blank?
-      flash[:alert] = 'Please enter the date this response was sent out'
-      redirect_to respond_case_path(@case)
-    else
-      @case.update(params)
+    if @case.update(params)
       @case.respond(current_user)
       flash[:notice] = t('.success')
       redirect_to case_path(@case)
+    else
+      set_correspondence_type(@case.type_abbreviation.downcase)
+      render :respond
     end
   end
 
