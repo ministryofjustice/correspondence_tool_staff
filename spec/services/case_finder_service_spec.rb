@@ -142,6 +142,10 @@ describe CaseFinderService do
                 @newer_dacu_flagged_case,
                 @newer_dacu_flagged_accept,
                 @accepted_case,
+                @approved_ico.original_case,
+                @responded_ico.original_case,
+                @approved_ico,
+                @responded_ico
               ]
       end
     end
@@ -150,9 +154,12 @@ describe CaseFinderService do
       it 'returns closed cases' do
         finder = CaseFinderService.new(@manager)
         expect(finder.__send__ :closed_cases_scope)
-          .to eq [
+          .to match_array [
                 @closed_case_1,
                 @closed_case_2,
+                @responded_ico,
+                @responded_ico.original_case,
+                @approved_ico.original_case
               ]
       end
     end
@@ -187,7 +194,8 @@ describe CaseFinderService do
           finder = CaseFinderService.new(@responder)
           expect(finder.__send__ :my_open_cases_scope)
             .to match_array [
-                  @accepted_case
+                  @accepted_case,
+                  @approved_ico
                 ]
         end
       end
@@ -212,6 +220,7 @@ describe CaseFinderService do
                 @newer_dacu_flagged_case,
                 @newer_dacu_flagged_accept,
                 @accepted_case,
+                @approved_ico
               ]
       end
     end
@@ -233,6 +242,11 @@ describe CaseFinderService do
                   @newer_dacu_flagged_case,
                   @newer_dacu_flagged_accept,
                   @accepted_case,
+                  @approved_ico,
+                  @responded_ico,
+                  @approved_ico.original_case,
+                  @responded_ico.original_case,
+
                 ]
         end
       end
@@ -261,7 +275,8 @@ describe CaseFinderService do
           expect(finder.__send__ :open_cases_scope).to match_array [
                                                                        @accepted_case,
                                                                        @assigned_newer_case,
-                                                                       @assigned_older_case
+                                                                       @assigned_older_case,
+                                                                       @approved_ico
                                                                    ]
         end
       end
@@ -282,7 +297,8 @@ describe CaseFinderService do
               @assigned_other_team,
               @newer_dacu_flagged_case,
               @newer_dacu_flagged_accept,
-              @accepted_case
+              @accepted_case,
+              @approved_ico,
           ]
         end
       end
