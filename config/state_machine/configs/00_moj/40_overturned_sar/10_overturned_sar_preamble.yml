@@ -1,0 +1,18 @@
+  overturned_sar:
+    name: Overturned ICO appeal for SAR
+    permitted_workflows:
+      - standard
+      - trigger
+
+    permitted_user_roles:
+      - manager
+      - responder
+      - approver
+
+    permitted_states:
+      - unassigned
+      - awaiting_responder
+      - drafting
+      - pending_dacu_clearance
+      - awaiting_dispatch
+      - closed

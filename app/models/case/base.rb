@@ -61,7 +61,7 @@ class Case::Base < ApplicationRecord
 
   attr_accessor :message_text
 
-  acts_as_gov_uk_date :received_date, :date_responded,
+  acts_as_gov_uk_date :received_date, :date_responded, :external_deadline,
                       validate_if: :received_in_acceptable_range?
 
   scope :by_deadline, -> {
@@ -597,6 +597,12 @@ class Case::Base < ApplicationRecord
 
   def closed_for_reporting_purposes?
     closed?
+  end
+
+  # don't know why, but adding external deadline into the list of dates acting as gov uk seems to remove
+  # external_deadline= method, so re-adding it here
+  def external_deadline=(date)
+    self[:external_deadline] = date
   end
 
   # predicate methods

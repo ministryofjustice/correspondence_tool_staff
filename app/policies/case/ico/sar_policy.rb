@@ -17,4 +17,5 @@ class Case::ICO::SARPolicy < Case::ICO::BasePolicy
   def show?
     defer_to_existing_policy(Case::SARPolicy, :show?)
   end
+
 end

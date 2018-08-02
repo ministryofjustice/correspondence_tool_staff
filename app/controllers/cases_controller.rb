@@ -152,32 +152,17 @@ class CasesController < ApplicationController
     end
   end
 
-  def create #rubocop:disable Metrics/MethodLength
-    set_correspondence_type(params.fetch(:correspondence_type))
-    case_params = create_params(@correspondence_type_key)
-
-    case_class_service = GetCaseClassFromParamsService.new(
-      type: @correspondence_type,
-      params: params["case_#{@correspondence_type_key}"]
-    )
-    case_class_service.call()
-    if case_class_service.error?
-      permitted_correspondence_types
-      prepare_new_case
-      @case.assign_attributes(case_params)
-      case_class_service.set_error_on_case(@case)
-      render(:new)
-    else
-      case_class = case_class_service.case_class
-      authorize case_class, :can_add_case?
-
-      service = CaseCreateService.new current_user, case_class, case_params
+  def create
+    begin
+      set_correspondence_type(params.fetch(:correspondence_type))
+      service = CaseCreateService.new current_user, @correspondence_type_key, params
+      authorize service.case_class, :can_add_case?
       service.call
       @case = service.case
       case service.result
       when :assign_responder
         flash[:creating_case] = true
-        flash[:notice] = "#{@case.type_abbreviation} case created<br/>Case number: #{@case.number}".html_safe
+        flash[:notice] = service.flash_notice
         redirect_to new_case_assignment_path @case
       else # including :error
         @case = @case.decorate
@@ -185,12 +170,35 @@ class CasesController < ApplicationController
         @s3_direct_post = s3_uploader_for @case, 'requests'
         render :new
       end
+    rescue ActiveRecord::RecordNotUnique
+      flash[:notice] = t('activerecord.errors.models.case.attributes.number.duplication')
+      render :new
     end
+  end
 
-  rescue ActiveRecord::RecordNotUnique
-    flash[:notice] =
-      t('activerecord.errors.models.case.attributes.number.duplication')
-    render :new
+
+  # The new action for overturned ICO cases is a separate action because it is a bit different
+  #
+  # from the other case types:
+  #
+  #   - it takes parameter (the id of the ICO appeal from which it is to be created)
+  #
+  # We can consider merging it back in to the generalised new, and having logic there to work out what to do
+  # and what page to show, but am leaving it for now.
+  #
+  def new_overturned_ico
+    overturned_case_class = determine_overturned_ico_class(params[:id])
+    authorize overturned_case_class
+    service = CreateOverturnedICOCaseService.new(params[:id])
+    service.call
+    if service.error?
+      @case = service.original_ico_appeal.decorate
+      render :show, :status => :bad_request
+    else
+      @case = service.overturned_ico_case.decorate
+      @original_ico_appeal = service.original_ico_appeal
+      render '/cases/overturned_ico/new'
+    end
   end
 
   def show
@@ -616,6 +624,17 @@ class CasesController < ApplicationController
   end
 
   private
+  def determine_overturned_ico_class(original_appeal_id)
+    original_appeal_case = Case::ICO::Base.find original_appeal_id
+    case original_appeal_case.type
+      when 'Case::ICO::FOI'
+        Case::OverturnedICO::FOI
+      when 'Case::ICO::SAR'
+        Case::OverturnedICO::SAR
+      else
+        raise ArgumentError.new 'Invalid case type for original ICO appeal'
+    end
+  end
 
   def set_url
     @action_url = request.env['PATH_INFO']
@@ -724,15 +743,6 @@ class CasesController < ApplicationController
       CaseClosure::RefusalReason.tmm.abbreviation
     elsif params[:case_sar][:missing_info] == "no"
       @case.missing_info = false
-    end
-  end
-
-  def create_params(correspondence_type)
-    # Call case-specific create params, which we should be defined in concerns files.
-    case correspondence_type
-      when 'foi' then create_foi_params
-      when 'sar' then create_sar_params
-      when 'ico' then create_ico_params
     end
   end
 
