@@ -152,7 +152,7 @@ describe CasesController, type: :controller do
       end
 
       context 'successful case creation' do
-        let(:decorated_overturned_ico)  { double Case::OverturnedICO::SARDecorator }
+        let(:decorated_overturned_ico)  { double Case::OverturnedICO::SARDecorator, type_abbreviation: 'OVERTURNED_SAR' }
         let(:overturned_ico)            { double Case::OverturnedICO::SAR, decorate: decorated_overturned_ico }
 
         before(:each) do
@@ -170,7 +170,7 @@ describe CasesController, type: :controller do
         end
 
         it 'renders the new template' do
-          expect(response).to render_template('cases/overturned_ico/new')
+          expect(response).to render_template('cases/overturned_sar/new')
         end
 
         it 'has a status of success' do
