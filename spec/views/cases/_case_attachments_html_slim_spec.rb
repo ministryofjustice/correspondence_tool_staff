@@ -1,16 +1,17 @@
 require 'rails_helper'
 
-def allow_case_policy(policy_name, kase)
-  policy = double('Pundit::Policy', policy_name => true)
-  allow(view).to receive(:policy).with(kase).and_return(policy)
-end
-
-def disallow_case_policy(policy_name, kase)
-  policy = double('Pundit::Policy', policy_name => false)
-  allow(view).to receive(:policy).with(kase).and_return(policy)
-end
-
 describe 'cases/case_attachments.html.slim', type: :view do
+
+  def allow_case_policy(policy_name, kase)
+    policy = double('Pundit::Policy', policy_name => true)
+    allow(view).to receive(:policy).with(kase).and_return(policy)
+  end
+
+  def disallow_case_policy(policy_name, kase)
+    policy = double('Pundit::Policy', policy_name => false)
+    allow(view).to receive(:policy).with(kase).and_return(policy)
+  end
+
 
   before(:all) do
     @upload_group_1 = '20170608101112'

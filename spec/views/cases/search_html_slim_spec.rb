@@ -1,18 +1,17 @@
 require 'rails_helper'
 
-def allow_case_policy(policy_name)
-  policy = double('Pundit::Policy', policy_name => true)
-  allow(view).to receive(:policy).with(:case).and_return(policy)
-end
-
-def disallow_case_policy(policy_name)
-  policy = double('Pundit::Policy', policy_name => false)
-  allow(view).to receive(:policy).with(:case).and_return(policy)
-end
-
 describe 'cases/search.html.slim', type: :view do
-  let(:closed_case) {create(:closed_case)}
+  def allow_case_policy(policy_name)
+    policy = double('Pundit::Policy', policy_name => true)
+    allow(view).to receive(:policy).with(:case).and_return(policy)
+  end
 
+  def disallow_case_policy(policy_name)
+    policy = double('Pundit::Policy', policy_name => false)
+    allow(view).to receive(:policy).with(:case).and_return(policy)
+  end
+
+  let(:closed_case) {create(:closed_case)}
 
   context 'no search query' do
     before :each do

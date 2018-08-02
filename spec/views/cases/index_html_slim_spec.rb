@@ -1,16 +1,18 @@
 require 'rails_helper'
 
-def allow_case_policy(policy_name)
-  policy = double('Pundit::Policy', policy_name => true)
-  allow(view).to receive(:policy).with(:case).and_return(policy)
-end
-
-def disallow_case_policy(policy_name)
-  policy = double('Pundit::Policy', policy_name => false)
-  allow(view).to receive(:policy).with(:case).and_return(policy)
-end
 
 describe 'cases/index.html.slim', type: :view do
+  def allow_case_policy(policy_name)
+    policy = double('Pundit::Policy', policy_name => true)
+    allow(view).to receive(:policy).with(:case).and_return(policy)
+  end
+
+  def disallow_case_policy(policy_name)
+    policy = double('Pundit::Policy', policy_name => false)
+    allow(view).to receive(:policy).with(:case).and_return(policy)
+  end
+
+
   let(:responder)       { create :responder }
   let(:responding_team) { responder.responding_teams.first }
   let(:assigned_case)   { create(:assigned_case, :flagged_accepted,
