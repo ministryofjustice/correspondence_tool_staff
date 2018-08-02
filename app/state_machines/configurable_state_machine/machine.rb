@@ -82,11 +82,9 @@ module ConfigurableStateMachine
 
     def event_name(event)
       if events.include?(event.to_sym)
-        if event == 'respond' && @kase.type_abbreviation == 'ICO'
-          I18n.t('event.case/ico.respond')
-        else
-          I18n.t("event.#{event}", default: event.to_s.humanize)
-        end
+        specific_key = "event.case/#{@kase.type_abbreviation.downcase}.#{event}"
+        default_key = "event.#{event}"
+        I18n.t(specific_key, default: default_key)
       end
     end
 
