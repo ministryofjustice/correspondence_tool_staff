@@ -304,13 +304,11 @@ RSpec.describe Case::Base, type: :model do
     let!(:responded_ico_sar) { create(:responded_ico_sar_case, email: "D@D.com") }
     let!(:accepted_ico_foi) { create(:accepted_ico_foi_case, email: "F@F.com") }
     let!(:accepted_ico_sar) { create(:accepted_ico_sar_case, email: "G@G.com") }
-
     let!(:closed_foi)        { create(:closed_case, email:"E@E.com") }
 
-    it 'returns open cases which arent responded icos' do
-      ap Case::Base.open_excl_responded_icos.pluck(:email)
-      puts Case::Base.open_excl_responded_icos.to_sql
-      expect(Case::Base.open_excl_responded_icos).to match_array([responded_foi, approved_sar, accepted_ico_foi, accepted_ico_sar])
+    it 'it excludes all closed AND ico case which are responded' do
+      expect(Case::Base.open_excl_responded_icos).to match_array( [  responded_foi, approved_sar, accepted_ico_foi, accepted_ico_sar ] )
     end
+
   end
 end
