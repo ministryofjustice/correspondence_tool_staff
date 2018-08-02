@@ -4,7 +4,7 @@ require 'rails_helper'
 describe 'cases/respond.html.slim', type: :view do
 
   let(:responder)    { create(:responder) }
-  let(:kase)         { create(:case_with_response, responder: responder) }
+  let(:kase)         { create(:case_with_response, responder: responder).decorate }
 
   it 'displays the new case page' do
 

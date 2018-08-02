@@ -4,12 +4,10 @@ tbody.response-details
       th = t('common.case.date_responded')
       td = case_details.date_sent_to_requester
 
-  - if case_details.date_responded.present?
     tr.timeliness
       th = t('common.case.timeliness')
       td = case_details.timeliness
 
-  - if case_details.date_responded.present?
     tr.time-taken
       th = t('common.case.time_taken')
       td = case_details.time_taken
