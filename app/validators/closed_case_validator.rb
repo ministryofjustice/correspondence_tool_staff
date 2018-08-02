@@ -7,7 +7,6 @@ class ClosedCaseValidator < ActiveModel::Validator
              :validate_outcome,
              :validate_refusal_reason,
              :validate_exemptions],
-    'ICO'=> [:validate_date_responded]
   }
   # Validations applicable to cases that are being processed for closure.
   #
@@ -16,7 +15,6 @@ class ClosedCaseValidator < ActiveModel::Validator
   PROCESSING_CLOSURE_VALIDATIONS = {
     'SAR'=> [:validate_tmm],
     'FOI'=> [],
-    'ICO'=> [:validate_date_responded]
   }
 
   class << self

@@ -72,7 +72,7 @@ class Case::Base < ApplicationRecord
   scope :most_recent_first, -> {reorder("(properties ->> 'external_deadline')::timestamp with time zone DESC, cases.id") }
 
   scope :opened, ->       { where.not(current_state: 'closed') }
-  scope :open_excl_responded_icos, -> { where(closed_incl_responded_icos) }
+  scope :open_excl_responded_icos, -> { where.not(current_state: 'closed').or(where.not(type: ['Case::ICO::FOI', "Case::ICO::SAR"], current_state: [:responded, :closed])) }
   scope :closed, ->       { where(current_state: 'closed')}
   scope :closed_incl_responded_icos, -> { where(current_state: 'closed').or(where(type: ['Case::ICO::FOI', "Case::ICO::SAR"], current_state: [:responded, :closed])) }
   scope :standard_foi, -> { where(type: 'Case::FOI::Standard') }
@@ -148,6 +148,7 @@ class Case::Base < ApplicationRecord
   validate :validate_related_cases
   validates_associated :case_links
 
+  validates_with ::RespondedCaseValidator
   validates_with ::ClosedCaseValidator
 
   has_many :assignments, dependent: :destroy, foreign_key: :case_id
@@ -383,6 +384,14 @@ class Case::Base < ApplicationRecord
 
   def refusal_reason_abbreviation=(abbreviation)
     self.refusal_reason = CaseClosure::RefusalReason.by_abbreviation(abbreviation)
+  end
+
+  def prepare_for_respond
+    @preparing_for_respond = true
+  end
+
+  def prepared_for_respond?
+    @preparing_for_respond == true
   end
 
   def prepare_for_close

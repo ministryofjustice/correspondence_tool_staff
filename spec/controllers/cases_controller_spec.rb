@@ -948,15 +948,16 @@ RSpec.describe CasesController, type: :controller do
 
   describe 'PATCH confirm_respond' do
     let(:another_responder)  { create(:responder) }
+    let(:date_responded)     { case_with_response.received_date + 2.days }
     let(:params) do
       {
         correspondence_type: 'foi',
         case_foi:  {
-          date_responded_dd: 5,
-          date_responded_mm: 7,
-          date_responded_yyyy: 2018,
+          date_responded_dd: date_responded.day,
+          date_responded_mm: date_responded.month,
+          date_responded_yyyy: date_responded.year,
         },
-        commit: 'Submit',
+        commit: 'Mark response as sent',
         id:  case_with_response.id.to_s
       }
     end
@@ -1016,7 +1017,7 @@ RSpec.describe CasesController, type: :controller do
               date_responded_mm: '',
               date_responded_yyyy: '',
             },
-            commit: 'Submit',
+            commit: 'Mark response as sent',
             id:  case_with_response.id.to_s
           }
         end
@@ -1049,13 +1050,14 @@ RSpec.describe CasesController, type: :controller do
     context 'for ICO cases' do
       let(:approved_ico)    { create(:approved_ico_foi_case, approver: approver) }
       let(:approver)        { create(:disclosure_specialist) }
+      let(:date_responded)  { approved_ico.received_date + 2.days }
       let(:params) do
         {
           correspondence_type: 'ico',
           case_ico:  {
-            date_responded_dd: 5,
-            date_responded_mm: 7,
-            date_responded_yyyy: 2018,
+            date_responded_dd: date_responded.day,
+            date_responded_mm: date_responded.month,
+            date_responded_yyyy: date_responded.year,
           },
           commit: 'Submit',
           id:  approved_ico.id.to_s

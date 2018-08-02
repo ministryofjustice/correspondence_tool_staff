@@ -74,6 +74,12 @@ describe CaseFinderService do
                  identifier: 'older dacu flagged accept')
         @accepted_case        = create(:accepted_case,
                                        responder: @responder)
+
+        @approved_ico         = create(:approved_ico_foi_case,
+                                       responding_team: @responding_team)
+        @responded_ico        = create(:responded_ico_foi_case,
+                                        responding_team: @responding_team)
+        # @closed_ico
       end
     end
 

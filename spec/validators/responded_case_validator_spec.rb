@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-describe RespondedICOValidator do
+describe RespondedCaseValidator do
 
   let(:foi)   { create(:foi_case) }
   let(:ico)   { create(:ico_foi_case, original_case: foi)}
 
   context 'not prepared for respond' do
     it 'does not validate' do
-      expect_any_instance_of(RespondedICOValidator).not_to receive(:validate_responded_date)
+      expect_any_instance_of(RespondedCaseValidator).not_to receive(:validate_responded_date)
       ico.valid?
     end
   end
