@@ -1,0 +1,9 @@
+= form_for @case, as: :case_overturned_sar, url: cases_path do |f|
+
+  = hidden_field_tag 'correspondence_type', 'overturned_sar'
+  = f.hidden_field :original_ico_appeal_id
+  = f.hidden_field :original_case_id, value: @case.original_ico_appeal.original_case_id
+
+  = render partial: 'cases/overturned_sar/new_form', locals: { kase: @case, f: f }
+
+  = f.submit t('button.create_case'), {class: 'button'}

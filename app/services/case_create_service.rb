@@ -47,6 +47,7 @@ class CaseCreateService
 
   def create_case
     @case = @case_class.new(@permitted_params.merge(uploading_user: @user))
+    # @case.original_case = @case.original_ico_appeal.original_case
 
     if @case.invalid?
       @result = :error

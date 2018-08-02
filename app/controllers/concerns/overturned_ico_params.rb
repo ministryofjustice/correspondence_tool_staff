@@ -2,7 +2,7 @@ module OverturnedICOParams
   extend ActiveSupport::Concern
 
   def create_overturned_ico_params
-    params.require(:case_overturned_ico).permit(
+    params.require(:case_overturned_sar).permit(
         :original_ico_appeal_id,
         :original_case_id,
         :reply_method,

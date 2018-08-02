@@ -36,12 +36,13 @@ hr
   = f.gov_uk_date_field :external_deadline, { legend_text: "Final deadline" ,
           form_hint_text: "We'll use this date to set the draft deadline, calculated as 20 working days from the final deadline."}
 
+
 p
   = "Only change the details below if the Requester's contact details and the "
   = "preferred way of receiving the information has changed."
 
 #delivery-method
-  = f.radio_button_fieldset :delivery_method, choices: [:send_by_email, :send_by_post] do |fieldset|
+  = f.radio_button_fieldset :reply_method, choices: [:send_by_email, :send_by_post] do |fieldset|
     - fieldset.radio_input('send_by_email',
                            panel_id: 'delivery_method_send_by_email_panel')
     - fieldset.revealing_panel(:delivery_method_send_by_email_panel) do |panel|
