@@ -341,9 +341,11 @@ GEM
       jwt (~> 1.5)
     ntlm-http (0.1.1)
     orm_adapter (0.5.0)
-    paper_trail (9.0.2)
+    paper_trail (9.2.0)
       activerecord (>= 4.2, < 5.3)
+      paper_trail-association_tracking (< 2)
       request_store (~> 1.1)
+    paper_trail-association_tracking (1.0.0)
     parallel (1.12.1)
     parallel_tests (2.22.0)
       parallel
@@ -615,7 +617,7 @@ DEPENDENCIES
   logstash-event
   mechanize (>= 2.7.5)
   mimetype-fu (~> 0.1.2)
-  paper_trail (~> 9.0)
+  paper_trail (~> 9.2)
   parallel_tests
   pg (~> 0.18)
   pg_search (~> 2.1.2)
