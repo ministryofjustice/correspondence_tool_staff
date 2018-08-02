@@ -84,7 +84,7 @@ module ConfigurableStateMachine
       if events.include?(event.to_sym)
         specific_key = "event.case/#{@kase.type_abbreviation.downcase}.#{event}"
         default_key = "event.#{event}"
-        I18n.t(specific_key, default: default_key)
+        I18n.t(specific_key, default: I18n.t(default_key))
       end
     end
 

@@ -6,7 +6,7 @@ module CurrentTeamAndUser
         @user = @case.approver_assignments.for_team(@team).first.user
       end
 
-      def awaiting_dispatch
+      def responded
         @team = @dts.approving_team
         @user = @case.approver_assignments.for_team(@team).first.user
       end

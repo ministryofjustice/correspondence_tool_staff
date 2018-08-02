@@ -206,12 +206,17 @@ en:
     add_response_to_flagged_case_and_approve: Response uploaded and cleared
     add_responses: Response uploaded
     approve: Response cleared
+    assign_responder: Assign responder
     close: Case closed
     edit_case: Case details edited
     extend_for_pit: Extended for Public Interest Test (PIT)
+    progress_for_clearance: Progress for clearance
+    reassign_user: Reassign user
     reject_responder_assignment: Rejected by Business unit
     remove_last_response: File removed
     remove_response: File removed
+    request_amends: Request amends
+    request_further_clearance: Request further clearance
     respond: Response sent to requester
     take_on_for_approval: Clearance level added
     unaccept_approver_assignment: Clearance level removed

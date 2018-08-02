@@ -22,13 +22,6 @@ feature 'Mark response as sent' do
 
     expect(cases_show_page).
         to have_content('The response has been marked as sent.')
-
-    expect(cases_show_page.case_details.response_details.date_responded.data.text)
-      .to eq 0.business_days.ago.strftime(Settings.default_date_format)
-
-    login_as manager
-    open_cases_page.load
-    # expect(open_cases_page.case_numbers).to include kase.number
   end
 
   scenario 'the assigned KILO has uploaded a response but decides not to mark as sent' do

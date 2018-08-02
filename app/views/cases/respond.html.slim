@@ -1,5 +1,4 @@
-= GovukElementsErrorsHelper.error_summary @case.object,
-    "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+= GovukElementsErrorsHelper.error_summary @case.object, @case.error_summary_message, ''
 
 - content_for :page_title do
   = t('page_title.mark_as_sent_page', case_number: @case.number)
