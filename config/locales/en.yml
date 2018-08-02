@@ -662,7 +662,7 @@ en:
         </ul>
       respond_date: Date response sent
 
-    overturned_ico:
+    overturned_sar:
       new_form:
         sub_heading: Create an ICO Overturned case
         heading: Add case details

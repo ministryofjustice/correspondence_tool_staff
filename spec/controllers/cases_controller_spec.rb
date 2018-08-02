@@ -1397,7 +1397,7 @@ RSpec.describe CasesController, type: :controller do
 
     let(:ico_sar)                         { create :ico_sar_case }
     let(:sar)                             { create :sar_case }
-    let(:decorated_overturned_ico_case)   { double(Case::OverturnedICO::SARDecorator) }
+    let(:decorated_overturned_ico_case)   { double(Case::OverturnedICO::SARDecorator, type_abbreviation: 'OVERTURNED_SAR') }
     let(:double_overturned_ico_case)      { double(Case::OverturnedICO::SAR, decorate: decorated_overturned_ico_case) }
 
 
@@ -1428,7 +1428,7 @@ RSpec.describe CasesController, type: :controller do
         end
 
         it 'renders the new overturned ico case page' do
-          expect(response).to render_template('cases/overturned_ico/new')
+          expect(response).to render_template('cases/overturned_sar/new')
         end
       end
 
