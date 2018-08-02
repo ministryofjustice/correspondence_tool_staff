@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-def allow_case_policy(policy_name)
+def allow_case_policy(policy_name, kase)
   policy = double('Pundit::Policy', policy_name => true)
-  allow(view).to receive(:policy).with(@kase).and_return(policy)
+  allow(view).to receive(:policy).with(kase).and_return(policy)
 end
 
-def disallow_case_policy(policy_name)
+def disallow_case_policy(policy_name, kase)
   policy = double('Pundit::Policy', policy_name => false)
-  allow(view).to receive(:policy).with(@kase).and_return(policy)
+  allow(view).to receive(:policy).with(kase).and_return(policy)
 end
 
 describe 'cases/case_attachments.html.slim', type: :view do
@@ -40,7 +40,7 @@ describe 'cases/case_attachments.html.slim', type: :view do
     let(:ico_case){ create :ico_foi_case}
 
     it 'should display as Appeal response for ICO cases' do
-      disallow_case_policy(:can_remove_attachment?)
+      disallow_case_policy(:can_remove_attachment?, ico_case)
 
 
       render partial: 'cases/case_attachments.html.slim',
@@ -52,7 +52,7 @@ describe 'cases/case_attachments.html.slim', type: :view do
     end
 
     it 'should display as Response for non ICO cases' do
-      disallow_case_policy(:can_remove_attachment?)
+      disallow_case_policy(:can_remove_attachment?, @kase)
 
 
       render partial: 'cases/case_attachments.html.slim',
@@ -66,7 +66,7 @@ describe 'cases/case_attachments.html.slim', type: :view do
 
   describe 'filename' do
     it 'should display a filename' do
-      disallow_case_policy(:can_remove_attachment?)
+      disallow_case_policy(:can_remove_attachment?, @kase)
 
 
       render partial: 'cases/case_attachments.html.slim',
@@ -83,7 +83,7 @@ describe 'cases/case_attachments.html.slim', type: :view do
   describe '#actions' do
 
     it 'should have a preview and download link' do
-      disallow_case_policy(:can_remove_attachment?)
+      disallow_case_policy(:can_remove_attachment?, @kase)
 
       render partial: 'cases/case_attachments.html.slim',
              locals:{ case_details: @kase}
@@ -99,7 +99,7 @@ describe 'cases/case_attachments.html.slim', type: :view do
     describe '#remove' do
 
       it 'should show a remove link if the user is authorised to do so' do
-        allow_case_policy(:can_remove_attachment?)
+        allow_case_policy(:can_remove_attachment?, @kase)
 
         render partial: 'cases/case_attachments.html.slim',
                locals:{ case_details: @kase}
@@ -112,7 +112,7 @@ describe 'cases/case_attachments.html.slim', type: :view do
       end
 
       it 'should not show a remove link if the user is not allowed to' do
-        disallow_case_policy(:can_remove_attachment?)
+        disallow_case_policy(:can_remove_attachment?, @kase)
 
         render partial: 'cases/case_attachments.html.slim',
                locals:{ case_details: @kase}
