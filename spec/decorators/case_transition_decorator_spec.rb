@@ -105,11 +105,24 @@ RSpec.describe CaseTransitionDecorator, type: :model do
     end
 
     context 'respond' do
-      it 'returns marked as reponded' do
-        ct = create(:case_transition_respond).decorate
-        event = 'Response sent to requester'
-        details = ''
-        expect(ct.event_and_detail).to eq response(event, details)
+      context 'Non ICO case' do
+        it 'returns marked as reponded' do
+          ct = create(:case_transition_respond).decorate
+          event = 'Response sent to requester'
+          details = ''
+          expect(ct.event_and_detail).to eq response(event, details)
+        end
+      end
+
+      context 'ICO case' do
+        it 'returns messsage resonse sent to ICO' do
+          ico_sar_case = create :ico_sar_case
+          ct = create(:case_transition_respond, case: ico_sar_case).decorate
+          event = 'Response sent to ICO'
+          details = ''
+          expect(ct.event_and_detail).to eq response(event, details)
+        end
+
       end
     end
 
