@@ -56,6 +56,12 @@ FactoryBot.define do
     report_category_name ''
   end
 
+  factory :overturned_sar_correspondence_type, parent: :sar_correspondence_type do
+    name 'Overturned ICO appeal (SAR)'
+    abbreviation 'OVERTURNED_SAR'
+    report_category_name ''
+  end
+
   trait :business_days do
     deadline_calculator_class 'BusinessDays'
   end

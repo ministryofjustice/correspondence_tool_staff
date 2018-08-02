@@ -5,4 +5,6 @@ class Case::ICO::SAR < Case::ICO::Base
   end
 
   def original_case_type; 'SAR' end
+
+
 end

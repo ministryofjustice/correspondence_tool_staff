@@ -83,7 +83,7 @@ describe CaseLinkingService do
       let(:sar_case_1)      { create :sar_case }
       let(:sar_case_2)      { create :sar_case }
 
-      describe 'linking a sar case to a non-sar case' do
+      describe 'linking a sar case to a  non sar case' do
         it 'errors' do
           service = CaseLinkingService.new(manager, sar_case_1, foi_case.number)
           service.create

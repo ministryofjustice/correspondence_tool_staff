@@ -1,0 +1,54 @@
+- content_for :page_title do
+  = t('page_title.create_overturned_ico_page')
+
+= GovukElementsErrorsHelper.error_summary @case,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  = t('.sub_heading', case_type: @case.type_abbreviation)
+
+= render partial: 'layouts/header'
+
+
+section
+  h2.page-heading--secondary
+    = t('.overturned_case_for')
+  .heading-medium
+    = "#{@case.subject} "
+    span.no-break
+      = link_to @case.original_case_description,
+              case_path(@case.original_case_id)
+
+hr
+
+.grid-row
+  .column-two-thirds
+    .form-group
+      = f.gov_uk_date_field :received_date, { legend_text: "Date Information Commissioner's Office (ICO) decision was received",
+              form_hint_text: '',
+              today_button: {class: 'button-secondary'} }
+
+
+.form-group
+  = f.gov_uk_date_field :external_deadline, { legend_text: "Final deadline" ,
+          form_hint_text: "We'll use this date to set the draft deadline, calculated as 20 working days from the final deadline."}
+
+p
+  = "Only change the details below if the Requester's contact details and the "
+  = "preferred way of receiving the information has changed."
+
+#delivery-method
+  = f.radio_button_fieldset :delivery_method, choices: [:send_by_email, :send_by_post] do |fieldset|
+    - fieldset.radio_input('send_by_email',
+                           panel_id: 'delivery_method_send_by_email_panel')
+    - fieldset.revealing_panel(:delivery_method_send_by_email_panel) do |panel|
+      - panel.email_field :email
+
+    - fieldset.radio_input('send_by_post',
+                           panel_id: 'delivery_method_send_by_post_panel')
+
+    - fieldset.revealing_panel(:delivery_method_send_by_post_panel) do |panel|
+      - panel.text_area :postal_address, {rows: 4}

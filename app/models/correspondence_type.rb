@@ -60,6 +60,7 @@ class CorrespondenceType < ApplicationRecord
     SAR: [Case::SAR],
     ICO: [Case::ICO::FOI,
           Case::ICO::SAR],
+    OVERTURNED_SAR: [Case::OverturnedICO::SAR]
   }.with_indifferent_access.freeze
 
   def self.by_report_category

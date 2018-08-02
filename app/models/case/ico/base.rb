@@ -1,9 +1,13 @@
 class Case::ICO::Base < Case::Base
+
+  include LinkableOriginalCase
+
   jsonb_accessor :properties,
                  ico_officer_name: :string,
                  ico_reference_number: :string,
                  internal_deadline: :date,
                  external_deadline: :date
+
 
   acts_as_gov_uk_date :received_date, :date_responded, :external_deadline
 
@@ -17,20 +21,10 @@ class Case::ICO::Base < Case::Base
                     :received_date,
                   ]
 
-  has_one :original_case_link,
-          -> { original },
-          class_name: 'LinkedCase',
-          foreign_key: :case_id
-  has_one :original_case,
-          through: :original_case_link,
-          source: :linked_case
-
   validates :ico_officer_name, presence: true
   validates :ico_reference_number, presence: true
   validates :message, presence: true
   validates :external_deadline, presence: true
-  validate :validate_original_case
-  validate :validate_original_case_not_already_related
   validates_presence_of :original_case
 
   before_save do
@@ -62,15 +56,7 @@ class Case::ICO::Base < Case::Base
   def name=(_new_name)
     raise StandardError.new(
             'name attribute is read-only for ICO cases'
-          )
-  end
-
-  def original_case_id=(case_id)
-    self.original_case = Case::Base.find(case_id)
-  end
-
-  def original_case_id
-    self.original_case&.id
+      )
   end
 
   def requires_flag_for_disclosure_specialists?
@@ -104,15 +90,4 @@ class Case::ICO::Base < Case::Base
     'trigger'
   end
 
-  def validate_original_case
-    if self.original_case
-      validate_case_link(:original, original_case, :original_case)
-    end
-  end
-
-  def validate_original_case_not_already_related
-    if original_case.in?(related_cases)
-      self.errors.add(:linked_cases, :original_case_already_related)
-    end
-  end
 end

@@ -23,8 +23,12 @@ class CaseLinkTypeValidator < ActiveModel::Validator
                                         'Case::ICO::SAR'],
     },
     original: {
-      'Case::ICO::FOI' => ['Case::FOI::Standard'],
-      'Case::ICO::SAR' => ['Case::SAR'],
+      'Case::ICO::FOI'            => ['Case::FOI::Standard'],
+      'Case::ICO::SAR'            => ['Case::SAR'],
+      'Case::OverturnedICO::SAR'  => ['Case::SAR']
+    },
+    original_appeal: {
+      'Case::OverturnedICO::SAR'  => ['Case::ICO::SAR'],
     },
   }.with_indifferent_access
 
@@ -46,12 +50,11 @@ class CaseLinkTypeValidator < ActiveModel::Validator
 
     case_class = case_link.case.class
     linked_class = case_link.linked_case.class
-    if not self.class.classes_can_be_linked_with_type?(
+    unless self.class.classes_can_be_linked_with_type?(
              type: case_link.type,
              klass: case_class,
              linked_klass: linked_class
            )
-
       case_class_name = I18n.t("cases.types.#{case_class}")
       linked_class_name = I18n.t("cases.types.#{linked_class}")
       case_link.errors.add(
@@ -62,7 +65,6 @@ class CaseLinkTypeValidator < ActiveModel::Validator
                         case_class: case_class_name,
                         linked_case_class: linked_class_name)
       )
-
     end
   end
 end
