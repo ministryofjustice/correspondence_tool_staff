@@ -311,6 +311,9 @@ class CasesController < ApplicationController
   def close
     # prepopulate date if it was entered by the KILO
     authorize @case, :can_close_case?
+    if @case.ico?
+      @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
+    end
     set_permitted_events
   end
 
