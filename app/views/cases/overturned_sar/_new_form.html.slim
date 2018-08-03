@@ -1,9 +1,6 @@
 - content_for :page_title do
   = t('page_title.create_overturned_ico_page')
 
-= GovukElementsErrorsHelper.error_summary @case.object,
-        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
-
 - content_for :heading
   = t('.heading')
 

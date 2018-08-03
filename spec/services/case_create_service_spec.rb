@@ -165,7 +165,7 @@ describe CaseCreateService do
         ActionController::Parameters.new(
           {
               'correspondence_type'   => 'overturned_sar',
-              'case_overturned_ico'   => {
+              'case_overturned_sar'   => {
                   'original_ico_appeal_id'  => original_ico_appeal.id.to_s,
                   'original_case_id'        => original_case.id.to_s,
                   'received_date_dd'        => received.day.to_s,

@@ -47,7 +47,7 @@ describe CasesController do
   let(:overturned_ico_params) do
     {
       action: 'create',
-      case_overturned_ico: {
+      case_overturned_sar: {
           email: 'stephen@stephenrichards.eu',
           external_deadline_dd: deadline.day.to_s,
           external_deadline_mm: deadline.month.to_s,
