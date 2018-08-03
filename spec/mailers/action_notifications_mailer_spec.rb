@@ -117,7 +117,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
                                    subject: 'The anatomy of man' }
     let(:assignment)      { approved_case.responder_assignment }
     let(:responding_team) { assignment.team }
-    let(:responder)       { responding_team.responders.first }
+    let(:responder)       { approved_case.responder }
     let(:mail)            { described_class.notify_information_officers(approved_case, 'Ready to send')}
 
     it 'personalises the email' do
@@ -140,6 +140,17 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
 
     it 'sets the To address of the email using the provided user' do
       expect(mail.to).to include assignment.user.email
+    end
+
+    context 'with a case that still has pending assignments' do
+      it 'uses the accepted responder assignment' do
+        other_responding_team = create(:responding_team, responders: [responder])
+        approved_case.assignments << Assignment.new(role: 'responding',
+                                                    team: other_responding_team,
+                                                    state: 'pending')
+        approved_case.reload
+        expect(mail.to).to include responder.email
+      end
     end
 
     context 'ready to send' do
