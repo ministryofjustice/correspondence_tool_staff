@@ -107,6 +107,7 @@ ignore_unused:
   - 'cases.new*.external_deadline_copy'
   - 'cases.new*.sub_heading'
   - '*.case/*'
+  - 'cases.show.case.attachments_heading'
 
 
 ## Consider these keys used:
