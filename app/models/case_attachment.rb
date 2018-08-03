@@ -28,7 +28,7 @@ class CaseAttachment < ActiveRecord::Base
 
   after_destroy :remove_from_storage_bucket
 
-  enum type: { response: 'response', request: 'request' }
+  enum type: { response: 'response', request: 'request', ico_decision: 'ico_decision' }
 
   def filename
     File.basename(key)

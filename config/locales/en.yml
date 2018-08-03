@@ -153,6 +153,8 @@ en:
       show?: You are not authorised to view this case.
       unflag_for_clearance?: 'You are not authorised to remove clearance from this case'
       update?: You are not authorised to edit this case.
+    case/ico/foi_policy:
+      can_close_case?: You are not authorised to close this case
     case/foi/standard_policy:
       <<: *case_policy
     case/foi/compliance_review_policy:

@@ -6,10 +6,12 @@ class Case::ICO::Base < Case::Base
                  ico_officer_name: :string,
                  ico_reference_number: :string,
                  internal_deadline: :date,
-                 external_deadline: :date
+                 external_deadline: :date,
+                 date_ico_decision_received: :date,
+                 ico_decision: :string
 
-
-  acts_as_gov_uk_date :date_responded,
+  acts_as_gov_uk_date :date_ico_decision_received,
+                      :date_responded,
                       :external_deadline,
                       :internal_deadline,
                       :received_date
@@ -23,6 +25,7 @@ class Case::ICO::Base < Case::Base
                     :message,
                     :properties,
                     :received_date,
+                    :date_closed
                   ]
 
   validates :ico_officer_name, presence: true

@@ -343,13 +343,12 @@ class CasesController < ApplicationController
 
   def process_closure
     authorize @case, :can_close_case?
-
-    @case.prepare_for_close
     close_params = process_closure_params(@case.type_abbreviation)
-    if @case.update(close_params)
-      @case.close(current_user)
+    service = CaseClosureService.new(@case, close_params).call
+    if service.result == :ok
       set_permitted_events
-      flash[:notice] = t('notices.case_closed')
+      # flash[:notice] = t('notices.case_closed')
+      flash[:notice] = service.ok_flash
       redirect_to case_path(@case)
     else
       set_permitted_events
@@ -742,6 +741,7 @@ class CasesController < ApplicationController
     case correspondence_type
     when 'FOI' then process_foi_closure_params
     when 'SAR' then process_sar_closure_params
+    when 'ICO' then process_ico_closure_params
     else raise 'Unknown case type'
     end
   end

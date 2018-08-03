@@ -41,6 +41,17 @@ module ICOCasesParams
     result
   end
 
+  def process_ico_closure_params
+    params.require(:case_ico).permit(
+                                 :date_ico_decision_received_dd,
+                                 :date_ico_decision_received_mm,
+                                 :date_ico_decision_received_yyyy,
+                                 :request_amends_comment,
+                                 :ico_decision,
+                                 uploaded_request_files: []
+    )
+  end
+
   def process_new_linked_cases_for_ico_params
     case @link_type
     when 'original' then process_new_linked_cases_for_ico_original_params
