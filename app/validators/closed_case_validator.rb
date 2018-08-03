@@ -53,6 +53,16 @@ class ClosedCaseValidator < ActiveModel::Validator
   end
 
   def validate(rec)
+    rec.ico? ? validate_ico_appeal(rec) : validate_other(rec)
+  end
+
+  private
+
+  def validate_ico_appeal(rec)
+    true
+  end
+
+  def validate_other(rec)
     if closure_details_are_validatable?(rec)
       if rec.current_state == 'closed'
         run_validations(
@@ -71,8 +81,6 @@ class ClosedCaseValidator < ActiveModel::Validator
       end
     end
   end
-
-  private
 
   def run_validations(validations:, kase:)
     validations.each do |validation|
