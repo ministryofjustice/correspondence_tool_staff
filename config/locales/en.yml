@@ -649,9 +649,7 @@ en:
     show:
       case/ico:
         attachments_heading: Appeal response
-      case/sar:
-        attachments_heading: Response
-      case/foi:
+      case:
         attachments_heading: Response
     new_case_link:
       heading: 'Link case'
