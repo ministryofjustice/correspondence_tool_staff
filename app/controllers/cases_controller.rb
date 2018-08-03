@@ -344,11 +344,11 @@ class CasesController < ApplicationController
   def process_closure
     authorize @case, :can_close_case?
     close_params = process_closure_params(@case.type_abbreviation)
-    service = CaseClosureService.new(@case, close_params).call
+    service = CaseClosureService.new(@case, current_user, close_params)
+    service.call
     if service.result == :ok
       set_permitted_events
-      # flash[:notice] = t('notices.case_closed')
-      flash[:notice] = service.ok_flash
+      flash[:notice] = service.flash_message
       redirect_to case_path(@case)
     else
       set_permitted_events
