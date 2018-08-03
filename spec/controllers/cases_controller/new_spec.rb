@@ -170,7 +170,7 @@ describe CasesController, type: :controller do
         end
 
         it 'renders the new template' do
-          expect(response).to render_template('cases/overturned_sar/new')
+          expect(response).to render_template('cases/new')
         end
 
         it 'has a status of success' do

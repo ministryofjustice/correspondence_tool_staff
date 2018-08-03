@@ -666,8 +666,6 @@ en:
 
     overturned_sar:
       new_form:
-        sub_heading: Create an ICO Overturned case
-        heading: Add case details
         overturned_case_for: 'ICO Overturned case for:'
 
     ico:

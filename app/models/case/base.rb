@@ -8,7 +8,7 @@
 #  message              :text
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
-#  received_date        :date
+#  recevied_date        :date
 #  postal_address       :string
 #  subject              :string
 #  properties           :jsonb
