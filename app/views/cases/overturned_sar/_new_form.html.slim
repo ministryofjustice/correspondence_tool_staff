@@ -1,15 +1,6 @@
 - content_for :page_title do
   = t('page_title.create_overturned_ico_page')
 
-- content_for :heading
-  = t('.heading')
-
-- content_for :sub_heading
-  = t('.sub_heading', case_type: @case.type_abbreviation)
-
-= render partial: 'layouts/header'
-
-
 section
   h2.page-heading--secondary
     = t('.overturned_case_for')

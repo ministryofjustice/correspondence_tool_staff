@@ -197,7 +197,7 @@ class CasesController < ApplicationController
     else
       @case = service.overturned_ico_case.decorate
       @original_ico_appeal = service.original_ico_appeal
-      render "/cases/#{@case.type_abbreviation.downcase}/new"
+      render :new
     end
   end
 
