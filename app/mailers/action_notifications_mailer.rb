@@ -12,7 +12,6 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
         case_current_state: I18n.t("state.#{kase.current_state}").downcase,
         case_number:        kase.number,
         case_abbr:          kase.type_abbreviation,
-        case_name:          kase.name,
         case_received_date: kase.received_date.strftime(Settings.default_date_format),
         case_subject:       kase.subject,
         case_link: edit_case_assignment_url(@assignment.case_id, @assignment.id)
@@ -35,7 +34,6 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
         case_number:            kase.number,
         case_subject:           kase.subject,
         case_type:              kase.type_abbreviation,
-        case_name:              kase.name,
         case_received_date:     kase.received_date.strftime(Settings.default_date_format),
         case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format),
         case_link: case_url(kase.id)
@@ -57,7 +55,6 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
         case_number:            kase.number,
         case_subject:           kase.subject,
         case_abbr:              kase.type_abbreviation,
-        case_name:              kase.name,
         case_received_date:     kase.received_date.strftime(Settings.default_date_format),
         case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format),
         case_link:              case_url(kase.id),
@@ -78,7 +75,6 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
         case_number:            kase.number,
         case_subject:           kase.subject,
         case_abbr:              kase.type_abbreviation,
-        case_name:              kase.name,
         case_received_date:     kase.received_date.strftime(Settings.default_date_format),
         case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format),
         case_link:              case_url(kase.id),

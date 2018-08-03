@@ -442,10 +442,10 @@ GEM
       rspec-mocks (~> 3.5.0)
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
-    rubocop (0.57.2)
+    rubocop (0.58.2)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
-      parser (>= 2.5)
+      parser (>= 2.5, != 2.5.1.1)
       powerpack (~> 0.1)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
@@ -547,7 +547,7 @@ GEM
     turbolinks-source (5.1.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
-    uglifier (3.0.1)
+    uglifier (4.1.17)
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
@@ -633,7 +633,7 @@ DEPENDENCIES
   recursive-open-struct
   rspec-collection_matchers
   rspec-rails (~> 3.5)
-  rubocop (~> 0.57.2)
+  rubocop (~> 0.58.2)
   rubocop-rspec
   ruby-progressbar
   sass-rails (~> 5.0)
