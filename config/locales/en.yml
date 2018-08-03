@@ -28,6 +28,8 @@ en:
         third_party: ''
       report:
         correspondence_type: Case type
+      case/overturned_ico/sar:
+        external_deadline: Final deadline
     errors:
       models:
         business_unit:
@@ -84,9 +86,9 @@ en:
             received_date:
               future: cannot be in the future
               past: is too far in the past
-#            external_deadline:
-#              past: cannot be in the past
-#              future: is too far in the future
+            external_deadline:
+              past: cannot be in the past
+              future: is too far in the future
             original_ico_appeal:
               not_ico_sar: is not an ICO appeal for a SAR case
             original_case:
