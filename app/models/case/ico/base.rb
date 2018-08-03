@@ -27,8 +27,6 @@ class Case::ICO::Base < Case::Base
   validates :external_deadline, presence: true
   validates_presence_of :original_case
 
-  validates_with ::RespondedCaseValidator
-
   before_save do
     self.workflow = 'trigger'
   end

@@ -78,10 +78,10 @@ class Case::Base < ApplicationRecord
 
   scope :icos_not_responded_or_closed, -> { where(type: ['Case::ICO::FOI', 'Case::ICO::SAR']).not_closed_or_responded }
 
-  scope :open_excl_responded_icos, -> { (opened.not_icos).or(icos_not_responded_or_closed) }
+  scope :presented_as_open, -> { (opened.not_icos).or(icos_not_responded_or_closed) }
 
   scope :closed, ->       { where(current_state: 'closed')}
-  scope :closed_incl_responded_icos, -> { where(current_state: 'closed').or(where(type: ['Case::ICO::FOI', "Case::ICO::SAR"], current_state: [:responded, :closed])) }
+  scope :presented_as_closed, -> { where(current_state: 'closed').or(where(type: ['Case::ICO::FOI', "Case::ICO::SAR"], current_state: [:responded, :closed])) }
   scope :standard_foi, -> { where(type: 'Case::FOI::Standard') }
   scope :ico_appeal, ->   { where(type: ['Case::ICO::FOI', 'Case::ICO::SAR'])}
 

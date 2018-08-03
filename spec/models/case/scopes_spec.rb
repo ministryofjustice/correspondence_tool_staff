@@ -99,7 +99,7 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  describe 'closed_incl_responded_icos scope' do
+  describe 'presented_as_closed scope' do
     it 'returns only closed cases and responded and closed icos' do
       create :case
       create :responded_case
@@ -107,7 +107,7 @@ RSpec.describe Case::Base, type: :model do
       closed_case_2 = create :closed_case, last_transitioned_at: 1.day.ago
       responded_ico = create :responded_ico_foi_case, last_transitioned_at: 1.day.ago
 
-      expect(Case::Base.closed_incl_responded_icos).to match_array [ closed_case_1, closed_case_2, responded_ico, responded_ico.original_case ]
+      expect(Case::Base.presented_as_closed).to match_array [ closed_case_1, closed_case_2, responded_ico, responded_ico.original_case ]
     end
   end
 
@@ -297,7 +297,7 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  describe 'open_excl_responded_icos scope' do
+  describe 'presented_as_open scope' do
     let!(:responded_foi)     { create(:responded_case, email: "A@A.com") }
     let!(:approved_sar)      { create(:approved_sar, email: "B@B.com") }
     let!(:responded_ico_foi) { create(:responded_ico_foi_case, email: "C@C.com") }
@@ -307,7 +307,7 @@ RSpec.describe Case::Base, type: :model do
     let!(:closed_foi)        { create(:closed_case, email:"E@E.com") }
 
     it 'it excludes all closed AND ico case which are responded' do
-      expect(Case::Base.open_excl_responded_icos).to match_array( [  responded_foi, approved_sar, accepted_ico_foi, accepted_ico_sar ] )
+      expect(Case::Base.presented_as_open).to match_array( [  responded_foi, approved_sar, accepted_ico_foi, accepted_ico_sar ] )
     end
 
   end
