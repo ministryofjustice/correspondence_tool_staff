@@ -1428,7 +1428,7 @@ RSpec.describe CasesController, type: :controller do
         end
 
         it 'renders the new overturned ico case page' do
-          expect(response).to render_template('cases/overturned_sar/new')
+          expect(response).to render_template('cases/new')
         end
       end
 
