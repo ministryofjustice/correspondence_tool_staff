@@ -1072,19 +1072,19 @@ RSpec.describe CasesController, type: :controller do
 
       context 'as the assigned approver' do
 
-      before { sign_in approver }
+        before { sign_in approver }
 
-      it 'transitions current_state to "responded"' do
-        stub_find_case(approved_ico.id) do |kase|
-          expect(kase).to receive(:respond).with(approver)
+        it 'transitions current_state to "responded"' do
+          stub_find_case(approved_ico.id) do |kase|
+            expect(kase).to receive(:respond).with(approver)
+          end
+          patch :confirm_respond, params: params
         end
-        patch :confirm_respond, params: params
-      end
 
-      it 'redirects to the case list view' do
-        expect(patch :confirm_respond, params: params).
-          to redirect_to(case_path(approved_ico))
-      end
+        it 'redirects to the case list view' do
+          expect(patch :confirm_respond, params: params).
+            to redirect_to(case_path(approved_ico))
+        end
       end
     end
   end

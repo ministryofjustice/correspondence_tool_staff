@@ -54,11 +54,11 @@ describe CasesController do
         responded_ico.reload
       end
 
-      it 'updates the date outcome_received' do
-        expect(responded_ico.date_closed).to eq today
+      it 'updates the date_ico_decision_received' do
+        expect(responded_ico.date_ico_decision_received).to eq today
       end
 
-      it 'udpates the oiutcome' do
+      it 'udpates the outcome' do
         expect(responded_ico.ico_decision).to eq 'upheld'
       end
 
