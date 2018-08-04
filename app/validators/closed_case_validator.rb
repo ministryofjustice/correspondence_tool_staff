@@ -58,7 +58,7 @@ class ClosedCaseValidator < ActiveModel::Validator
 
   private
 
-  def validate_ico_appeal(rec)
+  def validate_ico_appeal(_rec)
     true
   end
 

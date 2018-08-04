@@ -31,7 +31,7 @@ RSpec.describe CaseAttachment, type: :model do
 
 
   describe 'type enum' do
-    it { should have_enum(:type).with_values ['response','request'] }
+    it { should have_enum(:type).with_values %w{ response request ico_decision } }
     it { should validate_presence_of :type }
   end
 

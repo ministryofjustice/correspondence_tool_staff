@@ -696,6 +696,9 @@ en:
 
 
     ico:
+      close_form:
+        close_date: Date response sent
+        date_example: For example, 30 1 2017
       form:
         uploaded_request_files: Upload relevant files (optional)
     select_type:
