@@ -64,7 +64,7 @@ group :test do
   gem 'capybara'
   gem 'capybara-screenshot'
   gem 'codeclimate-test-reporter', '~> 1.0'
-  gem 'i18n-tasks', '~> 0.9.21'
+  gem 'i18n-tasks', '~> 0.9.23'
   gem 'poltergeist'
   gem 'rails-controller-testing', require: false
   gem 'selenium-webdriver'
