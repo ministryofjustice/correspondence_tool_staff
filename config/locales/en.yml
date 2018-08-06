@@ -281,6 +281,7 @@ en:
         type: Type
         name: "Who is the requestor?"
       case_ico:
+        ico_decision: The original case has been
         delivery_method: How and where should the information be sent?
         type: Original Case Type
       case_sar:
@@ -388,6 +389,9 @@ en:
           Case::ICO::FOI: FOI
           Case::ICO::SAR: SAR
         postal_address: "Recipient postal address"
+        ico_decision:
+          upheld: Upheld by ICO
+          overturned: Overturned by ICO
       case_sar:
         email: "Recipient email address"
         message: Full case details
@@ -510,6 +514,7 @@ en:
       request_amends: Request amends
       upload_approve: 'Upload response and clear'
       close: Close case
+
     case/ico:
       close: "Record ICO's decision and close"
       respond: Mark as sent to ICO
@@ -730,6 +735,10 @@ en:
 
       close_form:
         close_date: Date response sent
+        date_example: For example, 30 1 2017
+    ico:
+      close_form:
+        date_ico_decision_received_date: Date decision was received at MoJ
         date_example: For example, 30 1 2017
     sar:
       new_form_common:
