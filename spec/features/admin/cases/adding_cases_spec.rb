@@ -193,6 +193,34 @@ feature 'adding cases' do
     end
   end
 
+  context 'Case::ICO' do
+    scenario 'creating a case with the default values' do
+      admin_cases_page.load
+      admin_cases_page.create_case_button.click
+      admin_cases_new_page.create_link_for_correspondence('ICO').click
+      admin_cases_new_ico_page.submit_button.click
+      expect(admin_cases_page).to be_displayed
+      expect(admin_cases_page.case_list.count).to eq 1
+    end
+
+    scenario 'creating an ICO in pending_dacu_clearance' do
+      create_ico(target_state: 'pending_dacu_disclosure_clearance')
+      expect(admin_cases_page).to be_displayed
+      expect(admin_cases_page.case_list.count).to eq 1
+      kase = Case::ICO::FOI.first
+      expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
+    end
+
+    scenario 'creating a trigger SAR in awaiting_dispatch' do
+      create_ico(target_state: 'awaiting_dispatch')
+      expect(admin_cases_page).to be_displayed
+      expect(admin_cases_page.case_list.count).to eq 1
+      kase = Case::ICO::FOI.first
+      expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
+    end
+  end
+
+
   def create_foi(case_type:, target_state:, flag: nil)
     stub_s3_uploader_for_all_files!
     find_or_create :default_press_officer
@@ -228,6 +256,17 @@ feature 'adding cases' do
       admin_cases_new_sar_page.flag_for_disclosure_specialists.set(true)
     end
     admin_cases_new_sar_page.submit_button.click
+    expect(admin_cases_page).to be_displayed
+    expect(admin_cases_page.case_list.count).to eq 1
+  end
+
+  def create_ico(target_state: 'drafting')
+    admin_cases_page.load
+    admin_cases_page.create_case_button.click
+    admin_cases_new_page.create_link_for_correspondence('ICO').click
+    admin_cases_new_ico_page.target_state.select target_state
+    admin_cases_new_ico_page.flag_for_disclosure_specialists.set(true)
+    admin_cases_new_ico_page.submit_button.click
     expect(admin_cases_page).to be_displayed
     expect(admin_cases_page.case_list.count).to eq 1
   end

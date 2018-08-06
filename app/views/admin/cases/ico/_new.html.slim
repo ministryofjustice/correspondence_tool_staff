@@ -56,7 +56,6 @@
 
   h2
     = "Please only select one."
-  = f.check_box_fieldset :flag_for_disclosure_specialists, [:flagged_for_disclosure_specialist_clearance?]
 
   = f.collection_select :responding_team, BusinessUnit.responding, :id, :name, { selected: @case.responding_team.id }
 

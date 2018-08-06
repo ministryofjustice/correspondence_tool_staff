@@ -171,7 +171,7 @@ class Admin::CasesController < AdminController
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :external_deadline_dd, :external_deadline_mm, :external_deadline_yyyy,
       uploaded_request_files: [],
-    )
+    ).merge(flag_for_disclosure_specialists: 1)
   end
 
   def param_flag_for_ds?

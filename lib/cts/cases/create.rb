@@ -52,9 +52,17 @@ module CTS::Cases
         created_at:           set_created_at_date,
         dirty:                options.fetch(:dirty, true),
         ico_officer_name:     options.fetch(:ico_officer_name, Faker::Name.name),
-        ico_reference_number: "123asdf",
+        ico_reference_number: options.fetch(:ico_reference_number, Faker::IDNumber.south_african_id_number),
         original_case_id:     options.fetch(:original_case_id, Case::Base.closed.last),
       )
+    end
+
+    def set_original_case
+      if options.key? :original_case_id
+        options[:original_case_id]
+      else
+        create_original_case(@klass)
+      end
     end
 
     def new_foi_case
