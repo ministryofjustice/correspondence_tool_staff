@@ -3,7 +3,7 @@ require 'rails_helper'
 
 describe CasesController do
   let(:new_date_responded) { 1.business_day.before(Date.today) }
-  # let(:exemption_ids) { nil }
+
   let(:params) {
     {
       id: 1,
@@ -66,32 +66,32 @@ describe CasesController do
       subject { controller.__send__(:process_foi_closure_params).to_unsafe_hash }
 
       let(:outcome_required?) { false }
-      it { should     include info_held_status_abbreviation: 'held' }
-      it { should_not include :outcome_abbreviation }
-      it { should     include outcome_id: nil  }
-      it { should     include refusal_reason_abbreviation: 'overturned' }
-      it { should     include exemption_ids: ['1', '2'] }
+      it { should     include 'info_held_status_abbreviation' => 'held' }
+      it { should_not include 'outcome_abbreviation' }
+      it { should     include 'outcome_id' => nil  }
+      it { should     include 'refusal_reason_abbreviation' => 'overturned' }
+      it { should     include 'exemption_ids' => ['1', '2'] }
     end
 
     context 'when refusal reason is not required' do
       subject { controller.__send__(:process_foi_closure_params).to_unsafe_hash }
       let(:refusal_reason_required?) { false }
 
-      it { should     include info_held_status_abbreviation: 'held' }
-      it { should     include outcome_abbreviation: 'refused' }
-      it { should_not include :refusal_reason_abbreviation }
-      it { should     include refusal_reason_id: nil }
-      it { should     include exemption_ids: ['1', '2'] }
+      it { should     include 'info_held_status_abbreviation' => 'held' }
+      it { should     include 'outcome_abbreviation' => 'refused' }
+      it { should_not include 'refusal_reason_abbreviation' }
+      it { should     include 'refusal_reason_id' => nil }
+      it { should     include 'exemption_ids' => ['1', '2'] }
     end
 
     context 'when exemption is not required' do
       subject { controller.__send__(:process_foi_closure_params).to_unsafe_hash }
       let(:exemption_required?) { false }
 
-      it { should     include info_held_status_abbreviation: 'held' }
-      it { should     include outcome_abbreviation: 'refused' }
-      it { should     include refusal_reason_abbreviation: 'overturned' }
-      it { should     include exemption_ids: [] }
+      it { should     include 'info_held_status_abbreviation' => 'held' }
+      it { should     include 'outcome_abbreviation' => 'refused' }
+      it { should     include 'refusal_reason_abbreviation' => 'overturned' }
+      it { should     include 'exemption_ids' => [] }
     end
 
   end
