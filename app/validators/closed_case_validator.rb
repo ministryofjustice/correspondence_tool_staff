@@ -6,7 +6,9 @@ class ClosedCaseValidator < ActiveModel::Validator
              :validate_info_held_status,
              :validate_outcome,
              :validate_refusal_reason,
-             :validate_exemptions]
+             :validate_exemptions],
+    'ICO'=> [:validate_date_ico_decision_received,
+             :validate_files_or_comment]
   }
   # Validations applicable to cases that are being processed for closure.
   #
@@ -15,6 +17,7 @@ class ClosedCaseValidator < ActiveModel::Validator
   PROCESSING_CLOSURE_VALIDATIONS = {
     'SAR'=> [:validate_tmm],
     'FOI'=> [],
+    'ICO'=> []
   }
 
   class << self
@@ -52,17 +55,10 @@ class ClosedCaseValidator < ActiveModel::Validator
     end
   end
 
+
+
+
   def validate(rec)
-    rec.ico? ? validate_ico_appeal(rec) : validate_other(rec)
-  end
-
-  private
-
-  def validate_ico_appeal(_rec)
-    true
-  end
-
-  def validate_other(rec)
     if closure_details_are_validatable?(rec)
       if rec.current_state == 'closed'
         run_validations(
@@ -82,11 +78,30 @@ class ClosedCaseValidator < ActiveModel::Validator
     end
   end
 
+  private
+
   def run_validations(validations:, kase:)
     validations.each do |validation|
       self.__send__(validation, kase)
     end
+  end
 
+  def validate_date_ico_decision_received(rec)
+    if rec.date_ico_decision_received.blank?
+      rec.errors.add(:date_ico_decision_received, 'blank')
+    elsif rec.date_ico_decision_received > Date.today
+      rec.errors.add(:date_ico_decision_received, 'future')
+    elsif rec.date_ico_decision_received < 1.month.ago
+      rec.errors.add(:date_ico_decision_received, 'past')
+    end
+  end
+
+  def validate_files_or_comment(rec)
+    if rec.ico_decision == 'overturned' &&
+        rec.uploaded_ico_decision_files.blank? &&
+        rec.ico_decision_comment.blank?
+          rec.errors.add(:uploaded_ico_decision_files, 'blank')
+    end
   end
 
   def validate_info_held_status(rec)
@@ -120,7 +135,7 @@ class ClosedCaseValidator < ActiveModel::Validator
         rec.errors.add(:outcome, "can't be blank")
       end
     elsif rec.outcome.present?
-      rec.errors.add(:outcome, 'can only be present if information held or part held') 
+      rec.errors.add(:outcome, 'can only be present if information held or part held')
     end
   end
 
@@ -149,6 +164,7 @@ class ClosedCaseValidator < ActiveModel::Validator
   end
 
   def closure_details_are_validatable?(rec)
+    return true if rec.ico?
     if rec.date_responded.blank?
       true
     else

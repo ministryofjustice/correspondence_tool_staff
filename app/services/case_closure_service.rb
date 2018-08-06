@@ -14,9 +14,19 @@ class CaseClosureService
     if @kase.update(@params)
       @kase.close(@user)
       @flash_message = I18n.t('notices.case_closed')
+      add_ico_decision_files if @kase.ico?
       @result = :ok
     else
       @result = :error
+    end
+  end
+
+  private
+
+  def add_ico_decision_files
+    if @params[:uploaded_ico_decision_files].present?
+      uploader = S3Uploader.new(@kase, @user)
+      uploader.process_files(@params[:uploaded_ico_decision_files], :ico_decision)
     end
   end
 end

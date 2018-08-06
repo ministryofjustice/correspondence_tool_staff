@@ -28,6 +28,8 @@ class CaseAttachment < ActiveRecord::Base
 
   after_destroy :remove_from_storage_bucket
 
+  scope :ico_decisions, -> { where(type: :ico_decision) }
+
   enum type: { response: 'response', request: 'request', ico_decision: 'ico_decision' }
 
   def filename

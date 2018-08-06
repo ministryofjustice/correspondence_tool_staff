@@ -396,7 +396,129 @@ describe 'ClosedCaseValidator' do
         end
       end
     end
-
   end
+
+
+  context 'ICO Appeal cases' do
+
+    let(:responded_ico)       { build :responded_ico_foi_case }
+
+    before(:each) do
+      responded_ico.prepare_for_close
+    end
+
+    context 'date_ico_decision_received' do
+
+      context 'blank' do
+        it 'is invalid' do
+          responded_ico.date_ico_decision_received = nil
+          expect(responded_ico).not_to be_valid
+          expect(responded_ico.errors[:date_ico_decision_received]).to eq ['blank']
+        end
+      end
+      context 'future' do
+        it 'is invalid' do
+          responded_ico.date_ico_decision_received = Date.tomorrow
+          expect(responded_ico).not_to be_valid
+          expect(responded_ico.errors[:date_ico_decision_received]).to eq ['future']
+        end
+      end
+
+      context 'too far in the past' do
+        it 'is invalid' do
+          responded_ico.date_ico_decision_received = 2.months.ago
+          expect(responded_ico).not_to be_valid
+          expect(responded_ico.errors[:date_ico_decision_received]).to eq ['past']
+        end
+      end
+
+      context 'just right' do
+        it 'is valid' do
+          responded_ico.date_ico_decision_received = Date.yesterday
+          expect(responded_ico).to be_valid
+        end
+      end
+
+
+    end
+
+    context 'files and or ico decision comment' do
+
+      before(:each) do
+        responded_ico.date_ico_decision_received = Date.today
+        responded_ico.uploaded_ico_decision_files = nil
+        responded_ico.ico_decision_comment = nil
+      end
+
+      context 'decision upheld' do
+        before(:each)   do
+          responded_ico.ico_decision = 'upheld'
+        end
+
+        context 'files and decision blank' do
+          it 'is valid' do
+            expect(responded_ico).to be_valid
+          end
+        end
+
+        context 'files uploaded' do
+          it 'is valid' do
+            responded_ico.uploaded_ico_decision_files = %w{ file_1 file2 }
+            expect(responded_ico).to be_valid
+          end
+        end
+
+        context 'decision comment specified' do
+          it 'is valid' do
+            responded_ico.ico_decision_comment = 'Rubbish!'
+            expect(responded_ico).to be_valid
+          end
+        end
+
+        context 'files uploaded and decision comment specified'
+        it 'is valid' do
+          responded_ico.ico_decision_comment = 'Rubbish!'
+          responded_ico.uploaded_ico_decision_files = %w{ file_1 file2 }
+          expect(responded_ico).to be_valid
+        end
+      end
+
+      context 'decision overturned' do
+        before(:each) do
+          responded_ico.ico_decision = 'overturned'
+        end
+
+        context 'files and decision blank' do
+          it 'is invalid' do
+            expect(responded_ico).not_to be_valid
+            expect(responded_ico.errors[:uploaded_ico_decision_files]).to eq ['blank']
+          end
+        end
+
+        context 'files uploaded' do
+          it 'is valid' do
+            responded_ico.uploaded_ico_decision_files = %w{ file_1 file2 }
+            expect(responded_ico).to be_valid
+          end
+        end
+
+        context 'decision comment specified' do
+          it 'is valid' do
+            responded_ico.ico_decision_comment = 'Rubbish!'
+            expect(responded_ico).to be_valid
+          end
+        end
+
+        context 'files uploaded and decision comment specified'
+        it 'is valid' do
+          responded_ico.ico_decision_comment = 'Rubbish!'
+          responded_ico.uploaded_ico_decision_files = %w{ file_1 file2 }
+          expect(responded_ico).to be_valid
+        end
+
+      end
+    end
+  end
+
 end
 
