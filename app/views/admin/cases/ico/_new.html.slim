@@ -1,0 +1,65 @@
+= form_for kase, as: :case_ico, url: admin_cases_path do |f|
+  = hidden_field_tag 'correspondence_type', @correspondence_type_key
+  = f.hidden_field :type, value: 'Case::ICO::FOI'
+
+  = f.text_field :ico_reference_number
+
+  = f.text_field :ico_officer_name
+
+  / #js-search-for-case.form-group
+    / .js-original-case
+  = f.text_field :original_case_id, class: ['form-control-1-8']
+  .form-group
+    = button_tag 'Link original case',
+            type: 'button',
+            class: 'button-secondary',
+            id: 'xhr-search-original-case-button',
+            data: { url: new_linked_cases_for_cases_path,
+                    correspondence_type: @correspondence_type_key,
+                    link_type: 'original'}
+
+
+  .js-original-case-and-friends
+    .js-original-case-report
+      = render partial: 'cases/ico/case_linking/linked_cases',
+               locals: { linked_cases: Case::Base.where(id: [@case.original_case_id]).map(&:decorate),
+                         link_type: 'original' }
+
+    .js-related-case-report
+      = render partial: 'cases/ico/case_linking/linked_cases',
+               locals: { linked_cases: Case::Base.where(id: [@case.related_case_ids]).map(&:decorate),
+                         link_type: 'related' }
+  .form-group
+    = f.gov_uk_date_field :received_date, { legend_text: t('cases.new.received_date'),
+                                            form_hint_text: t('cases.new.received_date_copy'),
+                                            today_button: {class: ''} }
+
+  .form-group
+    = f.gov_uk_date_field :external_deadline, { legend_text: t('cases.new.external_deadline'),
+                                                form_hint_text: t4c(kase, 'cases.new', 'external_deadline_copy') }
+
+  = f.text_area :message, { rows: 10 }
+
+  #uploaded-request-files-fields
+    .grid-row
+      .column-two-thirds
+        span.form-label-bold
+          = t('.uploaded_request_files')
+        span.form-hint
+          = t('cases.new.uploaded_request_files_hint')
+    .grid-row
+      .column-two-thirds
+        div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
+          = render partial: 'shared/dropzone_form',
+                   locals: { s3_direct_post: @s3_direct_post,
+                             file_input_name: 'case_ico[uploaded_request_files][]' }
+
+  h2
+    = "Please only select one."
+  = f.check_box_fieldset :flag_for_disclosure_specialists, [:flagged_for_disclosure_specialist_clearance?]
+
+  = f.collection_select :responding_team, BusinessUnit.responding, :id, :name, { selected: @case.responding_team.id }
+
+  = f.collection_select :target_state, @target_states, :to_s, :to_s, { selected: @selected_state }
+
+  = f.submit t('.create'), {class: 'button'}

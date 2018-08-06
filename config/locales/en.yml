@@ -545,6 +545,11 @@ en:
       sar:
         new:
           create: Create
+      ico:
+        new:
+          create: Create
+          uploaded_request_files: Uploads
+
     users:
       index:
         cases: Cases

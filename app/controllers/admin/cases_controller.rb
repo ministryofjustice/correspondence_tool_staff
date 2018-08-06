@@ -94,8 +94,24 @@ class Admin::CasesController < AdminController
     render :new
   end
 
+  def prepare_new_ico
+    @correspondence_type_key = params[:correspondence_type]
+    case_class = correspondence_types_map[@correspondence_type_key.to_sym].first
+    @case = case_class.new
+
+    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::ICO::FOI' )
+    @case = case_creator.new_case
+    @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.ico).active.sample
+    @case.flag_for_disclosure_specialists = 'yes'
+    @target_states = available_target_states
+    @selected_state = 'drafting'
+    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
+
+    render :new
+  end
+
   def permitted_correspondence_types
-    @permitted_correspondence_types = [CorrespondenceType.foi, CorrespondenceType.sar]
+    @permitted_correspondence_types = [CorrespondenceType.foi, CorrespondenceType.sar, CorrespondenceType.ico]
   end
 
   def available_target_states
@@ -106,6 +122,7 @@ class Admin::CasesController < AdminController
     case correspondence_type
     when 'foi' then create_foi_params
     when 'sar' then create_sar_params
+    when 'ico' then create_ico_params
     end
   end
 
@@ -143,6 +160,18 @@ class Admin::CasesController < AdminController
       :target_state,
       uploaded_request_files: [],
     ).merge(type: "Case::SAR")
+  end
+
+  def create_ico_params
+    params.require(:case_ico).permit(
+      :ico_officer_name,
+      :ico_reference_number,
+      :message,
+      :original_case_id,
+      :received_date_dd, :received_date_mm, :received_date_yyyy,
+      :external_deadline_dd, :external_deadline_mm, :external_deadline_yyyy,
+      uploaded_request_files: [],
+    )
   end
 
   def param_flag_for_ds?
@@ -185,6 +214,8 @@ class Admin::CasesController < AdminController
             Case::FOI::TimelinessReview,
             Case::FOI::ComplianceReview],
       sar: [Case::SAR],
+      ico: [Case::ICO::FOI,
+            Case::ICO::SAR]
     }.with_indifferent_access
   end
 
@@ -199,5 +230,4 @@ class Admin::CasesController < AdminController
       )
     end
   end
-
 end

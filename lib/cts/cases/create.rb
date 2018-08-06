@@ -8,7 +8,8 @@ module CTS::Cases
     def initialize(logger, options = {})
       @logger = logger
       @options = options
-      @klass = @options[:type].nil? ? Case::Base : @options[:type].constantize
+      # @klass = @options[:type].nil? ? Case::Base : @options[:type].constantize
+      @klass = @options[:type].constantize
       @options.delete(:type)
     end
 
@@ -33,9 +34,27 @@ module CTS::Cases
     def new_case
       if @klass.to_s == "Case::SAR"
         new_sar_case
+      elsif @klass.to_s == "Case::ICO::FOI"
+        new_ico_case
+      elsif @klass.to_s == "Case::ICO::SAR"
+        new_ico_case
       else
         new_foi_case
       end
+    end
+
+    def new_ico_case
+      @klass.new(
+        message:              options.fetch(:message,
+                                            Faker::Lorem.paragraph(10, true, 10)),
+        received_date:        set_received_date,
+        external_deadline:    set_external_deadline,
+        created_at:           set_created_at_date,
+        dirty:                options.fetch(:dirty, true),
+        ico_officer_name:     options.fetch(:ico_officer_name, Faker::Name.name),
+        ico_reference_number: "123asdf",
+        original_case_id:     options.fetch(:original_case_id, Case::Base.closed.last),
+      )
     end
 
     def new_foi_case
@@ -81,6 +100,14 @@ module CTS::Cases
         options[:received_date]
       else
         0.business_days.after(4.business_days.ago)
+      end
+    end
+
+    def set_external_deadline
+      if options.key? :external_deadline
+        options[:external_deadline]
+      else
+        0.business_days.after(4.business_days.since)
       end
     end
 
