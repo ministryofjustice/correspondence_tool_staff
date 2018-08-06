@@ -2,13 +2,16 @@ class Case::ICO::Base < Case::Base
 
   include LinkableOriginalCase
 
+  attr_accessor :uploaded_ico_decision_files
+
   jsonb_accessor :properties,
                  ico_officer_name: :string,
                  ico_reference_number: :string,
                  internal_deadline: :date,
                  external_deadline: :date,
                  date_ico_decision_received: :date,
-                 ico_decision: :string
+                 ico_decision: :string,
+                 ico_decision_comment: :string
 
   acts_as_gov_uk_date :date_ico_decision_received,
                       :date_responded,

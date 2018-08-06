@@ -83,6 +83,7 @@ class S3Uploader
     case type
     when :response then 'responses'
     when :request  then 'requests'
+    when :ico_decision then 'ico_decision'
     else
       raise RuntimeError, "unknown file type '#{type}'"
     end

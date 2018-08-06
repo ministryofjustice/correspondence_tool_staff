@@ -48,7 +48,7 @@ module ICOCasesParams
                                  :date_ico_decision_received_yyyy,
                                  :request_amends_comment,
                                  :ico_decision,
-                                 uploaded_request_files: []
+                                 uploaded_ico_decision_files: []
     )
   end
 
