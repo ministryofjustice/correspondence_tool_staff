@@ -509,7 +509,9 @@ en:
       clear_response: Clear response
       request_amends: Request amends
       upload_approve: 'Upload response and clear'
+      close: Close case
     case/ico:
+      close: "Record ICO's decision and close"
       respond: Mark as sent to ICO
     case_list:
       view_case: "Link to case "
