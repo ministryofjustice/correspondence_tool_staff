@@ -1,9 +1,9 @@
 module PageObjects
   module Pages
     module Cases
-      module New
+      module Edit
         class ICOPage < PageObjects::Pages::Base
-          set_url '/cases/new/ico'
+          set_url '/cases/ico/edit'
 
           section :primary_navigation,
                   PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
@@ -13,7 +13,8 @@ module PageObjects
 
           section :form,
                   PageObjects::Sections::Cases::ICO::FormSection,
-                  'form#new_case_ico'
+                  'form#edit_case_ico'
+
         end
       end
     end

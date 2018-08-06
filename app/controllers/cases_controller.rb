@@ -7,6 +7,7 @@ class CasesController < ApplicationController
 
   before_action :set_case,
                 only: [
+                  :edit,
                   :edit_closure,
                   :extend_for_pit,
                   :execute_extend_for_pit,
@@ -220,14 +221,11 @@ class CasesController < ApplicationController
   end
 
   def edit
-    # cannot use a decorated case here because the requester type radio buttons
-    # do not populate if you do
-    #
-    @case = Case::Base.find(params[:id])
     set_correspondence_type(@case.type_abbreviation.downcase)
-    @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
     authorize @case
 
+    @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
+    @s3_direct_post = s3_uploader_for(@case, 'requests')
     @case = @case.decorate
     render :edit
   end

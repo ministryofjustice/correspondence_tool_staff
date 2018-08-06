@@ -1249,6 +1249,7 @@ RSpec.describe CasesController, type: :controller do
         expect(flash[:alert]).to eq 'You are not authorised to edit this case.'
       end
     end
+
     context 'as a manager' do
       before(:each) do
         sign_in manager
@@ -1257,6 +1258,19 @@ RSpec.describe CasesController, type: :controller do
 
       it 'assigns case' do
         expect(assigns(:case)).to eq kase
+      end
+
+      it 'renders edit' do
+        expect(response).to render_template :edit
+      end
+    end
+
+    context 'ICO cases' do
+      let(:kase) { create :accepted_ico_foi_case }
+
+      before(:each) do
+        sign_in manager
+        get :edit, params: { id: kase.id }
       end
 
       it 'renders edit' do
