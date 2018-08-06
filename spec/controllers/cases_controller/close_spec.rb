@@ -25,6 +25,7 @@ describe CasesController do
     describe 'authorization' do
       it 'authorizes managers' do
         sign_in manager
+        allow_any_instance_of(S3Uploader).to receive(:remove_leftover_upload_files)
         expect {
           post :process_closure, params: params
         }.to require_permission(:can_close_case?).with_args(manager, responded_ico)
@@ -65,7 +66,7 @@ describe CasesController do
       it 'adds attachments' do
         ico_decision_attachments = responded_ico.attachments.ico_decisions
         expect(ico_decision_attachments.size).to eq 1
-        expect(ico_decision_attachments.first.key).to match /#{responded_ico.id}\/ico_decision\/\d{14}\/Invoice-41111225783-802805551.pdf/
+        expect(ico_decision_attachments.first.key).to match(/#{responded_ico.id}\/ico_decision\/\d{14}\/Invoice-41111225783-802805551.pdf/)
       end
 
       it 'transitions to closed state' do
