@@ -41,7 +41,7 @@ module PageObjects
       # for use on pages with a case list section
       def case_numbers
         case_list.map do |row|
-          row.number.text.delete('Link to case')
+          row.number.text.delete('Link to case').delete("\n")
         end
       end
 

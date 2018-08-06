@@ -195,7 +195,7 @@ feature 'filters whittle down search results' do
         login_step user: @setup.disclosure_bmt_user
         search_for(search_phrase: 'prison guards', num_expected_results: 12)
         cases_search_page.filter_on_exemptions(common: %w{ s40 } )
-        expect(cases_search_page.case_numbers).to match_array [ @ex2.number, @ex4.number ]
+        expect(cases_search_page.case_numbers).to match_trimmed_array [ @ex2.number, @ex4.number ]
 
         cases_search_page.open_filter(:exemption)
 
@@ -221,7 +221,7 @@ feature 'filters whittle down search results' do
         login_step user: @setup.disclosure_bmt_user
         search_for(search_phrase: 'prison guards', num_expected_results: 12)
         cases_search_page.filter_on_exemptions(common: %w{ s21 s22 } )
-        expect(cases_search_page.case_numbers).to match_array [ @ex1.number  ]
+        expect(cases_search_page.case_numbers).to match_trimmed_array [ @ex1.number ]
 
         cases_search_page.open_filter(:exemption)
 

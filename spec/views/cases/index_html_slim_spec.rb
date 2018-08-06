@@ -146,8 +146,12 @@ describe 'cases/index.html.slim', type: :view do
         @partial = pagination_section(view.paginate @cases)
       end
 
-      it 'has no pagination section' do
-        expect(@partial.html).to be_blank
+      it 'has no link to the prev page' do
+        expect(@partial).to have_no_prev_page_link
+      end
+
+      it 'has a link to the next page' do
+        expect(@partial).to have_no_next_page_link
       end
     end
 
@@ -162,7 +166,7 @@ describe 'cases/index.html.slim', type: :view do
         assign(:cases, @cases)
         @partial = pagination_section(view.paginate @cases)
       end
-
+      
       it 'has no link to the prev page' do
         expect(@partial).not_to have_prev_page_link
       end
