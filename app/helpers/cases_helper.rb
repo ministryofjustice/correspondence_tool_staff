@@ -71,7 +71,7 @@ module CasesHelper
               id: 'action--upload-redraft',
               class: 'button'
     when :close
-      link_to I18n.t('common.case.close'),
+      link_to translate_for_case(@case, "common", 'close'),
               close_case_path(@case),
               id: 'action--close-case',
               class: 'button', method: :get

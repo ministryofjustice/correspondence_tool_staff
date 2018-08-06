@@ -29,12 +29,25 @@ RSpec.describe CasesHelper, type: :helper do
     end
 
     context 'when event == :close' do
-      it 'generates HTML that links to the close case action' do
-        @case = create(:responded_case)
-        expect(action_button_for(:close)).to eq(
-"<a id=\"action--close-case\" class=\"button\" data-method=\"get\" \
+      context 'case is foi' do
+        it 'generates HTML that links to the close case action' do
+          @case = create(:responded_case)
+          expect(action_button_for(:close)).to eq(
+  "<a id=\"action--close-case\" class=\"button\" data-method=\"get\" \
 href=\"/cases/#{@case.id}/close\">Close case</a>"
-          )
+            )
+        end
+      end
+
+
+      context 'case is ICO' do
+        it 'generates HTML that links to the close case action' do
+          @case = create(:responded_ico_foi_case)
+          expect(action_button_for(:close)).to eq(
+  "<a id=\"action--close-case\" class=\"button\" data-method=\"get\" \
+href=\"/cases/#{@case.id}/close\">Record ICO&#39;s decision and close</a>"
+            )
+        end
       end
     end
 
@@ -70,12 +83,24 @@ href=\"/cases/#{@case.id}/close\">Close case</a>"
     end
 
     context 'when event = :respond' do
-      it 'generates HTML that links to the upload response page' do
-        @case = create(:case_with_response)
-        expect(action_button_for(:respond)).to eq(
-"<a id=\"action--mark-response-as-sent\" class=\"button\" \
+      context 'case is FOI/SAR' do
+        it 'generates HTML that links to the upload response page' do
+          @case = create(:case_with_response)
+          expect(action_button_for(:respond)).to eq(
+  "<a id=\"action--mark-response-as-sent\" class=\"button\" \
 href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
-          )
+            )
+        end
+      end
+
+      context 'case is ICO' do
+        it 'generates HTML that links to the upload response page' do
+          @case = create(:approved_ico_foi_case)
+          expect(action_button_for(:respond)).to eq(
+  "<a id=\"action--mark-response-as-sent\" class=\"button\" \
+href=\"/cases/#{@case.id}/respond\">Mark as sent to ICO</a>"
+            )
+        end
       end
     end
 
@@ -96,7 +121,8 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
           @case = create(:accepted_case)
           @assignments = [@case.responder_assignment]
           expect(action_button_for(:reassign_user)).to eq(
-                   %[<a id="action--reassign-case" class="button" href="/cases/#{@case.id}/assignments/#{@assignments.first.id}/reassign_user">Change team member</a>]
+                   %[<a id="action--reassign-case" class="button" \
+href="/cases/#{@case.id}/assignments/#{@assignments.first.id}/reassign_user">Change team member</a>]
                  )
         end
       end
@@ -107,7 +133,8 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
           @case = create(:accepted_case, :flagged)
           @assignments = [ @case.responder_assignment, @case.approver_assignments.first ]
           expect(action_button_for(:reassign_user)).to eq(
-                 %[<a id="action--reassign-case" class="button" href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.first.id}%2B#{@assignments.last.id}">Change team member</a>]
+                 %[<a id="action--reassign-case" class="button" \
+href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.first.id}%2B#{@assignments.last.id}">Change team member</a>]
                )
         end
       end
