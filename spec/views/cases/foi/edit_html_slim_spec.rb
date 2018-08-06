@@ -6,11 +6,11 @@ describe 'cases/edit.html.slim', type: :view do
     Timecop.freeze(Time.new(2016,8,13,12,15,45)) do
 
       kase = create :accepted_case, name: 'John Doe',
-                                    email: 'jd@moj.com',
-                                    requester_type: :journalist,
-                                    subject: 'Ferrets',
-                                    message: 'Can I keep a ferret in jail',
-                                    received_date: Date.new(2016,8,13)
+                    email: 'jd@moj.com',
+                    requester_type: :journalist,
+                    subject: 'Ferrets',
+                    message: 'Can I keep a ferret in jail',
+                    received_date: Date.new(2016,8,13)
 
       assign(:correspondence_type_key, 'foi')
       assign(:case, kase.decorate)
@@ -39,8 +39,5 @@ describe 'cases/edit.html.slim', type: :view do
 
       expect(page.submit_button.value).to eq "Submit"
     end
-
-
   end
-
 end

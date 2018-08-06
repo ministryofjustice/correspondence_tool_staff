@@ -4,10 +4,24 @@ describe 'cases/ico/case_details.html.slim', type: :view do
   let(:ico_foi_case)  { (build_stubbed :ico_foi_case).decorate }
   let(:accepted_case) { (create :accepted_ico_foi_case).decorate }
 
+  describe 'edit case link' do
+    before do
+      assign(:case, ico_foi_case)
+      login_as create(:manager)
+      render partial: 'cases/ico/case_details.html.slim',
+             locals:{ case_details: ico_foi_case}
+    end
+
+    it 'displays edit case link' do
+      partial = case_details_section(rendered)
+      expect(partial).to have_edit_case_link
+    end
+  end
 
   describe 'basic_details' do
     it 'displays the initial case details' do
       assign(:case, ico_foi_case)
+      login_as create(:manager)
       render partial: 'cases/ico/case_details.html.slim',
              locals:{ case_details: ico_foi_case}
 
@@ -17,9 +31,9 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       expect(partial.ico_officer_name.data.text).to eq ico_foi_case.ico_officer_name
       expect(partial.case_type.data.text).to eq "ICO appeal(FOI)  "
       expect(partial.date_received.data.text)
-          .to eq ico_foi_case.received_date.strftime(Settings.default_date_format)
+        .to eq ico_foi_case.received_date.strftime(Settings.default_date_format)
       expect(partial.external_deadline.data.text)
-          .to eq ico_foi_case.external_deadline
+        .to eq ico_foi_case.external_deadline
     end
 
   end
@@ -27,6 +41,7 @@ describe 'cases/ico/case_details.html.slim', type: :view do
   describe 'responders details' do
     it 'displays the responders team name' do
       assign(:case, accepted_case)
+      login_as create(:manager)
       render partial: 'cases/ico/case_details.html.slim',
              locals:{ case_details: accepted_case}
 
@@ -37,7 +52,4 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       expect(partial.name.data.text).to eq accepted_case.responder.full_name
     end
   end
-
-
-
 end
