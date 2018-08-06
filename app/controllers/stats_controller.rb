@@ -89,10 +89,7 @@ class StatsController < ApplicationController
                                 report.report_type.abbr
     scheduled_time = job_previous_run_time(job_config)
     report.created_at >= scheduled_time
-  rescue => err
-    puts ">>>>>>>>>> RESVUE #{__FILE__}:#{__LINE__} <<<<<<<<<<"
-    puts err.class
-    puts err.message
+  rescue
     false
   end
 
