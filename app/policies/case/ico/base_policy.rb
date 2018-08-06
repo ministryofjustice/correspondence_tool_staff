@@ -6,4 +6,9 @@ class Case::ICO::BasePolicy < Case::BasePolicy
   def remove_clearance?
     false
   end
+
+  def can_respond?
+    clear_failed_checks
+      check_can_trigger_event(:respond)
+  end
 end

@@ -5,6 +5,11 @@ module CurrentTeamAndUser
         @team = @dts.approving_team
         @user = @case.approver_assignments.for_team(@team).first.user
       end
+
+      def responded
+        @team = @dts.approving_team
+        @user = @case.approver_assignments.for_team(@team).first.user
+      end
     end
   end
 end

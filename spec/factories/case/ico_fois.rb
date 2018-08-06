@@ -5,7 +5,7 @@ FactoryBot.define do
   factory :ico_foi_case, class: Case::ICO::FOI do
     transient do
       creation_time { 4.business_days.ago }
-      identifier    "new ICO FOI case"
+      identifier    "new ICO FOI case based from a closed FOI case"
       managing_team { find_or_create :team_dacu }
     end
 

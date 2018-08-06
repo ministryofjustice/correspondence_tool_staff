@@ -76,7 +76,7 @@ class CasesController < ApplicationController
     @cases = @global_nav_manager
                .current_page_or_tab
                .cases
-               .by_deadline
+               .by_last_transitioned_date
                .page(params[:page])
                .decorate
   end
@@ -310,8 +310,8 @@ class CasesController < ApplicationController
   end
 
   def close
+    # prepopulate date if it was entered by the KILO
     authorize @case, :can_close_case?
-    @case.date_responded = nil
     set_permitted_events
   end
 
@@ -374,13 +374,21 @@ class CasesController < ApplicationController
 
   def respond
     authorize @case, :can_respond?
+    set_correspondence_type(@case.type_abbreviation.downcase)
   end
 
   def confirm_respond
     authorize @case, :can_respond?
-    @case.respond(current_user)
-    flash[:notice] = t('.success')
-    redirect_to case_path(@case)
+    @case.prepare_for_respond
+    params = respond_params(@case.type_abbreviation)
+    if @case.update(params)
+      @case.respond(current_user)
+      flash[:notice] = t('.success')
+      redirect_to case_path(@case)
+    else
+      set_correspondence_type(@case.type_abbreviation.downcase)
+      render :respond
+    end
   end
 
   def search
@@ -750,6 +758,14 @@ class CasesController < ApplicationController
     case correspondence_type
       when 'foi' then edit_foi_params
       when 'sar' then edit_sar_params
+    end
+  end
+
+  def respond_params(correspondence_type)
+    case correspondence_type
+    when 'FOI' then respond_foi_params
+    when 'ICO' then respond_ico_params
+    else raise 'Unknown case type'
     end
   end
 

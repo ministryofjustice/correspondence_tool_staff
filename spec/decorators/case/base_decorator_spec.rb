@@ -5,7 +5,8 @@ describe Case::BaseDecorator, type: :model do
   let(:assigned_case)   { create(:assigned_case).decorate }
   let(:accepted_case)   { create(:accepted_case,
                                  responder: responder).decorate }
-  let(:responded_ico)   { create(:approved_ico_foi_case).decorate }
+  let(:approved_ico)    { create(:approved_ico_foi_case).decorate }
+  let(:responded_ico)   { create(:responded_ico_foi_case).decorate }
   let(:responded_case)  { create(:responded_case).decorate }
   let(:closed_case)     { create(:closed_case).decorate }
   let(:manager)         { create :manager, managing_teams: [managing_team] }
@@ -323,8 +324,12 @@ describe Case::BaseDecorator, type: :model do
       expect(responded_case.status).to eq 'Ready to close'
     end
 
+    it 'returns a awaiting_dispatch status for ico' do
+      expect(approved_ico.status).to eq 'Ready to send to ICO'
+    end
+
     it 'returns a responded status for ico' do
-      expect(responded_ico.status).to eq 'Ready to send to ICO'
+      expect(responded_ico.status).to eq 'Awaiting ICO decision'
     end
   end
 

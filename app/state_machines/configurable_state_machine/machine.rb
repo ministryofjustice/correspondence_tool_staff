@@ -82,7 +82,9 @@ module ConfigurableStateMachine
 
     def event_name(event)
       if events.include?(event.to_sym)
-        I18n.t("event.#{event}", default: event.to_s.humanize)
+        specific_key = "event.case/#{@kase.type_abbreviation.downcase}.#{event}"
+        default_key = "event.#{event}"
+        I18n.t(specific_key, default: I18n.t(default_key))
       end
     end
 

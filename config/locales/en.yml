@@ -65,6 +65,10 @@ en:
         case/ico/base:
           original_case_already_related: 'already linked as the original case'
         case/ico/foi:
+          attributes:
+            date_responded:
+              before_received: can't be before date recieved
+              future: can't be in the future
           related_case_number:
             does_not_match_original: >-
               You've linked an FOI case as the original for this appeal. You
@@ -173,6 +177,7 @@ en:
     closed_status: Case closed
     case/ico:
       awaiting_dispatch: Ready to send to ICO
+      responded: Awaiting ICO decision
 
   roles:
     responders: Information officers
@@ -201,18 +206,25 @@ en:
     add_response_to_flagged_case_and_approve: Response uploaded and cleared
     add_responses: Response uploaded
     approve: Response cleared
+    assign_responder: Assign responder
     close: Case closed
     edit_case: Case details edited
     extend_for_pit: Extended for Public Interest Test (PIT)
+    progress_for_clearance: Progress for clearance
+    reassign_user: Reassign user
     reject_responder_assignment: Rejected by Business unit
     remove_last_response: File removed
     remove_response: File removed
+    request_amends: Request amends
+    request_further_clearance: Request further clearance
     respond: Response sent to requester
     take_on_for_approval: Clearance level added
     unaccept_approver_assignment: Clearance level removed
     unflag_for_clearance: Clearance level removed
     upload_response_and_approve: Response uploaded and cleared
     upload_response_and_return_for_redraft: Changes uploaded for redraft
+    case/ico:
+      respond: Response sent to ICO
 
   date:
     formats:
@@ -474,6 +486,8 @@ en:
       clear_response: Clear response
       request_amends: Request amends
       upload_approve: 'Upload response and clear'
+    case/ico:
+      respond: Mark as sent to ICO
     case_list:
       view_case: "Link to case "
       message_notification: Conversations
@@ -634,6 +648,20 @@ en:
       uploaded_request_files_hint: |
         You can upload different file types such as Word, Excel,
         PDF and JPEG up to 20MB per file.
+    respond:
+      date_example: For example, 30 1 2017
+      case/ico:
+        respond_date: Add date this response was sent to ICO
+      heading: Mark as sent
+      reminders_html: |
+        <strong>Make sure you have:</strong>
+        <ul class="list list-bullet">
+          <li>cleared the response with the Deputy Director</li>
+          <li>uploaded the response and any supporting documents</li>
+          <li>sent the response to the person who made the request</li>
+        </ul>
+      respond_date: Date response sent
+
     overturned_ico:
       new_form:
         sub_heading: Create an ICO Overturned case
@@ -661,15 +689,7 @@ en:
         PDF and JPEG up to 20MB per file.
     request_amends:
       heading: Request amends
-    respond:
-      heading: Marking it as sent
-      reminders_html: |
-        <strong>Make sure you have:</strong>
-        <ul class="list list-bullet">
-          <li>cleared the response with the Deputy Director</li>
-          <li>uploaded the response and any supporting documents</li>
-          <li>sent the response to the person who made the request</li>
-        </ul>
+
     confirm_respond:
       success: The response has been marked as sent.
     foi:

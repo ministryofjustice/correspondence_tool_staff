@@ -6,7 +6,7 @@ FactoryBot.define do
     transient do
 
       creation_time   { 4.business_days.ago }
-      identifier      "new ICO SAR case"
+      identifier      "new ICO SAR case based from a closed SAR case"
       managing_team   { find_or_create :team_dacu }
     end
 

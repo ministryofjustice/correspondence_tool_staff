@@ -54,7 +54,7 @@ class CaseFinderService
   end
 
   def closed_cases_scope
-    closed_scope = scope.closed
+    closed_scope = scope.presented_as_closed
     if user.responder_only?
       case_ids = Assignment.with_teams(user.responding_teams).pluck(:case_id)
       closed_scope.where(id: case_ids).most_recent_first
@@ -78,20 +78,20 @@ class CaseFinderService
   end
 
   def my_open_cases_scope
-    scope.joins(:assignments).opened
+    scope.joins(:assignments).presented_as_open
       .with_user(user)
       .distinct('case.id')
   end
 
   def my_open_flagged_for_approval_cases_scope
-    scope.opened
+    scope.presented_as_open
       .flagged_for_approval(*user.approving_team)
       .with_user(user, states: ['accepted'])
       .distinct('case.id')
   end
 
   def open_cases_scope
-    open_scope = scope.opened
+    open_scope = scope.presented_as_open
       .joins(:assignments)
       .where(assignments: { state: ['pending', 'accepted']})
       .distinct('case.id')
@@ -104,7 +104,7 @@ class CaseFinderService
   end
 
   def open_flagged_for_approval_scope
-    scope.opened
+    scope.presented_as_open
       .flagged_for_approval(*user.approving_team)
       .where(assignments: { state: ['accepted']})
       .distinct('case.id')
@@ -143,5 +143,3 @@ class CaseFinderService
       .distinct('case.id')
   end
 end
-
-

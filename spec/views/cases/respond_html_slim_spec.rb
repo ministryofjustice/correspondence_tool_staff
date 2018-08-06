@@ -3,12 +3,12 @@ require 'rails_helper'
 
 describe 'cases/respond.html.slim', type: :view do
 
-  let(:responder)    { create(:responder) }
-  let(:kase)         { create(:case_with_response, responder: responder) }
+  let(:foi_case)         { build_stubbed(:case_with_response).decorate }
+  let(:ico_case)         { build_stubbed(:approved_ico_foi_case).decorate }
 
-  it 'displays the new case page' do
+  it 'displays the new response page for FOI' do
 
-    assign(:case, kase)
+    assign(:case, foi_case)
 
     render
 
@@ -16,22 +16,32 @@ describe 'cases/respond.html.slim', type: :view do
 
     page = cases_respond_page
 
-    expect(page.page_heading.heading.text).to eq "Marking it as sent"
-    expect(page.page_heading.sub_heading.text).to eq "You are viewing case number #{kase.number} - FOI "
+    expect(page.page_heading.heading.text).to eq "Mark as sent#{foi_case.subject}"
+    expect(page.page_heading.sub_heading.text).to eq "You are viewing case number #{foi_case.number} - FOI "
 
-    expect(page).to have_reminders
+    expect(page).to have_foi_task_reminder
 
-    # Capybara text methos seems to be returning whitespace formated text
-    # this was not an issue when the same method was called in a feature test
-    expect(page.reminders.text)
-        .to eq("Make sure you have:\n\n  cleared the response with the Deputy Director\n  uploaded \
-the response and any supporting documents\n  sent the response to the person who \
-made the request\n\n")
+    expect(page).to have_submit_button
 
-    expect(page.alert.text)
-        .to eq("\n  \n    Important\n  \n  You can't update a response after marking it as sent.\n")
+    expect(page).to have_back_link
+  end
 
-    expect(page).to have_mark_as_sent_button
+  it 'displays the new response page for ICO' do
+
+    assign(:case, ico_case)
+
+    render
+
+    cases_respond_page.load(rendered)
+
+    page = cases_respond_page
+
+    expect(page.page_heading.heading.text).to eq "Mark as sent#{ico_case.subject}"
+    expect(page.page_heading.sub_heading.text).to eq "You are viewing case number #{ico_case.number} - ICO "
+
+    expect(page).to have_no_foi_task_reminder
+
+    expect(page).to have_submit_button
 
     expect(page).to have_back_link
   end

@@ -68,10 +68,20 @@ class Case::Base < ApplicationRecord
     select("\"cases\".*, (properties ->> 'external_deadline')::timestamp with time zone, cases.id")
       .order("(properties ->> 'external_deadline')::timestamp with time zone ASC, cases.id")
   }
+  scope :by_last_transitioned_date, -> { reorder(last_transitioned_at: :desc) }
   scope :most_recent_first, -> {reorder("(properties ->> 'external_deadline')::timestamp with time zone DESC, cases.id") }
 
   scope :opened, ->       { where.not(current_state: 'closed') }
-  scope :closed, ->       { where(current_state: 'closed').order(last_transitioned_at: :desc) }
+  scope :not_icos, -> { where.not(type: ['Case::ICO::FOI', 'Case::ICO::SAR'] ) }
+
+  scope :not_closed_or_responded, -> {where.not(current_state: [ :responded, :closed] ) }
+
+  scope :icos_not_responded_or_closed, -> { where(type: ['Case::ICO::FOI', 'Case::ICO::SAR']).not_closed_or_responded }
+
+  scope :presented_as_open, -> { (opened.not_icos).or(icos_not_responded_or_closed) }
+
+  scope :closed, ->       { where(current_state: 'closed')}
+  scope :presented_as_closed, -> { where(current_state: 'closed').or(where(type: ['Case::ICO::FOI', "Case::ICO::SAR"], current_state: [:responded, :closed])) }
   scope :standard_foi, -> { where(type: 'Case::FOI::Standard') }
   scope :ico_appeal, ->   { where(type: ['Case::ICO::FOI', 'Case::ICO::SAR'])}
 
@@ -145,6 +155,7 @@ class Case::Base < ApplicationRecord
   validate :validate_related_cases
   validates_associated :case_links
 
+  validates_with ::RespondedCaseValidator
   validates_with ::ClosedCaseValidator
 
   has_many :assignments, dependent: :destroy, foreign_key: :case_id
@@ -380,6 +391,14 @@ class Case::Base < ApplicationRecord
 
   def refusal_reason_abbreviation=(abbreviation)
     self.refusal_reason = CaseClosure::RefusalReason.by_abbreviation(abbreviation)
+  end
+
+  def prepare_for_respond
+    @preparing_for_respond = true
+  end
+
+  def prepared_for_respond?
+    @preparing_for_respond == true
   end
 
   def prepare_for_close
