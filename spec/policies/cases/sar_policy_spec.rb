@@ -12,10 +12,10 @@ describe Case::SARPolicy do
   let(:team_disclosure)       { find_or_create :team_dacu_disclosure }
   let(:disclosure_specialist) { team_disclosure.approvers.first }
 
-  let(:unassigned_case) { create :sar_case }
+  let(:unassigned_case)       { create :sar_case }
   let(:other_managing_team)   { create :managing_team }
   let(:responding_team)       { create :responding_team }
-  let(:dacu_disclosure)      { find_or_create :team_dacu_disclosure }
+  let(:dacu_disclosure)       { find_or_create :team_dacu_disclosure }
 
   # Users
   let(:manager)               { managing_team.managers.first }
