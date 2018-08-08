@@ -3,6 +3,8 @@ module PageObjects
     module Cases
       module ICO
         class FormSection < SitePrism::Section
+          include SitePrism::Support::DropInDropzone
+
           element :ico_reference_number, '#case_ico_ico_reference_number'
           element :ico_officer_name, '#case_ico_ico_officer_name'
 
@@ -49,25 +51,25 @@ module PageObjects
             external_deadline_year.set(final_deadline_date.year)
           end
 
-          def set_original_case_number(original_case_number)
-            self.original_case_number.set original_case_number
+          def add_original_case(kase)
+            self.original_case_number.set kase.number
             link_original_case.click
             has_original_case?
+            original_case.has_linked_records?(count: 1)
           end
 
-          def add_related_case(case_number)
-            before_count = related_cases.linked_records.count
-            self.related_case_number.set case_number
-            link_related_case.click
-            has_related_cases?
-            related_cases.has_linked_records(count: before_count + 1)
+          def add_related_cases(kases)
+            related_case_count = related_cases.linked_records.count
+            kases.each do |kase|
+              self.related_case_number.set kase.number
+              link_related_case.click
+              has_related_cases?
+              related_case_count += 1
+              related_cases.has_linked_records?(count: related_case_count)
+            end
           end
 
           def fill_in_case_details(params={})
-            # We can't rely on the factory to link original case since we only
-            # build the kase below (factory relies on after-create hook) and
-            # the point of this function is to exercise the front-end so we
-            # should be linking by adding the linked cases through it.
             original_case = params.delete(:original_case)
             related_cases = params.delete(:related_cases)
             kase = FactoryBot.build :ico_foi_case, params
@@ -77,10 +79,7 @@ module PageObjects
 
             ico_officer_name.set kase.ico_officer_name
             ico_reference_number.set kase.ico_reference_number
-            set_original_case_number(original_case.number)
-            related_cases.each { |c| add_related_case(c.number) }
 
-            subject.set kase.subject
             case_details.set kase.message
             kase.uploaded_request_files.each do |file|
               drop_in_dropzone(file)

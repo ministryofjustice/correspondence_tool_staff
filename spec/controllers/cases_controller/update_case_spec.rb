@@ -173,6 +173,49 @@ describe CasesController, type: :controller do
         end
       end
     end
+
+    context 'ico case' do
+      let(:kase)  do
+        create :accepted_ico_foi_case
+      end
+
+      let(:params) do
+          {
+              'correspondence_type'=>'ico',
+              'case_ico' => {
+                'ico_officer_name' => 'C00KYM0N',
+                'ico_reference_number' => 'NEWREFNOMNOMNOM',
+                'received_date_dd' => '26',
+                'received_date_mm' => '5',
+                'received_date_yyyy' => '2018',
+                'external_deadline_dd' => '26',
+                'external_deadline_mm' => '5',
+                'external_deadline_yyyy' => '2018',
+                'message' => 'modified full request'
+              },
+              'commit' => 'Submit',
+              'id' =>  kase.id.to_s
+          }
+      end
+
+      context 'valid params' do
+        it 'updates the case' do
+          patch :update, params: params
+          kase.reload
+
+          expect(kase.ico_officer_name).to eq 'C00KYM0N'
+          expect(kase.ico_reference_number).to eq 'NEWREFNOMNOMNOM'
+          expect(kase.message).to eq 'modified full request'
+          expect(kase.received_date).to eq Date.new(2018, 5, 26)
+          expect(kase.external_deadline).to eq Date.new(2018, 5, 26)
+        end
+
+        it 'redirects to show page' do
+          patch :update, params: params
+          expect(response).to redirect_to case_path(kase.id)
+        end
+      end
+    end
   end
 
 end

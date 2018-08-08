@@ -38,11 +38,11 @@ def create_ico_case_step(original_case:, related_cases: [], uploaded_request_fil
   cases_new_page.create_link_for_correspondence('ICO').click
   expect(cases_new_ico_page).to be_displayed
 
-  cases_new_ico_page.fill_in_case_details(
-    original_case: original_case,
-    related_cases: related_cases,
+  cases_new_ico_page.form.fill_in_case_details(
     uploaded_request_files: uploaded_request_files
   )
+  cases_new_ico_page.form.add_original_case(original_case)
+  cases_new_ico_page.form.add_related_cases(related_cases)
 
   click_button 'Create case'
 

@@ -46,9 +46,13 @@ feature 'ICO FOI case requiring clearance' do
                  user: disclosure_specialist,
                  test_undo: true
 
-     upload_response kase: kase,
-                     user: responder,
-                     file: UPLOAD_RESPONSE_DOCX_FIXTURE
+    upload_response kase: kase,
+                    user: responder,
+                    file: UPLOAD_RESPONSE_DOCX_FIXTURE
+
+    edit_case kase: kase,
+              user: manager,
+              subject: 'new test subject'
 
     clear_response kase: kase,
                     user: disclosure_specialist,
@@ -57,7 +61,8 @@ feature 'ICO FOI case requiring clearance' do
 
     mark_case_as_sent kase: kase,
                       user: disclosure_specialist,
-                      expected_status: 'Awaiting ICO decision'
+                      expected_status: 'Awaiting ICO decision',
+                      expected_to_be_with: 'Disclosure'
     #
     # close_sar_case kase: kase,
     #                user: responder,
