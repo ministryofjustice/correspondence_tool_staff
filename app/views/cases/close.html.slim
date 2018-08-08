@@ -4,9 +4,10 @@
 = GovukElementsErrorsHelper.error_summary @case.object, @case.error_summary_message, ''
 
 - content_for :heading
-  = t('.heading')
-  br
-  = @case.subject
+  - if @case.ico?
+    = "What was the ICO's decision?"
+  - else
+    = t('.heading')
 
 - content_for :sub_heading
   span.visually-hidden
@@ -15,6 +16,8 @@
 
 = render partial: 'layouts/header'
 
-= render partial: "cases/#{@case.type_abbreviation.downcase}/close_form",
-         locals: { kase: @case,
-                   submit_button: t('.submit')}
+div class="case-#{@case.type_abbreviation.downcase}"
+
+  = render partial: "cases/#{@case.type_abbreviation.downcase}/close_form",
+           locals: { kase: @case,
+                     submit_button: t('.submit')}

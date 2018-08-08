@@ -61,6 +61,10 @@ module PageObjects
           element :no,  'input#case_sar_missing_info_no', visible: false
         end
 
+        section :ico,
+                PageObjects::Sections::Cases::ICO::ClosureSection,
+                '.case-ico'
+
         element :submit_button, '.button'
 
         def fill_in_date_responded(date)

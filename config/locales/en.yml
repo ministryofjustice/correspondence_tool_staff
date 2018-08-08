@@ -392,6 +392,7 @@ en:
         ico_decision:
           upheld: Upheld by ICO
           overturned: Overturned by ICO
+        ico_decision_comment: "Details of ICO's decision"
       case_sar:
         email: "Recipient email address"
         message: Full case details

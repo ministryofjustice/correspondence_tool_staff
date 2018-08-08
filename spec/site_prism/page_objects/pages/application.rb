@@ -83,6 +83,7 @@ module PageObjects
         case_attachments:             'Cases::CaseAttachmentSection',
         clearance_copy:               'Cases::ClearanceCopySection',
         ico_case_details:             'Cases::ICO::CaseDetailsSection',
+        ico_close:                    'Cases::ICO::ClosureSection',
         ico_show:                     'Cases::ICO::ShowSection',
         open_case_status_filter_panel:'Cases::OpenCaseStatusFilterPanelSection',
         pagination:                   'PaginationSection',
