@@ -516,7 +516,7 @@ en:
       close: Close case
 
     case/ico:
-      close: "Record ICO's decision and close"
+      close: "Record ICO's decision"
       respond: Mark as sent to ICO
     case_list:
       view_case: "Link to case "

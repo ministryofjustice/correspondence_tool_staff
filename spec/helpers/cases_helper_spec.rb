@@ -45,7 +45,7 @@ href=\"/cases/#{@case.id}/close\">Close case</a>"
           @case = create(:responded_ico_foi_case)
           expect(action_button_for(:close)).to eq(
   "<a id=\"action--close-case\" class=\"button\" data-method=\"get\" \
-href=\"/cases/#{@case.id}/close\">Record ICO&#39;s decision and close</a>"
+href=\"/cases/#{@case.id}/close\">Record ICO&#39;s decision</a>"
             )
         end
       end
