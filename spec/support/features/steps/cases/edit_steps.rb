@@ -1,4 +1,11 @@
-def edit_case_step(kase:, subject: nil)
+def edit_case_step(kase:, **args)
+  case kase.correspondence_type
+  when 'foi' then edit_foi_case_step(kase, args)
+  when 'ico' then edit_ico_case_step(kase, args)
+  end
+end
+
+def edit_foi_case_step(kase:, subject:)
   expect(cases_show_page).to be_displayed(id: kase.id)
   expect(cases_show_page.case_details).to have_edit_case
   cases_show_page.case_details.edit_case.click
@@ -8,7 +15,28 @@ def edit_case_step(kase:, subject: nil)
 
   if subject
     expect(cases_show_page.page_heading.heading)
-        .to have_copy "Case subject, #{subject}"
+      .to have_copy "Case subject, #{subject}"
+  end
+end
+
+def edit_ico_case_step(kase:, **params)
+  expect(cases_show_page).to be_displayed(id: kase.id)
+  expect(cases_show_page.case_details).to have_edit_case
+
+  cases_show_page.case_details.edit_case.click
+  expect(cases_edit_ico_page).to be_displayed
+
+  cases_edit_ico_page.form.fill_in_case_details(params)
+  if params[:original_case].present?
+    cases_edit_ico_page.form.add_original_case(params[:original_case])
+  end
+  cases_edit_ico_page.form.add_related_cases([foi_timeliness_review])
+
+  cases_edit_page.submit_button.click
+
+  if subject
+    expect(cases_show_page.page_heading.heading.text)
+        .to eq "Case subject, #{subject}"
   end
 end
 

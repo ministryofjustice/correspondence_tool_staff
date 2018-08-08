@@ -55,6 +55,10 @@ module PageObjects
                 PageObjects::Sections::Cases::WhatDoYouWantToDoSection,
                 '.what-do-you-want-to-do'
 
+        section :ico,
+                PageObjects::Sections::Cases::ICO::ShowSection,
+                '.case'
+
         sections :messages, '#messages-section .message' do
           element :body, '.message-body'
           element :audit, '.message-audit'

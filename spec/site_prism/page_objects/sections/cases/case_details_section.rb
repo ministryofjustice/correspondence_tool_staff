@@ -80,56 +80,6 @@ module PageObjects
           end
         end
 
-        section :ico_basic_details, '.ico-appeal-basic-details' do
-
-          section :case_type, 'tr.case-type' do
-            element :ico_trigger, 'td .ico-trigger'
-            element :data, 'td'
-          end
-
-          section :ico_reference, 'tr.ico-reference' do
-            element :data, 'td'
-          end
-
-          section :ico_officer_name, 'tr.ico-officer-name' do
-            element :data, 'td'
-          end
-
-          section :date_received, 'tr.date-received' do
-            element :data, 'td'
-          end
-
-          section :internal_deadline, 'tr.case-internal-deadline' do
-            element :data, 'td'
-          end
-
-          section :external_deadline, 'tr.case-external-deadline' do
-            element :data, 'td'
-          end
-
-          section :name, 'tr.requester-name' do
-            element :data, 'td'
-          end
-
-          section :email, 'tr.requester-email' do
-            element :data, 'td'
-          end
-
-          section :address, 'tr.requester-address' do
-            element :data, 'td'
-          end
-
-          section :requester_type, 'tr.requester-type' do
-            element :data, 'td'
-          end
-
-          section :delivery_method, 'tr.delivery-method' do
-            element :data, 'td'
-          end
-        end
-
-
-
         section :responders_details, '.responder-details' do
           section :team, '.team' do
             element :data, 'td'

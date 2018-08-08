@@ -21,7 +21,7 @@
 
 = render partial: 'layouts/header'
 
-div id="case-#{@case.id}"
+div id="case-#{@case.id}" class="case"
   section.case-info.has-actions
     h2.visually-hidden
       = "Actions you can take on this case"
@@ -94,7 +94,8 @@ div id="case-#{@case.id}"
   - if @case.ico?
     section.case-info
       = render partial: "cases/#{@case.original_case.type_abbreviation.downcase}/case_details",
-              locals: { case_details: @case.original_case.decorate }
+              locals: { case_details: @case.original_case.decorate,
+                        link_type: 'original' }
 
   section.case-info
     = action_links_for_allowed_events(@case, :extend_for_pit, :destroy_case).join(' | ').html_safe

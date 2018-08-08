@@ -108,7 +108,10 @@ module Features
       logout_step
     end
 
-    def mark_case_as_sent(kase:, user:, expected_status:'Ready to close', do_login: true)
+    def mark_case_as_sent(kase:, user:,
+                          expected_status: 'Ready to close',
+                          do_login: true,
+                          expected_to_be_with: 'Disclosure BMT')
       if do_login
         login_step user: user
         go_to_case_details_step kase: kase
@@ -117,7 +120,9 @@ module Features
         expect(cases_show_page.user_card.greetings)
           .to have_content user.full_name
       end
-      mark_case_as_sent_step(responded_date: Date.today, expected_status: expected_status)
+      mark_case_as_sent_step(responded_date: Date.today,
+                             expected_status: expected_status,
+                             expected_to_be_with: expected_to_be_with)
       logout_step
     end
 

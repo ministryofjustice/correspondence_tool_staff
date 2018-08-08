@@ -442,6 +442,8 @@ en:
       answered_in_time: Answered in time
       answered_late: Answered late
       assign: Assign to a responder
+      case-details: Case details
+      original-case-details: Original case details
       close: Close case
       data_subject: Data subject
       data_subject_type: Type of data subject

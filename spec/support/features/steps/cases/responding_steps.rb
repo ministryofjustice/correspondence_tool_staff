@@ -10,7 +10,9 @@ def upload_response_step(file: UPLOAD_RESPONSE_DOCX_FIXTURE)
     .to have_text 'You have uploaded the response for this case.'
 end
 
-def mark_case_as_sent_step(responded_date:, expected_status:)
+def mark_case_as_sent_step(responded_date:,
+                           expected_status:,
+                           expected_to_be_with:)
   cases_show_page.actions.mark_as_sent.click
 
   cases_respond_page.fill_in_date_responded(responded_date)
@@ -20,7 +22,7 @@ def mark_case_as_sent_step(responded_date:, expected_status:)
   expect(open_cases_page)
     .to have_content("The response has been marked as sent.")
   expect(cases_show_page.case_status.details.who_its_with.text)
-    .to eq 'Disclosure BMT'
+    .to eq expected_to_be_with
   expect(cases_show_page.case_status.details.copy.text).to eq expected_status
 end
 

@@ -1,10 +1,8 @@
 .grid-row
-  .column-full.case-details
+  - link_type_prefix = defined?(link_type) && link_type.present? ? "#{link_type}-" : ""
+  div class="column-full #{link_type_prefix}case-details"
     h2.request--heading
-      - if @case.type_abbreviation != case_details.type_abbreviation
-        = "Original case details"
-      - else
-        = "Case details"
+      = translate_for_case(case_details, 'common', "#{link_type_prefix}case-details")
 
     table
       tbody.ico-appeal-basic-details

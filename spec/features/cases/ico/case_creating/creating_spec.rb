@@ -46,9 +46,10 @@ feature 'ICO case creation' do
       cases_new_ico_page.form.original_case_number.set original_foi.number
       cases_new_ico_page.form.link_original_case.click
 
+      expect(cases_new_ico_page.form.original_case).to have_linked_records(count: 1)
       cases_new_ico_page.form.original_case.linked_records.first.remove_link.click
 
-      expect(cases_new_ico_page.form).to have_no_original_case
+      expect(cases_new_ico_page.form.original_case).to have_no_linked_records
       expect(cases_new_ico_page.form.original_case_number).to be_visible
       expect(cases_new_ico_page.form).to have_no_related_case_number
     end

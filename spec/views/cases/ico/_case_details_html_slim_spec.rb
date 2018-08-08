@@ -25,7 +25,7 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       render partial: 'cases/ico/case_details.html.slim',
              locals:{ case_details: ico_foi_case}
 
-      partial = case_details_section(rendered).ico_basic_details
+      partial = ico_case_details_section(rendered)
       expect(partial.case_type).to have_no_ico_trigger
       expect(partial.ico_reference.data.text).to eq ico_foi_case.ico_reference_number
       expect(partial.ico_officer_name.data.text).to eq ico_foi_case.ico_officer_name

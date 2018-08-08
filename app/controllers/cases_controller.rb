@@ -754,6 +754,7 @@ class CasesController < ApplicationController
   def edit_params(correspondence_type)
     case correspondence_type
       when 'foi' then edit_foi_params
+      when 'ico' then edit_ico_params
       when 'sar' then edit_sar_params
     end
   end
