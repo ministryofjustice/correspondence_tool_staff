@@ -352,6 +352,7 @@ class CasesController < ApplicationController
       redirect_to case_path(@case)
     else
       set_permitted_events
+      @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
       render :close
     end
   end
