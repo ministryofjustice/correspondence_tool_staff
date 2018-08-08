@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe 'cases/close.html.slim' do
   context 'with an FOI case' do
-    let(:foi_being_drafted) { create :case_being_drafted }
+    let(:foi_being_drafted) { build_stubbed :case_being_drafted }
 
     it 'renders the close_form partial' do
       assign(:case, foi_being_drafted.decorate)
@@ -19,7 +19,7 @@ describe 'cases/close.html.slim' do
   end
 
   context 'with a SAR case' do
-    let(:sar_being_drafted) { create :sar_being_drafted }
+    let(:sar_being_drafted) { build_stubbed :sar_being_drafted }
 
     it 'renders the close_form partial' do
       assign(:case, sar_being_drafted.decorate)
@@ -42,4 +42,65 @@ describe 'cases/close.html.slim' do
       expect(cases_close_page.missing_info.no ).not_to be_checked
     end
   end
+
+  context 'with a ICO Appeal case' do
+    #need to create instead of build_stubbed because s3 needs created case
+    let(:ico_sent_and_awaiting_ico_decision) { create :responded_ico_foi_case }
+
+    it 'renders the close_form partial' do
+      assign(:case, ico_sent_and_awaiting_ico_decision.decorate)
+      assign(:s3_direct_post,
+             S3Uploader.s3_direct_post_for_case(ico_sent_and_awaiting_ico_decision,
+                                                :request))
+      render
+      expect(response)
+        .to have_rendered(
+              partial: 'cases/ico/close_form',
+              locals: {
+                kase: ico_sent_and_awaiting_ico_decision,
+                submit_button: 'Close case'
+              }
+            )
+    end
+
+    it 'ICO Decision' do
+      assign(:case, ico_sent_and_awaiting_ico_decision.decorate)
+      assign(:s3_direct_post,
+             S3Uploader.s3_direct_post_for_case(ico_sent_and_awaiting_ico_decision,
+                                                :request))
+
+      render
+      cases_close_page.load(rendered)
+      expect(cases_close_page.ico).to have_ico_decision
+      expect(cases_close_page.ico.ico_decision.overturned_label).to have_copy 'Overturned by ICO'
+      expect(cases_close_page.ico.ico_decision.upheld_label).to have_copy 'Upheld by ICO'
+
+    end
+
+    it 'date decision received' do
+      assign(:case, ico_sent_and_awaiting_ico_decision.decorate)
+      assign(:s3_direct_post,
+             S3Uploader.s3_direct_post_for_case(ico_sent_and_awaiting_ico_decision,
+                                                :request))
+
+      render
+      cases_close_page.load(rendered)
+      expect(cases_close_page.ico).to have_date_ico_decision_received_day
+      expect(cases_close_page.ico).to have_date_ico_decision_received_month
+      expect(cases_close_page.ico).to have_date_ico_decision_received_year
+    end
+
+    it 'ICO Decision uploads' do
+      assign(:case, ico_sent_and_awaiting_ico_decision.decorate)
+      assign(:s3_direct_post,
+             S3Uploader.s3_direct_post_for_case(ico_sent_and_awaiting_ico_decision,
+                                                :request))
+
+      render
+      cases_close_page.load(rendered)
+      expect(cases_close_page.ico).to have_uploads
+
+    end
+  end
+
 end

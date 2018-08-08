@@ -1,7 +1,8 @@
 - url = defined?(form_url) ? form_url : process_closure_case_path(id: @case.id)
 = form_for kase, as: :case_ico, url: url do |f|
 
-  = f.radio_button_fieldset :ico_decision,
+  .ico-decision
+    = f.radio_button_fieldset :ico_decision,
           choices: [:upheld, :overturned]
 
   .form-group
@@ -11,13 +12,19 @@
 
   .grid-row
     .column-two-thirds
-      div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
-        = render partial: 'shared/dropzone_form',
-                locals: { s3_direct_post: @s3_direct_post,
-                        file_input_name: 'case_ico[uploaded_request_files][]' }
+      #uploaded-ico-decision-files-fields
+        span.form-label-bold
+          = "Upload original ICO's decision document"
+        span.form-hint
+          = t('cases.new.uploaded_request_files_hint')
 
-  = f.text_area :request_amends_comment
+        div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
+          = render partial: 'shared/dropzone_form',
+                  locals: { s3_direct_post: @s3_direct_post,
+                          file_input_name: 'case_ico[uploaded_ico_decision_files][]' }
+
+      = f.text_area :ico_decision_comment, { rows: 10, class: 'form-control-1-1' }
   .grid-row
     .column-two-thirds
       = f.submit submit_button, {class: 'button'}
-      = link_to "Return to case detail", case_path(kase.id), class:'button-secondary button-left-spacing'
+      = link_to "Return to case detail", case_path(kase.id), class:'acts-like-button button-left-spacing'
