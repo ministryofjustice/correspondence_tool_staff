@@ -42,6 +42,14 @@ describe 'cases/edit.html.slim', type: :view do
     expect(page.form.date_received_month.value).to eq kase.received_date.month.to_s
     expect(page.form.date_received_year.value).to eq kase.received_date.year.to_s
 
+    expect(page.form.external_deadline_day.value).to eq kase.external_deadline.day.to_s
+    expect(page.form.external_deadline_month.value).to eq kase.external_deadline.month.to_s
+    expect(page.form.external_deadline_year.value).to eq kase.external_deadline.year.to_s
+
+    expect(page.form.internal_deadline_day.value).to eq kase.internal_deadline.day.to_s
+    expect(page.form.internal_deadline_month.value).to eq kase.internal_deadline.month.to_s
+    expect(page.form.internal_deadline_year.value).to eq kase.internal_deadline.year.to_s
+
     expect(page.form.root_element['action']).to match(/^\/cases\/\d+$/)
     expect(page.form.case_details.value).to eq kase.message
 

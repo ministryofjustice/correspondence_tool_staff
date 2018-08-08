@@ -9,11 +9,15 @@ class Case::ICO::Base < Case::Base
                  external_deadline: :date
 
 
-  acts_as_gov_uk_date :received_date, :date_responded, :external_deadline
+  acts_as_gov_uk_date :date_responded,
+                      :external_deadline,
+                      :internal_deadline,
+                      :received_date
 
   has_paper_trail only: [
                     :date_responded,
                     :external_deadline,
+                    :internal_deadline,
                     :ico_officer_name,
                     :ico_reference_number,
                     :message,
@@ -25,6 +29,7 @@ class Case::ICO::Base < Case::Base
   validates :ico_reference_number, presence: true
   validates :message, presence: true
   validates :external_deadline, presence: true
+  validates :internal_deadline, presence: true
   validates_presence_of :original_case
 
   before_save do
@@ -51,6 +56,10 @@ class Case::ICO::Base < Case::Base
 
   def closed_for_reporting_purposes?
     closed? || responded?
+  end
+
+  def ico?
+    true
   end
 
   def name=(_new_name)
@@ -80,8 +89,11 @@ class Case::ICO::Base < Case::Base
           )
   end
 
-  def ico?
-    true
+  def update_deadlines
+    # For ICOs deadlines are manually set and don't need to be automatically
+    # calculated. So this method called by a before_update hook in Case::Base
+    # becomes a nop.
+    nil
   end
 
   private

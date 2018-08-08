@@ -80,6 +80,21 @@ FactoryBot.define do
     target_team_id { responding_team.id }
   end
 
+  factory :case_transition_accept_approver_user, parent: :case_transition do
+    transient do
+      responder         { create :responder }
+      approving_team    { self.case.approving_team }
+      approver          { approving_team.users.first }
+    end
+
+    event          'accept_approver_user'
+    to_state       { self.case.current_state }
+    target_user_id { approver.id }
+    target_team_id { approving_team.id }
+    acting_user_id { approver.id }
+    acting_team_id { approving_team.id }
+  end
+
   factory :case_transition_accept_responder_assignment, parent: :case_transition do
     to_state 'drafting'
     event 'accept_responder_assignment'

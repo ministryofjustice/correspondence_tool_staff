@@ -185,9 +185,12 @@ describe CasesController, type: :controller do
               'case_ico' => {
                 'ico_officer_name' => 'C00KYM0N',
                 'ico_reference_number' => 'NEWREFNOMNOMNOM',
-                'received_date_dd' => '26',
+                'received_date_dd' => '1',
                 'received_date_mm' => '5',
                 'received_date_yyyy' => '2018',
+                'internal_deadline_dd' => '15',
+                'internal_deadline_mm' => '5',
+                'internal_deadline_yyyy' => '2018',
                 'external_deadline_dd' => '26',
                 'external_deadline_mm' => '5',
                 'external_deadline_yyyy' => '2018',
@@ -206,7 +209,8 @@ describe CasesController, type: :controller do
           expect(kase.ico_officer_name).to eq 'C00KYM0N'
           expect(kase.ico_reference_number).to eq 'NEWREFNOMNOMNOM'
           expect(kase.message).to eq 'modified full request'
-          expect(kase.received_date).to eq Date.new(2018, 5, 26)
+          expect(kase.received_date).to eq Date.new(2018, 5, 1)
+          expect(kase.internal_deadline).to eq Date.new(2018, 5, 15)
           expect(kase.external_deadline).to eq Date.new(2018, 5, 26)
         end
 

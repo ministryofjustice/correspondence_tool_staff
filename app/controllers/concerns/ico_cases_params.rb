@@ -35,6 +35,7 @@ module ICOCasesParams
       :message,
       :original_case_id,
       :received_date_dd, :received_date_mm, :received_date_yyyy,
+      :internal_deadline_dd, :internal_deadline_mm, :internal_deadline_yyyy,
       :external_deadline_dd, :external_deadline_mm, :external_deadline_yyyy,
       related_case_ids: [],
       uploaded_request_files: [],
