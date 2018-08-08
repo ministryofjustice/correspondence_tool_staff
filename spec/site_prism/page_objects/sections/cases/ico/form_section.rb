@@ -30,6 +30,10 @@ module PageObjects
           element :external_deadline_month, '#case_ico_external_deadline_mm'
           element :external_deadline_year, '#case_ico_external_deadline_yyyy'
 
+          element :internal_deadline_day, '#case_ico_internal_deadline_dd'
+          element :internal_deadline_month, '#case_ico_internal_deadline_mm'
+          element :internal_deadline_year, '#case_ico_internal_deadline_yyyy'
+
           element :case_details, '#case_ico_message'
 
           element :dropzone_container, '.dropzone'
@@ -51,6 +55,12 @@ module PageObjects
             external_deadline_year.set(final_deadline_date.year)
           end
 
+          def set_draft_deadline_date(draft_deadline_date)
+            internal_deadline_day.set(draft_deadline_date.day)
+            internal_deadline_month.set(draft_deadline_date.month)
+            internal_deadline_year.set(draft_deadline_date.year)
+          end
+
           def add_original_case(kase)
             self.original_case_number.set kase.number
             link_original_case.click
@@ -59,7 +69,11 @@ module PageObjects
           end
 
           def add_related_cases(kases)
-            related_case_count = related_cases.linked_records.count
+            related_case_count = if has_related_cases?
+                                   related_cases.linked_records.count
+                                 else
+                                   0
+                                 end
             kases.each do |kase|
               self.related_case_number.set kase.number
               link_related_case.click
@@ -70,11 +84,10 @@ module PageObjects
           end
 
           def fill_in_case_details(params={})
-            original_case = params.delete(:original_case)
-            related_cases = params.delete(:related_cases)
             kase = FactoryBot.build :ico_foi_case, params
 
             set_received_date(kase.received_date)
+            set_draft_deadline_date(kase.internal_deadline)
             set_final_deadline_date(kase.external_deadline)
 
             ico_officer_name.set kase.ico_officer_name

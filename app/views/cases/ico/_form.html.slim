@@ -13,6 +13,10 @@
   = f.gov_uk_date_field :external_deadline, { legend_text: t('cases.new.external_deadline'),
                                               form_hint_text: t4c(kase, 'cases.new', 'external_deadline_copy') }
 
+.form-group
+  = f.gov_uk_date_field :internal_deadline, { legend_text: t('cases.new.internal_deadline'),
+                                              form_hint_text: t4c(kase, 'cases.new', 'internal_deadline_copy') }
+
 = f.text_area :message, { rows: 10 }
 
 #uploaded-request-files-fields

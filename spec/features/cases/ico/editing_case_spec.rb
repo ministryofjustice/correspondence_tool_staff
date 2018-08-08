@@ -19,6 +19,9 @@ feature 'editing an ICO case' do
 
     request_attachment = Rails.root.join('spec', 'fixtures', 'new request.docx')
     cases_edit_ico_page.form.fill_in_case_details(
+      received_date: Date.new(2018, 03, 04),
+      external_deadline: Date.new(2018, 03, 24),
+      internal_deadline: Date.new(2018, 03, 14),
       ico_reference_number: 'IZEDITED',
       ico_officer_name: 'Richie King',
       message: 'Consider this case to be edited',
@@ -33,19 +36,11 @@ feature 'editing an ICO case' do
     kase.reload
     case_details = cases_show_page.ico.case_details
 
-    expect(case_details.ico_reference.data.text).to eq kase.ico_reference_number
-    expect(case_details.ico_officer_name.data.text).to eq kase.ico_officer_name
-
-    date_received = kase.received_date.strftime(Settings.default_date_format)
-    expect(case_details.date_received.data.text).to eq date_received
-
-    external_deadline = kase.external_deadline.strftime(Settings.default_date_format)
-    expect(case_details.external_deadline.data.text).to eq external_deadline
-
-    expect(cases_show_page.ico.case_details.date_received.data.text)
-      .to eq kase.received_date.strftime(Settings.default_date_format)
-    expect(cases_show_page.ico.case_details.external_deadline.data.text)
-      .to eq kase.external_deadline.strftime(Settings.default_date_format)
+    expect(case_details.ico_reference.data.text    ).to eq 'IZEDITED'
+    expect(case_details.ico_officer_name.data.text ).to eq 'Richie King'
+    expect(case_details.date_received.data.text    ).to eq '4 Mar 2018'
+    expect(case_details.external_deadline.data.text).to eq '24 Mar 2018'
+    expect(case_details.internal_deadline.data.text).to eq '14 Mar 2018'
 
     expect(cases_show_page.request.message.text).to eq kase.message
 

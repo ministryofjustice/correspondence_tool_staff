@@ -4,10 +4,10 @@ FactoryBot.define do
 
   factory :ico_sar_case, class: Case::ICO::SAR do
     transient do
-
       creation_time   { 4.business_days.ago }
       identifier      "new ICO SAR case based from a closed SAR case"
       managing_team   { find_or_create :team_dacu }
+      approving_team { find_or_create(:team_disclosure) }
     end
 
     current_state               'unassigned'
@@ -17,9 +17,37 @@ FactoryBot.define do
     association :original_case, factory: :closed_sar
     received_date               { 0.business_days.from_now }
     external_deadline           { 20.business_days.from_now.to_date }
+    internal_deadline           { 10.business_days.from_now.to_date }
     uploaded_request_files      { ["#{Faker::Internet.slug}.pdf"] }
     uploading_user              { find_or_create :manager }
     created_at                  { creation_time }
+
+    after(:create) do |kase, evaluator|
+      create :approver_assignment,
+             case: kase,
+             team: evaluator.approving_team,
+             state: 'pending'
+      create :flag_case_for_clearance_transition,
+             case: kase,
+             target_team_id: evaluator.approving_team.id
+      kase.update(workflow: 'trigger')
+    end
+
+    trait :flagged_accepted do
+      transient do
+        approver       { approving_team.users.first }
+      end
+
+      after(:create) do |kase, evaluator|
+        kase.assignments.for_team(evaluator.approving_team).first.update(
+          state: 'accepted',
+          user_id: evaluator.approver.id,
+        )
+        create :flag_case_for_clearance_transition,
+               case: kase,
+               target_team_id: evaluator.approving_team.id
+      end
+    end
   end
 
   factory :awaiting_responder_ico_sar_case, parent: :ico_sar_case do

@@ -49,6 +49,17 @@ describe Case::ICO::Base do
     it { should validate_presence_of(:external_deadline) }
   end
 
+  describe 'internal_deadline attribute' do
+    it { should validate_presence_of(:internal_deadline) }
+
+    it "is assignable by year, month and day" do
+      kase.internal_deadline_yyyy = '2018'
+      kase.internal_deadline_mm   = '1'
+      kase.internal_deadline_dd   = '12'
+      expect(kase.internal_deadline).to eq Date.new(2018, 1, 12)
+    end
+  end
+
   describe 'original_case association' do
     it { should have_one(:original_case)
                   .through(:original_case_link)
@@ -179,5 +190,24 @@ describe Case::ICO::Base do
     end
   end
 
+  describe 'updating deadlines' do
+    it 'uses the dates provided' do
+      today = 0.business_days.ago.to_date
+      kase = create(:ico_foi_case, :flagged,
+                    received_date: today,
+                    internal_deadline: 10.business_days.after(today),
+                    external_deadline: 20.business_days.after(today))
+      expect(kase.received_date).to eq today
+      expect(kase.internal_deadline).to eq 10.business_days.after(today)
+      expect(kase.external_deadline).to eq 20.business_days.after(today)
 
+      new_received_date = 5.business_days.ago.to_date
+      kase.update!(received_date: new_received_date,
+                   internal_deadline: 10.business_days.after(new_received_date),
+                   external_deadline: 20.business_days.after(new_received_date))
+      expect(kase.received_date).to eq new_received_date
+      expect(kase.internal_deadline).to eq 10.business_days.after(new_received_date)
+      expect(kase.external_deadline).to eq 20.business_days.after(new_received_date)
+    end
+  end
 end
