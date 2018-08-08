@@ -195,29 +195,39 @@ feature 'adding cases' do
 
   context 'Case::ICO' do
     # This should create the ICO appeal and a closed case to base it from
-    scenario 'creating a case with the default values' do
-      stub_s3_uploader_for_all_files!
+    context "FOI" do
+      scenario 'creating a case with the default values' do
+        stub_s3_uploader_for_all_files!
 
-      admin_cases_page.load
-      admin_cases_page.create_case_button.click
-      admin_cases_new_page.create_link_for_correspondence('ICO').click
-      admin_cases_new_ico_page.submit_button.click
-      expect(admin_cases_page).to be_displayed
-      expect(admin_cases_page.case_list.count).to eq 2
+        admin_cases_page.load
+        admin_cases_page.create_case_button.click
+        admin_cases_new_page.create_link_for_correspondence('ICO').click
+        admin_cases_new_ico_page.submit_button.click
+        expect(admin_cases_page).to be_displayed
+        expect(admin_cases_page.case_list.count).to eq 2
+      end
+
+      scenario 'creating an ICO in pending_dacu_clearance' do
+        create_ico(target_state: 'pending_dacu_disclosure_clearance')
+        expect(admin_cases_page).to be_displayed
+        kase = Case::ICO::FOI.first
+        expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
+      end
+
+      scenario 'creating a trigger ICO in awaiting_dispatch' do
+        create_ico(target_state: 'awaiting_dispatch')
+        expect(admin_cases_page).to be_displayed
+        kase = Case::ICO::FOI.first
+        expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
+      end
     end
-
-    scenario 'creating an ICO in pending_dacu_clearance' do
-      create_ico(target_state: 'pending_dacu_disclosure_clearance')
-      expect(admin_cases_page).to be_displayed
-      kase = Case::ICO::FOI.first
-      expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
-    end
-
-    scenario 'creating a trigger SAR in awaiting_dispatch' do
-      create_ico(target_state: 'awaiting_dispatch')
-      expect(admin_cases_page).to be_displayed
-      kase = Case::ICO::FOI.first
-      expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
+    context 'SAR' do
+      scenario 'creating a trigger ICO in awaiting_dispatch' do
+        create_ico(type: 'sar', target_state: 'awaiting_dispatch')
+        expect(admin_cases_page).to be_displayed
+        kase = Case::ICO::SAR.first
+        expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
+      end
     end
   end
 
@@ -261,12 +271,15 @@ feature 'adding cases' do
     expect(admin_cases_page.case_list.count).to eq 1
   end
 
-  def create_ico(target_state: 'drafting')
+  def create_ico(type: 'foi', target_state: 'drafting')
     stub_s3_uploader_for_all_files!
     admin_cases_page.load
     admin_cases_page.create_case_button.click
     admin_cases_new_page.create_link_for_correspondence('ICO').click
     admin_cases_new_ico_page.target_state.select target_state
+    if type == 'sar'
+      admin_cases_new_ico_page.original_case_type_sar.click
+    end
     admin_cases_new_ico_page.submit_button.click
     expect(admin_cases_page).to be_displayed
     expect(admin_cases_page.case_list.count).to eq 2
