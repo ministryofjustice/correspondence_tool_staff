@@ -1,22 +1,22 @@
 = form_for kase, as: :case_ico, url: admin_cases_path do |f|
   = hidden_field_tag 'correspondence_type', @correspondence_type_key
-  = f.hidden_field :type, value: 'Case::ICO::FOI'
 
   = f.text_field :ico_reference_number
 
   = f.text_field :ico_officer_name
 
-  / #js-search-for-case.form-group
-    / .js-original-case
-  = f.text_field :original_case_id, class: ['form-control-1-8']
-  .form-group
-    = button_tag 'Link original case',
-            type: 'button',
-            class: 'button-secondary',
-            id: 'xhr-search-original-case-button',
-            data: { url: new_linked_cases_for_cases_path,
-                    correspondence_type: @correspondence_type_key,
-                    link_type: 'original'}
+  = f.radio_button_fieldset :type, choices: ['Case::ICO::FOI', 'Case::ICO::SAR']
+  #js-search-for-case.form-group
+    .js-original-case
+      = f.text_field :original_case_id, class: ['form-control-1-8']
+      .form-group
+        = button_tag 'Link original case',
+                type: 'button',
+                class: 'button-secondary',
+                id: 'xhr-search-original-case-button',
+                data: { url: new_linked_cases_for_cases_path,
+                        correspondence_type: @correspondence_type_key,
+                        link_type: 'original'}
 
 
   .js-original-case-and-friends
@@ -40,24 +40,9 @@
 
   = f.text_area :message, { rows: 10 }
 
-  #uploaded-request-files-fields
-    .grid-row
-      .column-two-thirds
-        span.form-label-bold
-          = t('.uploaded_request_files')
-        span.form-hint
-          = t('cases.new.uploaded_request_files_hint')
-    .grid-row
-      .column-two-thirds
-        div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
-          = render partial: 'shared/dropzone_form',
-                   locals: { s3_direct_post: @s3_direct_post,
-                             file_input_name: 'case_ico[uploaded_request_files][]' }
-
-  h2
-    = "Please only select one."
-
   = f.collection_select :responding_team, BusinessUnit.responding, :id, :name, { selected: @case.responding_team.id }
+
+  = f.check_box_fieldset :flag_for_disclosure_specialists, [:flagged_for_disclosure_specialist_clearance?], value: :flagged_for_disclosure_specialist_clearance?
 
   = f.collection_select :target_state, @target_states, :to_s, :to_s, { selected: @selected_state }
 

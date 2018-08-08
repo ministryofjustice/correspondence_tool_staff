@@ -198,6 +198,7 @@ feature 'adding cases' do
       admin_cases_page.load
       admin_cases_page.create_case_button.click
       admin_cases_new_page.create_link_for_correspondence('ICO').click
+      save_and_open_page
       admin_cases_new_ico_page.submit_button.click
       expect(admin_cases_page).to be_displayed
       expect(admin_cases_page.case_list.count).to eq 1

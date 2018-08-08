@@ -106,6 +106,7 @@ class Admin::CasesController < AdminController
     @target_states = available_target_states
     @selected_state = 'drafting'
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
+    @case.approving_teams << BusinessUnit.dacu_disclosure
 
     render :new
   end
@@ -167,11 +168,12 @@ class Admin::CasesController < AdminController
       :ico_officer_name,
       :ico_reference_number,
       :message,
+      :flag_for_disclosure_specialists,
       :original_case_id,
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :external_deadline_dd, :external_deadline_mm, :external_deadline_yyyy,
       uploaded_request_files: [],
-    ).merge(flag_for_disclosure_specialists: 1)
+    )
   end
 
   def param_flag_for_ds?

@@ -8,8 +8,7 @@ module CTS::Cases
     def initialize(logger, options = {})
       @logger = logger
       @options = options
-      # @klass = @options[:type].nil? ? Case::Base : @options[:type].constantize
-      @klass = @options[:type].constantize
+      @klass = @options[:type].nil? ? Case::Base : @options[:type].constantize
       @options.delete(:type)
     end
 
@@ -52,8 +51,8 @@ module CTS::Cases
         created_at:           set_created_at_date,
         dirty:                options.fetch(:dirty, true),
         ico_officer_name:     options.fetch(:ico_officer_name, Faker::Name.name),
-        ico_reference_number: options.fetch(:ico_reference_number, Faker::IDNumber.south_african_id_number),
-        original_case_id:     options.fetch(:original_case_id, Case::Base.closed.last),
+        ico_reference_number: options.fetch(:ico_reference_number, SecureRandom.hex),
+        original_case_id:     set_original_case
       )
     end
 
@@ -62,6 +61,15 @@ module CTS::Cases
         options[:original_case_id]
       else
         create_original_case(@klass)
+      end
+    end
+
+    def create_original_case(klass)
+      case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::FOI::Standard' )
+      kase = case_creator.new_case
+      if kase.valid?
+        case_creator.call(['closed'], kase)
+        return kase
       end
     end
 

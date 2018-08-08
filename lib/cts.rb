@@ -120,7 +120,7 @@ module CTS
         if dacu_disclosure_team.approvers.blank?
           raise 'DACU Disclosure team has no approvers assigned.'
         else
-          dacu_disclosure_team.approvers.first
+          dacu_disclosure_team.approvers.last
         end
     end
 
