@@ -209,6 +209,7 @@ en:
     add_responses: Response uploaded
     approve: Response cleared
     assign_responder: Assign responder
+    assign_to_new_team: Assign to new team
     close: Case closed
     edit_case: Case details edited
     extend_for_pit: Extended for Public Interest Test (PIT)
