@@ -1,7 +1,7 @@
 class PopulateTeamsForOverturnedSars < ActiveRecord::DataMigration
   def up
-    overturned_sar_ct = CorrespondenceType.find_by(abbreviation: 'OVERTURNED_SAR')
-    sar_ct = CorrespondenceType.find_by(abbreviation: 'SAR')
+    overturned_sar_ct = CorrespondenceType.overturned_sar
+    sar_ct = CorrespondenceType.sar
 
     teams = BusinessUnit.all
     teams.each do |bu|

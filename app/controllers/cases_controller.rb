@@ -862,7 +862,7 @@ class CasesController < ApplicationController
     # @permitted_correspondence_types so that it's changed as an atomic
     # operation ... we don't want to possibly allow SAR or ICO types to be
     # permitted at any point.
-    types = current_user.managing_teams.first.correspondence_types.order(:name).to_a
+    types = current_user.managing_teams.first.correspondence_types.menu_visible.order(:name).to_a
     types.delete(CorrespondenceType.sar) unless FeatureSet.sars.enabled?
     types.delete(CorrespondenceType.ico) unless FeatureSet.ico.enabled?
     @permitted_correspondence_types = types

@@ -24,7 +24,8 @@ class CorrespondenceType < ApplicationRecord
                  deadline_calculator_class: :string,
                  default_press_officer: :string,
                  default_private_officer: :string,
-                 report_category_name: [:string, default: '']
+                 report_category_name: [:string, default: ''],
+                 show_on_menu: [:boolean, default: true]
 
 
   enum deadline_calculator_class: {
@@ -45,6 +46,9 @@ class CorrespondenceType < ApplicationRecord
            class_name: 'TeamCorrespondenceTypeRole'
   has_many :teams,
            through: :correspondence_type_roles
+
+  scope :menu_visible, -> { where("properties->>'show_on_menu' = 'true'") }
+
 
   # Mapping of correspondence type to the available sub-classes that may be
   # created when creating that type of correspondence. e.g. when creating an
@@ -83,6 +87,10 @@ class CorrespondenceType < ApplicationRecord
     find_by!(abbreviation: 'ICO')
   end
 
+  def self.overturned_sar
+    find_by!(abbreviation: 'OVERTURNED_SAR')
+  end
+
   def abbreviation_and_name
     "#{abbreviation.tr('_', '-')} - #{name}"
   end
@@ -90,4 +98,5 @@ class CorrespondenceType < ApplicationRecord
   def sub_classes
     SUB_CLASSES_MAP[abbreviation]
   end
+
 end
