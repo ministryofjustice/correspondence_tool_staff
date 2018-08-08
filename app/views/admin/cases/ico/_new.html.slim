@@ -5,30 +5,8 @@
 
   = f.text_field :ico_officer_name
 
-  = f.radio_button_fieldset :type, choices: ['Case::ICO::FOI', 'Case::ICO::SAR']
-  #js-search-for-case.form-group
-    .js-original-case
-      = f.text_field :original_case_id, class: ['form-control-1-8']
-      .form-group
-        = button_tag 'Link original case',
-                type: 'button',
-                class: 'button-secondary',
-                id: 'xhr-search-original-case-button',
-                data: { url: new_linked_cases_for_cases_path,
-                        correspondence_type: @correspondence_type_key,
-                        link_type: 'original'}
+  = f.radio_button_fieldset :type, choices: CTS::Cases::Constants::ICO_CASE_TYPES
 
-
-  .js-original-case-and-friends
-    .js-original-case-report
-      = render partial: 'cases/ico/case_linking/linked_cases',
-               locals: { linked_cases: Case::Base.where(id: [@case.original_case_id]).map(&:decorate),
-                         link_type: 'original' }
-
-    .js-related-case-report
-      = render partial: 'cases/ico/case_linking/linked_cases',
-               locals: { linked_cases: Case::Base.where(id: [@case.related_case_ids]).map(&:decorate),
-                         link_type: 'related' }
   .form-group
     = f.gov_uk_date_field :received_date, { legend_text: t('cases.new.received_date'),
                                             form_hint_text: t('cases.new.received_date_copy'),

@@ -18,6 +18,9 @@ class Admin::CasesController < AdminController
 
     @case = case_creator.new_case
     @selected_state = case_params[:target_state]
+    if @case.ico?
+      @case.original_case_id = create_original_case(@case)
+    end
     if @case.valid?
       case_creator.call([@selected_state], @case)
       flash[:notice] = "Case created: #{@case.number}"
@@ -169,7 +172,6 @@ class Admin::CasesController < AdminController
       :ico_reference_number,
       :message,
       :flag_for_disclosure_specialists,
-      :original_case_id,
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :external_deadline_dd, :external_deadline_mm, :external_deadline_yyyy,
       uploaded_request_files: [],
@@ -230,6 +232,25 @@ class Admin::CasesController < AdminController
       @correspondence_type = CorrespondenceType.find_by(
         abbreviation: params[:correspondence_type].upcase
       )
+    end
+  end
+
+  def create_original_case(kase)
+    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: original_case_type(kase) )
+    kase = case_creator.new_case
+    if kase.valid?
+      case_creator.call(['closed'], kase)
+      return kase
+    end
+  end
+
+  def original_case_type(kase)
+    if kase.type == "Case::ICO::FOI"
+      'Case::FOI::Standard'
+    elsif kase.type == "Case::ICO::SAR"
+      'Case::SAR'
+    else
+      flash[:alert] = "no case type selected"
     end
   end
 end

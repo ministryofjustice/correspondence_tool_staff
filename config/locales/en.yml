@@ -548,7 +548,6 @@ en:
       ico:
         new:
           create: Create
-          uploaded_request_files: Uploads
 
     users:
       index:

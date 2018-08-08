@@ -52,21 +52,12 @@ module CTS::Cases
         dirty:                options.fetch(:dirty, true),
         ico_officer_name:     options.fetch(:ico_officer_name, Faker::Name.name),
         ico_reference_number: options.fetch(:ico_reference_number, SecureRandom.hex),
-        original_case_id:     set_original_case
       )
-    end
-
-    def set_original_case
-      if options.key? :original_case_id
-        options[:original_case_id]
-      else
-        create_original_case(@klass)
-      end
     end
 
     def create_original_case(klass)
       case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::FOI::Standard' )
-      kase = case_creator.new_case
+      case_creator.new_case
       if kase.valid?
         case_creator.call(['closed'], kase)
         return kase
