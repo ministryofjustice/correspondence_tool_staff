@@ -1,6 +1,6 @@
 #js-search-for-case.form-group
   .js-original-case
-    = f.text_field :original_case_number, class: ['form-control-1-8']
+    = f.text_field :original_case_number, class: 'form-control-1-4'
     .form-group
       = button_tag 'Link original case',
               type: 'button',
@@ -11,7 +11,7 @@
                       link_type: 'original'}
 
   .js-related-case.js-hidden
-    = f.text_field :related_case_number, class: ['form-control-1-8']
+    = f.text_field :related_case_number, class: 'form-control-1-4'
     .form-group
       = button_tag 'Link related case',
               type: 'button',
