@@ -19,10 +19,10 @@ class Case::OverturnedICO::Base < Case::Base
       send_by_email: 'send_by_email',
   }
 
+
   validate :validate_received_date
   validate :validate_external_deadline
   validate :validate_original_ico_appeal
-  # validate :validate_original_case
 
   validates_presence_of :original_case
   validates_presence_of :reply_method
@@ -58,7 +58,11 @@ class Case::OverturnedICO::Base < Case::Base
     self.original_ico_appeal&.id
   end
 
-
+  def set_reply_method
+    self.reply_method = original_case.reply_method
+    self.email = original_case.email
+    self.postal_address = original_case.postal_address
+  end
 
   private
 
@@ -89,5 +93,7 @@ class Case::OverturnedICO::Base < Case::Base
   def validate_original_ico_appeal
     raise "Implement this method in the derived class"
   end
+
+
 
 end

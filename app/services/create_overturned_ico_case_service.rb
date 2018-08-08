@@ -26,11 +26,12 @@ class CreateOverturnedICOCaseService
                            @error = true
                        end
     if success?
-      original_case                                 = @original_ico_appeal
+      original_case                                 = @original_ico_appeal.original_case
       @overturned_ico_case                          = overturned_klass.new
-      @overturned_ico_case.subject                  = original_case.subject
+      # @overturned_ico_case.subject                  = original_case.subject
       @overturned_ico_case.original_ico_appeal_id   = @original_ico_appeal.id
       @overturned_ico_case.original_case_id         = original_case.id
+      @overturned_ico_case.set_reply_method if original_case.sar?
     end
   end
 

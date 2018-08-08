@@ -69,6 +69,10 @@ class Case::SAR < Case::Base
     false
   end
 
+  def sar?
+    true
+  end
+
   private
 
   def use_subject_as_requester
@@ -93,10 +97,5 @@ class Case::SAR < Case::Base
                  message: "can't be blank if no request files attached")
     end
   end
-
-  def sar?
-    true
-  end
-
 
 end
