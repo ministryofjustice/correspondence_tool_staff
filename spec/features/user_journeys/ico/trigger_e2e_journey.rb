@@ -63,9 +63,10 @@ feature 'ICO FOI case requiring clearance' do
                       user: disclosure_specialist,
                       expected_status: 'Awaiting ICO decision',
                       expected_to_be_with: 'Disclosure'
-    #
-    # close_sar_case kase: kase,
-    #                user: responder,
-    #                timeliness: 'in time'
+
+    close_ico_appeal_case kase: kase,
+                   user: manager,
+                   timeliness: 'in time'
+
   end
 end
