@@ -4,7 +4,7 @@ moj.Modules.Dropzone = {
   removeElement : function (elements){
                     while(elements.length > 0){
                         elements[0].parentNode.removeChild(elements[0]);
-                      }
+                    }
                   },
   $target: {},
   init: function() {
@@ -43,7 +43,7 @@ moj.Modules.Dropzone = {
         errorWrapper.classList.add('error-message');
         file.previewElement.getElementsByClassName('dz-filename')[0].classList.add('form-group-error');
         // Display error message
-        errorWrapper.getElementsByTagName('span')[0].innerHTML= response
+        errorWrapper.getElementsByTagName('span')[0].innerHTML= response;
 
         ////Remove "remove" link
         moj.Modules.Dropzone.removeElement(removeLinkContainer);
