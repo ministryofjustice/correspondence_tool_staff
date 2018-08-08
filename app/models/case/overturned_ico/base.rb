@@ -94,6 +94,4 @@ class Case::OverturnedICO::Base < Case::Base
     raise "Implement this method in the derived class"
   end
 
-
-
 end
