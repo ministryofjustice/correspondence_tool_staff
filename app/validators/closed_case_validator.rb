@@ -7,7 +7,8 @@ class ClosedCaseValidator < ActiveModel::Validator
              :validate_outcome,
              :validate_refusal_reason,
              :validate_exemptions],
-    'ICO'=> [:validate_date_ico_decision_received,
+    'ICO'=> [:validate_ico_decision,
+             :validate_date_ico_decision_received,
              :validate_files_or_comment]
   }
   # Validations applicable to cases that are being processed for closure.
@@ -88,11 +89,19 @@ class ClosedCaseValidator < ActiveModel::Validator
 
   def validate_date_ico_decision_received(rec)
     if rec.date_ico_decision_received.blank?
-      rec.errors.add(:date_ico_decision_received, 'blank')
+      rec.errors.add(:date_ico_decision_received, "can't be blank")
     elsif rec.date_ico_decision_received > Date.today
       rec.errors.add(:date_ico_decision_received, 'future')
     elsif rec.date_ico_decision_received < 1.month.ago
       rec.errors.add(:date_ico_decision_received, 'past')
+    end
+  end
+
+  def validate_ico_decision(rec)
+    if rec.ico_decision.blank?
+      rec.errors.add(:ico_decision, "can't be blank")
+    elsif rec.ico_decision.in?([:overturned, :upheld])
+      rec.errors.add(:ico_decision, "not a valid decision")
     end
   end
 
