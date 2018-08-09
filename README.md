@@ -87,16 +87,28 @@ $ xcode-select --install
 </details>
 
 <details>
-<summary>Installing PhantomJS</summary>
+<summary>Browser testing</summary>
 
-We use the [Poltergeist JS driver](https://github.com/teampoltergeist/poltergeist)
-for Capybara tests, which requires PhantomJS. Install this with your favourite
-package manager, e.g.:
+We use [headless chrome](https://developers.google.com/web/updates/2017/04/headless-chrome)
+for Capybara tests, which require JavaScript. You will need to install Chrome >= 59. 
+Where we don't require JavaScript to test a feature we use Capybara's default driver 
+[RackTest](https://github.com/teamcapybara/capybara#racktest) which is ruby based 
+and much faster as it does not require a server to be started.
+
+**Debugging:**
+
+To debug a spec that requires JavaScript, you need to set a environment variable called CHROME_DEBUG.
+It can be set to any value you like.
+
+Examples:
 
 ```
-$ brew install phantomjs
+$ CHROME_DEBUG=1 bundle exec rspec
 ```
 
+When you have set `CHROME_DEBUG`, you should notice chrome start up and appear on your
+taskbar/Docker. You can now click on chrome and watch it run through your tests.
+If you have a `binding.pry`  in your tests the browser will stop at that point.
 </details>
 
 #### DB Setup

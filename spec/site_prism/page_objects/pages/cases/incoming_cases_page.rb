@@ -9,6 +9,7 @@ module PageObjects
           elements :highlight_row, 'td.ajax-success, td.ajax-success--de-escalate'
 
           element :number, 'td[aria-label="Case number"]'
+          element :number_link, 'td[aria-label="Case number"] a'
           section :request, 'td[aria-label="Request"]' do
             element :name, '.case_name'
             element :subject, '.case_subject'

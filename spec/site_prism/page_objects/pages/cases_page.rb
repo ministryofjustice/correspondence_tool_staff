@@ -61,9 +61,14 @@ module PageObjects
       end
 
       def row_for_case_number(number)
-        case_list.find { |row|
-          row.number.text == "Link to case #{number}"
-        }
+        begin
+          Capybara.ignore_hidden_elements = false
+          case_list.find { |row|
+            row.number.text == "Link to case #{number}"
+          }
+        ensure
+          Capybara.ignore_hidden_elements = true
+        end
       end
     end
   end
