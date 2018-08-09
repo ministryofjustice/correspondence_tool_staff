@@ -55,15 +55,6 @@ module CTS::Cases
       )
     end
 
-    def create_original_case(klass)
-      case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::FOI::Standard' )
-      case_creator.new_case
-      if kase.valid?
-        case_creator.call(['closed'], kase)
-        return kase
-      end
-    end
-
     def new_foi_case
       name = options.fetch(:name, Faker::Name.name)
 
@@ -114,7 +105,7 @@ module CTS::Cases
       if options.key? :external_deadline
         options[:external_deadline]
       else
-        0.business_days.after(4.business_days.since)
+        4.business_days.after(0.business_days.ago)
       end
     end
 

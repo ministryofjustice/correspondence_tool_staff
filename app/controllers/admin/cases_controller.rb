@@ -122,14 +122,6 @@ class Admin::CasesController < AdminController
     CTS::Cases::Constants::CASE_JOURNEYS[@correspondence_type_key.to_sym].values.flatten.uniq.sort
   end
 
-  def create_params(correspondence_type)
-    case correspondence_type
-    when 'foi' then create_foi_params
-    when 'sar' then create_sar_params
-    when 'ico' then create_ico_params
-    end
-  end
-
   def create_foi_params
     params.require(:case_foi).permit(
       :type,
