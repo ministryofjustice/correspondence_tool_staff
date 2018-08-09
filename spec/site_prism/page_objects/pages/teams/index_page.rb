@@ -17,9 +17,14 @@ module PageObjects
         end
 
         def row_for_business_group(name)
-          business_groups_list.find { |row|
-            row.name.text == "View the details of #{ name }"
-          }
+          begin
+            Capybara.ignore_hidden_elements = false
+            business_groups_list.find { |row|
+              row.name.text == "View the details of #{ name }"
+            }
+          ensure
+            Capybara.ignore_hidden_elements = true
+          end
         end
 
       end

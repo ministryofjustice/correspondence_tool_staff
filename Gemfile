@@ -62,10 +62,8 @@ gem 'uglifier', '>= 1.3.0'
 
 group :test do
   gem 'capybara'
-  gem 'capybara-screenshot'
   gem 'codeclimate-test-reporter', '~> 1.0'
   gem 'i18n-tasks', '~> 0.9.23'
-  gem 'poltergeist'
   gem 'rails-controller-testing', require: false
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 3.1'
@@ -78,6 +76,7 @@ group :development, :test do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'byebug', platform: :mri
+  gem 'chromedriver-helper'
   gem 'colorize'
   gem 'guard-jasmine'
   gem 'launchy'

@@ -3,7 +3,7 @@ module PageObjects
     class Base < SitePrism::Page
       def make_radio_button_choice(choice_id)
         if Capybara.current_driver == Capybara.javascript_driver
-          find("input##{choice_id}", visible: false).trigger("click")
+          find("input##{choice_id}", visible: false).click
         else
           find("input##{choice_id}").set(true)
         end
@@ -11,7 +11,7 @@ module PageObjects
 
       def make_check_box_choice(choice_id)
         if Capybara.current_driver == Capybara.javascript_driver
-          find("input##{choice_id}", visible: false).trigger("click")
+          find("input##{choice_id}", visible: false).click
         else
           find("input##{choice_id}").set(true)
         end
@@ -19,7 +19,7 @@ module PageObjects
 
       def remove_check_box_choice(choice_id)
         if Capybara.current_driver == Capybara.javascript_driver
-          find("input##{choice_id}", visible: false).trigger("click")
+          find("input##{choice_id}", visible: false).click
         else
           find("input##{choice_id}").set(false)
         end
