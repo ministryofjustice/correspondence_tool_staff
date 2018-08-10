@@ -15,9 +15,9 @@ FactoryBot.define do
     ico_reference_number        { generate :ico_sar_reference_number }
     sequence(:ico_officer_name) { |n| "#{identifier} ico officer name #{n}" }
     association :original_case, factory: :closed_sar
-    received_date               { 0.business_days.from_now }
-    external_deadline           { 20.business_days.from_now.to_date }
-    internal_deadline           { 10.business_days.from_now.to_date }
+    received_date               { 0.business_days.ago }
+    external_deadline           { 20.business_days.after(0.business_days.ago).to_date }
+    internal_deadline           { 10.business_days.after(0.business_days.ago).to_date }
     uploaded_request_files      { ["#{Faker::Internet.slug}.pdf"] }
     uploading_user              { find_or_create :manager }
     created_at                  { creation_time }
@@ -100,19 +100,16 @@ FactoryBot.define do
     transient do
       identifier      'pending dacu clearance ICO SAR case'
       approving_team  { find_or_create :team_dacu_disclosure }
-      approver        { create :disclosure_specialist }
+      approver        { approving_team.users.first }
       responding_team { find_or_create(:responding_team) }
       responder       { responding_team.users.first }
     end
     workflow 'trigger'
 
     after(:create) do |kase, evaluator|
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.approving_team,
-             state: 'accepted',
-             user_id: evaluator.approver.id
-
+      kase.approver_assignments.for_team(evaluator.approving_team).singular
+        .update_attributes(user: evaluator.approver,
+                           state: 'accepted')
       create :case_transition_progress_for_clearance,
              case_id: kase.id,
              acting_team_id: evaluator.responding_team.id,

@@ -29,8 +29,15 @@ class Case::ICO::Base < Case::Base
   validates :ico_reference_number, presence: true
   validates :message, presence: true
   validates :external_deadline, presence: true
+  validate :external_deadline_within_limits?,
+           if: -> { external_deadline.present? }
   validates :internal_deadline, presence: true
+  validate :internal_deadline_within_limits?,
+           if: -> { internal_deadline.present? }
   validates_presence_of :original_case
+  validates :received_date, presence: true
+  validate :received_date_within_limits?,
+           if: -> { received_date.present? }
 
   before_save do
     self.workflow = 'trigger'
@@ -76,11 +83,6 @@ class Case::ICO::Base < Case::Base
     true
   end
 
-  def set_deadlines
-    days = correspondence_type.internal_time_limit.business_days
-    self.internal_deadline = days.before(self.external_deadline)
-  end
-
   delegate :subject, to: :original_case
 
   def subject=(_new_subject)
@@ -89,17 +91,74 @@ class Case::ICO::Base < Case::Base
           )
   end
 
-  def update_deadlines
-    # For ICOs deadlines are manually set and don't need to be automatically
-    # calculated. So this method called by a before_update hook in Case::Base
-    # becomes a nop.
-    nil
-  end
-
   private
 
   def default_workflow
     'trigger'
   end
 
+  def external_deadline_within_limits?
+    if received_date.present?
+      if external_deadline < received_date
+        errors.add(
+          :external_deadline,
+          I18n.t('activerecord.errors.models.case.attributes.external_deadline.before_received')
+        )
+      elsif external_deadline > received_date + 1.year
+        errors.add(
+          :external_deadline,
+          I18n.t('activerecord.errors.models.case.attributes.external_deadline.too_far_past_received')
+        )
+      end
+    end
+  end
+
+  def internal_deadline_within_limits?
+    if received_date.present? && internal_deadline < received_date
+      errors.add(
+        :internal_deadline,
+        TranslateForCase.t(self,
+                           'activerecord.errors.models',
+                           'attributes.internal_deadline.before_received')
+      )
+    end
+    if external_deadline.present? && internal_deadline > external_deadline
+      errors.add(
+        :internal_deadline,
+        I18n.t('activerecord.errors.models.case.attributes.internal_deadline.after_external')
+      )
+    end
+  end
+
+  def received_date_within_limits?
+    if received_date < Date.today - 10.years
+      errors.add(
+        :received_date,
+        TranslateForCase.t(self,
+                           'activerecord.errors.models',
+                           'attributes.received_date.past')
+      )
+    elsif received_date > Date.today
+      errors.add(
+        :received_date,
+        TranslateForCase.t(self,
+                           'activerecord.errors.models',
+                           'attributes.received_date.not_in_future')
+      )
+    end
+  end
+
+  def set_deadlines
+    # For ICOs deadlines are manually set and don't need to be automatically
+    # calculated. So this method called by a before_update hook in Case::Base
+    # becomes a nop.
+    nil
+  end
+
+  def update_deadlines
+    # For ICOs deadlines are manually set and don't need to be automatically
+    # calculated. So this method called by a before_update hook in Case::Base
+    # becomes a nop.
+    nil
+  end
 end

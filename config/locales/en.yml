@@ -39,9 +39,15 @@ en:
         case:
           attributes:
             email:
-              blank: and address can't both be blank
+              blank: "and address can't both be blank"
+            external_deadline:
+              too_far_past_received: 'cannot be more than a year past the date received'
+              before_received: "cannot be before date received"
+            internal_deadline:
+              after_external: "cannot be after final deadline"
+              before_received: "cannot be before date received"
             received_date:
-              not_in_future: can't be in the future.
+              not_in_future: "can't be in the future."
               past: too far in past.
             postal_address:
               blank: "and email can't both be blank"
@@ -54,6 +60,9 @@ en:
             flag_for_disclosure_specialists:
               blank: Please choose yes or no
         case/ico:
+          attributes:
+            received_date:
+              past: "cannot be over 10 years in the past"
           original_case_number:
             blank: "Enter original case number"
             missing: "Original case not found"
@@ -69,8 +78,8 @@ en:
         case/ico/foi:
           attributes:
             date_responded:
-              before_received: can't be before date recieved
-              future: can't be in the future
+              before_received: "can't be before date recieved"
+              future: "can't be in the future"
           related_case_number:
             does_not_match_original: >-
               You've linked an FOI case as the original for this appeal. You
