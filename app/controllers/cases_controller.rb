@@ -212,6 +212,7 @@ class CasesController < ApplicationController
     else
       authorize @case
 
+      @correspondence_type_key = @case.type_abbreviation.downcase
       get_flash_errors_for_case(@case)
       set_permitted_events
       @accepted_now = params[:accepted_now]
