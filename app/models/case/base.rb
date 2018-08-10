@@ -317,11 +317,11 @@ class Case::Base < ApplicationRecord
   end
 
   def upload_response_groups
-    CaseAttachmentUploadGroupCollection.new(self, attachments.response)
+    CaseAttachmentUploadGroupCollection.new(self, attachments.response, :responder)
   end
 
   def upload_request_groups
-    CaseAttachmentUploadGroupCollection.new(self, attachments.request)
+    CaseAttachmentUploadGroupCollection.new(self, attachments.request, :manager)
   end
 
   def info_held_status_abbreviation
@@ -336,9 +336,8 @@ class Case::Base < ApplicationRecord
     @default_team_service ||= DefaultTeamService.new(self)
   end
 
-  def team_for_user(user)
-    assignments.where(user_id: user.id).first&.team ||
-      (teams & user.teams).first
+  def team_for_user(user, role)
+    TeamFinderService.new(self, user, role).call
   end
 
   def allow_event?(user, event)

@@ -5,15 +5,27 @@ class UserReassignmentService
                  target_user:, acting_user:,
                  target_team: nil, acting_team: nil)
 
+    puts ">>>>>>>>>>>> target_user #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
+    ap target_user
+    puts ">>>>>>>>>>>> target_team #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
+    ap target_team
+    puts ">>>>>>>>>>>> acting_user #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
+    ap acting_user
+    puts ">>>>>>>>>>>> acting_team #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
+    ap acting_team
+    puts ">>>>>>>>>>>> assignment #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
+    ap assignment
+    puts ">>>>>>>>>>>> assignment teams #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
+    ap assignment.team
+
+
     @assignment             = assignment
     @original_assigned_user = assignment.user_id
     @kase                   = assignment.case
     @target_user            = target_user
     @acting_user            = acting_user
-    @target_team            = target_team || @assignment.case
-                                                 .team_for_user(@target_user)
-    @acting_team            = acting_team || @assignment.case
-                                                 .team_for_user(@acting_user)
+    @target_team            = target_team || get_team_for_user_and_case_with_role(@assignment.team.role, @target_user)
+    @acting_team            = acting_team || get_user_team(@acting_user)
     @result = :incomplete
   end
 
@@ -43,6 +55,17 @@ class UserReassignmentService
   end
 
   private
+
+  def get_team_for_user_and_case_with_role(role, user)
+    teams = @kase.teams.where(role: role) & user.teams.where(role: role)
+    raise "Unable to allocate acting team with role #{role} to user #{user.id}" if teams.empty?
+    teams.first
+  end
+
+  def get_user_team(user)
+    @assignment.case.team_for_user(user, :responder) ||  @assignment.case.team_for_user(user, :manager)
+
+  end
 
   def notify_target_user
 
