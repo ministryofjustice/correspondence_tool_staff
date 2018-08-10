@@ -628,25 +628,29 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  describe '#team_for_user' do
+  describe '#team_for_assigned_user' do
     let(:responder)       { case_being_drafted_trigger.responder }
     let(:responding_team) { case_being_drafted_trigger.responding_team }
     let(:other_responder) { create :responder,
                                    responding_teams: [responding_team] }
 
-    it 'returns the team that the user is assigned to the case from' do
-      expect(case_being_drafted_trigger.team_for_user(responder))
-        .to eq responding_team
+    it 'calls the TeamFinderService' do
+      service = double TeamFinderService, team_for_assigned_user: nil
+      expect(TeamFinderService).to receive(:new).with(kase, responder, :responder).and_return(service)
+      kase.team_for_assigned_user(responder, :responder)
     end
+  end
 
-    it 'if the user is not assigned to the case it returns the team they have in common' do
-      expect(case_being_drafted_trigger.team_for_user(other_responder))
-        .to eq responding_team
-    end
+  describe '#team_for_unassigned_user' do
+    let(:responder)       { case_being_drafted_trigger.responder }
+    let(:responding_team) { case_being_drafted_trigger.responding_team }
+    let(:other_responder) { create :responder,
+                                   responding_teams: [responding_team] }
 
-    it 'returns nil if there is no assignment for that user' do
-      user = create :user
-      expect(case_being_drafted_trigger.team_for_user(user)).to be_nil
+    it 'calls the TeamFinderService' do
+      service = double TeamFinderService, team_for_unassigned_user: nil
+      expect(TeamFinderService).to receive(:new).with(kase, responder, :responder).and_return(service)
+      kase.team_for_unassigned_user(responder, :responder)
     end
   end
 
@@ -794,7 +798,7 @@ RSpec.describe Case::Base, type: :model do
       response_attachments = double 'Response attachments'
       expect(attachments).to receive(:response).and_return(response_attachments)
       expect(kase).to receive(:attachments).and_return(attachments)
-      expect(CaseAttachmentUploadGroupCollection).to receive(:new).with(kase, response_attachments)
+      expect(CaseAttachmentUploadGroupCollection).to receive(:new).with(kase, response_attachments, :responder)
       kase.upload_response_groups
     end
   end
@@ -805,7 +809,7 @@ RSpec.describe Case::Base, type: :model do
       request_attachments = double 'Request attachments'
       expect(attachments).to receive(:request).and_return(request_attachments)
       expect(kase).to receive(:attachments).and_return(attachments)
-      expect(CaseAttachmentUploadGroupCollection).to receive(:new).with(kase, request_attachments)
+      expect(CaseAttachmentUploadGroupCollection).to receive(:new).with(kase, request_attachments, :manager)
       kase.upload_request_groups
     end
   end
@@ -1031,7 +1035,6 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  #rubocop:disable Metrics/ParameterLists
   describe '#responded_in_time_for_stats_purposes' do
 
     let(:responding_team_1)     { create :responding_team }
@@ -1041,6 +1044,7 @@ RSpec.describe Case::Base, type: :model do
     let(:press_office_team)     { find_or_create :team_press_office }
     let(:private_office_team)   { find_or_create :team_private_office }
 
+    #rubocop:disable Metrics/ParameterLists
     def create_transition(kase, event, to_state, acting_team, target_team = nil, target_user = nil)
       kase.transitions << CaseTransition.new(
         event: event,
@@ -1053,6 +1057,7 @@ RSpec.describe Case::Base, type: :model do
         target_user_id: target_user&.id,
         target_team_id: target_team&.id)
     end
+    #rubocop:enable Metrics/ParameterLists
 
     def create_case(t, creating_team)
       Timecop.freeze(Time.at(Time.parse(t))) do
@@ -1148,7 +1153,6 @@ RSpec.describe Case::Base, type: :model do
       end
     end
   end
-  #rubocop:enable Metrics/ParameterLists
 
   describe '#type_abbreviation' do
     it 'returns the class-defined type abbreviation' do
