@@ -57,7 +57,7 @@ module PageObjects
 
         section :ico,
                 PageObjects::Sections::Cases::ICO::ShowSection,
-                '.case'
+                '#case-ico'
 
         sections :messages, '#messages-section .message' do
           element :body, '.message-body'
