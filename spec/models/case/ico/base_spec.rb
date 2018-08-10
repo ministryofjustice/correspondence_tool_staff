@@ -47,6 +47,33 @@ describe Case::ICO::Base do
 
   describe 'external_deadline attribute' do
     it { should validate_presence_of(:external_deadline) }
+
+    it "is assignable by year, month and day" do
+      kase.external_deadline_yyyy = '2018'
+      kase.external_deadline_mm   = '1'
+      kase.external_deadline_dd   = '12'
+      expect(kase.external_deadline).to eq Date.new(2018, 1, 12)
+    end
+
+    it 'cannot be before than received_date' do
+      kase.update_attributes(
+        received_date: Date.today,
+        external_deadline: Date.today - 1.day,
+      )
+      expect(kase).not_to be_valid
+      expect(kase.errors[:external_deadline])
+        .to eq ['cannot be before date received']
+    end
+
+    it 'cannot be more than a year past received_date' do
+      kase.update_attributes(
+        received_date: Date.today,
+        external_deadline: Date.today + 1.year + 1.day,
+      )
+      expect(kase).not_to be_valid
+      expect(kase.errors[:external_deadline])
+        .to eq ['cannot be more than a year past the date received']
+    end
   end
 
   describe 'internal_deadline attribute' do
@@ -57,6 +84,26 @@ describe Case::ICO::Base do
       kase.internal_deadline_mm   = '1'
       kase.internal_deadline_dd   = '12'
       expect(kase.internal_deadline).to eq Date.new(2018, 1, 12)
+    end
+
+    it 'cannot be before than received_date' do
+      kase.update_attributes(
+        received_date: Date.today,
+        internal_deadline: Date.today - 1.day,
+      )
+      expect(kase).not_to be_valid
+      expect(kase.errors[:internal_deadline])
+        .to eq ['cannot be before date received']
+    end
+
+    it 'cannot be after than external_deadline' do
+      kase.update_attributes(
+        external_deadline: Date.today + 20.days,
+        internal_deadline: Date.today + 21.day,
+      )
+      expect(kase).not_to be_valid
+      expect(kase.errors[:internal_deadline])
+        .to eq ['cannot be after final deadline']
     end
   end
 
@@ -129,6 +176,31 @@ describe Case::ICO::Base do
         kase.name = 'something new'
       }.to raise_error(StandardError,
                        'name attribute is read-only for ICO cases')
+    end
+  end
+
+  describe 'received_date attribute' do
+    it { should validate_presence_of(:received_date) }
+
+    it "is assignable by year, month and day" do
+      kase.received_date_yyyy = '2018'
+      kase.received_date_mm   = '3'
+      kase.received_date_dd   = '12'
+      expect(kase.received_date).to eq Date.new(2018, 3, 12)
+    end
+
+    it 'cannot be more than 10 years in the past' do
+      kase.received_date = Date.today - 10.years - 1.day
+      expect(kase).not_to be_valid
+      expect(kase.errors[:received_date])
+        .to eq ['cannot be over 10 years in the past']
+    end
+
+    it 'cannot be in the future' do
+      kase.received_date = Date.today + 1.day
+      expect(kase).not_to be_valid
+      expect(kase.errors[:received_date])
+        .to eq ["can't be in the future."]
     end
   end
 
