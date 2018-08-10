@@ -413,14 +413,15 @@ describe 'ClosedCaseValidator' do
         it 'is invalid' do
           responded_ico.ico_decision = nil
           expect(responded_ico).not_to be_valid
-          expect(responded_ico.errors[:ico_decision]).to eq ["can't be blank"]
+          expect(responded_ico.errors[:ico_decision]).to eq ['blank']
         end
       end
+
       context 'not a valid decision' do
         it 'is invalid' do
-          responded_ico.ico_decision = Date.tomorrow
+          responded_ico.ico_decision = 'xxx'
           expect(responded_ico).not_to be_valid
-          expect(responded_ico.errors[:date_ico_decision_received]).to eq ['future']
+          expect(responded_ico.errors[:ico_decision]).to eq ['invalid']
         end
       end
 
@@ -428,7 +429,6 @@ describe 'ClosedCaseValidator' do
         it 'is valid' do
           responded_ico.ico_decision = 'overturned'
           expect(responded_ico).to be_valid
-          expect(responded_ico.errors[:ico_decision]).to eq ["can't be blank"]
         end
       end
     end
