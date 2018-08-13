@@ -545,6 +545,10 @@ en:
       sar:
         new:
           create: Create
+      ico:
+        new:
+          create: Create
+
     users:
       index:
         cases: Cases
