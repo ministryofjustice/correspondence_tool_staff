@@ -20,6 +20,6 @@ class CurrentTeamAndUserService
   private
 
   def resolver_for_case(kase)
-    "CurrentTeamAndUser::#{kase.type_abbreviation.delete(" ")}::#{kase.workflow.camelize}".constantize.new(kase)
+    "CurrentTeamAndUser::#{kase.type_abbreviation.delete("_")}::#{kase.workflow.camelize}".constantize.new(kase)
   end
 end
