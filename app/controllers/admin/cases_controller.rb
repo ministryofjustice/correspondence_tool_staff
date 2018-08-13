@@ -122,54 +122,6 @@ class Admin::CasesController < AdminController
     CTS::Cases::Constants::CASE_JOURNEYS[@correspondence_type_key.to_sym].values.flatten.uniq.sort
   end
 
-  def create_foi_params
-    params.require(:case_foi).permit(
-      :type,
-      :requester_type,
-      :name,
-      :postal_address,
-      :email,
-      :subject,
-      :message,
-      :received_date_dd, :received_date_mm, :received_date_yyyy,
-      :delivery_method,
-      :target_state,
-      :flag_for_disclosure_specialists,
-      uploaded_request_files: [],
-    )
-  end
-
-  def create_sar_params
-    params.require(:case_sar).permit(
-      :email,
-      :flag_for_disclosure_specialists,
-      :message,
-      :name,
-      :postal_address,
-      :received_date_dd, :received_date_mm, :received_date_yyyy,
-      :requester_type,
-      :subject,
-      :subject_full_name,
-      :subject_type,
-      :third_party,
-      :reply_method,
-      :target_state,
-      uploaded_request_files: [],
-    ).merge(type: "Case::SAR")
-  end
-
-  def create_ico_params
-    params.require(:case_ico).permit(
-      :ico_officer_name,
-      :ico_reference_number,
-      :message,
-      :flag_for_disclosure_specialists,
-      :received_date_dd, :received_date_mm, :received_date_yyyy,
-      :external_deadline_dd, :external_deadline_mm, :external_deadline_yyyy,
-      uploaded_request_files: [],
-    )
-  end
-
   def param_flag_for_ds?
     params[case_and_type][:flagged_for_disclosure_specialist_clearance] == '1'
   end
