@@ -4,7 +4,7 @@
 
 = form_for @case, as: 'case_foi', url: admin_cases_path do |f|
   = hidden_field_tag 'correspondence_type', @correspondence_type_key
-  = f.radio_button_fieldset :type, choices: CTS::Cases::Constants::CASE_TYPES
+  = f.radio_button_fieldset :type, choices: CTS::Cases::Constants::FOI_CASE_TYPES
 
   = f.text_field :name
 
