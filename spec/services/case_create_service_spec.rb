@@ -1,6 +1,7 @@
 require "rails_helper"
 
 describe CaseCreateService do
+
   let(:manager) { create :manager, managing_teams: [ team_dacu ] }
   let!(:team_dacu) { find_or_create :team_dacu }
   let!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
@@ -190,6 +191,7 @@ describe CaseCreateService do
         expect(kase.received_date).to eq received
         expect(kase.external_deadline).to eq deadline
         expect(kase.reply_method).to eq 'send_by_email'
+        expect(kase.email).to eq 'stephen@stephenrichards.eu'
       end
 
       it 'sets the workflow to standard' do

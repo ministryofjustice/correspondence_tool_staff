@@ -47,7 +47,6 @@ class CaseCreateService
 
   def create_case
     @case = @case_class.new(@permitted_params.merge(uploading_user: @user))
-    # @case.original_case = @case.original_ico_appeal.original_case
 
     if @case.invalid?
       @result = :error
@@ -71,7 +70,7 @@ class CaseCreateService
 
   def flag_for_disclosure_if_required
     @case.save!
-    @flash_notice = "#{@case.type_abbreviation} case created<br/>Case number: #{@case.number}".html_safe
+    @flash_notice = "#{@case.decorate.type_abbreviation} case created<br/>Case number: #{@case.number}".html_safe
 
     if @permitted_params[:flag_for_disclosure_specialists] == 'yes'
       CaseFlagForClearanceService.new(
