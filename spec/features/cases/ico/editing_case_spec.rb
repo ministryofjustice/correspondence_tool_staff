@@ -52,8 +52,8 @@ feature 'editing an ICO case' do
     related_case_link = cases_show_page.ico.related_cases.linked_records.first
     expect(related_case_link.link).to have_text new_related_case.number
 
-    expect(cases_show_page.request.attachments.first.collection.first.filename.text)
-      .to eq 'new request.docx'
+    # expect(cases_show_page.request.attachments.first.collection.first.filename.text)
+    #   .to eq 'new request.docx'
   end
 
 end
