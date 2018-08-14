@@ -4,9 +4,9 @@ FactoryBot.define do
 
   factory :ico_sar_case, class: Case::ICO::SAR do
     transient do
-      creation_time   { 4.business_days.ago }
-      identifier      "new ICO SAR case based from a closed SAR case"
-      managing_team   { find_or_create :team_dacu }
+      creation_time  { 4.business_days.ago }
+      identifier     "new ICO SAR case based from a closed SAR case"
+      managing_team  { find_or_create :team_dacu }
       approving_team { find_or_create(:team_disclosure) }
     end
 
@@ -16,8 +16,8 @@ FactoryBot.define do
     sequence(:ico_officer_name) { |n| "#{identifier} ico officer name #{n}" }
     association :original_case, factory: :closed_sar
     received_date               { 0.business_days.ago }
-    external_deadline           { 20.business_days.after(0.business_days.ago).to_date }
-    internal_deadline           { 10.business_days.after(0.business_days.ago).to_date }
+    external_deadline           { 20.business_days.after(received_date) }
+    internal_deadline           { 10.business_days.before(external_deadline) }
     uploaded_request_files      { ["#{Faker::Internet.slug}.pdf"] }
     uploading_user              { find_or_create :manager }
     created_at                  { creation_time }

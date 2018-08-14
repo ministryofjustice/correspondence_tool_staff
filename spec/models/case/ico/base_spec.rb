@@ -77,8 +77,6 @@ describe Case::ICO::Base do
   end
 
   describe 'internal_deadline attribute' do
-    it { should validate_presence_of(:internal_deadline) }
-
     it "is assignable by year, month and day" do
       kase.internal_deadline_yyyy = '2018'
       kase.internal_deadline_mm   = '1'
@@ -86,24 +84,30 @@ describe Case::ICO::Base do
       expect(kase.internal_deadline).to eq Date.new(2018, 1, 12)
     end
 
-    it 'cannot be before than received_date' do
-      kase.update_attributes(
-        received_date: Date.today,
-        internal_deadline: Date.today - 1.day,
-      )
-      expect(kase).not_to be_valid
-      expect(kase.errors[:internal_deadline])
-        .to eq ['cannot be before date received']
-    end
+    context 'on update' do
+      let(:kase) { create(:ico_foi_case) }
 
-    it 'cannot be after than external_deadline' do
-      kase.update_attributes(
-        external_deadline: Date.today + 20.days,
-        internal_deadline: Date.today + 21.day,
-      )
-      expect(kase).not_to be_valid
-      expect(kase.errors[:internal_deadline])
-        .to eq ['cannot be after final deadline']
+      it { should validate_presence_of(:internal_deadline).on(:update) }
+
+      it 'cannot be before received_date' do
+        kase.update_attributes(
+          received_date: Date.today,
+          internal_deadline: Date.today - 1.day,
+        )
+        expect(kase).not_to be_valid
+        expect(kase.errors[:internal_deadline])
+          .to eq ['cannot be before date received']
+      end
+
+      it 'cannot be after than external_deadline' do
+        kase.update_attributes(
+          external_deadline: Date.today + 20.days,
+          internal_deadline: Date.today + 21.day,
+        )
+        expect(kase).not_to be_valid
+        expect(kase.errors[:internal_deadline])
+          .to eq ['cannot be after final deadline']
+      end
     end
   end
 

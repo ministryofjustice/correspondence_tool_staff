@@ -433,7 +433,7 @@ en:
 
   notices:
     case_cleared: "The Information Officer has been notified that the response is ready to send."
-    case_closed: You've closed this case
+    case_closed: "You've closed this case"
     closure_details_updated: You have updated the closure details for this case.
     response_uploaded: You have uploaded the response for this case.
     progress_for_clearance: The Disclosure team has been notified this case is ready for clearance
@@ -653,6 +653,7 @@ en:
         not_authorised: "You are not authorised to create \"%{type}\" correspondences"
       external_deadline: "Final deadline"
       external_deadline_copy: "For example, 01 02 2018"
+      internal_deadline: Draft deadline
       heading: Add case details
       received_date: Date received at MOJ
       received_date_copy: "For example, 01 02 2018"
@@ -686,7 +687,7 @@ en:
 
 
     ico:
-      new_form:
+      form:
         uploaded_request_files: Upload relevant files (optional)
     select_type:
       heading: Choose correspondence type

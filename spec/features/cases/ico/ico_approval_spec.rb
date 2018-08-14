@@ -15,7 +15,7 @@ feature 'cases requiring clearance by disclosure specialist' do
 
 
   scenario 'taking_on and undoing a case as a disclosure specialist', js: true do
-    kase = create :accepted_ico_foi_case, :flagged,
+    kase = create :accepted_ico_foi_case,
                   approving_team: team_dacu_disclosure
 
     login_as disclosure_specialist

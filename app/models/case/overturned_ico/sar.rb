@@ -14,6 +14,9 @@ class Case::OverturnedICO::SAR < Case::OverturnedICO::Base
   ]
 
   def self.type_abbreviation
+    # This string is used when constructing paths or methods in other parts of
+    # the system. Ensure that it does not come from a user-supplied parameter,
+    # and does not contain special chars like slashes, etc.
     'OVERTURNED_SAR'
   end
 

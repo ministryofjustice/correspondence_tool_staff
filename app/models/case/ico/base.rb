@@ -31,9 +31,10 @@ class Case::ICO::Base < Case::Base
   validates :external_deadline, presence: true
   validate :external_deadline_within_limits?,
            if: -> { external_deadline.present? }
-  validates :internal_deadline, presence: true
+  validates :internal_deadline, presence: true, on: :update
   validate :internal_deadline_within_limits?,
-           if: -> { internal_deadline.present? }
+           if: -> { internal_deadline.present? },
+           on: :update
   validates_presence_of :original_case
   validates :received_date, presence: true
   validate :received_date_within_limits?,
@@ -57,6 +58,9 @@ class Case::ICO::Base < Case::Base
     end
 
     def type_abbreviation
+      # This string is used when constructing paths or methods in other parts of
+      # the system. Ensure that it does not come from a user-supplied parameter,
+      # and does not contain special chars like slashes, etc.
       'ICO'
     end
   end
@@ -152,7 +156,7 @@ class Case::ICO::Base < Case::Base
     # For ICOs deadlines are manually set and don't need to be automatically
     # calculated. So this method called by a before_update hook in Case::Base
     # becomes a nop.
-    nil
+    self.internal_deadline ||= deadline_calculator.internal_deadline
   end
 
   def update_deadlines

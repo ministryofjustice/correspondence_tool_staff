@@ -372,11 +372,14 @@ describe SearchQuery do
                                     user_id: disclosure_specialist.id,
                                     search_text: 'ico',
                                     filter_case_type: ['ico-appeal']
-              expect(search_query.results).to eq [@setup.ico_foi_unassigned,
-                                                  @setup.ico_foi_awaiting_responder,
-                                                  @setup.ico_foi_accepted,
-                                                  @setup.ico_sar_pending_dacu_clearance
-                                                 ]
+              expect(search_query.results)
+                .to eq [@setup.ico_foi_unassigned,
+                        @setup.ico_foi_awaiting_responder,
+                        @setup.ico_foi_accepted,
+                        @setup.ico_sar_unassigned,
+                        @setup.ico_sar_awaiting_responder,
+                        @setup.ico_sar_accepted,
+                        @setup.ico_sar_pending_dacu_clearance]
             end
           end
 

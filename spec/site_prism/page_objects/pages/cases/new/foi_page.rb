@@ -3,6 +3,8 @@ module PageObjects
     module Cases
       module New
         class FOIPage < PageObjects::Pages::Base
+          include SitePrism::Support::DropInDropzone
+
           set_url '/cases/new/foi'
 
           section :primary_navigation,

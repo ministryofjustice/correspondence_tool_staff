@@ -69,9 +69,12 @@ describe Case::BasePolicy::Scope do
       end
 
       context 'approvers' do
-        it 'returns all FOI cases and no SAR cases' do
+        it 'returns FOI cases and any case assigned to approver/team' do
           approver_scope = described_class.new(@approver, Case::Base.all).resolve
-          expect(approver_scope).to match_array(@existing_foi_cases)
+          # ICO Appeals are always trigger, so they get assigned to an approver
+          expect(approver_scope).to match_array(
+                                      @existing_foi_cases + [@ico_sar_case]
+                                    )
         end
       end
 

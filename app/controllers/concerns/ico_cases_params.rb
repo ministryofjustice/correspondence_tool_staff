@@ -17,29 +17,14 @@ module ICOCasesParams
       :original_case_id,
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :external_deadline_dd, :external_deadline_mm, :external_deadline_yyyy,
+      :internal_deadline_dd, :internal_deadline_mm, :internal_deadline_yyyy,
       related_case_ids: [],
       uploaded_request_files: [],
     )
   end
 
   def edit_ico_params
-    case_params = params.require(:case_ico)
-
-    if case_params[:original_case_ids].present?
-      case_params[:original_case_id] = case_params.delete(:original_case_ids).first
-    end
-
-    case_params.permit(
-      :ico_officer_name,
-      :ico_reference_number,
-      :message,
-      :original_case_id,
-      :received_date_dd, :received_date_mm, :received_date_yyyy,
-      :internal_deadline_dd, :internal_deadline_mm, :internal_deadline_yyyy,
-      :external_deadline_dd, :external_deadline_mm, :external_deadline_yyyy,
-      related_case_ids: [],
-      uploaded_request_files: [],
-    )
+    create_ico_params
   end
 
   def process_new_linked_cases_for_params

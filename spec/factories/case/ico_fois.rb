@@ -16,8 +16,8 @@ FactoryBot.define do
     sequence(:ico_officer_name) { |n| "#{identifier} ico officer name #{n}" }
     association :original_case, factory: :closed_case
     received_date               { 0.business_days.ago }
-    external_deadline           { 20.business_days.after(0.business_days.ago).to_date }
-    internal_deadline           { 10.business_days.after(0.business_days.ago).to_date }
+    external_deadline           { 20.business_days.after(received_date) }
+    internal_deadline           { 10.business_days.before(external_deadline) }
     uploaded_request_files      { ["#{Faker::Internet.slug}.pdf"] }
     uploading_user              { find_or_create :manager }
     created_at                  { creation_time }

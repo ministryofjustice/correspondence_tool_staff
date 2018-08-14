@@ -88,28 +88,28 @@ describe 'cases/new.html.slim', type: :view do
 
       cases_new_ico_page.load(rendered)
 
-      page = cases_new_ico_page
+      form = cases_new_ico_page.form
 
-      expect(page).to have_ico_officer_name
-      expect(page).to have_ico_reference_number
-      expect(page).to have_original_case_number
-      expect(page).to have_link_original_case
-      expect(page).to have_related_case_number
-      expect(page).to have_link_related_case
+      expect(form).to have_ico_officer_name
+      expect(form).to have_ico_reference_number
+      expect(form).to have_original_case_number
+      expect(form).to have_link_original_case
+      expect(form).to have_related_case_number
+      expect(form).to have_link_related_case
 
-      expect(page).to have_date_received_day
-      expect(page).to have_date_received_month
-      expect(page).to have_date_received_year
+      expect(form).to have_date_received_day
+      expect(form).to have_date_received_month
+      expect(form).to have_date_received_year
 
-      expect(page).to have_external_deadline_day
-      expect(page).to have_external_deadline_month
-      expect(page).to have_external_deadline_year
+      expect(form).to have_external_deadline_day
+      expect(form).to have_external_deadline_month
+      expect(form).to have_external_deadline_year
 
-      expect(page).to have_no_subject
-      expect(page).to have_case_details
+      expect(form).to have_case_details
 
-      expect(page).to have_dropzone_container
-      expect(page.dropzone_container['data-max-filesize-in-mb']).to eq Settings.max_attachment_file_size_in_MB.to_s
+      expect(form).to have_dropzone_container
+      expect(form.dropzone_container['data-max-filesize-in-mb'])
+        .to eq Settings.max_attachment_file_size_in_MB.to_s
     end
   end
 end

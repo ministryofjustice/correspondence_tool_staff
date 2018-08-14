@@ -3,6 +3,8 @@ module PageObjects
     module Cases
       module New
         class SARPage < PageObjects::Pages::Base
+          include SitePrism::Support::DropInDropzone
+
           set_url '/cases/new/sar'
 
           section :primary_navigation,
