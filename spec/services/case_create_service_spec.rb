@@ -101,9 +101,10 @@ describe CaseCreateService do
   end
 
   context 'ICO case' do
-    let(:received) { 0.business_days.from_now }
-    let(:deadline) { 28.business_days.from_now }
-    let(:foi)      { create :closed_case }
+    let(:received)          { 0.business_days.ago }
+    let(:deadline)          { 28.business_days.after(received) }
+    let(:internal_deadline) { 10.business_days.before(deadline) }
+    let(:foi)               { create :closed_case }
     let(:params) do
       ActionController::Parameters.new(
       { 'case_ico' => {
@@ -118,6 +119,9 @@ describe CaseCreateService do
           'external_deadline_dd'    => deadline.day.to_s,
           'external_deadline_mm'    => deadline.month.to_s,
           'external_deadline_yyyy'  => deadline.year.to_s,
+          'internal_deadline_dd'    => internal_deadline.day.to_s,
+          'internal_deadline_mm'    => internal_deadline.month.to_s,
+          'internal_deadline_yyyy'  => internal_deadline.year.to_s,
           'message'                 => 'AAAAA'
         }
       })

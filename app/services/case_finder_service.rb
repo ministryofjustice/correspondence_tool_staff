@@ -64,6 +64,10 @@ class CaseFinderService
   end
 
   def incoming_approving_cases_scope
+    # NB: This scope has the potential to return duplicate cases when there's
+    # multiple approver assignments. Given that that's not meant to happen in
+    # production, so far as we know, I'm leaving off any 'uniq' constraint to
+    # surface miss-configuration in tests.
     scope
       .flagged_for_approval(*user.approving_team)
       .unaccepted.by_deadline

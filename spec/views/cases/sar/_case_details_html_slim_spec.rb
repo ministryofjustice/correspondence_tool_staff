@@ -93,10 +93,11 @@ describe 'cases/sar/case_details.html.slim', type: :view do
     it 'displays as original case' do
       assign(:case, ico_case)
       render partial: 'cases/sar/case_details.html.slim',
-               locals:{ case_details: ico_case.original_case.decorate}
+             locals: { case_details: ico_case.original_case.decorate,
+                       link_type: 'original' }
 
       partial = case_details_section(rendered)
-      expect(partial.section_heading.text).to eq "Original case details"
+      expect(partial.original_section_heading.text).to eq "Original case details"
     end
 
     it 'displays a link to original case' do

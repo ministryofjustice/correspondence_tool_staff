@@ -4,6 +4,8 @@ module PageObjects
       class CaseDetailsSection < SitePrism::Section
 
         element :section_heading, '.case-details .request--heading'
+        element :original_section_heading,
+                '.original-case-details .request--heading'
 
         section :foi_basic_details, '.foi-basic-details' do
 

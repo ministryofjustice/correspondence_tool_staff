@@ -24,6 +24,9 @@ describe CasesController do
     }
   end
   let(:foi_case_for_ico) { create :closed_case }
+  let(:ico_received_date)     { 0.business_days.ago }
+  let(:ico_external_deadline) { 20.business_days.after(ico_received_date) }
+  let(:ico_internal_deadline) { 10.business_days.before(ico_external_deadline) }
   let(:ico_params) do
     {
       correspondence_type: 'ico',
@@ -32,18 +35,22 @@ describe CasesController do
         ico_officer_name: 'Ian C. Oldman',
         ico_reference_number: 'ICOREF1',
         message: 'ICO appeal for an FOI message',
-        received_date_dd: Time.zone.today.day.to_s,
-        received_date_mm: Time.zone.today.month.to_s,
-        received_date_yyyy: Time.zone.today.year.to_s,
-        external_deadline_dd: 20.business_days.from_now.day.to_s,
-        external_deadline_mm: 20.business_days.from_now.month.to_s,
-        external_deadline_yyyy: 20.business_days.from_now.year.to_s,
+        received_date_dd: ico_received_date.day.to_s,
+        received_date_mm: ico_received_date.month.to_s,
+        received_date_yyyy: ico_received_date.year.to_s,
+        internal_deadline_dd: ico_internal_deadline.day.to_s,
+        internal_deadline_mm: ico_internal_deadline.month.to_s,
+        internal_deadline_yyyy: ico_internal_deadline.year.to_s,
+        external_deadline_dd: ico_external_deadline.day.to_s,
+        external_deadline_mm: ico_external_deadline.month.to_s,
+        external_deadline_yyyy: ico_external_deadline.year.to_s,
         uploaded_request_files: ['uploads/71/request/request.pdf'],
       }
     }
   end
-  let(:ico_sar_case)        { create :ico_sar_case}
-  let(:deadline)            { 1.month.ago }
+  let(:ico_sar_case)      { create :ico_sar_case}
+  let(:deadline)          { 1.month.ago }
+  let(:internal_deadline) { 20.business_days.before(deadline) }
   let(:overturned_ico_params) do
     {
       action: 'create',
@@ -254,8 +261,9 @@ describe CasesController do
           expect(created_case.ico_officer_name).to eq 'Ian C. Oldman'
           expect(created_case.subject).to eq foi_case_for_ico.subject
           expect(created_case.message).to eq 'ICO appeal for an FOI message'
-          expect(created_case.received_date).to eq Time.zone.today
-          expect(created_case.external_deadline).to eq 20.business_days.from_now.to_date
+          expect(created_case.received_date).to eq ico_received_date.to_date
+          expect(created_case.internal_deadline).to eq ico_internal_deadline.to_date
+          expect(created_case.external_deadline).to eq ico_external_deadline.to_date
         end
 
         it 'displays a flash message' do
