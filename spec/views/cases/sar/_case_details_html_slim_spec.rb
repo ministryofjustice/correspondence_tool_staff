@@ -17,7 +17,8 @@ describe 'cases/sar/case_details.html.slim', type: :view do
     it 'displays the initial case details (non third party case' do
       assign(:case, unassigned_case)
       render partial: 'cases/sar/case_details.html.slim',
-             locals:{ case_details: unassigned_case}
+             locals: { case_details: unassigned_case,
+                       link_type: nil }
 
       partial = case_details_section(rendered).sar_basic_details
 
@@ -36,7 +37,8 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       third_party_case = (create :sar_case, :third_party, name: 'Rick Westor').decorate
       assign(:case, third_party_case)
       render partial: 'cases/sar/case_details.html.slim',
-             locals:{ case_details: third_party_case}
+             locals: { case_details: third_party_case,
+                       link_type: nil }
       partial = case_details_section(rendered).sar_basic_details
       expect(partial.third_party.data.text).to eq 'Yes'
       expect(partial.requester_name.data.text).to eq 'Rick Westor'
@@ -50,7 +52,8 @@ describe 'cases/sar/case_details.html.slim', type: :view do
 
       assign(:case, unassigned_case)
       render partial: 'cases/sar/case_details.html.slim',
-             locals:{ case_details: unassigned_case}
+             locals: { case_details: unassigned_case,
+                       link_type: nil }
 
       partial = case_details_section(rendered).sar_basic_details
 
@@ -64,7 +67,8 @@ describe 'cases/sar/case_details.html.slim', type: :view do
 
       assign(:case, unassigned_case)
       render partial: 'cases/sar/case_details.html.slim',
-             locals:{ case_details: unassigned_case}
+             locals:{ case_details: unassigned_case,
+                      link_type: nil }
 
       partial = case_details_section(rendered).sar_basic_details
 
@@ -77,7 +81,8 @@ describe 'cases/sar/case_details.html.slim', type: :view do
     it 'displays the responders team name' do
       assign(:case, accepted_case)
       render partial: 'cases/sar/case_details.html.slim',
-             locals:{ case_details: accepted_case}
+             locals:{ case_details: accepted_case,
+                      link_type: nil }
 
       partial = case_details_section(rendered).responders_details
 
@@ -103,7 +108,8 @@ describe 'cases/sar/case_details.html.slim', type: :view do
     it 'displays a link to original case' do
       assign(:case, ico_case)
       render partial: 'cases/sar/case_details.html.slim',
-               locals:{ case_details: ico_case.original_case.decorate}
+             locals: { case_details: ico_case.original_case.decorate,
+                       link_type: nil }
 
       partial = case_details_section(rendered)
       expect(partial).to have_view_original_case_link

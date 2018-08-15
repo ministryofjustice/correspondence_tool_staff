@@ -9,7 +9,8 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       assign(:case, ico_foi_case)
       login_as create(:manager)
       render partial: 'cases/ico/case_details.html.slim',
-             locals:{ case_details: ico_foi_case}
+             locals: { case_details: ico_foi_case,
+                       link_type: nil }
     end
 
     it 'displays edit case link' do
@@ -23,7 +24,8 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       assign(:case, ico_foi_case)
       login_as create(:manager)
       render partial: 'cases/ico/case_details.html.slim',
-             locals:{ case_details: ico_foi_case}
+             locals: { case_details: ico_foi_case,
+                       link_type: nil }
 
       partial = ico_case_details_section(rendered)
       expect(partial.case_type).to have_no_ico_trigger
@@ -43,7 +45,8 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       assign(:case, accepted_case)
       login_as create(:manager)
       render partial: 'cases/ico/case_details.html.slim',
-             locals:{ case_details: accepted_case}
+             locals: { case_details: accepted_case,
+                       link_type: nil }
 
       partial = case_details_section(rendered).responders_details
 

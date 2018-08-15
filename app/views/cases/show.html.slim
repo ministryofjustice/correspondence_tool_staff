@@ -70,7 +70,8 @@ div id="case-#{@correspondence_type_key}" class="case"
     = render partial: 'cases/case_request', locals: {case_details: @case}
 
   section.case-info
-    = render partial: "cases/#{@case.type_abbreviation.downcase}/case_details", locals: {case_details: @case}
+    = render partial: "cases/#{@case.type_abbreviation.downcase}/case_details",
+             locals: { case_details: @case, link_type: nil }
 
   section.case-info
     = render partial: 'cases/clearance_levels', locals: { case_details: @case }

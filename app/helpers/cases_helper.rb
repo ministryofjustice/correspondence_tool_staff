@@ -226,4 +226,12 @@ module CasesHelper
     TranslateForCase.translate(*args, **options)
   end
   alias t4c translate_for_case
+
+  def case_details_for_link_type(link_type)
+    if link_type.present?
+      "#{link_type}-case-details"
+    else
+      'case-details'
+    end
+  end
 end
