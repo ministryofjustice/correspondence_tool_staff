@@ -707,6 +707,7 @@ en:
     ico:
       close_form:
         close_date: Date response sent
+        date_ico_decision_received_date: Date decision was received at MoJ
         date_example: For example, 30 1 2017
       form:
         uploaded_request_files: Upload relevant files (optional)
@@ -738,10 +739,7 @@ en:
       close_form:
         close_date: Date response sent
         date_example: For example, 30 1 2017
-    ico:
-      close_form:
-        date_ico_decision_received_date: Date decision was received at MoJ
-        date_example: For example, 30 1 2017
+
     sar:
       new_form_common:
         dropzone: "Requestor's proof of ID and other documents"
