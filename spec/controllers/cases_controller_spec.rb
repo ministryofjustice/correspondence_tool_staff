@@ -251,7 +251,7 @@ RSpec.describe CasesController, type: :controller do
           expect(ActionNotificationsMailer)
             .to have_received(:notify_team)
                   .with(sar.managing_team, sar, :case_closed)
-          end
+        end
 
         def sar_closure_params(sar)
           date_responded = 3.days.ago
