@@ -204,6 +204,7 @@ en:
   event:
     accept_approver_assignment: Clearance level added
     accept_responder_assignment: Accepted by Business unit
+    add_message_to_case: Message added - see messages section above
     add_response_to_flagged_case: Response uploaded
     add_response_to_flagged_case_and_approve: Response uploaded and cleared
     add_responses: Response uploaded
