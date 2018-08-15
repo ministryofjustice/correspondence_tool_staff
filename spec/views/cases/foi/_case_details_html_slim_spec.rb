@@ -23,7 +23,8 @@ describe 'cases/foi/case_details.html.slim', type: :view do
     it 'displays the initial case details' do
       assign(:case, unassigned_case)
       render partial: 'cases/foi/case_details.html.slim',
-             locals:{ case_details: unassigned_case}
+             locals: { case_details: unassigned_case,
+                       link_type: nil }
 
       partial = case_details_section(rendered).foi_basic_details
 
@@ -59,7 +60,8 @@ describe 'cases/foi/case_details.html.slim', type: :view do
       trigger_case
       assign(:case, trigger_case)
       render partial: 'cases/foi/case_details.html.slim',
-                   locals:{ case_details: trigger_case}
+             locals: { case_details: trigger_case,
+                       link_type: nil }
 
       partial = case_details_section(rendered).foi_basic_details
 
@@ -74,7 +76,8 @@ describe 'cases/foi/case_details.html.slim', type: :view do
       unassigned_case.email = nil
       assign(:case, unassigned_case)
       render partial: 'cases/foi/case_details.html.slim',
-            locals:{ case_details: unassigned_case}
+             locals: { case_details: unassigned_case,
+                       link_type: nil }
 
       partial = case_details_section(rendered).foi_basic_details
 
@@ -86,7 +89,8 @@ describe 'cases/foi/case_details.html.slim', type: :view do
       unassigned_case.postal_address = nil
       assign(:case, unassigned_case)
       render partial: 'cases/foi/case_details.html.slim',
-             locals:{ case_details: unassigned_case}
+             locals: { case_details: unassigned_case,
+                       link_type: nil }
 
       partial = case_details_section(rendered).foi_basic_details
 
@@ -99,7 +103,8 @@ describe 'cases/foi/case_details.html.slim', type: :view do
     it 'displays the responders team name' do
       assign(:case, accepted_case)
       render partial: 'cases/foi/case_details.html.slim',
-             locals:{ case_details: accepted_case}
+             locals:{ case_details: accepted_case,
+                      link_type: nil }
 
       partial = case_details_section(rendered).responders_details
 
@@ -115,7 +120,8 @@ describe 'cases/foi/case_details.html.slim', type: :view do
       closed_case
       assign(:case, closed_case)
       render partial: 'cases/foi/case_details.html.slim',
-             locals:{ case_details: closed_case}
+             locals: { case_details: closed_case,
+                       link_type: nil }
 
       partial = case_details_section(rendered).response_details
       expect(partial.date_responded.data.text).to eq closed_case.date_sent_to_requester

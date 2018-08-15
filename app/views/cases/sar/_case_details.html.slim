@@ -1,11 +1,9 @@
 .grid-row
-  - link_type_prefix = defined?(link_type) && link_type.present? ? "#{link_type}-" : ""
-  / div class="column-full case-details"
-  div class="column-full #{link_type_prefix}case-details"
+  div class="column-full #{case_details_for_link_type(link_type)}"
     h2.request--heading
       / i18n-tasks-use t('common.case.case-details')
       / i18n-tasks-use t('common.case.original-case-details')
-      = translate_for_case(case_details, 'common', "#{link_type_prefix}case-details")
+      = translate_for_case(case_details, 'common', case_details_for_link_type(link_type))
 
     table
       tbody.sar-basic-details

@@ -212,4 +212,14 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
       expect(result).to eq "#{edit_case_link}#{edit_closure_link}"
     end
   end
+
+  describe '#case_details_for_link_type' do
+    it 'returns case-details for empty link type' do
+      expect(case_details_for_link_type(nil)).to eq 'case-details'
+    end
+
+    it 'returns original-case-details for original link types' do
+      expect(case_details_for_link_type('original')).to eq 'original-case-details'
+    end
+  end
 end
