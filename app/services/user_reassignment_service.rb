@@ -10,10 +10,8 @@ class UserReassignmentService
     @kase                   = assignment.case
     @target_user            = target_user
     @acting_user            = acting_user
-    @target_team            = target_team || @assignment.case
-                                                 .team_for_user(@target_user)
-    @acting_team            = acting_team || @assignment.case
-                                                 .team_for_user(@acting_user)
+    @target_team            = target_team || get_team_for_user_and_case_with_role(@assignment.team.role, @target_user)
+    @acting_team            = acting_team || get_user_team(@acting_user)
     @result = :incomplete
   end
 
@@ -43,6 +41,20 @@ class UserReassignmentService
   end
 
   private
+
+  def get_team_for_user_and_case_with_role(role, user)
+    teams = @kase.teams.where(role: role) & user.teams.where(role: role)
+    raise "Unable to allocate acting team with role #{role} to user #{user.id}" if teams.empty?
+    teams.first
+  end
+
+  def get_user_team(user)
+    team = nil
+    %i{ responder manager approver }.each do |role|
+      team = @assignment.case.team_for_unassigned_user(user, role) if team.nil?
+    end
+    team
+  end
 
   def notify_target_user
 

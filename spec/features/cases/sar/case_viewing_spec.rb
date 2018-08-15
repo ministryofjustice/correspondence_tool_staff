@@ -66,7 +66,6 @@ feature 'viewing SAR cases' do
       login_as responder
 
       cases_show_page.load id: kase.id
-
       expect(cases_show_page.request).to have_message
       expect(cases_show_page.request.message.text)
         .to eq kase.message
