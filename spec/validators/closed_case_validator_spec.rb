@@ -409,6 +409,8 @@ describe 'ClosedCaseValidator' do
 
     context 'ico_decision' do
 
+      before(:each)  { responded_ico.update(date_ico_decision_received: Date.today, ico_decision: 'upheld') }
+
       context 'blank' do
         it 'is invalid' do
           responded_ico.ico_decision = nil
@@ -427,7 +429,6 @@ describe 'ClosedCaseValidator' do
 
       context 'just right' do
         it 'is valid' do
-          responded_ico.ico_decision = 'overturned'
           expect(responded_ico).to be_valid
         end
       end
@@ -436,6 +437,8 @@ describe 'ClosedCaseValidator' do
 
 
     context 'date_ico_decision_received' do
+
+      before(:each)   { responded_ico.ico_decision = 'upheld' }
 
       context 'blank' do
         it 'is invalid' do
