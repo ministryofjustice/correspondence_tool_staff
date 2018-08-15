@@ -39,7 +39,7 @@ module ConfigurableStateMachine
 
 
     def state_machine(org:, case_type:, workflow:, kase:)
-      workflow_config = @state_machines[org].case_types[case_type].workflows[workflow]
+      workflow_config = @state_machines[org].case_types[case_type.parameterize.underscore].workflows[workflow]
       Machine.new(config: workflow_config, kase: kase)
     end
 

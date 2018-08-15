@@ -103,6 +103,14 @@ class Case::ICO::Base < Case::Base
           )
   end
 
+  def ico?
+    true
+  end
+
+  def current_team_and_user_resolver
+    CurrentTeamAndUser::ICO::Trigger.new(self)
+  end
+
   private
 
   def default_workflow

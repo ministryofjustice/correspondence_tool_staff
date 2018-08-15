@@ -117,7 +117,7 @@ describe 'CurrentTeamAndUserService' do
         service
       }.to raise_error(
              RuntimeError,
-             'State of_disbelief unrecognised by CurrentTeamAndUser::FOI::Standard'
+             'State of_disbelief unrecognised by CurrentTeamAndUser::Base'
            )
     end
   end
