@@ -1004,6 +1004,7 @@ case_types:
                 respond_and_close:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
+                  after_transition: Workflows::Hooks#notify_managing_team_case_closed
                 respond:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 close:
@@ -1137,6 +1138,7 @@ case_types:
                 respond_and_close:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
+                  after_transition: Workflows::Hooks#notify_managing_team_case_closed
                 respond:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 close:
