@@ -45,7 +45,7 @@ module CaseStates
 
   def respond(current_user)
     ActiveRecord::Base.transaction do
-      state_machine.respond!(acting_user: current_user, acting_team: self.team_for_user(current_user))
+      state_machine.respond!(acting_user: current_user, acting_team: self.team_for_user(current_user, :responder))
     end
   end
 

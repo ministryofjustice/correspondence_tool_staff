@@ -4,11 +4,11 @@ class CaseAttachmentUploadGroup
 
   attr_reader :user, :collection, :timestamp, :team_name
 
-  def initialize(array_of_time_and_user_id, kase, collection)
+  def initialize(array_of_time_and_user_id, role, kase, collection)
     @timestamp = get_time(array_of_time_and_user_id.first)
     @user = User.find(array_of_time_and_user_id.last)
     @collection = collection.to_a
-    team = kase.team_for_user(@user)
+    team = kase.team_for_user(@user, role)
     @team_name = team.nil? ? '' : team.name
 
   end
