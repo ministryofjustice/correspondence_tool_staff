@@ -238,12 +238,19 @@ RSpec.describe CasesController, type: :controller do
           CaseClosure::MetadataSeeder.unseed!
         end
 
+        before do
+          allow(ActionNotificationsMailer).to receive(:notify_team)
+        end
+
         it "closes a case that has been responded to" do
           sign_in responder
           patch :process_respond_and_close, params: sar_closure_params(sar)
           expect(Case::SAR.first.current_state).to eq 'closed'
           expect(Case::SAR.first.refusal_reason_id).to eq CaseClosure::RefusalReason.tmm.id
           expect(Case::SAR.first.date_responded).to eq 3.days.ago.to_date
+          expect(ActionNotificationsMailer)
+            .to have_received(:notify_team)
+                  .with(sar.managing_team, sar, :case_closed)
         end
 
         def sar_closure_params(sar)
