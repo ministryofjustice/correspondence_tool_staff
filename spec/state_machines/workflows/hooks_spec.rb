@@ -7,14 +7,15 @@ describe Workflows::Hooks do
 
   describe '#notify_managing_team_case_closed' do
     before do
-      allow(ActionNotificationsMailer).to receive(:notify_team)
+      allow(ActionNotificationsMailer).to receive_message_chain(:notify_team,
+                                                                :deliver_later)
     end
 
     it 'sends a notification' do
       workflow.notify_managing_team_case_closed
       expect(ActionNotificationsMailer)
         .to have_received(:notify_team)
-              .with(kase.managing_team, kase, :case_closed)
+              .with(kase.managing_team, kase, 'Case closed')
     end
   end
 end
