@@ -239,7 +239,8 @@ RSpec.describe CasesController, type: :controller do
         end
 
         before do
-          allow(ActionNotificationsMailer).to receive(:notify_team)
+          allow(ActionNotificationsMailer).to receive_message_chain(:notify_team,
+                                                                    :deliver_later)
         end
 
         it "closes a case that has been responded to" do
@@ -250,7 +251,7 @@ RSpec.describe CasesController, type: :controller do
           expect(Case::SAR.first.date_responded).to eq 3.days.ago.to_date
           expect(ActionNotificationsMailer)
             .to have_received(:notify_team)
-                  .with(sar.managing_team, sar, :case_closed)
+                  .with(sar.managing_team, sar, 'Case closed')
         end
 
         def sar_closure_params(sar)
