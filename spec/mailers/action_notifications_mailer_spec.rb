@@ -193,6 +193,42 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
     end
   end
 
+  describe 'notify_team' do
+    let(:kase)   { create :closed_sar,
+                          name: 'Semyon Aleksandrovich Romanov',
+                          received_date: 10.business_days.ago,
+                          subject: 'Lightness of not being' }
+    let(:assignment)      { approved_case.responder_assignment }
+    let(:responding_team) { assignment.team }
+    let(:responder)       { approved_case.responder }
+    let(:managing_team)   { kase.managing_team }
+    let(:mail)            { described_class.notify_team(managing_team,
+                                                        kase,
+                                                        'Case closed')}
+
+    it 'personalises the email' do
+      # allow(CaseNumberCounter).to receive(:next_for_date).and_return(333)
+      expect(mail.govuk_notify_personalisation)
+        .to eq({
+         email_subject:
+           "Case closed - SAR - #{kase.number} - Lightness of not being",
+         name: managing_team.name,
+         case_current_state: 'closed',
+         case_number: kase.number,
+         case_abbr: 'SAR',
+         case_received_date: kase.received_date.strftime(Settings.default_date_format),
+         case_subject: 'Lightness of not being',
+         case_link: case_url(kase.id),
+         case_draft_deadline: kase.internal_deadline.strftime(Settings.default_date_format),
+         case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format)
+         })
+    end
+
+    it 'sets the To address to the email of the team' do
+      expect(mail.to).to include managing_team.email
+    end
+  end
+
   describe 'case_assigned_to_another_user' do
     let(:accepted_case)   { create :accepted_case,
                                    name: 'Fyodor Ognievich Ilichion',
