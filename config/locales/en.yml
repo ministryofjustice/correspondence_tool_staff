@@ -218,9 +218,11 @@ en:
     add_response_to_flagged_case_and_approve: Response uploaded and cleared
     add_responses: Response uploaded
     approve: Response cleared
+    approve_and_bypass: Cleared - further clearance not required
     assign_responder: Assign responder
     assign_to_new_team: Assign to new team
     close: Case closed
+    destroy_case: Case deleted
     edit_case: Case details edited
     extend_for_pit: Extended for Public Interest Test (PIT)
     link_a_case: Case linked
@@ -228,6 +230,7 @@ en:
     reassign_user: Reassign user
     reject_responder_assignment: Rejected by Business unit
     remove_last_response: File removed
+    remove_linked_case: Linked case removed
     remove_response: File removed
     request_amends: Request amends
     request_further_clearance: Request further clearance
@@ -235,9 +238,10 @@ en:
     take_on_for_approval: Clearance level added
     unaccept_approver_assignment: Clearance level removed
     unflag_for_clearance: Clearance level removed
+    update_closure: Closure details edited
     upload_response_and_approve: Response uploaded and cleared
-    upload_response_approve_and_bypass: Response uploaded and cleared - further clearance not required
     upload_response_and_return_for_redraft: Changes uploaded for redraft
+    upload_response_approve_and_bypass: Response uploaded and cleared - further clearance not required
     case/ico:
       respond: Response sent to ICO
 
