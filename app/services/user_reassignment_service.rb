@@ -50,7 +50,7 @@ class UserReassignmentService
 
   def get_user_team(user)
     team = nil
-    %i{ responder manager approver }.each do |role|
+    %i{ responder approver manager }.each do |role|
       team = @assignment.case.team_for_unassigned_user(user, role) if team.nil?
     end
     team
