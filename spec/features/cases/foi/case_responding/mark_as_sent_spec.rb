@@ -58,7 +58,12 @@ feature 'Mark response as sent' do
 
       cases_show_page.actions.mark_as_sent.click
 
-      expect(cases_respond_page).to be_displayed(kase.id)
+      cases_respond_page.fill_in_date_responded(Date.today)
+
+      cases_respond_page.submit_button.click
+
+      expect(cases_show_page).
+          to have_content('The response has been marked as sent.')
     end
   end
 end
