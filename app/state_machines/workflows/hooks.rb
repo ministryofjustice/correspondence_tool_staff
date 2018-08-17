@@ -20,8 +20,6 @@ class Workflows::Hooks
   end
 
   def notify_managing_team_case_closed
-    ActionNotificationsMailer
-        .notify_team(@kase.managing_team, @kase, 'Case closed')
-        .deliver_later
+    NotifyTeamService.new(@kase, 'Case closed').call
   end
 end
