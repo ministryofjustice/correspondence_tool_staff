@@ -3,6 +3,7 @@ require 'rails_helper'
 feature 'cases being reassigned to other team members' do
   include Features::Interactions
 
+  given(:user_with_multiple_roles) { create :approver_responder_manager, approving_team: approving_team }
   given(:responding_team)   { create :responding_team }
   given(:responder) { responding_team.responders.first }
   given(:another_responder) { create :responder,
@@ -51,6 +52,19 @@ feature 'cases being reassigned to other team members' do
     do_case_reassign_to another_approver
     go_to_case_reassign expected_users: nil
     do_case_reassign_to approver
+  end
+
+  scenario 'Approver with multiple roles assigns a case to another team member' do
+    another_approver
+    kase = create :case_being_drafted, :flagged_accepted,
+                                  approving_team: approving_team,
+                                  approver: user_with_multiple_roles,
+                                  responding_team: responding_team
+    login_as user_with_multiple_roles
+
+    cases_show_page.load(id: kase.id)
+    cases_show_page.actions.reassign_user.click
+    do_case_reassign_to another_approver
   end
 
   scenario 'Disclosure Specialist assigns a case to a team member' do
