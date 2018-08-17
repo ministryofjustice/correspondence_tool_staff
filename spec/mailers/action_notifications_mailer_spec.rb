@@ -213,13 +213,11 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
          email_subject:
            "Case closed - SAR - #{kase.number} - Lightness of not being",
          name: managing_team.name,
-         case_current_state: 'closed',
          case_number: kase.number,
          case_abbr: 'SAR',
          case_received_date: kase.received_date.strftime(Settings.default_date_format),
          case_subject: 'Lightness of not being',
          case_link: case_url(kase.id),
-         case_draft_deadline: kase.internal_deadline.strftime(Settings.default_date_format),
          case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format)
          })
     end

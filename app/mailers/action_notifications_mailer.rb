@@ -72,14 +72,12 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     set_personalisation(
       email_subject:          format_subject_type(kase, notification_type),
       name:                   team.name,
-      case_current_state:     I18n.t("state.#{kase.current_state}").downcase,
       case_number:            kase.number,
-      case_subject:           kase.subject,
       case_abbr:              kase.type_abbreviation,
+      case_subject:           kase.subject,
       case_received_date:     kase.received_date.strftime(Settings.default_date_format),
       case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format),
       case_link:              case_url(kase.id),
-      case_draft_deadline:    kase.internal_deadline.strftime(Settings.default_date_format)
     )
 
     mail(to: team.email)
