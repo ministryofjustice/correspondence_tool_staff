@@ -254,6 +254,19 @@ RSpec.describe CasesController, type: :controller do
                   .with(sar.managing_team, sar, 'Case closed')
         end
 
+        context 'not the assigned responder' do
+          it "does not progress the case" do
+            sign_in another_responder
+            patch :process_respond_and_close, params: sar_closure_params(sar)
+            expect(Case::SAR.first.current_state).to eq 'drafting'
+            expect(Case::SAR.first.date_responded).to be nil
+            expect(ActionNotificationsMailer)
+              .not_to have_received(:notify_team)
+                    .with(sar.managing_team, sar, 'Case closed')
+          end
+        end
+
+
         def sar_closure_params(sar)
           date_responded = 3.days.ago
           {
