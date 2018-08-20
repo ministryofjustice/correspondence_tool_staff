@@ -18,4 +18,8 @@ class Workflows::Hooks
   def notify_responder_ready_to_send
     NotifyResponderService.new(@kase, 'Ready to send').call if @kase.awaiting_dispatch?
   end
+
+  def notify_managing_team_case_closed
+    NotifyTeamService.new(@kase, 'Case closed').call
+  end
 end

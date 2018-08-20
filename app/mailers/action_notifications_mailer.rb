@@ -64,6 +64,25 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     mail(to: recipient.email)
   end
 
+  def notify_team(team, kase, notification_type)
+    RavenContextProvider.set_context
+
+    find_template(notification_type)
+
+    set_personalisation(
+      email_subject:          format_subject_type(kase, notification_type),
+      name:                   team.name,
+      case_number:            kase.number,
+      case_abbr:              kase.type_abbreviation,
+      case_subject:           kase.subject,
+      case_received_date:     kase.received_date.strftime(Settings.default_date_format),
+      case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format),
+      case_link:              case_url(kase.id),
+    )
+
+    mail(to: team.email)
+  end
+
   def case_assigned_to_another_user(kase,recipient)
     RavenContextProvider.set_context
 
@@ -96,6 +115,8 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
   def find_template(type)
     case type
+    when 'Case closed'
+      set_template(Settings.case_closed_notify_template)
     when 'Redraft requested'
       set_template(Settings.redraft_requested_notify_template)
     when 'Ready to send'
