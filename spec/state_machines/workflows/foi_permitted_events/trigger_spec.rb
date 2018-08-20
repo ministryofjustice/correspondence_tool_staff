@@ -240,8 +240,7 @@ describe ConfigurableStateMachine::Machine do
                                                                           :reassign_user,
                                                                           :remove_last_response,
                                                                           :remove_linked_case,
-                                                                          :remove_response,
-                                                                          :respond]
+                                                                          :remove_response]
           end
         end
 

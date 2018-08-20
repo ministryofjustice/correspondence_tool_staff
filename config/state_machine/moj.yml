@@ -252,7 +252,7 @@ case_types:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?
                    transition_to_using: Workflows::Conditionals#remove_response_next_state
                  respond:
-                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                   if: Workflows::Predicates#user_is_assigned_responder?
                    transition_to: responded
 
               responded:
@@ -529,7 +529,7 @@ case_types:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to_using: Workflows::Conditionals#remove_response_next_state
                 respond:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#user_is_assigned_responder?
                   transition_to: responded
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
@@ -894,7 +894,7 @@ case_types:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?
                    transition_to_using: Workflows::Conditionals#remove_response_next_state
                  respond:
-                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                   if: Workflows::Predicates#user_is_assigned_responder?
                    transition_to: responded
 
               responded:
@@ -908,7 +908,6 @@ case_types:
                 add_message_to_case:
                 link_a_case:
                 remove_linked_case:
-
 #########################################################################
 #                                                                       #
 #                               SAR                                     #
@@ -1002,13 +1001,13 @@ case_types:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 respond_and_close:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#user_is_assigned_responder?
                   transition_to: closed
                 respond:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#user_is_assigned_responder?
                 close:
                   after_transition: Workflows::Hooks#notify_managing_team_case_closed
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#user_is_assigned_responder?
                   transition_to: closed
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
@@ -1036,8 +1035,6 @@ case_types:
               drafting:
                 flag_for_clearance:
                   switch_workflow: trigger
-
-
 
       ###########################TRIGGER SAR ########################
       trigger:
@@ -1136,13 +1133,13 @@ case_types:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 respond_and_close:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#user_is_assigned_responder?
                   transition_to: closed
                 respond:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#user_is_assigned_responder?
                 close:
                   after_transition: Workflows::Hooks#notify_managing_team_case_closed
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#user_is_assigned_responder?
                   transition_to: closed
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?

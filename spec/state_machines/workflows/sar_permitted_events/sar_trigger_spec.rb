@@ -139,7 +139,7 @@ describe ConfigurableStateMachine::Machine do
 
 
 
-    context 'within assigned team' do
+    context 'responder within assigned team' do
 
       context 'awaiting responder state' do
         it 'should show permitted events' do
@@ -179,10 +179,7 @@ describe ConfigurableStateMachine::Machine do
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'awaiting_dispatch'
           expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                        :close,
-                                                                        :reassign_user,
-                                                                        :respond,
-                                                                        :respond_and_close]
+                                                                        :reassign_user]
         end
       end
 

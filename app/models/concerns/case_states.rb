@@ -44,7 +44,8 @@ module CaseStates
   end
 
   def respond(current_user)
-    team = find_team_to_respond(self, current_user)
+    role = self.ico? ? :approver : :responder
+    team = team_for_assigned_user(current_user, role)
     ActiveRecord::Base.transaction do
       state_machine.respond!(acting_user: current_user, acting_team: team)
     end
@@ -55,14 +56,6 @@ module CaseStates
   end
 
   private
-
-  def find_team_to_respond(kase, user)
-    if kase.ico?
-      team_for_assigned_user(user, :approver)
-    else
-      team_for_unassigned_user(user, :responder)
-    end
-  end
 
   def reset_state_machine
     @state_machine = nil
