@@ -44,8 +44,10 @@ module CaseStates
   end
 
   def respond(current_user)
+    role = self.ico? ? :approver : :responder
+    team = team_for_assigned_user(current_user, role)
     ActiveRecord::Base.transaction do
-      state_machine.respond!(acting_user: current_user, acting_team: self.team_for_user(current_user))
+      state_machine.respond!(acting_user: current_user, acting_team: team)
     end
   end
 

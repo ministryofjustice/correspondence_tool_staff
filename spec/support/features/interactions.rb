@@ -199,6 +199,7 @@ module Features
     def do_case_reassign_to(user)
       reassign_user_page.choose_assignment_user user
       reassign_user_page.confirm_button.click
+
       expect(cases_show_page).to be_displayed
       expect(cases_show_page.case_history.entries.first)
         .to have_text("re-assigned this case to #{user.full_name}")

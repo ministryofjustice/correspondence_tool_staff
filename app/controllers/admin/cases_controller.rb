@@ -18,6 +18,9 @@ class Admin::CasesController < AdminController
 
     @case = case_creator.new_case
     @selected_state = case_params[:target_state]
+    if @case.ico?
+      @case.original_case_id = create_original_case(@case)
+    end
     if @case.valid?
       case_creator.call([@selected_state], @case)
       flash[:notice] = "Case created: #{@case.number}"
@@ -94,55 +97,29 @@ class Admin::CasesController < AdminController
     render :new
   end
 
+  def prepare_new_ico
+    @correspondence_type_key = params[:correspondence_type]
+    case_class = correspondence_types_map[@correspondence_type_key.to_sym].first
+    @case = case_class.new
+
+    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::ICO::FOI' )
+    @case = case_creator.new_case
+    @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.ico).active.sample
+    @case.flag_for_disclosure_specialists = 'yes'
+    @target_states = available_target_states
+    @selected_state = 'drafting'
+    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
+    @case.approving_teams << BusinessUnit.dacu_disclosure
+
+    render :new
+  end
+
   def permitted_correspondence_types
-    @permitted_correspondence_types = [CorrespondenceType.foi, CorrespondenceType.sar]
+    @permitted_correspondence_types = [CorrespondenceType.foi, CorrespondenceType.sar, CorrespondenceType.ico]
   end
 
   def available_target_states
     CTS::Cases::Constants::CASE_JOURNEYS[@correspondence_type_key.to_sym].values.flatten.uniq.sort
-  end
-
-  def create_params(correspondence_type)
-    case correspondence_type
-    when 'foi' then create_foi_params
-    when 'sar' then create_sar_params
-    end
-  end
-
-  def create_foi_params
-    params.require(:case_foi).permit(
-      :type,
-      :requester_type,
-      :name,
-      :postal_address,
-      :email,
-      :subject,
-      :message,
-      :received_date_dd, :received_date_mm, :received_date_yyyy,
-      :delivery_method,
-      :target_state,
-      :flag_for_disclosure_specialists,
-      uploaded_request_files: [],
-    )
-  end
-
-  def create_sar_params
-    params.require(:case_sar).permit(
-      :email,
-      :flag_for_disclosure_specialists,
-      :message,
-      :name,
-      :postal_address,
-      :received_date_dd, :received_date_mm, :received_date_yyyy,
-      :requester_type,
-      :subject,
-      :subject_full_name,
-      :subject_type,
-      :third_party,
-      :reply_method,
-      :target_state,
-      uploaded_request_files: [],
-    ).merge(type: "Case::SAR")
   end
 
   def param_flag_for_ds?
@@ -185,6 +162,8 @@ class Admin::CasesController < AdminController
             Case::FOI::TimelinessReview,
             Case::FOI::ComplianceReview],
       sar: [Case::SAR],
+      ico: [Case::ICO::FOI,
+            Case::ICO::SAR]
     }.with_indifferent_access
   end
 
@@ -200,4 +179,22 @@ class Admin::CasesController < AdminController
     end
   end
 
+  def create_original_case(kase)
+    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: original_case_type(kase) )
+    kase = case_creator.new_case
+    if kase.valid?
+      case_creator.call(['closed'], kase)
+      return kase
+    end
+  end
+
+  def original_case_type(kase)
+    if kase.type == "Case::ICO::FOI"
+      'Case::FOI::Standard'
+    elsif kase.type == "Case::ICO::SAR"
+      'Case::SAR'
+    else
+      flash[:alert] = "no case type selected"
+    end
+  end
 end

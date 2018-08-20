@@ -20,7 +20,7 @@ describe CaseAttachmentUploadGroup do
   after(:all) { DbHousekeeping.clean }
 
 
-  let(:upload_group) { CaseAttachmentUploadGroup.new([@upload_group, @responder.id], @kase, @kase.attachments) }
+  let(:upload_group) { CaseAttachmentUploadGroup.new([@upload_group, @responder.id], :responder, @kase, @kase.attachments) }
 
   describe '#user' do
     it 'returns the user specified by the id' do

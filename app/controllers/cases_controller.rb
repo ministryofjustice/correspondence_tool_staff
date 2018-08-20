@@ -362,7 +362,7 @@ class CasesController < ApplicationController
     close_params = process_closure_params(@case.type_abbreviation)
     if @case.update(close_params)
       @case.state_machine.update_closure!(acting_user: current_user,
-                                          acting_team: @case.team_for_user(current_user))
+                                          acting_team: @case.team_for_unassigned_user(current_user, :manager))
       set_permitted_events
       flash[:notice] = t('notices.closure_details_updated')
       redirect_to case_path(@case)
@@ -597,7 +597,7 @@ class CasesController < ApplicationController
     authorize @case
 
     @case.state_machine.progress_for_clearance!(acting_user: current_user,
-                                                acting_team: @case.team_for_user(current_user),
+                                                acting_team: @case.team_for_assigned_user(current_user, :responder),
                                                 target_team: @case.approver_assignments.first.team)
 
     flash[:notice] = t('notices.progress_for_clearance')
@@ -612,8 +612,7 @@ class CasesController < ApplicationController
       format.js do
         if process_new_linked_cases_for_params
           response = render_to_string(
-            partial: "cases/#{ @correspondence_type_key }/case_linking/" \
-                     "linked_cases",
+            partial: "cases/#{ @correspondence_type_key }/case_linking/linked_cases",
             locals: {
               linked_cases: @linked_cases.map(&:decorate),
               link_type: @link_type,

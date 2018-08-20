@@ -49,7 +49,7 @@ describe CaseAttachmentUploadGroupCollection do
 
     it 'returns a team name for each group' do
       team_names = []
-      expect(@kase).to receive(:team_for_user).exactly(2).and_return(create(:business_unit, name: 'Team 1'), create(:business_unit, name: 'Team 2'))
+      expect(@kase).to receive(:team_for_unassigned_user).exactly(2).and_return(create(:business_unit, name: 'Team 1'), create(:business_unit, name: 'Team 2'))
       @kase.upload_response_groups.each { |ug| team_names << ug.team_name }
       expect(team_names).to match_array [ 'Team 1', 'Team 2']
     end

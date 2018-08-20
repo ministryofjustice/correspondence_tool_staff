@@ -2,13 +2,16 @@ module CTS
   module Cases
     class Constants
 
+      ICO_CASE_TYPES = %w{
+          Case::ICO::FOI
+          Case::ICO::SAR
+      }
 
-      CASE_TYPES = %w{
+      FOI_CASE_TYPES = %w{
           Case::FOI::Standard
           Case::FOI::ComplianceReview
           Case::FOI::TimelinessReview
       }
-
 
       CASE_JOURNEYS = {
         foi:{
@@ -59,8 +62,17 @@ module CTS
               :pending_dacu_disclosure_clearance,
               :awaiting_dispatch,
               :closed,
-          ],
-
+          ]
+        },
+        ico: {
+          flagged_for_dacu_disclosure: [
+            :awaiting_responder,
+            :accepted_by_dacu_disclosure,
+            :drafting,
+            :pending_dacu_disclosure_clearance,
+            :awaiting_dispatch,
+            :closed,
+          ]
         }
       }
 

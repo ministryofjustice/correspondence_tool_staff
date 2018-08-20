@@ -33,9 +33,26 @@ module CTS::Cases
     def new_case
       if @klass.to_s == "Case::SAR"
         new_sar_case
+      elsif @klass.to_s == "Case::ICO::FOI"
+        new_ico_case
+      elsif @klass.to_s == "Case::ICO::SAR"
+        new_ico_case
       else
         new_foi_case
       end
+    end
+
+    def new_ico_case
+      @klass.new(
+        message:              options.fetch(:message,
+                                            Faker::Lorem.paragraph(10, true, 10)),
+        received_date:        set_received_date,
+        external_deadline:    set_external_deadline,
+        created_at:           set_created_at_date,
+        dirty:                options.fetch(:dirty, true),
+        ico_officer_name:     options.fetch(:ico_officer_name, Faker::Name.name),
+        ico_reference_number: options.fetch(:ico_reference_number, SecureRandom.hex),
+      )
     end
 
     def new_foi_case
@@ -81,6 +98,14 @@ module CTS::Cases
         options[:received_date]
       else
         0.business_days.after(4.business_days.ago)
+      end
+    end
+
+    def set_external_deadline
+      if options.key? :external_deadline
+        options[:external_deadline]
+      else
+        4.business_days.after(0.business_days.ago)
       end
     end
 
@@ -214,21 +239,22 @@ module CTS::Cases
 
     def transition_to_pending_dacu_disclosure_clearance(kase)
       case get_correspondence_type_abbreviation
-        when :foi
-        rus = ResponseUploaderService.new(kase,
-                                          responder,
-                                          BypassParamsManager.new({}),
-                                          nil)
-        rus.seed!('spec/fixtures/eon.pdf')
-        kase.state_machine.add_response_to_flagged_case!(acting_user: responder,
-                                                         acting_team:responding_team,
-                                                         filenames: kase.attachments)
         when :sar
           dts = DefaultTeamService.new(kase)
 
           kase.state_machine.progress_for_clearance!(acting_user: responder,
                                                      acting_team: kase.responding_team,
                                                      target_team: dts.approving_team)
+         else
+         rus = ResponseUploaderService.new(kase,
+                                           responder,
+                                           BypassParamsManager.new({}),
+                                           nil)
+         rus.seed!('spec/fixtures/eon.pdf')
+         kase.state_machine.add_response_to_flagged_case!(acting_user: responder,
+                                                          acting_team:responding_team,
+                                                          filenames: kase.attachments)
+
       end
     end
 
