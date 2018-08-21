@@ -220,6 +220,15 @@ feature 'adding cases' do
         kase = Case::ICO::FOI.first
         expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
       end
+
+      scenario 'creating a trigger ICO in awaiting_dispatch' do
+        create_ico(target_state: 'responded')
+        expect(admin_cases_page).to be_displayed
+        kase = Case::ICO::FOI.first
+        expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
+        expect(kase.current_state).to eq 'responded'
+      end
+
     end
     context 'SAR' do
       scenario 'creating a trigger ICO in awaiting_dispatch' do
