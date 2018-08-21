@@ -1,3 +1,5 @@
+require './lib/translate_for_case'
+
 class Case::ICO::Base < Case::Base
 
   include LinkableOriginalCase
