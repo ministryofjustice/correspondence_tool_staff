@@ -71,6 +71,7 @@ module CTS
             :drafting,
             :pending_dacu_disclosure_clearance,
             :awaiting_dispatch,
+            :responded,
             :closed,
           ]
         }

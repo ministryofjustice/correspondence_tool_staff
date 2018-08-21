@@ -234,6 +234,9 @@ module CTS::Cases
     end
 
     def transition_to_responded(kase)
+
+      responder = kase.ico? ? kase.assigned_disclosure_specialist : kase.responder
+
       kase.respond(responder)
     end
 
