@@ -67,7 +67,6 @@ module Workflows
           :flagged,
           :press_office,
           approver: @press_officer,
-          responder: @assigned_responder
         ),
         case_unassigned_trigger: create(
           :case,
@@ -80,7 +79,6 @@ module Workflows
           :press_office,
           approver: @press_officer,
           disclosure_specialist: @disclosure_specialist,
-          responder: @assigned_responder
         ),
       }
     end
@@ -105,6 +103,22 @@ module Workflows
     end
 
     describe :responder_is_member_of_assigned_team? do
+      it {
+        # This matcher will expect the given predicate in the spec description
+        # to only allow the combinations of [user, case] provided here. All
+        # other combinations of the case types in all_cases() and the user
+        # types in all_users() will be expected to fail with this predicate.
+        should permit_only_these_combinations(
+                 [:assigned_responder, :case_drafting],
+                 [:assigned_responder, :case_drafting_flagged],
+                 [:assigned_responder, :case_drafting_flagged_press],
+                 [:assigned_responder, :case_drafting_trigger],
+                 [:assigned_responder, :case_drafting_trigger_press],
+               )
+      }
+    end
+
+    describe :user_is_assigned_responder? do
       it {
         # This matcher will expect the given predicate in the spec description
         # to only allow the combinations of [user, case] provided here. All

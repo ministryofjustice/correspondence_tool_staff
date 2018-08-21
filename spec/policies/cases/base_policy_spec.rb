@@ -354,7 +354,7 @@ describe Case::BasePolicy do
   permissions :can_respond? do
     it { should_not permit(manager,           case_with_response) }
     it { should     permit(responder,         case_with_response) }
-    it { should     permit(coworker,          case_with_response) }
+    it { should_not permit(coworker,          case_with_response) }
     it { should_not permit(another_responder, case_with_response) }
     it { should_not permit(responder,         accepted_case) }
     it { should_not permit(coworker,          accepted_case) }

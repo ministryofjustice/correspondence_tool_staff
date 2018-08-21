@@ -56,9 +56,7 @@ feature 'Mark response as sent' do
     scenario 'marking the case as sent' do
       cases_show_page.load(id: kase.id)
 
-      cases_show_page.actions.mark_as_sent.click
-
-      expect(cases_respond_page).to be_displayed(kase.id)
+      expect(cases_show_page.actions).not_to have_mark_as_sent
     end
   end
 end

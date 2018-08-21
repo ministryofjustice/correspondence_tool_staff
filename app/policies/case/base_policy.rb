@@ -231,7 +231,7 @@ class Case::BasePolicy < ApplicationPolicy
     clear_failed_checks
     self.case.awaiting_dispatch? &&
         self.case.response_attachments.any? &&
-        user.responding_teams.include?(self.case.responding_team)
+        check_can_trigger_event(:respond)
   end
 
   def can_approve_or_escalate_case?
