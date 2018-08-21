@@ -1,3 +1,5 @@
+require './lib/translate_for_case'
+
 module CasesHelper
 
   def accepted_case_attachment_types
