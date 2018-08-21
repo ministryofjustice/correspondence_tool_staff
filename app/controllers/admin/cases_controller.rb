@@ -105,11 +105,9 @@ class Admin::CasesController < AdminController
     case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::ICO::FOI' )
     @case = case_creator.new_case
     @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.ico).active.sample
-    @case.flag_for_disclosure_specialists = 'yes'
     @target_states = available_target_states
     @selected_state = 'drafting'
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
-    @case.approving_teams << BusinessUnit.dacu_disclosure
 
     render :new
   end
@@ -123,7 +121,8 @@ class Admin::CasesController < AdminController
   end
 
   def param_flag_for_ds?
-    params[case_and_type][:flagged_for_disclosure_specialist_clearance] == '1'
+    params[case_and_type][:flagged_for_disclosure_specialist_clearance] == '1' ||
+        case_and_type == :case_ico
   end
 
   def param_flag_for_press?
