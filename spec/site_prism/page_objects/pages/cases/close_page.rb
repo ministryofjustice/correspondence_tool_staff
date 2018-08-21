@@ -2,6 +2,8 @@ module PageObjects
   module Pages
     module Cases
       class ClosePage < SitePrism::Page
+        include SitePrism::Support::DropInDropzone
+
         set_url '/cases/{id}/close'
 
         section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
@@ -14,10 +16,19 @@ module PageObjects
         element :date_responded_month, :case_form_element, 'date_responded_mm'
         element :date_responded_year, :case_form_element, 'date_responded_yyyy'
 
+        element :date_responded_day_ico, :case_form_element, 'date_ico_decision_received_dd'
+        element :date_responded_month_ico, :case_form_element, 'date_ico_decision_received_mm'
+        element :date_responded_year_ico, :case_form_element, 'date_ico_decision_received_yyyy'
+
         section :appeal_outcome, '.appeal-outcome-group' do
           element :upheld, 'label[for="case_foi_appeal_outcome_name_upheld"]'
           element :upheld_in_part, 'label[for="case_foi_appeal_outcome_name_upheld_in_part"]'
           element :overturned, 'label[for="case_foi_appeal_outcome_name_overturned"]'
+        end
+
+        section :ico_decision, '.ico-decision' do
+          element :upheld, 'input#case_ico_ico_decision_upheld', visible: false
+          element :overturned, 'input#case_ico_ico_decision_overturned', visible: false
         end
 
         section :is_info_held, '.js-info-held-status' do
@@ -73,10 +84,23 @@ module PageObjects
           date_responded_year.set(date.year)
         end
 
+        def fill_in_ico_date_responded(date)
+          date_responded_day_ico.set(date.day)
+          date_responded_month_ico.set(date.month)
+          date_responded_year_ico.set(date.year)
+        end
+
+
         def get_exemption(abbreviation:)
           exemption = CaseClosure::Exemption.find_by(abbreviation: abbreviation)
           exemptions.find("input#case_foi_exemption_ids_#{exemption.id}",
                           visible: false)
+        end
+
+        def drop_in_dropzone(file_path)
+          super file_path: file_path,
+                input_name: 'uploaded_files[]',
+                container_selector: '.dropzone:first'
         end
       end
     end

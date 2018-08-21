@@ -32,7 +32,6 @@ def go_to_case_details_step(kase:,
     end
   end
 end
-# rubocop:enable Metrics/ParameterLists
 
 def go_to_incoming_cases_step expect_not_to_see_cases: []
   cases_page.primary_navigation.new_cases.click

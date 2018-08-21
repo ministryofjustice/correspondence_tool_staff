@@ -76,32 +76,25 @@ def close_sar_case_step(timeliness: 'in time', tmm: false)
 end
 
 
-def close_ico_appeal_case_step(timeliness: 'in time', tmm: false)
+def close_ico_appeal_case_step(timeliness: 'in time', decision: 'upheld')
   cases_show_page.actions.close_case.click
 
-  cases_close_page.fill_in_date_responded(Date.today)
+  cases_close_page.fill_in_ico_date_responded(Date.today)
 
-  if tmm
-    cases_close_page.missing_info.yes.click
-  else
-    cases_close_page.missing_info.no.click
+  if decision == 'upheld'
+    cases_close_page.ico_decision.upheld.click
+  elsif decision == 'overturned'
+    cases_close_page.ico_decision.overturned.click
   end
 
   cases_close_page.click_on 'Close case'
-
   show_page = cases_show_page.case_details
-  expect(cases_show_page.notice.text).to eq("You've closed this case. Edit case closure details")
+  expect(cases_show_page.notice.text).to eq("You've closed this case")
 
   expect(show_page.response_details.date_responded.data.text)
     .to eq Date.today.strftime(Settings.default_date_format)
   expect(show_page.response_details.timeliness.data.text)
     .to eq "Answered #{timeliness}"
   expect(show_page.response_details.time_taken.data.text).to match(/\d+ working days/)
-
-  if tmm
-    expect(show_page.response_details.refusal_reason.data.text)
-      .to eq '(s1(3)) - Clarification required'
-  else
     expect(show_page.response_details).to have_no_refusal_reason
-  end
 end

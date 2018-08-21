@@ -65,8 +65,8 @@ feature 'ICO FOI case requiring clearance' do
                       expected_to_be_with: 'Disclosure'
 
     close_ico_appeal_case kase: kase,
-                   user: manager,
-                   timeliness: 'in time'
-
+               user: manager,
+               timeliness: 'in time',
+               decision: 'upheld'
   end
 end
