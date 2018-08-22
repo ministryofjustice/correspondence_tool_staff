@@ -238,7 +238,7 @@ GEM
       domain_name (~> 0.5)
     humanize_boolean (0.0.2)
       i18n
-    i18n (1.0.1)
+    i18n (1.1.0)
       concurrent-ruby (~> 1.0)
     i18n-tasks (0.9.23)
       activesupport (>= 4.0.2)
@@ -372,7 +372,7 @@ GEM
       pry (>= 0.10.4)
     public_suffix (3.0.2)
     puma (3.12.0)
-    pundit (1.1.0)
+    pundit (2.0.0)
       activesupport (>= 3.0.0)
     rack (2.0.5)
     rack-protection (2.0.3)
@@ -624,7 +624,7 @@ DEPENDENCIES
   pry-byebug
   pry-rails
   puma (~> 3.12)
-  pundit (~> 1.1)
+  pundit (~> 2.0)
   rails (~> 5.0)
   rails-controller-testing
   rails-data-migrations (~> 1.1.0)
