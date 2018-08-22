@@ -37,7 +37,7 @@ describe 'assignments/edit.html.slim', type: :view do
 
     login_as responder
     allow_case_policies :can_add_message_to_case?, :request_further_clearance?, :destroy_case_link?
-    disallow_case_policies :new_case_link?
+    disallow_case_policies :new_case_link?, :destroy_case_link?
 
     render
 
@@ -64,6 +64,8 @@ describe 'assignments/edit.html.slim', type: :view do
 
     expect(page).to have_case_history
 
+    expect(page).to have_no_original_case_details
+
     expect(page).to have_accept_radio
     expect(page).to have_reject_radio
 
@@ -71,4 +73,53 @@ describe 'assignments/edit.html.slim', type: :view do
 
   end
 
+  context 'ICO cases' do
+    let(:awaiting_responder_case) { create(:awaiting_responder_ico_foi_case, :with_messages,
+                                         responding_team: responding_team).decorate }
+    let(:assignment_for_ico)          { awaiting_responder_case.responder_assignment }
+
+    it 'should display page and sections for ICO cases' do
+      assign(:case, awaiting_responder_case)
+      assign(:case_transitions, awaiting_responder_case.transitions.decorate)
+      assign(:assignment, assignment_for_ico)
+
+      login_as responder
+      allow_case_policies :can_add_message_to_case?, :request_further_clearance?, :destroy_case_link?
+      disallow_case_policies :new_case_link?, :destroy_case_link?
+
+      render
+
+      assignments_edit_page.load(rendered)
+
+      page = assignments_edit_page
+
+      expect(page.page_heading.heading.text)
+          .to eq "Case subject, #{awaiting_responder_case.subject}"
+      expect(page.page_heading.sub_heading.text)
+          .to eq "You are viewing case number #{awaiting_responder_case.number} - #{awaiting_responder_case.pretty_type} "
+
+      expect(page).to have_case_status
+
+      expect(page).to have_case_details
+
+      expect(page).to have_request
+
+      expect(page.message.text).to eq awaiting_responder_case.message
+
+      expect(page).to have_messages
+
+      expect(page).to have_new_message
+
+      expect(page).to have_case_history
+
+      expect(page).to have_original_case_details
+      expect(page.original_case_details).to have_link_to_case
+
+      expect(page).to have_accept_radio
+      expect(page).to have_reject_radio
+
+      expect(page.confirm_button.value).to eq "Confirm"
+
+    end
+  end
 end

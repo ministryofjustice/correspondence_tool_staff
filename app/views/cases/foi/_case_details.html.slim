@@ -34,6 +34,6 @@
       / display links to edit case and/or closure details
       = case_details_links(case_details, current_user).html_safe
 
-    - if case_details.closed? && !case_details.allow_event?(current_user, :update_closure)
-      p
-        = t('.cannot_update_closure_html')
+      - if case_details.closed? && !case_details.allow_event?(current_user, :update_closure)
+        p
+          = t('.cannot_update_closure_html')

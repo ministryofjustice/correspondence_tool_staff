@@ -29,6 +29,8 @@ section#messages-section.case-info
   section.case-info.has-page-break
     = render partial: 'cases/case_history', locals: { case_transitions: @case_transitions }
 
+= render partial: 'shared/components/case_page_original_case_details'
+
 .grid-row
   section.case-main
     = form_for [@case, @assignment], url: accept_or_reject_case_assignment_path(@case, @assignment) do |f|
