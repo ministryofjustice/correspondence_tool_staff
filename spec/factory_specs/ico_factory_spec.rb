@@ -249,20 +249,65 @@ describe 'ICO cases factory' do
       end
     end
 
+    describe :approved_ico_sar_case do
+      it 'creates a case in awaiting_dispatch state' do
+        kase = create :approved_ico_sar_case,
+                      responding_team: responding_team,
+                      responder: responder,
+                      approver: disclosure_specialist
+
+        expect(kase).to be_instance_of(Case::ICO::SAR)
+        expect(kase.current_state).to eq 'awaiting_dispatch'
+        expect(kase.assignments.size).to eq 3
+
+        expect(kase.transitions.size).to eq 5
+        transition = kase.transitions.last
+        expect(transition.event).to eq 'approve'
+        expect(transition.acting_team_id).to eq disclosure_team.id
+        expect(transition.acting_user_id).to eq disclosure_specialist.id
+        expect(transition.target_team_id).to be_nil
+        expect(transition.target_user_id).to be_nil
+        expect(transition.to_workflow).to be_nil
+      end
+    end
+
 
     describe :responded_ico_sar_case do
       it 'creates a case in responded state' do
         kase = create :responded_ico_sar_case,
                       responding_team: responding_team,
-                      responder: responder
+                      responder: responder,
+                      approver: disclosure_specialist
 
         expect(kase).to be_instance_of(Case::ICO::SAR)
         expect(kase.current_state).to eq 'responded'
         expect(kase.assignments.size).to eq 3
 
-        expect(kase.transitions.size).to eq 5
+        expect(kase.transitions.size).to eq 6
         transition = kase.transitions.last
         expect(transition.event).to eq 'respond'
+        expect(transition.acting_team_id).to eq disclosure_team.id
+        expect(transition.acting_user_id).to eq disclosure_specialist.id
+        expect(transition.target_team_id).to be_nil
+        expect(transition.target_user_id).to be_nil
+        expect(transition.to_workflow).to be_nil
+      end
+    end
+
+    describe :closed_ico_sar_case do
+      it 'creates a case in responded state' do
+        kase = create :closed_ico_sar_case,
+                      responding_team: responding_team,
+                      responder: responder,
+                      approver: disclosure_specialist
+
+        expect(kase).to be_instance_of(Case::ICO::SAR)
+        expect(kase.current_state).to eq 'closed'
+        expect(kase.assignments.size).to eq 3
+
+        expect(kase.transitions.size).to eq 7
+        transition = kase.transitions.last
+        expect(transition.event).to eq 'close'
         expect(transition.acting_team_id).to eq disclosure_team.id
         expect(transition.acting_user_id).to eq disclosure_specialist.id
         expect(transition.target_team_id).to be_nil

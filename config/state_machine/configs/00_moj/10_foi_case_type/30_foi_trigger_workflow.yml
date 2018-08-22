@@ -93,7 +93,7 @@
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
-                  if: Case::BasePolicy#assignments_reassign_user?
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
                 take_on_for_approval:
                   if: Case::BasePolicy#can_take_on_for_approval?
@@ -184,7 +184,7 @@
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
-                  if: Case::BasePolicy#assignments_reassign_user?
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
                 take_on_for_approval:
                   if: Case::BasePolicy#can_take_on_for_approval?
@@ -232,7 +232,7 @@
                   transition_to: pending_dacu_clearance
                 link_a_case:
                 reassign_user:
-                  if: Case::BasePolicy#assignments_reassign_user?
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
                 upload_responses:
 
@@ -242,7 +242,7 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 link_a_case:
                 reassign_user:
-                  if: Case::BasePolicy#assignments_reassign_user?
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
 
               awaiting_dispatch:
@@ -253,7 +253,7 @@
                   if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
                 link_a_case:
                 reassign_user:
-                  if: Case::BasePolicy#assignments_reassign_user?
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_last_response:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 remove_linked_case:

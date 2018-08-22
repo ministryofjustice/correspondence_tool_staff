@@ -59,6 +59,7 @@
                 remove_linked_case:
 
               closed:
+                add_message_to_case:
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
@@ -73,9 +74,10 @@
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
-                  if: Workflows::Predicates#user_is_approver_on_case?
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 link_a_case:
                 reassign_user:
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
@@ -84,9 +86,10 @@
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
-                  if: Workflows::Predicates#user_is_approver_on_case?
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 link_a_case:
                 reassign_user:
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
@@ -95,10 +98,11 @@
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
-                  if: Workflows::Predicates#user_is_approver_on_case?
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 link_a_case:
                 reassign_user:
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
@@ -107,6 +111,7 @@
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 approve:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
@@ -114,6 +119,7 @@
                   after_transition: Workflows::Hooks#notify_responder_ready_to_send
                 link_a_case:
                 reassign_user:
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
                 unaccept_approver_assignment:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
@@ -131,10 +137,11 @@
 
               awaiting_dispatch:
                 add_message_to_case:
-                  if: Workflows::Predicates#user_is_approver_on_case?
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 link_a_case:
                 reassign_user:
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
                 respond:
                   if: Workflows::Predicates#user_is_in_approving_team_for_case?
@@ -143,11 +150,15 @@
               responded:
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 link_a_case:
-                reassign_user:
+                # reassign_user:
+                #   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
 
               closed:
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 link_a_case:
                 remove_linked_case:
 
@@ -189,7 +200,7 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 link_a_case:
                 reassign_user:
-                  if: Case::BasePolicy#assignments_reassign_user?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 remove_linked_case:
 
               awaiting_dispatch:
@@ -200,14 +211,14 @@
                   if: Case::ICO::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
                  link_a_case:
                  reassign_user:
-                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                  remove_linked_case:
                  remove_response:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?
                    transition_to_using: Workflows::Conditionals#remove_response_next_state
-                 respond:
-                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
-                   transition_to: responded
+                 # respond:
+                 #   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                 #   transition_to: responded
 
               responded:
                 add_message_to_case:
@@ -217,5 +228,7 @@
                 remove_linked_case:
 
               closed:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 link_a_case:
                 remove_linked_case:

@@ -184,5 +184,5 @@ enabled_features:
     Local: true
     Host-dev: true
     Host-demo: true
-    Host-staging: false
-    Host-prod: false
+    Host-staging: true
+    Host-prod: true

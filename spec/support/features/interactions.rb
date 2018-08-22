@@ -143,7 +143,7 @@ module Features
       close_sar_case_step timeliness: timeliness, tmm: tmm
     end
 
-    def close_ico_appeal_case(kase:, user:, tmm: false, timeliness:, decision:)
+    def close_ico_appeal_case(kase:, user:, timeliness:, decision:)
       login_step user: user
       cases_show_page.load(id: kase.id)
       close_ico_appeal_case_step timeliness: timeliness, decision: decision

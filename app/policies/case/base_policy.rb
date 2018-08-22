@@ -169,8 +169,8 @@ class Case::BasePolicy < ApplicationPolicy
 
   def assignments_reassign_user?
     clear_failed_checks
-    check_case_is_not_responded_or_closed &&
-        check_case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+    check_can_trigger_event(:reassign_user) &&
+      check_case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
   end
 
   def assignments_execute_reassign_user?
