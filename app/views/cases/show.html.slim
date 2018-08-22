@@ -9,17 +9,8 @@
   .alert-orange
     = t('alerts.escalation_warning_html', escalation_deadline: @case.escalation_deadline)
 
-- content_for :heading
-  span.visually-hidden
-    = t('common.case.header_subject')
-  = @case.subject
 
-- content_for :sub_heading
-  span.visually-hidden
-    = t('common.case.header_case_number')
-  = "#{@case.number} - #{@case.pretty_type}"
-
-= render partial: 'layouts/header'
+= render partial: 'shared/components/case_page_heading', locals: {kase: @case}
 
 div id="case-#{@correspondence_type_key}" class="case"
   section.case-info.has-actions

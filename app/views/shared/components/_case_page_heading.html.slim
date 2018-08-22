@@ -1,0 +1,11 @@
+- content_for :heading
+  span.visually-hidden
+    = t('common.case.header_subject')
+  = kase.subject
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = "#{kase.number} - #{kase.pretty_type}"
+
+= render partial: 'layouts/header'
