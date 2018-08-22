@@ -16,7 +16,7 @@ module PageObjects
                 PageObjects::Sections::Cases::CaseDetailsSection, '.case-details'
 
         element :message_label, '.request--heading'
-        element :message, '.request--message'
+        element :message, '.request--message p'
 
         section :request,
                 PageObjects::Sections::Cases::CaseRequestSection, '.request'
@@ -33,6 +33,10 @@ module PageObjects
 
         section :case_history,
                 PageObjects::Sections::Cases::CaseHistorySection, '#case-history'
+
+        section :original_case_details, '.original-case-details' do
+          element :link_to_case, 'a'
+        end
 
         element :accept_radio, 'label[for="assignment_state_accepted"]'
 

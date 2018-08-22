@@ -1,0 +1,5 @@
+- if @case.ico?
+  section.case-info
+    = render partial: "cases/#{@case.original_case.type_abbreviation.downcase}/case_details",
+            locals: { case_details: @case.original_case.decorate,
+                      link_type: 'original' }
