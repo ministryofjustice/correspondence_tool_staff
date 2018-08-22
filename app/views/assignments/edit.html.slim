@@ -6,37 +6,37 @@
 
 = render partial: 'shared/components/case_page_heading', locals: {kase: @case}
 
-section.case-info
-  = render partial: 'cases/case_status', locals: { case_details: @case }
+div id="case-#{@correspondence_type_key}" class="case"
+  section.case-info
+    = render partial: 'cases/case_status', locals: { case_details: @case }
 
-section.case-info
-  = render partial: 'cases/linked_cases', locals: { case_details: @case }
+  = render partial: 'shared/components/case_linked_cases'
 
-section.case-info
-  = render partial: 'cases/case_request', locals: { case_details: @case }
+  section.case-info
+    = render partial: 'cases/case_request', locals: { case_details: @case }
 
-section.case-info
-  = render partial: "cases/#{@case.type_abbreviation.downcase}/case_details",
-           locals: { case_details: @case, link_type: nil }
+  section.case-info
+    = render partial: "cases/#{@case.type_abbreviation.downcase}/case_details",
+             locals: { case_details: @case, link_type: nil }
 
-section.case-info
-  = render partial: 'cases/clearance_levels', locals: {case_details: @case }
+  section.case-info
+    = render partial: 'cases/clearance_levels', locals: {case_details: @case }
 
-section#messages-section.case-info
-  = render partial: 'cases/case_messages', locals: { case_details: @case }
+  section#messages-section.case-info
+    = render partial: 'cases/case_messages', locals: { case_details: @case }
 
-- if @case_transitions.any?
-  section.case-info.has-page-break
-    = render partial: 'cases/case_history', locals: { case_transitions: @case_transitions }
+  - if @case_transitions.any?
+    section.case-info.has-page-break
+      = render partial: 'cases/case_history', locals: { case_transitions: @case_transitions }
 
-= render partial: 'shared/components/case_page_original_case_details'
+  = render partial: 'shared/components/case_page_original_case_details'
 
-.grid-row
-  section.case-main
-    = form_for [@case, @assignment], url: accept_or_reject_case_assignment_path(@case, @assignment) do |f|
-      #js-assigment-actions
-        = f.radio_button_fieldset :state, choices: [:accepted, :rejected], inline: true
+  .grid-row
+    section.case-main
+      = form_for [@case, @assignment], url: accept_or_reject_case_assignment_path(@case, @assignment) do |f|
+        #js-assigment-actions
+          = f.radio_button_fieldset :state, choices: [:accepted, :rejected], inline: true
 
-      #js-rejected-reasons.panel.panel-border-narrow
-        = f.text_area :reasons_for_rejection
-      = f.submit t('button.confirm'), class: 'button'
+        #js-rejected-reasons.panel.panel-border-narrow
+          = f.text_area :reasons_for_rejection
+        = f.submit t('button.confirm'), class: 'button'

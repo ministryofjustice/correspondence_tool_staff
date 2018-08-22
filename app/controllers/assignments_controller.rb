@@ -76,6 +76,7 @@ class AssignmentsController < ApplicationController
         redirect_to case_path @case, accepted_now: false
       else
         authorize @case, :can_accept_or_reject_responder_assignment?
+        @correspondence_type_key = @case.type_abbreviation.downcase
         render :edit
       end
     else
