@@ -47,15 +47,7 @@ div id="case-#{@correspondence_type_key}" class="case"
   section.case-info
     = render partial: 'cases/case_status', locals: {case_details: @case}
 
-  - if @case.ico?
-    - if case_attachments_visible_for_case?
-      section.case-info
-        = render partial: 'cases/case_attachments', locals: { case_details: @case }
-    section.case-info
-      = render partial: 'cases/ico/show_linked_cases', locals: { case_details: @case }
-  - else
-    section.case-info
-      = render partial: 'cases/linked_cases', locals: { case_details: @case }
+  = render partial: 'shared/components/case_linked_cases'
 
   section.case-info
     = render partial: 'cases/case_request', locals: {case_details: @case}

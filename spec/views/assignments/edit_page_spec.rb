@@ -33,6 +33,7 @@ describe 'assignments/edit.html.slim', type: :view do
 
     assign(:case, awaiting_responder_case)
     assign(:case_transitions, awaiting_responder_case.transitions.decorate)
+    assign(:correspondence_type_key, awaiting_responder_case.type_abbreviation.downcase)
     assign(:assignment, assignment)
 
     login_as responder
@@ -51,6 +52,8 @@ describe 'assignments/edit.html.slim', type: :view do
         .to eq "You are viewing case number #{awaiting_responder_case.number} - #{awaiting_responder_case.pretty_type} "
 
     expect(page).to have_case_status
+
+    expect(page).to have_no_ico
 
     expect(page).to have_case_details
 
@@ -81,6 +84,7 @@ describe 'assignments/edit.html.slim', type: :view do
     it 'should display page and sections for ICO cases' do
       assign(:case, awaiting_responder_case)
       assign(:case_transitions, awaiting_responder_case.transitions.decorate)
+      assign(:correspondence_type_key, awaiting_responder_case.type_abbreviation.downcase)
       assign(:assignment, assignment_for_ico)
 
       login_as responder
@@ -99,6 +103,10 @@ describe 'assignments/edit.html.slim', type: :view do
           .to eq "You are viewing case number #{awaiting_responder_case.number} - #{awaiting_responder_case.pretty_type} "
 
       expect(page).to have_case_status
+
+      expect(page).to have_ico
+
+      expect(page.ico).to have_original_cases
 
       expect(page).to have_case_details
 

@@ -9,6 +9,10 @@ module PageObjects
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
 
+        section :ico,
+                PageObjects::Sections::Cases::ICO::ShowSection,
+                '#case-ico'
+
         section :case_status,
                 PageObjects::Sections::Cases::CaseStatusSection, '.case-status'
 

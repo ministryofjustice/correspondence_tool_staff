@@ -606,6 +606,15 @@ RSpec.describe AssignmentsController, type: :controller do
       expect(assigns(:case)).to eq assignment.case
     end
 
+    it 'sets @@correspondence_type_key' do
+      get :edit, params: {
+        id: assignment.id,
+        case_id: assignment.case.id
+      }
+      expect(assigns(:correspondence_type_key)).to eq 'foi'
+    end
+
+
     it 'syncs case transitions tracker for user' do
       stub_find_case(assignment.case.id) do |kase|
         expect(kase).to receive(:sync_transition_tracker_for_user)
