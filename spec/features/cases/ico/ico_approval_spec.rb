@@ -40,7 +40,8 @@ feature 'cases requiring clearance by disclosure specialist' do
 
     approve_case_step(kase: kase,
                       expected_team: team_dacu_disclosure,
-                      expected_status: 'Ready to send to ICO')
+                      expected_status: 'Ready to send to ICO',
+                      expected_notice: 'The response has been cleared and is ready to be sent to the ICO')
     go_to_case_details_step(
       kase: kase,
       expected_team: team_dacu_disclosure,

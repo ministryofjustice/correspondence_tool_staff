@@ -480,7 +480,7 @@ class CasesController < ApplicationController
     service = CaseApprovalService.new(user: current_user, kase: @case, bypass_params: bypass_params_manager)
     service.call
     if service.result == :ok
-      flash[:notice] = I18n.t('notices.case_cleared')
+      flash[:notice] = I18n.t("notices.case_cleared.#{@case.type_abbreviation}")
       redirect_to case_path(@case)
     else
       flash[:alert] = service.error_message

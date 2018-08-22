@@ -99,12 +99,17 @@ module Features
       logout_step if do_logout
     end
 
-    def clear_response(kase:, user:, expected_team:, expected_status:)
+    def clear_response(kase:,
+                        user:,
+                        expected_team:,
+                        expected_status:,
+                        expected_notice:  "The Information Officer has been notified that the response is ready to send.")
       login_step user: user
       go_to_case_details_step kase: kase
       approve_case_step kase: kase,
                         expected_team: expected_team,
-                        expected_status: expected_status
+                        expected_status: expected_status,
+                        expected_notice: expected_notice
       logout_step
     end
 

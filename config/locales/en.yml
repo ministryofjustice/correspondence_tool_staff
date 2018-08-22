@@ -227,6 +227,7 @@ en:
     destroy_case: Case deleted
     edit_case: Case details edited
     extend_for_pit: Extended for Public Interest Test (PIT)
+    flag_for_clearance: Clearance level added
     link_a_case: Case linked
     progress_for_clearance: Progress for clearance
     reassign_user: Reassign user
@@ -446,7 +447,10 @@ en:
 
 
   notices:
-    case_cleared: "The Information Officer has been notified that the response is ready to send."
+    case_cleared:
+      FOI: "The Information Officer has been notified that the response is ready to send."
+      SAR: "The Information Officer has been notified that the response is ready to send."
+      ICO: "The response has been cleared and is ready to be sent to the ICO"
     case_closed: "You've closed this case"
     closure_details_updated: You have updated the closure details for this case.
     response_uploaded: You have uploaded the response for this case.
@@ -676,6 +680,7 @@ en:
       received_date: Date received at MOJ
       received_date_copy: "For example, 01 02 2018"
       case/ico:
+        internal_deadline_copy: "For example, 01 02 2018"
         external_deadline_copy: >-
           We'll use this date to set the draft deadline, calculated as 20
           working days before the final deadline.<br>
