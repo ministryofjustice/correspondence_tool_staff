@@ -45,9 +45,10 @@ describe 'assignments/edit.html.slim', type: :view do
 
     page = assignments_edit_page
 
-    expect(page.page_heading.heading.text).to eq awaiting_responder_case.subject
+    expect(page.page_heading.heading.text)
+        .to eq "Case subject, #{awaiting_responder_case.subject}"
     expect(page.page_heading.sub_heading.text)
-        .to eq "You are viewing case number #{awaiting_responder_case.number} "
+        .to eq "You are viewing case number #{awaiting_responder_case.number} - #{awaiting_responder_case.pretty_type} "
 
     expect(page).to have_case_status
 
