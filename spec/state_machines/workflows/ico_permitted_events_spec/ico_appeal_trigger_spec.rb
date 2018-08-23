@@ -294,6 +294,7 @@ describe ConfigurableStateMachine::Machine do
             expect(k.state_machine.permitted_events(disclosure_specialist.id)).to eq [:accept_approver_assignment,
                                                                                       :add_message_to_case,
                                                                                       :link_a_case,
+                                                                                      :reassign_user,
                                                                                       :remove_linked_case]
           end
         end
@@ -306,6 +307,7 @@ describe ConfigurableStateMachine::Machine do
             expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
                                                                          :add_message_to_case,
                                                                          :link_a_case,
+                                                                         :reassign_user,
                                                                          :remove_linked_case]
           end
         end
@@ -318,6 +320,7 @@ describe ConfigurableStateMachine::Machine do
             expect(k.state_machine.permitted_events(approver.id)).to eq [ :accept_approver_assignment,
                                                                           :add_message_to_case,
                                                                           :link_a_case,
+                                                                          :reassign_user,
                                                                           :remove_linked_case]
           end
         end

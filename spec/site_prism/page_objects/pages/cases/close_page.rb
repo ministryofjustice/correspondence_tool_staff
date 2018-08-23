@@ -2,7 +2,6 @@ module PageObjects
   module Pages
     module Cases
       class ClosePage < SitePrism::Page
-        include SitePrism::Support::DropInDropzone
 
         set_url '/cases/{id}/close'
 
@@ -95,12 +94,6 @@ module PageObjects
           exemption = CaseClosure::Exemption.find_by(abbreviation: abbreviation)
           exemptions.find("input#case_foi_exemption_ids_#{exemption.id}",
                           visible: false)
-        end
-
-        def drop_in_dropzone(file_path)
-          super file_path: file_path,
-                input_name: 'uploaded_files[]',
-                container_selector: '.dropzone:first'
         end
       end
     end

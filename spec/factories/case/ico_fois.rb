@@ -102,8 +102,6 @@ FactoryBot.define do
       identifier      'pending dacu clearance ICO FOI case'
       approving_team  { find_or_create :team_dacu_disclosure }
       approver        { approving_team.users.first }
-      responding_team { find_or_create(:responding_team) }
-      responder       { responding_team.users.first }
     end
 
     after(:create) do |kase, evaluator|

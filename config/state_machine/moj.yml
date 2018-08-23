@@ -1323,7 +1323,7 @@ case_types:
                   if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 link_a_case:
                 reassign_user:
-                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 remove_linked_case:
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
@@ -1335,7 +1335,7 @@ case_types:
                   if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 link_a_case:
                 reassign_user:
-                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 remove_linked_case:
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
@@ -1348,7 +1348,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 link_a_case:
                 reassign_user:
-                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 remove_linked_case:
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
@@ -1365,7 +1365,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_ready_to_send
                 link_a_case:
                 reassign_user:
-                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 remove_linked_case:
                 unaccept_approver_assignment:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
@@ -1387,7 +1387,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 link_a_case:
                 reassign_user:
-                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 remove_linked_case:
                 respond:
                   if: Workflows::Predicates#user_is_in_approving_team_for_case?
@@ -1398,8 +1398,6 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                   if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 link_a_case:
-                # reassign_user:
-                #   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
 
               closed:
@@ -1462,9 +1460,6 @@ case_types:
                  remove_response:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?
                    transition_to_using: Workflows::Conditionals#remove_response_next_state
-                 # respond:
-                 #   if: Workflows::Predicates#responder_is_member_of_assigned_team?
-                 #   transition_to: responded
 
               responded:
                 add_message_to_case:

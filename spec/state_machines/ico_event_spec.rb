@@ -194,8 +194,13 @@ describe 'state machine' do
         should permit_event_to_be_triggered_only_by(
           [:responder, :ico_foi_accepted],
           [:responder, :ico_sar_accepted],
+          [:responder, :ico_foi_awaiting_dispatch],
+          [:responder, :ico_sar_awaiting_dispatch],
           [:another_responder_in_same_team, :ico_foi_accepted],
           [:another_responder_in_same_team, :ico_sar_accepted],
+          [:another_responder_in_same_team, :ico_foi_awaiting_dispatch],
+          [:another_responder_in_same_team, :ico_sar_awaiting_dispatch],
+
          )}
     end
 
@@ -439,7 +444,7 @@ describe 'state machine' do
       }
     end
 
-    xdescribe :reassign_user do
+    describe :reassign_user do
       it {
         should permit_event_to_be_triggered_only_by(
           [:responder, :ico_foi_accepted],
@@ -456,14 +461,26 @@ describe 'state machine' do
           [:another_responder_in_same_team, :ico_foi_awaiting_dispatch],
           [:another_responder_in_same_team, :ico_sar_awaiting_dispatch],
 
+          [:disclosure_specialist, :ico_foi_unassigned],
+          [:disclosure_specialist, :ico_foi_awaiting_responder],
+          [:disclosure_specialist, :ico_foi_accepted],
           [:disclosure_specialist, :ico_foi_pending_dacu],
-          [:disclosure_specialist, :ico_sar_pending_dacu],
           [:disclosure_specialist, :ico_foi_awaiting_dispatch],
+          [:disclosure_specialist, :ico_sar_unassigned],
+          [:disclosure_specialist, :ico_sar_awaiting_responder],
+          [:disclosure_specialist, :ico_sar_accepted],
+          [:disclosure_specialist, :ico_sar_pending_dacu],
           [:disclosure_specialist, :ico_sar_awaiting_dispatch],
 
+          [:disclosure_specialist_coworker, :ico_foi_unassigned],
+          [:disclosure_specialist_coworker, :ico_foi_awaiting_responder],
+          [:disclosure_specialist_coworker, :ico_foi_accepted],
           [:disclosure_specialist_coworker, :ico_foi_pending_dacu],
-          [:disclosure_specialist_coworker, :ico_sar_pending_dacu],
           [:disclosure_specialist_coworker, :ico_foi_awaiting_dispatch],
+          [:disclosure_specialist_coworker, :ico_sar_unassigned],
+          [:disclosure_specialist_coworker, :ico_sar_awaiting_responder],
+          [:disclosure_specialist_coworker, :ico_sar_accepted],
+          [:disclosure_specialist_coworker, :ico_sar_pending_dacu],
           [:disclosure_specialist_coworker, :ico_sar_awaiting_dispatch],
                )  }
     end

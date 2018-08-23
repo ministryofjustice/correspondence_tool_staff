@@ -482,7 +482,6 @@ class CasesController < ApplicationController
     service.call
     if service.result == :ok
       flash[:notice] = translate_for_case(@case, 'notices', 'case_cleared')
-      # flash[:notice] = I18n.t("notices.case_cleared.#{@case.type_abbreviation}")
       redirect_to case_path(@case)
     else
       flash[:alert] = service.error_message

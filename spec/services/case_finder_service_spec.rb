@@ -76,9 +76,9 @@ describe CaseFinderService do
                                        responder: @responder)
 
         @approved_ico         = create(:approved_ico_foi_case,
-                                       responding_team: @responding_team)
+                                       responder: @responder)
         @responded_ico        = create(:responded_ico_foi_case,
-                                        responding_team: @responding_team)
+                                       responder: @responder)
         # @closed_ico
       end
     end
