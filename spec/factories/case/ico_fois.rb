@@ -102,8 +102,6 @@ FactoryBot.define do
       identifier      'pending dacu clearance ICO FOI case'
       approving_team  { find_or_create :team_dacu_disclosure }
       approver        { approving_team.users.first }
-      responding_team { find_or_create(:responding_team) }
-      responder       { responding_team.users.first }
     end
 
     after(:create) do |kase, evaluator|
@@ -145,6 +143,22 @@ FactoryBot.define do
 
     after(:create) do |kase, _evaluator|
       create :case_transition_respond_to_ico,
+             case_id: kase.id
+      kase.reload
+    end
+  end
+
+  factory :closed_ico_foi_case, parent: :responded_ico_foi_case do
+    transient do
+      identifier 'closed ICO FOI case'
+    end
+
+    date_ico_decision_received Date.today
+    ico_decision "upheld"
+
+
+    after(:create) do |kase, _evaluator|
+      create :case_transition_close_ico,
              case_id: kase.id
       kase.reload
     end

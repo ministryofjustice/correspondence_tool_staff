@@ -57,7 +57,9 @@ feature 'ICO FOI case requiring clearance' do
     clear_response kase: kase,
                     user: disclosure_specialist,
                     expected_team: team_dacu_disclosure,
-                    expected_status: 'Ready to send to ICO'
+                    expected_status: 'Ready to send to ICO',
+                    expected_notice: 'The response has been cleared and is ready to be sent to the ICO'
+
 
     mark_case_as_sent kase: kase,
                       user: disclosure_specialist,
@@ -65,8 +67,8 @@ feature 'ICO FOI case requiring clearance' do
                       expected_to_be_with: 'Disclosure'
 
     close_ico_appeal_case kase: kase,
-                   user: manager,
-                   timeliness: 'in time'
-
+               user: manager,
+               timeliness: 'in time',
+               decision: 'upheld'
   end
 end

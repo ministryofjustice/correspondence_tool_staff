@@ -123,29 +123,95 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
     }
 
     # Each case is created in a lambda so that it can be conditionally created
-    # depending on how StandardSetup is instantiated (see the only_cases arg). 
+    # depending on how StandardSetup is instantiated (see the only_cases arg).
     @@cases = {
       ico_foi_unassigned: ->(attributes={}) {
-        create :ico_foi_case, {identifier: 'ico_foi_unassigned'}.merge(attributes)
+        create :ico_foi_case,
+        {identifier: 'ico_foi_unassigned'}.merge(attributes)
       },
       ico_foi_awaiting_responder: ->(attributes={}) {
-        create :awaiting_responder_ico_foi_case, {identifier: 'ico_foi_awaiting_responder'}.merge(attributes)
+        create :awaiting_responder_ico_foi_case,
+        {identifier: 'ico_foi_awaiting_responder',
+        responding_team: responding_team}
+        .merge(attributes)
       },
       ico_foi_accepted: ->(attributes={}) {
-        create :accepted_ico_foi_case, {identifier: 'ico_foi_accepted'}.merge(attributes)
+        create :accepted_ico_foi_case,
+        {identifier: 'ico_foi_accepted',
+          responder: responder_user}
+        .merge(attributes)
+      },
+      ico_foi_pending_dacu: ->(attributes={}) {
+        create :pending_dacu_clearance_ico_foi_case,
+        {identifier: 'pending_dacu_clearance_ico_foi_case',
+          responder: responder_user,
+          approver: disclosure_specialist_user}
+        .merge(attributes)
+      },
+      ico_foi_awaiting_dispatch: ->(attributes={}) {
+        create :approved_ico_foi_case,
+        {identifier: 'approved_ico_foi_case',
+          responder: responder_user,
+          approver: disclosure_specialist_user}
+        .merge(attributes)
+      },
+      ico_foi_responded: ->(attributes={}) {
+        create :responded_ico_foi_case,
+        {identifier: 'responded_ico_foi_case',
+          responder: responder_user,
+          approver: disclosure_specialist_user}
+        .merge(attributes)
+      },
+      ico_foi_closed: ->(attributes={}) {
+        create :closed_ico_foi_case,
+        {identifier: 'closed_ico_foi_case',
+          responder: responder_user,
+          approver: disclosure_specialist_user}
+        .merge(attributes)
       },
 
       ico_sar_unassigned: ->(attributes={}) {
         create :ico_sar_case, {identifier: 'ico_sar_unassigned'}.merge(attributes)
       },
       ico_sar_awaiting_responder: ->(attributes={}) {
-        create :awaiting_responder_ico_sar_case, {identifier: 'ico_sar_awaiting_responder'}.merge(attributes)
+        create :awaiting_responder_ico_sar_case,
+        {identifier: 'ico_sar_awaiting_responder',
+        responding_team: responding_team}
+        .merge(attributes)
       },
       ico_sar_accepted: ->(attributes={}) {
-        create :accepted_ico_sar_case, {identifier: 'ico_sar_accepted'}.merge(attributes)
+        create :accepted_ico_sar_case,
+        {identifier: 'ico_sar_accepted',
+          responder: responder_user}
+          .merge(attributes)
       },
-      ico_sar_pending_dacu_clearance: ->(attributes={}) {
-        create :pending_dacu_clearance_ico_sar_case, {identifier: 'ico_sar_pending_dacu_clearance'}.merge(attributes)
+      ico_sar_pending_dacu: ->(attributes={}) {
+        create :pending_dacu_clearance_ico_sar_case,
+        {identifier: 'ico_sar_pending_dacu',
+          responder: responder_user,
+          approver: disclosure_specialist_user}
+          .merge(attributes)
+      },
+      ico_sar_awaiting_dispatch: ->(attributes={}) {
+        create :approved_ico_sar_case,
+        {identifier: 'approved_ico_sar_case',
+          responder: responder_user,
+          approver: disclosure_specialist_user}
+        .merge(attributes)
+      },
+      ico_sar_responded: ->(attributes={}) {
+        create :responded_ico_sar_case,
+        {identifier: 'responded_ico_sar_case',
+          responder: responder_user,
+          approver: disclosure_specialist_user}
+          .merge(attributes)
+      },
+      ico_sar_closed: ->(attributes={}) {
+        create :closed_ico_sar_case,
+        {identifier: 'closed_ico_sar_case',
+          responder: responder_user,
+          approver: disclosure_specialist_user}
+          .merge(attributes)
       },
 
       sar_noff_unassigned: ->(attributes={}) {

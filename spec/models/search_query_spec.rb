@@ -277,7 +277,7 @@ describe SearchQuery do
                                    ico_sar_unassigned:              {},
                                    ico_sar_awaiting_responder:      {responding_team: @responding_team},
                                    ico_sar_accepted:                {responding_team: @responding_team},
-                                   ico_sar_pending_dacu_clearance:  {responding_team: @responding_team},
+                                   ico_sar_pending_dacu:  {responding_team: @responding_team},
                                 })
       Case::Base.update_all_indexes
     end
@@ -329,7 +329,7 @@ describe SearchQuery do
                                                   @setup.ico_sar_unassigned,
                                                   @setup.ico_sar_awaiting_responder,
                                                   @setup.ico_sar_accepted,
-                                                  @setup.ico_sar_pending_dacu_clearance,
+                                                  @setup.ico_sar_pending_dacu,
                                                  ]
             end
           end
@@ -360,7 +360,7 @@ describe SearchQuery do
                                                   @setup.ico_foi_accepted,
                                                   @setup.ico_sar_awaiting_responder,
                                                   @setup.ico_sar_accepted,
-                                                  @setup.ico_sar_pending_dacu_clearance,
+                                                  @setup.ico_sar_pending_dacu,
                                                  ]
             end
           end
@@ -379,7 +379,7 @@ describe SearchQuery do
                         @setup.ico_sar_unassigned,
                         @setup.ico_sar_awaiting_responder,
                         @setup.ico_sar_accepted,
-                        @setup.ico_sar_pending_dacu_clearance]
+                        @setup.ico_sar_pending_dacu]
             end
           end
 

@@ -112,7 +112,7 @@
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
-                  if: Case::BasePolicy#assignments_reassign_user?
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
                 take_on_for_approval:
                   if: Case::BasePolicy#can_take_on_for_approval?
@@ -196,7 +196,7 @@
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
-                  if: Case::BasePolicy#assignments_reassign_user?
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
                 request_amends:
                   if: Workflows::Predicates#user_is_assigned_press_officer?
@@ -220,7 +220,7 @@
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
-                  if: Case::BasePolicy#assignments_reassign_user?
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
                 request_amends:
                   if: Workflows::Predicates#user_is_assigned_private_officer?
@@ -240,7 +240,7 @@
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
-                  if: Case::BasePolicy#assignments_reassign_user?
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
                 remove_response:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
@@ -261,8 +261,6 @@
                 extend_for_pit:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
-                reassign_user:
-                  if: Case::BasePolicy#assignments_reassign_user?
                 remove_linked_case:
 
               closed:
@@ -309,7 +307,7 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 link_a_case:
                 reassign_user:
-                  if: Case::BasePolicy#assignments_reassign_user?
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
 
               pending_press_office_clearance:
@@ -318,7 +316,7 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 link_a_case:
                 reassign_user:
-                  if: Case::BasePolicy#assignments_reassign_user?
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
 
               pending_private_office_clearance:
@@ -327,7 +325,7 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 link_a_case:
                 reassign_user:
-                  if: Case::BasePolicy#assignments_reassign_user?
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
 
               awaiting_dispatch:
@@ -338,7 +336,7 @@
                   if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
                  link_a_case:
                  reassign_user:
-                   if: Case::BasePolicy#assignments_reassign_user?
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                  remove_linked_case:
                  remove_response:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?

@@ -99,12 +99,17 @@ module Features
       logout_step if do_logout
     end
 
-    def clear_response(kase:, user:, expected_team:, expected_status:)
+    def clear_response(kase:,
+                        user:,
+                        expected_team:,
+                        expected_status:,
+                        expected_notice:  "The Information Officer has been notified that the response is ready to send.")
       login_step user: user
       go_to_case_details_step kase: kase
       approve_case_step kase: kase,
                         expected_team: expected_team,
-                        expected_status: expected_status
+                        expected_status: expected_status,
+                        expected_notice: expected_notice
       logout_step
     end
 
@@ -138,10 +143,10 @@ module Features
       close_sar_case_step timeliness: timeliness, tmm: tmm
     end
 
-    def close_ico_appeal_case(kase:, user:, tmm: false, timeliness:)
+    def close_ico_appeal_case(kase:, user:, timeliness:, decision:)
       login_step user: user
-      go_to_case_details_step kase: kase
-      close_sar_case_step timeliness: timeliness, tmm: tmm
+      cases_show_page.load(id: kase.id)
+      close_ico_appeal_case_step timeliness: timeliness, decision: decision
     end
 
     def add_message_to_case(kase:, message:, do_logout: true)
@@ -244,4 +249,3 @@ module Features
     end
   end
 end
-

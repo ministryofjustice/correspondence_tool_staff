@@ -293,4 +293,12 @@ FactoryBot.define do
     acting_user_id      { find_or_create(:team_dacu_disclosure).users.first.id }
     acting_team_id       { find_or_create(:team_dacu_disclosure).id }
   end
+
+  factory :case_transition_close_ico, parent: :case_transition do
+    association         :case, factory: [:ico_foi_case]
+    event               'close'
+    to_state            { 'closed' }
+    acting_user_id      { find_or_create(:team_dacu_disclosure).users.first.id }
+    acting_team_id       { find_or_create(:team_dacu_disclosure).id }
+  end
 end

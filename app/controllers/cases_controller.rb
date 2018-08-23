@@ -1,4 +1,5 @@
 #rubocop:disable Metrics/ClassLength
+require './lib/translate_for_case'
 
 class CasesController < ApplicationController
   include FOICasesParams
@@ -480,7 +481,7 @@ class CasesController < ApplicationController
     service = CaseApprovalService.new(user: current_user, kase: @case, bypass_params: bypass_params_manager)
     service.call
     if service.result == :ok
-      flash[:notice] = I18n.t('notices.case_cleared')
+      flash[:notice] = translate_for_case(@case, 'notices', 'case_cleared')
       redirect_to case_path(@case)
     else
       flash[:alert] = service.error_message
@@ -886,5 +887,11 @@ class CasesController < ApplicationController
                          edit_close_link,
                          { class: "undo-take-on-link" }
   end
+
+  def translate_for_case(*args, **options)
+    options[:translator] ||= public_method(:t)
+    TranslateForCase.translate(*args, **options)
+  end
+  alias t4c translate_for_case
 end
 #rubocop:enable Metrics/ClassLength

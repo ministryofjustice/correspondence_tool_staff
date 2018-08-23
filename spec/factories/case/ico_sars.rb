@@ -101,8 +101,6 @@ FactoryBot.define do
       identifier      'pending dacu clearance ICO SAR case'
       approving_team  { find_or_create :team_dacu_disclosure }
       approver        { approving_team.users.first }
-      responding_team { find_or_create(:responding_team) }
-      responder       { responding_team.users.first }
     end
     workflow 'trigger'
 
@@ -118,7 +116,26 @@ FactoryBot.define do
     end
   end
 
-  factory :responded_ico_sar_case, parent: :pending_dacu_clearance_ico_sar_case do
+
+  factory :approved_ico_sar_case, parent: :pending_dacu_clearance_ico_sar_case do
+    transient do
+      identifier 'approved ICO SAR case'
+      approving_team { find_or_create :team_dacu_disclosure }
+      approver { create :disclosure_specialist }
+    end
+
+    after(:create) do |kase, evaluator|
+      create :case_transition_approve,
+             case: kase,
+             acting_team_id: evaluator.approving_team.id,
+             acting_user_id: evaluator.approver.id
+
+      kase.approver_assignments.each { |a| a.update approved: true }
+      kase.reload
+    end
+  end
+
+  factory :responded_ico_sar_case, parent: :approved_ico_sar_case do
     transient do
       identifier 'responded ICO SAR case'
     end
@@ -132,5 +149,20 @@ FactoryBot.define do
     end
   end
 
+  factory :closed_ico_sar_case, parent: :responded_ico_sar_case do
+    transient do
+      identifier 'closed ICO SAR case'
+    end
+
+    date_ico_decision_received Date.today
+    ico_decision "upheld"
+
+
+    after(:create) do |kase, _evaluator|
+      create :case_transition_close_ico,
+             case_id: kase.id
+      kase.reload
+    end
+  end
 
 end
