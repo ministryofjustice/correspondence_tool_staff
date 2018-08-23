@@ -159,5 +159,27 @@ module Workflows
                )
       end
     end
+
+    describe :case_is_assigned_to_responder_or_approver_in_same_team_as_current_user do
+      it do
+        should permit_only_these_combinations(
+          [:assigned_responder, :case_drafting],
+          [:assigned_responder, :case_drafting_flagged],
+          [:assigned_responder, :case_drafting_flagged_press],
+          [:assigned_responder, :case_drafting_trigger],
+          [:assigned_responder, :case_drafting_trigger_press],
+          [:disclosure_specialist, :case_drafting_trigger],
+          [:disclosure_specialist, :case_drafting_trigger_press],
+          [:disclosure_specialist, :case_unassigned_trigger],
+          [:disclosure_specialist, :case_unassigned_trigger_press],
+          [:disclosure_specialist_coworker, :case_drafting_trigger],
+          [:disclosure_specialist_coworker, :case_drafting_trigger_press],
+          [:disclosure_specialist_coworker, :case_unassigned_trigger],
+          [:disclosure_specialist_coworker, :case_unassigned_trigger_press],
+          [:press_officer, :case_drafting_trigger_press],
+          [:press_officer, :case_unassigned_trigger_press]
+        )
+      end
+    end
   end
 end
