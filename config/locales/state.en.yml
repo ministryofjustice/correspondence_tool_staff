@@ -1,0 +1,17 @@
+en:
+  state: &state_translations
+    unassigned: Needs reassigning
+    awaiting_responder: To be accepted
+    awaiting_responder_email: Waiting to be accepted
+    awaiting_dispatch: Ready to send
+    drafting: Draft in progress
+    pending_dacu_clearance: Pending clearance
+    pending_press_office_clearance: Pending clearance
+    pending_private_office_clearance: Pending clearance
+    responded: Ready to close
+    closed: Closed
+    closed_status: Case closed
+    case/ico:
+      awaiting_dispatch: Ready to send to ICO
+      responded: Awaiting ICO decision
+
