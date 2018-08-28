@@ -540,11 +540,21 @@ describe 'ClosedCaseValidator' do
           end
         end
 
-        context 'files uploaded and decision comment specified'
-        it 'is valid' do
-          responded_ico.ico_decision_comment = 'Rubbish!'
-          responded_ico.uploaded_ico_decision_files = %w{ file_1 file2 }
-          expect(responded_ico).to be_valid
+        context 'files uploaded and decision comment specified' do
+          it 'is valid' do
+            responded_ico.ico_decision_comment = 'Rubbish!'
+            responded_ico.uploaded_ico_decision_files = %w{ file_1 file2 }
+            expect(responded_ico).to be_valid
+          end
+        end
+
+
+        context 'attachments and decision comment specified' do
+          it 'is valid' do
+            responded_ico.ico_decision_comment = 'Rubbish!'
+            responded_ico.attachments.push build(:case_ico_decision)
+            expect(responded_ico).to be_valid
+          end
         end
 
       end
