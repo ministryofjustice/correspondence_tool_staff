@@ -1,5 +1,3 @@
-UPLOAD_RESPONSE_DOCX_FIXTURE = Rails.root.join 'spec/fixtures/response.docx'
-
 def upload_response_step(file: UPLOAD_RESPONSE_DOCX_FIXTURE)
   stub_s3_uploader_for_all_files!
   cases_show_page.actions.upload_response.click
