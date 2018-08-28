@@ -41,6 +41,10 @@ describe Case::ICO::Base do
     it { should validate_presence_of(:ico_reference_number) }
   end
 
+  describe 'ico_decision enum' do
+    it { should have_enum(:ico_decision).with_values %w{ upheld overturned } }
+  end
+
   describe 'message attribute' do
     it { should validate_presence_of(:message) }
   end
