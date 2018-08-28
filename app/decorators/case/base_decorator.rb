@@ -103,7 +103,11 @@ class Case::BaseDecorator < Draper::Decorator
     if current_state != 'closed'
       translation_for_case(object, "state", object.current_state)
     else
-      I18n.t("state.#{current_state}_status")
+      if object.ico?
+        "Closed - #{ico_decision.downcase} by ICO"
+      else
+        I18n.t("state.#{current_state}_status")
+      end
     end
   end
 
