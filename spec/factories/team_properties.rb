@@ -12,25 +12,25 @@
 
 FactoryBot.define do
   factory :team_property do
-    team_id       33
-    key           'area'
-    value         'Hammersmith'
+    team_id       { 33 }
+    key           { 'area' }
+    value         { 'Hammersmith' }
 
     trait :area
 
     trait :lead do
-      key         'lead'
-      value       'Donald Trump'
+      key         { 'lead' }
+      value       { 'Donald Trump' }
     end
 
     trait :can_allocate_foi do
-      key         'can_allocate'
-      value       'FOI'
+      key         { 'can_allocate' }
+      value       { 'FOI' }
     end
 
     trait :can_allocate_gq do
-      key         'can_allocate'
-      value       'GQ'
+      key         { 'can_allocate' }
+      value       { 'GQ' }
     end
   end
 
@@ -41,22 +41,22 @@ FactoryBot.define do
 
 
   factory :team_lead, class: TeamProperty do
-    key   'lead'
+    key   { 'lead' }
     value { generate :team_lead }
   end
 
   factory :director_general, class: TeamProperty do
-    key   'lead'
+    key   { 'lead' }
     value { generate :director_general }
   end
 
   factory :director, class: TeamProperty do
-    key   'lead'
+    key   { 'lead' }
     value { generate :director }
   end
 
   factory :deputy_director, class: TeamProperty do
-    key   'lead'
+    key   { 'lead' }
     value { generate :deputy_director }
   end
 end
