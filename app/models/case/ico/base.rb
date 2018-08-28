@@ -77,10 +77,6 @@ class Case::ICO::Base < Case::Base
     closed? || responded?
   end
 
-  def ico?
-    true
-  end
-
   def name=(_new_name)
     raise StandardError.new(
             'name attribute is read-only for ICO cases'
@@ -101,6 +97,14 @@ class Case::ICO::Base < Case::Base
     raise StandardError.new(
             'subject attribute is read-only for ICO cases'
           )
+  end
+
+  def ico?
+    true
+  end
+
+  def current_team_and_user_resolver
+    CurrentTeamAndUser::ICO::Trigger.new(self)
   end
 
   private

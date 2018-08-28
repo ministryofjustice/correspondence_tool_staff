@@ -20,6 +20,6 @@ class CurrentTeamAndUserService
   private
 
   def resolver_for_case(kase)
-    "CurrentTeamAndUser::#{kase.type_abbreviation}::#{kase.workflow.camelize}".constantize.new(kase)
+    kase.current_team_and_user_resolver
   end
 end

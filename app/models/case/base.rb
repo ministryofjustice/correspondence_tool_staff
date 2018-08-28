@@ -630,6 +630,10 @@ class Case::Base < ApplicationRecord
     self[:external_deadline] = date
   end
 
+  def current_team_and_user_resolver
+    CurrentTeamAndUser::Base.new(self)
+  end
+
   # predicate methods
   #
   def foi?;                 false;  end
