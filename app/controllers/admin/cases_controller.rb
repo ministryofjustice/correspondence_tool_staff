@@ -107,6 +107,7 @@ class Admin::CasesController < AdminController
     @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.ico).active.sample
     @target_states = available_target_states
     @selected_state = 'drafting'
+    @case.ico_decision = Case::ICO::Base.ico_decisions.keys.sample
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
 
     render :new

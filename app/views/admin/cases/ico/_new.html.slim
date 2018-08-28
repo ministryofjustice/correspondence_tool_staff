@@ -22,4 +22,9 @@
 
   = f.collection_select :target_state, @target_states, :to_s, :to_s, { selected: @selected_state }
 
+  h2.heading-medium
+    = "ONLY for closed clases"
+
+  = f.radio_button_fieldset :ico_decision, choices: Case::ICO::Base.ico_decisions.keys
+
   = f.submit t('.create'), {class: 'button'}
