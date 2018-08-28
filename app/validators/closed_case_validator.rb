@@ -107,7 +107,8 @@ class ClosedCaseValidator < ActiveModel::Validator
 
   def validate_files_or_comment(rec)
     if rec.ico_decision == 'overturned' &&
-        rec.uploaded_ico_decision_files.blank? &&
+        (rec.uploaded_ico_decision_files.blank? ||
+            rec.attachments.ico_decisions.any?) &&
         rec.ico_decision_comment.blank?
           rec.errors.add(:uploaded_ico_decision_files, 'blank')
     end

@@ -150,14 +150,25 @@ FactoryBot.define do
 
   factory :closed_ico_foi_case, parent: :responded_ico_foi_case do
     transient do
-      identifier { 'closed ICO FOI case' }
+      identifier  { 'closed ICO FOI case' }
+      attachments {[ build(:case_ico_decision) ]}
     end
 
     date_ico_decision_received { Date.today }
     ico_decision { "upheld" }
 
+    trait :overturned_by_ico do
+      ico_decision         { "overturned" }
+      ico_decision_comment { Faker::NewGirl.quote }
+    end
 
-    after(:create) do |kase, _evaluator|
+    after(:create) do |kase, evaluator|
+
+      if kase.ico_decision == 'overturned'
+        kase.attachments.push(*evaluator.attachments)
+        kase.save!
+      end
+
       create :case_transition_close_ico,
              case_id: kase.id
       kase.reload
