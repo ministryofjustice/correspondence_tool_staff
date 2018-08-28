@@ -66,13 +66,13 @@
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 respond_and_close:
-                  if: Workflows::Predicates#user_is_assigned_responder?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
                 respond:
-                  if: Workflows::Predicates#user_is_assigned_responder?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 close:
                   after_transition: Workflows::Hooks#notify_managing_team_case_closed
-                  if: Workflows::Predicates#user_is_assigned_responder?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?

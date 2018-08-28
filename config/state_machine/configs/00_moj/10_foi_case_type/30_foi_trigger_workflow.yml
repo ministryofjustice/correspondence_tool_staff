@@ -261,7 +261,7 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to_using: Workflows::Conditionals#remove_response_next_state
                 respond:
-                  if: Workflows::Predicates#user_is_assigned_responder?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: responded
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
