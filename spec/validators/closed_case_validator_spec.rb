@@ -419,14 +419,6 @@ describe 'ClosedCaseValidator' do
         end
       end
 
-      context 'not a valid decision' do
-        it 'is invalid' do
-          responded_ico.ico_decision = 'xxx'
-          expect(responded_ico).not_to be_valid
-          expect(responded_ico.errors[:ico_decision]).to eq ['invalid']
-        end
-      end
-
       context 'just right' do
         it 'is valid' do
           expect(responded_ico).to be_valid

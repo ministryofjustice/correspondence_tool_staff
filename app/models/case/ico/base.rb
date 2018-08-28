@@ -33,6 +33,11 @@ class Case::ICO::Base < Case::Base
                     :date_closed
                   ]
 
+  enum ico_decision: {
+      upheld: 'upheld',
+      overturned: 'overturned'
+  }
+
   validates :ico_officer_name, presence: true
   validates :ico_reference_number, presence: true
   validates :message, presence: true

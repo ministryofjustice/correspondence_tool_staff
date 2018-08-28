@@ -100,7 +100,7 @@ class ClosedCaseValidator < ActiveModel::Validator
   def validate_ico_decision(rec)
     if rec.ico_decision.blank?
       rec.errors.add(:ico_decision, 'blank')
-    elsif !rec.ico_decision.in?(%w{ overturned upheld } )
+    elsif !rec.ico_decision.in?( Case::ICO::Base.ico_decisions.keys )
       rec.errors.add(:ico_decision, 'invalid')
     end
   end
