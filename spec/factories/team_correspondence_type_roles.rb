@@ -18,26 +18,26 @@ FactoryBot.define do
   factory :team_correspondence_type_role do
     correspondence_type   { find_or_create :foi_correspondence_type }
     # team_id       BusinessUnit.first.id
-    view          false
-    edit          false
-    manage        false
-    respond       false
-    approve       false
+    view          { false }
+    edit          { false }
+    manage        { false }
+    respond       { false }
+    approve       { false }
 
     trait :responder do
-      view          true
-      respond       true
+      view          { true }
+      respond       { true }
     end
 
     trait :manager do
-      view          true
-      manage        true
-      edit          true
+      view          { true }
+      manage        { true }
+      edit          { true }
     end
 
     trait :approver do
-      view          true
-      approve       true
+      view          { true }
+      approve       { true }
     end
 
     trait :foi do

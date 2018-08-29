@@ -18,213 +18,213 @@
 
 FactoryBot.define do
   factory :exemption, class: CaseClosure::Exemption do
-    requires_refusal_reason false
-    subtype           'absolute'
-    name              'Generic exemption'
-    abbreviation      'genex'
-    sequence_id       404
+    requires_refusal_reason { false }
+    subtype           { 'absolute' }
+    name              { 'Generic exemption' }
+    abbreviation      { 'genex' }
+    sequence_id       { 404 }
 
     trait :ncnd do
-      subtype           'ncnd'
-      name              'Neither confirm nor deny (NCND)'
-      abbreviation      'ncnd'
-      sequence_id       410
+      subtype           { 'ncnd' }
+      name              { 'Neither confirm nor deny (NCND)' }
+      abbreviation      { 'ncnd' }
+      sequence_id       { 410 }
     end
 
     trait :absolute do
-      subtype           'absolute'
-      name              'Generic absolute exemption'
-      abbreviation      'genabs'
-      sequence_id       405
+      subtype           { 'absolute' }
+      name              { 'Generic absolute exemption' }
+      abbreviation      { 'genabs' }
+      sequence_id       { 405 }
     end
 
     trait :qualified do
-      subtype           'qualified'
-      name              'Generic qualified exemption'
-      abbreviation      'genqual'
-      sequence_id       601
+      subtype           { 'qualified' }
+      name              { 'Generic qualified exemption' }
+      abbreviation      { 'genqual' }
+      sequence_id       { 601 }
     end
 
     trait :s12_1 do
-      subtype           'absolute'
-      name              '(s12(1)) - Exceeded cost to obtain'
-      abbreviation      'cost'
-      sequence_id       505
+      subtype           { 'absolute' }
+      name              { '(s12(1)) - Exceeded cost to obtain' }
+      abbreviation      { 'cost' }
+      sequence_id       { 505 }
     end
 
     trait :s21 do
-      subtype           'absolute'
-      name              '(s21) - Information accessible by other means'
-      abbreviation      'othermeans'
-      sequence_id       510
+      subtype           { 'absolute' }
+      name              { '(s21) - Information accessible by other means' }
+      abbreviation      { 'othermeans' }
+      sequence_id       { 510 }
     end
 
     trait :s12 do
-      subtype           'absolute'
-      name              '(s12(1))  - Exceeded cost to obtain'
-      abbreviation      'cost'
-      sequence_id       512
+      subtype           { 'absolute' }
+      name              { '(s12(1))  - Exceeded cost to obtain' }
+      abbreviation      { 'cost' }
+      sequence_id       { 512 }
     end
 
     trait :s23 do
-      subtype           'absolute'
-      name              '(s23) - Information supplied by, or relating to, bodies dealing with security matters'
-      abbreviation      'security'
-      sequence_id       520
+      subtype           { 'absolute' }
+      name              { '(s23) - Information supplied by, or relating to, bodies dealing with security matters' }
+      abbreviation      { 'security' }
+      sequence_id       { 520 }
     end
 
     trait :s32 do
-      subtype           'absolute'
-      name              '(s32) - Court records'
-      abbreviation      'court'
-      sequence_id       530
+      subtype           { 'absolute' }
+      name              { '(s32) - Court records' }
+      abbreviation      { 'court' }
+      sequence_id       { 530 }
     end
 
     trait :s34 do
-      subtype           'absolute'
-      name              '(s34) - Parliamentary privilege'
-      abbreviation      'pp'
-      sequence_id       540
+      subtype           { 'absolute' }
+      name              { '(s34) - Parliamentary privilege' }
+      abbreviation      { 'pp' }
+      sequence_id       { 540 }
     end
 
     trait :s40 do
-      subtype           'absolute'
-      name              '(s40) - Personal information'
-      abbreviation      'pers'
-      sequence_id       550
+      subtype           { 'absolute' }
+      name              { '(s40) - Personal information' }
+      abbreviation      { 'pers' }
+      sequence_id       { 550 }
     end
 
     trait :s41 do
-      subtype           'absolute'
-      name              '(s41) - Information provided in confidence'
-      abbreviation      'conf'
-      sequence_id       560
+      subtype           { 'absolute' }
+      name              { '(s41) - Information provided in confidence' }
+      abbreviation      { 'conf' }
+      sequence_id       { 560 }
     end
 
     trait :s44 do
-      subtype           'absolute'
-      name              '(s44) - Prohibitions on disclosure'
-      abbreviation      'prohib'
-      sequence_id       570
+      subtype           { 'absolute' }
+      name              { '(s44) - Prohibitions on disclosure' }
+      abbreviation      { 'prohib' }
+      sequence_id       { 570 }
     end
 
     trait :s22 do
-      subtype           'qualified'
-      name              '(s22) - Information intended for future publication'
-      abbreviation      'future'
-      sequence_id       605
+      subtype           { 'qualified' }
+      name              { '(s22) - Information intended for future publication' }
+      abbreviation      { 'future' }
+      sequence_id       { 605 }
     end
 
     trait :s22a do
-      subtype           'qualified'
-      name              '(s22A) - Research intended for future publication'
-      abbreviation      'research'
-      sequence_id       610
+      subtype           { 'qualified' }
+      name              { '(s22A) - Research intended for future publication' }
+      abbreviation      { 'research' }
+      sequence_id       { 610 }
     end
 
     trait :s24 do
-      subtype           'qualified'
-      name              '(s24) - National security'
-      abbreviation      'natsec'
-      sequence_id       615
+      subtype           { 'qualified' }
+      name              { '(s24) - National security' }
+      abbreviation      { 'natsec' }
+      sequence_id       { 615 }
     end
 
     trait :s26 do
-      subtype           'qualified'
-      name              '(s26) - Defence'
-      abbreviation      'defence'
-      sequence_id       620
+      subtype           { 'qualified' }
+      name              { '(s26) - Defence' }
+      abbreviation      { 'defence' }
+      sequence_id       { 620 }
     end
 
     trait :s27 do
-      subtype           'qualified'
-      name              '(s27) - International relations'
-      abbreviation      'intrel'
-      sequence_id       625
+      subtype           { 'qualified' }
+      name              { '(s27) - International relations' }
+      abbreviation      { 'intrel' }
+      sequence_id       { 625 }
     end
 
     trait :s28 do
-      subtype           'qualified'
-      name              '(s28) - Relations within the United Kingdom'
-      abbreviation      'ukrel'
-      sequence_id       630
+      subtype           { 'qualified' }
+      name              { '(s28) - Relations within the United Kingdom' }
+      abbreviation      { 'ukrel' }
+      sequence_id       { 630 }
     end
 
     trait :s29 do
-      subtype           'qualified'
-      name              '(s29) - The economy'
-      abbreviation      'economy'
-      sequence_id       635
+      subtype           { 'qualified' }
+      name              { '(s29) - The economy' }
+      abbreviation      { 'economy' }
+      sequence_id       { 635 }
     end
 
     trait :s30 do
-      subtype           'qualified'
-      name              '(s30) - Investigations and proceedings conducted by public authorities'
-      abbreviation      'pubauth'
-      sequence_id       640
+      subtype           { 'qualified' }
+      name              { '(s30) - Investigations and proceedings conducted by public authorities' }
+      abbreviation      { 'pubauth' }
+      sequence_id       { 640 }
     end
 
     trait :s31 do
-      subtype           'qualified'
-      name              '(s31) - Law enforcement'
-      abbreviation      'law'
-      sequence_id       645
+      subtype           { 'qualified' }
+      name              { '(s31) - Law enforcement' }
+      abbreviation      { 'law' }
+      sequence_id       { 645 }
     end
 
     trait :s33 do
-      subtype           'qualified'
-      name              '(s33) - Audit functions'
-      abbreviation      'audit'
-      sequence_id       650
+      subtype           { 'qualified' }
+      name              { '(s33) - Audit functions' }
+      abbreviation      { 'audit' }
+      sequence_id       { 650 }
     end
 
     trait :s35 do
-      subtype           'qualified'
-      name              '(s35) - Formulation of government policy'
-      abbreviation      'policy'
-      sequence_id       655
+      subtype           { 'qualified' }
+      name              { '(s35) - Formulation of government policy' }
+      abbreviation      { 'policy' }
+      sequence_id       { 655 }
     end
 
     trait :s36 do
-      subtype           'qualified'
-      name              '(s36) - Prejudice to effective conduct of public affairs'
-      abbreviation      'prej'
-      sequence_id       660
+      subtype           { 'qualified' }
+      name              { '(s36) - Prejudice to effective conduct of public affairs' }
+      abbreviation      { 'prej' }
+      sequence_id       { 660 }
     end
 
     trait :s37 do
-      subtype           'qualified'
-      name              '(s37) - Communication with Her Majesty, etc. and honours'
-      abbreviation      'royals'
-      sequence_id       665
+      subtype           { 'qualified' }
+      name              { '(s37) - Communication with Her Majesty, etc. and honours' }
+      abbreviation      { 'royals' }
+      sequence_id       { 665 }
     end
 
     trait :s38 do
-      subtype           'qualified'
-      name              '(s38) - Health and safety'
-      abbreviation      'elf'
-      sequence_id       670
+      subtype           { 'qualified' }
+      name              { '(s38) - Health and safety' }
+      abbreviation      { 'elf' }
+      sequence_id       { 670 }
     end
 
     trait :s39 do
-      subtype           'qualified'
-      name              '(s39) - Environment information'
-      abbreviation      'env'
-      sequence_id       675
+      subtype           { 'qualified' }
+      name              { '(s39) - Environment information' }
+      abbreviation      { 'env' }
+      sequence_id       { 675 }
     end
 
     trait :s42 do
-      subtype           'qualified'
-      name              '(s42) - Legal professional privilege'
-      abbreviation      'legpriv'
-      sequence_id       680
+      subtype           { 'qualified' }
+      name              { '(s42) - Legal professional privilege' }
+      abbreviation      { 'legpriv' }
+      sequence_id       { 680 }
     end
 
     trait :s43 do
-      subtype           'qualified'
-      name              '(s43) - Commercial interests'
-      abbreviation      'comm'
-      sequence_id       685
+      subtype           { 'qualified' }
+      name              { '(s43) - Commercial interests' }
+      abbreviation      { 'comm' }
+      sequence_id       { 685 }
     end
 
 
@@ -233,160 +233,160 @@ FactoryBot.define do
 
 
     factory :outcome, class: CaseClosure::Outcome do
-      subtype nil
+      subtype { nil }
 
 
       trait :requires_refusal_reason do
-        name                      'Generic outcome'
-        abbreviation              'outcome'
-        requires_refusal_reason   true
+        name                      { 'Generic outcome' }
+        abbreviation              { 'outcome' }
+        requires_refusal_reason   { true }
       end
 
       trait :granted do
-        name                      'Granted in full'
-        abbreviation              'granted'
-        sequence_id               10
+        name                      { 'Granted in full' }
+        abbreviation              { 'granted' }
+        sequence_id               { 10 }
       end
 
       trait :part_refused do
-        name                      'Refused in part'
-        abbreviation              'part'
-        sequence_id               20
-        requires_refusal_reason   true
+        name                      { 'Refused in part' }
+        abbreviation              { 'part' }
+        sequence_id               { 20 }
+        requires_refusal_reason   { true }
       end
 
       trait :refused do
-        name                      'Refused fully'
-        abbreviation              'refused'
-        sequence_id               30
-        requires_refusal_reason   true
+        name                      { 'Refused fully' }
+        abbreviation              { 'refused' }
+        sequence_id               { 30 }
+        requires_refusal_reason   { true }
       end
 
       trait :clarify do
-        name                      'Clarification needed - Section 1(3)'
-        abbreviation              'clarify'
-        sequence_id               15
+        name                      { 'Clarification needed - Section 1(3)' }
+        abbreviation              { 'clarify' }
+        sequence_id               { 15 }
       end
     end
 
     factory :refusal_reason, class: CaseClosure::RefusalReason do
-      subtype nil
+      subtype { nil }
 
       trait :requires_exemption do
-        name                        'generic refusal reason'
-        abbreviation                'genrefusal'
-        requires_exemption          true
+        name                        { 'generic refusal reason' }
+        abbreviation                { 'genrefusal' }
+        requires_exemption          { true }
       end
 
       trait :tmm do
-        name                        '(s1(3)) - Clarification required'
-        abbreviation                'tmm'
-        sequence_id                 100
-        requires_exemption          false
+        name                        { '(s1(3)) - Clarification required' }
+        abbreviation                { 'tmm' }
+        sequence_id                 { 100 }
+        requires_exemption          { false }
       end
 
       trait :exempt do
-        name                        'Exemption applied'
-        abbreviation                'exempt'
-        sequence_id                 110
-        requires_exemption          true
+        name                        { 'Exemption applied' }
+        abbreviation                { 'exempt' }
+        sequence_id                 { 110 }
+        requires_exemption          { true }
       end
 
       trait :noinfo do
-        name                        'Information not held'
-        abbreviation                'noinfo'
-        sequence_id                 120
-        requires_exemption          false
+        name                        { 'Information not held' }
+        abbreviation                { 'noinfo' }
+        sequence_id                 { 120 }
+        requires_exemption          { false }
       end
 
       trait :notmet do
-        name                        's8(1) - Conditions for submitting request not met'
-        abbreviation                'notmet'
-        sequence_id                 130
-        requires_exemption          false
+        name                        { 's8(1) - Conditions for submitting request not met' }
+        abbreviation                { 'notmet' }
+        sequence_id                 { 130 }
+        requires_exemption          { false }
       end
 
       trait :cost do
-        name                        '(s12(2)) - Exceeded cost to investigate'
-        abbreviation                'cost'
-        sequence_id                 140
-        requires_exemption          false
+        name                        { '(s12(2)) - Exceeded cost to investigate' }
+        abbreviation                { 'cost' }
+        sequence_id                 { 140 }
+        requires_exemption          { false }
       end
 
       trait :vex do
-        name                        '(s14(1)) - Vexatious'
-        abbreviation                'vex'
-        sequence_id                 150
-        requires_exemption          false
+        name                        { '(s14(1)) - Vexatious' }
+        abbreviation                { 'vex' }
+        sequence_id                 { 150 }
+        requires_exemption          { false }
       end
 
       trait :repeat do
-        name                        '(s14(2)) - Repeated request'
-        abbreviation                'repeat'
-        sequence_id                 160
-        requires_exemption          false
+        name                        { '(s14(2)) - Repeated request' }
+        abbreviation                { 'repeat' }
+        sequence_id                 { 160 }
+        requires_exemption          { false }
       end
 
       trait :ncnd do
-        name                        'Neither confirm nor deny (NCND)'
-        abbreviation                'ncnd'
-        sequence_id                 170
-        requires_exemption          true
+        name                        { 'Neither confirm nor deny (NCND)' }
+        abbreviation                { 'ncnd' }
+        sequence_id                 { 170 }
+        requires_exemption          { true }
       end
     end
 
     factory :info_status, class: CaseClosure::InfoHeldStatus do
-      subtype                       nil
-      requires_refusal_reason       false
-      requires_exemption            false
-      active                        true
-      omit_for_part_refused         false
+      subtype                       { nil }
+      requires_refusal_reason       { false }
+      requires_exemption            { false }
+      active                        { true }
+      omit_for_part_refused         { false }
 
       trait :held do
-        name                        'Yes'
-        abbreviation                'held'
-        sequence_id                 710
+        name                        { 'Yes' }
+        abbreviation                { 'held' }
+        sequence_id                 { 710 }
       end
 
       trait :not_held do
-        name                        'No'
-        abbreviation                'not_held'
-        sequence_id                 730
+        name                        { 'No' }
+        abbreviation                { 'not_held' }
+        sequence_id                 { 730 }
       end
 
       trait :part_held do
-        name                        'Held in part'
-        abbreviation                'part_held'
-        sequence_id                 720
+        name                        { 'Held in part' }
+        abbreviation                { 'part_held' }
+        sequence_id                 { 720 }
       end
 
       trait :ncnd do
-        name                        'Other'
-        abbreviation                'not_confirmed'
-        sequence_id                 740
+        name                        { 'Other' }
+        abbreviation                { 'not_confirmed' }
+        sequence_id                 { 740 }
       end
     end
   end
 
   factory :appeal_outcome, class: CaseClosure::AppealOutcome do
-    subtype                       nil
+    subtype                       { nil }
 
     trait :upheld do
-      name                        'upheld'
-      abbreviation                'Upheld'
-      sequence_id                 40
+      name                        { 'upheld' }
+      abbreviation                { 'Upheld' }
+      sequence_id                 { 40 }
     end
 
     trait :upheld_in_part do
-      name                        'upheld_in_part'
-      abbreviation                'Upheld in part'
-      sequence_id                 50
+      name                        { 'upheld_in_part' }
+      abbreviation                { 'Upheld in part' }
+      sequence_id                 { 50 }
     end
 
     trait :overturned do
-      name                        'Overturned'
-      abbreviation                'overturned'
-      sequence_id                 60
+      name                        { 'Overturned' }
+      abbreviation                { 'overturned' }
+      sequence_id                 { 60 }
     end
   end
 
