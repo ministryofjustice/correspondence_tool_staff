@@ -160,14 +160,15 @@ FactoryBot.define do
     trait :overturned_by_ico do
       ico_decision         { "overturned" }
       ico_decision_comment { Faker::NewGirl.quote }
-    end
 
-    after(:create) do |kase, evaluator|
-
-      if kase.ico_decision == 'overturned'
+      after(:create) do |kase, evaluator|
         kase.attachments.push(*evaluator.attachments)
         kase.save!
       end
+
+    end
+
+    after(:create) do |kase, evaluator|
 
       create :case_transition_close_ico,
              case_id: kase.id
