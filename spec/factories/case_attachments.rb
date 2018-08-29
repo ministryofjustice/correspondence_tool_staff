@@ -28,10 +28,10 @@ FactoryBot.define do
   end
 
   factory :correspondence_response, parent: :case_attachment do
-    type 'response'
+    type { 'response' }
 
     trait :without_preview_key do
-      preview_key nil
+      preview_key { nil }
     end
   end
 
@@ -46,7 +46,7 @@ FactoryBot.define do
   end
 
   factory :case_postal_request, parent: :case_attachment do
-    type 'response'
+    type { 'response' }
     key { "#{SecureRandom.hex(16)}/requests/" +
           "#{upload_group}/#{Faker::Internet.slug}.pdf" }
     preview_key { "#{SecureRandom.hex(16)}/request_previews/" +

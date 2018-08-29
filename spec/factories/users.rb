@@ -39,10 +39,10 @@ FactoryBot.define do
 
   factory :user do
     transient do
-      identifier 'user'
+      identifier { 'user' }
     end
 
-    password 'qwerty$123'
+    password { 'qwerty$123' }
     sequence(:full_name) { |n| "#{identifier} #{n}" }
     email { Faker::Internet.email(full_name) }
 
@@ -57,7 +57,7 @@ FactoryBot.define do
 
     factory :manager do
       transient do
-        identifier 'managing user'
+        identifier { 'managing user' }
       end
 
       full_name      { generate(:manager_name) }
@@ -66,7 +66,7 @@ FactoryBot.define do
 
     factory :manager_approver do
       transient do
-        identifier 'managing-approving user'
+        identifier { 'managing-approving user' }
       end
 
       full_name      { generate(:manager_name) }
@@ -76,7 +76,7 @@ FactoryBot.define do
 
     factory :disclosure_bmt_user do
       transient do
-        identifier 'disclosure-bmt managing user'
+        identifier { 'disclosure-bmt managing user' }
       end
 
       full_name      { generate :disclosure_bmt_user_name }
@@ -85,7 +85,7 @@ FactoryBot.define do
 
     factory :responder do
       transient do
-        identifier 'responding user'
+        identifier { 'responding user' }
       end
 
       full_name      { generate(:responder_name) }
@@ -94,7 +94,7 @@ FactoryBot.define do
 
     factory :approver do
       transient do
-        identifier 'approving user'
+        identifier { 'approving user' }
       end
 
       full_name      { generate(:approver_name) }
@@ -103,7 +103,7 @@ FactoryBot.define do
 
     factory :approver_responder do
       transient do
-        identifier 'approving-responding user'
+        identifier { 'approving-responding user' }
       end
 
       full_name         { generate(:approver_responder_name) }
@@ -113,7 +113,7 @@ FactoryBot.define do
 
     factory :approver_responder_manager do
       transient do
-        identifier 'approving-responding-managing user'
+        identifier { 'approving-responding-managing user' }
       end
 
       full_name         { generate(:approver_responder_manager_name) }
@@ -124,7 +124,7 @@ FactoryBot.define do
 
     factory :disclosure_specialist do
       transient do
-        identifier 'disclosure-specialist approving user'
+        identifier { 'disclosure-specialist approving user' }
       end
 
       full_name      { generate(:disclosure_specialist_name) }
@@ -133,7 +133,7 @@ FactoryBot.define do
 
     factory :disclosure_specialist_bmt do
       transient do
-        identifier 'disclosure-specialist-bmt managing user'
+        identifier { 'disclosure-specialist-bmt managing user' }
       end
 
       full_name      { generate(:disclosure_specialist_name) }
@@ -143,7 +143,7 @@ FactoryBot.define do
 
     factory :press_officer do
       transient do
-        identifier 'press-office approving user'
+        identifier { 'press-office approving user' }
       end
 
       full_name      { generate(:press_officer_name) }
@@ -159,7 +159,7 @@ FactoryBot.define do
 
     factory :private_officer do
       transient do
-        identifier 'private-office approving user'
+        identifier { 'private-office approving user' }
       end
 
       full_name      { generate(:private_officer_name) }
@@ -174,7 +174,7 @@ FactoryBot.define do
 
     factory :deactivated_user do
       transient do
-        identifier 'deactivated user'
+        identifier { 'deactivated user' }
       end
 
       full_name      { generate(:manager_name) }
@@ -184,7 +184,7 @@ FactoryBot.define do
 
     factory :admin do
       transient do
-        identifier 'admin user'
+        identifier { 'admin user' }
       end
 
       full_name      { generate(:manager_name) }

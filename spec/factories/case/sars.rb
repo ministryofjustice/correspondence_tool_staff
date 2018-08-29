@@ -4,26 +4,26 @@ FactoryBot.define do
           class: Case::SAR do
     transient do
       creation_time             { 4.business_days.ago }
-      identifier                "new sar case"
+      identifier                { "new sar case" }
       managing_team             { find_or_create :team_dacu }
     end
 
-    current_state                 'unassigned'
+    current_state                 { 'unassigned' }
     sequence(:name)               { |n| "#{identifier} name #{n}" }
     email                         { Faker::Internet.email(identifier) }
-    reply_method                  'send_by_email'
+    reply_method                  { 'send_by_email' }
     sequence(:subject)            { |n| "#{identifier} subject #{n}" }
     sequence(:message)            { |n| "#{identifier} message #{n}" }
     received_date                 { Time.zone.today.to_s }
     sequence(:postal_address)     { |n| "#{identifier} postal address #{n}" }
     sequence(:subject_full_name)  { |n| "Subject #{n}" }
-    subject_type                  'offender'
-    third_party                   false
+    subject_type                  { 'offender' }
+    third_party                   { false }
     created_at                    { creation_time }
 
     trait :third_party do
-      third_party true
-      third_party_relationship 'Aunt'
+      third_party { true }
+      third_party_relationship { 'Aunt' }
     end
 
     after(:build) do |_kase, evaluator|
@@ -41,7 +41,7 @@ FactoryBot.define do
           aliases: [:assigned_sar],
           class: Case::SAR do
     transient do
-      identifier "assigned sar"
+      identifier { "assigned sar" }
       manager         { managing_team.managers.first }
       responding_team { create :responding_team }
     end
@@ -69,7 +69,7 @@ FactoryBot.define do
   factory :accepted_sar, parent: :assigned_sar,
           aliases: [:sar_being_drafted] do
     transient do
-      identifier "accepted sar"
+      identifier { "accepted sar" }
       responder { create :responder }
       responding_team { responder.responding_teams.first }
     end
@@ -91,7 +91,7 @@ FactoryBot.define do
       approving_team { find_or_create :team_dacu_disclosure }
       approver       { create :disclosure_specialist }
     end
-    workflow 'trigger'
+    workflow { 'trigger' }
 
     after(:create) do |kase, evaluator|
       create :approver_assignment,
@@ -129,7 +129,7 @@ FactoryBot.define do
     missing_info              { false }
 
     transient do
-      identifier "closed sar"
+      identifier { "closed sar" }
     end
 
     received_date { 22.business_days.ago }
@@ -154,7 +154,7 @@ FactoryBot.define do
     missing_info              { false }
 
     transient do
-      identifier "closed sar"
+      identifier { "closed sar" }
     end
 
     received_date { 22.business_days.ago }
@@ -177,7 +177,7 @@ FactoryBot.define do
   trait :clarification_required do
     refusal_reason              { find_or_create :refusal_reason, :tmm }
     missing_info                { true }
-    message                     'info held other, clarification required'
+    message                     { 'info held other, clarification required' }
   end
 
 end
