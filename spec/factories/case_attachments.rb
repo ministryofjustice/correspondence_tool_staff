@@ -54,7 +54,7 @@ FactoryBot.define do
   end
 
   factory :case_ico_decision, parent: :case_attachment do
-    type 'ico_decision'
+    type { 'ico_decision' }
     key { "#{SecureRandom.hex(16)}/ico_decision/" +
           "#{upload_group}/#{Faker::Internet.slug}.pdf" }
     preview_key { "#{SecureRandom.hex(16)}/ico_decision_previews/" +
