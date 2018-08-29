@@ -252,7 +252,7 @@ case_types:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?
                    transition_to_using: Workflows::Conditionals#remove_response_next_state
                  respond:
-                   if: Workflows::Predicates#user_is_assigned_responder?
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                    transition_to: responded
 
               responded:
@@ -529,7 +529,7 @@ case_types:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to_using: Workflows::Conditionals#remove_response_next_state
                 respond:
-                  if: Workflows::Predicates#user_is_assigned_responder?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: responded
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
@@ -795,9 +795,6 @@ case_types:
                 remove_response:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to_using: Workflows::Conditionals#remove_response_next_state
-                respond:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
-                  transition_to: responded
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
                 unflag_for_clearance:               # needed for press/private office to unaccept
@@ -892,7 +889,7 @@ case_types:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?
                    transition_to_using: Workflows::Conditionals#remove_response_next_state
                  respond:
-                   if: Workflows::Predicates#user_is_assigned_responder?
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                    transition_to: responded
 
               responded:
@@ -999,13 +996,13 @@ case_types:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 respond_and_close:
-                  if: Workflows::Predicates#user_is_assigned_responder?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
                 respond:
-                  if: Workflows::Predicates#user_is_assigned_responder?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 close:
                   after_transition: Workflows::Hooks#notify_managing_team_case_closed
-                  if: Workflows::Predicates#user_is_assigned_responder?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
@@ -1131,13 +1128,13 @@ case_types:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 respond_and_close:
-                  if: Workflows::Predicates#user_is_assigned_responder?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
                 respond:
-                  if: Workflows::Predicates#user_is_assigned_responder?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 close:
                   after_transition: Workflows::Hooks#notify_managing_team_case_closed
-                  if: Workflows::Predicates#user_is_assigned_responder?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?

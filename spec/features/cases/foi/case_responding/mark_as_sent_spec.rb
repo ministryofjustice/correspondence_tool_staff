@@ -56,7 +56,18 @@ feature 'Mark response as sent' do
     scenario 'marking the case as sent' do
       cases_show_page.load(id: kase.id)
 
-      expect(cases_show_page.actions).not_to have_mark_as_sent
+      cases_show_page.actions.mark_as_sent.click
+
+      cases_respond_page.fill_in_date_responded(Date.today)
+
+      cases_respond_page.submit_button.click
+
+      expect(cases_show_page).
+          to have_content('The response has been marked as sent.')
+
+      login_as manager
+      open_cases_page.load
+      expect(open_cases_page.case_numbers).to include kase.number
     end
   end
 end
