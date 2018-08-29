@@ -168,7 +168,7 @@ FactoryBot.define do
 
     end
 
-    after(:create) do |kase, evaluator|
+    after(:create) do |kase, _evaluator|
 
       create :case_transition_close_ico,
              case_id: kase.id
