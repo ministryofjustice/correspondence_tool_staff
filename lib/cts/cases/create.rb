@@ -274,16 +274,10 @@ module CTS::Cases
     end
 
     def transition_to_closed(kase)
-      if get_correspondence_type_abbreviation == :foi
-        kase.prepare_for_close
-        kase.update(date_responded: Date.today,
-                    info_held_status: CaseClosure::InfoHeldStatus.held,
-                    outcome_abbreviation: 'granted')
-        kase.close(CTS::dacu_manager)
-      else
-        kase.prepare_for_close
-        kase.update(date_responded: Date.today, missing_info: false)
-        kase.respond_and_close(responder)
+      case kase.type_abbreviation
+      when 'FOI' then transition_to_closed_for_foi(kase)
+      when 'ICO' then transition_to_closed_for_ico(kase)
+      when 'SAR' then transition_to_closed_for_sar(kase)
       end
     end
 
@@ -378,6 +372,36 @@ module CTS::Cases
     def get_correspondence_type_abbreviation
       @klass.type_abbreviation.to_sym.downcase
     end
+
+
+
+    def transition_to_closed_for_foi(kase)
+      kase.prepare_for_close
+      kase.update(date_responded: Date.today,
+                  info_held_status: CaseClosure::InfoHeldStatus.held,
+                  outcome_abbreviation: 'granted')
+      kase.close(CTS::dacu_manager)
+    end
+
+    def transition_to_closed_for_ico(kase)
+      kase.prepare_for_close
+      ico_decision = options.fetch(:ico_decision, Case::ICO::Base.ico_decisions.keys.sample )
+      kase.update_attributes(date_ico_decision_received: Date.today, ico_decision: ico_decision)
+      if kase.overturned?
+        uploader = S3Uploader.new(kase, CTS::dacu_manager)
+        uploader.add_file_to_case('spec/fixtures/ico_decision.png', :ico_decision)
+        kase.ico_decision_comment = options.fetch(:ico_decision_comment, Faker::NewGirl.quote)
+      end
+      kase.save!
+      kase.close(CTS::dacu_manager)
+    end
+
+    def transition_to_closed_for_sar(kase)
+      kase.prepare_for_close
+      kase.update(date_responded: Date.today, missing_info: false)
+      kase.respond_and_close(responder)
+    end
+
   end
 end
 # rubocop:enable Metrics/ClassLength

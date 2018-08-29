@@ -419,14 +419,6 @@ describe 'ClosedCaseValidator' do
         end
       end
 
-      context 'not a valid decision' do
-        it 'is invalid' do
-          responded_ico.ico_decision = 'xxx'
-          expect(responded_ico).not_to be_valid
-          expect(responded_ico.errors[:ico_decision]).to eq ['invalid']
-        end
-      end
-
       context 'just right' do
         it 'is valid' do
           expect(responded_ico).to be_valid
@@ -540,11 +532,21 @@ describe 'ClosedCaseValidator' do
           end
         end
 
-        context 'files uploaded and decision comment specified'
-        it 'is valid' do
-          responded_ico.ico_decision_comment = 'Rubbish!'
-          responded_ico.uploaded_ico_decision_files = %w{ file_1 file2 }
-          expect(responded_ico).to be_valid
+        context 'files uploaded and decision comment specified' do
+          it 'is valid' do
+            responded_ico.ico_decision_comment = 'Rubbish!'
+            responded_ico.uploaded_ico_decision_files = %w{ file_1 file2 }
+            expect(responded_ico).to be_valid
+          end
+        end
+
+
+        context 'attachments and decision comment specified' do
+          it 'is valid' do
+            responded_ico.ico_decision_comment = 'Rubbish!'
+            responded_ico.attachments.push build(:case_ico_decision)
+            expect(responded_ico).to be_valid
+          end
         end
 
       end

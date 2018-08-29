@@ -3,7 +3,7 @@
 
   .ico-decision
     = f.radio_button_fieldset :ico_decision,
-          choices: [:upheld, :overturned]
+          choices: Case::ICO::Base.ico_decisions.keys
 
   .form-group
     = f.gov_uk_date_field :date_ico_decision_received, { legend_text: t('.date_ico_decision_received_date'),
