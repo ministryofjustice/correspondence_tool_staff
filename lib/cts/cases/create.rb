@@ -237,6 +237,8 @@ module CTS::Cases
 
       responder = kase.ico? ? kase.assigned_disclosure_specialist : kase.responder
 
+      kase.update(date_responded: 5.business_days.after(kase.received_date))
+
       kase.respond(responder)
     end
 

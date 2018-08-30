@@ -1,0 +1,33 @@
+- if case_details.ico? && case_details.closed?
+  section.case-info
+    h2.request--heading
+      = "ICO's decision"
+
+    .request--message
+      p
+        strong
+          = "MoJ's decision has been #{ case_details.ico_decision } by the ICO"
+        = " on #{ case_details.date_decision_received }"
+      - if case_details.ico_decision_comment.present?
+        p
+          = case_details.ico_decision_comment
+
+      table.case-attachments-report
+        thead.visually-hidden
+          tr
+            th
+              = 'File'
+            th
+              = 'Action'
+        tbody
+          - case_details.attachments.ico_decisions.each do |file|
+            tr
+              td
+                = file.filename
+              td.request--responses--actions
+                .response-actions
+                  = attachment_preview_link(file)
+                  = " | "
+                  = attachment_download_link(case_details, file)
+
+

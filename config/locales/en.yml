@@ -455,7 +455,9 @@ en:
       create_overturned: Create an ICO Overturned case
       data_subject: Data subject
       data_subject_type: Type of data subject
-      date_responded: Date sent to requester
+      date_responded: Date response sent to requester
+      case/ico:
+        date_responded: Date response sent to ICO
       outcome: Outcome
       appeal_outcome: Appeal Outcome
       download_link_html: |

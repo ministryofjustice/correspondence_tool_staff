@@ -154,7 +154,8 @@ FactoryBot.define do
       attachments {[ build(:case_ico_decision) ]}
     end
 
-    date_ico_decision_received { Date.today }
+    received_date { 22.business_days.ago }
+    date_ico_decision_received { 4.business_days.ago }
     ico_decision { "upheld" }
 
     trait :overturned_by_ico do
