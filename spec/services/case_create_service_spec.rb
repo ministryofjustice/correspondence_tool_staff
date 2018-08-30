@@ -216,6 +216,11 @@ describe CaseCreateService do
         expect(kase.internal_deadline).to eq 20.business_days.before(kase.external_deadline)
       end
 
+      it 'calls #link_related_cases on the newly created case' do
+        expect_any_instance_of(Case::OverturnedICO::SAR).to receive(:link_related_cases)
+        ccs.call
+      end
+
       context 'invalid case type for original ico appeal' do
         let(:original_ico_appeal)   { create :case }
 

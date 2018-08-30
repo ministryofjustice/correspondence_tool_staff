@@ -564,7 +564,7 @@ class Case::Base < ApplicationRecord
   # default_press_officer to be defined on the CorrespondenceType for this case.
   def correspondence_type
     @correspondence_type ||=
-      CorrespondenceType.find_by!(abbreviation: type_abbreviation)
+      CorrespondenceType.find_by!(abbreviation: type_abbreviation.parameterize.underscore.upcase)
   end
 
   def is_foi?
