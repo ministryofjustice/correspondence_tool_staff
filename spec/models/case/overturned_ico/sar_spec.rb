@@ -9,7 +9,7 @@ describe Case::OverturnedICO::SAR do
 
   describe '.type_abbreviation' do
     it 'returns the correct abbreviation' do
-      expect(described_class.type_abbreviation).to eq 'Overturned SAR'
+      expect(described_class.type_abbreviation).to eq 'OVERTURNED_SAR'
     end
   end
 

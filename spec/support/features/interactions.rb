@@ -1,5 +1,7 @@
 module Features
   module Interactions
+    include Interactions::OverturnedSAR
+
     def create_and_assign_foi_case(type: Case::FOI::Standard,
                                    user:,
                                    responding_team:,

@@ -14,7 +14,7 @@ class Case::OverturnedICO::SAR < Case::OverturnedICO::Base
   ]
 
   def self.type_abbreviation
-    'Overturned SAR'
+    'OVERTURNED_SAR'
   end
 
   def validate_original_ico_appeal

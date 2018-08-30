@@ -10,9 +10,11 @@ FactoryBot.define do
     sequence(:name)     { |n| "Business Unit #{n}" }
     email               { name.downcase.gsub(/\W/, '_') + '@localhost' }
     role                { 'responder' }
-    correspondence_types { [find_or_create(:foi_correspondence_type),
-                            find_or_create(:sar_correspondence_type),
-                            find_or_create(:ico_correspondence_type),] }
+    correspondence_types { [
+                             find_or_create(:foi_correspondence_type),
+                             find_or_create(:sar_correspondence_type),
+                             find_or_create(:ico_correspondence_type),
+                           ] }
     directorate         { find_or_create :directorate }
     properties          { [find_or_create(:team_property, :area)] }
 
@@ -49,6 +51,10 @@ FactoryBot.define do
   factory :responding_team, parent: :business_unit do
     sequence(:name) { |n| "Responding Team #{n}" }
     responders { [create(:user)] }
+
+    after(:create) do |bu, _evaluator|
+      bu.correspondence_types << find_or_create(:overturned_sar_correspondence_type)
+    end
   end
 
   factory :approving_team, parent: :business_unit do

@@ -52,7 +52,7 @@ describe 'Business Unit factories' do
         bu = create :responding_team
 
         expect(bu.role).to eq 'responder'
-        expect(bu.correspondence_type_roles.size).to eq 3
+        expect(bu.correspondence_type_roles.size).to eq 4
         foi_tcr = bu.correspondence_type_roles.detect do |r|
           r.correspondence_type_id == CorrespondenceType.foi.id
         end
@@ -67,6 +67,11 @@ describe 'Business Unit factories' do
           r.correspondence_type_id == CorrespondenceType.ico.id
         end
         expect(ico_tcr).to match_tcr_attrs(:ico, :view, :respond)
+
+        overturned_sar_tcr = bu.correspondence_type_roles.detect do |r|
+          r.correspondence_type_id == CorrespondenceType.overturned_sar.id
+        end
+        expect(overturned_sar_tcr).to match_tcr_attrs(:overturned_sar, :view, :respond)
       end
     end
   end
