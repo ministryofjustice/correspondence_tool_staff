@@ -19,7 +19,7 @@ class Admin::CasesController < AdminController
     @case = case_creator.new_case
     @selected_state = case_params[:target_state]
     if @case.ico?
-      @case.original_case_id = create_original_case(@case)
+      @case.original_case_id = create_original_case(@case).id
     end
     if @case.valid?
       case_creator.call([@selected_state], @case)

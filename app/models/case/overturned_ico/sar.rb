@@ -27,4 +27,9 @@ class Case::OverturnedICO::SAR < Case::OverturnedICO::Base
     end
   end
 
+  def overturned_ico_sar?
+    true
+  end
+
+
 end

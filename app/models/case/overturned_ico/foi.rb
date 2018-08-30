@@ -4,5 +4,8 @@ class Case::OverturnedICO::FOI < Case::OverturnedICO::Base
   #   'OVERTURNED_FOI'
   # end
 
+  def overturned_ico_foi?
+    true
+  end
 
 end
