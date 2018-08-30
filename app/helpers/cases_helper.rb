@@ -36,6 +36,11 @@ module CasesHelper
               new_response_upload_case_path(@case, 'mode' => determine_action),
               id: 'action--upload-response',
               class: 'button'
+    when :create_overturned
+      link_to t('common.case.create_overturned'),
+              new_overturned_ico_case_path(@case),
+              id: 'action--create-overturned',
+              class: 'button'
     when :respond
       link_to translate_for_case(@case, "common", 'respond'),
               respond_case_path(@case),
