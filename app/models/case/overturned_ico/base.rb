@@ -87,6 +87,7 @@ class Case::OverturnedICO::Base < Case::Base
 
   def set_deadlines
     self.internal_deadline = 20.business_days.before(self.external_deadline)
+    self.escalation_deadline = self.created_at.to_date
   end
 
   def validate_received_date

@@ -230,6 +230,15 @@ describe Case::OverturnedICO::SAR do
         expect(kase.internal_deadline).to eq 20.business_days.before(1.month.from_now).to_date
       end
     end
+
+    it 'sets the escalation deadline to the received_date' do
+      kase = create :overturned_ico_sar,
+                    original_ico_appeal: original_ico_appeal,
+                    original_case: original_case,
+                    received_date: 0.business_days.ago,
+                    external_deadline: 30.business_days.from_now
+      expect(kase.escalation_deadline).to eq kase.created_at.to_date
+    end
   end
 
   describe '#link_related_cases' do
