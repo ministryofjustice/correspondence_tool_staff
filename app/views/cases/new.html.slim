@@ -12,5 +12,5 @@
 
 = render partial: 'layouts/header'
 
-= render partial: "cases/#{@case.type_abbreviation.downcase}/new", locals: { kase: @case,
+= render partial: "cases/#{@case.type_abbreviation.parameterize.underscore}/new", locals: { kase: @case,
                                                                              correspondence_type: @correspondence_type }

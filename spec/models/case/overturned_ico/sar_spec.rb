@@ -4,9 +4,8 @@ describe Case::OverturnedICO::SAR do
 
   let(:new_case)                { described_class.new }
 
-  let(:original_ico_appeal)     { create :ico_sar_case }
+  let(:original_ico_appeal)     { create :ico_sar_case, original_case: original_case }
   let(:original_case)           { create :sar_case }
-
 
   describe '.type_abbreviation' do
     it 'returns the correct abbreviation' do
@@ -231,5 +230,39 @@ describe Case::OverturnedICO::SAR do
         expect(kase.internal_deadline).to eq 20.business_days.before(1.month.from_now).to_date
       end
     end
+  end
+
+  describe '#link_related_cases' do
+
+    let(:link_case_1)             { create :sar_case }
+    let(:link_case_2)             { create :sar_case }
+    let(:link_case_3)             { create :sar_case }
+
+    before(:each) do
+      @kase = create :overturned_ico_sar,
+                    original_ico_appeal: original_ico_appeal,
+                    original_case: original_case,
+                    received_date: Date.today,
+                    external_deadline: 1.month.from_now.to_date
+
+      original_case.linked_cases << link_case_1
+      original_case.linked_cases << link_case_2
+
+      original_ico_appeal.linked_cases << link_case_2
+      original_ico_appeal.linked_cases << link_case_3
+    end
+    
+    it 'links all the cases linked to the original case and the original_ico_appeal' do
+      @kase.link_related_cases
+
+      expect(@kase.linked_cases).to match_array [
+                                                    original_case,
+                                                    original_ico_appeal,
+                                                    link_case_1,
+                                                    link_case_2,
+                                                    link_case_3
+                                                ]
+    end
+
   end
 end

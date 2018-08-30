@@ -54,8 +54,14 @@ class CaseCreateService
       set_flagged_for_disclosure_errors
     else
       flag_for_disclosure_if_required
+      overturned_ico_post_creation_processing if @case.overturned_ico?
     end
     @result != :error
+  end
+
+  def overturned_ico_post_creation_processing
+    @case.escalation_deadline = Date.today
+    @case.link_related_cases
   end
 
   def flagged_for_disclosure_specialists_mismatch?
