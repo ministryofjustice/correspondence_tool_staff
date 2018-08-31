@@ -3,6 +3,7 @@ FactoryBot.define do
   factory :overturned_ico_sar,
           aliases: [:ot_ico_sar_noff_unassigned],
           class: Case::OverturnedICO::SAR do
+
     transient do
       creation_time   { 4.business_days.ago }
       identifier      { "unassigned overturned ico sar" }
@@ -10,7 +11,6 @@ FactoryBot.define do
 
     message                         { identifier }
     current_state                   { 'unassigned' }
-    sequence(:ico_reference)        { |n| "ICO-SAR-1234-#{n}" }
     original_ico_appeal             { create :ico_sar_case }
     original_case                   { create :sar_case }
     received_date                   { Date.yesterday }
@@ -73,6 +73,7 @@ FactoryBot.define do
       kase.reload
     end
   end
+
 
   factory :pending_dacu_clearance_to_ico_sar,
           aliases: [:ot_ico_sar_noff_pdacu],
