@@ -685,6 +685,10 @@ en:
           working days before the final deadline.<br>
           You will be able to change both dates later.
         sub_heading: Create an ICO Appeal case
+      case/overturned_ico/sar:
+        sub_heading: Create an ICO Overturned (SAR) case
+      case/overturned_ico/foi:
+        sub_heading: Create an ICO Overturned (FOI) case
       sub_heading: Create %{case_type} case
       uploaded_request_files_hint: |
         You can upload different file types such as Word, Excel,

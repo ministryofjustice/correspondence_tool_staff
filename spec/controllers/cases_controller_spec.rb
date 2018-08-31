@@ -1430,11 +1430,9 @@ RSpec.describe CasesController, type: :controller do
 
   describe 'GET new_overturned_ico' do
 
-    let(:ico_sar)                         { create :ico_sar_case }
-    let(:sar)                             { create :sar_case }
-    let(:decorated_overturned_ico_case)   { double(Case::OverturnedICO::SARDecorator, type_abbreviation: 'OVERTURNED_SAR') }
-    let(:double_overturned_ico_case)      { double(Case::OverturnedICO::SAR, decorate: decorated_overturned_ico_case) }
-
+    let(:ico_sar)             { create :ico_sar_case }
+    let(:sar)                 { create :sar_case }
+    let(:overturned_ico_case) { create :overturned_ico_sar }
 
     context 'logged in as manager' do
 
@@ -1448,7 +1446,7 @@ RSpec.describe CasesController, type: :controller do
                            success?: true,
                            original_ico_appeal: ico_sar,
                            original_case: sar,
-                           overturned_ico_case: double_overturned_ico_case)
+                           overturned_ico_case: overturned_ico_case)
           params = ActionController::Parameters.new({ id: ico_sar.id })
           expect(CreateOverturnedICOCaseService).to receive(:new).with(ico_sar.id.to_s).and_return(service)
           get :new_overturned_ico, params: params.to_unsafe_hash
@@ -1459,7 +1457,7 @@ RSpec.describe CasesController, type: :controller do
         end
 
         it 'assigns a new overturned case to @case' do
-          expect(assigns(:case)).to eq decorated_overturned_ico_case
+          expect(assigns(:case)).to eq overturned_ico_case
         end
 
         it 'renders the new overturned ico case page' do
@@ -1475,7 +1473,7 @@ RSpec.describe CasesController, type: :controller do
                            success?: false,
                            original_ico_appeal: ico_sar,
                            original_case: sar,
-                           overturned_ico_case: double_overturned_ico_case)
+                           overturned_ico_case: overturned_ico_case)
           params = ActionController::Parameters.new({ id: ico_sar.id })
           expect(CreateOverturnedICOCaseService).to receive(:new).with(ico_sar.id.to_s).and_return(service)
           get :new_overturned_ico, params: params.to_unsafe_hash

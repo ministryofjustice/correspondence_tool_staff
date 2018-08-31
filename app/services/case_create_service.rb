@@ -60,7 +60,6 @@ class CaseCreateService
   end
 
   def overturned_ico_post_creation_processing
-    @case.escalation_deadline = Date.today
     @case.link_related_cases
   end
 
