@@ -18,8 +18,8 @@ def assign_case_step(business_unit:,
     expect(cases_show_page.case_status.details.who_its_with.text)
       .to eq expected_to_be_with_text
   end
-  # expect(cases_show_page.case_details.responders_details.team.data.text)
-  #   .to eq expected_to_be_with_text
+  expect(cases_show_page.case_details.responders_details.team.data.text)
+    .to eq expected_to_be_with_text
 end
 
 def accept_responder_assignment_step
