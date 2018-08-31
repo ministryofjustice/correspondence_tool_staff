@@ -138,6 +138,28 @@ describe 'cases/case_status.html.slim', type: :view do
       expect(partial.details.ico_ref_number.text).to eq ico_case.ico_reference_number
 
     end
+
+    let(:ico_overturned_sar) {
+      double Case::OverturnedICO::SARDecorator,
+             status: "Needs reassigning",
+             external_deadline: (DateTime.now + 10.days).strftime(Settings.default_date_format),
+             ico_reference_number: '123456789ABC',
+             ico?: true,
+             internal_deadline: nil,
+             current_state: 'drafting',
+             type_abbreviation: 'OVERTURNED_SAR',
+             who_its_with: 'DACU'
+    }
+
+    it 'displays ICO case reference number for ICO overturned SAR cases' do
+      render partial: 'cases/case_status.html.slim',
+             locals: { case_details: ico_overturned_sar }
+      partial = case_status_section(rendered)
+
+      expect(partial.details.ico_ref_number_label.text)
+        .to eq 'ICO case reference number'
+      expect(partial.details.ico_ref_number.text).to eq '123456789ABC'
+    end
   end
 
 end

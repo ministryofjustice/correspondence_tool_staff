@@ -8,11 +8,12 @@ class Case::OverturnedICO::Base < Case::Base
 
 
   jsonb_accessor :properties,
-                 ico_reference: :string,
                  escalation_deadline: :date,
                  internal_deadline: :date,
                  external_deadline: :date,
                  reply_method: :string
+
+  delegate :ico_reference_number, to: :original_ico_appeal
 
   enum reply_method: {
       send_by_post:  'send_by_post',

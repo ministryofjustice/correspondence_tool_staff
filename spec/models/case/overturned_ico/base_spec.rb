@@ -30,6 +30,13 @@ describe Case::OverturnedICO::Base do
     end
   end
 
+  describe 'ico_reference_number' do
+    it 'delegates to the origin ICO Appeal' do
+      expect(overturned_ico).to delegate_method(:ico_reference_number)
+                                  .to(:original_ico_appeal)
+    end
+  end
+
   describe '#subject' do
     it 'returns the subject from the original case' do
       expect(overturned_ico.subject).to eq 'My original SAR case'
