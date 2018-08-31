@@ -123,9 +123,8 @@ FactoryBot.define do
     end
   end
 
-  factory :overturned_ico_foi, class: Case::OverturnedICO::FOI do
+  factory :overturned_ico_foi, aliases: [:ico_overturned_foi], class: Case::OverturnedICO::FOI do
     current_state                   { 'unassigned' }
-    sequence(:ico_reference)        { |n| "ICO-FOI-1234-#{n}" }
     original_ico_appeal             { create :ico_foi_case }
     original_case                   { create :foi_case }
     received_date                   { Date.yesterday }
