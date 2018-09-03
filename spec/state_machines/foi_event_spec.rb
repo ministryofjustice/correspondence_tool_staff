@@ -525,6 +525,8 @@ describe 'state machine' do
     describe :extend_for_pit do
       it {
         should permit_event_to_be_triggered_only_by(
+                 [:disclosure_bmt, :std_draft_foi],
+                 [:disclosure_bmt, :std_awdis_foi],
                  [:disclosure_specialist, :trig_draft_foi_accepted],
                  [:disclosure_specialist, :trig_pdacu_foi_accepted],
                  [:disclosure_specialist, :trig_awdis_foi],
