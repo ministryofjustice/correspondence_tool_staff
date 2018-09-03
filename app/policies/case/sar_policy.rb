@@ -86,6 +86,10 @@ class Case::SARPolicy < Case::BasePolicy
       check_user_is_an_approver_for_case
   end
 
+  def can_request_further_clearance?
+    !self.case.flagged?
+  end
+
   check :responding_team_is_linked_to_case do
     self.case.linked_cases.detect do |kase|
       kase.responding_team.in? user.responding_teams

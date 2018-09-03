@@ -27,14 +27,9 @@ class RequestFurtherClearanceService
         target_user: @kase.responder
       )
 
-      # Flag it for Disclosure
-      CaseFlagForClearanceService.new(user: @user,
-                                    kase: @kase,
-                                    team: BusinessUnit.dacu_disclosure).call
+      flag_case_for_disclosure
 
-      # update the escalation deadline to the new clearance deadline
-      # Enabled press/private to view this case in their Case list
-      @kase.update( escalation_deadline: @kase.deadline_calculator.escalation_deadline(Date.today))
+      flag_case_for_press_and_private if @kase.foi?
 
       @result = :ok
     end
@@ -55,5 +50,17 @@ class RequestFurtherClearanceService
     else
       @kase.responding_team
     end
+  end
+
+  def flag_case_for_disclosure
+    CaseFlagForClearanceService.new(user: @user,
+                                  kase: @kase,
+                                  team: BusinessUnit.dacu_disclosure).call
+  end
+
+  def flag_case_for_press_and_private
+    # update the escalation deadline to the new clearance deadline
+    # Enabled press/private to view this case in their Case list
+    @kase.update( escalation_deadline: @kase.deadline_calculator.escalation_deadline(Date.today))
   end
 end
