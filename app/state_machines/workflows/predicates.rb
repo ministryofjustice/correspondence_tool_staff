@@ -90,7 +90,7 @@ class Workflows::Predicates
     (user_teams_ids & (approving_assignment_team_ids + responding_assignment_team_ids)).any?
   end
 
-  def ico_appeal_overturned?
+  def can_create_new_overturned_ico?
     @kase.ico? && @kase.ico_decision == 'overturned'
   end
 end
