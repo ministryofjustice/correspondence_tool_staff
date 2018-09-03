@@ -1304,6 +1304,8 @@ case_types:
               closed:
                 add_message_to_case:
                 assign_to_new_team:
+                create_overturned:
+                  if: Workflows::Predicates#ico_appeal_overturned?
                 destroy_case:
                 edit_case:
                 link_a_case:

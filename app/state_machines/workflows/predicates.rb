@@ -89,4 +89,8 @@ class Workflows::Predicates
     responding_assignment_team_ids = @kase.assignments.responding.accepted.pluck(:team_id)
     (user_teams_ids & (approving_assignment_team_ids + responding_assignment_team_ids)).any?
   end
+
+  def ico_appeal_overturned?
+    @kase.ico? && @kase.ico_decision == 'overturned'
+  end
 end

@@ -61,6 +61,8 @@
               closed:
                 add_message_to_case:
                 assign_to_new_team:
+                create_overturned:
+                  if: Workflows::Predicates#new_overturned_ico?
                 destroy_case:
                 edit_case:
                 link_a_case:

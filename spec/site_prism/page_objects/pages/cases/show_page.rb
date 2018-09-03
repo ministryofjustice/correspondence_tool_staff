@@ -20,6 +20,7 @@ module PageObjects
         section :actions, '.button-holder' do
           element :assign_to_new_team, '#action--assign-new-team'
           element :upload_response, '#action--upload-response'
+          element :create_overturned, '#action--create-overturned'
           element :mark_as_sent, '#action--mark-response-as-sent'
           element :close_case, '#action--close-case'
           element :clear_case, '#action--approve'

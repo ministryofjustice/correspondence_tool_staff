@@ -468,6 +468,7 @@ en:
       case-details: Case details
       original-case-details: Original case details
       close: Close case
+      create_overturned: Create an ICO Overturned case
       data_subject: Data subject
       data_subject_type: Type of data subject
       date_responded: Date sent to requester

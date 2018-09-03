@@ -16,4 +16,5 @@ class Case::SARDecorator < Case::BaseDecorator
   def third_party_display
     object.third_party == true ? 'Yes' : 'No'
   end
+
 end
