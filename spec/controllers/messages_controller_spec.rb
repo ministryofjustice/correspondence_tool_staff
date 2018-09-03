@@ -113,5 +113,26 @@ RSpec.describe MessagesController, type: :controller do
                                       anchor: 'messages-section'))
       end
     end
+
+    context "overturned_sar case" do
+      let(:overturned_sar)     { create :overturned_ico_sar }
+      let(:params) do
+        {
+          case: {
+            message_text: 'This is a new message'
+          },
+          case_id: overturned_sar.id
+        }
+      end
+
+      context "as a manager" do
+        before { sign_in manager }
+
+        it "redirects to case detail page and contains a hash" do
+          post :create , params: params
+          expect(response).to redirect_to(case_path(overturned_sar, anchor: 'messages-section'))
+        end
+      end
+    end
   end
 end
