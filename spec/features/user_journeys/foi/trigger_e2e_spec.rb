@@ -66,7 +66,7 @@ feature 'FOI case that does not require clearance' do
     add_message_to_case kase: kase, message: 'This. Is. A. Test.'
 
     extend_for_pit kase: kase,
-                   user: disclosure_specialist,
+                   user: manager,
                    new_deadline: 30.business_days.from_now
 
     upload_response kase: kase,

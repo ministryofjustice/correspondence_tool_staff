@@ -74,10 +74,7 @@ case_types:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
-<<<<<<< HEAD
-=======
                 extend_for_pit:
->>>>>>> CT-1876 allow disclosure to extend for PIT on standard cases
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -91,10 +88,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
-<<<<<<< HEAD
-=======
                 extend_for_pit:
->>>>>>> CT-1876 allow disclosure to extend for PIT on standard cases
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -170,11 +164,6 @@ case_types:
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
-<<<<<<< HEAD
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
-=======
->>>>>>> CT-1876 allow disclosure to extend for PIT on standard cases
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -191,11 +180,6 @@ case_types:
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
-<<<<<<< HEAD
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
-=======
->>>>>>> CT-1876 allow disclosure to extend for PIT on standard cases
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
@@ -208,11 +192,6 @@ case_types:
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_in_approving_team_for_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
-<<<<<<< HEAD
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
-=======
->>>>>>> CT-1876 allow disclosure to extend for PIT on standard cases
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
@@ -320,6 +299,7 @@ case_types:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
@@ -331,6 +311,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
@@ -341,6 +322,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
@@ -411,8 +393,6 @@ case_types:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
@@ -435,8 +415,6 @@ case_types:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                   transition_to: awaiting_dispatch
                   after_transition: Workflows::Hooks#notify_responder_ready_to_send
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
@@ -465,8 +443,6 @@ case_types:
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
@@ -602,6 +578,7 @@ case_types:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
@@ -613,6 +590,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
@@ -623,6 +601,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
@@ -633,6 +612,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 link_a_case:
                 remove_linked_case:
 
@@ -641,6 +621,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -708,8 +689,6 @@ case_types:
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                   if: Workflows::Predicates#user_is_in_approving_team_for_case?
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
@@ -732,8 +711,6 @@ case_types:
                 approve_and_bypass:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                   transition_to: awaiting_dispatch
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
@@ -759,8 +736,6 @@ case_types:
                 approve:
                   if: Workflows::Predicates#user_is_assigned_press_officer?
                   transition_to: pending_private_office_clearance
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
@@ -783,8 +758,6 @@ case_types:
                 approve:
                   if: Workflows::Predicates#user_is_assigned_private_officer?
                   transition_to: awaiting_dispatch
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
@@ -962,12 +935,9 @@ case_types:
                   switch_workflow: trigger
                 link_a_case:
                 remove_linked_case:
-<<<<<<< HEAD
                 request_further_clearance:
                   if: Case::SARPolicy#can_request_further_clearance?
                   switch_workflow: trigger
-=======
->>>>>>> CT-1876 allow disclosure to extend for PIT on standard cases
 
               awaiting_responder:
                 add_message_to_case:
@@ -978,12 +948,9 @@ case_types:
                   switch_workflow: trigger
                 link_a_case:
                 remove_linked_case:
-<<<<<<< HEAD
                 request_further_clearance:
                   if: Case::SARPolicy#can_request_further_clearance?
                   switch_workflow: trigger
-=======
->>>>>>> CT-1876 allow disclosure to extend for PIT on standard cases
 
               drafting:
                 add_message_to_case:
@@ -994,12 +961,9 @@ case_types:
                   switch_workflow: trigger
                 link_a_case:
                 remove_linked_case:
-<<<<<<< HEAD
                 request_further_clearance:
                   if: Case::SARPolicy#can_request_further_clearance?
                   switch_workflow: trigger
-=======
->>>>>>> CT-1876 allow disclosure to extend for PIT on standard cases
 
               closed:
                 add_message_to_case:
@@ -1080,10 +1044,7 @@ case_types:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
-<<<<<<< HEAD
                 flag_for_clearance:
-=======
->>>>>>> CT-1876 allow disclosure to extend for PIT on standard cases
                 link_a_case:
                 remove_linked_case:
 
@@ -1092,10 +1053,7 @@ case_types:
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
-<<<<<<< HEAD
                 flag_for_clearance:
-=======
->>>>>>> CT-1876 allow disclosure to extend for PIT on standard cases
                 link_a_case:
                 remove_linked_case:
 
@@ -1105,10 +1063,7 @@ case_types:
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
-<<<<<<< HEAD
                 flag_for_clearance:
-=======
->>>>>>> CT-1876 allow disclosure to extend for PIT on standard cases
                 link_a_case:
                 remove_linked_case:
 
