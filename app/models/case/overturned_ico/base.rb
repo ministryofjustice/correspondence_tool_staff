@@ -73,6 +73,10 @@ class Case::OverturnedICO::Base < Case::Base
     [original_case, original_ico_appeal].each { |source_case| link_cases_related_to(source_case) }
   end
 
+  def identifier
+    message
+  end
+
 
   private
 

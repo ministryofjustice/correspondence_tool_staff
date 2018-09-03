@@ -112,6 +112,9 @@ class Case::ICO::Base < Case::Base
     CurrentTeamAndUser::ICO::Trigger.new(self)
   end
 
+  def identifier
+    message
+  end
   private
 
   def default_workflow

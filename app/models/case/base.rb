@@ -646,6 +646,10 @@ class Case::Base < ApplicationRecord
   def overturned_ico_sar?;  false;  end
   def overturned_ico_foi?;  false;  end
 
+  def identifier
+    name.sub(/\sname\s?\d{0,3}$/, '')
+  end
+
 
   private
 
