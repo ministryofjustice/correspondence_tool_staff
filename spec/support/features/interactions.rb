@@ -37,6 +37,20 @@ module Features
       kase
     end
 
+    def create_and_assign_overturned_sar(user:,
+                                        responding_team:,
+                                        ico_case:)
+      login_step user: user
+      kase = create_overturned_sar_case_step(ico_case: ico_case)
+
+      # At the moment before the case_details page is ready the assign step is done as follows
+      assignments_new_page.choose_business_group(responding_team.business_group)
+      assignments_new_page.choose_business_unit(responding_team)
+      # Once the overturned case details page is completed we can use the following method:
+      # assign_case_step business_unit: responding_team
+      kase
+    end
+
     def assign_unassigned_case(user:, responding_team:)
       login_step user: user
       assign_case_step business_unit: responding_team

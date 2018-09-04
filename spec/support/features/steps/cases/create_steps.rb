@@ -106,4 +106,8 @@ def create_overturned_sar_case_step(params={})
   expect(form.reply_method.email.value).to eq ico_case.original_case.email
 
   click_button 'Create case'
+  
+  # Return the case we created using the params of the current  path
+  kase_id = Rails.application.routes.recognize_path(current_path)[:case_id]
+  Case::Base.find(kase_id)
 end
