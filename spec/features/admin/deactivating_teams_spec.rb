@@ -34,13 +34,13 @@ feature 'deactivating business units' do
     login_as manager
 
     teams_show_page.load(id: dir.id)
-    expect(teams_show_page.row_for_business_unit(bu.name)).to be_present
+    expect(teams_show_page.row_for_business_unit(bu.name).name.text).to have_text(bu.name)
 
     teams_show_page.load(id: bu.id)
     teams_show_page.deactivate_team_link.click
     expect(teams_show_page.flash_notice.text).to eq I18n.t('teams.destroyed')
 
     expect(teams_show_page).to be_displayed(id: dir.id)
-    expect(teams_show_page.row_for_business_unit(bu.name)).not_to be_present
+    expect(teams_show_page.row_for_business_unit(bu.name)).to equal nil
   end
 end
