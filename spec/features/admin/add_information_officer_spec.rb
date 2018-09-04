@@ -25,7 +25,6 @@ feature 'add information officer to a business unit' do
     users_new_page.submit.click
     expect(teams_show_page).to be_displayed(id: bu.id)
     user_row = teams_show_page.row_for_information_officer(new_user_name)
-    expect(user_row).to be_present
     expect(user_row.email).to have_text new_user_email
   end
 end
