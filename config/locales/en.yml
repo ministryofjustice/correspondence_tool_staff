@@ -671,7 +671,7 @@ en:
           We'll use this date to set the draft deadline, calculated as 20
           working days before the final deadline.<br>
           You will be able to change both dates later.
-        sub_heading: Create an ICO Appeal case
+        sub_heading: Create an ICO appeal case
       case/overturned_ico/sar:
         sub_heading: Create an ICO Overturned (SAR) case
       case/overturned_ico/foi:

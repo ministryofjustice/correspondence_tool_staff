@@ -19,7 +19,7 @@ describe 'cases/edit.html.slim', type: :view do
 
     expect(page.page_heading.heading.text).to eq "Edit case details"
     expect(page.page_heading.sub_heading.text.strip)
-      .to eq "#{kase.number} - ICO appeal(FOI)"
+      .to eq "#{kase.number} - ICO appeal (FOI)"
 
     expect(page.form.original_case).to have_linked_records(count: 1)
     original_case_section = page.form.original_case.linked_records.first

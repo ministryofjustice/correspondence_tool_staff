@@ -37,7 +37,7 @@ describe 'cases/ico/case_details.html.slim', type: :view do
         expect(partial.case_type).to have_no_ico_trigger
         expect(partial.ico_reference.data.text).to eq ico_foi_case.ico_reference_number
         expect(partial.ico_officer_name.data.text).to eq ico_foi_case.ico_officer_name
-        expect(partial.case_type.data.text).to eq "ICO appeal(FOI)  "
+        expect(partial.case_type.data.text).to eq "ICO appeal (FOI)  "
         expect(partial.date_received.data.text)
           .to eq ico_foi_case.received_date.strftime(Settings.default_date_format)
         expect(partial.external_deadline.data.text)
@@ -110,7 +110,7 @@ describe 'cases/ico/case_details.html.slim', type: :view do
         expect(partial.case_type).to have_no_ico_trigger
         expect(partial.ico_reference.data.text).to eq ico_sar_case.ico_reference_number
         expect(partial.ico_officer_name.data.text).to eq ico_sar_case.ico_officer_name
-        expect(partial.case_type.data.text).to eq "ICO appeal(SAR)  "
+        expect(partial.case_type.data.text).to eq "ICO appeal (SAR)  "
         expect(partial.date_received.data.text)
           .to eq ico_sar_case.received_date.strftime(Settings.default_date_format)
         expect(partial.external_deadline.data.text)

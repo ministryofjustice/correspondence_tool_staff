@@ -9,7 +9,7 @@ describe Case::ICO::FOIDecorator do
 
   describe '#type_printer' do
     it 'pretty prints Case' do
-      expect(ico_foi_case.decorate.pretty_type).to eq 'ICO appeal(FOI)'
+      expect(ico_foi_case.decorate.pretty_type).to eq 'ICO appeal (FOI)'
     end
   end
 end
