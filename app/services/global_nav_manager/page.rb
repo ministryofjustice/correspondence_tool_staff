@@ -51,7 +51,6 @@ class GlobalNavManager
 
     def cases
       @cases ||= finder.scope
-
     end
 
     def matches_path?(match_path)

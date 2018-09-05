@@ -13,6 +13,11 @@
 /log/*
 .idea/*
 
+
+# Ignore concatenated state machine config file - it will be regenerated
+# from the constituent parts
+/config/state_machine/moj.yml
+
 # Ignore Byebug command history file.
 .byebug_history
 

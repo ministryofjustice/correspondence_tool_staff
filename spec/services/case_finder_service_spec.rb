@@ -22,74 +22,125 @@ describe CaseFinderService do
         @closed_case_1        = create(:closed_case, :granted_in_full,
                                        received_date: dd(17),
                                        date_responded: dd(22),
-                                       identifier: 'closed case 1')
+                                       identifier: '00-closed case 1')
         @older_case_1         = create(:case,
                                        received_date: dd(15),
-                                       identifier: 'older case 1')
+                                       identifier: '01-older case 1')
         @newer_case_1         = create(:case,
                                        received_date: dd(17),
-                                       identifier: 'newer case 1')
+                                       identifier: '02-newer case 1')
         @case_1               = create(:case,
                                        received_date: dd(16),
-                                       identifier: 'case 1')
+                                       identifier: '03-case 1')
         @case_2               = create(:case,
                                        received_date: dd(16),
-                                       identifier: 'case 2')
+                                       identifier: '04-case 2')
         @newer_case_2         = create(:case,
                                        received_date: dd(17),
-                                       identifier: 'newer case 2')
+                                       identifier: '05-newer case 2')
         @older_case_2         = create(:case,
                                        received_date: dd(15),
-                                       identifier: 'older case 2')
+                                       identifier: '06-older case 2')
         @closed_case_2        = create(:closed_case, :granted_in_full,
                                        received_date: dd(15),
                                        date_responded: dd(23),
-                                       identifier: 'closed case 2')
+                                       identifier: '07-closed case 2')
         @assigned_newer_case  = create(:awaiting_responder_case,
                                        received_date: dd(17),
                                        responding_team: @responding_team,
-                                       identifier: 'assigned newer case')
+                                       identifier: '08-assigned newer case')
         @assigned_older_case  = create(:awaiting_responder_case,
                                        received_date: dd(15),
                                        responding_team: @responding_team,
-                                       identifier: 'old assigned case')
+                                       identifier: '09-old assigned case')
         @assigned_other_team  = create(:awaiting_responder_case,
                                        received_date: dd(17),
-                                       identifier: 'assigned other team')
+                                       identifier: '10-assigned other team')
         @newer_dacu_flagged_case   = create(:case, :flagged, :dacu_disclosure,
                                             received_date: dd(17),
-                                            identifier: 'newer flagged case')
+                                            identifier: '11-newer flagged case')
         @older_dacu_flagged_case   = create(:case, :flagged, :dacu_disclosure,
                                             received_date: dd(15),
-                                            identifier: 'older flagged case')
+                                            identifier: '12-older flagged case')
         @newer_dacu_flagged_accept =
           create(:case, :flagged_accepted, :dacu_disclosure,
                  received_date: dd(17),
                  approver: @disclosure_specialist,
-                 identifier: 'newer dacu flagged accept')
+                 identifier: '13-newer dacu flagged accept')
         @older_dacu_flagged_accept =
           create(:case, :flagged_accepted, :dacu_disclosure,
                  received_date: dd(15),
                  approver: @disclosure_specialist,
-                 identifier: 'older dacu flagged accept')
+                 identifier: '14-older dacu flagged accept')
         @accepted_case        = create(:accepted_case,
-                                       responder: @responder)
+                                       responder: @responder,
+                                       identifier: '15-accepted case')
 
         @approved_ico         = create(:approved_ico_foi_case,
-                                       responder: @responder)
+                                       responder: @responder,
+                                       original_case: create(:closed_case, :granted_in_full,
+                                                             received_date: dd(17),
+                                                             date_responded: dd(22),
+                                                             identifier: '16A-original closed case for 16-approved_ico'),
+                                       identifier: '16-approved ico')
+
         @responded_ico        = create(:responded_ico_foi_case,
-                                       responder: @responder)
-        # @closed_ico
+                                       responder: @responder,
+                                       original_case: create(:closed_case, :granted_in_full,
+                                                             received_date: dd(17),
+                                                             date_responded: dd(22),
+                                                             identifier: '17A-original closed case for 17-responded-ico'),
+                                       identifier: '17-responded ico')
+
+        @overturned_ico_sar_original              = create(:closed_sar,
+                                                           responder: @responder,
+                                                           identifier: '18A-original closed sar for 18-overturned ico sar')
+        @overturned_ico_sar_original_appeal       = create(:closed_ico_sar_case_overturned,
+                                                           responder: @responder,
+                                                           original_case: @overturned_ico_sar_original,
+                                                           identifier: '18B-original ico appeal for 18-overturned ico sar')
+        @overturned_ico_sar                       = create :overturned_ico_sar,
+                                                           responder: @responder,
+                                                           original_case: @overturned_ico_sar_original,
+                                                           original_ico_appeal: @overturned_ico_sar_original_appeal,
+                                                           identifier: '18-overturned ico sar'
+
+        @awaiting_responder_overturned_ico_sar_original =
+                                                    create(:closed_sar,
+                                                           responder: @responder,
+                                                           identifier: '19A-original closed sar for 19-awaiting responder overturned ico sar')
+        @awaiting_responder_overturned_ico_sar_original_appeal =
+                                                    create(:closed_ico_sar_case_overturned,
+                                                           responder: @responder,
+                                                           original_case: @awaiting_responder_overturned_ico_sar_original,
+                                                           identifier: '19B-original ico appeal for 18-overturned ico sar')
+        @awaiting_responder_overturned_ico_sar    = create :awaiting_responder_overturned_ico_sar,
+                                                           responding_team: @responding_team,
+                                                           original_case: @awaiting_responder_overturned_ico_sar_original,
+                                                           original_ico_appeal: @awaiting_responder_overturned_ico_sar_original_appeal,
+                                                           identifier: '19-awaiting responder overturned ico sar'
+
+        @accepted_overturned_ico_sar_original     = create(:closed_sar,
+                                                           responder: @responder,
+                                                           identifier: '20A-original closed sar for 19-awaiting responder overturned ico sar')
+        @accepted_overturned_ico_sar_original_appeal =
+                                                    create(:closed_ico_sar_case_overturned,
+                                                           responder: @responder,
+                                                           original_case: @accepted_overturned_ico_sar_original,
+                                                           identifier: '20B-original ico appeal for 18-overturned ico sar')
+        @accepted_overturned_ico_sar              = create :accepted_overturned_ico_sar,
+                                                           responding_team: @responding_team,
+                                                           original_case: @accepted_overturned_ico_sar_original,
+                                                           original_ico_appeal: @accepted_overturned_ico_sar_original_appeal,
+                                                           identifier: '20-accepted overturned ico sar'
       end
     end
-
-    after(:all) { DbHousekeeping.clean }
 
     describe '#for_params' do
       it 'filters cases for provided states' do
         finder = CaseFinderService.new(@manager)
         expect(finder.for_params('states' => 'drafting').scope)
-          .to match_array [@accepted_case]
+          .to match_array [@accepted_case, @accepted_overturned_ico_sar]
       end
     end
 
@@ -116,15 +167,16 @@ describe CaseFinderService do
 
     describe '#for_user' do
       it 'returns a finder that with a finder scoped to the users cases' do
+        expected = Case::Base.where.not(id: [@overturned_ico_sar.id])
         finder = CaseFinderService.new(@responder)
-        expect(finder.for_user.scope).to match_array Case::Base.all
+        expect(finder.for_user.scope).to match_array expected
       end
     end
 
     describe '#index_cases_scope' do
       it 'returns all the cases' do
         finder = CaseFinderService.new(@manager)
-        expect(finder.__send__ :index_cases_scope)
+        expect(finder.__send__(:index_cases_scope))
           .to match_array [
                 @older_case_1,
                 @older_case_2,
@@ -145,7 +197,17 @@ describe CaseFinderService do
                 @approved_ico.original_case,
                 @responded_ico.original_case,
                 @approved_ico,
-                @responded_ico
+                @responded_ico,
+                @overturned_ico_sar,
+                @overturned_ico_sar_original,
+                @overturned_ico_sar_original_appeal,
+                @awaiting_responder_overturned_ico_sar,
+                @awaiting_responder_overturned_ico_sar_original,
+                @awaiting_responder_overturned_ico_sar_original_appeal,
+                @accepted_overturned_ico_sar,
+                @accepted_overturned_ico_sar_original,
+                @accepted_overturned_ico_sar_original_appeal
+
               ]
       end
     end
@@ -159,7 +221,13 @@ describe CaseFinderService do
                 @closed_case_2,
                 @responded_ico,
                 @responded_ico.original_case,
-                @approved_ico.original_case
+                @approved_ico.original_case,
+                @overturned_ico_sar_original,
+                @overturned_ico_sar_original_appeal,
+                @awaiting_responder_overturned_ico_sar_original,
+                @awaiting_responder_overturned_ico_sar_original_appeal,
+                @accepted_overturned_ico_sar_original,
+                @accepted_overturned_ico_sar_original_appeal
               ]
       end
     end
@@ -204,7 +272,7 @@ describe CaseFinderService do
     describe '#open_cases_scope' do
       it 'returns all open cases' do
         finder = CaseFinderService.new(@manager)
-        expect(finder.__send__ :open_cases_scope)
+        expect(finder.__send__(:open_cases_scope))
           .to match_array [
                 @older_case_1,
                 @older_case_2,
@@ -220,7 +288,10 @@ describe CaseFinderService do
                 @newer_dacu_flagged_case,
                 @newer_dacu_flagged_accept,
                 @accepted_case,
-                @approved_ico
+                @approved_ico,
+                @overturned_ico_sar,
+                @awaiting_responder_overturned_ico_sar,
+                @accepted_overturned_ico_sar
               ]
       end
     end
@@ -229,7 +300,7 @@ describe CaseFinderService do
       it 'returns all the cases that are in time' do
         Timecop.freeze(@case_1.external_deadline) do
           finder = CaseFinderService.new(@manager)
-          expect(finder.__send__ :in_time_cases_scope)
+          expect(finder.__send__(:in_time_cases_scope))
             .to match_array [
                   @case_1,
                   @case_2,
@@ -246,7 +317,15 @@ describe CaseFinderService do
                   @responded_ico,
                   @approved_ico.original_case,
                   @responded_ico.original_case,
-
+                  @overturned_ico_sar_original,
+                  @overturned_ico_sar,
+                  @overturned_ico_sar_original_appeal,
+                  @awaiting_responder_overturned_ico_sar_original,
+                  @awaiting_responder_overturned_ico_sar_original_appeal,
+                  @awaiting_responder_overturned_ico_sar,
+                  @accepted_overturned_ico_sar,
+                  @accepted_overturned_ico_sar_original,
+                  @accepted_overturned_ico_sar_original_appeal
                 ]
         end
       end
@@ -276,13 +355,16 @@ describe CaseFinderService do
                                                                        @accepted_case,
                                                                        @assigned_newer_case,
                                                                        @assigned_older_case,
-                                                                       @approved_ico
+                                                                       @approved_ico,
+                                                                       @awaiting_responder_overturned_ico_sar,
+                                                                       @accepted_overturned_ico_sar
                                                                    ]
         end
       end
       context 'non-responder' do
         it 'includes all assigned cases' do
           finder = CaseFinderService.new(@manager)
+
           expect(finder.__send__ :open_cases_scope).to match_array [
               @older_case_1,
               @older_case_2,
@@ -299,6 +381,9 @@ describe CaseFinderService do
               @newer_dacu_flagged_accept,
               @accepted_case,
               @approved_ico,
+              @overturned_ico_sar,
+              @awaiting_responder_overturned_ico_sar,
+              @accepted_overturned_ico_sar
           ]
         end
       end
@@ -391,4 +476,5 @@ describe CaseFinderService do
     describe 'incoming_cases_press_office filter' do
     end
   end
+
 end
