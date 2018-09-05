@@ -176,22 +176,6 @@ en:
     case/overturned_ico/base_policy:
       new_overturned_ico?: 'You are not authorised to create an overturned ICO case'
 
-  state: &state_translations
-    unassigned: Needs reassigning
-    awaiting_responder: To be accepted
-    awaiting_responder_email: Waiting to be accepted
-    awaiting_dispatch: Ready to send
-    drafting: Draft in progress
-    pending_dacu_clearance: Pending clearance
-    pending_press_office_clearance: Pending clearance
-    pending_private_office_clearance: Pending clearance
-    responded: Ready to close
-    closed: Closed
-    closed_status: Case closed
-    case/ico:
-      awaiting_dispatch: Ready to send to ICO
-      responded: Awaiting ICO decision
-
   roles:
     responders: Information officers
 
@@ -471,7 +455,9 @@ en:
       create_overturned: Create an ICO Overturned case
       data_subject: Data subject
       data_subject_type: Type of data subject
-      date_responded: Date sent to requester
+      date_responded: Date response sent to requester
+      case/ico:
+        date_responded: Date response sent to ICO
       outcome: Outcome
       appeal_outcome: Appeal Outcome
       download_link_html: |
@@ -685,7 +671,7 @@ en:
           We'll use this date to set the draft deadline, calculated as 20
           working days before the final deadline.<br>
           You will be able to change both dates later.
-        sub_heading: Create an ICO Appeal case
+        sub_heading: Create an ICO appeal case
       case/overturned_ico/sar:
         sub_heading: Create an ICO Overturned (SAR) case
       case/overturned_ico/foi:

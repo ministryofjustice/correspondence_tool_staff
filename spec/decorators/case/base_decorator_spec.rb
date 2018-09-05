@@ -1,23 +1,25 @@
 require 'rails_helper'
 
 describe Case::BaseDecorator, type: :model do
-  let(:unassigned_case) { create(:case).decorate }
-  let(:assigned_case)   { create(:assigned_case).decorate }
-  let(:accepted_case)   { create(:accepted_case,
+  let(:unassigned_case)     { create(:case).decorate }
+  let(:assigned_case)       { create(:assigned_case).decorate }
+  let(:accepted_case)       { create(:accepted_case,
                                  responder: responder).decorate }
-  let(:approved_ico)    { create(:approved_ico_foi_case).decorate }
-  let(:responded_ico)   { create(:responded_ico_foi_case).decorate }
-  let(:responded_case)  { create(:responded_case).decorate }
-  let(:closed_case)     { create(:closed_case).decorate }
-  let(:manager)         { create :manager, managing_teams: [managing_team] }
-  let(:managing_team)   { find_or_create :team_dacu }
-  let(:responder)       { create :responder }
-  let(:responding_team) { responder.teams.first }
-  let(:coworker)        { create :responder,
+  let(:approved_ico)        { create(:approved_ico_foi_case).decorate }
+  let(:responded_ico)       { create(:responded_ico_foi_case).decorate }
+  let(:upheld_ico_case)     { create(:closed_ico_foi_case).decorate }
+  let(:overturned_ico_case) { create(:closed_ico_foi_case, :overturned_by_ico).decorate }
+  let(:responded_case)      { create(:responded_case).decorate }
+  let(:closed_case)         { create(:closed_case).decorate }
+  let(:manager)             { create :manager, managing_teams: [managing_team] }
+  let(:managing_team)       { find_or_create :team_dacu }
+  let(:responder)           { create :responder }
+  let(:responding_team)     { responder.teams.first }
+  let(:coworker)            { create :responder,
                                  responding_teams: responder.responding_teams }
   let(:pending_dacu_clearance_case) { create(:pending_dacu_clearance_case).decorate }
-  let(:another_responder) { create :responder }
-  let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
+  let(:another_responder)   { create :responder }
+  let(:team_dacu_disclosure){ find_or_create :team_dacu_disclosure }
 
 
   context 'ensuring the correct decorator is instantiated' do
@@ -331,6 +333,18 @@ describe Case::BaseDecorator, type: :model do
     it 'returns a responded status for ico' do
       expect(responded_ico.status).to eq 'Awaiting ICO decision'
     end
+
+    context 'closed ico - ICO decisions' do
+      it 'returns a closed status with upheld' do
+        expect(upheld_ico_case.status).to eq 'Closed - upheld by ICO'
+      end
+
+      it 'returns a closed status with overturned' do
+        expect(overturned_ico_case.status).to eq 'Closed - overturned by ICO'
+      end
+    end
+
+
   end
 
   describe '#escaltion_deadline' do

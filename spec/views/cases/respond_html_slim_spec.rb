@@ -37,7 +37,7 @@ describe 'cases/respond.html.slim', type: :view do
     page = cases_respond_page
 
     expect(page.page_heading.heading.text).to eq "Mark as sent#{ico_case.subject}"
-    expect(page.page_heading.sub_heading.text).to eq "You are viewing case number #{ico_case.number} - ICO appeal(FOI) "
+    expect(page.page_heading.sub_heading.text).to eq "You are viewing case number #{ico_case.number} - ICO appeal (FOI) "
 
     expect(page).to have_no_foi_task_reminder
 

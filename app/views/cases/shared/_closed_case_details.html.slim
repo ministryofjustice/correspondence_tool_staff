@@ -1,7 +1,8 @@
 tbody.response-details
   - if case_details.date_responded.present?
     tr.date-responded
-      th = t('common.case.date_responded')
+      / i18n-tasks-use t('common.case.date_responded')
+      th = translate_for_case(case_details, 'common.case', 'date_responded')
       td = case_details.date_sent_to_requester
 
     tr.timeliness
@@ -39,3 +40,8 @@ tbody.response-details
         ul
           - case_details.exemptions.each do |exemption|
             li = exemption.name
+
+  - if case_details.respond_to?(:ico_decision) && case_details.ico_decision.present?
+    tr.outcome
+      th = t('common.case.outcome')
+      td = "#{case_details.ico_decision.capitalize} by ICO"

@@ -152,11 +152,22 @@ FactoryBot.define do
   factory :closed_ico_sar_case, parent: :responded_ico_sar_case do
     transient do
       identifier { 'closed ICO SAR case - upheld' }
+      attachments {[ build(:case_ico_decision) ]}
     end
 
-    date_ico_decision_received { Date.today }
+    received_date { 22.business_days.ago }
+    date_ico_decision_received { 4.business_days.ago }
     ico_decision { "upheld" }
 
+    trait :overturned_by_ico do
+      ico_decision         { "overturned" }
+      ico_decision_comment { Faker::NewGirl.quote }
+
+      after(:create) do |kase, evaluator|
+        kase.attachments.push(*evaluator.attachments)
+        kase.save!
+      end
+    end
 
     after(:create) do |kase, _evaluator|
       create :case_transition_close_ico,
