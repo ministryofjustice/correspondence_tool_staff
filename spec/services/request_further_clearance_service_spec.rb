@@ -95,7 +95,7 @@ describe RequestFurtherClearanceService do
         end
       end
     end
-    
+
     context 'SAR' do
       let(:accepted_sar)      { create :accepted_sar }
       before(:each) do
@@ -110,12 +110,10 @@ describe RequestFurtherClearanceService do
         expect(accepted_sar.approver_assignments.count).to eq 1
       end
 
-      it 'sets the escalation date' do
-        Timecop.freeze thu_may_18 do
+      it 'does not flag for press and private' do
           @service.call
-          expect(accepted_sar.escalation_deadline)
-              .to eq tue_may_23.to_date
-        end
+          expect(accepted_case.within_escalation_deadline?)
+              .to be false
       end
     end
   end
