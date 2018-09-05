@@ -409,7 +409,13 @@ describe 'ClosedCaseValidator' do
 
     context 'ico_decision' do
 
-      before(:each)  { responded_ico.update(date_ico_decision_received: Date.today, ico_decision: 'upheld') }
+      before(:each)  do
+        responded_ico.update(
+                         date_ico_decision_received: Date.today,
+                         ico_decision: 'upheld',
+                         uploaded_ico_decision_files:  %w{ file_1 file2 }
+        )
+      end
 
       context 'blank' do
         it 'is invalid' do
@@ -430,7 +436,11 @@ describe 'ClosedCaseValidator' do
 
     context 'date_ico_decision_received' do
 
-      before(:each)   { responded_ico.ico_decision = 'upheld' }
+      before(:each)   do
+        responded_ico.ico_decision = 'upheld'
+        responded_ico.uploaded_ico_decision_files = %w{ file_1 file2 }
+      end
+
 
       context 'blank' do
         it 'is invalid' do
@@ -465,7 +475,7 @@ describe 'ClosedCaseValidator' do
 
     end
 
-    context 'files and or ico decision comment' do
+    context 'uploaded ico decision files' do
 
       before(:each) do
         responded_ico.date_ico_decision_received = Date.today
@@ -479,8 +489,8 @@ describe 'ClosedCaseValidator' do
         end
 
         context 'files and decision blank' do
-          it 'is valid' do
-            expect(responded_ico).to be_valid
+          it 'is not valid' do
+            expect(responded_ico).not_to be_valid
           end
         end
 
@@ -489,20 +499,6 @@ describe 'ClosedCaseValidator' do
             responded_ico.uploaded_ico_decision_files = %w{ file_1 file2 }
             expect(responded_ico).to be_valid
           end
-        end
-
-        context 'decision comment specified' do
-          it 'is valid' do
-            responded_ico.ico_decision_comment = 'Rubbish!'
-            expect(responded_ico).to be_valid
-          end
-        end
-
-        context 'files uploaded and decision comment specified'
-        it 'is valid' do
-          responded_ico.ico_decision_comment = 'Rubbish!'
-          responded_ico.uploaded_ico_decision_files = %w{ file_1 file2 }
-          expect(responded_ico).to be_valid
         end
       end
 
@@ -511,10 +507,10 @@ describe 'ClosedCaseValidator' do
           responded_ico.ico_decision = 'overturned'
         end
 
-        context 'files and decision blank' do
+        context 'uploaded ico decision files blank' do
           it 'is invalid' do
             expect(responded_ico).not_to be_valid
-            expect(responded_ico.errors[:uploaded_ico_decision_files]).to eq ['blank']
+            expect(responded_ico.errors[:uploaded_ico_decision_files]).to eq ['No ICO decision files have been uploaded']
           end
         end
 
@@ -524,31 +520,6 @@ describe 'ClosedCaseValidator' do
             expect(responded_ico).to be_valid
           end
         end
-
-        context 'decision comment specified' do
-          it 'is valid' do
-            responded_ico.ico_decision_comment = 'Rubbish!'
-            expect(responded_ico).to be_valid
-          end
-        end
-
-        context 'files uploaded and decision comment specified' do
-          it 'is valid' do
-            responded_ico.ico_decision_comment = 'Rubbish!'
-            responded_ico.uploaded_ico_decision_files = %w{ file_1 file2 }
-            expect(responded_ico).to be_valid
-          end
-        end
-
-
-        context 'attachments and decision comment specified' do
-          it 'is valid' do
-            responded_ico.ico_decision_comment = 'Rubbish!'
-            responded_ico.attachments.push build(:case_ico_decision)
-            expect(responded_ico).to be_valid
-          end
-        end
-
       end
     end
   end

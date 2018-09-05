@@ -47,7 +47,7 @@ describe 'cases/show.html.slim', type: :view do
   let(:case_being_drafted_flagged)        { create(:case_being_drafted, :flagged, :dacu_disclosure).decorate }
   let(:case_with_response)                { create(:case_with_response).decorate }
   let(:upheld_closed_sar_ico_appeal)      { create(:closed_ico_sar_case).decorate }
-  let(:overturned_closed_sar_ico_appeal)  { create(:closed_ico_sar_case_overturned).decorate }
+  let(:overturned_closed_sar_ico_appeal)  { create(:closed_ico_sar_case, :overturned_by_ico).decorate }
 
 
   let(:policy) do
