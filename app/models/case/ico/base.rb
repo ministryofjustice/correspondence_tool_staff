@@ -114,6 +114,10 @@ class Case::ICO::Base < Case::Base
 
   private
 
+  def identifier
+    message
+  end
+
   def default_workflow
     'trigger'
   end
