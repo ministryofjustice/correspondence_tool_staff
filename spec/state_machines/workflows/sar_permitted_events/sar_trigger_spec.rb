@@ -13,6 +13,7 @@ describe ConfigurableStateMachine::Machine do
                                                                       :assign_responder,
                                                                       :destroy_case,
                                                                       :edit_case,
+                                                                      :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
         end
@@ -26,6 +27,7 @@ describe ConfigurableStateMachine::Machine do
                                                                       :assign_to_new_team,
                                                                       :destroy_case,
                                                                       :edit_case,
+                                                                      :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
         end
@@ -39,6 +41,7 @@ describe ConfigurableStateMachine::Machine do
                                                                       :assign_to_new_team,
                                                                       :destroy_case,
                                                                       :edit_case,
+                                                                      :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
         end
@@ -179,7 +182,7 @@ describe ConfigurableStateMachine::Machine do
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'awaiting_dispatch'
           expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                        :close, 
+                                                                        :close,
                                                                         :reassign_user,
                                                                         :respond,
                                                                         :respond_and_close]

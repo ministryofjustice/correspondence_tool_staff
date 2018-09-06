@@ -37,6 +37,7 @@
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -50,6 +51,7 @@
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -125,8 +127,6 @@
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -143,8 +143,6 @@
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
@@ -157,8 +155,6 @@
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_in_approving_team_for_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user

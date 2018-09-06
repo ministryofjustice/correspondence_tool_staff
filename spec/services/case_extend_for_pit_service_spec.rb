@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe CaseExtendForPITService do
   let(:case_being_drafted) { create :case_being_drafted }
-  let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
+  let(:team_dacu) { find_or_create :team_disclosure_bmt }
   let(:manager) { find_or_create :disclosure_bmt_user }
   let(:old_external_deadline) { case_being_drafted.external_deadline }
   let(:days_to_extend_deadline_by) { 10 }
@@ -26,7 +26,7 @@ describe CaseExtendForPITService do
       expect(case_being_drafted.state_machine)
         .to have_received(:extend_for_pit!)
         .with(acting_user: manager,
-              acting_team: team_dacu_disclosure,
+              acting_team: team_dacu,
               final_deadline: 10.business_days.after(old_external_deadline),
               message: 'I like to extend my best tests')
     end

@@ -62,7 +62,7 @@ feature 'FOI compliance review case that requires clearance' do
                         message: 'This. Is. A. Test.'
 
     extend_for_pit kase: kase,
-                   user: disclosure_specialist,
+                   user: manager,
                    new_deadline: 30.business_days.from_now
 
     upload_response kase: kase,
