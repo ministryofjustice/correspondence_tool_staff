@@ -525,14 +525,21 @@ describe 'state machine' do
     describe :extend_for_pit do
       it {
         should permit_event_to_be_triggered_only_by(
-                 [:disclosure_specialist, :trig_draft_foi_accepted],
-                 [:disclosure_specialist, :trig_pdacu_foi_accepted],
-                 [:disclosure_specialist, :trig_awdis_foi],
-                 [:disclosure_specialist, :full_pdacu_foi_accepted],
-                 [:disclosure_specialist, :full_ppress_foi_accepted],
-                 [:disclosure_specialist, :full_ppress_foi],
-                 [:disclosure_specialist, :full_pprivate_foi],
-                 [:disclosure_specialist, :full_pprivate_foi_accepted],
+                 [:disclosure_bmt, :std_draft_foi],
+                 [:disclosure_bmt, :std_awdis_foi],
+                 [:disclosure_bmt, :trig_draft_foi_accepted],
+                 [:disclosure_bmt, :trig_draft_foi],
+                 [:disclosure_bmt, :trig_pdacu_foi_accepted],
+                 [:disclosure_bmt, :trig_pdacu_foi],
+                 [:disclosure_bmt, :trig_awdis_foi],
+                 [:disclosure_bmt, :full_draft_foi],
+                 [:disclosure_bmt, :full_pdacu_foi_unaccepted],
+                 [:disclosure_bmt, :full_pdacu_foi_accepted],
+                 [:disclosure_bmt, :full_ppress_foi_accepted],
+                 [:disclosure_bmt, :full_ppress_foi],
+                 [:disclosure_bmt, :full_pprivate_foi],
+                 [:disclosure_bmt, :full_pprivate_foi_accepted],
+                 [:disclosure_bmt, :full_awdis_foi]
                )}
     end
 

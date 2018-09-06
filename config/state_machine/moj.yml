@@ -74,6 +74,7 @@ case_types:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -87,6 +88,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -162,8 +164,6 @@ case_types:
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -180,8 +180,6 @@ case_types:
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
@@ -194,8 +192,6 @@ case_types:
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_in_approving_team_for_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
@@ -303,6 +299,7 @@ case_types:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
@@ -314,6 +311,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
@@ -324,6 +322,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
@@ -394,8 +393,6 @@ case_types:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
@@ -418,8 +415,6 @@ case_types:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                   transition_to: awaiting_dispatch
                   after_transition: Workflows::Hooks#notify_responder_ready_to_send
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
@@ -448,8 +443,6 @@ case_types:
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
@@ -585,6 +578,7 @@ case_types:
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
@@ -596,6 +590,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
@@ -606,6 +601,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 link_a_case:
                 remove_linked_case:
                 request_further_clearance:
@@ -616,6 +612,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 link_a_case:
                 remove_linked_case:
 
@@ -624,6 +621,7 @@ case_types:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
+                extend_for_pit:
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -691,8 +689,6 @@ case_types:
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                   if: Workflows::Predicates#user_is_in_approving_team_for_case?
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
@@ -715,8 +711,6 @@ case_types:
                 approve_and_bypass:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                   transition_to: awaiting_dispatch
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
                 remove_linked_case:
@@ -742,8 +736,6 @@ case_types:
                 approve:
                   if: Workflows::Predicates#user_is_assigned_press_officer?
                   transition_to: pending_private_office_clearance
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
@@ -766,8 +758,6 @@ case_types:
                 approve:
                   if: Workflows::Predicates#user_is_assigned_private_officer?
                   transition_to: awaiting_dispatch
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user

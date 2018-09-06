@@ -537,10 +537,11 @@ describe Case::BasePolicy do
 
   permissions :extend_for_pit? do
     it { should_not permit(responder,             accepted_case) }
-    it { should_not permit(manager,               accepted_case) }
+    it { should     permit(manager,               accepted_case) }
+    it { should     permit(manager,               drafting_trigger_case) }
     it { should_not permit(manager,               unassigned_case) }
     it { should_not permit(manager,               closed_case) }
-    it { should     permit(approver,              drafting_trigger_case) }
+    it { should_not permit(approver,              drafting_trigger_case) }
     it { should_not permit(press_officer,         accepted_case) }
     it { should_not permit(private_officer,       accepted_case) }
   end

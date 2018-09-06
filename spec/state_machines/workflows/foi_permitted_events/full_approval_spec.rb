@@ -49,6 +49,7 @@ describe ConfigurableStateMachine::Machine do
                                                                       :assign_to_new_team,
                                                                       :destroy_case,
                                                                       :edit_case,
+                                                                      :extend_for_pit,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
@@ -63,6 +64,7 @@ describe ConfigurableStateMachine::Machine do
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :destroy_case,
                                                                       :edit_case,
+                                                                      :extend_for_pit,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
         end
@@ -76,6 +78,7 @@ describe ConfigurableStateMachine::Machine do
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :destroy_case,
                                                                       :edit_case,
+                                                                      :extend_for_pit,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
         end
@@ -89,6 +92,7 @@ describe ConfigurableStateMachine::Machine do
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :destroy_case,
                                                                       :edit_case,
+                                                                      :extend_for_pit,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
         end
@@ -102,6 +106,7 @@ describe ConfigurableStateMachine::Machine do
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :destroy_case,
                                                                       :edit_case,
+                                                                      :extend_for_pit,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
@@ -525,7 +530,6 @@ describe ConfigurableStateMachine::Machine do
 
           expect(k.current_state).to eq 'pending_press_office_clearance'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
-                                                                       :extend_for_pit,
                                                                        :link_a_case,
                                                                        :reassign_user,
                                                                        :remove_linked_case]
@@ -539,7 +543,6 @@ describe ConfigurableStateMachine::Machine do
 
           expect(k.current_state).to eq 'pending_private_office_clearance'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
-                                                                       :extend_for_pit,
                                                                        :link_a_case,
                                                                        :reassign_user,
                                                                        :remove_linked_case]
