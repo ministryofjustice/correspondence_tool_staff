@@ -1,5 +1,6 @@
 class Workflows::Predicates
   def initialize(user:, kase:)
+
     @user = user
     @kase = kase
   end
@@ -91,6 +92,19 @@ class Workflows::Predicates
   end
 
   def can_create_new_overturned_ico?
-    @kase.ico? && @kase.ico_decision == 'overturned'
+    @kase.ico? && @kase.ico_decision == 'overturned' && overturned_enabled?(@kase)
+  end
+
+
+  private
+
+  def overturned_enabled?(kase)
+    if kase.original_case.sar?
+      FeatureSet.overturned_sars.enabled?
+    elsif kase.original_case.foi?
+      FeatureSet.overturned_fois.enabled?
+    else
+      false
+    end
   end
 end
