@@ -224,5 +224,4 @@ describe Case::SAR do
     end
   end
 
-  describe ''
 end
