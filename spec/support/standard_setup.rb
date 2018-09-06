@@ -56,7 +56,7 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
       elsif @@users&.key?(method_name)
         @@users[method_name].call
       elsif @@cases&.key?(method_name)
-        @@cases[method_name].call
+        @@cases[method_name].call(identifier: method_name)
       elsif @@teams&.key?(method_name)
         @@teams[method_name].call
       else
@@ -216,8 +216,7 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
 
       sar_noff_unassigned: ->(attributes={}) {
         create(:sar_case,
-               {identifier: 'sar_noff_unassigned'}
-                 .merge(attributes))
+               attributes)
       },
       sar_noff_awresp: ->(attributes={}) {
         create(:awaiting_responder_sar,
@@ -227,13 +226,125 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
       },
       sar_noff_draft: ->(attributes={}) {
         create(:sar_being_drafted,
-               {responder: responder_user,
-                identifier: 'sar_noff_draft'}
+               { responder: responder_user }
                  .merge(attributes))
       },
       sar_noff_closed: ->(attributes={}) {
         create(:closed_sar,
-               {identifier: 'sar_noff_closed'}
+               attributes)
+      },
+      sar_noff_trig_unassigned: ->(attributes={}) {
+        create(:sar_case,
+               :flagged,
+               attributes)
+      },
+      sar_noff_trig_unassigned_accepted: ->(attributes={}) {
+        create(:sar_case,
+               :flagged_accepted,
+               :dacu_disclosure,
+               {identifier: 'sar_noff_unassigned'}
+                 .merge(attributes))
+      },
+      sar_noff_trig_pdacu: ->(attributes={}) {
+        create(:pending_dacu_clearance_sar,
+               {responding_team: responding_team,
+                identifier: 'sar_noff_awresp'}
+                 .merge(attributes))
+      },
+      sar_noff_trig_awdis: ->(attributes={}) {
+        create(:approved_sar,
+               :flagged_accepted,
+               :dacu_disclosure,
+               { responding_team: responding_team }
+                 .merge(attributes))
+      },
+      sar_noff_trig_awresp: ->(attributes={}) {
+        create(:awaiting_responder_sar,
+               :flagged,
+               :dacu_disclosure,
+               { responding_team: responding_team, }
+                 .merge(attributes))
+      },
+      sar_noff_trig_awresp_accepted: ->(attributes={}) {
+        create(:awaiting_responder_sar,
+               :flagged_accepted,
+               :dacu_disclosure,
+               { responding_team: responding_team }
+                 .merge(attributes))
+      },
+      sar_noff_trig_draft: ->(attributes={}) {
+        create(:sar_being_drafted,
+               :flagged,
+               :dacu_disclosure,
+               { responder: responder_user, }
+                 .merge(attributes))
+      },
+      sar_noff_trig_draft_accepted: ->(attributes={}) {
+        create(:sar_being_drafted,
+               :flagged_accepted,
+               :dacu_disclosure,
+               { responder: responder_user, }
+                 .merge(attributes))
+      },
+      sar_noff_trig_closed_accepted: ->(attributes={}) {
+        create(:closed_sar,
+               :flagged_accepted,
+               :dacu_disclosure,
+               attributes)
+      },
+
+      ot_ico_sar_noff_unassigned: ->(attributes={}) {
+        create(:ot_ico_sar_noff_unassigned,
+               attributes)
+      },
+      ot_ico_sar_noff_awresp: ->(attributes={}) {
+        create(:ot_ico_sar_noff_awresp,
+               { responding_team: responding_team }
+                 .merge(attributes))
+      },
+      ot_ico_sar_noff_draft: ->(attributes={}) {
+        create(:ot_ico_sar_noff_draft,
+               { responder: responder_user }
+                 .merge(attributes))
+      },
+      ot_ico_sar_noff_pdacu: ->(attributes={}) {
+        create(:ot_ico_sar_noff_pdacu,
+               { responder: responder_user }
+                 .merge(attributes))
+      },
+      ot_ico_sar_noff_trig_awresp: ->(attributes={}) {
+        create(:ot_ico_sar_noff_awresp,
+               :flagged,
+               :dacu_disclosure,
+               { responding_team: responding_team, }
+                 .merge(attributes))
+      },
+      ot_ico_sar_noff_trig_awresp_accepted: ->(attributes={}) {
+        create(:awaiting_responder_sar,
+               :flagged,
+               :dacu_disclosure,
+               { responding_team: responding_team }
+                 .merge(attributes))
+      },
+      ot_ico_sar_noff_trig_draft: ->(attributes={}) {
+        create(:sar_being_drafted,
+               :flagged,
+               :dacu_disclosure,
+               { responder: responder_user, }
+                 .merge(attributes))
+      },
+      ot_ico_sar_noff_trig_draft_accepted: ->(attributes={}) {
+        create(:sar_being_drafted,
+               :flagged_accepted,
+               :dacu_disclosure,
+               { responder: responder_user, }
+                 .merge(attributes))
+      },
+      ot_ico_sar_noff_trig_draft_accepted: ->(attributes={}) {
+        create(:sar_being_drafted,
+               :flagged_accepted,
+               :dacu_disclosure,
+               { responder: responder_user, }
                  .merge(attributes))
       },
 
@@ -558,7 +669,7 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
       elsif @@users&.key?(method_name)
         @@users[method_name].call
       elsif @@cases&.key?(method_name)
-        @@cases[method_name].call
+        @@cases[method_name].call(identifier: method_name)
       elsif @@teams&.key?(method_name)
         @@teams[method_name].call
       else
@@ -579,14 +690,16 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
       only_cases.each do |name, attrs|
         # instantiate case by calling the blocks in @@cases and passing in any
         # attributes defined in only_cases for this case.
-        @cases[name] = @cases[name].call(attrs)
+        @cases[name] = @cases[name].call({ identifier: name }.merge(attrs))
       end
     else
       case_types = only_cases || @@cases.keys
-      @cases = @@cases.slice(*case_types).transform_values do |kase|
-        # instantiate case by calling the blocks in @@cases
-        kase.call
-      end
+      @cases = Hash[
+        @@cases.slice(*case_types).map do |name, kase|
+          # instantiate case by calling the blocks in @@cases
+          [name, kase.call(identifier: name)]
+        end
+      ]
     end
   end
 

@@ -19,6 +19,7 @@
               awaiting_responder:
                 add_message_to_case:
                 assign_to_new_team:
+                  transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
                 flag_for_clearance:
@@ -29,6 +30,7 @@
               drafting:
                 add_message_to_case:
                 assign_to_new_team:
+                  transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
                 flag_for_clearance:

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-feature 'Assigning a closed case to a new team' do
+feature 'Assigning a SAR case to a new team' do
   given(:disclosure_bmt_user) { create :disclosure_bmt_user }
   given(:responding_team)     { create :responding_team }
 
@@ -8,7 +8,7 @@ feature 'Assigning a closed case to a new team' do
     login_as disclosure_bmt_user
   end
 
-  scenario 're-assigning a SAR case' do
+  scenario 're-assigning a closed SAR case' do
     responding_team
 
     closed_case = create :closed_sar
@@ -21,18 +21,32 @@ feature 'Assigning a closed case to a new team' do
                      expected_status: 'Case closed',
                      expected_flash_msg: 'Case has been assigned to a new team'
   end
-  
-  scenario 're-assigning a closed FOI case' do
+
+  scenario 're-assigning a SAR case that is being drafted' do
     responding_team
 
-    closed_case = create :closed_case
+    accepted_case = create :accepted_sar
 
-    cases_show_page.load(id: closed_case.id)
+    cases_show_page.load(id: accepted_case.id)
     cases_show_page.actions.assign_to_new_team.click
 
     assign_case_step business_unit: responding_team,
                      assigning_page: assign_to_new_team_page,
-                     expected_status: 'Case closed',
+                     expected_status: 'To be accepted',
+                     expected_flash_msg: 'Case has been assigned to a new team'
+  end
+
+  scenario 're-assigning a trigger SAR case that is being drafted' do
+    responding_team
+
+    accepted_case = create :accepted_sar
+
+    cases_show_page.load(id: accepted_case.id)
+    cases_show_page.actions.assign_to_new_team.click
+
+    assign_case_step business_unit: responding_team,
+                     assigning_page: assign_to_new_team_page,
+                     expected_status: 'To be accepted',
                      expected_flash_msg: 'Case has been assigned to a new team'
   end
 end

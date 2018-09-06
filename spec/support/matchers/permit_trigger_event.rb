@@ -19,7 +19,18 @@ module PermitTriggerEvent
         all_cases.each do |case_type, kase|
           user, team = user_and_team
           state_machine = kase.state_machine
-          result = state_machine.can_trigger_event?(event_name: event, metadata: {acting_user: user, acting_team: team})
+          result = state_machine.can_trigger_event?(event_name: event,
+                                                    metadata: {
+                                                      acting_user: user,
+                                                      acting_team: team
+                                                    })
+          if result && @transition_to.present?
+            next_state = state_machine.next_state_for_event(event,
+                                                            acting_user: user,
+                                                            acting_team: team)
+            result = result && @transition_to == next_state
+          end
+
           if [user_type, case_type].in?(permitted_combinations) ^ result
             (binding).pry if @debug_on_error && $stdout.tty?
             # this is handy to be able to step through what failed
@@ -32,6 +43,10 @@ module PermitTriggerEvent
         end
       end
       @errors.empty?
+    end
+
+    chain :with_transition_to do |target_state|
+      @transition_to = target_state.to_s
     end
 
     # Use this to run binding.pry if a particular combination fails a test.
