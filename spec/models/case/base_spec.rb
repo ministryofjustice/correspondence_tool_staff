@@ -935,8 +935,12 @@ RSpec.describe Case::Base, type: :model do
                        name: 'Brian Bush',
                        responding_team: @responding_team_b,
                        responder: @responding_team_b.responders.first
+      @sar_case = create :sar_case,
+                         subject_full_name: 'Stepriponikas Bonstart',
+                         name: 'Boris Johnson'
       @case_a.update_index
       @case_b.update_index
+      @sar_case.update_index
     end
 
     after :all do
@@ -961,6 +965,14 @@ RSpec.describe Case::Base, type: :model do
 
     it 'returns case with a responding team that matches the query' do
       expect(Case::Base.search('bargain')).to match_array [@case_b]
+    end
+
+    it 'returns a SAR case with a data subject name matching the query' do
+      expect(Case::Base.search('Bonstart')).to match_array [@sar_case]
+    end
+
+    it 'returns a SAR case with a requestor name matching the query' do
+      expect(Case::Base.search('Boris')).to match_array [@sar_case]
     end
   end
 

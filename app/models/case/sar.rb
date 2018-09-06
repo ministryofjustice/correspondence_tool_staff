@@ -12,6 +12,14 @@ class Case::SAR < Case::Base
     self.workflow = 'standard' if workflow.nil?
   end
 
+  def self.searchable_fields_and_ranks
+    super.merge(
+        {
+            subject_full_name:     'B'
+        }
+    )
+  end
+
   jsonb_accessor :properties,
                  escalation_deadline: :date,
                  internal_deadline: :date,
