@@ -4,8 +4,7 @@ FactoryBot.define do
           aliases: [:ot_ico_sar_noff_unassigned],
           class: Case::OverturnedICO::SAR do
     transient do
-      creation_time   { Time.now }
-      # creation_time   { 4.business_days.ago }
+      creation_time   { 4.business_days.ago }
       identifier      { "unassigned overturned ico sar" }
     end
 
