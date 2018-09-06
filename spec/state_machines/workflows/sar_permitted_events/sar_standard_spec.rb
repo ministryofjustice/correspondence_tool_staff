@@ -15,7 +15,8 @@ describe ConfigurableStateMachine::Machine do
                                                                       :edit_case,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
-                                                                      :remove_linked_case]
+                                                                      :remove_linked_case,
+                                                                      :request_further_clearance]
         end
       end
 
@@ -29,7 +30,8 @@ describe ConfigurableStateMachine::Machine do
                                                                       :edit_case,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
-                                                                      :remove_linked_case]
+                                                                      :remove_linked_case,
+                                                                      :request_further_clearance]
         end
       end
 
@@ -43,7 +45,8 @@ describe ConfigurableStateMachine::Machine do
                                                                       :edit_case,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
-                                                                      :remove_linked_case]
+                                                                      :remove_linked_case,
+                                                                      :request_further_clearance]
         end
       end
 
@@ -119,7 +122,7 @@ describe ConfigurableStateMachine::Machine do
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'drafting'
           expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                        :close, 
+                                                                        :close,
                                                                         :reassign_user,
                                                                         :respond,
                                                                         :respond_and_close]
