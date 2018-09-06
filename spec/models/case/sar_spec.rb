@@ -217,4 +217,12 @@ describe Case::SAR do
       expect(kase.requires_flag_for_disclosure_specialists?).to be true
     end
   end
+
+  describe '.searchable_fields_and_ranks' do
+    it 'includes subject full name' do
+      expect(Case::SAR.searchable_fields_and_ranks).to include({subject_full_name: 'B'})
+    end
+  end
+
+  describe ''
 end
