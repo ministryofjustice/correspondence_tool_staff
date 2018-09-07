@@ -30,6 +30,7 @@
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 assign_to_new_team:
+                  transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
                 flag_for_clearance:
@@ -39,7 +40,6 @@
               pending_dacu_clearance:
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                assign_to_new_team:
                 destroy_case:
                 edit_case:
                 link_a_case:
@@ -48,7 +48,6 @@
               awaiting_dispatch:
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                assign_to_new_team:
                 destroy_case:
                 edit_case:
                 link_a_case:

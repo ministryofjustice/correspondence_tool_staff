@@ -114,7 +114,7 @@ describe CaseFinderService do
                                                            responder: @responder,
                                                            original_case: @awaiting_responder_overturned_ico_sar_original,
                                                            identifier: '19B-original ico appeal for 18-overturned ico sar')
-        @awaiting_responder_overturned_ico_sar    = create :awaiting_responder_overturned_ico_sar,
+        @awaiting_responder_overturned_ico_sar    = create :awaiting_responder_ot_ico_sar,
                                                            responding_team: @responding_team,
                                                            original_case: @awaiting_responder_overturned_ico_sar_original,
                                                            original_ico_appeal: @awaiting_responder_overturned_ico_sar_original_appeal,
@@ -128,7 +128,7 @@ describe CaseFinderService do
                                                            responder: @responder,
                                                            original_case: @accepted_overturned_ico_sar_original,
                                                            identifier: '20B-original ico appeal for 18-overturned ico sar')
-        @accepted_overturned_ico_sar              = create :accepted_overturned_ico_sar,
+        @accepted_overturned_ico_sar              = create :accepted_ot_ico_sar,
                                                            responding_team: @responding_team,
                                                            original_case: @accepted_overturned_ico_sar_original,
                                                            original_ico_appeal: @accepted_overturned_ico_sar_original_appeal,

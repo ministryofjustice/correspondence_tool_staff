@@ -1,11 +1,11 @@
 FactoryBot.define do
 
-  factory :overturned_ico_sar, class: Case::OverturnedICO::SAR do
-
+  factory :overturned_ico_sar,
+          aliases: [:ot_ico_sar_noff_unassigned],
+          class: Case::OverturnedICO::SAR do
     transient do
       creation_time   { 4.business_days.ago }
-      identifier      { 'new overturned ico sar case' }
-      managing_team   { find_or_create :team_dacu }
+      identifier      { "unassigned overturned ico sar" }
     end
 
     message                         { identifier }
@@ -21,10 +21,14 @@ FactoryBot.define do
     email                           { 'dave@moj.com' }
   end
 
-  factory :awaiting_responder_overturned_ico_sar, parent: :overturned_ico_sar do
+  factory :awaiting_responder_ot_ico_sar,
+          aliases: [:ot_ico_sar_noff_awresp],
+          parent: :overturned_ico_sar do
+
     transient do
-      identifier      { "assigned overturned ico sar case" }
+      identifier      { "awaiting responder overturned ico sar case" }
       manager         { managing_team.managers.first }
+      managing_team   { find_or_create :team_dacu }
       responding_team { create :responding_team }
     end
 
@@ -48,12 +52,14 @@ FactoryBot.define do
     end
   end
 
+  factory :accepted_ot_ico_sar,
+          aliases: [:ot_ico_sar_noff_draft],
+          parent: :awaiting_responder_ot_ico_sar do
 
-  factory :accepted_overturned_ico_sar, parent: :awaiting_responder_overturned_ico_sar do
     transient do
-      identifier          { "accepted overturned ico sar case" }
-      responder           { create :responder }
-      responding_team     { responder.responding_teams.first }
+      identifier      { "responder accepted overturned ico sar case" }
+      responder       { create :responder }
+      responding_team { responder.responding_teams.first }
     end
 
     after(:create) do |kase, evaluator|
@@ -68,6 +74,28 @@ FactoryBot.define do
     end
   end
 
+  factory :pending_dacu_clearance_to_ico_sar,
+          aliases: [:ot_ico_sar_noff_pdacu],
+          parent: :accepted_ot_ico_sar do
+    transient do
+      approving_team { find_or_create :team_dacu_disclosure }
+      approver       { create :disclosure_specialist }
+    end
+    workflow { 'trigger' }
+
+    after(:create) do |kase, evaluator|
+      create :approver_assignment,
+             case: kase,
+             team: evaluator.approving_team,
+             state: 'accepted',
+             user_id: evaluator.approver.id
+
+      create :case_transition_pending_dacu_clearance,
+             case_id: kase.id,
+             acting_user_id: evaluator.responder.id
+      kase.reload
+    end
+  end
 
   factory :overturned_ico_foi, class: Case::OverturnedICO::FOI do
     current_state                   { 'unassigned' }
