@@ -162,36 +162,14 @@ FactoryBot.define do
     trait :overturned_by_ico do
       ico_decision         { "overturned" }
       ico_decision_comment { Faker::NewGirl.quote }
-
-      after(:create) do |kase, evaluator|
-        kase.attachments.push(*evaluator.attachments)
-        kase.save!
-      end
     end
 
-    after(:create) do |kase, _evaluator|
+    after(:create) do |kase, evaluator|
+      kase.attachments.push(*evaluator.attachments)
+      kase.save!
       create :case_transition_close_ico,
              case_id: kase.id
       kase.reload
     end
   end
-
-  factory :closed_ico_sar_case_overturned, parent: :responded_ico_sar_case do
-    transient do
-      identifier { 'closed ICO SAR case - overturned' }
-    end
-
-    date_ico_decision_received    { Date.today }
-    ico_decision                  { "overturned" }
-    uploaded_ico_decision_files   { ['my_file'] }
-    ico_decision_comment          { 'not good enough'}
-
-
-    after(:create) do |kase, _evaluator|
-      create :case_transition_close_ico,
-             case_id: kase.id
-      kase.reload
-    end
-  end
-
 end

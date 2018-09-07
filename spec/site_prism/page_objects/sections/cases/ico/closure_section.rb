@@ -4,6 +4,8 @@ module PageObjects
       module ICO
         class ClosureSection < SitePrism::Section
 
+          include SitePrism::Support::DropInDropzone
+
           section :ico_decision, '.ico-decision' do
             element :overturned, '#case_ico_ico_decision_overturned'
             element :overturned_label, 'label[for="case_ico_ico_decision_overturned"]'
@@ -22,6 +24,17 @@ module PageObjects
           section :missing_info, '.missing-info' do
             element :yes, 'label[for="case_sar_missing_info_yes"]'
             element :no, 'label[for="case_sar_missing_info_no"]'
+          end
+
+          # only shows up when using drop_in_dropzone
+          element :uploaded_request_file_input, '#uploadedRequestFileInput'
+
+
+          # Upload a file to Dropzone.js
+          def drop_in_dropzone(file_path)
+            super file_path: file_path,
+                  input_name: 'case_ico[uploaded_ico_decision_files][]',
+                  container_selector: '.dropzone:first'
           end
         end
       end

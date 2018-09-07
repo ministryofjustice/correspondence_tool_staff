@@ -24,12 +24,15 @@ en:
     attributes:
       business_unit:
         correspondence_type_ids: "Correspondence types"
+      case/ico/base:
+        uploaded_ico_decision_files: ''
       case/sar:
         third_party: ''
       report:
         correspondence_type: Case type
       case/overturned_ico/sar:
         external_deadline: Final deadline
+
     errors:
       models:
         business_unit:
@@ -155,6 +158,7 @@ en:
       update?: You are not authorised to edit this case.
     case/ico/foi_policy:
       can_close_case?: You are not authorised to close this case
+      can_accept_or_reject_responder_assignment?: You are not allowed to accept or reject responder assignment
     case/foi/standard_policy:
       <<: *case_policy
     case/foi/compliance_review_policy:

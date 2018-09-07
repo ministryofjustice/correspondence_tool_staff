@@ -7,7 +7,16 @@ def upload_response_step(file: UPLOAD_RESPONSE_DOCX_FIXTURE)
   cases_new_response_upload_page.upload_response_button.click
   expect(cases_show_page).to be_displayed
   expect(cases_show_page.notice)
-    .to have_text 'You have uploaded the response for this case.'
+      .to have_text 'You have uploaded the response for this case.'
+end
+
+def upload_ico_decision__and_close_step(file: UPLOAD_RESPONSE_DOCX_FIXTURE)
+  stub_s3_uploader_for_all_files!
+  cases_close_page.ico.drop_in_dropzone(file)
+  cases_new_response_upload_page.upload_response_button.click
+  expect(cases_show_page).to be_displayed
+  expect(cases_show_page.notice)
+      .to have_text "You've closed this case"
 end
 
 def mark_case_as_sent_step(responded_date:,
@@ -87,7 +96,8 @@ def close_ico_appeal_case_step(timeliness: 'in time', decision: 'upheld')
     cases_close_page.ico_decision.overturned.click
   end
 
-  cases_close_page.click_on 'Close case'
+  upload_ico_decision__and_close_step
+
   show_page = cases_show_page.case_details
   expect(cases_show_page.notice.text).to eq("You've closed this case")
 

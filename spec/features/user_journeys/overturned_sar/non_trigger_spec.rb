@@ -8,7 +8,7 @@ feature 'SAR overturned case' do
   given(:manager)                             { create :disclosure_bmt_user }
   given!(:team_dacu_disclosure)               { find_or_create :team_dacu_disclosure }
   given!(:overturned_sar_correspondence_type) { create :overturned_sar_correspondence_type }
-  given(:original_appeal_case)                { create :closed_ico_sar_case_overturned,
+  given(:original_appeal_case)                { create :closed_ico_sar_case, :overturned_by_ico,
                                                         responding_team: responding_team }
 
   scenario 'end-to-end journey', js: true do

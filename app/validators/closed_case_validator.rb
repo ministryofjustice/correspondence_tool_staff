@@ -9,7 +9,7 @@ class ClosedCaseValidator < ActiveModel::Validator
              :validate_exemptions],
     'ICO'=> [:validate_ico_decision,
              :validate_date_ico_decision_received,
-             :validate_files_or_comment]
+             :validate_ico_decision_files]
   }
   # Validations applicable to cases that are being processed for closure.
   #
@@ -105,12 +105,10 @@ class ClosedCaseValidator < ActiveModel::Validator
     end
   end
 
-  def validate_files_or_comment(rec)
-    if rec.ico_decision == 'overturned' &&
-        (rec.uploaded_ico_decision_files.blank? ||
-            rec.attachments.ico_decisions.any?) &&
-        rec.ico_decision_comment.blank?
-          rec.errors.add(:uploaded_ico_decision_files, 'blank')
+  def validate_ico_decision_files(rec)
+    if rec.uploaded_ico_decision_files.blank? &&
+        rec.attachments.ico_decisions.none?
+      rec.errors.add(:uploaded_ico_decision_files, 'No ICO decision files have been uploaded')
     end
   end
 

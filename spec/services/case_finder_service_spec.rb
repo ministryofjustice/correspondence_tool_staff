@@ -95,7 +95,7 @@ describe CaseFinderService do
         @overturned_ico_sar_original              = create(:closed_sar,
                                                            responder: @responder,
                                                            identifier: '18A-original closed sar for 18-overturned ico sar')
-        @overturned_ico_sar_original_appeal       = create(:closed_ico_sar_case_overturned,
+        @overturned_ico_sar_original_appeal       = create(:closed_ico_sar_case, :overturned_by_ico,
                                                            responder: @responder,
                                                            original_case: @overturned_ico_sar_original,
                                                            identifier: '18B-original ico appeal for 18-overturned ico sar')
@@ -110,7 +110,7 @@ describe CaseFinderService do
                                                            responder: @responder,
                                                            identifier: '19A-original closed sar for 19-awaiting responder overturned ico sar')
         @awaiting_responder_overturned_ico_sar_original_appeal =
-                                                    create(:closed_ico_sar_case_overturned,
+                                                    create(:closed_ico_sar_case, :overturned_by_ico,
                                                            responder: @responder,
                                                            original_case: @awaiting_responder_overturned_ico_sar_original,
                                                            identifier: '19B-original ico appeal for 18-overturned ico sar')
@@ -124,7 +124,7 @@ describe CaseFinderService do
                                                            responder: @responder,
                                                            identifier: '20A-original closed sar for 19-awaiting responder overturned ico sar')
         @accepted_overturned_ico_sar_original_appeal =
-                                                    create(:closed_ico_sar_case_overturned,
+                                                    create(:closed_ico_sar_case, :overturned_by_ico,
                                                            responder: @responder,
                                                            original_case: @accepted_overturned_ico_sar_original,
                                                            identifier: '20B-original ico appeal for 18-overturned ico sar')
@@ -319,13 +319,10 @@ describe CaseFinderService do
                   @responded_ico.original_case,
                   @overturned_ico_sar_original,
                   @overturned_ico_sar,
-                  @overturned_ico_sar_original_appeal,
                   @awaiting_responder_overturned_ico_sar_original,
-                  @awaiting_responder_overturned_ico_sar_original_appeal,
                   @awaiting_responder_overturned_ico_sar,
                   @accepted_overturned_ico_sar,
-                  @accepted_overturned_ico_sar_original,
-                  @accepted_overturned_ico_sar_original_appeal
+                  @accepted_overturned_ico_sar_original
                 ]
         end
       end
@@ -335,13 +332,16 @@ describe CaseFinderService do
       it 'returns all the cases that are late' do
         Timecop.freeze(@case_1.external_deadline) do
           finder = CaseFinderService.new(@manager)
-          expect(finder.__send__ :late_cases_scope)
+          expect(finder.__send__(:late_cases_scope))
             .to match_array [
                   @older_case_1,
                   @older_case_2,
                   @assigned_older_case,
                   @older_dacu_flagged_case,
                   @older_dacu_flagged_accept,
+                  @overturned_ico_sar_original_appeal,
+                  @awaiting_responder_overturned_ico_sar_original_appeal,
+                  @accepted_overturned_ico_sar_original_appeal
                 ]
         end
       end

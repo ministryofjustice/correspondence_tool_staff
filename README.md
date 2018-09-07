@@ -3,7 +3,8 @@
 [![Code Climate](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/gpa.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff)
 [![Test Coverage](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/coverage.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/coverage)
 [![Issue Count](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/issue_count.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff)
-[![Build Status](https://semaphoreci.com/api/v1/aliuk2012/correspondence_tool_staff/branches/ct-1778-ico-filter/badge.svg)](https://semaphoreci.com/aliuk2012/correspondence_tool_staff)
+[![Build Status](https://semaphoreci.com/api/v1/aliuk2012/correspondence_tool_staff/branches/master/badge.svg)](https://semaphoreci.com/aliuk2012/correspondence_tool_staff)
+
 
 A simple application to allow internal staff users to answer correspondence.
 
