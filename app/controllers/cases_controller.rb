@@ -330,6 +330,7 @@ class CasesController < ApplicationController
     authorize @case, :respond_and_close?
     @case.prepare_for_close
     close_params = process_closure_params(@case.type_abbreviation)
+
     if @case.update(close_params)
       @case.respond_and_close(current_user)
       set_permitted_events
@@ -744,7 +745,7 @@ class CasesController < ApplicationController
   def process_closure_params(correspondence_type)
     case correspondence_type
     when 'FOI' then process_foi_closure_params
-    when 'SAR' then process_sar_closure_params
+    when 'SAR', 'OVERTURNED_SAR' then process_sar_closure_params
     when 'ICO' then process_ico_closure_params
     else raise 'Unknown case type'
     end

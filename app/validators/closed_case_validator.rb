@@ -1,24 +1,27 @@
 class ClosedCaseValidator < ActiveModel::Validator
   # Validations applicable to cases that are closed.
   CLOSED_VALIDATIONS = {
-    'SAR'=> [:validate_date_responded],
-    'FOI'=> [:validate_date_responded,
-             :validate_info_held_status,
-             :validate_outcome,
-             :validate_refusal_reason,
-             :validate_exemptions],
-    'ICO'=> [:validate_ico_decision,
-             :validate_date_ico_decision_received,
-             :validate_ico_decision_files]
+    'SAR'=>             [:validate_date_responded],
+    'FOI'=>             [:validate_date_responded,
+                         :validate_info_held_status,
+                         :validate_outcome,
+                         :validate_refusal_reason,
+                         :validate_exemptions],
+    'ICO'=>             [:validate_ico_decision,
+                         :validate_date_ico_decision_received,
+                         :validate_ico_decision_files],
+    'OVERTURNED_SAR' => [:validate_date_responded],
   }
   # Validations applicable to cases that are being processed for closure.
   #
   # e.g. missing_info is a virtual attribute which is only used when submitting
   # the form to close a case, and is only required at that time.
   PROCESSING_CLOSURE_VALIDATIONS = {
-    'SAR'=> [:validate_tmm],
-    'FOI'=> [],
-    'ICO'=> []
+    'SAR'=>               [:validate_tmm],
+    'FOI'=>               [],
+    'ICO'=>               [],
+    'OVERTURNED_SAR' =>   [:validate_tmm,
+                           :validate_date_responded],
   }
 
   class << self
