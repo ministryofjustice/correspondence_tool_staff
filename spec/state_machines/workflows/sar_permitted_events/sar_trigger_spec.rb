@@ -52,6 +52,7 @@ describe ConfigurableStateMachine::Machine do
           k = create :pending_dacu_clearance_sar, :flagged_accepted
           expect(k.current_state).to eq 'pending_dacu_clearance'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
+                                                                      :assign_to_new_team,
                                                                       :destroy_case,
                                                                       :edit_case,
                                                                       :link_a_case,
