@@ -468,20 +468,20 @@ en:
       appeal_outcome: Appeal Outcome
       download_link_html: |
         Download <span class="visuallyhidden">file %{filename}.</span>
-      email: "Requesters email"
+      email: "Requester’s email"
       exemptions_heading: Exemptions
       extend_for_pit: Extend for Public Interest Test
       external_deadline: Final deadline
       internal_deadline: Draft deadline
       ico_case_number: ICO case reference number
-      ico_officer_name: ICO officer name
+      ico_officer_name: ICO information officer handling this case
       filename: File name
       header_case_number: "You are viewing case number "
       header_subject: "Case subject, "
       name: Requester
-      postal_address: "Requesters postal address"
+      postal_address: "Requester’s postal address"
       progress_for_clearance: "Ready for Disclosure clearance"
-      received_date: Date received at MOJ
+      received_date: Date request received at MOJ
       reason_for_refusal: Outcome
       reassign_case: "Change team member"
       remove_link_html: |
@@ -515,6 +515,7 @@ en:
     case/ico:
       close: "Record ICO's decision"
       respond: Mark as sent to ICO
+      request: "ICO's request and documents"
     case_list:
       view_case: "Link to case "
       message_notification: Conversations

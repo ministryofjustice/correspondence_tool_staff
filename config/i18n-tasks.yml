@@ -110,6 +110,7 @@ ignore_unused:
   - 'cases.show.case.attachments_heading'
   - 'cases.respond.respond_date'
   - 'notices.case_cleared'
+  - 'common.case.request'
 
 ## Consider these keys used:
 # ignore_unused:
