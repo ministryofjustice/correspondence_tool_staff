@@ -133,7 +133,7 @@ describe CaseFinderService do
                                                            original_case: @accepted_overturned_ico_sar_original,
                                                            original_ico_appeal: @accepted_overturned_ico_sar_original_appeal,
                                                            identifier: '20-accepted overturned ico sar'
-       @closed_overturned_ico_sar                 = create :closed_overturned_ico_sar,
+       @closed_overturned_ico_sar                 = create :closed_ot_ico_sar,
                                                           responding_team: @responding_team,
                                                           original_case: @accepted_overturned_ico_sar_original,
                                                           original_ico_appeal: @accepted_overturned_ico_sar_original_appeal,

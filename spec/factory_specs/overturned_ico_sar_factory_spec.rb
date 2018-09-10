@@ -18,7 +18,7 @@ describe 'Overturned ICO SAR cases factory' do
           kase = create :overturned_ico_sar
           expect(kase).to be_instance_of(Case::OverturnedICO::SAR)
           expect(kase.created_at).to eq Time.local(2018, 7, 9, 10, 35, 22)
-          expect(kase.ico_reference).to match(/^ICO-SAR-1234-\d{1}$/)
+          expect(kase.ico_reference_number).to match(/^ICOSARREFNUM\d{3}$/)
           expect(kase.current_state).to eq 'unassigned'
           expect(kase.external_deadline).to eq Date.new(2018, 7, 29)
           expect(kase.internal_deadline).to eq Date.new(2018, 6, 29)
@@ -36,10 +36,10 @@ describe 'Overturned ICO SAR cases factory' do
       end
     end
 
-    describe :awaiting_responder_overturned_ico_sar do
+    describe :awaiting_responder_ot_ico_sar do
       it 'creates an assigned ICO FOI case' do
         Timecop.freeze(frozen_time) do
-          kase = create :awaiting_responder_overturned_ico_sar, responding_team: responding_team
+          kase = create :awaiting_responder_ot_ico_sar, responding_team: responding_team
           expect(kase.current_state).to eq 'awaiting_responder'
 
           expect(kase.assignments.size).to eq 2
@@ -59,9 +59,9 @@ describe 'Overturned ICO SAR cases factory' do
       end
     end
 
-    describe :accepted_overturned_ico_sar do
+    describe :accepted_ot_ico_sar do
       it 'creates an case in drafting state' do
-        kase = create :accepted_overturned_ico_sar, responding_team: responding_team, responder: responder
+        kase = create :accepted_ot_ico_sar, responding_team: responding_team, responder: responder
         expect(kase.current_state).to eq 'drafting'
         expect(kase.assignments.size).to eq 2
         responding_assignment = kase.assignments.responding.first
@@ -80,10 +80,10 @@ describe 'Overturned ICO SAR cases factory' do
       end
     end
 
-    describe :closed_overturned_ico_sar do
+    describe :closed_ot_ico_sar do
       it 'creates a case in responded state' do
         Timecop.freeze(frozen_time) do
-          kase = create :closed_overturned_ico_sar,
+          kase = create :closed_ot_ico_sar,
                         responding_team: responding_team,
                         responder: responder
 
