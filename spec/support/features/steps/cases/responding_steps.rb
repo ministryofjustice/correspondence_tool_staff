@@ -1,3 +1,5 @@
+UPLOAD_RESPONSE_DOCX_FIXTURE = Rails.root.join 'spec/fixtures/response.docx'
+
 def upload_response_step(file: UPLOAD_RESPONSE_DOCX_FIXTURE)
   stub_s3_uploader_for_all_files!
   cases_show_page.actions.upload_response.click
@@ -103,6 +105,6 @@ def close_ico_appeal_case_step(timeliness: 'in time', decision: 'upheld')
     .to eq Date.today.strftime(Settings.default_date_format)
   expect(show_page.response_details.timeliness.data.text)
     .to eq "Answered #{timeliness}"
-  expect(show_page.response_details.time_taken.data.text).to match(/\d+ working days/)
+  expect(show_page.response_details.time_taken.data.text).to match(/\d+ working days?/)
     expect(show_page.response_details).to have_no_refusal_reason
 end
