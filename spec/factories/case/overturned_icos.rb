@@ -75,7 +75,7 @@ FactoryBot.define do
     end
   end
 
-  factory :closed_overturned_ico_sar, parent: :accepted_overturned_ico_sar do
+  factory :closed_ot_ico_sar, parent: :accepted_ot_ico_sar do
 
     missing_info              { false }
 
