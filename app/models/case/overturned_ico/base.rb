@@ -8,6 +8,7 @@ class Case::OverturnedICO::Base < Case::Base
 
 
   jsonb_accessor :properties,
+                 ico_officer_name: :string,
                  escalation_deadline: :date,
                  internal_deadline: :date,
                  external_deadline: :date,
@@ -20,11 +21,13 @@ class Case::OverturnedICO::Base < Case::Base
       send_by_email: 'send_by_email',
   }
 
+  before_validation :copy_ico_officer_name
 
   validate :validate_received_date
   validate :validate_external_deadline
   validate :validate_original_ico_appeal
 
+  validates_presence_of :ico_officer_name
   validates_presence_of :original_case
   validates_presence_of :reply_method
   validates_presence_of :email,          if: :send_by_email?
@@ -75,6 +78,13 @@ class Case::OverturnedICO::Base < Case::Base
   end
 
   private
+
+  def copy_ico_officer_name
+    if self.new_record? && original_ico_appeal.respond_to?(:ico_officer_name
+    )
+      self.ico_officer_name = original_ico_appeal.ico_officer_name if self.ico_officer_name.blank?
+    end
+  end
 
   def identifier
     message
