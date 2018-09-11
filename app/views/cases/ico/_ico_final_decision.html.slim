@@ -3,14 +3,8 @@
     h2.request--heading
       = "ICO's decision"
 
-    .request--message
-      p
-        strong
-          = "MoJ's decision has been #{ case_details.ico_decision } by the ICO"
-        = " on #{ case_details.date_decision_received }"
-      - if case_details.ico_decision_comment.present?
-        p
-          = case_details.ico_decision_comment
+  .request--message
+    = case_details.ico_decision_summary
 
     = render partial: 'cases/attachment_report',
             locals: { attachments: case_details.ico_decision_attachments,
