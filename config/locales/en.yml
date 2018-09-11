@@ -179,6 +179,8 @@ en:
       destroy?: 'You are not authorised to deactivate users'
     case/overturned_ico/base_policy:
       new_overturned_ico?: 'You are not authorised to create an overturned ICO case'
+    case/overturned_ico/sar_policy:
+      respond_and_close?: You are not authorised to close this case
 
   roles:
     responders: Information officers
