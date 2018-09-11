@@ -12,22 +12,7 @@
         p
           = case_details.ico_decision_comment
 
-      table.case-attachments-report
-        thead.visually-hidden
-          tr
-            th
-              = 'File'
-            th
-              = 'Action'
-        tbody
-          - case_details.attachments.ico_decisions.each do |file|
-            tr
-              td
-                = file.filename
-              td.request--responses--actions
-                .response-actions
-                  = attachment_preview_link(file)
-                  = " | "
-                  = attachment_download_link(case_details, file)
-
+    = render partial: 'cases/attachment_report',
+            locals: { attachments: case_details.ico_decision_attachments,
+                      case_details: case_details }
 
