@@ -13,6 +13,9 @@ class Case::OverturnedICO::SAR < Case::OverturnedICO::Base
       :date_received
   ]
 
+  attr_accessor :missing_info
+
+
   def self.type_abbreviation
     'OVERTURNED_SAR'
   end
@@ -29,6 +32,11 @@ class Case::OverturnedICO::SAR < Case::OverturnedICO::Base
 
   def overturned_ico_sar?
     true
+  end
+
+  def respond_and_close(current_user)
+    state_machine.respond!(acting_user: current_user, acting_team: self.responding_team)
+    state_machine.close!(acting_user: current_user, acting_team: self.responding_team)
   end
 
 
