@@ -15,6 +15,9 @@ class Case::OverturnedICO::SAR < Case::OverturnedICO::Base
 
   attr_accessor :missing_info
 
+  def state_machine_name
+    'sar'
+  end
 
   def self.type_abbreviation
     'OVERTURNED_SAR'
