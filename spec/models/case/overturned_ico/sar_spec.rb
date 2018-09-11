@@ -40,6 +40,7 @@ describe Case::OverturnedICO::SAR do
                       'external_deadline_yyyy'  => deadline.year.to_s,
                       'reply_method'            => 'send_by_email',
                       'email'                   => 'stephen@stephenrichards.eu',
+                      'ico_officer_name'        => 'Dan Dare'
               }).to_unsafe_hash
           kase = described_class.new(params)
           expect(kase).to be_valid

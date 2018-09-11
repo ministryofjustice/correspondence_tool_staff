@@ -64,6 +64,10 @@ describe CreateOverturnedICOCaseService do
         expect(service.overturned_ico_case.subject).to eq original_case.subject
       end
 
+      it 'copies the ico officer name from the original appeal' do
+        expect(service.overturned_ico_case.ico_officer_name).to eq original_ico_appeal.ico_officer_name
+      end
+
       context 'reply method' do
         context 'original case send_by_email' do
           it 'sets the reply method' do

@@ -19,6 +19,7 @@ FactoryBot.define do
     escalation_deadline             { 3.days.from_now }
     reply_method                    { 'send_by_email' }
     email                           { 'dave@moj.com' }
+    ico_officer_name                { 'Dan Dare' }
   end
 
   factory :awaiting_responder_ot_ico_sar,
