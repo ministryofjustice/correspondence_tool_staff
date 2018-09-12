@@ -105,6 +105,6 @@ def close_ico_appeal_case_step(timeliness: 'in time', decision: 'upheld')
     .to eq Date.today.strftime(Settings.default_date_format)
   expect(show_page.response_details.timeliness.data.text)
     .to eq "Answered #{timeliness}"
-  expect(show_page.response_details.time_taken.data.text).to match(/\d+ working days/)
+  expect(show_page.response_details.time_taken.data.text).to match(/\d+ working days?/)
     expect(show_page.response_details).to have_no_refusal_reason
 end

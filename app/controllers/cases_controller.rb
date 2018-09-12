@@ -191,7 +191,7 @@ class CasesController < ApplicationController
   def new_overturned_ico
     overturned_case_class = determine_overturned_ico_class(params[:id])
     authorize overturned_case_class
-    service = CreateOverturnedICOCaseService.new(params[:id])
+    service = NewOverturnedIcoCaseService.new(params[:id])
     service.call
     if service.error?
       @case = service.original_ico_appeal.decorate
@@ -234,6 +234,7 @@ class CasesController < ApplicationController
 
   def edit_closure
     authorize @case, :update_closure?
+    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
     @case = @case.decorate
   end
 
@@ -330,6 +331,7 @@ class CasesController < ApplicationController
     authorize @case, :respond_and_close?
     @case.prepare_for_close
     close_params = process_closure_params(@case.type_abbreviation)
+
     if @case.update(close_params)
       @case.respond_and_close(current_user)
       set_permitted_events
@@ -364,6 +366,10 @@ class CasesController < ApplicationController
     @case.prepare_for_close
     close_params = process_closure_params(@case.type_abbreviation)
     if @case.update(close_params)
+      if @case.ico?
+        uploader = S3Uploader.new(@case, current_user)
+        uploader.process_files(params[:case_ico][:uploaded_ico_decision_files], :ico_decision)
+      end
       @case.state_machine.update_closure!(acting_user: current_user,
                                           acting_team: @case.team_for_unassigned_user(current_user, :manager))
       set_permitted_events
@@ -744,7 +750,7 @@ class CasesController < ApplicationController
   def process_closure_params(correspondence_type)
     case correspondence_type
     when 'FOI' then process_foi_closure_params
-    when 'SAR' then process_sar_closure_params
+    when 'SAR', 'OVERTURNED_SAR' then process_sar_closure_params
     when 'ICO' then process_ico_closure_params
     else raise 'Unknown case type'
     end

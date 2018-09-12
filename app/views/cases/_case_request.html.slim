@@ -1,6 +1,6 @@
 .request
   h2.request--heading
-    = t('common.case.request')
+    = t4c(case_details, 'common', 'request')
 
   .request--message
     - if case_details.message.present?
@@ -29,4 +29,3 @@
                       = attachment_preview_link(ca)
                       = " | "
                       = attachment_download_link(case_details, ca)
-

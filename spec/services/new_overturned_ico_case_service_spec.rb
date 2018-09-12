@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe CreateOverturnedICOCaseService do
+describe NewOverturnedIcoCaseService do
 
   describe '.new' do
     context 'id of non existent case' do
@@ -62,6 +62,10 @@ describe CreateOverturnedICOCaseService do
 
       it 'the subject is delegated to the original case' do
         expect(service.overturned_ico_case.subject).to eq original_case.subject
+      end
+
+      it 'copies the ico officer name from the original appeal' do
+        expect(service.overturned_ico_case.ico_officer_name).to eq original_ico_appeal.ico_officer_name
       end
 
       context 'reply method' do
