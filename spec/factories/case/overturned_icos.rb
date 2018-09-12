@@ -75,6 +75,30 @@ FactoryBot.define do
     end
   end
 
+  factory :closed_ot_ico_sar, parent: :accepted_ot_ico_sar do
+
+    missing_info              { false }
+
+    transient do
+      identifier { "closed overturned ico sar case" }
+    end
+
+    received_date { 4.business_days.ago }
+    date_responded { 3.business_days.ago }
+
+    after(:create) do |kase, evaluator|
+      create :case_transition_respond,
+             case: kase,
+             acting_user_id: evaluator.responder.id,
+             acting_team_id: evaluator.responding_team.id
+      create :case_transition_close,
+             case: kase,
+             acting_user_id: evaluator.responder.id,
+             acting_team_id: evaluator.responding_team.id
+      kase.reload
+    end
+  end
+
 
   factory :pending_dacu_clearance_to_ico_sar,
           aliases: [:ot_ico_sar_noff_pdacu],
