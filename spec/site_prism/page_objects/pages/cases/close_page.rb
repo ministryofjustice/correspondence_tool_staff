@@ -2,6 +2,7 @@ module PageObjects
   module Pages
     module Cases
       class ClosePage < SitePrism::Page
+        include SitePrism::Support::DropInDropzone
 
         set_url '/cases/{id}/close'
 
@@ -18,6 +19,8 @@ module PageObjects
         element :date_responded_day_ico, :case_form_element, 'date_ico_decision_received_dd'
         element :date_responded_month_ico, :case_form_element, 'date_ico_decision_received_mm'
         element :date_responded_year_ico, :case_form_element, 'date_ico_decision_received_yyyy'
+
+        element :uploaded_request_file_input, '#uploadedRequestFileInput'
 
         section :appeal_outcome, '.appeal-outcome-group' do
           element :upheld, 'label[for="case_foi_appeal_outcome_name_upheld"]'
@@ -94,6 +97,12 @@ module PageObjects
           exemption = CaseClosure::Exemption.find_by(abbreviation: abbreviation)
           exemptions.find("input#case_foi_exemption_ids_#{exemption.id}",
                           visible: false)
+        end
+
+        def drop_in_dropzone(file_path)
+          super file_path: file_path,
+                input_name: 'case_ico[uploaded_ico_decision_files][]',
+                container_selector: '.dropzone:first'
         end
       end
     end
