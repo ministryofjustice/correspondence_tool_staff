@@ -49,18 +49,19 @@ class UserReassignmentService
   end
 
   def get_user_team(user)
-    if @kase.current_state == 'unassigned'
-      team = nil
-      %i{ approver manager }.each do |role|
-        team = @assignment.case.team_for_unassigned_user(user, role) if team.nil?
-      end
-    else
-      team = nil
-      %i{ responder approver manager }.each do |role|
-        team = @assignment.case.team_for_unassigned_user(user, role) if team.nil?
-      end
+    team = nil
+    get_roles_for_case.each do |role|
+      team = @assignment.case.team_for_unassigned_user(user, role) if team.nil?
     end
     team
+  end
+
+  def get_roles_for_case
+    roles = Set.new
+    @kase.assignments.each do |assignment|
+      roles << assignment.role.sub('ing', 'er').to_sym
+    end
+    roles.delete(:manager)
   end
 
   def notify_target_user

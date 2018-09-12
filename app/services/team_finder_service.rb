@@ -46,7 +46,6 @@ class TeamFinderService
   # returns the team for the user, where the team is accepted for the specified role in the case assignments
   #
   def team_for_unassigned_user
-    # binding.pry
     assigned_teams = @kase.assignments.where(state: [:accepted, :pending], role: @assignment_role).map(&:team)
     raise UserNotFoundError.new(self) if assigned_teams.empty?
     user_teams = @user.team_roles.where(role: @team_role).map(&:team)
