@@ -151,3 +151,56 @@ def edit_sar_case_closure_step(kase:, date_responded: Date.today, tmm: false) # 
       .to eq '(s1(3)) - Clarification required'
   end
 end
+
+def edit_ico_case_closure_step(kase:, decision_received_date: Date.today, ico_decision: 'upheld') # rubocop:disable Metrics/CyclomaticComplexity,  Metrics/MethodLength
+  expect(cases_show_page).to be_displayed(id: kase.id)
+  expect(cases_show_page.case_details).to have_edit_closure
+
+  cases_show_page.case_details.edit_closure.click
+
+  expect(cases_edit_closure_page).to be_displayed
+  expect(cases_edit_closure_page.date_responded_day_ico.value)
+    .to eq kase.date_ico_decision_received.day.to_s
+  expect(cases_edit_closure_page.date_responded_month_ico.value)
+    .to eq kase.date_ico_decision_received.month.to_s
+  expect(cases_edit_closure_page.date_responded_year_ico.value)
+    .to eq kase.date_ico_decision_received.year.to_s
+
+  if kase.ico_decision == 'upheld'
+    expect(cases_edit_closure_page.ico_decision.upheld).to be_checked
+    expect(cases_edit_closure_page.ico_decision.overturned ).not_to be_checked
+  elsif kase.ico_decision == 'overturned'
+    expect(cases_edit_closure_page.ico_decision.upheld).not_to be_checked
+    expect(cases_edit_closure_page.ico_decision.overturned ).to be_checked
+  end
+
+  cases_edit_closure_page.fill_in_ico_date_responded(decision_received_date)
+
+  if ico_decision == 'upheld'
+    cases_edit_closure_page.ico_decision.upheld.click
+  elsif ico_decision == 'overturned'
+    cases_edit_closure_page.ico_decision.overturned.click
+  end
+  upload_ico_decision_file
+  cases_edit_closure_page.click_on 'Save changes'
+  expect(cases_show_page).to be_displayed(id: kase.id)
+  expect(cases_show_page.notice.text)
+    .to eq 'You have updated the closure details for this case.'
+  if ico_decision == 'upheld'
+    expect(cases_show_page.ico.case_details.response_details.outcome.data.text)
+      .to eq "Upheld by ICO"
+  elsif ico_decision == 'overturned'
+    expect(cases_show_page.ico.case_details.response_details.outcome.data.text)
+      .to eq "Overturned by ICO"
+  end
+  # Add this test once the date_ico_decision_received field is implemented
+  # on the case_show_page
+  #
+  # expect(cases_show_page.case_details.response_details.date_ico_decision_received.data.text)
+  #   .to eq decision_received_date.strftime(Settings.default_date_format)
+end
+
+def upload_ico_decision_file(file: UPLOAD_RESPONSE_DOCX_FIXTURE)
+  stub_s3_uploader_for_all_files!
+  cases_edit_closure_page.drop_in_dropzone(file)
+end

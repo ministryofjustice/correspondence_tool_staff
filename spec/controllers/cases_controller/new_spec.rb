@@ -143,10 +143,10 @@ describe CasesController, type: :controller do
 
     context 'post-authorization processing' do
 
-      let(:service)                   { double CreateOverturnedICOCaseService }
+      let(:service)                   { double NewOverturnedIcoCaseService }
 
       before(:each) do
-        expect(CreateOverturnedICOCaseService).to receive(:new).with(ico_sar.id.to_s).and_return(service)
+        expect(NewOverturnedIcoCaseService).to receive(:new).with(ico_sar.id.to_s).and_return(service)
         expect(service).to receive(:call)
         expect(service).to receive(:original_ico_appeal).and_return(ico_sar)
       end

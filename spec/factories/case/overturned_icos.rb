@@ -19,6 +19,7 @@ FactoryBot.define do
     escalation_deadline             { 3.days.from_now }
     reply_method                    { 'send_by_email' }
     email                           { 'dave@moj.com' }
+    ico_officer_name                { 'Dan Dare' }
   end
 
   factory :awaiting_responder_ot_ico_sar,
@@ -70,6 +71,30 @@ FactoryBot.define do
              acting_user_id: kase.responder.id,
              acting_team_id: kase.responding_team.id,
              created_at: evaluator.creation_time
+      kase.reload
+    end
+  end
+
+  factory :closed_ot_ico_sar, parent: :accepted_ot_ico_sar do
+
+    missing_info              { false }
+
+    transient do
+      identifier { "closed overturned ico sar case" }
+    end
+
+    received_date { 4.business_days.ago }
+    date_responded { 3.business_days.ago }
+
+    after(:create) do |kase, evaluator|
+      create :case_transition_respond,
+             case: kase,
+             acting_user_id: evaluator.responder.id,
+             acting_team_id: evaluator.responding_team.id
+      create :case_transition_close,
+             case: kase,
+             acting_user_id: evaluator.responder.id,
+             acting_team_id: evaluator.responding_team.id
       kase.reload
     end
   end

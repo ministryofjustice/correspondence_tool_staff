@@ -40,6 +40,7 @@ describe Case::OverturnedICO::SAR do
                       'external_deadline_yyyy'  => deadline.year.to_s,
                       'reply_method'            => 'send_by_email',
                       'email'                   => 'stephen@stephenrichards.eu',
+                      'ico_officer_name'        => 'Dan Dare'
               }).to_unsafe_hash
           kase = described_class.new(params)
           expect(kase).to be_valid
@@ -271,6 +272,16 @@ describe Case::OverturnedICO::SAR do
                                                     link_case_2,
                                                     link_case_3
                                                 ]
+    end
+
+    it 'links the overturned case to the original appeal' do
+      @kase.link_related_cases
+      expect(original_ico_appeal.linked_cases).to include(@kase)
+    end
+    
+    it 'links the overturned case to the original case' do
+      @kase.link_related_cases
+      expect(original_case.linked_cases).to include(@kase)
     end
 
   end

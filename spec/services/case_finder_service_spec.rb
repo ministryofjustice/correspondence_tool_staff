@@ -133,6 +133,11 @@ describe CaseFinderService do
                                                            original_case: @accepted_overturned_ico_sar_original,
                                                            original_ico_appeal: @accepted_overturned_ico_sar_original_appeal,
                                                            identifier: '20-accepted overturned ico sar'
+       @closed_overturned_ico_sar                 = create :closed_ot_ico_sar,
+                                                          responding_team: @responding_team,
+                                                          original_case: @accepted_overturned_ico_sar_original,
+                                                          original_ico_appeal: @accepted_overturned_ico_sar_original_appeal,
+                                                          identifier: '21-closed overturned ico sar'
       end
     end
 
@@ -206,7 +211,8 @@ describe CaseFinderService do
                 @awaiting_responder_overturned_ico_sar_original_appeal,
                 @accepted_overturned_ico_sar,
                 @accepted_overturned_ico_sar_original,
-                @accepted_overturned_ico_sar_original_appeal
+                @accepted_overturned_ico_sar_original_appeal,
+                @closed_overturned_ico_sar
 
               ]
       end
@@ -227,7 +233,8 @@ describe CaseFinderService do
                 @awaiting_responder_overturned_ico_sar_original,
                 @awaiting_responder_overturned_ico_sar_original_appeal,
                 @accepted_overturned_ico_sar_original,
-                @accepted_overturned_ico_sar_original_appeal
+                @accepted_overturned_ico_sar_original_appeal,
+                @closed_overturned_ico_sar
               ]
       end
     end
@@ -322,7 +329,8 @@ describe CaseFinderService do
                   @awaiting_responder_overturned_ico_sar_original,
                   @awaiting_responder_overturned_ico_sar,
                   @accepted_overturned_ico_sar,
-                  @accepted_overturned_ico_sar_original
+                  @accepted_overturned_ico_sar_original,
+                  @closed_overturned_ico_sar
                 ]
         end
       end

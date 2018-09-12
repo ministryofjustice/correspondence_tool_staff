@@ -316,6 +316,10 @@ class Case::Base < ApplicationRecord
     define_method("#{state}?") { current_state == state }
   end
 
+  def state_machine_name
+    self.type_abbreviation.downcase
+  end
+
   def upload_response_groups
     CaseAttachmentUploadGroupCollection.new(self, attachments.response, :responder)
   end

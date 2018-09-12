@@ -68,7 +68,6 @@
                 link_a_case:
                 remove_linked_case:
                 update_closure:
-                  if: Workflows::Predicates#can_edit_closure
 
           approver:
             states:
