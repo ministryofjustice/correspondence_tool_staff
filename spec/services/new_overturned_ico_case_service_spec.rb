@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe CreateOverturnedICOCaseService do
+describe NewOverturnedIcoCaseService do
 
   describe '.new' do
     context 'id of non existent case' do
