@@ -18,9 +18,11 @@ class CaseLinkTypeValidator < ActiveModel::Validator
                                         'Case::FOI::TimelinessReview',
                                         'Case::ICO::FOI'],
       'Case::SAR'                   => ['Case::SAR',
-                                        'Case::ICO::SAR'],
+                                        'Case::ICO::SAR',
+                                        'Case::OverturnedICO::SAR'],
       'Case::ICO::SAR'              => ['Case::SAR',
-                                        'Case::ICO::SAR'],
+                                        'Case::ICO::SAR',
+                                        'Case::OverturnedICO::SAR'],
       'Case::OverturnedICO::SAR'    => ['Case::SAR',
                                         'Case::ICO::SAR'],
 
