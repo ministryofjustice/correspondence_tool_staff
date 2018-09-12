@@ -44,10 +44,9 @@ class Case::ICO::Base < Case::Base
   validates :external_deadline, presence: true
   validate :external_deadline_within_limits?,
            if: -> { external_deadline.present? }
-  validates :internal_deadline, presence: true, on: :update
+  validates :internal_deadline, presence: true
   validate :internal_deadline_within_limits?,
-           if: -> { internal_deadline.present? },
-           on: :update
+           if: -> { internal_deadline.present? }
   validates_presence_of :original_case
   validates :received_date, presence: true
   validate :received_date_within_limits?,

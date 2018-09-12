@@ -48,6 +48,7 @@ module CTS::Cases
                                             Faker::Lorem.paragraph(10, true, 10)),
         received_date:        set_received_date,
         external_deadline:    set_external_deadline,
+        internal_deadline:    set_internal_deadline,
         created_at:           set_created_at_date,
         dirty:                options.fetch(:dirty, true),
         ico_officer_name:     options.fetch(:ico_officer_name, Faker::Name.name),
@@ -105,7 +106,15 @@ module CTS::Cases
       if options.key? :external_deadline
         options[:external_deadline]
       else
-        4.business_days.after(0.business_days.ago)
+        20.business_days.after(set_received_date)
+      end
+    end
+
+    def set_internal_deadline
+      if options.key? :internal_deadline
+        options[:internal_deadline]
+      else
+        10.business_days.before(set_external_deadline)
       end
     end
 
