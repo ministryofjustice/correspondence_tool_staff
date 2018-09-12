@@ -12,4 +12,29 @@ describe Case::ICO::SAR do
     subject { kase.original_case_type }
     it { should eq 'SAR' }
   end
+
+  describe '#has_overturn? and #lacks?' do
+
+    let(:ico_sar_case)    { create :closed_ico_sar_case }
+
+    before(:each)   {ico_sar_case.linked_cases << create(:sar_case) }
+
+    context 'no overturn' do
+      it 'returns false' do
+        expect(ico_sar_case.has_overturn?).to be false
+        expect(ico_sar_case.lacks_overturn?).to be true
+      end
+    end
+
+    context 'overturn exists' do
+
+      before { create :overturned_ico_sar, original_ico_appeal: ico_sar_case }
+
+      it 'returns true' do
+        expect(ico_sar_case.has_overturn?).to be true
+        expect(ico_sar_case.lacks_overturn?).to be false
+      end
+
+    end
+  end
 end

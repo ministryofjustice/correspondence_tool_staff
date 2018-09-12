@@ -92,7 +92,10 @@ class Workflows::Predicates
   end
 
   def can_create_new_overturned_ico?
-    @kase.ico? && @kase.ico_decision == 'overturned' && overturned_enabled?(@kase)
+    @kase.ico? &&
+        @kase.ico_decision == 'overturned' &&
+        overturned_enabled?(@kase) &&
+        @kase.lacks_overturn?
   end
 
 
