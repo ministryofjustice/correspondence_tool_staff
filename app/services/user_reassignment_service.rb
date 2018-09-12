@@ -49,9 +49,16 @@ class UserReassignmentService
   end
 
   def get_user_team(user)
-    team = nil
-    %i{ responder approver manager }.each do |role|
-      team = @assignment.case.team_for_unassigned_user(user, role) if team.nil?
+    if @kase.current_state == 'unassigned'
+      team = nil
+      %i{ approver manager }.each do |role|
+        team = @assignment.case.team_for_unassigned_user(user, role) if team.nil?
+      end
+    else
+      team = nil
+      %i{ responder approver manager }.each do |role|
+        team = @assignment.case.team_for_unassigned_user(user, role) if team.nil?
+      end
     end
     team
   end
