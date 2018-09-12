@@ -16,7 +16,7 @@ class Case::ICO::BaseDecorator < Case::BaseDecorator
       
       - if #{object.ico_decision_comment.present?}
         p
-          = " #{object.ico_decision_comment}"
+          = "#{object.ico_decision_comment}"
       EOHTML
     end.render.html_safe
   end

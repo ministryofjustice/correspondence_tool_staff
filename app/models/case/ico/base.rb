@@ -53,6 +53,13 @@ class Case::ICO::Base < Case::Base
   validate :received_date_within_limits?,
            if: -> { received_date.present? }
 
+  has_many :ico_decision_attachments,
+           -> { ico_decision },
+           class_name: 'CaseAttachment',
+           foreign_key: :case_id
+
+
+
   before_save do
     self.workflow = 'trigger'
   end
