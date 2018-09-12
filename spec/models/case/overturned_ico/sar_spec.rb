@@ -274,5 +274,15 @@ describe Case::OverturnedICO::SAR do
                                                 ]
     end
 
+    it 'links the overturned case to the original appeal' do
+      @kase.link_related_cases
+      expect(original_ico_appeal.linked_cases).to include(@kase)
+    end
+    
+    it 'links the overturned case to the original case' do
+      @kase.link_related_cases
+      expect(original_case.linked_cases).to include(@kase)
+    end
+
   end
 end

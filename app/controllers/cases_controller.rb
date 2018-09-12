@@ -191,7 +191,7 @@ class CasesController < ApplicationController
   def new_overturned_ico
     overturned_case_class = determine_overturned_ico_class(params[:id])
     authorize overturned_case_class
-    service = CreateOverturnedICOCaseService.new(params[:id])
+    service = NewOverturnedIcoCaseService.new(params[:id])
     service.call
     if service.error?
       @case = service.original_ico_appeal.decorate

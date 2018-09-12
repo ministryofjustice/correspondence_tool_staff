@@ -91,10 +91,11 @@ class Case::OverturnedICO::Base < Case::Base
   end
 
   # link the cases linked to the source case to this case, unless already linked
+  # then link THIS case to the source case
   def link_cases_related_to(source_case)
     source_case.linked_cases.each do |kase_to_be_linked|
       unless linked_cases.include?(kase_to_be_linked)
-        linked_cases << kase_to_be_linked
+        linked_cases << kase_to_be_linked unless kase_to_be_linked == self
       end
     end
   end

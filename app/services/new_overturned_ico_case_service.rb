@@ -1,4 +1,4 @@
-class CreateOverturnedICOCaseService
+class NewOverturnedIcoCaseService
 
   attr_reader :original_ico_appeal, :overturned_ico_case
 
