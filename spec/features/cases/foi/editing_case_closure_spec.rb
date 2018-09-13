@@ -45,4 +45,16 @@ feature 'editing case closure information' do
     expect(cases_show_page.case_details)
       .to have_text("This is an old case with closure details that can't be edited. If you need to edit this case let us know.")
   end
+
+  scenario 'responder views case details for FOI with old closure info', js: true do
+    responder = create :responder
+    kase = create :closed_case, responder: responder
+    kase.update_attribute(:info_held_status_id, nil)
+
+    login_as responder
+    cases_show_page.load(id: kase.id)
+    expect(cases_show_page.case_details).not_to have_edit_closure
+    expect(cases_show_page.case_details)
+        .not_to have_text("This is an old case with closure details that can't be edited. If you need to edit this case let us know.")
+  end
 end
