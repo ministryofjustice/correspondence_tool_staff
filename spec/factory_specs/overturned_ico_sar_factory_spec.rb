@@ -102,6 +102,5 @@ describe 'Overturned ICO SAR cases factory' do
         end
       end
     end
-
   end
 end
