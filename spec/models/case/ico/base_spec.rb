@@ -273,7 +273,7 @@ describe Case::ICO::Base do
   describe 'updating deadlines' do
     it 'uses the dates provided' do
       today = 0.business_days.ago.to_date
-      kase = create(:ico_foi_case, :flagged,
+      kase = create(:ico_foi_case,
                     received_date: today,
                     internal_deadline: 10.business_days.after(today),
                     external_deadline: 20.business_days.after(today))
