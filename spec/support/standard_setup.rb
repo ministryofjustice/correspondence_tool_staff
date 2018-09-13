@@ -333,6 +333,13 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
                { responder: responder_user, }
                  .merge(attributes))
       },
+      ot_ico_sar_noff_trig_draft_accepted: ->(attributes={}) {
+        create(:sar_being_drafted,
+               :flagged_accepted,
+               :dacu_disclosure,
+               { responder: responder_user, }
+                 .merge(attributes))
+      },
 
       std_unassigned_foi: ->(attributes={}) {
         create(:case,
