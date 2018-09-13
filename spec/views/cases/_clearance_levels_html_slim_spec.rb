@@ -30,15 +30,6 @@ describe 'cases/clearance_details.html.slim', type: :view do
                                                          press_officer: create(:press_officer, full_name: 'Alistair Campbell') }
 
 
-  def allow_case_policies(kase, *policy_names)
-    policy = double 'Pundit::Policy'
-    policy_names.each do |policy_name|
-      allow(policy).to receive(policy_name).and_return(true)
-    end
-    allow(view).to receive(:policy).with(kase).and_return(policy)
-  end
-
-
   before(:each) { allow(controller).to receive(:current_user).and_return(disclosure_specialist) }
 
   context 'escalation_deadline not yet reached' do
