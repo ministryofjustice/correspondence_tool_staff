@@ -329,9 +329,6 @@ describe ConfigurableStateMachine::Machine do
         context 'pending_dacu_disclosure_clearance state' do
           it 'shows events' do
             k = create :pending_dacu_clearance_ico_foi_case, :dacu_disclosure
-
-            binding.pry
-
             expect(k.current_state).to eq 'pending_dacu_clearance'
             expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
                                                                           :link_a_case,
