@@ -135,17 +135,6 @@ describe 'state machine' do
      )    }
   end
 
-  describe :request_further_clearance do
-    # Is this right???
-    it {
-      should permit_event_to_be_triggered_only_by(
-        [:disclosure_bmt, :ot_ico_sar_noff_unassigned],
-        [:disclosure_bmt, :ot_ico_sar_noff_awresp],
-        [:disclosure_bmt, :ot_ico_sar_noff_draft]
-               )
-    }
-  end
-
   describe :respond do
     it {
       should permit_event_to_be_triggered_only_by(
