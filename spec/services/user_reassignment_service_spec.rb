@@ -132,5 +132,55 @@ describe UserReassignmentService do
         expect(ActionNotificationsMailer).to_not have_received(:case_assigned_to_another_user)
       end
     end
+
+    context 'unassigned case' do
+      let(:approver)         { create(:disclosure_specialist) }
+      let(:unassigned_case)  { create(:foi_case, :flagged_accepted, approver: approver) }
+      let(:approver_coworker){ create(:disclosure_specialist) }
+      let(:disclosure_team)  { approver.approving_team }
+      let(:assignment)       { unassigned_case
+                                 .assignments
+                                 .for_team(disclosure_team.id)
+                                 .last }
+
+      let(:service) {
+        UserReassignmentService.new(target_user: approver_coworker,
+                                    acting_user: approver,
+                                    assignment: assignment )
+      }
+
+      let(:policy)          { service.instance_variable_get(:@policy) }
+
+      context 'Reassign the assignment' do
+
+        before do
+          allow(ActionNotificationsMailer).to receive_message_chain(
+                                              :case_assigned_to_another_user,
+                                              :deliver_later)
+        end
+
+        it 'returns :ok' do
+          expect(service.call).to eq :ok
+        end
+
+        it 'creates a transition record' do
+          expect {
+            service.call
+          }.to change{ unassigned_case.transitions.count }.by(1)
+
+        end
+
+        it 'updates the assignment record' do
+          assignment = unassigned_case.assignments
+          service.call
+          expect(unassigned_case.assignments).to eq assignment
+        end
+
+        it 'sends an email (only if different and user not assigning themselves' do
+          service.call
+          expect(ActionNotificationsMailer).to have_received(:case_assigned_to_another_user)
+        end
+      end
+    end
   end
 end
