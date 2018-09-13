@@ -119,6 +119,14 @@ class Case::ICO::Base < Case::Base
     CurrentTeamAndUser::ICO::Trigger.new(self)
   end
 
+  def has_overturn?
+    raise "Define method in derived class"
+  end
+
+  def lacks_overturn?
+    !has_overturn?
+  end
+
   private
 
   def identifier

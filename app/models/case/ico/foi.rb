@@ -5,4 +5,9 @@ class Case::ICO::FOI < Case::ICO::Base
   end
 
   def original_case_type; 'FOI' end
+
+  def has_overturn?
+    linked_cases.pluck(:type).include?('Case::OverturnedICO::FOI')
+  end
+
 end
