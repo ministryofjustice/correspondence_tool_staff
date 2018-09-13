@@ -72,8 +72,8 @@ RSpec.describe CasesHelper, type: :helper do
         context 'new style closure details' do
           it 'returns false' do
             expect(manager_updating_close_details_on_old_case?(responder, new_style_closed_case)).to be false
+          end
         end
-      end
       end
     end
   end
