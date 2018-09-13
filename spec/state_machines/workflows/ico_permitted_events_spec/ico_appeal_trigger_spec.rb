@@ -315,7 +315,7 @@ describe ConfigurableStateMachine::Machine do
 
         context 'drafting state' do
           it 'shows events' do
-            k = create :accepted_ico_foi_case, :flagged, :dacu_disclosure
+            k = create :accepted_ico_foi_case, :dacu_disclosure
 
             expect(k.current_state).to eq 'drafting'
             expect(k.state_machine.permitted_events(approver.id)).to eq [ :accept_approver_assignment,
