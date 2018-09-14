@@ -329,6 +329,7 @@ describe ConfigurableStateMachine::Machine do
         context 'pending_dacu_disclosure_clearance state' do
           it 'shows events' do
             k = create :pending_dacu_clearance_ico_foi_case, :dacu_disclosure
+
             expect(k.current_state).to eq 'pending_dacu_clearance'
             expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
                                                                           :link_a_case,
@@ -338,7 +339,7 @@ describe ConfigurableStateMachine::Machine do
         end
         context 'awaiting_dispatch state' do
           it 'shows events' do
-            k = create :approved_ico_foi_case, :flagged, :dacu_disclosure
+            k = create :approved_ico_foi_case, :dacu_disclosure
 
             expect(k.current_state).to eq 'awaiting_dispatch'
             expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
@@ -350,7 +351,7 @@ describe ConfigurableStateMachine::Machine do
         end
         context 'responded state' do
           it 'shows events' do
-            k = create :responded_ico_foi_case, :flagged, :dacu_disclosure
+            k = create :responded_ico_foi_case, :dacu_disclosure
 
             expect(k.current_state).to eq 'responded'
             expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
@@ -360,7 +361,7 @@ describe ConfigurableStateMachine::Machine do
         end
         context 'closed state' do
           it 'shows events' do
-            k = create :closed_ico_foi_case, :flagged, :dacu_disclosure
+            k = create :closed_ico_foi_case, :dacu_disclosure
 
             expect(k.current_state).to eq 'closed'
             expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
