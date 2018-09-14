@@ -1551,7 +1551,6 @@ describe 'state machine' do
     describe :upload_response_approve_and_bypass do
       it {
         should permit_event_to_be_triggered_only_by(
-                 [:disclosure_specialist, :trig_pdacu_foi_accepted],
                  [:disclosure_specialist, :full_pdacu_foi_accepted],
                )
       }

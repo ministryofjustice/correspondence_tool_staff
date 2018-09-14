@@ -171,9 +171,6 @@
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                   after_transition: Workflows::Hooks#notify_responder_redraft_requested
                   transition_to: drafting
-                upload_response_approve_and_bypass:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
-                  transition_to: awaiting_dispatch
 
               awaiting_dispatch:
                 add_message_to_case:
