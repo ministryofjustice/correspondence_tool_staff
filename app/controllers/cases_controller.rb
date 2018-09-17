@@ -366,7 +366,7 @@ class CasesController < ApplicationController
     @case.prepare_for_close
     close_params = process_closure_params(@case.type_abbreviation)
     if @case.update(close_params)
-      if @case.ico?
+      if @case.ico? && params[:case_ico][:uploaded_decision_files].present?
         uploader = S3Uploader.new(@case, current_user)
         uploader.process_files(params[:case_ico][:uploaded_ico_decision_files], :ico_decision)
       end

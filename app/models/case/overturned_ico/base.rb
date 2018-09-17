@@ -15,6 +15,10 @@ class Case::OverturnedICO::Base < Case::Base
                  reply_method: :string
 
   delegate :ico_reference_number, to: :original_ico_appeal
+  delegate :ico_decision, to: :original_ico_appeal
+  delegate :ico_decision_comment, to: :original_ico_appeal
+  delegate :date_ico_decision_received, to: :original_ico_appeal
+  delegate :ico_decision_attachments, to: :original_ico_appeal
 
   enum reply_method: {
       send_by_post:  'send_by_post',

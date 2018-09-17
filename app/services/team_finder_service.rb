@@ -60,4 +60,3 @@ class TeamFinderService
     TEAM_ROLES[@team_role]
   end
 end
-

@@ -197,9 +197,20 @@ module Workflows
             end
             context 'overturned' do
               let(:kase)    { create :closed_ico_sar_case, :overturned_by_ico }
-              it 'returns true' do
-                expect(pred.can_create_new_overturned_ico?).to be true
+              context 'overturn already exists' do
+                it 'returns true' do
+                  expect(kase).to receive(:lacks_overturn?).and_return(false)
+                  expect(pred.can_create_new_overturned_ico?).to be false
+                end
               end
+
+              context 'no overturn exists yet' do
+                it 'returns true' do
+                  expect(kase).to receive(:lacks_overturn?).and_return(true)
+                  expect(pred.can_create_new_overturned_ico?).to be true
+                end
+              end
+
             end
 
             context 'upheld' do
@@ -210,14 +221,22 @@ module Workflows
             end
           end
 
-          context 'overturned_sars feature set enabled' do
+          context 'overturned_sars feature set disabled' do
             before(:each) do
               allow(FeatureSet).to receive(:overturned_sars).and_return(double 'Feature', enabled?: false)
             end
             context 'overturned' do
               let(:kase)    { create :closed_ico_sar_case, :overturned_by_ico }
-              it 'returns true' do
-                expect(pred.can_create_new_overturned_ico?).to be false
+              context 'overturn already exists' do
+                it 'returns false' do
+                  expect(pred.can_create_new_overturned_ico?).to be false
+                end
+              end
+
+              context 'no overturn already exists' do
+                it 'returns true' do
+                  expect(pred.can_create_new_overturned_ico?).to be false
+                end
               end
             end
 
@@ -230,7 +249,7 @@ module Workflows
           end
         end
 
-        context 'FO ICO appeal' do
+        context 'FOI ICO appeal' do
           context 'overturned_fois feature set enabled' do
             before(:each) do
               allow(FeatureSet).to receive(:overturned_fois).and_return(double 'Feature', enabled?: true)

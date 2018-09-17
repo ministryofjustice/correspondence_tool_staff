@@ -46,9 +46,10 @@ module CTS::Cases
       @klass.new(
         message:              options.fetch(:message,
                                             Faker::Lorem.paragraph(10, true, 10)),
-        received_date:        set_received_date,
-        external_deadline:    set_external_deadline,
-        created_at:           set_created_at_date,
+        received_date:        get_ico_received_date,
+        external_deadline:    get_ico_external_deadline,
+        internal_deadline:    get_ico_internal_deadline,
+        created_at:           get_created_at_date,
         dirty:                options.fetch(:dirty, true),
         ico_officer_name:     options.fetch(:ico_officer_name, Faker::Name.name),
         ico_reference_number: options.fetch(:ico_reference_number, SecureRandom.hex),
@@ -59,57 +60,71 @@ module CTS::Cases
       name = options.fetch(:name, Faker::Name.name)
 
       @klass.new(
-        name:               name,
-        email:              options.fetch(:email, Faker::Internet.email(name)),
-        delivery_method:    options.fetch(:delivery_method, 'sent_by_email'),
-        subject:            options.fetch(:subject, Faker::Company.catch_phrase),
-        message:            options.fetch(:message,
-                                          Faker::Lorem.paragraph(10, true, 10)),
-        requester_type:     options.fetch(:requester_type,
-                                          Case::FOI::Standard.requester_types.keys.sample),
-        received_date:      set_received_date,
-        created_at:         set_created_at_date,
-        dirty:              options.fetch(:dirty, true)
+        name:            name,
+        email:           options.fetch(:email, Faker::Internet.email(name)),
+        delivery_method: options.fetch(:delivery_method, 'sent_by_email'),
+        subject:         options.fetch(:subject, Faker::Company.catch_phrase),
+        message:         options.fetch(:message,
+                                       Faker::Lorem.paragraph(10, true, 10)),
+        requester_type:  options.fetch(:requester_type,
+                                       Case::FOI::Standard.requester_types.keys.sample),
+        received_date:   get_foi_received_date,
+        created_at:      get_created_at_date,
+        dirty:           options.fetch(:dirty, true)
       )
     end
 
     def new_sar_case
       subject_full_name = options.fetch(:subject_full_name, Faker::Name.name)
         @klass.new(
-          subject_full_name:  options.fetch(:subject_full_name, Faker::Name.name),
-          email:              options.fetch(:email, Faker::Internet.email(subject_full_name)),
-          subject:            options.fetch(:subject, Faker::Company.catch_phrase),
-          third_party:        options.fetch(:third_party, false),
-          message:            options.fetch(:message,
-                                            Faker::Lorem.paragraph(10, true, 10)),
-          subject_type:       options.fetch(:subject_type,
-                                            Case::SAR.subject_types.keys.sample),
-          received_date:      set_received_date,
-          created_at:         set_created_at_date,
-          reply_method:       options.fetch(:reply_method, 'send_by_email'),
-          dirty:              options.fetch(:dirty, true)
+          subject_full_name: options.fetch(:subject_full_name, Faker::Name.name),
+          email:             options.fetch(:email, Faker::Internet.email(subject_full_name)),
+          subject:           options.fetch(:subject, Faker::Company.catch_phrase),
+          third_party:       options.fetch(:third_party, false),
+          message:           options.fetch(:message,
+                                           Faker::Lorem.paragraph(10, true, 10)),
+          subject_type:      options.fetch(:subject_type,
+                                           Case::SAR.subject_types.keys.sample),
+          received_date:     get_sar_received_date,
+          created_at:        get_created_at_date,
+          reply_method:      options.fetch(:reply_method, 'send_by_email'),
+          dirty:             options.fetch(:dirty, true)
         )
     end
 
     private
 
-    def set_received_date
-      if options.key? :received_date
-        options[:received_date]
-      else
+    def get_foi_received_date
+      options.fetch(:received_date) do
         0.business_days.after(4.business_days.ago)
       end
     end
 
-    def set_external_deadline
-      if options.key? :external_deadline
-        options[:external_deadline]
-      else
-        4.business_days.after(0.business_days.ago)
+    def get_ico_received_date
+      options.fetch(:received_date) do
+        0.business_days.ago
       end
     end
 
-    def set_created_at_date
+    def get_sar_received_date
+      options.fetch(:received_date) do
+        0.business_days.ago
+      end
+    end
+
+    def get_ico_external_deadline
+      options.fetch(:external_deadline) do
+        20.business_days.after(get_ico_received_date)
+      end
+    end
+
+    def get_ico_internal_deadline
+      options.fetch(:internal_deadline) do
+        10.business_days.before(get_ico_external_deadline)
+      end
+    end
+
+    def get_created_at_date
       if options[:created_at].present?
         0.business_days.after(DateTime.parse(options[:created_at]))
       else

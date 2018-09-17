@@ -307,6 +307,11 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
                { responder: responder_user }
                  .merge(attributes))
       },
+      ot_ico_sar_noff_closed: ->(attributes={}) {
+        create(:closed_ot_ico_sar,
+               { responder: responder_user }
+                 .merge(attributes))
+      },
       ot_ico_sar_noff_pdacu: ->(attributes={}) {
         create(:ot_ico_sar_noff_pdacu,
                { responder: responder_user }

@@ -12,11 +12,72 @@ require 'rails_helper'
 # end
 RSpec.describe CasesHelper, type: :helper do
 
-  let(:manager)   { create :manager }
-  let(:responder) { create :responder }
-  let(:coworker)  { create :responder,
-                           responding_teams: responder.responding_teams }
+  let(:manager)           { create :manager }
+  let(:responder)         { create :responder }
+  let(:coworker)          { create :responder,
+                                    responding_teams: responder.responding_teams }
   let(:another_responder) { create :responder }
+  let(:approver)          { create :approver }
+
+  describe '#manager_updating_close_details_on_old_case?' do
+
+    let(:old_style_closed_case)   { create :closed_case, :old_without_info_held }
+    let(:new_style_closed_case)   { create :closed_case }
+    let(:open_case)               { create :assigned_case }
+
+    context 'manager' do
+      context 'case_closed' do
+        context 'old_style closure details on case' do
+          it 'returns true' do
+            expect(manager_updating_close_details_on_old_case?(manager, old_style_closed_case)).to be true
+          end
+        end
+
+        context 'new style closure details' do
+          it 'returns false' do
+            expect(manager_updating_close_details_on_old_case?(manager, new_style_closed_case)).to be false
+          end
+        end
+      end
+
+      context 'case open' do
+        it 'returns false' do
+          expect(manager_updating_close_details_on_old_case?(manager, open_case)).to be false
+        end
+      end
+    end
+
+    context 'approver' do
+      context 'case closed' do
+        context 'old style closure details' do
+          it 'returns false' do
+            expect(manager_updating_close_details_on_old_case?(approver, old_style_closed_case)).to be false
+          end
+        end
+        context 'new style closure details' do
+          it 'returns false' do
+            expect(manager_updating_close_details_on_old_case?(approver, new_style_closed_case)).to be false
+          end
+        end
+      end
+    end
+
+    context 'responder' do
+      context 'case closed' do
+        context 'old style closure details' do
+          it 'returns false' do
+            expect(manager_updating_close_details_on_old_case?(responder, old_style_closed_case)).to be false
+          end
+        end
+        context 'new style closure details' do
+          it 'returns false' do
+            expect(manager_updating_close_details_on_old_case?(responder, new_style_closed_case)).to be false
+          end
+        end
+      end
+    end
+  end
+
 
   describe '#action_button_for(event)' do
 

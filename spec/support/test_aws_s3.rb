@@ -7,6 +7,10 @@ class TestAWSS3
       @objects = {}
     end
 
+    def delete(key)
+      @objects.delete(key)
+    end
+
     def object(key)
       @objects[key] = Object.new(key, self)
     end
@@ -42,6 +46,10 @@ class TestAWSS3
     def move_to(path)
       @events << { event: :move_to, args: { path: path } }
       @bucket.object(path)
+    end
+
+    def delete
+      @bucket.delete(@key)
     end
   end
 

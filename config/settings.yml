@@ -189,7 +189,7 @@ enabled_features:
   overturned_sars:
     Local: true
     Host-dev: true
-    Host-demo: false
+    Host-demo: true
     Host-staging: false
     Host-prod: false
   overturned_fois:
