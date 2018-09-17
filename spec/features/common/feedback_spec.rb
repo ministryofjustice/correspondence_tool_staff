@@ -19,7 +19,7 @@ feature "Submitting feedback" do
     cases_page.service_feedback.feedback_textarea.set ""
     cases_page.service_feedback.send_button.click
 
-    cases_page.service_feedback.wait_for_error_notice
+    cases_page.service_feedback.wait_until_error_notice_visible
     expect(cases_page.service_feedback).to have_error_notice
   end
 
@@ -35,7 +35,7 @@ feature "Submitting feedback" do
     cases_page.service_feedback.feedback_textarea.set "Very good service"
     cases_page.service_feedback.send_button.click
 
-    cases_page.service_feedback.wait_for_success_notice
+    cases_page.service_feedback.wait_until_success_notice_visible
     expect(cases_page.service_feedback).to have_success_notice
     expect(cases_page.service_feedback.feedback_textarea.text).to eq ""
     expect(Feedback.first.comment).to eq "Very good service"

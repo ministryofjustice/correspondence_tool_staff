@@ -39,7 +39,7 @@ feature 'editing teams' do
 
     teams_areas_page.add_area_field.set 'This is another area'
     teams_areas_page.add_button.click
-    teams_areas_page.wait_for_existing_areas nil, count: 2
+    teams_areas_page.wait_until_existing_areas_visible nil, count: 2
     expect(teams_areas_page.descriptions).to include 'This is another area'
 
     teams_areas_page.create.click

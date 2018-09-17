@@ -12,7 +12,7 @@ module SitePrism
           ).appendTo('#{container_selector}');
           JS
 
-        wait_for_uploaded_request_file_input
+        wait_until_uploaded_request_file_input_visible
         sleep 2
 
         # Attach the file to the uploaded request file input selector

@@ -40,6 +40,7 @@ end
 
 Capybara.javascript_driver = :headless_chrome
 
+Capybara.server = :puma, { Silent: true }
 
 # Set these env variables to push screenshots for failed tests to S3.
 # if ENV['S3_TEST_SCREENSHOT_ACCESS_KEY_ID'].present? &&
