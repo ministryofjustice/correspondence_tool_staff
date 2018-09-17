@@ -28,7 +28,7 @@ feature 'Closing a case' do
 
         cases_close_page.fill_in_date_responded(0.business_days.ago)
         cases_close_page.is_info_held.yes.click
-        cases_close_page.wait_for_outcome
+        cases_close_page.wait_until_outcome_visible
         cases_close_page.outcome.granted_in_full.click
         cases_close_page.submit_button.click
 
@@ -59,7 +59,7 @@ feature 'Closing a case' do
 
         cases_close_page.fill_in_date_responded(0.business_days.ago)
         cases_close_page.is_info_held.yes.click
-        cases_close_page.wait_for_outcome
+        cases_close_page.wait_until_outcome_visible
         cases_close_page.outcome.granted_in_full.click
         cases_close_page.submit_button.click
 
