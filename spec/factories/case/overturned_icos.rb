@@ -99,30 +99,6 @@ FactoryBot.define do
     end
   end
 
-
-  factory :pending_dacu_clearance_to_ico_sar,
-          aliases: [:ot_ico_sar_noff_pdacu],
-          parent: :accepted_ot_ico_sar do
-    transient do
-      approving_team { find_or_create :team_dacu_disclosure }
-      approver       { create :disclosure_specialist }
-    end
-    workflow { 'trigger' }
-
-    after(:create) do |kase, evaluator|
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.approving_team,
-             state: 'accepted',
-             user_id: evaluator.approver.id
-
-      create :case_transition_pending_dacu_clearance,
-             case_id: kase.id,
-             acting_user_id: evaluator.responder.id
-      kase.reload
-    end
-  end
-
   factory :overturned_ico_foi, aliases: [:ico_overturned_foi], class: Case::OverturnedICO::FOI do
     current_state                   { 'unassigned' }
     original_ico_appeal             { create :ico_foi_case }
