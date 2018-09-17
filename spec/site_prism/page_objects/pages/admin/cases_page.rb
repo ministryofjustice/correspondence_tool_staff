@@ -24,10 +24,8 @@ module PageObjects
         sections :case_list, '.case_row' do
           element :id, 'td:nth-child(1)'
           element :number, 'td:nth-child(2)'
-          element :request_detail, 'td[aria-label="Request detail"]'
-          element :draft_deadline, 'td[aria-label="Draft deadline"]'
-          element :external_deadline, 'td[aria-label="Final deadline"]'
-          element :status, 'td[aria-label="Status"]'
+          element :request_detail, 'td:nth-child(3)'
+          element :status, 'td:nth-child(4)'
           element :who_its_with, 'td[aria-label="With"]'
         end
 

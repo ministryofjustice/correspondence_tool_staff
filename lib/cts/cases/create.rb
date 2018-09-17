@@ -325,7 +325,10 @@ module CTS::Cases
       case kase.type_abbreviation
       when 'FOI' then transition_to_closed_for_foi(kase)
       when 'ICO' then transition_to_closed_for_ico(kase)
-      when 'SAR' then transition_to_closed_for_sar(kase)
+      when 'SAR', 'OVERTURNED_SAR' then transition_to_closed_for_sar(kase)
+      else
+        # No good having this fail silently.
+        raise "Don't know how to close #{kase.type_abbreviation} cases."
       end
     end
 

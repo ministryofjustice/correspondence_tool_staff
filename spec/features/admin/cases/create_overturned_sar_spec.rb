@@ -34,12 +34,24 @@ feature 'creating ICO Overturned SAR case' do
     end
     admin_cases_new_overturned_sar_page.submit_button.click
     expect(admin_cases_page).to be_displayed
-    expect(admin_cases_page.case_list.count).to eq 2
+    expect(admin_cases_page.case_list.count).to eq 3
+
+    overturned_sar_row = admin_cases_page.case_list[0]
+    expect(overturned_sar_row.number).to have_text('Case/Overturned Ico/Sar')
+    expect(overturned_sar_row.status.text).to eq 'Closed'
+
+    ico_appeal_row = admin_cases_page.case_list[1]
+    expect(ico_appeal_row.number).to have_text('SAR Appeal')
+    expect(ico_appeal_row.status.text).to eq 'Closed'
+
+    sar_case_row = admin_cases_page.case_list[2]
+    expect(sar_case_row.number).to have_text('Case/Sar')
+    expect(sar_case_row.status.text).to eq 'Closed'
   end
 
   context 'Case::OverturnedICO::SAR' do
     scenario 'creating a case with the default values' do
-      create_ico_overturned_sar
+      create_ico_overturned_sar(target_state: 'closed')
     end
   end
 end

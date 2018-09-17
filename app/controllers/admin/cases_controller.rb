@@ -18,9 +18,6 @@ class Admin::CasesController < AdminController
 
     @case = case_creator.new_case
     @selected_state = case_params[:target_state]
-    # if @case.ico?
-    #   @case.original_case_id = create_original_case(@case).id
-    # end
     (result, _case) = case_creator.call(@selected_state, @case)
     if result == :ok
       flash[:notice] = "Case created: #{@case.number}"

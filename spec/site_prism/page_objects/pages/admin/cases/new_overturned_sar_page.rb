@@ -30,7 +30,7 @@ module PageObjects
 
           # element :repsonding_team, '#case_ico_responding_team'
 
-          element :target_state, '#case_ico_target_state'
+          element :target_state, '#case_overturned_sar_target_state'
 
           element :submit_button, '.button'
 
