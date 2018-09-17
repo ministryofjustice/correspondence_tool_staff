@@ -1,0 +1,45 @@
+require "rails_helper"
+require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
+
+feature 'creating ICO Overturned SAR case' do
+  given(:admin) { create :admin }
+
+  before(:all) do
+    CaseClosure::MetadataSeeder.seed!
+  end
+
+  after(:all) do
+    CaseClosure::MetadataSeeder.unseed!
+  end
+
+  before do
+    CTS.class_eval { @dacu_manager = nil; @dacu_team = nil }
+    create :responding_team
+    find_or_create :team_dacu
+
+    login_as admin
+  end
+
+
+  def create_ico_overturned_sar(type: 'overturned_sar', target_state: nil)
+    stub_s3_uploader_for_all_files!
+
+    admin_cases_page.load
+    admin_cases_page.create_case_button.click
+    admin_cases_new_page.create_link_for_correspondence('OVERTURNED.SAR').click
+    expect(admin_cases_new_overturned_sar_page).to be_displayed
+
+    if target_state
+      admin_cases_new_overturned_sar_page.target_state.select(target_state)
+    end
+    admin_cases_new_overturned_sar_page.submit_button.click
+    expect(admin_cases_page).to be_displayed
+    expect(admin_cases_page.case_list.count).to eq 2
+  end
+
+  context 'Case::OverturnedICO::SAR' do
+    scenario 'creating a case with the default values' do
+      create_ico_overturned_sar
+    end
+  end
+end

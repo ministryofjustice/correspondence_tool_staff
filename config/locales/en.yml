@@ -564,15 +564,8 @@ en:
       select_type:
         heading: Choose correspondence type
         sub_heading: Admin
-      foi:
-        new:
-          create: Create
-      sar:
-        new:
-          create: Create
-      ico:
-        new:
-          create: Create
+      new:
+        create: Create
 
     users:
       index:
