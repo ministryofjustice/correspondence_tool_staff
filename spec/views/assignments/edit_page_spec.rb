@@ -160,6 +160,9 @@ describe 'assignments/edit.html.slim', type: :view do
 
       expect(page).to have_case_history
 
+      expect(page.overturned_sar).to have_original_case_details
+      expect(page.overturned_sar.original_case_details).to have_link_to_case
+
       expect(page).to have_accept_radio
       expect(page).to have_reject_radio
 
