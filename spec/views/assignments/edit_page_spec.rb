@@ -150,6 +150,10 @@ describe 'assignments/edit.html.slim', type: :view do
       expect(page.overturned_sar).to have_ico_decision
 
       expect(page.overturned_sar).to have_case_details
+
+      expect(page.overturned_sar).to have_no_request
+
+
       expect(page).to have_messages
 
       expect(page).to have_new_message
