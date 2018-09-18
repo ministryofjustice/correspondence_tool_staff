@@ -15,8 +15,9 @@ div id="case-#{@correspondence_type_key}" class="case"
 
   = render partial: 'shared/components/case_linked_cases'
 
-  section.case-info
-    = render partial: 'cases/case_request', locals: { case_details: @case }
+  - unless @case.overturned_ico?
+    section.case-info
+      = render partial: 'cases/case_request', locals: { case_details: @case }
 
   section.case-info
     = render partial: "cases/#{@case.type_abbreviation.downcase}/case_details",
