@@ -2,7 +2,7 @@ module PageObjects
   module Sections
     module Cases
       module ICO
-        class IcoDecisionSection < SitePrism::Section
+        class ICODecisionSection < SitePrism::Section
 
           element :summary, '.request--message p:eq(1)'
           element :comments, '.request--message p:eq(2)'

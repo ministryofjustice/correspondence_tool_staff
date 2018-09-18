@@ -21,7 +21,7 @@ module PageObjects
                 PageObjects::Sections::Cases::CaseStatusSection, '.case-status'
 
         section :ico_decision_section,
-                PageObjects::Sections::Cases::ICO::IcoDecisionSection, '.ico-decision-section'
+                PageObjects::Sections::Cases::ICO::ICODecisionSection, '.ico-decision-section'
 
         section :case_details,
                 PageObjects::Sections::Cases::CaseDetailsSection, '.case-details'
