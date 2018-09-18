@@ -12,23 +12,13 @@ module PageObjects
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-          # element :ico_reference_number, '#case_ico_ico_reference_number'
-          # element :ico_officer_name, '#case_ico_ico_officer_name'
+          element :date_received_day, '#case_overturned_sar_received_date_dd'
+          element :date_received_month, '#case_overturned_sar_received_date_mm'
+          element :date_received_year, '#case_overturned_sar_received_date_yyyy'
 
-          # element :original_case_type_foi, '#case_ico_type_caseicofoi'
-          # element :original_case_type_sar, '#case_ico_type_caseicosar'
-
-          # element :date_received_day, '#case_ico_received_date_dd'
-          # element :date_received_month, '#case_ico_received_date_mm'
-          # element :date_received_year, '#case_ico_received_date_yyyy'
-
-          # element :external_deadline_day, '#case_ico_external_deadline_dd'
-          # element :external_deadline_month, '#case_ico_external_deadline_mm'
-          # element :external_deadline_year, '#case_ico_external_deadline_yyyy'
-
-          # element :case_details, '#case_ico_message'
-
-          # element :repsonding_team, '#case_ico_responding_team'
+          element :external_deadline_day, '#case_overturned_sar_external_deadline_dd'
+          element :external_deadline_month, '#case_overturned_sar_external_deadline_mm'
+          element :external_deadline_year, '#case_overturned_sar_external_deadline_yyyy'
 
           element :target_state, '#case_overturned_sar_target_state'
 

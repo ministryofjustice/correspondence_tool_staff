@@ -476,7 +476,6 @@ module CTS::Cases
 
     def prepare_ico_case(kase)
       case_creator = CTS::Cases::Create.new(Rails.logger,
-                                            case_model: Case::Base,
                                             type: original_case_type(kase) )
       (result, original_case) = case_creator.call(:closed)
       if result == :ok
@@ -489,7 +488,6 @@ module CTS::Cases
       #       disclosure, but that should be done by virtue of it being an ICO
       #       appeal, we shouldn't have to say so.
       case_creator = CTS::Cases::Create.new(Rails.logger,
-                                            case_model: Case::Base,
                                             flag_for_disclosure: true,
                                             ico_decision: :overturned,
                                             type: original_appeal_case_type(kase))

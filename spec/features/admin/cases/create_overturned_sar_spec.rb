@@ -21,7 +21,7 @@ feature 'creating ICO Overturned SAR case' do
   end
 
 
-  def create_ico_overturned_sar(type: 'overturned_sar', target_state: nil)
+  def create_ico_overturned_sar(target_state: nil)
     stub_s3_uploader_for_all_files!
 
     admin_cases_page.load
