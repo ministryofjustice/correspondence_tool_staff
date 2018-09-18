@@ -147,7 +147,7 @@ describe 'assignments/edit.html.slim', type: :view do
 
       expect(page.overturned_sar).to have_original_cases
 
-      expect(page.overturned_sar).to have_ico_decision
+      expect(page.overturned_sar).to have_ico_decision_section
 
       expect(page.overturned_sar).to have_case_details
 

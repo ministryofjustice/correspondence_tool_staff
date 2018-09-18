@@ -85,7 +85,7 @@ module PageObjects
         clearance_copy:               'Cases::ClearanceCopySection',
         ico_case_details:             'Cases::ICO::CaseDetailsSection',
         ico_close:                    'Cases::ICO::ClosureSection',
-        ico_decision:                 'Cases::ICO::IcoDecisionSection',
+        ico_decision:                 'Cases::ICO::ICODecisionSection',
         ico_show:                     'Cases::ICO::ShowSection',
         open_case_status_filter_panel:'Cases::OpenCaseStatusFilterPanelSection',
         overturned_sar_case_details:  'Cases::OverturnedSAR::CaseDetailsSection',

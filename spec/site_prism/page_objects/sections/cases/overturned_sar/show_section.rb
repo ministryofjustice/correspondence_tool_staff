@@ -1,5 +1,6 @@
 require 'page_objects/sections/cases/overturned_sar/case_details_section'
 require 'page_objects/sections/cases/case_request_section'
+require 'page_objects/sections/cases/ico/ico_decision_section'
 require 'page_objects/sections/cases/linked_cases_section'
 
 module PageObjects
@@ -14,6 +15,10 @@ module PageObjects
           section :related_cases,
                   PageObjects::Sections::Cases::LinkedCasesSection,
                   '.related-linked-cases'
+
+          section :ico_decision_section,
+                  PageObjects::Sections::Cases::ICO::ICODecisionSection,
+                  '.ico-decision-section'
 
           section :case_details,
                   PageObjects::Sections::Cases::OverturnedSAR::CaseDetailsSection,
