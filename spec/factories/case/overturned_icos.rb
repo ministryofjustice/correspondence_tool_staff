@@ -11,7 +11,7 @@ FactoryBot.define do
 
     message                         { identifier }
     current_state                   { 'unassigned' }
-    original_ico_appeal             { create :ico_sar_case }
+    original_ico_appeal             { create :closed_ico_sar_case }
     original_case                   { create :sar_case }
     received_date                   { Date.yesterday }
     internal_deadline               { 10.days.from_now }
