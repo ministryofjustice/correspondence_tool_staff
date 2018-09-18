@@ -153,10 +153,11 @@ module CTS::Cases
 
       cases = []
       options[:number].times do |n|
-        creator = CTS::Cases::Create.new(CTS, options.dup)
-
         CTS.info "Creating #{target_states.join ', '} case(s) ##{n}"
-        cases += creator.call(target_states)
+        target_states.each do |target_state|
+          creator = CTS::Cases::Create.new(CTS, options.dup)
+          cases += creator.call(target_state)
+        end
       end
 
       unless options[:dry_run]

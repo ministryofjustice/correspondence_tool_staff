@@ -170,14 +170,6 @@ class Admin::CasesController < AdminController
 
   def correspondence_types_map
     CorrespondenceType::SUB_CLASSES_MAP
-    # @correspondence_types_map ||= {
-    #   foi: [Case::FOI::Standard,
-    #         Case::FOI::TimelinessReview,
-    #         Case::FOI::ComplianceReview],
-    #   sar: [Case::SAR],
-    #   ico: [Case::ICO::FOI,
-    #         Case::ICO::SAR]
-    # }.with_indifferent_access
   end
 
   def case_and_type
@@ -191,24 +183,4 @@ class Admin::CasesController < AdminController
       )
     end
   end
-
-  # def create_original_case(kase)
-  #   case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: original_case_type(kase) )
-  #   kase = case_creator.new_case
-  #   if kase.valid?
-  #     case_creator.call(['closed'], kase)
-  #     return kase
-  #   end
-  # end
-
-  # def original_case_type(kase)
-  #   if kase.type == "Case::ICO::FOI"
-  #     'Case::FOI::Standard'
-  #   elsif kase.type == "Case::ICO::SAR"
-  #     'Case::SAR'
-  #   else
-  #     flash[:alert] = "no case type selected"
-  #   end
-  # end
-
 end
