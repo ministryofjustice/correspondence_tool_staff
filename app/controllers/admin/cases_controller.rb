@@ -18,11 +18,8 @@ class Admin::CasesController < AdminController
 
     @case = case_creator.new_case
     @selected_state = case_params[:target_state]
-    if @case.ico?
-      @case.original_case_id = create_original_case(@case).id
-    end
-    if @case.valid?
-      case_creator.call([@selected_state], @case)
+    (result, _case) = case_creator.call(@selected_state, @case)
+    if result == :ok
       flash[:notice] = "Case created: #{@case.number}"
       redirect_to(admin_cases_path)
     else
@@ -67,10 +64,9 @@ class Admin::CasesController < AdminController
 
   def prepare_new_foi
     @correspondence_type_key = params[:correspondence_type]
-    case_class = correspondence_types_map[@correspondence_type_key.to_sym].first
-    @case = case_class.new
 
-    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::FOI::Standard' )
+    case_creator = CTS::Cases::Create.new(Rails.logger,
+                                          type: 'Case::FOI::Standard' )
     @case = case_creator.new_case
     @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.foi).active.sample
     @case.flag_for_disclosure_specialists = 'no'
@@ -83,10 +79,8 @@ class Admin::CasesController < AdminController
 
   def prepare_new_sar
     @correspondence_type_key = params[:correspondence_type]
-    case_class = correspondence_types_map[@correspondence_type_key.to_sym].first
-    @case = case_class.new
 
-    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::SAR' )
+    case_creator = CTS::Cases::Create.new(Rails.logger, type: 'Case::SAR' )
     @case = case_creator.new_case
     @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.sar).active.sample
     @target_states = available_target_states
@@ -99,10 +93,7 @@ class Admin::CasesController < AdminController
 
   def prepare_new_ico
     @correspondence_type_key = params[:correspondence_type]
-    case_class = correspondence_types_map[@correspondence_type_key.to_sym].first
-    @case = case_class.new
-
-    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::ICO::FOI' )
+    case_creator = CTS::Cases::Create.new(Rails.logger, type: 'Case::ICO::FOI' )
     @case = case_creator.new_case
     @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.ico).active.sample
     @target_states = available_target_states
@@ -113,8 +104,29 @@ class Admin::CasesController < AdminController
     render :new
   end
 
+  def prepare_new_overturned_sar
+    @correspondence_type_key = params[:correspondence_type]
+    case_creator = CTS::Cases::Create.new(Rails.logger,
+                                          type: 'Case::OverturnedICO::SAR')
+    @case = case_creator.new_case
+    @case.responding_team = BusinessUnit
+                              .responding
+                              .responding_for_correspondence_type(CorrespondenceType.sar)
+                              .active
+                              .sample
+    @target_states = available_target_states
+    @selected_state = 'drafting'
+    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
+    # @case.reply_method = 'send_by_email'
+  end
+
   def permitted_correspondence_types
-    @permitted_correspondence_types = [CorrespondenceType.foi, CorrespondenceType.sar, CorrespondenceType.ico]
+    @permitted_correspondence_types = [
+      CorrespondenceType.foi,
+      CorrespondenceType.sar,
+      CorrespondenceType.ico,
+      CorrespondenceType.overturned_sar,
+    ]
   end
 
   def available_target_states
@@ -157,14 +169,7 @@ class Admin::CasesController < AdminController
   end
 
   def correspondence_types_map
-    @correspondence_types_map ||= {
-      foi: [Case::FOI::Standard,
-            Case::FOI::TimelinessReview,
-            Case::FOI::ComplianceReview],
-      sar: [Case::SAR],
-      ico: [Case::ICO::FOI,
-            Case::ICO::SAR]
-    }.with_indifferent_access
+    CorrespondenceType::SUB_CLASSES_MAP
   end
 
   def case_and_type
@@ -176,25 +181,6 @@ class Admin::CasesController < AdminController
       @correspondence_type = CorrespondenceType.find_by(
         abbreviation: params[:correspondence_type].upcase
       )
-    end
-  end
-
-  def create_original_case(kase)
-    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: original_case_type(kase) )
-    kase = case_creator.new_case
-    if kase.valid?
-      case_creator.call(['closed'], kase)
-      return kase
-    end
-  end
-
-  def original_case_type(kase)
-    if kase.type == "Case::ICO::FOI"
-      'Case::FOI::Standard'
-    elsif kase.type == "Case::ICO::SAR"
-      'Case::SAR'
-    else
-      flash[:alert] = "no case type selected"
     end
   end
 end

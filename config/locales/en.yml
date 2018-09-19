@@ -559,20 +559,12 @@ en:
         Case::ICO::FOI: ICO FOI Appeal
         Case::ICO::SAR: ICO SAR Appeal
       new:
+        create: Create
         heading: New Case
         sub_heading: Admin
       select_type:
         heading: Choose correspondence type
         sub_heading: Admin
-      foi:
-        new:
-          create: Create
-      sar:
-        new:
-          create: Create
-      ico:
-        new:
-          create: Create
 
     users:
       index:
