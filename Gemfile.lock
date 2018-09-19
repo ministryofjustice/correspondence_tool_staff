@@ -117,7 +117,6 @@ GEM
     crass (1.0.4)
     debug_inspector (0.0.3)
     deep_merge (1.2.1)
-    deepl-rb (2.1.0)
     devise (4.5.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
