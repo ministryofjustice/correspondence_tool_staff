@@ -2,14 +2,13 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.13
--- Dumped by pg_dump version 9.5.13
+-- Dumped from database version 9.5.9
+-- Dumped by pg_dump version 9.5.9
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
@@ -42,11 +41,13 @@ CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
 
 
+SET search_path = public, pg_catalog;
+
 --
 -- Name: attachment_type; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.attachment_type AS ENUM (
+CREATE TYPE attachment_type AS ENUM (
     'response',
     'request',
     'ico_decision'
@@ -57,7 +58,7 @@ CREATE TYPE public.attachment_type AS ENUM (
 -- Name: cases_delivery_methods; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.cases_delivery_methods AS ENUM (
+CREATE TYPE cases_delivery_methods AS ENUM (
     'sent_by_email',
     'sent_by_post'
 );
@@ -67,7 +68,7 @@ CREATE TYPE public.cases_delivery_methods AS ENUM (
 -- Name: requester_type; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.requester_type AS ENUM (
+CREATE TYPE requester_type AS ENUM (
     'academic_business_charity',
     'journalist',
     'member_of_the_public',
@@ -82,7 +83,7 @@ CREATE TYPE public.requester_type AS ENUM (
 -- Name: search_query_type; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.search_query_type AS ENUM (
+CREATE TYPE search_query_type AS ENUM (
     'search',
     'filter',
     'list'
@@ -93,7 +94,7 @@ CREATE TYPE public.search_query_type AS ENUM (
 -- Name: state; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.state AS ENUM (
+CREATE TYPE state AS ENUM (
     'pending',
     'rejected',
     'accepted',
@@ -105,7 +106,7 @@ CREATE TYPE public.state AS ENUM (
 -- Name: team_roles; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.team_roles AS ENUM (
+CREATE TYPE team_roles AS ENUM (
     'managing',
     'responding',
     'approving'
@@ -116,7 +117,7 @@ CREATE TYPE public.team_roles AS ENUM (
 -- Name: user_role; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.user_role AS ENUM (
+CREATE TYPE user_role AS ENUM (
     'creator',
     'manager',
     'responder',
@@ -133,7 +134,7 @@ SET default_with_oids = false;
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.ar_internal_metadata (
+CREATE TABLE ar_internal_metadata (
     key character varying NOT NULL,
     value character varying,
     created_at timestamp without time zone NOT NULL,
@@ -145,14 +146,14 @@ CREATE TABLE public.ar_internal_metadata (
 -- Name: assignments; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.assignments (
+CREATE TABLE assignments (
     id integer NOT NULL,
-    state public.state DEFAULT 'pending'::public.state,
+    state state DEFAULT 'pending'::state,
     case_id integer NOT NULL,
     team_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    role public.team_roles,
+    role team_roles,
     user_id integer,
     approved boolean DEFAULT false
 );
@@ -162,7 +163,7 @@ CREATE TABLE public.assignments (
 -- Name: assignments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.assignments_id_seq
+CREATE SEQUENCE assignments_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -174,17 +175,17 @@ CREATE SEQUENCE public.assignments_id_seq
 -- Name: assignments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.assignments_id_seq OWNED BY public.assignments.id;
+ALTER SEQUENCE assignments_id_seq OWNED BY assignments.id;
 
 
 --
 -- Name: case_attachments; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.case_attachments (
+CREATE TABLE case_attachments (
     id integer NOT NULL,
     case_id integer,
-    type public.attachment_type,
+    type attachment_type,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     key character varying,
@@ -198,7 +199,7 @@ CREATE TABLE public.case_attachments (
 -- Name: case_attachments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.case_attachments_id_seq
+CREATE SEQUENCE case_attachments_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -210,14 +211,14 @@ CREATE SEQUENCE public.case_attachments_id_seq
 -- Name: case_attachments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.case_attachments_id_seq OWNED BY public.case_attachments.id;
+ALTER SEQUENCE case_attachments_id_seq OWNED BY case_attachments.id;
 
 
 --
 -- Name: case_closure_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.case_closure_metadata (
+CREATE TABLE case_closure_metadata (
     id integer NOT NULL,
     type character varying,
     subtype character varying,
@@ -237,7 +238,7 @@ CREATE TABLE public.case_closure_metadata (
 -- Name: case_closure_metadata_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.case_closure_metadata_id_seq
+CREATE SEQUENCE case_closure_metadata_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -249,14 +250,14 @@ CREATE SEQUENCE public.case_closure_metadata_id_seq
 -- Name: case_closure_metadata_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.case_closure_metadata_id_seq OWNED BY public.case_closure_metadata.id;
+ALTER SEQUENCE case_closure_metadata_id_seq OWNED BY case_closure_metadata.id;
 
 
 --
 -- Name: case_number_counters; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.case_number_counters (
+CREATE TABLE case_number_counters (
     id integer NOT NULL,
     date date NOT NULL,
     counter integer DEFAULT 0
@@ -267,7 +268,7 @@ CREATE TABLE public.case_number_counters (
 -- Name: case_number_counters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.case_number_counters_id_seq
+CREATE SEQUENCE case_number_counters_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -279,14 +280,14 @@ CREATE SEQUENCE public.case_number_counters_id_seq
 -- Name: case_number_counters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.case_number_counters_id_seq OWNED BY public.case_number_counters.id;
+ALTER SEQUENCE case_number_counters_id_seq OWNED BY case_number_counters.id;
 
 
 --
 -- Name: case_transitions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.case_transitions (
+CREATE TABLE case_transitions (
     id integer NOT NULL,
     event character varying,
     to_state character varying NOT NULL,
@@ -308,7 +309,7 @@ CREATE TABLE public.case_transitions (
 -- Name: case_transitions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.case_transitions_id_seq
+CREATE SEQUENCE case_transitions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -320,14 +321,14 @@ CREATE SEQUENCE public.case_transitions_id_seq
 -- Name: case_transitions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.case_transitions_id_seq OWNED BY public.case_transitions.id;
+ALTER SEQUENCE case_transitions_id_seq OWNED BY case_transitions.id;
 
 
 --
 -- Name: cases; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.cases (
+CREATE TABLE cases (
     id integer NOT NULL,
     name character varying,
     email character varying,
@@ -338,14 +339,14 @@ CREATE TABLE public.cases (
     postal_address character varying,
     subject character varying,
     properties jsonb,
-    requester_type public.requester_type,
+    requester_type requester_type,
     number character varying NOT NULL,
     date_responded date,
     outcome_id integer,
     refusal_reason_id integer,
     current_state character varying,
     last_transitioned_at timestamp without time zone,
-    delivery_method public.cases_delivery_methods,
+    delivery_method cases_delivery_methods,
     workflow character varying,
     deleted boolean DEFAULT false,
     info_held_status_id integer,
@@ -360,7 +361,7 @@ CREATE TABLE public.cases (
 -- Name: cases_exemptions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.cases_exemptions (
+CREATE TABLE cases_exemptions (
     id integer NOT NULL,
     case_id integer,
     exemption_id integer,
@@ -373,7 +374,7 @@ CREATE TABLE public.cases_exemptions (
 -- Name: cases_exemptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.cases_exemptions_id_seq
+CREATE SEQUENCE cases_exemptions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -385,14 +386,14 @@ CREATE SEQUENCE public.cases_exemptions_id_seq
 -- Name: cases_exemptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.cases_exemptions_id_seq OWNED BY public.cases_exemptions.id;
+ALTER SEQUENCE cases_exemptions_id_seq OWNED BY cases_exemptions.id;
 
 
 --
 -- Name: cases_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.cases_id_seq
+CREATE SEQUENCE cases_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -404,14 +405,14 @@ CREATE SEQUENCE public.cases_id_seq
 -- Name: cases_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.cases_id_seq OWNED BY public.cases.id;
+ALTER SEQUENCE cases_id_seq OWNED BY cases.id;
 
 
 --
 -- Name: cases_users_transitions_trackers; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.cases_users_transitions_trackers (
+CREATE TABLE cases_users_transitions_trackers (
     id integer NOT NULL,
     case_id integer,
     user_id integer,
@@ -423,7 +424,7 @@ CREATE TABLE public.cases_users_transitions_trackers (
 -- Name: cases_users_transitions_trackers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.cases_users_transitions_trackers_id_seq
+CREATE SEQUENCE cases_users_transitions_trackers_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -435,14 +436,14 @@ CREATE SEQUENCE public.cases_users_transitions_trackers_id_seq
 -- Name: cases_users_transitions_trackers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.cases_users_transitions_trackers_id_seq OWNED BY public.cases_users_transitions_trackers.id;
+ALTER SEQUENCE cases_users_transitions_trackers_id_seq OWNED BY cases_users_transitions_trackers.id;
 
 
 --
 -- Name: correspondence_types; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.correspondence_types (
+CREATE TABLE correspondence_types (
     id integer NOT NULL,
     name character varying,
     abbreviation character varying,
@@ -456,7 +457,7 @@ CREATE TABLE public.correspondence_types (
 -- Name: correspondence_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.correspondence_types_id_seq
+CREATE SEQUENCE correspondence_types_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -468,14 +469,14 @@ CREATE SEQUENCE public.correspondence_types_id_seq
 -- Name: correspondence_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.correspondence_types_id_seq OWNED BY public.correspondence_types.id;
+ALTER SEQUENCE correspondence_types_id_seq OWNED BY correspondence_types.id;
 
 
 --
 -- Name: data_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.data_migrations (
+CREATE TABLE data_migrations (
     version character varying NOT NULL
 );
 
@@ -484,7 +485,7 @@ CREATE TABLE public.data_migrations (
 -- Name: feedback; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.feedback (
+CREATE TABLE feedback (
     id integer NOT NULL,
     content jsonb,
     created_at timestamp without time zone NOT NULL,
@@ -496,7 +497,7 @@ CREATE TABLE public.feedback (
 -- Name: feedback_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.feedback_id_seq
+CREATE SEQUENCE feedback_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -508,14 +509,14 @@ CREATE SEQUENCE public.feedback_id_seq
 -- Name: feedback_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.feedback_id_seq OWNED BY public.feedback.id;
+ALTER SEQUENCE feedback_id_seq OWNED BY feedback.id;
 
 
 --
 -- Name: linked_cases; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.linked_cases (
+CREATE TABLE linked_cases (
     id integer NOT NULL,
     case_id integer NOT NULL,
     linked_case_id integer NOT NULL,
@@ -527,7 +528,7 @@ CREATE TABLE public.linked_cases (
 -- Name: linked_cases_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.linked_cases_id_seq
+CREATE SEQUENCE linked_cases_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -539,14 +540,14 @@ CREATE SEQUENCE public.linked_cases_id_seq
 -- Name: linked_cases_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.linked_cases_id_seq OWNED BY public.linked_cases.id;
+ALTER SEQUENCE linked_cases_id_seq OWNED BY linked_cases.id;
 
 
 --
 -- Name: report_types; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.report_types (
+CREATE TABLE report_types (
     id integer NOT NULL,
     abbr character varying NOT NULL,
     full_name character varying NOT NULL,
@@ -564,7 +565,7 @@ CREATE TABLE public.report_types (
 -- Name: report_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.report_types_id_seq
+CREATE SEQUENCE report_types_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -576,14 +577,14 @@ CREATE SEQUENCE public.report_types_id_seq
 -- Name: report_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.report_types_id_seq OWNED BY public.report_types.id;
+ALTER SEQUENCE report_types_id_seq OWNED BY report_types.id;
 
 
 --
 -- Name: reports; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.reports (
+CREATE TABLE reports (
     id integer NOT NULL,
     report_type_id integer NOT NULL,
     period_start date,
@@ -598,7 +599,7 @@ CREATE TABLE public.reports (
 -- Name: reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.reports_id_seq
+CREATE SEQUENCE reports_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -610,14 +611,14 @@ CREATE SEQUENCE public.reports_id_seq
 -- Name: reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.reports_id_seq OWNED BY public.reports.id;
+ALTER SEQUENCE reports_id_seq OWNED BY reports.id;
 
 
 --
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.schema_migrations (
+CREATE TABLE schema_migrations (
     version character varying NOT NULL
 );
 
@@ -626,7 +627,7 @@ CREATE TABLE public.schema_migrations (
 -- Name: search_queries; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.search_queries (
+CREATE TABLE search_queries (
     id integer NOT NULL,
     user_id integer NOT NULL,
     query jsonb NOT NULL,
@@ -636,7 +637,7 @@ CREATE TABLE public.search_queries (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     parent_id integer,
-    query_type public.search_query_type DEFAULT 'search'::public.search_query_type NOT NULL,
+    query_type search_query_type DEFAULT 'search'::search_query_type NOT NULL,
     filter_type character varying
 );
 
@@ -645,7 +646,7 @@ CREATE TABLE public.search_queries (
 -- Name: search_queries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.search_queries_id_seq
+CREATE SEQUENCE search_queries_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -657,14 +658,14 @@ CREATE SEQUENCE public.search_queries_id_seq
 -- Name: search_queries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.search_queries_id_seq OWNED BY public.search_queries.id;
+ALTER SEQUENCE search_queries_id_seq OWNED BY search_queries.id;
 
 
 --
 -- Name: sessions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.sessions (
+CREATE TABLE sessions (
     id integer NOT NULL,
     session_id character varying NOT NULL,
     data text,
@@ -677,7 +678,7 @@ CREATE TABLE public.sessions (
 -- Name: sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.sessions_id_seq
+CREATE SEQUENCE sessions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -689,14 +690,14 @@ CREATE SEQUENCE public.sessions_id_seq
 -- Name: sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.sessions_id_seq OWNED BY public.sessions.id;
+ALTER SEQUENCE sessions_id_seq OWNED BY sessions.id;
 
 
 --
 -- Name: team_correspondence_type_roles; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.team_correspondence_type_roles (
+CREATE TABLE team_correspondence_type_roles (
     id integer NOT NULL,
     correspondence_type_id integer,
     team_id integer,
@@ -714,7 +715,7 @@ CREATE TABLE public.team_correspondence_type_roles (
 -- Name: team_correspondence_type_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.team_correspondence_type_roles_id_seq
+CREATE SEQUENCE team_correspondence_type_roles_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -726,14 +727,14 @@ CREATE SEQUENCE public.team_correspondence_type_roles_id_seq
 -- Name: team_correspondence_type_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.team_correspondence_type_roles_id_seq OWNED BY public.team_correspondence_type_roles.id;
+ALTER SEQUENCE team_correspondence_type_roles_id_seq OWNED BY team_correspondence_type_roles.id;
 
 
 --
 -- Name: team_properties; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.team_properties (
+CREATE TABLE team_properties (
     id integer NOT NULL,
     team_id integer,
     key character varying,
@@ -747,7 +748,7 @@ CREATE TABLE public.team_properties (
 -- Name: team_properties_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.team_properties_id_seq
+CREATE SEQUENCE team_properties_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -759,17 +760,17 @@ CREATE SEQUENCE public.team_properties_id_seq
 -- Name: team_properties_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.team_properties_id_seq OWNED BY public.team_properties.id;
+ALTER SEQUENCE team_properties_id_seq OWNED BY team_properties.id;
 
 
 --
 -- Name: teams; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.teams (
+CREATE TABLE teams (
     id integer NOT NULL,
     name character varying NOT NULL,
-    email public.citext,
+    email citext,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     type character varying,
@@ -784,7 +785,7 @@ CREATE TABLE public.teams (
 -- Name: teams_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.teams_id_seq
+CREATE SEQUENCE teams_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -796,18 +797,18 @@ CREATE SEQUENCE public.teams_id_seq
 -- Name: teams_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.teams_id_seq OWNED BY public.teams.id;
+ALTER SEQUENCE teams_id_seq OWNED BY teams.id;
 
 
 --
 -- Name: teams_users_roles; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.teams_users_roles (
+CREATE TABLE teams_users_roles (
     id integer NOT NULL,
     team_id integer,
     user_id integer,
-    role public.user_role NOT NULL
+    role user_role NOT NULL
 );
 
 
@@ -815,7 +816,7 @@ CREATE TABLE public.teams_users_roles (
 -- Name: teams_users_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.teams_users_roles_id_seq
+CREATE SEQUENCE teams_users_roles_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -827,14 +828,14 @@ CREATE SEQUENCE public.teams_users_roles_id_seq
 -- Name: teams_users_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.teams_users_roles_id_seq OWNED BY public.teams_users_roles.id;
+ALTER SEQUENCE teams_users_roles_id_seq OWNED BY teams_users_roles.id;
 
 
 --
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.users (
+CREATE TABLE users (
     id integer NOT NULL,
     email character varying DEFAULT ''::character varying NOT NULL,
     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
@@ -859,7 +860,7 @@ CREATE TABLE public.users (
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.users_id_seq
+CREATE SEQUENCE users_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -871,14 +872,14 @@ CREATE SEQUENCE public.users_id_seq
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
 -- Name: versions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.versions (
+CREATE TABLE versions (
     id integer NOT NULL,
     item_type character varying NOT NULL,
     item_id integer NOT NULL,
@@ -893,7 +894,7 @@ CREATE TABLE public.versions (
 -- Name: versions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.versions_id_seq
+CREATE SEQUENCE versions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -905,161 +906,161 @@ CREATE SEQUENCE public.versions_id_seq
 -- Name: versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
+ALTER SEQUENCE versions_id_seq OWNED BY versions.id;
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.assignments ALTER COLUMN id SET DEFAULT nextval('public.assignments_id_seq'::regclass);
+ALTER TABLE ONLY assignments ALTER COLUMN id SET DEFAULT nextval('assignments_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.case_attachments ALTER COLUMN id SET DEFAULT nextval('public.case_attachments_id_seq'::regclass);
+ALTER TABLE ONLY case_attachments ALTER COLUMN id SET DEFAULT nextval('case_attachments_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.case_closure_metadata ALTER COLUMN id SET DEFAULT nextval('public.case_closure_metadata_id_seq'::regclass);
+ALTER TABLE ONLY case_closure_metadata ALTER COLUMN id SET DEFAULT nextval('case_closure_metadata_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.case_number_counters ALTER COLUMN id SET DEFAULT nextval('public.case_number_counters_id_seq'::regclass);
+ALTER TABLE ONLY case_number_counters ALTER COLUMN id SET DEFAULT nextval('case_number_counters_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.case_transitions ALTER COLUMN id SET DEFAULT nextval('public.case_transitions_id_seq'::regclass);
+ALTER TABLE ONLY case_transitions ALTER COLUMN id SET DEFAULT nextval('case_transitions_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.cases ALTER COLUMN id SET DEFAULT nextval('public.cases_id_seq'::regclass);
+ALTER TABLE ONLY cases ALTER COLUMN id SET DEFAULT nextval('cases_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.cases_exemptions ALTER COLUMN id SET DEFAULT nextval('public.cases_exemptions_id_seq'::regclass);
+ALTER TABLE ONLY cases_exemptions ALTER COLUMN id SET DEFAULT nextval('cases_exemptions_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.cases_users_transitions_trackers ALTER COLUMN id SET DEFAULT nextval('public.cases_users_transitions_trackers_id_seq'::regclass);
+ALTER TABLE ONLY cases_users_transitions_trackers ALTER COLUMN id SET DEFAULT nextval('cases_users_transitions_trackers_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.correspondence_types ALTER COLUMN id SET DEFAULT nextval('public.correspondence_types_id_seq'::regclass);
+ALTER TABLE ONLY correspondence_types ALTER COLUMN id SET DEFAULT nextval('correspondence_types_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.feedback ALTER COLUMN id SET DEFAULT nextval('public.feedback_id_seq'::regclass);
+ALTER TABLE ONLY feedback ALTER COLUMN id SET DEFAULT nextval('feedback_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.linked_cases ALTER COLUMN id SET DEFAULT nextval('public.linked_cases_id_seq'::regclass);
+ALTER TABLE ONLY linked_cases ALTER COLUMN id SET DEFAULT nextval('linked_cases_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.report_types ALTER COLUMN id SET DEFAULT nextval('public.report_types_id_seq'::regclass);
+ALTER TABLE ONLY report_types ALTER COLUMN id SET DEFAULT nextval('report_types_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.reports ALTER COLUMN id SET DEFAULT nextval('public.reports_id_seq'::regclass);
+ALTER TABLE ONLY reports ALTER COLUMN id SET DEFAULT nextval('reports_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.search_queries ALTER COLUMN id SET DEFAULT nextval('public.search_queries_id_seq'::regclass);
+ALTER TABLE ONLY search_queries ALTER COLUMN id SET DEFAULT nextval('search_queries_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.sessions ALTER COLUMN id SET DEFAULT nextval('public.sessions_id_seq'::regclass);
+ALTER TABLE ONLY sessions ALTER COLUMN id SET DEFAULT nextval('sessions_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.team_correspondence_type_roles ALTER COLUMN id SET DEFAULT nextval('public.team_correspondence_type_roles_id_seq'::regclass);
+ALTER TABLE ONLY team_correspondence_type_roles ALTER COLUMN id SET DEFAULT nextval('team_correspondence_type_roles_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.team_properties ALTER COLUMN id SET DEFAULT nextval('public.team_properties_id_seq'::regclass);
+ALTER TABLE ONLY team_properties ALTER COLUMN id SET DEFAULT nextval('team_properties_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.teams ALTER COLUMN id SET DEFAULT nextval('public.teams_id_seq'::regclass);
+ALTER TABLE ONLY teams ALTER COLUMN id SET DEFAULT nextval('teams_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.teams_users_roles ALTER COLUMN id SET DEFAULT nextval('public.teams_users_roles_id_seq'::regclass);
+ALTER TABLE ONLY teams_users_roles ALTER COLUMN id SET DEFAULT nextval('teams_users_roles_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.versions_id_seq'::regclass);
+ALTER TABLE ONLY versions ALTER COLUMN id SET DEFAULT nextval('versions_id_seq'::regclass);
 
 
 --
 -- Name: ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.ar_internal_metadata
+ALTER TABLE ONLY ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
 
 
@@ -1067,7 +1068,7 @@ ALTER TABLE ONLY public.ar_internal_metadata
 -- Name: assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.assignments
+ALTER TABLE ONLY assignments
     ADD CONSTRAINT assignments_pkey PRIMARY KEY (id);
 
 
@@ -1075,7 +1076,7 @@ ALTER TABLE ONLY public.assignments
 -- Name: case_attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.case_attachments
+ALTER TABLE ONLY case_attachments
     ADD CONSTRAINT case_attachments_pkey PRIMARY KEY (id);
 
 
@@ -1083,7 +1084,7 @@ ALTER TABLE ONLY public.case_attachments
 -- Name: case_closure_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.case_closure_metadata
+ALTER TABLE ONLY case_closure_metadata
     ADD CONSTRAINT case_closure_metadata_pkey PRIMARY KEY (id);
 
 
@@ -1091,7 +1092,7 @@ ALTER TABLE ONLY public.case_closure_metadata
 -- Name: case_number_counters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.case_number_counters
+ALTER TABLE ONLY case_number_counters
     ADD CONSTRAINT case_number_counters_pkey PRIMARY KEY (id);
 
 
@@ -1099,7 +1100,7 @@ ALTER TABLE ONLY public.case_number_counters
 -- Name: case_transitions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.case_transitions
+ALTER TABLE ONLY case_transitions
     ADD CONSTRAINT case_transitions_pkey PRIMARY KEY (id);
 
 
@@ -1107,7 +1108,7 @@ ALTER TABLE ONLY public.case_transitions
 -- Name: cases_exemptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.cases_exemptions
+ALTER TABLE ONLY cases_exemptions
     ADD CONSTRAINT cases_exemptions_pkey PRIMARY KEY (id);
 
 
@@ -1115,7 +1116,7 @@ ALTER TABLE ONLY public.cases_exemptions
 -- Name: cases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.cases
+ALTER TABLE ONLY cases
     ADD CONSTRAINT cases_pkey PRIMARY KEY (id);
 
 
@@ -1123,7 +1124,7 @@ ALTER TABLE ONLY public.cases
 -- Name: cases_users_transitions_trackers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.cases_users_transitions_trackers
+ALTER TABLE ONLY cases_users_transitions_trackers
     ADD CONSTRAINT cases_users_transitions_trackers_pkey PRIMARY KEY (id);
 
 
@@ -1131,7 +1132,7 @@ ALTER TABLE ONLY public.cases_users_transitions_trackers
 -- Name: correspondence_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.correspondence_types
+ALTER TABLE ONLY correspondence_types
     ADD CONSTRAINT correspondence_types_pkey PRIMARY KEY (id);
 
 
@@ -1139,7 +1140,7 @@ ALTER TABLE ONLY public.correspondence_types
 -- Name: data_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.data_migrations
+ALTER TABLE ONLY data_migrations
     ADD CONSTRAINT data_migrations_pkey PRIMARY KEY (version);
 
 
@@ -1147,7 +1148,7 @@ ALTER TABLE ONLY public.data_migrations
 -- Name: feedback_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.feedback
+ALTER TABLE ONLY feedback
     ADD CONSTRAINT feedback_pkey PRIMARY KEY (id);
 
 
@@ -1155,7 +1156,7 @@ ALTER TABLE ONLY public.feedback
 -- Name: linked_cases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.linked_cases
+ALTER TABLE ONLY linked_cases
     ADD CONSTRAINT linked_cases_pkey PRIMARY KEY (id);
 
 
@@ -1163,7 +1164,7 @@ ALTER TABLE ONLY public.linked_cases
 -- Name: report_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.report_types
+ALTER TABLE ONLY report_types
     ADD CONSTRAINT report_types_pkey PRIMARY KEY (id);
 
 
@@ -1171,7 +1172,7 @@ ALTER TABLE ONLY public.report_types
 -- Name: reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.reports
+ALTER TABLE ONLY reports
     ADD CONSTRAINT reports_pkey PRIMARY KEY (id);
 
 
@@ -1179,7 +1180,7 @@ ALTER TABLE ONLY public.reports
 -- Name: schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.schema_migrations
+ALTER TABLE ONLY schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
 
 
@@ -1187,7 +1188,7 @@ ALTER TABLE ONLY public.schema_migrations
 -- Name: search_queries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.search_queries
+ALTER TABLE ONLY search_queries
     ADD CONSTRAINT search_queries_pkey PRIMARY KEY (id);
 
 
@@ -1195,7 +1196,7 @@ ALTER TABLE ONLY public.search_queries
 -- Name: sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.sessions
+ALTER TABLE ONLY sessions
     ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
 
 
@@ -1203,7 +1204,7 @@ ALTER TABLE ONLY public.sessions
 -- Name: team_correspondence_type_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.team_correspondence_type_roles
+ALTER TABLE ONLY team_correspondence_type_roles
     ADD CONSTRAINT team_correspondence_type_roles_pkey PRIMARY KEY (id);
 
 
@@ -1211,7 +1212,7 @@ ALTER TABLE ONLY public.team_correspondence_type_roles
 -- Name: team_properties_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.team_properties
+ALTER TABLE ONLY team_properties
     ADD CONSTRAINT team_properties_pkey PRIMARY KEY (id);
 
 
@@ -1219,7 +1220,7 @@ ALTER TABLE ONLY public.team_properties
 -- Name: teams_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.teams
+ALTER TABLE ONLY teams
     ADD CONSTRAINT teams_pkey PRIMARY KEY (id);
 
 
@@ -1227,7 +1228,7 @@ ALTER TABLE ONLY public.teams
 -- Name: teams_users_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.teams_users_roles
+ALTER TABLE ONLY teams_users_roles
     ADD CONSTRAINT teams_users_roles_pkey PRIMARY KEY (id);
 
 
@@ -1235,7 +1236,7 @@ ALTER TABLE ONLY public.teams_users_roles
 -- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.users
+ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
 
@@ -1243,7 +1244,7 @@ ALTER TABLE ONLY public.users
 -- Name: versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.versions
+ALTER TABLE ONLY versions
     ADD CONSTRAINT versions_pkey PRIMARY KEY (id);
 
 
@@ -1251,273 +1252,273 @@ ALTER TABLE ONLY public.versions
 -- Name: cases_document_tsvector_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX cases_document_tsvector_index ON public.cases USING gin (document_tsvector);
+CREATE INDEX cases_document_tsvector_index ON cases USING gin (document_tsvector);
 
 
 --
 -- Name: index_assignments_on_case_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_assignments_on_case_id ON public.assignments USING btree (case_id);
+CREATE INDEX index_assignments_on_case_id ON assignments USING btree (case_id);
 
 
 --
 -- Name: index_assignments_on_state; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_assignments_on_state ON public.assignments USING btree (state);
+CREATE INDEX index_assignments_on_state ON assignments USING btree (state);
 
 
 --
 -- Name: index_assignments_on_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_assignments_on_team_id ON public.assignments USING btree (team_id);
+CREATE INDEX index_assignments_on_team_id ON assignments USING btree (team_id);
 
 
 --
 -- Name: index_assignments_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_assignments_on_user_id ON public.assignments USING btree (user_id);
+CREATE INDEX index_assignments_on_user_id ON assignments USING btree (user_id);
 
 
 --
 -- Name: index_case_attachments_on_case_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_case_attachments_on_case_id ON public.case_attachments USING btree (case_id);
+CREATE INDEX index_case_attachments_on_case_id ON case_attachments USING btree (case_id);
 
 
 --
 -- Name: index_case_attachments_on_key; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_case_attachments_on_key ON public.case_attachments USING btree (key);
+CREATE UNIQUE INDEX index_case_attachments_on_key ON case_attachments USING btree (key);
 
 
 --
 -- Name: index_case_number_counters_on_date; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_case_number_counters_on_date ON public.case_number_counters USING btree (date);
+CREATE UNIQUE INDEX index_case_number_counters_on_date ON case_number_counters USING btree (date);
 
 
 --
 -- Name: index_case_transitions_parent_most_recent; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_case_transitions_parent_most_recent ON public.case_transitions USING btree (case_id, most_recent) WHERE most_recent;
+CREATE UNIQUE INDEX index_case_transitions_parent_most_recent ON case_transitions USING btree (case_id, most_recent) WHERE most_recent;
 
 
 --
 -- Name: index_case_transitions_parent_sort; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_case_transitions_parent_sort ON public.case_transitions USING btree (case_id, sort_key);
+CREATE UNIQUE INDEX index_case_transitions_parent_sort ON case_transitions USING btree (case_id, sort_key);
 
 
 --
 -- Name: index_cases_exemptions_on_case_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_cases_exemptions_on_case_id ON public.cases_exemptions USING btree (case_id);
+CREATE INDEX index_cases_exemptions_on_case_id ON cases_exemptions USING btree (case_id);
 
 
 --
 -- Name: index_cases_exemptions_on_exemption_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_cases_exemptions_on_exemption_id ON public.cases_exemptions USING btree (exemption_id);
+CREATE INDEX index_cases_exemptions_on_exemption_id ON cases_exemptions USING btree (exemption_id);
 
 
 --
 -- Name: index_cases_on_deleted; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_cases_on_deleted ON public.cases USING btree (deleted);
+CREATE INDEX index_cases_on_deleted ON cases USING btree (deleted);
 
 
 --
 -- Name: index_cases_on_number; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_cases_on_number ON public.cases USING btree (number);
+CREATE UNIQUE INDEX index_cases_on_number ON cases USING btree (number);
 
 
 --
 -- Name: index_cases_on_requester_type; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_cases_on_requester_type ON public.cases USING btree (requester_type);
+CREATE INDEX index_cases_on_requester_type ON cases USING btree (requester_type);
 
 
 --
 -- Name: index_cases_users_transitions_trackers_on_case_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_cases_users_transitions_trackers_on_case_id ON public.cases_users_transitions_trackers USING btree (case_id);
+CREATE INDEX index_cases_users_transitions_trackers_on_case_id ON cases_users_transitions_trackers USING btree (case_id);
 
 
 --
 -- Name: index_cases_users_transitions_trackers_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_cases_users_transitions_trackers_on_user_id ON public.cases_users_transitions_trackers USING btree (user_id);
+CREATE INDEX index_cases_users_transitions_trackers_on_user_id ON cases_users_transitions_trackers USING btree (user_id);
 
 
 --
 -- Name: index_linked_cases_on_case_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_linked_cases_on_case_id ON public.linked_cases USING btree (case_id);
+CREATE INDEX index_linked_cases_on_case_id ON linked_cases USING btree (case_id);
 
 
 --
 -- Name: index_linked_cases_on_case_id_and_linked_case_id_and_type; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_linked_cases_on_case_id_and_linked_case_id_and_type ON public.linked_cases USING btree (case_id, linked_case_id, type);
+CREATE UNIQUE INDEX index_linked_cases_on_case_id_and_linked_case_id_and_type ON linked_cases USING btree (case_id, linked_case_id, type);
 
 
 --
 -- Name: index_report_types_on_abbr; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_report_types_on_abbr ON public.report_types USING btree (abbr);
+CREATE UNIQUE INDEX index_report_types_on_abbr ON report_types USING btree (abbr);
 
 
 --
 -- Name: index_reports_on_report_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_reports_on_report_type_id ON public.reports USING btree (report_type_id);
+CREATE INDEX index_reports_on_report_type_id ON reports USING btree (report_type_id);
 
 
 --
 -- Name: index_sessions_on_session_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_sessions_on_session_id ON public.sessions USING btree (session_id);
+CREATE UNIQUE INDEX index_sessions_on_session_id ON sessions USING btree (session_id);
 
 
 --
 -- Name: index_sessions_on_updated_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_sessions_on_updated_at ON public.sessions USING btree (updated_at);
+CREATE INDEX index_sessions_on_updated_at ON sessions USING btree (updated_at);
 
 
 --
 -- Name: index_team_correspondence_type_roles_on_type_id_and_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_team_correspondence_type_roles_on_type_id_and_team_id ON public.team_correspondence_type_roles USING btree (correspondence_type_id, team_id);
+CREATE UNIQUE INDEX index_team_correspondence_type_roles_on_type_id_and_team_id ON team_correspondence_type_roles USING btree (correspondence_type_id, team_id);
 
 
 --
 -- Name: index_team_properties_on_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_team_properties_on_team_id ON public.team_properties USING btree (team_id);
+CREATE INDEX index_team_properties_on_team_id ON team_properties USING btree (team_id);
 
 
 --
 -- Name: index_team_properties_on_team_id_and_key_and_value; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_team_properties_on_team_id_and_key_and_value ON public.team_properties USING btree (team_id, key, value);
+CREATE UNIQUE INDEX index_team_properties_on_team_id_and_key_and_value ON team_properties USING btree (team_id, key, value);
 
 
 --
 -- Name: index_team_table_team_id_role_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_team_table_team_id_role_user_id ON public.teams_users_roles USING btree (team_id, role, user_id);
+CREATE UNIQUE INDEX index_team_table_team_id_role_user_id ON teams_users_roles USING btree (team_id, role, user_id);
 
 
 --
 -- Name: index_teams_on_code; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_teams_on_code ON public.teams USING btree (code);
+CREATE UNIQUE INDEX index_teams_on_code ON teams USING btree (code);
 
 
 --
 -- Name: index_teams_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_teams_on_email ON public.teams USING btree (email);
+CREATE INDEX index_teams_on_email ON teams USING btree (email);
 
 
 --
 -- Name: index_teams_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_teams_on_name ON public.teams USING btree (name);
+CREATE INDEX index_teams_on_name ON teams USING btree (name);
 
 
 --
 -- Name: index_teams_on_parent_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_teams_on_parent_id ON public.teams USING btree (parent_id);
+CREATE INDEX index_teams_on_parent_id ON teams USING btree (parent_id);
 
 
 --
 -- Name: index_teams_on_type; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_teams_on_type ON public.teams USING btree (type);
+CREATE INDEX index_teams_on_type ON teams USING btree (type);
 
 
 --
 -- Name: index_teams_on_type_and_name; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_teams_on_type_and_name ON public.teams USING btree (type, name);
+CREATE UNIQUE INDEX index_teams_on_type_and_name ON teams USING btree (type, name);
 
 
 --
 -- Name: index_teams_users_roles_on_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_teams_users_roles_on_team_id ON public.teams_users_roles USING btree (team_id);
+CREATE INDEX index_teams_users_roles_on_team_id ON teams_users_roles USING btree (team_id);
 
 
 --
 -- Name: index_teams_users_roles_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_teams_users_roles_on_user_id ON public.teams_users_roles USING btree (user_id);
+CREATE INDEX index_teams_users_roles_on_user_id ON teams_users_roles USING btree (user_id);
 
 
 --
 -- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
+CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
 
 
 --
 -- Name: index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING btree (reset_password_token);
+CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (reset_password_token);
 
 
 --
 -- Name: index_users_on_unlock_token; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_unlock_token ON public.users USING btree (unlock_token);
+CREATE UNIQUE INDEX index_users_on_unlock_token ON users USING btree (unlock_token);
 
 
 --
 -- Name: index_versions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING btree (item_type, item_id);
+CREATE INDEX index_versions_on_item_type_and_item_id ON versions USING btree (item_type, item_id);
 
 
 --

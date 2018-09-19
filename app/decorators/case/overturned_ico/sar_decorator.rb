@@ -8,10 +8,6 @@ class Case::OverturnedICO::SARDecorator < Case::OverturnedICO::BaseDecorator
     pretty_type
   end
 
-  def original_case_description
-    "#{object.original_ico_appeal.decorate.pretty_type} #{object.original_ico_appeal.number}"
-  end
-
   def missing_info
     if object.closed?
       object.refusal_reason&.abbreviation == 'tmm' ? 'yes' : 'no'

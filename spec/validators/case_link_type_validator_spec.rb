@@ -137,6 +137,20 @@ describe CaseLinkTypeValidator do
     it { should allow_link(Case::ICO::SAR)
                   .to_case(Case::ICO::SAR )
                   .as_type(:related) }
+
+    it { should allow_link(Case::OverturnedICO::SAR)
+                  .to_case(Case::SAR )
+                  .as_type(:original) }
+    it { should allow_link(Case::OverturnedICO::SAR)
+                  .to_case(Case::ICO::SAR )
+                  .as_type(:original_appeal) }
+
+    it { should allow_link(Case::OverturnedICO::FOI)
+                  .to_case(Case::FOI::Standard )
+                  .as_type(:original) }
+    it { should allow_link(Case::OverturnedICO::FOI)
+                  .to_case(Case::ICO::FOI )
+                  .as_type(:original_appeal) }
   end
 
   describe '#validate' do

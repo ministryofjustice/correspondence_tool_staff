@@ -15,6 +15,8 @@ class GetCaseClassFromParamsService
                   when 'ico' then get_ico_case_class_from_params
                   when 'sar' then get_sar_case_class_from_params
                   when 'overturned_sar' then Case::OverturnedICO::SAR
+                  when 'overturned_foi' then Case::OverturnedICO::FOI
+
 
                   else
                     raise RuntimeError.new(
@@ -79,4 +81,3 @@ class GetCaseClassFromParamsService
   end
 
 end
-

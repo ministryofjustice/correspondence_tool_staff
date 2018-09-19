@@ -749,7 +749,7 @@ class CasesController < ApplicationController
 
   def process_closure_params(correspondence_type)
     case correspondence_type
-    when 'FOI' then process_foi_closure_params
+    when 'FOI', 'OVERTURNED_FOI' then process_foi_closure_params
     when 'SAR', 'OVERTURNED_SAR' then process_sar_closure_params
     when 'ICO' then process_ico_closure_params
     else raise 'Unknown case type'

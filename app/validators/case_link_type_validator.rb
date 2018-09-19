@@ -30,10 +30,12 @@ class CaseLinkTypeValidator < ActiveModel::Validator
     original: {
       'Case::ICO::FOI'            => ['Case::FOI::Standard'],
       'Case::ICO::SAR'            => ['Case::SAR'],
-      'Case::OverturnedICO::SAR'  => ['Case::SAR']
+      'Case::OverturnedICO::SAR'  => ['Case::SAR'],
+      'Case::OverturnedICO::FOI'  => ['Case::FOI::Standard']
     },
     original_appeal: {
       'Case::OverturnedICO::SAR'  => ['Case::ICO::SAR'],
+      'Case::OverturnedICO::FOI'  => ['Case::ICO::FOI'],
     },
   }.with_indifferent_access
 
