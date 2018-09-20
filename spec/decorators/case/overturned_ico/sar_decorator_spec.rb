@@ -10,16 +10,4 @@ describe Case::OverturnedICO::SARDecorator do
       expect(decorated_case.pretty_type).to eq 'ICO overturned (SAR)'
     end
   end
-
-  describe '#original_case_description' do
-    it 'returns pretty description' do
-      expect(decorated_case.original_case_description).to eq(
-          "ICO appeal (SAR) #{overturned_sar.original_ico_appeal.number}")
-    end
-
-  end
-
 end
-
-
-

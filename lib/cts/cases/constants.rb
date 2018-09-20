@@ -89,7 +89,7 @@ module CTS
             :awaiting_dispatch,
             :closed,
           ]
-        }
+        },
       }
 
     end
