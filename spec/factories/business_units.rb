@@ -54,6 +54,7 @@ FactoryBot.define do
 
     after(:create) do |bu, _evaluator|
       bu.correspondence_types << find_or_create(:overturned_sar_correspondence_type)
+      bu.correspondence_types << find_or_create(:overturned_foi_correspondence_type)
     end
   end
 
