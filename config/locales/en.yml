@@ -105,6 +105,18 @@ en:
               not_ico_sar: is not an ICO appeal for a SAR case
             original_case:
               not_sar: is not a SAR case
+        case/overturned_ico/foi:
+          attributes:
+            received_date:
+              future: cannot be in the future
+              past: is too far in the past
+            external_deadline:
+              past: cannot be in the past
+              future: is too far in the future
+            original_ico_appeal:
+              not_ico_foi: is not an ICO appeal for a FOI case
+            original_case:
+              not_foi: is not a FOI case
         case/sar:
           attributes:
             third_party:
@@ -758,6 +770,7 @@ en:
       Case::ICO::SAR: ICO Appeal - SAR
       Case::SAR: Non-offender SAR
       Case::OverturnedICO::SAR: Overturned ICO appeal for non-offender SAR
+      Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
 
   feedback:
     error_html: |

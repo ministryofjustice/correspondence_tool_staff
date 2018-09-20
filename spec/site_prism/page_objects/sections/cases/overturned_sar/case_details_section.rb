@@ -7,88 +7,18 @@ module PageObjects
           element :section_heading, '.case-details .request--heading'
 
           section :case_type, 'tr.case-type' do
-            element :ico_trigger, 'td .ico-trigger'
-            element :data, 'td'
+            element :trigger, 'td .ico-trigger'
+            element :type, 'td'
           end
+          element :ico_case_number, 'tr.ico-reference td'
+          element :ico_officer_name, 'tr.ico-officer-name td'
+          element :date_received, 'tr.date-received td'
+          element :draft_deadline, 'tr.case-internal-deadline td'
+          element :final_deadline, 'tr.case-external-deadline td'
 
-          section :ico_reference, 'tr.ico-reference' do
-            element :data, 'td'
-          end
-
-          section :ico_officer_name, 'tr.ico-officer-name' do
-            element :data, 'td'
-          end
-
-          section :date_received, 'tr.date-received' do
-            element :data, 'td'
-          end
-
-          section :internal_deadline, 'tr.case-internal-deadline' do
-            element :data, 'td'
-          end
-
-          section :external_deadline, 'tr.case-external-deadline' do
-            element :data, 'td'
-          end
-
-          section :name, 'tr.requester-name' do
-            element :data, 'td'
-          end
-
-          section :email, 'tr.requester-email' do
-            element :data, 'td'
-          end
-
-          section :address, 'tr.requester-address' do
-            element :data, 'td'
-          end
-
-          section :requester_type, 'tr.requester-type' do
-            element :data, 'td'
-          end
-
-          section :delivery_method, 'tr.delivery-method' do
-            element :data, 'td'
-          end
-
-          section :responders_details, '.responder-details' do
-            section :team, '.team' do
-              element :data, 'td'
-            end
-
-            section :name, '.responder-name' do
-              element :data, 'td'
-            end
-          end
-
-          section :response_details, '.response-details' do
-            section :date_responded, '.date-responded' do
-              element :data, 'td'
-            end
-
-            section :timeliness, '.timeliness' do
-              element :data, 'td'
-            end
-
-            section :time_taken, '.time-taken' do
-              element :data, 'td'
-            end
-
-            section :info_held, '.info-held' do
-              element :data, 'td'
-            end
-            section :outcome, '.outcome' do
-              element :data, 'td'
-            end
-
-            section :refusal_reason, '.refusal-reason' do
-              element :data, 'td'
-            end
-
-            section :exemptions, '.exemptions' do
-              elements :list, 'td ul li'
-            end
-          end
+          element :date_responded, '.date-responded td'
+          element :timeliness, '.timeliness td'
+          element :time_taken, '.time-taken td'
 
           element :edit_case, :xpath, '//a[contains(.,"Edit case details")]'
           element :edit_case_link, :xpath, '//a[contains(.,"Edit case details")]'

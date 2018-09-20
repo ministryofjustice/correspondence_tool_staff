@@ -62,6 +62,12 @@ FactoryBot.define do
     report_category_name { '' }
   end
 
+  factory :overturned_foi_correspondence_type, parent: :foi_correspondence_type do
+    name { 'Overturned ICO appeal (FOI)' }
+    abbreviation { 'OVERTURNED_FOI' }
+    report_category_name { '' }
+  end
+
   trait :business_days do
     deadline_calculator_class { 'BusinessDays' }
   end

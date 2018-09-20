@@ -11,6 +11,11 @@ class ClosedCaseValidator < ActiveModel::Validator
                          :validate_date_ico_decision_received,
                          :validate_ico_decision_files],
     'OVERTURNED_SAR' => [:validate_date_responded],
+    'OVERTURNED_FOI'=>  [:validate_date_responded,
+                         :validate_info_held_status,
+                         :validate_outcome,
+                         :validate_refusal_reason,
+                         :validate_exemptions],
   }
   # Validations applicable to cases that are being processed for closure.
   #
@@ -22,6 +27,7 @@ class ClosedCaseValidator < ActiveModel::Validator
     'ICO'=>               [],
     'OVERTURNED_SAR' =>   [:validate_tmm,
                            :validate_date_responded],
+    'OVERTURNED_FOI'=>    [],
   }
 
   class << self

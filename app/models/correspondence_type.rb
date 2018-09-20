@@ -64,7 +64,8 @@ class CorrespondenceType < ApplicationRecord
     SAR: [Case::SAR],
     ICO: [Case::ICO::FOI,
           Case::ICO::SAR],
-    OVERTURNED_SAR: [Case::OverturnedICO::SAR]
+    OVERTURNED_SAR: [Case::OverturnedICO::SAR],
+    OVERTURNED_FOI: [Case::OverturnedICO::FOI],
   }.with_indifferent_access.freeze
 
   def self.by_report_category
@@ -89,6 +90,10 @@ class CorrespondenceType < ApplicationRecord
 
   def self.overturned_sar
     find_by!(abbreviation: 'OVERTURNED_SAR')
+  end
+
+  def self.overturned_foi
+    find_by!(abbreviation: 'OVERTURNED_FOI')
   end
 
   def abbreviation_and_name
