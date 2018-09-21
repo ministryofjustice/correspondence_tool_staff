@@ -150,6 +150,8 @@ class User < ApplicationRecord
               .uniq
     types.delete(CorrespondenceType.sar) unless FeatureSet.sars.enabled?
     types.delete(CorrespondenceType.ico) unless FeatureSet.ico.enabled?
+    types << CorrespondenceType.overturned_foi if types.include?(CorrespondenceType.foi)
+    types << CorrespondenceType.overturned_sar if types.include?(CorrespondenceType.sar)
     types
   end
 
