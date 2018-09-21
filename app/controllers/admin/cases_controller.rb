@@ -120,12 +120,28 @@ class Admin::CasesController < AdminController
     # @case.reply_method = 'send_by_email'
   end
 
+  def prepare_new_overturned_foi
+    @correspondence_type_key = params[:correspondence_type]
+    case_creator = CTS::Cases::Create.new(Rails.logger,
+                                          type: 'Case::OverturnedICO::FOI')
+    @case = case_creator.new_case
+    @case.responding_team = BusinessUnit
+                              .responding
+                              .responding_for_correspondence_type(CorrespondenceType.foi)
+                              .active
+                              .sample
+    @target_states = available_target_states
+    @selected_state = 'drafting'
+    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
+  end
+
   def permitted_correspondence_types
     @permitted_correspondence_types = [
       CorrespondenceType.foi,
       CorrespondenceType.sar,
       CorrespondenceType.ico,
       CorrespondenceType.overturned_sar,
+      CorrespondenceType.overturned_foi
     ]
   end
 

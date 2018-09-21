@@ -40,6 +40,7 @@ module CTS::Cases
       when /^Case::ICO/ then new_ico_case
       when /^Case::FOI/ then new_foi_case
       when 'Case::OverturnedICO::SAR' then new_overturned_sar_case
+      when 'Case::OverturnedICO::FOI' then new_overturned_foi_case
       end
     end
 
@@ -94,6 +95,18 @@ module CTS::Cases
     end
 
     def new_overturned_sar_case
+      @klass.new(
+        created_at:        get_created_at_date,
+        dirty:             options.fetch(:dirty, true),
+        email:             options.fetch(:email, Faker::Internet.email),
+        external_deadline: get_overturned_sar_external_deadline,
+        internal_deadline: get_overturned_sar_internal_deadline,
+        received_date:     get_overturned_sar_received_date,
+        reply_method:      options.fetch(:reply_method, 'send_by_email'),
+      )
+    end
+
+    def new_overturned_foi_case
       @klass.new(
         created_at:        get_created_at_date,
         dirty:             options.fetch(:dirty, true),
@@ -323,7 +336,7 @@ module CTS::Cases
 
     def transition_to_closed(kase)
       case kase.type_abbreviation
-      when 'FOI' then transition_to_closed_for_foi(kase)
+      when 'FOI', 'OVERTURNED_FOI' then transition_to_closed_for_foi(kase)
       when 'ICO' then transition_to_closed_for_ico(kase)
       when 'SAR', 'OVERTURNED_SAR' then transition_to_closed_for_sar(kase)
       else
