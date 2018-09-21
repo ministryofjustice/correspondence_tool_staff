@@ -200,6 +200,7 @@ class CasesController < ApplicationController
     else
       @case = service.overturned_ico_case.decorate
       @original_ico_appeal = service.original_ico_appeal
+      set_correspondence_type(overturned_case_class.type_abbreviation.downcase)
       render :new
     end
   end

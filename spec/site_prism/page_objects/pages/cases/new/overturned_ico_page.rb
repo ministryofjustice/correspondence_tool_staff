@@ -12,9 +12,9 @@ module PageObjects
                   PageObjects::Sections::Cases::OverturnedSAR::FormSection,
                   'form#new_case_overturned_sar'
 
-          # section :foi_form,
-          #         PageObjects::Sections::Cases::OverturnedFOI::FormSection,
-          #         'form#new_case_overturned_foi'
+          section :foi_form,
+                  PageObjects::Sections::Cases::OverturnedFOI::FormSection,
+                  'form#new_case_overturned_foi'
         end
       end
     end
