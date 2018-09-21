@@ -39,7 +39,8 @@ class Case::BasePolicy < ApplicationPolicy
         Case::SAR,
         Case::ICO::FOI,
         Case::ICO::SAR,
-        Case::OverturnedICO::SAR
+        Case::OverturnedICO::SAR,
+        Case::OverturnedICO::FOI,
     ]
 
     def initialize(user, scope)
