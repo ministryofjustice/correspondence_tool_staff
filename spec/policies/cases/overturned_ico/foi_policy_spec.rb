@@ -20,6 +20,9 @@ RSpec.describe Case::OverturnedICO::FOIPolicy do
   let(:private_officer)       { find_or_create :private_officer }
   let(:disclosure_approver)   { dacu_disclosure.approvers.first }
 
+  it 'inherits from the SAR policy' do
+    expect(described_class.ancestors).to include Case::FOI::StandardPolicy
+  end
 
   permissions :can_add_case? do
     it { should     permit(manager,                 Case::OverturnedICO::FOI) }
