@@ -59,77 +59,50 @@ class Admin::CasesController < AdminController
 
   def select_type
     permitted_correspondence_types
+
     render :select_type
   end
 
   def prepare_new_foi
-    @correspondence_type_key = params[:correspondence_type]
-
-    case_creator = CTS::Cases::Create.new(Rails.logger,
-                                          type: 'Case::FOI::Standard' )
-    @case = case_creator.new_case
-    @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.foi).active.sample
-    @case.flag_for_disclosure_specialists = 'no'
-    @target_states = available_target_states
-    @selected_state = 'drafting'
-    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
+    prepare_new_case('Case::FOI::Standard', CorrespondenceType.foi)
 
     render :new
   end
 
   def prepare_new_sar
-    @correspondence_type_key = params[:correspondence_type]
-
-    case_creator = CTS::Cases::Create.new(Rails.logger, type: 'Case::SAR' )
-    @case = case_creator.new_case
-    @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.sar).active.sample
-    @target_states = available_target_states
-    @selected_state = 'drafting'
-    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
+    prepare_new_case('Case::SAR', CorrespondenceType.sar)
     @case.reply_method = 'send_by_email'
 
     render :new
   end
 
   def prepare_new_ico
-    @correspondence_type_key = params[:correspondence_type]
-    case_creator = CTS::Cases::Create.new(Rails.logger, type: 'Case::ICO::FOI' )
-    @case = case_creator.new_case
-    @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.ico).active.sample
-    @target_states = available_target_states
-    @selected_state = 'drafting'
-    @case.ico_decision = Case::ICO::Base.ico_decisions.keys.sample
+    prepare_new_case('Case::ICO::FOI', CorrespondenceType.foi)
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
 
     render :new
   end
 
-  def prepare_new_overturned_sar
-    @correspondence_type_key = params[:correspondence_type]
-    case_creator = CTS::Cases::Create.new(Rails.logger,
-                                          type: 'Case::OverturnedICO::SAR')
-    @case = case_creator.new_case
-    @case.responding_team = BusinessUnit
-                              .responding
-                              .responding_for_correspondence_type(CorrespondenceType.sar)
-                              .active
-                              .sample
-    @target_states = available_target_states
-    @selected_state = 'drafting'
-    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
-    # @case.reply_method = 'send_by_email'
+  def prepare_new_overturned_foi
+    prepare_new_case('Case::OverturnedICO::FOI', CorrespondenceType.foi)
   end
 
-  def prepare_new_overturned_foi
+  def prepare_new_overturned_sar
+    prepare_new_case('Case::OverturnedICO::SAR', CorrespondenceType.sar)
+  end
+
+  def prepare_new_case(correspondence_type, original_type)
     @correspondence_type_key = params[:correspondence_type]
+
     case_creator = CTS::Cases::Create.new(Rails.logger,
-                                          type: 'Case::OverturnedICO::FOI')
+                                          type: correspondence_type )
     @case = case_creator.new_case
     @case.responding_team = BusinessUnit
                               .responding
-                              .responding_for_correspondence_type(CorrespondenceType.foi)
+                              .responding_for_correspondence_type(original_type)
                               .active
                               .sample
+    @case.flag_for_disclosure_specialists = 'no'
     @target_states = available_target_states
     @selected_state = 'drafting'
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
@@ -182,10 +155,6 @@ class Admin::CasesController < AdminController
     @case.approving_teams << BusinessUnit.dacu_disclosure if param_flag_for_ds?
     @case.approving_teams << BusinessUnit.press_office if param_flag_for_press?
     @case.approving_teams << BusinessUnit.private_office if param_flag_for_private?
-  end
-
-  def correspondence_types_map
-    CorrespondenceType::SUB_CLASSES_MAP
   end
 
   def case_and_type

@@ -39,8 +39,7 @@ module CTS::Cases
       when 'Case::SAR' then new_sar_case
       when /^Case::ICO/ then new_ico_case
       when /^Case::FOI/ then new_foi_case
-      when 'Case::OverturnedICO::SAR' then new_overturned_sar_case
-      when 'Case::OverturnedICO::FOI' then new_overturned_foi_case
+      when 'Case::OverturnedICO::SAR', 'Case::OverturnedICO::FOI' then new_overturned_case
       end
     end
 
@@ -94,26 +93,14 @@ module CTS::Cases
         )
     end
 
-    def new_overturned_sar_case
+    def new_overturned_case
       @klass.new(
         created_at:        get_created_at_date,
         dirty:             options.fetch(:dirty, true),
         email:             options.fetch(:email, Faker::Internet.email),
-        external_deadline: get_overturned_sar_external_deadline,
-        internal_deadline: get_overturned_sar_internal_deadline,
-        received_date:     get_overturned_sar_received_date,
-        reply_method:      options.fetch(:reply_method, 'send_by_email'),
-      )
-    end
-
-    def new_overturned_foi_case
-      @klass.new(
-        created_at:        get_created_at_date,
-        dirty:             options.fetch(:dirty, true),
-        email:             options.fetch(:email, Faker::Internet.email),
-        external_deadline: get_overturned_sar_external_deadline,
-        internal_deadline: get_overturned_sar_internal_deadline,
-        received_date:     get_overturned_sar_received_date,
+        external_deadline: get_overturned_external_deadline,
+        internal_deadline: get_overturned_internal_deadline,
+        received_date:     get_overturned_received_date,
         reply_method:      options.fetch(:reply_method, 'send_by_email'),
       )
     end
@@ -132,7 +119,7 @@ module CTS::Cases
       end
     end
 
-    def get_overturned_sar_received_date
+    def get_overturned_received_date
       options.fetch(:received_date) do
         0.business_days.ago
       end
@@ -156,15 +143,15 @@ module CTS::Cases
       end
     end
 
-    def get_overturned_sar_external_deadline
+    def get_overturned_external_deadline
       options.fetch(:external_deadline) do
-        20.business_days.after(get_overturned_sar_received_date)
+        20.business_days.after(get_overturned_received_date)
       end
     end
 
-    def get_overturned_sar_internal_deadline
+    def get_overturned_internal_deadline
       options.fetch(:internal_deadline) do
-        10.business_days.before(get_overturned_sar_external_deadline)
+        10.business_days.before(get_overturned_external_deadline)
       end
     end
 
