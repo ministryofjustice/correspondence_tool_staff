@@ -43,9 +43,10 @@ class Admin::CasesController < AdminController
   end
 
   def new
+    # binding.pry
     if params[:correspondence_type].present?
-      @correspondence_type_key = params[:correspondence_type].downcase
-      self.__send__("prepare_new_#{@correspondence_type_key}")
+      @correspondence_type_key = params[:correspondence_type]
+      prepare_new_case(@correspondence_type_key)
     else
       select_type
     end
@@ -63,43 +64,15 @@ class Admin::CasesController < AdminController
     render :select_type
   end
 
-  def prepare_new_foi
-    prepare_new_case('Case::FOI::Standard', CorrespondenceType.foi)
-
-    render :new
-  end
-
-  def prepare_new_sar
-    prepare_new_case('Case::SAR', CorrespondenceType.sar)
-    @case.reply_method = 'send_by_email'
-
-    render :new
-  end
-
-  def prepare_new_ico
-    prepare_new_case('Case::ICO::FOI', CorrespondenceType.foi)
-    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
-
-    render :new
-  end
-
-  def prepare_new_overturned_foi
-    prepare_new_case('Case::OverturnedICO::FOI', CorrespondenceType.foi)
-  end
-
-  def prepare_new_overturned_sar
-    prepare_new_case('Case::OverturnedICO::SAR', CorrespondenceType.sar)
-  end
-
-  def prepare_new_case(correspondence_type, original_type)
+  def prepare_new_case(correspondence_type)
     @correspondence_type_key = params[:correspondence_type]
 
     case_creator = CTS::Cases::Create.new(Rails.logger,
-                                          type: correspondence_type )
+                                          type: class_for_case[correspondence_type] )
     @case = case_creator.new_case
     @case.responding_team = BusinessUnit
                               .responding
-                              .responding_for_correspondence_type(original_type)
+                              .responding_for_correspondence_type(correspondence_type_for_case[correspondence_type])
                               .active
                               .sample
     @case.flag_for_disclosure_specialists = 'no'
@@ -116,6 +89,26 @@ class Admin::CasesController < AdminController
       CorrespondenceType.overturned_sar,
       CorrespondenceType.overturned_foi
     ]
+  end
+
+  def correspondence_type_for_case
+    {
+      'foi'             => CorrespondenceType.foi,
+      'sar'             => CorrespondenceType.sar,
+      'ico'             => CorrespondenceType.ico,
+      'overturned_foi'  => CorrespondenceType.foi,
+      'overturned_sar'  => CorrespondenceType.sar
+ }
+  end
+
+  def class_for_case
+    {
+      'foi'              => 'Case::FOI::Standard',
+      'sar'              => 'Case::SAR',
+      'ico'              => 'Case::ICO::FOI',
+      'overturned_foi'   => 'Case::OverturnedICO::FOI',
+      'overturned_sar'   => 'Case::OverturnedICO::SAR'
+    }
   end
 
   def available_target_states
