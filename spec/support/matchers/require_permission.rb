@@ -1,12 +1,17 @@
 require 'rspec/expectations'
 
 RSpec::Matchers.define :require_permission do |permission|
+  @permission_result = true
+
   match do |event_or_block|
     if event_or_block.respond_to? :call
       policy_class = Pundit::PolicyFinder.new(@object).policy!
       policy = spy(policy_class)
       allow(policy).to receive(permission)
-                         .with(no_args) { @permission_received = true }
+                         .with(no_args) do
+                           @permission_received = true
+                           @permission_result
+                         end
       allowing = @allowing || []
       allowing.each do |allow_permission|
         allow(policy).to receive(allow_permission).and_return(true)
@@ -24,7 +29,8 @@ RSpec::Matchers.define :require_permission do |permission|
       expect(@permission_received).to eq true
     else
       policy_class = Pundit::PolicyFinder.new(@object).policy!
-      expect_any_instance_of(policy_class).to receive(permission).and_return(true)
+      expect_any_instance_of(policy_class).to receive(permission)
+                                                .and_return(@permission_result)
       state_machine_class = RSpec::current_example
                               .example_group
                               .top_level_description
@@ -54,13 +60,21 @@ RSpec::Matchers.define :require_permission do |permission|
   end
 
   chain :allowing do |*args|
-    @allowing ||= []
+    @allowing ||= Set.new
     @allowing += args
+    @disallowing ||= Set.new
+    @disallowing -= args
   end
 
   chain :disallowing do |*args|
-    @disallowing ||= []
+    @disallowing ||= Set.new
     @disallowing += args
+    @allowing ||= Set.new
+    @allowing -= args
+  end
+
+  chain :disallow do
+    @permission_result = false
   end
 
   supports_block_expectations

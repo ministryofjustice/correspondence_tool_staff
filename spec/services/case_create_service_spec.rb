@@ -158,6 +158,20 @@ describe CaseCreateService do
     end
   end
 
+  let(:ico_overturned_params) do
+    {
+      'received_date_dd'        => received.day.to_s,
+      'received_date_mm'        => received.month.to_s,
+      'received_date_yyyy'      => received.year.to_s,
+      'external_deadline_dd'    => deadline.day.to_s,
+      'external_deadline_mm'    => deadline.month.to_s,
+      'external_deadline_yyyy'  => deadline.year.to_s,
+      'reply_method'            => 'send_by_email',
+      'email'                   => 'stephen@stephenrichards.eu',
+      'postal_address'          => ''
+    }
+  end
+
   context 'OverturnedICO' do
     context 'SAR' do
       let(:received)              { Date.today }
@@ -165,24 +179,15 @@ describe CaseCreateService do
       let(:original_ico_appeal)   { create :ico_sar_case }
       let(:original_case)         { create :sar_case }
       let(:ccs)                   { CaseCreateService.new(manager, 'overturned_sar', params) }
-
       let(:params) do
         ActionController::Parameters.new(
           {
-              'correspondence_type'   => 'overturned_sar',
-              'case_overturned_sar'   => {
-                  'original_ico_appeal_id'  => original_ico_appeal.id.to_s,
-                  'original_case_id'        => original_case.id.to_s,
-                  'received_date_dd'        => received.day.to_s,
-                  'received_date_mm'        => received.month.to_s,
-                  'received_date_yyyy'      => received.year.to_s,
-                  'external_deadline_dd'    => deadline.day.to_s,
-                  'external_deadline_mm'    => deadline.month.to_s,
-                  'external_deadline_yyyy'  => deadline.year.to_s,
-                  'reply_method'            => 'send_by_email',
-                  'email'                   => 'stephen@stephenrichards.eu',
-                  'postal_address'          => ''},
-              'commit' => 'Create case'
+            correspondence_type: 'overturned_sar',
+            case_overturned_sar: ico_overturned_params.merge(
+              original_ico_appeal_id: original_ico_appeal.id.to_s,
+              original_case_id:       original_case.id.to_s
+            ),
+            commit:              'Create case',
           })
       end
 
@@ -234,6 +239,33 @@ describe CaseCreateService do
 
   end
 
+  describe '#create_params' do
+    context 'ICO Overturned FOI' do
+      let(:received)            { 0.business_days.ago }
+      let(:deadline)            { 28.business_days.from_now }
+      let(:original_ico_appeal) { create(:ico_foi_case) }
+      let(:original_case)       { create(:foi_case) }
+      let(:params) do
+        ActionController::Parameters.new(
+          {
+            correspondence_type: 'overturned_foi',
+            case_overturned_foi: ico_overturned_params.merge(
+              original_ico_appeal_id: original_ico_appeal.id.to_s,
+              original_case_id:       original_case.id.to_s
+            ),
+            commit:              'Create case',
+          })
+      end
+
+      let(:service) { CaseCreateService.new(manager, 'overturned_foi', params) }
+
+      it 'returns case_overturned_foi params' do
+        create_params = service.__send__(:create_params, 'overturned_foi')
+        expect(create_params).to eq params.require(:case_overturned_foi).permit!
+      end
+    end
+  end
+
   context 'invalid case params' do
     let(:params) do
       regular_params[:case_foi][:name] = nil
@@ -250,6 +282,4 @@ describe CaseCreateService do
       expect(ccs.call).to eq false
     end
   end
-
-
 end

@@ -48,29 +48,44 @@ describe CasesController do
       }
     }
   end
-  let(:ico_sar_case)      { create :ico_sar_case}
+  let(:ico_sar_case)      { create :ico_sar_case }
+  let(:ico_foi_case)      { create :ico_foi_case }
   let(:deadline)          { 1.month.ago }
   let(:internal_deadline) { 20.business_days.before(deadline) }
-  let(:overturned_ico_params) do
-    {
-      action: 'create',
-      case_overturned_sar: {
-          email: 'stephen@stephenrichards.eu',
-          external_deadline_dd: deadline.day.to_s,
-          external_deadline_mm: deadline.month.to_s,
-          external_deadline_yyyy: deadline.year.to_s,
-          original_ico_appeal_id: ico_sar_case.id.to_s,
-          received_date_dd: Date.today.day.to_s,
-          received_date_mm: Date.today.month.to_s,
-          received_date_yyyy: Date.today.year.to_s,
-      },
-      controller: 'cases',
-      correspondence_type: 'overturned_sar',
-    }
-  end
-
 
   describe 'POST create' do
+    describe 'authentication' do
+      let(:user) { create(:user) }
+      let(:case_class) { Case::Base }
+      let(:service) { instance_spy(CaseCreateService,
+                                   case_class: case_class) }
+
+      subject { post :create, params: foi_params }
+
+      before(:each) do
+        allow(CaseCreateService).to receive(:new).and_return(service)
+      end
+
+      it 'authorises with can_add_case? policy and Case::ICO::Base' do
+        sign_in(user)
+        expect{ subject }.to require_permission(:can_add_case?)
+                               .disallow
+                               .with_args(user, case_class)
+      end
+
+      it 'does not create a case when authentication fails' do
+        disallow_case_policies(case_class, :can_add_case?)
+        sign_in user
+        expect{ subject }.not_to change { Case::Base.count }
+      end
+
+      it 'redirects to the application root path when authentication fails' do
+        disallow_case_policies(case_class, :can_add_case?)
+        sign_in user
+        expect(subject).to redirect_to(responder_root_path)
+      end
+    end
+
     describe 'cross-correspondence-type functionality' do
       before do
         sign_in manager
@@ -92,26 +107,6 @@ describe CasesController do
     end
 
     context 'FOI case' do
-      describe 'authentication' do
-        subject { post :create, params: foi_params }
-
-        it 'authorises with can_add_case? policy and Case::ICO::Base' do
-          sign_in manager
-          expect{ subject }.to require_permission(:can_add_case?)
-                                 .with_args(manager, Case::FOI::Standard)
-        end
-
-        it 'does not create a case when authentication fails' do
-          sign_in responder
-          expect{ subject }.not_to change { Case::Base.count }
-        end
-
-        it 'redirects to the application root path when authentication fails' do
-          sign_in responder
-          expect(subject).to redirect_to(responder_root_path)
-        end
-      end
-
       context "as an authenticated manager" do
         before do
           sign_in manager
@@ -217,27 +212,6 @@ describe CasesController do
     end
 
     context 'ICO case' do
-      describe 'authentication' do
-        subject { post :create, params: ico_params }
-
-        it 'authorises with can_add_case? policy and Case::ICO::Base' do
-          sign_in manager
-          expect{ subject }.to require_permission(:can_add_case?)
-                                 .with_args(manager, Case::ICO::FOI)
-        end
-
-        it 'does not create a case when authentication fails' do
-          sign_in responder
-          foi_case_for_ico
-          expect{ subject }.not_to change { Case::Base.count }
-        end
-
-        it 'redirects to the application root path when authentication fails' do
-          sign_in responder
-          expect(subject).to redirect_to(responder_root_path)
-        end
-      end
-
       describe 'creating an ICO case' do
         before do
           sign_in manager
@@ -297,12 +271,105 @@ describe CasesController do
       end
     end
 
-    context 'Overturned ICO case' do
+    context 'ICO Overturned FOI case' do
+      let(:ico_overturned_foi_params) do
+        {
+          action: 'create',
+          case_overturned_foi: {
+            email: 'stephen@stephenrichards.eu',
+            external_deadline_dd: deadline.day.to_s,
+            external_deadline_mm: deadline.month.to_s,
+            external_deadline_yyyy: deadline.year.to_s,
+            original_ico_appeal_id: ico_foi_case.id.to_s,
+            received_date_dd: Date.today.day.to_s,
+            received_date_mm: Date.today.month.to_s,
+            received_date_yyyy: Date.today.year.to_s,
+          },
+          controller: 'cases',
+          correspondence_type: 'overturned_foi',
+        }
+      end
+
+      # describe 'creating an OverturnedICO::FOI case' do
+      #   before(:each) do
+      #     sign_in manager
+      #     expect(CaseCreateService).to receive(:new)
+      #                                    .with(manager,
+      #                                          'overturned_foi',
+      #                                          controller_params)
+      #                                    .and_return(service)
+      #   end
+
+      #   let(:correspondence_type)       { CorrespondenceType.foi }
+      #   let(:controller_params)         { ActionController::Parameters
+      #                                       .new(ico_overturned_foi_params) }
+      #   let(:new_overturned_case)       { double Case::OverturnedICO::FOI,
+      #                                            id: 87366 }
+      #   let(:decorated_overturned_case) { double(Case::OverturnedICO::FOIDecorator,
+      #                                            uploads_dir: 'xx') }
+      #   let(:service)                   { double(CaseCreateService,
+      #                                        case: new_overturned_case,
+      #                                        case_class: Case::OverturnedICO::FOI,
+      #                                        call: nil) }
+
+      #   context 'case created OK' do
+      #     before(:each) do
+      #       expect(service).to receive(:result).and_return(:assign_responder)
+      #       expect(service).to receive(:flash_notice)
+      #                            .and_return('Case successfully created')
+      #       post :create, params: ico_overturned_foi_params
+      #     end
+
+      #     it 'sets the flash' do
+      #       expect(flash[:creating_case]).to be true
+      #       expect(flash[:notice]).to eq 'Case successfully created'
+      #     end
+
+      #     it 'redirects to the new case assignment page' do
+      #       expect(response)
+      #         .to redirect_to(new_case_assignment_path(new_overturned_case))
+      #     end
+      #   end
+
+      #   context 'error when creating case' do
+      #     before(:each) do
+      #       expect(service).to receive(:result).and_return(:error)
+      #       expect(new_overturned_case)
+      #         .to receive(:decorate).and_return(decorated_overturned_case)
+      #     end
+
+      #     it 'renders the new page' do
+      #       post :create, params: ico_overturned_foi_params
+      #       expect(response).to render_template(:new)
+      #     end
+      #   end
+      # end
+
+    end
+
+    context 'ICO Overturned SAR case' do
+      let(:ico_overturned_sar_params) do
+        {
+          action: 'create',
+          case_overturned_sar: {
+            email: 'stephen@stephenrichards.eu',
+            external_deadline_dd: deadline.day.to_s,
+            external_deadline_mm: deadline.month.to_s,
+            external_deadline_yyyy: deadline.year.to_s,
+            original_ico_appeal_id: ico_sar_case.id.to_s,
+            received_date_dd: Date.today.day.to_s,
+            received_date_mm: Date.today.month.to_s,
+            received_date_yyyy: Date.today.year.to_s,
+          },
+          controller: 'cases',
+          correspondence_type: 'overturned_sar',
+        }
+      end
 
       describe 'authentication' do
-        subject { post :create, params: overturned_ico_params }
+        subject { post :create, params: ico_overturned_sar_params }
 
-        it 'authorises with can_add_case? policy and Case::ICO::Base' do
+        it 'authorises with can_add_case? policy and Case::OverturnedICO::SAR' do
           sign_in manager
           expect{ subject }.to require_permission(:can_add_case?)
                                    .with_args(manager, Case::OverturnedICO::SAR)

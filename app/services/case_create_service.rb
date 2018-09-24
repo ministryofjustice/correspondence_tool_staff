@@ -41,7 +41,8 @@ class CaseCreateService
       when 'foi' then create_foi_params
       when 'sar' then create_sar_params
       when 'ico' then create_ico_params
-      when 'overturned_sar', 'overturned_foi' then create_overturned_ico_params
+      when 'overturned_foi' then create_ico_overturned_foi_params
+      when 'overturned_sar' then create_ico_overturned_sar_params
     end
   end
 
