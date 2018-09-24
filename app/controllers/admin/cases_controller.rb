@@ -3,6 +3,7 @@ require 'cts/cases/constants'
 
 
 class Admin::CasesController < AdminController
+
   before_action :set_correspondence_type,
                 only: [
                   :create,
@@ -43,10 +44,9 @@ class Admin::CasesController < AdminController
   end
 
   def new
-    # binding.pry
     if params[:correspondence_type].present?
       @correspondence_type_key = params[:correspondence_type]
-      prepare_new_case(@correspondence_type_key)
+      prepare_new_case
     else
       select_type
     end
@@ -64,15 +64,13 @@ class Admin::CasesController < AdminController
     render :select_type
   end
 
-  def prepare_new_case(correspondence_type)
-    @correspondence_type_key = params[:correspondence_type]
-
+  def prepare_new_case
     case_creator = CTS::Cases::Create.new(Rails.logger,
-                                          type: class_for_case[correspondence_type] )
+                                          type: class_for_case )
     @case = case_creator.new_case
     @case.responding_team = BusinessUnit
                               .responding
-                              .responding_for_correspondence_type(correspondence_type_for_case[correspondence_type])
+                              .responding_for_correspondence_type(correspondence_type_for_case)
                               .active
                               .sample
     @case.flag_for_disclosure_specialists = 'no'
@@ -92,23 +90,25 @@ class Admin::CasesController < AdminController
   end
 
   def correspondence_type_for_case
-    {
+    correspondence_types ={
       'foi'             => CorrespondenceType.foi,
       'sar'             => CorrespondenceType.sar,
       'ico'             => CorrespondenceType.ico,
       'overturned_foi'  => CorrespondenceType.foi,
       'overturned_sar'  => CorrespondenceType.sar
- }
+    }
+    correspondence_types[@correspondence_type_key]
   end
 
   def class_for_case
-    {
+    case_classes = {
       'foi'              => 'Case::FOI::Standard',
       'sar'              => 'Case::SAR',
       'ico'              => 'Case::ICO::FOI',
       'overturned_foi'   => 'Case::OverturnedICO::FOI',
       'overturned_sar'   => 'Case::OverturnedICO::SAR'
     }
+    case_classes[@correspondence_type_key]
   end
 
   def available_target_states
