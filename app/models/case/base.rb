@@ -290,6 +290,15 @@ class Case::Base < ApplicationRecord
            through: :related_case_links,
            source: :linked_case
 
+  has_many :original_appeal_and_related_case_links,
+           -> { related_and_appeal },
+           class_name: 'LinkedCase',
+           foreign_key: :case_id
+
+  has_many :original_appeal_and_related_cases,
+           through: :original_appeal_and_related_case_links,
+           source: :linked_case
+
 
   after_initialize do
     self.workflow = default_workflow if self.workflow.nil?
