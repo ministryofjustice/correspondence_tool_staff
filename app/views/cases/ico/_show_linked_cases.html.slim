@@ -25,11 +25,10 @@
             td
               = request_details_html(case_details.original_case)
 
-
 .grid-row.form-group.related-linked-cases
   .column-full
     h2.request--heading
-      = "Related case"
+      = "Other linked cases"
     table
       thead
         tr
@@ -40,8 +39,8 @@
           th style="width:60%"
             = 'Request'
       tbody
-        - if case_details.related_cases.present?
-          - case_details.related_cases.each do |linked_case|
+        - if (case_details.original_appeal_and_related_cases).any?
+          - case_details.original_appeal_and_related_cases.each do |linked_case|
             tr
               td
                 = link_to case_path(linked_case.id) do

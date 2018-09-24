@@ -89,13 +89,14 @@ describe 'cases/overturned_sar/case_details.html.slim', type: :view do
     end
 
     it 'displays the time taken to send the response' do
-      closed_case.update(
-        date_responded: 1.business_day.after(closed_case.external_deadline)
-      )
+      Timecop.freeze(Time.local(2018, 9, 23, 10, 0, 0)) do
+        closed_case.update(
+          date_responded: 1.business_day.after(closed_case.external_deadline)
+        )
+        partial = render_partial(closed_case)
 
-      partial = render_partial(closed_case)
-
-      expect(partial.time_taken.text).to eq '19 working days'
+        expect(partial.time_taken.text).to eq '21 working days'
+      end
     end
   end
 
