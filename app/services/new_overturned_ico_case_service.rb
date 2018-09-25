@@ -28,7 +28,6 @@ class NewOverturnedIcoCaseService
     if success?
       original_case                                 = @original_ico_appeal.original_case
       @overturned_ico_case                          = overturned_klass.new
-      # @overturned_ic_case.subject                  = original_case.subject
       @overturned_ico_case.original_ico_appeal_id   = @original_ico_appeal.id
       @overturned_ico_case.original_case_id         = original_case.id
       @overturned_ico_case.ico_officer_name         = @original_ico_appeal.ico_officer_name

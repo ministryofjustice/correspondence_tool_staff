@@ -87,7 +87,7 @@ class Case::SARPolicy < Case::BasePolicy
   end
 
   def can_request_further_clearance?
-    !self.case.flagged?
+    !self.case.flagged? && !self.case.overturned_ico?
   end
 
   check :responding_team_is_linked_to_case do
