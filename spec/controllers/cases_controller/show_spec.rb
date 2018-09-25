@@ -21,6 +21,9 @@ describe CasesController, type: :controller do
     it 'authorises' do
       sign_in manager
       expect_any_instance_of(ConfigurableStateMachine::Machine).to receive(:predicate_is_true?).with(
+          predicate: 'Workflows::Predicates#not_overturned?',
+          user: manager).and_return(true)
+      expect_any_instance_of(ConfigurableStateMachine::Machine).to receive(:predicate_is_true?).with(
           predicate: 'Case::FOI::StandardPolicy#can_request_further_clearance?',
           user: manager).and_return(true)
       expect {

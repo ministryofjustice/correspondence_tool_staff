@@ -98,6 +98,10 @@ class Workflows::Predicates
         @kase.lacks_overturn?
   end
 
+  def not_overturned?
+    !@kase.overturned_ico?
+  end
+
 
   private
 

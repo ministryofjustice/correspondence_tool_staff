@@ -12,7 +12,6 @@ describe ConfigurableStateMachine::Machine do
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_responder,
                                                                       :destroy_case,
-                                                                      :edit_case,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
@@ -26,7 +25,6 @@ describe ConfigurableStateMachine::Machine do
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
                                                                       :destroy_case,
-                                                                      :edit_case,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
@@ -40,7 +38,6 @@ describe ConfigurableStateMachine::Machine do
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
                                                                       :destroy_case,
-                                                                      :edit_case,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case]
@@ -54,7 +51,6 @@ describe ConfigurableStateMachine::Machine do
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
                                                                       :destroy_case,
-                                                                      :edit_case,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
                                                                       :update_closure]
