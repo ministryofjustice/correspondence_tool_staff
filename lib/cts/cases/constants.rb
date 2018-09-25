@@ -89,6 +89,16 @@ module CTS
             :awaiting_dispatch,
             :closed,
           ]
+        },
+
+        overturned_foi:{
+          unflagged: [
+              :awaiting_responder,
+              :drafting,
+              :awaiting_dispatch,
+              :responded,
+              :closed,
+          ]
         }
       }
 
