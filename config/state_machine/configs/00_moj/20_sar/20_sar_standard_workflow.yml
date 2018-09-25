@@ -11,6 +11,7 @@
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                  if: Workflows::Predicates#not_overturned?
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -25,6 +26,7 @@
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                  if: Workflows::Predicates#not_overturned?
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -39,6 +41,7 @@
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                  if: Workflows::Predicates#not_overturned?
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -52,7 +55,9 @@
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
+                  if: Workflows::Predicates#not_overturned?
                 update_closure:
+                  if: Workflows::Predicates#not_overturned?
                 link_a_case:
                 remove_linked_case:
 
@@ -92,7 +97,7 @@
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 update_closure:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_overturned?
 
 
           ########################### SAR :: STANDARD WORKFLOW :: APPROVER ########################

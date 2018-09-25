@@ -9,6 +9,7 @@
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                  if: Workflows::Predicates#not_overturned?
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -22,6 +23,7 @@
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
+                  if: Workflows::Predicates#not_overturned?
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -37,6 +39,7 @@
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                  if: Workflows::Predicates#not_overturned?
                 extend_for_pit:
                 flag_for_clearance:
                   switch_workflow: trigger
@@ -51,6 +54,7 @@
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
+                  if: Workflows::Predicates#not_overturned?
                 extend_for_pit:
                 flag_for_clearance:
                   switch_workflow: trigger
@@ -67,6 +71,7 @@
                   transition_to: closed
                 destroy_case:
                 edit_case:
+                  if: Workflows::Predicates#not_overturned?
                 link_a_case:
                 remove_linked_case:
 
@@ -75,6 +80,7 @@
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
+                  if: Workflows::Predicates#not_overturned?
                 link_a_case:
                 remove_linked_case:
                 update_closure:

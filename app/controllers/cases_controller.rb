@@ -336,7 +336,11 @@ class CasesController < ApplicationController
       @case.respond_and_close(current_user)
       set_permitted_events
       @close_flash_message = t('notices.case_closed')
-      flash[:notice] = "#{@close_flash_message}. #{ get_edit_close_link }".html_safe
+      if @permitted_events.include?(:update_closure)
+        flash[:notice] = "#{@close_flash_message}. #{ get_edit_close_link }".html_safe
+      else
+        flash[:notice] = @close_flash_message
+      end
       redirect_to case_path(@case)
     else
       set_permitted_events

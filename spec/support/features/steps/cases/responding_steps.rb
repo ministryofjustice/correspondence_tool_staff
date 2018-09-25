@@ -53,7 +53,7 @@ def close_case_step(responded_date: Date.today)
   expect(cases_show_page.case_status.details.copy.text).to eq "Case closed"
 end
 
-def close_sar_case_step(timeliness: 'in time', tmm: false)
+def close_sar_case_step(timeliness: 'in time', tmm: false, editable: true)
   cases_show_page.actions.close_case.click
 
   cases_close_page.fill_in_date_responded(Date.today)
@@ -67,7 +67,11 @@ def close_sar_case_step(timeliness: 'in time', tmm: false)
   cases_close_page.click_on 'Close case'
 
   show_page = cases_show_page.case_details
-  expect(cases_show_page.notice.text).to eq("You've closed this case. Edit case closure details")
+  if editable
+    expect(cases_show_page.notice.text).to eq("You've closed this case. Edit case closure details")
+  else
+    expect(cases_show_page.notice.text).to eq("You've closed this case")
+  end
 
   expect(show_page.response_details.date_responded.data.text)
     .to eq Date.today.strftime(Settings.default_date_format)
