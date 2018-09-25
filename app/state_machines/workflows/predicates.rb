@@ -13,6 +13,10 @@ class Workflows::Predicates
     end
   end
 
+  def responder_is_member_of_assigned_team_and_not_overturned?
+    responder_is_member_of_assigned_team? && not_overturned?
+  end
+
   def user_is_assigned_responder?
     @kase.responder == @user
   end
