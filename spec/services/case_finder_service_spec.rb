@@ -138,6 +138,52 @@ describe CaseFinderService do
                                                           original_case: @accepted_overturned_ico_sar_original,
                                                           original_ico_appeal: @accepted_overturned_ico_sar_original_appeal,
                                                           identifier: '21-closed overturned ico sar'
+      @overturned_ico_foi_original              = create(:closed_case,
+                                                         responder: @responder,
+                                                         identifier: '18A-original closed foi for 18-overturned ico foi')
+      @overturned_ico_foi_original_appeal       = create(:closed_ico_foi_case, :overturned_by_ico,
+                                                         responder: @responder,
+                                                         original_case: @overturned_ico_foi_original,
+                                                         identifier: '18B-original ico appeal for 18-overturned ico foi')
+      @overturned_ico_foi                       = create :overturned_ico_foi,
+                                                         responder: @responder,
+                                                         original_case: @overturned_ico_foi_original,
+                                                         original_ico_appeal: @overturned_ico_foi_original_appeal,
+                                                         identifier: '18-overturned ico foi'
+
+      @awaiting_responder_overturned_ico_foi_original =
+                                                  create(:closed_case,
+                                                         responder: @responder,
+                                                         identifier: '19A-original closed foi for 19-awaiting responder overturned ico foi')
+      @awaiting_responder_overturned_ico_foi_original_appeal =
+                                                  create(:closed_ico_foi_case, :overturned_by_ico,
+                                                         responder: @responder,
+                                                         original_case: @awaiting_responder_overturned_ico_foi_original,
+                                                         identifier: '19B-original ico appeal for 18-overturned ico foi')
+      @awaiting_responder_overturned_ico_foi    = create :awaiting_responder_ot_ico_foi,
+                                                         responding_team: @responding_team,
+                                                         original_case: @awaiting_responder_overturned_ico_foi_original,
+                                                         original_ico_appeal: @awaiting_responder_overturned_ico_foi_original_appeal,
+                                                         identifier: '19-awaiting responder overturned ico foi'
+
+      @accepted_overturned_ico_foi_original     = create(:closed_case,
+                                                         responder: @responder,
+                                                         identifier: '20A-original closed foi for 19-awaiting responder overturned ico foi')
+      @accepted_overturned_ico_foi_original_appeal =
+                                                  create(:closed_ico_foi_case, :overturned_by_ico,
+                                                         responder: @responder,
+                                                         original_case: @accepted_overturned_ico_foi_original,
+                                                         identifier: '20B-original ico appeal for 18-overturned ico foi')
+      @accepted_overturned_ico_foi              = create :accepted_ot_ico_foi,
+                                                         responding_team: @responding_team,
+                                                         original_case: @accepted_overturned_ico_foi_original,
+                                                         original_ico_appeal: @accepted_overturned_ico_foi_original_appeal,
+                                                         identifier: '20-accepted overturned ico foi'
+     @closed_overturned_ico_foi                 = create :closed_ot_ico_foi,
+                                                        responding_team: @responding_team,
+                                                        original_case: @accepted_overturned_ico_foi_original,
+                                                        original_ico_appeal: @accepted_overturned_ico_foi_original_appeal,
+                                                        identifier: '21-closed overturned ico foi'
       end
     end
 
@@ -145,7 +191,7 @@ describe CaseFinderService do
       it 'filters cases for provided states' do
         finder = CaseFinderService.new(@manager)
         expect(finder.for_params('states' => 'drafting').scope)
-          .to match_array [@accepted_case, @accepted_overturned_ico_sar]
+          .to match_array [@accepted_case, @accepted_overturned_ico_sar, @accepted_overturned_ico_foi]
       end
     end
 
@@ -212,8 +258,17 @@ describe CaseFinderService do
                 @accepted_overturned_ico_sar,
                 @accepted_overturned_ico_sar_original,
                 @accepted_overturned_ico_sar_original_appeal,
-                @closed_overturned_ico_sar
-
+                @closed_overturned_ico_sar,
+                @overturned_ico_foi_original,
+                @overturned_ico_foi_original_appeal,
+                @overturned_ico_foi,
+                @awaiting_responder_overturned_ico_foi_original,
+                @awaiting_responder_overturned_ico_foi_original_appeal,
+                @awaiting_responder_overturned_ico_foi,
+                @accepted_overturned_ico_foi_original,
+                @accepted_overturned_ico_foi_original_appeal,
+                @accepted_overturned_ico_foi,
+                @closed_overturned_ico_foi
               ]
       end
     end
@@ -234,7 +289,15 @@ describe CaseFinderService do
                 @awaiting_responder_overturned_ico_sar_original_appeal,
                 @accepted_overturned_ico_sar_original,
                 @accepted_overturned_ico_sar_original_appeal,
-                @closed_overturned_ico_sar
+                @closed_overturned_ico_sar,
+                @overturned_ico_foi_original,
+                @overturned_ico_foi_original_appeal,
+                @awaiting_responder_overturned_ico_foi_original,
+                @awaiting_responder_overturned_ico_foi_original_appeal,
+                @accepted_overturned_ico_foi_original,
+                @accepted_overturned_ico_foi_original_appeal,
+                @closed_overturned_ico_foi,
+
               ]
       end
     end
@@ -298,7 +361,11 @@ describe CaseFinderService do
                 @approved_ico,
                 @overturned_ico_sar,
                 @awaiting_responder_overturned_ico_sar,
-                @accepted_overturned_ico_sar
+                @accepted_overturned_ico_sar,
+                @overturned_ico_foi,
+                @awaiting_responder_overturned_ico_foi,
+                @accepted_overturned_ico_foi
+
               ]
       end
     end
@@ -330,7 +397,14 @@ describe CaseFinderService do
                   @awaiting_responder_overturned_ico_sar,
                   @accepted_overturned_ico_sar,
                   @accepted_overturned_ico_sar_original,
-                  @closed_overturned_ico_sar
+                  @closed_overturned_ico_sar,
+                  @overturned_ico_foi_original,
+                  @overturned_ico_foi,
+                  @awaiting_responder_overturned_ico_foi_original,
+                  @awaiting_responder_overturned_ico_foi,
+                  @accepted_overturned_ico_foi,
+                  @accepted_overturned_ico_foi_original,
+                  @closed_overturned_ico_foi
                 ]
         end
       end
@@ -349,7 +423,11 @@ describe CaseFinderService do
                   @older_dacu_flagged_accept,
                   @overturned_ico_sar_original_appeal,
                   @awaiting_responder_overturned_ico_sar_original_appeal,
-                  @accepted_overturned_ico_sar_original_appeal
+                  @accepted_overturned_ico_sar_original_appeal,
+                  @overturned_ico_foi_original_appeal,
+                  @awaiting_responder_overturned_ico_foi_original_appeal,
+                  @accepted_overturned_ico_foi_original_appeal
+
                 ]
         end
       end
@@ -359,14 +437,17 @@ describe CaseFinderService do
       context 'responder' do
         it 'only includes cases assigned to user teams' do
           finder = CaseFinderService.new(@responder)
-          expect(finder.__send__ :open_cases_scope).to match_array [
-                                                                       @accepted_case,
-                                                                       @assigned_newer_case,
-                                                                       @assigned_older_case,
-                                                                       @approved_ico,
-                                                                       @awaiting_responder_overturned_ico_sar,
-                                                                       @accepted_overturned_ico_sar
-                                                                   ]
+          expect(finder.__send__ :open_cases_scope)
+          .to match_array [
+               @accepted_case,
+               @assigned_newer_case,
+               @assigned_older_case,
+               @approved_ico,
+               @awaiting_responder_overturned_ico_sar,
+               @accepted_overturned_ico_sar,
+               @awaiting_responder_overturned_ico_foi,
+               @accepted_overturned_ico_foi
+           ]
         end
       end
       context 'non-responder' do
@@ -391,7 +472,11 @@ describe CaseFinderService do
               @approved_ico,
               @overturned_ico_sar,
               @awaiting_responder_overturned_ico_sar,
-              @accepted_overturned_ico_sar
+              @accepted_overturned_ico_sar,
+              @overturned_ico_foi,
+              @awaiting_responder_overturned_ico_foi,
+              @accepted_overturned_ico_foi
+
           ]
         end
       end
