@@ -98,9 +98,10 @@ describe NewOverturnedIcoCaseService do
     end
 
     context 'original case type is Case::ICO::FOI' do
-      let(:original_ico_appeal)     { create :ico_foi_case }
-      let(:original_case)           { create :foi_case }
-      let(:service)                 { described_class.new(original_ico_appeal.id) }
+      let(:original_case)       { create :foi_case }
+      let(:original_ico_appeal) { create :ico_foi_case,
+                                         original_case: original_case }
+      let(:service)             { described_class.new(original_ico_appeal.id) }
 
       before(:each) do
         allow_any_instance_of(Case::ICO::FOI).to receive(:original_case).and_return(original_case)
@@ -113,6 +114,29 @@ describe NewOverturnedIcoCaseService do
 
       it 'is success' do
         expect(service.success?).to be true
+      end
+
+      describe 'setting the reply method' do
+        context 'original case sent_by_email' do
+          it 'sets the reply method' do
+            expect(service.overturned_ico_case.reply_method).to eq 'send_by_email'
+          end
+
+          it 'sets the email address' do
+            expect(service.overturned_ico_case.email).to eq original_case.email
+          end
+        end
+
+        context 'original case sent by post' do
+          let(:original_case)       { create :foi_case, :sent_by_post }
+
+          it 'sets the reply method and postal address' do
+            expect(service.overturned_ico_case.reply_method).to eq 'send_by_post'
+            expect(service.overturned_ico_case.postal_address)
+              .to eq original_case.postal_address
+          end
+
+        end
       end
     end
   end

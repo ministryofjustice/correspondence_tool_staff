@@ -11,19 +11,12 @@ feature 'ICO Overturned FOI case' do
                                         responding_team: responding_team }
 
   scenario 'end-to-end journey', js: true do
-    login_step user: manager
-
-    kase = create_overturned_foi_case_step(
-      ico_case: original_appeal_case,
-    )
-    # expect(assignments_new_page).to be_displayed
-
-    # kase = create_and_assign_overturned_foi user: manager,
-    #                                         responding_team: responding_team,
-    #                                         ico_case: original_appeal_case
+    _kase = create_and_assign_overturned_ico user: manager,
+                                             responding_team: responding_team,
+                                             ico_case: original_appeal_case
 
     # add_message_to_case kase: kase,
-    #                     message: 'This. Is. A. Test.',
+    #                     message: 'Case created',
     #                     do_logout: true
 
     # accept_case kase: kase,
@@ -31,7 +24,7 @@ feature 'ICO Overturned FOI case' do
     #             do_logout: false
 
     # add_message_to_case kase: kase,
-    #                     message: 'This. Is. A. Test.',
+    #                     message: 'Case accepted',
     #                     do_logout: true
 
     # close_foi_case user: responder,

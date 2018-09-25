@@ -6,7 +6,7 @@ describe 'cases/overturned_shared/_new.html.slim' do
 
   def render_partial
     render
-    overturned_foi_form_section(rendered)
+    overturned_ico_form_section(rendered)
   end
 
   def login_as(user)

@@ -16,24 +16,36 @@ class NewOverturnedIcoCaseService
   end
 
   def call
-    overturned_klass = case @original_ico_appeal.type
-                        when 'Case::ICO::FOI'
-                          Case::OverturnedICO::FOI
-                         when 'Case::ICO::SAR'
-                           Case::OverturnedICO::SAR
-                         else
-                           @original_ico_appeal.errors.add(:base, 'Invalid ICO appeal case type')
-                           @error = true
-                       end
+    case @original_ico_appeal.type
+    when 'Case::ICO::FOI'
+      original_case = @original_ico_appeal.original_case
+      reply_method = if original_case.sent_by_email?
+                       :send_by_email
+                     else
+                       :send_by_post
+                     end
+      overturned_klass = Case::OverturnedICO::FOI
+    when 'Case::ICO::SAR'
+      original_case = @original_ico_appeal.original_case
+      reply_method = original_case.reply_method
+      overturned_klass = Case::OverturnedICO::SAR
+    else
+      @original_ico_appeal.errors.add(:base, 'Invalid ICO appeal case type')
+      @error = true
+    end
+
     if success?
-      original_case                                 = @original_ico_appeal.original_case
-      @overturned_ico_case                          = overturned_klass.new
-      @overturned_ico_case.original_ico_appeal_id   = @original_ico_appeal.id
-      @overturned_ico_case.original_case_id         = original_case.id
-      @overturned_ico_case.ico_officer_name         = @original_ico_appeal.ico_officer_name
-      @overturned_ico_case.set_reply_method if original_case.sar?
+      @overturned_ico_case = overturned_klass.new(
+        {
+          original_ico_appeal_id: @original_ico_appeal.id,
+          original_case_id:       original_case.id,
+          ico_officer_name:       @original_ico_appeal.ico_officer_name,
+          reply_method:           reply_method,
+          email:                  original_case.email,
+          postal_address:         original_case.postal_address,
+        }
+      )
     end
   end
-
 
 end

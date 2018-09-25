@@ -1210,6 +1210,12 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
+  describe '#correspondence_type_for_business_unit_assignment' do
+    it 'returns the correspondence_type' do
+      expect(kase.correspondence_type).to eq CorrespondenceType.foi
+    end
+  end
+
   # See note in case.rb about why this is commented out.
   #
   # describe 'awaiting_approver?' do

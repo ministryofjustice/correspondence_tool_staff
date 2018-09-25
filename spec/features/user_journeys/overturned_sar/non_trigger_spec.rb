@@ -11,12 +11,13 @@ feature 'SAR overturned case' do
                                                         responding_team: responding_team }
 
   scenario 'end-to-end journey', js: true do
-    kase = create_and_assign_overturned_sar user: manager,
+    kase = create_and_assign_overturned_ico user: manager,
                                             responding_team: responding_team,
-                                            ico_case: original_appeal_case
+                                            ico_case: original_appeal_case,
+                                            do_logout: false
 
     add_message_to_case kase: kase,
-                        message: 'This. Is. A. Test.',
+                        message: 'Case created',
                         do_logout: true
 
     accept_case kase: kase,
@@ -24,7 +25,7 @@ feature 'SAR overturned case' do
                 do_logout: false
 
     add_message_to_case kase: kase,
-                        message: 'This. Is. A. Test.',
+                        message: 'Case accepted',
                         do_logout: true
 
     close_sar_case user: responder,

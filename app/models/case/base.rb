@@ -580,6 +580,13 @@ class Case::Base < ApplicationRecord
       CorrespondenceType.find_by!(abbreviation: type_abbreviation.parameterize.underscore.upcase)
   end
 
+  # Override this method if you want to make this correspondence type
+  # assignable by the same business units as another correspondence type. e.x.
+  # ICO Overturned FOIs can be assigned to the same business units as FOIs
+  def correspondence_type_for_business_unit_assignment
+    correspondence_type
+  end
+
   def is_foi?
     type_abbreviation == 'FOI'
   end

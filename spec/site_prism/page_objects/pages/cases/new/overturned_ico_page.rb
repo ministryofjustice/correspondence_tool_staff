@@ -8,13 +8,9 @@ module PageObjects
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-          section :sar_form,
-                  PageObjects::Sections::Cases::OverturnedSAR::FormSection,
-                  'form#new_case_overturned_sar'
-
-          section :foi_form,
-                  PageObjects::Sections::Cases::OverturnedFOI::FormSection,
-                  'form#new_case_overturned_foi'
+          section :form,
+                  PageObjects::Sections::Cases::OverturnedICO::FormSection,
+                  'form#new_case_overturned_sar, form#new_case_overturned_foi'
         end
       end
     end

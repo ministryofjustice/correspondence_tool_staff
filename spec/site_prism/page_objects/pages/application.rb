@@ -91,7 +91,7 @@ module PageObjects
         ico_show:                     'Cases::ICO::ShowSection',
         open_case_status_filter_panel:'Cases::OpenCaseStatusFilterPanelSection',
         overturned_foi_case_details:  'Cases::OverturnedFOI::CaseDetailsSection',
-        overturned_foi_form:          'Cases::OverturnedFOI::FormSection',
+        overturned_ico_form:          'Cases::OverturnedICO::FormSection',
         overturned_sar_case_details:  'Cases::OverturnedSAR::CaseDetailsSection',
         pagination:                   'PaginationSection',
       }.each do |section_name, section_class|

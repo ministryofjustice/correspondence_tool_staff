@@ -290,60 +290,60 @@ describe CasesController do
         }
       end
 
-      # describe 'creating an OverturnedICO::FOI case' do
-      #   before(:each) do
-      #     sign_in manager
-      #     expect(CaseCreateService).to receive(:new)
-      #                                    .with(manager,
-      #                                          'overturned_foi',
-      #                                          controller_params)
-      #                                    .and_return(service)
-      #   end
+      describe 'creating an OverturnedICO::FOI case' do
+        let(:correspondence_type)       { CorrespondenceType.foi }
+        let(:controller_params)         { ActionController::Parameters
+                                            .new(ico_overturned_foi_params) }
+        let(:new_overturned_case)       { double Case::OverturnedICO::FOI,
+                                                 id: 87366 }
+        let(:decorated_overturned_case) { double(Case::OverturnedICO::FOIDecorator,
+                                                 uploads_dir: 'xx') }
+        let(:service)                   { double(CaseCreateService,
+                                             case: new_overturned_case,
+                                             case_class: Case::OverturnedICO::FOI,
+                                             call: nil) }
 
-      #   let(:correspondence_type)       { CorrespondenceType.foi }
-      #   let(:controller_params)         { ActionController::Parameters
-      #                                       .new(ico_overturned_foi_params) }
-      #   let(:new_overturned_case)       { double Case::OverturnedICO::FOI,
-      #                                            id: 87366 }
-      #   let(:decorated_overturned_case) { double(Case::OverturnedICO::FOIDecorator,
-      #                                            uploads_dir: 'xx') }
-      #   let(:service)                   { double(CaseCreateService,
-      #                                        case: new_overturned_case,
-      #                                        case_class: Case::OverturnedICO::FOI,
-      #                                        call: nil) }
+        before(:each) do
+          sign_in manager
+          expect(CaseCreateService).to receive(:new)
+                                         .with(manager,
+                                               'overturned_foi',
+                                               controller_params)
+                                         .and_return(service)
+        end
 
-      #   context 'case created OK' do
-      #     before(:each) do
-      #       expect(service).to receive(:result).and_return(:assign_responder)
-      #       expect(service).to receive(:flash_notice)
-      #                            .and_return('Case successfully created')
-      #       post :create, params: ico_overturned_foi_params
-      #     end
+        context 'case created OK' do
+          before(:each) do
+            expect(service).to receive(:result).and_return(:assign_responder)
+            expect(service).to receive(:flash_notice)
+                                 .and_return('Case successfully created')
+            post :create, params: ico_overturned_foi_params
+          end
 
-      #     it 'sets the flash' do
-      #       expect(flash[:creating_case]).to be true
-      #       expect(flash[:notice]).to eq 'Case successfully created'
-      #     end
+          it 'sets the flash' do
+            expect(flash[:creating_case]).to be true
+            expect(flash[:notice]).to eq 'Case successfully created'
+          end
 
-      #     it 'redirects to the new case assignment page' do
-      #       expect(response)
-      #         .to redirect_to(new_case_assignment_path(new_overturned_case))
-      #     end
-      #   end
+          it 'redirects to the new case assignment page' do
+            expect(response)
+              .to redirect_to(new_case_assignment_path(new_overturned_case))
+          end
+        end
 
-      #   context 'error when creating case' do
-      #     before(:each) do
-      #       expect(service).to receive(:result).and_return(:error)
-      #       expect(new_overturned_case)
-      #         .to receive(:decorate).and_return(decorated_overturned_case)
-      #     end
+        context 'error when creating case' do
+          before(:each) do
+            expect(service).to receive(:result).and_return(:error)
+            expect(new_overturned_case)
+              .to receive(:decorate).and_return(decorated_overturned_case)
+          end
 
-      #     it 'renders the new page' do
-      #       post :create, params: ico_overturned_foi_params
-      #       expect(response).to render_template(:new)
-      #     end
-      #   end
-      # end
+          it 'renders the new page' do
+            post :create, params: ico_overturned_foi_params
+            expect(response).to render_template(:new)
+          end
+        end
+      end
 
     end
 
@@ -366,27 +366,6 @@ describe CasesController do
         }
       end
 
-      describe 'authentication' do
-        subject { post :create, params: ico_overturned_sar_params }
-
-        it 'authorises with can_add_case? policy and Case::OverturnedICO::SAR' do
-          sign_in manager
-          expect{ subject }.to require_permission(:can_add_case?)
-                                   .with_args(manager, Case::OverturnedICO::SAR)
-        end
-
-        it 'does not create a case when authentication fails' do
-          ico_sar_case
-          sign_in responder
-          expect{ subject }.not_to change { Case::Base.count }
-        end
-
-        it 'redirects to the application root path when authentication fails' do
-          sign_in responder
-          expect(subject).to redirect_to(responder_root_path)
-        end
-      end
-
       describe 'creating an OverturnedICO case' do
 
         before(:each) do
@@ -397,7 +376,8 @@ describe CasesController do
         end
 
         let(:correspondence_type)       { CorrespondenceType.sar }
-        let(:controller_params)         { ActionController::Parameters.new(overturned_ico_params) }
+        let(:controller_params)         { ActionController::Parameters
+                                            .new(ico_overturned_sar_params) }
         let(:new_overturned_case)       { double Case::OverturnedICO::SAR, id: 87366 }
         let(:decorated_overturned_case) { double(Case::OverturnedICO::SARDecorator, uploads_dir: 'xx')}
         let(:service)                   { double(CaseCreateService,
@@ -409,7 +389,7 @@ describe CasesController do
           before(:each) do
             expect(service).to receive(:result).and_return(:assign_responder)
             expect(service).to receive(:flash_notice).and_return('Case successfully created')
-            post :create, params: overturned_ico_params
+            post :create, params: ico_overturned_sar_params
           end
 
           it 'sets the flash' do
@@ -429,7 +409,7 @@ describe CasesController do
           end
 
           it 'renders the new page' do
-            post :create, params: overturned_ico_params
+            post :create, params: ico_overturned_sar_params
             expect(response).to render_template(:new)
           end
         end
