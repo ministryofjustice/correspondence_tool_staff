@@ -268,7 +268,7 @@ describe CasesController do
 
         it 'displays a flash message' do
           post :create, params: ico_params
-          expect(flash[:notice]).to eq "ICO case created<br/>Case number: #{created_case.number}"
+          expect(flash[:notice]).to eq "ICO appeal (FOI) case created<br/>Case number: #{created_case.number}"
         end
 
         context 'original case not linked' do

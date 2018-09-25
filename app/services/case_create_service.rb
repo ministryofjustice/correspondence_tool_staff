@@ -75,7 +75,7 @@ class CaseCreateService
 
   def flag_for_disclosure_if_required
     @case.save!
-    @flash_notice = "#{@case.decorate.type_abbreviation} case created<br/>Case number: #{@case.number}".html_safe
+    @flash_notice = "#{@case.decorate.pretty_type} case created<br/>Case number: #{@case.number}".html_safe
 
     if @permitted_params[:flag_for_disclosure_specialists] == 'yes'
       CaseFlagForClearanceService.new(
