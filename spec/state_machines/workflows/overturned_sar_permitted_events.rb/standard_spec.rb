@@ -14,14 +14,13 @@ describe ConfigurableStateMachine::Machine do
                                                                       :destroy_case,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :request_further_clearance]
+                                                                      :remove_linked_case]
         end
       end
 
       context 'awaiting responder' do
         it 'should show permitted events' do
-          k = create :awaiting_responder_sar
+          k = create :awaiting_responder_ot_ico_sar
           expect(k.current_state).to eq 'awaiting_responder'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
@@ -29,14 +28,13 @@ describe ConfigurableStateMachine::Machine do
                                                                       :edit_case,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :request_further_clearance]
+                                                                      :remove_linked_case]
         end
       end
 
       context 'drafting' do
         it 'should show permitted events' do
-          k = create :accepted_sar
+          k = create :accepted_ot_ico_sar
           expect(k.current_state).to eq 'drafting'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
@@ -44,14 +42,13 @@ describe ConfigurableStateMachine::Machine do
                                                                       :edit_case,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :request_further_clearance]
+                                                                      :remove_linked_case]
         end
       end
 
       context 'closed' do
         it "should show permitted events" do
-          k = create :closed_sar
+          k = create :closed_ot_ico_sar
           expect(k.current_state).to eq 'closed'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
@@ -69,7 +66,7 @@ describe ConfigurableStateMachine::Machine do
 
       context 'unassigned state' do
         it 'should show permitted events' do
-          k = create :sar_case
+          k = create :overturned_ico_sar
           expect(k.current_state).to eq 'unassigned'
           expect(k.state_machine.permitted_events(responder.id)).to be_empty
         end
@@ -77,7 +74,7 @@ describe ConfigurableStateMachine::Machine do
 
       context 'awaiting responder state' do
         it 'should show permitted events' do
-          k = create :awaiting_responder_sar
+          k = create :awaiting_responder_ot_ico_sar
           expect(k.current_state).to eq 'awaiting_responder'
           expect(k.state_machine.permitted_events(responder.id)).to be_empty
         end
@@ -85,7 +82,7 @@ describe ConfigurableStateMachine::Machine do
 
       context 'drafting state' do
         it 'should show permitted events' do
-          k = create :accepted_sar
+          k = create :accepted_ot_ico_sar
           expect(k.current_state).to eq 'drafting'
           expect(k.state_machine.permitted_events(responder.id)).to be_empty
         end
@@ -93,7 +90,7 @@ describe ConfigurableStateMachine::Machine do
 
       context 'closed state' do
         it 'should show permitted events' do
-          k = create :closed_sar
+          k = create :closed_ot_ico_sar
           expect(k.current_state).to eq 'closed'
           expect(k.state_machine.permitted_events(responder.id)).to be_empty
         end
@@ -106,7 +103,7 @@ describe ConfigurableStateMachine::Machine do
 
       context 'awaiting responder state' do
         it 'should show permitted events' do
-          k = create :awaiting_responder_sar
+          k = create :awaiting_responder_ot_ico_sar
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'awaiting_responder'
           expect(k.state_machine.permitted_events(responder.id)).to eq [:accept_responder_assignment,
@@ -117,7 +114,7 @@ describe ConfigurableStateMachine::Machine do
 
       context 'drafting state' do
         it 'should show permitted events' do
-          k = create :accepted_sar
+          k = create :accepted_ot_ico_sar
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'drafting'
           expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
@@ -130,7 +127,7 @@ describe ConfigurableStateMachine::Machine do
 
       context 'closed state' do
         it 'should show permitted events' do
-          k = create :closed_sar
+          k = create :closed_ot_ico_sar
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'closed'
           expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
