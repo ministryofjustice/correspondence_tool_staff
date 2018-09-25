@@ -52,8 +52,7 @@ describe ConfigurableStateMachine::Machine do
                                                                       :assign_to_new_team,
                                                                       :destroy_case,
                                                                       :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :update_closure]
+                                                                      :remove_linked_case]
         end
       end
     end
@@ -127,8 +126,7 @@ describe ConfigurableStateMachine::Machine do
           k = create :closed_ot_ico_sar
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'closed'
-          expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                        :update_closure]
+          expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case]
         end
       end
     end
