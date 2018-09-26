@@ -5,6 +5,7 @@ class CasesController < ApplicationController
   include FOICasesParams
   include ICOCasesParams
   include SARCasesParams
+  include OverturnedICOParams
 
   before_action :set_case,
                 only: [
@@ -781,6 +782,7 @@ class CasesController < ApplicationController
     case correspondence_type
     when 'FOI' then respond_foi_params
     when 'ICO' then respond_ico_params
+    when 'OVERTURNED_FOI' then respond_overturned_params
     else raise 'Unknown case type'
     end
   end
