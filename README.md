@@ -91,9 +91,9 @@ $ xcode-select --install
 <summary>Browser testing</summary>
 
 We use [headless chrome](https://developers.google.com/web/updates/2017/04/headless-chrome)
-for Capybara tests, which require JavaScript. You will need to install Chrome >= 59. 
-Where we don't require JavaScript to test a feature we use Capybara's default driver 
-[RackTest](https://github.com/teamcapybara/capybara#racktest) which is ruby based 
+for Capybara tests, which require JavaScript. You will need to install Chrome >= 59.
+Where we don't require JavaScript to test a feature we use Capybara's default driver
+[RackTest](https://github.com/teamcapybara/capybara#racktest) which is ruby based
 and much faster as it does not require a server to be started.
 
 **Debugging:**
@@ -412,6 +412,8 @@ control aspects of the build. The available build arguments are:
   These are required to scan the uploaded files for viruses (clamav & Co.) and
   to generate a PDF preview (libreoffice).
 
+#### Guide to our deploy process
+For our deploy process please see the our [confluence page](https://dsdmoj.atlassian.net/wiki/spaces/CD/pages/164660145/Manual+-+Development+and+Release+Process)
 
 # Case Journey
 1. **unassigned**  
