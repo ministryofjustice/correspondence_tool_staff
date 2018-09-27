@@ -290,6 +290,10 @@ en:
         ico_decision: The original case has been
         delivery_method: How and where should the information be sent?
         type: Original Case Type
+      case_overturned_foi:
+        reply_method: 'How should this information be sent to the requester?'
+      case_overturned_sar:
+        reply_method: 'How should this information be sent to the requester?'
       case_sar:
         missing_info: "Was the response asking for missing information (e.g. proof of ID) or
           clarification, i.e. a TMM?"
@@ -399,6 +403,20 @@ en:
           upheld: Upheld by ICO
           overturned: Overturned by ICO
         ico_decision_comment: "Details of ICO's decision"
+      case_overturned_foi:
+        email: "Requester's email"
+        ico_officer_name: "Name of the ICO information officer who's handling this case"
+        postal_address: "Requester's postal address"
+        reply_method:
+          send_by_email: "By email"
+          send_by_post: "By post"
+      case_overturned_sar:
+        email: "Requester's email"
+        ico_officer_name: "Name of the ICO information officer who's handling this case"
+        postal_address: "Requester's postal address" 
+        reply_method:
+          send_by_email: "By email"
+          send_by_post: "By post"
       case_sar:
         email: "Recipient email address"
         message: Full case details

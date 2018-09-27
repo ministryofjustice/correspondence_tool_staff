@@ -18,22 +18,25 @@ fieldset#received_date
   = f.hidden_field :received_date_yyyy
 
 .form-group
-  = f.gov_uk_date_field :external_deadline, { legend_text: "Final deadline" ,
-                        form_hint_text: "We'll use this date to set the draft deadline, calculated as 20 working days from the final deadline."}
+  = f.gov_uk_date_field :external_deadline,
+                        { legend_text: "Final deadline" ,
+                          form_hint_text: "For example, 01 02 2018" }
+  .form-hint
+    | The draft deadline will be set to 20 working days before the final deadline.
+    | You will be able to change both deadlines later.
 
+hr
 
 p
-  = "Only change the details below if the Requester's contact details and the "
-  = "preferred way of receiving the information has changed."
+  = "Only change the details below if this information has changed."
+
+= f.email_field :email
+
+= f.text_area :postal_address, {rows: 4}
 
 = f.radio_button_fieldset :reply_method, choices: [:send_by_email, :send_by_post] do |fieldset|
-  - fieldset.radio_input('send_by_email',
-                         panel_id: 'reply_method_send_by_email_panel')
-  - fieldset.revealing_panel(:reply_method_send_by_email_panel) do |panel|
-    - panel.email_field :email
+  - fieldset.radio_input('send_by_email')
+  - fieldset.radio_input('send_by_post')
 
-  - fieldset.radio_input('send_by_post',
-                         panel_id: 'reply_method_send_by_post_panel')
+= f.text_field :ico_officer_name
 
-  - fieldset.revealing_panel(:reply_method_send_by_post_panel) do |panel|
-    - panel.text_area :postal_address, {rows: 4}

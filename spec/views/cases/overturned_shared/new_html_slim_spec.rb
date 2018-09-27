@@ -59,4 +59,37 @@ describe 'cases/overturned_shared/_new.html.slim' do
       expect(partial.final_deadline.year.value).to eq ''
     end
   end
+
+  describe "requester's email" do
+    it "populates from the case" do
+      expect(partial).to have_field("Requester's email",
+                                    with: @overturned_foi_case.email,
+                                    type: :email)
+    end
+  end
+
+  describe "requester's postal address" do
+    it "populates from the case" do
+      expect(partial).to have_field("Requester's postal address",
+                                    with: @overturned_foi_case.postal_address,
+                                    type: :textarea)
+    end
+  end
+
+  describe "reply method" do
+    it "populates from the case" do
+      expect(partial).to have_checked_field("By email")
+    end
+  end
+
+  describe 'ico officer name' do
+    it 'populates from the case' do
+      expect(partial)
+        .to have_field(
+              "Name of the ICO information officer who's handling this case",
+              with: @overturned_foi_case.ico_officer_name,
+              type: :text
+            )
+    end
+  end
 end
