@@ -1,15 +1,15 @@
 require 'rails_helper'
 
-describe 'cases/overturned_sar/case_details.html.slim', type: :view do
-  let(:unassigned_case) { create(:overturned_ico_sar) }
-  let(:closed_case)     { create(:closed_ot_ico_sar) }
+describe 'cases/overturned_foi/case_details.html.slim', type: :view do
+  let(:unassigned_case) { create(:overturned_ico_foi) }
+  let(:closed_case)     { create(:closed_ot_ico_foi) }
   let(:bmt_manager)     { create(:disclosure_bmt_user) }
 
   def render_partial(kase)
-    render partial: 'cases/overturned_sar/case_details.html.slim',
+    render partial: 'cases/overturned_foi/case_details.html.slim',
            locals: { case_details: kase.decorate,
                      link_type: nil }
-    overturned_sar_case_details_section(rendered)
+    overturned_foi_case_details_section(rendered)
   end
 
   def login_as(user)
@@ -27,13 +27,15 @@ describe 'cases/overturned_sar/case_details.html.slim', type: :view do
 
       expect(partial.case_type).to have_no_trigger
       expect(partial.case_type.type.text)
-        .to eq "ICO overturned (SAR)  "
+        .to eq "ICO overturned (FOI)  "
       expect(partial.date_received.text)
         .to eq I18n.l(unassigned_case.received_date)
       expect(partial.final_deadline.text)
         .to eq I18n.l(unassigned_case.external_deadline)
     end
 
+    # Requester email/postal address isn't being displayed yet, but once
+    # implemented these tests will be needed.
     it 'does not display the email address if one is not provided' do
       unassigned_case.email = nil
       unassigned_case.postal_address = "1 High Street\nAnytown\nAT1 1AA"
@@ -41,7 +43,7 @@ describe 'cases/overturned_sar/case_details.html.slim', type: :view do
 
       partial = render_partial(unassigned_case)
 
-      expect(partial.response_address.text)
+      expect(partial.address.text)
         .to eq "1 High Street\nAnytown\nAT1 1AA"
     end
 
@@ -51,8 +53,8 @@ describe 'cases/overturned_sar/case_details.html.slim', type: :view do
 
       partial = render_partial(unassigned_case)
 
-      expect(partial).to have_response_address
-      expect(partial.response_address.text).to eq 'john.doe@moj.com'
+      expect(partial).to have_no_address
+      expect(partial.email.text).to eq 'john.doe@moj.com'
     end
   end
 
@@ -103,7 +105,7 @@ describe 'cases/overturned_sar/case_details.html.slim', type: :view do
 
     it 'displays as original case' do
       assign(:case, ico_case)
-      render partial: 'cases/sar/case_details.html.slim',
+      render partial: 'cases/foi/case_details.html.slim',
              locals: { case_details: ico_case.original_case.decorate,
                        link_type: 'original' }
 
@@ -113,7 +115,7 @@ describe 'cases/overturned_sar/case_details.html.slim', type: :view do
 
     it 'displays a link to original case' do
       assign(:case, ico_case)
-      render partial: 'cases/sar/case_details.html.slim',
+      render partial: 'cases/foi/case_details.html.slim',
              locals: { case_details: ico_case.original_case.decorate,
                        link_type: 'original' }
 
@@ -122,4 +124,6 @@ describe 'cases/overturned_sar/case_details.html.slim', type: :view do
     end
 
   end
+
+
 end
