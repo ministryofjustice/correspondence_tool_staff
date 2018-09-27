@@ -1,4 +1,7 @@
 class CaseLinkingService
+
+  class CaseLinkingError < RuntimeError; end
+
   attr_reader :result, :error
 
   def initialize(user, kase, link_case_number)
@@ -24,11 +27,12 @@ class CaseLinkingService
       if @case.valid?
         @linked_case = @case_link.linked_case
         # Log event in both cases
+        acting_team = acting_team_for_case_and_user
         @case.state_machine.link_a_case!(acting_user: @user,
-                                         acting_team: @user.teams_for_case(@case).first,
+                                         acting_team: acting_team,
                                          linked_case_id: @linked_case.id)
         @linked_case.state_machine.link_a_case!(acting_user: @user,
-                                                acting_team: @user.teams_for_case(@case).first,
+                                                acting_team: acting_team,
                                                 linked_case_id: @case.id)
         @result = :ok
       else
@@ -37,6 +41,10 @@ class CaseLinkingService
       end
     end
     @result
+  rescue CaseLinkingError => err
+    @case.errors.add(:linked_case_number, err.message)
+    @error = err
+    @result = :error
   rescue => err
     Rails.logger.error err.to_s
     Rails.logger.error err.backtrace.join("\n\t")
@@ -63,11 +71,12 @@ class CaseLinkingService
       @case.related_cases.destroy(@link_case)
 
       # Log event in both cases
+      acting_team = acting_team_for_case_and_user
       @case.state_machine.remove_linked_case!(acting_user: @user,
-                                       acting_team: @user.teams_for_case(@case).first,
+                                       acting_team: acting_team,
                                        linked_case_id: @link_case.id)
       @link_case.state_machine.remove_linked_case!(acting_user: @user,
-                                            acting_team: @user.teams_for_case(@case).first,
+                                            acting_team: acting_team,
                                             linked_case_id: @case.id)
 
       @result = :ok
@@ -83,6 +92,16 @@ class CaseLinkingService
   end
 
   private
+
+  def acting_team_for_case_and_user
+    if @case.sar? || @case.overturned_ico_sar?
+      team = @user.teams_for_case(@case).detect{ |t| t.role == 'manager'}
+      raise CaseLinkingError.new('User requires manager role for linking SAR cases') if team.nil?
+      team
+    else
+      @user.teams_for_case(@case).first
+    end
+  end
 
   def validate_params
     validate_case_number_present
