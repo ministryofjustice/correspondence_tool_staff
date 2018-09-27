@@ -99,7 +99,7 @@ describe NewOverturnedIcoCaseService do
 
     context 'original case type is Case::ICO::FOI' do
       let(:original_case)       { create :foi_case }
-      let(:original_ico_appeal) { create :ico_foi_case,
+      let(:original_ico_appeal) { create :closed_ico_foi_case,
                                          original_case: original_case }
       let(:service)             { described_class.new(original_ico_appeal.id) }
 
@@ -136,6 +136,13 @@ describe NewOverturnedIcoCaseService do
               .to eq original_case.postal_address
           end
 
+        end
+      end
+
+      describe 'setting the received_date' do
+        it 'is set from the original ico appeal' do
+          expect(service.overturned_ico_case.received_date)
+            .to eq original_ico_appeal.date_ico_decision_received
         end
       end
     end

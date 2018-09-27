@@ -1,4 +1,4 @@
-= form_for @case, as: "case_#{@correspondence_type_key}", url: cases_path do |f|
+= form_for @case.object, as: "case_#{@correspondence_type_key}", url: cases_path do |f|
 
   = hidden_field_tag 'correspondence_type', @correspondence_type_key
   = f.hidden_field :original_ico_appeal_id

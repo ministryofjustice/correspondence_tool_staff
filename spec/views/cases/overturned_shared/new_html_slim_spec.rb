@@ -4,9 +4,11 @@ describe 'cases/overturned_shared/_new.html.slim' do
   let(:bmt_manager) { create(:disclosure_bmt_user) }
   let(:ico_appeal)  { create(:closed_ico_sar_case) }
 
-  def render_partial
+  let(:overturned_foi) { find_or_create(:overturned_foi_correspondence_type) }
+
+  let(:partial) do
     render
-    overturned_ico_form_section(rendered)
+    overturned_ico_new_form_section(rendered)
   end
 
   def login_as(user)
@@ -14,17 +16,47 @@ describe 'cases/overturned_shared/_new.html.slim' do
     super(user)
   end
 
-  before(:each) { login_as bmt_manager }
+  before(:all) do
+    @overturned_foi_case = build(:overturned_ico_foi)
+  end
 
-  let(:overturned_foi) { find_or_create(:overturned_foi_correspondence_type) }
+  after(:all) do
+    DbHousekeeping.clean
+  end
 
-  it 'renders a form for overturned_foi' do
-    assign(:case, build(:overturned_ico_foi).decorate)
+  before(:each) do
+    assign(:case, @overturned_foi_case.decorate)
     assign(:correspondence_type, overturned_foi)
     assign(:correspondence_type_key, 'overturned_foi')
 
-    partial = render_partial
+    login_as bmt_manager
+  end
 
-    expect(partial).to have_date_received_day
+  describe 'ico_appeal_info section' do
+    subject { partial.ico_appeal_info }
+
+    it { should be_visible }
+    it { should have_text(@overturned_foi_case.number) }
+    it { should have_text(@overturned_foi_case.subject) }
+    it { should have_text('(opens in a new tab)') }
+  end
+
+  describe 'date decision was received' do
+    it 'has the case received date' do
+      expect(partial.received_date.day.value)
+        .to eq @overturned_foi_case.received_date.day.to_s
+      expect(partial.received_date.month.value)
+        .to eq @overturned_foi_case.received_date.month.to_s
+      expect(partial.received_date.year.value)
+        .to eq @overturned_foi_case.received_date.year.to_s
+    end
+  end
+
+  describe 'final deadline' do
+    it 'is blank' do
+      expect(partial.final_deadline.day.value).to eq ''
+      expect(partial.final_deadline.month.value).to eq ''
+      expect(partial.final_deadline.year.value).to eq ''
+    end
   end
 end
