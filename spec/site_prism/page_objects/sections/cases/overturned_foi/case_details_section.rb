@@ -1,7 +1,7 @@
 module PageObjects
   module Sections
     module Cases
-      module OverturnedSAR
+      module OverturnedFOI
         class CaseDetailsSection < SitePrism::Section
 
           element :section_heading, '.case-details .request--heading'
@@ -13,7 +13,11 @@ module PageObjects
 
           element :ico_case_number, 'tr.ico-reference td'
           element :ico_officer_name, 'tr.ico-officer-name td'
-          element :response_address, 'tr.response-address td'
+
+          element :email, 'tr.requester-email td'
+          element :address, 'tr.requester-address td'
+          element :delivery_method, 'tr.delivery-method td'
+
           element :date_received, 'tr.date-received td'
           element :draft_deadline, 'tr.case-internal-deadline td'
           element :final_deadline, 'tr.case-external-deadline td'
