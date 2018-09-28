@@ -37,6 +37,7 @@
 
               drafting:
                 add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
                 assign_to_new_team:
                   transition_to: awaiting_responder
                 destroy_case:
@@ -81,6 +82,7 @@
               drafting:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
                 respond_and_close:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed

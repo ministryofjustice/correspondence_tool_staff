@@ -26,6 +26,12 @@ RSpec.describe MessagesController, type: :controller do
       }
     end
 
+    before do
+      allow(ActionNotificationsMailer).to receive_message_chain(:notify_information_officers,
+                                                                :deliver_later)
+    end
+
+
     context "as an anonymous user" do
       it "be redirected to signin if trying to start a new case" do
         post :create , params: params
@@ -62,6 +68,10 @@ RSpec.describe MessagesController, type: :controller do
       it "redirects to case detail page and contains a hash" do
         post :create , params: params
         expect(response).to redirect_to(case_path(accepted_case, anchor: 'messages-section'))
+        expect(ActionNotificationsMailer)
+          .to have_received(:notify_information_officers)
+                .with(accepted_case, 'Message received')
+
       end
       it 'allows them to post on a closed case' do
         params[:case_id] = closed_case.id
@@ -88,6 +98,9 @@ RSpec.describe MessagesController, type: :controller do
         params[:case_id] = flagged_case.id
         post :create , params: params
         expect(response).to redirect_to(case_path(flagged_case, anchor: 'messages-section'))
+        expect(ActionNotificationsMailer)
+          .to have_received(:notify_information_officers)
+                .with(flagged_case, 'Message received')
       end
 
     end
@@ -114,8 +127,83 @@ RSpec.describe MessagesController, type: :controller do
       end
     end
 
+    context "ico fois appeal case" do
+      let(:ico_case)     { create :accepted_ico_foi_case }
+      let(:params) do
+        {
+          case: {
+            message_text: 'This is a new message'
+          },
+          case_id: ico_case.id
+        }
+      end
+
+      context "as a manager" do
+        before { sign_in manager }
+
+        it "redirects to case detail page and contains a hash" do
+          post :create , params: params
+          expect(response).to redirect_to(case_path(ico_case, anchor: 'messages-section'))
+          expect(ActionNotificationsMailer)
+            .to have_received(:notify_information_officers)
+                  .with(ico_case, 'Message received')
+
+        end
+      end
+    end
+
+    context "ico sars appeal case" do
+      let(:ico_case)     { create :accepted_ico_sar_case }
+      let(:params) do
+        {
+          case: {
+            message_text: 'This is a new message'
+          },
+          case_id: ico_case.id
+        }
+      end
+
+      context "as a manager" do
+        before { sign_in manager }
+
+        it "redirects to case detail page and contains a hash" do
+          post :create , params: params
+          expect(response).to redirect_to(case_path(ico_case, anchor: 'messages-section'))
+          expect(ActionNotificationsMailer)
+            .to have_received(:notify_information_officers)
+                  .with(ico_case, 'Message received')
+
+        end
+      end
+    end
+
+    context "sar case" do
+      let(:sar)     { create :accepted_sar }
+      let(:params) do
+        {
+          case: {
+            message_text: 'This is a new message'
+          },
+          case_id: sar.id
+        }
+      end
+
+      context "as a manager" do
+        before { sign_in manager }
+
+        it "redirects to case detail page and contains a hash" do
+          post :create , params: params
+          expect(response).to redirect_to(case_path(sar, anchor: 'messages-section'))
+          expect(ActionNotificationsMailer)
+            .to have_received(:notify_information_officers)
+                  .with(sar, 'Message received')
+
+        end
+      end
+    end
+
     context "overturned_sar case" do
-      let(:overturned_sar)     { create :overturned_ico_sar }
+      let(:overturned_sar)     { create :accepted_ot_ico_sar }
       let(:params) do
         {
           case: {
@@ -131,6 +219,35 @@ RSpec.describe MessagesController, type: :controller do
         it "redirects to case detail page and contains a hash" do
           post :create , params: params
           expect(response).to redirect_to(case_path(overturned_sar, anchor: 'messages-section'))
+          expect(ActionNotificationsMailer)
+            .to have_received(:notify_information_officers)
+                  .with(overturned_sar, 'Message received')
+
+        end
+      end
+    end
+
+    context "overturned_foi case" do
+      let(:overturned_foi)     { create :accepted_ot_ico_foi }
+      let(:params) do
+        {
+          case: {
+            message_text: 'This is a new message'
+          },
+          case_id: overturned_foi.id
+        }
+      end
+
+      context "as a manager" do
+        before { sign_in manager }
+
+        it "redirects to case detail page and contains a hash" do
+          post :create , params: params
+          expect(response).to redirect_to(case_path(overturned_foi, anchor: 'messages-section'))
+          expect(ActionNotificationsMailer)
+            .to have_received(:notify_information_officers)
+                  .with(overturned_foi, 'Message received')
+
         end
       end
     end
