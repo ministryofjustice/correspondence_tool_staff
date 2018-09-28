@@ -66,7 +66,7 @@ describe 'state machine' do
                [:disclosure_bmt, :ot_ico_sar_noff_awresp],
                [:disclosure_bmt, :ot_ico_sar_noff_draft],
                [:disclosure_bmt, :ot_ico_sar_noff_closed],
-             )}
+             ) }
   end
 
   describe :close do
@@ -102,9 +102,10 @@ describe 'state machine' do
   describe :reassign_user do
     it {
       should permit_event_to_be_triggered_only_by(
-        [:responder, :ot_ico_sar_noff_draft],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_draft],
-    )  }
+               [:responder, :ot_ico_sar_noff_draft],
+               [:another_responder_in_same_team, :ot_ico_sar_noff_draft],
+             ) # .with_post_hook(Workflows::Hooks, :notify_managing_team_case_closed)
+    }
   end
 
   describe :reject_responder_assignment do

@@ -19,16 +19,21 @@ module PermitTriggerEvent
         all_cases.each do |case_type, kase|
           user, team = user_and_team
           state_machine = kase.state_machine
-          result = state_machine.can_trigger_event?(event_name: event,
-                                                    metadata: {
-                                                      acting_user: user,
-                                                      acting_team: team
-                                                    })
-          if result && @transition_to.present?
+          config = state_machine.config_for_event(event_name: event,
+                                                  metadata: {
+                                                    acting_user: user,
+                                                    acting_team: team
+                                                  })
+
+          # config.present? would return false for {}, which we don't want.
+          if !config.nil? && @transition_to.present?
             next_state = state_machine.next_state_for_event(event,
                                                             acting_user: user,
                                                             acting_team: team)
-            result = result && @transition_to == next_state
+            # result = !config.nil? && @transition_to == next_state
+            result = @transition_to == next_state
+          else
+            result = !config.nil?
           end
 
           if [user_type, case_type].in?(permitted_combinations) ^ result
@@ -37,8 +42,8 @@ module PermitTriggerEvent
             #
             #    kase : the case currently being tested
             #    user : the user currently being tested
-            unexpected_result = state_machine.can_trigger_event?(event_name: event, metadata: {acting_user: user, acting_team: team})
-            @errors << [user_type, case_type, unexpected_result]
+            # unexpected_result = state_machine.can_trigger_event?(event_name: event, metadata: {acting_user: user, acting_team: team})
+            @errors << [user_type, case_type, !config.nil?]
           end
         end
       end
@@ -47,6 +52,11 @@ module PermitTriggerEvent
 
     chain :with_transition_to do |target_state|
       @transition_to = target_state.to_s
+    end
+
+    chain :with_post_hook do |klass, method|
+      @post_hook_class = klass
+      @post_hook_method = method
     end
 
     # Use this to run binding.pry if a particular combination fails a test.

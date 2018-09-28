@@ -65,6 +65,26 @@ module ConfigurableStateMachine
       result
     end
 
+    def config_for_event(event_name:, metadata:, roles: nil)
+      roles = [roles] if roles.is_a?(String)
+      roles = extract_roles_from_metadata(metadata) if roles.nil?
+      user = extract_user_from_metadata(metadata)
+      roles.each do |role|
+        role_config = @config.user_roles[role]
+        next if role_config.nil?
+        role_state_config =  role_config.states[@kase.current_state]
+        if key_present_but_nil?(role_state_config, event_name.to_sym)
+          return {}
+        elsif event_present_and_triggerable?(
+                role_state_config: role_state_config,
+                event: event_name,
+                user: user)
+          return role_state_config[event_name]
+        end
+      end
+      return nil
+    end
+
     # intercept trigger event  methods, whcih all end in a !
     #
     def method_missing(method, *args)
