@@ -272,6 +272,7 @@ describe CasesController do
     end
 
     context 'ICO Overturned FOI case' do
+      let(:received_date) { Date.today }
       let(:ico_overturned_foi_params) do
         {
           action: 'create',
@@ -281,70 +282,67 @@ describe CasesController do
             external_deadline_mm: deadline.month.to_s,
             external_deadline_yyyy: deadline.year.to_s,
             original_ico_appeal_id: ico_foi_case.id.to_s,
-            received_date_dd: Date.today.day.to_s,
-            received_date_mm: Date.today.month.to_s,
-            received_date_yyyy: Date.today.year.to_s,
+            received_date_dd: received_date.day.to_s,
+            received_date_mm: received_date.month.to_s,
+            received_date_yyyy: received_date.year.to_s,
           },
           controller: 'cases',
           correspondence_type: 'overturned_foi',
         }
       end
 
-      describe 'creating an OverturnedICO::FOI case' do
-        let(:correspondence_type)       { CorrespondenceType.foi }
-        let(:controller_params)         { ActionController::Parameters
-                                            .new(ico_overturned_foi_params) }
-        let(:new_overturned_case)       { double Case::OverturnedICO::FOI,
-                                                 id: 87366 }
-        let(:decorated_overturned_case) { double(Case::OverturnedICO::FOIDecorator,
-                                                 uploads_dir: 'xx') }
-        let(:service)                   { double(CaseCreateService,
-                                             case: new_overturned_case,
-                                             case_class: Case::OverturnedICO::FOI,
-                                             call: nil) }
+      let(:correspondence_type)       { CorrespondenceType.foi }
+      let(:controller_params)         { ActionController::Parameters
+                                          .new(ico_overturned_foi_params) }
+      let(:new_overturned_case)       { double Case::OverturnedICO::FOI,
+                                               id: 87366 }
+      let(:decorated_overturned_case) { double(Case::OverturnedICO::FOIDecorator,
+                                               uploads_dir: 'xx') }
+      let(:service)                   { double(CaseCreateService,
+                                               case: new_overturned_case,
+                                               case_class: Case::OverturnedICO::FOI,
+                                               call: nil) }
 
+      before(:each) do
+        sign_in manager
+        expect(CaseCreateService).to receive(:new)
+                                       .with(manager,
+                                             'overturned_foi',
+                                             controller_params)
+                                       .and_return(service)
+      end
+
+      context 'case created OK' do
         before(:each) do
-          sign_in manager
-          expect(CaseCreateService).to receive(:new)
-                                         .with(manager,
-                                               'overturned_foi',
-                                               controller_params)
-                                         .and_return(service)
+          expect(service).to receive(:result).and_return(:assign_responder)
+          expect(service).to receive(:flash_notice)
+                               .and_return('Case successfully created')
+          post :create, params: ico_overturned_foi_params
         end
 
-        context 'case created OK' do
-          before(:each) do
-            expect(service).to receive(:result).and_return(:assign_responder)
-            expect(service).to receive(:flash_notice)
-                                 .and_return('Case successfully created')
-            post :create, params: ico_overturned_foi_params
-          end
-
-          it 'sets the flash' do
-            expect(flash[:creating_case]).to be true
-            expect(flash[:notice]).to eq 'Case successfully created'
-          end
-
-          it 'redirects to the new case assignment page' do
-            expect(response)
-              .to redirect_to(new_case_assignment_path(new_overturned_case))
-          end
+        it 'sets the flash' do
+          expect(flash[:creating_case]).to be true
+          expect(flash[:notice]).to eq 'Case successfully created'
         end
 
-        context 'error when creating case' do
-          before(:each) do
-            expect(service).to receive(:result).and_return(:error)
-            expect(new_overturned_case)
-              .to receive(:decorate).and_return(decorated_overturned_case)
-          end
-
-          it 'renders the new page' do
-            post :create, params: ico_overturned_foi_params
-            expect(response).to render_template(:new)
-          end
+        it 'redirects to the new case assignment page' do
+          expect(response)
+            .to redirect_to(new_case_assignment_path(new_overturned_case))
         end
       end
 
+      context 'error when creating case' do
+        before(:each) do
+          expect(service).to receive(:result).and_return(:error)
+          expect(new_overturned_case)
+            .to receive(:decorate).and_return(decorated_overturned_case)
+        end
+
+        it 'renders the new page' do
+          post :create, params: ico_overturned_foi_params
+          expect(response).to render_template(:new)
+        end
+      end
     end
 
     context 'ICO Overturned SAR case' do
