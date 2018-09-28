@@ -156,7 +156,7 @@ module Features
     def close_sar_case(kase:, user:, tmm: false, timeliness:)
       login_step user: user
       go_to_case_details_step kase: kase
-      close_sar_case_step timeliness: timeliness, tmm: tmm
+      close_sar_case_step timeliness: timeliness, tmm: tmm, editable: !kase.overturned_ico?
     end
 
     def close_ico_appeal_case(kase:, user:, timeliness:, decision:)

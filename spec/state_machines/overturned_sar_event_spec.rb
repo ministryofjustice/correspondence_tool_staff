@@ -88,16 +88,6 @@ describe 'state machine' do
       )}
   end
 
-  describe :edit_case do
-    it {
-      should permit_event_to_be_triggered_only_by(
-        [:disclosure_bmt, :ot_ico_sar_noff_unassigned],
-        [:disclosure_bmt, :ot_ico_sar_noff_awresp],
-        [:disclosure_bmt, :ot_ico_sar_noff_draft],
-        [:disclosure_bmt, :ot_ico_sar_noff_closed],
-     )}
-  end
-
   describe :link_a_case do
     it {
       should permit_event_to_be_triggered_only_by(
@@ -151,12 +141,4 @@ describe 'state machine' do
       )}
   end
 
-  describe :update_closure do
-    it {
-      should permit_event_to_be_triggered_only_by(
-        [:disclosure_bmt, :ot_ico_sar_noff_closed],
-        [:responder, :ot_ico_sar_noff_closed],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_closed],
-      )}
-  end
 end

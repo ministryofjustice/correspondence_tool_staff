@@ -81,5 +81,8 @@ div id="case-#{@correspondence_type_key}" class="case"
       = render partial: 'cases/case_history', locals: { case_transitions: @case_transitions }
 
   = render partial: 'shared/components/case_page_original_case_details'
+
+  hr
+
   section.case-info
     = action_links_for_allowed_events(@case, :extend_for_pit, :destroy_case).join(' | ').html_safe
