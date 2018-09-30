@@ -21,8 +21,14 @@ describe 'assignments/edit.html.slim', type: :view do
     assign(:assignment, assignment)
 
     login_as responder
-    allow_case_policies awaiting_responder_case, :can_add_message_to_case?, :request_further_clearance?, :destroy_case_link?
-    disallow_case_policies awaiting_responder_case, :new_case_link?, :destroy_case_link?, :can_remove_attachment?
+    allow_case_policies_in_view awaiting_responder_case,
+                                :can_add_message_to_case?,
+                                :request_further_clearance?,
+                                :destroy_case_link?
+    disallow_case_policies_in_view awaiting_responder_case,
+                                   :new_case_link?,
+                                   :destroy_case_link?,
+                                   :can_remove_attachment?
 
     render
 
@@ -72,8 +78,14 @@ describe 'assignments/edit.html.slim', type: :view do
       assign(:assignment, assignment_for_ico)
 
       login_as responder
-      allow_case_policies awaiting_responder_case, :can_add_message_to_case?, :request_further_clearance?, :destroy_case_link?
-      disallow_case_policies awaiting_responder_case, :new_case_link?, :destroy_case_link?, :can_remove_attachment?
+      allow_case_policies_in_view awaiting_responder_case,
+                                  :can_add_message_to_case?,
+                                  :request_further_clearance?,
+                                  :destroy_case_link?
+      disallow_case_policies_in_view awaiting_responder_case,
+                                     :new_case_link?,
+                                     :destroy_case_link?,
+                                     :can_remove_attachment?
 
       render
 
@@ -127,8 +139,14 @@ describe 'assignments/edit.html.slim', type: :view do
       assign(:assignment, assignment_for_overturned)
 
       login_as responder
-      allow_case_policies awaiting_responder_case, :can_add_message_to_case?, :request_further_clearance?, :destroy_case_link?
-      disallow_case_policies awaiting_responder_case, :new_case_link?, :destroy_case_link?, :can_remove_attachment?
+      allow_case_policies_in_view awaiting_responder_case,
+                                  :can_add_message_to_case?,
+                                  :request_further_clearance?,
+                                  :destroy_case_link?
+      disallow_case_policies_in_view awaiting_responder_case,
+                                     :new_case_link?,
+                                     :destroy_case_link?,
+                                     :can_remove_attachment?
 
       render
 

@@ -1,7 +1,8 @@
 require 'rspec/expectations'
 
 RSpec::Matchers.define :require_permission do |permission|
-  @permission_result = true
+  permission_result = true
+  permission_received = false
 
   match do |event_or_block|
     if event_or_block.respond_to? :call
@@ -9,8 +10,8 @@ RSpec::Matchers.define :require_permission do |permission|
       policy = spy(policy_class)
       allow(policy).to receive(permission)
                          .with(no_args) do
-                           @permission_received = true
-                           @permission_result
+                           permission_received = true
+                           permission_result
                          end
       allowing = @allowing || []
       allowing.each do |allow_permission|
@@ -22,15 +23,20 @@ RSpec::Matchers.define :require_permission do |permission|
       end
       if @with_args.present?
         allow(policy_class).to receive(:new).with(*@with_args).and_return(policy)
+        # Our Pundit policies can also be called with named args when called
+        # by the state machine. To ensure these work seamlessly:
+        allow(policy_class).to receive(:new)
+                                 .with(user: @user, kase: @object)
+                                 .and_return(policy)
       else
         allow(policy_class).to receive(:new).and_return(policy)
       end
       event_or_block.call
-      expect(@permission_received).to eq true
+      expect(permission_received).to eq true
     else
       policy_class = Pundit::PolicyFinder.new(@object).policy!
       expect_any_instance_of(policy_class).to receive(permission)
-                                                .and_return(@permission_result)
+                                                .and_return(permission_result)
       state_machine_class = RSpec::current_example
                               .example_group
                               .top_level_description
@@ -39,11 +45,11 @@ RSpec::Matchers.define :require_permission do |permission|
       event[:callbacks][:guards].each do |guard|
         expect do
           guard.call(@object, nil, @options)
-          @permission_received = true
+          permission_received = true
         end .not_to raise_error
       end
     end
-    expect(@permission_received).to eq true
+    expect(permission_received).to eq true
   end
 
   chain :using_options do |options|
@@ -55,15 +61,13 @@ RSpec::Matchers.define :require_permission do |permission|
   end
 
   chain :with_args do |*args|
-    @object = args.second
-    @with_args = args
+    (@user, @object) = @with_args = args
   end
 
   chain :allowing do |*args|
     @allowing ||= Set.new
     @allowing += args
     @disallowing ||= Set.new
-    @disallowing -= args
   end
 
   chain :disallowing do |*args|
@@ -74,7 +78,7 @@ RSpec::Matchers.define :require_permission do |permission|
   end
 
   chain :disallow do
-    @permission_result = false
+    permission_result = false
   end
 
   supports_block_expectations
