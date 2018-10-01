@@ -35,6 +35,7 @@ class NewOverturnedIcoCaseService
         {
           email:                  original_case.email,
           ico_officer_name:       @original_ico_appeal.ico_officer_name,
+          original_case_id:       original_case.id,
           original_ico_appeal_id: @original_ico_appeal.id,
           postal_address:         original_case.postal_address,
           reply_method:           reply_method,

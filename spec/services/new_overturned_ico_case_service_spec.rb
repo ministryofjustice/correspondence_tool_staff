@@ -52,6 +52,10 @@ describe NewOverturnedIcoCaseService do
         expect(service.success?).to be true
       end
 
+      it 'sets the original_case' do
+        expect(service.overturned_ico_case.original_case).to eq original_case
+      end
+
       it 'sets the original_ico_appeal' do
         expect(service.overturned_ico_case.original_ico_appeal).to eq original_ico_appeal
       end
@@ -106,6 +110,14 @@ describe NewOverturnedIcoCaseService do
 
       it 'is success' do
         expect(service.success?).to be true
+      end
+
+      it 'sets the original_case' do
+        expect(service.overturned_ico_case.original_case).to eq original_case
+      end
+
+      it 'sets the original_ico_appeal' do
+        expect(service.overturned_ico_case.original_ico_appeal).to eq original_ico_appeal
       end
 
       describe 'setting the reply method' do
