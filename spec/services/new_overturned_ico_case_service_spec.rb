@@ -56,14 +56,6 @@ describe NewOverturnedIcoCaseService do
         expect(service.overturned_ico_case.original_ico_appeal).to eq original_ico_appeal
       end
 
-      it 'sets the original case' do
-        expect(service.overturned_ico_case.original_case).to eq original_case
-      end
-
-      it 'the subject is delegated to the original case' do
-        expect(service.overturned_ico_case.subject).to eq original_case.subject
-      end
-
       it 'copies the ico officer name from the original appeal' do
         expect(service.overturned_ico_case.ico_officer_name).to eq original_ico_appeal.ico_officer_name
       end
@@ -136,13 +128,6 @@ describe NewOverturnedIcoCaseService do
               .to eq original_case.postal_address
           end
 
-        end
-      end
-
-      describe 'setting the received_date' do
-        it 'is set from the original ico appeal' do
-          expect(service.overturned_ico_case.received_date)
-            .to eq original_ico_appeal.date_ico_decision_received
         end
       end
     end

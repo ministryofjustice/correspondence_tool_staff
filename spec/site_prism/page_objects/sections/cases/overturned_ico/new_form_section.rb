@@ -5,14 +5,14 @@ module PageObjects
         class NewFormSection < SitePrism::Section
           include SitePrism::Support::DropInDropzone
 
-          element :ico_appeal_info, '.heading-medium'
-
-          # Annoyingly, although this allows the presence of received_date to
-          # be testable, it doesn't allow the fields within it to be set.
-          section :received_date,
-                  PageObjects::Sections::Shared::GovUKDateSection,
-                  'fieldset#received_date',
+          element :correspondence_type,
+                  '#correspondence_type',
                   visible: false
+          element :original_ico_appeal_id,
+                  :xpath,
+                  ".//input[contains(@name,'original_ico_appeal_id')]",
+                  visible: false
+          element :ico_appeal_info, '.heading-medium'
 
           section :final_deadline,
                   PageObjects::Sections::Shared::GovUKDateSection,

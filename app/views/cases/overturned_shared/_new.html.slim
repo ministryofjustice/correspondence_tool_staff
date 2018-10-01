@@ -2,8 +2,6 @@
 
   = hidden_field_tag 'correspondence_type', @correspondence_type_key
   = f.hidden_field :original_ico_appeal_id
-  = f.hidden_field :original_case_id,
-                   value: @case.original_ico_appeal.original_case_id
 
   = render partial: 'cases/overturned_shared/new_form', locals: { kase: @case, f: f }
 

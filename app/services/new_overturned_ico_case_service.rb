@@ -36,9 +36,7 @@ class NewOverturnedIcoCaseService
           email:                  original_case.email,
           ico_officer_name:       @original_ico_appeal.ico_officer_name,
           original_ico_appeal_id: @original_ico_appeal.id,
-          original_case_id:       original_case.id,
           postal_address:         original_case.postal_address,
-          received_date:          @original_ico_appeal.date_ico_decision_received,
           reply_method:           reply_method,
         }
       )

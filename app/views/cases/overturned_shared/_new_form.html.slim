@@ -13,11 +13,6 @@ section
 
 hr
 
-fieldset#received_date
-  = f.hidden_field :received_date_dd
-  = f.hidden_field :received_date_mm
-  = f.hidden_field :received_date_yyyy
-
 .form-group
   = f.gov_uk_date_field :external_deadline,
                         { legend_text: "Final deadline" ,

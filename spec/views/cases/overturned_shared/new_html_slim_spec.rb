@@ -1,10 +1,9 @@
 require "rails_helper"
 
 describe 'cases/overturned_shared/_new.html.slim' do
-  let(:bmt_manager) { create(:disclosure_bmt_user) }
-  let(:ico_appeal)  { create(:closed_ico_sar_case) }
-
-  let(:overturned_foi) { find_or_create(:overturned_foi_correspondence_type) }
+  let(:bmt_manager)    { create(:disclosure_bmt_user) }
+  let(:ico_appeal)     { @overturned_foi.original_ico_appeal }
+  let(:overturned_foi) { @overturned_foi }
 
   let(:partial) do
     render
@@ -17,7 +16,9 @@ describe 'cases/overturned_shared/_new.html.slim' do
   end
 
   before(:all) do
-    @overturned_foi_case = build(:overturned_ico_foi)
+    # Creating an Overturned FOI case fixture is slow because it has to create
+    # the original cases, etc. Let's only do this once.
+    @overturned_foi = build(:overturned_ico_foi)
   end
 
   after(:all) do
@@ -25,35 +26,34 @@ describe 'cases/overturned_shared/_new.html.slim' do
   end
 
   before(:each) do
-    assign(:case, @overturned_foi_case.decorate)
+    assign(:case, overturned_foi.decorate)
     assign(:correspondence_type, overturned_foi)
     assign(:correspondence_type_key, 'overturned_foi')
 
     login_as bmt_manager
   end
 
+  describe 'hidden case info fields' do
+    it 'has a hidden correspondence_type field' do
+      expect(partial.correspondence_type.value).to eq 'overturned_foi'
+    end
+
+    it 'has a hidden original_ico_appeal_id field' do
+      expect(partial.original_ico_appeal_id.value).to eq ico_appeal.id.to_s
+    end
+  end
+
   describe 'ico_appeal_info section' do
     subject { partial.ico_appeal_info }
 
     it { should be_visible }
-    it { should have_text(@overturned_foi_case.number) }
-    it { should have_text(@overturned_foi_case.subject) }
+    it { should have_text(overturned_foi.number) }
+    it { should have_text(overturned_foi.subject) }
     it { should have_text('(opens in a new tab)') }
 
     it 'should open up a new tab' do
       link = subject.find('a')
       expect(link[:target]).to eq '_blank'
-    end
-  end
-
-  describe 'date decision was received' do
-    it 'has the case received date' do
-      expect(partial.received_date.day.value)
-        .to eq @overturned_foi_case.received_date.day.to_s
-      expect(partial.received_date.month.value)
-        .to eq @overturned_foi_case.received_date.month.to_s
-      expect(partial.received_date.year.value)
-        .to eq @overturned_foi_case.received_date.year.to_s
     end
   end
 
@@ -68,7 +68,7 @@ describe 'cases/overturned_shared/_new.html.slim' do
   describe "requester's email" do
     it "populates from the case" do
       expect(partial).to have_field("Requester's email",
-                                    with: @overturned_foi_case.email,
+                                    with: overturned_foi.email,
                                     type: :email)
     end
   end
@@ -76,7 +76,7 @@ describe 'cases/overturned_shared/_new.html.slim' do
   describe "requester's postal address" do
     it "populates from the case" do
       expect(partial).to have_field("Requester's postal address",
-                                    with: @overturned_foi_case.postal_address,
+                                    with: overturned_foi.postal_address,
                                     type: :textarea)
     end
   end
@@ -92,7 +92,7 @@ describe 'cases/overturned_shared/_new.html.slim' do
       expect(partial)
         .to have_field(
               "Name of the ICO information officer who's handling this case",
-              with: @overturned_foi_case.ico_officer_name,
+              with: overturned_foi.ico_officer_name,
               type: :text
             )
     end
