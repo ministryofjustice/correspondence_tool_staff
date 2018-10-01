@@ -19,11 +19,7 @@ class NewOverturnedIcoCaseService
     case @original_ico_appeal.type
     when 'Case::ICO::FOI'
       original_case = @original_ico_appeal.original_case
-      reply_method = if original_case.sent_by_email?
-                       :send_by_email
-                     else
-                       :send_by_post
-                     end
+      reply_method = delivery_method_to_reply_method(original_case)
       overturned_klass = Case::OverturnedICO::FOI
     when 'Case::ICO::SAR'
       original_case = @original_ico_appeal.original_case
@@ -49,4 +45,13 @@ class NewOverturnedIcoCaseService
     end
   end
 
+  private
+
+  def delivery_method_to_reply_method(kase)
+    if kase.sent_by_email?
+      :send_by_email
+    else
+      :send_by_post
+    end
+  end
 end
