@@ -94,7 +94,9 @@ class AssignmentsController < ApplicationController
       redirect_to case_path @assignment.case, accepted_now: true
     elsif valid_reject?
       @assignment.reject current_user, assignment_params[:reasons_for_rejection]
-      redirect_to case_assignments_show_rejected_path @case, rejected_now: true
+      flash[:notice] = "#{ @case.number} has been rejected.".html_safe
+      goto_path = case_path(@case)
+      redirect_to goto_path
     else
       @assignment.assign_and_validate_state(assignment_params[:state])
       render :edit

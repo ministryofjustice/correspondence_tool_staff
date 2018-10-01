@@ -40,12 +40,8 @@ feature 'respond to responder assignment' do
     fill_in 'Why are you rejecting this case?', with: 'This is not for me'
     click_button 'Confirm'
 
-    expect(page).to have_current_path(case_assignments_show_rejected_path assigned_case, rejected_now: true)
-    expect(page).to have_content "You've rejected this case"
-    expect(page).
-      to have_content(
-        'Disclosure BMT will assign the case to the appropriate business unit.'
-      )
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page.notice.text).to eq "#{assigned_case.number} has been rejected."
 
     expect(assigned_case.reload.current_state).to eq 'unassigned'
   end
