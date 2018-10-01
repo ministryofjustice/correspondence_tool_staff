@@ -39,6 +39,11 @@ describe 'cases/overturned_shared/_new.html.slim' do
     it { should have_text(@overturned_foi_case.number) }
     it { should have_text(@overturned_foi_case.subject) }
     it { should have_text('(opens in a new tab)') }
+
+    it 'should open up a new tab' do
+      link = subject.find('a')
+      expect(link[:target]).to eq '_blank'
+    end
   end
 
   describe 'date decision was received' do

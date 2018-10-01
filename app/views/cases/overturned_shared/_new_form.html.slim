@@ -8,7 +8,8 @@ section
     = "#{@case.subject} "
     span.no-break
       = link_to @case.original_case_description + ' (opens in a new tab)',
-              case_path(@case.original_case_id)
+                case_path(@case.original_case_id),
+                target: '_blank'
 
 hr
 
