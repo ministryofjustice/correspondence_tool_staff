@@ -19,6 +19,10 @@ class Case::OverturnedICO::SAR < Case::OverturnedICO::Base
     'sar'
   end
 
+  def within_escalation_deadline?
+    false
+  end
+
   def self.type_abbreviation
     'OVERTURNED_SAR'
   end

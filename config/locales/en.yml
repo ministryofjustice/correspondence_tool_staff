@@ -171,6 +171,8 @@ en:
     case/ico/foi_policy:
       can_close_case?: You are not authorised to close this case
       can_accept_or_reject_responder_assignment?: You are not allowed to accept or reject responder assignment
+    case/ico/sar_policy:
+      <<: *case_policy
     case/foi/standard_policy:
       <<: *case_policy
     case/foi/compliance_review_policy:
@@ -187,12 +189,13 @@ en:
       edit?: 'You are not authorised to edit this team'
       destroy?: 'You are not authorised to deactivate teams'
     nil_class: 'Authorisation failed due to internal error.'
-    user_policy:
-      destroy?: 'You are not authorised to deactivate users'
     case/overturned_ico/base_policy:
       new_overturned_ico?: 'You are not authorised to create an overturned ICO case'
     case/overturned_ico/sar_policy:
       respond_and_close?: You are not authorised to close this case
+      <<: *case_policy
+    user_policy:
+      destroy?: 'You are not authorised to deactivate users'
 
   roles:
     responders: Information officers

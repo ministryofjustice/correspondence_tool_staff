@@ -63,7 +63,7 @@ gem 'uglifier', '>= 1.3.0'
 group :test do
   gem 'capybara'
   gem 'codeclimate-test-reporter', '~> 1.0'
-  gem 'i18n-tasks', '~> 0.9.24'
+  gem 'i18n-tasks', '~> 0.9.25'
   gem 'rails-controller-testing', require: false
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 3.1'
@@ -85,7 +85,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 3.8'
-  gem 'rubocop', '~> 0.58.2', require: false
+  gem 'rubocop', '~> 0.59.2', require: false
   gem 'rubocop-rspec', require: false
   gem 'ruby-progressbar'
 
