@@ -13,4 +13,11 @@ module OverturnedICOParams
         )
   end
 
+  def respond_overturned_params
+    params.require(:case_overturned_foi).permit(
+      :date_responded_dd,
+      :date_responded_mm,
+      :date_responded_yyyy,
+    )
+  end
 end
