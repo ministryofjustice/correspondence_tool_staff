@@ -152,33 +152,34 @@ RSpec.describe AssignmentsController, type: :controller do
       end
 
       context 'rejecting' do
-        it 'calls #reject' do
-          expect_any_instance_of(Assignment).to receive(:reject).with(responder, rejection_message) do |subject_assignment|
-            expect(subject_assignment.id).to eq assignment.id
+        describe 'when a user rejects FOI' do
+          it 'calls #reject' do
+            expect_any_instance_of(Assignment).to receive(:reject).with(responder, rejection_message) do |subject_assignment|
+              expect(subject_assignment.id).to eq assignment.id
+            end
+            patch :accept_or_reject, params: reject_assignment_params
           end
-          patch :accept_or_reject, params: reject_assignment_params
-        end
 
-        it 'redirects to show_rejected page' do
-          patch :accept_or_reject, params: reject_assignment_params
-          expect(response).to redirect_to(
-                                 case_assignments_show_rejected_path(
-                                   assigned_case,
-                                   rejected_now: true
-                                 )
-                               )
-        end
+          it 'redirects to case_details page' do
+            patch :accept_or_reject, params: reject_assignment_params
+            expect(response).to redirect_to(case_path(assigned_case))
+          end
 
-        it 'requires a reason for rejecting' do
-          patch :accept_or_reject, params: reject_assignment_params.merge(
-                  assignment: {
-                                reasons_for_rejection: '',
-                                state: 'rejected'
-                              }
-                )
-          expect(response).to render_template(:edit)
-        end
+          it 'has success message in flash' do
+            patch :accept_or_reject, params: reject_assignment_params
+            expect(flash[:notice]).to eq "#{assigned_case.number} has been rejected."
+          end
 
+          it 'requires a reason for rejecting' do
+            patch :accept_or_reject, params: reject_assignment_params.merge(
+                    assignment: {
+                                  reasons_for_rejection: '',
+                                  state: 'rejected'
+                                }
+                  )
+            expect(response).to render_template(:edit)
+          end
+        end
       end
 
       it 'does not allow unknown states' do
