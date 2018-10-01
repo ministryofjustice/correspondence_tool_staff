@@ -167,10 +167,10 @@ describe CaseLinkingService do
 
         describe 'linking a sar case to a sar case' do
           it 'errors if user is not a manager' do
-            service = CaseLinkingService.new(responder, sar_case_1, sar_case_2.number)
-            service.create
-            expect(service.result).to eq :error
-            expect(sar_case_1.errors[:linked_case_number]).to eq ['User requires manager role for linking SAR cases']
+            expect {
+              service = CaseLinkingService.new(responder, sar_case_1, sar_case_2.number)
+              service.create
+            }.to raise_error CaseLinkingService::CaseLinkingError, 'User requires manager role for linking SAR cases'
           end
         end
       end
@@ -299,7 +299,7 @@ describe CaseLinkingService do
   context 'when an error occurs' do
     it 'rolls back changes' do
       allow(kase.related_case_links)
-        .to receive(:<<).and_throw(ActiveRecord::RecordInvalid)
+        .to receive(:<<).and_raise(ActiveRecord::RecordInvalid)
       service.create
 
       cases_transitions = kase.transitions.where(
@@ -315,7 +315,7 @@ describe CaseLinkingService do
 
     it 'sets result to :error and returns same' do
       allow(kase.related_case_links)
-        .to receive(:<<).and_throw(ActiveRecord::RecordInvalid)
+        .to receive(:<<).and_raise(ActiveRecord::RecordInvalid)
       result = service.create
       expect(result).to eq :error
       expect(service.result).to eq :error

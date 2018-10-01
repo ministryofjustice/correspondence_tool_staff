@@ -23,11 +23,11 @@ class CaseLinkingService
         )
         create_links
         @result
-      rescue CaseLinkingError => err
-        @case.errors.add(:linked_case_number, err.message)
-        @error = err
-        @result = :error
-      rescue => err
+      # rescue CaseLinkingError => err
+      #   @case.errors.add(:linked_case_number, err.message)
+      #   @error = err
+      #   @result = :error
+      rescue ActiveRecord::RecordInvalid => err
         Rails.logger.error err.to_s
         Rails.logger.error err.backtrace.join("\n\t")
         @error = err
