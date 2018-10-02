@@ -180,11 +180,6 @@ class AssignmentsController < ApplicationController
     end
   end
 
-  def show_rejected
-    @rejected_now = params[:rejected_now]
-    render
-  end
-
   def reassign_user
     authorize @case, :assignments_reassign_user?
     @team_users = set_team_users.decorate

@@ -47,10 +47,6 @@ describe 'cases routes', type: :routing do
     it { should route_to 'cases#my_open_cases', tab: 'in_time' }
   end
 
-  describe get: '/cases/1/assignments/show_rejected' do
-    it { should route_to 'assignments#show_rejected', case_id: '1' }
-  end
-
   describe patch: '/cases/1/unflag_for_clearance' do
     it { should route_to 'cases#unflag_for_clearance', id: '1' }
   end
