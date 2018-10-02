@@ -6,6 +6,7 @@ describe Case::OverturnedICO::SAR do
 
   let(:original_ico_appeal)     { create :ico_sar_case, original_case: original_case }
   let(:original_case)           { create :sar_case }
+  let(:sar)                     { find_or_create :sar_correspondence_type }
 
   describe '.type_abbreviation' do
     it 'returns the correct abbreviation' do
@@ -284,5 +285,12 @@ describe Case::OverturnedICO::SAR do
       expect(original_case.linked_cases).to include(@kase)
     end
 
+  end
+
+  describe '#correspondence_type_for_business_unit_assignment' do
+    it 'returns SAR correspondence type' do
+      expect(new_case.correspondence_type_for_business_unit_assignment)
+        .to eq sar
+    end
   end
 end

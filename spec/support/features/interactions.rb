@@ -1,6 +1,6 @@
 module Features
   module Interactions
-    include Interactions::OverturnedSAR
+    include Interactions::OverturnedICO
 
     def create_and_assign_foi_case(type: Case::FOI::Standard,
                                    user:,
@@ -34,20 +34,6 @@ module Features
                                   related_cases: related_cases)
       assign_case_step business_unit: responding_team
       logout_step
-      kase
-    end
-
-    def create_and_assign_overturned_sar(user:,
-                                        responding_team:,
-                                        ico_case:)
-      login_step user: user
-      kase = create_overturned_sar_case_step(ico_case: ico_case)
-
-      # At the moment before the case_details page is ready the assign step is done as follows
-      assignments_new_page.choose_business_group(responding_team.business_group)
-      assignments_new_page.choose_business_unit(responding_team)
-      # Once the overturned case details page is completed we can use the following method:
-      # assign_case_step business_unit: responding_team
       kase
     end
 
@@ -168,7 +154,7 @@ module Features
     def add_message_to_case(kase:, message:, do_logout: true)
       expect(cases_show_page).to be_displayed(id: kase.id)
       cases_show_page.add_message_to_case(message)
-      expect(cases_show_page.messages.first).to have_content(message)
+      expect(cases_show_page.messages.last).to have_content(message)
       logout_step if do_logout
     end
 

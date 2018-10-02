@@ -66,12 +66,6 @@ class Case::OverturnedICO::Base < Case::Base
     self.original_ico_appeal&.id
   end
 
-  def set_reply_method
-    self.reply_method = original_case.reply_method
-    self.email = original_case.email
-    self.postal_address = original_case.postal_address
-  end
-
   def overturned_ico?
     true
   end
