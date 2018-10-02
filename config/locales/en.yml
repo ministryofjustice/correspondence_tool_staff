@@ -403,20 +403,17 @@ en:
           upheld: Upheld by ICO
           overturned: Overturned by ICO
         ico_decision_comment: "Details of ICO's decision"
-      case_overturned_foi:
+      case_overturned_ico: &case_overturned_ico
         email: "Requester's email"
         ico_officer_name: "Name of the ICO information officer who's handling this case"
         postal_address: "Requester's postal address"
         reply_method:
           send_by_email: "By email"
           send_by_post: "By post"
+      case_overturned_foi:
+        <<: *case_overturned_ico
       case_overturned_sar:
-        email: "Requester's email"
-        ico_officer_name: "Name of the ICO information officer who's handling this case"
-        postal_address: "Requester's postal address" 
-        reply_method:
-          send_by_email: "By email"
-          send_by_post: "By post"
+        <<: *case_overturned_ico
       case_sar:
         email: "Recipient email address"
         message: Full case details
