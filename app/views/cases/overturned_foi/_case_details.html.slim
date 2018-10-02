@@ -6,19 +6,7 @@
       = translate_for_case(case_details, 'common', case_details_for_link_type(link_type))
 
     table
-      tbody.overturned-sar-basic-details
-        = render partial: 'cases/shared/case_type', locals: { case_details: case_details }
-        = render partial: 'cases/shared/ico_reference', locals: { case_details: case_details }
-        = render partial: 'cases/shared/ico_officer_name', locals: { case_details: case_details }
-        = render partial: 'cases/shared/date_received', locals: { case_details: case_details }
-        = render partial: 'cases/shared/case_deadlines', locals: { case_details: case_details }
-
-
-      - if case_details.responding_team.present?
-        = render partial: 'cases/shared/responding_team', locals: { case_details: case_details }
-
-      - if case_details.responded? || case_details.closed?
-        = render partial: 'cases/shared/closed_case_details', locals: { case_details: case_details }
-
+      tbody.overturned-foi-basic-details
+        = render partial: 'cases/overturned_shared/case_details', locals: {case_details: case_details }
     / display links to edit case and/or closure details
     = case_details_links(case_details, current_user).html_safe

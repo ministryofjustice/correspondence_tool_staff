@@ -6,6 +6,7 @@ describe Case::OverturnedICO::FOI do
 
   let(:original_ico_appeal)     { create :ico_foi_case, original_case: original_case }
   let(:original_case)           { create :foi_case }
+  let(:foi)                     { find_or_create :foi_correspondence_type }
 
   describe '.type_abbreviation' do
     it 'returns the correct abbreviation' do
@@ -239,6 +240,13 @@ describe Case::OverturnedICO::FOI do
                     received_date: 0.business_days.ago,
                     external_deadline: 30.business_days.from_now
       expect(kase.escalation_deadline).to eq kase.created_at.to_date
+    end
+  end
+
+  describe '#correspondence_type_for_business_unit_assignment' do
+    it 'returns FOI correspondence type' do
+      expect(new_case.correspondence_type_for_business_unit_assignment)
+        .to eq foi
     end
   end
 end

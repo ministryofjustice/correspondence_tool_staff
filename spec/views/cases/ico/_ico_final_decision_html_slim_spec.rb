@@ -8,8 +8,8 @@ describe 'cases/_ico_final_decision.html.slim', type: :view do
     before do
       assign(:case, upheld_closed_sar_ico_appeal)
       login_as create(:manager)
-      disallow_case_policies upheld_closed_sar_ico_appeal,
-                             :can_remove_attachment?
+      disallow_case_policies_in_view upheld_closed_sar_ico_appeal,
+                                     :can_remove_attachment?
       render partial: 'cases/ico/ico_final_decision.html.slim',
              locals: { case_details: upheld_closed_sar_ico_appeal }
     end
@@ -30,8 +30,8 @@ describe 'cases/_ico_final_decision.html.slim', type: :view do
     it 'should display comments if comments exist' do
       upheld_closed_sar_ico_appeal.ico_decision_comment = 'Today is the day.'
 
-      disallow_case_policies upheld_closed_sar_ico_appeal,
-                             :can_remove_attachment?
+      disallow_case_policies_in_view upheld_closed_sar_ico_appeal,
+                                     :can_remove_attachment?
       render partial: 'cases/ico/ico_final_decision.html.slim',
              locals: { case_details: upheld_closed_sar_ico_appeal }
 
@@ -50,8 +50,8 @@ describe 'cases/_ico_final_decision.html.slim', type: :view do
     before do
       assign(:case, overturned_ico_sar)
       login_as create(:manager)
-      disallow_case_policies overturned_ico_sar,
-                             :can_remove_attachment?
+      disallow_case_policies_in_view overturned_ico_sar,
+                                     :can_remove_attachment?
       render partial: 'cases/ico/ico_final_decision.html.slim',
              locals: { case_details: overturned_ico_sar }
     end
@@ -72,8 +72,8 @@ describe 'cases/_ico_final_decision.html.slim', type: :view do
     it 'should display comments if comments exist' do
       overturned_ico_sar.original_ico_appeal.ico_decision_comment = 'Today is the day.'
 
-      disallow_case_policies overturned_ico_sar,
-                             :can_remove_attachment?
+      disallow_case_policies_in_view overturned_ico_sar,
+                                     :can_remove_attachment?
       render partial: 'cases/ico/ico_final_decision.html.slim',
              locals: { case_details: overturned_ico_sar }
 

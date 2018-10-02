@@ -15,7 +15,7 @@ feature 'SAR Case creation by a manager' do
   end
 
   scenario 'creating a case that needs clearance', js: true do
-    ico_case = create(:ico_sar_case)
+    ico_case = create(:closed_ico_sar_case)
 
     # Move this to a user journey test once displaying works.
     # create_and_assign_overturned_sar_case(user: manager,
@@ -29,22 +29,21 @@ feature 'SAR Case creation by a manager' do
     cases_new_overturned_ico_page.load(id: ico_case.id)
 
     expect(cases_new_overturned_ico_page).to be_displayed
-    expect(cases_new_overturned_ico_page).to have_sar_form
+    expect(cases_new_overturned_ico_page).to have_form
     expect(cases_new_overturned_ico_page).to have_text(ico_case.number)
 
-    form = cases_new_overturned_ico_page.sar_form
-    date_received = Date.today
-    form.date_received_day.set(date_received.day)
-    form.date_received_month.set(date_received.month)
-    form.date_received_year.set(date_received.year)
-
+    form = cases_new_overturned_ico_page.form
     final_deadline = 10.business_days.from_now
-    form.final_deadline_day.set(final_deadline.day)
-    form.final_deadline_month.set(final_deadline.month)
-    form.final_deadline_year.set(final_deadline.year)
+    form.final_deadline.day.set(final_deadline.day)
+    form.final_deadline.month.set(final_deadline.month)
+    form.final_deadline.year.set(final_deadline.year)
 
-    expect(form.reply_method.send_by_email).to be_checked
-    expect(form.reply_method.email.value).to eq ico_case.original_case.email
+    expect(form).to have_checked_field('By email', visible: false)
+    expect(form).to have_field(
+                      "Name of the ICO information officer who's handling this case",
+                      with: ico_case.ico_officer_name,
+                      type: :text
+                    )
 
     click_button 'Create case'
 

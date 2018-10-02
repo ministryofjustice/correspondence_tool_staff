@@ -90,6 +90,8 @@ module PageObjects
         ico_decision:                 'Cases::ICO::ICODecisionSection',
         ico_show:                     'Cases::ICO::ShowSection',
         open_case_status_filter_panel:'Cases::OpenCaseStatusFilterPanelSection',
+        overturned_foi_case_details:  'Cases::OverturnedFOI::CaseDetailsSection',
+        overturned_ico_new_form:      'Cases::OverturnedICO::NewFormSection',
         overturned_sar_case_details:  'Cases::OverturnedSAR::CaseDetailsSection',
         pagination:                   'PaginationSection',
       }.each do |section_name, section_class|

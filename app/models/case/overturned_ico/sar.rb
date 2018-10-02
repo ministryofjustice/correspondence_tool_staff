@@ -15,6 +15,10 @@ class Case::OverturnedICO::SAR < Case::OverturnedICO::Base
 
   attr_accessor :missing_info
 
+  def correspondence_type_for_business_unit_assignment
+    CorrespondenceType.sar
+  end
+
   def state_machine_name
     'sar'
   end

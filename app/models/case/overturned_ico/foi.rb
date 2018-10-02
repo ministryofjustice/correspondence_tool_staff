@@ -13,6 +13,10 @@ class Case::OverturnedICO::FOI < Case::OverturnedICO::Base
     :date_received
 ]
 
+  def correspondence_type_for_business_unit_assignment
+    CorrespondenceType.foi
+  end
+
   def overturned_ico_foi?
     true
   end
