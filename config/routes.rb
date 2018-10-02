@@ -39,7 +39,6 @@
 #                        update_closure_case PATCH  /cases/:id/update_closure(.:format)                                  cases#update_closure
 #                               respond_case GET    /cases/:id/respond(.:format)                                         cases#respond
 #                       confirm_respond_case PATCH  /cases/:id/confirm_respond(.:format)                                 cases#confirm_respond
-#             case_assignments_show_rejected GET    /cases/:case_id/assignments/show_rejected(.:format)                  assignments#show_rejected
 #              case_assign_to_responder_team GET    /cases/:case_id/assignments/assign_to_team(.:format)                 assignments#assign_to_team
 #                  unflag_for_clearance_case PATCH  /cases/:id/unflag_for_clearance(.:format)                            cases#unflag_for_clearance
 #    unflag_taken_on_case_for_clearance_case PATCH  /cases/:id/unflag_taken_on_case_for_clearance(.:format)              cases#unflag_taken_on_case_for_clearance
@@ -226,7 +225,6 @@ Rails.application.routes.draw do
     patch 'update_closure', on: :member
     get 'respond', on: :member
     patch 'confirm_respond', on: :member
-    get '/assignments/show_rejected' => 'assignments#show_rejected'
     get '/assignments/assign_to_team' => 'assignments#assign_to_team', as: 'assign_to_responder_team'
     patch 'unflag_for_clearance' => 'cases#unflag_for_clearance', on: :member
     patch 'unflag_taken_on_case_for_clearance' => 'cases#unflag_taken_on_case_for_clearance', on: :member

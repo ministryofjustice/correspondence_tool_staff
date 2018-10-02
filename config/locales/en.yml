@@ -445,12 +445,6 @@ en:
     assignment_accepted_html: |
       <strong>You've accepted this case</strong><br>
       It will now appear in <a href="%{case_list_url}">your cases</a>.
-    assignment_rejected_html: |
-      <strong>You've rejected this case</strong><br>
-      Disclosure BMT will assign the case to the appropriate business unit.
-    assignment_already_rejected_html: |
-      <strong>This case has already been rejected.</strong><br>
-      This case will be reviewed and assigned the to appropriate unit.
     escalation_warning_html: |
       <strong>Important notice</strong><br>
       This case is being reviewed for sensitivity.
