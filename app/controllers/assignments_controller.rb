@@ -1,3 +1,4 @@
+#rubocop:disable Metrics/ClassLength
 class AssignmentsController < ApplicationController
 
   before_action :set_case, only: [
@@ -95,18 +96,7 @@ class AssignmentsController < ApplicationController
     elsif valid_reject?
       @assignment.reject current_user, assignment_params[:reasons_for_rejection]
       flash[:notice] = "#{ @case.number} has been rejected.".html_safe
-
-      case @case.type_abbreviation
-      when 'FOI', 'OVERTURNED_FOI' then redirect_to case_path(@case)
-      when 'SAR', 'OVERTURNED_SAR' then redirect_to responder_root_path
-      when 'ICO' then
-        if @case.original_case_type === 'SAR'
-          redirect_to responder_root_path
-        else
-          redirect_to case_path(@case)
-        end
-      else raise 'Unknown case type'
-      end
+      redirect_user_to_specific_landing_page
     else
       @assignment.assign_and_validate_state(assignment_params[:state])
       render :edit
@@ -298,4 +288,19 @@ class AssignmentsController < ApplicationController
                          unlink_path,
                          { method: :patch, class: "undo-take-on-link"}
   end
+
+  def redirect_user_to_specific_landing_page
+    case @case.type_abbreviation
+    when 'FOI', 'OVERTURNED_FOI' then redirect_to case_path(@case)
+    when 'SAR', 'OVERTURNED_SAR' then redirect_to responder_root_path
+    when 'ICO' then
+      if @case.original_case_type === 'SAR'
+        redirect_to responder_root_path
+      else
+        redirect_to case_path(@case)
+      end
+    else raise 'Unknown case type'
+    end
+  end
 end
+#rubocop:enable Metrics/ClassLength
