@@ -95,8 +95,12 @@ class AssignmentsController < ApplicationController
     elsif valid_reject?
       @assignment.reject current_user, assignment_params[:reasons_for_rejection]
       flash[:notice] = "#{ @case.number} has been rejected.".html_safe
-      goto_path = case_path(@case)
-      redirect_to goto_path
+
+      case @case.type_abbreviation
+      when 'FOI', 'OVERTURNED_FOI' then redirect_to case_path(@case)
+      when 'SAR', 'OVERTURNED_SAR' then redirect_to responder_root_path
+      else raise 'Unknown case type'
+      end
     else
       @assignment.assign_and_validate_state(assignment_params[:state])
       render :edit
