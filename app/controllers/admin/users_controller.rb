@@ -3,7 +3,10 @@ class Admin::UsersController < AdminController
     if @team.present?
       @users = @team.users
     else
-      @users = User.all.page(params[:page]).per(50).decorate
+      @users = User.all
+                   .order(:full_name)
+                   .page(params[:page]).per(100)
+                   .decorate
     end
   end
 end
