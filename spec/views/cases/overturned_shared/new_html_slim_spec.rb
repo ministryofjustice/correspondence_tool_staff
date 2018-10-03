@@ -97,4 +97,13 @@ describe 'cases/overturned_shared/_new.html.slim' do
             )
     end
   end
+
+  describe 'back to case details link' do
+    it 'exists on the page' do
+      expect(partial)
+        .to have_link('Back to case details',
+                      href: "/cases/#{ico_appeal.id}")
+    end
+
+  end
 end
