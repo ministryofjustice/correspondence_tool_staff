@@ -9,17 +9,17 @@ FactoryBot.define do
       identifier      { "unassigned overturned ico sar" }
     end
 
-    message                         { identifier }
-    current_state                   { 'unassigned' }
-    original_ico_appeal             { create :closed_ico_sar_case }
-    original_case                   { create :sar_case }
-    received_date                   { Date.yesterday }
-    internal_deadline               { 10.days.from_now }
-    external_deadline               { 20.days.from_now }
-    escalation_deadline             { 3.days.from_now }
-    reply_method                    { 'send_by_email' }
-    email                           { 'dave@moj.com' }
-    ico_officer_name                { 'Dan Dare' }
+    message             { identifier }
+    current_state       { 'unassigned' }
+    original_ico_appeal { create(:closed_ico_sar_case, :overturned_by_ico) }
+    original_case       { original_ico_appeal.original_case }
+    received_date       { Date.yesterday }
+    internal_deadline   { 10.days.from_now }
+    external_deadline   { 20.days.from_now }
+    escalation_deadline { 3.days.from_now }
+    reply_method        { 'send_by_email' }
+    email               { 'dave@moj.com' }
+    ico_officer_name    { 'Dan Dare' }
   end
 
   factory :awaiting_responder_ot_ico_sar,
