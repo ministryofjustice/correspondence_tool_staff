@@ -105,6 +105,18 @@ en:
               not_ico_sar: is not an ICO appeal for a SAR case
             original_case:
               not_sar: is not a SAR case
+        case/overturned_ico/foi:
+          attributes:
+            received_date:
+              future: cannot be in the future
+              past: is too far in the past
+            external_deadline:
+              past: cannot be in the past
+              future: is too far in the future
+            original_ico_appeal:
+              not_ico_foi: is not an ICO appeal for a FOI case
+            original_case:
+              not_foi: is not a FOI case
         case/sar:
           attributes:
             third_party:
@@ -159,6 +171,8 @@ en:
     case/ico/foi_policy:
       can_close_case?: You are not authorised to close this case
       can_accept_or_reject_responder_assignment?: You are not allowed to accept or reject responder assignment
+    case/ico/sar_policy:
+      <<: *case_policy
     case/foi/standard_policy:
       <<: *case_policy
     case/foi/compliance_review_policy:
@@ -175,12 +189,13 @@ en:
       edit?: 'You are not authorised to edit this team'
       destroy?: 'You are not authorised to deactivate teams'
     nil_class: 'Authorisation failed due to internal error.'
-    user_policy:
-      destroy?: 'You are not authorised to deactivate users'
     case/overturned_ico/base_policy:
       new_overturned_ico?: 'You are not authorised to create an overturned ICO case'
     case/overturned_ico/sar_policy:
       respond_and_close?: You are not authorised to close this case
+      <<: *case_policy
+    user_policy:
+      destroy?: 'You are not authorised to deactivate users'
 
   roles:
     responders: Information officers
@@ -275,6 +290,10 @@ en:
         ico_decision: The original case has been
         delivery_method: How and where should the information be sent?
         type: Original Case Type
+      case_overturned_foi:
+        reply_method: 'How should this information be sent to the requester?'
+      case_overturned_sar:
+        reply_method: 'How should this information be sent to the requester?'
       case_sar:
         missing_info: "Was the response asking for missing information (e.g. proof of ID) or
           clarification, i.e. a TMM?"
@@ -384,6 +403,17 @@ en:
           upheld: Upheld by ICO
           overturned: Overturned by ICO
         ico_decision_comment: "Details of ICO's decision"
+      case_overturned_ico: &case_overturned_ico
+        email: "Requester's email"
+        ico_officer_name: "Name of the ICO information officer who's handling this case"
+        postal_address: "Requester's postal address"
+        reply_method:
+          send_by_email: "By email"
+          send_by_post: "By post"
+      case_overturned_foi:
+        <<: *case_overturned_ico
+      case_overturned_sar:
+        <<: *case_overturned_ico
       case_sar:
         email: "Recipient email address"
         message: Full case details
@@ -415,12 +445,6 @@ en:
     assignment_accepted_html: |
       <strong>You've accepted this case</strong><br>
       It will now appear in <a href="%{case_list_url}">your cases</a>.
-    assignment_rejected_html: |
-      <strong>You've rejected this case</strong><br>
-      Disclosure BMT will assign the case to the appropriate business unit.
-    assignment_already_rejected_html: |
-      <strong>This case has already been rejected.</strong><br>
-      This case will be reviewed and assigned the to appropriate unit.
     escalation_warning_html: |
       <strong>Important notice</strong><br>
       This case is being reviewed for sensitivity.
@@ -461,6 +485,7 @@ en:
       create_overturned: Create an ICO Overturned case
       data_subject: Data subject
       data_subject_type: Type of data subject
+      date_ico_decision_received: Date ICO's decision was received
       date_responded: Date response sent to requester
       case/ico:
         date_responded: Date response sent to ICO
@@ -559,20 +584,12 @@ en:
         Case::ICO::FOI: ICO FOI Appeal
         Case::ICO::SAR: ICO SAR Appeal
       new:
+        create: Create
         heading: New Case
         sub_heading: Admin
       select_type:
         heading: Choose correspondence type
         sub_heading: Admin
-      foi:
-        new:
-          create: Create
-      sar:
-        new:
-          create: Create
-      ico:
-        new:
-          create: Create
 
     users:
       index:
@@ -766,6 +783,7 @@ en:
       Case::ICO::SAR: ICO Appeal - SAR
       Case::SAR: Non-offender SAR
       Case::OverturnedICO::SAR: Overturned ICO appeal for non-offender SAR
+      Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
 
   feedback:
     error_html: |

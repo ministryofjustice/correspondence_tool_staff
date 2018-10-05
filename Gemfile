@@ -7,7 +7,7 @@ gem 'aws-sdk'
 gem 'bank_holiday', git: 'https://github.com/ministryofjustice/bank_holiday.git', branch: 'bundler-fix'
 gem 'business_time'
 gem 'config'
-gem 'devise', '~> 4.4'
+gem 'devise', '~> 4.5'
 gem 'draper', '3.0.1'
 gem 'dropzonejs-rails', '~> 0.7.3'
 gem 'foreman', '~> 0.85.0'
@@ -15,7 +15,7 @@ gem 'factory_bot_rails', '~> 4.11.1'
 gem 'faker', '~> 1.9.1'
 gem 'gov_uk_date_fields', '~> 3.0'
 gem 'govuk_template',         '~> 0.23.0'
-gem 'govuk_frontend_toolkit', '>= 7.2.0'
+gem 'govuk_frontend_toolkit', '>= 8.0.0'
 gem 'govuk_elements_rails',   '>= 3.1.2'
 gem 'govuk_elements_form_builder', '>= 1.2.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -63,7 +63,7 @@ gem 'uglifier', '>= 1.3.0'
 group :test do
   gem 'capybara'
   gem 'codeclimate-test-reporter', '~> 1.0'
-  gem 'i18n-tasks', '~> 0.9.23'
+  gem 'i18n-tasks', '~> 0.9.25'
   gem 'rails-controller-testing', require: false
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 3.1'
@@ -85,7 +85,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 3.8'
-  gem 'rubocop', '~> 0.58.2', require: false
+  gem 'rubocop', '~> 0.59.2', require: false
   gem 'rubocop-rspec', require: false
   gem 'ruby-progressbar'
 

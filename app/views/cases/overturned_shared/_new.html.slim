@@ -1,9 +1,11 @@
-= form_for @case, as: :case_overturned_sar, url: cases_path do |f|
+= form_for @case.object, as: "case_#{@correspondence_type_key}", url: cases_path do |f|
 
-  = hidden_field_tag 'correspondence_type', 'overturned_sar'
+  = hidden_field_tag 'correspondence_type', @correspondence_type_key
   = f.hidden_field :original_ico_appeal_id
-  = f.hidden_field :original_case_id, value: @case.original_ico_appeal.original_case_id
 
   = render partial: 'cases/overturned_shared/new_form', locals: { kase: @case, f: f }
 
   = f.submit t('button.create_case'), {class: 'button'}
+  = link_to('Back to case details',
+            case_path(id: @case.original_ico_appeal_id),
+            class: 'acts-like-button button-left-spacing')

@@ -37,6 +37,34 @@ describe Case::OverturnedICO::Base do
     end
   end
 
+  describe 'ico_decision' do
+    it 'delegates to the origin ICO Appeal' do
+      expect(overturned_ico).to delegate_method(:ico_decision)
+                                  .to(:original_ico_appeal)
+    end
+  end
+
+  describe 'ico_decision_comment' do
+    it 'delegates to the origin ICO Appeal' do
+      expect(overturned_ico).to delegate_method(:ico_decision_comment)
+                                  .to(:original_ico_appeal)
+    end
+  end
+
+  describe 'date_ico_decision_received' do
+    it 'delegates to the origin ICO Appeal' do
+      expect(overturned_ico).to delegate_method(:date_ico_decision_received)
+                                  .to(:original_ico_appeal)
+    end
+  end
+
+  describe 'ico_decision_attachments' do
+    it 'delegates to the origin ICO Appeal' do
+      expect(overturned_ico).to delegate_method(:ico_decision_attachments)
+                                  .to(:original_ico_appeal)
+    end
+  end
+
   describe '#subject' do
     it 'returns the subject from the original case' do
       expect(overturned_ico.subject).to eq 'My original SAR case'

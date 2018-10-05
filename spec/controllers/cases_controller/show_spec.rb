@@ -20,9 +20,6 @@ describe CasesController, type: :controller do
 
     it 'authorises' do
       sign_in manager
-      expect_any_instance_of(ConfigurableStateMachine::Machine).to receive(:predicate_is_true?).with(
-          predicate: 'Case::FOI::StandardPolicy#can_request_further_clearance?',
-          user: manager).and_return(true)
       expect {
         get :show, params: { id: accepted_case.id }
       }.to require_permission(:show?)

@@ -5,6 +5,7 @@ class CasesController < ApplicationController
   include FOICasesParams
   include ICOCasesParams
   include SARCasesParams
+  include OverturnedICOParams
 
   before_action :set_case,
                 only: [
@@ -199,6 +200,7 @@ class CasesController < ApplicationController
     else
       @case = service.overturned_ico_case.decorate
       @original_ico_appeal = service.original_ico_appeal
+      set_correspondence_type(overturned_case_class.type_abbreviation.downcase)
       render :new
     end
   end
@@ -336,7 +338,11 @@ class CasesController < ApplicationController
       @case.respond_and_close(current_user)
       set_permitted_events
       @close_flash_message = t('notices.case_closed')
-      flash[:notice] = "#{@close_flash_message}. #{ get_edit_close_link }".html_safe
+      if @permitted_events.include?(:update_closure)
+        flash[:notice] = "#{@close_flash_message}. #{ get_edit_close_link }".html_safe
+      else
+        flash[:notice] = @close_flash_message
+      end
       redirect_to case_path(@case)
     else
       set_permitted_events
@@ -366,7 +372,7 @@ class CasesController < ApplicationController
     @case.prepare_for_close
     close_params = process_closure_params(@case.type_abbreviation)
     if @case.update(close_params)
-      if @case.ico?
+      if @case.ico? && params[:case_ico][:uploaded_decision_files].present?
         uploader = S3Uploader.new(@case, current_user)
         uploader.process_files(params[:case_ico][:uploaded_ico_decision_files], :ico_decision)
       end
@@ -749,7 +755,7 @@ class CasesController < ApplicationController
 
   def process_closure_params(correspondence_type)
     case correspondence_type
-    when 'FOI' then process_foi_closure_params
+    when 'FOI', 'OVERTURNED_FOI' then process_foi_closure_params
     when 'SAR', 'OVERTURNED_SAR' then process_sar_closure_params
     when 'ICO' then process_ico_closure_params
     else raise 'Unknown case type'
@@ -777,6 +783,7 @@ class CasesController < ApplicationController
     case correspondence_type
     when 'FOI' then respond_foi_params
     when 'ICO' then respond_ico_params
+    when 'OVERTURNED_FOI' then respond_overturned_params
     else raise 'Unknown case type'
     end
   end

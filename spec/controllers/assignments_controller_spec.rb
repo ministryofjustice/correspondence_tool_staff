@@ -2,12 +2,20 @@ require 'rails_helper'
 
 
 RSpec.describe AssignmentsController, type: :controller do
-  let(:manager)           { create :manager }
-  let(:assigned_case)     { create :assigned_case }
-  let(:assignment)        { assigned_case.responder_assignment }
-  let(:unassigned_case)   { create :case }
-  let(:responding_team)   { assigned_case.responding_team }
-  let(:responder)         { responding_team.responders.first }
+  let(:manager)             { create :manager }
+  let(:assigned_case)       { create :assigned_case }
+  let(:assignment)          { assigned_case.responder_assignment }
+  let(:assigned_sar_case)   { create :awaiting_responder_sar }
+  let(:sar_assignment)      { assigned_sar_case.responder_assignment}
+  let(:assigned_ico_case)   { create :awaiting_responder_ico_sar_case }
+  let(:ico_assignment)      { assigned_ico_case.responder_assignment}
+  let(:unassigned_case)     { create :case }
+  let(:responding_team)     { assigned_case.responding_team }
+  let(:responder)           { responding_team.responders.first }
+  let(:sar_responding_team) { assigned_sar_case.responding_team }
+  let(:sar_responder)       { sar_responding_team.responders.first }
+  let(:ico_responding_team) { assigned_ico_case.responding_team }
+  let(:ico_responder)       { ico_responding_team.responders.first }
   let(:another_responder) { create :responder, responding_teams: [responding_team] }
   let(:approver)          { create :approver }
   let(:approving_team)    { approver.approving_team }
@@ -30,6 +38,29 @@ RSpec.describe AssignmentsController, type: :controller do
       },
     }
   end
+
+  let(:reject_sar_assignment_params) do
+    {
+      id: sar_assignment.id,
+      case_id: assigned_sar_case.id,
+      assignment: {
+        state: 'rejected',
+        reasons_for_rejection: rejection_message,
+      },
+    }
+  end
+
+  let(:reject_ico_assignment_params) do
+    {
+      id: ico_assignment.id,
+      case_id: assigned_ico_case.id,
+      assignment: {
+        state: 'rejected',
+        reasons_for_rejection: rejection_message,
+      },
+    }
+  end
+
 
   let(:rejection_message) do |_example|
     'rejection test #{example.description}'
@@ -116,16 +147,6 @@ RSpec.describe AssignmentsController, type: :controller do
     before { sign_in responder }
 
     describe 'PATCH accept_or_reject' do
-      before do
-        stub_s3_uploader_for_all_files!
-
-        # allow(Assignment).to receive(:find).
-        #                        with(assignment.id.to_s).
-        #                        and_return(assignment)
-        # allow(Assignment).to receive(:find).
-        #                        with(assignment.id).
-        #                        and_return(assignment)
-      end
 
       context 'accepting' do
         let(:assignment_params) { { assignment: { state: 'accepted' } } }
@@ -152,25 +173,89 @@ RSpec.describe AssignmentsController, type: :controller do
       end
 
       context 'rejecting' do
-        it 'calls #reject' do
-          expect_any_instance_of(Assignment).to receive(:reject).with(responder, rejection_message) do |subject_assignment|
-            expect(subject_assignment.id).to eq assignment.id
+        describe 'when a user rejects FOI' do
+          it 'calls #reject' do
+            expect_any_instance_of(Assignment).to receive(:reject).with(responder, rejection_message) do |subject_assignment|
+              expect(subject_assignment.id).to eq assignment.id
+            end
+            patch :accept_or_reject, params: reject_assignment_params
           end
-          patch :accept_or_reject, params: reject_assignment_params
+
+          it 'redirects to case_details page' do
+            patch :accept_or_reject, params: reject_assignment_params
+            expect(response).to redirect_to(case_path(assigned_case))
+          end
+
+          it 'has success message in flash' do
+            patch :accept_or_reject, params: reject_assignment_params
+            expect(flash[:notice]).to eq "#{assigned_case.number} has been rejected."
+          end
+
+          it 'requires a reason for rejecting' do
+            patch :accept_or_reject, params: reject_assignment_params.merge(
+                    assignment: {
+                                  reasons_for_rejection: '',
+                                  state: 'rejected'
+                                }
+                  )
+            expect(response).to render_template(:edit)
+          end
         end
 
-        it 'redirects to show_rejected page' do
-          patch :accept_or_reject, params: reject_assignment_params
-          expect(response).to redirect_to(
-                                 case_assignments_show_rejected_path(
-                                   assigned_case,
-                                   rejected_now: true
-                                 )
-                               )
+        describe 'when a user rejects SAR, they should not be able see SAR again' do
+          before {sign_in sar_responder}
+
+          it 'calls #reject' do
+            expect_any_instance_of(Assignment).to receive(:reject).with(sar_responder, rejection_message) do |subject_assignment|
+              expect(subject_assignment.id).to eq sar_assignment.id
+            end
+            patch :accept_or_reject, params: reject_sar_assignment_params
+          end
+
+          it 'redirects to case list page' do
+            patch :accept_or_reject, params: reject_sar_assignment_params
+            expect(response).to redirect_to(responder_root_path)
+          end
+
+          it 'has success message in flash' do
+            patch :accept_or_reject, params: reject_sar_assignment_params
+            expect(flash[:notice]).to eq "#{assigned_sar_case.number} has been rejected."
+          end
+
+          it 'requires a reason for rejecting' do
+            patch :accept_or_reject, params: reject_sar_assignment_params.merge(
+                    assignment: {
+                                  reasons_for_rejection: '',
+                                  state: 'rejected'
+                                }
+                  )
+            expect(response).to render_template(:edit)
+          end
+        end
+      end
+
+      describe 'when a user rejects ICO Appeal SAR, they should not be able see SAR again' do
+        before {sign_in ico_responder}
+
+        it 'calls #reject' do
+          expect_any_instance_of(Assignment).to receive(:reject).with(ico_responder, rejection_message) do |subject_assignment|
+            expect(subject_assignment.id).to eq ico_assignment.id
+          end
+          patch :accept_or_reject, params: reject_ico_assignment_params
+        end
+
+        it 'redirects to case list page' do
+          patch :accept_or_reject, params: reject_ico_assignment_params
+          expect(response).to redirect_to(responder_root_path)
+        end
+
+        it 'has success message in flash' do
+          patch :accept_or_reject, params: reject_ico_assignment_params
+          expect(flash[:notice]).to eq "#{assigned_ico_case.number} has been rejected."
         end
 
         it 'requires a reason for rejecting' do
-          patch :accept_or_reject, params: reject_assignment_params.merge(
+          patch :accept_or_reject, params: reject_ico_assignment_params.merge(
                   assignment: {
                                 reasons_for_rejection: '',
                                 state: 'rejected'
@@ -178,7 +263,6 @@ RSpec.describe AssignmentsController, type: :controller do
                 )
           expect(response).to render_template(:edit)
         end
-
       end
 
       it 'does not allow unknown states' do

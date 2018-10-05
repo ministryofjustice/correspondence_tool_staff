@@ -13,8 +13,15 @@ module PageObjects
                 PageObjects::Sections::Cases::ICO::ShowSection,
                 '#case-ico'
 
+        section :overturned_sar,
+                PageObjects::Sections::Cases::OverturnedSAR::ShowSection,
+                '#case-overturned_sar'
+
         section :case_status,
                 PageObjects::Sections::Cases::CaseStatusSection, '.case-status'
+
+        section :ico_decision_section,
+                PageObjects::Sections::Cases::ICO::ICODecisionSection, '.ico-decision-section'
 
         section :case_details,
                 PageObjects::Sections::Cases::CaseDetailsSection, '.case-details'

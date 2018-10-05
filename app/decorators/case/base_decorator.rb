@@ -3,6 +3,8 @@ class Case::BaseDecorator < Draper::Decorator
   decorates_association :linked_cases
   decorates_association :original_case
   decorates_associations :related_cases
+  decorates_association :original_ico_appeal
+  decorates_association :original_appeal_and_related_cases
 
 
   # if the case is with a responding team and the current user is a responder

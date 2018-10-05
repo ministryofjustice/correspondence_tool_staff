@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'rails_helper'
 
 describe 'cases/clearance_details.html.slim', type: :view do
@@ -30,15 +31,6 @@ describe 'cases/clearance_details.html.slim', type: :view do
                                                          press_officer: create(:press_officer, full_name: 'Alistair Campbell') }
 
 
-  def allow_case_policies(kase, *policy_names)
-    policy = double 'Pundit::Policy'
-    policy_names.each do |policy_name|
-      allow(policy).to receive(policy_name).and_return(true)
-    end
-    allow(view).to receive(:policy).with(kase).and_return(policy)
-  end
-
-
   before(:each) { allow(controller).to receive(:current_user).and_return(disclosure_specialist) }
 
   context 'escalation_deadline not yet reached' do
@@ -47,10 +39,10 @@ describe 'cases/clearance_details.html.slim', type: :view do
       allow(kase).to receive(:escalation_deadline).and_return('13 Aug 2017')
       allow(kase).to receive(:within_escalation_deadline?).and_return(true)
 
-      allow_case_policies kase.decorate, :request_further_clearance?
+      allow_case_policies_in_view kase.decorate, :request_further_clearance?
 
       render partial: 'cases/clearance_levels.html.slim',
-                 locals:{ case_details: kase }
+             locals:{ case_details: kase }
 
       partial = clearance_levels_section(rendered)
       expect(partial.escalation_deadline.text).to eq 'To be decided by  13 Aug 2017'
@@ -62,7 +54,7 @@ describe 'cases/clearance_details.html.slim', type: :view do
     context 'case not flagged for approval' do
       it 'displays the name of the deputy director of the responding team' do
 
-        allow_case_policies accepted_case.decorate, :request_further_clearance?
+        allow_case_policies_in_view accepted_case.decorate, :request_further_clearance?
 
         render partial: 'cases/clearance_levels.html.slim',
                locals:{ case_details: accepted_case.decorate }
@@ -77,7 +69,10 @@ describe 'cases/clearance_details.html.slim', type: :view do
     context 'case flagged for approval by DACU Disclosure but not yet accepted by disclosure team member' do
       it 'displays the name of the deputy director of the responding team' do
 
-        allow_case_policies unaccepted_pending_dacu_clearance_case.decorate, :request_further_clearance?
+        allow_case_policies_in_view(
+          unaccepted_pending_dacu_clearance_case.decorate,
+          :request_further_clearance?
+        )
 
         render partial: 'cases/clearance_levels.html.slim',
                locals:{ case_details:unaccepted_pending_dacu_clearance_case.decorate }
@@ -92,7 +87,11 @@ describe 'cases/clearance_details.html.slim', type: :view do
     context 'case flagged and accepted for approval by DACU disclosure only' do
       it 'displays the name of the deputy director and the name of the dacu disclosure approver' do
 
-        allow_case_policies accepted_pending_dacu_clearance_case.decorate, :request_further_clearance?, :remove_clearance?
+        allow_case_policies_in_view(
+          accepted_pending_dacu_clearance_case.decorate,
+          :request_further_clearance?,
+          :remove_clearance?
+        )
 
 
         render partial: 'cases/clearance_levels.html.slim',

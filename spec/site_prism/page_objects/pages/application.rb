@@ -18,6 +18,8 @@ module PageObjects
         admin_cases_new_foi:            'Admin::Cases::NewFOIPage',
         admin_cases_new_sar:            'Admin::Cases::NewSARPage',
         admin_cases_new_ico:            'Admin::Cases::NewICOPage',
+        admin_cases_new_overturned_sar: 'Admin::Cases::NewOverturnedSARPage',
+        admin_cases_new_overturned_foi: 'Admin::Cases::NewOverturnedFOIPage',
         approve_response_interstitial:  'Cases::ApproveResponseInterstitialPage',
         approve_response:               'Cases::ApproveResponsePage',
         assign_to_new_team:             'Assignments::AssignToNewTeamPage',
@@ -85,8 +87,12 @@ module PageObjects
         clearance_copy:               'Cases::ClearanceCopySection',
         ico_case_details:             'Cases::ICO::CaseDetailsSection',
         ico_close:                    'Cases::ICO::ClosureSection',
+        ico_decision:                 'Cases::ICO::ICODecisionSection',
         ico_show:                     'Cases::ICO::ShowSection',
         open_case_status_filter_panel:'Cases::OpenCaseStatusFilterPanelSection',
+        overturned_foi_case_details:  'Cases::OverturnedFOI::CaseDetailsSection',
+        overturned_ico_new_form:      'Cases::OverturnedICO::NewFormSection',
+        overturned_sar_case_details:  'Cases::OverturnedSAR::CaseDetailsSection',
         pagination:                   'PaginationSection',
       }.each do |section_name, section_class|
         full_section_class = "PageObjects::Sections::#{section_class}"

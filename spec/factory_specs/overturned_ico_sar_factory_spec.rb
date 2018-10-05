@@ -13,7 +13,7 @@ describe 'Overturned ICO SAR cases factory' do
 
   context 'Overturned ICO SAR' do
     describe :overturned_ico_sar do
-      it 'creates an unassigned ICO FOI case' do
+      it 'creates an unassigned ICO SAR case' do
         Timecop.freeze(frozen_time) do
           kase = create :overturned_ico_sar
           expect(kase).to be_instance_of(Case::OverturnedICO::SAR)
@@ -37,7 +37,7 @@ describe 'Overturned ICO SAR cases factory' do
     end
 
     describe :awaiting_responder_ot_ico_sar do
-      it 'creates an assigned ICO FOI case' do
+      it 'creates an assigned ICO SAR case' do
         Timecop.freeze(frozen_time) do
           kase = create :awaiting_responder_ot_ico_sar, responding_team: responding_team
           expect(kase.current_state).to eq 'awaiting_responder'
@@ -102,6 +102,5 @@ describe 'Overturned ICO SAR cases factory' do
         end
       end
     end
-
   end
 end

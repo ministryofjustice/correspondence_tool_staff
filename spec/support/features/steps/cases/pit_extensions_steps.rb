@@ -9,7 +9,6 @@ def extend_for_pit_step(kase:, new_deadline:)
   extend_for_pit_row = cases_show_page.case_history.row_for_event(
     'Extended for Public Interest Test (PIT)'
   )
-  expect(extend_for_pit_row).to be_present
   expect(extend_for_pit_row)
     .to have_content "Extending to #{new_deadline} for testing"
 end

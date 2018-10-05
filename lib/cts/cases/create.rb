@@ -12,33 +12,34 @@ module CTS::Cases
       @options.delete(:type)
     end
 
-    def call(target_states, kase = nil)
+    def call(target_state, kase = nil)
       CTS::check_environment unless options[:force]
       parse_options(options)
-      target_states.map do |target_state|
-        journey = find_case_journey_for_state target_state.to_sym
-        logger.info "creating case in #{target_state}"
-        kase ||= new_case
-        if options[:dry_run]
-          kase.validate!
-        else
-          kase.save!
-        end
-        flag_for_dacu_disclosure(kase) if @flag.present?
-        run_transitions(kase, target_state, journey)
-        kase
-      end .flatten
+
+      journey = find_case_journey_for_state target_state.to_sym
+      logger.info "creating case in #{target_state}"
+      kase ||= new_case
+
+      if options[:dry_run]
+        kase.validate!
+      else
+        prepare_case(kase)
+        kase.save!
+      end
+
+      return [:invalid, kase] if kase.invalid?
+
+      flag_for_dacu_disclosure(kase) if @flag.present?
+      run_transitions(kase, target_state, journey)
+      [:ok, kase]
     end
 
     def new_case
-      if @klass.to_s == "Case::SAR"
-        new_sar_case
-      elsif @klass.to_s == "Case::ICO::FOI"
-        new_ico_case
-      elsif @klass.to_s == "Case::ICO::SAR"
-        new_ico_case
-      else
-        new_foi_case
+      case @klass.to_s
+      when 'Case::SAR' then new_sar_case
+      when /^Case::ICO/ then new_ico_case
+      when /^Case::FOI/ then new_foi_case
+      when 'Case::OverturnedICO::SAR', 'Case::OverturnedICO::FOI' then new_overturned_case
       end
     end
 
@@ -46,9 +47,10 @@ module CTS::Cases
       @klass.new(
         message:              options.fetch(:message,
                                             Faker::Lorem.paragraph(10, true, 10)),
-        received_date:        set_received_date,
-        external_deadline:    set_external_deadline,
-        created_at:           set_created_at_date,
+        received_date:        get_ico_received_date,
+        external_deadline:    get_ico_external_deadline,
+        internal_deadline:    get_ico_internal_deadline,
+        created_at:           get_created_at_date,
         dirty:                options.fetch(:dirty, true),
         ico_officer_name:     options.fetch(:ico_officer_name, Faker::Name.name),
         ico_reference_number: options.fetch(:ico_reference_number, SecureRandom.hex),
@@ -59,57 +61,101 @@ module CTS::Cases
       name = options.fetch(:name, Faker::Name.name)
 
       @klass.new(
-        name:               name,
-        email:              options.fetch(:email, Faker::Internet.email(name)),
-        delivery_method:    options.fetch(:delivery_method, 'sent_by_email'),
-        subject:            options.fetch(:subject, Faker::Company.catch_phrase),
-        message:            options.fetch(:message,
-                                          Faker::Lorem.paragraph(10, true, 10)),
-        requester_type:     options.fetch(:requester_type,
-                                          Case::FOI::Standard.requester_types.keys.sample),
-        received_date:      set_received_date,
-        created_at:         set_created_at_date,
-        dirty:              options.fetch(:dirty, true)
+        name:            name,
+        email:           options.fetch(:email, Faker::Internet.email(name)),
+        delivery_method: options.fetch(:delivery_method, 'sent_by_email'),
+        subject:         options.fetch(:subject, Faker::Company.catch_phrase),
+        message:         options.fetch(:message,
+                                       Faker::Lorem.paragraph(10, true, 10)),
+        requester_type:  options.fetch(:requester_type,
+                                       Case::FOI::Standard.requester_types.keys.sample),
+        received_date:   get_foi_received_date,
+        created_at:      get_created_at_date,
+        dirty:           options.fetch(:dirty, true)
       )
     end
 
     def new_sar_case
       subject_full_name = options.fetch(:subject_full_name, Faker::Name.name)
         @klass.new(
-          subject_full_name:  options.fetch(:subject_full_name, Faker::Name.name),
-          email:              options.fetch(:email, Faker::Internet.email(subject_full_name)),
-          subject:            options.fetch(:subject, Faker::Company.catch_phrase),
-          third_party:        options.fetch(:third_party, false),
-          message:            options.fetch(:message,
-                                            Faker::Lorem.paragraph(10, true, 10)),
-          subject_type:       options.fetch(:subject_type,
-                                            Case::SAR.subject_types.keys.sample),
-          received_date:      set_received_date,
-          created_at:         set_created_at_date,
-          reply_method:       options.fetch(:reply_method, 'send_by_email'),
-          dirty:              options.fetch(:dirty, true)
+          subject_full_name: options.fetch(:subject_full_name, Faker::Name.name),
+          email:             options.fetch(:email, Faker::Internet.email(subject_full_name)),
+          subject:           options.fetch(:subject, Faker::Company.catch_phrase),
+          third_party:       options.fetch(:third_party, false),
+          message:           options.fetch(:message,
+                                           Faker::Lorem.paragraph(10, true, 10)),
+          subject_type:      options.fetch(:subject_type,
+                                           Case::SAR.subject_types.keys.sample),
+          received_date:     get_sar_received_date,
+          created_at:        get_created_at_date,
+          reply_method:      options.fetch(:reply_method, 'send_by_email'),
+          dirty:             options.fetch(:dirty, true)
         )
+    end
+
+    def new_overturned_case
+      @klass.new(
+        created_at:        get_created_at_date,
+        dirty:             options.fetch(:dirty, true),
+        email:             options.fetch(:email, Faker::Internet.email),
+        external_deadline: get_overturned_external_deadline,
+        internal_deadline: get_overturned_internal_deadline,
+        received_date:     get_overturned_received_date,
+        reply_method:      options.fetch(:reply_method, 'send_by_email'),
+      )
     end
 
     private
 
-    def set_received_date
-      if options.key? :received_date
-        options[:received_date]
-      else
+    def get_foi_received_date
+      options.fetch(:received_date) do
         0.business_days.after(4.business_days.ago)
       end
     end
 
-    def set_external_deadline
-      if options.key? :external_deadline
-        options[:external_deadline]
-      else
-        4.business_days.after(0.business_days.ago)
+    def get_ico_received_date
+      options.fetch(:received_date) do
+        0.business_days.ago
       end
     end
 
-    def set_created_at_date
+    def get_overturned_received_date
+      options.fetch(:received_date) do
+        0.business_days.ago
+      end
+    end
+
+    def get_sar_received_date
+      options.fetch(:received_date) do
+        0.business_days.ago
+      end
+    end
+
+    def get_ico_external_deadline
+      options.fetch(:external_deadline) do
+        20.business_days.after(get_ico_received_date)
+      end
+    end
+
+    def get_ico_internal_deadline
+      options.fetch(:internal_deadline) do
+        10.business_days.before(get_ico_external_deadline)
+      end
+    end
+
+    def get_overturned_external_deadline
+      options.fetch(:external_deadline) do
+        20.business_days.after(get_overturned_received_date)
+      end
+    end
+
+    def get_overturned_internal_deadline
+      options.fetch(:internal_deadline) do
+        10.business_days.before(get_overturned_external_deadline)
+      end
+    end
+
+    def get_created_at_date
       if options[:created_at].present?
         0.business_days.after(DateTime.parse(options[:created_at]))
       else
@@ -277,9 +323,12 @@ module CTS::Cases
 
     def transition_to_closed(kase)
       case kase.type_abbreviation
-      when 'FOI' then transition_to_closed_for_foi(kase)
+      when 'FOI', 'OVERTURNED_FOI' then transition_to_closed_for_foi(kase)
       when 'ICO' then transition_to_closed_for_ico(kase)
-      when 'SAR' then transition_to_closed_for_sar(kase)
+      when 'SAR', 'OVERTURNED_SAR' then transition_to_closed_for_sar(kase)
+      else
+        # No good having this fail silently.
+        raise "Don't know how to close #{kase.type_abbreviation} cases."
       end
     end
 
@@ -404,6 +453,50 @@ module CTS::Cases
       kase.respond_and_close(responder)
     end
 
+    def original_case_type(kase)
+      case kase.type
+      when 'Case::ICO::FOI' then 'Case::FOI::Standard'
+      when 'Case::ICO::SAR' then 'Case::SAR'
+      end
+    end
+
+    def original_appeal_case_type(kase)
+      case kase.type
+      when 'Case::OverturnedICO::FOI' then 'Case::ICO::FOI'
+      when 'Case::OverturnedICO::SAR' then 'Case::ICO::SAR'
+      end
+    end
+
+    def prepare_case(kase)
+      case kase.class.to_s
+      when /^Case::ICO:/ then prepare_ico_case(kase)
+      when /^Case::OverturnedICO:/ then prepare_overturned_case(kase)
+      end
+    end
+
+    def prepare_ico_case(kase)
+      case_creator = CTS::Cases::Create.new(Rails.logger,
+                                            type: original_case_type(kase) )
+      (result, original_case) = case_creator.call(:closed)
+      if result == :ok
+        kase.original_case = original_case
+      end
+    end
+
+    def prepare_overturned_case(kase)
+      # TODO: The appeal case being created here should be flagged for
+      #       disclosure, but that should be done by virtue of it being an ICO
+      #       appeal, we shouldn't have to say so.
+      case_creator = CTS::Cases::Create.new(Rails.logger,
+                                            flag_for_disclosure: true,
+                                            ico_decision: :overturned,
+                                            type: original_appeal_case_type(kase))
+      (result, original_ico_appeal) = case_creator.call(:closed)
+      if result == :ok
+        kase.original_case = original_ico_appeal.original_case
+        kase.original_ico_appeal = original_ico_appeal
+      end
+    end
   end
 end
 # rubocop:enable Metrics/ClassLength

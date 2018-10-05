@@ -12,11 +12,9 @@
 
   #correspondence-type-radios
     = form.collection_check_boxes :correspondence_type_ids,
-                                  CorrespondenceType.all.order(:name),
+                                  CorrespondenceType.menu_visible.order(:name),
                                   :id,
                                   :abbreviation_and_name
   br
 
 = form.submit @action_copy, {class: 'button'}
-
-

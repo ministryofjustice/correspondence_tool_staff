@@ -52,7 +52,7 @@ describe 'Business Unit factories' do
         bu = create :responding_team
 
         expect(bu.role).to eq 'responder'
-        expect(bu.correspondence_type_roles.size).to eq 4
+        expect(bu.correspondence_type_roles.size).to eq 5
         foi_tcr = bu.correspondence_type_roles.detect do |r|
           r.correspondence_type_id == CorrespondenceType.foi.id
         end

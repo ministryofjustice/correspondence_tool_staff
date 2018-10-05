@@ -1,0 +1,12 @@
+.grid-row
+  div class="column-full #{case_details_for_link_type(link_type)}"
+    h2.request--heading
+      / i18n-tasks-use t('common.case.case-details')
+      / i18n-tasks-use t('common.case.original-case-details')
+      = translate_for_case(case_details, 'common', case_details_for_link_type(link_type))
+
+    table
+      tbody.overturned-foi-basic-details
+        = render partial: 'cases/overturned_shared/case_details', locals: {case_details: case_details }
+    / display links to edit case and/or closure details
+    = case_details_links(case_details, current_user).html_safe

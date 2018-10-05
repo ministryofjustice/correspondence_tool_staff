@@ -43,7 +43,7 @@ FactoryBot.define do
     transient do
       identifier { "assigned sar" }
       manager         { managing_team.managers.first }
-      responding_team { create :responding_team }
+      responding_team { find_or_create :responding_team }
     end
 
     created_at      { creation_time }

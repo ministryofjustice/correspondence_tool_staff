@@ -290,6 +290,15 @@ class Case::Base < ApplicationRecord
            through: :related_case_links,
            source: :linked_case
 
+  has_many :original_appeal_and_related_case_links,
+           -> { related_and_appeal },
+           class_name: 'LinkedCase',
+           foreign_key: :case_id
+
+  has_many :original_appeal_and_related_cases,
+           through: :original_appeal_and_related_case_links,
+           source: :linked_case
+
 
   after_initialize do
     self.workflow = default_workflow if self.workflow.nil?
@@ -569,6 +578,13 @@ class Case::Base < ApplicationRecord
   def correspondence_type
     @correspondence_type ||=
       CorrespondenceType.find_by!(abbreviation: type_abbreviation.parameterize.underscore.upcase)
+  end
+
+  # Override this method if you want to make this correspondence type
+  # assignable by the same business units as another correspondence type. e.x.
+  # ICO Overturned FOIs can be assigned to the same business units as FOIs
+  def correspondence_type_for_business_unit_assignment
+    correspondence_type
   end
 
   def is_foi?

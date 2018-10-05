@@ -264,6 +264,37 @@ describe CasesController do
           end
         end
 
+        context 'no ico decison files specified' do
+          let(:params)             { {
+              id: kase.id,
+              case_ico: {
+                  date_ico_decision_received_yyyy: new_date_responded.year,
+                  date_ico_decision_received_mm: new_date_responded.month,
+                  date_ico_decision_received_dd: new_date_responded.day,
+                  ico_decision: 'upheld',
+                  ico_decision_comment: 'ayt',
+              }
+          } }
+          before do
+            sign_in manager
+            patch :update_closure, params: params
+          end
+
+          it 'updates the cases date responded field' do
+            kase.reload
+            expect(kase.date_ico_decision_received).to eq new_date_responded
+          end
+
+          it 'updates the cases refusal reason' do
+            kase.reload
+            expect(kase.ico_decision).to eq 'upheld'
+          end
+
+          it 'redirects to the case details page' do
+            expect(response).to redirect_to case_path(id: kase.id)
+          end
+        end
+
         context 'change to overturned' do
           let(:kase)         { create :closed_ico_foi_case }
           let(:params)       { {

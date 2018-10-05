@@ -11,7 +11,7 @@ FactoryBot.define do
 
     message                         { identifier }
     current_state                   { 'unassigned' }
-    original_ico_appeal             { create :ico_sar_case }
+    original_ico_appeal             { create :closed_ico_sar_case }
     original_case                   { create :sar_case }
     received_date                   { Date.yesterday }
     internal_deadline               { 10.days.from_now }
@@ -97,42 +97,5 @@ FactoryBot.define do
              acting_team_id: evaluator.responding_team.id
       kase.reload
     end
-  end
-
-
-  factory :pending_dacu_clearance_to_ico_sar,
-          aliases: [:ot_ico_sar_noff_pdacu],
-          parent: :accepted_ot_ico_sar do
-    transient do
-      approving_team { find_or_create :team_dacu_disclosure }
-      approver       { create :disclosure_specialist }
-    end
-    workflow { 'trigger' }
-
-    after(:create) do |kase, evaluator|
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.approving_team,
-             state: 'accepted',
-             user_id: evaluator.approver.id
-
-      create :case_transition_pending_dacu_clearance,
-             case_id: kase.id,
-             acting_user_id: evaluator.responder.id
-      kase.reload
-    end
-  end
-
-  factory :overturned_ico_foi, class: Case::OverturnedICO::FOI do
-    current_state                   { 'unassigned' }
-    sequence(:ico_reference)        { |n| "ICO-FOI-1234-#{n}" }
-    original_ico_appeal             { create :ico_foi_case }
-    original_case                   { create :foi_case }
-    received_date                   { Date.yesterday }
-    internal_deadline               { 10.days.from_now }
-    external_deadline               { 20.days.from_now }
-    escalation_deadline             { 3.days.from_now }
-    reply_method                    { 'send_by_email' }
-    email                           { 'dave@moj.com' }
   end
 end

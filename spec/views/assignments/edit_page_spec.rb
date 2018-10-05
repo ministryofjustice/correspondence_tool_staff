@@ -7,22 +7,6 @@ describe 'assignments/edit.html.slim', type: :view do
     super(user)
   end
 
-  def allow_case_policies(*policy_names)
-    @policy ||= double 'Pundit::Policy'
-    policy_names.each do |policy_name|
-      allow(@policy).to receive(policy_name).and_return(true)
-    end
-    allow(view).to receive(:policy).with(awaiting_responder_case).and_return(@policy)
-  end
-
-  def disallow_case_policies(*policy_names)
-    @policy ||= double 'Pundit::Policy'
-    policy_names.each do |policy_name|
-      allow(@policy).to receive(policy_name).and_return(false)
-    end
-    allow(view).to receive(:policy).with(awaiting_responder_case).and_return(@policy)
-  end
-
   let(:responder)       { create :responder }
   let(:responding_team) { responder.responding_teams.first }
   let(:awaiting_responder_case) { create(:awaiting_responder_case, :with_messages,
@@ -37,8 +21,14 @@ describe 'assignments/edit.html.slim', type: :view do
     assign(:assignment, assignment)
 
     login_as responder
-    allow_case_policies :can_add_message_to_case?, :request_further_clearance?, :destroy_case_link?
-    disallow_case_policies :new_case_link?, :destroy_case_link?
+    allow_case_policies_in_view awaiting_responder_case,
+                                :can_add_message_to_case?,
+                                :request_further_clearance?,
+                                :destroy_case_link?
+    disallow_case_policies_in_view awaiting_responder_case,
+                                   :new_case_link?,
+                                   :destroy_case_link?,
+                                   :can_remove_attachment?
 
     render
 
@@ -88,8 +78,14 @@ describe 'assignments/edit.html.slim', type: :view do
       assign(:assignment, assignment_for_ico)
 
       login_as responder
-      allow_case_policies :can_add_message_to_case?, :request_further_clearance?, :destroy_case_link?
-      disallow_case_policies :new_case_link?, :destroy_case_link?
+      allow_case_policies_in_view awaiting_responder_case,
+                                  :can_add_message_to_case?,
+                                  :request_further_clearance?,
+                                  :destroy_case_link?
+      disallow_case_policies_in_view awaiting_responder_case,
+                                     :new_case_link?,
+                                     :destroy_case_link?,
+                                     :can_remove_attachment?
 
       render
 
@@ -122,6 +118,68 @@ describe 'assignments/edit.html.slim', type: :view do
 
       expect(page).to have_original_case_details
       expect(page.original_case_details).to have_link_to_case
+
+      expect(page).to have_accept_radio
+      expect(page).to have_reject_radio
+
+      expect(page.confirm_button.value).to eq "Confirm"
+
+    end
+  end
+
+  context 'Overturned SARS cases' do
+    let(:awaiting_responder_case) { create(:awaiting_responder_ot_ico_sar, :with_messages,
+                                         responding_team: responding_team).decorate }
+    let(:assignment_for_overturned)          { awaiting_responder_case.responder_assignment }
+
+    it 'should display page and sections for ICO cases' do
+      assign(:case, awaiting_responder_case)
+      assign(:case_transitions, awaiting_responder_case.transitions.decorate)
+      assign(:correspondence_type_key, awaiting_responder_case.type_abbreviation.downcase)
+      assign(:assignment, assignment_for_overturned)
+
+      login_as responder
+      allow_case_policies_in_view awaiting_responder_case,
+                                  :can_add_message_to_case?,
+                                  :request_further_clearance?,
+                                  :destroy_case_link?
+      disallow_case_policies_in_view awaiting_responder_case,
+                                     :new_case_link?,
+                                     :destroy_case_link?,
+                                     :can_remove_attachment?
+
+      render
+
+      assignments_edit_page.load(rendered)
+
+      page = assignments_edit_page
+
+      expect(page.page_heading.heading.text)
+          .to eq "Case subject, #{awaiting_responder_case.subject}"
+      expect(page.page_heading.sub_heading.text)
+          .to eq "You are viewing case number #{awaiting_responder_case.number} - #{awaiting_responder_case.pretty_type} "
+
+      expect(page).to have_case_status
+
+      expect(page).to have_overturned_sar
+
+      expect(page.overturned_sar).to have_original_cases
+
+      expect(page.overturned_sar).to have_ico_decision_section
+
+      expect(page.overturned_sar).to have_case_details
+
+      expect(page.overturned_sar).to have_no_request
+
+
+      expect(page).to have_messages
+
+      expect(page).to have_new_message
+
+      expect(page).to have_case_history
+
+      expect(page.overturned_sar).to have_original_case_details
+      expect(page.overturned_sar.original_case_details).to have_link_to_case
 
       expect(page).to have_accept_radio
       expect(page).to have_reject_radio

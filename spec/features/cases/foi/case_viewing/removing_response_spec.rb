@@ -67,7 +67,7 @@ feature 'removing a response from response details' do
             uploaded_file.first.actions.remove.click
           end
           sleep 0.25
-          cases_show_page.wait_for_case_attachments nil, count: 0
+          cases_show_page.wait_until_case_attachments_visible nil, count: 0
           expect(cases_show_page).to have_no_case_attachments
           expect(attachment_object).to have_received(:delete)
         end
@@ -158,7 +158,7 @@ feature 'removing a response from response details' do
           accept_alert do
             uploaded_file.first.actions.remove.click
           end
-          cases_show_page.wait_for_case_attachments 10, count: 0
+          cases_show_page.wait_until_case_attachments_visible 10, count: 0
           expect(cases_show_page).to have_no_case_attachments
           expect(attachment_object).to have_received(:delete)
           expect(cases_show_page.actions).to have_no_mark_as_sent

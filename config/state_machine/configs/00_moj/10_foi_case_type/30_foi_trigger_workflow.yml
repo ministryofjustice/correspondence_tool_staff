@@ -10,6 +10,7 @@
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                  if: Workflows::Predicates#not_overturned?
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
@@ -22,6 +23,7 @@
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                  if: Workflows::Predicates#not_overturned?
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
@@ -35,6 +37,7 @@
                   transition_to: awaiting_responder
                 destroy_case:
                 edit_case:
+                  if: Workflows::Predicates#not_overturned?
                 extend_for_pit:
                 flag_for_clearance:
                 link_a_case:
@@ -47,6 +50,7 @@
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
+                  if: Workflows::Predicates#not_overturned?
                 extend_for_pit:
                 link_a_case:
                 remove_linked_case:
@@ -58,6 +62,7 @@
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
+                  if: Workflows::Predicates#not_overturned?
                 extend_for_pit:
                 flag_for_clearance:
                 link_a_case:
@@ -73,6 +78,7 @@
                   transition_to: closed
                 destroy_case:
                 edit_case:
+                  if: Workflows::Predicates#not_overturned?
                 link_a_case:
                 remove_linked_case:
 
@@ -81,6 +87,7 @@
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
+                  if: Workflows::Predicates#not_overturned?
                 link_a_case:
                 remove_linked_case:
                 update_closure:
@@ -171,9 +178,6 @@
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                   after_transition: Workflows::Hooks#notify_responder_redraft_requested
                   transition_to: drafting
-                upload_response_approve_and_bypass:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
-                  transition_to: awaiting_dispatch
 
               awaiting_dispatch:
                 add_message_to_case:

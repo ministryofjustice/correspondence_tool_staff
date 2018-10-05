@@ -44,14 +44,20 @@ class Case::ICO::Base < Case::Base
   validates :external_deadline, presence: true
   validate :external_deadline_within_limits?,
            if: -> { external_deadline.present? }
-  validates :internal_deadline, presence: true, on: :update
+  validates :internal_deadline, presence: true
   validate :internal_deadline_within_limits?,
-           if: -> { internal_deadline.present? },
-           on: :update
+           if: -> { internal_deadline.present? }
   validates_presence_of :original_case
   validates :received_date, presence: true
   validate :received_date_within_limits?,
            if: -> { received_date.present? }
+
+  has_many :ico_decision_attachments,
+           -> { ico_decision },
+           class_name: 'CaseAttachment',
+           foreign_key: :case_id
+
+
 
   before_save do
     self.workflow = 'trigger'
@@ -110,6 +116,14 @@ class Case::ICO::Base < Case::Base
 
   def current_team_and_user_resolver
     CurrentTeamAndUser::ICO::Trigger.new(self)
+  end
+
+  def has_overturn?
+    raise "Define method in derived class"
+  end
+
+  def lacks_overturn?
+    !has_overturn?
   end
 
   private

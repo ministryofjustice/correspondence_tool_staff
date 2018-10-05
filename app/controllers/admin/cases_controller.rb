@@ -3,6 +3,7 @@ require 'cts/cases/constants'
 
 
 class Admin::CasesController < AdminController
+
   before_action :set_correspondence_type,
                 only: [
                   :create,
@@ -18,11 +19,8 @@ class Admin::CasesController < AdminController
 
     @case = case_creator.new_case
     @selected_state = case_params[:target_state]
-    if @case.ico?
-      @case.original_case_id = create_original_case(@case).id
-    end
-    if @case.valid?
-      case_creator.call([@selected_state], @case)
+    (result, _case) = case_creator.call(@selected_state, @case)
+    if result == :ok
       flash[:notice] = "Case created: #{@case.number}"
       redirect_to(admin_cases_path)
     else
@@ -47,8 +45,8 @@ class Admin::CasesController < AdminController
 
   def new
     if params[:correspondence_type].present?
-      @correspondence_type_key = params[:correspondence_type].downcase
-      self.__send__("prepare_new_#{@correspondence_type_key}")
+      @correspondence_type_key = params[:correspondence_type]
+      prepare_new_case
     else
       select_type
     end
@@ -62,59 +60,55 @@ class Admin::CasesController < AdminController
 
   def select_type
     permitted_correspondence_types
+
     render :select_type
   end
 
-  def prepare_new_foi
-    @correspondence_type_key = params[:correspondence_type]
-    case_class = correspondence_types_map[@correspondence_type_key.to_sym].first
-    @case = case_class.new
-
-    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::FOI::Standard' )
+  def prepare_new_case
+    case_creator = CTS::Cases::Create.new(Rails.logger,
+                                          type: class_for_case )
     @case = case_creator.new_case
-    @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.foi).active.sample
+    @case.responding_team = BusinessUnit
+                              .responding
+                              .responding_for_correspondence_type(correspondence_type_for_case)
+                              .active
+                              .sample
     @case.flag_for_disclosure_specialists = 'no'
     @target_states = available_target_states
     @selected_state = 'drafting'
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
-
-    render :new
-  end
-
-  def prepare_new_sar
-    @correspondence_type_key = params[:correspondence_type]
-    case_class = correspondence_types_map[@correspondence_type_key.to_sym].first
-    @case = case_class.new
-
-    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::SAR' )
-    @case = case_creator.new_case
-    @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.sar).active.sample
-    @target_states = available_target_states
-    @selected_state = 'drafting'
-    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
-    @case.reply_method = 'send_by_email'
-
-    render :new
-  end
-
-  def prepare_new_ico
-    @correspondence_type_key = params[:correspondence_type]
-    case_class = correspondence_types_map[@correspondence_type_key.to_sym].first
-    @case = case_class.new
-
-    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: 'Case::ICO::FOI' )
-    @case = case_creator.new_case
-    @case.responding_team = BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.ico).active.sample
-    @target_states = available_target_states
-    @selected_state = 'drafting'
-    @case.ico_decision = Case::ICO::Base.ico_decisions.keys.sample
-    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
-
-    render :new
   end
 
   def permitted_correspondence_types
-    @permitted_correspondence_types = [CorrespondenceType.foi, CorrespondenceType.sar, CorrespondenceType.ico]
+    @permitted_correspondence_types = [
+      CorrespondenceType.foi,
+      CorrespondenceType.sar,
+      CorrespondenceType.ico,
+      CorrespondenceType.overturned_sar,
+      CorrespondenceType.overturned_foi
+    ]
+  end
+
+  def correspondence_type_for_case
+    correspondence_types ={
+      'foi'             => CorrespondenceType.foi,
+      'sar'             => CorrespondenceType.sar,
+      'ico'             => CorrespondenceType.ico,
+      'overturned_foi'  => CorrespondenceType.foi,
+      'overturned_sar'  => CorrespondenceType.sar
+    }
+    correspondence_types[@correspondence_type_key]
+  end
+
+  def class_for_case
+    case_classes = {
+      'foi'              => 'Case::FOI::Standard',
+      'sar'              => 'Case::SAR',
+      'ico'              => 'Case::ICO::FOI',
+      'overturned_foi'   => 'Case::OverturnedICO::FOI',
+      'overturned_sar'   => 'Case::OverturnedICO::SAR'
+    }
+    case_classes[@correspondence_type_key]
   end
 
   def available_target_states
@@ -156,17 +150,6 @@ class Admin::CasesController < AdminController
     @case.approving_teams << BusinessUnit.private_office if param_flag_for_private?
   end
 
-  def correspondence_types_map
-    @correspondence_types_map ||= {
-      foi: [Case::FOI::Standard,
-            Case::FOI::TimelinessReview,
-            Case::FOI::ComplianceReview],
-      sar: [Case::SAR],
-      ico: [Case::ICO::FOI,
-            Case::ICO::SAR]
-    }.with_indifferent_access
-  end
-
   def case_and_type
     "case_#{@correspondence_type_key}".to_sym
   end
@@ -176,25 +159,6 @@ class Admin::CasesController < AdminController
       @correspondence_type = CorrespondenceType.find_by(
         abbreviation: params[:correspondence_type].upcase
       )
-    end
-  end
-
-  def create_original_case(kase)
-    case_creator = CTS::Cases::Create.new(Rails.logger, case_model: Case::Base, type: original_case_type(kase) )
-    kase = case_creator.new_case
-    if kase.valid?
-      case_creator.call(['closed'], kase)
-      return kase
-    end
-  end
-
-  def original_case_type(kase)
-    if kase.type == "Case::ICO::FOI"
-      'Case::FOI::Standard'
-    elsif kase.type == "Case::ICO::SAR"
-      'Case::SAR'
-    else
-      flash[:alert] = "no case type selected"
     end
   end
 end

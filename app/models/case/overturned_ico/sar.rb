@@ -15,8 +15,16 @@ class Case::OverturnedICO::SAR < Case::OverturnedICO::Base
 
   attr_accessor :missing_info
 
+  def correspondence_type_for_business_unit_assignment
+    CorrespondenceType.sar
+  end
+
   def state_machine_name
     'sar'
+  end
+
+  def within_escalation_deadline?
+    false
   end
 
   def self.type_abbreviation

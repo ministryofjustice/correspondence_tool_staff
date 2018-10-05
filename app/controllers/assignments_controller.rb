@@ -1,3 +1,4 @@
+#rubocop:disable Metrics/ClassLength
 class AssignmentsController < ApplicationController
 
   before_action :set_case, only: [
@@ -94,7 +95,8 @@ class AssignmentsController < ApplicationController
       redirect_to case_path @assignment.case, accepted_now: true
     elsif valid_reject?
       @assignment.reject current_user, assignment_params[:reasons_for_rejection]
-      redirect_to case_assignments_show_rejected_path @case, rejected_now: true
+      flash[:notice] = "#{ @case.number} has been rejected.".html_safe
+      redirect_user_to_specific_landing_page
     else
       @assignment.assign_and_validate_state(assignment_params[:state])
       render :edit
@@ -178,11 +180,6 @@ class AssignmentsController < ApplicationController
     end
   end
 
-  def show_rejected
-    @rejected_now = params[:rejected_now]
-    render
-  end
-
   def reassign_user
     authorize @case, :assignments_reassign_user?
     @team_users = set_team_users.decorate
@@ -207,14 +204,15 @@ class AssignmentsController < ApplicationController
   private
 
   def set_business_units
+    correspondence_type = @case.correspondence_type_for_business_unit_assignment
     if params[:business_group_id].present?
       @business_units = BusinessGroup.find(params[:business_group_id])
                           .business_units.responding_for_correspondence_type(
-                            @case.correspondence_type
+                            correspondence_type
                           ).order(:name)
     elsif params[:show_all].present? && params[:show_all]
       @business_units = BusinessUnit.responding_for_correspondence_type(
-        @case.correspondence_type
+        correspondence_type
       ).order(:name)
     end
   end
@@ -285,4 +283,19 @@ class AssignmentsController < ApplicationController
                          unlink_path,
                          { method: :patch, class: "undo-take-on-link"}
   end
+
+  def redirect_user_to_specific_landing_page
+    case @case.type_abbreviation
+    when 'FOI', 'OVERTURNED_FOI' then redirect_to case_path(@case)
+    when 'SAR', 'OVERTURNED_SAR' then redirect_to responder_root_path
+    when 'ICO' then
+      if @case.original_case_type === 'SAR'
+        redirect_to responder_root_path
+      else
+        redirect_to case_path(@case)
+      end
+    else raise 'Unknown case type'
+    end
+  end
 end
+#rubocop:enable Metrics/ClassLength

@@ -13,6 +13,10 @@ class Workflows::Predicates
     end
   end
 
+  def responder_is_member_of_assigned_team_and_not_overturned?
+    responder_is_member_of_assigned_team? && not_overturned?
+  end
+
   def user_is_assigned_responder?
     @kase.responder == @user
   end
@@ -92,7 +96,14 @@ class Workflows::Predicates
   end
 
   def can_create_new_overturned_ico?
-    @kase.ico? && @kase.ico_decision == 'overturned' && overturned_enabled?(@kase)
+    @kase.ico? &&
+        @kase.ico_decision == 'overturned' &&
+        overturned_enabled?(@kase) &&
+        @kase.lacks_overturn?
+  end
+
+  def not_overturned?
+    !@kase.overturned_ico?
   end
 
 

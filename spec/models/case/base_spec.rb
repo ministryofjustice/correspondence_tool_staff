@@ -470,6 +470,30 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
+  describe 'original_appeal_and_related_cases association' do
+
+    let(:sar)               { create :sar_case }
+    let(:linked_sar)        { create :sar_case }
+    let(:manager)           { sar.managing_team.users.first }
+    let(:ico_appeal)        { create :closed_ico_sar_case, :overturned_by_ico, original_case: sar }
+
+    before(:each) do
+      cls = CaseLinkingService.new(manager, sar, linked_sar.number)
+      cls.create
+      @ovt = create :overturned_ico_sar, original_ico_appeal: ico_appeal, original_case: sar
+      @ovt.link_related_cases
+      @ovt.reload
+    end
+
+
+    it 'returns all related cases and the original appeal' do
+      expect(@ovt.original_case).to eq sar
+      expect(@ovt.related_cases).to eq [linked_sar]
+      expect(@ovt.original_appeal_and_related_cases).to eq [ ico_appeal, linked_sar]
+    end
+
+  end
+
   describe 'related_case_links association' do
     it { should have_many(:related_case_links)
                   .class_name('LinkedCase')
@@ -1183,6 +1207,12 @@ RSpec.describe Case::Base, type: :model do
       kase.correspondence_type
       kase.correspondence_type
       expect(CorrespondenceType).to have_received(:find_by!).at_least(1)
+    end
+  end
+
+  describe '#correspondence_type_for_business_unit_assignment' do
+    it 'returns the correspondence_type' do
+      expect(kase.correspondence_type).to eq CorrespondenceType.foi
     end
   end
 

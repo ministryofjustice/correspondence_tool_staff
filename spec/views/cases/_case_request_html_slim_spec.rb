@@ -99,6 +99,7 @@ describe 'cases/case_request.html.slim', type: :view do
     end
 
     let(:partial) do
+      disallow_case_policies_in_view(decorated_case, :can_remove_attachment? )
       render partial: 'cases/case_request.html.slim',
              locals:{ case_details: decorated_case }
 

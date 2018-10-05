@@ -44,9 +44,11 @@ RSpec.describe User, type: :model do
   let(:approver)        { create :approver }
   let(:press_officer)   { create :press_officer }
   let(:deactivated_user){ create :deactivated_user }
-  let(:foi) { create(:foi_correspondence_type) }
-  let(:ico) { create(:ico_correspondence_type) }
-  let(:sar) { create(:sar_correspondence_type) }
+  let(:foi)             { create(:foi_correspondence_type) }
+  let(:ico)             { create(:ico_correspondence_type) }
+  let(:sar)             { create(:sar_correspondence_type) }
+  let(:overturned_sar)  { create(:overturned_sar_correspondence_type) }
+  let(:overturned_foi)  { create(:overturned_foi_correspondence_type) }
 
   describe '#manager?' do
     it 'returns true for a manager' do
@@ -236,21 +238,21 @@ RSpec.describe User, type: :model do
   describe '#permitted_correspondence_types' do
     it 'returns any correspondence types associated with users teams' do
       expect(manager.permitted_correspondence_types)
-        .to match_array([foi, ico, sar])
+        .to match_array([foi, ico, sar, overturned_foi, overturned_sar])
     end
 
     it 'does not include SAR if that feature is disabled' do
       disable_feature(:sars)
 
       expect(manager.permitted_correspondence_types)
-        .to match_array([foi, ico])
+        .to match_array([foi, ico, overturned_foi])
     end
 
     it 'does not include ICO if that feature is disabled' do
       disable_feature(:ico)
 
       expect(manager.permitted_correspondence_types)
-        .to match_array([foi, sar])
+        .to match_array([foi, sar, overturned_foi, overturned_sar])
     end
   end
 
