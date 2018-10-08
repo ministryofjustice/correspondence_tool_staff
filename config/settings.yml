@@ -198,3 +198,9 @@ enabled_features:
     Host-demo: false
     Host-staging: false
     Host-prod: false
+  overturned_trigger_fois:
+    Local: false
+    Host-dev: false
+    Host-demo: false
+    Host-staging: false
+    Host-prod: false
