@@ -9,33 +9,39 @@ class CaseSearchService
               :search_query
 
   def initialize(user:, query_type:, query_params:)
-    @query_params = process_params(query_params)
-    @current_user = user
-    @query_type = query_type
-    @error = false
-    @error_message = nil
-    @result_set = Case::Base.none
+    begin
+      @query_params = process_params(query_params)
+      @current_user = user
+      @query_type = query_type
+      @error = false
+      @error_message = nil
+      @result_set = Case::Base.none
 
-    if query_params.blank?
-      @query = SearchQuery.new
-    else
-      @query = SearchQuery.find_or_create(@query_params.merge(
-                                            user_id: @current_user.id,
-                                            query_type: @query_type,
-                                          ))
-      @parent = @query.parent
+      if query_params.blank?
+        @query = SearchQuery.new
+      else
+        @query = SearchQuery.find_or_create(@query_params.merge(
+                                              user_id: @current_user.id,
+                                              query_type: @query_type,
+                                            ))
+        @parent = @query.parent
 
-      unless @query.valid?
-        @error = true
-        if @query.search_text.blank?
-          @error_message = 'Specify what you want to search for'
+        unless @query.valid?
+          @error = true
+          if @query.search_text.blank?
+            @error_message = 'Specify what you want to search for'
+          end
         end
       end
+    rescue ArgumentError
+      @error = true
+      @error_message = 'Invalid date'
+      @query = SearchQuery.new
     end
   end
 
   def call(full_list_of_cases = nil)
-    if @query.valid?
+    if @error == false && @query.valid?
       @result_set = @query.results(full_list_of_cases)
       @query.update num_results: @result_set.size
     else
