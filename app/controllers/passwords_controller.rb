@@ -7,9 +7,6 @@ class PasswordsController < Devise::PasswordsController
       user = User.find_by(email: resource_params[:email].downcase)
       if user == nil
         redirect_to new_user_session_path
-      elsif user.deactivated?
-        DeviseMailer.account_not_active(user).deliver_later
-        redirect_to new_user_session_path
       else
         super
       end

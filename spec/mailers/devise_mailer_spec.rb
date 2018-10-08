@@ -49,25 +49,4 @@ RSpec.describe DeviseMailer, type: :mailer do
     end
   end
 
-  describe 'account_not_active' do
-    let(:user) { create :user, full_name: 'Someone' }
-    let(:mail) { described_class.account_not_active(user) }
-
-    it 'sets the template' do
-      expect(mail.govuk_notify_template)
-          .to eq '2a7531a6-4976-4400-9478-0829d3f46cc9'
-    end
-
-    it 'personalises the email' do
-      expect(mail.govuk_notify_personalisation)
-          .to eq({
-                     email_subject: 'Your CMS user account has been deactivated',
-                     user_full_name: 'Someone',
-                 })
-    end
-
-    it 'sets the To address of the email' do
-      expect(mail.to).to include user.email
-    end
-  end
 end
