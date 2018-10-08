@@ -60,7 +60,7 @@ describe Case::OverturnedICO::FOI do
       it 'errors if in the future' do
         new_case.received_date = 1.day.from_now
         expect(new_case).not_to be_valid
-        expect(new_case.errors[:received_date]).to eq ['cannot be in the future']
+        expect(new_case.errors[:received_date]).to eq ["can't be in the future"]
       end
 
       context 'too far in the past' do
