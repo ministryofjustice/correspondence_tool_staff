@@ -74,7 +74,7 @@ module ConfigurableStateMachine
         next if role_config.nil?
         role_state_config =  role_config.states[@kase.current_state]
         if key_present_but_nil?(role_state_config, event_name.to_sym)
-          return {}
+          return RecursiveOpenStruct.new
         elsif event_present_and_triggerable?(
                 role_state_config: role_state_config,
                 event: event_name,

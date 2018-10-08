@@ -142,4 +142,30 @@ describe 'state machine' do
       )}
   end
 
+############## EMAIL TESTS ################
+
+  describe :add_message_to_case do
+    it {
+      should have_after_hook(
+         [:disclosure_bmt, :ot_ico_sar_noff_draft],
+
+         [:responder, :ot_ico_sar_noff_draft],
+
+         [:another_responder_in_same_team, :ot_ico_sar_noff_draft],
+
+       ).with_hook('Workflows::Hooks', :notify_responder_message_received)
+    }
+  end
+
+  describe :close do
+    it {
+      should have_after_hook(
+       [:responder, :ot_ico_sar_noff_draft],
+
+       [:another_responder_in_same_team, :ot_ico_sar_noff_draft],
+
+     ).with_hook('Workflows::Hooks', :notify_managing_team_case_closed)
+   }
+  end
+
 end

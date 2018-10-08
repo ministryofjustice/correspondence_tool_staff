@@ -14,7 +14,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
         case_abbr:          kase.decorate.pretty_type,
         case_received_date: kase.received_date.strftime(Settings.default_date_format),
         case_subject:       kase.subject,
-        case_link: edit_case_assignment_url(@assignment.case_id, @assignment.id)
+        case_link:          edit_case_assignment_url(@assignment.case_id, @assignment.id)
     )
 
     mail(to: recipient)

@@ -43,6 +43,39 @@ describe 'state machine' do
                 )}
   end
 
+  ############## EMAIL TESTS ################
+
+  describe :add_message_to_case do
+    it {
+      should have_after_hook(
+         [:disclosure_bmt, :sar_noff_draft],
+         [:disclosure_bmt, :sar_noff_trig_draft],
+         [:disclosure_bmt, :sar_noff_trig_draft_accepted],
+         [:disclosure_bmt, :sar_noff_trig_awdis],
+         [:responder, :sar_noff_draft],
+         [:responder, :sar_noff_trig_draft],
+         [:responder, :sar_noff_trig_draft_accepted],
+         [:responder, :sar_noff_trig_awdis],
+         [:another_responder_in_same_team, :sar_noff_draft],
+         [:another_responder_in_same_team, :sar_noff_trig_draft],
+         [:another_responder_in_same_team, :sar_noff_trig_draft_accepted],
+         [:another_responder_in_same_team, :sar_noff_trig_awdis],
+       ).with_hook('Workflows::Hooks', :notify_responder_message_received)
+    }
+  end
+
+  describe :close do
+    it {
+      should have_after_hook(
+       [:responder, :sar_noff_draft],
+       [:responder, :sar_noff_trig_awdis],
+       [:another_responder_in_same_team, :sar_noff_draft],
+       [:another_responder_in_same_team, :sar_noff_trig_awdis],
+
+     ).with_hook('Workflows::Hooks', :notify_managing_team_case_closed)
+   }
+  end
+
   def all_user_teams
     @setup.user_teams
   end

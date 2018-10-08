@@ -178,6 +178,7 @@
                   transition_to: pending_press_office_clearance
                 upload_response_approve_and_bypass:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  after_transition: Workflows::Hooks#notify_responder_ready_to_send
                   transition_to: awaiting_dispatch
                 upload_response_and_return_for_redraft:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?

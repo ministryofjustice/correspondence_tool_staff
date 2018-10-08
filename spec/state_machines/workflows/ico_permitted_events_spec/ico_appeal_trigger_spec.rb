@@ -359,8 +359,7 @@ describe ConfigurableStateMachine::Machine do
                        :remove_linked_case,
                        :unaccept_approver_assignment,
                        :upload_response_and_approve,
-                       :upload_response_and_return_for_redraft,
-                       :upload_response_approve_and_bypass ]
+                       :upload_response_and_return_for_redraft]
           end
         end
 
@@ -458,8 +457,7 @@ describe ConfigurableStateMachine::Machine do
                                                                          :reassign_user, :remove_linked_case,
                                                                          :unaccept_approver_assignment,
                                                                          :upload_response_and_approve,
-                                                                         :upload_response_and_return_for_redraft,
-                                                                         :upload_response_approve_and_bypass]
+                                                                         :upload_response_and_return_for_redraft]
           end
         end
         context 'awaiting_dispatch state' do
