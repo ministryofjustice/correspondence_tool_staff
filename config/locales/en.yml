@@ -62,6 +62,13 @@ en:
               blank: Type of requester must be selected
             flag_for_disclosure_specialists:
               blank: Please choose yes or no
+
+        case/foi/standard:
+          attributes: &foi_attr
+            date_responded:
+              before_received: "can't be before date received"
+              future: "can't be in the future"
+
         case/ico:
           attributes:
             received_date:
@@ -81,7 +88,7 @@ en:
         case/ico/foi:
           attributes:
             date_responded:
-              before_received: "can't be before date recieved"
+              before_received: "can't be before date received"
               future: "can't be in the future"
           related_case_number:
             does_not_match_original: >-
@@ -96,10 +103,10 @@ en:
         case/overturned_ico/sar:
           attributes:
             received_date:
-              future: cannot be in the future
+              future: can't be in the future
               past: is too far in the past
             external_deadline:
-              past: cannot be in the past
+              past: can't be in the past
               future: is too far in the future
             original_ico_appeal:
               not_ico_sar: is not an ICO appeal for a SAR case
@@ -107,8 +114,9 @@ en:
               not_sar: is not a SAR case
         case/overturned_ico/foi:
           attributes:
+            <<: *foi_attr
             received_date:
-              future: cannot be in the future
+              future: can't be in the future
               past: is too far in the past
             external_deadline:
               past: cannot be in the past
@@ -141,11 +149,12 @@ en:
           attributes:
             correspondence_type:
               blank: "can't be blank"
-            period_start:
+            period_start: &report_dates
               in_future: "can't be in the future."
             period_end:
+              <<: *report_dates
               before_start_date: "can't be after Date to"
-              in_future: "can't be in the future."
+
 
   pundit:
     assignment_policy:
