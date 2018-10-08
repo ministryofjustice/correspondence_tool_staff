@@ -60,7 +60,7 @@ describe Case::OverturnedICO::SAR do
       it 'errors if in the future' do
         new_case.received_date = 1.day.from_now
         expect(new_case).not_to be_valid
-        expect(new_case.errors[:received_date]).to eq ['cannot be in the future']
+        expect(new_case.errors[:received_date]).to eq ["can't be in the future"]
       end
 
       context 'too far in the past' do
@@ -107,7 +107,7 @@ describe Case::OverturnedICO::SAR do
           it 'errors' do
             new_case.external_deadline = 1.day.ago
             expect(new_case).not_to be_valid
-            expect(new_case.errors[:external_deadline]).to eq ['cannot be in the past']
+            expect(new_case.errors[:external_deadline]).to eq ["can't be in the past"]
           end
         end
 
@@ -262,7 +262,7 @@ describe Case::OverturnedICO::SAR do
       original_ico_appeal.linked_cases << link_case_2
       original_ico_appeal.linked_cases << link_case_3
     end
-    
+
     it 'links all the cases linked to the original case and the original_ico_appeal' do
       @kase.link_related_cases
 
@@ -279,7 +279,7 @@ describe Case::OverturnedICO::SAR do
       @kase.link_related_cases
       expect(original_ico_appeal.linked_cases).to include(@kase)
     end
-    
+
     it 'links the overturned case to the original case' do
       @kase.link_related_cases
       expect(original_case.linked_cases).to include(@kase)
