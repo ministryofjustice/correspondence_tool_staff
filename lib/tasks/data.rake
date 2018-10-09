@@ -8,7 +8,9 @@ namespace :data do
   namespace :migrate do
 
     desc 'run all data migrations'
-    task :all => [:environment, :add_refusal_reasons] {}
+    task :all => [:environment, :add_refusal_reasons] do
+
+    end
 
     desc 'add requires refusal reasons to non-granted outcomes'
     task :add_refusal_reasons => :environmment do
