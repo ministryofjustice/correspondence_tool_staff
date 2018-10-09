@@ -9,7 +9,30 @@ describe 'Overturned ICO FOI cases factory' do
   let(:responder)               { responding_team.users.first }
   let(:disclosure_team)         { find_or_create :team_disclosure }
   let(:disclosure_specialist)   { disclosure_team.users.first }
+  let(:press_office)            { find_or_create :team_press_office }
+  let(:press_officer)           { press_office.approvers.first }
+  let(:private_office)          { find_or_create :team_private_office }
+  let(:private_officer)         { private_office.approvers.first }
 
+  def assignment_for(kase, team)
+    kase.assignments
+      .approving
+      .accepted
+      .where(team: team)
+      .singular
+  end
+
+  def disclosure_assignment_for(kase)
+    assignment_for(kase, disclosure_team)
+  end
+
+  def press_assignment_for(kase)
+    assignment_for(kase, press_office)
+  end
+
+  def private_assignment_for(kase)
+    assignment_for(kase, private_office)
+  end
 
   describe :overturned_ico_foi do
     it 'creates an unassigned ICO Overturned FOI' do
@@ -97,11 +120,142 @@ describe 'Overturned ICO FOI cases factory' do
     end
   end
 
+  describe :pending_dacu_clearance_ot_ico_foi do
+    it 'create an ICO Overturned FOI that is pending disclosure clearance' do
+      kase = create :pending_dacu_clearance_ot_ico_foi,
+                    responding_team: responding_team,
+                    responder: responder,
+                    approving_team: disclosure_team,
+                    approver: disclosure_specialist
+
+      expect(kase).to be_instance_of(Case::OverturnedICO::FOI)
+      expect(kase.current_state).to eq 'pending_dacu_clearance'
+
+      expect(kase.transitions.size).to eq 4
+      expect(kase.workflow).to eq 'trigger'
+      transition = kase.transitions.last
+      expect(transition.event).to eq 'add_response_to_flagged_case'
+      expect(transition.acting_team_id).to eq responding_team.id
+      expect(transition.acting_user_id).to eq responder.id
+      expect(transition.target_team_id).to be_nil
+      expect(transition.target_user_id).to be_nil
+      expect(kase.assignments.approving.accepted.count).to eq 1
+      expect(kase.assignments.approving.accepted[0].team_id).to eq disclosure_team.id
+      expect(kase.assignments.approving.accepted[0].approved).to be_falsey
+    end
+  end
+
+  describe :approved_trigger_ot_ico_foi do
+    it 'create a trigger ICO Overturned FOI that has been approved' do
+      kase = create :approved_trigger_ot_ico_foi,
+                    approving_team: disclosure_team,
+                    approver: disclosure_specialist
+
+      expect(kase).to be_instance_of(Case::OverturnedICO::FOI)
+      expect(kase.current_state).to eq 'awaiting_dispatch'
+      expect(kase.workflow).to eq 'trigger'
+
+      expect(kase.transitions.size).to eq 5
+      transition = kase.transitions.last
+      expect(transition.event).to eq 'approve'
+      expect(transition.acting_team_id).to eq disclosure_team.id
+      expect(transition.acting_user_id).to eq disclosure_specialist.id
+
+      expect(kase.assignments.approving.accepted.count).to eq 1
+      expect(disclosure_assignment_for(kase)).to be_approved
+    end
+  end
+
+  describe :pending_press_clearance_ot_ico_foi do
+    it 'create a full-approval ICO Overturned FOI case that is pending press office clearance' do
+      kase = create :pending_press_clearance_ot_ico_foi,
+                    responding_team: responding_team,
+                    responder: responder,
+                    approving_team: disclosure_team,
+                    approver: disclosure_specialist,
+                    press_office: press_office,
+                    press_officer: press_officer,
+                    private_office: private_office,
+                    private_officer: private_officer
+
+      expect(kase).to be_instance_of(Case::OverturnedICO::FOI)
+      expect(kase.current_state).to eq 'pending_press_office_clearance'
+      expect(kase.workflow).to eq 'full_approval'
+
+      expect(kase.transitions.size).to eq 5
+      transition = kase.transitions.last
+      expect(transition.event).to eq 'approve'
+      expect(transition.acting_team_id).to eq disclosure_team.id
+      expect(transition.acting_user_id).to eq disclosure_specialist.id
+
+      expect(kase.assignments.approving.accepted.count).to eq 3
+      expect(disclosure_assignment_for(kase)).to be_approved
+      expect(press_assignment_for(kase))     .not_to be_approved
+      expect(private_assignment_for(kase))   .not_to be_approved
+    end
+  end
+
+  describe :pending_private_clearance_ot_ico_foi do
+    it 'create a full-approval ICO Overturned FOI that is pending press office clearance' do
+      kase = create :pending_private_clearance_ot_ico_foi,
+                    approving_team: disclosure_team,
+                    approver: disclosure_specialist,
+                    press_office: press_office,
+                    press_officer: press_officer,
+                    private_office: private_office,
+                    private_officer: private_officer
+
+      expect(kase).to be_instance_of(Case::OverturnedICO::FOI)
+      expect(kase.current_state).to eq 'pending_private_office_clearance'
+      expect(kase.workflow).to eq 'full_approval'
+
+      expect(kase.transitions.size).to eq 6
+      transition = kase.transitions.last
+      expect(transition.event).to eq 'approve'
+      expect(transition.acting_team_id).to eq press_office.id
+      expect(transition.acting_user_id).to eq press_officer.id
+
+      expect(kase.assignments.approving.accepted.count).to eq 3
+      expect(disclosure_assignment_for(kase)).to be_approved
+      expect(press_assignment_for(kase))     .to be_approved
+      expect(private_assignment_for(kase))   .not_to be_approved
+    end
+  end
+
+  describe :approved_full_approval_ot_ico_foi do
+    it 'create a full-approval ICO Overturned FOI that has been fully approved' do
+      kase = create :approved_full_approval_ot_ico_foi,
+                    approving_team: disclosure_team,
+                    approver: disclosure_specialist,
+                    press_office: press_office,
+                    press_officer: press_officer,
+                    private_office: private_office,
+                    private_officer: private_officer
+
+      expect(kase).to be_instance_of(Case::OverturnedICO::FOI)
+      expect(kase.current_state).to eq 'awaiting_dispatch'
+      expect(kase.workflow).to eq 'full_approval'
+
+      expect(kase.transitions.size).to eq 7
+      transition = kase.transitions.last
+      expect(transition.event).to eq 'approve'
+      expect(transition.acting_team_id).to eq private_office.id
+      expect(transition.acting_user_id).to eq private_officer.id
+
+      expect(kase.assignments.approving.accepted.count).to eq 3
+      expect(disclosure_assignment_for(kase)).to be_approved
+      expect(press_assignment_for(kase))     .to be_approved
+      expect(private_assignment_for(kase))   .to be_approved
+    end
+  end
+
   describe :responded_ot_ico_foi do
-    it 'creates an case in drafting state' do
+    it 'creates an ICO Overturned FOI case that has been responded state' do
       kase = create :responded_ot_ico_foi,
                     responding_team: responding_team,
                     responder: responder
+
+      expect(kase).to be_instance_of(Case::OverturnedICO::FOI)
       expect(kase.current_state).to eq 'responded'
 
       expect(kase.transitions.size).to eq 4
@@ -115,26 +269,114 @@ describe 'Overturned ICO FOI cases factory' do
     end
   end
 
-  describe :closed_ot_ico_foi do
-    it 'creates a case in responded state' do
-      Timecop.freeze(frozen_time) do
-        kase = create :closed_ot_ico_foi,
-                      responding_team: responding_team,
-                      responder: responder
+  describe :responded_trigger_ot_ico_foi do
+    it 'creates a trigger ICO Overturned FOI case that has been responded' do
+      kase = create :responded_trigger_ot_ico_foi,
+                    responding_team: responding_team,
+                    responder: responder
 
-        expect(kase).to be_instance_of(Case::OverturnedICO::FOI)
-        expect(kase.current_state).to eq 'closed'
-        expect(kase.assignments.size).to eq 2
+      expect(kase).to be_instance_of(Case::OverturnedICO::FOI)
+      expect(kase.current_state).to eq 'responded'
+      expect(kase.workflow).to eq 'trigger'
 
-        expect(kase.transitions.size).to eq 4
-        transition = kase.transitions.last
-        expect(transition.event).to eq 'close'
-        expect(transition.acting_team_id).to eq responding_team.id
-        expect(transition.acting_user_id).to eq responder.id
-        expect(transition.target_team_id).to be_nil
-        expect(transition.target_user_id).to be_nil
-        expect(transition.to_workflow).to be_nil
-      end
+      expect(kase.transitions.size).to eq 6
+      transition = kase.transitions.last
+      expect(transition.event).to eq 'respond'
+      expect(transition.acting_team_id).to eq responding_team.id
+      expect(transition.acting_user_id).to eq responder.id
+      expect(transition.target_team_id).to eq responding_team.id
+      expect(transition.target_user_id).to eq responder.id
+      expect(transition.to_workflow).to be_nil
+
+      expect(kase.assignments.approving.accepted.count).to eq 1
+      expect(disclosure_assignment_for(kase)).to be_approved
     end
   end
+
+  describe :responded_full_approval_ot_ico_foi do
+    it 'creates a full-approval ICO Overturned FOI case that has been responded' do
+      kase = create :responded_full_approval_ot_ico_foi,
+                    responding_team: responding_team,
+                    responder: responder
+      expect(kase.current_state).to eq 'responded'
+      expect(kase.workflow).to eq 'full_approval'
+
+      expect(kase.transitions.size).to eq 8
+      transition = kase.transitions.last
+      expect(transition.event).to eq 'respond'
+      expect(transition.acting_team_id).to eq responding_team.id
+      expect(transition.acting_user_id).to eq responder.id
+      expect(transition.target_team_id).to eq responding_team.id
+      expect(transition.target_user_id).to eq responder.id
+      expect(transition.to_workflow).to be_nil
+      expect(kase.assignments.approving.accepted.count).to eq 3
+      expect(disclosure_assignment_for(kase)).to be_approved
+      expect(press_assignment_for(kase))     .to be_approved
+      expect(private_assignment_for(kase))   .to be_approved
+    end
+  end
+
+  describe :closed_ot_ico_foi do
+    it 'creates an ICO Overturned FOI case that is closed' do
+      kase = create :closed_ot_ico_foi,
+                    responding_team: responding_team,
+                    responder: responder
+
+      expect(kase).to be_instance_of(Case::OverturnedICO::FOI)
+      expect(kase.current_state).to eq 'closed'
+      expect(kase.assignments.size).to eq 2
+
+      expect(kase.transitions.size).to eq 5
+      transition = kase.transitions.last
+      expect(transition.event).to eq 'close'
+      expect(transition.acting_team).to eq disclosure_bmt
+      expect(transition.acting_user).to eq manager
+      expect(transition.to_workflow).to be_nil
+    end
+  end
+
+  describe :closed_trigger_ot_ico_foi do
+    it 'creates a trigger ICO Overturned FOI case that is closed' do
+      kase = create :closed_trigger_ot_ico_foi,
+                    responding_team: responding_team,
+                    responder: responder
+
+      expect(kase).to be_instance_of(Case::OverturnedICO::FOI)
+      expect(kase.current_state).to eq 'closed'
+      expect(kase.workflow).to eq 'trigger'
+
+      expect(kase.transitions.size).to eq 7
+      transition = kase.transitions.last
+      expect(transition.event).to eq 'close'
+      expect(transition.acting_team).to eq disclosure_bmt
+      expect(transition.acting_user).to eq manager
+
+      expect(kase.assignments.approving.accepted.count).to eq 1
+      expect(disclosure_assignment_for(kase)).to be_approved
+    end
+  end
+
+  describe :closed_full_approval_ot_ico_foi do
+    it 'creates a full-approval ICO Overturned FOI case that is closed' do
+      kase = create :closed_full_approval_ot_ico_foi,
+                    responding_team: responding_team,
+                    responder: responder
+
+      expect(kase).to be_instance_of(Case::OverturnedICO::FOI)
+      expect(kase.current_state).to eq 'closed'
+      expect(kase.workflow).to eq 'full_approval'
+
+      expect(kase.transitions.size).to eq 9
+      transition = kase.transitions.last
+      expect(transition.event).to eq 'close'
+      expect(transition.acting_team).to eq disclosure_bmt
+      expect(transition.acting_user).to eq manager
+
+      expect(kase.assignments.approving.accepted.count).to eq 3
+      expect(disclosure_assignment_for(kase)).to be_approved
+      expect(press_assignment_for(kase))     .to be_approved
+      expect(private_assignment_for(kase))   .to be_approved
+    end
+  end
+
 end
