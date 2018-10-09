@@ -160,7 +160,7 @@ FactoryBot.define do
 
     trait :overturned_by_ico do
       ico_decision         { "overturned" }
-      ico_decision_comment { Faker::NewGirl.quote }
+      ico_decision_comment { Faker::DrWho.quote }
 
     end
 
