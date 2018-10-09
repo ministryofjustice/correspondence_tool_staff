@@ -591,7 +591,7 @@ module ConfigurableStateMachine
             end
           end
 
-          xcontext 'triggered as a result of no "if present' do
+          context 'triggered as a result of no "if present' do
             it 'returns true' do
               expect(Case::FOI::StandardPolicy).not_to receive(:new)
               config.user_roles.manager.states.unassigned.add_message_to_case.delete_field(:if)
@@ -605,7 +605,7 @@ module ConfigurableStateMachine
           end
         end
 
-        xcontext 'event cannot be triggered' do
+        context 'event cannot be triggered' do
           context 'not triggered as a result of a predicate returning false' do
             it 'returns  false' do
               expect(Case::FOI::StandardPolicy).to receive(:new).with(user: @manager, kase: @unassigned_case).and_return(@policy)

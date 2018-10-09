@@ -54,11 +54,6 @@ module PermitTriggerEvent
       @transition_to = target_state.to_s
     end
 
-    chain :with_post_hook do |klass, method|
-      @post_hook_class = klass
-      @post_hook_method = method
-    end
-
     # Use this to run binding.pry if a particular combination fails a test.
     # Handy to be able to get a peek into the context where the error occured.
     # The debugger is also protected so that it doesn't appear if STDOUT is not

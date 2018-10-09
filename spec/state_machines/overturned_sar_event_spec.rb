@@ -102,9 +102,9 @@ describe 'state machine' do
   describe :reassign_user do
     it {
       should permit_event_to_be_triggered_only_by(
-               [:responder, :ot_ico_sar_noff_draft],
-               [:another_responder_in_same_team, :ot_ico_sar_noff_draft],
-             ) # .with_post_hook(Workflows::Hooks, :notify_managing_team_case_closed)
+        [:responder, :ot_ico_sar_noff_draft],
+        [:another_responder_in_same_team, :ot_ico_sar_noff_draft],
+      )
     }
   end
 
@@ -157,6 +157,24 @@ describe 'state machine' do
     }
   end
 
+  describe :assign_responder do
+    it {
+      should have_after_hook(
+        [:disclosure_bmt, :ot_ico_sar_noff_unassigned],
+     ).with_hook('Workflows::Hooks', :assign_responder_email)
+   }
+  end
+
+
+  describe :assign_to_new_team do
+    it {
+      should have_after_hook(
+        [:disclosure_bmt, :ot_ico_sar_noff_awresp],
+        [:disclosure_bmt, :ot_ico_sar_noff_draft],
+     ).with_hook('Workflows::Hooks', :assign_responder_email)
+   }
+  end
+
   describe :close do
     it {
       should have_after_hook(
@@ -166,6 +184,15 @@ describe 'state machine' do
 
      ).with_hook('Workflows::Hooks', :notify_managing_team_case_closed)
    }
+  end
+
+  describe :reassign_user do
+    it {
+      should have_after_hook(
+        [:responder, :ot_ico_sar_noff_draft],
+        [:another_responder_in_same_team, :ot_ico_sar_noff_draft]
+       ).with_hook('Workflows::Hooks', :reassign_user_email)
+    }
   end
 
 end

@@ -746,16 +746,6 @@ describe 'state machine' do
      }
     end
 
-    describe :upload_response_and_return_for_redraft do
-      it {
-        should have_after_hook(
-          [:disclosure_specialist, :ico_sar_pending_dacu],
-          [:disclosure_specialist, :ico_foi_pending_dacu],
-
-       ).with_hook('Workflows::Hooks', :notify_responder_redraft_requested)
-     }
-    end
-
     describe :approve do
       it {
         should have_after_hook(
@@ -763,6 +753,81 @@ describe 'state machine' do
           [:disclosure_specialist, :ico_foi_pending_dacu],
 
        ).with_hook('Workflows::Hooks', :notify_responder_ready_to_send)
+     }
+    end
+
+    describe :assign_responder do
+      it {
+        should have_after_hook(
+          [:disclosure_bmt, :ico_foi_unassigned],
+          [:disclosure_bmt, :ico_sar_unassigned],
+       ).with_hook('Workflows::Hooks', :assign_responder_email)
+     }
+    end
+
+
+    describe :assign_to_new_team do
+      it {
+        should have_after_hook(
+          [:disclosure_bmt, :ico_foi_awaiting_responder],
+          [:disclosure_bmt, :ico_foi_accepted],
+          [:disclosure_bmt, :ico_sar_awaiting_responder],
+          [:disclosure_bmt, :ico_sar_accepted],
+       ).with_hook('Workflows::Hooks', :assign_responder_email)
+     }
+    end
+
+
+    describe :reassign_user do
+      it {
+        should have_after_hook(
+          [:responder, :ico_foi_accepted],
+          [:responder, :ico_sar_accepted],
+          [:responder, :ico_foi_pending_dacu],
+          [:responder, :ico_sar_pending_dacu],
+          [:responder, :ico_foi_awaiting_dispatch],
+          [:responder, :ico_sar_awaiting_dispatch],
+
+          [:another_responder_in_same_team, :ico_foi_accepted],
+          [:another_responder_in_same_team, :ico_sar_accepted],
+          [:another_responder_in_same_team, :ico_foi_pending_dacu],
+          [:another_responder_in_same_team, :ico_sar_pending_dacu],
+          [:another_responder_in_same_team, :ico_foi_awaiting_dispatch],
+          [:another_responder_in_same_team, :ico_sar_awaiting_dispatch],
+
+          [:disclosure_specialist, :ico_foi_unassigned],
+          [:disclosure_specialist, :ico_foi_awaiting_responder],
+          [:disclosure_specialist, :ico_foi_accepted],
+          [:disclosure_specialist, :ico_foi_pending_dacu],
+          [:disclosure_specialist, :ico_foi_awaiting_dispatch],
+          [:disclosure_specialist, :ico_sar_unassigned],
+          [:disclosure_specialist, :ico_sar_awaiting_responder],
+          [:disclosure_specialist, :ico_sar_accepted],
+          [:disclosure_specialist, :ico_sar_pending_dacu],
+          [:disclosure_specialist, :ico_sar_awaiting_dispatch],
+
+          [:disclosure_specialist_coworker, :ico_foi_unassigned],
+          [:disclosure_specialist_coworker, :ico_foi_awaiting_responder],
+          [:disclosure_specialist_coworker, :ico_foi_accepted],
+          [:disclosure_specialist_coworker, :ico_foi_pending_dacu],
+          [:disclosure_specialist_coworker, :ico_foi_awaiting_dispatch],
+          [:disclosure_specialist_coworker, :ico_sar_unassigned],
+          [:disclosure_specialist_coworker, :ico_sar_awaiting_responder],
+          [:disclosure_specialist_coworker, :ico_sar_accepted],
+          [:disclosure_specialist_coworker, :ico_sar_pending_dacu],
+          [:disclosure_specialist_coworker, :ico_sar_awaiting_dispatch],
+
+       ).with_hook('Workflows::Hooks', :reassign_user_email)
+     }
+    end
+
+    describe :upload_response_and_return_for_redraft do
+      it {
+        should have_after_hook(
+          [:disclosure_specialist, :ico_sar_pending_dacu],
+          [:disclosure_specialist, :ico_foi_pending_dacu],
+
+       ).with_hook('Workflows::Hooks', :notify_responder_redraft_requested)
      }
     end
 

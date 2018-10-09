@@ -1692,11 +1692,162 @@ describe 'state machine' do
      }
     end
 
+    describe :reassign_user do
+      it {
+        should have_after_hook(
+          [:disclosure_specialist, :trig_unassigned_foi_accepted],
+          [:disclosure_specialist, :trig_awresp_foi],
+          [:disclosure_specialist, :trig_awresp_foi_accepted],
+          [:disclosure_specialist, :trig_draft_foi],
+          [:disclosure_specialist, :trig_draft_foi_accepted],
+          [:disclosure_specialist, :trig_pdacu_foi],
+          [:disclosure_specialist, :trig_pdacu_foi_accepted],
+          [:disclosure_specialist, :trig_awdis_foi],
+          [:disclosure_specialist, :full_awresp_foi],
+          [:disclosure_specialist, :full_awresp_foi_accepted],
+          [:disclosure_specialist, :full_draft_foi],
+          [:disclosure_specialist, :full_pdacu_foi_accepted],
+          [:disclosure_specialist, :full_pdacu_foi_unaccepted],
+          [:disclosure_specialist, :full_ppress_foi],
+          [:disclosure_specialist, :full_ppress_foi_accepted],
+          [:disclosure_specialist, :full_pprivate_foi_accepted],
+          [:disclosure_specialist, :full_pprivate_foi],
+          [:disclosure_specialist, :full_awdis_foi],
+
+
+          [:disclosure_specialist_coworker, :trig_unassigned_foi_accepted],
+          [:disclosure_specialist_coworker, :trig_awresp_foi],
+          [:disclosure_specialist_coworker, :trig_awresp_foi_accepted],
+          [:disclosure_specialist_coworker, :trig_draft_foi],
+          [:disclosure_specialist_coworker, :trig_draft_foi_accepted],
+          [:disclosure_specialist_coworker, :trig_pdacu_foi],
+          [:disclosure_specialist_coworker, :trig_pdacu_foi_accepted],
+          [:disclosure_specialist_coworker, :trig_awdis_foi],
+          [:disclosure_specialist_coworker, :full_awresp_foi],
+          [:disclosure_specialist_coworker, :full_awresp_foi_accepted],
+          [:disclosure_specialist_coworker, :full_draft_foi],
+          [:disclosure_specialist_coworker, :full_pdacu_foi_accepted],
+          [:disclosure_specialist_coworker, :full_pdacu_foi_unaccepted],
+          [:disclosure_specialist_coworker, :full_ppress_foi],
+          [:disclosure_specialist_coworker, :full_ppress_foi_accepted],
+          [:disclosure_specialist_coworker, :full_pprivate_foi_accepted],
+          [:disclosure_specialist_coworker, :full_pprivate_foi],
+          [:disclosure_specialist_coworker, :full_awdis_foi],
+
+          [:another_disclosure_specialist, :trig_awresp_foi],
+          [:another_disclosure_specialist, :trig_awresp_foi_accepted],
+          [:another_disclosure_specialist, :trig_draft_foi],
+          [:another_disclosure_specialist, :trig_draft_foi_accepted],
+          [:another_disclosure_specialist, :trig_pdacu_foi],
+          [:another_disclosure_specialist, :trig_pdacu_foi_accepted],
+          [:another_disclosure_specialist, :full_awresp_foi],
+          [:another_disclosure_specialist, :full_awresp_foi_accepted],
+          [:another_disclosure_specialist, :full_draft_foi],
+          [:another_disclosure_specialist, :full_pdacu_foi_accepted],
+          [:another_disclosure_specialist, :full_pdacu_foi_unaccepted],
+
+          [:responder, :std_draft_foi],
+          [:responder, :std_awdis_foi],
+          [:responder, :trig_draft_foi],
+          [:responder, :trig_draft_foi_accepted],
+          [:responder, :trig_pdacu_foi],
+          [:responder, :trig_pdacu_foi_accepted],
+          [:responder, :trig_awdis_foi],
+          [:responder, :full_draft_foi],
+          [:responder, :full_pdacu_foi_accepted],
+          [:responder, :full_pdacu_foi_unaccepted],
+          [:responder, :full_ppress_foi],
+          [:responder, :full_ppress_foi_accepted],
+          [:responder, :full_pprivate_foi],
+          [:responder, :full_pprivate_foi_accepted],
+          [:responder, :full_awdis_foi],
+
+          [:another_responder_in_same_team, :std_draft_foi],
+          [:another_responder_in_same_team, :std_awdis_foi],
+          [:another_responder_in_same_team, :trig_draft_foi],
+          [:another_responder_in_same_team, :trig_draft_foi_accepted],
+          [:another_responder_in_same_team, :trig_pdacu_foi],
+          [:another_responder_in_same_team, :trig_pdacu_foi_accepted],
+          [:another_responder_in_same_team, :trig_awdis_foi],
+          [:another_responder_in_same_team, :full_draft_foi],
+          [:another_responder_in_same_team, :full_pdacu_foi_accepted],
+          [:another_responder_in_same_team, :full_pdacu_foi_unaccepted],
+          [:another_responder_in_same_team, :full_ppress_foi],
+          [:another_responder_in_same_team, :full_ppress_foi_accepted],
+          [:another_responder_in_same_team, :full_pprivate_foi],
+          [:another_responder_in_same_team, :full_pprivate_foi_accepted],
+          [:another_responder_in_same_team, :full_awdis_foi],
+
+          [:press_officer, :trig_awresp_foi],
+          [:press_officer, :trig_awresp_foi_accepted],
+          [:press_officer, :trig_draft_foi],
+          [:press_officer, :trig_draft_foi_accepted],
+          [:press_officer, :trig_pdacu_foi],
+          [:press_officer, :trig_pdacu_foi_accepted],
+          [:press_officer, :full_awresp_foi],
+          [:press_officer, :full_awresp_foi_accepted],
+          [:press_officer, :full_draft_foi],
+          [:press_officer, :full_pdacu_foi_accepted],
+          [:press_officer, :full_pdacu_foi_unaccepted],
+          [:press_officer, :full_ppress_foi],
+          [:press_officer, :full_ppress_foi_accepted],
+          [:press_officer, :full_pprivate_foi],
+          [:press_officer, :full_pprivate_foi_accepted],
+          [:press_officer, :full_awdis_foi],
+
+          [:private_officer, :trig_awresp_foi],
+          [:private_officer, :trig_awresp_foi_accepted],
+          [:private_officer, :trig_draft_foi],
+          [:private_officer, :trig_draft_foi_accepted],
+          [:private_officer, :trig_pdacu_foi],
+          [:private_officer, :trig_pdacu_foi_accepted],
+          [:private_officer, :full_awresp_foi],
+          [:private_officer, :full_awresp_foi_accepted],
+          [:private_officer, :full_draft_foi],
+          [:private_officer, :full_pdacu_foi_accepted],
+          [:private_officer, :full_pdacu_foi_unaccepted],
+          [:private_officer, :full_ppress_foi],
+          [:private_officer, :full_ppress_foi_accepted],
+          [:private_officer, :full_pprivate_foi],
+          [:private_officer, :full_pprivate_foi_accepted],
+          [:private_officer, :full_awdis_foi],
+       ).with_hook('Workflows::Hooks', :reassign_user_email)
+     }
+    end
+
     describe :approve do
       it {
         should have_after_hook(
           [:disclosure_specialist, :trig_pdacu_foi_accepted]
        ).with_hook('Workflows::Hooks', :notify_responder_ready_to_send)
+     }
+    end
+
+    describe :assign_responder do
+      it {
+        should have_after_hook(
+          [:disclosure_bmt, :std_unassigned_foi],
+          [:disclosure_bmt, :trig_unassigned_foi],
+          [:disclosure_bmt, :trig_unassigned_foi_accepted],
+          [:disclosure_bmt, :full_unassigned_foi],
+       ).with_hook('Workflows::Hooks', :assign_responder_email)
+     }
+    end
+
+
+    describe :assign_to_new_team do
+      it {
+        should have_after_hook(
+          [:disclosure_bmt, :std_awresp_foi],
+          [:disclosure_bmt, :std_draft_foi],
+          [:disclosure_bmt, :trig_awresp_foi],
+          [:disclosure_bmt, :trig_awresp_foi_accepted],
+          [:disclosure_bmt, :trig_draft_foi],
+          [:disclosure_bmt, :trig_draft_foi_accepted],
+          [:disclosure_bmt, :full_awresp_foi],
+          [:disclosure_bmt, :full_awresp_foi_accepted],
+          [:disclosure_bmt, :full_draft_foi],
+       ).with_hook('Workflows::Hooks', :assign_responder_email)
      }
     end
 

@@ -22,7 +22,7 @@ class CaseAssignResponderService
       end
     end
     if @result == :ok
-      NotifyNewAssignmentService.new(team: @team, assignment: @assignment).run
+      # NotifyNewAssignmentService.new(team: @team, assignment: @assignment).run
       true
     else
       false

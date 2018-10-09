@@ -52,32 +52,6 @@ describe CaseAssignResponderService, type: :service do
         service.call
         expect(service.assignment).to eq new_assignment
       end
-
-      it 'emails the team' do
-        service.call
-        expect(ActionNotificationsMailer).to have_received(:new_assignment)
-                                      .with new_assignment,
-                                            responding_team.email
-      end
-
-      context 'a team with no email address' do
-        let(:other_responder) { create :responder }
-
-        before do
-          responding_team.responders << other_responder
-          responding_team.update email: nil
-        end
-
-        it 'emails each of the responders on the team' do
-          service.call
-          expect(ActionNotificationsMailer).to have_received(:new_assignment)
-                                        .with new_assignment,
-                                              responder.email
-          expect(ActionNotificationsMailer).to have_received(:new_assignment)
-                                        .with new_assignment,
-                                              other_responder.email
-        end
-      end
     end
 
     context 'created assignment is invalid' do

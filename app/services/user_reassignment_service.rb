@@ -69,12 +69,12 @@ class UserReassignmentService
     # User is not assigning to themselves and
     # the assigned user changed
 
-    if @acting_user != @target_user &&
-        @original_assigned_user != @assignment.user_id
-
-        ActionNotificationsMailer
-          .case_assigned_to_another_user(@kase, @target_user)
-          .deliver_later
-    end
+    # if @acting_user != @target_user &&
+    #     @original_assigned_user != @assignment.user_id
+    #
+    #     ActionNotificationsMailer
+    #       .case_assigned_to_another_user(@kase, @target_user)
+    #       .deliver_later
+    # end
   end
 end

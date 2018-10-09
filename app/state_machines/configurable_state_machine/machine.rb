@@ -224,7 +224,7 @@ module ConfigurableStateMachine
           CaseTransition.unset_most_recent(@kase)
           write_transition(event: event, to_state: to_state, to_workflow: to_workflow, params: params)
           @kase.update!(current_state: to_state, workflow: to_workflow)
-          execute_after_transition_method(event_config: event_config, user: user)
+          execute_after_transition_method(event_config: event_config, user: user, metadata: params)
         end
       else
         raise InvalidEventError.new(
@@ -326,11 +326,11 @@ module ConfigurableStateMachine
       end
     end
 
-    def execute_after_transition_method(event_config:, user:)
+    def execute_after_transition_method(event_config:, user:, metadata:)
       if event_config.to_h.key?(:after_transition)
         class_and_method = event_config.after_transition
         klass, method = class_and_method.split('#')
-        after_object = klass.constantize.new(user: user, kase: @kase)
+        after_object = klass.constantize.new(user: user, kase: @kase, metadata: metadata)
         after_object.__send__(method)
       end
     end

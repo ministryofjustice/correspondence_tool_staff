@@ -8,6 +8,7 @@
                 add_message_to_case:
                 assign_responder:
                   transition_to: awaiting_responder
+                  after_transition: Workflows::Hooks#assign_responder_email
                 destroy_case:
                 edit_case:
                 flag_for_clearance:
@@ -17,6 +18,7 @@
               awaiting_responder:
                 add_message_to_case:
                 assign_to_new_team:
+                  after_transition: Workflows::Hooks#assign_responder_email
                 destroy_case:
                 edit_case:
                 link_a_case:
@@ -27,6 +29,7 @@
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 assign_to_new_team:
                   transition_to: awaiting_responder
+                  after_transition: Workflows::Hooks#assign_responder_email
                 destroy_case:
                 edit_case:
                 link_a_case:
@@ -79,6 +82,7 @@
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#user_is_in_approving_team_for_case?
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
@@ -91,6 +95,7 @@
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#user_is_in_approving_team_for_case?
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
@@ -104,6 +109,7 @@
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#user_is_in_approving_team_for_case?
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
@@ -121,6 +127,7 @@
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#user_is_in_approving_team_for_case?
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
                 unaccept_approver_assignment:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
@@ -132,9 +139,6 @@
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                   after_transition: Workflows::Hooks#notify_responder_redraft_requested
                   transition_to: drafting
-                # upload_response_approve_and_bypass:
-                #   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
-                #   transition_to: awaiting_dispatch
 
               awaiting_dispatch:
                 add_message_to_case:
@@ -143,6 +147,7 @@
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#user_is_in_approving_team_for_case?
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
                 respond:
                   if: Workflows::Predicates#user_is_in_approving_team_for_case?
@@ -191,6 +196,7 @@
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
 
               pending_dacu_clearance:
@@ -200,6 +206,7 @@
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
 
               awaiting_dispatch:
@@ -211,6 +218,7 @@
                  link_a_case:
                  reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#reassign_user_email
                  remove_linked_case:
                  remove_response:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?

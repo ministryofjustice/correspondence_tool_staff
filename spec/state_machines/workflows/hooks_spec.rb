@@ -3,7 +3,7 @@ require "rails_helper"
 describe Workflows::Hooks do
   let(:user)     { create(:responder) }
   let(:kase)     { create(:foi_case)  }
-  let(:workflow) { described_class.new(user: user, kase: kase) }
+  let(:workflow) { described_class.new(user: user, kase: kase, metadata: nil) }
 
   describe '#notify_managing_team_case_closed' do
     before do
