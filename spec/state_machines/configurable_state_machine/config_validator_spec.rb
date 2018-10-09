@@ -179,13 +179,13 @@ module ConfigurableStateMachine
         end
       end
 
-      context 'permitted workflows is a Fixnum' do
+      context 'permitted workflows is an Integer' do
         it 'errors' do
           config.case_types.foi.permitted_workflows = 55
           validator = ConfigValidator.new(config, filename)
           expect{
             validator.run
-          }.to raise_error ConfigurationError, /File #{filename} section case_types\/foi\/permitted_workflows: Expected an array, got Fixnum/
+          }.to raise_error ConfigurationError, /File #{filename} section case_types\/foi\/permitted_workflows: Expected an array, got Integer/
         end
       end
 
@@ -206,7 +206,7 @@ module ConfigurableStateMachine
             validator = ConfigValidator.new(config, filename)
             expect{
               validator.run
-            }.to raise_error ConfigurationError, "File #{filename} section case_types/foi: Expected workflows to be a Hash, is a Fixnum"
+            }.to raise_error ConfigurationError, "File #{filename} section case_types/foi: Expected workflows to be a Hash, is a Integer"
           end
         end
 
@@ -256,7 +256,7 @@ module ConfigurableStateMachine
             validator = ConfigValidator.new(config, filename)
             expect{
               validator.run
-            }.to raise_error ConfigurationError, "File #{filename} section case_types/foi/workflows/standard: Expected user_roles to be a Hash, got Fixnum"
+            }.to raise_error ConfigurationError, "File #{filename} section case_types/foi/workflows/standard: Expected user_roles to be a Hash, got Integer"
           end
         end
 
