@@ -11,24 +11,23 @@ describe ConfigurableStateMachine::Machine do
 
       context 'unassigned state' do
         it 'should show permitted events' do
-          k = create :overturned_ico_foi
-          expect(k.workflow).to eq 'standard'
+          k = create :overturned_ico_foi, :flagged, :dacu_disclosure
           expect(k.current_state).to eq 'unassigned'
+          expect(k.workflow).to eq 'trigger'
           expect(k.state_machine.permitted_events(manager)).to eq [:add_message_to_case,
                                                                    :assign_responder,
                                                                    :destroy_case,
                                                                    :flag_for_clearance,
                                                                    :link_a_case,
-                                                                   :remove_linked_case,
-                                                                   :request_further_clearance]
+                                                                   :remove_linked_case]
         end
       end
 
 
       context 'awaiting responder state' do
         it 'shows events' do
-          k = create :awaiting_responder_ot_ico_foi
-          expect(k.workflow).to eq 'standard'
+          k = create :awaiting_responder_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+          expect(k.workflow).to eq 'trigger'
           expect(k.current_state).to eq 'awaiting_responder'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
@@ -42,8 +41,8 @@ describe ConfigurableStateMachine::Machine do
 
       context 'drafting state' do
         it 'shows events' do
-          k = create :accepted_ot_ico_foi
-          expect(k.workflow).to eq 'standard'
+          k = create :accepted_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+          expect(k.workflow).to eq 'trigger'
           expect(k.current_state).to eq 'drafting'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
@@ -58,8 +57,8 @@ describe ConfigurableStateMachine::Machine do
 
       context 'awaiting_dispatch' do
         it 'shows events' do
-          k = create :with_response_ot_ico_foi
-          expect(k.workflow).to eq 'standard'
+          k = create :with_response_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+          expect(k.workflow).to eq 'trigger'
           expect(k.current_state).to eq 'awaiting_dispatch'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :destroy_case,
@@ -71,10 +70,33 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
+
+      context 'pending_dacu_clearance' do
+        it 'shows events' do
+          k = create :pending_dacu_clearance_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+          expect(k.workflow).to eq 'trigger'
+          expect(k.current_state).to eq 'pending_dacu_clearance'
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
+                                                                      :destroy_case,
+                                                                      :extend_for_pit,
+                                                                      :link_a_case,
+                                                                      :remove_linked_case,
+                                                                      :request_further_clearance]
+        end
+      end
+
+
+
+
+
+
+
+
+
       context 'responded' do
         it 'shows events' do
-          k = create :responded_ot_ico_foi
-          expect(k.workflow).to eq 'standard'
+          k = create :responded_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+          expect(k.workflow).to eq 'trigger'
           expect(k.current_state).to eq 'responded'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :close,
@@ -86,8 +108,8 @@ describe ConfigurableStateMachine::Machine do
 
       context 'closed' do
         it 'shows events' do
-          k = create :closed_ot_ico_foi
-          expect(k.workflow).to eq 'standard'
+          k = create :closed_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+          expect(k.workflow).to eq 'trigger'
           expect(k.current_state).to eq 'closed'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
@@ -110,8 +132,8 @@ describe ConfigurableStateMachine::Machine do
 
         context 'unassigned state' do
           it 'should show permitted events' do
-            k = create :overturned_ico_foi
-            expect(k.workflow).to eq 'standard'
+            k = create :overturned_ico_foi, :flagged_accepted, :dacu_disclosure
+            expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'unassigned'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
@@ -119,8 +141,8 @@ describe ConfigurableStateMachine::Machine do
 
         context 'awaiting responder state' do
           it 'shows events' do
-            k = create :awaiting_responder_ot_ico_foi
-            expect(k.workflow).to eq 'standard'
+            k = create :awaiting_responder_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+            expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'awaiting_responder'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
@@ -128,17 +150,27 @@ describe ConfigurableStateMachine::Machine do
 
         context 'drafting state' do
           it 'shows events' do
-            k = create :accepted_ot_ico_foi
-
+            k = create :accepted_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+            expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'drafting'
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
+          end
+        end
+
+
+        context 'pending_dacu_clearance' do
+          it 'shows events' do
+            k = create :pending_dacu_clearance_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+            expect(k.workflow).to eq 'trigger'
+            expect(k.current_state).to eq 'pending_dacu_clearance'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
         end
 
         context 'awaiting_dispatch' do
           it 'shows events' do
-            k = create :with_response_ot_ico_foi
-            expect(k.workflow).to eq 'standard'
+            k = create :with_response_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+            expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'awaiting_dispatch'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,
                                                                           :remove_linked_case]
@@ -147,16 +179,17 @@ describe ConfigurableStateMachine::Machine do
 
         context 'responded state' do
           it 'shows events' do
-            k = create :responded_ot_ico_foi
-            expect(k.workflow).to eq 'standard'
+            k = create :responded_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+            expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'responded'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
         end
+
         context 'closed state' do
           it 'shows events' do
-            k = create :closed_ot_ico_foi
-            expect(k.workflow).to eq 'standard'
+            k = create :closed_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+            expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'closed'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                           :link_a_case,
@@ -170,10 +203,10 @@ describe ConfigurableStateMachine::Machine do
         # from state machine permitted events check
         context 'awaiting_responder state' do
           it 'shows events' do
-            k = create :awaiting_responder_ot_ico_foi
+            k = create :awaiting_responder_ot_ico_foi, :flagged_accepted, :dacu_disclosure
             responder = responder_in_assigned_team(k)
             permitted_events = k.state_machine.permitted_events(responder.id) - [:request_further_clearance]
-            expect(k.workflow).to eq 'standard'
+            expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'awaiting_responder'
             expect(permitted_events).to eq [:accept_responder_assignment,
                                             :add_message_to_case,
@@ -186,29 +219,31 @@ describe ConfigurableStateMachine::Machine do
 
         context 'drafting state' do
           it 'shows events' do
-            k = create :accepted_ot_ico_foi
+            k = create :accepted_ot_ico_foi, :flagged_accepted, :dacu_disclosure
             responder = responder_in_assigned_team(k)
-            expect(k.workflow).to eq 'standard'
+            expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'drafting'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                          :add_responses,
+                                                                          :add_response_to_flagged_case,
                                                                           :link_a_case,
                                                                           :reassign_user,
                                                                           :remove_linked_case,
+                                                                          :upload_responses
                                                                          ]
           end
         end
 
         context 'awaiting_dispatch state' do
           it 'shows events' do
-            k = create :with_response_ot_ico_foi
+            k = create :with_response_ot_ico_foi, :flagged_accepted, :dacu_disclosure
             responder = responder_in_assigned_team(k)
-            expect(k.workflow).to eq 'standard'
+            expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'awaiting_dispatch'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                           :add_responses,
                                                                           :link_a_case,
                                                                           :reassign_user,
+                                                                          :remove_last_response,
                                                                           :remove_linked_case,
                                                                           :remove_response,
                                                                           :respond]
@@ -217,9 +252,9 @@ describe ConfigurableStateMachine::Machine do
 
         context 'responded state' do
           it 'shows events' do
-            k = create :responded_ot_ico_foi
+            k = create :responded_ot_ico_foi, :flagged_accepted, :dacu_disclosure
             responder = responder_in_assigned_team(k)
-            expect(k.workflow).to eq 'standard'
+            expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'responded'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                           :link_a_case,
@@ -229,9 +264,9 @@ describe ConfigurableStateMachine::Machine do
 
         context 'closed state' do
           it 'shows events' do
-            k = create :closed_ot_ico_foi
+            k = create :closed_ot_ico_foi, :flagged_accepted, :dacu_disclosure
             responder = responder_in_assigned_team(k)
-            expect(k.workflow).to eq 'standard'
+            expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'closed'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                           :link_a_case,
@@ -255,56 +290,62 @@ describe ConfigurableStateMachine::Machine do
 
         context 'unassigned state' do
           it 'should show permitted events' do
-            k = create :overturned_ico_foi
-            expect(k.workflow).to eq 'standard'
+            k = create :overturned_ico_foi, :flagged_accepted, :dacu_disclosure
+            expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'unassigned'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:flag_for_clearance,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                         :flag_for_clearance,
                                                                          :link_a_case,
+                                                                         :reassign_user,
                                                                          :remove_linked_case,
-                                                                         :take_on_for_approval]
+                                                                         :unflag_for_clearance]
 
           end
         end
 
         context 'awaiting responder state' do
           it 'shows events' do
-            k = create :awaiting_responder_ot_ico_foi
-            expect(k.workflow).to eq 'standard'
+            k = create :awaiting_responder_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+            expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'awaiting_responder'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:flag_for_clearance,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                         :flag_for_clearance,
                                                                          :link_a_case,
+                                                                         :reassign_user,
                                                                          :remove_linked_case,
-                                                                         :take_on_for_approval]
+                                                                         :unflag_for_clearance]
           end
         end
 
         context 'drafting state' do
           it 'shows events' do
-            k = create :accepted_ot_ico_foi
-            expect(k.workflow).to eq 'standard'
+            k = create :accepted_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+            expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'drafting'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [ :flag_for_clearance,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
+                                                                          :flag_for_clearance,
                                                                           :link_a_case,
+                                                                          :reassign_user,
                                                                           :remove_linked_case,
-                                                                          :take_on_for_approval]
+                                                                          :unflag_for_clearance]
           end
         end
 
         context 'awaiting_dispatch' do
           it 'shows events' do
-            k = create :with_response_ot_ico_foi
-            expect(k.workflow).to eq 'standard'
+            k = create :with_response_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+            expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'awaiting_dispatch'
             expect(k.state_machine.permitted_events(approver.id)).to eq [ :link_a_case,
-                                                                          :remove_linked_case,
-                                                                          :take_on_for_approval]
+                                                                          :reassign_user,
+                                                                          :remove_linked_case]
           end
         end
 
         context 'responded' do
           it 'shows events' do
-            k = create :responded_ot_ico_foi
-            expect(k.workflow).to eq 'standard'
+            k = create :responded_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+            expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'responded'
             expect(k.state_machine.permitted_events(approver.id)).to eq [:link_a_case,
                                                                          :remove_linked_case]
@@ -313,8 +354,8 @@ describe ConfigurableStateMachine::Machine do
 
         context 'closed' do
           it 'shows events' do
-            k = create :closed_ot_ico_foi
-            expect(k.workflow).to eq 'standard'
+            k = create :closed_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+            expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'closed'
             expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                          :link_a_case,

@@ -152,8 +152,7 @@ describe ConfigurableStateMachine::Machine do
 
             expect(k.current_state).to eq 'drafting'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,
-                                                                          :remove_linked_case,
-                                                                          :upload_responses]
+                                                                          :remove_linked_case]
           end
         end
 
