@@ -26,6 +26,35 @@ describe CaseSearchService do
                            search_text: specific_query
                          ).permit! }
 
+    context 'invalid date params' do
+      let(:params) { ActionController::Parameters.new(
+          external_deadline_from_dd: '31',
+          external_deadline_from_mm:'2',
+          external_deadline_from_yyyy: '2018',
+          external_deadline_to_dd: '15',
+          external_deadline_to_mm: '3',
+          external_deadline_to_yyyy: '2018'
+          ).permit! }
+
+      it 'does not raise' do
+        expect {
+          CaseSearchService.new(user: user,
+                                query_type: :search,
+                                query_params: params)
+        }.not_to raise_error
+      end
+
+      it 'sets the error message' do
+        service = CaseSearchService.new(user: user,
+                                        query_type: :search,
+                                        query_params: params)
+        service.call
+        expect(service.error?).to be true
+        expect(service.error_message).to eq 'Invalid date'
+      end
+
+    end
+
     context 'use of the policy scope' do
       let(:specific_query)    { 'my scoped query' }
       it 'uses the for_view_only policy scope' do

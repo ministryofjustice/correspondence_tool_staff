@@ -98,7 +98,7 @@ class SearchQuery < ApplicationRecord
   #    be taken into consideration
   # c) we're searching using the JSON query field as well as other columns
   def self.find_or_create(query_params)
-    if query_params.key? :parent_id
+    if query_params[:parent_id].present?
       parent = find(query_params[:parent_id])
       existing_query_params = ActionController::Parameters.new(
         parent.slice(*query_attributes)
