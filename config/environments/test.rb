@@ -28,6 +28,9 @@ Rails.application.configure do
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
   config.active_job.queue_adapter = :test
+
+  # Don't care if the mailer can't send.
+  config.action_mailer.raise_delivery_errors = false
   config.action_mailer.perform_caching = false
   config.action_mailer.default_url_options = { host: Settings.cts_email_url, port: Settings.cts_email_port }
 

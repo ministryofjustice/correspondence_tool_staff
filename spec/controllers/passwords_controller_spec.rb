@@ -17,10 +17,10 @@ RSpec.describe PasswordsController, type: :controller do
     before(:each)  { @request.env["devise.mapping"] = Devise.mappings[:user] }
 
     context 'user is deactivated' do
-      it 'sends an email and shows message' do
+      it 'sends reset password mail' do
         mailer = double("mailer")
-        expect(DeviseMailer).to receive(:account_not_active).and_return(mailer)
-        expect(mailer).to receive(:deliver_later)
+        expect(DeviseMailer).to receive(:reset_password_instructions).and_return(mailer)
+        expect(mailer).to receive(:deliver)
         post :create, params: params
 
         expect(flash[:notice]).to eq success_message
