@@ -69,7 +69,7 @@ class LinkedCase < ApplicationRecord
 
   def create_reverse_link
     self.class.skip_callback(:create, :after, :create_reverse_link)
-    self.class.create(case_id: linked_case_id, linked_case_id: self.case_id)
+    self.class.create!(case_id: linked_case_id, linked_case_id: self.case_id)
   rescue ActiveRecord::RecordNotUnique
     nil
   ensure

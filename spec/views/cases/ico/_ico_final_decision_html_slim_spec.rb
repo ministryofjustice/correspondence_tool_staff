@@ -48,42 +48,41 @@ describe 'cases/_ico_final_decision.html.slim', type: :view do
 
   context 'Overturned SAR' do
     before do
-      assign(:case, overturned_ico_sar)
       login_as create(:manager)
-      disallow_case_policies_in_view overturned_ico_sar,
-                                     :can_remove_attachment?
+    end
+
+    def render_partial(kase)
+      assign(:case, kase)
+      disallow_case_policies_in_view kase, :can_remove_attachment?
       render partial: 'cases/ico/ico_final_decision.html.slim',
-             locals: { case_details: overturned_ico_sar }
+             locals: { case_details: kase }
+
+      ico_decision_section(rendered)
     end
 
     it 'should display a summary' do
-      partial = ico_decision_section(rendered)
+      partial = render_partial(overturned_ico_sar)
 
       expect(partial).to have_summary
       expect(partial.summary.text).
-          to eq "MoJ's decision has been upheld by the ICO on #{overturned_ico_sar.formatted_date_ico_decision_received}"
+          to eq "MoJ's decision has been overturned by the ICO on #{overturned_ico_sar.formatted_date_ico_decision_received}"
     end
 
     it 'should not display comments if no comments exist' do
-      partial = ico_decision_section(rendered)
+      overturned_ico_sar.original_ico_appeal.ico_decision_comment = nil
+      partial = render_partial(overturned_ico_sar)
       expect(partial).to have_no_comments
     end
 
     it 'should display comments if comments exist' do
       overturned_ico_sar.original_ico_appeal.ico_decision_comment = 'Today is the day.'
-
-      disallow_case_policies_in_view overturned_ico_sar,
-                                     :can_remove_attachment?
-      render partial: 'cases/ico/ico_final_decision.html.slim',
-             locals: { case_details: overturned_ico_sar }
-
-      partial = ico_decision_section(rendered)
+      partial = render_partial(overturned_ico_sar)
       expect(partial).to have_comments
       expect(partial.comments.text).to eq 'Today is the day.'
     end
 
     it 'should display attachments' do
-      partial = ico_decision_section(rendered)
+      partial = render_partial(overturned_ico_sar)
       expect(partial).to have_attachments
     end
 
