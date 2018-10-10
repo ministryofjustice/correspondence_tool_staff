@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe ConfigurableStateMachine::Machine do
-  context 'standard workflow' do
+  context 'trigger workflow' do
 
 ##################### MANAGER  ############################
 
@@ -232,6 +232,21 @@ describe ConfigurableStateMachine::Machine do
                                                                          ]
           end
         end
+
+        context 'pending dacu clearance' do
+          it 'shows events' do
+            k = create :pending_dacu_clearance_ot_ico_foi, :flagged_accepted, :dacu_disclosure
+            responder = responder_in_assigned_team(k)
+            expect(k.workflow).to eq 'trigger'
+            expect(k.current_state).to eq 'pending_dacu_clearance'
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
+                                                                          :link_a_case,
+                                                                          :reassign_user,
+                                                                          :remove_linked_case,
+                                                                         ]
+          end
+        end
+
 
         context 'awaiting_dispatch state' do
           it 'shows events' do
