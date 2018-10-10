@@ -142,7 +142,8 @@ FactoryBot.define do
 
   factory :case_transition_approve, parent: :case_transition do
     transient do
-      approver       { self.case.approvers.first }
+      approving_team { find_or_create :team_disclosure }
+      approver       { approving_team.approvers.first }
     end
 
     association :case, factory: [:case, :flagged]
@@ -154,25 +155,27 @@ FactoryBot.define do
 
   factory :case_transition_approve_for_press_office, parent: :case_transition do
     transient do
-      approver       { self.case.approvers.first }
+      approving_team { find_or_create :team_disclosure }
+      approver       { approving_team.approvers.first }
     end
 
     association :case, factory: [:case, :flagged, :press_office]
     to_state    { 'pending_press_office_clearance' }
     acting_user { approver }
-    acting_team { find_or_create :team_press_office }
+    acting_team { approving_team }
     event       { 'approve' }
   end
 
   factory :case_transition_approve_for_private_office, parent: :case_transition do
     transient do
-      approver       { self.case.approvers.first }
+      press_officer { find_or_create :press_officer }
+      press_office  { find_or_create :press_office }
     end
 
     association :case, factory: [:case, :flagged, :private_office]
     to_state    { 'pending_private_office_clearance' }
-    acting_user { approver }
-    acting_team { find_or_create :team_private_office }
+    acting_user { press_officer }
+    acting_team { press_office }
     event       { 'approve' }
   end
 

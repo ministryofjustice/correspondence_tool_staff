@@ -34,7 +34,7 @@ describe RespondedCaseValidator do
       it 'is not valid' do
         ico.date_responded = ico.received_date - 1.day
         expect(ico).not_to be_valid
-        expect(ico.errors[:date_responded]).to eq ["can't be before date recieved"]
+        expect(ico.errors[:date_responded]).to eq ["can't be before date received"]
       end
     end
 

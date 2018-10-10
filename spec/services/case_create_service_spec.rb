@@ -171,6 +171,14 @@ describe CaseCreateService do
     end
 
     context 'OverturnedSAR' do
+      before :all do
+        @original_ico_appeal = create(:closed_ico_sar_case)
+      end
+
+      after :all do
+        DbHousekeeping.clean
+      end
+
       let(:deadline)            { 1.month.from_now.to_date }
       let(:original_ico_appeal) { @original_ico_appeal }
       let(:original_case)       { @original_ico_appeal.original_case }
@@ -186,14 +194,6 @@ describe CaseCreateService do
           })
       end
       let(:new_case) { Case::OverturnedICO::SAR.last }
-
-      before :all do
-        @original_ico_appeal = create(:closed_ico_sar_case)
-      end
-
-      after :all do
-        DbHousekeeping.clean
-      end
 
       it 'creates a case with the specified params' do
         ccs.call
@@ -246,6 +246,86 @@ describe CaseCreateService do
 
           expect(ccs.case.errors[:original_ico_appeal])
             .to eq ['is not an ICO appeal for a SAR case']
+        end
+      end
+    end
+
+    context 'OverturnedFOI' do
+      before :all do
+        @original_ico_appeal = create(:closed_ico_foi_case)
+      end
+
+      after :all do
+        DbHousekeeping.clean
+      end
+
+      let(:deadline)            { 1.month.from_now.to_date }
+      let(:original_ico_appeal) { @original_ico_appeal }
+      let(:original_case)       { @original_ico_appeal.original_case }
+      let(:ccs)                 { CaseCreateService.new(manager, 'overturned_foi', params) }
+      let(:params) do
+        ActionController::Parameters.new(
+          {
+            correspondence_type: 'overturned_sar',
+            case_overturned_foi: ico_overturned_params.merge(
+              original_ico_appeal_id: original_ico_appeal.id.to_s,
+            ),
+            commit:              'Create case',
+          })
+      end
+      let(:new_case) { Case::OverturnedICO::FOI.last }
+
+      it 'creates a case with the specified params' do
+        ccs.call
+        expect(new_case).to be_valid
+        expect(new_case.original_ico_appeal).to eq original_ico_appeal
+        expect(new_case.original_case).to eq original_case
+        expect(new_case.received_date).to eq original_ico_appeal.date_ico_decision_received
+        expect(new_case.external_deadline).to eq deadline
+        expect(new_case.reply_method).to eq 'send_by_email'
+        expect(new_case.email).to eq 'stephen@stephenrichards.eu'
+      end
+
+      it 'sets the workflow to standard' do
+        ccs.call
+        expect(new_case.workflow).to eq 'standard'
+      end
+
+      it 'sets the current state to unassigned' do
+        ccs.call
+        expect(new_case.current_state).to eq 'unassigned'
+      end
+
+      it 'sets the original case' do
+        ccs.call
+        expect(new_case.original_case).to eq original_case
+      end
+
+      it 'sets the received date' do
+        ccs.call
+        expect(new_case.received_date)
+          .to eq original_ico_appeal.date_ico_decision_received
+      end
+
+      it 'sets the escalation date to 20 working days before the external deadline' do
+        ccs.call
+        kase = Case::OverturnedICO::FOI.last
+        expect(kase.internal_deadline).to eq 20.business_days.before(kase.external_deadline)
+      end
+
+      it 'calls #link_related_cases on the newly created case' do
+        expect_any_instance_of(Case::OverturnedICO::FOI).to receive(:link_related_cases)
+        ccs.call
+      end
+
+      context 'invalid case type for original ico appeal' do
+        let(:original_ico_appeal) { create :closed_ico_sar_case }
+
+        it 'errors' do
+          ccs.call
+
+          expect(ccs.case.errors[:original_ico_appeal])
+            .to eq ['is not an ICO appeal for a FOI case']
         end
       end
     end

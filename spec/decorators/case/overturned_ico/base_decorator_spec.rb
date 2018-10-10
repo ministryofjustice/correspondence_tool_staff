@@ -29,7 +29,7 @@ describe Case::OverturnedICO::BaseDecorator do
       overturned_ico_sar.original_ico_appeal.date_ico_decision_received = Date.new(2017, 8, 13)
       overturned_ico_sar.original_ico_appeal.ico_decision = :upheld
       expect(overturned_ico_sar.ico_decision_summary)
-          .to eq '<p><strong>MoJ&#39;s decision has been upheld by the ICO </strong>on 13 Aug 2017</p>'
+          .to start_with '<p><strong>MoJ&#39;s decision has been upheld by the ICO </strong>on 13 Aug 2017</p>'
     end
 
     it 'returns summary and comment' do

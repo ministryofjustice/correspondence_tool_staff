@@ -62,6 +62,13 @@ en:
               blank: Type of requester must be selected
             flag_for_disclosure_specialists:
               blank: Please choose yes or no
+
+        case/foi/standard:
+          attributes: &foi_attr
+            date_responded:
+              before_received: "can't be before date received"
+              future: "can't be in the future"
+
         case/ico:
           attributes:
             received_date:
@@ -81,7 +88,7 @@ en:
         case/ico/foi:
           attributes:
             date_responded:
-              before_received: "can't be before date recieved"
+              before_received: "can't be before date received"
               future: "can't be in the future"
           related_case_number:
             does_not_match_original: >-
@@ -96,10 +103,10 @@ en:
         case/overturned_ico/sar:
           attributes:
             received_date:
-              future: cannot be in the future
+              future: can't be in the future
               past: is too far in the past
             external_deadline:
-              past: cannot be in the past
+              past: can't be in the past
               future: is too far in the future
             original_ico_appeal:
               not_ico_sar: is not an ICO appeal for a SAR case
@@ -107,8 +114,9 @@ en:
               not_sar: is not a SAR case
         case/overturned_ico/foi:
           attributes:
+            <<: *foi_attr
             received_date:
-              future: cannot be in the future
+              future: can't be in the future
               past: is too far in the past
             external_deadline:
               past: cannot be in the past
@@ -141,11 +149,12 @@ en:
           attributes:
             correspondence_type:
               blank: "can't be blank"
-            period_start:
+            period_start: &report_dates
               in_future: "can't be in the future."
             period_end:
+              <<: *report_dates
               before_start_date: "can't be after Date to"
-              in_future: "can't be in the future."
+
 
   pundit:
     assignment_policy:
@@ -215,43 +224,6 @@ en:
     business_group: Business group
     directorate: Directorate
     business_unit: Business unit
-
-
-  event:
-    accept_approver_assignment: Clearance level added
-    accept_responder_assignment: Accepted by Business unit
-    add_message_to_case: Message added - see messages section above
-    add_response_to_flagged_case: Response uploaded
-    add_response_to_flagged_case_and_approve: Response uploaded and cleared
-    add_responses: Response uploaded
-    approve: Response cleared
-    approve_and_bypass: Cleared - further clearance not required
-    assign_responder: Assign responder
-    assign_to_new_team: Assign to new team
-    close: Case closed
-    destroy_case: Case deleted
-    edit_case: Case details edited
-    extend_for_pit: Extended for Public Interest Test (PIT)
-    flag_for_clearance: Clearance level added
-    link_a_case: Case linked
-    progress_for_clearance: Progress for clearance
-    reassign_user: Reassign user
-    reject_responder_assignment: Rejected by Business unit
-    remove_last_response: File removed
-    remove_linked_case: Linked case removed
-    remove_response: File removed
-    request_amends: Request amends
-    request_further_clearance: Request further clearance
-    respond: Response sent to requester
-    take_on_for_approval: Clearance level added
-    unaccept_approver_assignment: Clearance level removed
-    unflag_for_clearance: Clearance level removed
-    update_closure: Closure details edited
-    upload_response_and_approve: Response uploaded and cleared
-    upload_response_and_return_for_redraft: Changes uploaded for redraft
-    upload_response_approve_and_bypass: Response uploaded and cleared - further clearance not required
-    case/ico:
-      respond: Response sent to ICO
 
   date:
     formats:
@@ -790,53 +762,6 @@ en:
       <strong>The following error(s) occurred:</strong>
     success_html: |
       <strong>Your feedback has been submitted.</strong>
-
-  filters:
-    crumbs:
-      list_filter_type: &list_filter_type
-        one: "%{first_value}"
-        other: "%{first_value} + %{remaining_values_count} more"
-      assigned_business_units:
-        <<: *list_filter_type
-      exemptions:
-        <<: *list_filter_type
-      external_deadline: "%{from_date} - %{to_date}"
-      case_type:
-        <<: *list_filter_type
-      open_case_status:
-        <<: *list_filter_type
-      sensitivity:
-        <<: *list_filter_type
-      status:
-        <<: *list_filter_type
-      timeliness:
-        <<: *list_filter_type
-    timeliness:
-      in_time: 'In time'
-      late: 'Late'
-    open_case_statuses:
-      unassigned: 'Needs reassigning'
-      awaiting_responder: 'To be accepted'
-      drafting: 'Draft in progress'
-      pending_dacu_clearance: 'Pending clearance - Disclosure'
-      pending_press_office_clearance: 'Pending clearance - Press office'
-      pending_private_office_clearance: 'Pending clearance - Private office'
-      awaiting_dispatch: 'Ready to send'
-      responded: 'Ready to close'
-      open: 'Open'
-      closed: 'Closed'
-    sensitivities:
-      non-trigger: 'Non-trigger'
-      trigger: 'Trigger'
-    statuses:
-      open: 'Open'
-      closed: 'Closed'
-    case_types:
-      foi-standard: 'FOI - Standard'
-      foi-ir-compliance: 'FOI - Internal review for compliance'
-      foi-ir-timeliness: 'FOI - Internal review for timeliness'
-      sar-non-offender: 'SAR - Non-offender'
-      ico-appeal: 'ICO appeals'
 
   stats:
     common:
