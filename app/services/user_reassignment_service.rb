@@ -28,10 +28,7 @@ class UserReassignmentService
 
       @result = :ok
     end
-
-    # If everything is good email the user
-    notify_target_user
-
+    
     @result
   rescue => err
     Rails.logger.error err.to_s
@@ -62,19 +59,5 @@ class UserReassignmentService
       roles << assignment.role.sub('ing', 'er').to_sym
     end
     roles.delete(:manager)
-  end
-
-  def notify_target_user
-
-    # User is not assigning to themselves and
-    # the assigned user changed
-
-    # if @acting_user != @target_user &&
-    #     @original_assigned_user != @assignment.user_id
-    #
-    #     ActionNotificationsMailer
-    #       .case_assigned_to_another_user(@kase, @target_user)
-    #       .deliver_later
-    # end
   end
 end

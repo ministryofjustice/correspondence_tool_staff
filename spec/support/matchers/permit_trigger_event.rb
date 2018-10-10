@@ -42,7 +42,6 @@ module PermitTriggerEvent
             #
             #    kase : the case currently being tested
             #    user : the user currently being tested
-            # unexpected_result = state_machine.can_trigger_event?(event_name: event, metadata: {acting_user: user, acting_team: team})
             @errors << [user_type, case_type, !config.nil?]
           end
         end

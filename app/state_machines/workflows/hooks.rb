@@ -34,7 +34,7 @@ class Workflows::Hooks
 
   def assign_responder_email
     NotifyNewAssignmentService.new(team: @metadata[:target_team],
-                                   assignment: @kase.assignments.responding.first
+                                   assignment: @kase.responder_assignment
                                   ).run
   end
 end
