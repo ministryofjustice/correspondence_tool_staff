@@ -9,33 +9,26 @@ class CaseSearchService
               :search_query
 
   def initialize(user:, query_type:, query_params:)
-    @query_params = process_params(query_params)
-    @current_user = user
-    @query_type = query_type
-    @error = false
-    @error_message = nil
-    @result_set = Case::Base.none
-
-    if query_params.blank?
+    begin
+      @query_params = process_params(query_params)
+      @current_user = user
+      @query_type = query_type
+      @error = false
+      @error_message = nil
+      @result_set = Case::Base.none
+      setup_search_query
+    rescue ArgumentError
+      @error = true
+      @error_message = 'Invalid date'
       @query = SearchQuery.new
-    else
-      @query = SearchQuery.find_or_create(@query_params.merge(
-                                            user_id: @current_user.id,
-                                            query_type: @query_type,
-                                          ))
-      @parent = @query.parent
-
-      unless @query.valid?
-        @error = true
-        if @query.search_text.blank?
-          @error_message = 'Specify what you want to search for'
-        end
-      end
     end
   end
 
+
+
+
   def call(full_list_of_cases = nil)
-    if @query.valid?
+    if @error == false && @query.valid?
       @result_set = @query.results(full_list_of_cases)
       @query.update num_results: @result_set.size
     else
@@ -49,6 +42,25 @@ class CaseSearchService
   end
 
   private
+
+  def setup_search_query
+    if query_params.blank?
+      @query = SearchQuery.new
+    else
+      @query = SearchQuery.find_or_create(@query_params.merge(
+          user_id: @current_user.id,
+          query_type: @query_type,
+          ))
+      @parent = @query.parent
+
+      unless @query.valid?
+        @error = true
+        if @query.search_text.blank?
+          @error_message = 'Specify what you want to search for'
+        end
+      end
+    end
+  end
 
   # Process the params in <tt>@query_params</tt> so that they're suitable for
   # use by the SeachQuery model.
