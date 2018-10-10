@@ -236,6 +236,7 @@
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                 remove_linked_case:
                 upload_responses:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
 
               pending_dacu_clearance:
                 add_message_to_case:
