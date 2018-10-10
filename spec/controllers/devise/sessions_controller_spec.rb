@@ -37,17 +37,14 @@ describe Devise::SessionsController do
         end
 
         it 'locks the user' do
-          now = Time.now
-          Timecop.freeze now do
-            allow(DeviseMailer).to receive(:unlock_instructions).and_return(notification_double)
-            allow(notification_double).to receive(:deliver)
-            @request.env["devise.mapping"] = Devise.mappings[:user]
-            post :create, params: { user: {email: bad_user.email, password: bad_pass } }
-            bad_user.reload
-            expect(bad_user.failed_attempts).to eq 4
-            expect(bad_user.unlock_token).to be_present
-            expect(bad_user.locked_at).to eq now
-          end
+          allow(DeviseMailer).to receive(:unlock_instructions).and_return(notification_double)
+          allow(notification_double).to receive(:deliver)
+          @request.env["devise.mapping"] = Devise.mappings[:user]
+          post :create, params: { user: {email: bad_user.email, password: bad_pass } }
+          bad_user.reload
+          expect(bad_user.failed_attempts).to eq 4
+          expect(bad_user.unlock_token).to be_present
+          expect(bad_user.access_locked?).to be true
         end
       end
     end
