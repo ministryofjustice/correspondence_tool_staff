@@ -85,7 +85,7 @@ FactoryBot.define do
     end
   end
 
-  factory :team_press_office, parent: :approving_team do
+  factory :team_press_office, aliases: [:press_office], parent: :approving_team do
     name { 'Press Office' }
     email { 'press.office@localhost' }
     code { Settings.press_office_team_code }
