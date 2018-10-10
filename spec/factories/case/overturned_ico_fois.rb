@@ -10,8 +10,8 @@ FactoryBot.define do
 
     sequence(:message)  { |n| "#{identifier} message #{n}" }
     current_state       { 'unassigned' }
-    original_ico_appeal { create :closed_ico_foi_case }
-    original_case       { create :foi_case }
+    original_ico_appeal { create(:closed_ico_foi_case, :overturned_by_ico) }
+    original_case       { original_ico_appeal.original_case }
     received_date       { Date.yesterday }
     internal_deadline   { 10.days.from_now }
     external_deadline   { 20.days.from_now }

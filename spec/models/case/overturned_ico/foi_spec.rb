@@ -243,6 +243,50 @@ describe Case::OverturnedICO::FOI do
     end
   end
 
+  describe '#link_related_cases' do
+
+    let(:link_case_1)             { create :foi_case }
+    let(:link_case_2)             { create :foi_case }
+    let(:link_case_3)             { create :foi_case }
+
+    before(:each) do
+      @kase = create :overturned_ico_foi,
+                    original_ico_appeal: original_ico_appeal,
+                    original_case: original_case,
+                    received_date: Date.today,
+                    external_deadline: 1.month.from_now.to_date
+
+      original_case.linked_cases << link_case_1
+      original_case.linked_cases << link_case_2
+
+      original_ico_appeal.linked_cases << link_case_2
+      original_ico_appeal.linked_cases << link_case_3
+    end
+
+    it 'links all the cases linked to the original case and the original_ico_appeal' do
+      @kase.link_related_cases
+
+      expect(@kase.linked_cases).to match_array [
+                                                    original_case,
+                                                    original_ico_appeal,
+                                                    link_case_1,
+                                                    link_case_2,
+                                                    link_case_3
+                                                ]
+    end
+
+    it 'links the overturned case to the original appeal' do
+      @kase.link_related_cases
+      expect(original_ico_appeal.linked_cases).to include(@kase)
+    end
+
+    it 'links the overturned case to the original case' do
+      @kase.link_related_cases
+      expect(original_case.linked_cases).to include(@kase)
+    end
+
+  end
+
   describe '#correspondence_type_for_business_unit_assignment' do
     it 'returns FOI correspondence type' do
       expect(new_case.correspondence_type_for_business_unit_assignment)
