@@ -152,9 +152,6 @@ FactoryBot.define do
       responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
     end
 
-
-
-
     after(:create) do |kase, evaluator|
       kase.attachments.push(*evaluator.responses)
 
@@ -296,7 +293,8 @@ FactoryBot.define do
 
       create :case_transition_approve_for_press_office,
              case: kase,
-             acting_user_id: evaluator.approver.id
+             acting_user_id: evaluator.approver.id,
+             acting_team_id: evaluator.approving_team.id
 
       kase.reload
       kase.update(workflow: 'full_approval')
