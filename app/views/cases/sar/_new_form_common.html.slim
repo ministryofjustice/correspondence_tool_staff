@@ -17,7 +17,10 @@ section
   header
 
   .form-group
-    = f.gov_uk_date_field :received_date, {legend_text: t('cases.new.received_date'), form_hint_text: t('cases.new.received_date_copy'), today_button: {class: 'button-secondary'} }
+    = f.gov_uk_date_field :received_date,
+            {legend_text: t('cases.new.received_date'),
+                    form_hint_text: t('cases.new.received_date_copy'),
+                    today_button: {class: ''} }
 
 
   = f.text_field :subject
