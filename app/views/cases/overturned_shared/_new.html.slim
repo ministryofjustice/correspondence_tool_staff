@@ -5,7 +5,7 @@
 
   = render partial: 'cases/overturned_shared/new_form', locals: { kase: @case, f: f }
 
-  - if FeatureSet.overturned_trigger_fois.enabled?
+  - if show_disclosure_radios_for_ovt?
     = f.radio_button_fieldset :flag_for_disclosure_specialists
 
   = f.submit t('button.create_case'), {class: 'button'}

@@ -18,6 +18,9 @@ module PageObjects
                   PageObjects::Sections::Shared::GovUKDateSection,
                   :xpath,
                   '//fieldset[contains(.,"Final deadline")]'
+
+          element :flag_for_disclosure_specialists, :xpath,
+                  '//fieldset[contains(.,"Flag for disclosure specialists")]'
         end
       end
     end
