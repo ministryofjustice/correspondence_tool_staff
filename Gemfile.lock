@@ -134,7 +134,7 @@ GEM
       activemodel-serializers-xml (~> 1.0)
       activesupport (~> 5.0)
       request_store (~> 1.0)
-    dropzonejs-rails (0.7.3)
+    dropzonejs-rails (0.8.2)
       rails (> 3.1)
     dry-configurable (0.7.0)
       concurrent-ruby (~> 1.0)
@@ -580,7 +580,7 @@ DEPENDENCIES
   config
   devise (~> 4.5)
   draper (= 3.0.1)
-  dropzonejs-rails (~> 0.7.3)
+  dropzonejs-rails (>= 0.8)
   factory_bot_rails (~> 4.11.1)
   faker (~> 1.9.1)
   foreman (~> 0.85.0)
@@ -648,4 +648,4 @@ DEPENDENCIES
   web-console
 
 BUNDLED WITH
-   1.16.0
+   1.16.5
