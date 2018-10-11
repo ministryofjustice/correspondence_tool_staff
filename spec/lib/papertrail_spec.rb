@@ -22,7 +22,7 @@ class DummyCase < Case::Base
       :subject_full_name,
   ]
 
-  def type_abbreviation
+  def self.type_abbreviation
     'FOI'
   end
 end
