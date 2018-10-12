@@ -22,6 +22,14 @@ module PageObjects
 
           element :target_state, '#case_overturned_foi_target_state'
 
+          element :flag_for_disclosure_specialists,
+                  '#case_overturned_foi_flagged_for_disclosure_specialist_clearance'
+          element :flag_for_press_office,
+                  '#case_overturned_foi_flagged_for_press_office_clearance'
+          element :flag_for_private_office,
+                  '#case_overturned_foi_flagged_for_private_office_clearance'
+
+
           element :submit_button, '.button'
 
           def set_received_date(received_date)
