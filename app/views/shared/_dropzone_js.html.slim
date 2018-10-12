@@ -1,13 +1,16 @@
 .dz-preview.dz-file-preview
-  .dz-filename
-    span data={ dz_name: true}
-    .file-info
+  .dz-details
+    .dz-filename
+      span { data-dz-name }
       = "("
-      span.dz-size data={dz_size: true}
+      span.dz-size { data-dz-size }
       = ")"
-      span.dz-progress
-          span.dz-upload data={dz_uploadprogress: true}
+
+    .dz-progress
+      span.dz-upload { data-dz-uploadprogress }
+
     .dz-remove-link
-      span data={dz_remove: true}
+      span { data-dz-remove }
+
     .dz-error-message
-      span data={dz_errormessage: true}
+       span { data-dz-errormessage }
