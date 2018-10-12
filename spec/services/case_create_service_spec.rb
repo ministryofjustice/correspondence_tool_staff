@@ -250,7 +250,7 @@ describe CaseCreateService do
       end
     end
 
-    context 'OverturnedFOI' do
+    context 'Non trigger OverturnedFOI' do
       before :all do
         @original_ico_appeal = create(:closed_ico_foi_case)
       end
@@ -328,8 +328,22 @@ describe CaseCreateService do
             .to eq ['is not an ICO appeal for a FOI case']
         end
       end
+
+      context 'Trigger Overturned FOI case' do
+        before do
+          params[:case_overturned_foi][:flag_for_disclosure_specialists] = 'yes'
+        end
+
+        it 'sets the workflow to trigger' do
+          ccs.call
+          expect(new_case.workflow).to eq 'trigger'
+        end
+
+      end
     end
   end
+
+
 
   describe '#create_params' do
     context 'ICO Overturned FOI' do

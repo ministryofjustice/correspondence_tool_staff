@@ -325,7 +325,7 @@ class Case::Base < ApplicationRecord
     define_method("#{state}?") { current_state == state }
   end
 
-  def state_machine_name
+  def self.state_machine_name
     self.type_abbreviation.downcase
   end
 

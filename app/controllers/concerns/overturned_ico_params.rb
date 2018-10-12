@@ -32,6 +32,7 @@ module OverturnedICOParams
       :email,
       :postal_address,
       :external_deadline_dd, :external_deadline_mm, :external_deadline_yyyy,
+      :flag_for_disclosure_specialists
     ]
   end
 

@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 describe ConfigurableStateMachine::Machine do
-  context 'trigger workflow' do
+  context 'full_approval workflow' do
 
-  ##################### MANAGER FLAGGED ############################
+    ##################### MANAGER FLAGGED ############################
 
     context 'manager' do
 
@@ -11,8 +11,9 @@ describe ConfigurableStateMachine::Machine do
 
       context 'unassigned state' do
         it 'should show permitted events' do
-          k = create :case, :flagged, :dacu_disclosure
-
+          k = create :overturned_ico_foi, :flagged, :press_office
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'unassigned'
           expect(k.state_machine.permitted_events(manager)).to eq [ :add_message_to_case,
                                                                     :assign_responder,
@@ -20,16 +21,16 @@ describe ConfigurableStateMachine::Machine do
                                                                     :edit_case,
                                                                     :flag_for_clearance,
                                                                     :link_a_case,
-                                                                    :remove_linked_case,
-                                                                    :request_further_clearance]
+                                                                    :remove_linked_case]
         end
       end
 
 
       context 'awaiting responder state' do
         it 'shows events' do
-          k = create :awaiting_responder_case, :flagged, :dacu_disclosure
-
+          k = create :awaiting_responder_ot_ico_foi, :flagged, :press_office
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'awaiting_responder'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
@@ -37,15 +38,15 @@ describe ConfigurableStateMachine::Machine do
                                                                       :edit_case,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :request_further_clearance]
+                                                                      :remove_linked_case]
         end
       end
 
       context 'drafting state' do
         it 'shows events' do
-          k = create :accepted_case, :flagged, :dacu_disclosure
-
+          k = create :accepted_ot_ico_foi, :flagged, :press_office
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'drafting'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
@@ -54,30 +55,60 @@ describe ConfigurableStateMachine::Machine do
                                                                       :extend_for_pit,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :request_further_clearance]
+                                                                      :remove_linked_case]
         end
       end
 
       context 'pending_dacu_clearance' do
         it 'shows events' do
-          k = create :pending_dacu_clearance_case, :flagged, :dacu_disclosure
-
+          k = create :pending_dacu_clearance_ot_ico_foi, :flagged, :press_office
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'pending_dacu_clearance'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :destroy_case,
                                                                       :edit_case,
                                                                       :extend_for_pit,
                                                                       :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :request_further_clearance]
+                                                                      :remove_linked_case]
+        end
+      end
+
+      context 'pending_press_clearance' do
+        it 'shows events' do
+          k = create :pending_press_clearance_ot_ico_foi, :flagged, :press_office
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
+          expect(k.current_state).to eq 'pending_press_office_clearance'
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
+                                                                      :destroy_case,
+                                                                      :edit_case,
+                                                                      :extend_for_pit,
+                                                                      :link_a_case,
+                                                                      :remove_linked_case]
+        end
+      end
+
+      context 'pending_private_clearance' do
+        it 'shows events' do
+          k = create :pending_private_clearance_ot_ico_foi
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
+          expect(k.current_state).to eq 'pending_private_office_clearance'
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
+                                                                      :destroy_case,
+                                                                      :edit_case,
+                                                                      :extend_for_pit,
+                                                                      :link_a_case,
+                                                                      :remove_linked_case]
         end
       end
 
       context 'awaiting_dispatch' do
         it 'shows events' do
-          k = create :case_with_response, :flagged, :dacu_disclosure
-
+          k = create :with_response_ot_ico_foi, :flagged, :press_office
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'awaiting_dispatch'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :destroy_case,
@@ -85,15 +116,15 @@ describe ConfigurableStateMachine::Machine do
                                                                       :extend_for_pit,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :request_further_clearance]
+                                                                      :remove_linked_case]
         end
       end
 
       context 'responded' do
         it 'shows events' do
-          k = create :responded_case, :flagged, :dacu_disclosure
-
+          k = create :responded_full_approval_ot_ico_foi, :flagged, :press_office
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'responded'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :close,
@@ -106,8 +137,9 @@ describe ConfigurableStateMachine::Machine do
 
       context 'closed' do
         it 'shows events' do
-          k = create :closed_case, :flagged, :dacu_disclosure
-
+          k = create :closed_full_approval_ot_ico_foi, :flagged, :press_office
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'closed'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
@@ -121,7 +153,7 @@ describe ConfigurableStateMachine::Machine do
     end
 
 
-  ##################### RESPONDER FLAGGED ############################
+    ##################### RESPONDER FLAGGED ############################
 
     context 'responder' do
       context 'responder not in team' do
@@ -130,8 +162,9 @@ describe ConfigurableStateMachine::Machine do
 
         context 'unassigned state' do
           it 'should show permitted events' do
-            k = create :case, :flagged, :dacu_disclosure
-
+            k = create :overturned_ico_foi, :flagged, :press_office
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'unassigned'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
@@ -139,8 +172,9 @@ describe ConfigurableStateMachine::Machine do
 
         context 'awaiting responder state' do
           it 'shows events' do
-            k = create :awaiting_responder_case, :flagged, :dacu_disclosure
-
+            k = create :awaiting_responder_ot_ico_foi, :flagged, :press_office
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'awaiting_responder'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,:remove_linked_case]
           end
@@ -148,30 +182,53 @@ describe ConfigurableStateMachine::Machine do
 
         context 'drafting state' do
           it 'shows events' do
-            k = create :accepted_case, :flagged, :dacu_disclosure
-
+            k = create :accepted_ot_ico_foi, :flagged, :press_office
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'drafting'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,
-                                                                          :remove_linked_case]
+                                                                          :remove_linked_case,
+                                                                          :upload_responses]
           end
         end
 
         context 'pending_dacu_clearance state' do
           it 'shows events' do
-            k = create :pending_dacu_clearance_case
-
+            k = create :pending_dacu_clearance_ot_ico_foi, :flagged, :press_office
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'pending_dacu_clearance'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,
                                                                           :remove_linked_case]
           end
         end
 
+        context 'pending_press_clearance state' do
+          it 'shows events' do
+            k = create :pending_press_clearance_ot_ico_foi, :flagged, :press_office
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
+            expect(k.current_state).to eq 'pending_press_office_clearance'
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
+          end
+        end
+
+        context 'pending_private_clearance state' do
+          it 'shows events' do
+            k = create :pending_private_clearance_ot_ico_foi
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
+            expect(k.current_state).to eq 'pending_private_office_clearance'
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
+          end
+        end
+
         context 'awaiting_dispatch' do
           it 'shows events' do
-            k = create :case_with_response, :flagged, :dacu_disclosure
-
+            k = create :with_response_ot_ico_foi, :flagged, :press_office
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'awaiting_dispatch'
-            expect(k.workflow).to eq 'trigger'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,
                                                                           :remove_linked_case]
           end
@@ -179,8 +236,9 @@ describe ConfigurableStateMachine::Machine do
 
         context 'responded state' do
           it 'shows events' do
-            k = create :responded_case, :flagged, :dacu_disclosure
-
+            k = create :responded_full_approval_ot_ico_foi, :flagged, :press_office
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'responded'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
@@ -190,10 +248,10 @@ describe ConfigurableStateMachine::Machine do
       context 'responder in assigned team' do
         context 'awaiting_responder state' do
           it 'shows events' do
-            k = create :awaiting_responder_case, :flagged, :dacu_disclosure
+            k = create :awaiting_responder_ot_ico_foi, :flagged, :press_office
             responder = responder_in_assigned_team(k)
-            expect(k.class).to eq Case::FOI::Standard
-            expect(k.workflow).to eq 'trigger'
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'awaiting_responder'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:accept_responder_assignment,
                                                                           :add_message_to_case,
@@ -205,10 +263,10 @@ describe ConfigurableStateMachine::Machine do
 
         context 'drafting state' do
           it 'shows events' do
-            k = create :accepted_case, :flagged, :dacu_disclosure
+            k = create :accepted_ot_ico_foi, :flagged, :press_office
             responder = responder_in_assigned_team(k)
-            expect(k.class).to eq Case::FOI::Standard
-            expect(k.workflow).to eq 'trigger'
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'drafting'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                           :add_response_to_flagged_case,
@@ -221,11 +279,39 @@ describe ConfigurableStateMachine::Machine do
 
         context 'pending_dacu_clearance state' do
           it 'shows events' do
-            k = create :pending_dacu_clearance_case, :flagged, :dacu_disclosure
+            k = create :pending_dacu_clearance_ot_ico_foi, :flagged, :press_office
             responder = responder_in_assigned_team(k)
-            expect(k.class).to eq Case::FOI::Standard
-            expect(k.workflow).to eq 'trigger'
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'pending_dacu_clearance'
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
+                                                                          :link_a_case,
+                                                                          :reassign_user,
+                                                                          :remove_linked_case]
+          end
+        end
+
+        context 'pending_press_clearance state' do
+          it 'shows events' do
+            k = create :pending_press_clearance_ot_ico_foi
+            responder = responder_in_assigned_team(k)
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
+            expect(k.current_state).to eq 'pending_press_office_clearance'
+            expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
+                                                                          :link_a_case,
+                                                                          :reassign_user,
+                                                                          :remove_linked_case]
+          end
+        end
+
+        context 'pending_private_clearance state' do
+          it 'shows events' do
+            k = create :pending_private_clearance_ot_ico_foi
+            responder = responder_in_assigned_team(k)
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
+            expect(k.current_state).to eq 'pending_private_office_clearance'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                           :link_a_case,
                                                                           :reassign_user,
@@ -235,16 +321,15 @@ describe ConfigurableStateMachine::Machine do
 
         context 'awaiting_dispatch state' do
           it 'shows events' do
-            k = create :case_with_response, :flagged, :dacu_disclosure
+            k = create :with_response_ot_ico_foi, :flagged, :press_office
             responder = responder_in_assigned_team(k)
-            expect(k.class).to eq Case::FOI::Standard
-            expect(k.workflow).to eq 'trigger'
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'awaiting_dispatch'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                           :add_responses,
                                                                           :link_a_case,
                                                                           :reassign_user,
-                                                                          :remove_last_response,
                                                                           :remove_linked_case,
                                                                           :remove_response,
                                                                           :respond]
@@ -253,10 +338,10 @@ describe ConfigurableStateMachine::Machine do
 
         context 'responded state' do
           it 'shows events' do
-            k = create :responded_case, :flagged, :dacu_disclosure
+            k = create :responded_full_approval_ot_ico_foi, :flagged, :press_office
             responder = responder_in_assigned_team(k)
-            expect(k.class).to eq Case::FOI::Standard
-            expect(k.workflow).to eq 'trigger'
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'responded'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case, :link_a_case, :remove_linked_case]
           end
@@ -264,10 +349,10 @@ describe ConfigurableStateMachine::Machine do
 
         context 'close state' do
           it 'shows events' do
-            k = create :closed_case, :flagged, :dacu_disclosure
+            k = create :closed_full_approval_ot_ico_foi, :flagged, :press_office
             responder = responder_in_assigned_team(k)
-            expect(k.class).to eq Case::FOI::Standard
-            expect(k.workflow).to eq 'trigger'
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'closed'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                           :link_a_case,
@@ -282,7 +367,7 @@ describe ConfigurableStateMachine::Machine do
     end
 
 
-  ##################### APPROVER FLAGGED ############################
+    ##################### APPROVER FLAGGED ############################
 
     context 'approver' do
       context 'unassigned approver' do
@@ -292,93 +377,115 @@ describe ConfigurableStateMachine::Machine do
 
         context 'unassigned state' do
           it 'should show permitted events' do
-            k = create :case, :flagged, :dacu_disclosure
-            expect(k.class).to eq Case::FOI::Standard
-            expect(k.workflow).to eq 'trigger'
+            k = create :overturned_ico_foi, :flagged, :press_office
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'unassigned'
             expect(k.state_machine.permitted_events(disclosure_specialist.id)).to eq [:accept_approver_assignment,
                                                                                       :add_message_to_case,
                                                                                       :flag_for_clearance,
                                                                                       :link_a_case,
-                                                                                      :remove_linked_case,
-                                                                                      :unflag_for_clearance]
+                                                                                      :remove_linked_case]
           end
         end
 
         context 'awaiting responder state' do
           it 'shows events' do
-            k = create :awaiting_responder_case, :flagged, :dacu_disclosure
-            expect(k.class).to eq Case::FOI::Standard
-            expect(k.workflow).to eq 'trigger'
+            k = create :awaiting_responder_ot_ico_foi, :flagged, :press_office
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'awaiting_responder'
             expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
                                                                          :add_message_to_case,
                                                                          :flag_for_clearance,
                                                                          :link_a_case,
                                                                          :reassign_user,
-                                                                         :remove_linked_case,
-                                                                         :unflag_for_clearance]
+                                                                         :remove_linked_case]
           end
         end
 
         context 'drafting state' do
           it 'shows events' do
-            k = create :accepted_case, :flagged, :dacu_disclosure
-            expect(k.class).to eq Case::FOI::Standard
-            expect(k.workflow).to eq 'trigger'
+            k = create :accepted_ot_ico_foi, :flagged, :press_office
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'drafting'
             expect(k.state_machine.permitted_events(approver.id)).to eq [ :accept_approver_assignment,
                                                                           :add_message_to_case,
                                                                           :flag_for_clearance,
                                                                           :link_a_case,
                                                                           :reassign_user,
-                                                                          :remove_linked_case,
-                                                                          :unflag_for_clearance]
+                                                                          :remove_linked_case]
           end
         end
 
         context 'pending_dacu_clearance state' do
           it 'shows events' do
-            k = create :pending_dacu_clearance_case, :dacu_disclosure
-            unassigned_approver = create :approver
-            expect(k.class).to eq Case::FOI::Standard
-            expect(k.workflow).to eq 'trigger'
+            k = create :pending_dacu_clearance_ot_ico_foi, :flagged, :press_office
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'pending_dacu_clearance'
-            expect(k.state_machine.permitted_events(unassigned_approver.id)).to eq [ :add_message_to_case,
-                                                                                     :link_a_case,
-                                                                                     :reassign_user,
-                                                                                     :remove_linked_case]
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
+                                                                         :add_message_to_case,
+                                                                         :link_a_case,
+                                                                         :reassign_user,
+                                                                         :remove_linked_case]
+          end
+        end
+
+        context 'pending_press_clearance state' do
+          it 'shows events' do
+            k = create :pending_press_clearance_ot_ico_foi, :flagged, :press_office
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
+            expect(k.current_state).to eq 'pending_press_office_clearance'
+            expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
+                                                                          :link_a_case,
+                                                                          :remove_linked_case]
+          end
+        end
+
+        context 'pending_private_clearance state' do
+          it 'shows events' do
+            k = create :pending_private_clearance_ot_ico_foi, :flagged, :press_office
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
+            expect(k.current_state).to eq 'pending_private_office_clearance'
+            expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
+                                                                          :link_a_case,
+                                                                          :remove_linked_case]
           end
         end
 
         context 'awaiting_dispatch' do
           it 'shows events' do
-            # this needs to be corrected when switched to config state machine - no request further clearance or extend for pit
-            k = create :case_with_response, :flagged, :dacu_disclosure
-            expect(k.class).to eq Case::FOI::Standard
-            expect(k.workflow).to eq 'trigger'
+            k = create :with_response_ot_ico_foi, :flagged, :press_office
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'awaiting_dispatch'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:link_a_case,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:flag_for_clearance,
+                                                                         :link_a_case,
                                                                          :remove_linked_case]
           end
         end
 
         context 'responded' do
           it 'shows events' do
-            k = create :responded_case, :flagged, :dacu_disclosure
-            expect(k.class).to eq Case::FOI::Standard
-            expect(k.workflow).to eq 'trigger'
+            k = create :responded_full_approval_ot_ico_foi, :flagged, :press_office
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'responded'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:link_a_case,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                         :link_a_case,
                                                                          :remove_linked_case]
           end
         end
 
         context 'closed' do
           it 'shows events' do
-            k = create :closed_case, :flagged, :dacu_disclosure
-            expect(k.class).to eq Case::FOI::Standard
-            expect(k.workflow).to eq 'trigger'
+            k = create :closed_full_approval_ot_ico_foi, :flagged, :press_office
+            expect(k.class).to eq Case::OverturnedICO::FOI
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'closed'
             expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                          :link_a_case,
@@ -389,86 +496,80 @@ describe ConfigurableStateMachine::Machine do
     end
 
 
-  ##################### APPROVER FLAGGED ############################
+    ##################### APPROVER FLAGGED ############################
 
     context 'assigned approver' do
       context 'unassigned state' do
 
         it 'should show permitted events' do
-          k = create :case, :flagged_accepted, :dacu_disclosure
+          k = create :overturned_ico_foi, :flagged_accepted, :press_office
           approver = approver_in_assigned_team(k)
-          expect(k.class).to eq Case::FOI::Standard
-          expect(k.workflow).to eq 'trigger'
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'unassigned'
           expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
                                                                         :flag_for_clearance,
                                                                         :link_a_case,
                                                                         :reassign_user,
                                                                         :remove_linked_case,
-                                                                        :unaccept_approver_assignment,
                                                                         :unflag_for_clearance]
         end
       end
 
       context 'awaiting responder state' do
         it 'shows events' do
-          k = create :awaiting_responder_case, :flagged_accepted, :dacu_disclosure
+          k = create :awaiting_responder_ot_ico_foi, :flagged_accepted, :press_office
           approver = approver_in_assigned_team(k)
-          expect(k.class).to eq Case::FOI::Standard
-          expect(k.workflow).to eq 'trigger'
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'awaiting_responder'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                        :flag_for_clearance,
                                                                        :link_a_case,
                                                                        :reassign_user,
                                                                        :remove_linked_case,
-                                                                       :unaccept_approver_assignment,
                                                                        :unflag_for_clearance]
         end
       end
 
       context 'drafting state' do
         it 'shows events' do
-          k = create :accepted_case, :flagged_accepted, :dacu_disclosure
+          k = create :accepted_ot_ico_foi, :flagged_accepted, :press_office
           approver = approver_in_assigned_team(k)
-          expect(k.class).to eq Case::FOI::Standard
-          expect(k.workflow).to eq 'trigger'
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'drafting'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                        :flag_for_clearance,
                                                                        :link_a_case,
                                                                        :reassign_user,
                                                                        :remove_linked_case,
-                                                                       :unaccept_approver_assignment,
                                                                        :unflag_for_clearance]
         end
       end
 
       context 'pending_dacu_clearance state' do
         it 'shows events' do
-          k = create :pending_dacu_clearance_case, :flagged_accepted, :dacu_disclosure
+          k = create :pending_dacu_clearance_ot_ico_foi, :flagged_accepted, :press_office
           approver = approver_in_assigned_team(k)
-          expect(k.class).to eq Case::FOI::Standard
-          expect(k.workflow).to eq 'trigger'
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'pending_dacu_clearance'
           expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
-                                                                        :approve,
                                                                         :link_a_case,
                                                                         :reassign_user,
                                                                         :remove_linked_case,
-                                                                        :unaccept_approver_assignment,
-                                                                        :upload_response_and_approve,
-                                                                        :upload_response_and_return_for_redraft]
+                                                                        :unflag_for_clearance]
         end
       end
 
-      context 'awaiting_dispatch' do
+      context 'pending_press_clearance state' do
         it 'shows events' do
-          k = create :case_with_response, :flagged_accepted, :dacu_disclosure
+          k = create :pending_press_clearance_ot_ico_foi
           approver = approver_in_assigned_team(k)
-          expect(k.class).to eq Case::FOI::Standard
-          expect(k.workflow).to eq 'trigger'
-          expect(k.current_state).to eq 'awaiting_dispatch'
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
+          expect(k.current_state).to eq 'pending_press_office_clearance'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                        :link_a_case,
                                                                        :reassign_user,
@@ -476,12 +577,43 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
+      context 'pending_press_clearance state' do
+        it 'shows events' do
+          k = create :pending_private_clearance_ot_ico_foi
+          approver = approver_in_assigned_team(k)
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
+          expect(k.current_state).to eq 'pending_private_office_clearance'
+          expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                       :link_a_case,
+                                                                       :reassign_user,
+                                                                       :remove_linked_case]
+        end
+      end
+
+      context 'awaiting_dispatch' do
+        it 'shows events' do
+          k = create :with_response_ot_ico_foi, :flagged_accepted, :press_office
+          approver = approver_in_assigned_team(k)
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
+          expect(k.current_state).to eq 'awaiting_dispatch'
+          expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                       :flag_for_clearance,
+                                                                       :link_a_case,
+                                                                       :reassign_user,
+                                                                       :remove_linked_case,
+                                                                       :unaccept_approver_assignment,
+                                                                       :unflag_for_clearance]
+        end
+      end
+
       context 'responded' do
         it 'shows events' do
-          k = create :responded_case, :flagged_accepted, :dacu_disclosure
+          k = create :responded_full_approval_ot_ico_foi, :flagged_accepted, :press_office
           approver = approver_in_assigned_team(k)
-          expect(k.class).to eq Case::FOI::Standard
-          expect(k.workflow).to eq 'trigger'
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'responded'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                        :link_a_case,
@@ -491,10 +623,10 @@ describe ConfigurableStateMachine::Machine do
 
       context 'closed' do
         it 'shows events' do
-          k = create :closed_case, :flagged_accepted, :dacu_disclosure
+          k = create :closed_full_approval_ot_ico_foi, :flagged_accepted, :press_office
           approver = approver_in_assigned_team(k)
-          expect(k.class).to eq Case::FOI::Standard
-          expect(k.workflow).to eq 'trigger'
+          expect(k.class).to eq Case::OverturnedICO::FOI
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'closed'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                        :link_a_case,
@@ -504,6 +636,10 @@ describe ConfigurableStateMachine::Machine do
 
       def approver_in_assigned_team(k)
         k.approver_assignments.first.user
+      end
+
+      def assigned_disclosure_specialist(kase)
+        kase.approver_assignments.for_team(BusinessUnit.dacu_disclosure).first.user
       end
     end
   end

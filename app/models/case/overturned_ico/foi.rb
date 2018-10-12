@@ -1,5 +1,9 @@
 class Case::OverturnedICO::FOI < Case::OverturnedICO::Base
 
+  attr_accessor :flag_for_disclosure_specialists
+
+  delegate :message, to: :original_case
+
   has_paper_trail only: [
     :ico_reference,
     :escalation_deadline,
@@ -21,7 +25,7 @@ class Case::OverturnedICO::FOI < Case::OverturnedICO::Base
     true
   end
 
-  def state_machine_name
+  def self.state_machine_name
     'foi'
   end
 

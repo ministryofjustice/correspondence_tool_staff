@@ -9,4 +9,9 @@ module ApplicationHelper
       ''
     end
   end
+
+  def show_disclosure_radios_for_ovt?
+    (@case.is_a?(Case::OverturnedICO::FOI) && FeatureSet.overturned_trigger_fois.enabled?) ||
+      (@case.is_a?(Case::OverturnedICO::SAR) && FeatureSet.overturned_trigger_sars.enabled?)
+  end
 end

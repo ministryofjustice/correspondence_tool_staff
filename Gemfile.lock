@@ -104,7 +104,7 @@ GEM
     chromedriver-helper (2.1.0)
       archive-zip (~> 0.10)
       nokogiri (~> 1.8)
-    codeclimate-test-reporter (1.0.8)
+    codeclimate-test-reporter (1.0.9)
       simplecov (<= 0.13)
     coderay (1.1.2)
     colorize (0.8.1)
@@ -134,7 +134,7 @@ GEM
       activemodel-serializers-xml (~> 1.0)
       activesupport (~> 5.0)
       request_store (~> 1.0)
-    dropzonejs-rails (0.7.3)
+    dropzonejs-rails (0.8.2)
       rails (> 3.1)
     dry-configurable (0.7.0)
       concurrent-ruby (~> 1.0)
@@ -443,7 +443,7 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
-    rubocop-rspec (1.29.1)
+    rubocop-rspec (1.30.0)
       rubocop (>= 0.58.0)
     ruby-progressbar (1.10.0)
     ruby_dep (1.5.0)
@@ -580,7 +580,7 @@ DEPENDENCIES
   config
   devise (~> 4.5)
   draper (= 3.0.1)
-  dropzonejs-rails (~> 0.7.3)
+  dropzonejs-rails (>= 0.8)
   factory_bot_rails (~> 4.11.1)
   faker (~> 1.9.1)
   foreman (~> 0.85.0)
@@ -648,4 +648,4 @@ DEPENDENCIES
   web-console
 
 BUNDLED WITH
-   1.16.0
+   1.16.5

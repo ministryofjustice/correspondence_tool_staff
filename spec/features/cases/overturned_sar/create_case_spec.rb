@@ -14,7 +14,7 @@ feature 'SAR Case creation by a manager' do
     cases_page.load
   end
 
-  scenario 'creating a case that needs clearance', js: true do
+  scenario 'creating an OVT SAR case', js: true do
     ico_case = create(:closed_ico_sar_case)
 
     # Move this to a user journey test once displaying works.
@@ -45,6 +45,8 @@ feature 'SAR Case creation by a manager' do
                       type: :text
                     )
 
+    expect(form).not_to have_flag_for_disclosure_specialists
+
     click_button 'Create case'
 
     # Browse Business Group
@@ -53,5 +55,6 @@ feature 'SAR Case creation by a manager' do
     # Select Business Unit
     assignments_new_page.choose_business_unit(responding_team)
   end
+
 end
 

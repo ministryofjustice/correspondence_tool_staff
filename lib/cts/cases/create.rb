@@ -39,7 +39,7 @@ module CTS::Cases
       when 'Case::SAR' then new_sar_case
       when /^Case::ICO/ then new_ico_case
       when /^Case::FOI/ then new_foi_case
-      when 'Case::OverturnedICO::SAR', 'Case::OverturnedICO::FOI' then new_overturned_case
+      when /^Case::OverturnedICO/ then new_overturned_case
       end
     end
 
@@ -421,7 +421,7 @@ module CTS::Cases
     end
 
     def get_correspondence_type_abbreviation
-      @klass.type_abbreviation.to_sym.downcase
+      @klass.state_machine_name.to_sym.downcase
     end
 
 
