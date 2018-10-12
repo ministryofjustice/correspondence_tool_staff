@@ -188,4 +188,66 @@ describe 'assignments/edit.html.slim', type: :view do
 
     end
   end
+
+  context 'Overturned FOI cases' do
+    let(:ovt_foi_case)            { create(:awaiting_responder_ot_ico_foi, :with_messages,
+                                           responding_team: responding_team).decorate }
+    let(:assignment)              { awaiting_responder_case.responder_assignment }
+
+    it 'should display page and sections for ICO cases' do
+      assign(:case, ovt_foi_case)
+      assign(:case_transitions, ovt_foi_case.transitions.decorate)
+      assign(:correspondence_type_key, ovt_foi_case.type_abbreviation.downcase)
+      assign(:assignment, assignment)
+
+      login_as responder
+      allow_case_policies_in_view ovt_foi_case,
+                                  :can_add_message_to_case?,
+                                  :request_further_clearance?,
+                                  :destroy_case_link?
+      disallow_case_policies_in_view ovt_foi_case,
+                                     :new_case_link?,
+                                     :destroy_case_link?,
+                                     :can_remove_attachment?
+
+      render
+
+      assignments_edit_page.load(rendered)
+
+      page = assignments_edit_page
+
+      expect(page.page_heading.heading.text)
+          .to eq "Case subject, #{ovt_foi_case.subject}"
+      expect(page.page_heading.sub_heading.text)
+          .to eq "You are viewing case number #{ovt_foi_case.number} - #{ovt_foi_case.pretty_type} "
+
+      expect(page).to have_case_status
+
+      expect(page).to have_overturned_foi
+
+      expect(page.overturned_foi).to have_original_cases
+
+      expect(page.overturned_foi).to have_ico_decision_section
+
+      expect(page.overturned_foi).to have_case_details
+
+      expect(page.overturned_foi).to have_no_request
+
+
+      expect(page).to have_messages
+
+      expect(page).to have_new_message
+
+      expect(page).to have_case_history
+
+      expect(page.overturned_foi).to have_original_case_details
+      expect(page.overturned_foi.original_case_details).to have_link_to_case
+
+      expect(page).to have_accept_radio
+      expect(page).to have_reject_radio
+
+      expect(page.confirm_button.value).to eq "Confirm"
+
+    end
+  end
 end
