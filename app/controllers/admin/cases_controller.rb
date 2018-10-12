@@ -112,7 +112,7 @@ class Admin::CasesController < AdminController
   end
 
   def available_target_states
-    CTS::Cases::Constants::CASE_JOURNEYS[@correspondence_type_key.to_sym].values.flatten.uniq.sort
+    CTS::Cases::Constants::CASE_JOURNEYS[@case.class.state_machine_name.to_sym].values.flatten.uniq.sort
   end
 
   def param_flag_for_ds?

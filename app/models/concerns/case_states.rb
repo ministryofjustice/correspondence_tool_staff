@@ -12,7 +12,7 @@ module CaseStates
   def instantiate_configurable_state_machine
     @state_machine = ConfigurableStateMachine::Manager.instance.state_machine(
       org: 'moj',
-      case_type: state_machine_name,
+      case_type: self.class.state_machine_name,
       workflow: workflow.nil? ? 'standard' : workflow,
       kase: self
     )

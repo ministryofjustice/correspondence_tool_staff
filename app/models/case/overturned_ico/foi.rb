@@ -21,7 +21,7 @@ class Case::OverturnedICO::FOI < Case::OverturnedICO::Base
     true
   end
 
-  def state_machine_name
+  def self.state_machine_name
     'foi'
   end
 

@@ -19,10 +19,10 @@ class Case::OverturnedICO::SAR < Case::OverturnedICO::Base
     CorrespondenceType.sar
   end
 
-  def state_machine_name
+  def self.state_machine_name
     'sar'
   end
-
+  
   def within_escalation_deadline?
     false
   end
