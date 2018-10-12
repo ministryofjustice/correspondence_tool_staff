@@ -12,7 +12,8 @@ describe ConfigurableStateMachine::Machine do
       context 'unassigned state' do
         it 'should show permitted events' do
           k = create :case, :flagged, :press_office
-
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'unassigned'
           expect(k.state_machine.permitted_events(manager)).to eq [ :add_message_to_case,
                                                                     :assign_responder,
@@ -28,7 +29,8 @@ describe ConfigurableStateMachine::Machine do
       context 'awaiting responder state' do
         it 'shows events' do
           k = create :awaiting_responder_case, :flagged, :press_office
-
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'awaiting_responder'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
@@ -43,7 +45,8 @@ describe ConfigurableStateMachine::Machine do
       context 'drafting state' do
         it 'shows events' do
           k = create :accepted_case, :flagged, :press_office
-
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'drafting'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
@@ -59,7 +62,8 @@ describe ConfigurableStateMachine::Machine do
       context 'pending_dacu_clearance' do
         it 'shows events' do
           k = create :pending_dacu_clearance_case, :flagged, :press_office
-
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'pending_dacu_clearance'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :destroy_case,
@@ -73,7 +77,8 @@ describe ConfigurableStateMachine::Machine do
       context 'pending_press_clearance' do
         it 'shows events' do
           k = create :pending_press_clearance_case, :flagged, :press_office
-
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'pending_press_office_clearance'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :destroy_case,
@@ -87,7 +92,8 @@ describe ConfigurableStateMachine::Machine do
       context 'pending_private_clearance' do
         it 'shows events' do
           k = create :pending_private_clearance_case
-
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'pending_private_office_clearance'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :destroy_case,
@@ -101,7 +107,8 @@ describe ConfigurableStateMachine::Machine do
       context 'awaiting_dispatch' do
         it 'shows events' do
           k = create :case_with_response, :flagged, :press_office
-
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'awaiting_dispatch'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :destroy_case,
@@ -116,7 +123,8 @@ describe ConfigurableStateMachine::Machine do
       context 'responded' do
         it 'shows events' do
           k = create :responded_case, :flagged, :press_office
-
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'responded'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :close,
@@ -130,7 +138,8 @@ describe ConfigurableStateMachine::Machine do
       context 'closed' do
         it 'shows events' do
           k = create :closed_case, :flagged, :press_office
-
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'closed'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
@@ -154,7 +163,8 @@ describe ConfigurableStateMachine::Machine do
         context 'unassigned state' do
           it 'should show permitted events' do
             k = create :case, :flagged, :press_office
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'unassigned'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
@@ -163,7 +173,8 @@ describe ConfigurableStateMachine::Machine do
         context 'awaiting responder state' do
           it 'shows events' do
             k = create :awaiting_responder_case, :flagged, :press_office
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'awaiting_responder'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,:remove_linked_case]
           end
@@ -172,7 +183,8 @@ describe ConfigurableStateMachine::Machine do
         context 'drafting state' do
           it 'shows events' do
             k = create :accepted_case, :flagged, :press_office
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'drafting'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,
                                                                           :remove_linked_case,
@@ -182,8 +194,9 @@ describe ConfigurableStateMachine::Machine do
 
         context 'pending_dacu_clearance state' do
           it 'shows events' do
-            k = create :pending_dacu_clearance_case
-
+            k = create :pending_dacu_clearance_case, :flagged, :press_office
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'pending_dacu_clearance'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,
                                                                           :remove_linked_case]
@@ -193,7 +206,8 @@ describe ConfigurableStateMachine::Machine do
         context 'pending_press_clearance state' do
           it 'shows events' do
             k = create :pending_press_clearance_case
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'pending_press_office_clearance'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
@@ -202,7 +216,8 @@ describe ConfigurableStateMachine::Machine do
         context 'pending_private_clearance state' do
           it 'shows events' do
             k = create :pending_private_clearance_case
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'pending_private_office_clearance'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
@@ -211,7 +226,8 @@ describe ConfigurableStateMachine::Machine do
         context 'awaiting_dispatch' do
           it 'shows events' do
             k = create :case_with_response, :flagged, :press_office
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'awaiting_dispatch'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case,
                                                                           :remove_linked_case]
@@ -221,7 +237,8 @@ describe ConfigurableStateMachine::Machine do
         context 'responded state' do
           it 'shows events' do
             k = create :responded_case, :flagged, :press_office
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'responded'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:link_a_case, :remove_linked_case]
           end
@@ -233,7 +250,8 @@ describe ConfigurableStateMachine::Machine do
           it 'shows events' do
             k = create :awaiting_responder_case, :flagged, :press_office
             responder = responder_in_assigned_team(k)
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'awaiting_responder'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:accept_responder_assignment,
                                                                           :add_message_to_case,
@@ -247,7 +265,8 @@ describe ConfigurableStateMachine::Machine do
           it 'shows events' do
             k = create :accepted_case, :flagged, :press_office
             responder = responder_in_assigned_team(k)
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'drafting'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                           :add_response_to_flagged_case,
@@ -262,7 +281,8 @@ describe ConfigurableStateMachine::Machine do
           it 'shows events' do
             k = create :pending_dacu_clearance_case, :flagged, :press_office
             responder = responder_in_assigned_team(k)
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'pending_dacu_clearance'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                           :link_a_case,
@@ -275,7 +295,8 @@ describe ConfigurableStateMachine::Machine do
           it 'shows events' do
             k = create :pending_press_clearance_case
             responder = responder_in_assigned_team(k)
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'pending_press_office_clearance'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                           :link_a_case,
@@ -288,7 +309,8 @@ describe ConfigurableStateMachine::Machine do
           it 'shows events' do
             k = create :pending_private_clearance_case
             responder = responder_in_assigned_team(k)
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'pending_private_office_clearance'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                           :link_a_case,
@@ -301,7 +323,8 @@ describe ConfigurableStateMachine::Machine do
           it 'shows events' do
             k = create :case_with_response, :flagged, :press_office
             responder = responder_in_assigned_team(k)
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'awaiting_dispatch'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                           :add_responses,
@@ -317,7 +340,8 @@ describe ConfigurableStateMachine::Machine do
           it 'shows events' do
             k = create :responded_case, :flagged, :press_office
             responder = responder_in_assigned_team(k)
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'responded'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case, :link_a_case, :remove_linked_case]
           end
@@ -327,7 +351,8 @@ describe ConfigurableStateMachine::Machine do
           it 'shows events' do
             k = create :closed_case, :flagged, :press_office
             responder = responder_in_assigned_team(k)
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'closed'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
                                                                           :link_a_case,
@@ -353,7 +378,8 @@ describe ConfigurableStateMachine::Machine do
         context 'unassigned state' do
           it 'should show permitted events' do
             k = create :case, :flagged, :press_office
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'unassigned'
             expect(k.state_machine.permitted_events(disclosure_specialist.id)).to eq [:accept_approver_assignment,
                                                                                       :add_message_to_case,
@@ -366,7 +392,8 @@ describe ConfigurableStateMachine::Machine do
         context 'awaiting responder state' do
           it 'shows events' do
             k = create :awaiting_responder_case, :flagged, :press_office
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'awaiting_responder'
             expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
                                                                          :add_message_to_case,
@@ -380,7 +407,8 @@ describe ConfigurableStateMachine::Machine do
         context 'drafting state' do
           it 'shows events' do
             k = create :accepted_case, :flagged, :press_office
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'drafting'
             expect(k.state_machine.permitted_events(approver.id)).to eq [ :accept_approver_assignment,
                                                                           :add_message_to_case,
@@ -394,7 +422,8 @@ describe ConfigurableStateMachine::Machine do
         context 'pending_dacu_clearance state' do
           it 'shows events' do
             k = create :pending_dacu_clearance_case, :flagged, :press_office
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'pending_dacu_clearance'
             expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
                                                                          :add_message_to_case,
@@ -407,7 +436,8 @@ describe ConfigurableStateMachine::Machine do
         context 'pending_press_clearance state' do
           it 'shows events' do
             k = create :pending_press_clearance_case, :flagged, :press_office
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'pending_press_office_clearance'
             expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
                                                                           :link_a_case,
@@ -418,7 +448,8 @@ describe ConfigurableStateMachine::Machine do
         context 'pending_private_clearance state' do
           it 'shows events' do
             k = create :pending_private_clearance_case, :flagged, :press_office
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'pending_private_office_clearance'
             expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
                                                                           :link_a_case,
@@ -429,7 +460,8 @@ describe ConfigurableStateMachine::Machine do
         context 'awaiting_dispatch' do
           it 'shows events' do
             k = create :case_with_response, :flagged, :press_office
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'awaiting_dispatch'
             expect(k.state_machine.permitted_events(approver.id)).to eq [:flag_for_clearance,
                                                                          :link_a_case,
@@ -440,7 +472,8 @@ describe ConfigurableStateMachine::Machine do
         context 'responded' do
           it 'shows events' do
             k = create :responded_case, :flagged, :press_office
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'responded'
             expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                          :link_a_case,
@@ -451,7 +484,8 @@ describe ConfigurableStateMachine::Machine do
         context 'closed' do
           it 'shows events' do
             k = create :closed_case, :flagged, :press_office
-
+            expect(k.class).to eq Case::FOI::Standard
+            expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'closed'
             expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                          :link_a_case,
@@ -470,6 +504,8 @@ describe ConfigurableStateMachine::Machine do
         it 'should show permitted events' do
           k = create :case, :flagged_accepted, :press_office
           approver = approver_in_assigned_team(k)
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'unassigned'
           expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
                                                                         :flag_for_clearance,
@@ -484,6 +520,8 @@ describe ConfigurableStateMachine::Machine do
         it 'shows events' do
           k = create :awaiting_responder_case, :flagged_accepted, :press_office
           approver = approver_in_assigned_team(k)
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'awaiting_responder'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                        :flag_for_clearance,
@@ -498,7 +536,8 @@ describe ConfigurableStateMachine::Machine do
         it 'shows events' do
           k = create :accepted_case, :flagged_accepted, :press_office
           approver = approver_in_assigned_team(k)
-
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'drafting'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                        :flag_for_clearance,
@@ -513,7 +552,8 @@ describe ConfigurableStateMachine::Machine do
         it 'shows events' do
           k = create :pending_dacu_clearance_case, :flagged_accepted, :press_office
           approver = approver_in_assigned_team(k)
-
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'pending_dacu_clearance'
           expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
                                                                         :link_a_case,
@@ -527,7 +567,8 @@ describe ConfigurableStateMachine::Machine do
         it 'shows events' do
           k = create :pending_press_clearance_case
           approver = approver_in_assigned_team(k)
-
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'pending_press_office_clearance'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                        :link_a_case,
@@ -540,7 +581,8 @@ describe ConfigurableStateMachine::Machine do
         it 'shows events' do
           k = create :pending_private_clearance_case
           approver = approver_in_assigned_team(k)
-
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'pending_private_office_clearance'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                        :link_a_case,
@@ -553,6 +595,8 @@ describe ConfigurableStateMachine::Machine do
         it 'shows events' do
           k = create :case_with_response, :flagged_accepted, :press_office
           approver = approver_in_assigned_team(k)
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'awaiting_dispatch'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                        :flag_for_clearance,
@@ -568,6 +612,8 @@ describe ConfigurableStateMachine::Machine do
         it 'shows events' do
           k = create :responded_case, :flagged_accepted, :press_office
           approver = approver_in_assigned_team(k)
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'responded'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                        :link_a_case,
@@ -579,6 +625,8 @@ describe ConfigurableStateMachine::Machine do
         it 'shows events' do
           k = create :closed_case, :flagged_accepted, :press_office
           approver = approver_in_assigned_team(k)
+          expect(k.class).to eq Case::FOI::Standard
+          expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'closed'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                        :link_a_case,

@@ -14,6 +14,12 @@ describe Case::OverturnedICO::FOI do
     end
   end
 
+  context 'state machine' do
+    it 'uses the same state machine as standard FOI' do
+      expect(described_class.state_machine_name).to eq 'foi'
+    end
+  end
+
   context 'validations' do
 
     context 'all mandatory fields specified' do

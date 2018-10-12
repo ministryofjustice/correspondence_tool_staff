@@ -16,4 +16,8 @@
 
   = f.collection_select :target_state, @target_states, :to_s, :to_s, { selected: @selected_state }
 
+  h2
+    = "Please only select one."
+  = f.check_box_fieldset :flag_for_disclosure_specialists, [:flagged_for_disclosure_specialist_clearance?, :flagged_for_press_office_clearance?, :flagged_for_private_office_clearance?]
+
   = f.submit t('admin.cases.new.create'), {class: 'button'}

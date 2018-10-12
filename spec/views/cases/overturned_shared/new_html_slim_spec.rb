@@ -106,4 +106,35 @@ describe 'cases/overturned_shared/_new.html.slim' do
     end
 
   end
+
+  describe 'flag for disclosure details' do
+    it 'exists on the page' do
+      expect(partial).to have_flag_for_disclosure_specialists
+    end
+
+    context 'the original case was flagged' do
+      before(:each)  do
+        overturned_foi.flag_for_disclosure_specialists = 'yes'
+        assign(:case, overturned_foi.decorate)
+      end
+
+      it 'checks the yes button if the original case is flagged?' do
+        expect(partial.flag_for_disclosure_specialists.yes).to be_checked
+      end
+    end
+
+    context 'the original case was not flagged' do
+      before(:each) do
+        overturned_foi.flag_for_disclosure_specialists = nil
+        assign(:case, overturned_foi.decorate)
+      end
+
+      it 'displays both yes and no unchecked' do
+        expect(partial.flag_for_disclosure_specialists.yes).not_to be_checked
+        expect(partial.flag_for_disclosure_specialists.no).not_to be_checked
+      end
+    end
+
+
+  end
 end
