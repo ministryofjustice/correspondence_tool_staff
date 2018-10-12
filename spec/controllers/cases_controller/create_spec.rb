@@ -271,7 +271,7 @@ describe CasesController do
       end
     end
 
-    context 'ICO Overturned FOI case' do
+    context 'ICO Overturned FOI case - non-trigger' do
       let(:received_date) { Date.today }
       let(:ico_overturned_foi_params) do
         {
