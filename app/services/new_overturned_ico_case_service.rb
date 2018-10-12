@@ -39,6 +39,7 @@ class NewOverturnedIcoCaseService
           original_ico_appeal_id: @original_ico_appeal.id,
           postal_address:         original_case.postal_address,
           reply_method:           reply_method,
+          flag_for_disclosure_specialists: original_case.flagged? ? 'yes' : nil
         }
       )
     end

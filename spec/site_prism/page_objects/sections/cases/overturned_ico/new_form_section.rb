@@ -11,6 +11,7 @@ module PageObjects
           element :original_ico_appeal_id,
                   :xpath,
                   ".//input[contains(@name,'original_ico_appeal_id')]",
+
                   visible: false
           element :ico_appeal_info, '.heading-medium'
 
@@ -19,10 +20,14 @@ module PageObjects
                   :xpath,
                   '//fieldset[contains(.,"Final deadline")]'
 
-          element :flag_for_disclosure_specialists, :xpath,
-                  '//fieldset[contains(.,"Flag for disclosure specialists")]'
+          section :flag_for_disclosure_specialists, :xpath,
+                  '//fieldset[contains(.,"Flag for disclosure specialists")]' do
+                    element :yes, 'input[value="yes"]'
+                    element :no, 'input[value="no"]'
+                  end
         end
       end
     end
   end
 end
+
