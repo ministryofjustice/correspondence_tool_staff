@@ -17,6 +17,10 @@ module PageObjects
                 PageObjects::Sections::Cases::OverturnedSAR::ShowSection,
                 '#case-overturned_sar'
 
+        section :overturned_foi,
+                PageObjects::Sections::Cases::OverturnedFOI::ShowSection,
+                '#case-overturned_foi'
+
         section :case_status,
                 PageObjects::Sections::Cases::CaseStatusSection, '.case-status'
 
