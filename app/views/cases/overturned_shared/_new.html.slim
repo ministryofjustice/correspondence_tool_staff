@@ -5,7 +5,11 @@
 
   = render partial: 'cases/overturned_shared/new_form', locals: { kase: @case, f: f }
 
+  - if show_disclosure_radios_for_ovt?
+    = f.radio_button_fieldset :flag_for_disclosure_specialists
+
   = f.submit t('button.create_case'), {class: 'button'}
+
   = link_to('Back to case details',
             case_path(id: @case.original_ico_appeal_id),
             class: 'acts-like-button button-left-spacing')

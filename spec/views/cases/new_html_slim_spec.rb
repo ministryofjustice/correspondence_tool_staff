@@ -112,4 +112,5 @@ describe 'cases/new.html.slim', type: :view do
         .to eq Settings.max_attachment_file_size_in_MB.to_s
     end
   end
+
 end
