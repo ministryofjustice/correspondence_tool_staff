@@ -31,8 +31,19 @@ module Stats
       expect(csv_lines.shift).to match dacu_directorate_line
       expect(csv_lines.shift).to match dacu_line
       expect(csv_lines.shift).to match press_office_directorate_line
+
+
+
       expect(csv_lines.shift).to match press_office_line
+      expect(csv_lines.shift).to match press_office_second_user_line
+
       expect(csv_lines.shift).to match private_office_line
+      expect(csv_lines.shift).to match private_office_second_user_line
+
+      # puts ">>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<"
+      # # puts csv_lines.shift
+      # # puts private_office_line
+      # # # expect(csv_lines.shift).to match private_office_line
     end
 
     def header_line
@@ -76,11 +87,19 @@ module Stats
     end
 
     def press_office_line
-      /"","",Press Office,Deputy Director \d{1,5},Hammersmith,press.office@localhost,user \d{1,5},/
+      /"","",Press Office,Deputy Director \d{1,5},Hammersmith,press.office@localhost,Press Officer \d{1,5},/
+    end
+
+    def press_office_second_user_line
+      /"","","","","",user \d{1,5},/
     end
 
     def private_office_line
-      /"","",Private Office,Deputy Director \d{1,5},Hammersmith,private.office@localhost,user \d{1,5},/
+      /"","",Private Office,Deputy Director \d{1,5},Hammersmith,private.office@localhost,Private Officer \d{1,5},/
+    end
+
+    def private_office_second_user_line
+      /"","","","","",user \d{1,5},/
     end
 
   end
