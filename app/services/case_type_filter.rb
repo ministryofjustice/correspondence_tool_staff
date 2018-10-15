@@ -32,6 +32,12 @@ class CaseTypeFilter
       )
     end
 
+    if 'FOI'.in?(user_types) || 'SAR'.in?(user_types)
+      types.merge!(
+        'overturned-ico' => 'ICO overturned'
+      )
+    end
+
     types
   end
 
@@ -123,6 +129,7 @@ class CaseTypeFilter
       when 'foi-ir-timeliness' then records.internal_review_timeliness
       when 'sar-non-offender'  then records.non_offender_sar
       when 'ico-appeal'        then records.ico_appeal
+      when 'overturned-ico'    then records.overturned_ico
       else
         raise NameError.new("unknown case type filter '#{filter}")
       end

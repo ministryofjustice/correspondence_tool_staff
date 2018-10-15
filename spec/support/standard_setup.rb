@@ -346,6 +346,11 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
                  .merge(attributes))
       },
 
+      ot_ico_foi_noff_unassigned: ->(attributes={}) {
+        create(:ot_ico_foi_noff_unassigned,
+               attributes)
+      },
+
       std_unassigned_foi: ->(attributes={}) {
         create(:case,
                {identifier: 'std_unassigned_foi'}

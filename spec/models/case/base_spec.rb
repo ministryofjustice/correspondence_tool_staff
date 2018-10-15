@@ -58,7 +58,8 @@ RSpec.describe Case::Base, type: :model do
     create :case, :flagged,
            received_date: Date.parse('16/11/2016')
   end
-
+  let(:ot_ico_foi_draft)   { create :ot_ico_foi_noff_draft }
+  let(:ot_ico_sar_draft)   { create :ot_ico_sar_noff_draft }
   let(:kase) { create :case }
 
   describe 'has a factory' do
@@ -723,6 +724,12 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
+  describe '#overturned_ico' do
+    it 'returns ICO Overturned FOIs and SARs cases' do
+      expected_results = [ot_ico_foi_draft, ot_ico_sar_draft]
+      expect(Case::Base.overturned_ico).to match_array expected_results
+    end
+  end
 
   describe 'responded?' do
     it 'returns false if there are no transitions to repsonded' do
