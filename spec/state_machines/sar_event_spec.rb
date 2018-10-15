@@ -69,7 +69,7 @@ describe 'state machine' do
       should have_after_hook(
         [:disclosure_bmt, :sar_noff_unassigned]
      ).with_hook('Workflows::Hooks', :assign_responder_email)
-   }
+    }
   end
 
 
@@ -83,7 +83,7 @@ describe 'state machine' do
         [:disclosure_bmt, :sar_noff_trig_draft],
         [:disclosure_bmt, :sar_noff_trig_draft_accepted],
      ).with_hook('Workflows::Hooks', :assign_responder_email)
-   }
+    }
   end
 
   describe :close do
@@ -95,7 +95,7 @@ describe 'state machine' do
        [:another_responder_in_same_team, :sar_noff_trig_awdis],
 
      ).with_hook('Workflows::Hooks', :notify_managing_team_case_closed)
-   }
+    }
   end
 
   describe :reassign_user do
@@ -121,7 +121,7 @@ describe 'state machine' do
 
 
      ).with_hook('Workflows::Hooks', :reassign_user_email)
-   }
+    }
   end
 
   def all_user_teams

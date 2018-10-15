@@ -1680,7 +1680,7 @@ describe 'state machine' do
           [:private_officer, :full_pprivate_foi_accepted],
 
        ).with_hook('Workflows::Hooks', :notify_responder_message_received)
-     }
+      }
     end
 
     describe :upload_response_and_return_for_redraft do
@@ -1689,7 +1689,7 @@ describe 'state machine' do
           [:disclosure_specialist, :full_pdacu_foi_accepted],
           [:disclosure_specialist, :trig_pdacu_foi_accepted],
        ).with_hook('Workflows::Hooks', :notify_responder_redraft_requested)
-     }
+      }
     end
 
     describe :reassign_user do
@@ -1812,7 +1812,7 @@ describe 'state machine' do
           [:private_officer, :full_pprivate_foi_accepted],
           [:private_officer, :full_awdis_foi],
        ).with_hook('Workflows::Hooks', :reassign_user_email)
-     }
+      }
     end
 
     describe :approve do
@@ -1820,7 +1820,7 @@ describe 'state machine' do
         should have_after_hook(
           [:disclosure_specialist, :trig_pdacu_foi_accepted]
        ).with_hook('Workflows::Hooks', :notify_responder_ready_to_send)
-     }
+      }
     end
 
     describe :assign_responder do
@@ -1831,7 +1831,7 @@ describe 'state machine' do
           [:disclosure_bmt, :trig_unassigned_foi_accepted],
           [:disclosure_bmt, :full_unassigned_foi],
        ).with_hook('Workflows::Hooks', :assign_responder_email)
-     }
+      }
     end
 
 
@@ -1848,7 +1848,7 @@ describe 'state machine' do
           [:disclosure_bmt, :full_awresp_foi_accepted],
           [:disclosure_bmt, :full_draft_foi],
        ).with_hook('Workflows::Hooks', :assign_responder_email)
-     }
+      }
     end
 
     describe :upload_response_and_approve do
@@ -1856,7 +1856,7 @@ describe 'state machine' do
         should have_after_hook(
           [:disclosure_specialist, :trig_pdacu_foi_accepted]
        ).with_hook('Workflows::Hooks', :notify_responder_ready_to_send)
-     }
+      }
     end
 
     describe :upload_response_approve_and_bypass do
@@ -1864,7 +1864,7 @@ describe 'state machine' do
         should have_after_hook(
           [:disclosure_specialist, :full_pdacu_foi_accepted],
        ).with_hook('Workflows::Hooks', :notify_responder_ready_to_send)
-     }
+      }
     end
 
   end

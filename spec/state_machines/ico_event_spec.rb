@@ -743,7 +743,7 @@ describe 'state machine' do
           [:disclosure_specialist_coworker, :ico_sar_responded],
 
        ).with_hook('Workflows::Hooks', :notify_responder_message_received)
-     }
+      }
     end
 
     describe :approve do
@@ -753,7 +753,7 @@ describe 'state machine' do
           [:disclosure_specialist, :ico_foi_pending_dacu],
 
        ).with_hook('Workflows::Hooks', :notify_responder_ready_to_send)
-     }
+      }
     end
 
     describe :assign_responder do
@@ -762,7 +762,7 @@ describe 'state machine' do
           [:disclosure_bmt, :ico_foi_unassigned],
           [:disclosure_bmt, :ico_sar_unassigned],
        ).with_hook('Workflows::Hooks', :assign_responder_email)
-     }
+      }
     end
 
 
@@ -774,7 +774,7 @@ describe 'state machine' do
           [:disclosure_bmt, :ico_sar_awaiting_responder],
           [:disclosure_bmt, :ico_sar_accepted],
        ).with_hook('Workflows::Hooks', :assign_responder_email)
-     }
+      }
     end
 
 
@@ -818,7 +818,7 @@ describe 'state machine' do
           [:disclosure_specialist_coworker, :ico_sar_awaiting_dispatch],
 
        ).with_hook('Workflows::Hooks', :reassign_user_email)
-     }
+      }
     end
 
     describe :upload_response_and_return_for_redraft do
@@ -828,7 +828,7 @@ describe 'state machine' do
           [:disclosure_specialist, :ico_foi_pending_dacu],
 
        ).with_hook('Workflows::Hooks', :notify_responder_redraft_requested)
-     }
+      }
     end
 
     describe :upload_response_and_approve do
@@ -838,7 +838,7 @@ describe 'state machine' do
           [:disclosure_specialist, :ico_foi_pending_dacu],
 
        ).with_hook('Workflows::Hooks', :notify_responder_ready_to_send)
-     }
+      }
     end
   end
 end

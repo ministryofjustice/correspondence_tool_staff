@@ -46,21 +46,10 @@ module ConfigurableStateMachine
     # * roles:      Either a string denoting the role, or an array of roles, or nil.  If nil, the role will be determined
     #               from either the acting_team or acting_user
     #
+
     def can_trigger_event?(event_name:, metadata:, roles: nil)
-      result = false
-      set_users_and_roles(metadata: metadata, roles: roles)
-      @roles.each do |role|
-        role_config = @config.user_roles[role]
-        next if role_config.nil?
-        role_state_config =  role_config.states[@kase.current_state]
-        if key_present_but_nil?(role_state_config, event_name.to_sym)
-          result = true
-        else
-          result = event_present_and_triggerable?(role_state_config: role_state_config, event: event_name, user: @user)
-        end
-        break if result == true
-      end
-      result
+      config = config_for_event(event_name: event_name, metadata: metadata, roles: roles)
+      config.present?
     end
 
     def config_for_event(event_name:, metadata:, roles: nil)
@@ -69,13 +58,9 @@ module ConfigurableStateMachine
         role_config = @config.user_roles[role]
         next if role_config.nil?
         role_state_config =  role_config.states[@kase.current_state]
-        if key_present_but_nil?(role_state_config, event_name.to_sym)
-          return RecursiveOpenStruct.new
-        elsif event_present_and_triggerable?(
-                role_state_config: role_state_config,
-                event: event_name,
-                user: @user)
-          return role_state_config[event_name]
+        event_config = fetch_event_config(config: role_state_config, event: event_name)
+        if event_config
+          return check_event_config(config: event_config, user: @user)
         end
       end
       return nil
@@ -184,7 +169,23 @@ module ConfigurableStateMachine
       config.to_h.key?(key) && config[key].nil?
     end
 
+    def fetch_event_config(config: role_state_config, event: event_name)
+      if config.nil? || !config.to_h.key?(event)
+        nil
+      elsif config[event].nil?
+        RecursiveOpenStruct.new
+      else
+        config[event]
+      end
+    end
 
+    def check_event_config(config:, user:)
+      if config.nil?
+        RecursiveOpenStruct.new
+      elsif config.if.nil? || predicate_is_true?(predicate: config.if, user: user)
+        config
+      end
+    end
 
     # in a transaction, write the case transition record, and transition the case
     # params are guaranteed to have the following keys:
@@ -298,8 +299,8 @@ module ConfigurableStateMachine
 
     def predicate_is_true?(predicate:, user:)
       klass, method = predicate.split('#')
-      predicate_oject = klass.constantize.new(user: user, kase: @kase)
-      predicate_oject.__send__(method)
+      predicate_object = klass.constantize.new(user: user, kase: @kase)
+      predicate_object.__send__(method) ? true : false
     end
 
     def find_destination_state(event_config:, user:)
