@@ -12,32 +12,10 @@ class CaseTypeFilter
     user_types = user.permitted_correspondence_types.map(&:abbreviation)
     types = {}
 
-    if "FOI".in?(user_types)
-      types.merge!(
-        'foi-standard'      => I18n.t('filters.case_types.foi-standard'),
-        'foi-ir-compliance' => I18n.t('filters.case_types.foi-ir-compliance'),
-        'foi-ir-timeliness' => I18n.t('filters.case_types.foi-ir-timeliness'),
-      )
-    end
-
-    if "SAR".in?(user_types) && FeatureSet.sars.enabled?
-      types.merge!(
-        'sar-non-offender' => I18n.t('filters.case_types.sar-non-offender')
-      )
-    end
-
-    if 'ICO'.in?(user_types) && FeatureSet.ico.enabled?
-      types.merge!(
-        'ico-appeal' => 'ICO appeals'
-      )
-    end
-
-    if 'FOI'.in?(user_types) || 'SAR'.in?(user_types)
-      types.merge!(
-        'overturned-ico' => 'ICO overturned'
-      )
-    end
-
+    merge_foi_types_if_user_eligible!(types, user_types)
+    merge_sar_types_if_user_eligible!(types, user_types)
+    merge_ico_appeal_types_if_user_eligible!(types, user_types)
+    merge_overturned_ico_types_if_user_eligible!(types, user_types)
     types
   end
 
@@ -103,6 +81,16 @@ class CaseTypeFilter
 
   private
 
+  def execute_filters(filters, records)
+    if filters.present?
+      filters.reduce(Case::Base.none) do |result, filter|
+        result.or(filter)
+      end
+    else
+      records
+    end
+  end
+
   def filter_trigger?
     'trigger'.in? @query.filter_sensitivity
   end
@@ -121,7 +109,7 @@ class CaseTypeFilter
     end
   end
 
-  def filter_case_type(records)
+  def filter_case_type(records) # rubocop:disable Metrics/CyclomaticComplexity
     filters = @query.filter_case_type.map do |filter|
       case filter
       when 'foi-standard'      then records.standard_foi
@@ -137,14 +125,37 @@ class CaseTypeFilter
     execute_filters(filters, records)
   end
 
+  def merge_foi_types_if_user_eligible!(types, user_types)
+    if "FOI".in?(user_types)
+      types.merge!(
+        'foi-standard'      => I18n.t('filters.case_types.foi-standard'),
+        'foi-ir-compliance' => I18n.t('filters.case_types.foi-ir-compliance'),
+        'foi-ir-timeliness' => I18n.t('filters.case_types.foi-ir-timeliness'),
+      )
+    end
+  end
 
-  def execute_filters(filters, records)
-    if filters.present?
-      filters.reduce(Case::Base.none) do |result, filter|
-        result.or(filter)
-      end
-    else
-      records
+  def merge_ico_appeal_types_if_user_eligible!(types, user_types)
+    if 'ICO'.in?(user_types) && FeatureSet.ico.enabled?
+      types.merge!(
+        'ico-appeal' => 'ICO appeals'
+      )
+    end
+  end
+
+  def merge_overturned_ico_types_if_user_eligible!(types, user_types)
+    if 'FOI'.in?(user_types) || 'SAR'.in?(user_types)
+      types.merge!(
+        'overturned-ico' => 'ICO overturned'
+      )
+    end
+  end
+
+  def merge_sar_types_if_user_eligible!(types, user_types)
+    if "SAR".in?(user_types) && FeatureSet.sars.enabled?
+      types.merge!(
+        'sar-non-offender' => I18n.t('filters.case_types.sar-non-offender')
+      )
     end
   end
 end
