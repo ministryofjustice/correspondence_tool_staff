@@ -39,7 +39,9 @@ describe 'state machine' do
 
   describe :update_closure do
     it { should permit_event_to_be_triggered_only_by(
-                  [:disclosure_bmt, :sar_noff_closed],
+                  [:sar_responder,                      :sar_noff_closed],
+                  [:another_sar_responder_in_same_team, :sar_noff_closed],
+                  [:disclosure_bmt,                     :sar_noff_closed],
                 )}
   end
 

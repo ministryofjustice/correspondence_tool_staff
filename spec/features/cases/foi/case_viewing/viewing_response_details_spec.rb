@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 feature 'viewing response details' do
-  given(:manager)         { create :manager }
+  given(:manager)         { find_or_create :disclosure_bmt_user }
   given(:responder)       { responding_team.responders.first }
-  given(:responding_team) { create :responding_team }
+  given(:responding_team) { find_or_create :foi_responding_team }
 
   context 'as an manager' do
     before do
@@ -11,8 +11,7 @@ feature 'viewing response details' do
     end
 
     context 'with a case not yet accepted' do
-      given(:assigned_case)  { create :assigned_case,
-                                      responding_team: responding_team }
+      given(:assigned_case)   { create :assigned_case }
 
       scenario 'when the case has a response' do
         cases_show_page.load(id: assigned_case.id)
@@ -22,12 +21,8 @@ feature 'viewing response details' do
     end
 
     context 'with a case marked as responded' do
-      given(:responded_case) do
-        create :responded_case,
-               manager: manager,
-               responder: responder
-      end
-      given(:response) { responded_case.attachments.first }
+      given(:responded_case) { create :responded_case }
+      given(:response)       { responded_case.attachments.first }
 
       scenario 'when the case has a response' do
         cases_show_page.load(id: responded_case.id)
@@ -44,8 +39,7 @@ feature 'viewing response details' do
       given(:case_with_many_responses) do
         create :responded_case,
                responses: build_list(:correspondence_response, 4),
-               manager: manager,
-               responder: responder
+               manager: manager
       end
       given(:responses) { case_with_many_responses.attachments }
 
@@ -65,7 +59,7 @@ feature 'viewing response details' do
     end
 
     context 'with a closed case' do
-      given(:closed_case)  { create :closed_case, responder: responder }
+      given(:closed_case)  { create :closed_case }
 
       scenario 'when the case has a response' do
         cases_show_page.load(id: closed_case.id)
@@ -93,7 +87,8 @@ feature 'viewing response details' do
     end
 
     context 'with a case being drafted' do
-      given(:accepted_case) { create :accepted_case, responder: responder }
+      given(:accepted_case) { create :accepted_case,
+                                     responding_team: responding_team }
       given(:response)      { create :case_response, user_id: responder.id }
 
       scenario 'when the case has no responses' do

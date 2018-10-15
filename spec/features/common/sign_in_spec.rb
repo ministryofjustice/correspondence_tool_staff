@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature "Signing in" do
-  let(:responder)         { create(:responder) }
+  let(:responder)         { find_or_create(:foi_responder) }
   let!(:deactivated_user) { create :deactivated_user }
 
   scenario "Signing in with correct credentials" do

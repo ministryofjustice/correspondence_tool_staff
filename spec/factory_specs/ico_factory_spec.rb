@@ -12,6 +12,8 @@ describe 'ICO cases factory' do
 
 
   context 'ICO FOI cases' do
+    let(:responding_team) { find_or_create :foi_responding_team }
+
     describe :ico_foi_case do
       it 'creates an unassigned ICO FOI case' do
         Timecop.freeze(frozen_time) do
@@ -154,6 +156,8 @@ describe 'ICO cases factory' do
   end
 
   context 'ICO SAR cases' do
+    let(:responding_team) { find_or_create :sar_responding_team }
+
     describe :ico_sar_case do
       it 'creates an unassigned ICO SAR case' do
         Timecop.freeze(frozen_time) do

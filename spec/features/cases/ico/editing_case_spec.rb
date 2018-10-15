@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature 'editing an ICO case' do
-  given(:manager) { create :disclosure_bmt_user }
+  given(:manager) { find_or_create :disclosure_bmt_user }
 
   background do
     login_as manager

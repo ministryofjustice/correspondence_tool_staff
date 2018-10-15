@@ -2,9 +2,9 @@ require 'rails_helper'
 
 feature 'ICO case creation' do
 
-  given(:responder)                   { create(:responder) }
+  given(:responder)                   { find_or_create(:foi_responder) }
   given(:responding_team)             { create :responding_team, responders: [responder] }
-  given(:manager)                     { create :disclosure_bmt_user }
+  given(:manager)                     { find_or_create :disclosure_bmt_user }
   given(:managing_team)               { create :managing_team, managers: [manager] }
   given(:original_foi)                { create :closed_case }
   given(:related_foi)                 { create :closed_case }

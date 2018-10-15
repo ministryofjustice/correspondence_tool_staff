@@ -57,11 +57,13 @@ RSpec.describe BusinessUnit, type: :model do
     before(:all) do
       @team_1 = create :responding_team
       @team_2 = create :responding_team
-      
+
       @unassigned_case                  = create :case, name: 'unassigned'
       @t1_assigned_case                 = create :assigned_case, responding_team: @team_1, name: 't1-assigned'
       @t1_accepted_case                 = create :accepted_case, responding_team: @team_1, name: 't1-accepted'
-      @t1_rejected_case                 = create :rejected_case, responding_team: @team_1, name: 't1-rejected'
+      @t1_rejected_case                 = create :rejected_case,
+                                                 responding_team: @team_1,
+                                                 name: 't1-rejected'
       @t1_pending_dacu_clearance_case   = create :pending_dacu_clearance_case, responding_team: @team_1, name: 't1-pending-dacu'
       @t1_responded_case                = create :responded_case, responding_team: @team_1, name: 't1-responded'
       @t1_closed_case                   = create :closed_case, responding_team: @team_1, name: 't1-closed'
@@ -222,8 +224,8 @@ RSpec.describe BusinessUnit, type: :model do
   end
 
   describe '#correspondence_types' do
-    let(:foi) { find_or_create :foi_correspondence_type }
-    let(:sar) { find_or_create :sar_correspondence_type }
+    let(:foi) { create :foi_correspondence_type }
+    let(:sar) { create :sar_correspondence_type }
     let(:dir)  { create :directorate}
 
     it { should have_many(:correspondence_types).through(:correspondence_type_roles) }
@@ -250,9 +252,9 @@ RSpec.describe BusinessUnit, type: :model do
 
   describe '#correspondence_type_ids=' do
     let(:dir) { create :directorate }
-    let(:foi) { find_or_create :foi_correspondence_type }
-    let(:sar) { find_or_create :sar_correspondence_type }
-    let(:gq)  { find_or_create :gq_correspondence_type }
+    let(:foi) { create :foi_correspondence_type }
+    let(:sar) { create :sar_correspondence_type }
+    let(:gq)  { create :gq_correspondence_type }
 
     it 'adds new team correspondence_type role records' do
       bu = BusinessUnit.new(name: 'bu1', parent: dir, role: 'manager')

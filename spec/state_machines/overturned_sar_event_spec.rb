@@ -34,12 +34,12 @@ describe 'state machine' do
   describe :accept_responder_assignment do
     it {
       should permit_event_to_be_triggered_only_by(
-         [:responder, :ot_ico_sar_noff_awresp],
-         [:responder, :ot_ico_sar_noff_trig_awresp],
-         [:responder, :ot_ico_sar_noff_trig_awresp_accepted],
-         [:another_responder_in_same_team, :ot_ico_sar_noff_awresp],
-         [:another_responder_in_same_team, :ot_ico_sar_noff_trig_awresp],
-         [:another_responder_in_same_team, :ot_ico_sar_noff_trig_awresp_accepted],
+         [:sar_responder, :ot_ico_sar_noff_awresp],
+         [:sar_responder, :ot_ico_sar_noff_trig_awresp],
+         [:sar_responder, :ot_ico_sar_noff_trig_awresp_accepted],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_awresp],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awresp],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awresp_accepted],
        )
     }
   end
@@ -58,25 +58,25 @@ describe 'state machine' do
          [:disclosure_bmt, :ot_ico_sar_noff_pdacu],
          [:disclosure_bmt, :ot_ico_sar_noff_trig_awdisp],
 
-         [:responder, :ot_ico_sar_noff_awresp],
-         [:responder, :ot_ico_sar_noff_draft],
-         [:responder, :ot_ico_sar_noff_closed],
-         [:responder, :ot_ico_sar_noff_trig_awresp],
-         [:responder, :ot_ico_sar_noff_trig_awresp_accepted],
-         [:responder, :ot_ico_sar_noff_trig_draft],
-         [:responder, :ot_ico_sar_noff_trig_draft_accepted],
-         [:responder, :ot_ico_sar_noff_pdacu],
-         [:responder, :ot_ico_sar_noff_trig_awdisp],
+         [:sar_responder, :ot_ico_sar_noff_awresp],
+         [:sar_responder, :ot_ico_sar_noff_draft],
+         [:sar_responder, :ot_ico_sar_noff_closed],
+         [:sar_responder, :ot_ico_sar_noff_trig_awresp],
+         [:sar_responder, :ot_ico_sar_noff_trig_awresp_accepted],
+         [:sar_responder, :ot_ico_sar_noff_trig_draft],
+         [:sar_responder, :ot_ico_sar_noff_trig_draft_accepted],
+         [:sar_responder, :ot_ico_sar_noff_pdacu],
+         [:sar_responder, :ot_ico_sar_noff_trig_awdisp],
 
-         [:another_responder_in_same_team, :ot_ico_sar_noff_awresp],
-         [:another_responder_in_same_team, :ot_ico_sar_noff_draft],
-         [:another_responder_in_same_team, :ot_ico_sar_noff_closed],
-         [:another_responder_in_same_team, :ot_ico_sar_noff_trig_awresp],
-         [:another_responder_in_same_team, :ot_ico_sar_noff_trig_awresp_accepted],
-         [:another_responder_in_same_team, :ot_ico_sar_noff_trig_draft],
-         [:another_responder_in_same_team, :ot_ico_sar_noff_trig_draft_accepted],
-         [:another_responder_in_same_team, :ot_ico_sar_noff_pdacu],
-         [:another_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_awresp],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_closed],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awresp],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awresp_accepted],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft_accepted],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_pdacu],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
        )
     }
   end
@@ -105,11 +105,10 @@ describe 'state machine' do
   describe :close do
     it {
       should permit_event_to_be_triggered_only_by(
-       [:responder, :ot_ico_sar_noff_draft],
-       [:responder, :ot_ico_sar_noff_trig_awdisp],
-       [:another_responder_in_same_team, :ot_ico_sar_noff_draft],
-       [:another_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
-
+       [:sar_responder, :ot_ico_sar_noff_draft],
+       [:sar_responder, :ot_ico_sar_noff_trig_awdisp],
+       [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
+       [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
      )}
   end
 
@@ -162,14 +161,17 @@ describe 'state machine' do
   describe :reassign_user do
     it {
       should permit_event_to_be_triggered_only_by(
-        [:responder, :ot_ico_sar_noff_draft],
-        [:responder, :ot_ico_sar_noff_trig_awdisp],
+        [:sar_responder, :ot_ico_sar_noff_draft],
+        [:sar_responder, :ot_ico_sar_noff_trig_awdisp],
+        [:sar_responder, :ot_ico_sar_noff_trig_draft],
+        [:sar_responder, :ot_ico_sar_noff_trig_draft_accepted],
+        [:sar_responder, :ot_ico_sar_noff_pdacu],
 
-        [:another_responder_in_same_team, :ot_ico_sar_noff_draft],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_trig_draft],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_trig_draft_accepted],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_pdacu],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft_accepted],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_pdacu],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
 
         [:disclosure_specialist, :ot_ico_sar_noff_trig_draft_accepted],
         [:disclosure_specialist, :ot_ico_sar_noff_pdacu],
@@ -178,13 +180,6 @@ describe 'state machine' do
         [:disclosure_specialist_coworker, :ot_ico_sar_noff_trig_draft_accepted],
         [:disclosure_specialist_coworker, :ot_ico_sar_noff_pdacu],
         [:disclosure_specialist_coworker, :ot_ico_sar_noff_trig_awdisp],
-
-        [:responder, :ot_ico_sar_noff_trig_draft],
-        [:responder, :ot_ico_sar_noff_trig_draft_accepted],
-        [:responder, :ot_ico_sar_noff_pdacu],
-
-
-
       )
     }
   end
@@ -192,12 +187,12 @@ describe 'state machine' do
   describe :reject_responder_assignment do
     it {
       should permit_event_to_be_triggered_only_by(
-        [:responder, :ot_ico_sar_noff_awresp],
-        [:responder, :ot_ico_sar_noff_trig_awresp],
-        [:responder, :ot_ico_sar_noff_trig_awresp_accepted],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_awresp],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_trig_awresp],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_trig_awresp_accepted],
+        [:sar_responder, :ot_ico_sar_noff_awresp],
+        [:sar_responder, :ot_ico_sar_noff_trig_awresp],
+        [:sar_responder, :ot_ico_sar_noff_trig_awresp_accepted],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_awresp],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awresp],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awresp_accepted],
   )  }
   end
 
@@ -220,20 +215,20 @@ describe 'state machine' do
   describe :respond do
     it {
       should permit_event_to_be_triggered_only_by(
-        [:responder, :ot_ico_sar_noff_draft],
-        [:responder, :ot_ico_sar_noff_trig_awdisp],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_draft],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
+        [:sar_responder, :ot_ico_sar_noff_draft],
+        [:sar_responder, :ot_ico_sar_noff_trig_awdisp],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
       )}
   end
 
   describe :respond_and_close do
     it {
       should permit_event_to_be_triggered_only_by(
-        [:responder, :ot_ico_sar_noff_draft],
-        [:responder, :ot_ico_sar_noff_trig_awdisp],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_draft],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
+        [:sar_responder, :ot_ico_sar_noff_draft],
+        [:sar_responder, :ot_ico_sar_noff_trig_awdisp],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
       )}
   end
 
@@ -248,17 +243,17 @@ describe 'state machine' do
          [:disclosure_bmt, :ot_ico_sar_noff_pdacu],
          [:disclosure_bmt, :ot_ico_sar_noff_trig_awdisp],
 
-         [:responder, :ot_ico_sar_noff_draft],
-         [:responder, :ot_ico_sar_noff_trig_draft],
-         [:responder, :ot_ico_sar_noff_trig_draft_accepted],
-         [:responder, :ot_ico_sar_noff_pdacu],
-         [:responder, :ot_ico_sar_noff_trig_awdisp],
+         [:sar_responder, :ot_ico_sar_noff_draft],
+         [:sar_responder, :ot_ico_sar_noff_trig_draft],
+         [:sar_responder, :ot_ico_sar_noff_trig_draft_accepted],
+         [:sar_responder, :ot_ico_sar_noff_pdacu],
+         [:sar_responder, :ot_ico_sar_noff_trig_awdisp],
 
-         [:another_responder_in_same_team, :ot_ico_sar_noff_draft],
-         [:another_responder_in_same_team, :ot_ico_sar_noff_trig_draft],
-         [:another_responder_in_same_team, :ot_ico_sar_noff_trig_draft_accepted],
-         [:another_responder_in_same_team, :ot_ico_sar_noff_pdacu],
-         [:another_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft_accepted],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_pdacu],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
        ).with_hook('Workflows::Hooks', :notify_responder_message_received)
     }
   end
@@ -289,11 +284,11 @@ describe 'state machine' do
   describe :close do
     it {
       should have_after_hook(
-       [:responder, :ot_ico_sar_noff_draft],
-       [:responder, :ot_ico_sar_noff_trig_awdisp],
+       [:sar_responder, :ot_ico_sar_noff_draft],
+       [:sar_responder, :ot_ico_sar_noff_trig_awdisp],
 
-       [:another_responder_in_same_team, :ot_ico_sar_noff_draft],
-       [:another_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
+       [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
+       [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
      ).with_hook('Workflows::Hooks', :notify_managing_team_case_closed)
     }
   end
@@ -309,17 +304,17 @@ describe 'state machine' do
         [:disclosure_specialist_coworker, :ot_ico_sar_noff_pdacu],
         [:disclosure_specialist_coworker, :ot_ico_sar_noff_trig_awdisp],
 
-        [:responder, :ot_ico_sar_noff_draft],
-        [:responder, :ot_ico_sar_noff_trig_draft],
-        [:responder, :ot_ico_sar_noff_trig_draft_accepted],
-        [:responder, :ot_ico_sar_noff_pdacu],
-        [:responder, :ot_ico_sar_noff_trig_awdisp],
+        [:sar_responder, :ot_ico_sar_noff_draft],
+        [:sar_responder, :ot_ico_sar_noff_trig_draft],
+        [:sar_responder, :ot_ico_sar_noff_trig_draft_accepted],
+        [:sar_responder, :ot_ico_sar_noff_pdacu],
+        [:sar_responder, :ot_ico_sar_noff_trig_awdisp],
 
-        [:another_responder_in_same_team, :ot_ico_sar_noff_draft],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_trig_draft],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_trig_draft_accepted],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_pdacu],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft_accepted],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_pdacu],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
        ).with_hook('Workflows::Hooks', :reassign_user_email)
     }
   end

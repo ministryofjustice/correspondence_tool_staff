@@ -164,8 +164,8 @@ RSpec.describe Team, type: :model do
   describe '#can_allocate?' do
     before(:each) do
       @team = build_stubbed :team
-      @foi = find_or_create :foi_correspondence_type
-      @gq = find_or_create :gq_correspondence_type
+      @foi = create :foi_correspondence_type
+      @gq = create :gq_correspondence_type
       create :team_property, :can_allocate_gq, team_id: @team.id
     end
 
@@ -180,7 +180,7 @@ RSpec.describe Team, type: :model do
 
   describe '#enable_allocation' do
 
-    let(:foi) { find_or_create :foi_correspondence_type }
+    let(:foi) { create :foi_correspondence_type }
 
     it 'creates a team property record' do
       expect(TeamProperty.where(key: 'can_allocate', value: foi.abbreviation).size).to eq 0
@@ -199,7 +199,7 @@ RSpec.describe Team, type: :model do
   describe '#disable_allocation' do
     before(:each) do
       @team = build_stubbed :team
-      @foi = find_or_create :foi_correspondence_type
+      @foi = create :foi_correspondence_type
       create :team_property, :can_allocate_foi, team_id: @team.id
     end
 
@@ -219,8 +219,8 @@ RSpec.describe Team, type: :model do
 
   describe '.allocatable' do
     it 'returns a collection of teams that have the can_allocate property set for the correspondence type' do
-      foi = find_or_create :foi_correspondence_type
-      gq = find_or_create :gq_correspondence_type
+      foi = create :foi_correspondence_type
+      gq = create :gq_correspondence_type
       t1 = create :team
       t2 = create :team
       t3 = create :team

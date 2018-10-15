@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe StatsController, type: :controller do
   let!(:kase)             { create :case }
   let!(:r003_report_type) { create :report_type, :r003 }
-  let(:manager)           { create :disclosure_bmt_user }
+  let(:manager)           { find_or_create :disclosure_bmt_user }
 
   describe '#download' do
     before do

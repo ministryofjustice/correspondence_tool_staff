@@ -39,7 +39,8 @@ RSpec.describe AssignmentsController, type: :controller do
       let(:approver_responder) { create :approver_responder }
       let(:approving_team)     { approver_responder.approving_team }
       let(:accepted_case)      { create :accepted_case, :flagged_accepted,
-                                        approver: approver_responder }
+                                        approver: approver_responder,
+                                        approving_team: approving_team }
       let(:assignment)         { accepted_case.approver_assignments.first }
 
       it 'uses the assignment_id param to set @team_users' do

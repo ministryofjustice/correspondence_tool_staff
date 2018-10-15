@@ -2,11 +2,11 @@ require 'rails_helper'
 
 
 describe GlobalNavManager::Page do
-  let(:disclosure_specialist) { create :disclosure_specialist }
-  let(:disclosure_bmt_user)   { create :disclosure_bmt_user }
-  let(:disclosure_specialist_bmt) { create :disclosure_specialist_bmt }
-  let(:press_officer)         { create :press_officer }
-  let(:responder)             { create :responder }
+  let(:disclosure_specialist) { find_or_create :disclosure_specialist }
+  let(:disclosure_bmt_user)   { find_or_create :disclosure_bmt_user }
+  let(:disclosure_specialist_bmt) { find_or_create :disclosure_specialist_bmt }
+  let(:press_officer)         { find_or_create :press_officer }
+  let(:responder)             { find_or_create :foi_responder }
   let(:request)               { instance_double ActionDispatch::Request,
                                                 path: '/cases/open',
                                                 fullpath: '/cases/open',

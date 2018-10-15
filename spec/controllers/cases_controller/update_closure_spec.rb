@@ -10,7 +10,7 @@ describe CasesController do
     DbHousekeeping.clean
   end
 
-  let(:manager)     { create :disclosure_bmt_user }
+  let(:manager) { find_or_create :disclosure_bmt_user }
   let(:responder)   { create :responder }
 
   describe 'PATCH update_closure' do

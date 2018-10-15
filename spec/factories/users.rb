@@ -38,6 +38,8 @@ FactoryBot.define do
   sequence(:approver_responder_manager_name)  { |n| "Mgr Approver-Responder #{n}" }
 
   factory :user do
+    initialize_with { User.find_or_create_by(email: email) }
+
     transient do
       identifier { 'user' }
     end
@@ -55,13 +57,13 @@ FactoryBot.define do
       email { email_from_name(identifier) }
     end
 
-    factory :manager do
+    factory :manager, parent: :user do
       transient do
         identifier { 'managing user' }
       end
 
       full_name      { generate(:manager_name) }
-      managing_teams { [create(:managing_team)] }
+      managing_teams { [create(:managing_team, :empty)] }
     end
 
     factory :manager_approver do
@@ -74,13 +76,22 @@ FactoryBot.define do
       approving_team { create(:approving_team) }
     end
 
-    factory :disclosure_bmt_user do
+    factory :disclosure_bmt_user, parent: :manager do
       transient do
         identifier { 'disclosure-bmt managing user' }
       end
 
-      full_name      { generate :disclosure_bmt_user_name }
-      managing_teams { [find_or_create(:team_dacu)] }
+      # full_name      { generate :disclosure_bmt_user_name }
+      full_name      { identifier }
+      email          { email_from_name(full_name) }
+      managing_teams { [find_or_create(:team_dacu, :empty)] }
+    end
+
+    trait :orphan do
+      approving_team { nil }
+      managing_teams { [] }
+      responding_teams { [] }
+      teams { [] }
     end
 
     factory :responder do
@@ -90,6 +101,26 @@ FactoryBot.define do
 
       full_name      { generate(:responder_name) }
       responding_teams { [find_or_create(:responding_team)] }
+    end
+
+    factory :foi_responder do
+      transient do
+        identifier { 'foi responding user' }
+      end
+
+      full_name        { identifier }
+      email            { email_from_name(full_name) }
+      responding_teams { [find_or_create(:foi_responding_team, :empty)] }
+    end
+
+    factory :sar_responder do
+      transient do
+        identifier { 'sar responding user' }
+      end
+
+      full_name        { identifier }
+      email            { email_from_name(full_name) }
+      responding_teams { [find_or_create(:sar_responding_team, :empty)] }
     end
 
     factory :approver do
@@ -127,8 +158,9 @@ FactoryBot.define do
         identifier { 'disclosure-specialist approving user' }
       end
 
-      full_name      { generate(:disclosure_specialist_name) }
-      approving_team { find_or_create(:team_dacu_disclosure) }
+      full_name      { identifier }
+      email          { email_from_name(full_name) }
+      approving_team { find_or_create(:team_dacu_disclosure, :empty) }
     end
 
     factory :disclosure_specialist_bmt do
@@ -136,9 +168,10 @@ FactoryBot.define do
         identifier { 'disclosure-specialist-bmt managing user' }
       end
 
-      full_name      { generate(:disclosure_specialist_name) }
-      managing_teams { [find_or_create(:team_dacu)] }
-      approving_team { find_or_create(:team_dacu_disclosure) }
+      full_name      { identifier }
+      email          { email_from_name(full_name) }
+      approving_team { find_or_create(:team_dacu_disclosure, :empty) }
+      managing_teams { [find_or_create(:team_dacu, :empty)] }
     end
 
     factory :press_officer do
@@ -146,9 +179,10 @@ FactoryBot.define do
         identifier { 'press-office approving user' }
       end
 
-      full_name      { generate(:press_officer_name) }
-      approving_team { find_or_create(:team_press_office) }
-
+      # full_name      { generate(:press_officer_name) }
+      full_name      { identifier }
+      email          { email_from_name(full_name) }
+      approving_team { find_or_create(:team_press_office, :empty) }
     end
 
     factory :default_press_officer, parent: :press_officer do
@@ -163,8 +197,10 @@ FactoryBot.define do
         identifier { 'private-office approving user' }
       end
 
-      full_name      { generate(:private_officer_name) }
-      approving_team { find_or_create(:team_private_office) }
+      # full_name      { generate(:private_officer_name) }
+      full_name      { identifier }
+      email          { email_from_name(full_name) }
+      approving_team { find_or_create(:team_private_office, :empty) }
     end
 
     factory :default_private_officer, parent: :private_officer do

@@ -13,7 +13,7 @@ describe 'cases/index.html.slim', type: :view do
   end
 
 
-  let(:responder)       { create :responder }
+  let(:responder)       { find_or_create :foi_responder }
   let(:responding_team) { responder.responding_teams.first }
   let(:assigned_case)   { create(:assigned_case, :flagged_accepted,
                                  responding_team: responding_team)

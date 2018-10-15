@@ -32,29 +32,95 @@ FactoryBot.define do
 
   factory :foi_case, aliases: [:case], class: Case::FOI::Standard do
     transient do
-      creation_time { 4.business_days.ago }
-      identifier { "new case" }
-      managing_team { find_or_create :team_dacu }
+      creation_time       { 4.business_days.ago }
+      identifier          { "new case" }
+      managing_team       { find_or_create :team_disclosure_bmt }
+      manager             { managing_team.managers.first }
+      responding_team     { find_or_create :foi_responding_team }
+      responder           { responding_team.responders.first }
+      approving_team      { find_or_create :team_disclosure }
+      approver            { approving_team.approvers.first }
+      flag_for_disclosure { nil }
+      flag_for_press      { false }
+      flag_for_private    { false }
+      press_office        { find_or_create :team_press_office }
+      press_officer       { press_office.approvers.first }
+      private_office      { find_or_create :team_private_office }
+      private_officer     { private_office.approvers.first }
     end
 
-    current_state { 'unassigned' }
-    requester_type { 'member_of_the_public' }
-    sequence(:name) { |n| "#{identifier} name #{n}" }
-    email { Faker::Internet.email(identifier) }
-    delivery_method { 'sent_by_email' }
-    sequence(:subject) { |n| "#{identifier} subject #{n}" }
-    sequence(:message) { |n| "#{identifier} message #{n}" }
-    received_date { Time.zone.today.to_s }
+    workflow                  { 'standard' }
+    current_state             { 'unassigned' }
+    requester_type            { 'member_of_the_public' }
+    sequence(:name)           { |n| "#{identifier} name #{n}" }
+    email                     { Faker::Internet.email(identifier) }
+    delivery_method           { 'sent_by_email' }
+    sequence(:subject)        { |n| "#{identifier} subject #{n}" }
+    sequence(:message)        { |n| "#{identifier} message #{n}" }
+    received_date             { Time.zone.today.to_s }
     sequence(:postal_address) { |n| "#{identifier} postal address #{n}" }
-    created_at { creation_time }
+    created_at                { creation_time }
 
     after(:build) do |_kase, evaluator|
       evaluator.managing_team
     end
 
-    after(:create) do | kase, evaluator|
+    after(:create) do |kase, evaluator|
       ma = kase.managing_assignment
       ma.update! created_at: evaluator.creation_time
+
+      if evaluator.flag_for_disclosure
+        create :flag_case_for_clearance_transition,
+               case: kase,
+               acting_team: evaluator.managing_team,
+               target_team: evaluator.approving_team
+        create :approver_assignment,
+               case: kase,
+               team: evaluator.approving_team,
+               state: 'pending'
+        kase.update workflow: 'trigger'
+
+        if evaluator.flag_for_disclosure == :accepted
+          disclosure_assignment = kase.assignments.for_team(
+            evaluator.approving_team
+          ).singular
+          disclosure_assignment.update(state: 'accepted',
+                                       user: evaluator.approver)
+        end
+      end
+
+      if evaluator.flag_for_press
+        create :case_transition_take_on_for_approval,
+               case: kase,
+               target_team: evaluator.press_office,
+               target_user: evaluator.press_officer,
+               acting_team: evaluator.press_office,
+               acting_user: evaluator.press_officer
+        create :approver_assignment,
+               case: kase,
+               team: evaluator.press_office,
+               user: evaluator.press_officer,
+               state: 'accepted'
+      end
+
+      if evaluator.flag_for_private
+        create :case_transition_take_on_for_approval,
+               case: kase,
+               target_user: evaluator.private_officer,
+               target_team: evaluator.private_office,
+               acting_user: evaluator.press_officer,
+               acting_team: evaluator.press_office
+        create :approver_assignment,
+               case: kase,
+               team: evaluator.private_office,
+               user: evaluator.private_officer,
+               state: 'accepted'
+      end
+
+      if evaluator.flag_for_press || evaluator.flag_for_private
+        kase.update workflow: 'full_approval'
+      end
+
     end
   end
 
@@ -79,12 +145,9 @@ FactoryBot.define do
           aliases: [:assigned_case] do
     transient do
       identifier { "assigned case" }
-      manager         { managing_team.managers.first }
-      responding_team { create :responding_team }
     end
-
-    created_at      { creation_time }
-    received_date   { creation_time }
+    created_at    { creation_time }
+    received_date { creation_time }
 
     after(:create) do |kase, evaluator|
       create :assignment,
@@ -94,11 +157,12 @@ FactoryBot.define do
              role: 'responding',
              created_at: evaluator.creation_time
       create :case_transition_assign_responder,
-             case_id: kase.id,
+             case: kase,
              acting_user_id: evaluator.manager.id,
              acting_team_id: evaluator.managing_team.id,
              target_team_id: evaluator.responding_team.id,
              created_at: evaluator.creation_time
+
       kase.reload
     end
   end
@@ -107,8 +171,6 @@ FactoryBot.define do
           aliases: [:case_being_drafted] do
     transient do
       identifier { "accepted case" }
-      responder { create :responder }
-      responding_team { responder.responding_teams.first }
     end
 
     after(:create) do |kase, evaluator|
@@ -116,9 +178,10 @@ FactoryBot.define do
       kase.responder_assignment.accepted!
       create :case_transition_accept_responder_assignment,
              case: kase,
-             acting_user_id: kase.responder.id,
-             acting_team_id: kase.responding_team.id,
+             acting_team: kase.responding_team,
+             acting_user: kase.responder,
              created_at: evaluator.creation_time
+
       kase.reload
     end
   end
@@ -126,8 +189,6 @@ FactoryBot.define do
   factory :rejected_case, parent: :assigned_case do
     transient do
       rejection_message { Faker::Hipster.sentence }
-      responder         { create :responder }
-      responding_team   { responder.responding_teams.first }
       identifier        { "rejected case" }
     end
 
@@ -148,7 +209,6 @@ FactoryBot.define do
     transient do
       identifier { "case with response" }
       # creation_time { 4.business_days.ago }
-      responder { find_or_create :responder, full_name: 'Ivor Response' }
       responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
     end
 
@@ -156,222 +216,185 @@ FactoryBot.define do
       kase.attachments.push(*evaluator.responses)
 
       create :case_transition_add_responses,
-             case_id: kase.id,
-             acting_team_id: evaluator.responding_team.id,
-             acting_user_id: evaluator.responder.id
-      # filenames: [evaluator.attachment.filename]
+             case: kase,
+             acting_team: kase.responding_team,
+             acting_user: kase.responder,
+             filenames: [evaluator.responses.map(&:filename)]
       kase.reload
     end
   end
 
-  factory :pending_dacu_clearance_case, parent: :case_with_response do
+  factory :pending_dacu_clearance_case, parent: :accepted_case do
     transient do
-      approving_team { find_or_create :team_dacu_disclosure }
-      approver       { create :disclosure_specialist }
+      identifier          { 'case pending disclosure approval' }
+      flag_for_disclosure { :accepted }
+      responses           { [build(:correspondence_response,
+                                   type: 'response',
+                                   user_id: responder.id)] }
     end
-    workflow { 'trigger' }
 
     after(:create) do |kase, evaluator|
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.approving_team,
-             state: 'accepted',
-             user_id: evaluator.approver.id
+      kase.attachments.push(*evaluator.responses)
 
       create :case_transition_pending_dacu_clearance,
-             case_id: kase.id,
-             acting_user_id: evaluator.responder.id
+             case: kase,
+             acting_team: evaluator.responding_team,
+             acting_user: evaluator.responder,
+             filenames: evaluator.responses.map(&:filename)
       kase.reload
     end
   end
 
-  factory :unaccepted_pending_dacu_clearance_case, parent: :case_with_response do
+  # TODO: Use traits for this instead of a separate case type
+  factory :unaccepted_pending_dacu_clearance_case,
+          parent: :pending_dacu_clearance_case do
     transient do
-      approving_team { find_or_create :team_dacu_disclosure }
-    end
-
-    workflow { 'trigger' }
-
-    after(:create) do |kase, evaluator|
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.approving_team,
-             state: 'pending',
-             user_id: nil
-
-      create :case_transition_pending_dacu_clearance,
-             case_id: kase.id,
-             acting_user_id: evaluator.responder.id
-      kase.reload
+      identifier          { 'case pending disclosure approval but no accepted' }
+      flag_for_disclosure { :pending }
     end
   end
 
-  factory :unaccepted_pending_dacu_clearance_case_flagged_for_press_and_private, parent: :unaccepted_pending_dacu_clearance_case do
+  # TODO: Use traits for this instead of a separate case type
+  factory :unaccepted_pending_dacu_clearance_case_flagged_for_press_and_private,
+          parent: :unaccepted_pending_dacu_clearance_case do
     transient do
-      press_office      { find_or_create :team_press_office }
-      press_officer     { find_or_create :press_officer }
-      private_office    { find_or_create :team_private_office }
-      private_officer   { find_or_create :private_officer }
-    end
-
-    workflow { 'full_approval' }
-
-    after(:create) do |kase, evaluator|
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.press_office,
-             state: 'accepted',
-             user: evaluator.press_officer
-
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.private_office,
-             state: 'accepted',
-             user: evaluator.private_officer
+      flag_for_press   { true }
+      flag_for_private { true }
     end
   end
 
-  factory :pending_dacu_clearance_case_flagged_for_press, parent: :pending_dacu_clearance_case do
+  # TODO: Use traits for this instead of a separate case type
+  factory :pending_dacu_clearance_case_flagged_for_press,
+          parent: :pending_dacu_clearance_case do
     transient do
-      press_office  { find_or_create :team_press_office }
-      press_officer { find_or_create :press_officer }
-    end
-    after(:create) do |kase, evaluator|
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.press_office,
-             state: 'accepted',
-             user: evaluator.press_officer
-      kase.reload
-      kase.update(workflow: 'full_approval')
+      flag_for_press { true }
     end
   end
 
-
-  factory :pending_dacu_clearance_case_flagged_for_press_and_private, parent: :pending_dacu_clearance_case_flagged_for_press do
+  # TODO: Use traits for this instead of a separate case type
+  factory :pending_dacu_clearance_case_flagged_for_press_and_private,
+          parent: :pending_dacu_clearance_case_flagged_for_press do
     transient do
-      private_office  { find_or_create :team_private_office }
-      private_officer { find_or_create :private_officer }
-    end
-    after(:create) do |kase, evaluator|
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.private_office,
-             state: 'accepted',
-             user: evaluator.private_officer
-      kase.reload
-      kase.update(workflow: 'full_approval')
+      flag_for_press   { true }
+      flag_for_private { true }
     end
   end
 
-
-
-  factory :pending_press_clearance_case, parent: :pending_dacu_clearance_case do
+  factory :pending_press_clearance_case,
+          parent: :pending_dacu_clearance_case do
     transient do
-      press_office     { find_or_create :team_press_office }
-      press_officer    { find_or_create :press_officer }
-      private_office   { find_or_create :team_private_office }
-      private_officer  { find_or_create :private_officer }
+      flag_for_press   { true }
+      flag_for_private { true }
     end
 
     after(:create) do |kase, evaluator|
-
-      kase.approver_assignments.for_team(evaluator.approving_team)
-          .first.update!(approved: true)
-
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.press_office,
-             state: 'accepted',
-             user: evaluator.press_officer
-
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.private_office,
-             state: 'accepted',
-             user: evaluator.private_officer
-
       create :case_transition_approve_for_press_office,
              case: kase,
-             acting_user_id: evaluator.approver.id,
-             acting_team_id: evaluator.approving_team.id
+             acting_user: evaluator.press_officer,
+             acting_team: evaluator.press_office
 
       kase.reload
-      kase.update(workflow: 'full_approval')
     end
   end
 
-  factory :pending_private_clearance_case, parent: :pending_dacu_clearance_case do
+  factory :pending_private_clearance_case,
+          parent: :pending_press_clearance_case do
     transient do
-      press_office    { find_or_create :team_press_office }
-      press_officer   { find_or_create :press_officer }
-      private_office  { find_or_create :team_private_office }
-      private_officer { find_or_create :private_officer }
+      flag_for_press   { true }
+      flag_for_private { true }
     end
 
     after(:create) do |kase, evaluator|
-
-      kase.approver_assignments.for_team(evaluator.approving_team)
-          .first.update!(approved: true)
-
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.press_office,
-             state: 'accepted',
-             user: evaluator.press_officer
-
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.private_office,
-             state: 'accepted',
-             user: evaluator.private_officer
-
-      create :case_transition_approve_for_press_office,
-             case: kase,
-             target_user_id: evaluator.approver.id
       create :case_transition_approve_for_private_office,
              case: kase,
-             target_user_id: evaluator.approver.id
+             acting_team: evaluator.press_office,
+             acting_user: evaluator.press_officer
 
       kase.reload
-      kase.update(workflow: 'full_approval')
-
     end
   end
 
-  factory :redrafting_case, parent: :pending_private_clearance_case do
-    after(:create) do |kase, _evaluator|
-      team_dacu_disclosure = find_or_create :team_dacu_disclosure
-      disclosure_approval  = kase.assignments.approving.where(team_id: team_dacu_disclosure.id).first
-      disclosure_approval.update(approved: true)
+  factory :redrafting_case, parent: :pending_dacu_clearance_case do
+    after(:create) do |kase, evaluator|
+      # team_dacu_disclosure = find_or_create :team_dacu_disclosure
+      # disclosure_approval  = kase.assignments.approving.where(team_id: team_dacu_disclosure.id).first
+      # disclosure_approval.update(approved: true)
 
-      kase.update(current_state: 'drafting')
+      create :case_transition_upload_response_and_return_for_redraft,
+             case: kase,
+             acting_team: evaluator.approving_team,
+             acting_user: evaluator.approver
       kase.reload
     end
 
   end
 
-  factory :approved_case, parent: :pending_dacu_clearance_case do
+  factory :ready_to_send_case,
+          aliases: [:approved_case],
+          parent: :accepted_case do
     transient do
-      approving_team { find_or_create :team_dacu_disclosure }
-      approver { create :disclosure_specialist }
+      identifier { "approved case requiring disclosure approval" }
+      responses { [build(:correspondence_response,
+                         type: 'response',
+                         user_id: responder.id)] }
     end
 
     after(:create) do |kase, evaluator|
-      create :case_transition_approve,
-             case: kase,
-             acting_team_id: evaluator.approving_team.id,
-             acting_user_id: evaluator.approver.id
+      kase.attachments.push(*evaluator.responses)
+
+      unless evaluator.flag_for_disclosure == :accepted
+        create :case_transition_add_responses,
+               case: kase,
+               acting_team: evaluator.responding_team,
+               acting_user: evaluator.responder,
+               filenames: evaluator.responses.map(&:filename)
+      else
+
+        create :case_transition_pending_dacu_clearance,
+               case: kase,
+               acting_team: evaluator.responding_team,
+               acting_user: evaluator.responder,
+               filenames: evaluator.responses.map(&:filename)
+
+        final_approving_team = evaluator.approving_team
+        final_approver       = evaluator.approver
+
+        if evaluator.flag_for_press
+          create :case_transition_approve_for_press_office,
+                 case: kase,
+                 acting_team: evaluator.approving_team,
+                 acting_user: evaluator.approver
+
+          final_approving_team = evaluator.press_office
+          final_approver       = evaluator.press_officer
+        end
+
+        if evaluator.flag_for_private
+          create :case_transition_approve_for_private_office,
+                 case: kase,
+                 acting_team: evaluator.flag_for_press ? evaluator.press_office
+                                                       : evaluator.approving_team,
+                 acting_user: evaluator.flag_for_press ? evaluator.press_officer
+                                                       : evaluator.approver
+
+          final_approving_team = evaluator.private_office
+          final_approver       = evaluator.private_officer
+        end
+
+        create :case_transition_approve,
+               case: kase,
+               acting_team: final_approving_team,
+               acting_user: final_approver
+      end
 
       kase.approver_assignments.each { |a| a.update approved: true }
       kase.reload
     end
   end
 
-  factory :responded_case, parent: :case_with_response do
+  factory :responded_case, parent: :ready_to_send_case do
     transient do
       identifier { "responded case" }
-      responder { create :responder }
     end
 
     date_responded { Date.today }
@@ -379,22 +402,21 @@ FactoryBot.define do
     after(:create) do |kase, evaluator|
       create :case_transition_respond,
              case: kase,
-             acting_user_id: evaluator.responder.id,
-             acting_team_id: evaluator.responding_team.id
+             acting_user: evaluator.responder,
+             acting_team: evaluator.responding_team
       kase.reload
     end
   end
 
   factory :closed_case, parent: :responded_case do
 
-    info_held_status            { find_or_create :info_status, :held }
-    outcome                     { find_or_create :outcome, :granted }
-    message                     { 'info held, granted' }
-
     transient do
       identifier { "closed case" }
     end
 
+    info_held_status { find_or_create :info_status, :held }
+    outcome          { find_or_create :outcome, :granted }
+    message          { 'info held, granted' }
     received_date { 22.business_days.ago }
     date_responded { 4.business_days.ago }
 
@@ -668,116 +690,153 @@ FactoryBot.define do
 
   trait :flagged do
     transient do
-      approving_team { find_or_create :approving_team }
-      disclosure_assignment_state { 'pending' }
+      flag_for_disclosure { :pending }
     end
+  end
 
-
-    after(:create) do |kase, evaluator|
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.approving_team,
-             state: 'pending'
-      create :flag_case_for_clearance_transition,
-             case: kase,
-             acting_team_id: evaluator.approving_team.id
-      kase.update(workflow: 'trigger')
-      kase.reload
+  trait :pending_disclosure do
+    transient do
+      flag_for_disclosure { :pending }
     end
   end
 
   trait :flagged_accepted do
     transient do
-      approver { create :approver }
-      approving_team { approver.approving_team }
-      disclosure_assignment_state { 'accepted' }
+      flag_for_disclosure { :accepted }
+      # approver                    { approving_team.approvers.first }
+      # approving_team              { find_or_create(:team_dacu_disclosure) }
+      # disclosure_assignment_state { 'accepted' }
     end
 
-    # so this is a bit tricky.  Traits are available to all factories, so this flagged_accepted
-    # can be used with fois, sars, ico_fois, ......
-    # ICO-FOIs are created with a pending approver assignment, so we can't just create another
-    # accepted approver assignment here - we have to see if there is one first, and if there is
-    # then accept it, otherwise create it
-    after(:create) do |kase, evaluator|
-      approver_assignments = kase.assignments.approving.where(team_id: evaluator.approving_team.id)
-      raise "Too many approver assginemtnst" if approver_assignments.size > 1
-      if approver_assignments.any?
-        approver_assignment = approver_assignments.first
-        approver_assignment.update! state: 'accepted',
-                                    team_id: evaluator.approving_team.id,
-                                    user_id: evaluator.approver.id
-      else
-        create :approver_assignment,
-               case: kase,
-               user: evaluator.approver,
-               team: evaluator.approving_team,
-               state: 'accepted'
-      end
 
-      create :flag_case_for_clearance_transition,
-             case: kase,
-             target_team_id: evaluator.approving_team.id,
-             to_workflow: 'trigger'
-      kase.update(workflow: 'trigger')
-    end
+    # after(:create) do |kase, evaluator|
+    #   create :approver_assignment,
+    #          case: kase,
+    #          user: evaluator.approver,
+    #          team: evaluator.approving_team,
+    #          state: 'accepted'
+    #   create :flag_case_for_clearance_transition,
+    #          case: kase,
+    #          target_team_id: evaluator.approving_team.id
+    # end
   end
 
   trait :dacu_disclosure do
     # Use with :flagged or :flagged_accepted trait
     transient do
-      approver { create :disclosure_specialist }
+      approver { find_or_create :disclosure_specialist }
       approving_team { find_or_create :team_dacu_disclosure }
     end
+  end
+
+  trait :trigger do
+    transient do
+      flag_for_disclosure { :accepted }
+      flag_for_press      { true }
+      flag_for_private    { true }
+    end
+  end
+
+  trait :full_approval do
+    # Use after :flagged or :flagged_accepted trait when creating case
+    transient do
+      flag_for_disclosure { :accepted }
+      flag_for_press      { true }
+      flag_for_private    { true }
+      # approver                    { create :press_officer }
+      # approving_team              { create :team_press_office }
+      # disclosure_specialist       { find_or_create :disclosure_specialist }
+      # disclosure_team             { create :team_dacu_disclosure }
+      # press_officer               { find_or_create :private_officer }
+      # press_office                { create :team_private_office }
+      # private_officer             { find_or_create :private_officer }
+      # private_office              { create :team_private_office }
+    end
+
+    # after(:create) do |kase, evaluator|
+    #   disclosure_specialist = if evaluator.disclosure_assignment_state == 'accepted'
+    #                             evaluator.disclosure_specialist
+    #                           else
+    #                             nil
+    #                           end
+    #   create :approver_assignment,
+    #          case: kase,
+    #          team: evaluator.disclosure_team,
+    #          user: disclosure_specialist,
+    #          state: evaluator.disclosure_assignment_state
+
+    #   create :approver_assignment,
+    #          case: kase,
+    #          team: evaluator.press_office,
+    #          user: evaluator.press_officer,
+    #          state: evaluator.disclosure_assignment_state
+
+    #   create :approver_assignment,
+    #          case: kase,
+    #          team: evaluator.private_office,
+    #          user: evaluator.private_officer,
+    #          state: evaluator.disclosure_assignment_state
+    # end
   end
 
   trait :press_office do
     # Use after :flagged or :flagged_accepted trait when creating case
     transient do
-      approver                    { create :press_officer }
-      approving_team              { find_or_create :team_press_office }
-      disclosure_specialist       { create :disclosure_specialist }
-      disclosure_team             { find_or_create :team_dacu_disclosure }
-      private_officer             { create :private_officer }
-      private_office              { find_or_create :team_private_office }
+      flag_for_press { true }
+      # approver                    { find_or_create :press_officer }
+      # approving_team              { find_or_create :team_press_office }
+      # disclosure_specialist       { find_or_create :disclosure_specialist }
+      # disclosure_team             { find_or_create :team_dacu_disclosure }
+      # private_officer             { find_or_create :private_officer }
+      # private_office              { find_or_create :team_private_office }
     end
 
-    after(:create) do |kase, evaluator|
-      disclosure_specialist = if evaluator.disclosure_assignment_state == 'accepted'
-                                evaluator.disclosure_specialist
-                              else
-                                nil
-                              end
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.disclosure_team,
-             user: disclosure_specialist,
-             state: evaluator.disclosure_assignment_state
+    # after(:create) do |kase, evaluator|
+    #   disclosure_specialist = if evaluator.disclosure_assignment_state == 'accepted'
+    #                             evaluator.disclosure_specialist
+    #                           else
+    #                             nil
+    #                           end
+    #   create :approver_assignment,
+    #          case: kase,
+    #          team: evaluator.disclosure_team,
+    #          user: disclosure_specialist,
+    #          state: evaluator.disclosure_assignment_state
 
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.private_office,
-             user: evaluator.private_officer,
-             state: evaluator.disclosure_assignment_state
-
-      kase.update(workflow: 'full_approval')
-    end
+    #   create :approver_assignment,
+    #          case: kase,
+    #          team: evaluator.private_office,
+    #          user: evaluator.private_officer,
+    #          state: evaluator.disclosure_assignment_state
+    # end
   end
 
   trait :private_office do
-    # Use after :flagged or :flagged_accepted trait when creating case
     transient do
-      approver                    { create :private_officer }
-      approving_team              { find_or_create :team_private_office }
-      disclosure_team             { find_or_create :team_dacu_disclosure }
-      disclosure_assignment_state { 'pending' }
+      flag_for_private { true }
     end
+    # Use after :flagged or :flagged_accepted trait when creating case
+    # transient do
+    #   approver                    { find_or_create :private_officer }
+    #   approving_team              { find_or_create :team_private_office }
+    #   disclosure_team             { find_or_create :team_dacu_disclosure }
+    #   disclosure_assignment_state { 'pending' }
+    # end
 
+    # after(:create) do |kase, evaluator|
+    #   create :approver_assignment,
+    #          case: kase,
+    #          team: evaluator.disclosure_team,
+    #          state: evaluator.disclosure_assignment_state
+    # end
+  end
+
+  trait :accept_disclosure do
     after(:create) do |kase, evaluator|
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.disclosure_team,
-             state: evaluator.disclosure_assignment_state
-      kase.update(workflow: 'full_approval')
+      disclosure_assignment = kase.assignments.for_team(
+        evaluator.approving_team
+      ).singular
+      disclosure_assignment.update(state: 'accepted')
     end
   end
 
@@ -798,9 +857,9 @@ FactoryBot.define do
       if kase.current_state.in?(%w( awaiting_responder ))
         Timecop.freeze(25.seconds.ago) do
           create(:case_transition_add_message_to_case,
-                 case_id: kase.id,
-                 acting_user_id: kase.responding_team.users.first.id,
-                 acting_team_id: kase.responding_team.id,
+                 case: kase,
+                 acting_user: kase.responding_team.users.first,
+                 acting_team: kase.responding_team,
                  message: "I'm not sure if I should accept or reject this case")
         end
       end
@@ -808,9 +867,9 @@ FactoryBot.define do
       if kase.current_state.in?(%w( drafting awaiting_dispatch pending_dacu_clearance responded closed ))
         Timecop.freeze(20.seconds.ago) do
           create(:case_transition_add_message_to_case,
-                 case_id: kase.id,
-                 acting_user_id: kase.responder.id,
-                 acting_team_id: kase.responding_team.id,
+                 case: kase,
+                 acting_user: kase.responder,
+                 acting_team: kase.responding_team,
                  message: "I've accepted this case as a KILO")
         end
       end
@@ -818,9 +877,9 @@ FactoryBot.define do
       if kase.current_state.in?(%w( awaiting_dispatch pending_dacu_clearance responded closed ))
         Timecop.freeze(15.seconds.ago) do
           create(:case_transition_add_message_to_case,
-                 case_id: kase.id,
-                 acting_user_id: kase.responder.id,
-                 acting_team_id: kase.responding_team.id,
+                 case: kase,
+                 acting_user: kase.responder,
+                 acting_team: kase.responding_team,
                  message: "I've uploaded a response")
         end
       end
@@ -828,9 +887,9 @@ FactoryBot.define do
       if kase.current_state.in?(%w(  pending_dacu_clearance ))
         Timecop.freeze(10.seconds.ago) do
           create(:case_transition_add_message_to_case,
-                 case_id: kase.id,
-                 acting_user_id: kase.responder.id,
-                 acting_team_id: kase.responding_team.id,
+                 case: kase,
+                 acting_user: kase.responder,
+                 acting_team: kase.responding_team,
                  message: "I'm the approver for this case")
         end
       end

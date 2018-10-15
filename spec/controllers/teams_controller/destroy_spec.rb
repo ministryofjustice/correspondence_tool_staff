@@ -4,7 +4,7 @@ RSpec.describe TeamsController, type: :controller do
 
   describe 'DELETE destroy' do
 
-    let(:responder) { create :responder }
+    let(:responder) { find_or_create :foi_responder }
     let(:dir)       { create :directorate, business_group: bg }
     let(:bg)        { create :business_group}
     let(:manager)   { create :manager }

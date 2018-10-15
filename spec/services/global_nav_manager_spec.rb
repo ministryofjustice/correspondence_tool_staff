@@ -18,8 +18,8 @@ describe GlobalNavManager do
   let(:request) { instance_double ActionDispatch::Request,
                                   path: '/cases/incoming' }
   let(:manager)   { create :manager }
-  let(:responder) { create :responder }
-  let(:disclosure_specialist)  { create :disclosure_specialist }
+  let(:responder) { find_or_create :foi_responder }
+  let(:disclosure_specialist)  { find_or_create :disclosure_specialist }
 
   let(:settings) do
     YAML.load(ERB.new(<<~EOY).result)

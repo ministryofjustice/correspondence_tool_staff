@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe StatsController, type: :controller do
   let!(:kase)    { create :case}
-  let(:manager) { create :disclosure_bmt_user }
+  let(:manager) { find_or_create :disclosure_bmt_user }
 
   before(:all) do
     require File.join(Rails.root, 'db', 'seeders', 'report_type_seeder')

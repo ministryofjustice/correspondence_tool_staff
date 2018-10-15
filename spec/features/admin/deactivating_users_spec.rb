@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 feature 'deactivating users' do
-  given!(:manager)         { create :manager }
-  given!(:responder)       { create :responder }
-  given!(:bu)              { responder.teams.first }
+  given!(:manager)   { find_or_create :disclosure_bmt_user }
+  given!(:responder) { find_or_create :foi_responder }
+  given!(:bu)        { responder.teams.first }
 
   scenario 'manager deactivates a responder with no live cases' do
     login_as manager

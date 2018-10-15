@@ -27,9 +27,9 @@ require File.join(Rails.root, 'db', 'seeders', 'report_type_seeder')
 
 
 feature "Downloading stats(csv) from the system" do
-  given(:manager)  { create :manager }
-  given(:responder){ create :responder }
-  given(:kase)     { create :case }
+  given(:manager)   { find_or_create :disclosure_bmt_user }
+  given(:responder) { find_or_create :foi_responder }
+  given(:kase)      { create :case }
 
   before(:all) do
     CaseClosure::MetadataSeeder.seed!(verbose: false)

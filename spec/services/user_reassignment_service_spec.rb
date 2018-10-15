@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe UserReassignmentService do
   let(:accepted_case)    { create(:accepted_case, responder: responder)}
-  let(:responder)        { create :responder }
+  let(:responder)        { find_or_create :foi_responder }
   let(:coworker)         { create :responder,
                                   responding_teams: [responding_team] }
   let(:responding_team ) { responder.responding_teams.first }
@@ -110,9 +110,9 @@ describe UserReassignmentService do
     end
 
     context 'unassigned case' do
-      let(:approver)         { create(:disclosure_specialist) }
+      let(:approver)         { find_or_create(:disclosure_specialist) }
       let(:unassigned_case)  { create(:foi_case, :flagged_accepted, approver: approver) }
-      let(:approver_coworker){ create(:disclosure_specialist) }
+      let(:approver_coworker){ create(:approver, approving_team: disclosure_team) }
       let(:disclosure_team)  { approver.approving_team }
       let(:assignment)       { unassigned_case
                                  .assignments

@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe CasesController, type: :controller do
 
-  let(:manager) { create :disclosure_bmt_user }
+  let(:manager) { find_or_create :disclosure_bmt_user }
 
   describe '#new' do
 

@@ -2,7 +2,7 @@ require "rails_helper"
 
 feature 'deleting ICO cases' do
 
-  given(:manager) { create :disclosure_bmt_user }
+  given(:manager) { find_or_create :disclosure_bmt_user }
 
   scenario 'deleting an open SAR case' do
     accepted_ico_foi_case = create :accepted_ico_foi_case

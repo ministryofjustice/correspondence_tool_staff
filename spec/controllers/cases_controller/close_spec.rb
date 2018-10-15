@@ -4,9 +4,9 @@ describe CasesController do
 
   let(:responded_ico)       { create :responded_ico_foi_case }
   let(:today)               { Date.today }
-  let(:manager)             { create :manager }
-  let(:responder)           { create :responder }
-  let(:approver)            { create :approver }
+  let(:manager)             { find_or_create :disclosure_bmt_user }
+  let(:responder)           { responded_ico.responder }
+  let(:approver)            { find_or_create :disclosure_specialist }
   let(:params) do
     {
         id: responded_ico.id.to_s,
@@ -86,7 +86,7 @@ describe CasesController do
   context 'overturned SAR' do
 
     before(:all)   do
-      @responder = create :responder
+      @responder = find_or_create :foi_responder
       @drafting_ovt_sar_case = create :accepted_ot_ico_sar, responder: @responder
     end
 

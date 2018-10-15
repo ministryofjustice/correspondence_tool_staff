@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 describe TeamPolicy do
-  let(:responding_team) { create :responding_team }
-  let(:manager)         { create :manager }
-  let(:responder)       { create :responder }
-  let(:approver)        { create :approver }
+  let(:responding_team) { find_or_create :foi_responding_team }
+  let(:manager)         { find_or_create :disclosure_bmt_user }
+  let(:responder)       { responding_team.responders.first }
+  let(:approver)        { find_or_create :disclosure_specialist }
 
   subject { described_class }
 

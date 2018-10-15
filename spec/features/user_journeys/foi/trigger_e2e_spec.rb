@@ -20,15 +20,15 @@ feature 'FOI case that does not require clearance' do
   include Features::Interactions
   include CaseDateManipulation
 
-  given(:responder)             { create :responder }
-  given(:responding_team)       { responder.responding_teams.first }
-  given(:manager)               { create :manager, managing_teams: [ team_dacu ] }
-  given(:disclosure_specialist) { create :disclosure_specialist }
-  given!(:press_officer)        { create :press_officer }
-  given(:press_office)          { press_officer.approving_team }
-  given(:foi)                   { create :foi_correspondence_type }
-  given!(:private_officer)      { create :default_private_officer }
-  given(:private_office)        { private_officer.approving_team }
+  given(:responder)             { responding_team.responders.first }
+  given(:responding_team)       { find_or_create :foi_responding_team }
+  given(:manager)               { find_or_create :disclosure_bmt_user }
+  given(:disclosure_specialist) { find_or_create :disclosure_specialist }
+  given!(:press_officer)        { press_office.approvers.first }
+  given(:press_office)          { find_or_create :team_press_office }
+  given(:foi)                   { find_or_create :foi_correspondence_type }
+  given!(:private_officer)      { find_or_create :default_private_officer }
+  given(:private_office)        { find_or_create :team_private_office }
   given!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
   given(:team_dacu)             { find_or_create :team_dacu }
 

@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe CasesController, type: :controller do
   describe 'GET open' do
-    let(:user)                { create :disclosure_bmt_user }
+    let(:user)                { find_or_create :disclosure_bmt_user }
 
     let(:open_cases)         { Case::Base.opened }
     let(:current_page)       { instance_double(GlobalNavManager::Page,

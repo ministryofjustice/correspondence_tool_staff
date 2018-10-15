@@ -42,7 +42,7 @@ RSpec.describe Case::Base, type: :model do
                                     responding_teams: [responding_team]   }
   let(:manager)            { create :manager                              }
   let(:approving_team)     { create :approving_team                       }
-  let(:press_officer)      { create :press_officer }
+  let(:press_officer)      { find_or_create :press_officer }
   let(:press_office)       { press_officer.approving_team }
   let(:non_trigger_foi)    { build :case, received_date: Date.parse('16/11/2016') }
   let(:assigned_case)      { create :assigned_case,
@@ -1368,7 +1368,7 @@ RSpec.describe Case::Base, type: :model do
 
   describe '#assigned_disclosure_specialist' do
     it 'returns the specialist' do
-      disclosure_specialist = create :disclosure_specialist
+      disclosure_specialist = find_or_create :disclosure_specialist
       kase = create :assigned_case, :flagged_accepted, approver: disclosure_specialist
 
       expect(kase.assigned_disclosure_specialist).to eq disclosure_specialist
@@ -1377,7 +1377,7 @@ RSpec.describe Case::Base, type: :model do
 
   describe '#assigned_press_officer' do
     it 'returns the press_officer' do
-      press_officer = create :press_officer
+      press_officer = find_or_create :press_officer
       kase = create :assigned_case, :flagged_accepted, approver: press_officer
 
       expect(kase.assigned_press_officer).to eq press_officer
@@ -1387,7 +1387,7 @@ RSpec.describe Case::Base, type: :model do
   describe '#assigned_private_officer' do
     it 'returns the private_officer' do
 
-      private_officer = create :private_officer
+      private_officer = find_or_create :private_officer
       kase = create :assigned_case, :flagged_accepted, approver: private_officer
 
       expect(kase.assigned_private_officer).to eq private_officer

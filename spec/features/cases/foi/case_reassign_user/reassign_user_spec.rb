@@ -10,12 +10,12 @@ feature 'cases being reassigned to other team members' do
                                      responding_teams: [responding_team] }
 
   given(:approving_team)   { find_or_create :team_dacu_disclosure }
-  given(:approver)         { create :disclosure_specialist, approving_team: approving_team }
+  given(:approver)         { find_or_create :disclosure_specialist, approving_team: approving_team }
   given(:another_approver) { create :approver, approving_team: approving_team }
 
   # given(:disclosure_team)  { find_or_create :team_dacu_disclosure }
   given(:sds)              { approving_team.approvers.first }
-  given(:another_sds)      { create :disclosure_specialist }
+  given(:another_sds)      { find_or_create :disclosure_specialist }
 
   given(:accepted_case) { create :accepted_case, responder: responder,
                                  responding_team: responding_team }

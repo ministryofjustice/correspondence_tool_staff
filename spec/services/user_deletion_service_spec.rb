@@ -4,7 +4,7 @@ describe UserDeletionService do
 
   describe '#call' do
 
-    let(:team)          { create :responding_team }
+    let(:team)          { find_or_create :foi_responding_team }
     let(:responder)     { team.responders.first }
     let(:service)       { UserDeletionService.new(params) }
     let(:params) do
@@ -34,7 +34,9 @@ describe UserDeletionService do
       end
 
       context 'when user has live cases' do
-        let!(:kase)        { create :accepted_case, responder: responder }
+        let!(:kase)        { create :accepted_case,
+                                    responder: responder,
+                                    responding_team: team }
 
         it 'returns :has_live_cases' do
           service.call

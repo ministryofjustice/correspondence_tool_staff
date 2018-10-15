@@ -6,7 +6,7 @@ describe Case::BasePolicy do
   before(:all) do
     @managing_team                 = find_or_create :team_dacu
     @manager                       = @managing_team.managers.first
-    @responding_team               = create :responding_team
+    @responding_team               = find_or_create :foi_responding_team
     @responder                     = @responding_team.responders.first
     @coworker                      = create :responder,
                                             responding_teams: [@responding_team]
@@ -14,9 +14,10 @@ describe Case::BasePolicy do
     @dacu_disclosure               = find_or_create :team_dacu_disclosure
     @approver                      = @dacu_disclosure.approvers.first
     @disclosure_specialist         = @approver
-    @another_disclosure_specialist = create :disclosure_specialist
+    @another_disclosure_specialist = find_or_create :disclosure_specialist
     @press_officer                 = find_or_create :press_officer
-    @another_press_officer         = create :press_officer
+    @press_office                  = find_or_create :team_press_office
+    @another_press_officer         = create :approver, approving_team: @press_office
     @private_officer               = find_or_create :private_officer
     @co_approver                   = create :approver,
                                             approving_team: @dacu_disclosure
@@ -91,6 +92,8 @@ describe Case::BasePolicy do
     @pending_press_private_clearance_case =
       create :pending_press_clearance_case, :private_office,
              press_officer: @press_officer
+
+    @responder.reload
   end
 
   after(:all) do
@@ -228,7 +231,7 @@ describe Case::BasePolicy do
   describe  do
     permissions :can_take_on_for_approval? do
       it { should_not   permit(approver,          pending_dacu_clearance_case) }
-      it { should       permit(approver,          flagged_accepted_case) }
+      it { should       permit(approver,          accepted_case) }
       it { should_not   permit(manager,           pending_dacu_clearance_case) }
       it { should_not   permit(responder,         pending_dacu_clearance_case) }
     end

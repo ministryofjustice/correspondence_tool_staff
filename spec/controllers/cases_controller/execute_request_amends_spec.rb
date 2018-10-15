@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe CasesController, type: :controller do
   let(:pending_private_clearance_case) { create :pending_private_clearance_case }
-  let(:private_officer)                { create :private_officer }
+  let(:private_officer)                { find_or_create :private_officer }
   let(:service)                        { instance_double(CaseRequestAmendsService,
                                                          call: true) }
 
@@ -46,8 +46,9 @@ RSpec.describe CasesController, type: :controller do
     end
 
     context 'trigger SAR' do
-      let(:trigger_sar)             { create :pending_dacu_clearance_sar, approver: disclosure_specialist }
-      let(:disclosure_specialist)   { create :disclosure_specialist }
+      let(:trigger_sar)             { create :pending_dacu_clearance_sar,
+                                             approver: disclosure_specialist }
+      let(:disclosure_specialist)   { find_or_create :disclosure_specialist }
 
       before do
         sign_in disclosure_specialist

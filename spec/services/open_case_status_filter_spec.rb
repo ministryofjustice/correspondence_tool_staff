@@ -12,8 +12,8 @@ describe OpenCaseStatusFilter do
                                  :trig_awresp_foi,
                                  :trig_draft_foi,
                                  :trig_pdacu_foi_accepted,
-                                 :full_ppress_foi_accepted,
-                                 :full_pprivate_foi_accepted,
+                                 :full_ppress_foi,
+                                 :full_pprivate_foi,
                                  :full_awdis_foi,
                                  :std_responded_foi,
                                  :trig_responded_foi,
@@ -100,7 +100,7 @@ describe OpenCaseStatusFilter do
 
       it 'returns the correct list of cases' do
         results = open_case_status_filter.call
-        expect(results).to match_array [@setup.full_ppress_foi_accepted]
+        expect(results).to match_array [@setup.full_ppress_foi]
       end
     end
 
@@ -110,7 +110,7 @@ describe OpenCaseStatusFilter do
 
       it 'returns the correct list of cases' do
         results = open_case_status_filter.call
-        expect(results).to match_array [@setup.full_pprivate_foi_accepted]
+        expect(results).to match_array [@setup.full_pprivate_foi]
       end
     end
 

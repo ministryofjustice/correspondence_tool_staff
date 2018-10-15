@@ -1,7 +1,7 @@
 def login_step(user:)
   login_page.load
   login_page.username_field.set user.email
-  login_page.password_field.set user.password
+  login_page.password_field.set 'qwerty$123'
   login_page.signin.click
   expect(cases_page.user_card.greetings).to have_text user.full_name
 end

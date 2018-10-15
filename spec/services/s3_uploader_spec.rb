@@ -3,7 +3,7 @@ require 'rails_helper'
 describe S3Uploader do
 
   let(:upload_group)       { '20170615102233' }
-  let(:responder)          { create :responder }
+  let(:responder)          { find_or_create :foi_responder }
   let(:kase)               { create(:accepted_case, responder: responder) }
   let(:filename)           { "#{Faker::Internet.slug}.jpg" }
   let(:uploads_key)        { "uploads/#{kase.id}/responses/#{filename}" }

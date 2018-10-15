@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'application routes', type: :routing do
   let(:manager)   { create :manager }
-  let(:responder) { create :responder }
+  let(:responder) { find_or_create :foi_responder }
   let(:approver)  { create :approver }
 
   describe '/ redirects', type: :request do

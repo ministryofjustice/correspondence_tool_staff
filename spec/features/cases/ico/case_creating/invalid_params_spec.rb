@@ -2,7 +2,7 @@ require "rails_helper"
 
 feature 'creating ICO with invalid params' do
 
-  given(:manager)                     { create :disclosure_bmt_user }
+  given(:manager)                     { find_or_create :disclosure_bmt_user }
   given!(:original_foi)                { create :closed_case }
 
   background do

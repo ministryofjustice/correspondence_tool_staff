@@ -2,7 +2,7 @@ require "rails_helper"
 
 feature 'viewing SAR cases' do
   given(:approver)          { create :approver }
-  given(:manager)           { create :disclosure_bmt_user }
+  given(:manager)           { find_or_create :disclosure_bmt_user }
   given(:responder)         { create :responder }
   given(:another_responder) { create :responder }
 

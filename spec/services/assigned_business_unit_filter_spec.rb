@@ -20,8 +20,12 @@ describe AssignedBusinessUnitFilter do
     @closed_case_1    = create :closed_case, responding_team: @responding_team_1, name: 'closed team 1'
     @closed_case_3    = create :closed_case, responding_team: @responding_team_3, name: 'closed team 3'
 
-    @rejected_case_2  = create :rejected_case, responding_team: @responding_team_2, name: 'rejected_team 1'
-    @rejected_case_3  = create :rejected_case, responding_team: @responding_team_2, name: 'rejected team 3 '
+    @rejected_case_2  = create :rejected_case,
+                               responding_team: @responding_team_2,
+                               name: 'rejected_team 1'
+    @rejected_case_3  = create :rejected_case,
+                               responding_team: @responding_team_2,
+                               name: 'rejected team 3 '
   end
 
   after(:all) { DbHousekeeping.clean }

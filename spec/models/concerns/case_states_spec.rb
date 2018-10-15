@@ -4,12 +4,12 @@ RSpec.describe Case, type: :model do
   let(:kase) { create :assigned_case }
 
   describe 'case states' do
-    let(:managing_team)   { create :managing_team }
+    let(:managing_team)   { create :team_disclosure_bmt }
     let(:manager)         { managing_team.managers.first }
     let(:assigned_case)   { create :assigned_case }
     let(:responding_team) { responder.responding_teams.first }
-    let(:responder)       { create :responder }
-    let(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
+    let(:responder)       { find_or_create :foi_responder }
+    let(:dacu_disclosure) { create :team_dacu_disclosure }
 
     describe '#responder_assignment_rejected' do
       let(:state_machine)   { assigned_case.state_machine }

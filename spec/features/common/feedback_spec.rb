@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature "Submitting feedback" do
-  let(:responder) { create(:responder) }
+  let(:responder) { find_or_create(:foi_responder) }
 
   scenario "Cannot submit feedback from login page" do
     login_page.load

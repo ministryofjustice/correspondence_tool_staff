@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 feature 'downloading a response from response details' do
-  given(:manager)   { create :manager }
-  given(:responder) { create :responder  }
+  given(:manager)   { find_or_create :disclosure_bmt_user }
+  given(:responder) { find_or_create :foi_responder  }
 
   given(:response) { build :case_response, user_id: responder.id }
   given(:presigned_url) do
@@ -39,8 +39,6 @@ feature 'downloading a response from response details' do
     context 'with a case being drafted' do
       given(:drafting_case) do
         create :case_with_response,
-               manager: manager,
-               responder: responder,
                responses: [response]
       end
 

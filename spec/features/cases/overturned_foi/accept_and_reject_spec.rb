@@ -1,10 +1,9 @@
 require 'rails_helper'
 
 feature 'respond to responder assignment' do
-  given(:responder)       { create :responder }
-  given(:responding_team) { responder.responding_teams.first }
-  given(:assigned_case)   { create(:awaiting_responder_ot_ico_foi,
-                                    responding_team: responding_team).decorate }
+  given(:responder)       { find_or_create :foi_responder }
+  given(:responding_team) { assigned_case.responding_team }
+  given(:assigned_case)   { create(:awaiting_responder_ot_ico_foi) }
 
   given(:assignment) do
     assigned_case.responder_assignment

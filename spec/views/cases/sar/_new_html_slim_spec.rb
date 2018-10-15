@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'cases/sar/new.html.slim', type: :view do
   let(:sar_case)                { build :sar_case }
-  let(:disclosure_specialist)   { create :disclosure_specialist }
+  let(:disclosure_specialist)   { find_or_create :disclosure_specialist }
 
   def login_as(user)
     allow(view).to receive(:current_user).and_return(user)

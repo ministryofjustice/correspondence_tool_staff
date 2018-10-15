@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe UserDecorator, type: :model do
   let(:disclosure)           { find_or_create(:team_dacu_disclosure) }
-  let(:responder)            { create(:responder).decorate }
+  let(:responder)            { find_or_create(:foi_responder).decorate }
   let(:sds)                  { disclosure.approvers.first.decorate }
   let(:accepted_case)        { create(:accepted_case, :flagged_accepted,
                                       approver: sds,

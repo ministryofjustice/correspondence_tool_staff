@@ -16,11 +16,11 @@ require 'rails_helper'
 
 feature "Viewing Business Groups/Directorate/Business Units" do
   include CaseDateManipulation
-  given(:manager)         { create :manager }
-  given(:responder)       { create :responder }
-  given(:business_unit )  { responder.teams.first }
-  given(:business_group)  { responder.teams.first.business_group }
-  given(:directorate)     { responder.teams.first.directorate}
+  given(:manager)        { create :manager }
+  given(:responder)      { find_or_create :foi_responder }
+  given(:business_unit ) { responder.teams.first }
+  given(:business_group) { responder.teams.first.business_group }
+  given(:directorate)    { responder.teams.first.directorate}
 
 
   background do

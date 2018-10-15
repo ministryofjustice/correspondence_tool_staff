@@ -7,7 +7,7 @@ describe 'cases/foi/case_details.html.slim', type: :view do
   let(:trigger_case)            { create(:case, :flagged_accepted).decorate }
 
   let(:closed_case)             { create(:closed_case).decorate }
-  let(:disclosure_specialist)   { create :disclosure_specialist }
+  let(:disclosure_specialist)   { find_or_create :disclosure_specialist }
 
   def login_as(user)
     allow(view).to receive(:current_user).and_return(user)

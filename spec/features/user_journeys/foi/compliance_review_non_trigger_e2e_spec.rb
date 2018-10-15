@@ -16,11 +16,10 @@ require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 feature 'FOI compliance review case that does not require clearance' do
   include CaseDateManipulation
   include Features::Interactions
-  given(:responder)               { create :responder }
-  given(:responding_team)         { responder.responding_teams.first }
+  given(:responder)               { responding_team.responders.first }
+  given(:responding_team)         { find_or_create :foi_responding_team }
   given(:team_dacu_bmt)           { create :team_dacu }
-  given(:disclosure_bmt_user)     { create :disclosure_bmt_user }
-  given(:manager)                 { create :manager }
+  given(:manager)                 { find_or_create :disclosure_bmt_user }
 
   before(:all) do
     CaseClosure::MetadataSeeder.seed!(verbose: false)
@@ -33,11 +32,11 @@ feature 'FOI compliance review case that does not require clearance' do
   scenario 'end-to-end journey', js: true do
 
     kase = create_and_assign_foi_case type: Case::FOI::ComplianceReview,
-                                  user: disclosure_bmt_user,
+                                  user: manager,
                                   responding_team: responding_team
 
     edit_case kase: kase,
-              user: disclosure_bmt_user,
+              user: manager,
               subject: 'new test subject'
 
     accept_case kase: kase,

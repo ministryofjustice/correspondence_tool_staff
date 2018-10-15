@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature 'Upload response' do
-  given(:responder)      { create(:responder) }
+  given(:responder)      { find_or_create(:foi_responder) }
   given(:kase)           { create(:accepted_ico_foi_case, responder: responder) }
   given(:responder_teammate) do
     create :responder,

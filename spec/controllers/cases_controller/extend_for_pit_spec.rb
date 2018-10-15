@@ -3,7 +3,7 @@ require "rails_helper"
 describe CasesController, type: :controller do
   let(:case_being_drafted)   { create :case_being_drafted,
                                 :flagged_accepted }
-  let(:manager)           { create :disclosure_bmt_user}
+  let(:manager)           { find_or_create :disclosure_bmt_user}
 
   before do
     sign_in manager

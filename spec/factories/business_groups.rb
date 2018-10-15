@@ -13,8 +13,13 @@ FactoryBot.define do
   end
 
   factory :operations_business_group, parent: :business_group do
-    name { 'Operations' }
+    name  { 'Operations' }
     email { 'operations@localhost' }
+  end
+
+  factory :responder_business_group, parent: :business_group do
+    name  { 'Responder Business Group' }
+    email { 'responder-bg@localhost' }
   end
 
 end

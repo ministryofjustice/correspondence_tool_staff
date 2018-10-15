@@ -168,7 +168,7 @@ RSpec.describe UsersController, type: :controller do
 
   describe 'DELETE destroy' do
 
-    let(:responder) { create :responder }
+    let(:responder) { find_or_create :foi_responder }
     let(:team)      { create :responding_team }
     let(:params) do
       {

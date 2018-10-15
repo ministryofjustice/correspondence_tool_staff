@@ -5,7 +5,7 @@ module Stats
   RSpec.describe StatsController, type: :controller do
 
     let!(:kase)       { create :case }
-    let(:manager)     { create :disclosure_bmt_user }
+    let(:manager)     { find_or_create :disclosure_bmt_user }
     let(:report_type) { find_or_create :report_type, :r003 }
 
 

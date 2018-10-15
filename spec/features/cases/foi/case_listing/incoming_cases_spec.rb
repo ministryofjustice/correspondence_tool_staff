@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 feature 'listing incoming on the system' do
-  given(:disclosure_specialist) { create :disclosure_specialist }
-  given(:press_officer) { create :press_officer }
-  given(:private_officer) { create :private_officer }
+  given(:disclosure_specialist) { find_or_create :disclosure_specialist }
+  given(:press_officer) { find_or_create :press_officer }
+  given(:private_officer) { find_or_create :private_officer }
 
   given(:assigned_case) { create :assigned_case,
                                  created_at: 1.business_days.ago,

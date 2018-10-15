@@ -42,7 +42,7 @@ RSpec.describe User, type: :model do
   let(:manager)         { create :manager }
   let(:responder)       { create :responder }
   let(:approver)        { create :approver }
-  let(:press_officer)   { create :press_officer }
+  let(:press_officer)   { find_or_create :press_officer }
   let(:deactivated_user){ create :deactivated_user }
   let(:foi)             { create(:foi_correspondence_type) }
   let(:ico)             { create(:ico_correspondence_type) }

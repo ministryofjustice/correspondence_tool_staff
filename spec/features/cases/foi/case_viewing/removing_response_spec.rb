@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature 'removing a response from response details' do
-  given(:responder) { create(:responder) }
+  given(:responder) { find_or_create(:foi_responder) }
   given(:manager)   { create(:manager) }
   given(:responder_teammate) do
     create :responder,

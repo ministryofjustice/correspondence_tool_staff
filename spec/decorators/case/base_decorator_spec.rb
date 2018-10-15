@@ -4,7 +4,8 @@ describe Case::BaseDecorator, type: :model do
   let(:unassigned_case)     { create(:case).decorate }
   let(:assigned_case)       { create(:assigned_case).decorate }
   let(:accepted_case)       { create(:accepted_case,
-                                 responder: responder).decorate }
+                                     responder: responder,
+                                     responding_team: responding_team).decorate }
   let(:approved_ico)        { create(:approved_ico_foi_case).decorate }
   let(:responded_ico)       { create(:responded_ico_foi_case).decorate }
   let(:upheld_ico_case)     { create(:closed_ico_foi_case).decorate }

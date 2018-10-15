@@ -18,7 +18,7 @@ describe TeamFinderService do
            approving_team: team_disclosure,
            responding_teams: [team_candi]
   end
-  let(:disclosure_specialist)       { create :disclosure_specialist }
+  let(:disclosure_specialist)       { find_or_create :disclosure_specialist }
   let(:other_approver)              { create :user, approving_team: team_disclosure }
 
   #cases

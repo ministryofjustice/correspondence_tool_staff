@@ -9,7 +9,7 @@ feature "Signing Out" do
   end
 
   scenario "Signed in and need to sign out" do
-    login_as create(:responder)
+    login_as find_or_create(:foi_responder)
 
     cases_page.load
 

@@ -55,7 +55,7 @@ describe 'cases/show.html.slim', type: :view do
     end
   end
   let(:manager)   { create :manager }
-  let(:responder) { create :responder }
+  let(:responder) { find_or_create :foi_responder }
   let(:approver)  { create :approver }
 
   before do

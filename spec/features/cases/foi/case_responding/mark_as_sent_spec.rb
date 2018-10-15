@@ -1,17 +1,14 @@
 require 'rails_helper'
 
 feature 'Mark response as sent' do
-  given(:responder)    { create(:responder) }
+  given(:responder)    { find_or_create(:foi_responder) }
   given(:manager)      { create(:manager) }
   given(:kase)         { create(:case_with_response,
-                                responder: responder,
                                 received_date: 10.business_days.ago) }
   given(:another_kase) { create(:case_with_response,
-                                responder: responder,
                                 received_date: 10.business_days.ago) }
   given(:responder_teammate) do
-    create :responder,
-           responding_teams: responder.responding_teams
+    create :responder, responding_teams: responder.responding_teams
   end
 
   before do

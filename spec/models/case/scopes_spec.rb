@@ -2,13 +2,19 @@ require 'rails_helper'
 
 RSpec.describe Case::Base, type: :model do
 
-  let(:responding_team)    { create :responding_team                      }
-  let(:responder)          { responding_team.responders.first             }
-  let(:assigned_case)      { create :assigned_case,
-                                    responding_team: responding_team }
-  let(:accepted_case)      { create :accepted_case,
-                                    responder: responder }
-  let(:accepted_sar)       { create :accepted_sar, responder: responder }
+  let(:responding_team) { find_or_create :foi_responding_team }
+  let(:responder)       { responding_team.responders.first }
+  let(:co_responder)    { create(:responder,
+                                 responding_teams: [responding_team]) }
+  let(:other_responding_team) { create(:responding_team) }
+  let(:assigned_case)   { create :assigned_case,
+                                 responding_team: responding_team }
+  let(:accepted_case)   { create :accepted_case,
+                                 responding_team: responding_team,
+                                 responder: responder }
+  let(:accepted_sar)    { create :accepted_sar,
+                                 responding_team: responding_team,
+                                 responder: responder }
 
   context 'flagged for approval scopes' do
     before(:all) do
@@ -123,8 +129,9 @@ RSpec.describe Case::Base, type: :model do
 
   describe 'with_team scope' do
     it 'returns cases that are with a given team' do
-      create :assigned_case # Just some other case
-      expect(Case::Base.with_teams(responding_team)).to match_array([assigned_case])
+      create :assigned_case, responding_team: other_responding_team
+      expect(Case::Base.with_teams(responding_team))
+        .to match_array([assigned_case])
     end
 
     it 'can accept more than one team' do
@@ -151,14 +158,16 @@ RSpec.describe Case::Base, type: :model do
 
   describe 'not_with_team scope' do
     it 'returns cases that are not with a given team' do
-      other_assigned_case = create :assigned_case
-      expect(Case::Base.not_with_teams(responding_team)).to match_array([other_assigned_case])
+      other_assigned_case = create :assigned_case,
+                                   responding_team: other_responding_team
+      expect(Case::Base.not_with_teams(responding_team))
+        .to match_array([other_assigned_case])
     end
   end
 
   describe 'with_user scope' do
     it 'returns cases that are with a given user' do
-      create :accepted_case # Just some other case
+      create :accepted_case, responder: co_responder
       expect(Case::Base.with_user(responder)).to match_array([accepted_case])
     end
 

@@ -13,21 +13,27 @@ FactoryBot.define do
     end
   end
 
+  factory :responder_directorate, parent: :directorate do
+    name           { 'Responder Directorate' }
+    email          { 'responder-dir@localhost' }
+    business_group { find_or_create :responder_business_group }
+  end
+
   factory :dacu_directorate, parent: :directorate do
-    name { 'DACU Directorate' }
-    email { 'dacu@localhost' }
+    name           { 'DACU Directorate' }
+    email          { 'dacu@localhost' }
     business_group { find_or_create :operations_business_group }
   end
 
   factory :press_office_directorate, parent: :directorate do
-    name { 'Press Office Directorate' }
-    email { 'press_office@localhost' }
+    name           { 'Press Office Directorate' }
+    email          { 'press_office@localhost' }
     business_group { find_or_create :operations_business_group }
   end
 
   factory :private_office_directorate, parent: :directorate do
-    name { 'Private Office Directorate' }
-    email { 'private_office@localhost' }
+    name           { 'Private Office Directorate' }
+    email          { 'private_office@localhost' }
     business_group { find_or_create :operations_business_group }
   end
 end

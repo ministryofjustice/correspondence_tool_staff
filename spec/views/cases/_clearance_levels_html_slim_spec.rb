@@ -10,9 +10,9 @@ describe 'cases/clearance_details.html.slim', type: :view do
   let(:responding_team)                         { create :responding_team, responders: [responder], lead: create(:team_property, :lead, value: 'Margaret Thatcher') }
 
   #users
-  let(:disclosure_specialist)                   { create :disclosure_specialist }
+  let(:disclosure_specialist)                   { find_or_create :disclosure_specialist }
   let(:responder)                               { create :user, full_name: 'Ralph Responder' }
-  let(:dack)                                    { create :disclosure_specialist, full_name: 'Dack Dispirito' }
+  let(:dack)                                    { find_or_create :disclosure_specialist, full_name: 'Dack Dispirito' }
 
   #cases
   let(:accepted_case)                           { create :accepted_case, responding_team: responding_team, responder: responder }

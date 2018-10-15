@@ -274,7 +274,7 @@ describe ConfigurableStateMachine::Machine do
 
     context 'approver' do
       context 'unassigned approver' do
-        let(:approver)   { create :disclosure_specialist}
+        let(:approver)   { find_or_create :disclosure_specialist}
 
         context 'unassigned state' do
           it 'should show permitted events' do

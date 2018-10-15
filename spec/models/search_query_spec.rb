@@ -77,7 +77,7 @@ describe SearchQuery do
 
   describe 'self.find_or_create' do
     context 'search queries' do
-      let(:user) { create(:disclosure_bmt_user) }
+      let(:user) { find_or_create(:disclosure_bmt_user) }
 
       let(:parent_search_query) {
         create(
@@ -139,7 +139,7 @@ describe SearchQuery do
     end
 
     context 'list queries' do
-      let(:user) { create(:disclosure_bmt_user) }
+      let(:user) { find_or_create(:disclosure_bmt_user) }
 
       let(:parent_list_query) {
         create(
@@ -264,20 +264,20 @@ describe SearchQuery do
 
   describe '#results' do
     before :all do
-      @responding_team = create :responding_team
+      @responding_team = find_or_create :foi_responding_team
       @setup = StandardSetup.new(only_cases: {
-                                   std_draft_foi:                   {},
-                                   std_draft_foi_late:              {},
-                                   trig_draft_foi:                  {},
-                                   std_draft_irt:                   {},
-                                   std_closed_foi:                  {},
-                                   ico_foi_unassigned:              {},
-                                   ico_foi_awaiting_responder:      {responding_team: @responding_team},
-                                   ico_foi_accepted:                {responding_team: @responding_team},
-                                   ico_sar_unassigned:              {},
-                                   ico_sar_awaiting_responder:      {responding_team: @responding_team},
-                                   ico_sar_accepted:                {responding_team: @responding_team},
-                                   ico_sar_pending_dacu:  {responding_team: @responding_team},
+                                   std_draft_foi:              {},
+                                   std_draft_foi_late:         {},
+                                   trig_draft_foi:             {},
+                                   std_draft_irt:              {},
+                                   std_closed_foi:             {},
+                                   ico_foi_unassigned:         {},
+                                   ico_foi_awaiting_responder: {responding_team: @responding_team},
+                                   ico_foi_accepted:           {responding_team: @responding_team},
+                                   ico_sar_unassigned:         {},
+                                   ico_sar_awaiting_responder: {responding_team: @responding_team},
+                                   ico_sar_accepted:           {responding_team: @responding_team},
+                                   ico_sar_pending_dacu:       {responding_team: @responding_team},
                                 })
       Case::Base.update_all_indexes
     end
@@ -286,7 +286,7 @@ describe SearchQuery do
       DbHousekeeping.clean
     end
 
-    let(:user)    { create :manager }
+    let(:user)    { find_or_create :disclosure_bmt_user }
 
     describe 'results from using a filter' do
       it 'returns the result of searching for search_text' do
@@ -294,7 +294,8 @@ describe SearchQuery do
                               user_id: user.id,
                               search_text: 'std_draft_foi'
         expect(search_query.results).to eq [@setup.std_draft_foi,
-                                            @setup.std_draft_foi_late]
+                                            @setup.std_draft_foi_late,
+                                            @setup.std_draft_irt]
       end
 
       it 'returns the result of filtering for sensitivity' do
@@ -336,7 +337,7 @@ describe SearchQuery do
 
           context 'responder in a team that the ICO SARs are not assigned to'  do
             it 'doesnt show the ICO SAR' do
-              responder = create :responder
+              responder = find_or_create :sar_responder
               search_query = create :search_query,
                                     user_id: responder.id,
                                     search_text: 'ico',
@@ -385,7 +386,7 @@ describe SearchQuery do
 
           context 'press officer' do
             it 'doesnt show the ICO SAR' do
-              press_officer = create :press_officer
+              press_officer = find_or_create :press_officer
               search_query = create :search_query,
                                     user_id: press_officer.id,
                                     search_text: 'ico',

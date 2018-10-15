@@ -4,7 +4,7 @@ describe CasesController, type: :controller do
   describe 'PATCH execute_extend_for_pit' do
     let(:case_being_drafted)   { create :case_being_drafted,
                                 :flagged_accepted }
-    let(:manager)         { create :disclosure_bmt_user }
+    let(:manager)         { find_or_create :disclosure_bmt_user }
     let(:patch_params)       { { id: case_being_drafted.id,
                                  case: {
                                    extension_deadline_yyyy: '2017',

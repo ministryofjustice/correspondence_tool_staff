@@ -4,12 +4,12 @@ RSpec.describe CasesController, type: :controller do
   let!(:service)              {double(CaseUnflagForClearanceService)}
   let(:params)                { { id: flagged_case.id, message: "message"} }
   let(:manager)               { create :manager }
-  let(:disclosure_specialist) { create :disclosure_specialist }
+  let(:disclosure_specialist) { find_or_create :disclosure_specialist }
   let(:flagged_case)          { create :accepted_case, :flagged,
                                     responding_team: responding_team,
                                     approving_team: team_dacu_disclosure }
   let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
-  let(:responder)            { create :responder }
+  let(:responder)            { find_or_create :foi_responder }
   let(:responding_team)      { responder.responding_teams.first }
   describe 'PATCH unflag_taken_on_case_for_clearance' do
 

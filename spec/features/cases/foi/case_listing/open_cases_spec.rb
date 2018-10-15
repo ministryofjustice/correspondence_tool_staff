@@ -16,9 +16,9 @@ feature 'listing open cases on the system' do
                             full_name: 'Co-Responder A',
                             responding_teams: [@responding_team_a]
     @team_dacu_disclosure = find_or_create :team_dacu_disclosure
-    @disclosure_specialist = create :disclosure_specialist
-    @disclosure_specialist_bmt = create :disclosure_specialist_bmt
-    @press_officer = create :press_officer
+    @disclosure_specialist = find_or_create :disclosure_specialist
+    @disclosure_specialist_bmt = find_or_create :disclosure_specialist_bmt
+    @press_officer = find_or_create :press_officer
 
     @unassigned_case = create :case
     @assigned_case_team_a = create :assigned_case,

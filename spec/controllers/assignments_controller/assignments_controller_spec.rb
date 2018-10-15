@@ -19,7 +19,7 @@ RSpec.describe AssignmentsController, type: :controller do
   let(:another_responder) { create :responder, responding_teams: [responding_team] }
   let(:approver)          { create :approver }
   let(:approving_team)    { approver.approving_team }
-  let(:press_officer)     { create :press_officer }
+  let(:press_officer)     { find_or_create :press_officer }
   let(:press_office)      { press_officer.approving_team }
   let(:accept_assignment_params) do
     {
@@ -543,8 +543,7 @@ RSpec.describe AssignmentsController, type: :controller do
     end
 
     context 'as a press office approver' do
-
-      let(:press_officer)  { create :press_officer }
+      let(:press_officer)  { find_or_create :press_officer }
       let(:service) { double CaseFlagForClearanceService }
 
 

@@ -22,7 +22,7 @@ describe CaseTypeFilter do
                                                Case::Base }
 
   describe '.available_case_types' do
-    let(:user) { create :disclosure_bmt_user }
+    let(:user) { find_or_create :disclosure_bmt_user }
     subject    { CaseTypeFilter.available_case_types(user) }
 
     it { should include 'foi-standard'      => 'FOI - Standard' }

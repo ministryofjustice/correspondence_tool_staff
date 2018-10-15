@@ -1,7 +1,7 @@
 require "rails_helper"
 
 feature 'Applying a PIT extension to a case' do
-  given(:manager)         { create :disclosure_bmt_user }
+  given(:manager)         { find_or_create :disclosure_bmt_user }
   let(:case_being_drafted)   { create :case_being_drafted,
                                 :flagged_accepted, :dacu_disclosure }
 

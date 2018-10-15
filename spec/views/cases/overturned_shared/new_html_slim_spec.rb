@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe 'cases/overturned_shared/_new.html.slim' do
-  let(:bmt_manager)    { create(:disclosure_bmt_user) }
+  let(:bmt_manager)    { find_or_create(:disclosure_bmt_user) }
   let(:ico_appeal)     { @overturned_foi.original_ico_appeal }
   let(:overturned_foi) { @overturned_foi }
 

@@ -45,7 +45,7 @@ describe RequestFurtherClearanceService do
 
       describe 'case is not assigned to responder' do
         it 'sets target user and team to nil' do
-          disclosure_bmt_user = create :disclosure_bmt_user
+          disclosure_bmt_user = find_or_create :disclosure_bmt_user
           kase = create :awaiting_responder_case
           service = RequestFurtherClearanceService.new(user: disclosure_bmt_user,
                                                        kase: kase)

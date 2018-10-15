@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'admin/users/index.html.slim', type: :view do
   it 'displays the users provided' do
-    responder = create :responder
+    responder = find_or_create :foi_responder
     approver = create :approver
     assign(:users, User.where(id: [responder.id, approver.id]).page(1).decorate)
 

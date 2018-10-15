@@ -2,17 +2,17 @@ require 'rails_helper'
 describe CasesController, type: :controller do
 
   describe 'PATCH confirm_respond' do
-    let(:responder)           { create :responder }
-    let(:another_responder)   { create :responder }
-    let(:manager)             { create :manager}
-    let(:approver)            { create :disclosure_specialist }
+    let(:responder)          { case_with_response.responder }
+    let(:responding_team)    { case_with_response.responding_team }
+    let(:another_responder)  { create :responder }
+    let(:manager)            { find_or_create :disclosure_bmt_user }
+    let(:approver)           { find_or_create :disclosure_specialist }
 
-    let(:case_with_response)  { create :case_with_response,
-                                        responder: responder }
-    let(:ot_foi)              { create :with_response_ot_ico_foi,
-                                       responder: responder }
-    let(:approved_ico)        { create :approved_ico_foi_case,
-                                       approver: approver }
+    let(:case_with_response) { create :case_with_response }
+    let(:ot_foi)             { create :with_response_ot_ico_foi,
+                                      responder: responder,
+                                      responding_team: responding_team }
+    let(:approved_ico)       { create :approved_ico_foi_case }
 
 
     context 'FOI case' do
