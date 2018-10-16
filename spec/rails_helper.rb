@@ -168,9 +168,12 @@ def seed_database_for_tests
   FactoryBot.find_or_create :ico_correspondence_type
   FactoryBot.find_or_create :overturned_sar_correspondence_type
   FactoryBot.find_or_create :overturned_foi_correspondence_type
-  FactoryBot.find_or_create :team_press_office
-  FactoryBot.find_or_create :team_private_office
   FactoryBot.find_or_create :team_dacu_disclosure
+
+  press_officer = FactoryBot.find_or_create :press_officer
+  private_officer = FactoryBot.find_or_create :private_officer
+  CorrespondenceType.overturned_foi.update(default_press_officer: press_officer.email,
+                                           default_private_officer: private_officer.email)
 end
 
 Shoulda::Matchers.configure do |config|

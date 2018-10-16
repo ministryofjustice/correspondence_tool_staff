@@ -4,11 +4,13 @@ module Features
       def create_and_assign_overturned_ico(user:,
                                            ico_case:,
                                            responding_team:,
+                                           flag_for_disclosure:,
                                            do_logout: true)
         login_step user: user
 
         kase = create_overturned_ico_case_step(
           ico_case: ico_case,
+          flag_for_disclosure: flag_for_disclosure
         )
 
         assign_case_step business_unit: responding_team
