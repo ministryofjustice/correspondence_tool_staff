@@ -16,7 +16,7 @@ require 'rails_helper'
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
 
-feature 'FOI case that does not require clearance' do
+feature 'FOI case that requires clearance' do
   include Features::Interactions
   include CaseDateManipulation
 
@@ -56,10 +56,10 @@ feature 'FOI case that does not require clearance' do
                  user: press_officer,
                  test_undo: true
 
-    # edit_case kase: kase,
-    #           user: manager,
-    #           subject: 'new test subject'
-    #
+    edit_case kase: kase,
+              user: manager,
+              subject: 'new test subject'
+
     accept_case kase: kase,
                 user: responder,
                 do_logout: true
@@ -80,17 +80,19 @@ feature 'FOI case that does not require clearance' do
                    user: disclosure_specialist,
                    expected_team: press_office,
                    expected_status: 'Pending clearance'
+
     clear_response kase: kase,
                    user: press_officer,
                    expected_team: private_office,
                    expected_status: 'Pending clearance'
+
     clear_response kase: kase,
                    user: private_officer,
                    expected_team: responding_team,
                    expected_status: 'Ready to send'
-    #
-    # mark_case_as_sent kase: kase,
-    #                   user: responder
+
+    mark_case_as_sent kase: kase,
+                      user: responder
     #
     # close_case kase: kase,
     #            user: manager
