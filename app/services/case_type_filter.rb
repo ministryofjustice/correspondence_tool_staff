@@ -1,31 +1,68 @@
 class CaseTypeFilter
   include FilterParamParsers
 
-  def self.available_sensitivities
-    {
-      'non-trigger' => I18n.t('filters.sensitivities.non-trigger'),
-      'trigger'     => I18n.t('filters.sensitivities.trigger'),
-    }
-  end
+  class << self
+    def available_sensitivities
+      {
+        'non-trigger' => I18n.t('filters.sensitivities.non-trigger'),
+        'trigger'     => I18n.t('filters.sensitivities.trigger'),
+      }
+    end
 
-  def self.available_case_types(user)
-    user_types = user.permitted_correspondence_types.map(&:abbreviation)
-    types = {}
+    def available_case_types(user)
+      user_types = user.permitted_correspondence_types.map(&:abbreviation)
+      types = {}
 
-    merge_foi_types_if_user_eligible!(types, user_types)
-    merge_sar_types_if_user_eligible!(types, user_types)
-    merge_ico_appeal_types_if_user_eligible!(types, user_types)
-    merge_overturned_ico_types_if_user_eligible!(types, user_types)
-    types
-  end
+      merge_foi_types_if_user_eligible!(types, user_types)
+      merge_sar_types_if_user_eligible!(types, user_types)
+      merge_ico_appeal_types_if_user_eligible!(types, user_types)
+      merge_overturned_ico_types_if_user_eligible!(types, user_types)
+      types
+    end
 
-  def self.filter_attributes
-    [:filter_case_type, :filter_sensitivity]
-  end
+    def filter_attributes
+      [:filter_case_type, :filter_sensitivity]
+    end
 
-  def self.process_params!(params)
-    process_array_param(params, :filter_case_type)
-    process_array_param(params, :filter_sensitivity)
+    def process_params!(params)
+      process_array_param(params, :filter_case_type)
+      process_array_param(params, :filter_sensitivity)
+    end
+
+    def merge_foi_types_if_user_eligible!(types, user_types)
+      if "FOI".in?(user_types)
+        types.merge!(
+          'foi-standard'      => I18n.t('filters.case_types.foi-standard'),
+          'foi-ir-compliance' => I18n.t('filters.case_types.foi-ir-compliance'),
+          'foi-ir-timeliness' => I18n.t('filters.case_types.foi-ir-timeliness'),
+        )
+      end
+    end
+
+    def merge_ico_appeal_types_if_user_eligible!(types, user_types)
+      if 'ICO'.in?(user_types) && FeatureSet.ico.enabled?
+        types.merge!(
+          'ico-appeal' => 'ICO appeals'
+        )
+      end
+    end
+
+    def merge_overturned_ico_types_if_user_eligible!(types, user_types)
+      if 'FOI'.in?(user_types) || 'SAR'.in?(user_types)
+        types.merge!(
+          'overturned-ico' => 'ICO overturned'
+        )
+      end
+    end
+
+    def merge_sar_types_if_user_eligible!(types, user_types)
+      if "SAR".in?(user_types) && FeatureSet.sars.enabled?
+        types.merge!(
+          'sar-non-offender' => I18n.t('filters.case_types.sar-non-offender')
+        )
+      end
+    end
+
   end
 
   def initialize(query, records)
@@ -123,39 +160,5 @@ class CaseTypeFilter
       end
     end
     execute_filters(filters, records)
-  end
-
-  def merge_foi_types_if_user_eligible!(types, user_types)
-    if "FOI".in?(user_types)
-      types.merge!(
-        'foi-standard'      => I18n.t('filters.case_types.foi-standard'),
-        'foi-ir-compliance' => I18n.t('filters.case_types.foi-ir-compliance'),
-        'foi-ir-timeliness' => I18n.t('filters.case_types.foi-ir-timeliness'),
-      )
-    end
-  end
-
-  def merge_ico_appeal_types_if_user_eligible!(types, user_types)
-    if 'ICO'.in?(user_types) && FeatureSet.ico.enabled?
-      types.merge!(
-        'ico-appeal' => 'ICO appeals'
-      )
-    end
-  end
-
-  def merge_overturned_ico_types_if_user_eligible!(types, user_types)
-    if 'FOI'.in?(user_types) || 'SAR'.in?(user_types)
-      types.merge!(
-        'overturned-ico' => 'ICO overturned'
-      )
-    end
-  end
-
-  def merge_sar_types_if_user_eligible!(types, user_types)
-    if "SAR".in?(user_types) && FeatureSet.sars.enabled?
-      types.merge!(
-        'sar-non-offender' => I18n.t('filters.case_types.sar-non-offender')
-      )
-    end
   end
 end
