@@ -75,11 +75,11 @@ feature 'FOI case that does not require clearance' do
     upload_response kase: kase,
                     user: responder,
                     file: UPLOAD_RESPONSE_DOCX_FIXTURE
-    #
-    # clear_response kase: kase,
-    #                user: disclosure_specialist,
-    #                expected_team: press_office,
-    #                expected_status: 'Pending clearance'
+
+    clear_response kase: kase,
+                   user: disclosure_specialist,
+                   expected_team: press_office,
+                   expected_status: 'Pending clearance'
     # clear_response kase: kase,
     #                user: press_officer,
     #                expected_team: private_office,
