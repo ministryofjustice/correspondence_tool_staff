@@ -31,19 +31,10 @@ module Stats
       expect(csv_lines.shift).to match dacu_directorate_line
       expect(csv_lines.shift).to match dacu_line
       expect(csv_lines.shift).to match press_office_directorate_line
-
-
-
       expect(csv_lines.shift).to match press_office_line
       expect(csv_lines.shift).to match press_office_second_user_line
-
       expect(csv_lines.shift).to match private_office_line
       expect(csv_lines.shift).to match private_office_second_user_line
-
-      # puts ">>>>>>>>>>  #{__FILE__}:#{__LINE__} <<<<<<<<<<"
-      # # puts csv_lines.shift
-      # # puts private_office_line
-      # # # expect(csv_lines.shift).to match private_office_line
     end
 
     def header_line
