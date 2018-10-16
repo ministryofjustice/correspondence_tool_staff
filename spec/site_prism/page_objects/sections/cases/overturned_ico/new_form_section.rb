@@ -24,7 +24,19 @@ module PageObjects
                   '//fieldset[contains(.,"Flag for disclosure specialists")]' do
                     element :yes, 'input[value="yes"]'
                     element :no, 'input[value="no"]'
-                  end
+          end
+
+          def choose_flag_for_disclosure_specialists(choice = 'yes')
+            make_radio_button_choice("case_overturned_foi_flag_for_disclosure_specialists_#{choice}")
+          end
+
+          def make_radio_button_choice(choice_id)
+            if Capybara.current_driver == Capybara.javascript_driver
+              find("input##{choice_id}", visible: false).click
+            else
+              find("input##{choice_id}").set(true)
+            end
+          end
         end
       end
     end
