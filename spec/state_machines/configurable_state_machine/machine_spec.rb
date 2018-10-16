@@ -569,7 +569,68 @@ module ConfigurableStateMachine
       end
     end
 
+    describe '#config_for_event' do
+      before(:each) { @policy = double Case::FOI::StandardPolicy }
 
+      context 'role provided as a string parameter' do
+        context 'event can be triggered' do
+          context 'triggered as a result of an predicate returning true' do
+            it 'returns the event config' do
+              expect(Case::FOI::StandardPolicy)
+                .to receive(:new)
+                      .with(user: @manager, kase: @unassigned_case)
+                      .and_return(@policy)
+              expect(@policy).to receive(:can_add_message_to_case?).and_return(true)
+              machine = Machine.new(config: config, kase: @unassigned_case)
+              expect(machine.config_for_event(
+                       event_name: :add_message_to_case,
+                       metadata: {acting_user: @manager},
+                       roles: 'manager').to_h
+                    )
+                .to eq({ if: 'Case::FOI::StandardPolicy#can_add_message_to_case?' })
+            end
+          end
+
+          context 'triggered as a result of no "if present' do
+            it 'returns true' do
+              expect(Case::FOI::StandardPolicy).not_to receive(:new)
+              config.user_roles.manager.states.unassigned.add_message_to_case.delete_field(:if)
+              expect(machine.can_trigger_event?(
+                                                event_name: :add_message_to_case,
+                                                metadata: {acting_user: @manager},
+                                                roles: 'manager')
+                                              ).to be true
+
+            end
+          end
+        end
+
+        context 'event cannot be triggered' do
+          context 'not triggered as a result of a predicate returning false' do
+            it 'returns  false' do
+              expect(Case::FOI::StandardPolicy).to receive(:new).with(user: @manager, kase: @unassigned_case).and_return(@policy)
+              expect(@policy).to receive(:can_add_message_to_case?).and_return(false)
+              machine = Machine.new(config: config, kase: @unassigned_case)
+              expect(machine.can_trigger_event?(
+                                                event_name: :add_message_to_case,
+                                                metadata: {acting_user: @manager},
+                                                roles: 'manager')
+                                              ).to be false
+            end
+          end
+          context 'event not a valid event for role/state' do
+            it 'returns false' do
+              machine = Machine.new(config: config, kase: @unassigned_case)
+              expect(machine.can_trigger_event?(
+                                                event_name: :flag_for_press,
+                                                metadata: {acting_user: @manager},
+                                                roles: 'manager')
+                                              ).to be false
+            end
+          end
+        end
+      end
+    end
 
     describe '#trigger_event' do
       context 'invalid metadata' do

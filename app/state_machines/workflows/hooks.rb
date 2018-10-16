@@ -1,8 +1,9 @@
 class Workflows::Hooks
 
-  def initialize(user:, kase:)
+  def initialize(user:, kase:, metadata:)
     @user = user
     @kase = kase
+    @metadata = metadata
   end
 
   def notify_responder_message_received
@@ -21,5 +22,19 @@ class Workflows::Hooks
 
   def notify_managing_team_case_closed
     NotifyTeamService.new(@kase, 'Case closed').call
+  end
+
+  def reassign_user_email
+    if @user !=  @metadata[:target_user]
+        ActionNotificationsMailer
+          .case_assigned_to_another_user(@kase, @metadata[:target_user])
+          .deliver_later
+    end
+  end
+
+  def assign_responder_email
+    NotifyNewAssignmentService.new(team: @metadata[:target_team],
+                                   assignment: @kase.responder_assignment
+                                  ).run
   end
 end

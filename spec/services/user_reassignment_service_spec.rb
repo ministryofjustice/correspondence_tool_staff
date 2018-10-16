@@ -54,12 +54,6 @@ describe UserReassignmentService do
 
     context 'Reassign the assignment' do
 
-      before do
-        allow(ActionNotificationsMailer).to receive_message_chain(
-                                            :case_assigned_to_another_user,
-                                            :deliver_later)
-      end
-
       it 'returns :ok' do
         expect(service.call).to eq :ok
       end
@@ -75,11 +69,6 @@ describe UserReassignmentService do
         assignment = accepted_case.assignments
         service.call
         expect(accepted_case.assignments).to eq assignment
-      end
-
-      it 'sends an email (only if different and user not assigning themselves' do
-        service.call
-        expect(ActionNotificationsMailer).to have_received(:case_assigned_to_another_user)
       end
 
       context 'when an error occurs' do
@@ -104,12 +93,6 @@ describe UserReassignmentService do
           expect(result).to eq :error
           expect(service.result).to eq :error
         end
-
-        it 'does not send an email' do
-          allow(assignment).to receive(:update).and_throw(RuntimeError)
-          service.call
-          expect(ActionNotificationsMailer).to_not have_received(:case_assigned_to_another_user)
-        end
       end
     end
 
@@ -120,16 +103,9 @@ describe UserReassignmentService do
                                     assignment: assignment )
       }
 
-      before do
-        allow(ActionNotificationsMailer).to receive_message_chain(
-                                            :case_assigned_to_another_user,
-                                            :deliver_later)
-      end
-
       it 'should not send email' do
         service.call
         expect(service.result).to eq :ok
-        expect(ActionNotificationsMailer).to_not have_received(:case_assigned_to_another_user)
       end
     end
 
@@ -153,12 +129,6 @@ describe UserReassignmentService do
 
       context 'Reassign the assignment' do
 
-        before do
-          allow(ActionNotificationsMailer).to receive_message_chain(
-                                              :case_assigned_to_another_user,
-                                              :deliver_later)
-        end
-
         it 'returns :ok' do
           expect(service.call).to eq :ok
         end
@@ -174,11 +144,6 @@ describe UserReassignmentService do
           assignment = unassigned_case.assignments
           service.call
           expect(unassigned_case.assignments).to eq assignment
-        end
-
-        it 'sends an email (only if different and user not assigning themselves' do
-          service.call
-          expect(ActionNotificationsMailer).to have_received(:case_assigned_to_another_user)
         end
       end
     end

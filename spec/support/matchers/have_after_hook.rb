@@ -1,5 +1,5 @@
 module PermitTriggerEvent
-  RSpec::Matchers.define :permit_event_to_be_triggered_only_by do |*permitted_combinations|
+  RSpec::Matchers.define :have_after_hook do |*permitted_combinations|
     match do |event|
       permitted_combinations.each do |user_and_team, kase|
         unless all_user_teams.key?(user_and_team)
@@ -13,7 +13,6 @@ module PermitTriggerEvent
         end
       end
 
-
       @errors = []
       all_user_teams.each do |user_type, user_and_team|
         all_cases.each do |case_type, kase|
@@ -25,23 +24,9 @@ module PermitTriggerEvent
                                                     acting_team: team
                                                   })
 
-          # config.present? would return false for {}, which we don't want.
-          if !config.nil? && @transition_to.present?
-            next_state = state_machine.next_state_for_event(event,
-                                                            acting_user: user,
-                                                            acting_team: team)
-            # result = !config.nil? && @transition_to == next_state
-            result = @transition_to == next_state
-          else
-            result = !config.nil?
-          end
-
+            result = !config.nil? && config.after_transition == @expected_hook
           if [user_type, case_type].in?(permitted_combinations) ^ result
             (binding).pry if @debug_on_error && $stdout.tty?
-            # this is handy to be able to step through what failed
-            #
-            #    kase : the case currently being tested
-            #    user : the user currently being tested
             @errors << [user_type, case_type, !config.nil?]
           end
         end
@@ -49,8 +34,8 @@ module PermitTriggerEvent
       @errors.empty?
     end
 
-    chain :with_transition_to do |target_state|
-      @transition_to = target_state.to_s
+    chain :with_hook do |klass, method|
+      @expected_hook = "#{klass}##{method}"
     end
 
     # Use this to run binding.pry if a particular combination fails a test.
@@ -67,10 +52,10 @@ module PermitTriggerEvent
         @errors.each do |user_type, kase_type, result|
           if result
             @error_message <<
-                "  We did not expect the event to be triggerable for #{user_type} on #{kase_type} cases, but it is.\n"
+                "  The after hook #{@expected_hook} was not present for #{user_type} on #{kase_type}.\n"
           else
             @error_message <<
-                "  We expected the event to be triggerable for #{user_type} on #{kase_type} cases, but it is not.\n"
+                "  We expected the after hook #{@expected_hook} to be present for #{user_type} on #{kase_type} cases, but it is not.\n"
           end
         end
       end

@@ -9,6 +9,7 @@
                 add_message_to_case:
                 assign_responder:
                   transition_to: awaiting_responder
+                  after_transition: Workflows::Hooks#assign_responder_email
                 destroy_case:
                 edit_case:
                   if: Workflows::Predicates#not_overturned?
@@ -24,6 +25,7 @@
                 add_message_to_case:
                 assign_to_new_team:
                   transition_to: awaiting_responder
+                  after_transition: Workflows::Hooks#assign_responder_email
                 destroy_case:
                 edit_case:
                   if: Workflows::Predicates#not_overturned?
@@ -37,8 +39,10 @@
 
               drafting:
                 add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
                 assign_to_new_team:
                   transition_to: awaiting_responder
+                  after_transition: Workflows::Hooks#assign_responder_email
                 destroy_case:
                 edit_case:
                   if: Workflows::Predicates#not_overturned?
@@ -81,6 +85,7 @@
               drafting:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
                 respond_and_close:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
@@ -92,6 +97,7 @@
                   transition_to: closed
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#reassign_user_email
 
               closed:
                 add_message_to_case:
