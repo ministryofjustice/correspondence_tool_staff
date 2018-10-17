@@ -90,11 +90,11 @@ feature 'FOI case that requires clearance' do
                    user: private_officer,
                    expected_team: responding_team,
                    expected_status: 'Ready to send'
-
+    
     mark_case_as_sent kase: kase,
                       user: responder
-    #
-    # close_case kase: kase,
-    #            user: manager
+
+    close_case kase: kase,
+               user: manager
   end
 end
