@@ -8,6 +8,7 @@
                 add_message_to_case:
                 assign_responder:
                   transition_to: awaiting_responder
+                  after_transition: Workflows::Hooks#assign_responder_email
                 destroy_case:
                 edit_case:
                 flag_for_clearance:
@@ -20,6 +21,7 @@
                 add_message_to_case:
                 assign_to_new_team:
                   transition_to: awaiting_responder
+                  after_transition: Workflows::Hooks#assign_responder_email
                 destroy_case:
                 edit_case:
                 flag_for_clearance:
@@ -33,6 +35,7 @@
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 assign_to_new_team:
                   transition_to: awaiting_responder
+                  after_transition: Workflows::Hooks#assign_responder_email
                 destroy_case:
                 edit_case:
                 extend_for_pit:
@@ -118,6 +121,7 @@
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
                 take_on_for_approval:
                   if: Case::BasePolicy#can_take_on_for_approval?
@@ -133,6 +137,7 @@
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
                 take_on_for_approval:
                   if: Case::BasePolicy#can_take_on_for_approval?
@@ -149,6 +154,7 @@
                 flag_for_clearance:
                 link_a_case:
                 reassign_user:
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
                 take_on_for_approval:
                   if: Case::BasePolicy#can_take_on_for_approval?
@@ -170,6 +176,7 @@
                   transition_to: awaiting_dispatch
                 link_a_case:
                 reassign_user:
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
                 unflag_for_clearance:               # needed for press/private office to unaccept
                   if: Workflows::Predicates#case_can_be_unflagged_for_clearance_by_press_or_private?
@@ -178,6 +185,7 @@
                   transition_to: pending_press_office_clearance
                 upload_response_approve_and_bypass:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  after_transition: Workflows::Hooks#notify_responder_ready_to_send
                   transition_to: awaiting_dispatch
                 upload_response_and_return_for_redraft:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
@@ -196,6 +204,7 @@
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
                 request_amends:
                   if: Workflows::Predicates#user_is_assigned_press_officer?
@@ -218,6 +227,7 @@
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
                 request_amends:
                   if: Workflows::Predicates#user_is_assigned_private_officer?
@@ -238,6 +248,7 @@
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
                 remove_response:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
@@ -292,6 +303,7 @@
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
                 upload_responses:
 
@@ -302,6 +314,7 @@
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
 
               pending_press_office_clearance:
@@ -311,6 +324,7 @@
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
 
               pending_private_office_clearance:
@@ -320,6 +334,7 @@
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
 
               awaiting_dispatch:
@@ -331,6 +346,7 @@
                  link_a_case:
                  reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  after_transition: Workflows::Hooks#reassign_user_email
                  remove_linked_case:
                  remove_response:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?

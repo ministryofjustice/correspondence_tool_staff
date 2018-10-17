@@ -14,6 +14,7 @@ feature 'SAR overturned case' do
     kase = create_and_assign_overturned_ico user: manager,
                                             responding_team: responding_team,
                                             ico_case: original_appeal_case,
+                                            flag_for_disclosure: false,
                                             do_logout: false
 
     add_message_to_case kase: kase,
