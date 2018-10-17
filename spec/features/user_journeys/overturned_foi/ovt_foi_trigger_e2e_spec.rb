@@ -80,14 +80,14 @@ feature 'FOI case that does not require clearance' do
                    user: disclosure_specialist,
                    expected_team: press_office,
                    expected_status: 'Pending clearance'
-    # clear_response kase: kase,
-    #                user: press_officer,
-    #                expected_team: private_office,
-    #                expected_status: 'Pending clearance'
-    # clear_response kase: kase,
-    #                user: private_officer,
-    #                expected_team: responding_team,
-    #                expected_status: 'Ready to send'
+    clear_response kase: kase,
+                   user: press_officer,
+                   expected_team: private_office,
+                   expected_status: 'Pending clearance'
+    clear_response kase: kase,
+                   user: private_officer,
+                   expected_team: responding_team,
+                   expected_status: 'Ready to send'
     #
     # mark_case_as_sent kase: kase,
     #                   user: responder
