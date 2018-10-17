@@ -154,6 +154,7 @@ FactoryBot.define do
     factory :default_press_officer, parent: :press_officer do
       after(:create) do |user|
         CorrespondenceType.foi.update!(default_press_officer: user.email)
+        CorrespondenceType.overturned_foi.update!(default_press_officer: user.email)
       end
     end
 
@@ -169,6 +170,7 @@ FactoryBot.define do
     factory :default_private_officer, parent: :private_officer do
       after(:create) do |user|
         CorrespondenceType.foi.update!(default_private_officer: user.email)
+        CorrespondenceType.overturned_foi.update!(default_private_officer: user.email)
       end
     end
 
