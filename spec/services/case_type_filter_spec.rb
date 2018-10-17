@@ -10,7 +10,9 @@ describe CaseTypeFilter do
                                  :std_unassigned_irc,
                                  :std_unassigned_irt,
                                  :ico_foi_unassigned,
-                                 :ico_sar_unassigned
+                                 :ico_sar_unassigned,
+                                 :ot_ico_foi_noff_unassigned,
+                                 :ot_ico_sar_noff_unassigned,
                                ])
   end
 
@@ -23,11 +25,12 @@ describe CaseTypeFilter do
     let(:user) { create :disclosure_bmt_user }
     subject    { CaseTypeFilter.available_case_types(user) }
 
-    it { should include 'foi-standard' => 'FOI - Standard' }
+    it { should include 'foi-standard'      => 'FOI - Standard' }
     it { should include 'foi-ir-compliance' => 'FOI - Internal review for compliance' }
     it { should include 'foi-ir-timeliness' => 'FOI - Internal review for timeliness' }
-    it { should include 'sar-non-offender' => 'SAR - Non-offender' }
-    it { should include 'ico-appeal' =>'ICO appeals' }
+    it { should include 'sar-non-offender'  => 'SAR - Non-offender' }
+    it { should include 'ico-appeal'        =>'ICO appeals' }
+    it { should include 'overturned-ico'    =>'ICO overturned' }
 
     context 'for user who is assigned to a team that only handles FOIs' do
       let(:foi)             { find_or_create(:foi_correspondence_type) }
@@ -38,6 +41,7 @@ describe CaseTypeFilter do
       it { should include 'foi-standard' => 'FOI - Standard' }
       it { should include 'foi-ir-compliance' => 'FOI - Internal review for compliance' }
       it { should include 'foi-ir-timeliness' => 'FOI - Internal review for timeliness' }
+      it { should include 'overturned-ico'    =>'ICO overturned' }
       it { should_not include 'sar-non-offender' => 'SAR - Non-offender' }
       it { should_not include 'ico-appeal' =>'ICO appeals' }
     end
@@ -82,6 +86,8 @@ describe CaseTypeFilter do
                              @setup.trig_unassigned_foi,
                              @setup.ico_foi_unassigned,
                              @setup.ico_sar_unassigned,
+                             @setup.ot_ico_foi_noff_unassigned.original_ico_appeal,
+                             @setup.ot_ico_sar_noff_unassigned.original_ico_appeal,
                            ]
       end
     end
@@ -99,6 +105,10 @@ describe CaseTypeFilter do
                              @setup.std_unassigned_irt,
                              @setup.ico_foi_unassigned.original_case,
                              @setup.ico_sar_unassigned.original_case,
+                             @setup.ot_ico_sar_noff_unassigned,
+                             @setup.ot_ico_foi_noff_unassigned,
+                             @setup.ot_ico_sar_noff_unassigned.original_case,
+                             @setup.ot_ico_foi_noff_unassigned.original_case,
                            ]
       end
     end
@@ -113,6 +123,7 @@ describe CaseTypeFilter do
                              @setup.trig_unassigned_foi,
                              @setup.std_unassigned_foi,
                              @setup.ico_foi_unassigned.original_case,
+                             @setup.ot_ico_foi_noff_unassigned.original_case,
                            ]
       end
     end
@@ -147,18 +158,39 @@ describe CaseTypeFilter do
 
       it 'returns the correct list of cases' do
         results = case_type_filter.call
-        expect(results).to match_array [@setup.sar_noff_unassigned,
-                                        @setup.ico_sar_unassigned.original_case,]
+        expect(results).to match_array [
+                             @setup.sar_noff_unassigned,
+                             @setup.ico_sar_unassigned.original_case,
+                             @setup.ot_ico_sar_noff_unassigned.original_case,
+                           ]
       end
     end
 
     describe 'filtering for ICO cases' do
-      let(:search_query)      { create :search_query, filter_case_type: ['ico-appeal']}
+      let(:search_query)      { create :search_query,
+                                       filter_case_type: ['ico-appeal']}
 
       it 'returns ICO FOI and ICO SAR cases' do
         results = case_type_filter.call
-        expected_results = [@setup.ico_foi_unassigned, @setup.ico_sar_unassigned]
-        expect(results).to match_array expected_results
+        expect(results).to match_array [
+                             @setup.ico_foi_unassigned,
+                             @setup.ico_sar_unassigned,
+                             @setup.ot_ico_foi_noff_unassigned.original_ico_appeal,
+                             @setup.ot_ico_sar_noff_unassigned.original_ico_appeal,
+                           ]
+      end
+    end
+
+    describe 'filtering for Overturned ICO cases' do
+      let(:search_query)      { create :search_query,
+                                       filter_case_type: ['overturned-ico']}
+
+      it 'returns Overturned FOI and Overturned SAR cases' do
+        results = case_type_filter.call
+        expect(results).to match_array [
+                             @setup.ot_ico_foi_noff_unassigned,
+                             @setup.ot_ico_sar_noff_unassigned,
+                           ]
       end
     end
   end

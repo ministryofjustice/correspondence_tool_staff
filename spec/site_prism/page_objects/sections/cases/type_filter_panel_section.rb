@@ -17,6 +17,9 @@ module PageObjects
         element :sar_non_offender_checkbox,
                 '#search_query_filter_case_type_sar-non-offender',
                 visible: false
+        element :overturned_ico_checkbox,
+                '#search_query_filter_case_type_overturned-ico',
+                visible: false
         element :non_trigger_checkbox,
                 '#search_query_filter_sensitivity_non-trigger',
                 visible: false
