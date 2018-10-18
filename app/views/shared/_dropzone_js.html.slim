@@ -2,9 +2,10 @@
   .dz-details
     .dz-filename
       span { data-dz-name }
-      = "("
-      span.dz-size { data-dz-size }
-      = ")"
+      .file-info
+        = "("
+        span.dz-size { data-dz-size }
+        = ")"
 
     .dz-progress
       span.dz-upload { data-dz-uploadprogress }
