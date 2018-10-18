@@ -7,8 +7,7 @@
 #
 
 module ConfigurableStateMachine
-  class
-  Manager
+  class Manager
     # include Singleton
 
     @@instance = nil
