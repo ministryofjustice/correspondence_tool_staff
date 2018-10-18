@@ -18,19 +18,20 @@ feature 'ICO Overturned FOI case' do
                                             do_logout: false
 
     add_message_to_case kase: kase,
-                        message: 'Case created',
-                        do_logout: true
+                        message: 'Case created'
 
     accept_case kase: kase,
-                user: responder,
-                do_logout: false
+                user: responder
 
     set_case_dates_back_by(kase, 7.business_days)
 
+    extend_for_pit kase: kase,
+                   user: manager,
+                   new_deadline: 20.business_days.from_now
+
     upload_response kase: kase,
                     user: responder,
-                    file: UPLOAD_RESPONSE_DOCX_FIXTURE,
-                    do_login: false
+                    file: UPLOAD_RESPONSE_DOCX_FIXTURE
 
     mark_case_as_sent kase: kase,
                       user: responder
