@@ -376,8 +376,9 @@ class CasesController < ApplicationController
         uploader = S3Uploader.new(@case, current_user)
         uploader.process_files(params[:case_ico][:uploaded_ico_decision_files], :ico_decision)
       end
+      role = current_user.manager? ? :manager : :responder
       @case.state_machine.update_closure!(acting_user: current_user,
-                                          acting_team: @case.team_for_unassigned_user(current_user, :manager))
+                                          acting_team: @case.team_for_unassigned_user(current_user, role))
       set_permitted_events
       flash[:notice] = t('notices.closure_details_updated')
       redirect_to case_path(@case)
