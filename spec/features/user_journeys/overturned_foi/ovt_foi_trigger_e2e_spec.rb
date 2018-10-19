@@ -61,17 +61,16 @@ feature 'FOI case that requires clearance' do
               subject: 'new test subject'
 
     accept_case kase: kase,
-                user: responder,
-                do_logout: true
-
+                user: responder
+                
     set_case_dates_back_by(kase, 5.business_days)
     #
     # add_message_to_case kase: kase, message: 'This. Is. A. Test.'
     #
-    # extend_for_pit kase: kase,
-    #                user: manager,
-    #                new_deadline: 30.business_days.from_now
-    #
+    extend_for_pit kase: kase,
+                   user: manager,
+                   new_deadline: 30.business_days.from_now
+
     upload_response kase: kase,
                     user: responder,
                     file: UPLOAD_RESPONSE_DOCX_FIXTURE
