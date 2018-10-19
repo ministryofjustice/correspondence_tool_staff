@@ -48,8 +48,34 @@ module ConfigurableStateMachine
     #
 
     def can_trigger_event?(event_name:, metadata:, roles: nil)
-      config = config_for_event(event_name: event_name, metadata: metadata, roles: roles)
-      config.present?
+      configs = configs_for_event(event_name: event_name, metadata: metadata, roles: roles)
+      results = configs.map{ |config| event_triggerable_in_config?(config: config, user: @user ) }
+      results.include?(true)
+    end
+
+    def configs_for_event(event_name:, metadata:, roles:)
+      set_users_and_roles(metadata: metadata, roles: roles)
+      configs = []
+      @roles.each do |role|
+        role_config = @config.user_roles[role]
+        next if role_config.nil?
+        role_state_config =  role_config.states[@kase.current_state]
+        event_config = fetch_event_config(config: role_state_config, event: event_name)
+        configs << event_config
+      end
+      configs
+    end
+
+    def event_triggerable_in_config?(config:, user:)
+      if config.nil?
+        false
+      elsif config.if.nil?
+        true
+      elsif predicate_is_true?(predicate: config.if, user: user)
+        true
+      else
+        false
+      end
     end
 
     def config_for_event(event_name:, metadata:, roles: nil)
