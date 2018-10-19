@@ -49,8 +49,7 @@ module ConfigurableStateMachine
 
     def can_trigger_event?(event_name:, metadata:, roles: nil)
       configs = configs_for_event(event_name: event_name, metadata: metadata, roles: roles)
-      results = configs.map{ |config| event_triggerable_in_config?(config: config, user: @user ) }
-      results.include?(true)
+      configs.map{ |config| event_triggerable_in_config?(config: config, user: @user ) }.any?
     end
 
     def configs_for_event(event_name:, metadata:, roles:)
