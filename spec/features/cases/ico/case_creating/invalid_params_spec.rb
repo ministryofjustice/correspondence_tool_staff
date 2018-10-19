@@ -25,6 +25,6 @@ feature 'creating ICO with invalid params' do
     expect(page.current_path).to eq '/cases'
     expect(cases_new_ico_page.errors.details.count).to eq 1
     expect(cases_new_ico_page.errors.details.first)
-      .to have_content('Internal deadline cannot be after final deadline')
+      .to have_content('Draft deadline cannot be after final deadline')
   end
 end
