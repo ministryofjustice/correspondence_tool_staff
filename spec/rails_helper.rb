@@ -174,6 +174,8 @@ def seed_database_for_tests
   private_officer = FactoryBot.find_or_create :private_officer
   CorrespondenceType.overturned_foi.update(default_press_officer: press_officer.email,
                                            default_private_officer: private_officer.email)
+  CorrespondenceType.foi.update(default_press_officer: press_officer.email,
+                                default_private_officer: private_officer.email)
 end
 
 Shoulda::Matchers.configure do |config|
