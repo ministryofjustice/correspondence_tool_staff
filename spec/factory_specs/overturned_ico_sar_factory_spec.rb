@@ -5,7 +5,7 @@ describe 'Overturned ICO SAR cases factory' do
   let(:frozen_time)             { Time.local(2018, 7, 9, 10, 35, 22) }
   let(:disclosure_bmt)          { find_or_create :team_disclosure_bmt }
   let(:manager)                 { disclosure_bmt.users.first }
-  let(:responding_team)         { create :responding_team }
+  let(:responding_team)         { find_or_create :sar_responding_team }
   let(:responder)               { responding_team.users.first }
   let(:disclosure_team)         { find_or_create :team_disclosure }
   let(:disclosure_specialist)   { disclosure_team.users.first }

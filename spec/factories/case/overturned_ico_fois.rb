@@ -2,6 +2,7 @@ FactoryBot.define do
 
   factory :overturned_ico_foi,
           aliases: [:ot_ico_foi_noff_unassigned],
+          parent: :foi_case,
           class: Case::OverturnedICO::FOI do
     transient do
       creation_time { 4.business_days.ago }
@@ -20,22 +21,13 @@ FactoryBot.define do
     reply_method        { original_case.sent_by_email? ? :send_by_email : :send_by_post  }
     email               { original_case.email }
     postal_address      { original_case.postal_address }
-
-    after(:create) do | kase, evaluator|
-      ma = kase.managing_assignment
-      ma.update! created_at: evaluator.creation_time
-    end
   end
 
   factory :awaiting_responder_ot_ico_foi,
           aliases: [:ot_ico_foi_noff_awresp],
           parent: :overturned_ico_foi do
-
     transient do
       identifier      { "awaiting responder overturned ico foi case" }
-      manager         { managing_team.managers.first }
-      managing_team   { find_or_create :team_dacu }
-      responding_team { find_or_create :foi_responding_team }
     end
 
     created_at    { creation_time }
@@ -61,10 +53,8 @@ FactoryBot.define do
   factory :accepted_ot_ico_foi,
           aliases: [:ot_ico_foi_noff_draft],
           parent: :awaiting_responder_ot_ico_foi do
-
     transient do
       identifier      { "responder accepted overturned ico foi case" }
-      responder       { responding_team.responders.first }
     end
 
     after(:create) do |kase, evaluator|
@@ -83,7 +73,9 @@ FactoryBot.define do
           parent: :accepted_ot_ico_foi do
     transient do
       identifier { "overturned ico foi case with response" }
-      responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
+      responses  { [build(:correspondence_response,
+                          type: 'response',
+                          user_id: responder.id)] }
     end
 
     after(:create) do |kase, evaluator|
@@ -92,31 +84,28 @@ FactoryBot.define do
       create :case_transition_add_responses,
              case: kase,
              acting_team: evaluator.responding_team,
-             acting_user: evaluator.responder
+             acting_user: evaluator.responder,
+             filenames: [evaluator.responses.map(&:filename)]
       kase.reload
     end
   end
 
   factory :pending_dacu_clearance_ot_ico_foi,
-          parent: :with_response_ot_ico_foi do
+          parent: :accepted_ot_ico_foi do
     transient do
-      identifier     { 'pending dacu clearance overturned ico foi case'}
-      approving_team { find_or_create :team_dacu_disclosure }
-      approver       { find_or_create :disclosure_specialist }
+      identifier          { 'pending dacu clearance overturned ico foi case'}
+      flag_for_disclosure { :accepted }
+      responses           { [build(:correspondence_response,
+                                   type: 'response',
+                                   user_id: responder.id)] }
     end
 
-    workflow { 'trigger' }
-
     after(:create) do |kase, evaluator|
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.approving_team,
-             state: 'accepted',
-             user_id: evaluator.approver.id
-
       create :case_transition_pending_dacu_clearance,
              case: kase,
-             acting_user: evaluator.responder
+             acting_team: evaluator.responding_team,
+             acting_user: evaluator.responder,
+             filenames: evaluator.responses.map(&:filename)
       kase.reload
     end
   end

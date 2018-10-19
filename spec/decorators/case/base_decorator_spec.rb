@@ -145,7 +145,7 @@ describe Case::BaseDecorator, type: :model do
     context 'flagged case' do
       it 'returns the internal deadline' do
         Timecop.freeze(Time.new(2017, 5, 2, 9, 45, 33 )) do
-          flagged_case = create(:case, :flagged).decorate
+          flagged_case = create(:case, :flagged, creation_time: Date.today).decorate
           expect(flagged_case.internal_deadline).to eq '16 May 2017'
         end
       end
@@ -181,7 +181,7 @@ describe Case::BaseDecorator, type: :model do
     context 'flagged case' do
       it 'returns the internal deadline' do
         Timecop.freeze(Time.new(2017, 5, 2, 9, 45, 33 )) do
-          flagged_case = create(:case, :flagged).decorate
+          flagged_case = create(:case, :flagged, creation_time: Date.today).decorate
           expect(flagged_case.internal_deadline).to eq '16 May 2017'
         end
       end
@@ -191,7 +191,7 @@ describe Case::BaseDecorator, type: :model do
   describe '#external_deadline' do
     it 'returns the external deadline' do
       Timecop.freeze(Time.new(2017, 5, 2, 9, 45, 33 )) do
-        flagged_case = create(:case, :flagged).decorate
+        flagged_case = create(:case, :flagged, creation_time: Date.today).decorate
         expect(flagged_case.external_deadline).to eq '31 May 2017'
       end
     end

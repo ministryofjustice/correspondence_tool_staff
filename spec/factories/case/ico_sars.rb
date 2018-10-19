@@ -32,6 +32,8 @@ FactoryBot.define do
              state: 'pending'
       create :flag_case_for_clearance_transition,
              case: kase,
+             acting_team: evaluator.managing_team,
+             acting_user: evaluator.managing_team.managers.first,
              target_team: evaluator.approving_team
       kase.update(workflow: 'trigger')
 

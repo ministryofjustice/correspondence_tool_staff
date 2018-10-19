@@ -683,7 +683,7 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'as another responder' do
-        let(:user) { find_or_create(:foi_responder) }
+        let(:user) { another_responder }
 
         it 'filtered permitted_events to be empty' do
           expect(assigns(:filtered_permitted_events)).to be_empty
@@ -738,7 +738,7 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'as another responder' do
-        let(:user) { find_or_create(:foi_responder) }
+        let(:user) { another_responder }
 
         it 'filtered permitted_events to be empty' do
           expect(assigns(:filtered_permitted_events)).to be_empty
@@ -784,7 +784,8 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { responder }
 
         it 'filtered permitted_events to be empty' do
-          expect(assigns(:filtered_permitted_events)).to be_empty
+          expect(assigns(:filtered_permitted_events))
+            .to match_array [:add_message_to_case]
         end
 
         it 'renders case details page' do
@@ -793,7 +794,7 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'as another responder' do
-        let(:user) { find_or_create(:foi_responder) }
+        let(:user) { another_responder }
 
         it 'filtered permitted_events to be empty' do
           expect(assigns(:filtered_permitted_events)).to be_empty

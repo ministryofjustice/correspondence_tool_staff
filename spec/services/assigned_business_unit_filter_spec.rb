@@ -9,9 +9,15 @@ describe AssignedBusinessUnitFilter do
 
     @unassigned_case  = create :case, name: 'Unassigned case'
 
-    @pending_case_1  = create :case, responding_team: @responding_team_1, name: 'pending team 1'
-    @pending_case_2  = create :case, responding_team: @responding_team_2, name: 'pending team 2'
-    @pending_case_3  = create :case, responding_team: @responding_team_3, name: 'pending team 3'
+    @pending_case_1  = create :awaiting_responder_case,
+                              responding_team: @responding_team_1,
+                              name: 'pending team 1'
+    @pending_case_2  = create :awaiting_responder_case,
+                              responding_team: @responding_team_2,
+                              name: 'pending team 2'
+    @pending_case_3  = create :awaiting_responder_case,
+                              responding_team: @responding_team_3,
+                              name: 'pending team 3'
 
     @accepted_case_1 = create :accepted_case, responding_team: @responding_team_1, name: 'accepted team 1'
     @accepted_case_2 = create :accepted_case, responding_team: @responding_team_2, name: 'accepted team 2'

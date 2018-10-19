@@ -1,12 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentsController, type: :controller do
-  let(:responding_team_1) { create :responding_team }
-  let(:responding_team_2) { create :responding_team }
-  let(:responding_team_3) { create :responding_team }
-  let(:manager)           { create :manager }
-  let(:unassigned_case)   { create :case }
-  let(:params)            { { case_id: unassigned_case.id } }
+  let(:responding_team_1)   { create :responding_team }
+  let(:responding_team_2)   { create :responding_team }
+  let(:responding_team_3)   { create :responding_team }
+  let(:foi_responding_team) { find_or_create :foi_responding_team }
+  let(:sar_responding_team) { find_or_create :sar_responding_team }
+  let(:manager)             { create :manager }
+  let(:unassigned_case)     { create :case }
+  let(:params)              { { case_id: unassigned_case.id } }
 
 
   describe 'GET new' do
@@ -48,7 +50,7 @@ RSpec.describe AssignmentsController, type: :controller do
         params[:show_all] = true
         get :new, params: params, flash:{"creating_case"=> true}
         expect( assigns(:business_units))
-            .to match_array([responding_team_1, responding_team_2, responding_team_3])
+            .to match_array([foi_responding_team, sar_responding_team])
       end
 
       it 'is not set if no params are used' do

@@ -68,11 +68,11 @@ FactoryBot.define do
     after(:create) do |kase, evaluator|
       ma = kase.managing_assignment
       ma.update! created_at: evaluator.creation_time
-
       if evaluator.flag_for_disclosure
         create :flag_case_for_clearance_transition,
                case: kase,
                acting_team: evaluator.managing_team,
+               acting_user: evaluator.managing_team.managers.first,
                target_team: evaluator.approving_team
         create :approver_assignment,
                case: kase,
@@ -121,6 +121,7 @@ FactoryBot.define do
         kase.update workflow: 'full_approval'
       end
 
+      kase.reload
     end
   end
 
@@ -146,7 +147,6 @@ FactoryBot.define do
     transient do
       identifier { "assigned case" }
     end
-    created_at    { creation_time }
     received_date { creation_time }
 
     after(:create) do |kase, evaluator|
@@ -208,7 +208,6 @@ FactoryBot.define do
   factory :case_with_response, parent: :accepted_case do
     transient do
       identifier { "case with response" }
-      # creation_time { 4.business_days.ago }
       responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
     end
 
@@ -703,22 +702,7 @@ FactoryBot.define do
   trait :flagged_accepted do
     transient do
       flag_for_disclosure { :accepted }
-      # approver                    { approving_team.approvers.first }
-      # approving_team              { find_or_create(:team_dacu_disclosure) }
-      # disclosure_assignment_state { 'accepted' }
     end
-
-
-    # after(:create) do |kase, evaluator|
-    #   create :approver_assignment,
-    #          case: kase,
-    #          user: evaluator.approver,
-    #          team: evaluator.approving_team,
-    #          state: 'accepted'
-    #   create :flag_case_for_clearance_transition,
-    #          case: kase,
-    #          target_team_id: evaluator.approving_team.id
-    # end
   end
 
   trait :dacu_disclosure do
@@ -743,92 +727,22 @@ FactoryBot.define do
       flag_for_disclosure { :accepted }
       flag_for_press      { true }
       flag_for_private    { true }
-      # approver                    { create :press_officer }
-      # approving_team              { create :team_press_office }
-      # disclosure_specialist       { find_or_create :disclosure_specialist }
-      # disclosure_team             { create :team_dacu_disclosure }
-      # press_officer               { find_or_create :private_officer }
-      # press_office                { create :team_private_office }
-      # private_officer             { find_or_create :private_officer }
-      # private_office              { create :team_private_office }
     end
-
-    # after(:create) do |kase, evaluator|
-    #   disclosure_specialist = if evaluator.disclosure_assignment_state == 'accepted'
-    #                             evaluator.disclosure_specialist
-    #                           else
-    #                             nil
-    #                           end
-    #   create :approver_assignment,
-    #          case: kase,
-    #          team: evaluator.disclosure_team,
-    #          user: disclosure_specialist,
-    #          state: evaluator.disclosure_assignment_state
-
-    #   create :approver_assignment,
-    #          case: kase,
-    #          team: evaluator.press_office,
-    #          user: evaluator.press_officer,
-    #          state: evaluator.disclosure_assignment_state
-
-    #   create :approver_assignment,
-    #          case: kase,
-    #          team: evaluator.private_office,
-    #          user: evaluator.private_officer,
-    #          state: evaluator.disclosure_assignment_state
-    # end
   end
 
   trait :press_office do
     # Use after :flagged or :flagged_accepted trait when creating case
     transient do
       flag_for_press { true }
-      # approver                    { find_or_create :press_officer }
-      # approving_team              { find_or_create :team_press_office }
-      # disclosure_specialist       { find_or_create :disclosure_specialist }
-      # disclosure_team             { find_or_create :team_dacu_disclosure }
-      # private_officer             { find_or_create :private_officer }
-      # private_office              { find_or_create :team_private_office }
+      flag_for_private { true }
     end
-
-    # after(:create) do |kase, evaluator|
-    #   disclosure_specialist = if evaluator.disclosure_assignment_state == 'accepted'
-    #                             evaluator.disclosure_specialist
-    #                           else
-    #                             nil
-    #                           end
-    #   create :approver_assignment,
-    #          case: kase,
-    #          team: evaluator.disclosure_team,
-    #          user: disclosure_specialist,
-    #          state: evaluator.disclosure_assignment_state
-
-    #   create :approver_assignment,
-    #          case: kase,
-    #          team: evaluator.private_office,
-    #          user: evaluator.private_officer,
-    #          state: evaluator.disclosure_assignment_state
-    # end
   end
 
   trait :private_office do
     transient do
+      flag_for_press { true }
       flag_for_private { true }
     end
-    # Use after :flagged or :flagged_accepted trait when creating case
-    # transient do
-    #   approver                    { find_or_create :private_officer }
-    #   approving_team              { find_or_create :team_private_office }
-    #   disclosure_team             { find_or_create :team_dacu_disclosure }
-    #   disclosure_assignment_state { 'pending' }
-    # end
-
-    # after(:create) do |kase, evaluator|
-    #   create :approver_assignment,
-    #          case: kase,
-    #          team: evaluator.disclosure_team,
-    #          state: evaluator.disclosure_assignment_state
-    # end
   end
 
   trait :accept_disclosure do

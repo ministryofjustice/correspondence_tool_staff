@@ -122,7 +122,7 @@ describe CaseFinderService do
         @awaiting_responder_overturned_ico_sar_original_appeal =
           create(:closed_ico_sar_case, :overturned_by_ico,
                  original_case: @awaiting_responder_overturned_ico_sar_original,
-                 identifier: '19B-original ico appeal for 18-overturned ico sar')
+                 identifier: '19B-original ico appeal for 19-overturned ico sar')
         @awaiting_responder_overturned_ico_sar =
           create :awaiting_responder_ot_ico_sar,
                  original_case: @awaiting_responder_overturned_ico_sar_original,
@@ -143,7 +143,6 @@ describe CaseFinderService do
                  identifier: '20-accepted overturned ico sar'
        @closed_overturned_ico_sar =
          create :closed_ot_ico_sar,
-                responding_team: @responding_team,
                 original_case: @accepted_overturned_ico_sar_original,
                 original_ico_appeal: @accepted_overturned_ico_sar_original_appeal,
                 identifier: '21-closed overturned ico sar'
@@ -240,7 +239,39 @@ describe CaseFinderService do
 
     describe '#for_user' do
       it 'returns a finder that with a finder scoped to the users cases' do
-        expected = Case::Base.where.not(id: [@overturned_ico_sar.id])
+        expected = [
+          @accepted_case,
+          @accepted_overturned_ico_foi,
+          @accepted_overturned_ico_foi_original,
+          @accepted_overturned_ico_foi_original_appeal,
+          @approved_ico,
+          @approved_ico.original_case,
+          @assigned_newer_case,
+          @assigned_older_case,
+          @assigned_other_team,
+          @awaiting_responder_overturned_ico_foi,
+          @awaiting_responder_overturned_ico_foi_original,
+          @awaiting_responder_overturned_ico_foi_original_appeal,
+          @case_1,
+          @case_2,
+          @closed_case_1,
+          @closed_case_2,
+          @closed_overturned_ico_foi,
+          @newer_case_1,
+          @newer_case_2,
+          @newer_dacu_flagged_case,
+          @newer_dacu_flagged_accept,
+          @older_dacu_flagged_case,
+          @older_dacu_flagged_accept,
+          @older_case_1,
+          @older_case_2,
+          @overturned_ico_foi_original,
+          @overturned_ico_foi_original_appeal,
+          @overturned_ico_foi,
+          @responded_ico,
+          @responded_ico.original_case,
+        ]
+
         finder = CaseFinderService.new(@responder)
         expect(finder.for_user.scope).to match_array expected
       end
@@ -251,46 +282,46 @@ describe CaseFinderService do
         finder = CaseFinderService.new(@manager)
         expect(finder.__send__(:index_cases_scope))
           .to match_array [
-                @older_case_1,
-                @older_case_2,
-                @assigned_older_case,
-                @older_dacu_flagged_case,
-                @older_dacu_flagged_accept,
-                @case_1,
-                @case_2,
-                @newer_case_1,
-                @newer_case_2,
-                @assigned_newer_case,
-                @assigned_other_team,
-                @closed_case_1,
-                @closed_case_2,
-                @newer_dacu_flagged_case,
-                @newer_dacu_flagged_accept,
                 @accepted_case,
-                @approved_ico.original_case,
-                @responded_ico.original_case,
-                @approved_ico,
-                @responded_ico,
-                @overturned_ico_sar,
-                @overturned_ico_sar_original,
-                @overturned_ico_sar_original_appeal,
-                @awaiting_responder_overturned_ico_sar,
-                @awaiting_responder_overturned_ico_sar_original,
-                @awaiting_responder_overturned_ico_sar_original_appeal,
+                @accepted_overturned_ico_foi,
+                @accepted_overturned_ico_foi_original,
+                @accepted_overturned_ico_foi_original_appeal,
                 @accepted_overturned_ico_sar,
                 @accepted_overturned_ico_sar_original,
                 @accepted_overturned_ico_sar_original_appeal,
+                @approved_ico,
+                @approved_ico.original_case,
+                @assigned_newer_case,
+                @assigned_older_case,
+                @assigned_other_team,
+                @awaiting_responder_overturned_ico_foi,
+                @awaiting_responder_overturned_ico_foi_original,
+                @awaiting_responder_overturned_ico_foi_original_appeal,
+                @awaiting_responder_overturned_ico_sar,
+                @awaiting_responder_overturned_ico_sar_original,
+                @awaiting_responder_overturned_ico_sar_original_appeal,
+                @case_1,
+                @case_2,
+                @closed_case_1,
+                @closed_case_2,
+                @closed_overturned_ico_foi,
                 @closed_overturned_ico_sar,
+                @newer_case_1,
+                @newer_case_2,
+                @newer_dacu_flagged_case,
+                @newer_dacu_flagged_accept,
+                @older_dacu_flagged_case,
+                @older_dacu_flagged_accept,
+                @older_case_1,
+                @older_case_2,
                 @overturned_ico_foi_original,
                 @overturned_ico_foi_original_appeal,
                 @overturned_ico_foi,
-                @awaiting_responder_overturned_ico_foi_original,
-                @awaiting_responder_overturned_ico_foi_original_appeal,
-                @awaiting_responder_overturned_ico_foi,
-                @accepted_overturned_ico_foi_original,
-                @accepted_overturned_ico_foi_original_appeal,
-                @accepted_overturned_ico_foi,
-                @closed_overturned_ico_foi
+                @overturned_ico_sar,
+                @overturned_ico_sar_original,
+                @overturned_ico_sar_original_appeal,
+                @responded_ico,
+                @responded_ico.original_case,
               ]
       end
     end
@@ -462,16 +493,14 @@ describe CaseFinderService do
         it 'only includes cases assigned to user teams' do
           finder = CaseFinderService.new(@responder)
           expect(finder.__send__ :open_cases_scope)
-          .to match_array [
-               @accepted_case,
-               @assigned_newer_case,
-               @assigned_older_case,
-               @approved_ico,
-               @awaiting_responder_overturned_ico_sar,
-               @accepted_overturned_ico_sar,
-               @awaiting_responder_overturned_ico_foi,
-               @accepted_overturned_ico_foi
-           ]
+            .to match_array [
+                  @accepted_case,
+                  @accepted_overturned_ico_foi,
+                  @approved_ico,
+                  @assigned_newer_case,
+                  @assigned_older_case,
+                  @awaiting_responder_overturned_ico_foi,
+                ]
         end
       end
       context 'non-responder' do

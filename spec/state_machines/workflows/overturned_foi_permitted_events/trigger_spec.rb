@@ -14,12 +14,16 @@ describe ConfigurableStateMachine::Machine do
           k = create :overturned_ico_foi, :flagged, :dacu_disclosure
           expect(k.current_state).to eq 'unassigned'
           expect(k.workflow).to eq 'trigger'
-          expect(k.state_machine.permitted_events(manager)).to eq [:add_message_to_case,
-                                                                   :assign_responder,
-                                                                   :destroy_case,
-                                                                   :flag_for_clearance,
-                                                                   :link_a_case,
-                                                                   :remove_linked_case]
+          expect(k.state_machine.permitted_events(manager))
+            .to match_array [
+                  :add_message_to_case,
+                  :assign_responder,
+                  :destroy_case,
+                  :flag_for_clearance,
+                  :link_a_case,
+                  :remove_linked_case,
+                  :request_further_clearance
+                ]
         end
       end
 
@@ -301,7 +305,7 @@ describe ConfigurableStateMachine::Machine do
 
     context 'approver' do
       context 'unassigned approver' do
-        let(:approver)   { create :disclosure_specialist}
+        let(:approver) { find_or_create :disclosure_specialist }
 
         context 'unassigned state' do
           it 'should show permitted events' do
@@ -313,6 +317,7 @@ describe ConfigurableStateMachine::Machine do
                                                                          :link_a_case,
                                                                          :reassign_user,
                                                                          :remove_linked_case,
+                                                                         :unaccept_approver_assignment,
                                                                          :unflag_for_clearance]
 
           end
@@ -328,6 +333,7 @@ describe ConfigurableStateMachine::Machine do
                                                                          :link_a_case,
                                                                          :reassign_user,
                                                                          :remove_linked_case,
+                                                                         :unaccept_approver_assignment,
                                                                          :unflag_for_clearance]
           end
         end
@@ -342,6 +348,7 @@ describe ConfigurableStateMachine::Machine do
                                                                           :link_a_case,
                                                                           :reassign_user,
                                                                           :remove_linked_case,
+                                                                          :unaccept_approver_assignment,
                                                                           :unflag_for_clearance]
           end
         end
@@ -351,7 +358,8 @@ describe ConfigurableStateMachine::Machine do
             k = create :with_response_ot_ico_foi, :flagged_accepted, :dacu_disclosure
             expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'awaiting_dispatch'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [ :link_a_case,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
+                                                                          :link_a_case,
                                                                           :reassign_user,
                                                                           :remove_linked_case]
           end
@@ -362,7 +370,8 @@ describe ConfigurableStateMachine::Machine do
             k = create :responded_ot_ico_foi, :flagged_accepted, :dacu_disclosure
             expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'responded'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:link_a_case,
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                         :link_a_case,
                                                                          :remove_linked_case]
           end
         end

@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 describe 'cases/ico/case_details.html.slim', type: :view do
-  let(:ico_foi_case)      { (build_stubbed :ico_foi_case).decorate }
-  let(:ico_sar_case)      { (build_stubbed :ico_sar_case).decorate }
+  let(:ico_foi_case)      { (create :ico_foi_case).decorate }
+  let(:ico_sar_case)      { (create :ico_sar_case).decorate }
   let(:accepted_case)     { (create :accepted_ico_foi_case).decorate }
   let(:accepted_sar_case) { (create :accepted_ico_sar_case).decorate }
   let(:closed_foi_appeal) { (create :closed_ico_foi_case).decorate }
@@ -34,10 +34,11 @@ describe 'cases/ico/case_details.html.slim', type: :view do
                          link_type: nil }
 
         partial = ico_case_details_section(rendered)
-        expect(partial.case_type).to have_no_ico_trigger
+        expect(partial.case_type).to have_ico_trigger
         expect(partial.ico_reference.data.text).to eq ico_foi_case.ico_reference_number
         expect(partial.ico_officer_name.data.text).to eq ico_foi_case.ico_officer_name
-        expect(partial.case_type.data.text).to eq "ICO appeal (FOI)  "
+        expect(partial.case_type.data.text)
+          .to eq "ICO appeal (FOI) This is a Trigger case"
         expect(partial.date_received.data.text)
           .to eq ico_foi_case.received_date.strftime(Settings.default_date_format)
         expect(partial.external_deadline.data.text)
@@ -107,10 +108,11 @@ describe 'cases/ico/case_details.html.slim', type: :view do
                          link_type: nil }
 
         partial = ico_case_details_section(rendered)
-        expect(partial.case_type).to have_no_ico_trigger
+        expect(partial.case_type).to have_ico_trigger
         expect(partial.ico_reference.data.text).to eq ico_sar_case.ico_reference_number
         expect(partial.ico_officer_name.data.text).to eq ico_sar_case.ico_officer_name
-        expect(partial.case_type.data.text).to eq "ICO appeal (SAR)  "
+        expect(partial.case_type.data.text)
+          .to eq "ICO appeal (SAR) This is a Trigger case"
         expect(partial.date_received.data.text)
           .to eq ico_sar_case.received_date.strftime(Settings.default_date_format)
         expect(partial.external_deadline.data.text)

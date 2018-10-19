@@ -3,19 +3,20 @@ require 'rails_helper'
 describe ConfigurableStateMachine::Machine do
   context 'flagged case' do
     context 'manager' do
-      let(:manager) { create :manager }
+      let(:manager) { find_or_create :disclosure_bmt_user }
 
       context 'unassigned state' do
         it 'should show permitted events' do
           k = create :sar_case, :flagged
           expect(k.current_state).to eq 'unassigned'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
-                                                                      :assign_responder,
-                                                                      :destroy_case,
-                                                                      :edit_case,
-                                                                      :flag_for_clearance,
-                                                                      :link_a_case,
-                                                                      :remove_linked_case]
+          expect(k.state_machine.permitted_events(manager.id))
+            .to eq [:add_message_to_case,
+                    :assign_responder,
+                    :destroy_case,
+                    :edit_case,
+                    :flag_for_clearance,
+                    :link_a_case,
+                    :remove_linked_case]
         end
       end
 
@@ -74,7 +75,7 @@ describe ConfigurableStateMachine::Machine do
 
       context 'closed' do
         it "should show permitted events" do
-          k = create :closed_trigger_sar, :flagged_accepted
+          k = create :closed_sar, :flagged_accepted
           expect(k.current_state).to eq 'closed'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
@@ -132,7 +133,7 @@ describe ConfigurableStateMachine::Machine do
 
       context 'closed state' do
         it 'should show permitted events' do
-          k = create :closed_trigger_sar, :flagged_accepted
+          k = create :closed_sar, :flagged_accepted
           expect(k.current_state).to eq 'closed'
           expect(k.state_machine.permitted_events(responder.id)).to be_empty
         end
@@ -190,7 +191,7 @@ describe ConfigurableStateMachine::Machine do
 
       context 'closed state' do
         it 'should show permitted events' do
-          k = create :closed_trigger_sar, :flagged_accepted
+          k = create :closed_sar, :flagged_accepted
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'closed'
           expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
@@ -205,25 +206,17 @@ describe ConfigurableStateMachine::Machine do
 
     context 'approver' do
       context 'unassigned approver' do
-        let(:team_dacu_disclosure)      { find_or_create :team_dacu_disclosure }
-        let(:disclosure_specialist)     { team_dacu_disclosure.users.first }
-        let(:approver)                  { disclosure_specialist }
-
-        context 'unassigned state' do
-          it 'should show permitted events' do
-            k = create :sar_case, :flagged_accepted
-
-            expect(k.current_state).to eq 'unassigned'
-            expect(k.state_machine.permitted_events(disclosure_specialist.id)).to be_empty
-          end
-        end
+        let(:team_dacu_disclosure)  { find_or_create :team_dacu_disclosure }
+        let(:unassigned_approver)   { create :approver,
+                                             approving_team: team_dacu_disclosure }
 
         context 'awaiting responder state' do
           it 'shows events' do
             k = create :awaiting_responder_sar, :flagged_accepted
 
             expect(k.current_state).to eq 'awaiting_responder'
-            expect(k.state_machine.permitted_events(approver.id)).to be_empty
+            expect(k.state_machine.permitted_events(unassigned_approver.id))
+              .to match_array [:reassign_user, :unflag_for_clearance]
           end
         end
 
@@ -232,17 +225,18 @@ describe ConfigurableStateMachine::Machine do
             k = create :accepted_sar, :flagged_accepted
 
             expect(k.current_state).to eq 'drafting'
-            expect(k.state_machine.permitted_events(approver.id)).to be_empty
+            expect(k.state_machine.permitted_events(unassigned_approver.id))
+              .to match_array [:reassign_user, :unflag_for_clearance]
           end
         end
 
         context 'pending_dacu_clearance state' do
           it 'shows events' do
             k = create :pending_dacu_clearance_sar, :flagged_accepted
-            unassigned_approver = create :approver
 
             expect(k.current_state).to eq 'pending_dacu_clearance'
-            expect(k.state_machine.permitted_events(unassigned_approver.id)).to be_empty
+            expect(k.state_machine.permitted_events(unassigned_approver.id))
+              .to match_array [:reassign_user, :unflag_for_clearance]
           end
         end
 
@@ -252,16 +246,18 @@ describe ConfigurableStateMachine::Machine do
 
             expect(k.current_state).to eq 'awaiting_dispatch'
             expect(k.workflow).to eq 'trigger'
-            expect(k.state_machine.permitted_events(approver.id)).to be_empty
+            expect(k.state_machine.permitted_events(unassigned_approver.id))
+              .to match_array [:reassign_user]
           end
         end
 
         context 'closed' do
           it 'shows events' do
-            k = create :closed_trigger_sar, :flagged_accepted
+            k = create :closed_sar, :flagged_accepted
 
             expect(k.current_state).to eq 'closed'
-            expect(k.state_machine.permitted_events(approver.id)).to be_empty
+            expect(k.state_machine.permitted_events(unassigned_approver.id))
+              .to be_empty
           end
         end
       end
@@ -271,15 +267,19 @@ describe ConfigurableStateMachine::Machine do
   ##################### APPROVER FLAGGED ############################
 
     context 'assigned approver' do
-      context 'unassigned state' do
+      let(:approver) { find_or_create :disclosure_specialist }
 
+      context 'unassigned state' do
         it 'should show permitted events' do
           k = create :sar_case, :flagged_accepted
-          approver = approver_in_assigned_team(k)
           expect(k.current_state).to eq 'unassigned'
-          expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
-                                                                        :reassign_user,
-                                                                        :unaccept_approver_assignment]
+          expect(k.state_machine.permitted_events(approver.id))
+            .to match_array [
+                  :add_message_to_case,
+                  :reassign_user,
+                  :unaccept_approver_assignment,
+                  :unflag_for_clearance,
+                ]
         end
       end
 
@@ -288,9 +288,13 @@ describe ConfigurableStateMachine::Machine do
           k = create :awaiting_responder_sar, :flagged_accepted
           approver = approver_in_assigned_team(k)
           expect(k.current_state).to eq 'awaiting_responder'
-          expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
-                                                                        :reassign_user,
-                                                                        :unaccept_approver_assignment]
+          expect(k.state_machine.permitted_events(approver.id))
+            .to match_array [
+                  :add_message_to_case,
+                  :reassign_user,
+                  :unaccept_approver_assignment,
+                  :unflag_for_clearance,
+                ]
         end
       end
 
@@ -300,9 +304,13 @@ describe ConfigurableStateMachine::Machine do
           approver = approver_in_assigned_team(k)
 
           expect(k.current_state).to eq 'drafting'
-          expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
-                                                                        :reassign_user,
-                                                                        :unaccept_approver_assignment]
+          expect(k.state_machine.permitted_events(approver.id))
+            .to eq [
+                  :add_message_to_case,
+                  :reassign_user,
+                  :unaccept_approver_assignment,
+                  :unflag_for_clearance,
+                ]
         end
       end
 
@@ -312,11 +320,15 @@ describe ConfigurableStateMachine::Machine do
           approver = approver_in_assigned_team(k)
 
           expect(k.current_state).to eq 'pending_dacu_clearance'
-          expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
-                                                                        :approve,
-                                                                        :reassign_user,
-                                                                        :request_amends,
-                                                                        :unaccept_approver_assignment]
+          expect(k.state_machine.permitted_events(approver.id))
+            .to eq [
+                  :add_message_to_case,
+                  :approve,
+                  :reassign_user,
+                  :request_amends,
+                  :unaccept_approver_assignment,
+                  :unflag_for_clearance,
+                ]
         end
       end
 
@@ -333,7 +345,7 @@ describe ConfigurableStateMachine::Machine do
 
       context 'closed' do
         it 'shows events' do
-          k = create :closed_trigger_sar, :flagged_accepted
+          k = create :closed_sar, :flagged_accepted
           approver = approver_in_assigned_team(k)
           expect(k.current_state).to eq 'closed'
           expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case ]

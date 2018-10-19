@@ -14,7 +14,6 @@ feature 'adding cases' do
 
   before do
     CTS.class_eval { @dacu_manager = nil; @dacu_team = nil }
-    create :responding_team
     find_or_create :team_dacu
 
     login_as admin
@@ -243,8 +242,8 @@ feature 'adding cases' do
 
   def create_foi(case_type:, target_state:, flag: nil)
     stub_s3_uploader_for_all_files!
-    find_or_create :default_press_officer
-    find_or_create :default_private_officer
+    find_or_create :press_officer
+    find_or_create :private_officer
     admin_cases_page.load
     admin_cases_page.create_case_button.click
     admin_cases_new_page.create_link_for_correspondence('FOI').click
