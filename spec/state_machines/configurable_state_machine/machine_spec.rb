@@ -24,70 +24,100 @@ module ConfigurableStateMachine
     end
   end
 
+  class DummyPredicate
+    def initialize(user:, kase:)
+      @user = user
+      @kase = kase
+    end
+
+    def can_trigger_dummy_event_as_manager?
+      false
+    end
+
+    def can_trigger_dummy_event_as_approver?
+      false
+    end
+
+    def can_trigger_dummy_event_as_responder?
+      false
+    end
+  end
+
   describe Machine do
 
     let(:config)  do
       RecursiveOpenStruct.new(
-        {
-          initial_state: 'unassigned',
-          user_roles: {
-            manager: {
-              states: {
-                unassigned: {
-                  add_message_to_case: {
-                    if: 'Case::FOI::StandardPolicy#can_add_message_to_case?'
+          {
+              initial_state: 'unassigned',
+              user_roles: {
+                  manager: {
+                      states: {
+                          unassigned: {
+                              add_message_to_case: {
+                                  if: 'Case::FOI::StandardPolicy#can_add_message_to_case?'
+                              },
+                              assign_responder: {
+                                  transition_to: 'awaiting_responder'
+                              },
+                              destroy_case: nil,
+                              dummy_event_controlled_by_predicate: {
+                                  if: 'ConfigurableStateMachine::DummyPredicate#can_trigger_dummy_event_as_manager?'
+                              },
+                              edit_case: nil,
+                              flag_for_clearance: nil,
+                              unflag_for_clearance: {
+                                  if: 'Case::FOI::StandardPolicy#unflag_for_clearance?'
+                              }
+                          },
+                          drafting: {
+                              add_message_to_case: {
+                                  if: 'Case::FOI::StandardPolicy#can_add_message_to_case?',
+                                  switch_workflow: 'trigger',
+                                  transition_to: 'ready_to_send',
+                                  after_transition: 'Workflows::Hooks#notify_responder_message_received'
+                              },
+                              add_response: nil
+                          },
+                          awaiting_dispatch: {
+                              remove_response: {
+                                  transition_to_using: 'ConfigurableStateMachine::DummyConditional#remove_response'
+                              }
+                          }
+                      }
                   },
-                  assign_responder: {
-                    transition_to: 'awaiting_responder'
+                  approver: {
+                      states: {
+                          unassigned: {
+                              add_message_to_case: {
+                                  if: 'Case::FOI::StandardPolicy#can_add_message_to_case?'
+                              },
+                              dummy_event_controlled_by_predicate: {
+                                  if: 'ConfigurableStateMachine::DummyPredicate#can_trigger_dummy_event_as_approver?'
+                              },
+                              flag_for_press: {
+                                  transition_to: 'awaiting_press_clearance',
+                                  switch_workflow_using: 'Workflows::Conditionals#unaccept_approver_assignment'
+                              }
+                          }
+                      }
                   },
-                  destroy_case: nil,
-                  edit_case: nil,
-                  flag_for_clearance: nil,
-                  unflag_for_clearance: {
-                    if: 'Case::FOI::StandardPolicy#unflag_for_clearance?'
+                  responder: {
+                      states: {
+                          unassigned: {
+                              dummy_event_controlled_by_predicate: {
+                                  if: 'ConfigurableStateMachine::DummyPredicate#can_trigger_dummy_event_as_responder?'
+                              },
+                          },
+                          drafting: {
+                              add_message_to_case: {
+                                  if: 'Case::FOI::StandardPolicy#can_add_message_to_case?',
+                                  after_transition: 'Workflows::Hooks#notify_responder_message_received'
+                              }
+                          }
+                      }
                   }
-                },
-                drafting: {
-                  add_message_to_case: {
-                    if: 'Case::FOI::StandardPolicy#can_add_message_to_case?',
-                    switch_workflow: 'trigger',
-                    transition_to: 'ready_to_send',
-                    after_transition: 'Workflows::Hooks#notify_responder_message_received'
-                  },
-                  add_response: nil
-                },
-                awaiting_dispatch: {
-                  remove_response: {
-                    transition_to_using: 'ConfigurableStateMachine::DummyConditional#remove_response'
-                  }
-                }
               }
-            },
-            approver: {
-              states: {
-                unassigned: {
-                  add_message_to_case: {
-                    if: 'Case::FOI::StandardPolicy#can_add_message_to_case?'
-                  },
-                  flag_for_press: {
-                    transition_to: 'awaiting_press_clearance',
-                    switch_workflow_using: 'Workflows::Conditionals#unaccept_approver_assignment'
-                  }
-                }
-              }
-            },
-            responder: {
-              states: {
-                drafting: {
-                  add_message_to_case: {
-                    if: 'Case::FOI::StandardPolicy#can_add_message_to_case?',
-                    after_transition: 'Workflows::Hooks#notify_responder_message_received'
-                  }
-                }
-              }
-            }
-          }
-        })
+          })
     end
 
     let(:kase)        { create :case }
@@ -175,9 +205,49 @@ module ConfigurableStateMachine
       end
     end
 
-    describe 'can_trigger_event' do
+    describe 'can_trigger_event?' do
 
       before(:each) { @policy = double Case::FOI::StandardPolicy }
+
+      context 'user has multiple roles' do
+        context 'no user roles have rights to trigger event' do
+          it 'returns false' do
+            machine = Machine.new(config: config, kase: @unassigned_case)
+            expect(machine).to receive(:extract_roles_from_metadata).and_return(%w{ manager responder approver })
+            expect(machine.can_trigger_event?(
+                event_name: :dummy_event_controlled_by_predicate,
+                metadata: {acting_user: @manager, acting_team_id: @managing_team.id })
+            ).to be false
+          end
+
+        end
+        context 'the first user role is prevented from triggering an event by a predicate, but subsequent ones are ok' do
+          it 'returns true' do
+            machine = Machine.new(config: config, kase: @unassigned_case)
+            expect_any_instance_of(DummyPredicate).to receive(:can_trigger_dummy_event_as_approver?).and_return(true)
+            expect(machine).to receive(:extract_roles_from_metadata).and_return(%w{ manager responder approver })
+            expect(machine.can_trigger_event?(
+                event_name: :dummy_event_controlled_by_predicate,
+                metadata: {acting_user: @manager, acting_team_id: @managing_team.id })
+            ).to be true
+          end
+        end
+        context 'all user roles have rights to trigger event' do
+          it 'returns true' do
+            machine = Machine.new(config: config, kase: @unassigned_case)
+            expect_any_instance_of(DummyPredicate).to receive(:can_trigger_dummy_event_as_manager?).and_return(true)
+            expect_any_instance_of(DummyPredicate).to receive(:can_trigger_dummy_event_as_approver?).and_return(true)
+            expect_any_instance_of(DummyPredicate).to receive(:can_trigger_dummy_event_as_responder?).and_return(true)
+            expect(machine).to receive(:extract_roles_from_metadata).and_return(%w{ manager responder approver })
+            expect(machine.can_trigger_event?(
+                event_name: :dummy_event_controlled_by_predicate,
+                metadata: {acting_user: @manager, acting_team_id: @managing_team.id })
+            ).to be true
+
+          end
+        end
+
+      end
 
       context 'role provided as a string parameter' do
         context 'event can be triggered' do
@@ -187,10 +257,10 @@ module ConfigurableStateMachine
               expect(@policy).to receive(:can_add_message_to_case?).and_return(true)
               machine = Machine.new(config: config, kase: @unassigned_case)
               expect(machine.can_trigger_event?(
-                                                event_name: :add_message_to_case,
-                                                metadata: {acting_user: @manager},
-                                                roles: 'manager')
-                                              ).to be true
+                  event_name: :add_message_to_case,
+                  metadata: {acting_user: @manager},
+                  roles: 'manager')
+              ).to be true
             end
           end
 
@@ -199,10 +269,10 @@ module ConfigurableStateMachine
               expect(Case::FOI::StandardPolicy).not_to receive(:new)
               config.user_roles.manager.states.unassigned.add_message_to_case.delete_field(:if)
               expect(machine.can_trigger_event?(
-                                                event_name: :add_message_to_case,
-                                                metadata: {acting_user: @manager},
-                                                roles: 'manager')
-                                              ).to be true
+                  event_name: :add_message_to_case,
+                  metadata: {acting_user: @manager},
+                  roles: 'manager')
+              ).to be true
 
             end
           end
@@ -215,20 +285,20 @@ module ConfigurableStateMachine
               expect(@policy).to receive(:can_add_message_to_case?).and_return(false)
               machine = Machine.new(config: config, kase: @unassigned_case)
               expect(machine.can_trigger_event?(
-                                                event_name: :add_message_to_case,
-                                                metadata: {acting_user: @manager},
-                                                roles: 'manager')
-                                              ).to be false
+                  event_name: :add_message_to_case,
+                  metadata: {acting_user: @manager},
+                  roles: 'manager')
+              ).to be false
             end
           end
           context 'event not a valid event for role/state' do
             it 'returns false' do
               machine = Machine.new(config: config, kase: @unassigned_case)
               expect(machine.can_trigger_event?(
-                                                event_name: :flag_for_press,
-                                                metadata: {acting_user: @manager},
-                                                roles: 'manager')
-                                              ).to be false
+                  event_name: :flag_for_press,
+                  metadata: {acting_user: @manager},
+                  roles: 'manager')
+              ).to be false
             end
           end
         end
@@ -239,10 +309,10 @@ module ConfigurableStateMachine
           it 'returns true' do
             machine = Machine.new(config: config, kase: @unassigned_case)
             expect(machine.can_trigger_event?(
-                                              event_name: :destroy_case,
-                                              metadata: {acting_user: @manager},
-                                              roles: ['manager'])
-                                             ).to be true
+                event_name: :destroy_case,
+                metadata: {acting_user: @manager},
+                roles: ['manager'])
+            ).to be true
           end
         end
 
@@ -251,10 +321,10 @@ module ConfigurableStateMachine
             it 'returns false' do
               machine = Machine.new(config: config, kase: @unassigned_case)
               expect(machine.can_trigger_event?(
-                                                event_name: :close_case,
-                                                metadata: {acting_user: @manager},
-                                                roles: ['manager'])
-                                              ).to be false
+                  event_name: :close_case,
+                  metadata: {acting_user: @manager},
+                  roles: ['manager'])
+              ).to be false
             end
           end
         end
@@ -265,9 +335,9 @@ module ConfigurableStateMachine
           it 'returns true' do
             machine = Machine.new(config: config, kase: @unassigned_case)
             expect(machine.can_trigger_event?(
-                                              event_name: :destroy_case,
-                                              metadata: {acting_user: @manager, acting_team: @managing_team })
-                                            ).to be true
+                event_name: :destroy_case,
+                metadata: {acting_user: @manager, acting_team: @managing_team })
+            ).to be true
           end
         end
 
@@ -275,9 +345,9 @@ module ConfigurableStateMachine
           it 'returns false' do
             machine = Machine.new(config: config, kase: @unassigned_case)
             expect(machine.can_trigger_event?(
-                                              event_name: :close_case,
-                                              metadata: {acting_user: @manager, acting_team: @managing_team })
-                                            ).to be false
+                event_name: :close_case,
+                metadata: {acting_user: @manager, acting_team: @managing_team })
+            ).to be false
           end
         end
 
@@ -287,9 +357,9 @@ module ConfigurableStateMachine
           it 'returns true' do
             machine = Machine.new(config: config, kase: @unassigned_case)
             expect(machine.can_trigger_event?(
-                                              event_name: :destroy_case,
-                                              metadata: {acting_user: @manager, acting_team_id: @managing_team.id })
-                                            ).to be true
+                event_name: :destroy_case,
+                metadata: {acting_user: @manager, acting_team_id: @managing_team.id })
+            ).to be true
           end
         end
 
@@ -297,9 +367,9 @@ module ConfigurableStateMachine
           it 'returns false' do
             machine = Machine.new(config: config, kase: @unassigned_case)
             expect(machine.can_trigger_event?(
-                                              event_name: :close_case,
-                                              metadata: {acting_user: @manager, acting_team_id: @managing_team.id })
-                                            ).to be false
+                event_name: :close_case,
+                metadata: {acting_user: @manager, acting_team_id: @managing_team.id })
+            ).to be false
           end
         end
       end
@@ -309,18 +379,18 @@ module ConfigurableStateMachine
             it 'returns true' do
               machine = Machine.new(config: config, kase: @unassigned_case)
               expect(machine.can_trigger_event?(
-                                                event_name: :destroy_case,
-                                                metadata: {acting_user: @manager})
-                                              ).to be true
+                  event_name: :destroy_case,
+                  metadata: {acting_user: @manager})
+              ).to be true
             end
           end
           context 'event cannot be triggered' do
             it 'returns false' do
               machine = Machine.new(config: config, kase: @unassigned_case)
               expect(machine.can_trigger_event?(
-                                                event_name: :close_case,
-                                                metadata: {acting_user: @manager })
-                                              ).to be false
+                  event_name: :close_case,
+                  metadata: {acting_user: @manager })
+              ).to be false
             end
           end
 
@@ -330,9 +400,9 @@ module ConfigurableStateMachine
             it 'returns true' do
               machine = Machine.new(config: config, kase: @unassigned_case)
               expect(machine.can_trigger_event?(
-                                                event_name: :flag_for_press,
-                                                metadata: {acting_user: @manager_approver })
-                                              ).to be true
+                  event_name: :flag_for_press,
+                  metadata: {acting_user: @manager_approver })
+              ).to be true
             end
           end
 
@@ -340,9 +410,9 @@ module ConfigurableStateMachine
             it 'returns true' do
               machine = Machine.new(config: config, kase: @unassigned_case)
               expect(machine.can_trigger_event?(
-                                                event_name: :flag_for_clearance,
-                                                metadata: {acting_user: @manager_approver })
-                                              ).to be true
+                  event_name: :flag_for_clearance,
+                  metadata: {acting_user: @manager_approver })
+              ).to be true
             end
           end
         end
@@ -352,18 +422,18 @@ module ConfigurableStateMachine
           it 'returns true' do
             machine = Machine.new(config: config, kase: @unassigned_case)
             expect(machine.can_trigger_event?(
-                                              event_name: :destroy_case,
-                                              metadata: {acting_user_id: @manager.id})
-                                            ).to be true
+                event_name: :destroy_case,
+                metadata: {acting_user_id: @manager.id})
+            ).to be true
           end
         end
         context 'event cannot be triggered' do
           it 'returns false' do
             machine = Machine.new(config: config, kase: @unassigned_case)
             expect(machine.can_trigger_event?(
-                                              event_name: :close_case,
-                                              metadata: {acting_user_id: @manager.id})
-                                            ).to be false
+                event_name: :close_case,
+                metadata: {acting_user_id: @manager.id})
+            ).to be false
           end
         end
       end
@@ -550,6 +620,7 @@ module ConfigurableStateMachine
             add_response
             assign_responder
             destroy_case
+            dummy_event_controlled_by_predicate
             edit_case
             flag_for_clearance
             flag_for_press
@@ -562,7 +633,7 @@ module ConfigurableStateMachine
       context ' permitted_events specifically specified' do
         it 'returns a list of all events in alphabetical order' do
           config.permitted_events =
-          [:aaa, :bbb, :ccc]
+              [:aaa, :bbb, :ccc]
           machine = Machine.new(config: config, kase: kase)
           expect(machine.events).to eq [:aaa, :bbb, :ccc]
         end
@@ -577,17 +648,17 @@ module ConfigurableStateMachine
           context 'triggered as a result of an predicate returning true' do
             it 'returns the event config' do
               expect(Case::FOI::StandardPolicy)
-                .to receive(:new)
-                      .with(user: @manager, kase: @unassigned_case)
-                      .and_return(@policy)
+                  .to receive(:new)
+                          .with(user: @manager, kase: @unassigned_case)
+                          .and_return(@policy)
               expect(@policy).to receive(:can_add_message_to_case?).and_return(true)
               machine = Machine.new(config: config, kase: @unassigned_case)
               expect(machine.config_for_event(
-                       event_name: :add_message_to_case,
-                       metadata: {acting_user: @manager},
-                       roles: 'manager').to_h
-                    )
-                .to eq({ if: 'Case::FOI::StandardPolicy#can_add_message_to_case?' })
+                  event_name: :add_message_to_case,
+                  metadata: {acting_user: @manager},
+                  roles: 'manager').to_h
+              )
+                  .to eq({ if: 'Case::FOI::StandardPolicy#can_add_message_to_case?' })
             end
           end
 
@@ -596,10 +667,10 @@ module ConfigurableStateMachine
               expect(Case::FOI::StandardPolicy).not_to receive(:new)
               config.user_roles.manager.states.unassigned.add_message_to_case.delete_field(:if)
               expect(machine.can_trigger_event?(
-                                                event_name: :add_message_to_case,
-                                                metadata: {acting_user: @manager},
-                                                roles: 'manager')
-                                              ).to be true
+                  event_name: :add_message_to_case,
+                  metadata: {acting_user: @manager},
+                  roles: 'manager')
+              ).to be true
 
             end
           end
@@ -612,20 +683,20 @@ module ConfigurableStateMachine
               expect(@policy).to receive(:can_add_message_to_case?).and_return(false)
               machine = Machine.new(config: config, kase: @unassigned_case)
               expect(machine.can_trigger_event?(
-                                                event_name: :add_message_to_case,
-                                                metadata: {acting_user: @manager},
-                                                roles: 'manager')
-                                              ).to be false
+                  event_name: :add_message_to_case,
+                  metadata: {acting_user: @manager},
+                  roles: 'manager')
+              ).to be false
             end
           end
           context 'event not a valid event for role/state' do
             it 'returns false' do
               machine = Machine.new(config: config, kase: @unassigned_case)
               expect(machine.can_trigger_event?(
-                                                event_name: :flag_for_press,
-                                                metadata: {acting_user: @manager},
-                                                roles: 'manager')
-                                              ).to be false
+                  event_name: :flag_for_press,
+                  metadata: {acting_user: @manager},
+                  roles: 'manager')
+              ).to be false
             end
           end
         end
@@ -680,7 +751,7 @@ module ConfigurableStateMachine
         context 'no event for this state' do
           it 'raises InvalidEventError' do
             expect {
-                machine.non_existent_event!({acting_user: @manager, acting_team: @managing_team, linked_case_id: 33})
+              machine.non_existent_event!({acting_user: @manager, acting_team: @managing_team, linked_case_id: 33})
             }.to raise_error do |error|
               expect(error.message).to match(/Invalid event: type: FOI/)
               expect(error.message).to match(/event: non_existent_event/)
@@ -703,7 +774,7 @@ module ConfigurableStateMachine
         context 'acting_user no team' do
           it 'extracts all three roles' do
             metadata = { acting_user: user }
-           expect(machine.__send__(:extract_roles_from_metadata, metadata)).to match_array expected_roles
+            expect(machine.__send__(:extract_roles_from_metadata, metadata)).to match_array expected_roles
           end
         end
 
