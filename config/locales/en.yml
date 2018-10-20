@@ -26,6 +26,7 @@ en:
         correspondence_type_ids: "Correspondence types"
       case/ico/base:
         uploaded_ico_decision_files: ''
+        internal_deadline: Draft deadline
       case/sar:
         third_party: ''
       report:
