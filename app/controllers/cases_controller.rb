@@ -368,17 +368,12 @@ class CasesController < ApplicationController
 
   def update_closure
     authorize @case
-
-    @case.prepare_for_close
     close_params = process_closure_params(@case.type_abbreviation)
-    if @case.update(close_params)
-      if @case.ico? && params[:case_ico][:uploaded_decision_files].present?
-        uploader = S3Uploader.new(@case, current_user)
-        uploader.process_files(params[:case_ico][:uploaded_ico_decision_files], :ico_decision)
-      end
-      role = current_user.manager? ? :manager : :responder
-      @case.state_machine.update_closure!(acting_user: current_user,
-                                          acting_team: @case.team_for_unassigned_user(current_user, role))
+    @case.prepare_for_close
+
+    service = UpdateClosureService.new(@case, current_user, close_params)
+    service.call
+    if service.result == :ok
       set_permitted_events
       flash[:notice] = t('notices.closure_details_updated')
       redirect_to case_path(@case)
