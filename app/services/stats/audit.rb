@@ -5,11 +5,16 @@ module Stats
 
     COLUMN_NAMES = %w{
       case_number
+      case_type
       trigger
+      status
       date_received
-      date_last_assigned
-      date_approved
-      result
+      draft_deadline
+      final_deadline
+      date_responded
+      info_held
+      granted
+      exemptions
     }
 
     attr_reader :filename
@@ -35,31 +40,43 @@ module Stats
 
     def values_for_case(case_id)
       arry = []
-      kase = Case.find case_id
+      kase = Case::Base.find(case_id).decorate
       arry << kase.number
+      arry << kase.decorate.pretty_type
       arry << kase.flagged? ? 'YES' : 'NO'
+      arry << kase.status
       arry << kase.received_date.strftime('%Y-%m-%d')
-      if kase.flagged?
-        arry << last_assigned_date(kase)
-        arry << date_approved(kase)
-      else
-        arry << ''
-        arry << ''
-      end
-      arry << CaseAnalyser.new(kase).result
+      arry << format_date(kase.internal_deadline)
+      arry << format_date(kase.external_deadline)
+      arry << date_responded(kase)
+      arry << kase.info_held_status&.name
+      arry << kase.outcome&.name
+      arry << kase.exemptions.map{ |x| CaseClosure::Exemption.section_number_from_id(x.abbreviation) }.join(',')
     end
 
     def last_assigned_date(kase)
-      kase.transitions.where(event: 'assign_responder').last.created_at.to_date
+      assignment_transition = kase.transitions.where(event: 'assign_responder').last
+      assignment_transition&.created_at&.to_date
     end
 
-    def date_approved(kase)
-      kase.transitions.where(event: 'approve', acting_team_id: default_clearance_team(kase).id).last&.created_at&.to_date
+    def format_date(date)
+      if date.is_a?(Date)
+        date.strftime('%Y-%m-%d')
+      elsif date.blank?
+        ''
+      else
+        date.to_date.strftime('%Y-%m-%d')
+      end
     end
 
-    def default_clearance_team(kase)
-      team_code = Settings.__send__("#{kase.type_abbreviation.downcase}_cases").default_clearance_team
-      Team.find_by_code team_code
+    def date_responded(kase)
+      transition = kase.transitions.where(event: 'respond').last
+      if transition
+        transition.created_at.strftime('%Y-%m-%d')
+      else
+        ''
+      end
     end
+
   end
 end
