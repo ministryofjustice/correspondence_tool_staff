@@ -4,7 +4,7 @@ require 'cts/policies'
 require 'cts/teams/cli'
 require 'cts/users'
 
-class CTS::CLI < Thor
+class Cts::CLI < Thor
   include Thor::Rails unless SKIP_RAILS
 
   desc 'cases', 'Case commands'

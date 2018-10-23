@@ -1,5 +1,5 @@
-require 'cts/cases/create'
-require 'cts/cases/constants'
+# require 'cts/cases/create'
+# require 'cts/cases/constants'
 
 
 class Admin::CasesController < AdminController
