@@ -4,8 +4,9 @@ feature 'editing case closure information' do
   given(:manager) { create :disclosure_bmt_user }
 
   scenario 'bmt changes ico decision to overturned', js: true do
+    Timecop.freeze(11.days.ago)
     kase = create :closed_ico_foi_case
-
+    Timecop.return
     login_as manager
     cases_show_page.load(id: kase.id)
     edit_ico_case_closure_step(kase: kase,
@@ -14,8 +15,9 @@ feature 'editing case closure information' do
   end
 
   scenario 'bmt changes ico decision to upheld', js: true do
-    kase = create :closed_ico_foi_case, :overturned_by_ico
-
+    Timecop.freeze(11.days.ago)
+    kase = create :closed_ico_foi_case, :overturned_by_ico, created_at: 11.days.ago
+    Timecop.return
     login_as manager
     cases_show_page.load(id: kase.id)
     edit_ico_case_closure_step(kase: kase,
