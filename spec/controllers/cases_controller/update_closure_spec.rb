@@ -10,7 +10,8 @@ describe CasesController do
     DbHousekeeping.clean
   end
 
-  let(:manager) { create :disclosure_bmt_user }
+  let(:manager)     { create :disclosure_bmt_user }
+  let(:responder)   { create :responder }
 
   describe 'PATCH update_closure' do
     context 'SAR cases' do
@@ -25,12 +26,13 @@ describe CasesController do
                                    }
                                  } }
 
-      before do
-        sign_in manager
-        patch :update_closure, params: params
-      end
+    context 'closed SAR case' do
+      context 'as a manager' do
+        before do
+          sign_in manager
+          patch :update_closure, params: params
+        end
 
-      context 'closed SAR case' do
         let(:kase) { create :closed_sar }
 
         before do
@@ -53,18 +55,27 @@ describe CasesController do
         end
       end
 
-      context 'an open SAR case' do
-        let(:new_date_responded) { 1.business_day.ago }
-        let(:kase)               { create :sar_case }
-
-        it 'does not change the date responded' do
-          kase.reload
-          expect(kase.date_responded).not_to eq new_date_responded
+      context 'as a responder' do
+        before do
+          sign_in responder
+          patch :update_closure, params: params
         end
 
-        it 'does not update the cases refusal reason' do
+        let(:kase) { create :closed_sar, responder: responder }
+
+        before do
+          sign_in manager
+          patch :update_closure, params: params
+        end
+
+        it 'updates the cases date responded field' do
           kase.reload
-          expect(kase.refusal_reason).to be_nil
+          expect(kase.date_responded).to eq new_date_responded
+        end
+
+        it 'updates the cases refusal reason' do
+          kase.reload
+          expect(kase.refusal_reason).to eq CaseClosure::RefusalReason.tmm
         end
 
         it 'redirects to the case details page' do
@@ -72,6 +83,33 @@ describe CasesController do
         end
       end
     end
+
+    context 'an open SAR case' do
+
+      before do
+        sign_in manager
+        patch :update_closure, params: params
+      end
+
+      let(:new_date_responded) { 1.business_day.ago }
+      let(:kase)               { create :sar_case }
+
+      it 'does not change the date responded' do
+        kase.reload
+        expect(kase.date_responded).not_to eq new_date_responded
+      end
+
+      it 'does not update the cases refusal reason' do
+        kase.reload
+        expect(kase.refusal_reason).to be_nil
+      end
+
+      it 'redirects to the case details page' do
+        expect(response).to redirect_to case_path(id: kase.id)
+      end
+    end
+    end
+
 
     context 'FOI case' do
       let(:new_date_responded) { 1.business_day.before(kase.date_responded) }
