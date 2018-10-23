@@ -274,9 +274,9 @@ describe CasesController do
           let(:params)             { {
                                        id: kase.id,
                                        case_ico: {
-                                         date_ico_decision_received_yyyy: new_date_responded.year,
-                                         date_ico_decision_received_mm: new_date_responded.month,
-                                         date_ico_decision_received_dd: new_date_responded.day,
+                                         date_ico_decision_received_yyyy: kase.created_at.year,
+                                         date_ico_decision_received_mm: kase.created_at.month,
+                                         date_ico_decision_received_dd: kase.created_at.day,
                                          ico_decision: 'upheld',
                                          ico_decision_comment: 'ayt',
                                          uploaded_ico_decision_files: ['uploads/71/request/request.pdf']
@@ -289,7 +289,7 @@ describe CasesController do
 
           it 'updates the cases date responded field' do
             kase.reload
-            expect(kase.date_ico_decision_received).to eq new_date_responded
+            expect(kase.date_ico_decision_received).to eq kase.created_at.to_date
           end
 
           it 'updates the cases refusal reason' do
@@ -306,9 +306,10 @@ describe CasesController do
           let(:params)             { {
               id: kase.id,
               case_ico: {
-                  date_ico_decision_received_yyyy: new_date_responded.year,
-                  date_ico_decision_received_mm: new_date_responded.month,
-                  date_ico_decision_received_dd: new_date_responded.day,
+                  date_ico_decision_received_yyyy: kase.created_at.year,
+                  date_ico_decision_received_mm: kase.created_at.month,
+                  date_ico_decision_received_dd: kase.created_at
+                                                     .day,
                   ico_decision: 'upheld',
                   ico_decision_comment: 'ayt',
               }
@@ -320,7 +321,7 @@ describe CasesController do
 
           it 'updates the cases date responded field' do
             kase.reload
-            expect(kase.date_ico_decision_received).to eq new_date_responded
+            expect(kase.date_ico_decision_received).to eq kase.created_at.to_date
           end
 
           it 'updates the cases refusal reason' do
@@ -334,7 +335,7 @@ describe CasesController do
         end
 
         context 'change to overturned' do
-          let(:kase)         { create :closed_ico_foi_case }
+          let(:kase)         { create :closed_ico_foi_case, date_ico_decision_received: Date.today }
           let(:params)       { {
                               id: kase.id,
                                case_ico: {
