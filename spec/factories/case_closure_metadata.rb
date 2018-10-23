@@ -285,6 +285,13 @@ FactoryBot.define do
         requires_exemption          { false }
       end
 
+      trait :sar_tmm do
+        name                        { 'SAR Clarification/Tell Me More' }
+        abbreviation                { 'sartmm' }
+        sequence_id                 { 105 }
+        requires_exemption          { false }
+      end
+
       trait :exempt do
         name                        { 'Exemption applied' }
         abbreviation                { 'exempt' }

@@ -203,7 +203,7 @@ describe CasesController do
 
         context 'missing info' do
           it 'updates case closure reason with tmm' do
-            tmm_refusal_reason = create :refusal_reason, :tmm
+            tmm_refusal_reason = create :refusal_reason, :sar_tmm
             params[:case_sar][:missing_info] = 'yes'
             patch :process_respond_and_close, params: params
             @drafting_ovt_sar_case.reload
