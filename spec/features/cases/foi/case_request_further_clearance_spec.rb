@@ -16,6 +16,9 @@ feature 'Requesting further clearance on an unflagged case' do
     expect(cases_show_page).to be_displayed
     event_row = cases_show_page.case_history.rows.first
     expect(event_row.details.event.text)
+        .to eq 'Clearance level added'
+    event_row = cases_show_page.case_history.rows[1]
+    expect(event_row.details.event.text)
       .to eq 'Request further clearance'
     trigger_details = cases_show_page.case_details.foi_basic_details.case_type.foi_trigger.text
     expect(trigger_details).to eq 'This is a Trigger case'
@@ -27,6 +30,9 @@ feature 'Requesting further clearance on an unflagged case' do
     cases_show_page.clearance_levels.escalate_link.click
     expect(cases_show_page).to be_displayed
     event_row = cases_show_page.case_history.rows.first
+    expect(event_row.details.event.text)
+        .to eq 'Clearance level added'
+    event_row = cases_show_page.case_history.rows[1]
     expect(event_row.details.event.text)
       .to eq 'Request further clearance'
     trigger_details = cases_show_page.case_details.foi_basic_details.case_type.foi_trigger.text

@@ -131,7 +131,7 @@
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 update_closure:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_overturned?
 
           ########################### SAR :: STANDARD WORKFLOW :: APPROVER ########################
           approver:

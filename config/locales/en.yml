@@ -27,6 +27,7 @@ en:
       case/ico/base:
         uploaded_ico_decision_files: ''
         internal_deadline: Draft deadline
+        date_ico_decision_received: "Date ICO's decision received at MOJ"
       case/sar:
         third_party: ''
       report:

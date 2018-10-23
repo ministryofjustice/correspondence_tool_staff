@@ -10,7 +10,8 @@ describe CasesController do
     DbHousekeeping.clean
   end
 
-  let(:manager) { create :disclosure_bmt_user }
+  let(:manager)     { create :disclosure_bmt_user }
+  let(:responder)   { create :responder }
 
   describe 'PATCH update_closure' do
     context 'SAR cases' do
@@ -25,12 +26,13 @@ describe CasesController do
                                    }
                                  } }
 
-      before do
-        sign_in manager
-        patch :update_closure, params: params
-      end
+    context 'closed SAR case' do
+      context 'as a manager' do
+        before do
+          sign_in manager
+          patch :update_closure, params: params
+        end
 
-      context 'closed SAR case' do
         let(:kase) { create :closed_sar }
 
         before do
@@ -53,18 +55,27 @@ describe CasesController do
         end
       end
 
-      context 'an open SAR case' do
-        let(:new_date_responded) { 1.business_day.ago }
-        let(:kase)               { create :sar_case }
-
-        it 'does not change the date responded' do
-          kase.reload
-          expect(kase.date_responded).not_to eq new_date_responded
+      context 'as a responder' do
+        before do
+          sign_in responder
+          patch :update_closure, params: params
         end
 
-        it 'does not update the cases refusal reason' do
+        let(:kase) { create :closed_sar, responder: responder }
+
+        before do
+          sign_in manager
+          patch :update_closure, params: params
+        end
+
+        it 'updates the cases date responded field' do
           kase.reload
-          expect(kase.refusal_reason).to be_nil
+          expect(kase.date_responded).to eq new_date_responded
+        end
+
+        it 'updates the cases refusal reason' do
+          kase.reload
+          expect(kase.refusal_reason).to eq CaseClosure::RefusalReason.tmm
         end
 
         it 'redirects to the case details page' do
@@ -72,6 +83,33 @@ describe CasesController do
         end
       end
     end
+
+    context 'an open SAR case' do
+
+      before do
+        sign_in manager
+        patch :update_closure, params: params
+      end
+
+      let(:new_date_responded) { 1.business_day.ago }
+      let(:kase)               { create :sar_case }
+
+      it 'does not change the date responded' do
+        kase.reload
+        expect(kase.date_responded).not_to eq new_date_responded
+      end
+
+      it 'does not update the cases refusal reason' do
+        kase.reload
+        expect(kase.refusal_reason).to be_nil
+      end
+
+      it 'redirects to the case details page' do
+        expect(response).to redirect_to case_path(id: kase.id)
+      end
+    end
+    end
+
 
     context 'FOI case' do
       let(:new_date_responded) { 1.business_day.before(kase.date_responded) }
@@ -236,9 +274,9 @@ describe CasesController do
           let(:params)             { {
                                        id: kase.id,
                                        case_ico: {
-                                         date_ico_decision_received_yyyy: new_date_responded.year,
-                                         date_ico_decision_received_mm: new_date_responded.month,
-                                         date_ico_decision_received_dd: new_date_responded.day,
+                                         date_ico_decision_received_yyyy: kase.created_at.year,
+                                         date_ico_decision_received_mm: kase.created_at.month,
+                                         date_ico_decision_received_dd: kase.created_at.day,
                                          ico_decision: 'upheld',
                                          ico_decision_comment: 'ayt',
                                          uploaded_ico_decision_files: ['uploads/71/request/request.pdf']
@@ -251,7 +289,7 @@ describe CasesController do
 
           it 'updates the cases date responded field' do
             kase.reload
-            expect(kase.date_ico_decision_received).to eq new_date_responded
+            expect(kase.date_ico_decision_received).to eq kase.created_at.to_date
           end
 
           it 'updates the cases refusal reason' do
@@ -268,9 +306,10 @@ describe CasesController do
           let(:params)             { {
               id: kase.id,
               case_ico: {
-                  date_ico_decision_received_yyyy: new_date_responded.year,
-                  date_ico_decision_received_mm: new_date_responded.month,
-                  date_ico_decision_received_dd: new_date_responded.day,
+                  date_ico_decision_received_yyyy: kase.created_at.year,
+                  date_ico_decision_received_mm: kase.created_at.month,
+                  date_ico_decision_received_dd: kase.created_at
+                                                     .day,
                   ico_decision: 'upheld',
                   ico_decision_comment: 'ayt',
               }
@@ -282,7 +321,7 @@ describe CasesController do
 
           it 'updates the cases date responded field' do
             kase.reload
-            expect(kase.date_ico_decision_received).to eq new_date_responded
+            expect(kase.date_ico_decision_received).to eq kase.created_at.to_date
           end
 
           it 'updates the cases refusal reason' do
@@ -296,7 +335,7 @@ describe CasesController do
         end
 
         context 'change to overturned' do
-          let(:kase)         { create :closed_ico_foi_case }
+          let(:kase)         { create :closed_ico_foi_case, date_ico_decision_received: Date.today }
           let(:params)       { {
                               id: kase.id,
                                case_ico: {
