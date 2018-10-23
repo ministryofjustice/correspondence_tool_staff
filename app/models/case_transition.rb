@@ -45,9 +45,7 @@ class CaseTransition < ActiveRecord::Base
   scope :responded,         -> { where event: 'respond' }
   scope :further_clearance, -> { where event: 'request_further_clearance' }
 
-  scope :case_history, -> { where.not(event: ['add_message_to_case',
-                                              'flag_for_clearance',
-                                              'unflag_for_clearance'])}
+  scope :case_history, -> { where.not(event: 'add_message_to_case')}
 
   def record_state_change(kase)
     kase.update!(current_state: self.to_state, last_transitioned_at: self.created_at)
