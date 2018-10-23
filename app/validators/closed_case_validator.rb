@@ -101,8 +101,8 @@ class ClosedCaseValidator < ActiveModel::Validator
       rec.errors.add(:date_ico_decision_received, "can't be blank")
     elsif rec.date_ico_decision_received > Date.today
       rec.errors.add(:date_ico_decision_received, 'future')
-    elsif rec.date_ico_decision_received < 1.month.ago
-      rec.errors.add(:date_ico_decision_received, 'past')
+    elsif rec.date_ico_decision_received < rec.created_at.to_date
+      rec.errors.add(:date_ico_decision_received, 'before creation date')
     end
   end
 

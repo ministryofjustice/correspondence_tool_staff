@@ -459,20 +459,27 @@ describe 'ClosedCaseValidator' do
 
       context 'too far in the past' do
         it 'is invalid' do
-          responded_ico.date_ico_decision_received = 2.months.ago
+          responded_ico.date_ico_decision_received = responded_ico.created_at - 1.day
           expect(responded_ico).not_to be_valid
-          expect(responded_ico.errors[:date_ico_decision_received]).to eq ['past']
+          expect(responded_ico.errors[:date_ico_decision_received]).to eq ['before creation date']
         end
       end
 
       context 'just right' do
-        it 'is valid' do
-          responded_ico.date_ico_decision_received = Date.yesterday
-          expect(responded_ico).to be_valid
+        context 'yesterday' do
+          it 'is valid' do
+            responded_ico.date_ico_decision_received = Date.yesterday
+            expect(responded_ico).to be_valid
+          end
+        end
+
+        context 'creation date' do
+          it 'is valid' do
+            responded_ico.date_ico_decision_received = responded_ico.created_at.to_date
+            expect(responded_ico).to be_valid
+          end
         end
       end
-
-
     end
 
     context 'uploaded ico decision files' do
