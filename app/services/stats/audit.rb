@@ -8,6 +8,7 @@ module Stats
       case_type
       trigger
       status
+      responding_team
       date_received
       draft_deadline
       final_deadline
@@ -46,6 +47,7 @@ module Stats
       arry << kase.decorate.pretty_type
       arry << kase.flagged? ? 'YES' : 'NO'
       arry << kase.status
+      arry << responding_team(kase)
       arry << kase.received_date.strftime('%Y-%m-%d')
       arry << format_date(kase.internal_deadline)
       arry << format_date(kase.external_deadline)
@@ -83,6 +85,14 @@ module Stats
     def in_time(kase)
       if kase.date_responded
         kase.date_responded > kase.external_deadline.to_date ? 'No' : 'Yes'
+      else
+        ''
+      end
+    end
+
+    def responding_team(kase)
+      if kase.assignments.responding.any?
+        kase.assignments.responding.last.team.name
       else
         ''
       end
