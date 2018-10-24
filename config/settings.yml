@@ -41,6 +41,18 @@ case_closed_notify_template: '0f89383e-cee2-4a10-bc47-97879d1f6dc4'
 foi_cases:
   default_managing_team: DISCLOSURE-BMT
   default_clearance_team: DISCLOSURE
+sar_cases:
+  default_managing_team: DISCLOSURE-BMT
+  default_clearance_team: DISCLOSURE
+ico_cases:
+  default_managing_team: DISCLOSURE-BMT
+  default_clearance_team: DISCLOSURE
+overturned_foi_cases:
+  default_managing_team: DISCLOSURE-BMT
+  default_clearance_team: DISCLOSURE
+overturned_sar_cases:
+  default_managing_team: DISCLOSURE-BMT
+  default_clearance_team: DISCLOSURE
 
 pit_extension_limit: 20
 
