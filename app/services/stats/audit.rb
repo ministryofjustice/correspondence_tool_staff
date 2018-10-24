@@ -12,6 +12,7 @@ module Stats
       draft_deadline
       final_deadline
       date_responded
+      in_time
       info_held
       granted
       exemptions
@@ -49,6 +50,7 @@ module Stats
       arry << format_date(kase.internal_deadline)
       arry << format_date(kase.external_deadline)
       arry << date_responded(kase)
+      arry << in_time(kase)
       arry << kase.info_held_status&.name
       arry << kase.outcome&.name
       arry << kase.exemptions.map{ |x| CaseClosure::Exemption.section_number_from_id(x.abbreviation) }.join(',')
@@ -73,6 +75,14 @@ module Stats
       transition = kase.transitions.where(event: 'respond').last
       if transition
         transition.created_at.strftime('%Y-%m-%d')
+      else
+        ''
+      end
+    end
+
+    def in_time(kase)
+      if kase.date_responded
+        kase.date_responded > kase.external_deadline.to_date ? 'No' : 'Yes'
       else
         ''
       end

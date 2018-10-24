@@ -6,6 +6,7 @@ namespace :reports do
     ap x
   end
 
+  desc 'produce audit report'
   task :audit, [:start_date, :end_date] => :environment do | _task, args|
     report = Stats::Audit.new(Date.parse(args[:start_date]), Date.parse(args[:end_date]))
     report.run
