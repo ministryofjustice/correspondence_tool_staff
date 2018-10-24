@@ -12,8 +12,8 @@ RavenContextProvider.set_context if defined?(RavenContextProvider)
 
 require 'thor'
 
-$: << 'lib'
-require 'cts/cli'
+# $: << 'lib'
+# require 'cts/cli'
 
 class Thor
   module Shell
