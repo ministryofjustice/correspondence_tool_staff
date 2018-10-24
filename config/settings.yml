@@ -95,7 +95,7 @@ global_navigation:
 
     search_cases:
       path: /cases/search
-    settings:
+    teams:
       path: /teams
     stats:
       path: /stats
@@ -122,7 +122,7 @@ global_navigation:
       my_open_cases:
       closed_cases:
       search_cases:
-      settings:
+      teams:
 
     'PRESS-OFFICE':
       incoming_cases_press_office: default
@@ -130,7 +130,7 @@ global_navigation:
       my_open_cases:
       closed_cases:
       search_cases:
-      settings:
+      teams:
 
     'PRIVATE-OFFICE':
       incoming_cases_private_office: default
@@ -138,14 +138,14 @@ global_navigation:
       my_open_cases:
       closed_cases:
       search_cases:
-      settings:
+      teams:
 
     'manager':
       open_cases:
       my_open_cases:
       closed_cases:
       search_cases:
-      settings:
+      teams:
       stats:
 
     '*':
@@ -153,7 +153,7 @@ global_navigation:
       my_open_cases:
       closed_cases:
       search_cases:
-      settings:
+      teams:
 
 smoke_tests:
   username: 'no-reply-smoke-test@digital.justice.gov.uk'

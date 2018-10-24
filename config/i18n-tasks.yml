@@ -111,6 +111,7 @@ ignore_unused:
   - 'cases.respond.respond_date'
   - 'notices.case_cleared'
   - 'common.case.request'
+  - 'nav.pages.teams.*'
 
 ## Consider these keys used:
 # ignore_unused:

@@ -57,7 +57,7 @@ feature "Top level global navigation" do
       expect(nav_links[2]).to have_text('My open cases')
       expect(nav_links[3]).to have_text('Closed cases')
       expect(nav_links[4]).to have_text('Search')
-      expect(nav_links[5]).to have_text('Settings')
+      expect(nav_links[5]).to have_text('Team')
     end
 
     scenario "open in-time page has nav entries" do
@@ -71,7 +71,14 @@ feature "Top level global navigation" do
       expect(nav_links[2]).to have_text('My open cases')
       expect(nav_links[3]).to have_text('Closed cases')
       expect(nav_links[4]).to have_text('Search')
-      expect(nav_links[5]).to have_text('Settings')
+      expect(nav_links[5]).to have_text('Team')
+    end
+
+    scenario 'team link is rendered as teams if member of multiple teams' do
+      allow(disclosure_specialist).to receive(:teams).and_return([managing_team, dacu])
+      open_cases_page.load
+      nav_links = open_cases_page.primary_navigation.all_links
+      expect(nav_links[5]).to have_text('Teams')
     end
   end
 
@@ -91,7 +98,7 @@ feature "Top level global navigation" do
       expect(nav_links[2]).to have_text('My open cases')
       expect(nav_links[3]).to have_text('Closed cases')
       expect(nav_links[4]).to have_text('Search')
-      expect(nav_links[5]).to have_text('Settings')
+      expect(nav_links[5]).to have_text('Teams')
       expect(nav_links[6]).to have_text('Performance')
     end
 
@@ -106,7 +113,7 @@ feature "Top level global navigation" do
       expect(nav_links[2]).to have_text('My open cases')
       expect(nav_links[3]).to have_text('Closed cases')
       expect(nav_links[4]).to have_text('Search')
-      expect(nav_links[5]).to have_text('Settings')
+      expect(nav_links[5]).to have_text('Teams')
       expect(nav_links[6]).to have_text('Performance')
     end
   end

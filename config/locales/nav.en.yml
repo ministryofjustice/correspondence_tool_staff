@@ -6,7 +6,9 @@ en:
       my_open_cases: My open cases
       open_cases: All open cases
       search_cases: Search
-      settings: Settings
+      teams:
+        one: Team
+        other: Teams
       stats: Performance
       system_admin: Admin
     tabs:
