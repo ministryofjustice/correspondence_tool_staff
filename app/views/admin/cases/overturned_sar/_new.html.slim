@@ -14,6 +14,8 @@
 
   = f.collection_select :responding_team, BusinessUnit.responding, :id, :name, { selected: @case.responding_team.id }
 
+  = f.check_box_fieldset :flag_for_disclosure_specialists, [:flagged_for_disclosure_specialist_clearance?]
+
   = f.collection_select :target_state, @target_states, :to_s, :to_s, { selected: @selected_state }
 
   = f.submit t('admin.cases.new.create'), {class: 'button'}

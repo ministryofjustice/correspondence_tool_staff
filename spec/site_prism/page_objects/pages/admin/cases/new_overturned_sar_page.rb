@@ -22,6 +22,9 @@ module PageObjects
 
           element :target_state, '#case_overturned_sar_target_state'
 
+          element :flag_for_disclosure_specialists,
+                  '#case_overturned_sar_flagged_for_disclosure_specialist_clearance'
+
           element :submit_button, '.button'
 
           def set_received_date(received_date)

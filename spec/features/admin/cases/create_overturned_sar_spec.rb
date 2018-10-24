@@ -21,7 +21,7 @@ feature 'creating ICO Overturned SAR case' do
   end
 
 
-  def create_ico_overturned_sar(target_state: nil)
+  def create_ico_overturned_sar(target_state: nil, flag: nil)
     stub_s3_uploader_for_all_files!
 
     admin_cases_page.load
@@ -32,6 +32,12 @@ feature 'creating ICO Overturned SAR case' do
     if target_state
       admin_cases_new_overturned_sar_page.target_state.select(target_state)
     end
+
+    case flag
+    when 'disclosure'
+      admin_cases_new_overturned_sar_page.flag_for_disclosure_specialists.set(true)
+    end
+
     admin_cases_new_overturned_sar_page.submit_button.click
     expect(admin_cases_page).to be_displayed
     expect(admin_cases_page.case_list.count).to eq 3
@@ -52,6 +58,10 @@ feature 'creating ICO Overturned SAR case' do
   context 'Case::OverturnedICO::SAR' do
     scenario 'creating a case with the default values' do
       create_ico_overturned_sar(target_state: 'closed')
+    end
+
+    scenario 'creating a trigger case' do
+      create_ico_overturned_sar(target_state: 'closed', flag: 'disclosure')
     end
   end
 end
