@@ -158,7 +158,8 @@ RSpec.describe CaseTransitionDecorator, type: :model do
 
     context 'progress_for_clearance' do
       it 'returns to name of the clearance team' do
-        ct = create(:case_transition_progress_for_clearance).decorate
+        drafting_sar_case = create :sar_being_drafted, :flagged_accepted
+        ct = create(:case_transition_progress_for_clearance, case: drafting_sar_case).decorate
         target_team = Team.find(ct.target_team_id)
         event = "Progress for clearance"
         details = "Progressed to #{target_team.name}"
