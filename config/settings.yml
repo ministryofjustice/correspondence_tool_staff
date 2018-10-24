@@ -216,8 +216,8 @@ enabled_features:
     Host-staging: true
     Host-prod: true
   overturned_trigger_sars:
-    Local: false
-    Host-dev: false
+    Local: true
+    Host-dev: true
     Host-demo: false
     Host-staging: false
     Host-prod: false

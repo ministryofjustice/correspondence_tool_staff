@@ -26,8 +26,8 @@ module PageObjects
                     element :no, 'input[value="no"]'
           end
 
-          def choose_flag_for_disclosure_specialists(choice = 'yes')
-            make_radio_button_choice("case_overturned_foi_flag_for_disclosure_specialists_#{choice}")
+          def choose_flag_for_disclosure_specialists(choice = 'yes', case_type: 'foi')
+            make_radio_button_choice("case_overturned_#{case_type}_flag_for_disclosure_specialists_#{choice}")
           end
 
           def make_radio_button_choice(choice_id)
@@ -42,4 +42,3 @@ module PageObjects
     end
   end
 end
-
