@@ -59,10 +59,10 @@ class ResponseUploaderService
                                            filenames: filenames,
                                            message: @case.upload_comment)
       when 'upload-flagged'
-        @case.state_machine.add_response_to_flagged_case!(acting_user: @current_user,
-                                                          acting_team: @case.responding_team,
-                                                          filenames: filenames,
-                                                          message: @case.upload_comment)
+        @case.state_machine.add_responses!(acting_user: @current_user,
+                                           acting_team: @case.responding_team,
+                                           filenames: filenames,
+                                           message: @case.upload_comment)
       when 'upload-approve'
         upload_approve(filenames)
       when 'upload-redraft'

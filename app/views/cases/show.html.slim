@@ -24,8 +24,8 @@ div id="case-#{@correspondence_type_key}" class="case"
           = action_button_for(:approve)
         - if policy(@case).upload_responses?
           = action_button_for(:add_responses)
-        - if policy(@case).upload_responses_for_flagged?
-          = action_button_for(:add_response_to_flagged_case)
+        / - if policy(@case).upload_responses_for_flagged?
+        /   = action_button_for(:add_response_to_flagged_case)
         - if policy(@case).upload_responses_for_approve?
           = action_button_for(:upload_response_and_approve)
         - if policy(@case).upload_responses_for_redraft?

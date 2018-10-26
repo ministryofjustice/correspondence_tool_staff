@@ -236,7 +236,7 @@
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
-                add_response_to_flagged_case:
+                add_responses:
                   if: Case::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
                   transition_to: pending_dacu_clearance
                 link_a_case:

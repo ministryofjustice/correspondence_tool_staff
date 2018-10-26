@@ -179,6 +179,7 @@ en:
       show?: You are not authorised to view this case.
       unflag_for_clearance?: 'You are not authorised to remove clearance from this case'
       update?: You are not authorised to edit this case.
+      upload_responses_for_flagged?: 'You are not authorised to upload attachments to this case.'
     case/ico/foi_policy:
       can_close_case?: You are not authorised to close this case
       can_accept_or_reject_responder_assignment?: You are not allowed to accept or reject responder assignment

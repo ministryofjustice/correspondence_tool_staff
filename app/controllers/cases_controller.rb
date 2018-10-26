@@ -829,7 +829,7 @@ class CasesController < ApplicationController
   def authorize_upload_response_for_action(kase, action)
     case action
     when nil, 'upload'    then authorize kase, 'upload_responses?'
-    when 'upload-flagged' then authorize kase, 'upload_responses_for_flagged?'
+    when 'upload-flagged' then authorize kase, 'upload_responses?'
     when 'upload-approve' then authorize kase, 'upload_responses_for_approve?'
     when 'upload-redraft' then authorize kase, 'upload_responses_for_redraft?'
     end
