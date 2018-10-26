@@ -61,12 +61,13 @@ feature 'FOI case that requires clearance' do
               subject: 'new test subject'
 
     accept_case kase: kase,
-                user: responder
-                
+                user: responder,
+                do_logout: false
+
     set_case_dates_back_by(kase, 5.business_days)
-    #
-    # add_message_to_case kase: kase, message: 'This. Is. A. Test.'
-    #
+
+    add_message_to_case kase: kase, message: 'This. Is. A. Test.'
+
     extend_for_pit kase: kase,
                    user: manager,
                    new_deadline: 30.business_days.from_now
@@ -89,7 +90,7 @@ feature 'FOI case that requires clearance' do
                    user: private_officer,
                    expected_team: responding_team,
                    expected_status: 'Ready to send'
-    
+
     mark_case_as_sent kase: kase,
                       user: responder
 
