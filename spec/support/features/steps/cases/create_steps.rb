@@ -81,6 +81,7 @@ end
 def create_overturned_ico_case_step(params={})
   ico_case = params.delete(:ico_case)
   flagged = params.delete(:flag_for_disclosure)
+  case_type = params[:case_type].downcase
 
   cases_show_page.load(id: ico_case.id)
   expect(cases_show_page).to be_displayed(id: ico_case.id)
@@ -107,7 +108,8 @@ def create_overturned_ico_case_step(params={})
                   )
 
   if form.has_flag_for_disclosure_specialists?
-    form.choose_flag_for_disclosure_specialists(flagged ? 'yes' : 'no')
+    form.choose_flag_for_disclosure_specialists(flagged ? 'yes' : 'no',
+                                                case_type: case_type)
   end
 
   click_button 'Create case'

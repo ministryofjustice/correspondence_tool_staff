@@ -10,7 +10,8 @@ module Features
 
         kase = create_overturned_ico_case_step(
           ico_case: ico_case,
-          flag_for_disclosure: flag_for_disclosure
+          flag_for_disclosure: flag_for_disclosure,
+          case_type: ico_case.original_case_type
         )
 
         assign_case_step business_unit: responding_team
