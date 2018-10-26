@@ -255,7 +255,7 @@ describe ConfigurableStateMachine::Machine do
             expect(k.workflow).to eq 'trigger'
             expect(k.current_state).to eq 'awaiting_dispatch'
             expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                          :add_responses,
+                                                                          :add_response_to_flagged_case,
                                                                           :link_a_case,
                                                                           :reassign_user,
                                                                           :remove_last_response,
