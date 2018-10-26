@@ -31,15 +31,15 @@ feature 'Overturned non-Offender SAR case requiring clearance' do
   end
 
   scenario 'end-to-end journey', js: true do
-    _kase = create_and_assign_overturned_ico user: manager,
+    kase = create_and_assign_overturned_ico user: manager,
                                       responding_team: responding_team,
                                       ico_case: original_appeal_case,
                                       flag_for_disclosure: true
 
-    # accept_case kase: kase,
-    #             user: responder,
-    #             do_logout: false
-    #
+    accept_case kase: kase,
+                user: responder,
+                do_logout: false
+
     # add_message_to_case kase: kase,
     #                     message: 'This. Is. A. Test.',
     #                     do_logout: true
