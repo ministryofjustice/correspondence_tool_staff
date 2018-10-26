@@ -295,6 +295,14 @@ module CaseClosure
           sequence_id: 100)
       end
 
+      rec = CaseClosure::RefusalReason.find_by_abbreviation('sartmm')
+      if rec.nil?
+        CaseClosure::RefusalReason.create!(
+          name: 'SAR Clarification/Tell Me More',
+          abbreviation: 'sartmm',
+          sequence_id: 105)
+      end
+
       rec = CaseClosure::RefusalReason.find_by_abbreviation('ncnd')
       if rec.nil?
         CaseClosure::RefusalReason.create!(

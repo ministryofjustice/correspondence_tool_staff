@@ -47,6 +47,10 @@ module CaseClosure
       abbrev('tmm')
     end
 
+    def self.sar_tmm
+      abbrev('sartmm')
+    end
+
     def self.ncnd
       abbrev('ncnd')
     end
