@@ -21,11 +21,6 @@ FactoryBot.define do
     email               { 'dave@moj.com' }
     ico_officer_name    { 'Dan Dare' }
 
-    # after(:create) do | kase, evaluator|
-    #   kase.update! created_at: evaluator.creation_time
-    #   ma = kase.managing_assignment
-    #   ma.update! created_at: evaluator.creation_time
-    # end
   end
 
   factory :awaiting_responder_ot_ico_sar,
