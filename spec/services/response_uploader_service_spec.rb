@@ -170,7 +170,7 @@ describe ResponseUploaderService do
     let(:action)  { 'upload' }
     let(:kase)    { create :accepted_case, :flagged }
 
-    it 'calls add_response_to_flagged_case! on state machine' do
+    it 'calls add_responses! on state machine' do
       expect(kase.state_machine).to receive(:add_responses!)
       rus.upload!
     end

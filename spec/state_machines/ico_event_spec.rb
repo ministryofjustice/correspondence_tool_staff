@@ -189,21 +189,6 @@ describe 'state machine' do
       }
     end
 
-    # describe :add_response_to_flagged_case do
-    #   it {
-    #     should permit_event_to_be_triggered_only_by(
-    #       [:responder, :ico_foi_accepted],
-    #       [:responder, :ico_sar_accepted],
-    #       [:responder, :ico_foi_awaiting_dispatch],
-    #       [:responder, :ico_sar_awaiting_dispatch],
-    #       [:another_responder_in_same_team, :ico_foi_accepted],
-    #       [:another_responder_in_same_team, :ico_sar_accepted],
-    #       [:another_responder_in_same_team, :ico_foi_awaiting_dispatch],
-    #       [:another_responder_in_same_team, :ico_sar_awaiting_dispatch],
-    #
-    #      )}
-    # end
-
     describe :approve do
       it {
         should permit_event_to_be_triggered_only_by(

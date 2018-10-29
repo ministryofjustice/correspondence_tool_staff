@@ -53,16 +53,16 @@ class ResponseUploaderService
       @case.upload_comment = @bypass_params_manager.params[:upload_comment]
       filenames = response_attachments.map(&:filename)
       case @action
-      when 'upload'
+      when 'upload', 'upload-flagged'
         @case.state_machine.add_responses!(acting_user: @current_user,
                                            acting_team: @case.responding_team,
                                            filenames: filenames,
                                            message: @case.upload_comment)
-      when 'upload-flagged'
-        @case.state_machine.add_responses!(acting_user: @current_user,
-                                           acting_team: @case.responding_team,
-                                           filenames: filenames,
-                                           message: @case.upload_comment)
+      # when 'upload-flagged'
+      #   @case.state_machine.add_responses!(acting_user: @current_user,
+      #                                      acting_team: @case.responding_team,
+      #                                      filenames: filenames,
+      #                                      message: @case.upload_comment)
       when 'upload-approve'
         upload_approve(filenames)
       when 'upload-redraft'

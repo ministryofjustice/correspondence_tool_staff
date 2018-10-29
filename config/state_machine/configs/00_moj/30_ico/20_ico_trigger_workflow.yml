@@ -191,7 +191,7 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 add_responses:
-                  if: Case::ICO::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: pending_dacu_clearance
                 link_a_case:
                 reassign_user:
@@ -214,7 +214,7 @@
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?
                    after_transition: Workflows::Hooks#notify_responder_message_received
                  add_responses:
-                  if: Case::ICO::BasePolicy#can_add_attachment_to_flagged_and_unflagged_cases?
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                  link_a_case:
                  reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
