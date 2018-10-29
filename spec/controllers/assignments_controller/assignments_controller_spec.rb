@@ -639,7 +639,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
         before(:each) { get :assign_to_new_team, params: { id: assignment.id, case_id: kase.id, business_group_id: bg.id } }
 
-        it 'assigns all business units within the businss group to business_units' do
+        it 'assigns all business units within the business group to business_units' do
           expect(assigns(:business_units)).to match_array [ bu1, bu2 ]
         end
 
