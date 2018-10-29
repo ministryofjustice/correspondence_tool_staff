@@ -436,7 +436,6 @@ describe ConfigurableStateMachine::Machine do
           it 'shows events' do
             k = create :accepted_ico_foi_case, :flagged_accepted, :dacu_disclosure
             approver = approver_in_assigned_team(k)
-
             expect(k.current_state).to eq 'drafting'
             expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                          :link_a_case,
