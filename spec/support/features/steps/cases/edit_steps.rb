@@ -148,7 +148,7 @@ def edit_sar_case_closure_step(kase:, date_responded: Date.today, tmm: false) # 
     .to eq date_responded.strftime(Settings.default_date_format)
   if tmm
     expect(cases_show_page.case_details.response_details.refusal_reason.data.text)
-      .to eq '(s1(3)) - Clarification required'
+      .to eq 'SAR Clarification/Tell Me More'
   end
 end
 

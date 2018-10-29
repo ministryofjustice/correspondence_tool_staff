@@ -81,7 +81,7 @@ def close_sar_case_step(timeliness: 'in time', tmm: false, editable: true)
 
   if tmm
     expect(show_page.response_details.refusal_reason.data.text)
-      .to eq '(s1(3)) - Clarification required'
+      .to eq 'SAR Clarification/Tell Me More'
   else
     expect(show_page.response_details).to have_no_refusal_reason
   end

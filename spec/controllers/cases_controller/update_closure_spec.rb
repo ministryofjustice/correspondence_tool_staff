@@ -47,7 +47,7 @@ describe CasesController do
 
         it 'updates the cases refusal reason' do
           kase.reload
-          expect(kase.refusal_reason).to eq CaseClosure::RefusalReason.tmm
+          expect(kase.refusal_reason).to eq CaseClosure::RefusalReason.sar_tmm
         end
 
         it 'redirects to the case details page' do
@@ -75,7 +75,7 @@ describe CasesController do
 
         it 'updates the cases refusal reason' do
           kase.reload
-          expect(kase.refusal_reason).to eq CaseClosure::RefusalReason.tmm
+          expect(kase.refusal_reason).to eq CaseClosure::RefusalReason.sar_tmm
         end
 
         it 'redirects to the case details page' do

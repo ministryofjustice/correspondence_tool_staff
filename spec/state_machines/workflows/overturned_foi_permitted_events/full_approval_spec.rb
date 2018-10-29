@@ -498,12 +498,12 @@ describe ConfigurableStateMachine::Machine do
 
     ##################### APPROVER FLAGGED ############################
 
-    context 'assigned approver' do
+    context 'assigned press officer' do
       context 'unassigned state' do
 
         it 'should show permitted events' do
           k = create :overturned_ico_foi, :flagged_accepted, :press_office
-          approver = approver_in_assigned_team(k)
+          approver = assigned_press_office_approver(k)
           expect(k.class).to eq Case::OverturnedICO::FOI
           expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'unassigned'
@@ -519,7 +519,7 @@ describe ConfigurableStateMachine::Machine do
       context 'awaiting responder state' do
         it 'shows events' do
           k = create :awaiting_responder_ot_ico_foi, :flagged_accepted, :press_office
-          approver = approver_in_assigned_team(k)
+          approver = assigned_press_office_approver(k)
           expect(k.class).to eq Case::OverturnedICO::FOI
           expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'awaiting_responder'
@@ -535,7 +535,7 @@ describe ConfigurableStateMachine::Machine do
       context 'drafting state' do
         it 'shows events' do
           k = create :accepted_ot_ico_foi, :flagged_accepted, :press_office
-          approver = approver_in_assigned_team(k)
+          approver = assigned_press_office_approver(k)
           expect(k.class).to eq Case::OverturnedICO::FOI
           expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'drafting'
@@ -551,7 +551,7 @@ describe ConfigurableStateMachine::Machine do
       context 'pending_dacu_clearance state' do
         it 'shows events' do
           k = create :pending_dacu_clearance_ot_ico_foi, :flagged_accepted, :press_office
-          approver = approver_in_assigned_team(k)
+          approver = assigned_press_office_approver(k)
           expect(k.class).to eq Case::OverturnedICO::FOI
           expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'pending_dacu_clearance'
@@ -566,35 +566,40 @@ describe ConfigurableStateMachine::Machine do
       context 'pending_press_clearance state' do
         it 'shows events' do
           k = create :pending_press_clearance_ot_ico_foi
-          approver = approver_in_assigned_team(k)
+          approver = assigned_press_office_approver(k)
           expect(k.class).to eq Case::OverturnedICO::FOI
           expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'pending_press_office_clearance'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                       :approve,
+                                                                       :execute_request_amends,
                                                                        :link_a_case,
                                                                        :reassign_user,
-                                                                       :remove_linked_case]
+                                                                       :remove_linked_case,
+                                                                       :request_amends,
+                                                                       :unflag_for_clearance]
         end
       end
 
       context 'pending_press_clearance state' do
         it 'shows events' do
           k = create :pending_private_clearance_ot_ico_foi
-          approver = approver_in_assigned_team(k)
+          approver = assigned_press_office_approver(k)
           expect(k.class).to eq Case::OverturnedICO::FOI
           expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'pending_private_office_clearance'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                        :link_a_case,
                                                                        :reassign_user,
-                                                                       :remove_linked_case]
+                                                                       :remove_linked_case,
+                                                                       :unflag_for_clearance]
         end
       end
 
       context 'awaiting_dispatch' do
         it 'shows events' do
           k = create :with_response_ot_ico_foi, :flagged_accepted, :press_office
-          approver = approver_in_assigned_team(k)
+          approver = assigned_press_office_approver(k)
           expect(k.class).to eq Case::OverturnedICO::FOI
           expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'awaiting_dispatch'
@@ -610,8 +615,8 @@ describe ConfigurableStateMachine::Machine do
 
       context 'responded' do
         it 'shows events' do
-          k = create :responded_full_approval_ot_ico_foi, :flagged_accepted, :press_office
-          approver = approver_in_assigned_team(k)
+          k = create :responded_full_approval_ot_ico_foi
+          approver = assigned_press_office_approver(k)
           expect(k.class).to eq Case::OverturnedICO::FOI
           expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'responded'
@@ -623,8 +628,9 @@ describe ConfigurableStateMachine::Machine do
 
       context 'closed' do
         it 'shows events' do
-          k = create :closed_full_approval_ot_ico_foi, :flagged_accepted, :press_office
-          approver = approver_in_assigned_team(k)
+          k = create :closed_full_approval_ot_ico_foi
+          approver = assigned_press_office_approver(k)
+
           expect(k.class).to eq Case::OverturnedICO::FOI
           expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'closed'
@@ -640,6 +646,10 @@ describe ConfigurableStateMachine::Machine do
 
       def assigned_disclosure_specialist(kase)
         kase.approver_assignments.for_team(BusinessUnit.dacu_disclosure).first.user
+      end
+
+      def assigned_press_office_approver(kase)
+        kase.approver_assignments.for_team(BusinessUnit.press_office).first.user
       end
     end
   end
