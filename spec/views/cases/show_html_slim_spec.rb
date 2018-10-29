@@ -8,7 +8,6 @@ describe 'cases/show.html.slim', type: :view do
 
   def setup_policies(policies)
     policy_names = [
-      :add_response_to_flagged_case?,
       :assignments_execute_reassign_user?,
       :can_remove_attachment?,
       :can_respond?,
@@ -279,8 +278,6 @@ describe 'cases/show.html.slim', type: :view do
                      remove_clearance?: false,
                      execute_response_approval?: false,
                      upload_responses?: false,
-                     upload_responses_for_flagged?: false,
-                     add_response_to_flagged_case?: false,
                      upload_responses_for_approve?: false,
                      upload_responses_for_redraft?: false
 

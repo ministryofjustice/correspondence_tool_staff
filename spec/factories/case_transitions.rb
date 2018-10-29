@@ -152,7 +152,7 @@ FactoryBot.define do
     acting_user_id { responder.id }
     acting_team_id { responding_team.id }
     filenames      { ['file1.pdf', 'file2.pdf'] }
-    event          { 'add_response_to_flagged_case' }
+    event          { 'add_responses' }
   end
 
   factory :case_transition_approve, parent: :case_transition do

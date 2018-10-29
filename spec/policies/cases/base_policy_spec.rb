@@ -462,10 +462,10 @@ describe Case::BasePolicy do
   permissions :upload_responses? do
     it { should_not permit(manager,                accepted_case) }
     it { should     permit(responder,              accepted_case) }
+    it { should     permit(responder,              flagged_accepted_case) }
     it { should_not permit(disclosure_specialist,  accepted_case) }
     it { should_not permit(press_officer,          accepted_case) }
     it { should_not permit(manager,                flagged_accepted_case) }
-    it { should_not permit(responder,              flagged_accepted_case) }
     it { should_not permit(disclosure_specialist,  flagged_accepted_case) }
     it { should_not permit(press_officer,          flagged_accepted_case) }
     it { should_not permit(manager,                pending_dacu_clearance_case) }

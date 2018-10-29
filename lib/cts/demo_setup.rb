@@ -102,7 +102,7 @@ module CTS
       upload_group = Time.now.strftime('%Y%m%d%H%M%S')
       kase.attachments << [ build_response(kase, upload_group, 1),  build_response(kase, upload_group, 2) ]
       if kase.requires_clearance?
-        kase.state_machine.add_response_to_flagged_case!(kase.responder, kase.responding_team, ['Demo_file_1.pdf', 'Demo_file_2.pdf'])
+        kase.state_machine.add_responses!(kase.responder, kase.responding_team, ['Demo_file_1.pdf', 'Demo_file_2.pdf'])
       end
     end
 
