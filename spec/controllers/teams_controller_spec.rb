@@ -307,7 +307,7 @@ RSpec.describe TeamsController, type: :controller do
           patch :update, params: params
           t = other_bu.reload
           expect(t.name).to eq 'SAR Responding Team'
-          expect(t.team_lead).to match /Deputy Director \d+/
+          expect(t.team_lead).to match(/Deputy Director \d+/)
         end
       end
 
