@@ -36,10 +36,9 @@ feature 'Overturned non-Offender SAR case requiring clearance' do
                                       ico_case: original_appeal_case,
                                       flag_for_disclosure: true
 
-    # accept_case kase: kase,
-    #             user: responder,
-    #             do_logout: false
-    #
+    accept_case kase: kase,
+                user: responder
+
     # add_message_to_case kase: kase,
     #                     message: 'This. Is. A. Test.',
     #                     do_logout: true
