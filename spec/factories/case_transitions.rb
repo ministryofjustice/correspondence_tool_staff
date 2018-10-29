@@ -80,14 +80,14 @@ FactoryBot.define do
     target_team_id { responding_team.id }
   end
 
-  factory :case_transition_accept_approver_user, parent: :case_transition do
+  factory :case_transition_accept_approver_assignment, parent: :case_transition do
     transient do
       responder         { create :responder }
       approving_team    { self.case.approving_team }
       approver          { approving_team.users.first }
     end
 
-    event          { 'accept_approver_user' }
+    event          { 'accept_approver_assignment' }
     to_state       { self.case.current_state }
     target_user_id { approver.id }
     target_team_id { approving_team.id }
@@ -124,6 +124,21 @@ FactoryBot.define do
     acting_team_id { responding_team.id }
     filenames      { ['file1.pdf', 'file2.pdf'] }
     event          { 'add_responses' }
+  end
+
+  factory :case_transition_progress_for_clearance, parent: :case_transition do
+    transient do
+      responder         { create :responder }
+      responding_team   { responder.responding_teams.first }
+    end
+
+    acting_team_id      { responding_team.id }
+    acting_user_id      { responder.id }
+    target_team_id      { responding_team.id }
+    target_user_id      { responder.id }
+    to_state            { 'pending_dacu_clearance' }
+    to_workflow         { 'trigger' }
+    event               { 'progress_for_clearance'}
   end
 
   factory :case_transition_pending_dacu_clearance, parent: :case_transition do
@@ -272,21 +287,6 @@ FactoryBot.define do
     acting_user_id { manager.id }
     acting_team_id { managing_team.id }
     target_team_id { nil }
-  end
-
-  factory :case_transition_progress_for_clearance, parent: :case_transition do
-    transient do
-      responder       { create :responder }
-      responding_team { responder.teams.first }
-      disclosure      { find_or_create :team_dacu_disclosure}
-    end
-
-    association    :case, factory: [:sar_case, :flagged]
-    event          { 'progress_for_clearance' }
-    to_state       { 'pending_dacu_clearance' }
-    acting_user_id { responder.id }
-    acting_team_id { responding_team.id }
-    target_team_id { disclosure.id }
   end
 
   factory :case_transition_respond_to_ico, parent: :case_transition do

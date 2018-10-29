@@ -32,22 +32,6 @@ FactoryBot.define do
              target_team_id: evaluator.approving_team.id
       kase.update(workflow: 'trigger')
     end
-
-    trait :flagged_accepted do
-      transient do
-        approver       { approving_team.users.first }
-      end
-
-      after(:create) do |kase, evaluator|
-        kase.assignments.for_team(evaluator.approving_team).first.update(
-          state: 'accepted',
-          user_id: evaluator.approver.id,
-        )
-        create :flag_case_for_clearance_transition,
-               case: kase,
-               target_team_id: evaluator.approving_team.id
-      end
-    end
   end
 
   factory :awaiting_responder_ico_sar_case, parent: :ico_sar_case do
@@ -111,11 +95,11 @@ FactoryBot.define do
       create :case_transition_progress_for_clearance,
              case_id: kase.id,
              acting_team_id: evaluator.responding_team.id,
-             acting_user_id: evaluator.responder.id
-      kase.reload
+             acting_user_id: evaluator.responder.id,
+             target_team_id: BusinessUnit.dacu_disclosure.id
+      kase.current_state = 'pending_dacu_clearance'
     end
   end
-
 
   factory :approved_ico_sar_case, parent: :pending_dacu_clearance_ico_sar_case do
     transient do
