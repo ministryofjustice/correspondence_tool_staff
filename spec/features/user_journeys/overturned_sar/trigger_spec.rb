@@ -56,8 +56,8 @@ feature 'Overturned non-Offender SAR case requiring clearance' do
                     expected_team: responding_team,
                     expected_status: 'Ready to send'
 
-    # close_sar_case kase: kase,
-    #                user: responder,
-    #                timeliness: 'in time'
+    close_sar_case kase: kase,
+                   user: responder,
+                   timeliness: 'in time'
   end
 end
