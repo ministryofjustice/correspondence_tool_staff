@@ -31,7 +31,7 @@ feature 'Overturned non-Offender SAR case requiring clearance' do
   end
 
   scenario 'end-to-end journey', js: true do
-    _kase = create_and_assign_overturned_ico user: manager,
+    kase = create_and_assign_overturned_ico user: manager,
                                       responding_team: responding_team,
                                       ico_case: original_appeal_case,
                                       flag_for_disclosure: true
@@ -44,9 +44,9 @@ feature 'Overturned non-Offender SAR case requiring clearance' do
     #                     message: 'This. Is. A. Test.',
     #                     do_logout: true
     #
-    # take_case_on kase: kase,
-    #              user: disclosure_specialist,
-    #              test_undo: true
+    take_case_on kase: kase,
+                 user: disclosure_specialist,
+                 test_undo: true
     #
     # progress_to_disclosure_step kase: kase,
     #                             user: responder,
