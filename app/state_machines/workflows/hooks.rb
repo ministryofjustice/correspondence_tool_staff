@@ -37,4 +37,14 @@ class Workflows::Hooks
                                    assignment: @kase.responder_assignment
                                   ).run
   end
+
+  def notify_approver_ready_for_review
+    current_info = CurrentTeamAndUserService.new(@kase)
+
+    assignment = @kase.approver_assignments
+                     .for_team(current_info.team)
+                     .first
+
+    ActionNotificationsMailer.ready_for_approver_review(assignment)
+  end
 end

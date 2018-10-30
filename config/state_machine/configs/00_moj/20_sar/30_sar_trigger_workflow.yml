@@ -97,6 +97,7 @@
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 progress_for_clearance:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#notify_approver_ready_for_review
                   transition_to: pending_dacu_clearance
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
