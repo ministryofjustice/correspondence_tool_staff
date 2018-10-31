@@ -610,7 +610,7 @@ class CasesController < ApplicationController
     authorize @case
 
     @case.state_machine.progress_for_clearance!(acting_user: current_user,
-                                                acting_team: @case.team_for_assigned_user(current_user, :responder),
+                                                acting_team: @case.team_for_unassigned_user(current_user, :responder),
                                                 target_team: @case.approver_assignments.first.team)
 
     flash[:notice] = t('notices.progress_for_clearance')
