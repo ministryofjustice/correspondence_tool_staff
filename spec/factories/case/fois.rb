@@ -693,16 +693,31 @@ FactoryBot.define do
       disclosure_assignment_state { 'accepted' }
     end
 
-
+    # so this is a bit tricky.  Traits are available to all factories, so this flagged_accepted
+    # can be used with fois, sars, ico_fois, ......
+    # ICO-FOIs are created with a pending approver assignment, so we can't just create another
+    # accepted approver assignment here - we have to see if there is one first, and if there is
+    # then accept it, otherwise create it
     after(:create) do |kase, evaluator|
-      create :approver_assignment,
-             case: kase,
-             user: evaluator.approver,
-             team: evaluator.approving_team,
-             state: 'accepted'
+      approver_assignments = kase.assignments.approving.where(team_id: evaluator.approving_team.id)
+      raise "Too many approver assginemtnst" if approver_assignments.size > 1
+      if approver_assignments.any?
+        approver_assignment = approver_assignments.first
+        approver_assignment.update! state: 'accepted',
+                                    team_id: evaluator.approving_team.id,
+                                    user_id: evaluator.approver.id
+      else
+        create :approver_assignment,
+               case: kase,
+               user: evaluator.approver,
+               team: evaluator.approving_team,
+               state: 'accepted'
+      end
+
       create :flag_case_for_clearance_transition,
              case: kase,
-             target_team_id: evaluator.approving_team.id
+             target_team_id: evaluator.approving_team.id,
+             to_workflow: 'trigger'
       kase.update(workflow: 'trigger')
     end
   end
