@@ -1,5 +1,7 @@
 class Case::OverturnedICO::SAR < Case::OverturnedICO::Base
 
+  delegate :message, to: :original_case
+
   has_paper_trail only: [
       :ico_reference,
       :escalation_deadline,
@@ -22,7 +24,7 @@ class Case::OverturnedICO::SAR < Case::OverturnedICO::Base
   def self.state_machine_name
     'sar'
   end
-  
+
   def within_escalation_deadline?
     false
   end

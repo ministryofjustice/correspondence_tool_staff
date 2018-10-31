@@ -1,7 +1,7 @@
 class Case::SARDecorator < Case::BaseDecorator
   def missing_info
     if object.closed?
-      object.refusal_reason&.abbreviation == 'tmm' ? 'yes' : 'no'
+      object.refusal_reason&.abbreviation == 'sartmm' ? 'yes' : 'no'
     end
   end
 

@@ -32,22 +32,6 @@ FactoryBot.define do
              target_team_id: evaluator.approving_team.id
       kase.update(workflow: 'trigger')
     end
-
-    trait :flagged_accepted do
-      transient do
-        approver       { approving_team.users.first }
-      end
-
-      after(:create) do |kase, evaluator|
-        kase.assignments.for_team(evaluator.approving_team).first.update(
-          state: 'accepted',
-          user_id: evaluator.approver.id,
-        )
-        create :flag_case_for_clearance_transition,
-               case: kase,
-               target_team_id: evaluator.approving_team.id
-      end
-    end
   end
 
 
