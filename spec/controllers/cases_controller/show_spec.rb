@@ -102,7 +102,7 @@ describe CasesController, type: :controller do
       end
 
       it { should have_permitted_events_including :add_message_to_case,
-                                                  :add_response_to_flagged_case,
+                                                  :add_responses,
                                                   :reassign_user }
 
       it 'renders the show page' do

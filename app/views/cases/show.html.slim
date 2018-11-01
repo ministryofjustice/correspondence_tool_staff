@@ -24,8 +24,6 @@ div id="case-#{@correspondence_type_key}" class="case"
           = action_button_for(:approve)
         - if policy(@case).upload_responses?
           = action_button_for(:add_responses)
-        - if policy(@case).upload_responses_for_flagged?
-          = action_button_for(:add_response_to_flagged_case)
         - if policy(@case).upload_responses_for_approve?
           = action_button_for(:upload_response_and_approve)
         - if policy(@case).upload_responses_for_redraft?
@@ -34,7 +32,7 @@ div id="case-#{@correspondence_type_key}" class="case"
         - if policy(@case).can_respond?
           = action_button_for(:respond)
 
-        - permitted_events = @permitted_events - [:add_responses, :add_response_to_flagged_case, :approve, :respond, :reassign_user, :upload_response_and_approve, :upload_response_and_return_for_redraft]
+        - permitted_events = @permitted_events - [:add_responses, :approve, :respond, :reassign_user, :upload_response_and_approve, :upload_response_and_return_for_redraft]
         - if @case.type_abbreviation.in? %w( SAR OVERTURNED_SAR )
           - permitted_events.delete(:close)
 

@@ -1142,7 +1142,7 @@ RSpec.describe Case::Base, type: :model do
 
     def upload_response(kase, t, acting_team)
       Timecop.freeze(Time.at(Time.parse(t))) do
-        create_transition(kase, 'add_response_to_flagged_case', 'pending_dacu_clearance', acting_team)
+        create_transition(kase, 'add_responses', 'pending_dacu_clearance', acting_team)
       end
     end
 

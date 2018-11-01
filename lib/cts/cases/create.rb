@@ -302,9 +302,9 @@ module CTS::Cases
                                            BypassParamsManager.new({}),
                                            nil)
          rus.seed!('spec/fixtures/eon.pdf')
-         kase.state_machine.add_response_to_flagged_case!(acting_user: responder,
-                                                          acting_team:responding_team,
-                                                          filenames: kase.attachments)
+         kase.state_machine.add_responses!(acting_user: responder,
+                                           acting_team:responding_team,
+                                           filenames: kase.attachments)
 
       end
     end

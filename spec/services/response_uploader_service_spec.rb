@@ -167,25 +167,25 @@ describe ResponseUploaderService do
 
   context 'action upload-flagged' do
 
-    let(:action)  { 'upload-flagged' }
+    let(:action)  { 'upload' }
     let(:kase)    { create :accepted_case, :flagged }
 
-    it 'calls add_response_to_flagged_case! on state machine' do
-      expect(kase.state_machine).to receive(:add_response_to_flagged_case!)
+    it 'calls add_responses! on state machine' do
+      expect(kase.state_machine).to receive(:add_responses!)
       rus.upload!
     end
 
     it 'creates a transition' do
       rus.upload!
       transition = kase.transitions.last
-      expect(transition.event).to eq 'add_response_to_flagged_case'
+      expect(transition.event).to eq 'add_responses'
       expect(transition.metadata).to eq({ 'filenames' => [filename], 'message' => nil })
     end
 
     it 'creates a transition with a message' do
       rus_with_message.upload!
       transition = kase.transitions.last
-      expect(transition.event).to eq 'add_response_to_flagged_case'
+      expect(transition.event).to eq 'add_responses'
       expect(transition.metadata).to eq({ 'filenames' => [filename], 'message' => 'This is my upload message' })
     end
   end
@@ -298,4 +298,3 @@ describe ResponseUploaderService do
     end
   end
 end
-
