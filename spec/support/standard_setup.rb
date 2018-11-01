@@ -313,7 +313,7 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
                  .merge(attributes))
       },
       ot_ico_sar_noff_pdacu: ->(attributes={}) {
-        create(:ot_ico_sar_noff_pdacu,
+        create(:pending_dacu_clearance_ot_ico_sar, :flagged_accepted, :dacu_disclosure,
                { responder: responder_user }
                  .merge(attributes))
       },
@@ -345,7 +345,13 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
                { responder: responder_user, }
                  .merge(attributes))
       },
-
+      ot_ico_sar_noff_trig_awdisp: -> (attributes={}) {
+        create(:awaiting_dispatch_ot_ico_sar,
+               :flagged_accepted,
+               :dacu_disclosure,
+               { responder: responder_user, }
+                   .merge(attributes))
+      },
       ot_ico_foi_noff_unassigned: ->(attributes={}) {
         create(:ot_ico_foi_noff_unassigned,
                attributes)
