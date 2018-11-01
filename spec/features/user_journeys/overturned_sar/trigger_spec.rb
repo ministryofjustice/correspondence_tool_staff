@@ -37,12 +37,13 @@ feature 'Overturned non-Offender SAR case requiring clearance' do
                                       flag_for_disclosure: true
 
     accept_case kase: kase,
-                user: responder
+                user: responder,
+                do_logout: false
 
-    # add_message_to_case kase: kase,
-    #                     message: 'This. Is. A. Test.',
-    #                     do_logout: true
-    #
+    add_message_to_case kase: kase,
+                        message: 'This. Is. A. Test.',
+                        do_logout: true
+
     take_case_on kase: kase,
                  user: disclosure_specialist,
                  test_undo: true
