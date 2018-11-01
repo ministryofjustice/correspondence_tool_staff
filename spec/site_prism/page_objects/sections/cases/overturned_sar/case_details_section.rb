@@ -7,7 +7,8 @@ module PageObjects
           element :section_heading, '.case-details .request--heading'
 
           section :case_type, 'tr.case-type' do
-            element :trigger, 'td .ico-trigger'
+            element :ot_foi_trigger_badge, 'td .overturned_foi-trigger'
+            element :ot_sar_trigger_badge, 'td .overturned_sar-trigger'
             element :type, 'td'
           end
 
