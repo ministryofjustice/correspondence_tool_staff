@@ -28,16 +28,22 @@ describe Case::SARPolicy do
   # Cases
   let(:non_trigger_sar_case)  { create :sar_case,
                                        managing_team: managing_team,
-                                       responding_team: responding_team}
+                                       responding_team: responding_team }
 
   let(:trigger_sar_case)       { create :sar_case,
                                       :flagged,
                                       managing_team: managing_team,
-                                      responding_team: responding_team}
+                                      responding_team: responding_team }
 
   let(:ot_sar_case)            { create :overturned_ico_sar,
-                                       managing_team: managing_team,
-                                       responding_team: responding_team}
+                                        managing_team: managing_team,
+                                        responding_team: responding_team }
+
+  let(:trigger_ot_sar_case)    { create :overturned_ico_sar,
+                                         :flagged_accepted,
+                                         :dacu_disclosure,
+                                         managing_team: managing_team,
+                                         responding_team: responding_team }
 
 
   after(:each) do |example|
@@ -83,6 +89,7 @@ describe Case::SARPolicy do
   permissions :can_request_further_clearance? do
     it { should     permit(manager,             non_trigger_sar_case) }
     it { should_not permit(manager,             trigger_sar_case)     }
-    it { should_not permit(manager,             ot_sar_case)          }
+    it { should     permit(manager,             ot_sar_case)          }
+    it { should_not permit(manager,             trigger_ot_sar_case)  }
   end
 end
