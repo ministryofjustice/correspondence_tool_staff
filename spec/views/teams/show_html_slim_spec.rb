@@ -15,7 +15,7 @@ describe 'teams/show.html.slim', type: :view do
       @hmpps      = create_business_group('HMPPS', 'Michael Spurr')
       @prisons    = create_directorate(@hmpps, 'Prisons', 'Phil Copple')
       @ops        = create_business_unit(@prisons, 'Operations', 'Jack Harris')
-      @ypt        = create_business_unit(@prisons, 'Young People Team', 'Cathy Rbinson')
+      @ypt        = create_business_unit(@prisons, 'Young People Team', 'Cathy Robinson')
       @hr         = create_directorate(@hmpps, 'HR', 'Martin Beecroft')
       @hmpps_hr   = create_business_unit(@hr, 'HMPPS HR', 'Dave Mann')
     end

@@ -140,6 +140,11 @@ class BusinessUnit < Team
                                   .map { |id| CorrespondenceType.find(id) }
   end
 
+  def has_active_children?
+    users.any?
+  end
+
+
   private
 
   def update_search_index
