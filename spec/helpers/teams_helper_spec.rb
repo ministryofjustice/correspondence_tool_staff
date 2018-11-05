@@ -48,10 +48,11 @@ RSpec.describe TeamsHelper, type: :helper do
         )
       end
     end
-    context "deactivatig business unit" do
+
+    context "deactivating business unit" do
       it 'returns a link for a team with no active children' do
         expect(show_deactivate_link_or_info(manager, bu)).to eq(
-          link_to "Deactivate Businesss unit", team_path(bu.id),
+          link_to "Deactivate Business unit", team_path(bu.id),
                                 data: {:confirm => I18n.t('.teams.business_unit_detail.destroy')},
                                 method: :delete,
                                 id: 'deactivate-team-link'
@@ -60,7 +61,7 @@ RSpec.describe TeamsHelper, type: :helper do
 
       it 'returns a message if the team has active children' do
         expect(show_deactivate_link_or_info(manager, bu_with_users)).to eq(
-          "To deactivate this business_unit you need to first deactivate all business units within it."
+          "To deactivate this business unit you need to first deactivate all users within it."
         )
       end
     end

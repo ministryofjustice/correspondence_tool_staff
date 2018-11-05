@@ -112,6 +112,9 @@ ignore_unused:
   - 'notices.case_cleared'
   - 'common.case.request'
   - 'nav.pages.teams.*'
+  - 'teams.deactivate_info.*'
+  - 'teams.directorate_detail.destroy'
+  - 'teams.business_unit_detail.destroy'
 
 ## Consider these keys used:
 # ignore_unused:

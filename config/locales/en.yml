@@ -787,7 +787,10 @@ en:
     new:
       new: New %{team_type}
     destroyed: This team has now been deactivated
-    error: To deactivate this team you need to first deactivate all members.
+    error: Unable to deactive this team
+    deactivate_info:
+      directorate: To deactivate this directorate you need to first deactivate all business units within it.
+      business_unit: To deactivate this business unit you need to first deactivate all users within it.
 
   users:
     new:
