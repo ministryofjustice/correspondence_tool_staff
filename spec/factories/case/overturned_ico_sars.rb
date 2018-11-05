@@ -102,18 +102,24 @@ FactoryBot.define do
 
   factory :pending_dacu_clearance_ot_ico_sar, parent: :accepted_ot_ico_sar do
     transient do
-      identifier        { "pending_dacu_clearance overturned ico sar case" }
-      managing_team     { BusinessUnit.dacu_bmt }
-      manager           { BusinessUnit.dacu_bmt.users.first }
-      approving_team    { BusinessUnit.dacu_disclosure }
-      approver          { BusinessUnit.dacu_disclosure.users.first }
+      identifier      { 'pending dacu clearance ICO SAR case' }
+      approving_team  { find_or_create :team_dacu_disclosure }
+      approver        { approving_team.users.first }
     end
+    workflow { 'trigger' }
 
     after(:create) do |kase, evaluator|
       create :case_transition_accept_approver_assignment,
              case: kase,
              approving_team: evaluator.approving_team,
              approver: evaluator.approver
+
+      create :case_transition_progress_for_clearance,
+             case_id: kase.id,
+             acting_team_id: evaluator.responding_team.id,
+             acting_user_id: evaluator.responder.id,
+             target_team_id: BusinessUnit.dacu_disclosure.id
+      kase.reload
     end
   end
 

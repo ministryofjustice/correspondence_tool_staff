@@ -218,8 +218,8 @@ enabled_features:
   overturned_trigger_sars:
     Local: true
     Host-dev: true
-    Host-demo: false
-    Host-staging: false
+    Host-demo: true
+    Host-staging: true
     Host-prod: false
   # A tempory feature flag to hide editing functionality on overturneds until the feature is built
   edit_overturned:
