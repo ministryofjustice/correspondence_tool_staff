@@ -13,14 +13,10 @@ feature 'cases requiring clearance by press office' do
   given(:pending_dacu_clearance_case) do
     create :pending_dacu_clearance_case,
            :flagged_accepted,
-           :press_office,
-           disclosure_assignment_state: 'accepted',
-           disclosure_specialist: disclosure_specialist
+           :press_office
   end
   given(:pending_press_clearance_case) { create :pending_press_clearance_case,
                                                 press_officer: press_officer }
-
-
 
   given(:case_available_for_taking_on) { create :case_being_drafted,
                                                 created_at: 1.business_day.ago }
@@ -48,8 +44,7 @@ feature 'cases requiring clearance by press office' do
     )
 
     _case_not_for_press_office_open_cases = create :case_being_drafted,
-                                                   :flagged_accepted,
-                                                   :private_office
+                                                   :flagged_accepted
     open_cases_page.load
     expect(open_cases_page.case_list.first.number)
       .to have_text case_available_for_taking_on.number

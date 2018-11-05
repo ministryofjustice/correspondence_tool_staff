@@ -39,7 +39,7 @@ describe 'Overturned ICO FOI cases factory' do
       Timecop.freeze(frozen_time) do
         kase = create :overturned_ico_foi
         expect(kase).to be_instance_of(Case::OverturnedICO::FOI)
-        expect(kase.created_at).to eq Time.local(2018, 7, 9, 10, 35, 22)
+        expect(kase.created_at).to eq Time.local(2018, 7, 3, 10, 35, 22)
         expect(kase.ico_reference_number).to match(/^ICOFOIREFNUM\d{3}$/)
         expect(kase.current_state).to eq 'unassigned'
         expect(kase.external_deadline).to eq Date.new(2018, 7, 29)
@@ -131,7 +131,7 @@ describe 'Overturned ICO FOI cases factory' do
       expect(kase).to be_instance_of(Case::OverturnedICO::FOI)
       expect(kase.current_state).to eq 'pending_dacu_clearance'
 
-      expect(kase.transitions.size).to eq 4
+      expect(kase.transitions.size).to eq 5
       expect(kase.workflow).to eq 'trigger'
       transition = kase.transitions.last
       expect(transition.event).to eq 'add_responses'
@@ -155,7 +155,7 @@ describe 'Overturned ICO FOI cases factory' do
       expect(kase.current_state).to eq 'awaiting_dispatch'
       expect(kase.workflow).to eq 'trigger'
 
-      expect(kase.transitions.size).to eq 5
+      expect(kase.transitions.size).to eq 6
       transition = kase.transitions.last
       expect(transition.event).to eq 'approve'
       expect(transition.acting_team_id).to eq disclosure_team.id
@@ -182,7 +182,7 @@ describe 'Overturned ICO FOI cases factory' do
       expect(kase.current_state).to eq 'pending_press_office_clearance'
       expect(kase.workflow).to eq 'full_approval'
 
-      expect(kase.transitions.size).to eq 5
+      expect(kase.transitions.size).to eq 6
       transition = kase.transitions.last
       expect(transition.event).to eq 'approve'
       expect(transition.acting_team_id).to eq disclosure_team.id
@@ -209,7 +209,7 @@ describe 'Overturned ICO FOI cases factory' do
       expect(kase.current_state).to eq 'pending_private_office_clearance'
       expect(kase.workflow).to eq 'full_approval'
 
-      expect(kase.transitions.size).to eq 6
+      expect(kase.transitions.size).to eq 7
       transition = kase.transitions.last
       expect(transition.event).to eq 'approve'
       expect(transition.acting_team_id).to eq press_office.id
@@ -236,7 +236,7 @@ describe 'Overturned ICO FOI cases factory' do
       expect(kase.current_state).to eq 'awaiting_dispatch'
       expect(kase.workflow).to eq 'full_approval'
 
-      expect(kase.transitions.size).to eq 7
+      expect(kase.transitions.size).to eq 8
       transition = kase.transitions.last
       expect(transition.event).to eq 'approve'
       expect(transition.acting_team_id).to eq private_office.id
@@ -263,8 +263,6 @@ describe 'Overturned ICO FOI cases factory' do
       expect(transition.event).to eq 'respond'
       expect(transition.acting_team_id).to eq responding_team.id
       expect(transition.acting_user_id).to eq responder.id
-      expect(transition.target_team_id).to eq responding_team.id
-      expect(transition.target_user_id).to eq responder.id
       expect(transition.to_workflow).to be_nil
     end
   end
@@ -279,13 +277,11 @@ describe 'Overturned ICO FOI cases factory' do
       expect(kase.current_state).to eq 'responded'
       expect(kase.workflow).to eq 'trigger'
 
-      expect(kase.transitions.size).to eq 6
+      expect(kase.transitions.size).to eq 7
       transition = kase.transitions.last
       expect(transition.event).to eq 'respond'
       expect(transition.acting_team_id).to eq responding_team.id
       expect(transition.acting_user_id).to eq responder.id
-      expect(transition.target_team_id).to eq responding_team.id
-      expect(transition.target_user_id).to eq responder.id
       expect(transition.to_workflow).to be_nil
 
       expect(kase.assignments.approving.accepted.count).to eq 1
@@ -301,13 +297,11 @@ describe 'Overturned ICO FOI cases factory' do
       expect(kase.current_state).to eq 'responded'
       expect(kase.workflow).to eq 'full_approval'
 
-      expect(kase.transitions.size).to eq 8
+      expect(kase.transitions.size).to eq 9
       transition = kase.transitions.last
       expect(transition.event).to eq 'respond'
       expect(transition.acting_team_id).to eq responding_team.id
       expect(transition.acting_user_id).to eq responder.id
-      expect(transition.target_team_id).to eq responding_team.id
-      expect(transition.target_user_id).to eq responder.id
       expect(transition.to_workflow).to be_nil
       expect(kase.assignments.approving.accepted.count).to eq 3
       expect(disclosure_assignment_for(kase)).to be_approved
@@ -345,7 +339,7 @@ describe 'Overturned ICO FOI cases factory' do
       expect(kase.current_state).to eq 'closed'
       expect(kase.workflow).to eq 'trigger'
 
-      expect(kase.transitions.size).to eq 7
+      expect(kase.transitions.size).to eq 8
       transition = kase.transitions.last
       expect(transition.event).to eq 'close'
       expect(transition.acting_team).to eq disclosure_bmt
@@ -366,7 +360,7 @@ describe 'Overturned ICO FOI cases factory' do
       expect(kase.current_state).to eq 'closed'
       expect(kase.workflow).to eq 'full_approval'
 
-      expect(kase.transitions.size).to eq 9
+      expect(kase.transitions.size).to eq 10
       transition = kase.transitions.last
       expect(transition.event).to eq 'close'
       expect(transition.acting_team).to eq disclosure_bmt

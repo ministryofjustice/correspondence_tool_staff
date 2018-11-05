@@ -37,10 +37,9 @@ feature 'listing open cases on the system' do
                                  received_date: 22.business_days.ago
     @assigned_case_flagged_for_press_office_accepted =
       create :assigned_case,
-             :flagged_accepted,
+             :flagged,
              :press_office,
              created_at: 2.business_days.ago,
-             disclosure_assignment_state: 'pending',
              identifier: 'assigned_case_flagged_for_press_office_accepted'
     @closed_case = create :closed_case, responder: @responder_a
   end

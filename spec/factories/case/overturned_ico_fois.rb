@@ -33,19 +33,12 @@ FactoryBot.define do
     created_at    { creation_time }
     received_date { creation_time }
 
-    after(:create) do |kase, evaluator|
-      create :assignment,
-             case: kase,
-             team: evaluator.responding_team,
-             state: 'pending',
-             role: 'responding',
-             created_at: evaluator.creation_time
-      create :case_transition_assign_responder,
-             case: kase,
-             acting_user: evaluator.manager,
-             acting_team: evaluator.managing_team,
-             target_team: evaluator.responding_team,
-             created_at: evaluator.creation_time
+    # Traits to bring in extra functionality
+    _transition_to_awaiting_responder
+    _taken_on_for_disclosure
+    _taken_on_by_press_or_private_in_current_state
+
+    after(:create) do |kase|
       kase.reload
     end
   end
@@ -93,19 +86,14 @@ FactoryBot.define do
   factory :pending_dacu_clearance_ot_ico_foi,
           parent: :accepted_ot_ico_foi do
     transient do
-      identifier          { 'pending dacu clearance overturned ico foi case'}
-      flag_for_disclosure { :accepted }
-      responses           { [build(:correspondence_response,
-                                   type: 'response',
-                                   user_id: responder.id)] }
+      identifier { 'pending dacu clearance overturned ico foi case'}
     end
 
-    after(:create) do |kase, evaluator|
-      create :case_transition_pending_dacu_clearance,
-             case: kase,
-             acting_team: evaluator.responding_team,
-             acting_user: evaluator.responder,
-             filenames: evaluator.responses.map(&:filename)
+    flagged_accepted
+
+    _transition_to_pending_dacu_clearance
+
+    after(:create) do |kase|
       kase.reload
     end
   end

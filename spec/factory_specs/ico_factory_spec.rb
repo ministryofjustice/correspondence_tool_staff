@@ -312,8 +312,8 @@ describe 'ICO cases factory' do
         expect(kase.transitions.size).to eq 7
         transition = kase.transitions.last
         expect(transition.event).to eq 'close'
-        expect(transition.acting_team_id).to eq disclosure_team.id
-        expect(transition.acting_user_id).to eq disclosure_specialist.id
+        expect(transition.acting_team_id).to eq disclosure_bmt.id
+        expect(transition.acting_user_id).to eq manager.id
         expect(transition.target_team_id).to be_nil
         expect(transition.target_user_id).to be_nil
         expect(transition.to_workflow).to be_nil

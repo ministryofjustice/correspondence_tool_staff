@@ -5,7 +5,7 @@ feature 'Upload response' do
   given(:kase)           { create(:accepted_case) }
   given(:approved_case ) { create(:approved_case) }
   given(:responder_teammate) do
-    create :responder, responding_teams: responder.responding_team
+    create :responder, responding_teams: responder.responding_teams
   end
 
   context 'as the assigned responder' do

@@ -587,7 +587,8 @@ describe ConfigurableStateMachine::Machine do
 
       context 'pending_press_clearance state' do
         it 'shows events' do
-          k = create :pending_private_clearance_ot_ico_foi
+          k = create :pending_private_clearance_ot_ico_fo
+          i
           expect(k.class).to eq Case::OverturnedICO::FOI
           expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'pending_private_office_clearance'

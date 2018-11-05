@@ -2,8 +2,8 @@ require "rails_helper"
 
 feature 'pagination' do
   background :all do
-    @responder = create :responder
-    @cases = 30.times.map { create :accepted_case, responder: @responder }
+    @cases = 30.times.map { create :accepted_case }
+    @responder = find_or_create :foi_responder
   end
 
   after :all do

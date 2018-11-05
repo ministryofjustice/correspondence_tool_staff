@@ -94,9 +94,8 @@ describe NewOverturnedIcoCaseService do
     end
 
     context 'original case type is Case::ICO::FOI' do
-      let(:original_case)       { create :foi_case }
-      let(:original_ico_appeal) { create :closed_ico_foi_case,
-                                         original_case: original_case }
+      let(:original_case)       { original_ico_appeal.original_case }
+      let(:original_ico_appeal) { create :closed_ico_foi_case }
       let(:service)             { described_class.new(original_ico_appeal.id) }
 
       before(:each) do

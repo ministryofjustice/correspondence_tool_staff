@@ -7,7 +7,8 @@ feature 'cases requiring clearance by disclosure specialist' do
 
   given(:manager)                     { create :manager, managing_teams: [ team_dacu ] }
   given(:disclosure_specialist)       { find_or_create :disclosure_specialist }
-  given(:other_disclosure_specialist) { find_or_create :disclosure_specialist }
+  given(:other_disclosure_specialist) { create :approver,
+                                               approving_team: team_dacu_disclosure }
   given!(:responding_team)            { create :responding_team }
   given!(:team_dacu_disclosure)       { find_or_create :team_dacu_disclosure }
   given(:team_dacu)                   { find_or_create :team_dacu }

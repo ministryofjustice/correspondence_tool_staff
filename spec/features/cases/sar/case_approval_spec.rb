@@ -5,11 +5,11 @@ feature 'cases requiring clearance by disclosure specialist' do
   include CaseDateManipulation
   include Features::Interactions
 
-  given(:manager)                     { create :manager, managing_teams: [ team_dacu ] }
-  given(:disclosure_specialist)       { find_or_create :disclosure_specialist }
-  given!(:sar_responding_team)        { find_or_create :sar_responding_team }
-  given!(:team_dacu_disclosure)       { find_or_create :team_dacu_disclosure }
-  given(:team_dacu)                   { find_or_create :team_dacu }
+  given(:manager)               { create :manager, managing_teams: [ team_dacu ] }
+  given(:disclosure_specialist) { find_or_create :disclosure_specialist }
+  given!(:responding_team)      { find_or_create :sar_responding_team }
+  given!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
+  given(:team_dacu)             { find_or_create :team_dacu }
 
   scenario 'taking_on, undoing and de-escalating a case as a disclosure specialist', js: true do
     kase = create :sar_being_drafted, :flagged,

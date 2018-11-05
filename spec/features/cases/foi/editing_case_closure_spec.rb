@@ -47,7 +47,7 @@ feature 'editing case closure information' do
   end
 
   scenario 'responder views case details for FOI with old closure info', js: true do
-    kase = create :closed_case, responder: responder
+    kase = create :closed_case
     responder = kase.responder
     kase.update_attribute(:info_held_status_id, nil)
 
