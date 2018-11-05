@@ -4,6 +4,9 @@ describe 'cases/overturned_sar/case_details.html.slim', type: :view do
   let(:unassigned_case) { create(:overturned_ico_sar) }
   let(:closed_case)     { create(:closed_ot_ico_sar) }
   let(:bmt_manager)     { create(:disclosure_bmt_user) }
+  let(:flagged_case)    { create(:overturned_ico_sar,
+                                 :flagged,
+                                 :dacu_disclosure) }
 
   def render_partial(kase)
     render partial: 'cases/overturned_sar/case_details.html.slim',
@@ -25,7 +28,7 @@ describe 'cases/overturned_sar/case_details.html.slim', type: :view do
 
       expect(partial.section_heading.text).to eq 'Case details'
 
-      expect(partial.case_type).to have_no_trigger
+      expect(partial.case_type).to have_no_ot_sar_trigger_badge
       expect(partial.case_type.type.text)
         .to eq "ICO overturned (SAR)  "
       expect(partial.date_received.text)
@@ -33,6 +36,25 @@ describe 'cases/overturned_sar/case_details.html.slim', type: :view do
       expect(partial.final_deadline.text)
         .to eq I18n.l(unassigned_case.external_deadline)
     end
+
+    describe 'basic_details flagged' do
+      it 'displays the initial case details (non third party case' do
+        partial = render_partial(flagged_case)
+
+        expect(partial.section_heading.text).to eq 'Case details'
+
+        expect(partial.case_type).to have_ot_sar_trigger_badge
+        expect(partial.case_type.type.text)
+          .to eq "ICO overturned (SAR) This is a Trigger case"
+        expect(partial.date_received.text)
+          .to eq I18n.l(flagged_case.received_date)
+        expect(partial.final_deadline.text)
+          .to eq I18n.l(flagged_case.external_deadline)
+        # edit case link is hidden until the joruney is implemented 
+        expect(partial).not_to have_edit_case
+      end
+    end
+
 
     it 'does not display the email address if one is not provided' do
       unassigned_case.email = nil

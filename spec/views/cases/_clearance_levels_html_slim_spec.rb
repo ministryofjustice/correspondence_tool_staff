@@ -29,7 +29,12 @@ describe 'cases/clearance_details.html.slim', type: :view do
                                                          approver: dack,
                                                          private_officer: create(:private_officer, full_name: 'Prince Johns'),
                                                          press_officer: create(:press_officer, full_name: 'Alistair Campbell') }
-
+  let(:flagged_overturned_sar)                  { create :pending_dacu_clearance_ot_ico_sar,
+                                                         :flagged_accepted,
+                                                         :dacu_disclosure,
+                                                          responding_team: responding_team,
+                                                          responder: responder,
+                                                          approver: dack }
 
   before(:each) { allow(controller).to receive(:current_user).and_return(disclosure_specialist) }
 
@@ -129,6 +134,26 @@ describe 'cases/clearance_details.html.slim', type: :view do
         approver_dets = partial.basic_details.private_office
         expect(approver_dets.department_name.text).to eq 'Private Office'
         expect(approver_dets.approver_name.text).to eq 'Prince Johns'
+      end
+    end
+
+    context 'Flagged overturned sar' do
+      it 'displays the name of the deputy director and the name of the dacu disclosure approver' do
+
+        allow_case_policies_in_view(
+          flagged_overturned_sar.decorate,
+          :request_further_clearance?,
+          :remove_clearance?
+        )
+
+
+        render partial: 'cases/clearance_levels.html.slim',
+               locals:{ case_details: flagged_overturned_sar.decorate }
+        partial = clearance_levels_section(rendered)
+
+        expect(partial.basic_details.deputy_director.data.text).to eq 'Margaret Thatcher'
+        expect(partial.basic_details.dacu_disclosure.text).to include 'Dack Dispirito'
+        expect(partial.basic_details.dacu_disclosure.text).to include 'Remove clearance'
       end
     end
   end
