@@ -14,7 +14,7 @@
                   after_transition: Workflows::Hooks#assign_responder_email
                 destroy_case:
                 edit_case:
-                  if: Workflows::Predicates#not_overturned?
+                  if: Workflows::Predicates#overturned_editing_enabled?
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
@@ -25,7 +25,7 @@
                   after_transition: Workflows::Hooks#assign_responder_email
                 destroy_case:
                 edit_case:
-                  if: Workflows::Predicates#not_overturned?
+                  if: Workflows::Predicates#overturned_editing_enabled?
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
@@ -38,7 +38,7 @@
                   after_transition: Workflows::Hooks#assign_responder_email
                 destroy_case:
                 edit_case:
-                  if: Workflows::Predicates#not_overturned?
+                  if: Workflows::Predicates#overturned_editing_enabled?
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
@@ -51,7 +51,7 @@
                   after_transition: Workflows::Hooks#assign_responder_email
                 destroy_case:
                 edit_case:
-                  if: Workflows::Predicates#not_overturned?
+                  if: Workflows::Predicates#overturned_editing_enabled?
                 link_a_case:
                 remove_linked_case:
 
@@ -60,7 +60,7 @@
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
-                  if: Workflows::Predicates#not_overturned?
+                  if: Workflows::Predicates#overturned_editing_enabled?
                 link_a_case:
                 remove_linked_case:
 
@@ -69,8 +69,9 @@
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
-                  if: Workflows::Predicates#not_overturned?
+                  if: Workflows::Predicates#overturned_editing_enabled?
                 update_closure:
+                  if: Workflows::Predicates#overturned_editing_enabled?
                 link_a_case:
                 remove_linked_case:
 
@@ -132,7 +133,7 @@
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 update_closure:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_overturned?
+                  if: Workflows::Predicates#overturned_editing_enabled_and_responder_in_assigned_team?
 
           ########################### SAR :: STANDARD WORKFLOW :: APPROVER ########################
           approver:

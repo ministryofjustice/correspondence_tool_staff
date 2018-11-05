@@ -106,6 +106,18 @@ class Workflows::Predicates
     !@kase.overturned_ico?
   end
 
+  def overturned_editing_enabled?
+    if @kase.overturned_ico?
+      FeatureSet.edit_overturned.enabled?
+    else
+      true
+    end
+  end
+
+  def overturned_editing_enabled_and_responder_in_assigned_team?
+    responder_is_member_of_assigned_team? && overturned_editing_enabled?
+  end
+
 
   private
 

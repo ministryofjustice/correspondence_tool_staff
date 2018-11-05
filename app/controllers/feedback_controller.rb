@@ -1,5 +1,4 @@
 class FeedbackController < ApplicationController
-
   def create
     @feedback = Feedback.new(create_feedback_params)
 
@@ -19,5 +18,4 @@ class FeedbackController < ApplicationController
               referer: request.referer
             })
   end
-
 end
