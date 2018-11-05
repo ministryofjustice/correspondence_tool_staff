@@ -310,4 +310,23 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
       expect(case_details_for_link_type('original')).to eq 'original-case-details'
     end
   end
+
+  describe '#download_csv_link' do
+
+    let(:base_path)     { '/cases/open' }
+    let(:param_path)    { '/cases/open?page=3&type=foi' }
+
+    context 'no query params' do
+      it 'returns link for csv without query params' do
+        expect(download_csv_link(base_path)).to eq %q{<a href="/cases/open.csv">Download cases</a>}
+      end
+    end
+
+    context 'with query params' do
+      it 'returns link for csv with query params' do
+        expect(download_csv_link(param_path)).to eq %q{<a href="/cases/open.csv?page=3&amp;type=foi">Download cases</a>}
+      end
+    end
+
+  end
 end

@@ -24,6 +24,7 @@ module PageObjects
         elements :filter_crumbs, '.filter-crumb a'
 
         element :search_results_count, '.search-results-summary'
+        element :download_cases_link, '.download-cases-link'
 
         sections :case_list, '.report tbody tr' do
           element :number, 'td[aria-label="Case number"]'

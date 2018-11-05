@@ -128,9 +128,22 @@ RSpec.describe CasesController, type: :controller do
   context "as an anonymous user" do
 
     describe 'GET closed_cases' do
-      it "be redirected to signin if trying to update a specific case" do
-        get :closed_cases
-        expect(response).to redirect_to(new_user_session_path)
+      context 'html' do
+        it "be redirected to signin if trying to update a specific case" do
+          get :closed_cases
+          expect(response).to redirect_to(new_user_session_path)
+        end
+      end
+
+      context 'csv format' do
+        it 'generates a file and downloads it' do
+          expect(CSVGenerator).not_to receive(:new)
+
+          get :closed_cases, format: 'csv'
+          expect(response.status).to eq 401
+          expect(response.header['Content-Type']).to eq 'text/csv; charset=utf-8'
+          expect(response.body).to eq 'You need to sign in or sign up before continuing.'
+        end
       end
     end
   end
@@ -140,10 +153,6 @@ RSpec.describe CasesController, type: :controller do
     before { sign_in manager }
 
     describe 'GET closed_cases' do
-      it 'renders the closed cases page' do
-        get :closed_cases
-        expect(response).to render_template :closed_cases
-      end
 
       it 'assigns cases returned by CaseFinderService' do
         stub_current_case_finder_for_closed_cases_with(:closed_cases_result)
@@ -156,6 +165,36 @@ RSpec.describe CasesController, type: :controller do
         get :closed_cases, params: { page: 'our_page' }
         expect(gnm.current_page_or_tab.cases.by_last_transitioned_date)
           .to have_received(:page).with('our_page')
+      end
+
+      context 'html format' do
+        it 'renders the closed cases page' do
+          get :closed_cases
+          expect(response).to render_template :closed_cases
+        end
+      end
+
+      context 'csv format' do
+        it 'generates a file and downloads it' do
+          generator = double CSVGenerator
+          expect(CSVGenerator).to receive(:new).and_return(generator)
+          expect(CSVGenerator).to receive(:options).with('closed').and_return({filename: 'abc.csv', type: 'text/csv; charset=utf-8'})
+          expect(generator).to receive(:to_csv).and_return('csv data')
+
+          get :closed_cases, format: 'csv'
+          expect(response.status).to eq 200
+          expect(response.header['Content-Disposition']).to eq %q{attachment; filename="abc.csv"}
+          expect(response.body).to eq 'csv data'
+        end
+
+        it 'does not paginate the result set' do
+          gnm = stub_current_case_finder_for_closed_cases_with(:closed_cases_result)
+          allow_any_instance_of(CSVGenerator).to receive(:to_csv).and_return ''
+          get :closed_cases, format: 'csv', params: { page: 'our_page' }
+
+          expect(gnm.current_page_or_tab.cases.by_last_transitioned_date)
+              .not_to have_received(:page).with('our_page')
+        end
       end
     end
 
@@ -399,16 +438,32 @@ RSpec.describe CasesController, type: :controller do
           .to have_received(:page).with('our_page')
       end
 
-      it 'renders the index template' do
-        stub_current_case_finder_cases_with(:my_open_cases_result)
-        get :my_open_cases, params: { tab: 'in_time' }
-        expect(response).to render_template(:index)
-      end
-
       it 'sets @current_tab_name to all cases for "All open cases tab"' do
         stub_current_case_finder_cases_with(:my_open_cases_result)
         get :my_open_cases, params: { tab: 'in_time' }
         expect(assigns(:current_tab_name)).to eq 'my_cases'
+      end
+
+      context 'html request' do
+        it 'renders the index template' do
+          stub_current_case_finder_cases_with(:my_open_cases_result)
+          get :my_open_cases, params: { tab: 'in_time' }
+          expect(response).to render_template(:index)
+        end
+      end
+
+      context 'csv request' do
+        it 'downloads a csv file' do
+          generator = double CSVGenerator
+          expect(CSVGenerator).to receive(:new).and_return(generator)
+          expect(CSVGenerator).to receive(:options).with('my-open').and_return({filename: 'abc.csv', type: 'text/csv; charset=utf-8'})
+          expect(generator).to receive(:to_csv).and_return('csv data')
+
+          get :my_open_cases, params: { tab: 'in_time' }, format: 'csv'
+          expect(response.status).to eq 200
+          expect(response.header['Content-Disposition']).to eq %q{attachment; filename="abc.csv"}
+          expect(response.body).to eq 'csv data'
+        end
       end
     end
   end

@@ -221,8 +221,16 @@ describe GlobalNavManager::Page do
   end
 
   describe '#matches_path?' do
-    it '#matches_path? returns true if the paths match' do
-      expect(open_cases_page.matches_path? 'in_time_fullpath').to be true
+    context 'no format specified' do
+      it 'returns true if the paths match' do
+        expect(open_cases_page.matches_path? 'in_time_fullpath').to be true
+      end
+    end
+
+    context 'csv format specified' do
+      it 'returns true if the paths match' do
+        expect(open_cases_page.matches_path? 'in_time_fullpath.csv').to be true
+      end
     end
   end
 end

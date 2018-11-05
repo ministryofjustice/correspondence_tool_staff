@@ -147,6 +147,20 @@ table caption{
   }
 }
 
+@media (min-width: 641px) {
+  .download-cases-link {
+    text-align: right;
+    margin-top: 15px;
+    margin-bottom: 30px;
+  }
+}
+
+@media (max-width: 640px) {
+  .download-cases-link {
+    margin-bottom: 15px;
+  }
+}
+
 .no-break {
   white-space: nowrap;
 }

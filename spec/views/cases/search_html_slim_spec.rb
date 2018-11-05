@@ -32,6 +32,7 @@ describe 'cases/search.html.slim', type: :view do
 
     it 'should not display number of results found' do
       expect(cases_search_page).to have_no_search_results_count
+      expect(cases_search_page).to have_no_download_cases_link
       expect(cases_search_page).to have_no_found_no_results_copy
     end
 
@@ -58,6 +59,10 @@ describe 'cases/search.html.slim', type: :view do
       expect(cases_search_page).to have_search_results_count
       expect(cases_search_page).to have_found_no_results_copy
     end
+
+    it 'should not display the download cases link' do
+      expect(cases_search_page).to have_no_download_cases_link
+    end
   end
 
   context 'found some results' do
@@ -81,6 +86,10 @@ describe 'cases/search.html.slim', type: :view do
 
     it 'should display number of results found' do
       expect(cases_search_page).to have_search_results_count
+    end
+
+    it 'should display the download cases link' do
+      expect(cases_search_page).to have_download_cases_link
     end
   end
 

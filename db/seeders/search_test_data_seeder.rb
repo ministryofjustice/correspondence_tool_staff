@@ -34,7 +34,7 @@ class SearchTestDataSeeder
     @case = case_creator.new_case
     selected_state = params['target_state']
     if @case.valid?
-      case_creator.call([selected_state], @case)
+      case_creator.call(selected_state, @case)
       puts "Case created: #{@case.number}"
       @show.call(@case)
     else
@@ -161,9 +161,10 @@ class SearchTestDataSeeder
   end
 
   def select_responding_team
-    @responding_teams ||= BusinessUnit.responding.active.map { |team| team.id.to_s}
-
-    @responding_teams.to_a[ @case_count % @responding_teams.length]
+    # @responding_teams ||= BusinessUnit.responding.active.map { |team| team.id.to_s}
+    #
+    # @responding_teams.to_a[ @case_count % @responding_teams.length]
+    '16'
   end
 
   def select_target_state

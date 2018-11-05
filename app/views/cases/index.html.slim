@@ -68,7 +68,11 @@
 - if @cases.present?
   - if request.path == '/cases/open'
     = render partial: 'cases/shared/case_list'
+    
   - else
+    .download-cases-link
+      = download_csv_link(request.fullpath)
+      | &nbsp;(.csv file)
     .grid-row
       .column-full.table-container.container
         table.report.table-font-xsmall
