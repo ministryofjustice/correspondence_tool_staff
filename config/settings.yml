@@ -220,7 +220,7 @@ enabled_features:
     Host-dev: true
     Host-demo: true
     Host-staging: true
-    Host-prod: false
+    Host-prod: true
   # A tempory feature flag to hide editing functionality on overturneds until the feature is built
   edit_overturned:
     Local: false
