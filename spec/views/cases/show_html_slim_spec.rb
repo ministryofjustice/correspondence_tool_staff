@@ -20,6 +20,7 @@ describe 'cases/show.html.slim', type: :view do
       :execute_response_approval?,
       :extend_for_pit?,
       :remove_clearance?,
+      :remove_pit_extension?,
       :request_further_clearance?,
       :new_case_link?,
       :upload_responses?,

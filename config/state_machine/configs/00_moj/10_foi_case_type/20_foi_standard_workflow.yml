@@ -48,6 +48,8 @@
                   switch_workflow: trigger
                 link_a_case:
                 remove_linked_case:
+                remove_pit_extension:
+                  if: Workflows::Predicates#has_pit_extension?
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
                   switch_workflow: :trigger
@@ -63,6 +65,8 @@
                   switch_workflow: trigger
                 link_a_case:
                 remove_linked_case:
+                remove_pit_extension:
+                  if: Workflows::Predicates#has_pit_extension?
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
                   switch_workflow: trigger

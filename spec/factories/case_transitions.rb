@@ -254,6 +254,19 @@ FactoryBot.define do
     acting_user { acting_team.managers.first }
   end
 
+  factory :case_remove_pit_extension, parent: :case_transition do
+    transient do
+      manager        { create :manager }
+      managing_team  { manager.managing_teams.first }
+    end
+
+    event          { 'remove_pit_extension' }
+    to_state       { self.case.current_state }
+    acting_user_id { manager.id }
+    acting_team_id { managing_team.id }
+  end
+
+
   factory :case_transition_request_further_clearance, parent: :case_transition do
     event    { 'request_further_clearance' }
     to_state { self.case.current_state }

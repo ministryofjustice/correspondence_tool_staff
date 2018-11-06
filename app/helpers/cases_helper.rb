@@ -199,6 +199,13 @@ module CasesHelper
 
   end
 
+  def action_link_for_remove_pit_extension(kase)
+    link_to I18n.t('common.case.remove_pit_extension'),
+            remove_pit_extension_case_path(kase),
+            id: 'action--remove-pit-extension',
+            method: :patch
+  end
+
   def action_link_for_new_case_link(kase)
     link_to "Link a case",
             new_case_link_case_path(kase.id),

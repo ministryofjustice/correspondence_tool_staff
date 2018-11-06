@@ -287,6 +287,11 @@ class Case::BasePolicy < ApplicationPolicy
     check_can_trigger_event(:extend_for_pit)
   end
 
+  def remove_pit_extension?
+    clear_failed_checks
+    check_can_trigger_event(:remove_pit_extension)
+  end
+
   def show?
     # This is just a catch-all in case we introduce a new type without a
     # corresponding policy for the new type. For safety sake, we do not allow
