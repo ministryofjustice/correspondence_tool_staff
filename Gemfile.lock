@@ -109,7 +109,7 @@ GEM
       simplecov (<= 0.13)
     coderay (1.1.2)
     colorize (0.8.1)
-    concurrent-ruby (1.0.5)
+    concurrent-ruby (1.1.2)
     config (1.7.0)
       activesupport (>= 3.0)
       deep_merge (~> 1.2.1)
@@ -237,13 +237,14 @@ GEM
       i18n
     i18n (1.1.1)
       concurrent-ruby (~> 1.0)
-    i18n-tasks (0.9.27)
+    i18n-tasks (0.9.28)
       activesupport (>= 4.0.2)
       ast (>= 2.1.0)
       erubi
       highline (>= 2.0.0)
       i18n
       parser (>= 2.2.3.0)
+      rails-i18n
       rainbow (>= 2.2.2, < 4.0)
       terminal-table (>= 1.5.1)
     inflecto (0.0.2)
@@ -395,6 +396,9 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
+    rails-i18n (5.1.2)
+      i18n (>= 0.7, < 2)
+      railties (>= 5.0, < 6)
     railties (5.0.7)
       actionpack (= 5.0.7)
       activesupport (= 5.0.7)
@@ -597,7 +601,7 @@ DEPENDENCIES
   guard-rspec
   guard-rubocop
   humanize_boolean
-  i18n-tasks (~> 0.9.27)
+  i18n-tasks (~> 0.9.28)
   jbuilder (~> 2.7)
   jquery-rails
   jquery-ui-rails
