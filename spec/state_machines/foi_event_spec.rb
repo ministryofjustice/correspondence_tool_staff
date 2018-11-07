@@ -48,6 +48,17 @@ describe 'state machine' do
 
     after(:all) { DbHousekeeping.clean }
 
+    let(:disclosure_assignment) do
+      kase.assignments.approving.for_team(@setup.disclosure_team).first
+    end
+
+    let(:press_assignment) do
+      kase.assignments.approving.for_team(@setup.press_office_team).first
+    end
+
+    let(:private_assignment) do
+      kase.assignments.approving.for_team(@setup.private_office_team).first
+    end
 
     describe 'setup' do
       context 'FOI' do
@@ -64,13 +75,13 @@ describe 'state machine' do
 
         context 'trigger workflow' do
           context 'awaiting dispatch' do
+            let(:kase) { @setup.trig_awdis_foi }
             it 'is trigger workflow' do
-              kase = @setup.trig_awdis_foi
               expect(kase.current_state).to eq 'awaiting_dispatch'
               expect(kase.workflow).to eq 'trigger'
-              expect(kase.approver_assignments.for_team(@setup.disclosure_team).first.state).to eq 'accepted'
-              expect(kase.approver_assignments.for_team(@setup.press_office_team)).to be_empty
-              expect(kase.approver_assignments.for_team(@setup.private_office_team)).to be_empty
+              expect(disclosure_assignment.state).to eq 'accepted'
+              expect(press_assignment).not_to be_present
+              expect(private_assignment).not_to be_present
             end
           end
         end
@@ -78,36 +89,38 @@ describe 'state machine' do
         context 'full_approval workflow' do
           context 'pending dacu clearance' do
             context 'accepted by disclosure specialist' do
+              let(:kase) { @setup.full_pdacu_foi_accepted }
+
               it 'accepted by all three approving teams ' do
-                kase = @setup.full_pdacu_foi_accepted
                 expect(kase.current_state).to eq 'pending_dacu_clearance'
                 expect(kase.workflow).to eq 'full_approval'
-                expect(kase.approver_assignments.for_team(@setup.disclosure_team).first.state).to eq 'accepted'
-                expect(kase.approver_assignments.for_team(@setup.press_office_team).first.state).to eq 'accepted'
-                expect(kase.approver_assignments.for_team(@setup.private_office_team).first.state).to eq 'accepted'
+                expect(disclosure_assignment.state).to eq 'accepted'
+                expect(press_assignment.state).to eq 'accepted'
+                expect(private_assignment.state).to eq 'accepted'
               end
             end
 
             context 'not accepted yet by dacu disclosure' do
+              let(:kase) { @setup.full_pdacu_foi_unaccepted }
+
               it 'accepted by press and private but not disclosure' do
-                kase = @setup.full_pdacu_foi_unaccepted
                 expect(kase.current_state).to eq 'pending_dacu_clearance'
                 expect(kase.workflow).to eq 'full_approval'
-                expect(kase.approver_assignments.for_team(@setup.disclosure_team).first.state).to eq 'pending'
-                expect(kase.approver_assignments.for_team(@setup.press_office_team).first.state).to eq 'accepted'
-                expect(kase.approver_assignments.for_team(@setup.private_office_team).first.state).to eq 'accepted'
+                expect(disclosure_assignment.state).to eq 'pending'
+                expect(press_assignment.state).to eq 'accepted'
+                expect(private_assignment.state).to eq 'accepted'
               end
             end
           end
 
           context 'awaiting dispatch' do
+            let(:kase) { @setup.full_awdis_foi }
             it 'is full approval workflow accepted by press, private and disclosure' do
-              kase = @setup.full_awdis_foi
               expect(kase.current_state).to eq 'awaiting_dispatch'
               expect(kase.workflow).to eq 'full_approval'
-              expect(kase.approver_assignments.for_team(@setup.disclosure_team).first.state).to eq 'accepted'
-              expect(kase.approver_assignments.for_team(@setup.press_office_team).first.state).to eq 'accepted'
-              expect(kase.approver_assignments.for_team(@setup.private_office_team).first.state).to eq 'accepted'
+              expect(disclosure_assignment.state).to eq 'accepted'
+              expect(press_assignment.state).to eq 'accepted'
+              expect(private_assignment.state).to eq 'accepted'
             end
           end
         end
@@ -1586,7 +1599,7 @@ describe 'state machine' do
                  [:press_officer, :full_awdis_foi],
 
                  [:private_officer, :full_awdis_foi],
-               ).debug }
+               ) }
     end
 
     describe :unflag_for_clearance do
@@ -1682,8 +1695,6 @@ describe 'state machine' do
           [:disclosure_bmt, :trig_pdacu_foi_accepted],
           [:disclosure_bmt, :full_pdacu_foi_accepted],
           [:disclosure_bmt, :full_pdacu_foi_unaccepted],
-          [:disclosure_bmt, :full_ppress_foi_accepted],
-          [:disclosure_bmt, :full_pprivate_foi_accepted],
 
           [:disclosure_specialist, :trig_draft_foi],
           [:disclosure_specialist, :trig_pdacu_foi],
@@ -1698,8 +1709,6 @@ describe 'state machine' do
           [:disclosure_specialist, :full_responded_foi],
           [:disclosure_specialist, :full_pdacu_foi_accepted],
           [:disclosure_specialist, :full_pdacu_foi_unaccepted],
-          [:disclosure_specialist, :full_ppress_foi_accepted],
-          [:disclosure_specialist, :full_pprivate_foi_accepted],
 
           [:disclosure_specialist_coworker, :trig_draft_foi],
           [:disclosure_specialist_coworker, :trig_pdacu_foi],
@@ -1711,8 +1720,6 @@ describe 'state machine' do
           [:disclosure_specialist_coworker, :full_responded_foi],
           [:disclosure_specialist_coworker, :full_pdacu_foi_accepted],
           [:disclosure_specialist_coworker, :full_pdacu_foi_unaccepted],
-          [:disclosure_specialist_coworker, :full_ppress_foi_accepted],
-          [:disclosure_specialist_coworker, :full_pprivate_foi_accepted],
 
           [:another_disclosure_specialist, :trig_draft_foi],
           [:another_disclosure_specialist, :trig_draft_foi_accepted],
@@ -1735,8 +1742,6 @@ describe 'state machine' do
           [:responder, :full_responded_foi],
           [:responder, :full_pdacu_foi_accepted],
           [:responder, :full_pdacu_foi_unaccepted],
-          [:responder, :full_ppress_foi_accepted],
-          [:responder, :full_pprivate_foi_accepted],
 
           [:another_responder_in_same_team, :std_draft_foi],
           [:another_responder_in_same_team, :std_awdis_foi],
@@ -1754,34 +1759,30 @@ describe 'state machine' do
           [:another_responder_in_same_team, :full_responded_foi],
           [:another_responder_in_same_team, :full_pdacu_foi_accepted],
           [:another_responder_in_same_team, :full_pdacu_foi_unaccepted],
-          [:another_responder_in_same_team, :full_ppress_foi_accepted],
-          [:another_responder_in_same_team, :full_pprivate_foi_accepted],
 
           [:press_officer, :trig_draft_foi],
           [:press_officer, :trig_pdacu_foi],
           [:press_officer, :trig_draft_foi_accepted],
           [:press_officer, :trig_pdacu_foi_accepted],
+          [:press_officer, :full_awdis_foi],
           [:press_officer, :full_draft_foi],
           [:press_officer, :full_ppress_foi],
           [:press_officer, :full_pprivate_foi],
           [:press_officer, :full_responded_foi],
           [:press_officer, :full_pdacu_foi_accepted],
           [:press_officer, :full_pdacu_foi_unaccepted],
-          [:press_officer, :full_ppress_foi_accepted],
-          [:press_officer, :full_pprivate_foi_accepted],
 
           [:private_officer, :trig_draft_foi],
           [:private_officer, :trig_pdacu_foi],
           [:private_officer, :trig_draft_foi_accepted],
           [:private_officer, :trig_pdacu_foi_accepted],
+          [:private_officer, :full_awdis_foi],
           [:private_officer, :full_draft_foi],
           [:private_officer, :full_ppress_foi],
           [:private_officer, :full_pprivate_foi],
           [:private_officer, :full_responded_foi],
           [:private_officer, :full_pdacu_foi_accepted],
           [:private_officer, :full_pdacu_foi_unaccepted],
-          [:private_officer, :full_ppress_foi_accepted],
-          [:private_officer, :full_pprivate_foi_accepted],
 
        ).with_hook('Workflows::Hooks', :notify_responder_message_received)
       }
@@ -1813,8 +1814,6 @@ describe 'state machine' do
           [:disclosure_specialist, :full_pdacu_foi_accepted],
           [:disclosure_specialist, :full_pdacu_foi_unaccepted],
           [:disclosure_specialist, :full_ppress_foi],
-          [:disclosure_specialist, :full_ppress_foi_accepted],
-          [:disclosure_specialist, :full_pprivate_foi_accepted],
           [:disclosure_specialist, :full_pprivate_foi],
           [:disclosure_specialist, :full_awdis_foi],
 
@@ -1833,8 +1832,6 @@ describe 'state machine' do
           [:disclosure_specialist_coworker, :full_pdacu_foi_accepted],
           [:disclosure_specialist_coworker, :full_pdacu_foi_unaccepted],
           [:disclosure_specialist_coworker, :full_ppress_foi],
-          [:disclosure_specialist_coworker, :full_ppress_foi_accepted],
-          [:disclosure_specialist_coworker, :full_pprivate_foi_accepted],
           [:disclosure_specialist_coworker, :full_pprivate_foi],
           [:disclosure_specialist_coworker, :full_awdis_foi],
 
@@ -1861,9 +1858,7 @@ describe 'state machine' do
           [:responder, :full_pdacu_foi_accepted],
           [:responder, :full_pdacu_foi_unaccepted],
           [:responder, :full_ppress_foi],
-          [:responder, :full_ppress_foi_accepted],
           [:responder, :full_pprivate_foi],
-          [:responder, :full_pprivate_foi_accepted],
           [:responder, :full_awdis_foi],
 
           [:another_responder_in_same_team, :std_draft_foi],
@@ -1877,9 +1872,7 @@ describe 'state machine' do
           [:another_responder_in_same_team, :full_pdacu_foi_accepted],
           [:another_responder_in_same_team, :full_pdacu_foi_unaccepted],
           [:another_responder_in_same_team, :full_ppress_foi],
-          [:another_responder_in_same_team, :full_ppress_foi_accepted],
           [:another_responder_in_same_team, :full_pprivate_foi],
-          [:another_responder_in_same_team, :full_pprivate_foi_accepted],
           [:another_responder_in_same_team, :full_awdis_foi],
 
           [:press_officer, :trig_awresp_foi],
@@ -1894,10 +1887,9 @@ describe 'state machine' do
           [:press_officer, :full_pdacu_foi_accepted],
           [:press_officer, :full_pdacu_foi_unaccepted],
           [:press_officer, :full_ppress_foi],
-          [:press_officer, :full_ppress_foi_accepted],
           [:press_officer, :full_pprivate_foi],
-          [:press_officer, :full_pprivate_foi_accepted],
           [:press_officer, :full_awdis_foi],
+          [:press_officer, :full_unassigned_foi],
 
           [:private_officer, :trig_awresp_foi],
           [:private_officer, :trig_awresp_foi_accepted],
@@ -1911,10 +1903,9 @@ describe 'state machine' do
           [:private_officer, :full_pdacu_foi_accepted],
           [:private_officer, :full_pdacu_foi_unaccepted],
           [:private_officer, :full_ppress_foi],
-          [:private_officer, :full_ppress_foi_accepted],
           [:private_officer, :full_pprivate_foi],
-          [:private_officer, :full_pprivate_foi_accepted],
           [:private_officer, :full_awdis_foi],
+          [:private_officer, :full_unassigned_foi],
        ).with_hook('Workflows::Hooks', :reassign_user_email)
       }
     end

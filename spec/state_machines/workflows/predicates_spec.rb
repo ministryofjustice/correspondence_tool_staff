@@ -35,10 +35,12 @@ module Workflows
                                               :flagged_accepted,
                                               :press_office),
         case_unassigned:               create(:case),
-        case_unassigned_flagged:       create(:case, :flagged, :dacu_disclosure),
+        case_unassigned_flagged:       create(:case, :flagged),
         case_unassigned_flagged_press: create(:case, :full_approval, :flagged),
         case_unassigned_trigger:       create(:case, :flagged_accepted),
-        case_unassigned_trigger_press: create(:case, :full_approval),
+        case_unassigned_trigger_press: create(:case,
+                                              :flagged_accepted,
+                                              :full_approval),
       }
     end
 
@@ -104,7 +106,7 @@ module Workflows
                  [:disclosure_specialist_coworker, :case_drafting_trigger],
                  [:disclosure_specialist_coworker, :case_unassigned_flagged],
                  [:disclosure_specialist_coworker, :case_unassigned_trigger],
-               ).debug
+               )
       end
     end
 

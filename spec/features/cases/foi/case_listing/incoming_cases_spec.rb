@@ -13,14 +13,12 @@ feature 'listing incoming on the system' do
   given(:assigned_case_flagged_for_dacu_disclosure) do
     create :assigned_case,
            :flagged,
-           :dacu_disclosure,
            created_at: 2.business_days.ago,
            identifier: 'assigned_case_flagged_for_dacu_disclosure'
   end
   given(:assigned_case_flagged_for_dacu_disclosure_accepted) do
     create :assigned_case,
            :flagged_accepted,
-           :dacu_disclosure,
            created_at: 2.business_days.ago,
            identifier: 'assigned_case_flagged_for_dacu_disclosure_accepted'
   end
@@ -28,7 +26,6 @@ feature 'listing incoming on the system' do
     create :assigned_case,
            :flagged_accepted,
            :press_office,
-           disclosure_assignment_state: 'pending',
            created_at: 2.business_days.ago,
            identifier: 'assigned_case_flagged_for_press_office_accepted'
   end
@@ -63,11 +60,9 @@ feature 'listing incoming on the system' do
 
       cases = incoming_cases_page.case_list
 
-      expect(cases.count).to eq 2
+      expect(cases.count).to eq 1
       expect(cases.first.number)
         .to have_text assigned_case_flagged_for_dacu_disclosure.number
-      expect(cases.second.number)
-        .to have_text assigned_case_flagged_for_press_office_accepted.number
     end
   end
 

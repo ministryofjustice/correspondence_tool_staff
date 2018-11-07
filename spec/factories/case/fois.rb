@@ -40,25 +40,65 @@ FactoryBot.define do
       responder              { responding_team.responders.first }
       approving_team         { find_or_create :team_disclosure }
       approver               { approving_team.approvers.first }
-      # flag_for_disclosure    { nil }
-      # flag_for_press         { false }
-      # flag_for_private       { false }
-
-      # flagged by manager when creating case. May be set to :pending or
-      # depending on the desired state of the assignment :acceptsed.
-      flagged                { false }
-      taken_on_by_disclosure { false }  # occurs before responder takes case on
-      taken_on_by_press      { false }  # occurs after responder takes case on
-      # unflagged_by_press     { false }  # occurs after responder takes case on
-      taken_on_by_private    { false }  # occurs after responder takes case on
-      unflagged_by_private   { false }  # occurs after responder takes case on
-      state_taken_on_by_press_or_private { 'unassigned' }
-      # user_flagging          { team_flagging&.approvers.first }
-      # team_flagging          { nil }
       press_office           { find_or_create :team_press_office }
       press_officer          { press_office.approvers.first }
       private_office         { find_or_create :team_private_office }
       private_officer        { private_office.approvers.first }
+
+      # These attributes allow us to control how the case is flagged or
+      # taken-on.
+      #
+      #   flagged                - simple boolean whether the case was flagged
+      #                            on creation
+      #   taken_on_by_disclosure - what state disclosure accepted the assignment
+      #   taken_on_by_press      - what state Press took the case on
+      #   taken_on_by_private    - what state Private took the case on
+      #   unflagged_by_private   - simple bool, whether private has unflagged
+      #
+      # They default value for these is the internal attributes
+      # _state_taken_on_by_disclosure and _state_taken_on_by_press_private,
+      # these are documented below.
+      flagged                { false }
+      taken_on_by_disclosure { nil }
+      taken_on_by_press      { nil }
+      taken_on_by_private    { nil }
+      unflagged_by_private   { false }
+
+      # _state_taken_on_by_{disclosure,press_or_private} are internal
+      # attributes for fine-tuning when to take on cases. They are set by the
+      # different factories that need them, and used by the taken_on_by_*
+      # attributes above. They ensure that cases are taken-on in the right
+      # state by allowing factories to set what state to perform the takin-on
+      # of cases:
+      #
+      # |-----------------------------+------------------------+-----------------------|
+      # | Factory                     | Case State             | When Case is Taken-On |
+      # |-----------------------------+------------------------+-----------------------|
+      # | foi_case                    | unassigned             | unassigned            |
+      # | awaiting_responder_case     | awaiting_responder     | awaiting_responder    |
+      # | accepted_case               | drafting               | drafting              |
+      # | pending_dacu_clearance_case | pending_dacu_clearance | drafting              |
+      # | ready_to_send_case          | awaiting_dispatch      | drafting              |
+      # |-----------------------------+------------------------+-----------------------|
+      #
+      _state_taken_on_by_disclosure       { 'unassigned' }
+      _state_taken_on_by_press_or_private { 'unassigned' }
+
+      # Sometimes these factories don't behave as expected. They're a little
+      # complicated. Sorry. This is especially annoying when a gazillion cases
+      # are being created, such as in the StandardSetup module ... sticking a
+      # binding.pry somewhere in here is useless, so here's what you do.
+      # Temporarily add the debug attribute where the case is being created{}
+      #
+      #   create :full_awresp_foi_accepted, debug: true
+      #
+      # And then, in the after(:create) block you need to debug, add the line:
+      #
+      #   binding.pry if evaluator.debug
+      #
+      # Et voila! You can now debug individual case setups within the context
+      # of a large and unwieldy test (framework).
+      debug { false }
     end
 
     workflow                  { 'standard' }
@@ -77,22 +117,13 @@ FactoryBot.define do
       evaluator.managing_team
     end
 
+    _flagged_for_disclosure
+    _taken_on_by_disclosure
+    _taken_on_by_press_or_private_in_current_state
+
     after(:create) do |kase, evaluator|
       ma = kase.managing_assignment
       ma.update! created_at: evaluator.creation_time
-
-      if evaluator.flagged
-        create :flag_case_for_clearance_transition,
-               case: kase,
-               acting_team: evaluator.managing_team,
-               acting_user: evaluator.manager,
-               target_team: evaluator.approving_team
-        create :approver_assignment,
-               case: kase,
-               team: evaluator.approving_team,
-               state: 'pending'
-        kase.update workflow: 'trigger'
-      end
 
       kase.reload
     end
@@ -107,20 +138,19 @@ FactoryBot.define do
           aliases: [:assigned_case] do
     transient do
       identifier { "assigned case" }
-      state_taken_on_by_press_or_private { 'awaiting_responder' }
+
+      _state_taken_on_by_press_or_private { 'awaiting_responder' }
+      _state_taken_on_by_disclosure       { 'awaiting_responder' }
     end
 
     received_date { creation_time }
 
     # Traits to bring in extra functionality
     _transition_to_awaiting_responder
-    _taken_on_for_disclosure
+    _taken_on_by_disclosure
     _taken_on_by_press_or_private_in_current_state
 
     after(:create) do |kase|
-      # This seems to be needed to ensure that transitions, assignments or
-      # anything else is added to a case, it is available in the final object
-      # returnes by the 'create'.
       kase.reload
     end
   end
@@ -129,15 +159,14 @@ FactoryBot.define do
           aliases: [:case_being_drafted] do
     transient do
       identifier { "accepted case" }
-      state_taken_on_by_press_or_private { 'drafting' }
+
+      _state_taken_on_by_press_or_private { 'drafting' }
+      _state_taken_on_by_disclosure       { 'drafting' }
     end
 
     _transition_to_accepted
+    _taken_on_by_disclosure
     _taken_on_by_press_or_private_in_current_state
-
-    after(:create) do |kase|
-      kase.reload
-    end
   end
 
   factory :rejected_case, parent: :assigned_case do
@@ -152,8 +181,8 @@ FactoryBot.define do
       kase.responder_assignment.rejected!
       create :case_transition_reject_responder_assignment,
              case: kase,
-             acting_user_id: evaluator.responder.id,
-             acting_team_id: evaluator.responding_team.id,
+             acting_user: evaluator.responder,
+             acting_team: evaluator.responding_team,
              message: evaluator.rejection_message
       kase.reload
     end
@@ -185,20 +214,18 @@ FactoryBot.define do
     flagged_accepted
 
     _transition_to_pending_dacu_clearance
-
-    after(:create) do |kase|
-      kase.reload
-    end
   end
 
   # TODO: Use traits for this instead of a separate case type
   factory :unaccepted_pending_dacu_clearance_case,
-          parent: :pending_dacu_clearance_case do
+          parent: :accepted_case do
     transient do
       identifier { 'case pending disclosure approval but no accepted' }
     end
 
     flagged
+
+    _transition_to_pending_dacu_clearance
   end
 
   # TODO: Use traits for this instead of a separate case type
@@ -216,7 +243,7 @@ FactoryBot.define do
 
   # TODO: Use traits for this instead of a separate case type
   factory :pending_dacu_clearance_case_flagged_for_press_and_private,
-          parent: :pending_dacu_clearance_case_flagged_for_press do
+          parent: :pending_dacu_clearance_case do
     taken_on_by_press
   end
 
@@ -225,23 +252,17 @@ FactoryBot.define do
 
     taken_on_by_press
     _transition_to_pending_press_clearance
-
-    after(:create) do |kase|
-      kase.reload
-    end
   end
 
   factory :pending_private_clearance_case,
           parent: :pending_press_clearance_case do
 
     _transition_to_pending_private_clearance
-
-    after(:create) do |kase|
-      kase.reload
-    end
   end
 
   factory :redrafting_case, parent: :pending_dacu_clearance_case do
+    flagged_accepted
+
     after(:create) do |kase, evaluator|
       # TODO: This should be approved: false if it's being redrafted
       # team_dacu_disclosure = find_or_create :team_dacu_disclosure
@@ -257,8 +278,8 @@ FactoryBot.define do
 
   end
 
+  # TODO: Move all the stuff relating to approvals to 'approved_case' factory
   factory :ready_to_send_case,
-          aliases: [:approved_case],
           parent: :accepted_case do
     transient do
       identifier { "approved case requiring disclosure approval" }
@@ -272,31 +293,34 @@ FactoryBot.define do
     _transition_to_pending_press_clearance
     _transition_to_pending_private_clearance
 
-    # TODO: This should be happening in the transitions that approve cases
-    _approve_all_assignments
-
     after(:create) do |kase, evaluator|
-      if evaluator.taken_on_by_private
+      if kase.assignments.approving.for_team(evaluator.private_office).exists?
         final_approving_team = evaluator.private_office
         final_approver = evaluator.private_officer
-      elsif evaluator.taken_on_by_press
-          final_approving_team = evaluator.press_office
-          final_approver = evaluator.press_officer
-      elsif kase.workflow != 'trigger'
+      elsif kase.assignments.approving.for_team(evaluator.press_office).exists?
+        final_approving_team = evaluator.press_office
+        final_approver = evaluator.press_officer
+      elsif kase.assignments.approving.for_team(evaluator.approving_team).exists?
         final_approving_team = evaluator.approving_team
         final_approver = evaluator.approver
-      else
-        final_approving_team = evaluator.managing_team
-        final_approver = evaluator.manager
       end
 
-      create :case_transition_approve,
-             case: kase,
-             acting_team: final_approving_team,
-             acting_user: final_approver
+      if final_approving_team && final_approver
+        create :case_transition_approve,
+               case: kase,
+               acting_team: final_approving_team,
+               acting_user: final_approver
+
+        kase.assignments.approving.for_team(final_approving_team).singular
+          .update!(approved: true)
+      end
 
       kase.reload
     end
+  end
+
+  factory :approved_case, parent: :ready_to_send_case do
+    taken_on_by_disclosure
   end
 
   factory :responded_case, parent: :ready_to_send_case do
@@ -324,15 +348,15 @@ FactoryBot.define do
     info_held_status { find_or_create :info_status, :held }
     outcome          { find_or_create :outcome, :granted }
     message          { 'info held, granted' }
-    received_date { 22.business_days.ago }
-    date_responded { 4.business_days.ago }
+    received_date    { 22.business_days.ago }
+    date_responded   { 4.business_days.ago }
 
     after(:create) do |kase, evaluator|
       create :case_transition_close,
              case: kase,
-             acting_user_id: evaluator.manager.id,
-             acting_team_id: evaluator.managing_team.id,
-             target_team_id: evaluator.responding_team.id
+             acting_user: evaluator.manager,
+             acting_team: evaluator.managing_team,
+             target_team: evaluator.responding_team
       kase.reload
     end
 
@@ -607,6 +631,30 @@ FactoryBot.define do
     end
   end
 
+  # Internal trait to flag a case for Disclosure on creation, should only be
+  # used in 'unassigned' state.
+  #
+  # NB: It may appear that this doesn't need to be extracted to a trait as it's
+  # only used in one factory (currently FOI unassigned cases), but by making it
+  # a trait we control when this happens in relation to the other taking-on
+  # transitions for the case.
+  trait :_flagged_for_disclosure do
+    after(:create) do |kase, evaluator|
+      if evaluator.flagged
+        create :flag_case_for_clearance_transition,
+               case: kase,
+               acting_team: evaluator.managing_team,
+               acting_user: evaluator.manager,
+               target_team: evaluator.approving_team
+        create :approver_assignment,
+               case: kase,
+               team: evaluator.approving_team,
+               state: 'pending'
+        kase.update workflow: 'trigger'
+      end
+    end
+  end
+
   # Internal trait used to package up functionality to flag cases for
   # press/private and optionally disclosure at the same time. Use the traits
   # :taken_on_by_press or :taken_on_by_private to trigger this:
@@ -628,6 +676,7 @@ FactoryBot.define do
     after(:create) do |kase, evaluator|
       if evaluator.taken_on_by_press == kase.current_state ||
          evaluator.taken_on_by_private == kase.current_state
+
         if evaluator.taken_on_by_press
           acting_team = evaluator.press_office
           acting_user = evaluator.press_officer
@@ -636,20 +685,16 @@ FactoryBot.define do
           acting_user = evaluator.private_officer
         end
 
-        unless evaluator.taken_on_by_disclosure || evaluator.flagged
-          create :case_transition_take_on_for_approval,
+        unless evaluator.flagged
+          create :flag_case_for_clearance_transition,
                  case: kase,
                  acting_team: acting_team,
                  acting_user: acting_user,
-                 target_team: evaluator.approving_team,
-                 target_user: evaluator.approver,
-                 created_at: evaluator.creation_time
+                 target_team: evaluator.approving_team
           create :approver_assignment,
                  case: kase,
                  team: evaluator.approving_team,
-                 user: evaluator.approver,
-                 state: 'accepted',
-                 created_at: evaluator.creation_time
+                 state: 'pending'
         end
 
         create :case_transition_take_on_for_approval,
@@ -732,43 +777,26 @@ FactoryBot.define do
     end
   end
 
-  # Internal trait that packages up functionality to flag a case either by
-  # being accepted by a a Disclosure Specialist, if it was flagged by
-  # Disclosure BMT, or by taking-on by Disclosure Specialist if not.
-  #
-  # This is only used in 'awaiting_responder'/'assigned' cases for the moment.
-  trait :_taken_on_for_disclosure do
+  # Internal trait that packages up functionality to either taken a case on by
+  # Disclosure, or accept the assignment by Disclosure if the case was already
+  # flagged when created.
+  trait :_taken_on_by_disclosure do
     after(:create) do |kase, evaluator|
-      if evaluator.flagged == :accepted || evaluator.taken_on_by_disclosure
-        # If the case was already flagged then accept the approver assignment.
-        if evaluator.flagged
-          disclosure_assignment = kase.assignments.for_team(
-            evaluator.approving_team
-          ).singular
-          disclosure_assignment.update!(state: 'accepted', user: evaluator.approver)
-          create :case_transition_accept_approver_user,
-                 case: kase,
-                 acting_team: evaluator.approving_team,
-                 acting_user: evaluator.approver,
-                 target_team: evaluator.approving_team,
-                 target_user: evaluator.approver,
-                 created_at: evaluator.creation_time
-        else
-          create :case_transition_take_on_for_approval,
-                 case: kase,
-                 acting_team: evaluator.approving_team,
-                 acting_user: evaluator.approver,
-                 target_team: evaluator.approving_team,
-                 target_user: evaluator.approver,
-                 created_at: evaluator.creation_time
-          create :approver_assignment,
-                 case: kase,
-                 team: evaluator.approving_team,
-                 user: evaluator.approver,
-                 state: 'accepted',
-                 created_at: evaluator.creation_time
-          kase.update workflow: 'trigger'
-        end
+      if (evaluator.flagged &&
+          evaluator.taken_on_by_disclosure == kase.current_state)
+
+        kase.assignments.for_team(evaluator.approving_team).singular.update!(
+          user: evaluator.approver,
+          state: 'accepted',
+        )
+
+        create :case_transition_accept_approver_user,
+               case: kase,
+               acting_team: evaluator.approving_team,
+               acting_user: evaluator.approver,
+               target_team: evaluator.approving_team,
+               target_user: evaluator.approver,
+               created_at: evaluator.creation_time
       end
     end
   end
@@ -795,10 +823,11 @@ FactoryBot.define do
              created_at: evaluator.creation_time
       create :case_transition_assign_responder,
              case: kase,
-             acting_user_id: evaluator.manager.id,
-             acting_team_id: evaluator.managing_team.id,
-             target_team_id: evaluator.responding_team.id,
+             acting_user: evaluator.manager,
+             acting_team: evaluator.managing_team,
+             target_team: evaluator.responding_team,
              created_at: evaluator.creation_time
+      kase.reload
     end
   end
 
@@ -824,22 +853,26 @@ FactoryBot.define do
 
   trait :_transition_to_pending_press_clearance do
     after(:create) do |kase, evaluator|
-      if evaluator.taken_on_by_press
+      if kase.assignments.approving.for_team(evaluator.press_office).exists?
         create :case_transition_approve_for_press_office,
                case: kase,
                acting_team: evaluator.approving_team,
                acting_user: evaluator.approver
+        kase.assignments.approving.for_team(evaluator.approving_team).singular
+          .update!(approved: true)
       end
     end
   end
 
   trait :_transition_to_pending_private_clearance do
     after(:create) do |kase, evaluator|
-      if evaluator.taken_on_by_private
+      if kase.assignments.approving.for_team(evaluator.private_office).exists?
         create :case_transition_approve_for_private_office,
                case: kase,
                acting_team: evaluator.press_office,
                acting_user: evaluator.press_officer
+        kase.assignments.approving.for_team(evaluator.press_office).singular
+          .update!(approved: true)
       end
     end
   end
@@ -865,31 +898,34 @@ FactoryBot.define do
 
   trait :flagged do
     transient do
-      flagged { :pending }
+      flagged                { true }
+      taken_on_by_disclosure { nil }
     end
   end
 
   trait :flagged_accepted do
     transient do
-      flagged { :accepted }
+      flagged                { true }
+      taken_on_by_disclosure { _state_taken_on_by_disclosure }
     end
   end
 
   trait :taken_on_by_disclosure do
     transient do
-      taken_on_by_disclosure { true }
+      flagged                { true }
+      taken_on_by_disclosure { _state_taken_on_by_disclosure }
     end
   end
 
   trait :taken_on_by_press do
     transient do
-      taken_on_by_press { state_taken_on_by_press_or_private }
+      taken_on_by_press { _state_taken_on_by_press_or_private }
     end
   end
 
   trait :taken_on_by_private do
     transient do
-      taken_on_by_private { state_taken_on_by_press_or_private }
+      taken_on_by_private { _state_taken_on_by_press_or_private }
     end
   end
 
@@ -909,6 +945,11 @@ FactoryBot.define do
 
   trait :full_approval do
     taken_on_by_press
+  end
+
+  # TODO: Remove this block
+  trait :dacu_disclosure do
+    # Does nothing that isn't already being done.
   end
 
   trait :press_office do
@@ -988,6 +1029,14 @@ FactoryBot.define do
       create :case_transition_request_further_clearance,
              case: kase
       kase.reload
+    end
+  end
+
+  # See the note in the :foi_case factory on how to use the :debug attribute
+  # for this works.
+  trait :debug do
+    transient do
+      debug { true }
     end
   end
 end

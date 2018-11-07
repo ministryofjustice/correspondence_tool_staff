@@ -473,7 +473,7 @@ RSpec.describe Case::Base, type: :model do
 
   describe 'original_appeal_and_related_cases association' do
 
-    let(:sar)               { create :sar_case }
+    let(:sar)               { create :closed_sar }
     let(:linked_sar)        { create :sar_case }
     let(:manager)           { sar.managing_team.users.first }
     let(:ico_appeal)        { create :closed_ico_sar_case, :overturned_by_ico, original_case: sar }
@@ -705,11 +705,12 @@ RSpec.describe Case::Base, type: :model do
 
   describe '#transitions.most_recent' do
     it 'returns the one transition that has the most recent flag set to true' do
-      expect(case_being_drafted_trigger.transitions.size).to eq 3
+      expect(case_being_drafted_trigger.transitions.size).to eq 4
       expect(case_being_drafted_trigger.transitions[0].most_recent).to be false
       expect(case_being_drafted_trigger.transitions[1].most_recent).to be false
-      expect(case_being_drafted_trigger.transitions[2].most_recent).to be true
-      expect(case_being_drafted_trigger.transitions.most_recent).to eq case_being_drafted_trigger.transitions[2]
+      expect(case_being_drafted_trigger.transitions[2].most_recent).to be false
+      expect(case_being_drafted_trigger.transitions[3].most_recent).to be true
+      expect(case_being_drafted_trigger.transitions.most_recent).to eq case_being_drafted_trigger.transitions[3]
     end
   end
 
@@ -1378,7 +1379,7 @@ RSpec.describe Case::Base, type: :model do
   describe '#assigned_press_officer' do
     it 'returns the press_officer' do
       press_officer = find_or_create :press_officer
-      kase = create :assigned_case, :flagged_accepted, approver: press_officer
+      kase = create :assigned_case, :taken_on_by_press
 
       expect(kase.assigned_press_officer).to eq press_officer
     end
@@ -1388,7 +1389,7 @@ RSpec.describe Case::Base, type: :model do
     it 'returns the private_officer' do
 
       private_officer = find_or_create :private_officer
-      kase = create :assigned_case, :flagged_accepted, approver: private_officer
+      kase = create :assigned_case, :taken_on_by_private
 
       expect(kase.assigned_private_officer).to eq private_officer
     end

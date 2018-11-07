@@ -225,7 +225,6 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
       sar_noff_trig_unassigned_accepted: ->(attributes={}) {
         create(:sar_case,
                :flagged_accepted,
-               :dacu_disclosure,
                { identifier: 'sar_noff_unassigned' }.merge(attributes))
       },
       sar_noff_trig_pdacu: ->(attributes={}) {
@@ -235,37 +234,31 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
       sar_noff_trig_awdis: ->(attributes={}) {
         create(:approved_sar,
                :flagged_accepted,
-               :dacu_disclosure,
                { identifier: 'sar_noff_trig_awdis' }.merge(attributes))
       },
       sar_noff_trig_awresp: ->(attributes={}) {
         create(:awaiting_responder_sar,
                :flagged,
-               :dacu_disclosure,
                { identifier: 'sar_noff_trig_awresp', }.merge(attributes))
       },
       sar_noff_trig_awresp_accepted: ->(attributes={}) {
         create(:awaiting_responder_sar,
                :flagged_accepted,
-               :dacu_disclosure,
                { identifier: 'sar_noff_trig_awresp_accepted' }.merge(attributes))
       },
       sar_noff_trig_draft: ->(attributes={}) {
         create(:sar_being_drafted,
                :flagged,
-               :dacu_disclosure,
                { identifier: 'sar_noff_trig_draft', }.merge(attributes))
       },
       sar_noff_trig_draft_accepted: ->(attributes={}) {
         create(:sar_being_drafted,
                :flagged_accepted,
-               :dacu_disclosure,
                { identifier: 'sar_noff_trig_draft_accepted' }.merge(attributes))
       },
       sar_noff_trig_closed_accepted: ->(attributes={}) {
         create(:closed_sar,
                :flagged_accepted,
-               :dacu_disclosure,
                { identifier: 'sar_noff_trig_closed_accepted' }.merge(attributes))
       },
 
@@ -293,26 +286,22 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
       ot_ico_sar_noff_trig_awresp: ->(attributes={}) {
         create(:ot_ico_sar_noff_awresp,
                :flagged,
-               :dacu_disclosure,
                { identifier: 'ot_ico_sar_noff_trig_awresp', }.merge(attributes))
       },
       ot_ico_sar_noff_trig_awresp_accepted: ->(attributes={}) {
         create(:awaiting_responder_sar,
                :flagged,
-               :dacu_disclosure,
                { identifier: 'ot_ico_sar_noff_trig_awresp_accepted', }
                  .merge(attributes))
       },
       ot_ico_sar_noff_trig_draft: ->(attributes={}) {
         create(:sar_being_drafted,
                :flagged,
-               :dacu_disclosure,
                { identifier: 'ot_ico_sar_noff_trig_draft' }.merge(attributes))
       },
       ot_ico_sar_noff_trig_draft_accepted: ->(attributes={}) {
         create(:sar_being_drafted,
                :flagged_accepted,
-               :dacu_disclosure,
                { identifier: 'ot_ico_sar_noff_trig_draft_accepted', }
                  .merge(attributes))
       },
@@ -392,19 +381,16 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
       trig_awresp_foi: ->(attributes={}) {
         create(:assigned_case,
                :flagged,
-               :dacu_disclosure,
                { identifier: 'trig_awresp_foi' }.merge(attributes))
       },
       trig_draft_foi_accepted: ->(attributes={}) {
         create(:accepted_case,
                :flagged_accepted,
-               :dacu_disclosure,
                { identifier: 'trig_draft_foi_accepted' }.merge(attributes))
       },
       trig_draft_foi_accepted_late: ->(attributes={}) {
         create(:accepted_case,
                :flagged_accepted,
-               :dacu_disclosure,
                { received_date: 25.business_days.ago,
                  identifier: 'trig_draft_foi_accepted_late' }
                  .merge(attributes))
@@ -412,13 +398,11 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
       trig_draft_foi: ->(attributes={}) {
         create(:accepted_case,
                :flagged,
-               :dacu_disclosure,
                { identifier: 'trig_draft_foi' }.merge(attributes))
       },
       trig_draft_foi_late: ->(attributes={}) {
         create(:accepted_case,
                :flagged,
-               :dacu_disclosure,
                { received_date: 25.business_days.ago,
                  identifier: 'trig_draft_foi_late' }
                  .merge(attributes))
@@ -434,19 +418,16 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
       trig_awdis_foi: ->(attributes={}) {
         create(:case_with_response,
                :flagged_accepted,
-               :dacu_disclosure,
                { identifier: 'trig_awdis_foi' }.merge(attributes))
       },
       trig_responded_foi: ->(attributes={}) {
         create(:responded_case,
                :flagged_accepted,
-               :dacu_disclosure,
                { identifier: 'trig_responded_foi' }.merge(attributes))
       },
       trig_closed_foi: ->(attributes={}) {
         create(:closed_case,
                :flagged_accepted,
-               :dacu_disclosure,
                { identifier: 'trig_closed_foi' }.merge(attributes))
       },
       trig_closed_foi_late: ->(attributes={}) {
@@ -467,7 +448,7 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
                { identifier: 'full_awresp_foi' }.merge(attributes))
       },
       full_awresp_foi_accepted: ->(attributes={}) {
-        create(:assigned_case, :full_approval,
+        create(:assigned_case, :full_approval, :flagged_accepted,
                { identifier: 'full_awresp_foi_accepted' }.merge(attributes))
       },
       full_draft_foi: ->(attributes={}) {
@@ -489,10 +470,6 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
       full_pprivate_foi: ->(attributes={}) {
         create(:pending_private_clearance_case,
                { identifier: 'full_pprivate_foi' }.merge(attributes))
-      },
-      full_pprivate_foi_accepted: ->(attributes={}) {
-        create(:pending_private_clearance_case,
-               { identifier: 'full_pprivate_foi_accepted' }.merge(attributes))
       },
       full_awdis_foi: ->(attributes={}) {
         create(:approved_case, :full_approval,

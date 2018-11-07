@@ -423,39 +423,44 @@ describe ConfigurableStateMachine::Machine do
 
         context 'pending_dacu_clearance state' do
           it 'shows events' do
-            k = create :pending_dacu_clearance_case, :flagged, :press_office
+            k = create :pending_dacu_clearance_case, :press_office, :flagged
             expect(k.class).to eq Case::FOI::Standard
             expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'pending_dacu_clearance'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:accept_approver_assignment,
-                                                                         :add_message_to_case,
-                                                                         :link_a_case,
-                                                                         :reassign_user,
-                                                                         :remove_linked_case]
+            expect(k.state_machine.permitted_events(approver.id))
+              .to eq [:accept_approver_assignment,
+                      :add_message_to_case,
+                      :link_a_case,
+                      :reassign_user,
+                      :remove_linked_case]
           end
         end
 
         context 'pending_press_clearance state' do
           it 'shows events' do
-            k = create :pending_press_clearance_case, :flagged, :press_office
+            k = create :pending_press_clearance_case, :press_office
             expect(k.class).to eq Case::FOI::Standard
             expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'pending_press_office_clearance'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
-                                                                          :link_a_case,
-                                                                          :remove_linked_case]
+            expect(k.state_machine.permitted_events(approver.id))
+              .to eq [ :add_message_to_case,
+                       :link_a_case,
+                       :reassign_user,
+                       :remove_linked_case]
           end
         end
 
         context 'pending_private_clearance state' do
           it 'shows events' do
-            k = create :pending_private_clearance_case, :flagged, :press_office
+            k = create :pending_private_clearance_case, :press_office
             expect(k.class).to eq Case::FOI::Standard
             expect(k.workflow).to eq 'full_approval'
             expect(k.current_state).to eq 'pending_private_office_clearance'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
-                                                                          :link_a_case,
-                                                                          :remove_linked_case]
+            expect(k.state_machine.permitted_events(approver.id))
+              .to eq [ :add_message_to_case,
+                       :link_a_case,
+                       :reassign_user,
+                       :remove_linked_case]
           end
         end
 

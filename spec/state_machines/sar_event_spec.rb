@@ -54,14 +54,16 @@ describe 'state machine' do
          [:disclosure_bmt, :sar_noff_trig_draft],
          [:disclosure_bmt, :sar_noff_trig_draft_accepted],
          [:disclosure_bmt, :sar_noff_trig_awdis],
-         [:responder, :sar_noff_draft],
-         [:responder, :sar_noff_trig_draft],
-         [:responder, :sar_noff_trig_draft_accepted],
-         [:responder, :sar_noff_trig_awdis],
-         [:another_responder_in_same_team, :sar_noff_draft],
-         [:another_responder_in_same_team, :sar_noff_trig_draft],
-         [:another_responder_in_same_team, :sar_noff_trig_draft_accepted],
-         [:another_responder_in_same_team, :sar_noff_trig_awdis],
+         [:disclosure_specialist, :sar_noff_trig_draft_accepted],
+         [:disclosure_specialist, :sar_noff_trig_awdis],
+         [:sar_responder, :sar_noff_draft],
+         [:sar_responder, :sar_noff_trig_draft],
+         [:sar_responder, :sar_noff_trig_draft_accepted],
+         [:sar_responder, :sar_noff_trig_awdis],
+         [:another_sar_responder_in_same_team, :sar_noff_draft],
+         [:another_sar_responder_in_same_team, :sar_noff_trig_draft],
+         [:another_sar_responder_in_same_team, :sar_noff_trig_draft_accepted],
+         [:another_sar_responder_in_same_team, :sar_noff_trig_awdis],
        ).with_hook('Workflows::Hooks', :notify_responder_message_received)
     }
   end
@@ -91,10 +93,10 @@ describe 'state machine' do
   describe :close do
     it {
       should have_after_hook(
-       [:responder, :sar_noff_draft],
-       [:responder, :sar_noff_trig_awdis],
-       [:another_responder_in_same_team, :sar_noff_draft],
-       [:another_responder_in_same_team, :sar_noff_trig_awdis],
+       [:sar_responder, :sar_noff_draft],
+       [:sar_responder, :sar_noff_trig_awdis],
+       [:another_sar_responder_in_same_team, :sar_noff_draft],
+       [:another_sar_responder_in_same_team, :sar_noff_trig_awdis],
 
      ).with_hook('Workflows::Hooks', :notify_managing_team_case_closed)
     }
@@ -111,15 +113,15 @@ describe 'state machine' do
         [:disclosure_specialist_coworker, :sar_noff_trig_awresp_accepted],
         [:disclosure_specialist_coworker, :sar_noff_trig_draft_accepted],
 
-        [:responder, :sar_noff_draft],
-        [:responder, :sar_noff_trig_awdis],
-        [:responder, :sar_noff_trig_draft_accepted],
-        [:responder, :sar_noff_trig_draft],
+        [:sar_responder, :sar_noff_draft],
+        [:sar_responder, :sar_noff_trig_awdis],
+        [:sar_responder, :sar_noff_trig_draft_accepted],
+        [:sar_responder, :sar_noff_trig_draft],
 
-        [:another_responder_in_same_team, :sar_noff_draft],
-        [:another_responder_in_same_team, :sar_noff_trig_awdis],
-        [:another_responder_in_same_team, :sar_noff_trig_draft_accepted],
-        [:another_responder_in_same_team, :sar_noff_trig_draft],
+        [:another_sar_responder_in_same_team, :sar_noff_draft],
+        [:another_sar_responder_in_same_team, :sar_noff_trig_awdis],
+        [:another_sar_responder_in_same_team, :sar_noff_trig_draft_accepted],
+        [:another_sar_responder_in_same_team, :sar_noff_trig_draft],
 
 
      ).with_hook('Workflows::Hooks', :reassign_user_email)

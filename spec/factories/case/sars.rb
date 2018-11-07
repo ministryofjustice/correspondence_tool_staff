@@ -145,7 +145,7 @@ FactoryBot.define do
   end
 
   factory :closed_sar, parent: :accepted_sar do
-    missing_info              { false }
+    missing_info { false }
 
     transient do
       identifier { "closed sar" }

@@ -28,6 +28,9 @@ FactoryBot.define do
           parent: :overturned_ico_foi do
     transient do
       identifier      { "awaiting responder overturned ico foi case" }
+
+      _state_taken_on_by_press_or_private { 'awaiting_responder' }
+      _state_taken_on_by_disclosure       { 'awaiting_responder' }
     end
 
     created_at    { creation_time }
@@ -35,7 +38,7 @@ FactoryBot.define do
 
     # Traits to bring in extra functionality
     _transition_to_awaiting_responder
-    _taken_on_for_disclosure
+    _taken_on_by_disclosure
     _taken_on_by_press_or_private_in_current_state
 
     after(:create) do |kase|
@@ -48,18 +51,14 @@ FactoryBot.define do
           parent: :awaiting_responder_ot_ico_foi do
     transient do
       identifier      { "responder accepted overturned ico foi case" }
+
+      _state_taken_on_by_press_or_private { 'drafting' }
+      _state_taken_on_by_disclosure       { 'drafting' }
     end
 
-    after(:create) do |kase, evaluator|
-      kase.responder_assignment.update_attribute :user, evaluator.responder
-      kase.responder_assignment.accepted!
-      create :case_transition_accept_responder_assignment,
-             case: kase,
-             acting_user: kase.responder,
-             acting_team: kase.responding_team,
-             created_at: evaluator.creation_time
-      kase.reload
-    end
+    _transition_to_accepted
+    _taken_on_by_disclosure
+    _taken_on_by_press_or_private_in_current_state
   end
 
   factory :with_response_ot_ico_foi,
@@ -86,16 +85,13 @@ FactoryBot.define do
   factory :pending_dacu_clearance_ot_ico_foi,
           parent: :accepted_ot_ico_foi do
     transient do
+      # TODO: This should automatically flag at least
       identifier { 'pending dacu clearance overturned ico foi case'}
     end
 
     flagged_accepted
 
     _transition_to_pending_dacu_clearance
-
-    after(:create) do |kase|
-      kase.reload
-    end
   end
 
   factory :approved_trigger_ot_ico_foi,
@@ -115,6 +111,9 @@ FactoryBot.define do
              acting_user: evaluator.approver,
              acting_team: evaluator.approving_team
 
+      kase.assignments.approving.for_team(evaluator.approving_team)
+        .update(approved: true)
+
       kase.reload
     end
   end
@@ -123,37 +122,11 @@ FactoryBot.define do
           parent: :pending_dacu_clearance_ot_ico_foi do
     transient do
       identifier      { 'pending press clearance overturned ico foi case'}
-      press_office    { find_or_create :team_press_office }
-      press_officer   { find_or_create :press_officer }
-      private_office  { find_or_create :team_private_office }
-      private_officer { find_or_create :private_officer }
     end
 
-    after(:create) do |kase, evaluator|
-
-      kase.approver_assignments.for_team(evaluator.approving_team)
-          .first.update!(approved: true)
-
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.press_office,
-             state: 'accepted',
-             user: evaluator.press_officer
-
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.private_office,
-             state: 'accepted',
-             user: evaluator.private_officer
-
-      create :case_transition_approve_for_press_office,
-             case: kase,
-             acting_user: evaluator.approver,
-             acting_team: evaluator.approving_team
-
-      kase.reload
-      kase.update(workflow: 'full_approval')
-    end
+    taken_on_by_press
+    flagged_accepted
+    _transition_to_pending_press_clearance
   end
 
   factory :pending_private_clearance_ot_ico_foi,
@@ -162,19 +135,7 @@ FactoryBot.define do
       identifier { 'pending private clearance overturned ico foi case'}
     end
 
-    after(:create) do |kase, evaluator|
-
-      kase.approver_assignments.for_team(evaluator.press_office)
-        .first.update!(approved: true)
-
-      create :case_transition_approve_for_private_office,
-             case: kase,
-             acting_user: evaluator.press_officer,
-             acting_team: evaluator.press_office
-
-      kase.reload
-      kase.update(workflow: 'full_approval')
-    end
+    _transition_to_pending_private_clearance
   end
 
   factory :approved_full_approval_ot_ico_foi,
@@ -193,6 +154,9 @@ FactoryBot.define do
              case: kase,
              acting_user: evaluator.private_officer,
              acting_team: evaluator.private_office
+
+      kase.assignments.approving.for_team(evaluator.private_office)
+        .update(approved: true)
 
       kase.reload
     end

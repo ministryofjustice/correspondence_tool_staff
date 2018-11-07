@@ -776,20 +776,20 @@ describe 'state machine' do
           [:responder, :ico_foi_awaiting_dispatch],
           [:responder, :ico_foi_responded],
 
-          [:responder, :ico_sar_accepted],
-          [:responder, :ico_sar_pending_dacu],
-          [:responder, :ico_sar_awaiting_dispatch],
-          [:responder, :ico_sar_responded],
+          [:sar_responder, :ico_sar_accepted],
+          [:sar_responder, :ico_sar_pending_dacu],
+          [:sar_responder, :ico_sar_awaiting_dispatch],
+          [:sar_responder, :ico_sar_responded],
 
           [:another_responder_in_same_team, :ico_foi_accepted],
           [:another_responder_in_same_team, :ico_foi_pending_dacu],
           [:another_responder_in_same_team, :ico_foi_awaiting_dispatch],
           [:another_responder_in_same_team, :ico_foi_responded],
 
-          [:another_responder_in_same_team, :ico_sar_accepted],
-          [:another_responder_in_same_team, :ico_sar_pending_dacu],
-          [:another_responder_in_same_team, :ico_sar_awaiting_dispatch],
-          [:another_responder_in_same_team, :ico_sar_responded],
+          [:another_sar_responder_in_same_team, :ico_sar_accepted],
+          [:another_sar_responder_in_same_team, :ico_sar_pending_dacu],
+          [:another_sar_responder_in_same_team, :ico_sar_awaiting_dispatch],
+          [:another_sar_responder_in_same_team, :ico_sar_responded],
 
           [:disclosure_specialist, :ico_foi_accepted],
           [:disclosure_specialist, :ico_foi_pending_dacu],
@@ -851,18 +851,20 @@ describe 'state machine' do
       it {
         should have_after_hook(
           [:responder, :ico_foi_accepted],
-          [:responder, :ico_sar_accepted],
           [:responder, :ico_foi_pending_dacu],
-          [:responder, :ico_sar_pending_dacu],
           [:responder, :ico_foi_awaiting_dispatch],
-          [:responder, :ico_sar_awaiting_dispatch],
+
+          [:sar_responder, :ico_sar_accepted],
+          [:sar_responder, :ico_sar_pending_dacu],
+          [:sar_responder, :ico_sar_awaiting_dispatch],
 
           [:another_responder_in_same_team, :ico_foi_accepted],
-          [:another_responder_in_same_team, :ico_sar_accepted],
           [:another_responder_in_same_team, :ico_foi_pending_dacu],
-          [:another_responder_in_same_team, :ico_sar_pending_dacu],
           [:another_responder_in_same_team, :ico_foi_awaiting_dispatch],
-          [:another_responder_in_same_team, :ico_sar_awaiting_dispatch],
+
+          [:another_sar_responder_in_same_team, :ico_sar_accepted],
+          [:another_sar_responder_in_same_team, :ico_sar_pending_dacu],
+          [:another_sar_responder_in_same_team, :ico_sar_awaiting_dispatch],
 
           [:disclosure_specialist, :ico_foi_unassigned],
           [:disclosure_specialist, :ico_foi_awaiting_responder],

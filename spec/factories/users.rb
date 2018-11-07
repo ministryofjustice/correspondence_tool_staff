@@ -44,6 +44,8 @@ FactoryBot.define do
       identifier { 'user' }
     end
 
+    # NB: when using either 'find' or 'find_or_create' strategies, the existing
+    #     user that is found will have it's password set to 'nil'.
     password { 'qwerty$123' }
     sequence(:full_name) { |n| "#{identifier} #{n}" }
     email { Faker::Internet.email(full_name) }

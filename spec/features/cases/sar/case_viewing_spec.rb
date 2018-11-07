@@ -1,10 +1,12 @@
 require "rails_helper"
 
 feature 'viewing SAR cases' do
-  given(:approver)          { create :approver }
-  given(:manager)           { find_or_create :disclosure_bmt_user }
-  given(:responder)         { create :responder }
-  given(:another_responder) { create :responder }
+  given(:approver)           { create :disclosure_specialist }
+  given(:manager)            { find_or_create :disclosure_bmt_user }
+  given(:responder)          { find_or_create :sar_responder }
+  given(:coworker_responder) { create :responder,
+                                      responding_teams: responder.responding_teams }
+  given(:another_responder)  { create :responder }
 
   context 'unassigned case' do
     given!(:kase)   { create :sar_case }
@@ -44,7 +46,15 @@ feature 'viewing SAR cases' do
       expect(cases_show_page).to be_displayed(id: kase.id)
     end
 
-    scenario 'viewing as another responder' do
+    scenario 'viewing as another responder on the same team' do
+      login_as coworker_responder
+
+      cases_show_page.load id: kase.id
+
+      expect(cases_show_page).to be_displayed(id: kase.id)
+    end
+
+    scenario 'viewing as another responder on different team' do
       login_as another_responder
 
       cases_show_page.load id: kase.id

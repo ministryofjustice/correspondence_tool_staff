@@ -10,8 +10,8 @@ describe CasesController do
     DbHousekeeping.clean
   end
 
-  let(:manager) { find_or_create :disclosure_bmt_user }
-  let(:responder)   { create :responder }
+  let(:manager)   { find_or_create :disclosure_bmt_user }
+  let(:responder) { create :foi_responder }
 
   describe 'PATCH update_closure' do
     context 'SAR cases' do
@@ -28,11 +28,6 @@ describe CasesController do
 
     context 'closed SAR case' do
       context 'as a manager' do
-        before do
-          sign_in manager
-          patch :update_closure, params: params
-        end
-
         let(:kase) { create :closed_sar }
 
         before do
@@ -56,11 +51,6 @@ describe CasesController do
       end
 
       context 'as a responder' do
-        before do
-          sign_in responder
-          patch :update_closure, params: params
-        end
-
         let(:kase) { create :closed_sar, responder: responder }
 
         before do
@@ -69,6 +59,7 @@ describe CasesController do
         end
 
         it 'updates the cases date responded field' do
+          # TODO: out-of-business-hours failure here.
           kase.reload
           expect(kase.date_responded).to eq new_date_responded
         end

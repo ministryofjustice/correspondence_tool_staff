@@ -52,15 +52,14 @@ RSpec.describe Team, type: :model do
   end
 
   context 'multiple teams created' do
-    let!(:managing_team)   { find_or_create :managing_team }
-    let!(:responding_team) { find_or_create :responding_team }
-    let!(:approving_team)  { find_or_create :approving_team }
-    let!(:team_dacu)       { find_or_create :team_dacu }
+    let!(:managing_team)       { find_or_create :team_disclosure_bmt }
+    let!(:responding_team)     { find_or_create :foi_responding_team }
+    let!(:sar_responding_team) { find_or_create :sar_responding_team }
+    let!(:approving_team)      { find_or_create :team_disclosure }
 
     describe 'managing scope' do
       it 'returns managing teams' do
         expect(BusinessUnit.managing).to match_array [
-                                           team_dacu,
                                            managing_team
                                          ]
       end
@@ -68,7 +67,8 @@ RSpec.describe Team, type: :model do
 
     describe 'responding scope' do
       it 'returns only responding teams' do
-        expect(BusinessUnit.responding).to eq [responding_team]
+        expect(BusinessUnit.responding).to match_array [responding_team,
+                                                        sar_responding_team]
       end
     end
 
@@ -78,7 +78,6 @@ RSpec.describe Team, type: :model do
                                     BusinessUnit.press_office,
                                     BusinessUnit.private_office,
                                     BusinessUnit.dacu_disclosure,
-                                    approving_team
                                   ]
       end
     end

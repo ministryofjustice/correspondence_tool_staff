@@ -5,8 +5,8 @@ describe TeamDeletionService do
   describe '#call' do
 
     context 'deleting a directorate or business group' do
-      let(:dir)           { find_or_create :directorate }
-      let(:service)       { TeamDeletionService.new(dir) }
+      let(:dir)     { find_or_create :directorate }
+      let(:service) { TeamDeletionService.new(dir) }
 
       context 'child team is not active' do
         let(:time) { Time.new(2017, 6, 30, 12, 0, 0) }
@@ -41,8 +41,8 @@ describe TeamDeletionService do
       end
 
       context 'deleting a business unit' do
-        let(:bu_without_users)        { create :responding_team, responders: [] }
-        let(:bu_with_users)           { create :responding_team }
+        let(:bu_without_users) { create :responding_team, responders: [] }
+        let(:bu_with_users)    { create :responding_team }
 
         context 'no cases, no users' do
           it 'returns :ok and soft deletes the business unit' do
@@ -91,16 +91,20 @@ describe TeamDeletionService do
 
         context 'has closed cases but no open' do
           it 'returns :ok and soft deletes the team' do
-            create :closed_case, responding_team: bu_without_users
-            expect(bu_without_users.cases).not_to be_empty
-            expect(bu_without_users.open_cases).to be_empty
+            closed_case = create :closed_case
+            bu = closed_case.responding_team
+            bu.responders.destroy_all
 
-            service = TeamDeletionService.new(bu_without_users)
+            expect(bu.cases).not_to be_empty
+            expect(bu.open_cases).to be_empty
+
+            bu.responders.destroy_all
+            service = TeamDeletionService.new(bu)
             service.call
 
             expect(service.result).to eq :ok
-            expect(bu_without_users.deleted_at).not_to be_nil
-            expect(bu_without_users.name).to match(/^DEACTIVATED/)
+            expect(bu.deleted_at).not_to be_nil
+            expect(bu.name).to match(/^DEACTIVATED/)
           end
         end
       end

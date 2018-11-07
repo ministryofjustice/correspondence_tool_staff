@@ -289,14 +289,15 @@ describe ConfigurableStateMachine::Machine do
 
         context 'unassigned state' do
           it 'should show permitted events' do
-            k = create :ico_foi_case, :dacu_disclosure
+            k = create :ico_foi_case
 
             expect(k.current_state).to eq 'unassigned'
-            expect(k.state_machine.permitted_events(disclosure_specialist.id)).to eq [:accept_approver_assignment,
-                                                                                      :add_message_to_case,
-                                                                                      :link_a_case,
-                                                                                      :reassign_user,
-                                                                                      :remove_linked_case]
+            expect(k.state_machine.permitted_events(disclosure_specialist.id))
+              .to eq [:accept_approver_assignment,
+                      :add_message_to_case,
+                      :link_a_case,
+                      :reassign_user,
+                      :remove_linked_case]
           end
         end
 

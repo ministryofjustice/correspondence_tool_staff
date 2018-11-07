@@ -23,37 +23,20 @@ describe Case::BasePolicy do
                                             approving_team: @dacu_disclosure
 
     @new_case                   = create :case
-    @accepted_case              = create :accepted_case,
-                                         responder: @responder,
-                                         manager: @manager
-    @flagged_accepted_case      = create :accepted_case, :flagged,
-                                         responder: @responder,
-                                         manager: @manager
-    @assigned_case              = create :assigned_case,
-                                         responding_team: @responding_team
-    @assigned_flagged_case      = create :assigned_case, :flagged,
-                                         approving_team: @dacu_disclosure
-    @assigned_trigger_case      = create :assigned_case, :flagged_accepted,
-                                         approver: @approver
-    @rejected_case              = create :rejected_case,
-                                         responding_team: @responding_team
+    @accepted_case              = create :accepted_case
+    @flagged_accepted_case      = create :accepted_case, :flagged
+    @assigned_case              = create :assigned_case
+    @assigned_flagged_case      = create :assigned_case, :flagged
+    @assigned_trigger_case      = create :assigned_case, :flagged_accepted
+    @rejected_case              = create :rejected_case
     @unassigned_case            = @new_case
-    @unassigned_flagged_case    = create :case, :flagged, :dacu_disclosure
-    @unassigned_trigger_case    = create :case,
-                                         :flagged_accepted,
-                                         :dacu_disclosure,
-                                         approver: @disclosure_specialist
-    @case_with_response         = create :case_with_response,
-                                         responder: @responder
-    @case_with_response_flagged = create :case_with_response, :flagged,
-                                         responder: @responder
-    @case_with_response_trigger = create :case_with_response,
-                                         :flagged_accepted,
-                                         responder: @responder
-    @responded_case             = create :responded_case,
-                                         responder: @responder
-    @closed_case                = create :closed_case,
-                                         responder: @responder
+    @unassigned_flagged_case    = create :case, :flagged
+    @unassigned_trigger_case    = create :case, :flagged_accepted
+    @case_with_response         = create :case_with_response
+    @case_with_response_flagged = create :case_with_response, :flagged
+    @case_with_response_trigger = create :case_with_response, :flagged_accepted
+    @responded_case             = create :responded_case
+    @closed_case                = create :closed_case
 
     @awaiting_responder_case         = create :awaiting_responder_case
     @awaiting_responder_flagged_case = create :awaiting_responder_case, :flagged
