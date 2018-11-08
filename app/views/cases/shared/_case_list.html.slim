@@ -11,10 +11,14 @@
         col
         col
       caption
-        .search-results-summary
-          strong
-            = @cases.total_count
-          = " #{ 'case'.pluralize(@cases.total_count)} found"
+        .grid-row
+          .search-results-summary.column-half
+            strong
+              = @cases.total_count
+            = " #{ 'case'.pluralize(@cases.total_count)} found"
+          .download-cases-link.column-half
+            = download_csv_link(request.fullpath)
+            | &nbsp;(.csv file)
       thead
         th scope='col'
           = t('common.case_list.number_html')

@@ -2,6 +2,15 @@ require './lib/translate_for_case'
 
 module CasesHelper
 
+  def download_csv_link(full_path)
+    uri = URI(full_path)
+    csv_path = "#{uri.path}.csv"
+    if uri.query.present?
+      csv_path += "?#{uri.query}"
+    end
+    link_to 'Download cases', csv_path
+  end
+
   def accepted_case_attachment_types
     Settings.case_uploads_accepted_types.join ','
   end

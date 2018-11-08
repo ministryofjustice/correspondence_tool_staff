@@ -6,6 +6,9 @@
 
 = render partial: 'layouts/header'
 
+.download-cases-link
+  = download_csv_link(request.fullpath)
+  | &nbsp;(.csv file)
 .grid-row
   .column-full.table-container.container
     table.report.closed-case-report.table-font-xsmall

@@ -331,6 +331,10 @@ class Case::Base < ApplicationRecord
     self.type_abbreviation.downcase
   end
 
+  def to_csv
+    CSVExporter.new(self).to_csv
+  end
+
   def upload_response_groups
     CaseAttachmentUploadGroupCollection.new(self, attachments.response, :responder)
   end
@@ -681,10 +685,6 @@ class Case::Base < ApplicationRecord
   def indexable_fields
     @indexable_fields ||= self.class.searchable_fields_and_ranks.keys.map(&:to_s)
   end
-
-
-
-
 
   def received_in_acceptable_range?
     if self.new_record? || received_date_changed?

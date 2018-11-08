@@ -7,6 +7,8 @@ class CasesController < ApplicationController
   include SARCasesParams
   include OverturnedICOParams
 
+  CSV_REQUEST_REGEX = /\.csv$/
+
   before_action :set_case,
                 only: [
                   :edit,
@@ -76,12 +78,21 @@ class CasesController < ApplicationController
   end
 
   def closed_cases
-    @cases = @global_nav_manager
-               .current_page_or_tab
-               .cases
-               .by_last_transitioned_date
-               .page(params[:page])
-               .decorate
+    unpaginated_cases =  @global_nav_manager
+                             .current_page_or_tab
+                             .cases
+                             .by_last_transitioned_date
+    if download_csv_request?
+      @cases = unpaginated_cases
+    else
+      @cases = unpaginated_cases.page(params[:page]).decorate
+    end
+    respond_to do |format|
+      format.html     { render :closed_cases }
+      format.csv do
+        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('closed')
+      end
+    end
   end
 
   def incoming_cases
@@ -93,21 +104,27 @@ class CasesController < ApplicationController
   end
 
   def my_open_cases
-    @cases = @global_nav_manager
-               .current_page_or_tab
-               .cases
-               .by_deadline
-               .page(params[:page])
-               .decorate
+    unpaginated_cases = @global_nav_manager
+                            .current_page_or_tab
+                            .cases
+                            .by_deadline
+    if download_csv_request?
+      @cases = unpaginated_cases
+    else
+      @cases = unpaginated_cases.page(params[:page]).decorate
+    end
     @current_tab_name = 'my_cases'
     @can_add_case = policy(Case::Base).can_add_case?
-
-    render :index
+    respond_to do |format|
+      format.html     { render :index }
+      format.csv do
+        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('my-open')
+      end
+    end
   end
 
   def open_cases
     full_list_of_cases = @global_nav_manager.current_page_or_tab.cases
-
     query_list_params = filter_params.merge(
       list_path: request.path,
     )
@@ -119,16 +136,18 @@ class CasesController < ApplicationController
     if service.error?
       flash.now[:alert] = service.error_message
     else
-      @page = params[:page] || '1'
-      @cases = service.result_set.by_deadline.page(@page).decorate
-      @parent_id = @query.id
-      flash[:query_id] = @query.id
+      prepare_open_cases_collection(service)
     end
 
     @filter_crumbs = @query.filter_crumbs
     @current_tab_name = 'all_cases'
     @can_add_case = policy(Case::Base).can_add_case?
-    render :index
+    respond_to do |format|
+      format.html     { render :index }
+      format.csv do
+        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('open')
+      end
+    end
   end
 
   def filter
@@ -417,8 +436,19 @@ class CasesController < ApplicationController
       @parent_id = @query.id
       flash[:query_id] = @query.id
     end
-    @cases = service.result_set.page(@page).decorate
+    unpaginated_cases = service.result_set
+    if download_csv_request?
+      @cases = unpaginated_cases
+    else
+      @cases = unpaginated_cases.page(@page).decorate
+    end
     @filter_crumbs = @query.filter_crumbs
+    respond_to do |format|
+      format.html     { render :search }
+      format.csv do
+        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('search')
+      end
+    end
   end
 
 
@@ -644,6 +674,25 @@ class CasesController < ApplicationController
   end
 
   private
+
+  def prepare_open_cases_collection(service)
+    @parent_id = @query.id
+    @page = params[:page] || '1'
+    @cases = service.result_set.by_deadline.decorate
+    if download_csv_request?
+      @cases = service.result_set.by_deadline
+    else
+      @cases = service.result_set.by_deadline.page(@page).decorate
+    end
+    flash[:query_id] = @query.id
+  end
+
+  def download_csv_request?
+    uri = URI(request.fullpath)
+    CSV_REQUEST_REGEX.match?(uri.path)
+  end
+
+
   def determine_overturned_ico_class(original_appeal_id)
     original_appeal_case = Case::ICO::Base.find original_appeal_id
     case original_appeal_case.type

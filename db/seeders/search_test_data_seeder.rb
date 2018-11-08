@@ -34,7 +34,7 @@ class SearchTestDataSeeder
     @case = case_creator.new_case
     selected_state = params['target_state']
     if @case.valid?
-      case_creator.call([selected_state], @case)
+      case_creator.call(selected_state, @case)
       puts "Case created: #{@case.number}"
       @show.call(@case)
     else

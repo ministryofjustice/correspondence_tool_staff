@@ -54,7 +54,8 @@ class GlobalNavManager
     end
 
     def matches_path?(match_path)
-      fullpath == match_path
+      normalized_match_path = match_path.sub('.csv', '')
+      fullpath == normalized_match_path
     end
 
     def request

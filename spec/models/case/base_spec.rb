@@ -1400,4 +1400,15 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
+  describe '#to_csv' do
+    it 'delegates to CSVExporter' do
+      kase = build :assigned_case
+      exporter = double(CSVExporter)
+      expect(CSVExporter).to receive(:new).with(kase).and_return(exporter)
+      expect(exporter).to receive(:to_csv)
+
+      kase.to_csv
+    end
+  end
+
 end
