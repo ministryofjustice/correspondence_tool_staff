@@ -161,10 +161,9 @@ class SearchTestDataSeeder
   end
 
   def select_responding_team
-    # @responding_teams ||= BusinessUnit.responding.active.map { |team| team.id.to_s}
-    #
-    # @responding_teams.to_a[ @case_count % @responding_teams.length]
-    '16'
+    @responding_teams ||= BusinessUnit.responding.active.map { |team| team.id.to_s}
+
+    @responding_teams.to_a[ @case_count % @responding_teams.length]
   end
 
   def select_target_state
