@@ -8,7 +8,6 @@ class CaseRemovePITExtensionService
   end
 
   def call
-    # binding.pry
     ActiveRecord::Base.transaction do
       @case.state_machine.remove_pit_extension!(acting_user: @user,
                                                 acting_team: BusinessUnit.dacu_bmt)

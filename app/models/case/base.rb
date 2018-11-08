@@ -661,7 +661,7 @@ class Case::Base < ApplicationRecord
   end
 
   def extended_for_pit?
-    transitions.where(event: 'extend_for_pit').any?
+    currently_extended_for_pit?
   end
 
   # predicate methods
@@ -736,6 +736,17 @@ class Case::Base < ApplicationRecord
     if changed.include?('received_date')  && !extended_for_pit?
       self.internal_deadline = deadline_calculator.internal_deadline
       self.external_deadline = deadline_calculator.external_deadline
+    end
+  end
+
+  def currently_extended_for_pit?
+    pit_related_transitions = transitions.where(event: ['extend_for_pit',
+                                                        'remove_pit_extension'])
+                                          .reorder(:created_at)
+    if pit_related_transitions.present?
+      pit_related_transitions.last.event == 'extend_for_pit'
+    else
+      false
     end
   end
 

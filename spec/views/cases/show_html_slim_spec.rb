@@ -43,7 +43,7 @@ describe 'cases/show.html.slim', type: :view do
   end
 
   let(:case_pending_dacu_clearance)       { create(:pending_dacu_clearance_case).decorate }
-  let(:case_being_drafted)                { create(:case_being_drafted).decorate }
+  let(:case_being_drafted)                { create(:case_being_drafted, :extended_for_pit).decorate }
   let(:case_being_drafted_flagged)        { create(:case_being_drafted, :flagged, :dacu_disclosure).decorate }
   let(:case_with_response)                { create(:case_with_response).decorate }
   let(:upheld_closed_sar_ico_appeal)      { create(:closed_ico_sar_case).decorate }
@@ -255,10 +255,12 @@ describe 'cases/show.html.slim', type: :view do
     context 'for a user that has permission to do the action' do
       before do
         login_as manager
-        setup_policies extend_for_pit?: true
+        setup_policies extend_for_pit?: true,
+                       remove_pit_extension?: true
       end
 
       it { should have_extend_for_pit_action }
+      it { should have_remove_pit_extension_action }
     end
 
     context 'for a user that does not have permission to do the action' do

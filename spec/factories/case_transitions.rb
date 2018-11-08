@@ -254,7 +254,7 @@ FactoryBot.define do
     acting_user { acting_team.managers.first }
   end
 
-  factory :case_remove_pit_extension, parent: :case_transition do
+  factory :case_transition_remove_pit_extension, parent: :case_transition do
     transient do
       manager        { create :manager }
       managing_team  { manager.managing_teams.first }
