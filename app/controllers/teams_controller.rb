@@ -27,6 +27,8 @@ class TeamsController < ApplicationController
     authorize @team
     @reports = ReportType.where(full_name: 'Business unit map')
     @children = @team.children.order(:name)
+    @active_users = @team.active_users
+    @case_counts = UserActiveCaseCountService.new.case_counts_by_user(@active_users)
   end
 
   def edit

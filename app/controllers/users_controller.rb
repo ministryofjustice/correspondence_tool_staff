@@ -2,6 +2,22 @@ class UsersController < ApplicationController
 
   before_action :set_team, only: [:create, :new, :edit, :update]
 
+  def show
+    @user = User.find params[:id]
+    unpaginated_cases = UserActiveCaseCountService.new.active_cases_for_user(@user)
+    if download_csv_request?
+      @cases = unpaginated_cases.decorate
+    else
+      @cases = unpaginated_cases.page(params[:page]).decorate
+    end
+    respond_to do |format|
+      format.html     { render :show }
+      format.csv do
+        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options("#{@user.full_name.downcase.tr(' ', '_')}")
+      end
+    end
+  end
+
   def create
     service = UserCreationService.new(team: @team, params: create_user_params)
     service.call

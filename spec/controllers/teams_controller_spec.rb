@@ -66,6 +66,35 @@ RSpec.describe TeamsController, type: :controller do
         get :show, params: { id: bg.id }
         expect(response).to render_template(:show)
       end
+
+      context 'viewing a business group' do
+        it 'has no active users' do
+          get :show, params: { id: @bg.id }
+          expect(assigns(:active_users)).to be_empty
+        end
+      end
+
+      context 'viewing a business unit' do
+        before(:each) do
+          @user_1 = create :user, responding_teams: [business_unit]
+          @user_2 = create :user, responding_teams: [business_unit]
+        end
+
+        it 'assigns active users' do
+          get :show, params: { id: business_unit.id }
+          expect(assigns(:active_users)).to eq [ @user_1, @user_2 ]
+        end
+
+        it 'calls UserActiveCaseCountService to populate case_counts' do
+          counts = {@user_1.id => 34, @user_2.id => 6 }
+          service = double UserActiveCaseCountService
+          expect(UserActiveCaseCountService).to receive(:new).and_return(service)
+          expect(service).to receive(:case_counts_by_user).with([ @user_1, @user_2]).and_return(counts)
+
+          get :show, params: { id: business_unit.id }
+          expect(assigns(:case_counts)).to eq counts
+        end
+      end
     end
 
     context 'logged in as a non-manager' do

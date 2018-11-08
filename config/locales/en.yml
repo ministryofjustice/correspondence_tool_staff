@@ -574,6 +574,7 @@ en:
         heading: Users
         teams: Teams
 
+
   assignments:
     accept:
       success: Case taken on
@@ -802,6 +803,8 @@ en:
       heading: "Edit %{role}"
     form:
       destroy: "If you deactivate this team member, they will no longer be able to sign in and take action on cases. Are you sure you want to continue?"
+    show:
+      <<: *cases_list
 
   devise:
     registrations:
