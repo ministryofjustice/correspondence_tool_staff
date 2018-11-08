@@ -55,33 +55,36 @@ describe CSVExporter do
 
   context 'SAR' do
     it 'returns sar fiels' do
-      csv = CSVExporter.new(sar_case).to_csv
-      expect(csv).to eq [
-                            '181008001',
-                            'SAR',
-                            'closed',
-                            'Transport for London',
-                            'Joe Smith',
-                            '2018-10-08',
-                            '2018-10-18',
-                            '2018-11-07',
-                            '2018-11-01',
-                            'standard',
-                            'SAR case name',
-                            nil,
-                            'my SAR message',
-                            nil,
-                            nil,
-                            nil,
-                            '',
-                            "2 High Street\nAnytown\nAY2 4FF",
-                            'theresa@moj.com',
-                            nil,
-                            false,
-                            'send_by_email',
-                            'offender',
-                            'Theresa Cant'
-                        ]
+      Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
+        csv = CSVExporter.new(sar_case).to_csv
+        expect(csv).to eq [
+                              '180830001',
+                              'SAR',
+                              'closed',
+                              'Transport for London',
+                              'Joe Smith',
+                              '2018-08-30',
+                              '2018-09-09',
+                              '2018-09-29',
+                              '2018-09-25',
+                              'standard',
+                              'SAR case name',
+                              nil,
+                              'my SAR message',
+                              nil,
+                              nil,
+                              nil,
+                              '',
+                              "2 High Street\nAnytown\nAY2 4FF",
+                              'theresa@moj.com',
+                              nil,
+                              false,
+                              'send_by_email',
+                              'offender',
+                              'Theresa Cant'
+                          ]
+      end
+
     end
   end
 end
