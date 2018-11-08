@@ -780,11 +780,17 @@ en:
       destroy: Are you sure you want to deactivate this business unit?
       team_members: Team members
       new_team_member: New team member
+    directorate_detail:
+      destroy: Are you sure you want to deactivate this directorate?
     edit:
       edit: Edit %{team_type}
     new:
       new: New %{team_type}
     destroyed: This team has now been deactivated
+    error: Unable to deactive this team
+    deactivate_info:
+      directorate: To deactivate this directorate you need to first deactivate all business units within it.
+      business_unit: To deactivate this business unit you need to first deactivate all users within it.
 
   users:
     new:

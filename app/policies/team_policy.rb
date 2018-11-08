@@ -45,7 +45,7 @@ class TeamPolicy < ApplicationPolicy
 
   def destroy?
     clear_failed_checks
-    check_user_is_a_manager && check_team_is_active
+    check_user_is_a_manager && check_team_is_active && check_team_has_no_active_children
   end
 
   class Scope
@@ -73,5 +73,10 @@ class TeamPolicy < ApplicationPolicy
   check :team_is_active do
     team.active?
   end
+
+  check :team_has_no_active_children do
+    !team.has_active_children?
+  end
+
 
 end

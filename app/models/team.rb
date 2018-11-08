@@ -126,7 +126,7 @@ class Team < ApplicationRecord
 
   private
 
-  # this method applies to Business Groups and Directorates only.  It is overridden in BusinssUnit.
+  # this method applies to Business Groups and Directorates only.  It is overridden in BusinessUnit.
   #
   def deletion_validation
     if deleted_at.present?

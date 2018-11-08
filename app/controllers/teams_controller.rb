@@ -133,7 +133,8 @@ class TeamsController < ApplicationController
       flash[:notice] = I18n.t('teams.destroyed')
       redirect_to(set_destination(@team))
     else
-      render action: :show
+      flash[:alert] = I18n.t('teams.error')
+      redirect_to team_path(@team)
     end
   end
 

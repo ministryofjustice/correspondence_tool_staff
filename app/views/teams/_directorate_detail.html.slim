@@ -16,9 +16,9 @@ h2.heading-medium
 p
 p
 
-= link_to 'Add new business unit', new_team_path(team_type: 'bu', parent_id: @team.id), class: 'button'
-/ = link_to "Deactivate", team_path(@team.id),
-/                       data: {:confirm => t('.destroy')},
-/                       method: :delete,
-/                       class: 'button-secondary button-left-spacing',
-/                       id: 'deactivate-team-link'
+.grid-row
+  .column-full
+    = link_to 'Add new business unit', new_team_path(team_type: 'bu', parent_id: @team.id), class: 'button'
+hr
+
+= show_deactivate_link_or_info(current_user, @team)

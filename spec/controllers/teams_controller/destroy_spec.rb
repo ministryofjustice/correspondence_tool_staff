@@ -63,7 +63,7 @@ RSpec.describe TeamsController, type: :controller do
         end
 
         it 'redirects to team path' do
-          expect(response).to render_template(:show)
+          expect(response).to redirect_to(team_path(dir))
         end
       end
     end
