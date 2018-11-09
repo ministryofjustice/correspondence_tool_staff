@@ -14,12 +14,19 @@ r003_report_definition: &r003_report_definition
   class: ReportGeneratorJob
   queue: report_generator
   args: ['R003']
-  description: This job generates the R003 YTD Bunsiness unit performance report
+  description: This job generates the R003 YTD Business unit performance report
 
 :schedule:
   R003 YTD Business unit performance report: 
     <<: *r003_report_definition
     cron: '0 0 * * * *' # Run on the hour
+
+  R005 Monthly performance report:
+    class: ReportGeneratorJob
+    queue: report_generator
+    args: ['R005']
+    description: This job generates the R005 Monthly performance report
+    cron: '5 0 * * * *' # Five minutes past each hour
 
 development:
   :schedule:
