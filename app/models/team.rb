@@ -124,6 +124,11 @@ class Team < ApplicationRecord
     !active?
   end
 
+  def original_team_name
+    team_name = name.remove('DEACTIVATED')
+    team_name.remove(deleted_at.to_s)
+  end
+
   private
 
   # this method applies to Business Groups and Directorates only.  It is overridden in BusinessUnit.
