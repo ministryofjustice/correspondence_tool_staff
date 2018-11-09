@@ -57,7 +57,7 @@ describe 'FOI cases factory' do
 
   let(:accept_approver_by_disclosure_transition) do
     kase.transitions.detect do |transition|
-      transition.event == 'accept_approver_user' &&
+      transition.event == 'accept_approver_assignment' &&
         transition.target_team == team_disclosure
     end
   end
@@ -341,7 +341,7 @@ describe 'FOI cases factory' do
           .to match_array [
                 ['assign_responder', 'FOI Responding Team'],
                 ['flag_for_clearance', 'Disclosure'],
-                ['accept_approver_user', 'Disclosure'],
+                ['accept_approver_assignment', 'Disclosure'],
               ]
       end
     end

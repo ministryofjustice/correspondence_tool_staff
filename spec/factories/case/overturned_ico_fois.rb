@@ -85,7 +85,6 @@ FactoryBot.define do
   factory :pending_dacu_clearance_ot_ico_foi,
           parent: :accepted_ot_ico_foi do
     transient do
-      # TODO: This should automatically flag at least
       identifier { 'pending dacu clearance overturned ico foi case'}
     end
 

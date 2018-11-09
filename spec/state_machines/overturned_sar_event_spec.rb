@@ -49,35 +49,39 @@ describe 'state machine' do
       should permit_event_to_be_triggered_only_by(
          [:disclosure_bmt, :ot_ico_sar_noff_unassigned],
          [:disclosure_bmt, :ot_ico_sar_noff_awresp],
-         [:disclosure_bmt, :ot_ico_sar_noff_draft],
-         [:disclosure_bmt, :ot_ico_sar_noff_closed],
          [:disclosure_bmt, :ot_ico_sar_noff_trig_awresp],
          [:disclosure_bmt, :ot_ico_sar_noff_trig_awresp_accepted],
+         [:disclosure_bmt, :ot_ico_sar_noff_draft],
          [:disclosure_bmt, :ot_ico_sar_noff_trig_draft],
          [:disclosure_bmt, :ot_ico_sar_noff_trig_draft_accepted],
+         [:disclosure_bmt, :ot_ico_sar_noff_closed],
          [:disclosure_bmt, :ot_ico_sar_noff_pdacu],
          [:disclosure_bmt, :ot_ico_sar_noff_trig_awdisp],
 
+         [:disclosure_specialist, :ot_ico_sar_noff_pdacu],
+         [:disclosure_specialist, :ot_ico_sar_noff_trig_awdisp],
+         [:disclosure_specialist, :ot_ico_sar_noff_trig_draft_accepted],
+
          [:sar_responder, :ot_ico_sar_noff_awresp],
-         [:sar_responder, :ot_ico_sar_noff_draft],
-         [:sar_responder, :ot_ico_sar_noff_closed],
          [:sar_responder, :ot_ico_sar_noff_trig_awresp],
          [:sar_responder, :ot_ico_sar_noff_trig_awresp_accepted],
+         [:sar_responder, :ot_ico_sar_noff_draft],
          [:sar_responder, :ot_ico_sar_noff_trig_draft],
          [:sar_responder, :ot_ico_sar_noff_trig_draft_accepted],
+         [:sar_responder, :ot_ico_sar_noff_closed],
          [:sar_responder, :ot_ico_sar_noff_pdacu],
          [:sar_responder, :ot_ico_sar_noff_trig_awdisp],
 
          [:another_sar_responder_in_same_team, :ot_ico_sar_noff_awresp],
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_closed],
          [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awresp],
          [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awresp_accepted],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
          [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft],
          [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft_accepted],
+         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_closed],
          [:another_sar_responder_in_same_team, :ot_ico_sar_noff_pdacu],
          [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
-       )
+       ).debug
     }
   end
 
@@ -148,11 +152,11 @@ describe 'state machine' do
   describe :progress_for_clearance do
     it {
       should have_after_hook(
-        [:responder, :ot_ico_sar_noff_trig_draft_accepted],
-        [:responder, :ot_ico_sar_noff_trig_draft],
+        [:sar_responder, :ot_ico_sar_noff_trig_draft_accepted],
+        [:sar_responder, :ot_ico_sar_noff_trig_draft],
 
-        [:another_responder_in_same_team, :ot_ico_sar_noff_trig_draft_accepted],
-        [:another_responder_in_same_team, :ot_ico_sar_noff_trig_draft],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft_accepted],
+        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft],
 
      ).with_hook('Workflows::Hooks', :notify_approver_ready_for_review)
     }
@@ -242,6 +246,10 @@ describe 'state machine' do
          [:disclosure_bmt, :ot_ico_sar_noff_trig_draft_accepted],
          [:disclosure_bmt, :ot_ico_sar_noff_pdacu],
          [:disclosure_bmt, :ot_ico_sar_noff_trig_awdisp],
+
+         [:disclosure_specialist, :ot_ico_sar_noff_trig_draft_accepted],
+         [:disclosure_specialist, :ot_ico_sar_noff_pdacu],
+         [:disclosure_specialist, :ot_ico_sar_noff_trig_awdisp],
 
          [:sar_responder, :ot_ico_sar_noff_draft],
          [:sar_responder, :ot_ico_sar_noff_trig_draft],

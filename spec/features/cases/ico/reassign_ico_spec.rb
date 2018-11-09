@@ -8,29 +8,13 @@ feature 'cases being reassigned to other team members' do
   given(:another_responder) { create :responder,
                                      responding_teams: [responding_team] }
 
-  given(:approving_team)   { create :team_dacu_disclosure }
+  given(:approving_team)   { find_or_create :team_dacu_disclosure }
   given(:approver)         { find_or_create :disclosure_specialist }
   given(:another_approver) { create :approver, approving_team: approving_team }
 
   given(:sds)              { create :approver, approving_team: approving_team }
   given(:another_sds)      { create :approver, approving_team: approving_team }
-
-  given(:accepted_case) { create :accepted_ico_foi_case,
-                                 :flagged_accepted,
-                                 responding_team: responding_team,
-                                 responder: responder,
-                                 approving_team: approving_team,
-                                 approver: approver }
-  given(:sds_flagged_case) { create :accepted_ico_foi_case, :flagged_accepted,
-                                    responding_team: responding_team,
-                                    responder: responder,
-                                    approving_team: approving_team,
-                                    approver: sds }
-  given(:sds_flagged_case_2) { create :accepted_ico_foi_case, :flagged_accepted,
-                                      responding_team: responding_team,
-                                      responder: responder,
-                                      approving_team: approving_team,
-                                      approver: sds }
+  given(:accepted_case)    { create :accepted_ico_foi_case, :flagged_accepted }
 
   scenario 'Responder assigns a case to another team member' do
     login_as responder

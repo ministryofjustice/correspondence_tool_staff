@@ -5,8 +5,14 @@ FactoryBot.define do
           class: Case::OverturnedICO::SAR do
 
     transient do
-      creation_time { 4.business_days.ago }
-      identifier    { "unassigned overturned ico sar" }
+      creation_time   { 4.business_days.ago }
+      identifier      { "unassigned overturned ico sar" }
+      managing_team   { find_or_create :team_disclosure_bmt }
+      manager         { managing_team.managers.first }
+      approving_team  { find_or_create :team_disclosure }
+      approver        { approving_team.approvers.first }
+      responding_team { find_or_create :sar_responding_team }
+      responder       { find_or_create :sar_responder }
     end
 
     message             { identifier }
@@ -21,6 +27,44 @@ FactoryBot.define do
     email               { 'dave@moj.com' }
     ico_officer_name    { 'Dan Dare' }
 
+    trait :flagged do
+      after(:create) do |kase, evaluator|
+        create :approver_assignment,
+               case: kase,
+               team: evaluator.approving_team,
+               state: 'pending'
+        create :flag_case_for_clearance_transition,
+               case: kase,
+               acting_team: evaluator.managing_team,
+               acting_user: evaluator.manager,
+               target_team: evaluator.approving_team,
+               to_workflow: 'trigger'
+        kase.update(workflow: 'trigger')
+        kase.reload
+      end
+    end
+
+    trait :flagged_accepted do
+      after(:create) do |kase, evaluator|
+        create :approver_assignment,
+               case: kase,
+               user: evaluator.approver,
+               team: evaluator.approving_team,
+               state: 'accepted'
+        create :flag_case_for_clearance_transition,
+               case: kase,
+               acting_team: evaluator.managing_team,
+               acting_user: evaluator.manager,
+               target_team: evaluator.approving_team,
+               to_workflow: 'trigger'
+        create :case_transition_accept_approver_assignment,
+               case: kase,
+               acting_team: evaluator.approving_team,
+               acting_user: evaluator.approver
+        kase.update(workflow: 'trigger')
+        kase.reload
+      end
+    end
   end
 
   factory :awaiting_responder_ot_ico_sar,
@@ -28,10 +72,7 @@ FactoryBot.define do
           parent: :overturned_ico_sar do
 
     transient do
-      identifier      { "awaiting responder overturned ico sar case" }
-      manager         { managing_team.managers.first }
-      managing_team   { find_or_create :team_dacu }
-      responding_team { find_or_create :sar_responding_team }
+      identifier { "awaiting responder overturned ico sar case" }
     end
 
     created_at    { creation_time }
@@ -59,9 +100,7 @@ FactoryBot.define do
           parent: :awaiting_responder_ot_ico_sar do
 
     transient do
-      identifier      { "responder accepted overturned ico sar case" }
-      responder       { find_or_create :sar_responder }
-      responding_team { responder.responding_teams.first }
+      identifier { "responder accepted overturned ico sar case" }
     end
 
     after(:create) do |kase, evaluator|
@@ -102,41 +141,32 @@ FactoryBot.define do
 
   factory :pending_dacu_clearance_ot_ico_sar, parent: :accepted_ot_ico_sar do
     transient do
-      identifier      { 'pending dacu clearance ICO SAR case' }
-      approving_team  { find_or_create :team_dacu_disclosure }
-      approver        { approving_team.users.first }
+      identifier { 'pending dacu clearance ICO SAR case' }
     end
     workflow { 'trigger' }
 
     after(:create) do |kase, evaluator|
-      create :case_transition_accept_approver_assignment,
-             case: kase,
-             approving_team: evaluator.approving_team,
-             approver: evaluator.approver
-
       create :case_transition_progress_for_clearance,
-             case_id: kase.id,
-             acting_team_id: evaluator.responding_team.id,
-             acting_user_id: evaluator.responder.id,
-             target_team_id: BusinessUnit.dacu_disclosure.id
+             case: kase,
+             acting_team: evaluator.responding_team,
+             acting_user: evaluator.responder,
+             target_team: evaluator.approving_team
       kase.reload
     end
   end
 
   factory :awaiting_dispatch_ot_ico_sar, parent: :pending_dacu_clearance_ot_ico_sar do
     transient do
-      identifier      { 'awaiting dispatch ICO SAR case' }
-      approving_team  { find_or_create :team_dacu_disclosure }
-      approver        { approving_team.users.first }
+      identifier { 'awaiting dispatch ICO SAR case' }
     end
     workflow { 'trigger' }
 
     after(:create) do |kase, evaluator|
 
       create :case_transition_approve,
-             case_id: kase.id,
-             acting_team_id: evaluator.approving_team.id,
-             acting_user_id: evaluator.approver.id
+             case: kase,
+             acting_team: evaluator.approving_team,
+             acting_user: evaluator.approver
       kase.current_state = 'awaiting_dispatch'
     end
   end

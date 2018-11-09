@@ -790,7 +790,7 @@ FactoryBot.define do
           state: 'accepted',
         )
 
-        create :case_transition_accept_approver_user,
+        create :case_transition_accept_approver_assignment,
                case: kase,
                acting_team: evaluator.approving_team,
                acting_user: evaluator.approver,

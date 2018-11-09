@@ -47,17 +47,33 @@ FactoryBot.define do
 
       kase.reload
     end
+
+    trait :flagged_accepted do
+      transient do
+        approver { approving_team.users.first }
+      end
+
+      after(:create) do |kase, evaluator|
+        kase.assignments.for_team(evaluator.approving_team).first.update(
+          state: 'accepted',
+          user_id: evaluator.approver.id,
+        )
+        create :flag_case_for_clearance_transition,
+               case: kase,
+               target_team_id: evaluator.approving_team.id
+      end
+    end
   end
 
   factory :awaiting_responder_ico_foi_case, parent: :ico_foi_case do
     transient do
-      identifier        { "assigned ICO FOI case" }
-      manager           { managing_team.managers.first }
-      responding_team   { original_case.responding_team }
+      identifier      { "assigned ICO FOI case" }
+      manager         { managing_team.managers.first }
+      responding_team { original_case.responding_team }
     end
 
-    created_at      { creation_time }
-    received_date   { creation_time }
+    created_at    { creation_time }
+    received_date { creation_time }
 
     after(:create) do |kase, evaluator|
       create :assignment,
@@ -106,7 +122,8 @@ FactoryBot.define do
       create :case_transition_progress_for_clearance,
              case: kase,
              acting_team: evaluator.responding_team,
-             acting_user: evaluator.responder
+             acting_user: evaluator.responder,
+             target_team: evaluator.approving_team
       kase.reload
     end
   end
@@ -164,5 +181,4 @@ FactoryBot.define do
       kase.reload
     end
   end
-
 end

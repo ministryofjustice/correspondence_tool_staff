@@ -84,14 +84,12 @@ FactoryBot.define do
     # target_user { target_team.responders.first }
   end
 
-  factory :case_transition_accept_approver_user, parent: :case_transition do
+  factory :case_transition_accept_approver_assignment, parent: :case_transition do
     event    { 'accept_approver_assignment' }
     to_state { self.case.current_state }
 
     acting_team { find_or_create :team_disclosure }
     acting_user { acting_team.approvers.first }
-    target_team { acting_team }
-    target_user { target_team.approvers.first }
   end
 
   factory :case_transition_unaccept_approver_assignment, parent: :case_transition do
@@ -141,25 +139,20 @@ FactoryBot.define do
   end
 
   factory :case_transition_progress_for_clearance, parent: :case_transition do
-    transient do
-      responder         { create :responder }
-      responding_team   { responder.responding_teams.first }
-    end
+    association :case, factory: [:sar_case, :flagged]
+    event       { 'progress_for_clearance' }
+    to_state    { 'pending_dacu_clearance' }
 
-    acting_team_id      { responding_team.id }
-    acting_user_id      { responder.id }
-    target_team_id      { responding_team.id }
-    target_user_id      { responder.id }
-    to_state            { 'pending_dacu_clearance' }
-    to_workflow         { 'trigger' }
-    event               { 'progress_for_clearance'}
+    acting_team { self.case.responding_team }
+    acting_user { self.case.responder }
+    target_team { self.case.approver_assignments.first.team }
   end
 
   factory :case_transition_pending_dacu_clearance, parent: :case_transition do
     association :case, factory: [:case, :flagged]
-    to_state    { 'pending_dacu_clearance' }
-    event       { 'add_response_to_flagged_case' }
+    event       { 'add_responses' }
     filenames   { ['file1.pdf', 'file2.pdf'] }
+    to_state    { 'pending_dacu_clearance' }
 
     acting_team { case_responding_team_or_foi_responding_team }
     acting_user { acting_team.responders.first }
@@ -267,17 +260,6 @@ FactoryBot.define do
 
     acting_team { self.case.managing_team }
     acting_user { acting_team.managers.first }
-  end
-
-  factory :case_transition_progress_for_clearance, parent: :case_transition do
-    association :case, factory: [:sar_case, :flagged]
-    event       { 'progress_for_clearance' }
-    to_state    { 'pending_dacu_clearance' }
-
-    acting_team { self.case.responding_team }
-    acting_user { self.case.responder }
-    target_team {
-      self.case.approver_assignments.first.team }
   end
 
   factory :case_transition_respond_to_ico, parent: :case_transition do

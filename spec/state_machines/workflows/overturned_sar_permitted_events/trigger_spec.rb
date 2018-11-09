@@ -3,7 +3,7 @@ require 'rails_helper'
 describe ConfigurableStateMachine::Machine do
   context 'flagged case' do
     context 'manager' do
-      let(:manager) { create :manager }
+      let(:manager) { find_or_create :disclosure_bmt_user }
 
       context 'unassigned state' do
         it 'should show permitted events' do
@@ -82,7 +82,7 @@ describe ConfigurableStateMachine::Machine do
 
     context 'responder' do
       context 'not in assigned team' do
-        let(:responder) { create :responder }
+        let(:responder) { find_or_create :foi_responder }
 
         context 'unassigned state' do
           it 'should show permitted events' do
@@ -182,149 +182,226 @@ describe ConfigurableStateMachine::Machine do
     end
   end
 
+  ##################### APPROVER FLAGGED ############################
+
   context 'approver' do
     context 'unassigned approver' do
-      let(:team_dacu_disclosure)      { find_or_create :team_dacu_disclosure }
-      let(:disclosure_specialist)     { team_dacu_disclosure.users.first }
-      let(:approver)                  { disclosure_specialist }
+      let(:unassigned_approver) { find_or_create :press_officer }
 
       context 'unassigned state' do
         it 'should show permitted events' do
-          k = create :sar_case, :flagged_accepted
+          k = create :sar_case, :flagged
 
           expect(k.current_state).to eq 'unassigned'
-          expect(k.state_machine.permitted_events(disclosure_specialist.id)).to be_empty
+          expect(k.workflow).to eq 'trigger'
+          expect(k.state_machine.permitted_events(unassigned_approver.id))
+            .to be_empty
         end
       end
 
       context 'awaiting responder state' do
         it 'shows events' do
-          k = create :awaiting_responder_sar, :flagged_accepted
+          k = create :awaiting_responder_sar, :flagged
 
           expect(k.current_state).to eq 'awaiting_responder'
-          expect(k.state_machine.permitted_events(approver.id)).to be_empty
+          expect(k.workflow).to eq 'trigger'
+          expect(k.state_machine.permitted_events(unassigned_approver.id))
+            .to be_empty
         end
       end
 
       context 'drafting state' do
         it 'shows events' do
-          k = create :accepted_sar, :flagged_accepted
+          k = create :accepted_sar, :flagged
 
           expect(k.current_state).to eq 'drafting'
-          expect(k.state_machine.permitted_events(approver.id)).to be_empty
+          expect(k.workflow).to eq 'trigger'
+          expect(k.state_machine.permitted_events(unassigned_approver.id))
+            .to be_empty
         end
       end
 
       context 'pending_dacu_clearance state' do
         it 'shows events' do
-          k = create :pending_dacu_clearance_sar, :flagged_accepted
-          unassigned_approver = create :approver
+          k = create :pending_dacu_clearance_sar, :flagged
 
           expect(k.current_state).to eq 'pending_dacu_clearance'
-          expect(k.state_machine.permitted_events(unassigned_approver.id)).to be_empty
+          expect(k.workflow).to eq 'trigger'
+          expect(k.state_machine.permitted_events(unassigned_approver.id))
+            .to be_empty
         end
       end
 
       context 'awaiting_dispatch' do
         it 'shows events' do
-          k = create :approved_sar, :flagged_accepted
+          k = create :approved_sar, :flagged
 
           expect(k.current_state).to eq 'awaiting_dispatch'
           expect(k.workflow).to eq 'trigger'
-          expect(k.state_machine.permitted_events(approver.id)).to be_empty
+          expect(k.state_machine.permitted_events(unassigned_approver.id))
+            .to be_empty
         end
       end
 
       context 'closed' do
         it 'shows events' do
-          k = create :closed_trigger_sar, :flagged_accepted
+          k = create :closed_sar, :flagged
 
           expect(k.current_state).to eq 'closed'
-          expect(k.state_machine.permitted_events(approver.id)).to be_empty
+          expect(k.workflow).to eq 'trigger'
+          expect(k.state_machine.permitted_events(unassigned_approver.id))
+            .to be_empty
         end
       end
     end
-  end
 
+    context 'unaccepted approver' do
+      let(:disclosure_specialist) { find_or_create :disclosure_specialist }
 
-##################### APPROVER FLAGGED ############################
+      context 'unassigned state' do
+        it 'should show permitted events' do
+          k = create :sar_case, :flagged
 
-  context 'assigned approver' do
-    context 'unassigned state' do
+          expect(k.current_state).to eq 'unassigned'
+          expect(k.workflow).to eq 'trigger'
+          expect(k.state_machine.permitted_events(disclosure_specialist.id))
+            .to match_array [:accept_approver_assignment, :unflag_for_clearance]
+        end
+      end
 
-      it 'should show permitted events' do
-        k = create :overturned_ico_sar, :flagged_accepted, :dacu_disclosure
-        approver = approver_in_assigned_team(k)
-        expect(k.current_state).to eq 'unassigned'
-        expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
-                                                                      :reassign_user,
-                                                                      :unaccept_approver_assignment,
-                                                                      :unflag_for_clearance]
+      context 'awaiting responder state' do
+        it 'shows events' do
+          k = create :awaiting_responder_sar, :flagged
+
+          expect(k.current_state).to eq 'awaiting_responder'
+          expect(k.workflow).to eq 'trigger'
+          expect(k.state_machine.permitted_events(disclosure_specialist.id))
+            .to match_array [:accept_approver_assignment, :unflag_for_clearance]
+        end
+      end
+
+      context 'drafting state' do
+        it 'shows events' do
+          k = create :accepted_sar, :flagged
+
+          expect(k.current_state).to eq 'drafting'
+          expect(k.workflow).to eq 'trigger'
+          expect(k.state_machine.permitted_events(disclosure_specialist.id))
+            .to match_array [:accept_approver_assignment, :unflag_for_clearance]
+        end
+      end
+
+      context 'pending_dacu_clearance state' do
+        it 'shows events' do
+          k = create :pending_dacu_clearance_sar, :flagged
+
+          expect(k.current_state).to eq 'pending_dacu_clearance'
+          expect(k.workflow).to eq 'trigger'
+          expect(k.state_machine.permitted_events(disclosure_specialist.id))
+            .to match_array [:accept_approver_assignment, :unflag_for_clearance]
+        end
+      end
+
+      context 'awaiting_dispatch' do
+        it 'shows events' do
+          k = create :approved_sar, :flagged
+
+          expect(k.current_state).to eq 'awaiting_dispatch'
+          expect(k.workflow).to eq 'trigger'
+          expect(k.state_machine.permitted_events(disclosure_specialist.id))
+            .to be_empty
+        end
+      end
+
+      context 'closed' do
+        it 'shows events' do
+          k = create :closed_sar, :flagged
+
+          expect(k.current_state).to eq 'closed'
+          expect(k.workflow).to eq 'trigger'
+          expect(k.state_machine.permitted_events(disclosure_specialist.id))
+            .to be_empty
+        end
       end
     end
 
-    context 'awaiting responder state' do
-      it 'shows events' do
-        k = create :awaiting_responder_ot_ico_sar, :flagged_accepted, :dacu_disclosure
-        approver = approver_in_assigned_team(k)
-        expect(k.current_state).to eq 'awaiting_responder'
-        expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
-                                                                      :reassign_user,
-                                                                      :unaccept_approver_assignment,
-                                                                      :unflag_for_clearance]
+    context 'assigned approver' do
+      context 'unassigned state' do
+
+        it 'should show permitted events' do
+          k = create :overturned_ico_sar, :flagged_accepted, :dacu_disclosure
+          approver = approver_in_assigned_team(k)
+          expect(k.current_state).to eq 'unassigned'
+          expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
+                                                                        :reassign_user,
+                                                                        :unaccept_approver_assignment,
+                                                                        :unflag_for_clearance]
+        end
       end
-    end
 
-    context 'drafting state' do
-      it 'shows events' do
-        k = create :accepted_ot_ico_sar, :flagged_accepted, :dacu_disclosure
-        approver = approver_in_assigned_team(k)
-
-        expect(k.current_state).to eq 'drafting'
-        expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
-                                                                      :reassign_user,
-                                                                      :unaccept_approver_assignment,
-                                                                      :unflag_for_clearance]
+      context 'awaiting responder state' do
+        it 'shows events' do
+          k = create :awaiting_responder_ot_ico_sar, :flagged_accepted, :dacu_disclosure
+          approver = approver_in_assigned_team(k)
+          expect(k.current_state).to eq 'awaiting_responder'
+          expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
+                                                                        :reassign_user,
+                                                                        :unaccept_approver_assignment,
+                                                                        :unflag_for_clearance]
+        end
       end
-    end
 
-    context 'pending_dacu_clearance state' do
-      it 'shows events' do
-         k = create :pending_dacu_clearance_ot_ico_sar, :flagged_accepted, :dacu_disclosure
-        approver = approver_in_assigned_team(k)
+      context 'drafting state' do
+        it 'shows events' do
+          k = create :accepted_ot_ico_sar, :flagged_accepted, :dacu_disclosure
+          approver = approver_in_assigned_team(k)
 
-        expect(k.current_state).to eq 'pending_dacu_clearance'
-        expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
-                                                                     :approve,
-                                                                     :reassign_user,
-                                                                     :request_amends,
-                                                                     :unaccept_approver_assignment,
-                                                                     :unflag_for_clearance]
+          expect(k.current_state).to eq 'drafting'
+          expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
+                                                                        :reassign_user,
+                                                                        :unaccept_approver_assignment,
+                                                                        :unflag_for_clearance]
+        end
       end
-    end
 
-    context 'awaiting_dispatch' do
-      it 'shows events' do
-        k = create :awaiting_dispatch_ot_ico_sar, :flagged_accepted, :dacu_disclosure
-        approver = approver_in_assigned_team(k)
-        expect(k.current_state).to eq 'awaiting_dispatch'
-        expect(k.workflow).to eq 'trigger'
-        expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
-                                                                      :reassign_user]
+      context 'pending_dacu_clearance state' do
+        it 'shows events' do
+          k = create :pending_dacu_clearance_ot_ico_sar, :flagged_accepted, :dacu_disclosure
+          approver = approver_in_assigned_team(k)
+
+          expect(k.current_state).to eq 'pending_dacu_clearance'
+          expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                       :approve,
+                                                                       :reassign_user,
+                                                                       :request_amends,
+                                                                       :unaccept_approver_assignment,
+                                                                       :unflag_for_clearance]
+        end
       end
-    end
 
-    context 'closed' do
-      it 'shows events' do
-        k = create :closed_ot_ico_sar, :flagged_accepted, :dacu_disclosure
-        approver = approver_in_assigned_team(k)
-        expect(k.current_state).to eq 'closed'
-        expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case ]
+      context 'awaiting_dispatch' do
+        it 'shows events' do
+          k = create :awaiting_dispatch_ot_ico_sar, :flagged_accepted, :dacu_disclosure
+          approver = approver_in_assigned_team(k)
+          expect(k.current_state).to eq 'awaiting_dispatch'
+          expect(k.workflow).to eq 'trigger'
+          expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
+                                                                        :reassign_user]
+        end
       end
-    end
 
-    def approver_in_assigned_team(k)
-      k.approver_assignments.first.user
+      context 'closed' do
+        it 'shows events' do
+          k = create :closed_ot_ico_sar, :flagged_accepted, :dacu_disclosure
+          approver = approver_in_assigned_team(k)
+          expect(k.current_state).to eq 'closed'
+          expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case ]
+        end
+      end
+
+      def approver_in_assigned_team(k)
+        k.approver_assignments.first.user
+      end
     end
   end
 end

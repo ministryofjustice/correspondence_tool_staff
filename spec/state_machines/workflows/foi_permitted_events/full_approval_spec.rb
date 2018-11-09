@@ -606,6 +606,7 @@ describe ConfigurableStateMachine::Machine do
           expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'awaiting_dispatch'
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
+                                                                       :add_responses,
                                                                        :flag_for_clearance,
                                                                        :link_a_case,
                                                                        :reassign_user,

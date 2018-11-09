@@ -26,7 +26,7 @@ describe UpdateClosureService do
 
       it 'changes the attributes on the case' do
         @service.call
-        expect(kase.date_responded).to eq new_date
+        expect(kase.date_responded).to eq new_date_responded
       end
 
       it 'transitions the cases state' do

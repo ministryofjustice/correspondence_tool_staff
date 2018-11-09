@@ -549,7 +549,8 @@ describe ConfigurableStateMachine::Machine do
                      :flag_for_clearance,
                      :link_a_case,
                      :reassign_user,
-                     :remove_linked_case]
+                     :remove_linked_case,
+                     :unflag_for_clearance]
         end
       end
 
@@ -564,7 +565,8 @@ describe ConfigurableStateMachine::Machine do
                     :flag_for_clearance,
                     :link_a_case,
                     :reassign_user,
-                    :remove_linked_case]
+                    :remove_linked_case,
+                    :unflag_for_clearance]
         end
       end
 
@@ -579,7 +581,8 @@ describe ConfigurableStateMachine::Machine do
                     :flag_for_clearance,
                     :link_a_case,
                     :reassign_user,
-                    :remove_linked_case]
+                    :remove_linked_case,
+                    :unflag_for_clearance]
         end
       end
 
@@ -590,17 +593,11 @@ describe ConfigurableStateMachine::Machine do
           expect(k.workflow).to eq 'full_approval'
           expect(k.current_state).to eq 'pending_dacu_clearance'
           expect(k.state_machine.permitted_events(press_officer.id))
-            .to match_array [
-                  :add_message_to_case,
-                  :approve,
-                  :approve_and_bypass,
-                  :link_a_case,
-                  :reassign_user,
-                  :remove_linked_case,
-                  :upload_response_and_approve,
-                  :upload_response_and_return_for_redraft,
-                  :upload_response_approve_and_bypass,
-                ]
+            .to match_array [:add_message_to_case,
+                             :link_a_case,
+                             :reassign_user,
+                             :remove_linked_case,
+                             :unflag_for_clearance]
         end
       end
 
@@ -649,7 +646,8 @@ describe ConfigurableStateMachine::Machine do
                     :link_a_case,
                     :reassign_user,
                     :remove_linked_case,
-                    :unaccept_approver_assignment]
+                    :unaccept_approver_assignment,
+                    :unflag_for_clearance]
         end
       end
 

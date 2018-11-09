@@ -86,7 +86,7 @@ describe CasesController do
   context 'overturned SAR' do
 
     before(:all)   do
-      @responder = find_or_create :foi_responder
+      @responder = find_or_create :sar_responder
       @drafting_ovt_sar_case = create :accepted_ot_ico_sar, responder: @responder
     end
 

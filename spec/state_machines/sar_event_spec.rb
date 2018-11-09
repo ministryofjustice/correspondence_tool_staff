@@ -131,11 +131,11 @@ describe 'state machine' do
   describe :progress_for_clearance do
     it {
       should have_after_hook(
-        [:responder, :sar_noff_trig_draft_accepted],
-        [:responder, :sar_noff_trig_draft],
+        [:sar_responder, :sar_noff_trig_draft_accepted],
+        [:sar_responder, :sar_noff_trig_draft],
 
-        [:another_responder_in_same_team, :sar_noff_trig_draft_accepted],
-        [:another_responder_in_same_team, :sar_noff_trig_draft],
+        [:another_sar_responder_in_same_team, :sar_noff_trig_draft_accepted],
+        [:another_sar_responder_in_same_team, :sar_noff_trig_draft],
 
      ).with_hook('Workflows::Hooks', :notify_approver_ready_for_review)
     }
