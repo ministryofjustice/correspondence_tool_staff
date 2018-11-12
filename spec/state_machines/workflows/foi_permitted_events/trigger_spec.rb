@@ -390,13 +390,13 @@ describe ConfigurableStateMachine::Machine do
 
 
   ##################### APPROVER FLAGGED ############################
+    let(:approver) { find_or_create :disclosure_specialist }
 
     context 'assigned disclosure approver' do
       context 'unassigned state' do
 
         it 'should show permitted events' do
           k = create :case, :flagged_accepted, :dacu_disclosure
-          approver = dacu_disclosure_approver(k)
           expect(k.class).to eq Case::FOI::Standard
           expect(k.workflow).to eq 'trigger'
           expect(k.current_state).to eq 'unassigned'
@@ -413,7 +413,6 @@ describe ConfigurableStateMachine::Machine do
       context 'awaiting responder state' do
         it 'shows events' do
           k = create :awaiting_responder_case, :flagged_accepted, :dacu_disclosure
-          approver = dacu_disclosure_approver(k)
           expect(k.class).to eq Case::FOI::Standard
           expect(k.workflow).to eq 'trigger'
           expect(k.current_state).to eq 'awaiting_responder'
@@ -430,7 +429,6 @@ describe ConfigurableStateMachine::Machine do
       context 'drafting state' do
         it 'shows events' do
           k = create :accepted_case, :flagged_accepted, :dacu_disclosure
-          approver = dacu_disclosure_approver(k)
           expect(k.class).to eq Case::FOI::Standard
           expect(k.workflow).to eq 'trigger'
           expect(k.current_state).to eq 'drafting'
@@ -447,7 +445,6 @@ describe ConfigurableStateMachine::Machine do
       context 'pending_dacu_clearance state' do
         it 'shows events' do
           k = create :pending_dacu_clearance_case, :flagged_accepted, :dacu_disclosure
-          approver = dacu_disclosure_approver(k)
           expect(k.class).to eq Case::FOI::Standard
           expect(k.workflow).to eq 'trigger'
           expect(k.current_state).to eq 'pending_dacu_clearance'
@@ -466,7 +463,6 @@ describe ConfigurableStateMachine::Machine do
       context 'awaiting_dispatch' do
         it 'shows events' do
           k = create :case_with_response, :flagged_accepted, :dacu_disclosure
-          approver = dacu_disclosure_approver(k)
           expect(k.class).to eq Case::FOI::Standard
           expect(k.workflow).to eq 'trigger'
           expect(k.current_state).to eq 'awaiting_dispatch'
@@ -480,7 +476,6 @@ describe ConfigurableStateMachine::Machine do
       context 'responded' do
         it 'shows events' do
           k = create :responded_case, :flagged_accepted, :dacu_disclosure
-          approver = dacu_disclosure_approver(k)
           expect(k.class).to eq Case::FOI::Standard
           expect(k.workflow).to eq 'trigger'
           expect(k.current_state).to eq 'responded'
@@ -493,7 +488,6 @@ describe ConfigurableStateMachine::Machine do
       context 'closed' do
         it 'shows events' do
           k = create :closed_case, :flagged_accepted, :dacu_disclosure
-          approver = dacu_disclosure_approver(k)
           expect(k.class).to eq Case::FOI::Standard
           expect(k.workflow).to eq 'trigger'
           expect(k.current_state).to eq 'closed'

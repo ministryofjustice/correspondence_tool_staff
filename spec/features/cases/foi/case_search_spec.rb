@@ -1,10 +1,10 @@
 require "rails_helper"
 
 feature 'Searching for cases' do
-  given(:approver)  { create :approver }
-  given(:manager)   { create :manager }
-  given(:responder) { create :responder }
-  given!(:kase)     { create :case_being_drafted, responder: responder }
+  given(:approver)  { find_or_create :disclosure_specialist }
+  given(:manager)   { find_or_create :disclosure_bmt_user }
+  given(:responder) { kase.responder }
+  given!(:kase)     { create :case_being_drafted }
 
   scenario 'searching by case number' do
     login_as manager

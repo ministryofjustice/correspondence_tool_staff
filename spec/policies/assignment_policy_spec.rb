@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 describe AssignmentPolicy do
-  let(:manager)         { create :manager }
-  let(:responder)       { create :responder }
+  let(:manager)         { find_or_create :disclosure_bmt_user }
+  let(:responder)       { find_or_create :foi_responder }
 
   let(:unassigned_case)                       { create :case }
   let(:assigned_case)                         { create :awaiting_responder_case }

@@ -263,8 +263,6 @@
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_in_approving_team_for_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                extend_for_pit:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 link_a_case:
                 remove_linked_case:
 

@@ -7,7 +7,7 @@ describe 'assignments/edit.html.slim', type: :view do
     super(user)
   end
 
-  let(:responder)       { create :responder }
+  let(:responder)       { find_or_create :foi_responder }
   let(:responding_team) { responder.responding_teams.first }
   let(:awaiting_responder_case) { create(:awaiting_responder_case, :with_messages,
                                          responding_team: responding_team).decorate }

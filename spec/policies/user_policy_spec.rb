@@ -3,7 +3,7 @@ require 'rails_helper'
 describe UserPolicy do
   let(:responding_team) { create :responding_team }
   let(:manager)         { create :manager }
-  let(:responder)       { create :responder }
+  let(:responder)       { find_or_create :foi_responder }
   let(:approver)        { create :approver }
 
   subject { described_class }

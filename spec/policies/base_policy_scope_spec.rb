@@ -6,10 +6,10 @@ describe Case::BasePolicy::Scope do
   describe 'case scope policy' do
 
     before(:all) do
-      @responding_team              = create :responding_team
+      @responding_team              = find_or_create :foi_responding_team
       @responding_team_2            = create :responding_team
-      @managing_team                = find_or_create :team_dacu
-      @dacu_disclosure              = find_or_create :team_dacu_disclosure
+      @managing_team                = create :team_dacu
+      @dacu_disclosure              = create :team_dacu_disclosure
 
       @responder                    = @responding_team.responders.first
       @responder_2                  = @responding_team_2.responders.first
@@ -18,36 +18,44 @@ describe Case::BasePolicy::Scope do
 
       @unassigned_case              = create :case, name: 'unassigned'
       @assigned_case                = create :assigned_case,
-                                             responding_team: @responding_team, name: 'assigned R'
-      @accepted_case                = create :accepted_case,
-                                             responder: @responder,
-                                             manager: @manager, name: 'accepted R'
+                                             name: 'assigned R'
+      @accepted_case                = create :accepted_case, name: 'accepted R'
       @accepted_case_r2             = create :accepted_case,
+                                             responding_team: @responding_team_2,
                                              responder: @responder_2,
                                              name: 'accepted R2'
-      @rejected_case                = create :rejected_case,
-                                             responding_team: @responding_team,  name: 'rejected R'
-      @case_with_response           = create :case_with_response,
-                                             responder: @responder, name: 'with response R'
-      @responded_case               = create :responded_case,
-                                             responder: @responder, name: 'responded R'
-      @closed_case                  = create :closed_case,
-                                             responder: @responder, name: 'closed R'
+      @rejected_case                = create :rejected_case, name: 'rejected R'
+      @case_with_response           = create :case_with_response, name: 'with response R'
+      @responded_case               = create :responded_case, name: 'responded R'
+      @closed_case                  = create :closed_case, name: 'closed R'
       @unassigned_sar_case          = create :sar_case, name: 'unassigned SAR'
-      @awaiting_responder_sar_case  = create :awaiting_responder_sar, name: 'SAR awaiting responder'
-      @drafting_sar_case            = create :sar_being_drafted, responder: @responder, name: 'SAR being drafted'
-      @drafting_sar_case_other_team = create :sar_being_drafted, responder: @responder_2, name: 'SAR being drafted'
-      @closed_sar                   = create :closed_sar
+      @awaiting_responder_sar_case  = create :awaiting_responder_sar,
+                                             responding_team: @responding_team,
+                                             name: 'SAR awaiting responder'
+      @drafting_sar_case            = create :sar_being_drafted,
+                                             responding_team: @responding_team,
+                                             responder: @responder,
+                                             name: 'SAR being drafted'
+      @drafting_sar_case_other_team = create :sar_being_drafted,
+                                             responding_team: @responding_team_2,
+                                             responder: @responder_2,
+                                             name: 'SAR being drafted'
+      @closed_sar                   = create :closed_sar,
+                                             responding_team: @responding_team,
+                                             responder: @responder
       @ico_foi_case                 = create :ico_foi_case, original_case: @rejected_case
       @ico_sar_case                 = create :ico_sar_case, original_case: @closed_sar
 
       @all_cases                    = Case::Base.all
       @existing_foi_cases           = Case::FOI::Standard.all + Case::ICO::FOI.all
       @responder_cases              = Case::Base.all - [@unassigned_sar_case,
-                                                        @awaiting_responder_sar_case,
                                                         @drafting_sar_case_other_team,
-                                                        @ico_sar_case,
-                                                        @closed_sar]
+                                                        @ico_sar_case]
+
+      @responder.reload
+      @responder_2.reload
+      @manager.reload
+      @approver.reload
     end
 
     after(:all)  { DbHousekeeping.clean }

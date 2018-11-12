@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe CasesController, type: :controller do
-  let(:manager)           { create :disclosure_bmt_user }
+  let(:manager)           { find_or_create :disclosure_bmt_user }
   let(:accepted_case)     { create :accepted_case  }
   let(:service)           { instance_double(RequestFurtherClearanceService,
                                             call: :ok) }

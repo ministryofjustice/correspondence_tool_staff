@@ -18,12 +18,13 @@ describe TeamFinderService do
            approving_team: team_disclosure,
            responding_teams: [team_candi]
   end
-  let(:disclosure_specialist)       { create :disclosure_specialist }
+  let(:disclosure_specialist)       { find_or_create :disclosure_specialist }
   let(:other_approver)              { create :user, approving_team: team_disclosure }
 
   #cases
   let(:kase) do
     create :case_with_response, :flagged_accepted,
+           responding_team: team_candi,
            responder: responder,
            approving_team: team_disclosure,
            approver: disclosure_specialist
@@ -31,6 +32,7 @@ describe TeamFinderService do
 
   let(:multi_role_managed_case) do
     create :case_with_response, :flagged_accepted,
+           responding_team: team_candi,
            responder: multi_role_user,
            approving_team: team_disclosure,
            approver: multi_role_user
@@ -79,10 +81,16 @@ describe TeamFinderService do
 
     context 'accepted assignment exist for user with multiple roles' do
       it 'returns the correct team for the role' do
-        user_assignments = multi_role_managed_case.assignments.accepted.where(user_id: multi_role_user.id)
+        user_assignments = multi_role_managed_case
+                             .assignments
+                             .accepted
+                             .where(user_id: multi_role_user.id)
         expect(user_assignments.size).to eq 2
-        expect(user_assignments.map(&:team_id)).to match_array( [ team_disclosure.id, team_candi.id ] )
-        team = TeamFinderService.new(multi_role_managed_case, multi_role_user, :approver).team_for_assigned_user
+        expect(user_assignments.map(&:team_id))
+          .to match_array( [ team_disclosure.id, team_candi.id ] )
+        team = TeamFinderService
+                 .new(multi_role_managed_case, multi_role_user, :approver)
+                 .team_for_assigned_user
         expect(team).to eq team_disclosure
       end
     end

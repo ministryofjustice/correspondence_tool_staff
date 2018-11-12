@@ -5,11 +5,11 @@ describe 'CurrentTeamAndUserService' do
   let(:team_dacu)             { find_or_create :team_dacu }
   let(:team_dacu_disclosure)  { find_or_create :team_dacu_disclosure }
   let(:responding_team)       { find_or_create :responding_team }
-  let(:responder)             { find_or_create :responder }
+  let(:responder)             { find_or_create :foi_responder }
   let(:press_office)          { find_or_create :team_press_office }
-  let(:press_officer)         { create :press_officer }
+  let(:press_officer)         { find_or_create :press_officer }
   let(:private_office)          { find_or_create :team_private_office }
-  let(:private_officer)         { create :private_officer }
+  let(:private_officer)         { find_or_create :private_officer }
   let(:service)               { CurrentTeamAndUserService.new(kase) }
 
   context 'unassigned state' do

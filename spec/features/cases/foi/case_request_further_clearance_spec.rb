@@ -1,7 +1,7 @@
 require "rails_helper"
 
 feature 'Requesting further clearance on an unflagged case' do
-  given(:manager)         { create :disclosure_bmt_user }
+  given(:manager)         { find_or_create :disclosure_bmt_user }
   given(:case_being_drafted)   { create :case_being_drafted }
   given(:assigned_case) { create :awaiting_responder_case}
 

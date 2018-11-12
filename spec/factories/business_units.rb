@@ -1,7 +1,17 @@
 FactoryBot.define do
 
+  trait :empty do
+    approvers  { [] }
+    managers   { [] }
+    responders { [] }
+    users      { [] }
+  end
 
   factory :business_unit do
+    initialize_with do
+      BusinessUnit.find_or_create_by(name: name, email: email)
+    end
+
     transient do
       lead                 { create :deputy_director }
       correspondence_type_ids { [] }
@@ -31,26 +41,18 @@ FactoryBot.define do
 
 
   factory :managing_team, parent: :business_unit do
-    transient do
-      managers { [] }
-    end
-
     sequence(:name) { |n| "Managing Team #{n}" }
     directorate { find_or_create :directorate, name: 'Management Directorate' }
     role { 'manager' }
+    managers { [create(:manager, :orphan)] }
 
     after(:create) do |team, evaluator|
-      if evaluator.managers.present?
-        team.managers << evaluator.managers
-      elsif team.managers.empty?
-        team.managers << create(:user)
-      end
     end
   end
 
   factory :responding_team, parent: :business_unit do
     sequence(:name) { |n| "Responding Team #{n}" }
-    responders { [create(:user)] }
+    responders { [create(:responder, :orphan)] }
 
     after(:create) do |bu, _evaluator|
       bu.correspondence_types << find_or_create(:overturned_sar_correspondence_type)
@@ -58,11 +60,30 @@ FactoryBot.define do
     end
   end
 
-  factory :approving_team, parent: :business_unit do
+  factory :foi_responding_team, parent: :business_unit do
+    directorate { find_or_create :responder_directorate }
+    name { "FOI Responding Team" }
+    responders { [find_or_create(:foi_responder, :orphan)] }
 
+    after(:create) do |bu, _evaluator|
+      bu.correspondence_types << find_or_create(:overturned_foi_correspondence_type)
+    end
+  end
+
+  factory :sar_responding_team, parent: :business_unit do
+    directorate { find_or_create :responder_directorate }
+    name { "SAR Responding Team" }
+    responders { [find_or_create(:sar_responder, :orphan)] }
+
+    after(:create) do |bu, _evaluator|
+      bu.correspondence_types << find_or_create(:overturned_sar_correspondence_type)
+    end
+  end
+
+  factory :approving_team, parent: :business_unit do
     sequence(:name) { |n| "Approving Team #{n}" }
     role { 'approver' }
-    approvers { [create(:user)] }
+    approvers { [create(:approver, :orphan)] }
   end
 
   factory :team_disclosure_bmt, aliases: [:team_dacu], parent: :managing_team do
@@ -70,33 +91,37 @@ FactoryBot.define do
     email { 'dacu@localhost' }
     code { Settings.foi_cases.default_managing_team }
     directorate { find_or_create :dacu_directorate }
+    managers { [find_or_create(:disclosure_bmt_user, :orphan)] }
   end
 
   factory :team_disclosure, aliases: [:team_dacu_disclosure], parent: :approving_team do
     name { 'Disclosure' }
     email { 'dacu.disclosure@localhost' }
     code { Settings.foi_cases.default_clearance_team }
-    approvers { [] }
+    directorate { find_or_create :dacu_directorate }
+    approvers { [find_or_create(:disclosure_specialist, :orphan)] }
 
     after :create do |bu, _evaluator|
       if bu.approvers.empty?
-        create(:disclosure_specialist, approving_team: bu)
+        find_or_create(:disclosure_specialist, approving_team: bu)
       end
     end
   end
 
   factory :team_press_office, aliases: [:press_office], parent: :approving_team do
-    name { 'Press Office' }
-    email { 'press.office@localhost' }
-    code { Settings.press_office_team_code }
+    name        { 'Press Office' }
+    email       { 'press.office@localhost' }
+    code        { Settings.press_office_team_code }
     directorate { find_or_create :press_office_directorate }
+    approvers   { [find_or_create(:press_officer, :orphan)] }
   end
 
   factory :team_private_office, parent: :approving_team do
-    name { 'Private Office' }
-    email { 'private.office@localhost' }
-    code { Settings.private_office_team_code }
+    name        { 'Private Office' }
+    email       { 'private.office@localhost' }
+    code        { Settings.private_office_team_code }
     directorate { find_or_create :press_office_directorate }
+    approvers   { [find_or_create(:private_officer, :orphan)] }
   end
 
   trait :deactivated do

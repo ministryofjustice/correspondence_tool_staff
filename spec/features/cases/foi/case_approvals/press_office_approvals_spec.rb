@@ -2,10 +2,10 @@ require 'rails_helper'
 
 feature 'cases requiring clearance by press office' do
   given(:dacu_disclosure)             { find_or_create :team_dacu_disclosure }
-  given(:disclosure_specialist)       { create :disclosure_specialist }
-  given(:other_disclosure_specialist) { create :disclosure_specialist }
+  given(:disclosure_specialist)       { find_or_create :disclosure_specialist }
+  given(:other_disclosure_specialist) { find_or_create :disclosure_specialist }
   given!(:press_officer)              { find_or_create :default_press_officer }
-  given(:other_press_officer)         { create :press_officer }
+  given(:other_press_officer)         { create :approver, approving_team: press_office }
   given!(:press_office)               { find_or_create :team_press_office }
   given!(:private_office)             { find_or_create :team_private_office }
   given!(:private_officer)            { find_or_create :default_private_officer,
@@ -13,14 +13,10 @@ feature 'cases requiring clearance by press office' do
   given(:pending_dacu_clearance_case) do
     create :pending_dacu_clearance_case,
            :flagged_accepted,
-           :press_office,
-           disclosure_assignment_state: 'accepted',
-           disclosure_specialist: disclosure_specialist
+           :press_office
   end
   given(:pending_press_clearance_case) { create :pending_press_clearance_case,
                                                 press_officer: press_officer }
-
-
 
   given(:case_available_for_taking_on) { create :case_being_drafted,
                                                 created_at: 1.business_day.ago }
@@ -48,8 +44,7 @@ feature 'cases requiring clearance by press office' do
     )
 
     _case_not_for_press_office_open_cases = create :case_being_drafted,
-                                                   :flagged_accepted,
-                                                   :private_office
+                                                   :flagged_accepted
     open_cases_page.load
     expect(open_cases_page.case_list.first.number)
       .to have_text case_available_for_taking_on.number

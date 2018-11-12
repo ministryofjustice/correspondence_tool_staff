@@ -8,7 +8,8 @@ describe CaseAttachmentUploadGroupCollection do
     @timestamp_2 = '12 Jun 2017 12:42'
     @kase = create :case_with_response
     @responder_1 = @kase.responding_team.users.first
-    @responder_2 = @kase.responding_team.users.last
+    @responder_2 = create(:responder,
+                          responding_teams: @responder_1.responding_teams)
     @kase.attachments.first.update!(upload_group: @upload_group_1, user_id: @responder_1.id)
 
     2.times do

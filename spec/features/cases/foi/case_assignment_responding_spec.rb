@@ -1,14 +1,13 @@
 require 'rails_helper'
 
 feature 'respond to responder assignment' do
-  given(:responder)       { create :responder }
-  given(:responding_team) { responder.responding_teams.first }
+  given(:responder)       { responding_team.responders.first }
+  given(:responding_team) { assigned_case.responding_team }
   given(:assigned_case) do
     create(
       :assigned_case,
       subject: 'A message about XYZ',
       message: 'I would like to know about XYZ',
-      responding_team: responding_team
     ).decorate
   end
 

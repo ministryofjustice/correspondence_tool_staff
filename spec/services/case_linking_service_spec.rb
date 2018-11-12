@@ -161,7 +161,7 @@ describe CaseLinkingService do
       end
 
       context 'SAR cases' do
-        let(:responder)       { create :responder }
+        let(:responder)       { find_or_create :foi_responder }
         let(:sar_case_1)      { create :accepted_sar, responder: responder }
         let(:sar_case_2)      { create :sar_case }
 

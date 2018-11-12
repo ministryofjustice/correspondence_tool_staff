@@ -4,10 +4,13 @@ FactoryBot.define do
 
   factory :ico_foi_case, class: Case::ICO::FOI do
     transient do
-      creation_time { 4.business_days.ago }
-      identifier    { "new ICO FOI case based from a closed FOI case" }
-      managing_team { find_or_create :team_dacu }
+      creation_time  { 4.business_days.ago }
+      identifier     { "new ICO FOI case based from a closed FOI case" }
+      managing_team  { find_or_create :team_dacu }
+
+      flag_for_disclosure { :pending }
       approving_team { find_or_create(:team_disclosure) }
+      approver       { find_or_create(:disclosure_specialist) }
     end
 
     current_state               { 'unassigned' }
@@ -29,21 +32,48 @@ FactoryBot.define do
              state: 'pending'
       create :flag_case_for_clearance_transition,
              case: kase,
-             target_team_id: evaluator.approving_team.id
+             acting_team: evaluator.managing_team,
+             acting_user: evaluator.managing_team.managers.first,
+             target_team: evaluator.approving_team
       kase.update(workflow: 'trigger')
+
+      if evaluator.flag_for_disclosure == :accepted
+        disclosure_assignment = kase.assignments.for_team(
+          evaluator.approving_team
+        ).singular
+        disclosure_assignment.update(state: 'accepted',
+                                     user: evaluator.approver)
+      end
+
+      kase.reload
+    end
+
+    trait :flagged_accepted do
+      transient do
+        approver { approving_team.users.first }
+      end
+
+      after(:create) do |kase, evaluator|
+        kase.assignments.for_team(evaluator.approving_team).first.update(
+          state: 'accepted',
+          user_id: evaluator.approver.id,
+        )
+        create :flag_case_for_clearance_transition,
+               case: kase,
+               target_team_id: evaluator.approving_team.id
+      end
     end
   end
 
-
   factory :awaiting_responder_ico_foi_case, parent: :ico_foi_case do
     transient do
-      identifier        { "assigned ICO FOI case" }
-      manager           { managing_team.managers.first }
-      responding_team   { create :responding_team }
+      identifier      { "assigned ICO FOI case" }
+      manager         { managing_team.managers.first }
+      responding_team { original_case.responding_team }
     end
 
-    created_at      { creation_time }
-    received_date   { creation_time }
+    created_at    { creation_time }
+    received_date { creation_time }
 
     after(:create) do |kase, evaluator|
       create :assignment,
@@ -53,10 +83,10 @@ FactoryBot.define do
              role: 'responding',
              created_at: evaluator.creation_time
       create :case_transition_assign_responder,
-             case_id: kase.id,
-             acting_user_id: evaluator.manager.id,
-             acting_team_id: evaluator.managing_team.id,
-             target_team_id: evaluator.responding_team.id,
+             case: kase,
+             acting_user: evaluator.manager,
+             acting_team: evaluator.managing_team,
+             target_team: evaluator.responding_team,
              created_at: evaluator.creation_time
       kase.reload
     end
@@ -65,8 +95,7 @@ FactoryBot.define do
   factory :accepted_ico_foi_case, parent: :awaiting_responder_ico_foi_case do
     transient do
       identifier { "accepted ICO FOI case" }
-      responder { create :responder }
-      responding_team { responder.responding_teams.first }
+      responder  { responding_team.responders.first }
     end
 
     after(:create) do |kase, evaluator|
@@ -74,8 +103,8 @@ FactoryBot.define do
       kase.responder_assignment.accepted!
       create :case_transition_accept_responder_assignment,
              case: kase,
-             acting_user_id: kase.responder.id,
-             acting_team_id: kase.responding_team.id,
+             acting_user: kase.responder,
+             acting_team: kase.responding_team,
              created_at: evaluator.creation_time
       kase.reload
     end
@@ -84,8 +113,6 @@ FactoryBot.define do
   factory :pending_dacu_clearance_ico_foi_case, parent: :accepted_ico_foi_case do
     transient do
       identifier      { 'pending dacu clearance ICO FOI case' }
-      approving_team  { find_or_create :team_dacu_disclosure }
-      approver        { approving_team.users.first }
     end
 
     after(:create) do |kase, evaluator|
@@ -93,9 +120,10 @@ FactoryBot.define do
         .update_attributes(user: evaluator.approver,
                            state: 'accepted')
       create :case_transition_progress_for_clearance,
-             case_id: kase.id,
-             responding_team: evaluator.responding_team,
-             responder: evaluator.responder
+             case: kase,
+             acting_team: evaluator.responding_team,
+             acting_user: evaluator.responder,
+             target_team: evaluator.approving_team
       kase.reload
     end
   end
@@ -103,15 +131,13 @@ FactoryBot.define do
   factory :approved_ico_foi_case, parent: :pending_dacu_clearance_ico_foi_case do
     transient do
       identifier { 'approved ICO FOI case' }
-      approving_team { find_or_create :team_dacu_disclosure }
-      approver { create :disclosure_specialist }
     end
 
     after(:create) do |kase, evaluator|
       create :case_transition_approve,
              case: kase,
-             acting_team_id: evaluator.approving_team.id,
-             acting_user_id: evaluator.approver.id
+             acting_team: evaluator.approving_team,
+             acting_user: evaluator.approver
 
       kase.approver_assignments.each { |a| a.update approved: true }
       kase.reload
@@ -127,7 +153,7 @@ FactoryBot.define do
 
     after(:create) do |kase, _evaluator|
       create :case_transition_respond_to_ico,
-             case_id: kase.id
+             case: kase
       kase.reload
     end
   end
@@ -151,10 +177,8 @@ FactoryBot.define do
     after(:create) do |kase, evaluator|
       kase.attachments.push(*evaluator.attachments)
       kase.save!
-      create :case_transition_close_ico,
-             case_id: kase.id
+      create :case_transition_close_ico, case: kase
       kase.reload
     end
   end
-
 end

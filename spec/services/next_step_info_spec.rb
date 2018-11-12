@@ -29,8 +29,8 @@ end
 
 describe 'NextStepInfo' do
   let(:responding_team)       { responder.responding_teams.first }
-  let(:responder)             { create :responder }
-  let(:disclosure_specialist) { create :disclosure_specialist}
+  let(:responder)             { find_or_create :foi_responder }
+  let(:disclosure_specialist) { find_or_create :disclosure_specialist}
   let!(:dacu_disclosure)      { find_or_create :team_dacu_disclosure }
   let!(:press_office)         { find_or_create :team_press_office }
   let!(:private_office)       { find_or_create :team_private_office }

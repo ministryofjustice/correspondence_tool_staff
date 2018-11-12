@@ -2,14 +2,15 @@ require 'rails_helper'
 
 RSpec.describe TeamsController, type: :controller do
 
-  let(:bg)              { create :business_group }
+  let(:bg)              { find_or_create :responder_business_group }
   let(:another_bg)      { create :business_group }
-  let(:directorate)     { create :directorate, business_group: bg }
-  let(:business_unit)   { create :business_unit, directorate: directorate, name: 'AAA' }
-  let(:business_unit2)  { create :business_unit, directorate: directorate, name: 'BBB' }
+  let(:directorate)     { find_or_create :responder_directorate }
+  let(:business_unit)   { find_or_create :foi_responding_team }
+  let(:business_unit2)  { find_or_create :sar_responding_team }
   let(:manager)         { create :manager }
   let(:business_map)    { create :r006_business_unit_map }
   let(:reports)         { [ business_map ]}
+  let(:foi_responder)   { find_or_create(:foi_responder) }
 
 
   describe 'GET index' do
@@ -31,8 +32,8 @@ RSpec.describe TeamsController, type: :controller do
 
     context 'logged in as a non-manager' do
       before(:each) do
-        @responder = create :responder, responding_teams: [ business_unit, business_unit2 ]
-        sign_in @responder
+        business_unit2.responders << foi_responder
+        sign_in foi_responder
       end
       it 'loads all teams the the responder is a member of' do
         get :index
@@ -49,23 +50,20 @@ RSpec.describe TeamsController, type: :controller do
 
   describe 'GET show' do
     context 'logged in as a manager' do
-
+      let(:directorate2) { create :directorate, business_group: bg }
       before(:each) do
         sign_in manager
-        @bg = create :business_group
-        @dir_1 = create :directorate, business_group: @bg
-        @dir_2 = create :directorate, business_group: @bg
       end
 
       it 'loads the team, children and business map' do
-        get :show, params: { id: @bg.id }
-        expect(assigns(:team)).to eq @bg
-        expect(assigns(:children)).to match_array [@dir_1, @dir_2]
+        get :show, params: { id: bg.id }
+        expect(assigns(:team)).to eq bg
+        expect(assigns(:children)).to match_array [directorate, directorate2]
         expect(assigns(:reports)).to eq reports
       end
 
       it 'renders the show template' do
-        get :show, params: { id: @bg.id }
+        get :show, params: { id: bg.id }
         expect(response).to render_template(:show)
       end
     end
@@ -73,8 +71,7 @@ RSpec.describe TeamsController, type: :controller do
     context 'logged in as a non-manager' do
 
       before(:each) do
-        @responder = create :responder, responding_teams: [ business_unit, business_unit2 ]
-        sign_in @responder
+        sign_in foi_responder
       end
 
       context 'viewing a team that he is a member of' do
@@ -141,8 +138,7 @@ RSpec.describe TeamsController, type: :controller do
     context 'signed in as a non-manager' do
 
       before(:each) do
-        @responder = create :responder, responding_teams: [ business_unit, business_unit2 ]
-        sign_in @responder
+        sign_in foi_responder
       end
 
       it 'redirects to root with unauth message in flash' do
@@ -178,8 +174,7 @@ RSpec.describe TeamsController, type: :controller do
     context 'signed in as a non manager' do
 
       before(:each) do
-        @responder = create :responder, responding_teams: [ business_unit, business_unit2 ]
-        sign_in @responder
+        sign_in foi_responder
       end
 
       context 'team that the responder ia a member of' do
@@ -189,7 +184,7 @@ RSpec.describe TeamsController, type: :controller do
           expect{
             get :edit, params: params
           }.to require_permission(:edit?)
-                 .with_args(@responder, business_unit)
+                 .with_args(foi_responder, business_unit)
         end
 
         it 'assigns @team' do
@@ -204,7 +199,7 @@ RSpec.describe TeamsController, type: :controller do
       end
 
       context 'team that the repsonder is not a member of' do
-        let(:other_bu) { create :business_unit, directorate: directorate }
+        let(:other_bu) { business_unit2 }
         let(:params) { { id: other_bu.id } }
 
         it 'redirects to root path with unauth message' do
@@ -269,8 +264,7 @@ RSpec.describe TeamsController, type: :controller do
         end
 
         it 'redirects business groups to the team path' do
-          business_group = create :business_group
-          patch :update, params: { id: business_group.id,
+          patch :update, params: { id: bg.id,
                               team: {
                                 name: 'New Name',
                                 email: 'n00b@localhost',
@@ -285,12 +279,11 @@ RSpec.describe TeamsController, type: :controller do
     context 'logged in as a non-manager' do
 
       before(:each) do
-        @responder = create :responder, responding_teams: [ business_unit, business_unit2 ]
-        sign_in @responder
+        sign_in foi_responder
       end
 
       context 'team that the responder ia a member of' do
-        let(:other_bu) { create :business_unit, directorate: directorate, name: 'CCCC', team_lead: 'Johnny Olds' }
+        let(:other_bu) { business_unit2 }
         let(:params) do
           {
             'id' => other_bu.id,
@@ -313,8 +306,8 @@ RSpec.describe TeamsController, type: :controller do
         it 'updates the teaam details' do
           patch :update, params: params
           t = other_bu.reload
-          expect(t.name).to eq 'CCCC'
-          expect(t.team_lead).to eq 'Johnny Olds'
+          expect(t.name).to eq 'SAR Responding Team'
+          expect(t.team_lead).to match(/Deputy Director \d+/)
         end
       end
 
@@ -346,8 +339,7 @@ RSpec.describe TeamsController, type: :controller do
     context 'logged in as a non manager' do
 
       before(:each) do
-        @responder = create :responder, responding_teams: [ business_unit, business_unit2 ]
-        sign_in @responder
+        sign_in foi_responder
       end
 
       it 'redirects to root with unauth message in flash' do

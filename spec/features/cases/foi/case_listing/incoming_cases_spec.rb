@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 feature 'listing incoming on the system' do
-  given(:disclosure_specialist) { create :disclosure_specialist }
-  given(:press_officer) { create :press_officer }
-  given(:private_officer) { create :private_officer }
+  given(:disclosure_specialist) { find_or_create :disclosure_specialist }
+  given(:press_officer) { find_or_create :press_officer }
+  given(:private_officer) { find_or_create :private_officer }
 
   given(:assigned_case) { create :assigned_case,
                                  created_at: 1.business_days.ago,
@@ -13,14 +13,12 @@ feature 'listing incoming on the system' do
   given(:assigned_case_flagged_for_dacu_disclosure) do
     create :assigned_case,
            :flagged,
-           :dacu_disclosure,
            created_at: 2.business_days.ago,
            identifier: 'assigned_case_flagged_for_dacu_disclosure'
   end
   given(:assigned_case_flagged_for_dacu_disclosure_accepted) do
     create :assigned_case,
            :flagged_accepted,
-           :dacu_disclosure,
            created_at: 2.business_days.ago,
            identifier: 'assigned_case_flagged_for_dacu_disclosure_accepted'
   end
@@ -28,7 +26,6 @@ feature 'listing incoming on the system' do
     create :assigned_case,
            :flagged_accepted,
            :press_office,
-           disclosure_assignment_state: 'pending',
            created_at: 2.business_days.ago,
            identifier: 'assigned_case_flagged_for_press_office_accepted'
   end
@@ -63,11 +60,9 @@ feature 'listing incoming on the system' do
 
       cases = incoming_cases_page.case_list
 
-      expect(cases.count).to eq 2
+      expect(cases.count).to eq 1
       expect(cases.first.number)
         .to have_text assigned_case_flagged_for_dacu_disclosure.number
-      expect(cases.second.number)
-        .to have_text assigned_case_flagged_for_press_office_accepted.number
     end
   end
 

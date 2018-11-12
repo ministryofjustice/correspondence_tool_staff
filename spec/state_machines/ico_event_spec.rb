@@ -91,7 +91,6 @@ describe 'state machine' do
           [:disclosure_specialist_coworker, :ico_sar_unassigned],
           [:disclosure_specialist_coworker, :ico_sar_awaiting_responder],
           [:disclosure_specialist_coworker, :ico_sar_accepted],
-
                )
       }
     end
@@ -100,10 +99,10 @@ describe 'state machine' do
       it {
         should permit_event_to_be_triggered_only_by(
           [:responder, :ico_foi_awaiting_responder],
-          [:responder, :ico_sar_awaiting_responder],
+          [:sar_responder, :ico_sar_awaiting_responder],
           [:another_responder_in_same_team, :ico_foi_awaiting_responder],
-          [:another_responder_in_same_team, :ico_sar_awaiting_responder]
-               )
+          [:another_sar_responder_in_same_team, :ico_sar_awaiting_responder]
+               ).debug
       }
     end
 
@@ -133,12 +132,12 @@ describe 'state machine' do
           [:responder, :ico_foi_responded],
           [:responder, :ico_foi_closed],
 
-          [:responder, :ico_sar_awaiting_responder],
-          [:responder, :ico_sar_accepted],
-          [:responder, :ico_sar_pending_dacu],
-          [:responder, :ico_sar_awaiting_dispatch],
-          [:responder, :ico_sar_responded],
-          [:responder, :ico_sar_closed],
+          [:sar_responder, :ico_sar_awaiting_responder],
+          [:sar_responder, :ico_sar_accepted],
+          [:sar_responder, :ico_sar_pending_dacu],
+          [:sar_responder, :ico_sar_awaiting_dispatch],
+          [:sar_responder, :ico_sar_responded],
+          [:sar_responder, :ico_sar_closed],
 
           [:another_responder_in_same_team, :ico_foi_awaiting_responder],
           [:another_responder_in_same_team, :ico_foi_accepted],
@@ -147,12 +146,12 @@ describe 'state machine' do
           [:another_responder_in_same_team, :ico_foi_responded],
           [:another_responder_in_same_team, :ico_foi_closed],
 
-          [:another_responder_in_same_team, :ico_sar_awaiting_responder],
-          [:another_responder_in_same_team, :ico_sar_accepted],
-          [:another_responder_in_same_team, :ico_sar_pending_dacu],
-          [:another_responder_in_same_team, :ico_sar_awaiting_dispatch],
-          [:another_responder_in_same_team, :ico_sar_responded],
-          [:another_responder_in_same_team, :ico_sar_closed],
+          [:another_sar_responder_in_same_team, :ico_sar_awaiting_responder],
+          [:another_sar_responder_in_same_team, :ico_sar_accepted],
+          [:another_sar_responder_in_same_team, :ico_sar_pending_dacu],
+          [:another_sar_responder_in_same_team, :ico_sar_awaiting_dispatch],
+          [:another_sar_responder_in_same_team, :ico_sar_responded],
+          [:another_sar_responder_in_same_team, :ico_sar_closed],
 
           [:disclosure_specialist, :ico_foi_unassigned],
           [:disclosure_specialist, :ico_foi_awaiting_responder],
@@ -194,7 +193,7 @@ describe 'state machine' do
         should permit_event_to_be_triggered_only_by(
           [:disclosure_specialist, :ico_foi_pending_dacu],
           [:disclosure_specialist, :ico_sar_pending_dacu],
-               )}
+               ) }
     end
 
     describe :assign_responder do
@@ -294,7 +293,7 @@ describe 'state machine' do
           [:disclosure_bmt, :ico_sar_responded],
           [:disclosure_bmt, :ico_sar_closed],
 
-
+          # Responders should not be adding/removing links
           [:responder, :ico_foi_unassigned],
           [:responder, :ico_foi_awaiting_responder],
           [:responder, :ico_foi_accepted],
@@ -302,7 +301,6 @@ describe 'state machine' do
           [:responder, :ico_foi_awaiting_dispatch],
           [:responder, :ico_foi_responded],
           [:responder, :ico_foi_closed],
-
           [:responder, :ico_sar_unassigned],
           [:responder, :ico_sar_awaiting_responder],
           [:responder, :ico_sar_accepted],
@@ -311,7 +309,22 @@ describe 'state machine' do
           [:responder, :ico_sar_responded],
           [:responder, :ico_sar_closed],
 
+          [:sar_responder, :ico_sar_unassigned],
+          [:sar_responder, :ico_sar_awaiting_responder],
+          [:sar_responder, :ico_sar_accepted],
+          [:sar_responder, :ico_sar_pending_dacu],
+          [:sar_responder, :ico_sar_awaiting_dispatch],
+          [:sar_responder, :ico_sar_responded],
+          [:sar_responder, :ico_sar_closed],
+          [:sar_responder, :ico_foi_unassigned],
+          [:sar_responder, :ico_foi_awaiting_responder],
+          [:sar_responder, :ico_foi_accepted],
+          [:sar_responder, :ico_foi_pending_dacu],
+          [:sar_responder, :ico_foi_awaiting_dispatch],
+          [:sar_responder, :ico_foi_responded],
+          [:sar_responder, :ico_foi_closed],
 
+          # Responders should not be adding/removing links
           [:another_responder_in_same_team, :ico_foi_unassigned],
           [:another_responder_in_same_team, :ico_foi_awaiting_responder],
           [:another_responder_in_same_team, :ico_foi_accepted],
@@ -319,7 +332,6 @@ describe 'state machine' do
           [:another_responder_in_same_team, :ico_foi_awaiting_dispatch],
           [:another_responder_in_same_team, :ico_foi_responded],
           [:another_responder_in_same_team, :ico_foi_closed],
-
           [:another_responder_in_same_team, :ico_sar_unassigned],
           [:another_responder_in_same_team, :ico_sar_awaiting_responder],
           [:another_responder_in_same_team, :ico_sar_accepted],
@@ -327,6 +339,21 @@ describe 'state machine' do
           [:another_responder_in_same_team, :ico_sar_awaiting_dispatch],
           [:another_responder_in_same_team, :ico_sar_responded],
           [:another_responder_in_same_team, :ico_sar_closed],
+
+          [:another_sar_responder_in_same_team, :ico_sar_unassigned],
+          [:another_sar_responder_in_same_team, :ico_sar_awaiting_responder],
+          [:another_sar_responder_in_same_team, :ico_sar_accepted],
+          [:another_sar_responder_in_same_team, :ico_sar_pending_dacu],
+          [:another_sar_responder_in_same_team, :ico_sar_awaiting_dispatch],
+          [:another_sar_responder_in_same_team, :ico_sar_responded],
+          [:another_sar_responder_in_same_team, :ico_sar_closed],
+          [:another_sar_responder_in_same_team, :ico_foi_unassigned],
+          [:another_sar_responder_in_same_team, :ico_foi_awaiting_responder],
+          [:another_sar_responder_in_same_team, :ico_foi_accepted],
+          [:another_sar_responder_in_same_team, :ico_foi_pending_dacu],
+          [:another_sar_responder_in_same_team, :ico_foi_awaiting_dispatch],
+          [:another_sar_responder_in_same_team, :ico_foi_responded],
+          [:another_sar_responder_in_same_team, :ico_foi_closed],
 
           [:disclosure_specialist, :ico_foi_unassigned],
           [:disclosure_specialist, :ico_foi_awaiting_responder],
@@ -376,7 +403,7 @@ describe 'state machine' do
           [:another_disclosure_specialist, :ico_sar_responded],
           [:another_disclosure_specialist, :ico_sar_closed],
 
-
+          # Responders should not be adding/removing links
           [:another_responder_in_diff_team, :ico_foi_unassigned],
           [:another_responder_in_diff_team, :ico_foi_awaiting_responder],
           [:another_responder_in_diff_team, :ico_foi_accepted],
@@ -384,7 +411,6 @@ describe 'state machine' do
           [:another_responder_in_diff_team, :ico_foi_awaiting_dispatch],
           [:another_responder_in_diff_team, :ico_foi_responded],
           [:another_responder_in_diff_team, :ico_foi_closed],
-
           [:another_responder_in_diff_team, :ico_sar_unassigned],
           [:another_responder_in_diff_team, :ico_sar_awaiting_responder],
           [:another_responder_in_diff_team, :ico_sar_accepted],
@@ -392,6 +418,21 @@ describe 'state machine' do
           [:another_responder_in_diff_team, :ico_sar_awaiting_dispatch],
           [:another_responder_in_diff_team, :ico_sar_responded],
           [:another_responder_in_diff_team, :ico_sar_closed],
+
+          [:another_sar_responder_in_diff_team, :ico_sar_unassigned],
+          [:another_sar_responder_in_diff_team, :ico_sar_awaiting_responder],
+          [:another_sar_responder_in_diff_team, :ico_sar_accepted],
+          [:another_sar_responder_in_diff_team, :ico_sar_pending_dacu],
+          [:another_sar_responder_in_diff_team, :ico_sar_awaiting_dispatch],
+          [:another_sar_responder_in_diff_team, :ico_sar_responded],
+          [:another_sar_responder_in_diff_team, :ico_sar_closed],
+          [:another_sar_responder_in_diff_team, :ico_foi_unassigned],
+          [:another_sar_responder_in_diff_team, :ico_foi_awaiting_responder],
+          [:another_sar_responder_in_diff_team, :ico_foi_accepted],
+          [:another_sar_responder_in_diff_team, :ico_foi_pending_dacu],
+          [:another_sar_responder_in_diff_team, :ico_foi_awaiting_dispatch],
+          [:another_sar_responder_in_diff_team, :ico_foi_responded],
+          [:another_sar_responder_in_diff_team, :ico_foi_closed],
 
           [:private_officer, :ico_foi_unassigned],
           [:private_officer, :ico_foi_awaiting_responder],
@@ -432,19 +473,19 @@ describe 'state machine' do
     describe :reassign_user do
       it {
         should permit_event_to_be_triggered_only_by(
-          [:responder, :ico_foi_accepted],
-          [:responder, :ico_sar_accepted],
-          [:responder, :ico_foi_pending_dacu],
-          [:responder, :ico_sar_pending_dacu],
-          [:responder, :ico_foi_awaiting_dispatch],
-          [:responder, :ico_sar_awaiting_dispatch],
+          [:responder,     :ico_foi_accepted],
+          [:sar_responder, :ico_sar_accepted],
+          [:responder,     :ico_foi_pending_dacu],
+          [:sar_responder, :ico_sar_pending_dacu],
+          [:responder,     :ico_foi_awaiting_dispatch],
+          [:sar_responder, :ico_sar_awaiting_dispatch],
 
-          [:another_responder_in_same_team, :ico_foi_accepted],
-          [:another_responder_in_same_team, :ico_sar_accepted],
-          [:another_responder_in_same_team, :ico_foi_pending_dacu],
-          [:another_responder_in_same_team, :ico_sar_pending_dacu],
-          [:another_responder_in_same_team, :ico_foi_awaiting_dispatch],
-          [:another_responder_in_same_team, :ico_sar_awaiting_dispatch],
+          [:another_responder_in_same_team,     :ico_foi_accepted],
+          [:another_sar_responder_in_same_team, :ico_sar_accepted],
+          [:another_responder_in_same_team,     :ico_foi_pending_dacu],
+          [:another_sar_responder_in_same_team, :ico_sar_pending_dacu],
+          [:another_responder_in_same_team,     :ico_foi_awaiting_dispatch],
+          [:another_sar_responder_in_same_team, :ico_sar_awaiting_dispatch],
 
           [:disclosure_specialist, :ico_foi_unassigned],
           [:disclosure_specialist, :ico_foi_awaiting_responder],
@@ -467,17 +508,18 @@ describe 'state machine' do
           [:disclosure_specialist_coworker, :ico_sar_accepted],
           [:disclosure_specialist_coworker, :ico_sar_pending_dacu],
           [:disclosure_specialist_coworker, :ico_sar_awaiting_dispatch],
-               )  }
+               ) }
     end
 
     describe :reject_responder_assignment do
       it {
         should permit_event_to_be_triggered_only_by(
-          [:responder, :ico_foi_awaiting_responder],
-          [:responder, :ico_sar_awaiting_responder],
-          [:another_responder_in_same_team, :ico_foi_awaiting_responder],
-          [:another_responder_in_same_team, :ico_sar_awaiting_responder]
-               )
+          [:responder,     :ico_foi_awaiting_responder],
+          [:sar_responder, :ico_sar_awaiting_responder],
+
+          [:another_responder_in_same_team,     :ico_foi_awaiting_responder],
+          [:another_sar_responder_in_same_team, :ico_sar_awaiting_responder]
+               ).debug
       }
     end
 
@@ -500,7 +542,7 @@ describe 'state machine' do
           [:disclosure_bmt, :ico_sar_responded],
           [:disclosure_bmt, :ico_sar_closed],
 
-
+          # Responders should not be adding/removing links
           [:responder, :ico_foi_unassigned],
           [:responder, :ico_foi_awaiting_responder],
           [:responder, :ico_foi_accepted],
@@ -508,7 +550,6 @@ describe 'state machine' do
           [:responder, :ico_foi_awaiting_dispatch],
           [:responder, :ico_foi_responded],
           [:responder, :ico_foi_closed],
-
           [:responder, :ico_sar_unassigned],
           [:responder, :ico_sar_awaiting_responder],
           [:responder, :ico_sar_accepted],
@@ -517,7 +558,22 @@ describe 'state machine' do
           [:responder, :ico_sar_responded],
           [:responder, :ico_sar_closed],
 
+          [:sar_responder, :ico_sar_unassigned],
+          [:sar_responder, :ico_sar_awaiting_responder],
+          [:sar_responder, :ico_sar_accepted],
+          [:sar_responder, :ico_sar_pending_dacu],
+          [:sar_responder, :ico_sar_awaiting_dispatch],
+          [:sar_responder, :ico_sar_responded],
+          [:sar_responder, :ico_sar_closed],
+          [:sar_responder, :ico_foi_unassigned],
+          [:sar_responder, :ico_foi_awaiting_responder],
+          [:sar_responder, :ico_foi_accepted],
+          [:sar_responder, :ico_foi_pending_dacu],
+          [:sar_responder, :ico_foi_awaiting_dispatch],
+          [:sar_responder, :ico_foi_responded],
+          [:sar_responder, :ico_foi_closed],
 
+          # Responders should not be adding/removing links
           [:another_responder_in_same_team, :ico_foi_unassigned],
           [:another_responder_in_same_team, :ico_foi_awaiting_responder],
           [:another_responder_in_same_team, :ico_foi_accepted],
@@ -525,7 +581,6 @@ describe 'state machine' do
           [:another_responder_in_same_team, :ico_foi_awaiting_dispatch],
           [:another_responder_in_same_team, :ico_foi_responded],
           [:another_responder_in_same_team, :ico_foi_closed],
-
           [:another_responder_in_same_team, :ico_sar_unassigned],
           [:another_responder_in_same_team, :ico_sar_awaiting_responder],
           [:another_responder_in_same_team, :ico_sar_accepted],
@@ -533,6 +588,21 @@ describe 'state machine' do
           [:another_responder_in_same_team, :ico_sar_awaiting_dispatch],
           [:another_responder_in_same_team, :ico_sar_responded],
           [:another_responder_in_same_team, :ico_sar_closed],
+
+          [:another_sar_responder_in_same_team, :ico_sar_unassigned],
+          [:another_sar_responder_in_same_team, :ico_sar_awaiting_responder],
+          [:another_sar_responder_in_same_team, :ico_sar_accepted],
+          [:another_sar_responder_in_same_team, :ico_sar_pending_dacu],
+          [:another_sar_responder_in_same_team, :ico_sar_awaiting_dispatch],
+          [:another_sar_responder_in_same_team, :ico_sar_responded],
+          [:another_sar_responder_in_same_team, :ico_sar_closed],
+          [:another_sar_responder_in_same_team, :ico_foi_unassigned],
+          [:another_sar_responder_in_same_team, :ico_foi_awaiting_responder],
+          [:another_sar_responder_in_same_team, :ico_foi_accepted],
+          [:another_sar_responder_in_same_team, :ico_foi_pending_dacu],
+          [:another_sar_responder_in_same_team, :ico_foi_awaiting_dispatch],
+          [:another_sar_responder_in_same_team, :ico_foi_responded],
+          [:another_sar_responder_in_same_team, :ico_foi_closed],
 
           [:disclosure_specialist, :ico_foi_unassigned],
           [:disclosure_specialist, :ico_foi_awaiting_responder],
@@ -582,7 +652,7 @@ describe 'state machine' do
           [:another_disclosure_specialist, :ico_sar_responded],
           [:another_disclosure_specialist, :ico_sar_closed],
 
-
+          # Responders should not be adding/removing links
           [:another_responder_in_diff_team, :ico_foi_unassigned],
           [:another_responder_in_diff_team, :ico_foi_awaiting_responder],
           [:another_responder_in_diff_team, :ico_foi_accepted],
@@ -590,7 +660,6 @@ describe 'state machine' do
           [:another_responder_in_diff_team, :ico_foi_awaiting_dispatch],
           [:another_responder_in_diff_team, :ico_foi_responded],
           [:another_responder_in_diff_team, :ico_foi_closed],
-
           [:another_responder_in_diff_team, :ico_sar_unassigned],
           [:another_responder_in_diff_team, :ico_sar_awaiting_responder],
           [:another_responder_in_diff_team, :ico_sar_accepted],
@@ -598,6 +667,21 @@ describe 'state machine' do
           [:another_responder_in_diff_team, :ico_sar_awaiting_dispatch],
           [:another_responder_in_diff_team, :ico_sar_responded],
           [:another_responder_in_diff_team, :ico_sar_closed],
+
+          [:another_sar_responder_in_diff_team, :ico_sar_unassigned],
+          [:another_sar_responder_in_diff_team, :ico_sar_awaiting_responder],
+          [:another_sar_responder_in_diff_team, :ico_sar_accepted],
+          [:another_sar_responder_in_diff_team, :ico_sar_pending_dacu],
+          [:another_sar_responder_in_diff_team, :ico_sar_awaiting_dispatch],
+          [:another_sar_responder_in_diff_team, :ico_sar_responded],
+          [:another_sar_responder_in_diff_team, :ico_sar_closed],
+          [:another_sar_responder_in_diff_team, :ico_foi_unassigned],
+          [:another_sar_responder_in_diff_team, :ico_foi_awaiting_responder],
+          [:another_sar_responder_in_diff_team, :ico_foi_accepted],
+          [:another_sar_responder_in_diff_team, :ico_foi_pending_dacu],
+          [:another_sar_responder_in_diff_team, :ico_foi_awaiting_dispatch],
+          [:another_sar_responder_in_diff_team, :ico_foi_responded],
+          [:another_sar_responder_in_diff_team, :ico_foi_closed],
 
           [:private_officer, :ico_foi_unassigned],
           [:private_officer, :ico_foi_awaiting_responder],
@@ -692,20 +776,20 @@ describe 'state machine' do
           [:responder, :ico_foi_awaiting_dispatch],
           [:responder, :ico_foi_responded],
 
-          [:responder, :ico_sar_accepted],
-          [:responder, :ico_sar_pending_dacu],
-          [:responder, :ico_sar_awaiting_dispatch],
-          [:responder, :ico_sar_responded],
+          [:sar_responder, :ico_sar_accepted],
+          [:sar_responder, :ico_sar_pending_dacu],
+          [:sar_responder, :ico_sar_awaiting_dispatch],
+          [:sar_responder, :ico_sar_responded],
 
           [:another_responder_in_same_team, :ico_foi_accepted],
           [:another_responder_in_same_team, :ico_foi_pending_dacu],
           [:another_responder_in_same_team, :ico_foi_awaiting_dispatch],
           [:another_responder_in_same_team, :ico_foi_responded],
 
-          [:another_responder_in_same_team, :ico_sar_accepted],
-          [:another_responder_in_same_team, :ico_sar_pending_dacu],
-          [:another_responder_in_same_team, :ico_sar_awaiting_dispatch],
-          [:another_responder_in_same_team, :ico_sar_responded],
+          [:another_sar_responder_in_same_team, :ico_sar_accepted],
+          [:another_sar_responder_in_same_team, :ico_sar_pending_dacu],
+          [:another_sar_responder_in_same_team, :ico_sar_awaiting_dispatch],
+          [:another_sar_responder_in_same_team, :ico_sar_responded],
 
           [:disclosure_specialist, :ico_foi_accepted],
           [:disclosure_specialist, :ico_foi_pending_dacu],
@@ -767,18 +851,20 @@ describe 'state machine' do
       it {
         should have_after_hook(
           [:responder, :ico_foi_accepted],
-          [:responder, :ico_sar_accepted],
           [:responder, :ico_foi_pending_dacu],
-          [:responder, :ico_sar_pending_dacu],
           [:responder, :ico_foi_awaiting_dispatch],
-          [:responder, :ico_sar_awaiting_dispatch],
+
+          [:sar_responder, :ico_sar_accepted],
+          [:sar_responder, :ico_sar_pending_dacu],
+          [:sar_responder, :ico_sar_awaiting_dispatch],
 
           [:another_responder_in_same_team, :ico_foi_accepted],
-          [:another_responder_in_same_team, :ico_sar_accepted],
           [:another_responder_in_same_team, :ico_foi_pending_dacu],
-          [:another_responder_in_same_team, :ico_sar_pending_dacu],
           [:another_responder_in_same_team, :ico_foi_awaiting_dispatch],
-          [:another_responder_in_same_team, :ico_sar_awaiting_dispatch],
+
+          [:another_sar_responder_in_same_team, :ico_sar_accepted],
+          [:another_sar_responder_in_same_team, :ico_sar_pending_dacu],
+          [:another_sar_responder_in_same_team, :ico_sar_awaiting_dispatch],
 
           [:disclosure_specialist, :ico_foi_unassigned],
           [:disclosure_specialist, :ico_foi_awaiting_responder],

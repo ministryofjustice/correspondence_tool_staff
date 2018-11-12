@@ -7,15 +7,14 @@ RSpec.describe CaseTransitionDecorator, type: :model do
   let(:laa) { create :business_unit, name: 'Legal Aid Agency' }
   let(:laa_user) { create :responder, responding_teams: [laa], full_name: 'Larry Adler' }
 
-  let(:ct) do
+  let(:ct_assign_responder) do
     create(:case_transition_assign_responder,
            acting_user: dacu_user,
            acting_team: dacu,
            target_team: laa,
            created_at: Time.utc(2017, 4, 10, 13, 22, 44)).decorate
   end
-
-  let(:winter_ct) do
+  let(:winter_ct_assign_responder) do
     create(:case_transition_assign_responder,
            acting_user: dacu_user,
            acting_team: dacu,
@@ -23,40 +22,41 @@ RSpec.describe CaseTransitionDecorator, type: :model do
            created_at: Time.utc(2017, 1, 10, 13, 22, 44)).decorate
   end
 
-
-
   describe '#action_date' do
     context 'winter' do
       it 'displays the time in UTC' do
         Timecop.freeze Date.new(2017, 2, 1) do
-          expect(winter_ct.action_date).to eq '10 Jan 2017<br>13:22'
+          expect(winter_ct_assign_responder.action_date)
+            .to eq '10 Jan 2017<br>13:22'
         end
       end
     end
 
     context 'summer' do
       it 'formats the creation date taking BST into account' do
-        expect(ct.action_date).to eq '10 Apr 2017<br>14:22'
+        expect(ct_assign_responder.action_date).to eq '10 Apr 2017<br>14:22'
       end
     end
   end
 
   describe '#user_name' do
     it 'returns full name of assigning user' do
-      expect(ct.user_name).to eq 'David Attenborough'
+      expect(ct_assign_responder.user_name).to eq 'David Attenborough'
     end
   end
 
   describe '#user_team' do
     it 'returns full team name of user' do
-      expect(ct.user_team).to eq dacu.name
+      expect(ct_assign_responder.user_team).to eq dacu.name
     end
   end
 
   describe '#event_and_detail' do
+
     context 'accept_responder_assignment' do
       it 'returns expected text' do
-        ct = create(:case_transition_accept_responder_assignment).decorate
+        ct = create(:case_transition_accept_responder_assignment,
+                    acting_team: dacu).decorate
         event = 'Accepted by Business unit'
         details = ''
         expect(ct.event_and_detail).to eq response(event, details)
@@ -76,7 +76,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       it 'returns team name to which it has been assigned' do
         event = 'Assign responder'
         details = 'Assigned to Legal Aid Agency'
-        expect(ct.event_and_detail).to eq response(event, details)
+        expect(ct_assign_responder.event_and_detail).to eq response(event, details)
       end
     end
 
@@ -95,7 +95,8 @@ RSpec.describe CaseTransitionDecorator, type: :model do
     context 'reject_responder_assignment' do
       it 'returns the reason for rejection' do
         ct = create(:case_transition_reject_responder_assignment,
-                    user: laa_user,
+                    acting_team: laa,
+                    acting_user: laa_user,
                     message: 'Not LAA matter',
                     case: create(:assigned_case)).decorate
         event = 'Rejected by Business unit'
@@ -146,6 +147,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
 
     context 'reassign_user' do
       it 'returns name of event' do
+        
         ct = create(:case_transition_reassign_user).decorate
         action_user = User.find(ct.acting_user_id)
         target_user = User.find(ct.target_user_id)

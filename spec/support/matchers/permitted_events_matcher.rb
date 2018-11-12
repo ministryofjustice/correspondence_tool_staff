@@ -10,12 +10,13 @@ RSpec::Matchers.define :have_no_permitted_events do
 end
 
 
-RSpec::Matchers.define :have_permitted_events do |*args|
+RSpec::Matchers.define :have_permitted_events do |*events|
   match do |controller|
-    controller.instance_variable_get(:@permitted_events) == args
+    controller.instance_variable_get(:@permitted_events) == events
   end
+
   failure_message do |actual|
-    "expected permitted_events to be #{controller.instance_variable_get(:@permitted_events).inspect}, was #{actual.instance_variable_get(:@permitted_events).inspect}"
+    "expected permitted_events to be #{events}, was #{actual.instance_variable_get(:@permitted_events).inspect}"
   end
 end
 

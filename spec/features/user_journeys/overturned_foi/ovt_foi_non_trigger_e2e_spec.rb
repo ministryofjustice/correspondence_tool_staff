@@ -3,12 +3,11 @@ require 'rails_helper'
 feature 'ICO Overturned FOI case' do
   include CaseDateManipulation
   include Features::Interactions
-  given(:responder)            { create :responder }
-  given(:responding_team)      { responder.responding_teams.first }
-  given(:manager)              { create :disclosure_bmt_user }
+  given(:responder)            { original_appeal_case.responder }
+  given(:responding_team)      { original_appeal_case.responding_team }
+  given(:manager)              { find_or_create :disclosure_bmt_user }
   given!(:overturned_foi_type) { create :overturned_foi_correspondence_type }
-  given(:original_appeal_case) { create :closed_ico_foi_case, :overturned_by_ico,
-                                        responding_team: responding_team }
+  given(:original_appeal_case) { create :closed_ico_foi_case, :overturned_by_ico }
 
   scenario 'end-to-end journey', js: true do
     kase = create_and_assign_overturned_ico user: manager,

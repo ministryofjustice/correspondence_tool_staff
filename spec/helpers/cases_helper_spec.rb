@@ -280,7 +280,7 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
   describe '#case_details_links' do
     it 'adds a link to edit case details if permitted' do
       kase = create(:case_being_drafted)
-      user = create(:disclosure_bmt_user)
+      user = find_or_create(:disclosure_bmt_user)
       result = case_details_links(kase, user)
       expect(result).to eq link_to('Edit case details',
                                         "/cases/#{kase.id}/edit",
@@ -289,7 +289,7 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
 
     it 'adds a link to edit closure details if permitted' do
       kase = create(:closed_sar)
-      user = create(:disclosure_bmt_user)
+      user = find_or_create(:disclosure_bmt_user)
       result = case_details_links(kase, user)
       edit_case_link = link_to('Edit case details',
                                "/cases/#{kase.id}/edit",

@@ -3,7 +3,7 @@ require "rails_helper"
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
 feature 'editing case closure information' do
-  given(:manager) { create :disclosure_bmt_user }
+  given(:manager) { find_or_create :disclosure_bmt_user }
 
   before(:all) do
     CaseClosure::MetadataSeeder.seed!
@@ -47,8 +47,8 @@ feature 'editing case closure information' do
   end
 
   scenario 'responder views case details for FOI with old closure info', js: true do
-    responder = create :responder
-    kase = create :closed_case, responder: responder
+    kase = create :closed_case
+    responder = kase.responder
     kase.update_attribute(:info_held_status_id, nil)
 
     login_as responder

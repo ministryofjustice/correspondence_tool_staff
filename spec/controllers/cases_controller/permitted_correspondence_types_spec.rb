@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe CasesController, type: :controller do
-  let(:manager)      { create :disclosure_bmt_user }
+  let(:manager)      { find_or_create :disclosure_bmt_user }
   let(:controller)   { described_class.new }
   let!(:sar)         { find_or_create :sar_correspondence_type }
   let!(:ico)         { find_or_create :ico_correspondence_type }

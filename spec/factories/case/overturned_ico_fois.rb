@@ -2,6 +2,7 @@ FactoryBot.define do
 
   factory :overturned_ico_foi,
           aliases: [:ot_ico_foi_noff_unassigned],
+          parent: :foi_case,
           class: Case::OverturnedICO::FOI do
     transient do
       creation_time { 4.business_days.ago }
@@ -20,40 +21,27 @@ FactoryBot.define do
     reply_method        { original_case.sent_by_email? ? :send_by_email : :send_by_post  }
     email               { original_case.email }
     postal_address      { original_case.postal_address }
-
-    after(:create) do | kase, evaluator|
-      ma = kase.managing_assignment
-      ma.update! created_at: evaluator.creation_time
-    end
   end
 
   factory :awaiting_responder_ot_ico_foi,
           aliases: [:ot_ico_foi_noff_awresp],
           parent: :overturned_ico_foi do
-
     transient do
       identifier      { "awaiting responder overturned ico foi case" }
-      manager         { managing_team.managers.first }
-      managing_team   { find_or_create :team_dacu }
-      responding_team { create :responding_team }
+
+      _state_taken_on_by_press_or_private { 'awaiting_responder' }
+      _state_taken_on_by_disclosure       { 'awaiting_responder' }
     end
 
-    created_at      { creation_time }
-    received_date   { creation_time }
+    created_at    { creation_time }
+    received_date { creation_time }
 
-    after(:create) do |kase, evaluator|
-      create :assignment,
-             case: kase,
-             team: evaluator.responding_team,
-             state: 'pending',
-             role: 'responding',
-             created_at: evaluator.creation_time
-      create :case_transition_assign_responder,
-             case_id: kase.id,
-             acting_user_id: evaluator.manager.id,
-             acting_team_id: evaluator.managing_team.id,
-             target_team_id: evaluator.responding_team.id,
-             created_at: evaluator.creation_time
+    # Traits to bring in extra functionality
+    _transition_to_awaiting_responder
+    _taken_on_by_disclosure
+    _taken_on_by_press_or_private_in_current_state
+
+    after(:create) do |kase|
       kase.reload
     end
   end
@@ -61,67 +49,48 @@ FactoryBot.define do
   factory :accepted_ot_ico_foi,
           aliases: [:ot_ico_foi_noff_draft],
           parent: :awaiting_responder_ot_ico_foi do
-
     transient do
       identifier      { "responder accepted overturned ico foi case" }
-      responder       { create :responder }
-      responding_team { responder.responding_teams.first }
+
+      _state_taken_on_by_press_or_private { 'drafting' }
+      _state_taken_on_by_disclosure       { 'drafting' }
     end
 
-    after(:create) do |kase, evaluator|
-      kase.responder_assignment.update_attribute :user, evaluator.responder
-      kase.responder_assignment.accepted!
-      create :case_transition_accept_responder_assignment,
-             case: kase,
-             acting_user_id: kase.responder.id,
-             acting_team_id: kase.responding_team.id,
-             created_at: evaluator.creation_time
-      kase.reload
-    end
+    _transition_to_accepted
+    _taken_on_by_disclosure
+    _taken_on_by_press_or_private_in_current_state
   end
 
   factory :with_response_ot_ico_foi,
           parent: :accepted_ot_ico_foi do
     transient do
       identifier { "overturned ico foi case with response" }
-      responder  { find_or_create :responder, full_name: 'Ivor Response' }
-      responses  { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
+      responses  { [build(:correspondence_response,
+                          type: 'response',
+                          user_id: responder.id)] }
     end
 
     after(:create) do |kase, evaluator|
       kase.attachments.push(*evaluator.responses)
 
       create :case_transition_add_responses,
-             case_id: kase.id,
-             acting_team_id: evaluator.responding_team.id,
-             acting_user_id: evaluator.responder.id
+             case: kase,
+             acting_team: evaluator.responding_team,
+             acting_user: evaluator.responder,
+             filenames: [evaluator.responses.map(&:filename)]
       kase.reload
     end
   end
 
   factory :pending_dacu_clearance_ot_ico_foi,
-          parent: :with_response_ot_ico_foi do
+          parent: :accepted_ot_ico_foi do
     transient do
-      identifier     { 'pending dacu clearance overturned ico foi case'}
-      approving_team { find_or_create :team_dacu_disclosure }
-      approver       { create :disclosure_specialist }
+      identifier { 'pending dacu clearance overturned ico foi case'}
     end
 
-    workflow { 'trigger' }
+    flagged_accepted
 
-    after(:create) do |kase, evaluator|
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.approving_team,
-             state: 'accepted',
-             user_id: evaluator.approver.id
-
-      create :case_transition_pending_dacu_clearance,
-             case_id: kase.id,
-             responder: evaluator.responder,
-             acting_user_id: evaluator.responder.id
-      kase.reload
-    end
+    _transition_to_pending_dacu_clearance
   end
 
   factory :approved_trigger_ot_ico_foi,
@@ -138,8 +107,11 @@ FactoryBot.define do
 
       create :case_transition_approve,
              case: kase,
-             acting_user_id: evaluator.approver.id,
-             acting_team_id: evaluator.approving_team.id
+             acting_user: evaluator.approver,
+             acting_team: evaluator.approving_team
+
+      kase.assignments.approving.for_team(evaluator.approving_team)
+        .update(approved: true)
 
       kase.reload
     end
@@ -149,37 +121,11 @@ FactoryBot.define do
           parent: :pending_dacu_clearance_ot_ico_foi do
     transient do
       identifier      { 'pending press clearance overturned ico foi case'}
-      press_office    { find_or_create :team_press_office }
-      press_officer   { find_or_create :press_officer }
-      private_office  { find_or_create :team_private_office }
-      private_officer { find_or_create :private_officer }
     end
 
-    after(:create) do |kase, evaluator|
-
-      kase.approver_assignments.for_team(evaluator.approving_team)
-          .first.update!(approved: true)
-
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.press_office,
-             state: 'accepted',
-             user: evaluator.press_officer
-
-      create :approver_assignment,
-             case: kase,
-             team: evaluator.private_office,
-             state: 'accepted',
-             user: evaluator.private_officer
-
-      create :case_transition_approve_for_press_office,
-             case: kase,
-             acting_user_id: evaluator.approver.id,
-             acting_team_id: evaluator.approving_team.id
-
-      kase.reload
-      kase.update(workflow: 'full_approval')
-    end
+    taken_on_by_press
+    flagged_accepted
+    _transition_to_pending_press_clearance
   end
 
   factory :pending_private_clearance_ot_ico_foi,
@@ -188,19 +134,7 @@ FactoryBot.define do
       identifier { 'pending private clearance overturned ico foi case'}
     end
 
-    after(:create) do |kase, evaluator|
-
-      kase.approver_assignments.for_team(evaluator.press_office)
-        .first.update!(approved: true)
-
-      create :case_transition_approve_for_private_office,
-             case: kase,
-             acting_user_id: evaluator.press_officer.id,
-             acting_team_id: evaluator.press_office.id
-
-      kase.reload
-      kase.update(workflow: 'full_approval')
-    end
+    _transition_to_pending_private_clearance
   end
 
   factory :approved_full_approval_ot_ico_foi,
@@ -217,8 +151,11 @@ FactoryBot.define do
 
       create :case_transition_approve,
              case: kase,
-             acting_user_id: evaluator.private_officer.id,
-             acting_team_id: evaluator.private_office.id
+             acting_user: evaluator.private_officer,
+             acting_team: evaluator.private_office
+
+      kase.assignments.approving.for_team(evaluator.private_office)
+        .update(approved: true)
 
       kase.reload
     end
@@ -228,7 +165,7 @@ FactoryBot.define do
           parent: :with_response_ot_ico_foi do
     transient do
       identifier { "responded overturned ico foi case" }
-      responder { create :responder }
+      responder { find_or_create :foi_responder }
     end
 
     date_responded { Date.today }
@@ -236,8 +173,8 @@ FactoryBot.define do
     after(:create) do |kase, evaluator|
       create :case_transition_respond,
              case: kase,
-             responder: evaluator.responder,
-             responding_team: evaluator.responding_team
+             acting_user: evaluator.responder,
+             acting_team: evaluator.responding_team
       kase.reload
     end
   end
@@ -254,8 +191,8 @@ FactoryBot.define do
     after(:create) do |kase, evaluator|
       create :case_transition_respond,
              case: kase,
-             responder: evaluator.responder,
-             responding_team: evaluator.responding_team
+             acting_user: evaluator.responder,
+             acting_team: evaluator.responding_team
       kase.reload
     end
   end
@@ -272,8 +209,8 @@ FactoryBot.define do
     after(:create) do |kase, evaluator|
       create :case_transition_respond,
              case: kase,
-             responder: evaluator.responder,
-             responding_team: evaluator.responding_team
+             acting_user: evaluator.responder,
+             acting_team: evaluator.responding_team
       kase.reload
     end
   end

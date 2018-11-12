@@ -129,7 +129,7 @@ module ConfigurableStateMachine
       @manager            = create :manager, managing_teams: [@managing_team]
       @approver           = create :approver
       @manager_approver   = create :manager_approver
-      @responder          = create :responder
+      @responder          = find_or_create :foi_responder
       @responding_team    = create :responding_team
 
     end

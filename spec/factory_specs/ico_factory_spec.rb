@@ -5,13 +5,15 @@ describe 'ICO cases factory' do
   let(:frozen_time)             { Time.local(2018, 7, 9, 10, 35, 22) }
   let(:disclosure_bmt)          { find_or_create :team_disclosure_bmt }
   let(:manager)                 { disclosure_bmt.users.first }
-  let(:responding_team)         { create :responding_team }
-  let(:responder)               { responding_team.users.first }
+  let(:responding_team)         { find_or_create :foi_responding_team }
+  let(:responder)               { find_or_create :foi_responder }
   let(:disclosure_team)         { find_or_create :team_disclosure }
   let(:disclosure_specialist)   { disclosure_team.users.first }
 
 
   context 'ICO FOI cases' do
+    let(:responding_team) { find_or_create :foi_responding_team }
+
     describe :ico_foi_case do
       it 'creates an unassigned ICO FOI case' do
         Timecop.freeze(frozen_time) do
@@ -81,14 +83,12 @@ describe 'ICO cases factory' do
       end
     end
 
-
     describe :pending_dacu_clearance_ico_foi_case do
       it 'creates a pending_dacu_clearance_case' do
         kase = create :pending_dacu_clearance_ico_foi_case,
                       responding_team: responding_team,
                       responder: responder,
                       approver: disclosure_specialist
-
 
         expect(kase.current_state).to eq 'pending_dacu_clearance'
         expect(kase.assignments.size).to eq 3
@@ -103,9 +103,8 @@ describe 'ICO cases factory' do
         expect(transition.event).to eq 'progress_for_clearance'
         expect(transition.acting_team_id).to eq responding_team.id
         expect(transition.acting_user_id).to eq responder.id
-        expect(transition.target_team_id).to eq responding_team.id
-        expect(transition.target_user_id).to eq responder.id
-        expect(transition.to_workflow).to eq 'trigger'
+        expect(transition.target_team_id).to eq disclosure_team.id
+        # expect(transition.target_user_id).to eq responder.id
       end
     end
 
@@ -154,6 +153,9 @@ describe 'ICO cases factory' do
   end
 
   context 'ICO SAR cases' do
+    let(:responding_team) { find_or_create :sar_responding_team }
+    let(:responder)       { find_or_create :sar_responder }
+
     describe :ico_sar_case do
       it 'creates an unassigned ICO SAR case' do
         Timecop.freeze(frozen_time) do
@@ -245,7 +247,6 @@ describe 'ICO cases factory' do
         expect(transition.acting_team_id).to eq responding_team.id
         expect(transition.acting_user_id).to eq responder.id
         expect(transition.target_team_id).to eq disclosure_team.id
-        expect(transition.to_workflow).to eq 'trigger'
       end
     end
 
@@ -308,8 +309,8 @@ describe 'ICO cases factory' do
         expect(kase.transitions.size).to eq 7
         transition = kase.transitions.last
         expect(transition.event).to eq 'close'
-        expect(transition.acting_team_id).to eq disclosure_team.id
-        expect(transition.acting_user_id).to eq disclosure_specialist.id
+        expect(transition.acting_team_id).to eq disclosure_bmt.id
+        expect(transition.acting_user_id).to eq manager.id
         expect(transition.target_team_id).to be_nil
         expect(transition.target_user_id).to be_nil
         expect(transition.to_workflow).to be_nil

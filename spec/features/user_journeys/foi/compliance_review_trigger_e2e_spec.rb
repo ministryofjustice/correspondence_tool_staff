@@ -18,17 +18,17 @@ require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 feature 'FOI compliance review case that requires clearance' do
   include CaseDateManipulation
   include Features::Interactions
-  given(:responder)             { create :responder }
-  given(:responding_team)       { responder.responding_teams.first }
-  given(:team_dacu)             { find_or_create :team_dacu }
-  given(:manager)               { create :manager, managing_teams: [ team_dacu ] }
-  given(:disclosure_specialist) { create :disclosure_specialist }
-  given!(:press_officer)        { create :press_officer }
-  given(:press_office)          { press_officer.approving_team }
+  given(:responder)             { responding_team.responders.first }
+  given(:responding_team)       { find_or_create :foi_responding_team }
+  given(:team_dacu)             { create :team_dacu }
+  given(:manager)               { find_or_create :disclosure_bmt_user }
+  given(:disclosure_specialist) { find_or_create :disclosure_specialist }
+  given!(:press_officer)        { press_office.approvers.first }
+  given(:press_office)          { create :team_press_office }
   given(:foi)                   { create :foi_correspondence_type }
-  given!(:private_officer)      { create :default_private_officer }
-  given(:private_office)        { private_officer.approving_team }
-  given!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
+  given!(:private_officer)      { private_office.approvers.first }
+  given(:private_office)        { create :team_private_office }
+  given!(:team_dacu_disclosure) { create :team_dacu_disclosure }
 
   background(:all) do
     CaseClosure::MetadataSeeder.seed!

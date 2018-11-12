@@ -27,12 +27,12 @@ RSpec.describe Assignment, type: :model do
 
   subject { build(:assignment) }
 
-  it { should validate_presence_of(:state)    }
-  it { should validate_presence_of(:case)     }
-  it { should validate_presence_of(:team)     }
-  it { should belong_to(:case)                }
-  it { should belong_to(:team)                }
-  it { should belong_to(:user)                }
+  it { should validate_presence_of(:state) }
+  it { should validate_presence_of(:case)  }
+  it { should validate_presence_of(:team)  }
+  it { should belong_to(:case)             }
+  it { should belong_to(:team)             }
+  it { should belong_to(:user)             }
   it { should have_enum(:state)
                 .with_values(%w{pending accepted bypassed rejected}) }
   it { should have_enum(:role)
@@ -44,7 +44,8 @@ RSpec.describe Assignment, type: :model do
       responded_trigger_case
       approved_trigger_case
       expect(Assignment.approved)
-        .to match_array approved_trigger_case.approver_assignments
+        .to match_array approved_trigger_case.approver_assignments +
+                        responded_trigger_case.approver_assignments
     end
   end
 
@@ -55,7 +56,8 @@ RSpec.describe Assignment, type: :model do
       approved_trigger_case
       expect(Assignment.unapproved)
         .to match_array assigned_flagged_case.assignments +
-                        responded_trigger_case.assignments +
+                        [responded_trigger_case.managing_assignment,
+                         responded_trigger_case.responder_assignment] +
                         [approved_trigger_case.responder_assignment,
                          approved_trigger_case.managing_assignment]
     end

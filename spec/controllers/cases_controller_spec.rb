@@ -26,22 +26,30 @@ RSpec.describe CasesController, type: :controller do
 
   let(:all_cases)             { create_list(:case, 5)   }
   let(:first_case)            { all_cases.first         }
-  let(:manager)               { create :manager }
-  let(:responder)             { create :responder }
+  let(:manager)               { find_or_create :disclosure_specialist_bmt }
+  let(:responder)             { find_or_create :foi_responder }
   let(:another_responder)     { create :responder }
   let(:responding_team)       { responder.responding_teams.first }
   let(:co_responder)          { create :responder,
                                        responding_teams: [responding_team] }
-  let(:disclosure_specialist) { create :disclosure_specialist }
+  let(:disclosure_specialist) { find_or_create :disclosure_specialist }
   let(:team_dacu_disclosure)  { find_or_create :team_dacu_disclosure }
   let(:approver_responder)    { create :approver_responder,
-                                        approving_team: team_dacu_disclosure }
+                                       responding_teams: [responding_team],
+                                       approving_team: team_dacu_disclosure }
   let(:unassigned_case)       { create(:case) }
   let(:assigned_case)         { create :assigned_case,
                                         responding_team: responding_team }
-  let(:accepted_case)         { create :accepted_case, responder: responder }
-  let(:responded_case)        { create :responded_case, responder: responder, received_date: 5.days.ago }
-  let(:case_with_response)    { create :case_with_response, responder: responder }
+  let(:accepted_case)         { create :accepted_case,
+                                       responder: responder,
+                                       responding_team: responding_team }
+  let(:responded_case)        { create :responded_case,
+                                       responder: responder,
+                                       responding_team: responding_team,
+                                       received_date: 5.days.ago }
+  let(:case_with_response)    { create :case_with_response,
+                                       responder: responder,
+                                       responding_team: responding_team }
   let(:flagged_case)          { create :assigned_case, :flagged,
                                         responding_team: responding_team,
                                         approving_team: team_dacu_disclosure }
@@ -52,20 +60,23 @@ RSpec.describe CasesController, type: :controller do
 
   let(:assigned_trigger_case)               { create :assigned_case, :flagged_accepted,
                                                       approver: disclosure_specialist }
-  let(:pending_dacu_clearance_case)         { create :pending_dacu_clearance_case }
+  let(:pending_dacu_clearance_case)         { create :pending_dacu_clearance_case,
+                                                     responding_team: responding_team }
   let(:case_accepted_by_approver_responder) { create :accepted_case,
                                                      :flagged_accepted,
                                                      approver:  approver_responder,
-                                                     responder: approver_responder }
+                                                     responder: approver_responder,
+                                                     responding_team: responding_team }
   let(:case_only_accepted_for_approving) { create :accepted_case,
                                                   :flagged_accepted,
                                                   approver:  approver_responder,
-                                                  responder: responder }
+                                                  responder: another_responder,
+                                                  responding_team: another_responder.responding_teams.first }
 
 
   describe '#set_cases' do
     before(:each) do
-      user = create :responder
+      user = find_or_create :foi_responder
       sign_in user
       get :show, params: {id: assigned_case.id }
     end
@@ -104,7 +115,8 @@ RSpec.describe CasesController, type: :controller do
         kase = case_accepted_by_approver_responder
         sign_in approver_responder
         get :show, params: {id: kase.id}
-        expect(assigns(:assignments)).to eq [ kase.responder_assignment, kase.approver_assignments.first ]
+        expect(assigns(:assignments)).to eq [ kase.responder_assignment,
+                                              kase.approver_assignments.first ]
       end
     end
 
@@ -266,8 +278,8 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'SAR' do
-        let(:responder)   { create :responder }
-        let(:sar)         { create :accepted_sar, responder: responder }
+        let(:responder)   { sar.responder }
+        let(:sar)         { create :accepted_sar }
 
         before(:all) do
           CaseClosure::MetadataSeeder.seed!
@@ -522,7 +534,7 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'as a responder' do
-        let(:user) { create(:responder) }
+        let(:user) { find_or_create(:foi_responder) }
 
         it { should have_permitted_events_including :link_a_case }
 
@@ -671,7 +683,7 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'as another responder' do
-        let(:user) { create(:responder) }
+        let(:user) { another_responder }
 
         it 'filtered permitted_events to be empty' do
           expect(assigns(:filtered_permitted_events)).to be_empty
@@ -726,7 +738,7 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'as another responder' do
-        let(:user) { create(:responder) }
+        let(:user) { another_responder }
 
         it 'filtered permitted_events to be empty' do
           expect(assigns(:filtered_permitted_events)).to be_empty
@@ -772,7 +784,8 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { responder }
 
         it 'filtered permitted_events to be empty' do
-          expect(assigns(:filtered_permitted_events)).to be_empty
+          expect(assigns(:filtered_permitted_events))
+            .to match_array [:add_message_to_case]
         end
 
         it 'renders case details page' do
@@ -781,7 +794,7 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'as another responder' do
-        let(:user) { create(:responder) }
+        let(:user) { another_responder }
 
         it 'filtered permitted_events to be empty' do
           expect(assigns(:filtered_permitted_events)).to be_empty
@@ -975,7 +988,7 @@ RSpec.describe CasesController, type: :controller do
 
   describe 'GET respond' do
 
-    let(:responder)            { create(:responder)                              }
+    let(:responder)            { find_or_create(:foi_responder)                              }
     let(:another_responder)    { create(:responder)                              }
 
     context 'as an anonymous user' do

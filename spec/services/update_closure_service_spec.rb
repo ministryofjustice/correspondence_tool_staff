@@ -5,7 +5,6 @@ describe UpdateClosureService do
   describe '#call' do
     let(:date_received)         { Date.new(2018, 10, 1) }
     let(:new_date_responded)    { Date.new(2018, 10, 5) }
-    let(:frozen_date)           { Date.new(2018, 10, 10) }
     let(:team)                  { find_or_create :team_dacu }
     let(:user)                  { team.users.first }
     let(:kase)                  { create :closed_case, received_date: date_received }
@@ -26,24 +25,19 @@ describe UpdateClosureService do
       end
 
       it 'changes the attributes on the case' do
-        Timecop.freeze(frozen_date) do
-          @service.call
-          expect(kase.date_responded).to eq new_date_responded
-        end
+        @service.call
+        expect(kase.date_responded).to eq new_date_responded
       end
 
       it 'transitions the cases state' do
-        Timecop.freeze(frozen_date) do
-          expect(state_machine).to receive(:update_closure!).with(acting_user: user, acting_team: team)
-          @service.call
-        end
+        expect(state_machine).to receive(:update_closure!)
+                                   .with(acting_user: user, acting_team: team)
+        @service.call
       end
 
       it 'sets results to :ok' do
-        Timecop.freeze(frozen_date) do
-          @service.call
-          expect(@service.result).to eq :ok
-        end
+        @service.call
+        expect(@service.result).to eq :ok
       end
     end
   end

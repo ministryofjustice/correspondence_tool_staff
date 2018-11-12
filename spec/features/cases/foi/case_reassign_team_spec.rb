@@ -1,7 +1,7 @@
 require "rails_helper"
 
 feature 'Assigning an FOI case to a new team' do
-  given(:disclosure_bmt_user) { create :disclosure_bmt_user }
+  given(:disclosure_bmt_user) { find_or_create :disclosure_bmt_user }
   given(:responding_team)     { create :responding_team }
 
   background do

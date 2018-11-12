@@ -4,7 +4,7 @@ RSpec.describe MessagesController, type: :controller do
   let!(:team_dacu)         { find_or_create :team_dacu }
   let!(:manager)           { team_dacu.users.first }
   let!(:approver)          { create :approver }
-  let!(:responder)         { create :responder }
+  let!(:responder)         { find_or_create :foi_responder }
   let!(:another_responder) { create :responder }
   let!(:accepted_case)     { create :accepted_case, responder: responder }
   let!(:closed_case)       { create :closed_case,

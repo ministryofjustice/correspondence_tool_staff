@@ -3,40 +3,8 @@ require 'rails_helper'
 feature 'viewing details of case in the system' do
 
   # TODO: Add test that DACU shows up when the case is marked as responded
-  given(:responder) { create :responder }
-  given(:responding_team) { responder.responding_teams.first }
-
-  background do
-    login_as responder
-  end
-
-  # scenario 'when the case is a general enquiry' do
-  #   cases_show_page.load id: gq.id
-
-  #   expect(cases_show_page).to have_case_heading
-  #   expect(cases_show_page.case_heading.case_number).to have_content(gq.number)
-  #   expect(cases_show_page.case_heading).to have_content(gq.subject)
-
-  #   expect(cases_show_page).to have_no_escalation_notice
-
-  #   expect(cases_show_page).to have_sidebar
-  #   expect(cases_show_page.sidebar).to have_external_deadline
-  #   expect(cases_show_page.sidebar.external_deadline).
-  #     to have_content(external_gq_deadline)
-  #   expect(cases_show_page.sidebar.status).to have_content('Response')
-  #   expect(cases_show_page.sidebar.who_its_with)
-  #     .to have_content(gq.responding_team.name)
-
-  #   expect(cases_show_page.sidebar.name).to have_content('Gina GQ')
-  #   expect(cases_show_page.sidebar.requester_type).
-  #     to have_content(gq.requester_type.humanize)
-  #   expect(cases_show_page.sidebar.email).
-  #     to have_content('gina.gq@testing.digital.justice.gov.uk')
-  #   expect(cases_show_page.sidebar.postal_address).to have_content(gq.postal_address)
-
-  #   expect(cases_show_page.message).to have_content('viewing gq details test message')
-  #   expect(cases_show_page.received_date).to have_content(foi_received_date)
-  # end
+  given(:responder)       { responding_team.responders.first }
+  given(:responding_team) { find_or_create :foi_responding_team }
 
   given(:foi) do
     create :accepted_case,
@@ -44,8 +12,9 @@ feature 'viewing details of case in the system' do
            name: 'Freddie FOI',
            email: 'freddie.foi@testing.digital.justice.gov.uk',
            subject: 'this is a foi',
-           message: 'viewing foi details test message',
-           responding_team: responding_team
+           responding_team: responding_team,
+           responder: responder,
+           message: 'viewing foi details test message'
   end
 
   given(:old_foi) do
@@ -66,6 +35,10 @@ feature 'viewing details of case in the system' do
     foi.deadline_calculator
       .external_deadline
       .strftime(Settings.default_date_format)
+  end
+
+  background do
+    login_as responder
   end
 
 

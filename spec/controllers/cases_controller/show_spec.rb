@@ -3,20 +3,19 @@ require "rails_helper"
 describe CasesController, type: :controller do
   describe '#show' do
     let(:manager)            { create :manager }
-    let(:responder)          { create :responder }
+    let(:responding_team)    { find_or_create :foi_responding_team }
+    let(:responder)          { find_or_create :foi_responder }
     let(:another_responder)  { create :responder }
-    let(:responding_team)    { responder.responding_teams.first }
-    let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
-    let(:disclosure_specialist) { create :disclosure_specialist }
+    let(:team_dacu_disclosure) { create :team_dacu_disclosure }
+    let(:disclosure_specialist) { find_or_create :disclosure_specialist }
     let(:assigned_case)      { create :assigned_case,
                                       responding_team: responding_team }
-    let(:accepted_case)      { create :accepted_case, responder: responder }
+    let(:accepted_case)      { create :accepted_case }
     let(:unassigned_case)    { create(:case) }
-    let(:case_with_response) { create :case_with_response, responder: responder }
+    let(:case_with_response) { create :case_with_response }
     let(:flagged_accepted_case) { create :accepted_case, :flagged_accepted,
                                          responding_team: responding_team,
-                                         approver: disclosure_specialist,
-                                         responder: responder}
+                                         approver: disclosure_specialist }
 
     it 'authorises' do
       sign_in manager
@@ -79,7 +78,7 @@ describe CasesController, type: :controller do
       end
 
       context 'as a responder' do
-        let(:user) { create(:responder) }
+        let(:user) { find_or_create(:foi_responder) }
 
         it { should have_permitted_events :link_a_case,
                                           :remove_linked_case}
@@ -153,9 +152,9 @@ describe CasesController, type: :controller do
 
       context 'as a responder of the assigned responding team' do
         let(:user)             { responder }
-        let(:press_office)     { find_or_create :team_press_office }
+        let(:press_office)     { create :team_press_office }
         let(:press_officer)    { find_or_create :press_officer }
-        let!(:private_officer) { find_or_create :default_private_officer }
+        let!(:private_officer) { create :default_private_officer }
 
         before do
           team_dacu_disclosure
@@ -345,10 +344,13 @@ describe CasesController, type: :controller do
       context 'as the previously assigned responder' do
         let(:user) { responder }
 
-        it { should have_permitted_events :link_a_case, :remove_linked_case }
+        it { should have_permitted_events :add_message_to_case,
+                                          :link_a_case,
+                                          :remove_linked_case }
 
         it 'has no filtered permitted events' do
-          expect(assigns(:filtered_permitted_events)).to be_empty
+          expect(assigns(:filtered_permitted_events))
+            .to include :add_message_to_case
         end
 
         it 'renders case details page' do

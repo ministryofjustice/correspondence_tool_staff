@@ -54,7 +54,12 @@ feature 'filtering by assigned business unit' do
     end
 
     it 'returns cases assigned to the specified business units', js: true do
-      expected_cases = [:std_draft_foi, :trig_responded_foi, :trig_closed_foi]
+      expected_cases = [:std_closed_foi,
+                        :std_closed_irc,
+                        :std_closed_irt,
+                        :std_draft_foi,
+                        :trig_responded_foi,
+                        :trig_closed_foi]
       filter_and_check_results(cases_search_page, expected_cases)
     end
   end
@@ -75,21 +80,20 @@ feature 'filtering by assigned business unit' do
 
   def filter_and_check_results(page, expected_cases)
     page.filter_tab_links.assigned_to_tab.click
-    page.assigned_to_filter_panel.business_unit_search_term.set('main')
-    page.assigned_to_filter_panel.main_responding_team_checkbox.click
+    page.assigned_to_filter_panel.business_unit_search_term.set('foi')
+    page.assigned_to_filter_panel.foi_responding_team_checkbox.click
     page.assigned_to_filter_panel.apply_filter_button.click
 
     expect(page.case_numbers).to match_array expected_case_numbers(*expected_cases)
 
     page.open_filter(:assigned_to)
-    main_team_name = 'Main responding_team'
+    main_team_name = 'FOI Responding Team'
     assigned_to_filter_panel = page.assigned_to_filter_panel
     expect(assigned_to_filter_panel.checkbox_for(main_team_name))
         .to be_checked
     page.filter_crumb_for(main_team_name).click
 
     page.open_filter(:assigned_to)
-    main_team_name = 'Main responding_team'
     assigned_to_filter_panel = page.assigned_to_filter_panel
     expect(assigned_to_filter_panel.checkbox_for(main_team_name))
         .not_to be_checked

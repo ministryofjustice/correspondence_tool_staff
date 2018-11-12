@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature 'removing a response from response details' do
-  given(:responder) { create(:responder) }
+  given(:responder) { find_or_create(:foi_responder) }
   given(:manager)   { create(:manager) }
   given(:responder_teammate) do
     create :responder,
@@ -9,7 +9,7 @@ feature 'removing a response from response details' do
   end
 
   given(:case_with_response) do
-    create :case_with_response, responder: responder
+    create :case_with_response
   end
   given!(:attached_response) do
     case_with_response.attachments.response.first
@@ -30,7 +30,7 @@ feature 'removing a response from response details' do
     cases_show_page.case_attachments.first.collection
   end
 
-  given(:approved_case ) { create(:approved_case, responder: responder) }
+  given(:approved_case ) { create(:approved_case) }
 
   context 'as the assigned responder' do
     background do

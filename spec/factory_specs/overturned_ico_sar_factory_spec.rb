@@ -5,7 +5,7 @@ describe 'Overturned ICO SAR cases factory' do
   let(:frozen_time)             { Time.local(2018, 7, 9, 10, 35, 22) }
   let(:disclosure_bmt)          { find_or_create :team_disclosure_bmt }
   let(:manager)                 { disclosure_bmt.users.first }
-  let(:responding_team)         { create :responding_team }
+  let(:responding_team)         { find_or_create :sar_responding_team }
   let(:responder)               { responding_team.users.first }
   let(:disclosure_team)         { find_or_create :team_disclosure }
   let(:disclosure_specialist)   { disclosure_team.users.first }
@@ -183,11 +183,7 @@ describe 'Overturned ICO SAR cases factory' do
           Timecop.freeze(frozen_time) do
             kase = create :awaiting_responder_ot_ico_sar,
                           :flagged_accepted,
-                          :dacu_disclosure,
-                          managing_team: disclosure_bmt,
-                          responding_team: responding_team,
-                          manager: manager,
-                          approver: disclosure_specialist
+                          :dacu_disclosure
             expect(kase.workflow).to eq 'trigger'
             expect(kase.current_state).to eq 'awaiting_responder'
 
@@ -197,7 +193,7 @@ describe 'Overturned ICO SAR cases factory' do
             expect(responding_assignment.user).to be_nil
             expect(responding_assignment.state).to eq 'pending'
 
-            expect(kase.transitions.size).to eq 2
+            expect(kase.transitions.size).to eq 3
             transition = kase.transitions.first
             expect(transition.event).to eq 'assign_responder'
             expect(transition.to_state).to eq 'awaiting_responder'
@@ -206,11 +202,17 @@ describe 'Overturned ICO SAR cases factory' do
             expect(transition.target_user_id).to be_nil
             expect(transition.to_workflow).to be_nil
 
-            transition = kase.transitions.last
+            transition = kase.transitions.second
             expect(transition.event).to eq 'flag_for_clearance'
             expect(transition.to_state).to eq 'awaiting_responder'
             expect(transition.target_team_id).to eq disclosure_team.id
             expect(transition.target_user_id).to be_nil
+
+            transition = kase.transitions.last
+            expect(transition.event).to eq 'accept_approver_assignment'
+            expect(transition.to_state).to eq 'awaiting_responder'
+            expect(transition.acting_team_id).to eq disclosure_team.id
+            expect(transition.acting_user_id).to eq disclosure_specialist.id
           end
         end
       end
@@ -224,7 +226,6 @@ describe 'Overturned ICO SAR cases factory' do
           transition = kase.transitions.detect{ |t| t.event == 'progress_for_clearance' }
           expect(transition.event).to eq 'progress_for_clearance'
           expect(transition.to_state).to eq 'pending_dacu_clearance'
-          expect(transition.to_workflow).to eq 'trigger'
           expect(transition.acting_team).to eq kase.responding_team
         end
       end
@@ -234,11 +235,7 @@ describe 'Overturned ICO SAR cases factory' do
         it 'creates a an awaiting  ot ico sar' do
           kase = create :awaiting_dispatch_ot_ico_sar,
                         :flagged_accepted,
-                        :dacu_disclosure,
-                        managing_team: disclosure_bmt,
-                        responding_team: responding_team,
-                        manager: manager,
-                        approver: disclosure_specialist
+                        :dacu_disclosure
           expect(kase.workflow).to eq 'trigger'
           expect(kase.current_state).to eq 'awaiting_dispatch'
 

@@ -1,10 +1,9 @@
 require "rails_helper"
 
 feature 'searching for SAR cases' do
-  given(:approver)  { create :approver }
-  given(:manager)   { create :manager }
-  given(:responder) { create :responder }
-  given!(:kase)     { create :accepted_sar, responder: responder }
+  given(:manager)   { find_or_create :disclosure_bmt_user }
+  given(:responder) { kase.responder }
+  given!(:kase)     { create :accepted_sar }
 
   context 'a manager' do
     scenario 'searching for a SAR case' do

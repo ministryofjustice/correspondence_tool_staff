@@ -1,7 +1,7 @@
 require "rails_helper"
 
 feature 'editing case closure information' do
-  given(:manager) { create :disclosure_bmt_user }
+  given(:manager) { find_or_create :disclosure_bmt_user }
 
   scenario 'bmt changes ico decision to overturned', js: true do
     Timecop.freeze(11.days.ago)

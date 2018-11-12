@@ -1,16 +1,16 @@
 require 'rails_helper'
 
 describe CaseUnacceptApproverAssignmentService do
-  let(:assigned_case)           { create :assigned_case, :flagged_accepted, approver: approver }
-  let(:approver)                { dacu_disclosure.approvers.first }
-  let(:team_dacu)               { find_or_create :team_dacu }
-  let(:dacu_disclosure)         { find_or_create :team_dacu_disclosure }
-  let(:assignment)              { assigned_case.approver_assignments.first }
-  let(:unaccepted_assignment)   { create :approver_assignment }
-  let!(:press_officer)          { find_or_create :default_press_officer }
-  let!(:press_office)           { press_officer.approving_team }
-  let!(:private_officer)        { find_or_create :default_private_officer }
-  let!(:private_office)         { private_officer.approving_team }
+  let(:assigned_case)         { create :assigned_case, :flagged_accepted, approver: approver }
+  let(:approver)              { dacu_disclosure.approvers.first }
+  let(:team_dacu)             { find_or_create :team_dacu }
+  let(:dacu_disclosure)       { find_or_create :team_dacu_disclosure }
+  let(:assignment)            { assigned_case.approver_assignments.first }
+  let(:unaccepted_assignment) { create :approver_assignment }
+  let!(:press_office)         { find_or_create :team_press_office }
+  let!(:press_officer)        { press_office.approvers.first }
+  let!(:private_office)       { find_or_create :team_private_office }
+  let!(:private_officer)      { private_office.approvers.first }
 
   describe 'call' do
     before do
@@ -58,8 +58,7 @@ describe CaseUnacceptApproverAssignmentService do
     context 'press office assignment' do
       let(:assigned_to_press_office_case) { create :assigned_case,
                                                    :flagged_accepted,
-                                                   :press_office,
-                                                   approver: press_officer }
+                                                   :taken_on_by_press }
       let(:press_office_assignment) do
         assigned_to_press_office_case
           .approver_assignments
@@ -142,29 +141,22 @@ describe CaseUnacceptApproverAssignmentService do
 
       context 'case is already flagged by DACU Disclosure and Private Office' do
         before do
-          create :flag_case_for_clearance_transition,
-                 case: assigned_to_press_office_case,
-                 acting_user: private_officer,
-                 acting_team: private_office,
-                 target_team: private_office
-          create :flag_case_for_clearance_transition,
-                 case: assigned_to_press_office_case,
-                 acting_user: press_officer,
-                 target_team: dacu_disclosure,
-                 acting_team: team_dacu
-          create :flag_case_for_clearance_transition,
-                 case: assigned_to_press_office_case,
-                 acting_user: press_officer,
-                 target_team: press_office,
-                 acting_team: press_office
+          # Alter the existing transition that was created in case setup so that
+          # it wasn't taken-on by press.
+          private_office_transition = assigned_to_press_office_case
+                                        .transitions
+                                        .where(event: :take_on_for_approval,
+                                               target_team_id: private_office.id)
+          private_office_transition.update acting_team_id: private_office.id,
+                                           acting_user_id: private_officer.id
         end
 
-        it 'deletes only the press office approver assignments' do
+        it 'deletes only assignments made by press office' do
           service.call
           approver_assignments =
             assigned_to_press_office_case.approver_assignments
-          expect(approver_assignments.first.team).to eq dacu_disclosure
-          expect(approver_assignments.count).to eq 2
+          expect(approver_assignments.map(&:team))
+            .to match_array [dacu_disclosure, private_office]
         end
 
         it 'triggers an unflag event on the case for press office' do
@@ -203,10 +195,6 @@ describe CaseUnacceptApproverAssignmentService do
     end
 
     context 'private office assignment' do
-      let(:assigned_to_private_office_case) { create :assigned_case,
-                                                   :flagged_accepted,
-                                                   :private_office,
-                                                   approver: private_officer }
       let(:private_office_assignment) do
         assigned_to_private_office_case
           .approver_assignments
@@ -223,18 +211,8 @@ describe CaseUnacceptApproverAssignmentService do
       let(:service) { CaseUnacceptApproverAssignmentService.new(assignment: private_office_assignment) }
 
       context 'case is not already flagged for clearance' do
-        before do
-          create :flag_case_for_clearance_transition,
-                 case: assigned_to_private_office_case,
-                 acting_user: private_officer,
-                 target_team: dacu_disclosure,
-                 acting_team: private_office
-          create :flag_case_for_clearance_transition,
-                 case: assigned_to_private_office_case,
-                 acting_user: private_officer,
-                 acting_team: private_office,
-                 target_team: private_office
-        end
+        let(:assigned_to_private_office_case) { create :assigned_case,
+                                                       :taken_on_by_private }
 
         it 'deletes approver assignments' do
           service.call
@@ -245,17 +223,21 @@ describe CaseUnacceptApproverAssignmentService do
           state_machine = private_office_assignment.case.state_machine
           allow(state_machine).to receive(:unflag_for_clearance!).with(any_args)
           service.call
-          expect(state_machine)
-            .to have_received(:unflag_for_clearance!)
-                    .with(acting_user: private_officer, acting_team: private_office, target_team: private_office)
+          expect(state_machine).to have_received(:unflag_for_clearance!)
+                                     .with(acting_user: private_officer,
+                                           acting_team: private_office,
+                                           target_team: private_office)
         end
 
         it 'triggers an unflag event on the case for dacu disclosure' do
           state_machine = private_office_assignment.case.state_machine
-          expect(state_machine).to receive(:trigger_event).with(event: :unflag_for_clearance, params: {acting_user: private_officer, acting_team: private_office, target_team: dacu_disclosure })
-          expect(state_machine).to receive(:trigger_event).with(event: :unflag_for_clearance, params: {acting_user: private_officer, acting_team: private_office, target_team: private_office })
-
+          allow(state_machine).to receive(:trigger_event).with(any_args)
           service.call
+          expect(state_machine).to have_received(:trigger_event)
+                                     .with(event: :unflag_for_clearance,
+                                           params: {acting_user: private_officer,
+                                                    acting_team: private_office,
+                                                    target_team: dacu_disclosure })
         end
 
         it 'sets the result to ok and returns true' do
@@ -265,19 +247,9 @@ describe CaseUnacceptApproverAssignmentService do
       end
 
       context 'case is already flagged for clearance by DACU Disclosure' do
-        before do
-          create :flag_case_for_clearance_transition,
-                 case: assigned_to_private_office_case,
-                 acting_user_id: private_officer.id,
-                 acting_team_id: team_dacu.id,
-                 target_team_id: dacu_disclosure.id
-
-          create :flag_case_for_clearance_transition,
-                 case: assigned_to_private_office_case,
-                 acting_user_id: private_officer.id,
-                 acting_team_id: private_office.id,
-                 target_team_id: private_office.id
-        end
+        let(:assigned_to_private_office_case) { create :assigned_case,
+                                                       :flagged_accepted,
+                                                       :taken_on_by_private }
 
         it 'deletes only the private office approver assignments' do
           service.call
@@ -289,11 +261,13 @@ describe CaseUnacceptApproverAssignmentService do
 
         it 'triggers an unflag event on the case for private office' do
           state_machine = private_office_assignment.case.state_machine
-          expect(state_machine).to receive(:trigger_event).with(event: :unflag_for_clearance,
-                                                                params: {acting_user: private_officer,
-                                                                         acting_team: private_office,
-                                                                         target_team: private_office })
+          allow(state_machine).to receive(:trigger_event).with(any_args)
           service.call
+          expect(state_machine).to have_received(:trigger_event)
+                                     .with(event: :unflag_for_clearance,
+                                           params: {acting_user: private_officer,
+                                                    acting_team: private_office,
+                                                    target_team: private_office })
         end
 
         it 'does not trigger unflag event on the case for dacu disclosure' do

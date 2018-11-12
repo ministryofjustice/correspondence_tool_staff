@@ -7,7 +7,7 @@ describe ConfigurableStateMachine::Machine do
 
     context 'manager' do
 
-      let(:manager)   { create :manager}
+      let(:manager)   { find_or_create :disclosure_bmt_user}
 
       context 'unassigned state' do
         it 'should show permitted events' do
@@ -268,7 +268,7 @@ describe ConfigurableStateMachine::Machine do
 
     context 'approver' do
       context 'unassigned approver' do
-        let(:approver)   { create :disclosure_specialist}
+        let(:approver)   { find_or_create :disclosure_specialist}
 
         context 'unassigned state' do
           it 'should show permitted events' do

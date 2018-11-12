@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe CasesController, type: :controller do
   describe '#update' do
-    let(:manager) { create :disclosure_bmt_user }
+    let(:manager) { find_or_create :disclosure_bmt_user }
     let(:now) { Time.local(2018, 5, 30, 10, 23, 33) }
 
     before do

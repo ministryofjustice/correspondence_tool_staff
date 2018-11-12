@@ -2,17 +2,15 @@ require 'rails_helper'
 
 describe CSVExporter do
 
-  let(:responding_team)   { create :responding_team, name: 'Transport for London' }
-  let(:responder)         { create :responder, full_name: 'Joe Smith', responding_teams: [ responding_team] }
+  # let(:responding_team)   { create :responding_team, name: 'Transport for London' }
+  # let(:responder)         { create :responder, full_name: 'Joe Smith', responding_teams: [ responding_team] }
   let(:foi_case)          { create :closed_case, :fully_refused_exempt_s40,
                                    name: 'FOI Case name',
                                    email: 'dave@moj.com',
                                    message: 'foi message',
-                                   postal_address: nil,
-                                   responder: responder }
+                                   postal_address: nil }
   let(:sar_case)          { create :closed_sar,
                                    name: 'SAR case name',
-                                   responder: responder,
                                    postal_address: "2 High Street\nAnytown\nAY2 4FF",
                                    subject: 'Full details required',
                                    email: 'theresa@moj.com',
@@ -27,8 +25,8 @@ describe CSVExporter do
                              '180830001',
                              'FOI',
                              'closed',
-                             'Transport for London',
-                             'Joe Smith',
+                             'FOI Responding Team',
+                             'foi responding user',
                              '2018-08-30',
                              '2018-09-13',
                              '2018-09-27',
@@ -61,8 +59,8 @@ describe CSVExporter do
                               '180830001',
                               'SAR',
                               'closed',
-                              'Transport for London',
-                              'Joe Smith',
+                              'SAR Responding Team',
+                              'sar responding user',
                               '2018-08-30',
                               '2018-09-09',
                               '2018-09-29',

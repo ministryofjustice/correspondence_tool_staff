@@ -12,13 +12,14 @@ require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 feature 'ICO FOI case requiring clearance' do
   include CaseDateManipulation
   include Features::Interactions
-  given(:responder)                { create :responder }
-  given(:responding_team)          { responder.responding_teams.first }
-  given(:disclosure_specialist)    { create :disclosure_specialist }
-  given(:manager)                  { create :disclosure_bmt_user }
-  given!(:team_dacu_disclosure)    { find_or_create :team_dacu_disclosure }
+  given(:responder)                { responding_team.responders.first }
+  given(:responding_team)          { find_or_create :foi_responding_team }
+  given(:disclosure_specialist)    { find_or_create :disclosure_specialist }
+  given(:manager)                  { find_or_create :disclosure_bmt_user }
+  given!(:team_dacu_disclosure)    { create :team_dacu_disclosure }
   given!(:ico_correspondence_type) { create :ico_correspondence_type }
   given(:original_foi_case)        { create :closed_case,
+                                            responder: responder,
                                             responding_team: responding_team }
 
   before(:all) do

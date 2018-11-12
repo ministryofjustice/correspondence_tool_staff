@@ -6,12 +6,14 @@ module Workflows
 
     before(:all) do
       @team_disclosure                = find_or_create :team_disclosure
-
-      @assigned_responder             = create :responder
+      @foi_responding_team            = find_or_create :foi_responding_team
+      @assigned_responder             = find_or_create :foi_responder
       @another_responder              = create :responder
+
       @disclosure_bmt_user            = find_or_create :disclosure_bmt_user
       @disclosure_specialist          = find_or_create :disclosure_specialist
-      @disclosure_specialist_coworker = find_or_create :disclosure_specialist
+      @disclosure_specialist_coworker = create :approver,
+                                               approving_team: @team_disclosure
       @press_officer                  = find_or_create :press_officer
 
       # Use by the permit_only_these_combinations matcher. Add any new case
@@ -22,64 +24,23 @@ module Workflows
       #
       # When adding a case type here put them in alphabetical order.
       @all_cases = {
-        case_drafting: create(
-          :case_being_drafted,
-          responder: @assigned_responder
-        ),
-        case_drafting_flagged: create(
-          :case_being_drafted,
-          :flagged,
-          approving_team: @team_disclosure,
-          responder: @assigned_responder
-        ),
-        case_drafting_flagged_press: create(
-          :case_being_drafted,
-          :flagged,
-          :press_office,
-          approver: @press_officer,
-          responder: @assigned_responder
-        ),
-        case_drafting_trigger: create(
-          :case_being_drafted,
-          :flagged_accepted,
-          approver: @disclosure_specialist,
-          approving_team: @team_disclosure,
-          responder: @assigned_responder
-        ),
-        case_drafting_trigger_press: create(
-          :case_being_drafted,
-          :flagged_accepted,
-          :press_office,
-          approver: @press_officer,
-          disclosure_specialist: @disclosure_specialist,
-          responder: @assigned_responder
-        ),
-        case_unassigned: create(
-          :case
-        ),
-        case_unassigned_flagged: create(
-          :case,
-          :flagged,
-          :dacu_disclosure
-        ),
-        case_unassigned_flagged_press: create(
-          :case,
-          :flagged,
-          :press_office,
-          approver: @press_officer,
-        ),
-        case_unassigned_trigger: create(
-          :case,
-          :flagged_accepted,
-          :dacu_disclosure
-        ),
-        case_unassigned_trigger_press: create(
-          :case,
-          :flagged_accepted,
-          :press_office,
-          approver: @press_officer,
-          disclosure_specialist: @disclosure_specialist,
-        ),
+        case_drafting:                 create(:case_being_drafted),
+        case_drafting_flagged:         create(:case_being_drafted, :flagged),
+        case_drafting_flagged_press:   create(:case_being_drafted,
+                                              :flagged,
+                                              :press_office),
+        case_drafting_trigger:         create(:case_being_drafted,
+                                              :flagged_accepted),
+        case_drafting_trigger_press:   create(:case_being_drafted,
+                                              :flagged_accepted,
+                                              :press_office),
+        case_unassigned:               create(:case),
+        case_unassigned_flagged:       create(:case, :flagged),
+        case_unassigned_flagged_press: create(:case, :full_approval, :flagged),
+        case_unassigned_trigger:       create(:case, :flagged_accepted),
+        case_unassigned_trigger_press: create(:case,
+                                              :flagged_accepted,
+                                              :full_approval),
       }
     end
 
@@ -145,7 +106,7 @@ module Workflows
                  [:disclosure_specialist_coworker, :case_drafting_trigger],
                  [:disclosure_specialist_coworker, :case_unassigned_flagged],
                  [:disclosure_specialist_coworker, :case_unassigned_trigger],
-               ).debug
+               )
       end
     end
 
@@ -177,7 +138,9 @@ module Workflows
           [:disclosure_specialist_coworker, :case_unassigned_trigger],
           [:disclosure_specialist_coworker, :case_unassigned_trigger_press],
           [:press_officer, :case_drafting_trigger_press],
-          [:press_officer, :case_unassigned_trigger_press]
+          [:press_officer, :case_drafting_flagged_press],
+          [:press_officer, :case_unassigned_trigger_press],
+          [:press_officer, :case_unassigned_flagged_press],
         )
       end
     end

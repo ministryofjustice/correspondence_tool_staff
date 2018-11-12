@@ -1,23 +1,25 @@
 require 'rails_helper'
 
 describe TeamPolicy do
-  let(:responding_team) { create :responding_team }
-  let(:manager)         { create :manager }
-  let(:responder)       { create :responder }
-  let(:approver)        { create :approver }
+  let(:responding_team) { find_or_create :foi_responding_team }
+  let(:manager)         { find_or_create :disclosure_bmt_user }
+  let(:responder)       { responding_team.responders.first }
+  let(:other_responder) { create :responder }
+  let(:approver)        { find_or_create :disclosure_specialist }
 
   subject { described_class }
 
   permissions :can_add_new_responder? do
-    it { should     permit(manager,   responding_team) }
-    it { should_not permit(responder, responding_team) }
-    it { should_not permit(approver,  responding_team) }
+    it { should     permit(manager,         responding_team) }
+    it { should     permit(responder,       responding_team) }
+    it { should_not permit(other_responder, responding_team) }
+    it { should_not permit(approver,        responding_team) }
   end
 
   permissions :edit? do
-    it { should     permit(manager,     Team.first)  }
-    it { should_not permit(responder,   Team.first) }
-    it { should_not permit(approver,    Team.first) }
+    it { should     permit(manager,         Team.first)  }
+    it { should_not permit(responder,       Team.first) }
+    it { should_not permit(approver,        Team.first) }
   end
 
   permissions :show? do

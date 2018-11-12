@@ -19,8 +19,8 @@ require 'rails_helper'
 describe TeamCorrespondenceTypeRole do
 
   let(:bu)  { create :business_unit }
-  let(:foi) { find_or_create :foi_correspondence_type }
-  let(:sar) { find_or_create :sar_correspondence_type }
+  let(:foi) { create :foi_correspondence_type }
+  let(:sar) { create :sar_correspondence_type }
 
   describe 'creation' do
     let(:managing_team)   { create :managing_team,

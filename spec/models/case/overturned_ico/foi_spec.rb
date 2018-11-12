@@ -4,6 +4,7 @@ describe Case::OverturnedICO::FOI do
 
   let(:new_case)                { described_class.new }
 
+  # TODO: Clean up factories, I think we're creating at on of extra cases we don't need here
   let(:original_ico_appeal)     { create :ico_foi_case, original_case: original_case }
   let(:original_case)           { create :foi_case }
   let(:foi)                     { find_or_create :foi_correspondence_type }

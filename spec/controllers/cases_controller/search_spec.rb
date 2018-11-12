@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe CasesController, type: :controller do
 
-  let(:responder)             { create :responder }
+  let(:responder)             { find_or_create :foi_responder }
   let(:responding_team)       { responder.responding_teams.first }
   let(:unassigned_case)       { create(:case, :indexed) }
   let(:assigned_case)         { create :assigned_case, :indexed,

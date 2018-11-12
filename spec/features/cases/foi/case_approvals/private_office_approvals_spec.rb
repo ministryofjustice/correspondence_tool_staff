@@ -42,7 +42,8 @@ feature 'cases requiring clearance by press office' do
 
     _case_not_for_private_office_open_cases = create :case_being_drafted,
                                                      :flagged,
-                                                     :press_office
+                                                     :press_office,
+                                                     :unflagged_by_private_office
     open_cases_page.load
     expect(open_cases_page.case_list.first.number)
       .to have_text case_available_for_taking_on.number

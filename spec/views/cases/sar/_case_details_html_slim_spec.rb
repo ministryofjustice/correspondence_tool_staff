@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'cases/sar/case_details.html.slim', type: :view do
   let(:unassigned_case)         { (create :sar_case).decorate }
   let(:accepted_case)           { (create :accepted_sar).decorate }
-  let(:bmt_manager)             { create :disclosure_bmt_user }
+  let(:bmt_manager)             { find_or_create :disclosure_bmt_user }
 
 
   def login_as(user)

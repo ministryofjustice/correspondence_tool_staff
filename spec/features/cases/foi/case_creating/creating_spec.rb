@@ -2,9 +2,9 @@ require 'rails_helper'
 
 feature 'FOI Case creation by a manager' do
 
-  given(:responder)       { create(:responder) }
+  given(:responder)       { find_or_create(:foi_responder) }
   given(:responding_team) { create :responding_team, responders: [responder] }
-  given(:manager)         { create :disclosure_bmt_user }
+  given(:manager)         { find_or_create :disclosure_bmt_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
 
   background do

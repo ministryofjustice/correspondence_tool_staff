@@ -23,7 +23,7 @@ describe GlobalNavManager::Tab do
     end
   end
 
-  let(:responder)             { create :responder }
+  let(:responder)             { find_or_create :foi_responder }
   let(:request)               { instance_double ActionDispatch::Request,
                                                 path: '/cases/open',
                                                 fullpath: '/cases/open',

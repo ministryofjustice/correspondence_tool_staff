@@ -2,7 +2,7 @@ require "rails_helper"
 
 feature 'deleting SAR cases' do
 
-  given(:manager) { create :disclosure_bmt_user }
+  given(:manager) { find_or_create :disclosure_bmt_user }
 
   scenario 'deleting an open SAR case' do
     sar_case = create :sar_being_drafted

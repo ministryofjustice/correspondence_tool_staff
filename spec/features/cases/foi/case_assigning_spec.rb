@@ -2,7 +2,7 @@ require 'rails_helper'
 
 feature 'Assigning a case from the detail view' do
   given(:kase)            { create(:case) }
-  given(:responder)       { create(:responder) }
+  given(:responder)       { find_or_create(:foi_responder) }
   given(:responding_team) { responder.responding_teams.first }
   given(:manager)         { create(:manager)  }
   given(:managing_team)   { create :managing_team, managers: [manager] }

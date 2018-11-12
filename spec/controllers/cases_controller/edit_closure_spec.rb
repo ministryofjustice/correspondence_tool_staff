@@ -4,7 +4,7 @@ describe CasesController do
   describe 'GET edit_closure' do
     context 'SAR case' do
       let(:kase)    { create :closed_sar }
-      let(:manager) { create :disclosure_bmt_user }
+      let(:manager) { find_or_create :disclosure_bmt_user }
 
       before do
         sign_in manager
@@ -26,7 +26,7 @@ describe CasesController do
 
   describe 'ICO appeal for SAR case' do
     let(:kase)    { create :closed_ico_sar_case }
-    let(:manager) { create :disclosure_bmt_user }
+    let(:manager) { find_or_create :disclosure_bmt_user }
 
     before do
       sign_in manager

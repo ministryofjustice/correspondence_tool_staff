@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'cases/overturned_foi/case_details.html.slim', type: :view do
   let(:unassigned_case) { create(:overturned_ico_foi) }
   let(:closed_case)     { create(:closed_ot_ico_foi) }
-  let(:bmt_manager)     { create(:disclosure_bmt_user) }
+  let(:bmt_manager)     { find_or_create(:disclosure_bmt_user) }
 
   def render_partial(kase)
     render partial: 'cases/overturned_foi/case_details.html.slim',

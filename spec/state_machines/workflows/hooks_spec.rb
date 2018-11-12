@@ -1,12 +1,16 @@
 require "rails_helper"
 
 describe Workflows::Hooks do
-  let(:responder)               { create(:responder, responding_teams: [responding_team]) }
-  let(:another_responder)       { create :responder, responding_teams: [responding_team] }
-  let(:approver)                { create :disclosure_specialist}
-  let(:another_approver)        { create :disclosure_specialist}
-  let(:kase)                    { create(:accepted_case, :flagged_accepted, :dacu_disclosure, approver: approver, responder: responder)  }
-  let(:responding_team)         { find_or_create(:responding_team) }
+
+  let(:responding_team)         { find_or_create(:foi_responding_team) }
+  let(:responder)               { find_or_create(:foi_responder) }
+  let(:another_responder)       { create :responder,
+                                         responding_teams: [responding_team] }
+  let(:team_disclosure)         { find_or_create :team_dacu_disclosure }
+  let(:approver)                { find_or_create :disclosure_specialist}
+  let(:another_approver)        { create :approver,
+                                         approving_team: team_disclosure }
+  let(:kase)                    { create(:accepted_case, :flagged_accepted) }
   let(:another_responding_team) { create :responding_team, email: 'madeupemail@test.com'}
   let(:workflow)                { described_class.new(user: responder, kase: kase, metadata: nil) }
 

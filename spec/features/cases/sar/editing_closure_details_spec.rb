@@ -2,7 +2,7 @@ require "rails_helper"
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
 feature 'editing case closure information' do
-  given(:manager) { create :disclosure_bmt_user }
+  given(:manager) { find_or_create :disclosure_bmt_user }
 
   before(:all) do
     CaseClosure::MetadataSeeder.seed!

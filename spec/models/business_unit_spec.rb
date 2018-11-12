@@ -17,8 +17,10 @@
 require 'rails_helper'
 
 RSpec.describe BusinessUnit, type: :model do
-  let(:foi)   { CorrespondenceType.foi }
-  let(:sar)   { CorrespondenceType.sar }
+  let(:foi)                 { CorrespondenceType.foi }
+  let(:sar)                 { CorrespondenceType.sar }
+  let(:foi_responding_team) { find_or_create :foi_responding_team }
+  let(:sar_responding_team) { find_or_create :sar_responding_team }
 
 
   it 'can be created' do
@@ -57,11 +59,13 @@ RSpec.describe BusinessUnit, type: :model do
     before(:all) do
       @team_1 = create :responding_team
       @team_2 = create :responding_team
-      
+
       @unassigned_case                  = create :case, name: 'unassigned'
       @t1_assigned_case                 = create :assigned_case, responding_team: @team_1, name: 't1-assigned'
       @t1_accepted_case                 = create :accepted_case, responding_team: @team_1, name: 't1-accepted'
-      @t1_rejected_case                 = create :rejected_case, responding_team: @team_1, name: 't1-rejected'
+      @t1_rejected_case                 = create :rejected_case,
+                                                 responding_team: @team_1,
+                                                 name: 't1-rejected'
       @t1_pending_dacu_clearance_case   = create :pending_dacu_clearance_case, responding_team: @team_1, name: 't1-pending-dacu'
       @t1_responded_case                = create :responded_case, responding_team: @team_1, name: 't1-responded'
       @t1_closed_case                   = create :closed_case, responding_team: @team_1, name: 't1-closed'
@@ -99,9 +103,8 @@ RSpec.describe BusinessUnit, type: :model do
   end
 
   context 'multiple teams created' do
-    let!(:managing_team)   { find_or_create :team_dacu }
-    let!(:responding_team) { find_or_create :responding_team }
-    let!(:approving_team)  { find_or_create :approving_team }
+    let(:managing_team)       { find_or_create :team_dacu }
+    let(:approving_team)      { find_or_create :approving_team }
 
     describe 'managing scope' do
       it 'returns only managing teams' do
@@ -113,8 +116,8 @@ RSpec.describe BusinessUnit, type: :model do
 
     describe 'responding scope' do
       it 'returns only responding teams' do
-        # ap BusinessUnit.pluck(:id, :name, :role)
-        expect(BusinessUnit.responding).to eq [responding_team]
+        expect(BusinessUnit.responding)
+          .to match_array [foi_responding_team, sar_responding_team]
       end
     end
 
@@ -207,23 +210,28 @@ RSpec.describe BusinessUnit, type: :model do
 
   describe '.responding_for_correspondence_type' do
     before(:each) do
-      @bu_foi_sar = create :business_unit, correspondence_type_ids: [foi.id, sar.id]
       @bu_foi = create :business_unit, correspondence_type_ids: [foi.id]
       @bu_sar = create :business_unit, correspondence_type_ids: [sar.id]
     end
 
     it 'only returns business units with reponding roles for the FOIs' do
-      expect(BusinessUnit.responding_for_correspondence_type(CorrespondenceType.foi)).to match_array [ @bu_foi_sar, @bu_foi ]
+      business_units = BusinessUnit.responding_for_correspondence_type(foi)
+      expect(business_units).to match_array [foi_responding_team,
+                                             sar_responding_team,
+                                             @bu_foi]
     end
 
     it 'only returns business units with reponding roles for the SARs' do
-      expect(BusinessUnit.responding_for_correspondence_type(CorrespondenceType.sar)).to match_array [ @bu_foi_sar, @bu_sar ]
+      business_units = BusinessUnit.responding_for_correspondence_type(sar)
+      expect(business_units).to match_array [foi_responding_team,
+                                             sar_responding_team,
+                                             @bu_sar]
     end
   end
 
   describe '#correspondence_types' do
-    let(:foi) { find_or_create :foi_correspondence_type }
-    let(:sar) { find_or_create :sar_correspondence_type }
+    let(:foi) { create :foi_correspondence_type }
+    let(:sar) { create :sar_correspondence_type }
     let(:dir)  { create :directorate}
 
     it { should have_many(:correspondence_types).through(:correspondence_type_roles) }
@@ -250,9 +258,9 @@ RSpec.describe BusinessUnit, type: :model do
 
   describe '#correspondence_type_ids=' do
     let(:dir) { create :directorate }
-    let(:foi) { find_or_create :foi_correspondence_type }
-    let(:sar) { find_or_create :sar_correspondence_type }
-    let(:gq)  { find_or_create :gq_correspondence_type }
+    let(:foi) { create :foi_correspondence_type }
+    let(:sar) { create :sar_correspondence_type }
+    let(:gq)  { create :gq_correspondence_type }
 
     it 'adds new team correspondence_type role records' do
       bu = BusinessUnit.new(name: 'bu1', parent: dir, role: 'manager')

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe CasesController do
   let(:manager)               { create :manager }
-  let(:responder)             { create :responder }
+  let(:responder)             { find_or_create :foi_responder }
   let(:foi_params) do
     {
       correspondence_type: 'foi',

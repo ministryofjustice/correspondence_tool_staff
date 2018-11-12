@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 feature "Top level global navigation" do
-  let(:responder)                 { create(:responder) }
+  let(:responder)                 { find_or_create(:foi_responder) }
   let(:manager)                   { create(:manager)  }
   let(:managing_team)             { create :managing_team, managers: [manager] }
-  let(:disclosure_specialist)     { create :disclosure_specialist }
-  let(:disclosure_specialist_bmt) { create :disclosure_specialist_bmt }
+  let(:disclosure_specialist)     { find_or_create :disclosure_specialist }
+  let(:disclosure_specialist_bmt) { find_or_create :disclosure_specialist_bmt }
   let(:dacu)                      { find_or_create :team_dacu }
 
   before do
