@@ -302,7 +302,6 @@ Rails.application.routes.draw do
     delete 'destroy_business_area' => 'teams#destroy_business_area', on: :member
     patch 'update_business_area' => 'teams#update_business_area', on: :member
     get 'update_business_area_form' => 'teams#update_business_area_form', on: :member
-
   end
 
   resource :users
@@ -310,6 +309,7 @@ Rails.application.routes.draw do
   authenticate :user do
     resources :users do
       resources :teams, only: :index
+      get 'confirm_destroy', on: :member
     end
   end
 

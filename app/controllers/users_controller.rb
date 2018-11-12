@@ -70,6 +70,11 @@ class UsersController < ApplicationController
     redirect_to team_path(params[:team_id])
   end
 
+  def confirm_destroy
+    authorize @user, :destroy?
+    render :confirm_destroy
+  end
+
   private
 
   def validate_role

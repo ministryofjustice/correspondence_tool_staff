@@ -7,8 +7,12 @@
 = f.submit submit_button_text, {class: 'button'}
 
 - if user.id
-  = link_to "Deactivate team member", team_user_path(team.id, user.id),
-            data: {:confirm => t('.destroy')},
-            method: :delete,
-            class: 'button-secondary button-left-spacing',
-            id: 'deactivate-user-button'
+  = link_to "Deactivate team member", confirm_destroy_user_path(team.id, user.id),
+             class: 'button-secondary button-left-spacing',
+             id: 'deactivate-user-button'
+
+/   = link_to "Deactivate team member", team_user_path(team.id, user.id),
+/             data: {:confirm => t('.destroy')},
+/             method: :delete,
+/             class: 'button-secondary button-left-spacing',
+/             id: 'deactivate-user-button'

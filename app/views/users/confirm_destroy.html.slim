@@ -1,0 +1,11 @@
+= GovukElementsErrorsHelper.error_summary @user,
+        "#{pluralize(@user.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+        ""
+
+- content_for :heading
+  = "#{@user.full_name} has open cases"
+
+- content_for :sub_heading
+  = t('.heading')
+
+= render partial: 'layouts/header'
