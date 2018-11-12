@@ -21,13 +21,14 @@ class CaseRemovePITExtensionService
     Rails.logger.error err.backtrace.join("\n\t")
     @error = err
     @result = :error
+    raise err
   end
 
   private
 
   def find_original_final_deadline
     first_pit_extension = @case.transitions.where(event: 'extend_for_pit')
-                                .reorder(:created_at)
+                                .order(:id)
                                 .first
     first_pit_extension.original_final_deadline
   end
