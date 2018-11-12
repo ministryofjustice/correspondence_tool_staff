@@ -130,7 +130,9 @@ class TeamsController < ApplicationController
     service.call
     case service.result
     when :ok
-      flash[:notice] = I18n.t('teams.destroyed')
+      flash[:notice] = I18n.t('teams.destroyed',
+                        team_name: @team.original_team_name,
+                        team_type: @team.pretty_type)
       redirect_to(set_destination(@team))
     else
       flash[:alert] = I18n.t('teams.error')

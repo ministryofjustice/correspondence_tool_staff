@@ -297,4 +297,12 @@ RSpec.describe Team, type: :model do
       end
     end
   end
+
+  describe '#original_team_name' do
+    let!(:bu) { create(:business_unit, :deactivated, name: "DEACTIVATED bu") }
+    it 'removes deactivated from the name' do
+      expect(bu.name).to include('DEACTIVATED')
+      expect(bu.original_team_name).not_to include('DEACTIVATED')
+    end
+  end
 end
