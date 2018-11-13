@@ -487,6 +487,7 @@ en:
         Remove <span class="visuallyhidden">file %{filename}</span>
       remove_linked_case_html: |
         Remove link<span class="visuallyhidden"> to %{case_number}</span>
+      remove_pit_extension: Remove all Public Interest Test extensions
       responding_team: Business unit
       responders:
         one: Information Officer

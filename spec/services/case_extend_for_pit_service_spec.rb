@@ -28,7 +28,8 @@ describe CaseExtendForPITService do
         .with(acting_user: manager,
               acting_team: team_dacu,
               final_deadline: 10.business_days.after(old_external_deadline),
-              message: 'I like to extend my best tests')
+              message: 'I like to extend my best tests',
+              original_final_deadline: old_external_deadline)
     end
 
     it 'sets the external deadline on the case' do

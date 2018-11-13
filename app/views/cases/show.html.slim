@@ -83,4 +83,4 @@ div id="case-#{@correspondence_type_key}" class="case"
   hr
 
   section.case-info
-    = action_links_for_allowed_events(@case, :extend_for_pit, :destroy_case).join(' | ').html_safe
+    = action_links_for_allowed_events(@case, :extend_for_pit, :remove_pit_extension, :destroy_case).join(' | ').html_safe

@@ -118,6 +118,10 @@ class Workflows::Predicates
     responder_is_member_of_assigned_team? && overturned_editing_enabled?
   end
 
+  def has_pit_extension?
+    @kase.extended_for_pit?
+  end
+
 
   private
 

@@ -660,6 +660,17 @@ class Case::Base < ApplicationRecord
     CurrentTeamAndUser::Base.new(self)
   end
 
+  def extended_for_pit?
+    pit_related_transitions = transitions.where(event: ['extend_for_pit',
+                                                        'remove_pit_extension'])
+                                          .order(:id)
+    if pit_related_transitions.present?
+      pit_related_transitions.last.event == 'extend_for_pit'
+    else
+      false
+    end
+  end
+
   # predicate methods
   #
   def foi?;                 false;  end
@@ -733,10 +744,6 @@ class Case::Base < ApplicationRecord
       self.internal_deadline = deadline_calculator.internal_deadline
       self.external_deadline = deadline_calculator.external_deadline
     end
-  end
-
-  def extended_for_pit?
-    transitions.where(event: 'extend_for_pit').any?
   end
 
   def set_managing_team

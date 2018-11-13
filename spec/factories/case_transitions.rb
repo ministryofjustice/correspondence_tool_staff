@@ -247,12 +247,26 @@ FactoryBot.define do
   end
 
   factory :case_transition_extend_for_pit, parent: :case_transition do
-    event    { 'extend_for_pit' }
-    to_state { self.case.current_state }
+    event                   { 'extend_for_pit' }
+    to_state                { self.case.current_state }
 
-    acting_team { self.case.managing_team }
-    acting_user { acting_team.managers.first }
+    acting_team             { self.case.managing_team }
+    acting_user             { acting_team.managers.first }
+    original_final_deadline { self.case.external_deadline }
   end
+
+  factory :case_transition_remove_pit_extension, parent: :case_transition do
+    transient do
+      manager        { create :manager }
+      managing_team  { manager.managing_teams.first }
+    end
+
+    event          { 'remove_pit_extension' }
+    to_state       { self.case.current_state }
+    acting_user_id { manager.id }
+    acting_team_id { managing_team.id }
+  end
+
 
   factory :case_transition_request_further_clearance, parent: :case_transition do
     event    { 'request_further_clearance' }
