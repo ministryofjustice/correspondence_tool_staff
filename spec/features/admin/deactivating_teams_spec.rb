@@ -13,7 +13,7 @@ feature 'deactivating directorates' do
     teams_show_page.deactivate_team_link.click
 
     expect(teams_show_page.flash_notice.text).to eq(
-    "#{dir.name} Directorate has now been deactivated")
+    "#{dir.name} directorate has now been deactivated")
   end
 end
 
@@ -31,7 +31,7 @@ feature 'deactivating business units' do
     teams_show_page.load(id: bu.id)
     teams_show_page.deactivate_team_link.click
     expect(teams_show_page.flash_notice.text).to eq(
-    "#{bu.name} Business unit has now been deactivated")
+    "#{bu.name} business unit has now been deactivated")
 
     expect(teams_show_page).to be_displayed(id: dir.id)
     expect(teams_show_page.row_for_business_unit(bu.name)).to equal nil

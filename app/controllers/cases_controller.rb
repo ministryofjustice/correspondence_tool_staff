@@ -18,6 +18,7 @@ class CasesController < ApplicationController
                   :execute_new_case_link,
                   :new_case_link,
                   :destroy_case_link,
+                  :remove_pit_extension,
                   :update_closure
                 ]
   before_action :set_url, only: [:search, :open_cases]
@@ -571,6 +572,22 @@ class CasesController < ApplicationController
       render :extend_for_pit
     else
       flash[:alert] = "Unable to perform PIT extension on case #{@case.number}"
+      redirect_to case_path(@case.id)
+    end
+  end
+
+  def remove_pit_extension
+    authorize @case, :remove_pit_extension?
+
+    service = CaseRemovePITExtensionService.new current_user,
+                                            @case
+    result = service.call
+
+    if result == :ok
+      flash[:notice] = 'Public Interest Test extensions removed'
+      redirect_to case_path(@case.id)
+    else
+      flash[:alert] = "Unable to remove Public Interest Test extensions"
       redirect_to case_path(@case.id)
     end
   end

@@ -32,6 +32,7 @@ module PageObjects
           element :progress_to_disclosure, '#action--progress-for-clearance'
         end
         element :extend_for_pit_action, '#action--extend-for-pit'
+        element :remove_pit_extension_action, '#action--remove-pit-extension'
 
         section :case_status,
                 PageObjects::Sections::Cases::CaseStatusSection, '.case-status'

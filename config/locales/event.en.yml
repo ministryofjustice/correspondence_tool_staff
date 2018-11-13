@@ -21,6 +21,7 @@ en:
     reject_responder_assignment: Rejected by Business unit
     remove_last_response: File removed
     remove_linked_case: Linked case removed
+    remove_pit_extension: Public Interest Test extensions removed
     remove_response: File removed
     request_amends: Request amends
     request_further_clearance: Request further clearance

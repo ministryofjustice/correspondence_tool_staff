@@ -36,7 +36,7 @@ RSpec.describe TeamsController, type: :controller do
 
         it 'displays a flash notice' do
           expect(flash[:notice]).to eq(
-            "#{dir.name} Directorate has now been deactivated")
+            "#{dir.name} directorate has now been deactivated")
         end
 
         context 'deactivating a directorate' do

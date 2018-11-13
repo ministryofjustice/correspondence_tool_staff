@@ -240,6 +240,7 @@ Rails.application.routes.draw do
     get :extend_for_pit, on: :member
     patch :execute_extend_for_pit, on: :member
     patch :request_further_clearance, on: :member
+    patch :remove_pit_extension, on: :member
     get :new_case_link, on: :member
     post :execute_new_case_link, on: :member
     delete 'destroy_link/:linked_case_number' => 'cases#destroy_case_link' , on: :member, as: 'destroy_link_on'

@@ -1412,4 +1412,27 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
+  describe '#extended_for_pit?' do
+
+    context 'case with no pit extension' do
+      it 'returns false' do
+        kase = create :case_being_drafted
+        expect(kase.extended_for_pit?).to be false
+      end
+    end
+
+    context 'case with pit extenstion' do
+      it 'returns true' do
+        kase = create :case_being_drafted, :extended_for_pit
+        expect(kase.extended_for_pit?).to be true
+      end
+    end
+
+    context 'case with removed pit extension' do
+      it 'returns false' do
+        kase = create :case_being_drafted, :pit_extension_removed
+        expect(kase.extended_for_pit?).to be false
+      end
+    end
+  end
 end
