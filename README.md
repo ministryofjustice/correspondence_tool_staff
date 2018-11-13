@@ -30,20 +30,6 @@ $ git clone git@github.com:ministryofjustice/correspondence_tool_staff.git
 $ cd correspondence_tool_staff
 ```
 
-#### Building with Docker Compose
-
-This project is buildable with `docker-compose`. Install [Docker for
-Mac](https://docs.docker.com/docker-for-mac/) and then run this in the
-repository directory:
-
-```
-$ docker-compose up
-```
-
-This will build and run all the Docker containers locally and publish port 3000
-from the web container locally. The application will be available on
-http://localhost:3000/
-
 
 #### Installing Dependencies
 
