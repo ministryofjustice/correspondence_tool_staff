@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
-  let(:manager) { create :manager, full_name: 'John Doe' }
+  # let(:manager) { create :manager, full_name: 'John Doe' }
+  let(:manager) { find_or_create :disclosure_bmt_user }
   let(:dacu)    { find_or_create :team_dacu }
 
   describe 'GET show' do
@@ -52,7 +53,7 @@ RSpec.describe UsersController, type: :controller do
           allow(generator).to receive(:to_csv).and_return('a,csv,file')
           get :show, format: 'csv', params: {id: manager.id }
 
-          expect(response.headers['Content-Disposition']).to eq %q{attachment; filename="john_doe-cases-18-11-09-134822.csv"}
+          expect(response.headers['Content-Disposition']).to eq %q{attachment; filename="disclosure-bmt_managing_user-cases-18-11-09-134822.csv"}
           expect(response.headers['Content-Type']).to eq 'text/csv; charset=utf-8'
         end
       end
