@@ -26,14 +26,14 @@ services:
     depends_on:
       - db
       - redis
-  mailer:
+  background_jobs:
     build:
       args:
         development_mode: "true"
         PUMA_PORT: ""
       context: .
-    container_name: cts_mailer
-    entrypoint: ./run-mailer.sh
+    container_name: cts_background_jobs
+    entrypoint: ./run-background-jobs.sh
     environment:
       DATABASE_URL: postgres://postgres@db/correspondence_platform_development
       RAILS_ENV: development
@@ -61,23 +61,5 @@ services:
     depends_on:
       - db
       - redis
-  reports:
-    build:
-      args:
-        development_mode: "true"
-        PUMA_PORT: ""
-      context: .
-    container_name: cts_reports
-    entrypoint: ./run-reports.sh
-    environment:
-      DATABASE_URL: postgres://postgres@db/correspondence_platform_development
-      RAILS_ENV: development
-      REDIS_URL: redis://redis/
-    volumes:
-      - .:/usr/src/app
-    depends_on:
-      - db
-      - redis
-
 volumes:
   postgresql-data-volume:
