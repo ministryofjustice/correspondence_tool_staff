@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'users/show.html.slim', type: :view do
-  let(:responder) { create :responder, full_name: 'Larry Adler' }
+  let(:responder) { find_or_create :foi_responder }
   let(:kase_1)    { create :accepted_case }
   let(:kase_2)    { create :closed_case }
   let(:kases)     { Case::Base.where(id: [kase_1.id, kase_2.id]).page(1).decorate }
@@ -14,7 +14,7 @@ describe 'users/show.html.slim', type: :view do
 
   it 'has the correct page heading' do
     users_show_page.load(rendered)
-    expect(users_show_page.page_heading.heading).to have_text('Larry Adler')
+    expect(users_show_page.page_heading.heading).to have_text('foi responding user')
     expect(users_show_page.page_heading.sub_heading).to have_text('Open cases')
   end
 
