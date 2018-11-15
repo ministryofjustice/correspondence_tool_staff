@@ -51,7 +51,7 @@ class CSVExporter
           @kase.workflow,
           @kase.name,
           @kase.requester_type,
-          @kase.message,
+          dequote_and_truncate(@kase.message),
           @kase.info_held_status&.name,
           @kase.outcome&.name,
           @kase.refusal_reason&.name,
@@ -69,4 +69,9 @@ class CSVExporter
     end
   end
   #rubocop:ensable Metrics/CyclomaticComplexity
+
+  private
+  def dequote_and_truncate(text)
+    text.tr('"', '').tr("'", '')[0..4000]
+  end
 end
