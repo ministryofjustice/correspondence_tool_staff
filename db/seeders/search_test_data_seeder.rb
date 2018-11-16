@@ -1,12 +1,14 @@
 class SearchTestDataSeeder
 
+  NUM_CASES_TO_CREATE = 8_000
+
   def initialize
     @show = CTS::Cases::Show.new
   end
 
   def run
     @case_count= 0
-    while @case_count < 200
+    while @case_count < NUM_CASES_TO_CREATE
       create_case
       @case_count += 1
     end
@@ -27,6 +29,13 @@ class SearchTestDataSeeder
                responding_team: select_responding_team,
                target_state: select_target_state,
            })
+
+    # FIX HERE TO ONLY CREATE FOI STD CASES  IN CLOSED STATE
+    params[:type] = 'Case::FOI::Standard'
+    params[:flag_for_team] = nil
+    params[:target_state] = 'closed'
+
+
     params[:received_date] = select_received_date(params[:target_state])
     params[:created_at] = select_created_at(params[:received_date])
 

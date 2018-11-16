@@ -6,9 +6,17 @@
 
 = render partial: 'layouts/header'
 
-.download-cases-link
-  = download_csv_link(request.fullpath)
-  | &nbsp;(.csv file)
+
+
+caption
+  .grid-row
+    .search-results-summary.column-half
+      strong
+        = @cases.total_count
+      = " #{ 'case'.pluralize(@cases.total_count)} found"
+    .download-cases-link.column-half
+      = download_csv_link(request.fullpath)
+      | &nbsp;(.csv file)
 .grid-row
   .column-full.table-container.container
     table.report.closed-case-report.table-font-xsmall
