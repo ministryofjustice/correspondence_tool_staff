@@ -150,12 +150,11 @@ RSpec.describe CasesController, type: :controller do
 
       context 'csv format' do
         it 'generates a file and downloads it' do
-          expect(CsvGeneratorNotUsed).not_to receive(:new)
+          expect(CSVStreamerService).not_to receive(:new)
 
           get :closed_cases, format: 'csv'
           expect(response.status).to eq 401
           expect(response.header['Content-Type']).to eq 'text/csv; charset=utf-8'
-          expect(response.body).to eq 'You need to sign in or sign up before continuing.'
         end
       end
     end
@@ -204,14 +203,15 @@ RSpec.describe CasesController, type: :controller do
         end
 
         it 'does not paginate the result set' do
-          gnm = stub_current_case_finder_for_closed_cases_with([closed_case])
+          expect_any_instance_of(Case::Base::ActiveRecord_Relation).not_to receive(:page)
+          closed_cases = [closed_case]
           allow_any_instance_of(CSVStreamerService).to receive(:send)
+                                                         .with(closed_cases)
                                                          .and_call_original
 
           get :closed_cases, format: 'csv', params: { page: 'our_page' }
 
-          expect(gnm.current_page_or_tab.cases.by_last_transitioned_date)
-              .not_to have_received(:page).with('our_page')
+          expect_any_instance_of(Case::Base::ActiveRecord_Relation).not_to receive(:page)
         end
       end
     end

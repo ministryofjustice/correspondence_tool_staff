@@ -31,9 +31,9 @@ class SearchTestDataSeeder
            })
 
     # FIX HERE TO ONLY CREATE FOI STD CASES  IN CLOSED STATE
-    params[:type] = 'Case::FOI::Standard'
-    params[:flag_for_team] = nil
-    params[:target_state] = 'closed'
+    # params[:type] = 'Case::FOI::Standard'
+    # params[:flag_for_team] = nil
+    # params[:target_state] = 'closed'
 
 
     params[:received_date] = select_received_date(params[:target_state])
