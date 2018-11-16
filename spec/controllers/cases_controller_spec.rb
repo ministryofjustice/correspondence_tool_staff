@@ -166,6 +166,7 @@ RSpec.describe CasesController, type: :controller do
     before { sign_in manager }
 
     describe 'GET closed_cases' do
+      let(:closed_case) { create(:closed_case) }
 
       it 'assigns cases returned by CaseFinderService' do
         stub_current_case_finder_for_closed_cases_with(:closed_cases_result)
@@ -188,21 +189,25 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'csv format' do
-        it 'generates a file and downloads it' do
-          generator = double CSVGenerator
-          expect(CSVGenerator).to receive(:new).and_return(generator)
-          expect(CSVGenerator).to receive(:options).with('closed').and_return({filename: 'abc.csv', type: 'text/csv; charset=utf-8'})
-          expect(generator).to receive(:to_csv).and_return('csv data')
+        it 'uses the CVSStreamerService to send the file' do
+          Timecop.freeze DateTime.new(2018, 11, 15, 18, 37, 21) do
+            expect(CSVStreamerService).to receive(:new)
+                                            .with(ActionDispatch::Response,
+                                                  'closed-cases')
+                                            .and_call_original
+            expect_any_instance_of(CSVStreamerService).to receive(:send)
+                                                            .with([closed_case])
+                                                            .and_call_original
 
-          get :closed_cases, format: 'csv'
-          expect(response.status).to eq 200
-          expect(response.header['Content-Disposition']).to eq %q{attachment; filename="abc.csv"}
-          expect(response.body).to eq 'csv data'
+            get :closed_cases, format: 'csv'
+          end
         end
 
         it 'does not paginate the result set' do
-          gnm = stub_current_case_finder_for_closed_cases_with(:closed_cases_result)
-          allow_any_instance_of(CSVGenerator).to receive(:to_csv).and_return ''
+          gnm = stub_current_case_finder_for_closed_cases_with([closed_case])
+          allow_any_instance_of(CSVStreamerService).to receive(:send)
+                                                         .and_call_original
+
           get :closed_cases, format: 'csv', params: { page: 'our_page' }
 
           expect(gnm.current_page_or_tab.cases.by_last_transitioned_date)

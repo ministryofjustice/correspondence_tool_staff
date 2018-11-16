@@ -6,6 +6,7 @@ class CasesController < ApplicationController
   include ICOCasesParams
   include SARCasesParams
   include OverturnedICOParams
+  include ActionController::Live
 
 
   before_action :set_case,
@@ -88,9 +89,9 @@ class CasesController < ApplicationController
       @cases = unpaginated_cases.page(params[:page]).decorate
     end
     respond_to do |format|
-      format.html     { render :closed_cases }
+      format.html { render :closed_cases }
       format.csv do
-        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('closed')
+        CSVStreamerService.new(response, 'closed-cases').send(@cases)
       end
     end
   end
