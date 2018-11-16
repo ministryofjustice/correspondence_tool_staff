@@ -119,7 +119,7 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.html     { render :index }
       format.csv do
-        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('my-open')
+        CSVStreamerService.new(response, 'closed-cases').send(@cases)
       end
     end
   end
@@ -146,7 +146,7 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.html     { render :index }
       format.csv do
-        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('open')
+        CSVStreamerService.new(response, 'closed-cases').send(@cases)
       end
     end
   end
@@ -447,7 +447,7 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.html     { render :search }
       format.csv do
-        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('search')
+        CSVStreamerService.new(response, 'closed-cases').send(@cases)
       end
     end
   end

@@ -1,6 +1,6 @@
 require 'csv'
 
-class CSVGenerator
+class CsvGeneratorNotUsed
 
   def initialize(kases)
     @kases = kases

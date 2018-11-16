@@ -150,7 +150,7 @@ RSpec.describe CasesController, type: :controller do
 
       context 'csv format' do
         it 'generates a file and downloads it' do
-          expect(CSVGenerator).not_to receive(:new)
+          expect(CsvGeneratorNotUsed).not_to receive(:new)
 
           get :closed_cases, format: 'csv'
           expect(response.status).to eq 401
@@ -472,15 +472,12 @@ RSpec.describe CasesController, type: :controller do
 
       context 'csv request' do
         it 'downloads a csv file' do
-          generator = double CSVGenerator
-          expect(CSVGenerator).to receive(:new).and_return(generator)
-          expect(CSVGenerator).to receive(:options).with('my-open').and_return({filename: 'abc.csv', type: 'text/csv; charset=utf-8'})
-          expect(generator).to receive(:to_csv).and_return('csv data')
-
-          get :my_open_cases, params: { tab: 'in_time' }, format: 'csv'
-          expect(response.status).to eq 200
-          expect(response.header['Content-Disposition']).to eq %q{attachment; filename="abc.csv"}
-          expect(response.body).to eq 'csv data'
+          Timecop.freeze(Time.new(2018, 11, 16, 17, 10, 29)) do
+            get :my_open_cases, params: { tab: 'in_time' }, format: 'csv'
+            expect(response.status).to eq 200
+            expect(response.header['Content-Disposition']).to eq %q{attachment; filename="closed-cases-2018-11-16-171029.csv"}
+            expect(response.body).to eq CSVExporter::CSV_COLUMN_HEADINGS.join(',') + "\n"
+          end
         end
       end
     end
@@ -1070,7 +1067,7 @@ RSpec.describe CasesController, type: :controller do
 
         it 'returns an error' do
           patch :flag_for_clearance, params: params, xhr: true
-          expect(response).to have_http_status 401
+          expect(response.status).to eq 401
         end
       end
 

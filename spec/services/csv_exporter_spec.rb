@@ -2,8 +2,6 @@ require 'rails_helper'
 
 describe CSVExporter do
 
-  # let(:responding_team)   { create :responding_team, name: 'Transport for London' }
-  # let(:responder)         { create :responder, full_name: 'Joe Smith', responding_teams: [ responding_team] }
   let(:foi_case)          { create :closed_case, :fully_refused_exempt_s40,
                                    name: 'FOI Case name',
                                    email: 'dave@moj.com',
