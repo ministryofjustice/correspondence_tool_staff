@@ -1,6 +1,6 @@
 class SearchTestDataSeeder
 
-  NUM_CASES_TO_CREATE = 8_000
+  NUM_CASES_TO_CREATE = 200
 
   def initialize
     @show = CTS::Cases::Show.new

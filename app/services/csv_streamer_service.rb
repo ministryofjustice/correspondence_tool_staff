@@ -10,6 +10,7 @@ class CSVStreamerService
 
   def send(objects)
     response.headers['Content-Type'] = 'text/csv'
+    response.headers['X-Accel-Buffering'] = 'no' # Stop NGINX from buffering
     timestamp = Time.now.strftime('%Y-%m-%d-%H%M%S')
     response.headers['Content-Disposition'] =
       %{attachment; filename="#{attachment_name}-#{timestamp}.csv"}
