@@ -4,11 +4,16 @@ class CSVStreamerService
   attr_reader :response, :attachment_name
 
   def initialize(response, attachment_name)
+    puts ">>>>>>>>>> CSVStreamer SErvice  #{__FILE__}:#{__LINE__} <<<<<<<<<<"
+    puts ">>>>>>>>>> attachment name #{attachment_name} #{__FILE__}:#{__LINE__} <<<<<<<<<<"
     @response = response
     @attachment_name = attachment_name
   end
 
   def send(objects)
+    puts ">>>>>>>>>> SEND #{__FILE__}:#{__LINE__} <<<<<<<<<<"
+    puts ">>>>>>>>>> #{objects.size} #{__FILE__}:#{__LINE__} <<<<<<<<<<"
+    puts ">>>>>>>>>> #{objects.class} #{__FILE__}:#{__LINE__} <<<<<<<<<<"
     response.headers['Content-Type'] = 'text/csv'
     response.headers['X-Accel-Buffering'] = 'no' # Stop NGINX from buffering
     timestamp = Time.now.strftime('%Y-%m-%d-%H%M%S')
