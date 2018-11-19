@@ -53,6 +53,7 @@
                 request_further_clearance:
                   if: Case::SARPolicy#can_request_further_clearance?
                   switch_workflow: trigger
+                unassign_from_user:
 
               closed:
                 add_message_to_case:

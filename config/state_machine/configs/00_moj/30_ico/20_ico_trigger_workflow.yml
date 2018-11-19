@@ -34,6 +34,7 @@
                 edit_case:
                 link_a_case:
                 remove_linked_case:
+                unassign_from_user:
 
               pending_dacu_clearance:
                 add_message_to_case:
@@ -42,6 +43,7 @@
                 edit_case:
                 link_a_case:
                 remove_linked_case:
+                unassign_from_user:
 
               awaiting_dispatch:
                 add_message_to_case:
@@ -50,6 +52,7 @@
                 edit_case:
                 link_a_case:
                 remove_linked_case:
+                unassign_from_user:
 
               responded:
                 add_message_to_case:
@@ -60,6 +63,7 @@
                 edit_case:
                 link_a_case:
                 remove_linked_case:
+                unassign_from_user:
 
               closed:
                 add_message_to_case:

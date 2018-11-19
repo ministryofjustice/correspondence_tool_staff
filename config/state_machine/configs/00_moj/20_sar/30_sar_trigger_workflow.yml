@@ -42,6 +42,7 @@
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
+                unassign_from_user:
 
               pending_dacu_clearance:
                 add_message_to_case:
@@ -54,6 +55,7 @@
                   if: Workflows::Predicates#overturned_editing_enabled?
                 link_a_case:
                 remove_linked_case:
+                unassign_from_user:
 
               awaiting_dispatch:
                 add_message_to_case:
@@ -63,6 +65,7 @@
                   if: Workflows::Predicates#overturned_editing_enabled?
                 link_a_case:
                 remove_linked_case:
+                unassign_from_user:
 
               closed:
                 add_message_to_case:

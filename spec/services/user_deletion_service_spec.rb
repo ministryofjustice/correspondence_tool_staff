@@ -40,12 +40,12 @@ describe UserDeletionService do
 
         it 'returns :has_live_cases' do
           service.call
-          expect(service.result).to eq(:has_live_cases)
+          expect(service.result).to eq(:ok)
         end
 
-        it 'does not update the deleted_at column' do
+        it 'updates the deleted_at column' do
           service.call
-          expect(responder.reload.deleted_at).to be nil
+          expect(responder.reload.deleted_at).not_to be nil
         end
       end
     end

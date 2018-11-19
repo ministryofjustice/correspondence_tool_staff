@@ -55,7 +55,8 @@ describe ConfigurableStateMachine::Machine do
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
-                                                                      :request_further_clearance]
+                                                                      :request_further_clearance,
+                                                                      :unassign_from_user]
         end
       end
 
@@ -70,7 +71,8 @@ describe ConfigurableStateMachine::Machine do
                                                                       :extend_for_pit,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
-                                                                      :request_further_clearance]
+                                                                      :request_further_clearance,
+                                                                      :unassign_from_user]
         end
       end
 
@@ -86,7 +88,8 @@ describe ConfigurableStateMachine::Machine do
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
-                                                                      :request_further_clearance]
+                                                                      :request_further_clearance,
+                                                                      :unassign_from_user]
         end
       end
 
@@ -100,7 +103,8 @@ describe ConfigurableStateMachine::Machine do
                                                                       :destroy_case,
                                                                       :edit_case,
                                                                       :link_a_case,
-                                                                      :remove_linked_case]
+                                                                      :remove_linked_case,
+                                                                      :unassign_from_user]
         end
       end
 

@@ -10,13 +10,13 @@ class UserDeletionService
 
   def call
     if @user.has_live_cases_for_team?(@team)
-      @result = :has_live_cases
+      unassign_cases
+    end
+    if @user.multiple_team_member?
+      delete_memberships_of_team(@user, @team)
+      @result = :ok
     else
-      if @user.multiple_team_member?
-        delete_memberships_of_team(@user, @team)
-      else
-        delete_user_if_not_member_of_other_team(@user, @team)
-      end
+      delete_user_if_not_member_of_other_team(@user, @team)
       @result = :ok
     end
   end
@@ -32,5 +32,15 @@ class UserDeletionService
   def delete_user_if_not_member_of_other_team(user, team)
     delete_memberships_of_team(user, team)
     user.soft_delete
+  end
+
+  def unassign_cases
+    ActiveRecord::Base.transaction do
+      @user.cases.opened.each do |kase|
+        kase.responder_assignment.update!(state: 'pending', team_id: @team.id, user_id: nil)
+        kase.state_machine.unassign_from_user!(acting_user: @user, acting_team: kase.managing_team)
+        kase.update!(current_state: 'awaiting_responder')
+      end
+    end
   end
 end
