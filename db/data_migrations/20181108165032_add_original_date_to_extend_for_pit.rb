@@ -9,7 +9,7 @@ class AddOriginalDateToExtendForPit < ActiveRecord::DataMigration
   private
 
   def find_original_final_deadline(transition)
-    kase = Case::Base.find(transition.case_id)
+    kase = Case::Base.unscoped.find(transition.case_id)
     if kase.overturned_ico?
       kase.external_deadline
     else
