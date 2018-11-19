@@ -18,6 +18,7 @@ def stub_current_case_finder_for_closed_cases_with(result)
   cases = double 'ActiveRecord Cases', by_last_transitioned_date: cases_by_last_transitioned_date
   page = instance_double GlobalNavManager::Page, cases: cases
   gnm = instance_double GlobalNavManager, current_page_or_tab: page
+  allow(cases_by_last_transitioned_date).to receive(:limit).and_return(cases_by_last_transitioned_date)
   allow(GlobalNavManager).to receive(:new).and_return gnm
   gnm
 end

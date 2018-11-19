@@ -84,7 +84,7 @@ class CasesController < ApplicationController
                              .cases
                              .by_last_transitioned_date
     if download_csv_request?
-      @cases = unpaginated_cases
+      @cases = unpaginated_cases.limit(1000)
     else
       @cases = unpaginated_cases.page(params[:page]).decorate
     end
