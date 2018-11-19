@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  before_action :set_team, only: [:create, :new, :edit, :update]
+  before_action :set_team, only: [:create, :new, :edit, :update, :confirm_destroy]
 
   def show
     @user = User.find params[:id]
@@ -71,7 +71,8 @@ class UsersController < ApplicationController
   end
 
   def confirm_destroy
-    authorize @user, :destroy?
+    @user = User.find params[:id]
+    @team = Team.find(params[:format])
     render :confirm_destroy
   end
 

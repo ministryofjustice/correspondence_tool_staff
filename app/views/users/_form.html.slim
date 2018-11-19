@@ -7,7 +7,7 @@
 = f.submit submit_button_text, {class: 'button'}
 
 - if user.id
-  = link_to "Deactivate team member", confirm_destroy_user_path(team.id, user.id),
+  = link_to "Deactivate team member", confirm_destroy_user_path(user.id, team.id),
              class: 'button-secondary button-left-spacing',
              id: 'deactivate-user-button'
 

@@ -9,3 +9,20 @@
   = t('.heading')
 
 = render partial: 'layouts/header'
+
+p
+  = "#{@user.full_name} has #{@user.cases.count} open cases assigned to them. "
+  = "If you deactivate them, their cases will still be assigned to Disclosure but a new responder will need to be assigned."
+
+  - if @user.multiple_team_member?
+    p
+      = "They are also a member of #{@user.teams_names}"
+
+= link_to "Deactivate team member", team_user_path(@team.id, @user.id),
+          method: :delete,
+          class: 'button',
+          id: 'deactivate-user-button'
+
+= link_to('Cancel',
+          team_path(@team),
+          class: 'acts-like-button button-left-spacing')

@@ -155,6 +155,10 @@ class User < ApplicationRecord
     types
   end
 
+  def teams_names
+    self.teams.map(&:name).join(", ")
+  end
+
   private
   def bad_passwords
     %w{
