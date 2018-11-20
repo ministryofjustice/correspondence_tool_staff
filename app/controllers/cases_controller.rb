@@ -7,7 +7,6 @@ class CasesController < ApplicationController
   include SARCasesParams
   include OverturnedICOParams
 
-  CSV_REQUEST_REGEX = /\.csv$/
 
   before_action :set_case,
                 only: [
@@ -704,10 +703,6 @@ class CasesController < ApplicationController
     flash[:query_id] = @query.id
   end
 
-  def download_csv_request?
-    uri = URI(request.fullpath)
-    CSV_REQUEST_REGEX.match?(uri.path)
-  end
 
 
   def determine_overturned_ico_class(original_appeal_id)

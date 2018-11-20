@@ -305,6 +305,8 @@ Rails.application.routes.draw do
 
   end
 
+  resource :users
+
   authenticate :user do
     resources :users do
       resources :teams, only: :index

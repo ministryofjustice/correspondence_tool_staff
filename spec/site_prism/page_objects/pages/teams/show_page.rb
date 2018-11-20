@@ -39,6 +39,7 @@ module PageObjects
         sections :information_officers_list, '.report tbody tr' do
           element :name, 'td[aria-label="Name"]'
           element :email, 'td[aria-label="Email"]'
+          element :num_cases, 'td[aria-label="Number of active cases"]'
           element :actions, 'td[aria-label="Actions"] a'
         end
 

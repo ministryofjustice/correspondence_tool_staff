@@ -64,6 +64,7 @@ module PageObjects
         users_index:                    'Users::IndexPage',
         users_new:                      'Users::NewPage',
         users_show:                     'Users::ShowPage',
+        users_edit:                     'Users::EditPage',
       }.each do |page_name, page_class|
         full_page_class = "PageObjects::Pages::#{page_class}"
         define_method "#{page_name}_page" do

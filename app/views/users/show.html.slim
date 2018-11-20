@@ -1,0 +1,55 @@
+- content_for :heading
+  = @user.full_name
+
+- content_for :sub_heading
+  | Open cases
+
+= render partial: 'layouts/header'
+
+.download-cases-link
+  = download_csv_link(request.fullpath)
+  | &nbsp;(.csv file)
+
+.grid-row
+  .column-full.table-container.container
+    table.report.table-font-xsmall
+      colgroup
+        col
+        col
+        col
+        col
+        col
+        col
+      thead
+        th scope='col'
+          = t('.number_html')
+        th scope='col'
+          = t('.type')
+        th scope='col'
+          = t('.request')
+        th scope='col'
+          = t('.draft_deadline')
+        th scope='col'
+          = t('.external_deadline')
+        th scope='col'
+          = t('.status')
+      tbody
+        - @cases.each do |kase|
+          tr.case_row
+            td aria-label="#{t('.number')}"
+              span.visually-hidden
+                = t('.view_case')
+              = link_to kase.number, case_path(kase.id)
+            td aria-label="#{t('.type')}"
+              = "#{kase.pretty_type} "
+              = kase.trigger_case_marker
+            td aria-label="#{t('.request_detail')}"
+              = request_details_html(kase)
+            td aria-label="#{t('.draft_deadline')}"
+              = kase.internal_deadline
+            td aria-label="#{t('.external_deadline')}"
+              = kase.external_deadline
+            td aria-label="#{t('.status')}"
+              = kase.status
+
+    = paginate @cases

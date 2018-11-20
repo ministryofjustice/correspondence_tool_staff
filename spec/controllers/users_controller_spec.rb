@@ -1,8 +1,74 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
-  let(:manager) { create :manager }
+  # let(:manager) { create :manager, full_name: 'John Doe' }
+  let(:manager) { find_or_create :disclosure_bmt_user }
   let(:dacu)    { find_or_create :team_dacu }
+
+  describe 'GET show' do
+    let(:service)                         { double UserActiveCaseCountService }
+    let(:generator)                       { double CSVGenerator }
+    let(:unpaginated_cases)               { double 'Unapaginated cases collection', page: paginated_cases, decorate: all_decorated_cases }
+    let(:paginated_cases)                 { double 'Paginated cases collection', decorate: paginated_decorated_cases }
+    let(:paginated_decorated_cases)       { double 'Paginaged decorated_cases' }
+    let(:all_decorated_cases)             { double 'Unpaginated decorated cases'}
+
+    before { sign_in manager }
+
+    it 'returns success' do
+      get :show, params: {id: manager.id }
+      expect(response).to be_success
+    end
+
+    context 'html request' do
+      it 'assigns case to paginated decorated case list' do
+        expect(UserActiveCaseCountService).to receive(:new).and_return(service)
+        expect(service).to receive(:active_cases_for_user).with(manager).and_return(unpaginated_cases)
+        get :show, params: {id: manager.id }
+
+        expect(assigns(:cases)).to eq paginated_decorated_cases
+      end
+
+      it 'renders show template' do
+        get :show, params: {id: manager.id }
+        expect(response).to render_template(:show)
+      end
+    end
+
+    context 'csv request' do
+      it 'does not paginate' do
+        expect(UserActiveCaseCountService).to receive(:new).and_return(service)
+        expect(service).to receive(:active_cases_for_user).with(manager).and_return(unpaginated_cases)
+        expect(CSVGenerator).to receive(:new).with(all_decorated_cases).and_return(generator)
+        expect(generator).to receive(:to_csv).and_return('a,csv,file')
+
+        get :show, format: 'csv', params: {id: manager.id }
+      end
+
+      it 'sends data' do
+        Timecop.freeze Time.local(2018, 11, 9, 13, 48, 22) do
+          allow(UserActiveCaseCountService).to receive(:new).and_return(service)
+          allow(service).to receive(:active_cases_for_user).with(manager).and_return(unpaginated_cases)
+          allow(CSVGenerator).to receive(:new).with(all_decorated_cases).and_return(generator)
+          allow(generator).to receive(:to_csv).and_return('a,csv,file')
+          get :show, format: 'csv', params: {id: manager.id }
+
+          expect(response.headers['Content-Disposition']).to eq %q{attachment; filename="disclosure-bmt_managing_user-cases-18-11-09-134822.csv"}
+          expect(response.headers['Content-Type']).to eq 'text/csv; charset=utf-8'
+        end
+      end
+
+      it 'returns the csv file in the body' do
+        allow(UserActiveCaseCountService).to receive(:new).and_return(service)
+        allow(service).to receive(:active_cases_for_user).with(manager).and_return(unpaginated_cases)
+        allow(CSVGenerator).to receive(:new).with(all_decorated_cases).and_return(generator)
+        allow(generator).to receive(:to_csv).and_return('a,csv,file')
+
+        get :show, format: 'csv', params: {id: manager.id }
+        expect(response.body).to eq 'a,csv,file'
+      end
+    end
+  end
 
   describe 'POST create', versioning: true do
     let(:params) do

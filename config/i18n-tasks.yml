@@ -115,6 +115,11 @@ ignore_unused:
   - 'teams.deactivate_info.*'
   - 'teams.directorate_detail.destroy'
   - 'teams.business_unit_detail.destroy'
+  - users.show.heading_all_cases
+  - users.show.heading_my_cases
+  - users.show.message_notification
+  - users.show.who_its_with
+
 
 ## Consider these keys used:
 # ignore_unused:

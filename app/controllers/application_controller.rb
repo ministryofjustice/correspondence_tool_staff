@@ -2,7 +2,8 @@ class ApplicationController < ActionController::Base
 
   include Pundit
 
-  GLOBAL_NAV_EXCLUSION_PATHS = %w{ /cases/filter }
+  GLOBAL_NAV_EXCLUSION_PATHS    = %w{ /cases/filter }
+  CSV_REQUEST_REGEX             = /\.csv$/
 
   before_action do
     unless self.class.to_s =~ /^Devise::/
@@ -26,6 +27,11 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def download_csv_request?
+    uri = URI(request.fullpath)
+    CSV_REQUEST_REGEX.match?(uri.path)
+  end
 
   def add_security_headers
     headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
