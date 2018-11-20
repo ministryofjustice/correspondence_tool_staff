@@ -80,7 +80,9 @@ class CaseAttachment < ActiveRecord::Base
   def scan_for_virus()
     scanning_for_virus!
     original_filepath = download_original_file
-    if system('clamscan', original_filepath)
+    cmd = ['clamdscan', original_filepath]
+    $stderr.puts "STDERR: Scanning for viruses: #{cmd.join(' ')}"
+    if system(*cmd)
       virus_scan_passed!
     else
       virus_scan_failed!
@@ -105,6 +107,8 @@ class CaseAttachment < ActiveRecord::Base
     original_file_tmpfile.close
     attachment_object = CASE_UPLOADS_S3_BUCKET.object(key)
     attachment_object.get(response_target: original_file_tmpfile.path)
+    # For clamd to read this it must be readable
+    File.chmod(0644, original_file_tmpfile.path)
     original_file_tmpfile.path
   end
 
