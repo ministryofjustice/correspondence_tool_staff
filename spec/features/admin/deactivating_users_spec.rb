@@ -32,13 +32,13 @@ feature 'deactivating users' do
 
     teams_show_page.load(id: bu.id)
     information_officer = teams_show_page.row_for_information_officer(user_with_cases.email)
-
     information_officer.actions.click
-    expect(users_show_page).to be_displayed
 
-    users_show_page.deactivate_user_button.click
+    expect(users_edit_page).to be_displayed
+
+    users_edit_page.deactivate_user_button.click
     users_destroy_page.deactivate_user_button.click
-    # expect(teams_show_page).to be_displayed
+    expect(teams_show_page).to be_displayed
     expect(teams_show_page.flash_notice.text).to eq "Team member has been deactivated"
     expect(information_officer).not_to eq user_with_cases
 
