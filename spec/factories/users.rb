@@ -83,7 +83,6 @@ FactoryBot.define do
         identifier { 'disclosure-bmt managing user' }
       end
 
-      # full_name      { generate :disclosure_bmt_user_name }
       full_name      { identifier }
       email          { email_from_name(full_name) }
       managing_teams { [find_or_create(:team_dacu, :empty)] }

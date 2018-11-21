@@ -156,7 +156,7 @@ class User < ApplicationRecord
   end
 
   def teams_names
-    self.teams.map(&:name).join(", ")
+    self.teams.map(&:name).to_sentence
   end
 
   private

@@ -293,7 +293,9 @@ Rails.application.routes.draw do
   end
 
   resources :teams do
-    resources :users
+    resources :users do
+      get 'confirm_destroy', on: :member
+    end
 
     get 'business_areas_covered' => 'teams#business_areas_covered',
         as: 'areas_covered_by', on: :member
@@ -309,7 +311,6 @@ Rails.application.routes.draw do
   authenticate :user do
     resources :users do
       resources :teams, only: :index
-      get 'confirm_destroy', on: :member
     end
   end
 

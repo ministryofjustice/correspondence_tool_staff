@@ -57,7 +57,7 @@ class UsersController < ApplicationController
 
   def destroy
     authorize @user
-    service = UserDeletionService.new(params)
+    service = UserDeletionService.new(params, @user)
     service.call
     case service.result
     when :ok
@@ -72,7 +72,7 @@ class UsersController < ApplicationController
 
   def confirm_destroy
     @user = User.find params[:id]
-    @team = Team.find(params[:format])
+    @team = Team.find params[:team_id]
     render :confirm_destroy
   end
 

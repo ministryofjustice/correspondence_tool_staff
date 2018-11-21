@@ -54,7 +54,7 @@
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
                   switch_workflow: :trigger
                 unassign_from_user:
-
+                  transition_to: awaiting_responder
 
               awaiting_dispatch:
                 add_message_to_case:
@@ -73,6 +73,7 @@
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
                   switch_workflow: trigger
                 unassign_from_user:
+                  transition_to: awaiting_responder
 
               responded:
                 add_message_to_case:
@@ -85,6 +86,7 @@
                 link_a_case:
                 remove_linked_case:
                 unassign_from_user:
+                  transition_to: awaiting_responder
 
               closed:
                 add_message_to_case:

@@ -28,6 +28,7 @@ en:
     respond: Response sent to requester
     take_on_for_approval: Clearance level added
     unaccept_approver_assignment: Clearance level removed
+    unassign_from_user: Assigned responder deactivated
     unflag_for_clearance: Clearance level removed
     update_closure: Closure details edited
     upload_response_and_approve: Response uploaded and cleared
