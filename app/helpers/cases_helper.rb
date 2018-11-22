@@ -40,7 +40,7 @@ module CasesHelper
               assign_to_new_team_case_assignment_path(@case, @case .responder_assignment),
               id: 'action--assign-new-team',
               class: 'button'
-    when :add_responses, :add_response_to_flagged_case
+    when :add_responses
       link_to t('common.case.upload_response'),
               new_response_upload_case_path(@case, 'mode' => determine_action),
               id: 'action--upload-response',

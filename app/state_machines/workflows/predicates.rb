@@ -122,6 +122,10 @@ class Workflows::Predicates
     @kase.extended_for_pit?
   end
 
+  def case_respondable?   # member of assigned team and outstide escalation period
+    responder_is_member_of_assigned_team? && @kase.outside_escalation_deadline?
+  end
+
 
   private
 

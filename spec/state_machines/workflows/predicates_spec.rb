@@ -253,5 +253,49 @@ module Workflows
         end
       end
     end
+
+    describe :case_respondable? do
+      let(:kase)        { @all_cases[:case_drafting] }
+      let(:predicate)   { Predicates.new(user: user, kase: kase) }
+
+      context 'manager' do
+        let(:user)    { @disclosure_bmt_user }
+        it 'returns false' do
+          expect(predicate.case_respondable?).to be false
+        end
+      end
+
+      context 'approver' do
+        let(:user)      { @disclosure_specialist }
+        it 'returns false' do
+          expect(predicate.case_respondable?).to be false
+        end
+      end
+
+      context 'responder' do
+        let(:user)        { @assigned_responder }
+        context 'in same team' do
+          context 'within escalation deadline' do
+            it 'returns false' do
+              allow(kase).to receive(:escalation_deadline).and_return(2.days.from_now)
+              expect(predicate.case_respondable?).to be false
+            end
+          end
+          context 'outside escalation deadline' do
+            it 'returns true' do
+              allow(kase).to receive(:escalation_deadline).and_return(2.days.ago)
+              expect(predicate.case_respondable?).to be true
+            end
+          end
+        end
+
+        context 'in different team' do
+          let(:user)      { @another_responder }
+          it 'returns false' do
+            expect(predicate.case_respondable?).to be false
+          end
+        end
+      end
+    end
   end
 end

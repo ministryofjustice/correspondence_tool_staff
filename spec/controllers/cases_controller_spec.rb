@@ -547,23 +547,53 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context 'viewing a flagged accepted case' do
-
+    context 'viewing a flagged accepted case outside the escalation period' do
       let(:user) { flagged_accepted_case.responder }
 
-      before do
-        sign_in user
-        get :show, params: { id: flagged_accepted_case.id   }
+      context 'outside the escalation_period' do
+        before do
+          sign_in user
+          flagged_accepted_case.update(escalation_deadline: 2.days.ago)
+          get :show, params: { id: flagged_accepted_case.id   }
+        end
+
+        it 'should permit adding a response' do
+
+          it {should have_permitted_events_including :add_message_to_case,
+                                                     :add_responses,
+                                                     :link_a_case,
+                                                     :reassign_user,
+                                                     :remove_linked_case,
+                                                     :upload_responses }
+        end
+
+        it 'renders the show page' do
+          expect(response).to have_rendered(:show)
+        end
       end
 
-      it {should have_permitted_events_including :add_message_to_case,
-                                                 :add_responses,
-                                                 :reassign_user }
+      context 'inside the escalation period' do
+        before do
+          sign_in user
+          flagged_accepted_case.update(escalation_deadline: 2.days.from_now)
+          get :show, params: { id: flagged_accepted_case.id   }
+        end
 
-      it 'renders the show page' do
-        expect(response).to have_rendered(:show)
+        it 'should not permit adding a response' do
+          it {should have_permitted_events :add_message_to_case,
+                                           :link_a_case,
+                                           :reassign_user,
+                                           :remove_linked_case,
+                                           :upload_responses }
+        end
+
+        it 'renders the show page' do
+          expect(response).to have_rendered(:show)
+        end
       end
+
     end
+
 
     context 'viewing an assigned_case' do
       before do

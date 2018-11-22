@@ -243,7 +243,7 @@
                   after_transition: Workflows::Hooks#notify_responder_message_received
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 add_responses:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#case_respondable?   # member of assigned team and outstide escalation period
                   transition_to: pending_dacu_clearance
                 link_a_case:
                 reassign_user:
