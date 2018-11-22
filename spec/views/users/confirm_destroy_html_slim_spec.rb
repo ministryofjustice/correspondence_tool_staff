@@ -48,7 +48,7 @@ describe 'users/confirm_destroy.html.slim', type: :view do
         .to have_text "#{multiple_team_responder.full_name} has 1 open cases assigned to them. If you deactivate them, their cases will still be assigned to Disclosure but a new responder will need to be assigned."
       expect(users_destroy_page.other_team_info)
         .to have_text(
-        "They are also a member of #{multiple_team_responder.teams.first.name} and #{multiple_team_responder.teams.last.name}")
+        "They are a member of the following teams #{multiple_team_responder.teams.first.name} and #{multiple_team_responder.teams.last.name}")
       expect(users_destroy_page)
         .to have_deactivate_user_button
     end

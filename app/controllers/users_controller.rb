@@ -56,8 +56,8 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    authorize @user
-    service = UserDeletionService.new(params, @user)
+    authorize current_user
+    service = UserDeletionService.new(params, current_user)
     service.call
     case service.result
     when :ok

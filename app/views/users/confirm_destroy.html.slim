@@ -18,7 +18,7 @@
 - if @user.multiple_team_member?
   .other-team-info
     p
-      = "They are also a member of #{@user.teams_names}"
+      = "They are a member of the following teams #{@user.teams_names}"
 
 = link_to "Deactivate team member", team_user_path(@team.id, @user.id),
           method: :delete,
