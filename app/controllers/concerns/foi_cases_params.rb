@@ -39,6 +39,10 @@ module FOICasesParams
     )
   end
 
+  def respond_date_params
+    respond_foi_params
+  end
+
   def process_foi_closure_params
     closure_params = params.require(:case_foi).permit(
       :date_responded_dd,
@@ -48,7 +52,8 @@ module FOICasesParams
       :appeal_outcome_name,
       :refusal_reason_abbreviation,
       :info_held_status_abbreviation,
-      exemption_ids: []
+      :late_team_id,
+      exemption_ids: [],
     )
 
     info_held_status = closure_params[:info_held_status_abbreviation]

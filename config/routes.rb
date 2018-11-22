@@ -210,6 +210,7 @@ Rails.application.routes.draw do
     get 'new_linked_cases_for', on: :collection
 
     get 'close', on: :member
+    get 'close_2', on: :member
     get 'respond_and_close', on: :member
     get 'closed' => 'cases#closed_cases', on: :collection
     get 'confirm_destroy' => 'cases#confirm_destroy', on: :member
@@ -221,8 +222,10 @@ Rails.application.routes.draw do
     get 'open/in_time', to: redirect('/cases/open')
     get 'open/late',    to: redirect('/cases/open')
     patch 'process_closure', on: :member
+    patch 'process_date_responded', on: :member
     patch 'process_respond_and_close', on: :member
     patch 'update_closure', on: :member
+    patch 'record_late_team', on: :member
     get 'respond', on: :member
     patch 'confirm_respond', on: :member
     get '/assignments/assign_to_team' => 'assignments#assign_to_team', as: 'assign_to_responder_team'

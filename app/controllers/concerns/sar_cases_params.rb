@@ -43,6 +43,7 @@ module SARCasesParams
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
+      :late_team_id,
     ).merge(refusal_reason_abbreviation: missing_info_to_tmm)
   end
 end

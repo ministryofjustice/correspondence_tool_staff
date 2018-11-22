@@ -225,6 +225,7 @@ FactoryBot.define do
     date_responded   { 3.business_days.ago }
     info_held_status { find_or_create :info_status, :held }
     outcome          { find_or_create :outcome, :granted }
+    late_team_id     { responding_team }
 
     after(:create) do |kase, evaluator|
       create :case_transition_close,

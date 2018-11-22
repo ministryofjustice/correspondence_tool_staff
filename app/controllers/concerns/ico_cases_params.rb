@@ -27,6 +27,14 @@ module ICOCasesParams
     create_ico_params
   end
 
+  def record_late_team_ico_params
+    if params[:case_ico].present?
+      params.require(:case_ico).permit(:late_team_id)
+    else
+      {}
+    end
+  end
+
   def process_new_linked_cases_for_params
     result = case @correspondence_type_key
              when 'ico' then process_new_linked_cases_for_ico_params
@@ -48,6 +56,7 @@ module ICOCasesParams
                                  :date_ico_decision_received_yyyy,
                                  :ico_decision_comment,
                                  :ico_decision,
+                                 :late_team_id,
                                  uploaded_ico_decision_files: [],
     )
   end

@@ -28,6 +28,7 @@ module PageObjects
         assignment_rejected:            'Assignments::ShowRejectedPage',
         cases:                          'CasesPage',
         cases_close:                    'Cases::ClosePage',
+        cases_closure_outcomes:         'Cases::ClosureOutcomesPage',
         cases_new:                      'Cases::NewPage',
         cases_new_foi:                  'Cases::New::FOIPage',
         cases_new_ico:                  'Cases::New::ICOPage',

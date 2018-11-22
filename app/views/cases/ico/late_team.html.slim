@@ -1,0 +1,30 @@
+- content_for :page_title do
+  = t('page_title.marking_response_as_sent', case_number: @case.number)
+
+- content_for :heading
+  .grid-row
+    .column-two-thirds
+      = 'Who was responsible for the late response?'
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+        ""
+
+
+- content_for :sub_heading
+span.visually-hidden
+  = t('common.case.header_case_number')
+= "#{@case.number} - #{@case.pretty_type}"
+
+= render partial: 'layouts/header'
+
+div class="case-#{@case.type_abbreviation.downcase}"
+
+  = form_for @case, as: "case_#{@case.type_abbreviation.downcase}", url: record_late_team_case_path do |f|
+
+    = render partial: 'cases/shared/team_caused_late_response', locals: {kase: @case, f: f}
+
+    .grid-row
+      .column-two-thirds
+        = f.submit 'Mark as responded', {class: 'button'}
+        = link_to "Return to case detail", case_path(@case.id), class: 'button-secondary button-left-spacing'

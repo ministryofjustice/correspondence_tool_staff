@@ -10,12 +10,17 @@
     = t('.heading')
 
 - content_for :sub_heading
-  span.visually-hidden
-    = t('common.case.header_case_number')
-  = "#{@case.number} - #{@case.pretty_type}"
+span.visually-hidden
+  = t('common.case.header_case_number')
+= "#{@case.number} - #{@case.pretty_type}"
 
 = render partial: 'layouts/header'
 
 div class="case-#{@case.type_abbreviation.downcase}"
 
-  = render partial: "cases/shared/date_responded_form", locals: { kase: @case, submit_button: t('.submit')}
+  = render partial: "cases/#{@case.type_abbreviation.downcase}/closure_outcomes_form",
+          locals: { kase: @case,
+                  submit_button: t('.submit')}
+
+
+

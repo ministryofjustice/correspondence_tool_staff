@@ -1,6 +1,6 @@
 .case-attachments
   h2.request--heading
-    = translate_for_case(case_details,'cases.show', 'attachments_heading')
+    = translate_for_case(case_details, 'cases.show', 'attachments_heading')
   .request--message
     - case_details.upload_response_groups.each do |ug|
       .case-attachments-group
@@ -12,5 +12,5 @@
             = " #{ ug.team_name }"
 
         = render partial: 'cases/attachment_report',
-                 locals: { attachments: ug.collection,
-                            case_details: case_details }
+                locals: {attachments: ug.collection,
+                        case_details: case_details}

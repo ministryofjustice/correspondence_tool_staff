@@ -20,7 +20,8 @@ class Case::FOI::Standard < Case::Base
   jsonb_accessor :properties,
                  escalation_deadline: :date,
                  internal_deadline: :date,
-                 external_deadline: :date
+                 external_deadline: :date,
+                 late_team_id: :integer
 
   has_paper_trail only: [
                     :name,

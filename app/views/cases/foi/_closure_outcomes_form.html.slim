@@ -1,0 +1,33 @@
+.grid-row
+  .column-full
+    = render partial: 'cases/case_attachments', locals: { case_details: @case }
+
+- url = defined?(form_url) ? form_url : process_closure_case_path(id: @case.id)
+= form_for @case, as: :case_foi, url: url do |f|
+
+  - if @case.responded_late?
+    = render partial: 'cases/shared/team_caused_late_response', locals: { kase: @case, f: f }
+
+  - if @case.is_internal_review?
+    .appeal-outcome-group
+      = f.radio_button_fieldset :appeal_outcome_name, choices: CaseClosure::AppealOutcome.active.map(&:name)
+
+  .js-info-held-status
+    = f.radio_button_fieldset :info_held_status_abbreviation, choices: CaseClosure::InfoHeldStatus.all, text_method: :name, value_method: :abbreviation
+
+  .js-outcome-group
+    = f.radio_button_fieldset :outcome_abbreviation, choices: CaseClosure::Outcome.active, text_method: :name, value_method: :abbreviation
+
+  .js-other-reasons.form-group
+    = f.radio_button_fieldset :refusal_reason_abbreviation, choices: CaseClosure::RefusalReason.active, text_method: :name, value_method: :abbreviation
+
+  .js-refusal-exemptions
+    #refusal-exemptions.form-group
+      h2.form-label-bold
+        = "What exemptions were applied?"
+
+      = render partial: 'exemption_checkbox_section', locals: { exemptions: CaseClosure::Exemption.absolute, heading: 'Absolute exemptions', hint: 'These have no public interest test attached', kase: @case, f: f }
+
+      = render partial: 'exemption_checkbox_section', locals: { exemptions: CaseClosure::Exemption.qualified, heading: 'Qualified exemptions', hint: 'These are subject to a public interest test', kase: @case, f: f }
+
+  = f.submit submit_button, {class: 'button'}

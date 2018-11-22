@@ -245,6 +245,8 @@ class Case::Base < ApplicationRecord
            foreign_key: :case_id,
            dependent: :destroy
 
+  belongs_to :late_team, class_name: 'BusinessUnit'
+
   belongs_to :outcome, class_name: 'CaseClosure::Outcome'
 
   belongs_to :appeal_outcome, class_name: 'CaseClosure::AppealOutcome'
@@ -473,6 +475,10 @@ class Case::Base < ApplicationRecord
 
   def responded?
     transitions.where(event: 'respond').any?
+  end
+
+  def responded_late?
+    date_responded.present? && (date_responded > external_deadline)
   end
 
   def responded_in_time?

@@ -28,7 +28,8 @@ class Case::SAR < Case::Base
                  subject_type: :string,
                  third_party: :boolean,
                  third_party_relationship: :string,
-                 reply_method: :string
+                 reply_method: :string,
+                 late_team_id: :integer
 
   attr_accessor :missing_info
 

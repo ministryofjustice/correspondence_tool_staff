@@ -41,6 +41,7 @@ class CasesController < ApplicationController
                   :approve_response_interstitial,
                   :assign_to_new_team,
                   :close,
+                  :closure_outcomes,
                   :confirm_respond,
                   :confirm_destroy,
                   :destroy,
@@ -49,9 +50,11 @@ class CasesController < ApplicationController
                   :flag_for_clearance,
                   :new_response_upload,
                   :process_closure,
+                  :process_date_responded,
                   :process_respond_and_close,
                   :progress_for_clearance,
                   :reassign_approver,
+                  :record_late_team,
                   :remove_clearance,
                   :request_amends,
                   :request_further_clearance,
@@ -340,6 +343,40 @@ class CasesController < ApplicationController
     set_permitted_events
   end
 
+  def process_date_responded
+    authorize @case, :can_close_case?
+    @case.prepare_for_respond
+    if !@case.update respond_date_params
+      render :close
+    else
+      @team_collection = CaseTeamCollection.new(@case)
+      @case.update(late_team_id: @case.responding_team.id)
+      render :closure_outcomes
+    end
+  end
+
+  def closure_outcomes
+    authorize @case, :can_close_case?
+  end
+
+  def process_closure
+    authorize @case, :can_close_case?
+    close_params = process_closure_params(@case.type_abbreviation)
+    service = CaseClosureService.new(@case, current_user, close_params)
+    service.call
+    if service.result == :ok
+      set_permitted_events
+      flash[:notice] = service.flash_message
+      redirect_to case_path(@case)
+    else
+      set_permitted_events
+      @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
+      @team_collection = CaseTeamCollection.new(@case)
+      render :closure_outcomes
+    end
+  end
+
+
   def respond_and_close
     authorize @case
     @case.date_responded = nil
@@ -369,21 +406,7 @@ class CasesController < ApplicationController
     end
   end
 
-  def process_closure
-    authorize @case, :can_close_case?
-    close_params = process_closure_params(@case.type_abbreviation)
-    service = CaseClosureService.new(@case, current_user, close_params)
-    service.call
-    if service.result == :ok
-      set_permitted_events
-      flash[:notice] = service.flash_message
-      redirect_to case_path(@case)
-    else
-      set_permitted_events
-      @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
-      render :close
-    end
-  end
+
 
   def update_closure
     authorize @case
@@ -409,19 +432,38 @@ class CasesController < ApplicationController
 
   def confirm_respond
     authorize @case, :can_respond?
-    @case.prepare_for_respond
     params = respond_params(@case.type_abbreviation)
-    ActiveRecord::Base.transaction do
-      if @case.update(params)
-        @case.respond(current_user)
-        flash[:notice] = t('.success')
-        redirect_to case_path(@case)
-      else
-        set_correspondence_type(@case.type_abbreviation.downcase)
-        render :respond
-      end
+    service = MarkResponseAsSentService.new(@case, current_user, params)
+    service.call
+    case service.result
+    when :ok
+      flash[:notice] = t('.success')
+      redirect_to case_path(@case)
+    when :late
+      @team_collection = CaseTeamCollection.new(@case)
+      render '/cases/ico/late_team'
+    when :error
+      set_correspondence_type(@case.type_abbreviation.downcase)
+      render :respond
+    else
+      raise 'unexpected result from MarkResponseAsSentService'
     end
   end
+
+  # this action is only used for ICO cases
+  def record_late_team
+    authorize @case, :can_respond?
+    @case.prepare_for_recording_late_team
+    params = record_late_team_params(@case.type_abbreviation)
+    if @case.update(params)
+      @case.respond(current_user)
+      redirect_to case_path
+    else
+      @team_collection = CaseTeamCollection.new(@case)
+      render '/cases/ico/late_team'
+    end
+  end
+
 
   def search
     service = CaseSearchService.new(user: current_user,
@@ -842,6 +884,14 @@ class CasesController < ApplicationController
     when 'ICO' then respond_ico_params
     when 'OVERTURNED_FOI' then respond_overturned_params
     else raise 'Unknown case type'
+    end
+  end
+
+  def record_late_team_params(correspondence_type)
+    if correspondence_type == 'ICO'
+      record_late_team_ico_params
+    else
+      raise '#record_late_team_params only valid for ICO cases'
     end
   end
 

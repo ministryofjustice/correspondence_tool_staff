@@ -1435,4 +1435,39 @@ RSpec.describe Case::Base, type: :model do
       end
     end
   end
+
+
+  describe '#responded_late?' do
+    context 'date responded is nil' do
+      it 'is false' do
+        kase = find_or_create :foi_case
+        expect(kase.date_responded).to be_nil
+        expect(kase.responded_late?).to be false
+      end
+    end
+
+    context 'date responded is present' do
+      let(:kase)    { find_or_create :closed_case, date_responded: Date.today }
+
+      context 'date responded > external deadline' do
+        it 'is true' do
+          kase.external_deadline = Date.yesterday
+          expect(kase.responded_late?).to be true
+        end
+      end
+
+      context 'date responded < external deadline' do
+        it 'is false' do
+          kase.external_deadline = Date.tomorrow
+          expect(kase.responded_late?).to be false
+        end
+      end
+      context 'date_responded = external deadline' do
+        it 'is false' do
+          kase.external_deadline = Date.today
+          expect(kase.responded_late?).to be false
+        end
+      end
+    end
+  end
 end

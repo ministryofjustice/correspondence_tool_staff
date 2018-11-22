@@ -13,7 +13,8 @@ class Case::ICO::Base < Case::Base
                  external_deadline: :date,
                  date_ico_decision_received: :date,
                  ico_decision: :string,
-                 ico_decision_comment: :string
+                 ico_decision_comment: :string,
+                 late_team_id: :integer
 
   acts_as_gov_uk_date :date_ico_decision_received,
                       :date_responded,
@@ -51,6 +52,7 @@ class Case::ICO::Base < Case::Base
   validates :received_date, presence: true
   validate :received_date_within_limits?,
            if: -> { received_date.present? }
+  validate :validate_late_team_recorded
 
   has_many :ico_decision_attachments,
            -> { ico_decision },
@@ -124,6 +126,22 @@ class Case::ICO::Base < Case::Base
 
   def lacks_overturn?
     !has_overturn?
+  end
+
+  def prepare_for_recording_late_team
+    @preparing_for_recording_late_team = true
+  end
+
+  def prepared_for_recording_late_team?
+    @preparing_for_recording_late_team == true
+  end
+
+  def validate_late_team_recorded
+    if prepared_for_recording_late_team? && responded_late?
+      if late_team_id.blank?
+        errors.add(:late_team, "can't be blank")
+      end
+    end
   end
 
   private

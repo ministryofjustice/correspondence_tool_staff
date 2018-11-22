@@ -1,31 +1,16 @@
 module PageObjects
   module Pages
     module Cases
-      class ClosePage < SitePrism::Page
-        include SitePrism::Support::DropInDropzone
+      class ClosureOutcomesPage < SitePrism::Page
+        # include SitePrism::Support::DropInDropzone
 
-        set_url '/cases/{id}/close'
+        set_url '/cases/{id}/process_date_responded'
 
         section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
         sections :case_attachments,
                  PageObjects::Sections::Cases::CaseAttachmentSection,
                  '.case-attachments-group'
-
-        element :date_responded_day, :case_form_element, 'date_responded_dd'
-        element :date_responded_month, :case_form_element, 'date_responded_mm'
-        element :date_responded_year, :case_form_element, 'date_responded_yyyy'
-
-        # WE'LL be able to remove all of this below once we've converted the edit case closure details
-        # to take account of assigning team responsible for lateness, because it is all now in the
-        # closure outcomes page
-
-
-        element :date_responded_day_ico, :case_form_element, 'date_ico_decision_received_dd'
-        element :date_responded_month_ico, :case_form_element, 'date_ico_decision_received_mm'
-        element :date_responded_year_ico, :case_form_element, 'date_ico_decision_received_yyyy'
-
-        element :uploaded_request_file_input, '#uploadedRequestFileInput'
 
         section :appeal_outcome, '.appeal-outcome-group' do
           element :upheld, 'label[for="case_foi_appeal_outcome_name_upheld"]'

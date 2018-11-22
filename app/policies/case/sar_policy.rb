@@ -65,8 +65,7 @@ class Case::SARPolicy < Case::BasePolicy
 
   def can_close_case?
     clear_failed_checks
-    self.case.drafting? &&
-        user.responding_teams.include?(self.case.responding_team)
+    user.responding_teams.include?(self.case.responding_team)
   end
 
   def can_add_attachment_to_flagged_and_unflagged_cases?

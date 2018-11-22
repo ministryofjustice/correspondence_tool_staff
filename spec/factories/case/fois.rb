@@ -5,13 +5,7 @@
 #  id                   :integer          not null, primary key
 #  name                 :string
 #  email                :string
-#  message              :text
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  category_id          :integer
-#  received_date        :date
-#  postal_address       :string
-#  subject              :string
+#  message              :textBFA9 3746 AB26 5BD4 E47C 72D3 44B7 50D1 7E64 F8EEect              :string
 #  properties           :jsonb
 #  requester_type       :enum
 #  number               :string           not null
@@ -350,6 +344,7 @@ FactoryBot.define do
     message          { 'info held, granted' }
     received_date    { 22.business_days.ago }
     date_responded   { 4.business_days.ago }
+    late_team_id     { responding_team.id }
 
     after(:create) do |kase, evaluator|
       create :case_transition_close,
@@ -378,8 +373,9 @@ FactoryBot.define do
     end
 
     trait :late do
-      received_date { 30.business_days.ago }
+      received_date  { 30.business_days.ago }
       date_responded { 1.business_day.ago }
+      late_team_id   { responding_team.id }
     end
 
     trait :granted_in_full do
