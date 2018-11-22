@@ -293,7 +293,9 @@ Rails.application.routes.draw do
   end
 
   resources :teams do
-    resources :users
+    resources :users do
+      get 'confirm_destroy', on: :member
+    end
 
     get 'business_areas_covered' => 'teams#business_areas_covered',
         as: 'areas_covered_by', on: :member
@@ -302,7 +304,6 @@ Rails.application.routes.draw do
     delete 'destroy_business_area' => 'teams#destroy_business_area', on: :member
     patch 'update_business_area' => 'teams#update_business_area', on: :member
     get 'update_business_area_form' => 'teams#update_business_area_form', on: :member
-
   end
 
   resource :users

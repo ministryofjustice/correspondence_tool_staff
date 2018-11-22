@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  before_action :set_team, only: [:create, :new, :edit, :update]
+  before_action :set_team, only: [:create, :new, :edit, :update, :confirm_destroy]
 
   def show
     @user = User.find params[:id]
@@ -56,8 +56,8 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    authorize @user
-    service = UserDeletionService.new(params)
+    authorize current_user
+    service = UserDeletionService.new(params, current_user)
     service.call
     case service.result
     when :ok
@@ -68,6 +68,12 @@ class UsersController < ApplicationController
       flash[:alert] = I18n.t('devise.registrations.error')
     end
     redirect_to team_path(params[:team_id])
+  end
+
+  def confirm_destroy
+    @user = User.find params[:id]
+    @team = Team.find params[:team_id]
+    render :confirm_destroy
   end
 
   private

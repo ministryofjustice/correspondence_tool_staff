@@ -49,6 +49,8 @@
                   if: Workflows::Predicates#has_pit_extension?
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
+                unassign_from_user:
+                  transition_to: awaiting_responder
 
               pending_dacu_clearance:
                 add_message_to_case:
@@ -63,6 +65,8 @@
                   if: Workflows::Predicates#has_pit_extension?
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
+                unassign_from_user:
+                  transition_to: awaiting_responder
 
               awaiting_dispatch:
                 add_message_to_case:
@@ -79,6 +83,8 @@
                 request_further_clearance:
                   if: Case::FOI::StandardPolicy#can_request_further_clearance?
                   switch_workflow: full_approval
+                unassign_from_user:
+                  transition_to: awaiting_responder
 
               responded:
                 add_message_to_case:
@@ -90,6 +96,8 @@
                   if: Workflows::Predicates#not_overturned?
                 link_a_case:
                 remove_linked_case:
+                unassign_from_user:
+                  transition_to: awaiting_responder
 
               closed:
                 add_message_to_case:

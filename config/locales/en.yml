@@ -801,10 +801,10 @@ en:
     edit:
       edit: Edit team member
       heading: "Edit %{role}"
-    form:
-      destroy: "If you deactivate this team member, they will no longer be able to sign in and take action on cases. Are you sure you want to continue?"
     show:
       <<: *cases_list
+    confirm_destroy:
+      heading: Deactivate team member
 
   devise:
     registrations:
