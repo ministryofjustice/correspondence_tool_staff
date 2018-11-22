@@ -132,11 +132,11 @@ describe 'teams/show.html.slim', type: :view do
       teams_show_page.load(rendered)
 
       user1 = teams_show_page.information_officers_list.first
-      expect(user1.name.text).to  eq responder1.full_name
+      expect(user1.name.text).to eq responder1.full_name
       expect(user1.email.text).to eq responder1.email
       expect(user1.num_cases.text).to eq '33'
       user2 = teams_show_page.information_officers_list.second
-      expect(user2.name.text).to  eq responder2.full_name
+      expect(user2.name.text).to eq responder2.full_name
       expect(user2.email.text).to eq responder2.email
       expect(user2.num_cases.text).to eq '5'
     end

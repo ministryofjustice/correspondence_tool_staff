@@ -310,4 +310,12 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '#teams_names' do
+    let(:user)       { find_or_create :approver_responder }
+
+    it 'prints out the team' do
+      expect(user.teams_names).to eq("#{user.teams.first.name} and #{user.teams.last.name}")
+    end
+  end
 end

@@ -1,0 +1,30 @@
+= GovukElementsErrorsHelper.error_summary @user,
+        "#{pluralize(@user.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+        ""
+
+- content_for :heading
+  = "#{@user.full_name} has open cases"
+
+- content_for :sub_heading
+  = t('.heading')
+
+= render partial: 'layouts/header'
+
+.deactivate-info
+  p
+    = "#{@user.full_name} has #{@user.cases.count} open cases assigned to them. "
+    = "If you deactivate them, their cases will still be assigned to Disclosure but a new responder will need to be assigned."
+
+- if @user.multiple_team_member?
+  .other-team-info
+    p
+      = "They are a member of the following teams #{@user.teams_names}"
+
+= link_to "Deactivate team member", team_user_path(@team.id, @user.id),
+          method: :delete,
+          class: 'button',
+          id: 'deactivate-user-button'
+
+= link_to('Cancel',
+          edit_team_user_path(@team, @user),
+          class: 'acts-like-button button-left-spacing')
