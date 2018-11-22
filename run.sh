@@ -21,6 +21,7 @@ development-setup)
     rails db:setup
     echo "migrating db"
     rails db:migrate
+    rails data:migrate
     echo "seeding db for dev"
     rails db:seed
     rails db:seed:dev
