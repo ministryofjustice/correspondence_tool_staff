@@ -16,6 +16,8 @@ module PageObjects
 
         # only shows up when using drop_in_dropzone
         element :uploaded_request_file_input, '#uploadedRequestFileInput'
+        elements :uploaded_request_file_inputs, 'input.case-uploaded-files',
+                 visible: false
 
         # Upload a file to Dropzone.js
         def drop_in_dropzone(file_path)

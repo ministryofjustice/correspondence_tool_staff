@@ -260,11 +260,13 @@ Rails.application.routes.draw do
       patch :execute_assign_to_new_team, on: :member
     end
 
-    resources :case_attachments, path: 'attachments', as: 'attachments', except: [:show] do
+    resources :case_attachments,
+              path: 'attachments',
+              as: 'attachments',
+              except: [:close, :show] do
       get '', on: :member, action: :show, format: :json
-      post 'create_from_s3', on: :collection
-      get 'preview', on: :member
       get 'download', on: :member
+      get 'preview', on: :member
     end
 
     resources :messages, only: :create
@@ -273,6 +275,10 @@ Rails.application.routes.draw do
     post 'upload_responses', on: :member
 
     get 'search' => 'cases#search', on: :collection
+  end
+
+  resources :case_attachments, only: [] do
+    get 'check_scan', on: :collection
   end
 
   authenticated :user, ->(u) { u.admin? } do

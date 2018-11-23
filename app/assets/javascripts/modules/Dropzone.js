@@ -37,7 +37,10 @@ moj.Modules.Dropzone = {
       paramName : 'file',
       createImageThumbnails : false,
       acceptedFiles : this.$target.data('accepted-files'),
+      attachmentType : this.$target.data('attachment-type'),
+      correspondenceType : this.$target.data('correspondence-type'),
       dataType : 'XML',
+      checkScanURL : this.$target.data('check-scan-url'),
       headers : { formData: this.$target.data('form-data')},
       sending : function(file, xhr, formData) {
         var s3Data = $(this.element).data('form-data');
@@ -63,6 +66,7 @@ moj.Modules.Dropzone = {
       },
       success : function(file, response) {
         // extract key and generate URL from response
+        console.log(response);
         var responseDoc = $.parseXML(response);
         var $response   = $(responseDoc);
         var key = $response.find('Key').text();

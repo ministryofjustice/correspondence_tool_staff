@@ -225,6 +225,7 @@ class CasesController < ApplicationController
   end
 
   def show
+
     if flash.key?(:query_id)
       SearchQuery.find(flash[:query_id])&.update_for_click(params[:pos].to_i)
     end
@@ -284,6 +285,9 @@ class CasesController < ApplicationController
   def upload_responses
     authorize_upload_response_for_action @case, flash[:action_params]
 
+    # TODO: there's a problem with the case attachment that gets created here.
+    #       it looks like the case attachment we want to create is already
+    #       created, so when we go to do it here, it's already created.
     bypass_params_manager = BypassParamsManager.new(params)
     rus = ResponseUploaderService.new(
       @case, current_user, bypass_params_manager, flash[:action_params]

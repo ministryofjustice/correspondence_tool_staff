@@ -94,7 +94,7 @@ module Features
           .to have_content user.full_name
       end
       cases_show_page.load(id: kase.id)
-      upload_response_step file: file
+      upload_response_step kase: kase, file: file
       go_to_case_details_step kase: kase.reload,
                               find_details_page: false,
                               expected_response_files: [File.basename(file)]

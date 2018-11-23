@@ -1,9 +1,10 @@
 UPLOAD_RESPONSE_DOCX_FIXTURE = Rails.root.join 'spec/fixtures/response.docx'
 
-def upload_response_step(file: UPLOAD_RESPONSE_DOCX_FIXTURE)
+def upload_response_step(kase:, file: UPLOAD_RESPONSE_DOCX_FIXTURE)
   stub_s3_uploader_for_all_files!
+  pass_virus_scan_for_all_files!
   cases_show_page.actions.upload_response.click
-  cases_new_response_upload_page.drop_in_dropzone(file)
+  cases_new_response_upload_page.upload_file(kase: kase, file_path: file)
   cases_new_response_upload_page.upload_response_button.click
   expect(cases_show_page).to be_displayed
   expect(cases_show_page.notice)

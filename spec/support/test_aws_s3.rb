@@ -12,7 +12,7 @@ class TestAWSS3
     end
 
     def object(key)
-      @objects[key] = Object.new(key, self)
+      @objects[key] ||= Object.new(key, self)
     end
 
     def objects(options = {})

@@ -1,12 +1,12 @@
 class CaseAttachmentsController < ApplicationController
-  before_action :set_case,       only: [:create_from_s3,
+  before_action :set_case,       only: [:create,
                                         :destroy,
                                         :download,
                                         :preview,
                                         :show]
   before_action :set_attachment, only: [:destroy, :download, :preview, :show]
 
-  def create_from_s3
+  def create
     authorize @case, :can_add_attachment?
 
     attachment = CaseAttachment.create!(create_params.merge(case: @case))
@@ -67,4 +67,9 @@ class CaseAttachmentsController < ApplicationController
   def set_case
     @case = Case::Base.find(params[:case_id])
   end
+
+  # def set_correspondence_type(type)
+  #   @correspondence_type = CorrespondenceType.find_by_abbreviation(type.upcase)
+  #   @correspondence_type_key = type
+  # end
 end

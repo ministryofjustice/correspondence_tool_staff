@@ -31,7 +31,9 @@ class CaseAttachment < ActiveRecord::Base
 
   scope :ico_decisions, -> { where(type: :ico_decision) }
 
-  enum type: { response: 'response', request: 'request', ico_decision: 'ico_decision' }
+  enum type: { response: 'response',
+               request: 'request',
+               ico_decision: 'ico_decision' }
 
   enum state: { unprocessed:        'unprocessed',
                 scanning_for_virus: 'scanning_for_virus',

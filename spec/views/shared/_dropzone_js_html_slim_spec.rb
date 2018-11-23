@@ -3,6 +3,10 @@ require 'rails_helper'
 describe 'shared/dropzone_js.html.slim', type: :view do
   describe 'Preview template' do
 
+    def render_partial
+      render partial: 'shared/dropzone_js.html.slim'
+      dropzonejs_preview_template_section(rendered)
+    end
 
     it 'displays a filename' do
       partial =  render_partial
@@ -29,11 +33,4 @@ describe 'shared/dropzone_js.html.slim', type: :view do
       expect(partial).to have_error_message_container
     end
   end
-
-
-  def render_partial
-    render partial: 'shared/dropzone_js.html.slim'
-    dropzonejs_preview_template_section(rendered)
-  end
-
 end

@@ -243,15 +243,31 @@ RSpec.describe CaseAttachment, type: :model do
     context 'private methods' do
 
       describe 'private method dowload_original_file' do
+        let(:object_key) { '6/responses/20170614142203/my_photo.jpg' }
+        let(:s3_object)  { CASE_UPLOADS_S3_BUCKET.object(object_key) }
+        let(:tempfile)   { double Tempfile,
+                                  close: nil,
+                                  path: '/tmp/xxx_my_photo.jpg' }
+
+        before do
+          allow(Tempfile).to receive(:new).with(['orig', '.jpg'])
+                                .and_return(tempfile)
+          allow(s3_object).to receive(:get)
+          allow(File).to receive(:chmod)
+        end
+
         it 'downloads file and puts in a temporary file' do
-          tempfile = double Tempfile, close: nil, path: '/tmp/xxx_my_photo.jpg'
-          expect(Tempfile).to receive(:new).with(['orig', '.jpg']).and_return(tempfile)
-          s3_object = double 'S3 Object'
-          expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with('6/responses/20170614142203/my_photo.jpg').and_return(s3_object)
-          expect(s3_object).to receive(:get).with(response_target: '/tmp/xxx_my_photo.jpg')
 
           download_file_path = jpg_case_attachment.__send__(:download_original_file)
           expect(download_file_path).to eq '/tmp/xxx_my_photo.jpg'
+          expect(s3_object).to have_received(:get)
+                                 .with(response_target: '/tmp/xxx_my_photo.jpg')
+        end
+
+        it 'chmods the file 644 for processing by clamdscan' do
+          jpg_case_attachment.__send__(:download_original_file)
+          expect(File).to have_received(:chmod)
+                            .with(0644, '/tmp/xxx_my_photo.jpg')
         end
       end
 
@@ -322,13 +338,13 @@ RSpec.describe CaseAttachment, type: :model do
       stub_s3_uploader_for_all_files!
     end
 
-    it 'runs clamscan' do
+    it 'runs clamdscan' do
       allow(attachment).to receive(:download_original_file)
                              .and_return(original_filename)
 
       attachment.scan_for_virus
       expect(attachment).to have_received(:system)
-                              .with('clamscan', original_filename)
+                              .with('clamdscan', original_filename)
     end
 
     it 'sets the state to scanning_for_virus on start' do

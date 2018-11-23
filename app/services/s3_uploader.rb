@@ -5,19 +5,29 @@ class S3Uploader
     @upload_group = create_upload_group
   end
 
-  def self.s3_direct_post_for_case(kase, type)
-    uploads_key = "uploads/#{kase.uploads_dir(type)}/${filename}"
-    CASE_UPLOADS_S3_BUCKET.presigned_post(
-      key:                   uploads_key,
-      success_action_status: '201',
-    )
-  end
+  class << self
+    def s3_direct_post_for_case(kase, type)
+      uploads_key = "uploads/#{kase.uploads_dir(type)}/${filename}"
+      CASE_UPLOADS_S3_BUCKET.presigned_post(
+        key:                   uploads_key,
+        success_action_status: '201',
+      )
+    end
 
-  def self.id_for_case(kase)
-    if kase.persisted?
-      kase.id
-    else
-      SecureRandom.urlsafe_base64
+    # def s3_direct_post_for_new_case(type)
+    #   uploads_key = "uploads/#{kase.uploads_dir(type)}/${filename}"
+    #   CASE_UPLOADS_S3_BUCKET.presigned_post(
+    #     key:                   uploads_key,
+    #     success_action_status: '201',
+    #   )
+    # end
+
+    def id_for_case(kase)
+      if kase.persisted?
+        kase.id
+      else
+        SecureRandom.urlsafe_base64
+      end
     end
   end
 

@@ -10,7 +10,7 @@ RSpec.describe CaseAttachmentsController, type: :controller do
     stub_s3_uploader_for_all_files!
   end
 
-  describe 'POST create_from_s3' do
+  describe 'POST create' do
     let(:kase)   { create :case_being_drafted }
     let(:params) {
       {
@@ -29,33 +29,33 @@ RSpec.describe CaseAttachmentsController, type: :controller do
 
     it 'authorises' do
       expect {
-        post :create_from_s3, params: params
+        post :create, params: params
       } .to require_permission(:can_add_attachment?)
               .with_args(responder, kase)
 
     end
 
     it 'creates the attachment' do
-      post :create_from_s3, params: params
+      post :create, params: params
 
       expect(kase.attachments.reload.count).to eq 1
       expect(kase.attachments.last.key).to eq s3_key
     end
 
     it 'defaults the state to "unprocessed"' do
-      post :create_from_s3, params: params
+      post :create, params: params
 
       expect(kase.attachments.last.state).to eq 'unprocessed'
     end
 
     it 'starts the virus scan job' do
-      post :create_from_s3, params: params
+      post :create, params: params
 
       expect(VirusScanJob).to have_been_enqueued.exactly(:once)
     end
 
     it 'redirects to status page' do
-      post :create_from_s3, params: params
+      post :create, params: params
 
       attachment = kase.attachments.last
       expect(response).to redirect_to case_attachment_path(

@@ -1,12 +1,14 @@
 .dropzone{ tabindex="0"
-           data-dz-template=render('shared/dropzone_js').gsub('"', '\'').html_safe
-           data-form-data=s3_direct_post.fields.to_json
-           data-url= s3_direct_post.url
-           data-host= URI.parse(s3_direct_post.url).host
-           data-accepted-files=accepted_case_attachment_types
-           data-file-input-name=file_input_name
-           data-max-filesize-in-mb=Settings.max_attachment_file_size_in_MB
-           data-process-file-url=create_from_s3_case_attachments_path(case_id: case_id)}
+           data-dz-template         = render('shared/dropzone_js').gsub('"', '\'').html_safe
+           data-form-data           = s3_direct_post.fields.to_json
+           data-url                 = s3_direct_post.url
+           data-host                = URI.parse(s3_direct_post.url).host
+           data-accepted-files      = accepted_case_attachment_types
+           data-file-input-name     = file_input_name
+           data-max-filesize-in-mb  = Settings.max_attachment_file_size_in_MB
+           data-process-file-url    = (defined?(case_id) ? case_attachments_path(case_id: case_id) : orphan_case_attachments_path)
+           data-attachment-type     = (defined?(attachment_type) ? attachment_type : 'response')
+           data-correspondence-type = (defined?(correspondence_type) ? correspondence_type : nil) }
 
   .dz-default.dz-message.grid-row
     .column-one-third.arrow-icon
