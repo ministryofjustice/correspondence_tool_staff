@@ -13,7 +13,7 @@
 .deactivate-info
   p
     = "#{@user.full_name} has #{@user.cases.count} open cases assigned to them. "
-    = "If you deactivate them, their cases will still be assigned to Disclosure but a new responder will need to be assigned."
+    = "If you deactivate them, their cases will still be assigned to #{@team.name} but a new responder will need to be assigned."
 
 - if @user.multiple_team_member?
   .other-team-info

@@ -18,7 +18,7 @@ describe 'users/confirm_destroy.html.slim', type: :view do
       expect(users_destroy_page.page_heading.sub_heading)
         .to have_text "Deactivate team member "
       expect(users_destroy_page.deactivate_info)
-        .to have_text "#{responder.full_name} has 1 open cases assigned to them. If you deactivate them, their cases will still be assigned to Disclosure but a new responder will need to be assigned."
+        .to have_text "#{responder.full_name} has 1 open cases assigned to them. If you deactivate them, their cases will still be assigned to #{team.name} but a new responder will need to be assigned."
       expect(users_destroy_page)
         .not_to have_other_team_info
       expect(users_destroy_page)
@@ -45,7 +45,7 @@ describe 'users/confirm_destroy.html.slim', type: :view do
       expect(users_destroy_page.page_heading.sub_heading)
         .to have_text "Deactivate team member "
       expect(users_destroy_page.deactivate_info)
-        .to have_text "#{multiple_team_responder.full_name} has 1 open cases assigned to them. If you deactivate them, their cases will still be assigned to Disclosure but a new responder will need to be assigned."
+        .to have_text "#{multiple_team_responder.full_name} has 1 open cases assigned to them. If you deactivate them, their cases will still be assigned to #{team.name} but a new responder will need to be assigned."
       expect(users_destroy_page.other_team_info)
         .to have_text(
         "They are a member of the following teams #{multiple_team_responder.teams.first.name} and #{multiple_team_responder.teams.last.name}")
