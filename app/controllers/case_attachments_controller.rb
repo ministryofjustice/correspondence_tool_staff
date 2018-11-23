@@ -17,6 +17,17 @@ class CaseAttachmentsController < ApplicationController
     # redirect_to case_attachment_path(case_id: @case.id, id: attachment.id )
   end
 
+  def check_scan
+    attachment_key = params[:key]
+    CASE_UPLOADS_S3_BUCKET.object(attachment_key)
+    client = CASE_UPLOADS_S3_BUCKET.client
+    tag_sets = client.get_object_tagging(bucket: CASE_UPLOADS_S3_BUCKET.name,
+                                         key: attachment_key).to_h
+    tag = tag_sets[:tag_set].find { |tags| tags[:key] == 'moj-virus-scan' }
+    tag_value = tag ? tag[:value] : 'PENDING'
+    render json: { virus_scan_result: tag_value }
+  end
+
   def download
     redirect_to @attachment.temporary_url
   end

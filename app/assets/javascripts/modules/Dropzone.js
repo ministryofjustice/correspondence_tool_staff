@@ -85,7 +85,8 @@ moj.Modules.Dropzone = {
 
         $(file.previewElement).append(input);
 
-        moj.Modules.Dropzone.CheckForVirus(this, file, recordToCheck);
+        moj.Modules.Dropzone.CheckVirusScan(this, file.checkScanURL);
+        // moj.Modules.Dropzone.CheckForVirus(this, file, recordToCheck);
       },
       removedfile : function(file) {
         // server-side will take care of cleaning up uploads dir
@@ -93,6 +94,25 @@ moj.Modules.Dropzone = {
       }
     });
   }
+};
+
+moj.Modules.Dropzone.CheckVirusScan = function (dropzone, url, key) {
+  var module = this;
+
+  $.get(url + '?key=' + key, function(data) {
+    switch (data.virus_scan_result) {
+    case 'CLEAN':
+      console.log('pass');
+      module.VirusTestPassed(file);
+      module.allScanningFinished();
+      break;
+    case 'INFECTED':
+      module.VirusTestFailed(file, checkVirusScanTimeOut);
+      module.allScanningFinished();
+      break;
+    default:
+      checkVirusScanTimeOut = setTimeout(checkVirusScan, 1000);
+    }
 };
 
 moj.Modules.Dropzone.CheckForVirus = function (dropzone, file, recordToCheck) {
