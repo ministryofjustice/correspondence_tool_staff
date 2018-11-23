@@ -57,6 +57,7 @@
 #                 execute_new_case_link_case POST   /cases/:id/execute_new_case_link(.:format)                           cases#execute_new_case_link
 #                       destroy_link_on_case DELETE /cases/:id/destroy_link/:linked_case_number(.:format)                cases#destroy_case_link
 #                progress_for_clearance_case PATCH  /cases/:id/progress_for_clearance(.:format)                          cases#progress_for_clearance
+#                    new_overturned_ico_case GET    /cases/:id/new_overturned_ico(.:format)                              cases#new_overturned_ico
 #           accept_or_reject_case_assignment PATCH  /cases/:case_id/assignments/:id/accept_or_reject(.:format)           assignments#accept_or_reject
 #                     accept_case_assignment PATCH  /cases/:case_id/assignments/:id/accept(.:format)                     assignments#accept
 #                   unaccept_case_assignment PATCH  /cases/:case_id/assignments/:id/unaccept(.:format)                   assignments#unaccept
@@ -74,9 +75,8 @@
 #                                            PUT    /cases/:case_id/assignments/:id(.:format)                            assignments#update
 #                                            DELETE /cases/:case_id/assignments/:id(.:format)                            assignments#destroy
 #                                            GET    /cases/:case_id/attachments/:id(.:format)                            case_attachments#show
-#            create_from_s3_case_attachments POST   /cases/:case_id/attachments/create_from_s3(.:format)                 case_attachments#create_from_s3
-#                    preview_case_attachment GET    /cases/:case_id/attachments/:id/preview(.:format)                    case_attachments#preview
 #                   download_case_attachment GET    /cases/:case_id/attachments/:id/download(.:format)                   case_attachments#download
+#                    preview_case_attachment GET    /cases/:case_id/attachments/:id/preview(.:format)                    case_attachments#preview
 #                           case_attachments GET    /cases/:case_id/attachments(.:format)                                case_attachments#index
 #                                            POST   /cases/:case_id/attachments(.:format)                                case_attachments#create
 #                        new_case_attachment GET    /cases/:case_id/attachments/new(.:format)                            case_attachments#new
@@ -95,7 +95,8 @@
 #                                            PATCH  /cases/:id(.:format)                                                 cases#update
 #                                            PUT    /cases/:id(.:format)                                                 cases#update
 #                                            DELETE /cases/:id(.:format)                                                 cases#destroy
-#                                 admin_root GET    /admin(.:format)                                                     admin#index
+#                                            POST   /case_attachments(.:format)                                          case_attachments#create
+#                                 admin_root GET    /admin(.:format)                                                     redirect(301, /admin/cases)
 #                             new_admin_case GET    /admin/cases/new/:correspondence_type(.:format)                      admin/cases#new {:correspondence_type=>""}
 #                                admin_cases GET    /admin/cases(.:format)                                               admin/cases#index
 #                                            POST   /admin/cases(.:format)                                               admin/cases#create
@@ -105,6 +106,12 @@
 #                                            PATCH  /admin/cases/:id(.:format)                                           admin/cases#update
 #                                            PUT    /admin/cases/:id(.:format)                                           admin/cases#update
 #                                            DELETE /admin/cases/:id(.:format)                                           admin/cases#destroy
+#                                admin_users GET    /admin/users(.:format)                                               admin/users#index
+#                      admin_dashboard_cases GET    /admin/dashboard/cases(.:format)                                     admin/dashboard#cases
+#                   admin_dashboard_feedback GET    /admin/dashboard/feedback(.:format)                                  admin/dashboard#feedback
+#                  admin_dashboard_exception GET    /admin/dashboard/exception(.:format)                                 admin/dashboard#exception
+#             admin_dashboard_search_queries GET    /admin/dashboard/search_queries(.:format)                            admin/dashboard#search_queries
+#               admin_dashboard_list_queries GET    /admin/dashboard/list_queries(.:format)                              admin/dashboard#list_queries
 #                                 team_users GET    /teams/:team_id/users(.:format)                                      users#index
 #                                            POST   /teams/:team_id/users(.:format)                                      users#create
 #                              new_team_user GET    /teams/:team_id/users/new(.:format)                                  users#new
@@ -144,14 +151,7 @@
 #                                     search GET    /search(.:format)                                                    cases#search
 #                                       ping GET    /ping(.:format)                                                      heartbeat#ping
 #                                healthcheck GET    /healthcheck(.:format)                                               heartbeat#healthcheck
-#                                  dashboard GET    /dashboard(.:format)                                                 dashboard#index
-#                            dashboard_cases GET    /dashboard/cases(.:format)                                           dashboard#cases
-#                         dashboard_feedback GET    /dashboard/feedback(.:format)                                        dashboard#feedback
-#                        dashboard_exception GET    /dashboard/exception(.:format)                                       dashboard#exception
-#                   dashboard_search_queries GET    /dashboard/search_queries(.:format)                                  dashboard#search_queries
-#                     dashboard_list_queries GET    /dashboard/list_queries(.:format)                                    dashboard#list_queries
 #                                       root GET    /                                                                    redirect(301, /users/sign_in)
-#
 
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
