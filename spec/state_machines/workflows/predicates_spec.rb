@@ -254,21 +254,21 @@ module Workflows
       end
     end
 
-    describe :case_respondable? do
+    describe :assigned_team_member_and_case_outside_escalation_period? do
       let(:kase)        { @all_cases[:case_drafting] }
       let(:predicate)   { Predicates.new(user: user, kase: kase) }
 
       context 'manager' do
         let(:user)    { @disclosure_bmt_user }
         it 'returns false' do
-          expect(predicate.case_respondable?).to be false
+          expect(predicate.assigned_team_member_and_case_outside_escalation_period?).to be false
         end
       end
 
       context 'approver' do
         let(:user)      { @disclosure_specialist }
         it 'returns false' do
-          expect(predicate.case_respondable?).to be false
+          expect(predicate.assigned_team_member_and_case_outside_escalation_period?).to be false
         end
       end
 
@@ -278,13 +278,13 @@ module Workflows
           context 'within escalation deadline' do
             it 'returns false' do
               allow(kase).to receive(:escalation_deadline).and_return(2.days.from_now)
-              expect(predicate.case_respondable?).to be false
+              expect(predicate.assigned_team_member_and_case_outside_escalation_period?).to be false
             end
           end
           context 'outside escalation deadline' do
             it 'returns true' do
               allow(kase).to receive(:escalation_deadline).and_return(2.days.ago)
-              expect(predicate.case_respondable?).to be true
+              expect(predicate.assigned_team_member_and_case_outside_escalation_period?).to be true
             end
           end
         end
@@ -292,7 +292,7 @@ module Workflows
         context 'in different team' do
           let(:user)      { @another_responder }
           it 'returns false' do
-            expect(predicate.case_respondable?).to be false
+            expect(predicate.assigned_team_member_and_case_outside_escalation_period?).to be false
           end
         end
       end
