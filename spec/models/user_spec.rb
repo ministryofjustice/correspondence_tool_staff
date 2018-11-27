@@ -319,7 +319,7 @@ RSpec.describe User, type: :model do
 
 
     it 'prints out the other teams' do
-      expect(user.other_teams_names(team1)).to eq("#{team2.name} and #{team3.name} .")
+      expect(user.other_teams_names(team1)).to eq("#{team2.name} and #{team3.name}")
     end
   end
 end

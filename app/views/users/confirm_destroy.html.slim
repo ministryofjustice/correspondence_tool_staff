@@ -20,7 +20,7 @@
   .grid-row
     .column-two-thirds
       .other-team-info
-        = "They are a member of the following teams #{@user.other_teams_names(@team)}"
+        = "They are also a member of #{@user.other_teams_names(@team)}."
 
 br
   = link_to "Deactivate team member", team_user_path(@team.id, @user.id),
