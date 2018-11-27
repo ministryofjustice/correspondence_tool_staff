@@ -155,8 +155,9 @@ class User < ApplicationRecord
     types
   end
 
-  def teams_names
-    self.teams.map(&:name).to_sentence
+  def other_teams_names(current_team)
+    self.teams.delete(current_team)
+    self.teams.map(&:name).to_sentence + '.'
   end
 
   private

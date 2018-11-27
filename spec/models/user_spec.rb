@@ -312,10 +312,14 @@ RSpec.describe User, type: :model do
   end
 
   describe '#teams_names' do
-    let(:user)       { find_or_create :approver_responder }
+    let(:user)      { create :responder, responding_teams: [team1, team2, team3] }
+    let(:team1)     { create :responding_team }
+    let(:team2)     { create :responding_team }
+    let(:team3)     { create :responding_team }
 
-    it 'prints out the team' do
-      expect(user.teams_names).to eq("#{user.teams.first.name} and #{user.teams.last.name}")
+
+    it 'prints out the other teams' do
+      expect(user.other_teams_names(team1)).to eq("#{team2.name} and #{team3.name} .")
     end
   end
 end
