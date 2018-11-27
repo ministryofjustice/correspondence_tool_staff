@@ -11,17 +11,18 @@
 = render partial: 'layouts/header'
 
 .grid-row
-  .column-two-thirds
-    .deactivate-info
-      = "#{@user.full_name} has #{@user.cases.count} open cases assigned to them. "
-      = "If you deactivate them, their cases will still be assigned to #{@team.name} but a new team member will need to be assigned."
+  p
+    .column-two-thirds
+      .deactivate-info
+        = "#{@user.full_name} has #{@user.cases.count} open cases assigned to them. "
+        = "If you deactivate them, their cases will still be assigned to #{@team.name} but a new team member will need to be assigned."
 
 - if @user.multiple_team_member?
-  .grid-row
-    .column-two-thirds
-      .other-team-info
-        = "They are also a member of #{@user.other_teams_names(@team)}."
-
+  p
+    .grid-row
+      .column-two-thirds
+        .other-team-info
+          = "They are also a member of #{@user.other_teams_names(@team)}."
 br
   = link_to "Deactivate team member", team_user_path(@team.id, @user.id),
             method: :delete,
