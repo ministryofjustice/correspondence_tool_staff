@@ -60,6 +60,7 @@ class Case::SAR < Case::Base
                  third_party_relationship: :string,
                  reply_method: :string,
                  late_team_id: :integer,
+                 date_draft_compliant: :date,
                  deadline_extended: [:boolean, default: false]
 
   attr_accessor :missing_info

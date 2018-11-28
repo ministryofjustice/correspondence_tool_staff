@@ -13,6 +13,7 @@ module PageObjects
         section :clearance,
                 PageObjects::Sections::Cases::ClearanceCopySection, '.clearance-copy'
 
+        element :draft_compliant, :xpath, '//fieldset[contains(.,"draft compliant")]'
 
         element :submit_button, '.button'
 

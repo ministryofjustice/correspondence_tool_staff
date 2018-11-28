@@ -51,7 +51,8 @@ class Case::FOI::Standard < Case::Base
                  escalation_deadline: :date,
                  internal_deadline: :date,
                  external_deadline: :date,
-                 late_team_id: :integer
+                 late_team_id: :integer,
+                 date_draft_compliant: :date
 
   has_paper_trail only: [
                     :name,

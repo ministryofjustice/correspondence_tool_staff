@@ -43,7 +43,8 @@ class Case::OverturnedICO::Base < Case::Base
                  internal_deadline: :date,
                  external_deadline: :date,
                  reply_method: :string,
-                 late_team_id: :integer
+                 late_team_id: :integer,
+                 date_draft_compliant: :date
 
   delegate :ico_reference_number, to: :original_ico_appeal
   delegate :ico_decision, to: :original_ico_appeal

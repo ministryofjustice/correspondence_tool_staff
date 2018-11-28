@@ -5,6 +5,9 @@ RSpec.describe CasesController, type: :controller do
   let(:private_officer)                { find_or_create :private_officer }
   let(:service)                        { instance_double(CaseRequestAmendsService,
                                                          call: true) }
+    let(:something)                        { instance_double(SetDraftTimelinessService,
+                                                           call: true) }
+
 
   describe 'PATCH execute_request_amends' do
     context 'Full approval FOI' do
@@ -53,6 +56,8 @@ RSpec.describe CasesController, type: :controller do
       before do
         sign_in disclosure_specialist
         allow(CaseRequestAmendsService).to receive(:new).and_return(service)
+        allow(SetDraftTimelinessService).to receive(:new).and_return(something)
+
       end
 
       it 'calls the case request amends service with disclosure specialist' do
@@ -70,6 +75,14 @@ RSpec.describe CasesController, type: :controller do
               params: { id: trigger_sar, case: {request_amends_comment: "Sneaky puppies"} }
         expect(flash[:notice])
           .to eq 'Information Officer has been notified a redraft is needed.'
+      end
+
+      it 'sets the draft Timeliness' do
+        patch :execute_request_amends,
+              params: { id: trigger_sar, case: {request_amends_comment: "Sneaky puppies", draft_compliant: 'yes'} }
+        expect(SetDraftTimelinessService)
+          .to have_received(:new).with(kase: trigger_sar)
+        expect(something).to have_received(:call)
       end
     end
   end

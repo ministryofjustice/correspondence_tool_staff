@@ -44,7 +44,8 @@ class Case::ICO::Base < Case::Base
                  date_ico_decision_received: :date,
                  ico_decision: :string,
                  ico_decision_comment: :string,
-                 late_team_id: :integer
+                 late_team_id: :integer,
+                 date_draft_compliant: :date
 
   acts_as_gov_uk_date :date_ico_decision_received,
                       :date_responded,

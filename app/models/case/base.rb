@@ -57,8 +57,9 @@ class Case::Base < ApplicationRecord
                 :uploaded_request_files,
                 :request_amends_comment,
                 :upload_comment,
-                :uploading_user # Used when creating case sent by post.
-
+                :uploading_user, # Used when creating case sent by post.
+                :draft_compliant
+                
   attr_accessor :message_text
 
   jsonb_accessor  :properties,
