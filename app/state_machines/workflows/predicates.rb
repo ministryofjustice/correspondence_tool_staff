@@ -71,11 +71,6 @@ class Workflows::Predicates
     @kase.assignments.with_teams(BusinessUnit.dacu_disclosure).for_user(@user).present?
   end
 
-  def case_outside_escalation_period_and_not_responded_or_closed?
-    @kase.outside_escalation_deadline? &&
-        @kase.current_state.in?(%w{responded closed})
-  end
-
   def user_is_assigned_press_officer?
     @kase.assignments.with_teams(BusinessUnit.press_office).for_user(@user).present?
   end
