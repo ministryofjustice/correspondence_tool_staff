@@ -29,6 +29,7 @@ describe 'state machine' do
           :std_awresp_foi,
           :std_closed_foi,
           :std_draft_foi,
+          :std_draft_foi_in_escalation_period,
           :std_responded_foi,
           :std_unassigned_foi,
           :trig_awdis_foi,
@@ -174,6 +175,7 @@ describe 'state machine' do
                  [:disclosure_bmt, :std_unassigned_foi],
                  [:disclosure_bmt, :std_awresp_foi],
                  [:disclosure_bmt, :std_draft_foi],
+                 [:disclosure_bmt, :std_draft_foi_in_escalation_period],
                  [:disclosure_bmt, :std_awdis_foi],
                  [:disclosure_bmt, :std_responded_foi],
                  [:disclosure_bmt, :std_closed_foi],
@@ -257,6 +259,7 @@ describe 'state machine' do
 
                  [:responder, :std_awresp_foi],
                  [:responder, :std_draft_foi],
+                 [:responder, :std_draft_foi_in_escalation_period],
                  [:responder, :std_awdis_foi],
                  [:responder, :std_responded_foi],
                  [:responder, :std_closed_foi],
@@ -286,6 +289,7 @@ describe 'state machine' do
 
                  [:another_responder_in_same_team, :std_awresp_foi],
                  [:another_responder_in_same_team, :std_draft_foi],
+                 [:another_responder_in_same_team, :std_draft_foi_in_escalation_period],
                  [:another_responder_in_same_team, :std_awdis_foi],
                  [:another_responder_in_same_team, :std_responded_foi],
                  [:another_responder_in_same_team, :std_closed_foi],
@@ -313,7 +317,6 @@ describe 'state machine' do
                  [:another_sar_responder_in_same_team, :trig_closed_foi],
                  [:another_sar_responder_in_same_team, :full_closed_foi],
 
-
                  [:another_responder_in_diff_team, :std_closed_foi],
                  [:another_responder_in_diff_team, :trig_closed_foi],
                  [:another_responder_in_diff_team, :full_closed_foi],
@@ -321,7 +324,6 @@ describe 'state machine' do
                  [:another_sar_responder_in_diff_team, :std_closed_foi],
                  [:another_sar_responder_in_diff_team, :trig_closed_foi],
                  [:another_sar_responder_in_diff_team, :full_closed_foi],
-
 
                  [:press_officer, :std_closed_foi],
                  [:press_officer, :trig_awresp_foi],
@@ -343,7 +345,6 @@ describe 'state machine' do
                  [:press_officer, :full_awdis_foi],
                  [:press_officer, :full_closed_foi],
 
-
                  [:private_officer, :std_closed_foi],
                  [:private_officer, :trig_awresp_foi],
                  [:private_officer, :trig_draft_foi],
@@ -364,7 +365,6 @@ describe 'state machine' do
                  [:private_officer, :full_awdis_foi],
                  [:private_officer, :trig_closed_foi],
                  [:private_officer, :full_closed_foi],
-
                )
       }
     end
@@ -424,6 +424,7 @@ describe 'state machine' do
         should permit_event_to_be_triggered_only_by(
                  [:disclosure_bmt, :std_awresp_foi],
                  [:disclosure_bmt, :std_draft_foi],
+                 [:disclosure_bmt, :std_draft_foi_in_escalation_period],
                  [:disclosure_bmt, :std_closed_foi],
                  [:disclosure_bmt, :trig_awresp_foi],
                  [:disclosure_bmt, :trig_awresp_foi_accepted],
@@ -452,6 +453,7 @@ describe 'state machine' do
                  [:disclosure_bmt, :std_unassigned_foi],
                  [:disclosure_bmt, :std_awresp_foi],
                  [:disclosure_bmt, :std_draft_foi],
+                 [:disclosure_bmt, :std_draft_foi_in_escalation_period],
                  [:disclosure_bmt, :std_awdis_foi],
                  [:disclosure_bmt, :std_responded_foi],
                  [:disclosure_bmt, :std_closed_foi],
@@ -486,6 +488,7 @@ describe 'state machine' do
                  [:disclosure_bmt, :std_unassigned_foi],
                  [:disclosure_bmt, :std_awresp_foi],
                  [:disclosure_bmt, :std_draft_foi],
+                 [:disclosure_bmt, :std_draft_foi_in_escalation_period],
                  [:disclosure_bmt, :std_awdis_foi],
                  [:disclosure_bmt, :std_responded_foi],
                  [:disclosure_bmt, :std_closed_foi],
@@ -518,6 +521,7 @@ describe 'state machine' do
       it {
         should permit_event_to_be_triggered_only_by(
                  [:disclosure_bmt, :std_draft_foi],
+                 [:disclosure_bmt, :std_draft_foi_in_escalation_period],
                  [:disclosure_bmt, :std_awdis_foi],
                  [:disclosure_bmt, :trig_draft_foi_accepted],
                  [:disclosure_bmt, :trig_draft_foi],
@@ -540,6 +544,7 @@ describe 'state machine' do
                  [:disclosure_bmt, :std_unassigned_foi],
                  [:disclosure_bmt, :std_awresp_foi],
                  [:disclosure_bmt, :std_draft_foi],
+                 [:disclosure_bmt, :std_draft_foi_in_escalation_period],
                  [:disclosure_bmt, :std_awdis_foi],
                  [:disclosure_bmt, :trig_unassigned_foi],
                  [:disclosure_bmt, :trig_awresp_foi],
@@ -558,6 +563,7 @@ describe 'state machine' do
                  [:disclosure_specialist, :std_unassigned_foi],
                  [:disclosure_specialist, :std_awresp_foi],
                  [:disclosure_specialist, :std_draft_foi],
+                 [:disclosure_specialist, :std_draft_foi_in_escalation_period],
                  [:disclosure_specialist, :trig_unassigned_foi],
                  [:disclosure_specialist, :trig_awresp_foi],
                  [:disclosure_specialist, :trig_draft_foi],
@@ -573,6 +579,7 @@ describe 'state machine' do
                  [:disclosure_specialist_coworker, :std_unassigned_foi],
                  [:disclosure_specialist_coworker, :std_awresp_foi],
                  [:disclosure_specialist_coworker, :std_draft_foi],
+                 [:disclosure_specialist_coworker, :std_draft_foi_in_escalation_period],
                  [:disclosure_specialist_coworker, :trig_unassigned_foi],
                  [:disclosure_specialist_coworker, :trig_awresp_foi],
                  [:disclosure_specialist_coworker, :trig_draft_foi],
@@ -588,6 +595,7 @@ describe 'state machine' do
                  [:another_disclosure_specialist, :std_unassigned_foi],
                  [:another_disclosure_specialist, :std_awresp_foi],
                  [:another_disclosure_specialist, :std_draft_foi],
+                 [:another_disclosure_specialist, :std_draft_foi_in_escalation_period],
                  [:another_disclosure_specialist, :trig_unassigned_foi],
                  [:another_disclosure_specialist, :trig_awresp_foi],
                  [:another_disclosure_specialist, :trig_draft_foi],
@@ -603,6 +611,7 @@ describe 'state machine' do
                  [:press_officer, :std_unassigned_foi],
                  [:press_officer, :std_awresp_foi],
                  [:press_officer, :std_draft_foi],
+                 [:press_officer, :std_draft_foi_in_escalation_period],
                  [:press_officer, :trig_unassigned_foi],
                  [:press_officer, :trig_awresp_foi],
                  [:press_officer, :trig_draft_foi],
@@ -618,6 +627,7 @@ describe 'state machine' do
                  [:private_officer, :std_unassigned_foi],
                  [:private_officer, :std_awresp_foi],
                  [:private_officer, :std_draft_foi],
+                 [:private_officer, :std_draft_foi_in_escalation_period],
                  [:private_officer, :trig_unassigned_foi],
                  [:private_officer, :trig_awresp_foi],
                  [:private_officer, :trig_draft_foi],
@@ -638,6 +648,7 @@ describe 'state machine' do
                  [:disclosure_bmt, :std_unassigned_foi],
                  [:disclosure_bmt, :std_awresp_foi],
                  [:disclosure_bmt, :std_draft_foi],
+                 [:disclosure_bmt, :std_draft_foi_in_escalation_period],
                  [:disclosure_bmt, :std_awdis_foi],
                  [:disclosure_bmt, :std_responded_foi],
                  [:disclosure_bmt, :trig_unassigned_foi],
@@ -667,6 +678,7 @@ describe 'state machine' do
                  [:disclosure_specialist, :std_unassigned_foi],
                  [:disclosure_specialist, :std_awresp_foi],
                  [:disclosure_specialist, :std_draft_foi],
+                 [:disclosure_specialist, :std_draft_foi_in_escalation_period],
                  [:disclosure_specialist, :std_awdis_foi],
                  [:disclosure_specialist, :std_responded_foi],
                  [:disclosure_specialist, :std_closed_foi],
@@ -696,6 +708,7 @@ describe 'state machine' do
                  [:disclosure_specialist_coworker, :std_unassigned_foi],
                  [:disclosure_specialist_coworker, :std_awresp_foi],
                  [:disclosure_specialist_coworker, :std_draft_foi],
+                 [:disclosure_specialist_coworker, :std_draft_foi_in_escalation_period],
                  [:disclosure_specialist_coworker, :std_awdis_foi],
                  [:disclosure_specialist_coworker, :std_responded_foi],
                  [:disclosure_specialist_coworker, :std_closed_foi],
@@ -725,6 +738,7 @@ describe 'state machine' do
                  [:another_disclosure_specialist, :std_unassigned_foi],
                  [:another_disclosure_specialist, :std_awresp_foi],
                  [:another_disclosure_specialist, :std_draft_foi],
+                 [:another_disclosure_specialist, :std_draft_foi_in_escalation_period],
                  [:another_disclosure_specialist, :std_awdis_foi],
                  [:another_disclosure_specialist, :std_responded_foi],
                  [:another_disclosure_specialist, :std_closed_foi],
@@ -754,6 +768,7 @@ describe 'state machine' do
                  [:responder, :std_unassigned_foi],
                  [:responder, :std_awresp_foi],
                  [:responder, :std_draft_foi],
+                 [:responder, :std_draft_foi_in_escalation_period],
                  [:responder, :std_awdis_foi],
                  [:responder, :std_responded_foi],
                  [:responder, :std_closed_foi],
@@ -783,6 +798,7 @@ describe 'state machine' do
                  [:sar_responder, :std_unassigned_foi],
                  [:sar_responder, :std_awresp_foi],
                  [:sar_responder, :std_draft_foi],
+                 [:sar_responder, :std_draft_foi_in_escalation_period],
                  [:sar_responder, :std_awdis_foi],
                  [:sar_responder, :std_responded_foi],
                  [:sar_responder, :std_closed_foi],
@@ -812,6 +828,7 @@ describe 'state machine' do
                  [:another_responder_in_same_team, :std_unassigned_foi],
                  [:another_responder_in_same_team, :std_awresp_foi],
                  [:another_responder_in_same_team, :std_draft_foi],
+                 [:another_responder_in_same_team, :std_draft_foi_in_escalation_period],
                  [:another_responder_in_same_team, :std_awdis_foi],
                  [:another_responder_in_same_team, :std_responded_foi],
                  [:another_responder_in_same_team, :std_closed_foi],
@@ -841,6 +858,7 @@ describe 'state machine' do
                  [:another_sar_responder_in_same_team, :std_unassigned_foi],
                  [:another_sar_responder_in_same_team, :std_awresp_foi],
                  [:another_sar_responder_in_same_team, :std_draft_foi],
+                 [:another_sar_responder_in_same_team, :std_draft_foi_in_escalation_period],
                  [:another_sar_responder_in_same_team, :std_awdis_foi],
                  [:another_sar_responder_in_same_team, :std_responded_foi],
                  [:another_sar_responder_in_same_team, :std_closed_foi],
@@ -870,6 +888,7 @@ describe 'state machine' do
                  [:another_responder_in_diff_team, :std_unassigned_foi],
                  [:another_responder_in_diff_team, :std_awresp_foi],
                  [:another_responder_in_diff_team, :std_draft_foi],
+                 [:another_responder_in_diff_team, :std_draft_foi_in_escalation_period],
                  [:another_responder_in_diff_team, :std_awdis_foi],
                  [:another_responder_in_diff_team, :std_responded_foi],
                  [:another_responder_in_diff_team, :std_closed_foi],
@@ -899,6 +918,7 @@ describe 'state machine' do
                  [:another_sar_responder_in_diff_team, :std_unassigned_foi],
                  [:another_sar_responder_in_diff_team, :std_awresp_foi],
                  [:another_sar_responder_in_diff_team, :std_draft_foi],
+                 [:another_sar_responder_in_diff_team, :std_draft_foi_in_escalation_period],
                  [:another_sar_responder_in_diff_team, :std_awdis_foi],
                  [:another_sar_responder_in_diff_team, :std_responded_foi],
                  [:another_sar_responder_in_diff_team, :std_closed_foi],
@@ -928,6 +948,7 @@ describe 'state machine' do
                  [:press_officer, :std_unassigned_foi],
                  [:press_officer, :std_awresp_foi],
                  [:press_officer, :std_draft_foi],
+                 [:press_officer, :std_draft_foi_in_escalation_period],
                  [:press_officer, :std_awdis_foi],
                  [:press_officer, :std_responded_foi],
                  [:press_officer, :std_closed_foi],
@@ -957,6 +978,7 @@ describe 'state machine' do
                  [:private_officer, :std_unassigned_foi],
                  [:private_officer, :std_awresp_foi],
                  [:private_officer, :std_draft_foi],
+                 [:private_officer, :std_draft_foi_in_escalation_period],
                  [:private_officer, :std_awdis_foi],
                  [:private_officer, :std_responded_foi],
                  [:private_officer, :std_closed_foi],
@@ -1037,6 +1059,7 @@ describe 'state machine' do
                  [:another_disclosure_specialist, :full_pdacu_foi_unaccepted],
 
                  [:responder, :std_draft_foi],
+                 [:responder, :std_draft_foi_in_escalation_period],
                  [:responder, :std_awdis_foi],
                  [:responder, :trig_draft_foi],
                  [:responder, :trig_draft_foi_accepted],
@@ -1051,6 +1074,7 @@ describe 'state machine' do
                  [:responder, :full_awdis_foi],
 
                  [:another_responder_in_same_team, :std_draft_foi],
+                 [:another_responder_in_same_team, :std_draft_foi_in_escalation_period],
                  [:another_responder_in_same_team, :std_awdis_foi],
                  [:another_responder_in_same_team, :trig_draft_foi],
                  [:another_responder_in_same_team, :trig_draft_foi_accepted],
@@ -1095,7 +1119,8 @@ describe 'state machine' do
                  [:private_officer, :full_ppress_foi],
                  [:private_officer, :full_pprivate_foi],
                  [:private_officer, :full_awdis_foi],
-               )  }
+               )
+      }
     end
 
     describe :reject_responder_assignment do
@@ -1122,6 +1147,7 @@ describe 'state machine' do
                  [:disclosure_bmt, :std_unassigned_foi],
                  [:disclosure_bmt, :std_awresp_foi],
                  [:disclosure_bmt, :std_draft_foi],
+                 [:disclosure_bmt, :std_draft_foi_in_escalation_period],
                  [:disclosure_bmt, :std_awdis_foi],
                  [:disclosure_bmt, :std_responded_foi],
                  [:disclosure_bmt, :trig_unassigned_foi],
@@ -1151,6 +1177,7 @@ describe 'state machine' do
                  [:disclosure_specialist, :std_unassigned_foi],
                  [:disclosure_specialist, :std_awresp_foi],
                  [:disclosure_specialist, :std_draft_foi],
+                 [:disclosure_specialist, :std_draft_foi_in_escalation_period],
                  [:disclosure_specialist, :std_awdis_foi],
                  [:disclosure_specialist, :std_responded_foi],
                  [:disclosure_specialist, :std_closed_foi],
@@ -1180,6 +1207,7 @@ describe 'state machine' do
                  [:another_disclosure_specialist, :std_unassigned_foi],
                  [:another_disclosure_specialist, :std_awresp_foi],
                  [:another_disclosure_specialist, :std_draft_foi],
+                 [:another_disclosure_specialist, :std_draft_foi_in_escalation_period],
                  [:another_disclosure_specialist, :std_awdis_foi],
                  [:another_disclosure_specialist, :std_responded_foi],
                  [:another_disclosure_specialist, :std_closed_foi],
@@ -1209,6 +1237,7 @@ describe 'state machine' do
                  [:disclosure_specialist_coworker, :std_unassigned_foi],
                  [:disclosure_specialist_coworker, :std_awresp_foi],
                  [:disclosure_specialist_coworker, :std_draft_foi],
+                 [:disclosure_specialist_coworker, :std_draft_foi_in_escalation_period],
                  [:disclosure_specialist_coworker, :std_awdis_foi],
                  [:disclosure_specialist_coworker, :std_responded_foi],
                  [:disclosure_specialist_coworker, :std_closed_foi],
@@ -1238,6 +1267,7 @@ describe 'state machine' do
                  [:responder, :std_unassigned_foi],
                  [:responder, :std_awresp_foi],
                  [:responder, :std_draft_foi],
+                 [:responder, :std_draft_foi_in_escalation_period],
                  [:responder, :std_awdis_foi],
                  [:responder, :std_responded_foi],
                  [:responder, :std_closed_foi],
@@ -1267,6 +1297,7 @@ describe 'state machine' do
                  [:sar_responder, :std_unassigned_foi],
                  [:sar_responder, :std_awresp_foi],
                  [:sar_responder, :std_draft_foi],
+                 [:sar_responder, :std_draft_foi_in_escalation_period],
                  [:sar_responder, :std_awdis_foi],
                  [:sar_responder, :std_responded_foi],
                  [:sar_responder, :std_closed_foi],
@@ -1296,6 +1327,7 @@ describe 'state machine' do
                  [:another_responder_in_same_team, :std_unassigned_foi],
                  [:another_responder_in_same_team, :std_awresp_foi],
                  [:another_responder_in_same_team, :std_draft_foi],
+                 [:another_responder_in_same_team, :std_draft_foi_in_escalation_period],
                  [:another_responder_in_same_team, :std_awdis_foi],
                  [:another_responder_in_same_team, :std_responded_foi],
                  [:another_responder_in_same_team, :std_closed_foi],
@@ -1325,6 +1357,7 @@ describe 'state machine' do
                  [:another_sar_responder_in_same_team, :std_unassigned_foi],
                  [:another_sar_responder_in_same_team, :std_awresp_foi],
                  [:another_sar_responder_in_same_team, :std_draft_foi],
+                 [:another_sar_responder_in_same_team, :std_draft_foi_in_escalation_period],
                  [:another_sar_responder_in_same_team, :std_awdis_foi],
                  [:another_sar_responder_in_same_team, :std_responded_foi],
                  [:another_sar_responder_in_same_team, :std_closed_foi],
@@ -1354,6 +1387,7 @@ describe 'state machine' do
                  [:another_responder_in_diff_team, :std_unassigned_foi],
                  [:another_responder_in_diff_team, :std_awresp_foi],
                  [:another_responder_in_diff_team, :std_draft_foi],
+                 [:another_responder_in_diff_team, :std_draft_foi_in_escalation_period],
                  [:another_responder_in_diff_team, :std_awdis_foi],
                  [:another_responder_in_diff_team, :std_responded_foi],
                  [:another_responder_in_diff_team, :std_closed_foi],
@@ -1383,6 +1417,7 @@ describe 'state machine' do
                  [:another_sar_responder_in_diff_team, :std_unassigned_foi],
                  [:another_sar_responder_in_diff_team, :std_awresp_foi],
                  [:another_sar_responder_in_diff_team, :std_draft_foi],
+                 [:another_sar_responder_in_diff_team, :std_draft_foi_in_escalation_period],
                  [:another_sar_responder_in_diff_team, :std_awdis_foi],
                  [:another_sar_responder_in_diff_team, :std_responded_foi],
                  [:another_sar_responder_in_diff_team, :std_closed_foi],
@@ -1412,6 +1447,7 @@ describe 'state machine' do
                  [:press_officer, :std_unassigned_foi],
                  [:press_officer, :std_awresp_foi],
                  [:press_officer, :std_draft_foi],
+                 [:press_officer, :std_draft_foi_in_escalation_period],
                  [:press_officer, :std_awdis_foi],
                  [:press_officer, :std_responded_foi],
                  [:press_officer, :std_closed_foi],
@@ -1441,6 +1477,7 @@ describe 'state machine' do
                  [:private_officer, :std_unassigned_foi],
                  [:private_officer, :std_awresp_foi],
                  [:private_officer, :std_draft_foi],
+                 [:private_officer, :std_draft_foi_in_escalation_period],
                  [:private_officer, :std_awdis_foi],
                  [:private_officer, :std_responded_foi],
                  [:private_officer, :std_closed_foi],
@@ -1466,7 +1503,8 @@ describe 'state machine' do
                  [:private_officer, :full_awdis_foi],
                  [:private_officer, :full_responded_foi],
                  [:private_officer, :full_closed_foi],
-               )    }
+               )
+      }
     end
 
     describe :remove_response do
@@ -1489,12 +1527,12 @@ describe 'state machine' do
                )}
     end
 
-
     describe :request_further_clearance do
       it {should permit_event_to_be_triggered_only_by(
                    [:disclosure_bmt, :std_unassigned_foi],
                    [:disclosure_bmt, :std_awresp_foi],
                    [:disclosure_bmt, :std_draft_foi],
+                   [:disclosure_bmt, :std_draft_foi_in_escalation_period],
                    [:disclosure_bmt, :std_awdis_foi],
                    [:disclosure_bmt, :trig_unassigned_foi],
                    [:disclosure_bmt, :trig_awresp_foi],
@@ -1527,6 +1565,7 @@ describe 'state machine' do
                  [:press_officer, :std_unassigned_foi],
                  [:press_officer, :std_awresp_foi],
                  [:press_officer, :std_draft_foi],
+                 [:press_officer, :std_draft_foi_in_escalation_period],
                  [:press_officer, :std_awdis_foi],
                  [:press_officer, :trig_unassigned_foi],
                  [:press_officer, :trig_unassigned_foi_accepted],
@@ -1539,6 +1578,7 @@ describe 'state machine' do
                  [:private_officer, :std_unassigned_foi],
                  [:private_officer, :std_awresp_foi],
                  [:private_officer, :std_draft_foi],
+                 [:private_officer, :std_draft_foi_in_escalation_period],
                  [:private_officer, :std_awdis_foi],
                  [:private_officer, :trig_unassigned_foi],
                  [:private_officer, :trig_unassigned_foi_accepted],
@@ -1553,6 +1593,7 @@ describe 'state machine' do
                  [:another_disclosure_specialist, :std_unassigned_foi],
                  [:another_disclosure_specialist, :std_awresp_foi],
                  [:another_disclosure_specialist, :std_draft_foi],
+                 [:another_disclosure_specialist, :std_draft_foi_in_escalation_period],
                  [:another_disclosure_specialist, :std_awdis_foi],
                  [:another_disclosure_specialist, :trig_unassigned_foi],
                  [:another_disclosure_specialist, :trig_unassigned_foi_accepted],
@@ -1569,14 +1610,16 @@ describe 'state machine' do
                  [:disclosure_specialist_coworker, :std_unassigned_foi],
                  [:disclosure_specialist_coworker, :std_awresp_foi],
                  [:disclosure_specialist_coworker, :std_draft_foi],
+                 [:disclosure_specialist_coworker, :std_draft_foi_in_escalation_period],
                  [:disclosure_specialist_coworker, :std_awdis_foi],
 
                  [:disclosure_specialist, :std_unassigned_foi],
                  [:disclosure_specialist, :std_awresp_foi],
                  [:disclosure_specialist, :std_draft_foi],
+                 [:disclosure_specialist, :std_draft_foi_in_escalation_period],
                  [:disclosure_specialist, :std_awdis_foi],
-
-               )  }
+               )
+      }
     end
 
     describe :update_closure do
@@ -1681,6 +1724,7 @@ describe 'state machine' do
       it {
         should have_after_hook(
           [:disclosure_bmt, :std_draft_foi],
+          [:disclosure_bmt, :std_draft_foi_in_escalation_period],
           [:disclosure_bmt, :std_awdis_foi],
           [:disclosure_bmt, :std_responded_foi],
           [:disclosure_bmt, :trig_draft_foi],
@@ -1728,6 +1772,7 @@ describe 'state machine' do
           [:another_disclosure_specialist, :trig_pdacu_foi_accepted],
 
           [:responder, :std_draft_foi],
+          [:responder, :std_draft_foi_in_escalation_period],
           [:responder, :std_awdis_foi],
           [:responder, :std_responded_foi],
           [:responder, :trig_draft_foi],
@@ -1745,6 +1790,7 @@ describe 'state machine' do
           [:responder, :full_pdacu_foi_unaccepted],
 
           [:another_responder_in_same_team, :std_draft_foi],
+          [:another_responder_in_same_team, :std_draft_foi_in_escalation_period],
           [:another_responder_in_same_team, :std_awdis_foi],
           [:another_responder_in_same_team, :std_responded_foi],
           [:another_responder_in_same_team, :trig_draft_foi],
@@ -1849,6 +1895,7 @@ describe 'state machine' do
           [:another_disclosure_specialist, :full_pdacu_foi_unaccepted],
 
           [:responder, :std_draft_foi],
+          [:responder, :std_draft_foi_in_escalation_period],
           [:responder, :std_awdis_foi],
           [:responder, :trig_draft_foi],
           [:responder, :trig_draft_foi_accepted],
@@ -1863,6 +1910,7 @@ describe 'state machine' do
           [:responder, :full_awdis_foi],
 
           [:another_responder_in_same_team, :std_draft_foi],
+          [:another_responder_in_same_team, :std_draft_foi_in_escalation_period],
           [:another_responder_in_same_team, :std_awdis_foi],
           [:another_responder_in_same_team, :trig_draft_foi],
           [:another_responder_in_same_team, :trig_draft_foi_accepted],
@@ -1930,12 +1978,12 @@ describe 'state machine' do
       }
     end
 
-
     describe :assign_to_new_team do
       it {
         should have_after_hook(
           [:disclosure_bmt, :std_awresp_foi],
           [:disclosure_bmt, :std_draft_foi],
+          [:disclosure_bmt, :std_draft_foi_in_escalation_period],
           [:disclosure_bmt, :trig_awresp_foi],
           [:disclosure_bmt, :trig_awresp_foi_accepted],
           [:disclosure_bmt, :trig_draft_foi],

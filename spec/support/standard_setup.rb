@@ -331,6 +331,13 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
                  identifier: 'std_draft_foi_late' }
                  .merge(attributes))
       },
+      std_draft_foi_in_escalation_period: ->(attributes={}) {
+        create(:accepted_case,
+               {responder: responder_user,
+                identifier: 'std_draft_foi_in_escalation_period',
+                creation_time: 1.business_days.ago}
+                 .merge(attributes))
+      },
       std_awdis_foi: ->(attributes={}) {
         create(:case_with_response,
                { identifier: 'std_awdis_foi' }.merge(attributes))

@@ -214,7 +214,7 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 add_responses:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#assigned_team_member_and_case_outside_escalation_period?
                   transition_to: awaiting_dispatch
                 link_a_case:
                 reassign_user:
