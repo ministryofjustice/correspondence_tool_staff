@@ -369,7 +369,7 @@ describe Case::BaseDecorator, type: :model do
   describe '#date_compliant_draft_uploaded' do
     it 'returns the escalation date in the default format' do
       expect(closed_case.object).to receive(:date_draft_compliant).and_return(Date.new(2017, 8, 14))
-      expect(closed_case.date_draft_compliant).to eq '14 Aug 2017'
+      expect(closed_case.date_compliant_draft_uploaded).to eq '14 Aug 2017'
     end
   end
 

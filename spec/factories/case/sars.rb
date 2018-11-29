@@ -175,6 +175,8 @@ FactoryBot.define do
   end
 
   factory :approved_sar, parent: :pending_dacu_clearance_sar do
+    date_draft_compliant { received_date + 2.days }
+
     after(:create) do |kase, evaluator|
       create :case_transition_approve,
              case: kase,

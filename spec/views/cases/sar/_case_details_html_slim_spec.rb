@@ -3,6 +3,7 @@ require 'rails_helper'
 describe 'cases/sar/case_details.html.slim', type: :view do
   let(:unassigned_case)         { (create :sar_case).decorate }
   let(:accepted_case)           { (create :accepted_sar).decorate }
+  let(:approved_case)           { (create :approved_sar).decorate}
   let(:bmt_manager)             { find_or_create :disclosure_bmt_user }
 
 
@@ -91,6 +92,22 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       expect(partial.name.data.text).to eq accepted_case.responder.full_name
     end
   end
+
+  describe 'draft compliance details' do
+    it 'displays the date compliant' do
+      assign(:case, approved_case)
+
+      render partial: 'cases/sar/case_details.html.slim',
+             locals:{ case_details: approved_case,
+                      link_type: nil }
+
+      partial = case_details_section(rendered).compliance_details
+
+      expect(partial.compliance_date.data.text).to eq approved_case.date_compliant_draft_uploaded
+      expect(partial.compliant_timeliness.data.text).to eq approved_case.draft_timeliness
+    end
+  end
+
 
   describe 'original case details' do
     let(:ico_case) { create :ico_sar_case}

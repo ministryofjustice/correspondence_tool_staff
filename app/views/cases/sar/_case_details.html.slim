@@ -17,6 +17,8 @@
         = render partial: 'cases/shared/date_received', locals: { case_details: case_details }
         = render partial: 'cases/shared/case_deadlines', locals: { case_details: case_details }
         = render partial: 'cases/sar/response_address', locals: { case_details: case_details }
+        - if case_details.date_draft_compliant.present?
+          = render partial: 'cases/shared/draft_compliance_details', locals: { case_details: case_details }
         - if case_details.responding_team.present?
           = render partial: 'cases/shared/responding_team', locals: { case_details: case_details }
         - if case_details.closed?

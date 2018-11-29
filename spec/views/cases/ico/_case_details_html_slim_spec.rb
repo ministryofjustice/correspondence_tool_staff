@@ -4,6 +4,7 @@ describe 'cases/ico/case_details.html.slim', type: :view do
   let(:ico_foi_case)      { (create :ico_foi_case).decorate }
   let(:ico_sar_case)      { (create :ico_sar_case).decorate }
   let(:accepted_case)     { (create :accepted_ico_foi_case).decorate }
+  let(:responded_case)    { (create :responded_ico_foi_case).decorate }
   let(:accepted_sar_case) { (create :accepted_ico_sar_case).decorate }
   let(:closed_foi_appeal) { (create :closed_ico_foi_case).decorate }
   let(:closed_sar_appeal) { (create :closed_ico_sar_case).decorate }
@@ -80,6 +81,21 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       end
     end
 
+    describe 'draft compliance details' do
+      it 'displays the date compliant' do
+        login_as create(:manager)
+        assign(:case, responded_case)
+
+        render partial: 'cases/ico/case_details.html.slim',
+               locals:{ case_details: responded_case,
+                        link_type: nil }
+
+        partial = case_details_section(rendered).compliance_details
+
+        expect(partial.compliance_date.data.text).to eq responded_case.date_compliant_draft_uploaded
+        expect(partial.compliant_timeliness.data.text).to eq responded_case.draft_timeliness
+      end
+    end
   end
 
   context 'SAR' do

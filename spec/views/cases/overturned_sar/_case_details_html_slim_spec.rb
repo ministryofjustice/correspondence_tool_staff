@@ -3,6 +3,7 @@ require 'rails_helper'
 describe 'cases/overturned_sar/case_details.html.slim', type: :view do
   let(:unassigned_case) { create(:overturned_ico_sar) }
   let(:closed_case)     { create(:closed_ot_ico_sar) }
+  let(:approved_case)   { create(:awaiting_dispatch_ot_ico_sar).decorate }
   let(:bmt_manager)     { find_or_create(:disclosure_bmt_user) }
   let(:flagged_case)    { create(:overturned_ico_sar, :flagged ) }
 
@@ -48,7 +49,7 @@ describe 'cases/overturned_sar/case_details.html.slim', type: :view do
           .to eq I18n.l(flagged_case.received_date)
         expect(partial.final_deadline.text)
           .to eq I18n.l(flagged_case.external_deadline)
-        # edit case link is hidden until the joruney is implemented 
+        # edit case link is hidden until the joruney is implemented
         expect(partial).not_to have_edit_case
       end
     end
@@ -115,6 +116,21 @@ describe 'cases/overturned_sar/case_details.html.slim', type: :view do
 
         expect(partial.time_taken.text).to eq '21 working days'
       end
+    end
+  end
+
+  describe 'draft compliance details' do
+    it 'displays the date compliant' do
+      assign(:case, approved_case)
+
+      render partial: 'cases/overturned_foi/case_details.html.slim',
+             locals:{ case_details: approved_case,
+                      link_type: nil }
+
+      partial = case_details_section(rendered).compliance_details
+
+      expect(partial.compliance_date.data.text).to eq approved_case.date_compliant_draft_uploaded
+      expect(partial.compliant_timeliness.data.text).to eq approved_case.draft_timeliness
     end
   end
 

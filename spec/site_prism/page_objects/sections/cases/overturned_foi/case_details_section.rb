@@ -26,6 +26,16 @@ module PageObjects
           element :timeliness, '.timeliness td'
           element :time_taken, '.time-taken td'
 
+          section :compliance_details, '.compliance-details' do
+            section :compliance_date, '.compliance-date' do
+              element :data, 'td'
+            end
+
+            section :compliant_timeliness, '.compliant-timeliness' do
+              element :data, 'td'
+            end
+          end
+
           element :edit_case, :xpath, '//a[contains(.,"Edit case details")]'
           element :edit_case_link, :xpath, '//a[contains(.,"Edit case details")]'
           element :edit_closure, :xpath, '//a[contains(.,"Edit closure details")]'

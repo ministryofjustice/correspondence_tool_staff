@@ -133,6 +133,8 @@ FactoryBot.define do
       identifier { 'approved ICO FOI case' }
     end
 
+    date_draft_compliant { received_date + 2.days }
+
     after(:create) do |kase, evaluator|
       create :case_transition_approve,
              case: kase,
@@ -150,6 +152,7 @@ FactoryBot.define do
     end
 
     date_responded { Date.today }
+    date_draft_compliant { received_date + 2.days }
 
     after(:create) do |kase, _evaluator|
       create :case_transition_respond_to_ico,
