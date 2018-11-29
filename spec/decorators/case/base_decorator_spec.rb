@@ -134,6 +134,17 @@ describe Case::BaseDecorator, type: :model do
     end
   end
 
+  describe '#draft_timeliness' do
+    it 'returns correct string for answered in time' do
+      expect(closed_case.draft_timeliness).to eq 'Uploaded in time'
+    end
+
+    it 'returns correct string for answered late' do
+      closed_late_case = create(:closed_case, :late).decorate
+      expect(closed_late_case.draft_timeliness).to eq 'Uploaded late'
+    end
+  end
+
   describe '#internal_deadline' do
     context 'unflagged case' do
       it 'returns space' do
@@ -352,6 +363,13 @@ describe Case::BaseDecorator, type: :model do
     it 'returns the escalation date in the default format' do
       expect(unassigned_case.object).to receive(:escalation_deadline).and_return(Date.new(2017, 8, 13))
       expect(unassigned_case.escalation_deadline).to eq '13 Aug 2017'
+    end
+  end
+
+  describe '#date_compliant_draft_uploaded' do
+    it 'returns the escalation date in the default format' do
+      expect(closed_case.object).to receive(:date_draft_compliant).and_return(Date.new(2017, 8, 14))
+      expect(closed_case.date_draft_compliant).to eq '14 Aug 2017'
     end
   end
 

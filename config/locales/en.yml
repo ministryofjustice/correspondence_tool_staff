@@ -460,11 +460,16 @@ en:
       assign: Assign to a responder
       case-details: Case details
       original-case-details: Original case details
+      close: Close case
+      compliant_in_time: Uploaded in time
+      compliant_late: Uploaded late
       create_overturned: Create an ICO Overturned case
       data_subject: Data subject
       data_subject_type: Type of data subject
+      date_draft_uploaded: Date draft uploaded
       date_ico_decision_received: Date ICO's decision was received
       date_responded: Date response sent to requester
+      draft_timeliness: Draft timeliness
       case/ico:
         date_responded: Date response sent to ICO
       outcome: Outcome

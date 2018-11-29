@@ -33,6 +33,14 @@ class Case::BaseDecorator < Draper::Decorator
     end
   end
 
+  def draft_timeliness
+    if within_draft_deadline?
+      I18n.t('common.case.compliant_in_time')
+    else
+      I18n.t('common.case.compliant_late')
+    end
+  end
+
   # we only display the internal deadline for flagged cases
   def internal_deadline
     if object.flagged?
@@ -61,6 +69,10 @@ class Case::BaseDecorator < Draper::Decorator
 
   def escalation_deadline
     I18n.l(object.escalation_deadline, format: :default)
+  end
+
+  def date_compliant_draft_uploaded
+    I18n.l(object.date_draft_compliant.to_date, format: :default)
   end
 
   def error_summary_message

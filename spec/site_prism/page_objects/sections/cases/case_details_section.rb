@@ -92,6 +92,15 @@ module PageObjects
           end
         end
 
+        section :compliance_details, '.compliance-details' do
+          section :compliance_date, '.compliance-date' do
+            element :data, 'td'
+          end
+
+          section :compliant_timeliness, '.compliant-timeliness' do
+            element :data, 'td'
+          end
+        end
 
         section :response_details, '.response-details' do
 

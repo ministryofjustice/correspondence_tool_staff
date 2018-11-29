@@ -59,7 +59,7 @@ class Case::Base < ApplicationRecord
                 :upload_comment,
                 :uploading_user, # Used when creating case sent by post.
                 :draft_compliant
-                
+
   attr_accessor :message_text
 
   jsonb_accessor  :properties,
@@ -396,6 +396,10 @@ class Case::Base < ApplicationRecord
 
   def within_external_deadline?
     date_responded <= external_deadline
+  end
+
+  def within_draft_deadline?
+    date_draft_compliant <= internal_deadline
   end
 
   def attachments_dir(attachment_type, upload_group)
