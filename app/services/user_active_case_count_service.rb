@@ -30,7 +30,7 @@ class UserActiveCaseCountService
     user.roles.each do |role|
       scopes << Settings.global_navigation.pages.my_open_cases.scope.__send__(role)
     end
-    scopes
+    scopes.compact
   end
 
 end

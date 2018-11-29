@@ -28,5 +28,10 @@ describe UserActiveCaseCountService do
       expected = [ kase_1, kase_2 ]
       expect(service.active_cases_for_user(user_1)).to eq expected
     end
+
+    it "works with admins" do
+      admin = create :admin, responding_teams: [responding_team]
+      expect(service.active_cases_for_user(admin)).to be_empty
+    end
   end
 end
