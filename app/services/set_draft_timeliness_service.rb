@@ -8,13 +8,15 @@ attr_reader :result
 
   def call
     ActiveRecord::Base.transaction do
-      if @kase.sar?
-        compliance_date = @kase.transitions.where(event: 'progress_for_clearance').last.created_at
-      else
-        compliance_date = @kase.transitions.where(event: 'add_responses').last.created_at
+      if @kase.date_draft_compliant.nil?
+        if @kase.sar?
+          compliance_date = @kase.transitions.where(event: 'progress_for_clearance').last.created_at
+        else
+          compliance_date = @kase.transitions.where(event: 'add_responses').last.created_at
+        end
+        @kase.update!(date_draft_compliant: compliance_date)
+        @result = :ok
       end
-      @kase.update!(date_draft_compliant: compliance_date)
-      @result = :ok
     end
   end
 end

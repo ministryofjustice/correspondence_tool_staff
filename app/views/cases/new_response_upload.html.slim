@@ -28,5 +28,9 @@
       - if params[:mode] == 'upload-approve' && @case.allow_event?(current_user, :upload_response_approve_and_bypass)
         = render partial: 'bypass_approvals_form'
 
+      - if params[:mode] == 'upload-redraft'
+        = form_for @case, as: :case, url: :cases do |f|
+          = f.radio_button_fieldset :draft_compliant
+
       .actions
         = submit_tag t('.upload_response'), class: 'button'

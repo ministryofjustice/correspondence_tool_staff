@@ -71,8 +71,12 @@ class Case::BaseDecorator < Draper::Decorator
     I18n.l(object.escalation_deadline, format: :default)
   end
 
-  def date_compliant_draft_uploaded
-    I18n.l(object.date_draft_compliant.to_date, format: :default)
+  def date_draft_compliant
+    if object.date_draft_compliant
+      I18n.l(object.date_draft_compliant, format: :default)
+    else
+      nil
+    end
   end
 
   def error_summary_message

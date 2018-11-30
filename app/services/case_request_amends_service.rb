@@ -2,10 +2,11 @@ class CaseRequestAmendsService
   attr_accessor :result
   attr_accessor :error
 
-  def initialize(user:, kase:, message:)
+  def initialize(user:, kase:, message:, compliance:)
     @user = user
     @kase = kase
     @message = message
+    @compliance = compliance
     @result = :incomplete
     @state_machine = @kase.state_machine
   end
@@ -16,6 +17,9 @@ class CaseRequestAmendsService
                      .with_teams(@user.approving_team)
                      .first
       @state_machine.request_amends!(acting_user: @user, acting_team: assignment.team, message: @message)
+      if @compliance == 'yes'
+        SetDraftTimelinessService.new(kase: @case).call
+      end
     end
 
     @result = :ok

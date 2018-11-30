@@ -123,7 +123,7 @@ describe 'cases/foi/case_details.html.slim', type: :view do
 
       partial = case_details_section(rendered).compliance_details
 
-      expect(partial.compliance_date.data.text).to eq responded_case.date_compliant_draft_uploaded
+      expect(partial.compliance_date.data.text).to eq responded_case.date_draft_compliant
       expect(partial.compliant_timeliness.data.text).to eq responded_case.draft_timeliness
     end
   end

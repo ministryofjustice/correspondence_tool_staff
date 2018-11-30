@@ -60,6 +60,8 @@ class ResponseUploaderService
                                            message: @case.upload_comment)
       when 'upload-approve'
         upload_approve(filenames)
+        SetDraftTimelinessService.new(kase: @case).call
+
       when 'upload-redraft'
         @case.state_machine.upload_response_and_return_for_redraft!(
                              acting_user: @current_user,
@@ -67,6 +69,9 @@ class ResponseUploaderService
                              message: @case.upload_comment,
                              filenames: filenames
         )
+        if @compliance == 'yes'
+          SetDraftTimelinessService.new(kase: @case).call
+        end
       else
         raise "Unexpected action parameter: '#{@action}'"
       end
