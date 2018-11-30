@@ -35,7 +35,7 @@ $ cd correspondence_tool_staff
 You can generate documentation for the project with:
 
 ```
-rails yard
+bundle exec yardoc
 ```
 
 If you need to you can edit settings for Yard in `Rakefile`.
