@@ -1,5 +1,6 @@
 lib/**/*.rb
 app/**/*.rb
 -
+spec/support/features/FEATURE_SPEC_COMPONENTS.md
 LICENSE
 
