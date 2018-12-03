@@ -31,7 +31,7 @@ class CaseApprovalService
                        .with_teams(@user.approving_team)
                        .singular
         assignment.update!(approved: true)
-        SetDraftTimelinessService.new(kase: @case).call
+        SetDraftTimelinessService.new(kase: @kase).call
 
         if @bypass_params.present? && @bypass_params.bypass_requested?
           bypass_press_and_private_approvals(assignment)

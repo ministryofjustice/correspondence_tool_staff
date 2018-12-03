@@ -9,7 +9,7 @@ attr_reader :result
   def call
     ActiveRecord::Base.transaction do
       if @kase.date_draft_compliant.nil?
-        if @kase.sar?
+        if @kase.sar? || @kase.overturned_ico_sar?
           compliance_date = @kase.transitions.where(event: 'progress_for_clearance').last.created_at
         else
           compliance_date = @kase.transitions.where(event: 'add_responses').last.created_at
