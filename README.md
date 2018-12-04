@@ -30,6 +30,21 @@ $ git clone git@github.com:ministryofjustice/correspondence_tool_staff.git
 $ cd correspondence_tool_staff
 ```
 
+#### Generating Documentation
+
+You can generate documentation for the project with:
+
+```
+bundle exec yardoc
+```
+
+If you need to you can edit settings for Yard in `Rakefile`. The documentation
+is generated in the `doc` folder, to view it on OSX run:
+
+```
+open doc/index.html
+```
+
 ### Installing the app for development
 
 You can either install the app in a docker container, or set it up natively on your mac.  Instructions for both methods are given below.
