@@ -42,6 +42,8 @@ class Case::FOI::Standard < Case::Base
     end
   end
 
+  include DraftTimeliness::ResponseAdded
+
   before_save do
     self.wokflow = 'standard' if workflow.nil?
   end

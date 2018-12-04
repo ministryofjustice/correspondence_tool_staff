@@ -18,7 +18,7 @@ class CaseRequestAmendsService
                      .first
       @state_machine.request_amends!(acting_user: @user, acting_team: assignment.team, message: @message)
       if @compliance == 'yes'
-        SetDraftTimelinessService.new(kase: @case).call
+        @kase.log_compliance_date
       end
     end
 

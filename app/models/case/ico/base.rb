@@ -33,6 +33,7 @@ require './lib/translate_for_case'
 class Case::ICO::Base < Case::Base
 
   include LinkableOriginalCase
+  include DraftTimeliness::ResponseAdded
 
   attr_accessor :uploaded_ico_decision_files
 

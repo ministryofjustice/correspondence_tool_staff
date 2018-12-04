@@ -38,6 +38,8 @@ class Case::SAR < Case::Base
     end
   end
 
+  include DraftTimeliness::ProgressedForClearance
+
   before_save do
     self.workflow = 'standard' if workflow.nil?
   end
