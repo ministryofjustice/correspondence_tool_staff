@@ -210,7 +210,7 @@ Rails.application.routes.draw do
     get 'new_linked_cases_for', on: :collection
 
     get 'close', on: :member
-    get 'close_2', on: :member
+    get 'closure_outcomes', on: :member
     get 'respond_and_close', on: :member
     get 'closed' => 'cases#closed_cases', on: :collection
     get 'confirm_destroy' => 'cases#confirm_destroy', on: :member

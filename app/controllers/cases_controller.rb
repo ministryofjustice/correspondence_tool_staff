@@ -345,18 +345,21 @@ class CasesController < ApplicationController
 
   def process_date_responded
     authorize @case, :can_close_case?
+
     @case.prepare_for_respond
-    if !@case.update respond_date_params
+    if !@case.update process_date_responded_params(@correspondence_type_key)
       render :close
     else
       @team_collection = CaseTeamCollection.new(@case)
       @case.update(late_team_id: @case.responding_team.id)
-      render :closure_outcomes
+      redirect_to closure_outcomes_case_path(@case)
     end
   end
 
   def closure_outcomes
     authorize @case, :can_close_case?
+
+    @team_collection = CaseTeamCollection.new(@case)
   end
 
   def process_closure
@@ -745,8 +748,6 @@ class CasesController < ApplicationController
     flash[:query_id] = @query.id
   end
 
-
-
   def determine_overturned_ico_class(original_appeal_id)
     original_appeal_case = Case::ICO::Base.find original_appeal_id
     case original_appeal_case.type
@@ -887,6 +888,15 @@ class CasesController < ApplicationController
     end
   end
 
+  def process_date_responded_params(correspondence_type)
+    params.require("case_#{correspondence_type.downcase}").permit(
+      :date_responded_dd,
+      :date_responded_mm,
+      :date_responded_yyyy,
+    )
+  end
+
+
   def record_late_team_params(correspondence_type)
     if correspondence_type == 'ICO'
       record_late_team_ico_params
@@ -896,13 +906,15 @@ class CasesController < ApplicationController
   end
 
   def set_decorated_case
-    @case = Case::Base.find(params[:id]).decorate
-    @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
+    set_case
+    @case = @case.decorate
+    @case_transitions = @case_transitions.decorate
   end
 
   def set_case
     @case = Case::Base.find(params[:id])
     @case_transitions = @case.transitions.case_history.order(id: :desc)
+    @correspondence_type_key = @case.type_abbreviation.downcase
   end
 
   def set_assignments
