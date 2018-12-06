@@ -7,7 +7,7 @@ class ResponseUploaderService
   # * 'upload-approve' - approver uploads a response and approves
   # * 'upload-redraft' - approver uploads a response for redrafting to kilo for amendments
   #
-  def initialize(kase, current_user, bypass_params_manager, action_params)
+  def initialize(kase, current_user, bypass_params_manager, action_params, is_compliant=false)
     @case = kase
     @current_user = current_user
     @bypass_params_manager = bypass_params_manager
@@ -17,6 +17,7 @@ class ResponseUploaderService
     @action = action_params
     @type = :response
     @uploader = S3Uploader.new(@case, @current_user)
+    @is_compliant = is_compliant
   end
 
   def seed!(filepath)
@@ -52,6 +53,7 @@ class ResponseUploaderService
     ActiveRecord::Base.transaction do
       @case.upload_comment = @bypass_params_manager.params[:upload_comment]
       filenames = response_attachments.map(&:filename)
+      # Maybe this should be different controller actions?
       case @action
       when 'upload', 'upload-flagged'
         @case.state_machine.add_responses!(acting_user: @current_user,
@@ -69,9 +71,7 @@ class ResponseUploaderService
                              message: @case.upload_comment,
                              filenames: filenames
         )
-        if @compliance == 'yes'
-          @case.log_compliance_date
-        end
+        @case.log_compliance_date if @is_compliant
       else
         raise "Unexpected action parameter: '#{@action}'"
       end

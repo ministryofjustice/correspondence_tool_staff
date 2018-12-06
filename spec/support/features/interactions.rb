@@ -240,10 +240,12 @@ module Features
           "id"=>kase.id.to_s,
           "controller"=>"cases",
           "upload_comment" => "I've uploaded it",
-          "action"=>"upload_responses"}
-      )
+          "action"=>"upload_responses",
+          "case"=>{"draft_compliant"=>"yes"}}
+        )
+      is_compliant = true
       params = BypassParamsManager.new(raw_params)
-      rus = ResponseUploaderService.new(kase, user, params, action)
+      rus = ResponseUploaderService.new(kase, user, params, action, is_compliant)
       uploader = rus.instance_variable_get :@uploader
       allow(uploader).to receive(:move_uploaded_file)
       allow(uploader).to receive(:remove_leftover_upload_files)

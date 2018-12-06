@@ -7,30 +7,49 @@
   = @case.number
 
 = render partial: 'layouts/header'
-.grid-row
-  .column-two-thirds
-    p.form-hint
-      = t('.upload_hint_copy')
 
-.grid-row
-  section.case-main
-    = form_tag upload_responses_case_path(@case) do
-      = render partial: 'shared/dropzone_form',
-            locals: { s3_direct_post: @s3_direct_post,
-                      file_input_name: 'uploaded_files[]' }
+.form-group
+  - if params[:mode] == 'upload-redraft'
+    = form_for @case, as: :case, url: upload_responses_case_path(@case), method: :post do |f|
+      .grid-row
+        .column-two-thirds
+          p.form-hint
+            = t('.upload_hint_copy')
+        .grid-row
+          section.case-main
+            = form_tag upload_responses_case_path(@case) do
+              = render partial: 'shared/dropzone_form',
+                    locals: { s3_direct_post: @s3_direct_post,
+                              file_input_name: 'uploaded_files[]' }
 
-      .form-group
-        label.form_label
-          | <strong>Add message (optional)</strong>
-        .message-form
-          = text_area_tag(:upload_comment, nil, rows: 4, class: 'form-control')
+              .form-group
+                label.form_label
+                  | <strong>Add message (optional)</strong>
 
-      - if params[:mode] == 'upload-approve' && @case.allow_event?(current_user, :upload_response_approve_and_bypass)
-        = render partial: 'bypass_approvals_form'
+                .message-form
+                  = text_area_tag(:upload_comment, nil, rows: 4, class: 'form-control')
 
-      - if params[:mode] == 'upload-redraft'
-        = form_for @case, as: :case, url: :cases do |f|
-          = f.radio_button_fieldset :draft_compliant
+                = f.radio_button_fieldset :draft_compliant
 
-      .actions
-        = submit_tag t('.upload_response'), class: 'button'
+                = f.submit t('button.submit'), { class: 'button' }
+
+  - else
+    .grid-row
+      section.case-main
+
+        = form_tag upload_responses_case_path(@case) do
+          = render partial: 'shared/dropzone_form',
+                locals: { s3_direct_post: @s3_direct_post,
+                          file_input_name: 'uploaded_files[]' }
+
+          .form-group
+            label.form_label
+              | <strong>Add message (optional)</strong>
+            .message-form
+              = text_area_tag(:upload_comment, nil, rows: 4, class: 'form-control')
+
+          - if params[:mode] == 'upload-approve' && @case.allow_event?(current_user, :upload_response_approve_and_bypass)
+            = render partial: 'bypass_approvals_form'
+
+          .actions
+            = submit_tag t('.upload_response'), class: 'button'

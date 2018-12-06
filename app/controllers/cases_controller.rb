@@ -293,7 +293,7 @@ class CasesController < ApplicationController
 
     bypass_params_manager = BypassParamsManager.new(params)
     rus = ResponseUploaderService.new(
-      @case, current_user, bypass_params_manager, flash[:action_params]
+      @case, current_user, bypass_params_manager, flash[:action_params], params[:case]&.fetch(:draft_compliant) == 'yes'
     )
     rus.upload!
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
