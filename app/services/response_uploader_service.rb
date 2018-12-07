@@ -7,17 +7,19 @@ class ResponseUploaderService
   # * 'upload-approve' - approver uploads a response and approves
   # * 'upload-redraft' - approver uploads a response for redrafting to kilo for amendments
   #
-  def initialize(kase, current_user, bypass_params_manager, action_params, is_compliant=false)
-    @case = kase
-    @current_user = current_user
-    @bypass_params_manager = bypass_params_manager
-    @uploaded_files = @bypass_params_manager.params[:uploaded_files]
+  def initialize(options = {})
+    @case                    = options[:kase]
+    @current_user            = options[:current_user]
+    @action                  = options[:action]
+    @uploaded_files          = options[:uploaded_files]
+    @is_compliant            = options[:is_compliant]
+    @upload_comment          = options[:upload_comment]
+    @bypass_message          = options[:bypass_message]
+    @bypass_further_approval = options[:bypass_further_approval]
+
     @result = nil
-    @attachments = nil
-    @action = action_params
     @type = :response
     @uploader = S3Uploader.new(@case, @current_user)
-    @is_compliant = is_compliant
   end
 
   def seed!(filepath)
@@ -51,7 +53,7 @@ class ResponseUploaderService
 
   def transition_state(response_attachments)
     ActiveRecord::Base.transaction do
-      @case.upload_comment = @bypass_params_manager.params[:upload_comment]
+      @case.upload_comment = @upload_comment
       filenames = response_attachments.map(&:filename)
       # Maybe this should be different controller actions?
       case @action
@@ -79,7 +81,7 @@ class ResponseUploaderService
   end
 
   def upload_approve(filenames)
-    if @bypass_params_manager.present? && @bypass_params_manager.bypass_requested?
+    if @bypass_further_approval
       bypass_further_approvals(filenames)
     else
       approve_and_progress_as_normal(filenames)
@@ -100,7 +102,7 @@ class ResponseUploaderService
   end
 
   def combined_message
-    msg = "Bypass Reason: #{@bypass_params_manager.message}"
+    msg = "Bypass Reason: #{@bypass_message}"
     if @case.upload_comment.present?
       msg += "<br/><br/>File upload comment: #{@case.upload_comment}"
     end

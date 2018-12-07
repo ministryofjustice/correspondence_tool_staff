@@ -11,7 +11,6 @@ module PageObjects
         @app_sections ||= {}
       end
 
-
       {
         admin_cases:                    'Admin::CasesPage',
         admin_cases_new:                'Admin::Cases::NewPage',
@@ -38,7 +37,7 @@ module PageObjects
         cases_edit:                     'Cases::EditPage',
         cases_edit_ico:                 'Cases::Edit::ICOPage',
         cases_edit_closure:             'Cases::EditClosurePage',
-        cases_new_response_upload:      'Cases::NewResponseUploadPage',
+        cases_upload_responses:         'Cases::UploadResponsesPage',
         cases_remove_clearance_form:    'Cases::RemoveClearanceFormPage',
         cases_respond:                  'Cases::RespondPage',
         cases_search:                   'Cases::SearchPage',

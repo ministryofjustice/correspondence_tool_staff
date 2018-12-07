@@ -437,7 +437,7 @@ describe Case::BasePolicy do
     end
   end
 
-  permissions :execute_response_approval? do
+  permissions :approve? do
     let(:flagged_case_responder)  { pending_dacu_clearance_case.responder }
 
     it { should_not permit(manager,   pending_dacu_clearance_case) }

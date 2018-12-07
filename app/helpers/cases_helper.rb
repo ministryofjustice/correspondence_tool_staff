@@ -42,7 +42,7 @@ module CasesHelper
               class: 'button-secondary'
     when :add_responses
       link_to t('common.case.upload_response'),
-              new_response_upload_case_path(@case, 'mode' => determine_action),
+              upload_responses_case_path(@case),
               id: 'action--upload-response',
               class: 'button'
     when :create_overturned
@@ -68,7 +68,7 @@ module CasesHelper
               class: 'button'
     when :approve
       link_to t('common.case.clear_response'),
-              approve_response_interstitial_case_path(@case, 'mode' => 'clear'),
+              approve_case_path(@case),
               id: 'action--approve',
               class: 'button'
     when :request_amends

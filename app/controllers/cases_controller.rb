@@ -11,6 +11,8 @@ class CasesController < ApplicationController
   before_action :set_case,
                 only: [
                   :closure_outcomes,
+                  :approve,
+                  :approve_action,
                   :edit,
                   :edit_closure,
                   :extend_for_pit,
@@ -24,7 +26,12 @@ class CasesController < ApplicationController
                   :record_late_team,
                   :remove_pit_extension,
                   :remove_sar_deadline_extension,
-                  :update_closure
+                  :update_closure,
+                  :response_upload_and_approve,
+                  :response_upload_for_redraft,
+                  :update_closure,
+                  :upload_responses,
+                  :upload_responses_action,
                 ]
   before_action :set_url, only: [:search, :open_cases]
 
@@ -50,7 +57,6 @@ class CasesController < ApplicationController
                   :confirm_respond,
                   :confirm_destroy,
                   :destroy,
-                  :execute_response_approval,
                   :execute_request_amends,
                   :flag_for_clearance,
                   :new_response_upload,
@@ -282,35 +288,125 @@ class CasesController < ApplicationController
     end
   end
 
-  def new_response_upload
-    flash[:action_params] = request.query_parameters['mode']
-    authorize_upload_response_for_action @case, flash[:action_params]
-    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
+  def approve
+    authorize @case
+
+    @case = @case.decorate
+  end
+
+  def approve_action
+    authorize @case, :approve?
+
+    bypass_params_manager = BypassParamsManager.new(params)
+    case_approval_service = CaseApprovalService.new(
+      user: current_user,
+      kase: @case,
+      bypass_params: bypass_params_manager
+    )
+    case_approval_service.call
+    if case_approval_service.result == :ok
+      if @case.ico?
+        flash[:notice] = t('notices.case/ico.case_cleared')
+      else
+        flash[:notice] = t('notices.case_cleared', team: current_team.name,
+                                                   status: I18n.t("state.#{@case.current_state}").downcase)
+      end
+      redirect_to case_path(@case)
+    else
+      flash[:alert] = case_approval_service.error_message
+      @case = @case.decorate
+      render :approve
+    end
   end
 
   def upload_responses
-    authorize_upload_response_for_action @case, flash[:action_params]
+    authorize @case
 
-    bypass_params_manager = BypassParamsManager.new(params)
+    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
+    @case = @case.decorate
+    render 'upload_responses'
+  end
+
+  def upload_responses_action
+    authorize @case, :upload_responses?
+
     rus = ResponseUploaderService.new(
-      @case, current_user, bypass_params_manager, flash[:action_params], params[:case]&.fetch(:draft_compliant) == 'yes'
+      kase: @case,
+      current_user: current_user,
+      action: 'upload',
+      uploaded_files: params[:uploaded_files],
+      upload_comment: params[:upload_comment],
     )
     rus.upload!
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
     case rus.result
     when :blank
       flash.now[:alert] = t('alerts.response_upload_blank?')
-      flash.keep(:action_params)
-      render :new_response_upload
+      flash.keep(:mode)
+      render :upload_responses
     when :error
       flash.now[:alert] = t('alerts.response_upload_error')
-      flash.keep(:action_params)
-      render :new_response_upload
+      flash.keep(:mode)
+      render :upload_responses
     when :ok
       flash[:notice] = t('notices.response_uploaded')
       set_permitted_events
       redirect_to case_path @case
     end
+  end
+
+  def response_upload_and_approve
+    authorize @case
+
+    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
+    @approval_action = 'approve'
+    @case = @case.decorate
+    render 'response_upload_and_approve'
+  end
+
+  def response_upload_for_redraft
+    authorize @case
+
+    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
+    @approval_action = 'redraft'
+    @case = @case.decorate
+    render 'response_upload_for_redraft'
+  end
+
+  # def upload_responses_old
+  #   authorize_upload_response_for_action @case, params[:mode]
+
+  #   bypass_params_manager = BypassParamsManager.new(params)
+  #   rus = ResponseUploaderService.new(
+  #     kase: @case,
+  #     current_user: current_user,
+  #     approval_requested: bypass_params_manager.check_approval_requested?,
+  #     mode: flash[:mode],
+  #     uploaded_files: params[:uploaded_files],
+  #     upload_comment: params[:upload_comment],
+  #     bypass_message: params[:bypass_approval][:bypass_message],
+  #     draft_compliant: params[:case]&.fetch(:draft_compliant) == 'yes'
+  #   )
+  #   rus.upload!
+  #   @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
+  #   case rus.result
+  #   when :blank
+  #     flash.now[:alert] = t('alerts.upload_responses_blank?')
+  #     render :upload_responses
+  #   when :error
+  #     flash.now[:alert] = t('alerts.upload_responses_error')
+  #     render :upload_responses
+  #   when :ok
+  #     flash[:notice] = t('notices.uploaded_responses')
+  #     set_permitted_events
+  #     redirect_to case_path @case
+  #   end
+  # end
+
+  def new_response_upload
+    @mode = flash[:mode] = request.query_parameters['mode']
+    authorize_upload_response_for_action @case, flash[:mode]
+    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
   end
 
   def update
@@ -395,7 +491,6 @@ class CasesController < ApplicationController
     set_permitted_events
     render :close
   end
-
 
   def process_respond_and_close
     authorize @case, :respond_and_close?
@@ -560,27 +655,6 @@ class CasesController < ApplicationController
 
   def approve_response_interstitial
     authorize @case, :can_approve_or_escalate_case?
-  end
-
-  def execute_response_approval
-    authorize @case
-
-    bypass_params_manager = BypassParamsManager.new(params)
-    service = CaseApprovalService.new(user: current_user, kase: @case, bypass_params: bypass_params_manager)
-    service.call
-    if service.result == :ok
-      current_team = CurrentTeamAndUserService.new(@case).team
-      if @case.ico?
-        flash[:notice] = t('notices.case/ico.case_cleared')
-      else
-        flash[:notice] = t('notices.case_cleared', team: current_team.name,
-                                                   status: I18n.t("state.#{@case.current_state}").downcase)
-      end
-      redirect_to case_path(@case)
-    else
-      flash[:alert] = service.error_message
-      render :approve_response_interstitial
-    end
   end
 
   def request_amends

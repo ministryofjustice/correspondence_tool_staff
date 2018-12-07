@@ -51,6 +51,37 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
             check_user_is_private_office_approver)
   end
 
+  def response_approve?
+    clear_failed_checks
+    check_case_requires_clearance &&
+      check_user_is_in_current_team
+  end
+
+  def upload_responses?
+    clear_failed_checks
+    check_user_is_in_current_team &&
+      check_can_trigger_event(:add_responses)
+  end
+
+  def response_upload_and_approve?
+    clear_failed_checks
+    check_user_is_in_current_team &&
+      check_can_trigger_event(:upload_response_and_approve)
+  end
+
+  def response_upload_for_redraft?
+    clear_failed_checks
+    check_user_is_in_current_team &&
+      check_can_trigger_event(:upload_response_and_return_for_redraft)
+  end
+
+  def show?
+    clear_failed_checks
+
+    # FOIs should be viewable by anyone who is logged into the system.
+    true
+  end
+
   check :case_is_not_assigned_to_press_or_private_office do
     check_case_is_not_assigned_to_private_office ||
       check_case_is_not_assigned_to_press_office
@@ -76,12 +107,4 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
      self.case.outside_escalation_deadline? &&
       !self.case.current_state.in?(%w{responded closed})
   end
-
-  def show?
-    clear_failed_checks
-
-    # FOIs should be viewable by anyone who is logged into the system.
-    true
-  end
-
 end

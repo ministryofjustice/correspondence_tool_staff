@@ -7,7 +7,27 @@ RSpec.describe CasesController, type: :controller do
                                                  call: true,
                                                  result: :ok) }
 
-  describe 'PATCH execute_response_approval' do
+  describe 'approve' do
+    before do
+      sign_in approver
+      # allow(CaseApprovalService).to receive(:new).and_return(service)
+    end
+
+    it 'authorizes' do
+      expect {
+        get :approve, params: { id: responded_trigger_case }
+      } .to require_permission(:approve?)
+              .with_args(approver, responded_trigger_case)
+    end
+
+    it 'renders the approve page' do
+      get :approve, params: { id: responded_trigger_case }
+
+      expect(response).to have_rendered('cases/approve')
+    end
+  end
+
+  describe 'approve_action' do
     before do
       sign_in approver
       allow(CaseApprovalService).to receive(:new).and_return(service)
@@ -15,13 +35,13 @@ RSpec.describe CasesController, type: :controller do
 
     it 'authorizes' do
       expect {
-        patch :execute_response_approval, params: { id: responded_trigger_case }
-      } .to require_permission(:execute_response_approval?)
+        patch :approve_action, params: { id: responded_trigger_case }
+      } .to require_permission(:approve?)
               .with_args(approver, responded_trigger_case)
     end
 
     it 'calls the case approval service' do
-      patch :execute_response_approval, params: { id: responded_trigger_case }
+      patch :approve_action, params: { id: responded_trigger_case }
       expect(CaseApprovalService).to have_received(:new)
                                        .with(hash_including(user: approver,
                                                             kase: responded_trigger_case))
@@ -30,13 +50,13 @@ RSpec.describe CasesController, type: :controller do
     end
 
     it 'flashes a notification' do
-      patch :execute_response_approval, params: { id: responded_trigger_case }
+      patch :approve_action, params: { id: responded_trigger_case }
       expect(flash[:notice])
         .to eq 'Disclosure has been notified that the response is pending clearance.'
     end
 
     it 'redirects to case detail page' do
-      patch :execute_response_approval, params: { id: responded_trigger_case }
+      patch :approve_action, params: { id: responded_trigger_case }
       expect(response).to redirect_to(case_path(responded_trigger_case))
     end
   end

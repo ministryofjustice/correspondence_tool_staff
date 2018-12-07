@@ -10,45 +10,35 @@ describe ResponseUploaderService do
   let(:uploads_key)        { "uploads/#{kase.id}/responses/#{filename}" }
   let(:destination_key)    { "#{kase.id}/responses/#{upload_group}/#{filename}" }
   let(:destination_path)   { "correspondence-staff-case-uploads-testing/#{destination_key}" }
-  let(:rus)                { ResponseUploaderService.new(kase,
-                                                         user,
-                                                         params,
-                                                         action) }
-  let(:rus_with_message)   { ResponseUploaderService.new(kase,
-                                                         user,
-                                                         params_with_message,
-                                                         action) }
+  let(:is_draft_compliant) { true }
+  let(:bypass_further_approval) { false }
+  let(:uploaded_files)     { [uploads_key] }
+  let(:upload_comment)     { nil }
+  let(:action)             { 'upload' }
+  let(:rus)                { ResponseUploaderService.new(
+                               kase: kase,
+                               current_user: user,
+                               bypass_further_approval: bypass_further_approval,
+                               action: action,
+                               uploaded_files: uploaded_files,
+                               upload_comment: upload_comment,
+                               bypass_message: '',
+                               draft_compliant: is_draft_compliant,
+                             ) }
+  let(:rus_with_message)   { ResponseUploaderService.new(
+                               kase: kase,
+                               current_user: user,
+                               bypass_further_approval: bypass_further_approval,
+                               action: action,
+                               uploaded_files: [uploads_key],
+                               upload_comment: 'This is my upload message',
+                               bypass_message: '',
+                               draft_compliant: is_draft_compliant,
+                             ) }
   let(:attachments)        { [instance_double(CaseAttachment,
                                               filename: filename)] }
   let(:uploader)           { instance_double(S3Uploader,
                                              process_files: attachments) }
-
-
-  let(:params) do
-    raw_params = ActionController::Parameters.new(
-      {
-        "type"           => "response",
-        "uploaded_files" => [uploads_key],
-        "id"             => kase.id.to_s,
-        "controller"     => "cases",
-        "action"         => "upload_responses"}
-    )
-    BypassParamsManager.new(raw_params)
-  end
-
-  let(:params_with_message) do
-    raw_params = ActionController::Parameters.new(
-        {
-            "type"           => "response",
-            "uploaded_files" => [uploads_key],
-            "upload_comment" => 'This is my upload message',
-            "id"             => kase.id.to_s,
-            "controller"     => "cases",
-            "action"         => "upload_responses"}
-    )
-    BypassParamsManager.new(raw_params)
-  end
-
 
   before(:each) do
     ActiveJob::Base.queue_adapter = :test
@@ -99,8 +89,8 @@ describe ResponseUploaderService do
       end
 
       context 'No valid files to upload' do
+        let(:uploaded_files) { [] }
         it 'returns a result of :blank' do
-          params.params.delete('uploaded_files')
           rus.upload!
           expect(rus.result).to eq :blank
 

@@ -53,10 +53,10 @@ feature 'cases requiring clearance by disclosure specialist' do
     expect(cases_show_page.actions).to have_upload_approve
     cases_show_page.actions.upload_approve.click
 
-    expect(cases_new_response_upload_page).to be_displayed
+    expect(cases_upload_responses_page).to be_displayed
 
     expect_any_instance_of(CasesController).to receive(:upload_responses)
-    cases_new_response_upload_page.upload_response_button.click
+    cases_upload_responses_page.upload_response_button.click
     upload_and_approve_response_as_dacu_disclosure_specialist(kase.reload, disclosure_specialist)
 
     cases_show_page.load(id: kase.id)
@@ -89,9 +89,9 @@ feature 'cases requiring clearance by disclosure specialist' do
     cases_show_page.load(id: kase.id)
     cases_show_page.actions.upload_redraft.click
 
-    expect(cases_new_response_upload_page).to be_displayed
+    expect(cases_upload_responses_page).to be_displayed
     expect_any_instance_of(CasesController).to receive(:upload_responses)
-    cases_new_response_upload_page.upload_response_button.click
+    cases_upload_responses_page.upload_response_button.click
     upload_response_and_send_for_redraft_as_disclosure_specialist(kase.reload, disclosure_specialist)
 
     cases_show_page.load(id: kase.id)

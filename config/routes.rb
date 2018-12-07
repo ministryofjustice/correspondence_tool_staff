@@ -248,9 +248,9 @@ Rails.application.routes.draw do
     patch 'unflag_for_clearance' => 'cases#unflag_for_clearance', on: :member
     patch 'unflag_taken_on_case_for_clearance' => 'cases#unflag_taken_on_case_for_clearance', on: :member
     patch 'flag_for_clearance' => 'cases#flag_for_clearance', on: :member
-    get 'approve_response' => 'cases#approve_response', on: :member
-    get 'approve_response_interstitial' => 'cases#approve_response_interstitial', on: :member
-    post 'execute_response_approval' => 'cases#execute_response_approval', on: :member
+    # get 'approve_response' => 'cases#approve_response', on: :member
+    # get 'approve_response_interstitial' => 'cases#approve_response_interstitial', on: :member
+    # post 'execute_response_approval' => 'cases#execute_response_approval', on: :member
     get :request_amends, on: :member
     patch :execute_request_amends, on: :member
     post  :filter, on: :collection
@@ -285,6 +285,25 @@ Rails.application.routes.draw do
     resources :case_attachments, path: 'attachments'
 
     resources :messages, only: :create
+
+    get 'approve', on: :member
+    patch 'approve',
+          action: :approve_action,
+          on: :member
+    get 'upload_responses', on: :member
+    patch 'upload_responses',
+          action: :upload_responses_action,
+          on: :member
+    # Change to upload_response_and_approve
+    get 'upload_response_and_approve', on: :member
+    patch 'upload_response_and_approve',
+          action: :perform_upload_response_and_approve,
+          on: :member
+    # Change to upload_response_and_return_for_redraft
+    get 'response_upload_for_redraft', on: :member
+    patch 'response_upload_for_redraft',
+          action: :perform_response_upload_for_redraft,
+          on: :member
 
     get 'new_response_upload', on: :member
     post 'upload_responses', on: :member

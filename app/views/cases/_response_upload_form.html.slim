@@ -1,0 +1,16 @@
+.grid-row
+  .column-two-thirds
+    p.form-hint
+      = t('.upload_hint_copy')
+.grid-row
+  section.case-main
+    = hidden_field_tag 'approval_action', params[:approval_action]
+
+    = render partial: 'shared/dropzone_form',
+          locals: { s3_direct_post: s3_direct_post,
+                    file_input_name: 'uploaded_files[]' }
+    .form-group
+      label.form_label
+        | <strong>Add message (optional)</strong>
+      .message-form
+        = text_area_tag(:upload_comment, nil, rows: 4, class: 'form-control')

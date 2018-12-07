@@ -1,0 +1,29 @@
+// Move this into a partial, or even better, layouts/application
+- content_for :page_title do
+  = t('page_title.approve_page', case_number: @case.number)
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = "#{@case.number} - #{@case.pretty_type}"
+
+= render partial: 'layouts/header'
+
+.clearance-copy
+  p
+    = "You are clearing the response to: "
+  p
+    strong.strong-block
+      = @case.subject
+  p
+    = t(".approve_message.#{@case.type_abbreviation.downcase}", managing_team: @case.managing_team.name)
+
+= form_tag approve_case_path(@case), method: :patch
+  - if @case.allow_event?(current_user, :approve_and_bypass)
+    = render partial: 'bypass_approvals_form'
+
+  .actions
+  = submit_tag 'Clear response', class: 'button'

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'cases/new_response_upload.html.slim', type: :view do
+describe 'cases/upload_responses.html.slim', type: :view do
 
   let(:drafting_case)         { build_stubbed(:accepted_case, :taken_on_by_press).decorate }
   let(:pending_clearance_case){ build_stubbed(:approved_ico_foi_case).decorate }
@@ -12,11 +12,11 @@ describe 'cases/new_response_upload.html.slim', type: :view do
       params[:mode] = 'upload-redraft'
       render
 
-      cases_new_response_upload_page.load(rendered)
+      cases_upload_responses_page.load(rendered)
 
-      puts cases_new_response_upload_page.load(rendered)
+      puts cases_upload_responses_page.load(rendered)
 
-      page = cases_new_response_upload_page
+      page = cases_upload_responses_page
 
       expect(page.page_heading.heading.text).to eq "Upload response"
       expect(page).to have_draft_compliant
@@ -30,11 +30,11 @@ describe 'cases/new_response_upload.html.slim', type: :view do
       params[:mode] = 'upload'
       render
 
-      cases_new_response_upload_page.load(rendered)
+      cases_upload_responses_page.load(rendered)
 
-      puts cases_new_response_upload_page.load(rendered)
+      puts cases_upload_responses_page.load(rendered)
 
-      page = cases_new_response_upload_page
+      page = cases_upload_responses_page
 
       expect(page.page_heading.heading.text).to eq "Upload response"
       expect(page).not_to have_draft_compliant

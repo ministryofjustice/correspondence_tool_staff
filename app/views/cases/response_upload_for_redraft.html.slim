@@ -1,0 +1,41 @@
+// Move the title and headings into a partial, or even better, layouts/application
+- content_for :page_title do
+  = t('page_title.response_upload_page', case_number: @case.number)
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = "#{@case.number} - #{@case.pretty_type}"
+
+= render partial: 'layouts/header'
+
+= form_tag upload_responses_case_path(@case) do
+  .form-group
+    = render partial: 'response_upload_form',
+             locals: { kase: @case,
+                       s3_direct_post: @s3_direct_post }
+
+  .form-group
+    .grid-row
+      .column-two-thirds
+        fieldset
+          legend
+            span.form-label-bold
+              = "Draft compliant"
+          div.multiple-choice
+            input#case_draft_compliant_yes type="radio" value="yes" name="case[draft_compliant]"
+            label for="case_draft_compliant_yes"
+              = "Yes"
+          div.multiple-choice
+            input#case_draft_compliant_no type="radio" value="no" name="case[draft_compliant]"
+            label for="case_draft_compliant_no"
+              = "No"
+
+  .form-group
+    .grid-row
+      .column-two-thirds
+        .actions
+          = submit_tag t('.upload_response'), class: 'button'

@@ -1,10 +1,10 @@
 module PageObjects
   module Pages
     module Cases
-      class NewResponseUploadPage < PageObjects::Pages::Base
+      class UploadResponsesPage < PageObjects::Pages::Base
         include SitePrism::Support::DropInDropzone
 
-        set_url '/cases/{id}/new_response_upload'
+        set_url '/cases/{id}/upload_responses'
 
         section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
