@@ -30,48 +30,46 @@ feature 'ICO FOI case requiring clearance' do
     CaseClosure::MetadataSeeder.unseed!
   end
 
+  scenario 'end-to-end journey', js: true do
+    kase = create_and_assign_ico_case user: manager,
+                                      responding_team: responding_team,
+                                      original_case: original_foi_case
 
-  ################### temporarily commented out - re-isnstate before PR ####################
-  # scenario 'end-to-end journey', js: true do
-  #   kase = create_and_assign_ico_case user: manager,
-  #                                     responding_team: responding_team,
-  #                                     original_case: original_foi_case
-  #
-  #   accept_case kase: kase,
-  #               user: responder,
-  #               do_logout: false
-  #
-  #   add_message_to_case kase: kase,
-  #                       message: 'This. Is. A. Test.',
-  #                       do_logout: true
-  #
-  #   take_case_on kase: kase,
-  #                user: disclosure_specialist,
-  #                test_undo: true
-  #
-  #   upload_response kase: kase,
-  #                   user: responder,
-  #                   file: UPLOAD_RESPONSE_DOCX_FIXTURE
-  #
-  #   edit_case kase: kase,
-  #             user: manager,
-  #             subject: 'new test subject'
-  #
-  #   clear_response kase: kase,
-  #                   user: disclosure_specialist,
-  #                   expected_team: team_dacu_disclosure,
-  #                   expected_status: 'Ready to send to ICO',
-  #                   expected_notice: 'The response has been cleared and is ready to be sent to the ICO'
-  #
-  #
-  #   mark_case_as_sent kase: kase,
-  #                     user: disclosure_specialist,
-  #                     expected_status: 'Awaiting ICO decision',
-  #                     expected_to_be_with: 'Disclosure'
-  #
-  #   close_ico_appeal_case kase: kase,
-  #              user: manager,
-  #              timeliness: 'in time',
-  #              decision: 'upheld'
-  # end
+    accept_case kase: kase,
+                user: responder,
+                do_logout: false
+
+    add_message_to_case kase: kase,
+                        message: 'This. Is. A. Test.',
+                        do_logout: true
+
+    take_case_on kase: kase,
+                 user: disclosure_specialist,
+                 test_undo: true
+
+    upload_response kase: kase,
+                    user: responder,
+                    file: UPLOAD_RESPONSE_DOCX_FIXTURE
+
+    edit_case kase: kase,
+              user: manager,
+              subject: 'new test subject'
+
+    clear_response kase: kase,
+                    user: disclosure_specialist,
+                    expected_team: team_dacu_disclosure,
+                    expected_status: 'Ready to send to ICO',
+                    expected_notice: 'The response has been cleared and is ready to be sent to the ICO'
+
+
+    mark_case_as_sent kase: kase,
+                      user: disclosure_specialist,
+                      expected_status: 'Awaiting ICO decision',
+                      expected_to_be_with: 'Disclosure'
+
+    close_ico_appeal_case kase: kase,
+               user: manager,
+               timeliness: 'in time',
+               decision: 'upheld'
+  end
 end

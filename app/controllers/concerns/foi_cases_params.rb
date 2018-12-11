@@ -66,4 +66,12 @@ module FOICasesParams
 
     closure_params
   end
+
+  def respond_foi_params	
+    params.require(:case_foi).permit(
+      :date_responded_dd,
+      :date_responded_mm,
+      :date_responded_yyyy,
+    )
+  end
 end

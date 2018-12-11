@@ -254,7 +254,7 @@ en:
         team_id: Assign to
         user_id: Choose a new team member for this case
       case_foi:
-        info_held_status_abbreviation: Was the information held?1
+        info_held_status_abbreviation: Was the information held?
         requester_type: Requester type
         refusal_reason_abbreviation: What was the outcome?
         outcome_abbreviation: What was the outcome?

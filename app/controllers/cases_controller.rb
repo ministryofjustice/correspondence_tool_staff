@@ -10,6 +10,7 @@ class CasesController < ApplicationController
 
   before_action :set_case,
                 only: [
+                  :closure_outcomes,
                   :edit,
                   :edit_closure,
                   :extend_for_pit,
@@ -17,7 +18,9 @@ class CasesController < ApplicationController
                   :execute_new_case_link,
                   :new_case_link,
                   :destroy_case_link,
+                  :process_date_responded,
                   :remove_pit_extension,
+                  :record_late_team,
                   :update_closure
                 ]
   before_action :set_url, only: [:search, :open_cases]
@@ -41,7 +44,6 @@ class CasesController < ApplicationController
                   :approve_response_interstitial,
                   :assign_to_new_team,
                   :close,
-                  :closure_outcomes,
                   :confirm_respond,
                   :confirm_destroy,
                   :destroy,
@@ -50,11 +52,9 @@ class CasesController < ApplicationController
                   :flag_for_clearance,
                   :new_response_upload,
                   :process_closure,
-                  :process_date_responded,
                   :process_respond_and_close,
                   :progress_for_clearance,
                   :reassign_approver,
-                  :record_late_team,
                   :remove_clearance,
                   :request_amends,
                   :request_further_clearance,
@@ -357,6 +357,7 @@ class CasesController < ApplicationController
   end
 
   def closure_outcomes
+    @case = @case.decorate
     authorize @case, :can_close_case?
 
     @team_collection = CaseTeamCollection.new(@case)
@@ -435,7 +436,7 @@ class CasesController < ApplicationController
 
   def confirm_respond
     authorize @case, :can_respond?
-    params = respond_params(@case.type_abbreviation)
+    params = respond_params(@correspondence_type_key)
     service = MarkResponseAsSentService.new(@case, current_user, params)
     service.call
     case service.result
@@ -858,7 +859,7 @@ class CasesController < ApplicationController
     when 'FOI', 'OVERTURNED_FOI' then process_foi_closure_params
     when 'SAR', 'OVERTURNED_SAR' then process_sar_closure_params
     when 'ICO' then process_ico_closure_params
-    else raise 'Unknown case type'
+    else raise "Unknown case type '#{correspondence_type}'"
     end
   end
 
@@ -881,21 +882,15 @@ class CasesController < ApplicationController
 
   def respond_params(correspondence_type)
     case correspondence_type
-    when 'FOI' then respond_foi_params
-    when 'ICO' then respond_ico_params
-    when 'OVERTURNED_FOI' then respond_overturned_params
+    when 'foi' then respond_foi_params
+    when 'sar' then respond_sar_params
+    when 'ico' then respond_ico_params
+    when 'overturned_foi', 'overturned_sar' then respond_overturned_params
     else raise 'Unknown case type'
     end
   end
 
-  def process_date_responded_params(correspondence_type)
-    params.require("case_#{correspondence_type.downcase}").permit(
-      :date_responded_dd,
-      :date_responded_mm,
-      :date_responded_yyyy,
-    )
-  end
-
+  alias process_date_responded_params respond_params
 
   def record_late_team_params(correspondence_type)
     if correspondence_type == 'ICO'

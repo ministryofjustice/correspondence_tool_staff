@@ -16,6 +16,5 @@
 
 = render partial: 'layouts/header'
 
-div class="case-#{@case.type_abbreviation.downcase}"
-
+div class="case-#{@correspondence_type_key}"
   = render partial: "cases/shared/date_responded_form", locals: { kase: @case, submit_button: t('.submit')}
