@@ -611,14 +611,6 @@ en:
       already_accepted: Case already accepted by %{name}
 
   cases:
-    approve_response_interstitial:
-      approve_message:
-        foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
-        sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
-        ico: "Once you clear this response, %{managing_team} can send the response and close the case."
-        overturned_foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
-        overturned_sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
-      clear: Clear response
     bypass_approvals_form:
       press_clearance_reqd: Does Press office need to clear this response?
       affirmative: 'Yes'

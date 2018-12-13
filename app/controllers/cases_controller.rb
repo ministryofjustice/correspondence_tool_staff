@@ -51,7 +51,6 @@ class CasesController < ApplicationController
   # or, this could be done in a new after_action block.
   before_action :set_decorated_case,
                 only: [
-                  :approve_response_interstitial,
                   :assign_to_new_team,
                   :close,
                   :confirm_respond,
@@ -59,7 +58,6 @@ class CasesController < ApplicationController
                   :destroy,
                   :execute_request_amends,
                   :flag_for_clearance,
-                  :new_response_upload,
                   :process_closure,
                   :process_respond_and_close,
                   :progress_for_clearance,
@@ -324,7 +322,6 @@ class CasesController < ApplicationController
 
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
     @case = @case.decorate
-    render 'upload_responses'
   end
 
   def upload_responses_action
@@ -402,12 +399,6 @@ class CasesController < ApplicationController
   #     redirect_to case_path @case
   #   end
   # end
-
-  def new_response_upload
-    @mode = flash[:mode] = request.query_parameters['mode']
-    authorize_upload_response_for_action @case, flash[:mode]
-    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
-  end
 
   def update
     set_correspondence_type(params.fetch(:correspondence_type))
@@ -601,7 +592,6 @@ class CasesController < ApplicationController
     end
   end
 
-
   def remove_clearance
     authorize @case
     # interstitial page for unflag_taken_on_case_for_clearance
@@ -651,10 +641,6 @@ class CasesController < ApplicationController
         redirect_to case_path(@case)
       end
     end
-  end
-
-  def approve_response_interstitial
-    authorize @case, :can_approve_or_escalate_case?
   end
 
   def request_amends
@@ -1071,12 +1057,17 @@ class CasesController < ApplicationController
     end
   end
 
+  # Catch exceptions as a result of a user not being authorised to perform an
+  # action on a case. The default behaviour is to redirect them to '/' but here
+  # we change that for certain actions where it makes sense (i.e. ones that
+  # operateon a case) so that they redirect to the case show page (e.g.
+  # approve, upload_responses).
   def user_not_authorized(exception)
     case exception.query
-    when 'can_add_attachment?',
+    when 'approve?',
+         'can_add_attachment?',
          /^add_response_to_flagged_case/,
          'upload_responses?',
-         'new_response_upload?',
          'update_closure?'
       super(exception, case_path(@case))
     else

@@ -121,6 +121,12 @@ FactoryBot.define do
 
       kase.reload
     end
+
+    trait :late do
+      received_date { 30.business_days.ago }
+      date_responded { 1.business_day.ago }
+      date_draft_compliant { 1.business_day.ago }
+    end
   end
 
   factory :case_within_escalation_deadline, parent: :case do
@@ -317,7 +323,7 @@ FactoryBot.define do
     taken_on_by_disclosure
   end
 
-  factory :responded_case, parent: :ready_to_send_case do
+  factory :responded_case, aliases: [:responded_foi_case], parent: :ready_to_send_case do
     transient do
       identifier { "responded case" }
     end

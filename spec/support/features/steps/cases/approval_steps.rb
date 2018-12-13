@@ -3,15 +3,15 @@ def approve_case_step(kase:,
                       expected_status:,
                       expected_notice: "#{expected_team.name} has been notified that the response is ready to send.")
   cases_show_page.actions.clear_case.click
-  expect(approve_response_interstitial_page).to be_displayed
+  expect(cases_approve_page).to be_displayed
 
-  if approve_response_interstitial_page.has_bypass_press_option?
-    approve_response_interstitial_page.bypass_press_option.radio_yes.click
-    expect(approve_response_interstitial_page.bypass_press_option)
+  if cases_approve_page.has_bypass_press_option?
+    cases_approve_page.bypass_press_option.radio_yes.click
+    expect(cases_approve_page.bypass_press_option)
       .to have_no_bypass_reason_text
   end
 
-  approve_response_interstitial_page.clear_response_button.click
+  cases_approve_page.clear_response_button.click
   expect(cases_show_page).to be_displayed(id: kase.id)
   unless expected_notice.nil?
     expect(cases_show_page.notice.text)
@@ -29,13 +29,13 @@ end
 
 def approve_case_with_bypass(kase:, expected_team:, expected_status:)
   cases_show_page.actions.clear_case.click
-  expect(approve_response_interstitial_page).to be_displayed
-  expect(approve_response_interstitial_page).to have_bypass_press_option
-  approve_response_interstitial_page.bypass_press_option.radio_no.click
-  expect(approve_response_interstitial_page.bypass_press_option)
+  expect(cases_approve_page).to be_displayed
+  expect(cases_approve_page).to have_bypass_press_option
+  cases_approve_page.bypass_press_option.radio_no.click
+  expect(cases_approve_page.bypass_press_option)
       .to have_bypass_reason_text
-  approve_response_interstitial_page.bypass_press_option.bypass_reason_text.set 'No Presss office approval required'
-  approve_response_interstitial_page.clear_response_button.click
+  cases_approve_page.bypass_press_option.bypass_reason_text.set 'No Presss office approval required'
+  cases_approve_page.clear_response_button.click
 
   expect(cases_show_page).to be_displayed(id: kase.id)
   open_cases_page.load
