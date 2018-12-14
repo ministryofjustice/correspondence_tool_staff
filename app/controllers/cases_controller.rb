@@ -345,6 +345,7 @@ class CasesController < ApplicationController
 
   def process_date_responded
     authorize @case, :can_close_case?
+    @case = @case.decorate
 
     @case.prepare_for_respond
     if !@case.update process_date_responded_params(@correspondence_type_key)
@@ -359,12 +360,16 @@ class CasesController < ApplicationController
   def closure_outcomes
     @case = @case.decorate
     authorize @case, :can_close_case?
+    if @case.ico?
+      @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
+    end
 
     @team_collection = CaseTeamCollection.new(@case)
   end
 
   def process_closure
     authorize @case, :can_close_case?
+    @case = @case.decorate
     close_params = process_closure_params(@case.type_abbreviation)
     service = CaseClosureService.new(@case, current_user, close_params)
     service.call
@@ -455,18 +460,18 @@ class CasesController < ApplicationController
   end
 
   # this action is only used for ICO cases
-  def record_late_team
-    authorize @case, :can_respond?
-    @case.prepare_for_recording_late_team
-    params = record_late_team_params(@case.type_abbreviation)
-    if @case.update(params)
-      @case.respond(current_user)
-      redirect_to case_path
-    else
-      @team_collection = CaseTeamCollection.new(@case)
-      render '/cases/ico/late_team'
-    end
-  end
+  # def record_late_team
+  #   authorize @case, :can_respond?
+  #   @case.prepare_for_recording_late_team
+  #   params = record_late_team_params(@case.type_abbreviation)
+  #   if @case.update(params)
+  #     @case.respond(current_user)
+  #     redirect_to case_path
+  #   else
+  #     @team_collection = CaseTeamCollection.new(@case)
+  #     render '/cases/ico/late_team'
+  #   end
+  # end
 
 
   def search
@@ -890,7 +895,15 @@ class CasesController < ApplicationController
     end
   end
 
-  alias process_date_responded_params respond_params
+  def process_date_responded_params(correspondence_type)
+    case correspondence_type
+    when 'foi' then respond_foi_params
+    when 'sar' then respond_sar_params
+    when 'ico' then ico_close_date_responded_params
+    when 'overturned_foi', 'overturned_sar' then respond_overturned_params
+    else raise 'Unknown case type'
+    end
+  end
 
   def record_late_team_params(correspondence_type)
     if correspondence_type == 'ICO'

@@ -1,2 +1,37 @@
-= render partial: '/cases/foi/closure_outcomes_form',
-        locals: { kase: kase, submit_button: submit_button }
+/ = render partial: '/cases/foi/closure_outcomes_form',
+/         locals: { kase: kase, submit_button: submit_button }
+
+
+- url = defined?(form_url) ? form_url : process_closure_case_path(id: @case.id)
+= form_for @case, as: :case_ico, url: url do |f|
+
+  .ico-decision
+    = f.radio_button_fieldset :ico_decision,
+          choices: Case::ICO::Base.ico_decisions.keys
+
+  / .form-group
+  /   = f.gov_uk_date_field :date_ico_decision_received, { legend_text: t('.date_ico_decision_received_date'),
+  /           form_hint_text: t('.date_example'),
+  /           today_button: {class: ''} }
+
+  - if @case.respond_to?(:ico_decision) && @case.ico_decision.present?
+    = render partial: 'cases/ico/ico_final_decision', locals: {case_details: @case}
+
+  .grid-row
+    .column-two-thirds
+      #uploaded-ico-decision-files-fields
+        span.form-label-bold
+          = "Upload original ICO's decision document"
+        span.form-hint
+          = t('cases.new.uploaded_request_files_hint')
+
+      div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
+        = render partial: 'shared/dropzone_form',
+                locals: { s3_direct_post: @s3_direct_post,
+                        file_input_name: 'case_ico[uploaded_ico_decision_files][]' }
+      = f.text_area :ico_decision_comment, { rows: 10, class: 'form-control-1-1' }
+
+  .grid-row
+    .column-two-thirds
+      = f.submit submit_button, {class: 'button'}
+      = link_to "Return to case detail", case_path(kase.id), class:'acts-like-button button-left-spacing'

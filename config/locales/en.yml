@@ -728,6 +728,7 @@ en:
       date_responded_form:
         close_date:  Date response sent
         date_example: For example, 30 1 2017
+        date_ico_decision_received_date: DATE ICO DECISION RECEIVED
     show:
       case/ico:
         attachments_heading: Appeal response
@@ -749,10 +750,17 @@ en:
     foi:
       case_details:
         cannot_update_closure_html: "This is an old case with closure details that can't be edited. If you need to edit this case <a href=\"#new_feedback\">let us know</a>."
+      close_form:
+        date_example: For example, 30 1 2017
+        close_date:  Date response sent
 
     sar:
       new_form_common:
         dropzone: "Requestor's proof of ID and other documents"
+      close_form:
+        date_example: For example, 30 1 2017
+        close_date:  Date response sent
+
 
     search:
       heading: Search
