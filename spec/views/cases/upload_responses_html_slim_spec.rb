@@ -14,8 +14,6 @@ describe 'cases/upload_responses.html.slim', type: :view do
 
       cases_upload_responses_page.load(rendered)
 
-      puts cases_upload_responses_page.load(rendered)
-
       page = cases_upload_responses_page
 
       expect(page.page_heading.heading.text).to eq "Upload response"
@@ -31,8 +29,6 @@ describe 'cases/upload_responses.html.slim', type: :view do
       render
 
       cases_upload_responses_page.load(rendered)
-
-      puts cases_upload_responses_page.load(rendered)
 
       page = cases_upload_responses_page
 

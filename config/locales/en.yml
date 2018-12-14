@@ -768,7 +768,7 @@ en:
     response_upload:
       heading: Upload response
       upload_response: 'Upload response'
-    response_upload_and_approve:
+    upload_response_and_approve:
       heading: Upload response
       upload_response: 'Upload response'
     response_upload_for_redraft:

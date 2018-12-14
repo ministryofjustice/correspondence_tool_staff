@@ -57,24 +57,6 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
       check_user_is_in_current_team
   end
 
-  def upload_responses?
-    clear_failed_checks
-    check_user_is_in_current_team &&
-      check_can_trigger_event(:add_responses)
-  end
-
-  def response_upload_and_approve?
-    clear_failed_checks
-    check_user_is_in_current_team &&
-      check_can_trigger_event(:upload_response_and_approve)
-  end
-
-  def response_upload_for_redraft?
-    clear_failed_checks
-    check_user_is_in_current_team &&
-      check_can_trigger_event(:upload_response_and_return_for_redraft)
-  end
-
   def show?
     clear_failed_checks
 

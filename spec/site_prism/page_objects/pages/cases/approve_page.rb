@@ -13,7 +13,9 @@ module PageObjects
         section :clearance,
                 PageObjects::Sections::Cases::ClearanceCopySection, '.clearance-copy'
         section :bypass_press_option,
-                PageObjects::Sections::Cases::BypassPressOfficeOptionSection, '#bypass-press-office-option'
+                PageObjects::Sections::Cases::BypassPressOfficeOptionSection,
+                :xpath,
+                '//fieldset[contains(.,"Does Press office need to clear this response?")]//..'
 
         element :clear_response_button, '.button'
 

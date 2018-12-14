@@ -78,7 +78,7 @@ module CasesHelper
               class: 'button'
     when :upload_response_and_approve
       link_to t('common.case.upload_approve'),
-              new_response_upload_case_path(@case, 'mode' => 'upload-approve'),
+              upload_response_and_approve_case_path(@case),
               id: 'action--upload-approve',
               class: 'button'
     when :upload_response_and_return_for_redraft
@@ -109,10 +109,6 @@ module CasesHelper
     end
   end
   #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
-
-  def determine_action
-    @case.requires_clearance? ? 'upload-flagged' : 'upload'
-  end
 
   def show_hide_message(kase)
 

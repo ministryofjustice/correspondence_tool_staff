@@ -259,7 +259,7 @@ class Case::BasePolicy < ApplicationPolicy
         check_can_trigger_event(:add_responses)
   end
 
-  def upload_responses_for_approve?
+  def upload_response_and_approve?
     clear_failed_checks
     check_user_is_in_current_team &&
         check_can_trigger_event(:upload_response_and_approve)

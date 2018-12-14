@@ -297,16 +297,13 @@ Rails.application.routes.draw do
     # Change to upload_response_and_approve
     get 'upload_response_and_approve', on: :member
     patch 'upload_response_and_approve',
-          action: :perform_upload_response_and_approve,
+          action: :upload_response_and_approve_action,
           on: :member
     # Change to upload_response_and_return_for_redraft
     get 'response_upload_for_redraft', on: :member
     patch 'response_upload_for_redraft',
           action: :perform_response_upload_for_redraft,
           on: :member
-
-    get 'new_response_upload', on: :member
-    post 'upload_responses', on: :member
 
     resources :case_attachments, path: 'attachments', only: [:destroy] do
       get 'download', on: :member

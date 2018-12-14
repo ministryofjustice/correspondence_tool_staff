@@ -17,9 +17,10 @@
            locals: { kase: @case,
                      s3_direct_post: @s3_direct_post }
 
-  .grid-row
-    .column-two-thirds
-      = render partial: 'bypass_approvals_form'
+  - if @case.allow_event?(current_user, :upload_response_approve_and_bypass)
+    .grid-row
+      .column-two-thirds
+        = render partial: 'bypass_approvals_form'
 
   .actions
     = submit_tag t('.upload_response'), class: 'button'

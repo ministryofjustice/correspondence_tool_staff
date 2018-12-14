@@ -27,7 +27,7 @@ describe 'cases/show.html.slim', type: :view do
       :remove_sar_deadline_extension?,
       :request_further_clearance?,
       :upload_responses?,
-      :upload_responses_for_approve?,
+      :upload_response_and_approve?,
       :upload_responses_for_flagged?,
       :upload_responses_for_redraft?
     ]
@@ -284,7 +284,7 @@ describe 'cases/show.html.slim', type: :view do
                      remove_clearance?: false,
                      approve?: false,
                      upload_responses?: false,
-                     upload_responses_for_approve?: false,
+                     upload_response_and_approve?: false,
                      upload_responses_for_redraft?: false
 
     end

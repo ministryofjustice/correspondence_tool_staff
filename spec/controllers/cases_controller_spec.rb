@@ -839,61 +839,10 @@ RSpec.describe CasesController, type: :controller do
 
   end
 
-  describe 'GET new_response_upload' do
-    let(:kase) { create(:accepted_case, responder: responder) }
-
-    context 'as an anonymous user' do
-      describe 'GET new_response_upload' do
-        it 'redirects to signin' do
-          get :new_response_upload, params: { id: kase }
-          expect(response).to redirect_to(new_user_session_path)
-        end
-      end
-    end
-
-    context "as a responder who isn't assigned to the case" do
-      let(:unassigned_responder) { create(:responder) }
-
-      before { sign_in unassigned_responder }
-
-      it 'redirects to case detail page' do
-        get :new_response_upload, params: { id: kase }
-        expect(response).to redirect_to(case_path(kase))
-      end
-    end
-
-    context 'as the assigned responder' do
-      before { sign_in responder }
-
-      it 'assigns @case' do
-        get :new_response_upload, params: { id: kase, action: 'upload' }
-        expect(assigns(:case)).to eq(Case::Base.first)
-      end
-
-
-
-      it 'renders the new_response_upload view' do
-        get :new_response_upload, params: { id: kase, action: 'upload'  }
-        expect(response).to have_rendered(:new_response_upload)
-      end
-    end
-
-
-    context 'as an authenticated manager' do
-      before { sign_in manager }
-
-      it 'redirects to case detail page' do
-        get :new_response_upload, params: { id: kase }
-        expect(response).to redirect_to(case_path(kase))
-      end
-    end
-
-  end
-
   describe 'GET respond' do
 
-    let(:responder)            { find_or_create(:foi_responder)                              }
-    let(:another_responder)    { create(:responder)                              }
+    let(:responder)            { find_or_create(:foi_responder) }
+    let(:another_responder)    { create(:responder)             }
 
     context 'as an anonymous user' do
       it 'redirects to sign_in' do
