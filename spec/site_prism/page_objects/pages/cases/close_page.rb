@@ -16,10 +16,9 @@ module PageObjects
         element :date_responded_month, :case_form_element, 'date_responded_mm'
         element :date_responded_year, :case_form_element, 'date_responded_yyyy'
 
-        # WE'LL be able to remove all of this below once we've converted the edit case closure details
-        # to take account of assigning team responsible for lateness, because it is all now in the
-        # closure outcomes page
-
+#         # WE'LL be able to remove all of this below once we've converted the edit case closure details
+#         # to take account of assigning team responsible for lateness, because it is all now in the
+#         # closure outcomes page
 
         element :date_responded_day_ico, :case_form_element, 'date_ico_decision_received_dd'
         element :date_responded_month_ico, :case_form_element, 'date_ico_decision_received_mm'

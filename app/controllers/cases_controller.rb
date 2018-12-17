@@ -460,18 +460,18 @@ class CasesController < ApplicationController
   end
 
   # this action is only used for ICO cases
-  # def record_late_team
-  #   authorize @case, :can_respond?
-  #   @case.prepare_for_recording_late_team
-  #   params = record_late_team_params(@case.type_abbreviation)
-  #   if @case.update(params)
-  #     @case.respond(current_user)
-  #     redirect_to case_path
-  #   else
-  #     @team_collection = CaseTeamCollection.new(@case)
-  #     render '/cases/ico/late_team'
-  #   end
-  # end
+  def record_late_team
+    authorize @case, :can_respond?
+    @case.prepare_for_recording_late_team
+    params = record_late_team_params(@case.type_abbreviation)
+    if @case.update(params)
+      @case.respond(current_user)
+      redirect_to case_path
+    else
+      @team_collection = CaseTeamCollection.new(@case)
+      render '/cases/ico/late_team'
+    end
+  end
 
 
   def search
@@ -891,7 +891,7 @@ class CasesController < ApplicationController
     when 'sar' then respond_sar_params
     when 'ico' then respond_ico_params
     when 'overturned_foi', 'overturned_sar' then respond_overturned_params
-    else raise 'Unknown case type'
+    else raise "Unknown case type '#{correspondence_type}'"
     end
   end
 
@@ -901,7 +901,7 @@ class CasesController < ApplicationController
     when 'sar' then respond_sar_params
     when 'ico' then ico_close_date_responded_params
     when 'overturned_foi', 'overturned_sar' then respond_overturned_params
-    else raise 'Unknown case type'
+    else raise "Unknown case type '#{correspondence_type}'"
     end
   end
 

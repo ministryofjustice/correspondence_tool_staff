@@ -11,7 +11,7 @@
 #  foi                      :boolean          default(FALSE)
 #  sar                      :boolean          default(FALSE)
 #  standard_report          :boolean          default(FALSE), not null
-#  default_reporting_period :string           default("year-to-date")
+#  default_reporting_period :string           default("year_to_date")
 #
 
 require 'rails_helper'

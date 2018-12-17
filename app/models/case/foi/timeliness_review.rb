@@ -8,7 +8,6 @@
 #  message              :text
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
-#  category_id          :integer
 #  received_date        :date
 #  postal_address       :string
 #  subject              :string
@@ -24,10 +23,10 @@
 #  workflow             :string
 #  deleted              :boolean          default(FALSE)
 #  info_held_status_id  :integer
-#  type                 :string 
+#  type                 :string
 #  appeal_outcome_id    :integer
+#  dirty                :boolean          default(FALSE)
 #
-
 
 class Case::FOI::TimelinessReview < Case::FOI::InternalReview
 

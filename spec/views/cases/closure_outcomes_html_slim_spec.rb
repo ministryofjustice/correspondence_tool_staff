@@ -1,9 +1,6 @@
 require "rails_helper"
 
-
-# ost of this needs to be re-written as the clousre outcomes page
-
-describe 'cases/close.html.slim' do
+describe 'cases/closure_outcomes.html.slim' do
   context 'with an FOI case' do
     let(:foi_being_drafted) { build_stubbed :case_being_drafted }
 
@@ -12,7 +9,7 @@ describe 'cases/close.html.slim' do
       render
       expect(response)
         .to have_rendered(
-              partial: 'cases/shared/date_responded_form',
+              partial: 'cases/foi/closure_outcomes_form',
               locals: {
                 kase: foi_being_drafted,
                 submit_button: 'Close case'
@@ -29,12 +26,20 @@ describe 'cases/close.html.slim' do
       render
       expect(response)
         .to have_rendered(
-              partial: 'cases/shared/date_responded_form',
+              partial: 'cases/sar/closure_outcomes_form',
               locals: {
                 kase: sar_being_drafted,
                 submit_button: 'Close case'
               }
             )
+    end
+
+    it 'does not set the value for missing_info' do
+      assign(:case, sar_being_drafted.decorate)
+      render
+      cases_close_page.load(rendered)
+      expect(cases_close_page.missing_info.yes).not_to be_checked
+      expect(cases_close_page.missing_info.no ).not_to be_checked
     end
   end
 
@@ -50,7 +55,7 @@ describe 'cases/close.html.slim' do
       render
       expect(response)
         .to have_rendered(
-              partial: 'cases/shared/date_responded_form',
+              partial: 'cases/ico/closure_outcomes_form',
               locals: {
                 kase: ico_sent_and_awaiting_ico_decision,
                 submit_button: 'Close case'
@@ -58,7 +63,7 @@ describe 'cases/close.html.slim' do
             )
     end
 
-    xit 'date decision received' do
+    it 'ICO Decision' do
       assign(:case, ico_sent_and_awaiting_ico_decision.decorate)
       assign(:s3_direct_post,
              S3Uploader.s3_direct_post_for_case(ico_sent_and_awaiting_ico_decision,
@@ -66,10 +71,22 @@ describe 'cases/close.html.slim' do
 
       render
       cases_close_page.load(rendered)
+      expect(cases_close_page.ico).to have_ico_decision
+      expect(cases_close_page.ico.ico_decision.overturned_label).to have_copy 'Overturned by ICO'
+      expect(cases_close_page.ico.ico_decision.upheld_label).to have_copy 'Upheld by ICO'
 
-      expect(cases_close_page).to have_date_responded_day_ico
-      expect(cases_close_page).to have_date_responded_month_ico
-      expect(cases_close_page).to have_date_responded_year_ico
+    end
+
+    it 'ICO Decision uploads' do
+      assign(:case, ico_sent_and_awaiting_ico_decision.decorate)
+      assign(:s3_direct_post,
+             S3Uploader.s3_direct_post_for_case(ico_sent_and_awaiting_ico_decision,
+                                                :request))
+
+      render
+      cases_close_page.load(rendered)
+      expect(cases_close_page.ico).to have_uploads
+
     end
   end
 end
