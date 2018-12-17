@@ -34,10 +34,16 @@ RSpec.describe CasesController, type: :controller do
         patch :record_late_team, params: { id: approved_ico.id }
 
         stub_find_case(approved_ico.id) do |kase|
-          expect(kase.state_machine).not_to have_received(:respond!)
+          expect(kase.state_machine).to have_received(:respond!)
           .with(acting_user: approver,
                acting_team: approving_team)
         end
+      end
+
+      it 'sets the late team' do
+        patch :record_late_team, params: { case_ico: {late_team_id: approving_team.id }, id: approved_ico.id }
+        approved_ico.reload
+        expect(approved_ico.late_team_id).to eq approving_team.id
       end
     end
   end
