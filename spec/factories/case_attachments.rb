@@ -11,6 +11,7 @@
 #  preview_key  :string
 #  upload_group :string
 #  user_id      :integer
+#  state        :string           default("unprocessed"), not null
 #
 
 FactoryBot.define do
