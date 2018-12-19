@@ -5,9 +5,9 @@ module DraftTimeliness
     def log_compliance_date
       return unless date_draft_compliant.nil?
       update! date_draft_compliant: transitions
-                                      .where(event: 'add_responses')
-                                      .last
-                                      .created_at
+                .where(event: ['add_responses', 'add_response_to_flagged_case'])
+                .last
+                .created_at
     end
   end
 

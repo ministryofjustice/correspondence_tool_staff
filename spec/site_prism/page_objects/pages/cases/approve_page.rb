@@ -15,7 +15,7 @@ module PageObjects
         section :bypass_press_option,
                 PageObjects::Sections::Cases::BypassPressOfficeOptionSection,
                 :xpath,
-                '//fieldset[contains(.,"Does Press office need to clear this response?")]//..'
+                '//fieldset[contains(.,"Does Press office need to clear this response?")]/../..'
 
         element :clear_response_button, '.button'
 

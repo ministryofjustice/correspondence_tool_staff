@@ -82,4 +82,13 @@ describe 'cases routes', type: :routing do
     it { should route_to 'cases#upload_response_and_approve_action', id: '1' }
   end
 
+  describe get: '/cases/1/upload_response_and_return_for_redraft' do
+    it { should route_to 'cases#upload_response_and_return_for_redraft',
+                         id: '1' }
+  end
+
+  describe patch: '/cases/1/upload_response_and_return_for_redraft' do
+    it { should route_to 'cases#upload_response_and_return_for_redraft_action',
+                         id: '1' }
+  end
 end

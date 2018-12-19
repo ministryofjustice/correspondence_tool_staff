@@ -53,13 +53,19 @@ feature 'cases requiring clearance by disclosure specialist' do
     expect(cases_show_page.actions).to have_upload_approve
     cases_show_page.actions.upload_approve.click
 
-    expect(cases_upload_responses_page).to be_displayed
+    expect(cases_upload_response_and_approve_page).to be_displayed
 
-    expect_any_instance_of(CasesController).to receive(:upload_responses)
-    cases_upload_responses_page.upload_response_button.click
-    upload_and_approve_response_as_dacu_disclosure_specialist(kase.reload, disclosure_specialist)
+    upload_file = "#{Faker::Internet.slug}.jpg"
+    cases_upload_response_and_approve_page.upload_file(
+      kase: kase,
+      file_path: upload_file
+    )
 
-    cases_show_page.load(id: kase.id)
+    cases_upload_response_and_approve_page.upload_response_button.click
+
+    expect(cases_show_page).to be_displayed(id: kase.id)
+    expect(cases_show_page.case_attachments[0].collection[0].filename.text)
+      .to eq upload_file
     expect(cases_show_page.case_status.details.copy.text).to eq 'Ready to send'
     expect(cases_show_page.case_status.details.who_its_with.text).to eq responding_team.name
   end
@@ -89,12 +95,19 @@ feature 'cases requiring clearance by disclosure specialist' do
     cases_show_page.load(id: kase.id)
     cases_show_page.actions.upload_redraft.click
 
-    expect(cases_upload_responses_page).to be_displayed
-    expect_any_instance_of(CasesController).to receive(:upload_responses)
+    expect(cases_upload_response_and_return_for_redraft_page).to be_displayed
+
+    upload_file = "#{Faker::Internet.slug}.jpg"
+    cases_upload_response_and_return_for_redraft_page.upload_file(
+      kase: kase,
+      file_path: upload_file
+    )
+
     cases_upload_responses_page.upload_response_button.click
-    upload_response_and_send_for_redraft_as_disclosure_specialist(kase.reload, disclosure_specialist)
 
     cases_show_page.load(id: kase.id)
+    expect(cases_show_page.case_attachments[0].collection[0].filename.text)
+      .to eq upload_file
     expect(cases_show_page.case_status.details.copy.text).to eq 'Draft in progress'
     expect(cases_show_page.case_status.details.who_its_with.text).to eq kase.responding_team.name
   end

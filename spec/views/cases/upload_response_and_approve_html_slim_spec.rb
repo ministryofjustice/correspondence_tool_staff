@@ -19,6 +19,13 @@ describe 'cases/upload_response_and_approve.html.slim', type: :view do
     cases_upload_response_and_approve_page
   end
 
+  it 'displays the upload response form' do
+    page = render_page
+
+    expect(page.upload_response_form[:action])
+      .to eq upload_response_and_approve_case_path(id: kase.id)
+  end
+
   it 'displays the uploader' do
     page = render_page
 
@@ -51,6 +58,6 @@ describe 'cases/upload_response_and_approve.html.slim', type: :view do
   it 'displays the upload button' do
     page = render_page
 
-    expect(page.page_heading.heading.text).to eq "Upload response"
+    expect(page.upload_response_button.value).to eq "Upload response"
   end
 end

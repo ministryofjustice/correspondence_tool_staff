@@ -178,6 +178,7 @@ en:
       show?: You are not authorised to view this case.
       unflag_for_clearance?: 'You are not authorised to remove clearance from this case'
       update?: You are not authorised to edit this case.
+      upload_responses?: You are not authorised to upload a response for this case.
     case/ico/foi_policy:
       can_close_case?: You are not authorised to close this case
       can_accept_or_reject_responder_assignment?: You are not allowed to accept or reject responder assignment
@@ -457,10 +458,10 @@ en:
       actions: Actions
       answered_in_time: Answered in time
       answered_late: Answered late
-      approve: Clear response
       assign: Assign to a responder
       case-details: Case details
       original-case-details: Original case details
+      clear_response: Clear response
       close: Close case
       compliant_in_time: Uploaded in time
       compliant_late: Uploaded late
@@ -746,32 +747,24 @@ en:
     upload_responses:
       heading: Upload response
       upload_response: 'Upload response'
-      upload_hint_copy: |
-        You can upload different file types such as Word, Excel,
-        PDF and JPEG up to 20MB per file.
     request_amends:
       heading: Request amends
     approve:
       heading: Clear response
-      upload_response: 'Upload response'
       approve_message:
         foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
         sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
         ico: "Once you clear this response, %{managing_team} can send the response and close the case."
         overturned_foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
         overturned_sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
-      clear: Clear response
     response_upload_form:
       upload_hint_copy: |
         You can upload different file types such as Word, Excel,
         PDF and JPEG up to 20MB per file.
-    response_upload:
-      heading: Upload response
-      upload_response: 'Upload response'
     upload_response_and_approve:
       heading: Upload response
       upload_response: 'Upload response'
-    response_upload_for_redraft:
+    upload_response_and_return_for_redraft:
       heading: Upload response
       upload_response: 'Upload response'
 

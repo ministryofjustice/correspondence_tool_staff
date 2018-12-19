@@ -17,6 +17,7 @@ module PageObjects
                 PageObjects::Sections::Cases::ClearanceCopySection,
                 '.clearance-copy'
 
+        element :upload_response_form, 'form'
         element :dropzone_container, '.dropzone'
         element :file_fields, '#uploaded_files'
 
@@ -29,6 +30,8 @@ module PageObjects
                 '//fieldset[contains(.,"Does Press office need to clear this response?")]//..'
 
         element :upload_response_button, '.button'
+        elements :uploaded_request_file_inputs, 'input.case-uploaded-files',
+                 visible: false
 
         # Upload a file to Dropzone.js
         def drop_in_dropzone(file_path)

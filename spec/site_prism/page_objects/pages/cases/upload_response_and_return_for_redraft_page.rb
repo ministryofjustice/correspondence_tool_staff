@@ -4,7 +4,7 @@ module PageObjects
       class UploadResponseAndReturnForRedraftPage < PageObjects::Pages::Base
         include SitePrism::Support::DropInDropzone
 
-        set_url '/cases/{id}/upload_responses'
+        set_url '/cases/{id}/upload_response_and_return_for_redraft'
 
         section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
@@ -27,6 +27,8 @@ module PageObjects
                 '//fieldset[contains(.,"Draft compliant")]'
 
         element :upload_response_button, '.button'
+        elements :uploaded_request_file_inputs, 'input.case-uploaded-files',
+                 visible: false
 
         # Upload a file to Dropzone.js
         def drop_in_dropzone(file_path)

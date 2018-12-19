@@ -83,7 +83,7 @@ module CasesHelper
               class: 'button'
     when :upload_response_and_return_for_redraft
       link_to t('common.case.upload_and_redraft'),
-              new_response_upload_case_path(@case, 'mode' => 'upload-redraft'),
+              upload_response_and_return_for_redraft_case_path(@case),
               id: 'action--upload-redraft',
               class: 'button'
     when :close, :respond_and_close

@@ -1,6 +1,6 @@
 // Move this into a partial, or even better, layouts/application
 - content_for :page_title do
-  = t('page_title.response_upload_page', case_number: @case.number)
+  = t('page_title.upload_responses_page', case_number: @case.number)
 
 - content_for :heading
   = t('.heading')
@@ -12,7 +12,7 @@
 
 = render partial: 'layouts/header'
 
-= form_tag upload_responses_case_path(@case) do
+= form_tag upload_response_and_approve_case_path(@case), method: :patch do
   = render partial: 'response_upload_form',
            locals: { kase: @case,
                      s3_direct_post: @s3_direct_post }

@@ -186,7 +186,7 @@ describe ResponseUploaderService do
     let(:kase)    { create :pending_dacu_clearance_case, :flagged_accepted, :dacu_disclosure }
     let(:user)    { kase.approvers.first }
 
-    it 'calls add_response_to_flagged_case! on state machine' do
+    it 'calls upload_response_and_approve! on state machine' do
       expect(kase.state_machine).to receive(:upload_response_and_approve!)
       rus.upload!
     end

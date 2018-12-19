@@ -29,7 +29,7 @@ describe 'cases/show.html.slim', type: :view do
       :upload_responses?,
       :upload_response_and_approve?,
       :upload_responses_for_flagged?,
-      :upload_responses_for_redraft?
+      :upload_response_and_return_for_redraft?
     ]
 
 
@@ -62,6 +62,14 @@ describe 'cases/show.html.slim', type: :view do
   let(:manager)   { create :manager }
   let(:responder) { find_or_create :foi_responder }
   let(:approver)  { create :approver }
+
+  # Convenience fixture that allows us to control when the page is rendered,
+  # useful as the subject of tests.
+  let(:rendered_page) do
+    render
+    cases_show_page.load(rendered)
+    cases_show_page
+  end
 
   before do
     assign(:permitted_events, [])
@@ -245,16 +253,114 @@ describe 'cases/show.html.slim', type: :view do
     end
   end
 
+  describe 'page actions' do
+    let(:kase) { create(:foi_case) }
+
+    subject { rendered_page.actions }
+
+    describe 'upload response button' do
+      before do
+        login_as approver
+        assign(:case, kase.decorate)
+      end
+
+      context 'upload_responses policy is permitted' do
+        before do
+          # TODO: Change to 'upload_response'
+          assign(:filtered_permitted_events, [:add_responses])
+          setup_policies upload_responses?: true
+        end
+
+        it { should have_upload_response }
+
+        it 'links to the path for upload_responses' do
+          expect(subject.upload_response['href'])
+            .to eq upload_responses_case_path(id: kase.id)
+        end
+      end
+
+      context 'upload_responses policy is NOT permitted' do
+        before do
+          # TODO: Change to 'upload_response'
+          assign(:filtered_permitted_events, [:some_other_action])
+          setup_policies upload_responses?: false
+        end
+
+        it { should_not have_upload_response }
+      end
+    end
+
+    describe 'upload response and approve button' do
+      before do
+        login_as approver
+        assign(:case, kase.decorate)
+      end
+
+      context 'upload_response_and_approve policy is permitted' do
+        before do
+          # TODO: Change to 'upload_response'
+          assign(:filtered_permitted_events, [:upload_response_and_approve])
+          setup_policies upload_response_and_approve?: true
+        end
+
+        it { should have_upload_approve }
+
+        it 'links to the path for upload_responses' do
+          expect(subject.upload_approve['href'])
+            .to eq upload_response_and_approve_case_path(id: kase.id)
+        end
+      end
+
+      context 'upload_response_and_approve policy is NOT permitted' do
+        before do
+          # TODO: Change to 'upload_response'
+          assign(:filtered_permitted_events, [:some_other_action])
+          setup_policies upload_response_and_approve?: false
+        end
+
+        it { should_not have_upload_approve }
+      end
+    end
+
+    describe 'upload response and return for redraft button' do
+      before do
+        login_as approver
+        assign(:case, kase.decorate)
+      end
+
+      context 'upload_response_and_return_for_redraft policy is permitted' do
+        before do
+          # TODO: Change to 'upload_response'
+          assign(:filtered_permitted_events, [:upload_response_and_return_for_redraft?])
+          setup_policies upload_response_and_return_for_redraft?: true
+        end
+
+        it { should have_upload_redraft }
+
+        it 'links to the path for upload_responses' do
+          expect(subject.upload_redraft['href'])
+            .to eq upload_response_and_return_for_redraft_case_path(id: kase.id)
+        end
+      end
+
+      context 'upload_response_and_return_for_redraft policy is NOT permitted' do
+        before do
+          # TODO: Change to 'upload_response'
+          assign(:filtered_permitted_events, [:some_other_action])
+          setup_policies upload_response_and_return_for_redraft?: false
+        end
+
+        it { should_not have_upload_redraft }
+      end
+    end
+  end
+
   describe 'link to extend case for pit' do
     before do
       assign(:case, case_being_drafted)
     end
 
-    subject do
-      render
-      cases_show_page.load(rendered)
-      cases_show_page
-    end
+    subject { rendered_page }
 
     context 'for a user that has permission to do the action' do
       before do
@@ -278,15 +384,13 @@ describe 'cases/show.html.slim', type: :view do
   end
 
   describe 'link to create new overturned ico case' do
-
     before(:each) do
       setup_policies assignments_execute_reassign_user?: false,
                      remove_clearance?: false,
                      approve?: false,
                      upload_responses?: false,
                      upload_response_and_approve?: false,
-                     upload_responses_for_redraft?: false
-
+                     upload_response_and_return_for_redraft?: false
     end
 
     context 'when permitted events include create_overturned' do

@@ -16,7 +16,7 @@ describe CasesController, type: :controller do
               .with_args(approver, responded_trigger_case)
     end
 
-    it 'renders the approve page' do
+    it 'renders the upload page' do
       get :upload_response_and_approve, params: { id: responded_trigger_case }
 
       expect(response).to have_rendered('cases/upload_response_and_approve')
@@ -67,6 +67,40 @@ describe CasesController, type: :controller do
                                          )
 
       expect(service).to have_received(:upload!)
+    end
+
+    context 'response does not require press office approval' do
+      let(:params) do
+        {
+          id: responded_trigger_case.id,
+          type: 'response',
+          uploaded_files: [uploads_key],
+          bypass_approval: {
+            bypass_message: 'Response does not need approval',
+            press_office_approval_required: 'false',
+          }
+        }
+      end
+
+      it 'sets the bypass_further_approval param to true' do
+        patch :upload_response_and_approve_action, params: params
+        expect(ResponseUploaderService).to have_received(:new).with(
+                                             hash_including(
+                                               bypass_further_approval: false
+                                             )
+                                           )
+      end
+
+
+      it 'sets the bypass_message param' do
+        patch :upload_response_and_approve_action, params: params
+        expect(ResponseUploaderService)
+          .to have_received(:new).with(
+                hash_including(
+                  bypass_message: 'Response does not need approval'
+                )
+              )
+      end
     end
 
     context 'successful action' do

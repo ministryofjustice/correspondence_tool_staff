@@ -2,14 +2,13 @@ require "rails_helper"
 
 describe CasesController do
   let(:responder)     { find_or_create :foi_responder }
-
   let(:accepted_case) { create(:accepted_case) }
 
-  describe 'upload_responses' do
-    before do
-      sign_in responder
-    end
+  before do
+    sign_in responder
+  end
 
+  describe 'upload_responses' do
     it 'authorises' do
       expect {
         get :upload_responses, params: { id: accepted_case.id }
@@ -34,8 +33,6 @@ describe CasesController do
         uploaded_files: [uploads_key]
       }
     end
-
-    before { sign_in responder }
 
     it 'authorises' do
       expect {

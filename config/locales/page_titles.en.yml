@@ -27,7 +27,6 @@ en:
     pit_extension_page: Extend for Public Interest Test (PIT) - %{case_number} - Track-a-query
     reassign_user_page: Change team member - %{case_number} - Track-a-query
     request_amends_page: Requesting amendments - %{case_number} - Track-a-query
-    response_upload_page: Uploading a response - %{case_number} - Track-a-query
     search: Searching for a case - Track-a-query
     settings: Settings - Track-a-query
     settings_business_group: Settings - %{business_group} - Track-a-query
@@ -35,4 +34,4 @@ en:
     settings_directorate: Settings - %{business_group} - %{directorate} - Track-a-query
     show_case_page: Viewing case details - %{case_number} - Track-a-query
     stats: Performance Reports - Track-a-query
-    upload_response_page: Uploading a response - %{case_number} - Track-a-query
+    upload_responses_page: Uploading a response - %{case_number} - Track-a-query

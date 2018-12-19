@@ -188,6 +188,24 @@ FactoryBot.define do
     end
   end
 
+  factory :amends_requested_sar, parent: :pending_dacu_clearance_sar do
+    transient do
+      is_draft_compliant? { true }
+    end
+
+    after(:create) do |kase, evaluator|
+      transition = create :case_transition_request_amends,
+                          case: kase,
+                          acting_team: evaluator.approving_team,
+                          acting_user: evaluator.approver
+      if evaluator.is_draft_compliant?
+        kase.update!(date_draft_compliant: transition.created_at)
+      end
+      kase.approver_assignments.each { |a| a.update approved: true }
+      kase.reload
+    end
+  end
+
   factory :closed_sar, parent: :accepted_sar do
     missing_info { false }
 

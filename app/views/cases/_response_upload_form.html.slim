@@ -4,8 +4,6 @@
       = t('.upload_hint_copy')
 .grid-row
   section.case-main
-    = hidden_field_tag 'approval_action', params[:approval_action]
-
     = render partial: 'shared/dropzone_form',
           locals: { s3_direct_post: s3_direct_post,
                     file_input_name: 'uploaded_files[]' }

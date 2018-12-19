@@ -270,9 +270,11 @@ module CTS::Cases
       if kase.approver_assignments.for_user(CTS::dacu_disclosure_approver).any?
         call_case_approval_service(CTS::dacu_disclosure_approver, kase)
       else
-        ResponseUploaderService
-          .new(kase, responder, BypassParamsManager.new({}), nil)
-          .seed!('spec/fixtures/eon.pdf')
+        ResponseUploaderService.new(
+          kase: kase,
+          current_user: responder,
+          action: 'upload',
+        ).seed!('spec/fixtures/eon.pdf')
         kase.state_machine.add_responses!(acting_user: responder,
                                           acting_team: kase.responding_team,
                                           filenames: kase.attachments)
@@ -290,22 +292,21 @@ module CTS::Cases
 
     def transition_to_pending_dacu_disclosure_clearance(kase)
       case get_correspondence_type_abbreviation
-        when :sar
-          dts = DefaultTeamService.new(kase)
+      when :sar
+        dts = DefaultTeamService.new(kase)
 
-          kase.state_machine.progress_for_clearance!(acting_user: responder,
-                                                     acting_team: kase.responding_team,
-                                                     target_team: dts.approving_team)
-         else
-         rus = ResponseUploaderService.new(kase,
-                                           responder,
-                                           BypassParamsManager.new({}),
-                                           nil)
-         rus.seed!('spec/fixtures/eon.pdf')
-         kase.state_machine.add_responses!(acting_user: responder,
-                                           acting_team:responding_team,
-                                           filenames: kase.attachments)
-
+        kase.state_machine.progress_for_clearance!(acting_user: responder,
+                                                   acting_team: kase.responding_team,
+                                                   target_team: dts.approving_team)
+      else
+        ResponseUploaderService.new(
+          kase: kase,
+          current_user: responder,
+          action: 'upload',
+        ).seed!('spec/fixtures/eon.pdf')
+        kase.state_machine.add_responses!(acting_user: responder,
+                                          acting_team:responding_team,
+                                          filenames: kase.attachments)
       end
     end
 

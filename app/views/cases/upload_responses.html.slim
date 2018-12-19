@@ -1,6 +1,6 @@
 // Move this into a partial, or even better, layouts/application
 - content_for :page_title do
-  = t('page_title.response_upload_page', case_number: @case.number)
+  = t('page_title.upload_responses_page', case_number: @case.number)
 
 - content_for :heading
   = t('.heading')

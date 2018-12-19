@@ -174,7 +174,7 @@ class User < ApplicationRecord
 
   def other_teams_names(current_team)
     self.teams.delete(current_team)
-    self.teams.map(&:name).to_sentence
+    self.teams.order(:id).map(&:name).to_sentence
   end
 
   private

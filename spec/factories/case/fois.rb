@@ -261,18 +261,26 @@ FactoryBot.define do
   end
 
   factory :redrafting_case, parent: :pending_dacu_clearance_case do
+    transient do
+      is_draft_compliant? { true }
+    end
+
     flagged_accepted
 
     after(:create) do |kase, evaluator|
-      # TODO: This should be approved: false if it's being redrafted
+      # TODO: This should update the approver assignment to set 'approved' to
+      #       false.
       # team_dacu_disclosure = find_or_create :team_dacu_disclosure
-      # disclosure_approval  = kase.assignments.approving.where(team_id: team_dacu_disclosure.id).first
-      # disclosure_approval.update(approved: true)
+      # disclosure_assignment = kase.assignments.approving.where(team_id: team_dacu_disclosure.id).first
+      # disclosure_assignment.update(approved: true)
 
-      create :case_transition_upload_response_and_return_for_redraft,
-             case: kase,
-             acting_team: evaluator.approving_team,
-             acting_user: evaluator.approver
+      transition = create :case_transition_upload_response_and_return_for_redraft,
+                          case: kase,
+                          acting_team: evaluator.approving_team,
+                          acting_user: evaluator.approver
+      if evaluator.is_draft_compliant?
+        kase.update!(date_draft_compliant: transition.created_at)
+      end
       kase.reload
     end
 
@@ -321,6 +329,13 @@ FactoryBot.define do
 
   factory :approved_case, parent: :ready_to_send_case do
     taken_on_by_disclosure
+
+    after(:create) do |kase, _evaluator|
+      kase.update!(date_draft_compliant: kase.transitions
+                     .where(event: 'add_responses')
+                     .last
+                     .created_at)
+    end
   end
 
   factory :responded_case, aliases: [:responded_foi_case], parent: :ready_to_send_case do
@@ -329,7 +344,6 @@ FactoryBot.define do
     end
 
     date_responded { Date.today }
-    date_draft_compliant { received_date + 2.days }
 
     after(:create) do |kase, evaluator|
       create :case_transition_respond,
@@ -840,6 +854,7 @@ FactoryBot.define do
       responses  { [build(:correspondence_response,
                           type: 'response',
                           user_id: responder.id)] }
+      when_response_uploaded { DateTime.now }
     end
 
     after(:create) do |kase, evaluator|
@@ -850,7 +865,8 @@ FactoryBot.define do
                case: kase,
                acting_team: evaluator.responding_team,
                acting_user: evaluator.responder,
-               filenames: evaluator.responses.map(&:filename)
+               filenames: evaluator.responses.map(&:filename),
+               created_at: evaluator.when_response_uploaded
       end
     end
   end
