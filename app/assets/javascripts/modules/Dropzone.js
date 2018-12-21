@@ -23,6 +23,7 @@ moj.Modules.Dropzone = {
   init: function() {
     this.$target = $('.dropzone');
     var fileInputName = this.$target.data('file-input-name');
+    var checkScanURL = this.$target.data('check-scan-url');
 
     Dropzone.autoDiscover = false;
 
@@ -40,7 +41,6 @@ moj.Modules.Dropzone = {
       attachmentType : this.$target.data('attachment-type'),
       correspondenceType : this.$target.data('correspondence-type'),
       dataType : 'XML',
-      checkScanURL : this.$target.data('check-scan-url'),
       headers : { formData: this.$target.data('form-data')},
       sending : function(file, xhr, formData) {
         var s3Data = $(this.element).data('form-data');
@@ -66,7 +66,6 @@ moj.Modules.Dropzone = {
       },
       success : function(file, response) {
         // extract key and generate URL from response
-        console.log(response);
         var responseDoc = $.parseXML(response);
         var $response   = $(responseDoc);
         var key = $response.find('Key').text();
@@ -85,7 +84,9 @@ moj.Modules.Dropzone = {
 
         $(file.previewElement).append(input);
 
-        moj.Modules.Dropzone.CheckVirusScan(this, file.checkScanURL);
+        console.log("checkScanURL: " + checkScanURL);
+        console.log("key: " + key);
+        moj.Modules.Dropzone.CheckVirusScan(this, file, checkScanURL, key);
         // moj.Modules.Dropzone.CheckForVirus(this, file, recordToCheck);
       },
       removedfile : function(file) {
@@ -96,58 +97,68 @@ moj.Modules.Dropzone = {
   }
 };
 
-moj.Modules.Dropzone.CheckVirusScan = function (dropzone, url, key) {
-  var module = this;
-
-  $.get(url + '?key=' + key, function(data) {
-    switch (data.virus_scan_result) {
-    case 'CLEAN':
-      console.log('pass');
-      module.VirusTestPassed(file);
-      module.allScanningFinished();
-      break;
-    case 'INFECTED':
-      module.VirusTestFailed(file, checkVirusScanTimeOut);
-      module.allScanningFinished();
-      break;
-    default:
-      checkVirusScanTimeOut = setTimeout(checkVirusScan, 1000);
-    }
-};
-
-moj.Modules.Dropzone.CheckForVirus = function (dropzone, file, recordToCheck) {
-  // Process the temporay uploaded file (virus scan)
+moj.Modules.Dropzone.CheckVirusScan = function (dropzone, file, url, key) {
   var module = this;
 
   $(file.previewElement).find('.dz-scanning').show().html('Scanning file for known viruses...');
   $(file.previewElement).find('.dz-remove').hide();
 
-  $.post(dropzone.options.processFileUrl, recordToCheck,function(data){
-    var uploadedFile = data;
-    var checkStatusTimeOut = '';
+  console.log("url: " + url + '?key=' + key);
+  function checkScan() {
+    $.get(url + '?key=' + key, function(data) {
+      var checkStatusTimeOut = '';
 
-    function checkState () {
-      // It throws 404 Not Found error (if virus found) but thats OK.
-      // What happens is the record in the DB is deleted so it cant be found
-      $.get(uploadedFile.path, function(data){
-        switch (data.state){
-        case 'virus_scan_passed':
-          console.log('pass');
-          module.VirusTestPassed(file);
-          module.allScanningFinished();
-          break;
-        case 'virus_scan_failed':
-          module.VirusTestFailed(file, checkStatusTimeOut);
-          module.allScanningFinished();
-          break;
-        default:
-          checkStatusTimeOut = setTimeout(checkState, 1000);
-        }
-      });
-    }
-    checkState();
-  });
+      console.log(data);
+      switch (data.virus_scan_result) {
+      case 'CLEAN':
+        module.VirusTestPassed(file);
+        module.allScanningFinished();
+        break;
+      case 'INFECTED':
+        module.VirusTestFailed(file, checkStatusTimeOut);
+        module.allScanningFinished();
+        break;
+      default:
+        checkStatusTimeOut = setTimeout(checkScan, 1000);
+      };
+    });
+  };
+  checkScan();
 };
+
+// moj.Modules.Dropzone.CheckForVirus = function (dropzone, file, recordToCheck) {
+//   // Process the temporay uploaded file (virus scan)
+//   var module = this;
+
+//   $(file.previewElement).find('.dz-scanning').show().html('Scanning file for known viruses...');
+//   $(file.previewElement).find('.dz-remove').hide();
+
+//   $.post(dropzone.options.processFileUrl, recordToCheck,function(data){
+//     var uploadedFile = data;
+//     var checkStatusTimeOut = '';
+
+//     function checkState () {
+//       // It throws 404 Not Found error (if virus found) but thats OK.
+//       // What happens is the record in the DB is deleted so it cant be found
+//       $.get(uploadedFile.path, function(data){
+//         switch (data.state){
+//         case 'virus_scan_passed':
+//           console.log('pass');
+//           module.VirusTestPassed(file);
+//           module.allScanningFinished();
+//           break;
+//         case 'virus_scan_failed':
+//           module.VirusTestFailed(file, checkStatusTimeOut);
+//           module.allScanningFinished();
+//           break;
+//         default:
+//           checkStatusTimeOut = setTimeout(checkState, 1000);
+//         }
+//       });
+//     };
+//     checkState();
+//   });
+// };
 
 moj.Modules.Dropzone.VirusTestPassed = function (file) {
   file.previewTemplate.setAttribute('virus-result', 'passed');

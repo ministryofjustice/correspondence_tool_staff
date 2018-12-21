@@ -95,7 +95,7 @@
 #                                            PATCH  /cases/:id(.:format)                                                 cases#update
 #                                            PUT    /cases/:id(.:format)                                                 cases#update
 #                                            DELETE /cases/:id(.:format)                                                 cases#destroy
-#                                            POST   /case_attachments(.:format)                                          case_attachments#create
+#                check_scan_case_attachments GET    /case_attachments/check_scan(.:format)                               case_attachments#check_scan
 #                                 admin_root GET    /admin(.:format)                                                     redirect(301, /admin/cases)
 #                             new_admin_case GET    /admin/cases/new/:correspondence_type(.:format)                      admin/cases#new {:correspondence_type=>""}
 #                                admin_cases GET    /admin/cases(.:format)                                               admin/cases#index

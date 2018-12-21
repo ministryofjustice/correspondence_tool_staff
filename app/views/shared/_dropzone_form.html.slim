@@ -6,9 +6,7 @@
            data-accepted-files      = accepted_case_attachment_types
            data-file-input-name     = file_input_name
            data-max-filesize-in-mb  = Settings.max_attachment_file_size_in_MB
-           data-process-file-url    = (defined?(case_id) ? case_attachments_path(case_id: case_id) : orphan_case_attachments_path)
-           data-attachment-type     = (defined?(attachment_type) ? attachment_type : 'response')
-           data-correspondence-type = (defined?(correspondence_type) ? correspondence_type : nil) }
+           data-check-scan-url      = check_scan_case_attachments_path }
 
   .dz-default.dz-message.grid-row
     .column-one-third.arrow-icon
