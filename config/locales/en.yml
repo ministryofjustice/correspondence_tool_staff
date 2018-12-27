@@ -462,7 +462,6 @@ en:
       case-details: Case details
       original-case-details: Original case details
       clear_response: Clear response
-      close: Close case
       compliant_in_time: Uploaded in time
       compliant_late: Uploaded late
       create_overturned: Create an ICO Overturned case

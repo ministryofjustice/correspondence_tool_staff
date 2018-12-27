@@ -136,7 +136,8 @@ describe Case::BaseDecorator, type: :model do
 
   describe '#draft_timeliness' do
     it 'returns correct string for answered in time' do
-      expect(closed_case.draft_timeliness).to eq 'Uploaded in time'
+      approved_case = create(:approved_case).decorate
+      expect(approved_case.draft_timeliness).to eq 'Uploaded in time'
     end
 
     it 'returns correct string for answered late' do
