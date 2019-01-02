@@ -11,7 +11,7 @@ describe 'stats/index.html.slim', type: :view do
   let(:foi_reports)   { [ report_1, report_2 ]  }
   let(:sar_reports)   { [ report_3 ]  }
   let(:today)         { Date.today.strftime(Settings.default_date_format) }
-
+  let(:year_start)    { Date.new(2019, 1, 1).strftime(Settings.default_date_format) }
 
   it 'has a heading' do
     assign(:foi_reports, foi_reports)
@@ -47,7 +47,7 @@ describe 'stats/index.html.slim', type: :view do
                 .to eq 'Includes performance data about FOI requests we received and responded to from the beginning of the year by month.'
           end
 
-          expect(report.report_period.text).to eq "Reporting period: 1 Jan 2018 to #{today}"
+          expect(report.report_period.text).to eq "Reporting period: #{year_start} to #{today}"
           expect(report.download).to have_link("Download report - #{foi_reports[index].full_name}",  href: stats_download_path(id: foi_reports[index].id))
         end
       end
@@ -69,7 +69,7 @@ describe 'stats/index.html.slim', type: :view do
           expect(report.description.text)
               .to eq "Includes performance data about SAR requests we received and responded to from the beginning of the year by month."
 
-          expect(report.report_period.text).to eq "Reporting period: 1 Jan 2018 to #{today}"
+          expect(report.report_period.text).to eq "Reporting period: #{year_start} to #{today}"
           expect(report.download).to have_link("Download report - #{sar_reports[index].full_name}",  href: stats_download_path(id: sar_reports[index].id))
         end
       end
