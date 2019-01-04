@@ -581,10 +581,12 @@ en:
       success: Case taken on
       already_accepted: Case already accepted by %{name}
     assign_to_new_team:
-      heading: 'Assign to new team'
+      heading: 'Assign to another team'
     assign_to_team:
       case_assigned: Case successfully assigned
       case_created: Case assigned to %{business_unit_name}
+    execute_assign_to_new_team:
+      case_assigned: Case has been assigned to %{business_unit_name}
     new:
       heading: Assign case
       new_assignment: Create case

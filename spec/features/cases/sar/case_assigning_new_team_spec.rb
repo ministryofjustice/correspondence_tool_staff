@@ -19,7 +19,7 @@ feature 'Assigning a SAR case to a new team' do
     assign_case_step business_unit: responding_team,
                      assigning_page: assign_to_new_team_page,
                      expected_status: 'Case closed',
-                     expected_flash_msg: 'Case has been assigned to a new team'
+                     expected_flash_msg: "Case has been assigned to #{responding_team.name}"
   end
 
   scenario 're-assigning a SAR case that is being drafted' do
@@ -33,7 +33,7 @@ feature 'Assigning a SAR case to a new team' do
     assign_case_step business_unit: responding_team,
                      assigning_page: assign_to_new_team_page,
                      expected_status: 'To be accepted',
-                     expected_flash_msg: 'Case has been assigned to a new team'
+                     expected_flash_msg: "Case has been assigned to #{responding_team.name}"
   end
 
   scenario 're-assigning a trigger SAR case that is being drafted' do
@@ -47,6 +47,6 @@ feature 'Assigning a SAR case to a new team' do
     assign_case_step business_unit: responding_team,
                      assigning_page: assign_to_new_team_page,
                      expected_status: 'To be accepted',
-                     expected_flash_msg: 'Case has been assigned to a new team'
+                     expected_flash_msg: "Case has been assigned to #{responding_team.name}"
   end
 end
