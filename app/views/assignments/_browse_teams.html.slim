@@ -8,6 +8,7 @@ ul.business-groups.list
         = business_group_option_for_new_case(kase, bg, params)
       - else
         = business_group_option_for_new_team(kase, assignment, bg, params)
+  br
   li.show-all
     - if assignment.new_record?
       = all_option_for_new_case(kase, params)
