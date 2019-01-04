@@ -778,7 +778,7 @@ RSpec.describe AssignmentsController, type: :controller do
         expect(service).to receive(:call)
         expect(service).to receive(:result).and_return(:ok)
         patch :execute_assign_to_new_team, params: params.to_unsafe_hash
-        expect(flash[:notice]).to eq 'Case has been assigned to a new team'
+        expect(flash[:notice]).to eq "Case has been assigned to #{bu2.name}"
         expect(response).to redirect_to case_path kase
       end
 

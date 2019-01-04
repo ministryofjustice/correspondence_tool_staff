@@ -60,10 +60,11 @@ class AssignmentsController < ApplicationController
 
   def execute_assign_to_new_team
     authorize @assignment, :can_assign_to_new_team?
+    team = Team.find(params[:team_id])
     service = AssignNewTeamService.new(current_user, params)
     service.call
     if service.result == :ok
-      flash[:notice] = "Case has been assigned to a new team"
+      flash[:notice] = t('.case_assigned', business_unit_name: team.name)
       redirect_to case_path @case
     else
       flash[:alert] = "Unable to assign to this team"
