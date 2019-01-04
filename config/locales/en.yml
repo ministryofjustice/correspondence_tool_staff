@@ -282,13 +282,14 @@ en:
       state_selector:
         selected_states: Filter by status
       search_query:
-        filter_sensitivity: Select sensitivity
-        filter_case_type: "Select type"
-        filter_status: "Select status"
+        filter_sensitivity: Sensitivity
+        filter_case_type: Type
+        filter_open_case_status: Open case status
+        filter_status: Status
         common_exemption_ids: Most frequently used
         exemption_ids: All exemptions
         filter_assigned_to_ids: Matching business units
-        filter_timeliness: "Select case timeliness"
+        filter_timeliness: Timeliness
       team:
         role: What will the business unit be responsible for?
         correspondente_type_ids: Correspondence types
@@ -399,7 +400,7 @@ en:
       feedback:
         comment: Help make this service better
       search_query:
-        business_unit_name_filter: Find and select a business unit
+        business_unit_name_filter: Business unit
       team:
         name: Business unit name
         email: Business unit group email
