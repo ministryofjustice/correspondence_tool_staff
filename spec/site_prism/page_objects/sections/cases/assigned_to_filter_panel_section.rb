@@ -7,7 +7,7 @@ module PageObjects
                 :xpath,
                 '//div[@class="js-all-business-units scrolling-details"]//label[contains(.,"FOI Responding Team")]'
 
-        element :apply_filter_button, '.button[value="Apply filter"]'
+        element :apply_filter_button, '.button-secondary[value="Filter"]'
 
         def checkbox_for(business_unit)
           unless business_unit.is_a? BusinessUnit

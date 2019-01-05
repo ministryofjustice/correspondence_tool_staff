@@ -5,6 +5,6 @@
 
     = f.collection_check_boxes :filter_open_case_status, @query.available_open_case_statuses, :first, :second
 
-    = f.submit "Apply filter", class: "button"
+    = f.submit "Filter", class: "button-secondary"
     a.acts-like-button.button-left-spacing href="#"
       = "Cancel"

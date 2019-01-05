@@ -8,6 +8,6 @@
     .exemption-all
       = f.collection_check_boxes :exemption_ids, @query.available_exemptions, :id, :name
 
-  = f.submit  "Apply filter", class: "button"
+  = f.submit  "Filter", class: "button-secondary"
   a.acts-like-button.button-left-spacing href="#"
     = "Cancel"

@@ -74,7 +74,7 @@ module PageObjects
       else
         raise ArgumentError.new("please provide preset or from/to")
       end
-      self.deadline_filter_panel.click_on 'Apply filter'
+      self.deadline_filter_panel.click_on 'Filter'
     end
 
     def filter_crumb_for(crumb_text)
@@ -85,4 +85,3 @@ module PageObjects
     end
   end
 end
-
