@@ -68,7 +68,7 @@ module PageObjects
 
         section :new_message, '.message-form' do
           element :input, 'textarea'
-          element :add_button, '.button'
+          element :add_button, '.button-secondary'
         end
 
         section :case_history,

@@ -12,4 +12,4 @@ h2.request--heading Conversation
   = form_for case_details, as: :case, url: case_messages_path(case_details), method: :post, class: "message-form" do |f|
     .message-form data-ws-case-id="#{case_details.id}"
       = f.text_area :message_text
-      = f.submit "Add message", class: 'button'
+      = f.submit "Add message", class: 'button-secondary'
