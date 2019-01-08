@@ -37,7 +37,7 @@ describe 'cases/edit.html.slim', type: :view do
       expect(page.foi_detail).to have_address
       expect(page).to have_submit_button
 
-      expect(page.submit_button.value).to eq "Submit"
+      expect(page.submit_button.value).to eq "Save changes"
     end
   end
 end

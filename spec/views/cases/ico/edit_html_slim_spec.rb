@@ -54,6 +54,6 @@ describe 'cases/edit.html.slim', type: :view do
     expect(page.form.case_details.value).to eq kase.message
 
     expect(page.form).to have_submit_button
-    expect(page.form.submit_button.value).to eq "Submit"
+    expect(page.form.submit_button.value).to eq "Save changes"
   end
 end

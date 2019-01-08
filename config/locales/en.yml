@@ -240,7 +240,7 @@ en:
     confirm: Confirm
     create_case: Create case
     feedback: Send feedback
-    submit: Submit
+    save_changes: Save changes
 
   helpers:
     fieldset:

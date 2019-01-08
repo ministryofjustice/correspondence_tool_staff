@@ -30,7 +30,7 @@ feature 'editing an ICO case' do
     cases_edit_ico_page.form.original_case.linked_records.first.remove_link.click
     cases_edit_ico_page.form.add_original_case(new_original_case)
     cases_edit_ico_page.form.add_related_cases([new_related_case])
-    click_button 'Submit'
+    click_button 'Save changes'
     expect(cases_show_page).to be_displayed(id: kase.id)
 
     kase.reload
