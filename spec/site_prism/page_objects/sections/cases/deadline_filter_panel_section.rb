@@ -10,7 +10,7 @@ module PageObjects
         element :to_mm, '#search_query_external_deadline_to_mm'
         element :to_yyyy, '#search_query_external_deadline_to_yyyy'
 
-        element :apply_filter_button, '.button[value="Apply filter"]'
+        element :apply_filter_button, '.button-secondary[value="Filter"]'
 
         def from_date=(date)
           date = date.to_date unless date.is_a? Date

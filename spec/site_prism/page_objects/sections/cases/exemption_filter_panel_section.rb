@@ -60,7 +60,7 @@ module PageObjects
           element :s42_checkbox, :xpath, '//div[@class="exemption-all"]//label[contains(.,"s42")]'
         end
 
-        element :apply_filter_button, '.button[value="Apply filter"]'
+        element :apply_filter_button, '.button-secondary[value="Filter"]'
       end
     end
   end

@@ -14,7 +14,7 @@ module PageObjects
                 '#search_query_filter_open_case_status_responded',
                 visible: false
 
-        element :apply_filter_button, '.button[value="Apply filter"]'
+        element :apply_filter_button, '.button-secondary[value="Filter"]'
       end
     end
   end

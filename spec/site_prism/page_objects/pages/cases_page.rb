@@ -12,8 +12,7 @@ module PageObjects
 
       section :state_filter, '.state-filter' do
         elements :check_boxes, 'label'
-        element :filter_button, 'input[value="Filter"]'
-        element :apply_filter_button, 'input[value="Apply filter"]'
+        element :apply_filter_button, 'input[value="Filter"]'
       end
 
       sections :tabs, '.section-tabs .tab' do
