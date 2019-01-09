@@ -19,7 +19,7 @@ module PageObjects
           PageObjects::Sections::Cases::SarEditDetailsSection, 'body'
 
         element :submit_button, '.button'
-
+        element :cancel, 'a'
       end
     end
   end
