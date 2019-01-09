@@ -10,6 +10,7 @@
         col
         col
         col
+        col
       caption
         .grid-row
           .search-results-summary.column-half
@@ -22,6 +23,8 @@
       thead
         th scope='col'
           = t('common.case_list.number_html')
+        th scope='col'
+          = t('common.case_list.flag')
         th scope='col'
           = t('common.case_list.type')
         th scope='col'
@@ -44,9 +47,10 @@
               span.visually-hidden
                 = t('common.case_list.view_case')
               = case_link_with_hash(kase, :number, @page, position)
+            td aria-label="#{t('common.case_list.flag')}"
+              = kase.trigger_case_marker
             td aria-label="#{t('common.case_list.type')}"
               = "#{kase.pretty_type} "
-              = kase.trigger_case_marker
             td aria-label="#{t('common.case_list.request_detail')}"
               = request_details_html(kase)
             td aria-label="#{t('common.case_list.draft_deadline')}"

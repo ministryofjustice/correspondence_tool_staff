@@ -62,7 +62,7 @@ describe 'cases/index.html.slim', type: :view do
 
     zeroth_case = cases_page.case_list[0]
     expect(zeroth_case.number.text).to eq "Link to case #{ovt_foi_trigger_case.original_case.number}"
-    expect(zeroth_case.type.text).to eq "FOI  "
+    expect(zeroth_case.type.text).to eq "FOI "
     expect(zeroth_case.request_detail.text)
         .to eq "#{ ovt_foi_trigger_case.original_case.subject } #{ovt_foi_trigger_case.original_case.name}"
     expect(zeroth_case.draft_deadline.text).to eq ovt_foi_trigger_case.original_case.internal_deadline
@@ -73,7 +73,8 @@ describe 'cases/index.html.slim', type: :view do
 
     first_case = cases_page.case_list[1]
     expect(first_case.number.text).to eq "Link to case #{ovt_foi_trigger_case.original_ico_appeal.number}"
-    expect(first_case.type.text).to eq "ICO appeal (FOI) This is a Trigger case"
+    expect(first_case.type.text).to eq "ICO appeal (FOI) "
+    expect(first_case.flag.text).to eq "This is a Trigger case"
     expect(first_case.request_detail.text)
         .to eq "#{ ovt_foi_trigger_case.original_ico_appeal.subject } #{ovt_foi_trigger_case.original_ico_appeal.name}"
     expect(first_case.draft_deadline.text).to eq ovt_foi_trigger_case.original_ico_appeal.internal_deadline
@@ -84,7 +85,8 @@ describe 'cases/index.html.slim', type: :view do
 
     second_case = cases_page.case_list[2]
     expect(second_case.number.text).to eq "Link to case #{assigned_case.number}"
-    expect(second_case.type.text).to eq "FOI This is a Trigger case"
+    expect(second_case.type.text).to eq "FOI "
+    expect(second_case.flag.text).to eq "This is a Trigger case"
     expect(second_case.request_detail.text)
       .to eq "#{ assigned_case.subject } #{assigned_case.name}"
     expect(second_case.draft_deadline.text).to eq assigned_case.internal_deadline
@@ -105,7 +107,7 @@ describe 'cases/index.html.slim', type: :view do
 
     fourth_case = cases_page.case_list[4]
     expect(fourth_case.number.text).to eq "Link to case #{ovt_foi_trigger_case.number}"
-    expect(fourth_case.type.text).to eq "ICO overturned (FOI)  "
+    expect(fourth_case.type.text).to eq "ICO overturned (FOI) "
     expect(fourth_case.request_detail.text)
         .to eq "#{ovt_foi_trigger_case.subject} #{ovt_foi_trigger_case.name}"
     expect(fourth_case.draft_deadline.text).to eq ovt_foi_trigger_case.internal_deadline
@@ -116,7 +118,7 @@ describe 'cases/index.html.slim', type: :view do
 
     fifth_case = cases_page.case_list[5]
     expect(fifth_case.number.text).to eq "Link to case #{unflagged_case.number}"
-    expect(fifth_case.type.text).to eq "FOI  "
+    expect(fifth_case.type.text).to eq "FOI "
     expect(fifth_case.request_detail.text)
       .to eq "#{unflagged_case.subject} #{unflagged_case.name}"
     expect(fifth_case.draft_deadline.text).to eq ' '
