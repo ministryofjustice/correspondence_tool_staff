@@ -55,5 +55,7 @@ describe 'cases/edit.html.slim', type: :view do
 
     expect(page.form).to have_submit_button
     expect(page.form.submit_button.value).to eq "Save changes"
+    expect(page).to have_cancel
+
   end
 end

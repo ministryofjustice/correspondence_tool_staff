@@ -15,6 +15,8 @@ module PageObjects
                   PageObjects::Sections::Cases::ICO::FormSection,
                   'form#edit_case_ico'
 
+          element :cancel, 'a'
+
         end
       end
     end
