@@ -1,8 +1,5 @@
 require "rails_helper"
 
-
-# ost of this needs to be re-written as the clousre outcomes page
-
 describe 'cases/close.html.slim' do
   context 'with an FOI case' do
     let(:foi_being_drafted) { build_stubbed :case_being_drafted }
