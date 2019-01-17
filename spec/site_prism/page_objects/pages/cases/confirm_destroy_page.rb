@@ -14,8 +14,8 @@ module PageObjects
         element :warning, '.delete-copy .notice'
 
         element :confirm_button, '.button'
+        element :cancel, 'a.acts-like-button.button-left-spacing'
       end
     end
   end
 end
-

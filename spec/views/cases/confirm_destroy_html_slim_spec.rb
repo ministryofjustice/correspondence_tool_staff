@@ -30,5 +30,7 @@ describe 'cases/confirm_destroy.html.slim', type: :view do
     expect(page).to have_warning
 
     expect(page.confirm_button.text).to eq "Delete case"
+    expect(page).to have_cancel
+
   end
 end

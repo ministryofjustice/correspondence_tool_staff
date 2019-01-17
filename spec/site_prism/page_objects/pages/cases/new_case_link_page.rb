@@ -14,6 +14,7 @@ module PageObjects
         element :linked_case_number_field, 'input[type="text"].form-control'
 
         element :submit_button, '.button'
+        element :cancel, 'a.acts-like-button.button-left-spacing'
 
         def create_a_new_case_link(kase_number = nil)
           if kase_number.nil?

@@ -29,7 +29,8 @@
 
   .grid-row
     .column-two-thirds
-      = f.submit submit_button, {class: 'button'}
-      = link_to('Cancel',
-                case_path(@case),
-                class: 'acts-like-button button-left-spacing')
+      .button-holder
+        = f.submit submit_button, {class: 'button'}
+        = link_to('Cancel',
+                  case_path(@case),
+                  class: 'acts-like-button button-left-spacing')
