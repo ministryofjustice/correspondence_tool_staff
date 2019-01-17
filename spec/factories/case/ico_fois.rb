@@ -167,6 +167,7 @@ FactoryBot.define do
     received_date { 22.business_days.ago }
     date_ico_decision_received { 4.business_days.ago }
     ico_decision { "upheld" }
+    late_team_id { responding_team.id }
 
     trait :overturned_by_ico do
       ico_decision         { "overturned" }

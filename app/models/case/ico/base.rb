@@ -1,3 +1,33 @@
+# == Schema Information
+#
+# Table name: cases
+#
+#  id                   :integer          not null, primary key
+#  name                 :string
+#  email                :string
+#  message              :text
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  received_date        :date
+#  postal_address       :string
+#  subject              :string
+#  properties           :jsonb
+#  requester_type       :enum
+#  number               :string           not null
+#  date_responded       :date
+#  outcome_id           :integer
+#  refusal_reason_id    :integer
+#  current_state        :string
+#  last_transitioned_at :datetime
+#  delivery_method      :enum
+#  workflow             :string
+#  deleted              :boolean          default(FALSE)
+#  info_held_status_id  :integer
+#  type                 :string
+#  appeal_outcome_id    :integer
+#  dirty                :boolean          default(FALSE)
+#
+
 require './lib/translate_for_case'
 
 class Case::ICO::Base < Case::Base
@@ -13,7 +43,8 @@ class Case::ICO::Base < Case::Base
                  external_deadline: :date,
                  date_ico_decision_received: :date,
                  ico_decision: :string,
-                 ico_decision_comment: :string
+                 ico_decision_comment: :string,
+                 late_team_id: :integer
 
   acts_as_gov_uk_date :date_ico_decision_received,
                       :date_responded,
@@ -51,6 +82,7 @@ class Case::ICO::Base < Case::Base
   validates :received_date, presence: true
   validate :received_date_within_limits?,
            if: -> { received_date.present? }
+  validate :validate_late_team_recorded
 
   has_many :ico_decision_attachments,
            -> { ico_decision },
@@ -124,6 +156,22 @@ class Case::ICO::Base < Case::Base
 
   def lacks_overturn?
     !has_overturn?
+  end
+
+  def prepare_for_recording_late_team
+    @preparing_for_recording_late_team = true
+  end
+
+  def prepared_for_recording_late_team?
+    @preparing_for_recording_late_team == true
+  end
+
+  def validate_late_team_recorded
+    if prepared_for_recording_late_team? && responded_late?
+      if late_team_id.blank?
+        errors.add(:late_team, "can't be blank")
+      end
+    end
   end
 
   private

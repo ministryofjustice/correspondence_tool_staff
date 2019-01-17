@@ -84,6 +84,10 @@ FactoryBot.define do
     # target_user { target_team.responders.first }
   end
 
+  factory :case_transition_assign_to_new_team, parent: :case_transition_assign_responder do
+    event    { 'assign_to_new_team' }
+  end
+
   factory :case_transition_accept_approver_assignment, parent: :case_transition do
     event    { 'accept_approver_assignment' }
     to_state { self.case.current_state }

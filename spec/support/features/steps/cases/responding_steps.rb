@@ -10,10 +10,11 @@ def upload_response_step(file: UPLOAD_RESPONSE_DOCX_FIXTURE)
       .to have_text 'You have uploaded the response for this case.'
 end
 
-def upload_ico_decision__and_close_step(file: UPLOAD_RESPONSE_DOCX_FIXTURE)
+def upload_ico_decision_and_close_step(file: UPLOAD_RESPONSE_DOCX_FIXTURE)
   stub_s3_uploader_for_all_files!
   cases_close_page.ico.drop_in_dropzone(file)
   cases_new_response_upload_page.upload_response_button.click
+
   expect(cases_show_page).to be_displayed
   expect(cases_show_page.notice)
       .to have_text "You've closed this case"
@@ -40,13 +41,17 @@ def close_case_step(responded_date: Date.today)
 
   cases_close_page.fill_in_date_responded(responded_date)
 
-  cases_close_page.is_info_held.yes.click
+  cases_close_page.click_on 'Continue'
 
-  cases_close_page.wait_until_outcome_visible
+  expect(cases_closure_outcomes_page).to be_displayed
 
-  cases_close_page.outcome.granted_in_full.click
+  cases_closure_outcomes_page.is_info_held.yes.click
 
-  cases_close_page.submit_button.click
+  cases_closure_outcomes_page.wait_until_outcome_visible
+
+  cases_closure_outcomes_page.outcome.granted_in_full.click
+
+  cases_closure_outcomes_page.submit_button.click
 
   expect(cases_show_page).to have_content("You've closed this case")
 
@@ -57,6 +62,10 @@ def close_sar_case_step(timeliness: 'in time', tmm: false, editable: true)
   cases_show_page.actions.close_case.click
 
   cases_close_page.fill_in_date_responded(Date.today)
+
+  cases_close_page.click_on 'Continue'
+
+  expect(cases_closure_outcomes_page).to be_displayed
 
   if tmm
     cases_close_page.missing_info.yes.click
@@ -92,7 +101,11 @@ end
 def close_ico_appeal_case_step(timeliness: 'in time', decision: 'upheld')
   cases_show_page.actions.close_case.click
 
+  expect(cases_close_page).to be_displayed
+
   cases_close_page.fill_in_ico_date_responded(Date.today)
+
+  cases_close_page.click_on 'Continue'
 
   if decision == 'upheld'
     cases_close_page.ico_decision.upheld.click
@@ -100,7 +113,7 @@ def close_ico_appeal_case_step(timeliness: 'in time', decision: 'upheld')
     cases_close_page.ico_decision.overturned.click
   end
 
-  upload_ico_decision__and_close_step
+  upload_ico_decision_and_close_step
 
   show_page = cases_show_page.case_details
   expect(cases_show_page.notice.text).to eq("You've closed this case")

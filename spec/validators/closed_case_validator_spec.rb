@@ -16,6 +16,37 @@ describe 'ClosedCaseValidator' do
 
     before(:each) { kase.prepare_for_close }
 
+    describe 'validate_late_team_id' do
+
+      before(:each) do
+        kase.outcome = CaseClosure::Outcome.granted
+        kase.info_held_status = CaseClosure::InfoHeldStatus.part_held
+      end
+
+      context 'late_team_id is blank' do
+        it 'does not error if case is responded in time' do
+          allow(kase).to receive(:responded_late?).and_return(false)
+          kase.late_team_id = nil
+          expect(kase).to be_valid
+        end
+
+        it 'errors if case is late' do
+          allow(kase).to receive(:responded_late?).and_return(true)
+          kase.late_team_id = nil
+          expect(kase).not_to be_valid
+          expect(kase.errors[:late_team_id]).to eq ['blank_invalid_if_case_late']
+        end
+      end
+
+      context 'late_team_id is not blank' do
+        it 'is valid' do
+          allow(kase).to receive(:responded_late?).and_return(true)
+          kase.late_team_id = BusinessUnit.first.id
+          expect(kase).to be_valid
+        end
+      end
+    end
+
     describe 'date responded validation' do
 
       before(:each) do

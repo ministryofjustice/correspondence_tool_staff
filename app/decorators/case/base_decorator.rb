@@ -162,6 +162,18 @@ class Case::BaseDecorator < Draper::Decorator
     object.class.type_abbreviation
   end
 
+  def late_team_name
+    if object.responded_late?
+      if object.late_team.nil?
+        'Unspecified'
+      else
+        object.late_team.name
+      end
+    else
+      'N/A'
+    end
+  end
+
   private
 
   def translation_for_case(kase, path, key, options = {})

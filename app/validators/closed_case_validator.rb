@@ -1,21 +1,26 @@
 class ClosedCaseValidator < ActiveModel::Validator
   # Validations applicable to cases that are closed.
   CLOSED_VALIDATIONS = {
-    'SAR'=>             [:validate_date_responded],
+    'SAR'=>             [:validate_date_responded,
+                         :validate_late_team_id],
     'FOI'=>             [:validate_date_responded,
                          :validate_info_held_status,
                          :validate_outcome,
                          :validate_refusal_reason,
-                         :validate_exemptions],
+                         :validate_exemptions,
+                         :validate_late_team_id],
     'ICO'=>             [:validate_ico_decision,
                          :validate_date_ico_decision_received,
-                         :validate_ico_decision_files],
-    'OVERTURNED_SAR' => [:validate_date_responded],
+                         :validate_ico_decision_files,
+                         :validate_late_team_id],
+    'OVERTURNED_SAR' => [:validate_date_responded,
+                         :validate_late_team_id],
     'OVERTURNED_FOI'=>  [:validate_date_responded,
                          :validate_info_held_status,
                          :validate_outcome,
                          :validate_refusal_reason,
-                         :validate_exemptions],
+                         :validate_exemptions,
+                         :validate_late_team_id ],
   }
   # Validations applicable to cases that are being processed for closure.
   #
@@ -93,6 +98,12 @@ class ClosedCaseValidator < ActiveModel::Validator
   def run_validations(validations:, kase:)
     validations.each do |validation|
       self.__send__(validation, kase)
+    end
+  end
+
+  def validate_late_team_id(rec)
+    if rec.responded_late? && rec.late_team_id.nil?
+      rec.errors.add(:late_team_id, 'blank_invalid_if_case_late')
     end
   end
 

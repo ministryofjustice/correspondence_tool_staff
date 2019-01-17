@@ -119,6 +119,7 @@ ignore_unused:
   - users.show.heading_my_cases
   - users.show.message_notification
   - users.show.who_its_with
+  - common.close
 
 
 ## Consider these keys used:

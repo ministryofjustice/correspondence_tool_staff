@@ -1,0 +1,14 @@
+- url = defined?(form_url) ? form_url : process_respond_and_close_case_path(id: @case.id)
+= form_for kase, as: :case_sar, url: url do |f|
+
+  - if @case.responded_late?
+    = render partial: 'cases/shared/team_caused_late_response', locals: {kase: @case, f: f}
+
+
+  .missing-info
+    = f.radio_button_fieldset :missing_info
+
+  .grid-row
+    .column-two-thirds
+      = f.submit submit_button, {class: 'button'}
+      = link_to "Return to case detail", case_path(kase.id), class:'button-secondary button-left-spacing'

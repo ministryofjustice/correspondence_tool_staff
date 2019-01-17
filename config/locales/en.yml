@@ -157,6 +157,8 @@ en:
               <<: *report_dates
               before_start_date: "can't be after Date to"
 
+  page_title:
+    marking_response_as_sent: Mark response as sent
 
   pundit:
     assignment_policy:
@@ -257,6 +259,7 @@ en:
         refusal_reason_abbreviation: What was the outcome?
         outcome_abbreviation: What was the outcome?
         appeal_outcome_name: What was the appeal outcome?
+        late_team_id: Business unit responsible for late response
         flag_for_disclosure_specialists: Flag for disclosure specialists
         type: Type
         name: "Who is the requestor?"
@@ -264,11 +267,13 @@ en:
         ico_decision: The original case has been
         delivery_method: How and where should the information be sent?
         type: Original Case Type
+        late_team_id_html: " "
       case_overturned_foi:
         reply_method: 'How should this information be sent to the requester?'
       case_overturned_sar:
         reply_method: 'How should this information be sent to the requester?'
       case_sar:
+        late_team_id: Business unit responsible for late response
         missing_info: "Was the response asking for missing information (e.g. proof of ID) or
           clarification, i.e. a TMM?"
         reply_method_html: |
@@ -456,7 +461,6 @@ en:
       assign: Assign to a responder
       case-details: Case details
       original-case-details: Original case details
-      close: Close case
       create_overturned: Create an ICO Overturned case
       data_subject: Data subject
       data_subject_type: Type of data subject
@@ -478,6 +482,7 @@ en:
       filename: File name
       header_case_number: "You are viewing case number "
       header_subject: "Case subject, "
+      late_team: Business unit responsible for late response
       name: Requester
       postal_address: "Requester’s postal address"
       progress_for_clearance: "Ready for Disclosure clearance"
@@ -511,7 +516,6 @@ en:
       clear_response: Clear response
       request_amends: Request amends
       upload_approve: 'Upload response and clear'
-      close: Close case
 
     case/ico:
       close: "Record ICO's decision"
@@ -537,6 +541,7 @@ en:
     signout: Sign out
     stats_custom_button: Create report
     summary_error: 'prevented this form from being submitted:'
+    close: Close case
 
   admin:
     cases:
@@ -622,6 +627,9 @@ en:
     close:
       heading: Close case
       submit: Close case
+    closure_outcomes:
+      heading: Closure outcomes
+      submit: Close case
     edit_closure:
       heading: Edit case closure details
       submit: Save changes
@@ -629,6 +637,12 @@ en:
       extend_for_pit: Extend for Public Interest Test (PIT)
       extension_date: Date of extension deadline
       extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
+    ico:
+      close_form:
+        date_ico_decision_received_date: Date decision was received at MoJ
+        date_example: For example, 30 1 2017
+      form:
+        uploaded_request_files: Upload relevant files (optional)
     index: &cases_list
       heading_all_cases: All open cases
       heading_my_cases: My open cases
@@ -706,15 +720,15 @@ en:
         overturned_case_for: 'ICO Overturned case for:'
 
 
-    ico:
-      close_form:
-        date_ico_decision_received_date: Date decision was received at MoJ
-        date_example: For example, 30 1 2017
-      form:
-        uploaded_request_files: Upload relevant files (optional)
+
     select_type:
       heading: Choose correspondence type
       sub_heading: Create case
+    shared:
+      date_responded_form:
+        close_date:  Date response sent
+        date_example: For example, 30 1 2017
+        date_ico_decision_received_date: Date decision received from ICO
     show:
       case/ico:
         attachments_heading: Appeal response
@@ -736,17 +750,18 @@ en:
     foi:
       case_details:
         cannot_update_closure_html: "This is an old case with closure details that can't be edited. If you need to edit this case <a href=\"#new_feedback\">let us know</a>."
-
       close_form:
-        close_date: Date response sent
         date_example: For example, 30 1 2017
+        close_date:  Date response sent
 
     sar:
       new_form_common:
         dropzone: "Requestor's proof of ID and other documents"
       close_form:
-        close_date: Date response sent
         date_example: For example, 30 1 2017
+        close_date:  Date response sent
+
+
     search:
       heading: Search
       external_deadline_from: From

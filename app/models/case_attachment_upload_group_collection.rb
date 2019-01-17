@@ -10,6 +10,10 @@ class CaseAttachmentUploadGroupCollection
     @grouped_collection.sort!
   end
 
+  def any?
+    @grouped_collection.any?
+  end
+
 
   # each returns an instance of GroupedCollection
   def each(&block)
