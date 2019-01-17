@@ -79,6 +79,7 @@ module PageObjects
                 '.case-ico'
 
         element :submit_button, '.button'
+        element :cancel, 'a.acts-like-button.button-left-spacing'
 
         def fill_in_date_responded(date)
           date_responded_day.set(date.day)

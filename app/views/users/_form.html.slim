@@ -3,8 +3,7 @@
   = f.hidden_field :team, id: 'role', name: 'role', value: role
 = f.text_field :full_name
 = f.email_field :email
-
-= f.submit submit_button_text, {class: 'button'}
-
-- if user.id
-  = unassign_or_deactivate_link(user, team)
+.button-holder
+  = f.submit submit_button_text, {class: 'button'}
+  - if user.id
+    = unassign_or_deactivate_link(user, team)

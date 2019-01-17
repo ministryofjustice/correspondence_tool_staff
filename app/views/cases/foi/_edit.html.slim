@@ -5,7 +5,8 @@
   = render partial: 'cases/foi/new_form_common', locals: { f: f }
   = render partial: 'cases/foi/edit_form_details', locals: { f: f }
 
-  = f.submit t('button.save_changes'), { class: 'button' }
-  = link_to('Cancel',
-            case_path(@case),
-            class: 'acts-like-button button-left-spacing')
+  .button-holder
+    = f.submit t('button.save_changes'), { class: 'button' }
+    = link_to('Cancel',
+              case_path(@case),
+              class: 'acts-like-button button-left-spacing')
