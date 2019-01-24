@@ -1,5 +1,7 @@
 .button-secondary{
   @include button($light-blue);
+  margin-right: $gutter;
+  margin-top: $gutter;
 }
 
 .button-holder {

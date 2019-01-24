@@ -363,7 +363,6 @@ class CasesController < ApplicationController
     if @case.ico?
       @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
     end
-
     @team_collection = CaseTeamCollection.new(@case)
   end
 
@@ -411,7 +410,8 @@ class CasesController < ApplicationController
       redirect_to case_path(@case)
     else
       set_permitted_events
-      render :close
+      @team_collection = CaseTeamCollection.new(@case)
+      render :closure_outcomes
     end
   end
 
