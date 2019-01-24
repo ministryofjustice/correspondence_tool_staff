@@ -10,5 +10,6 @@
 
   .grid-row
     .column-two-thirds
-      = f.submit submit_button, {class: 'button'}
-      = link_to "Return to case detail", case_path(kase.id), class:'button-secondary button-left-spacing'
+      .button-holder
+        = f.submit submit_button, {class: 'button'}
+        = link_to "Return to case detail", case_path(kase.id), class:'button-secondary button-left-spacing'

@@ -217,7 +217,7 @@ describe CasesController do
           it 'redisplays error page' do
             params[:case_sar][:date_responded_dd] = Date.tomorrow.day.to_s
             patch :process_respond_and_close, params: params
-            expect(response).to render_template(:close)
+            expect(response).to render_template(:closure_outcomes)
           end
         end
       end
