@@ -64,7 +64,7 @@ feature 'ICO FOI case requiring clearance' do
 
     mark_case_as_sent kase: kase,
                       user: disclosure_specialist,
-                      expected_status: 'Awaiting ICO decision',
+                      expected_status: 'Closed - awaiting ICO decision',
                       expected_to_be_with: 'Disclosure'
 
     close_ico_appeal_case kase: kase,

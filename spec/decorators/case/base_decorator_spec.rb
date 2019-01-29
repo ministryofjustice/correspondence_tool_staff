@@ -332,7 +332,7 @@ describe Case::BaseDecorator, type: :model do
     end
 
     it 'returns a responded status for ico' do
-      expect(responded_ico.status).to eq 'Awaiting ICO decision'
+      expect(responded_ico.status).to eq 'Closed - awaiting ICO decision'
     end
 
     context 'closed ico - ICO decisions' do
