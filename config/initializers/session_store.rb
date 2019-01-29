@@ -2,5 +2,4 @@
 
 Rails.application.config.session_store :active_record_store,
                                        key: '_correspondence_platform_session',
-                                       secure: Rails.env.production?
-
+                                       secure: false
