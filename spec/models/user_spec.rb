@@ -317,9 +317,10 @@ RSpec.describe User, type: :model do
     let(:team2)     { create :responding_team }
     let(:team3)     { create :responding_team }
 
-
     it 'prints out the other teams' do
-      expect(user.other_teams_names(team1)).to eq("#{team2.name} and #{team3.name}")
+      team1_other_team_names = user.other_teams_names(team1)
+      expect(team1_other_team_names).to include(team2.name, team3.name)
+      expect(team1_other_team_names).not_to include(team1.name)
     end
   end
 end
