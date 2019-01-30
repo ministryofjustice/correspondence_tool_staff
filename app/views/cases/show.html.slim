@@ -42,7 +42,7 @@ div id="case-#{@correspondence_type_key}" class="case"
 
         - action_button_for(:progress_for_clearance)
 
-        - if policy(@case).can_extend_deadline_for_sar?
+        - if policy(@case).extend_deadline_for_sar?
           = action_button_for(:extend_deadline_for_sar)
 
   section.case-info

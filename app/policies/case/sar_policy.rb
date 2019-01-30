@@ -90,7 +90,7 @@ class Case::SARPolicy < Case::BasePolicy
   end
 
   # TODO (Mohammed Seedat): Replace with rules for authorization
-  def can_extend_deadline_for_sar?
+  def extend_deadline_for_sar?
     true
   end
 

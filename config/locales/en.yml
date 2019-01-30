@@ -159,6 +159,7 @@ en:
 
   page_title:
     marking_response_as_sent: Mark response as sent
+    extend_deadline_for_sar: Extend deadline for SAR - %{case_number}
 
   pundit:
     assignment_policy:
@@ -636,6 +637,9 @@ en:
       submit: Save changes
     extend_for_pit:
       extend_for_pit: Extend for Public Interest Test (PIT)
+      extension_date: Date of extension deadline
+      extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
+    extend_deadline_for_sar:
       extension_date: Date of extension deadline
       extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
     ico:

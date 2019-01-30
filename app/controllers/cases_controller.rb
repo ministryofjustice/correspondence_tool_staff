@@ -21,7 +21,8 @@ class CasesController < ApplicationController
                   :process_date_responded,
                   :remove_pit_extension,
                   :record_late_team,
-                  :update_closure
+                  :update_closure,
+                  :extend_deadline_for_sar,
                 ]
   before_action :set_url, only: [:search, :open_cases]
 
@@ -646,6 +647,12 @@ class CasesController < ApplicationController
       flash[:alert] = "Unable to remove Public Interest Test extensions"
       redirect_to case_path(@case.id)
     end
+  end
+
+  def extend_deadline_for_sar
+    authorize @case
+
+    @case = CaseExtendDeadlineForSARDecorator.decorate @case
   end
 
   def request_further_clearance
