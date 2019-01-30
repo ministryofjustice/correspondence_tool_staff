@@ -55,6 +55,7 @@ overturned_sar_cases:
   default_clearance_team: DISCLOSURE
 
 pit_extension_limit: 20
+sar_extension_limit: 30
 
 default_date_format: '%-d %b %Y'
 default_time_format: '%d %b %Y %H:%M'
