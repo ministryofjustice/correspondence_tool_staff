@@ -249,6 +249,8 @@ Rails.application.routes.draw do
     delete 'destroy_link/:linked_case_number' => 'cases#destroy_case_link' , on: :member, as: 'destroy_link_on'
     patch 'progress_for_clearance' => 'cases#progress_for_clearance', on: :member
     get 'new_overturned_ico' => 'cases#new_overturned_ico', on: :member
+    get :extend_deadline_for_sar, on: :member
+
 
     resources :assignments, except: :create  do
       patch 'accept_or_reject', on: :member
