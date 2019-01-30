@@ -13,5 +13,5 @@ en:
     closed_status: Case closed
     case/ico:
       awaiting_dispatch: Ready to send to ICO
-      responded: Awaiting ICO decision
+      responded: Closed - awaiting ICO decision
 
