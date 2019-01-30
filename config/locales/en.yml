@@ -475,6 +475,7 @@ en:
       email: "Requester’s email"
       exemptions_heading: Exemptions
       extend_for_pit: Extend for Public Interest Test
+      extend_deadline_for_sar: Extend deadline
       external_deadline: Final deadline
       internal_deadline: Draft deadline
       ico_case_number: ICO case reference number
