@@ -23,6 +23,7 @@ class CasesController < ApplicationController
                   :record_late_team,
                   :update_closure,
                   :extend_deadline_for_sar,
+                  :execute_extend_deadline_for_sar,
                 ]
   before_action :set_url, only: [:search, :open_cases]
 
@@ -653,6 +654,42 @@ class CasesController < ApplicationController
     authorize @case
 
     @case = CaseExtendDeadlineForSARDecorator.decorate @case
+  end
+
+  def execute_extend_deadline_for_sar
+    authorize @case, :extend_deadline_for_sar?
+
+    extention_params = params[:case]
+
+    extension_deadline = Date.new(
+      extention_params[:extension_deadline_yyyy].to_i,
+      extention_params[:extension_deadline_mm].to_i,
+      extention_params[:extension_deadline_dd].to_i
+    )
+
+    service = CaseExtendDeadlineForSARService.new(
+                current_user,
+                @case,
+                extension_deadline,
+                extention_params[:reason_for_extending]
+              )
+
+    result = service.call
+
+    if result == :ok
+      flash[:notice] = 'Case extended for SAR'
+      redirect_to case_path(@case.id)
+    elsif result == :validation_error
+      @case = CaseExtendDeadlineForSARDecorator.decorate @case
+      @case.extension_deadline_yyyy = extention_params[:extension_deadline_yyyy]
+      @case.extension_deadline_mm = extention_params[:extension_deadline_mm]
+      @case.extension_deadline_dd = extention_params[:extension_deadline_dd]
+      @case.reason_for_extending = extention_params[:reason_for_extending]
+      render :extend_deadline_for_sar
+    else
+      flash[:alert] = "Unable to perform SAR extension on case #{@case.number}"
+      redirect_to case_path(@case.id)
+    end
   end
 
   def request_further_clearance
