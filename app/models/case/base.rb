@@ -60,12 +60,13 @@ class Case::Base < ApplicationRecord
                 :uploading_user, # Used when creating case sent by post.
                 :draft_compliant
 
+  jsonb_accessor :properties,
+                 date_draft_compliant: :date,
+                 has_pit_extension: [:boolean, default: false]
+
   attr_accessor :message_text
 
-  jsonb_accessor  :properties,
-                  has_pit_extension: [:boolean, default: false]
-
-  acts_as_gov_uk_date :received_date, :date_responded, :external_deadline,
+  acts_as_gov_uk_date :received_date, :date_draft_compliant, :date_responded, :external_deadline,
                       validate_if: :received_in_acceptable_range?
 
   scope :by_deadline, -> {
@@ -720,6 +721,7 @@ class Case::Base < ApplicationRecord
   end
 
   def received_in_acceptable_range?
+    # binding.pry
     if self.new_record? || received_date_changed?
       validate_received_date
     end
