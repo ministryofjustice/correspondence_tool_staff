@@ -254,4 +254,11 @@ describe Case::SAR do
     end
   end
 
+  describe '#deadline_extended' do
+    let(:kase) { create :sar_case }
+
+    it 'is false by default' do
+      expect(kase.deadline_extended?).to be false
+    end
+  end
 end

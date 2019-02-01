@@ -59,7 +59,8 @@ class Case::SAR < Case::Base
                  third_party: :boolean,
                  third_party_relationship: :string,
                  reply_method: :string,
-                 late_team_id: :integer
+                 late_team_id: :integer,
+                 deadline_extended: [:boolean, default: false]
 
   attr_accessor :missing_info
 
@@ -139,5 +140,4 @@ class Case::SAR < Case::Base
                  message: "can't be blank if no request files attached")
     end
   end
-
 end
