@@ -477,6 +477,7 @@ en:
       exemptions_heading: Exemptions
       extend_for_pit: Extend for Public Interest Test
       extend_deadline_for_sar: Extend deadline
+      remove_extended_deadline_for_sar: Remove deadline extension
       external_deadline: Final deadline
       internal_deadline: Draft deadline
       ico_case_number: ICO case reference number
