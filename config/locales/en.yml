@@ -642,6 +642,7 @@ en:
     extend_deadline_for_sar:
       extension_date: Date of extension deadline
       extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
+      extension_period: How long would you like to extend by?
     ico:
       close_form:
         date_ico_decision_received_date: Date decision was received at MoJ

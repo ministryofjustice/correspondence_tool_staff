@@ -35,11 +35,24 @@ div.action-copy
 br
 
 = form_for @case, as: :case, url: execute_extend_deadline_for_sar_case_path(@case) do |f|
+  fieldset.form-group
+    legend
+      span.form-label-bold
+        = t('cases.extend_deadline_for_sar.extension_period')
+    .multiple-choice
+      input type="radio" value="30" checked="checked" name="case[extension_period]" id="case_extension_period_30"
+      label for="case_extension_deadline_30" data-target="case_extension_period_content"
+        | 30 days
+    .multiple-choice
+      input type="radio" value="60" name="case[extension_period]" id="case_extension_period_60"
+      label for="case_extension_period_60" data-target="case_extension_period_content"
+        | 60 days
+
   .form-group
-    = f.gov_uk_date_field :extension_deadline,
-                          { legend_text: t('cases.extend_deadline_for_sar.extension_date'),
-                            form_hint_text: t('cases.extend_deadline_for_sar.extension_date_hint',
-                                              extension_limit: Settings.sar_extension_limit) }
+    / = f.gov_uk_date_field :extension_deadline,
+    /                       { legend_text: t('cases.extend_deadline_for_sar.extension_date'),
+    /                         form_hint_text: t('cases.extend_deadline_for_sar.extension_date_hint',
+    /                                           extension_limit: Settings.sar_extension_limit) }
 
 
   = f.text_area :reason_for_extending
