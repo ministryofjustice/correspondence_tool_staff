@@ -660,12 +660,8 @@ class CasesController < ApplicationController
     authorize @case, :extend_deadline_for_sar?
 
     extention_params = params[:case]
-
-    extension_deadline = Date.new(
-      extention_params[:extension_deadline_yyyy].to_i,
-      extention_params[:extension_deadline_mm].to_i,
-      extention_params[:extension_deadline_dd].to_i
-    )
+    extension_period = params[:case][:extension_period].to_i
+    extension_deadline = DateTime.now + extension_period.days
 
     service = CaseExtendDeadlineForSARService.new(
                 current_user,
