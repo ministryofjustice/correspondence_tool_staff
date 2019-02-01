@@ -55,6 +55,7 @@
                   switch_workflow: trigger
                 unassign_from_user:
                   transition_to: awaiting_responder
+                extend_deadline_for_sar:
 
               closed:
                 add_message_to_case:
