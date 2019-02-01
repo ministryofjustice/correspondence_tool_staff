@@ -13,12 +13,14 @@ class CaseExtendDeadlineForSARService
     ActiveRecord::Base.transaction do
       if validate_params
         # TODO (Mohammed Seedat): State Machine rules for SAR Extensions
-        # @case.state_machine.extend_for_pit!(acting_user: @user,
-        #                                     acting_team: BusinessUnit.dacu_bmt,
-        #                                     final_deadline: @extension_deadline,
-        #                                     original_final_deadline: @case.external_deadline,
-        #                                     message: @reason)
-        # @case.reload.update! external_deadline: @extension_deadline
+        @case.state_machine.extend_deadline_for_sar!(
+          acting_user: @user,
+          acting_team: BusinessUnit.dacu_bmt,
+          final_deadline: @extension_deadline,
+          original_final_deadline: @case.external_deadline,
+          message: @reason
+        )
+        @case.reload.update!(external_deadline: @extension_deadline)
         @result = :ok
       end
     end
