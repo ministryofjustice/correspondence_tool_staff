@@ -659,31 +659,27 @@ class CasesController < ApplicationController
   def execute_extend_deadline_for_sar
     authorize @case, :extend_deadline_for_sar?
 
-    extention_params = params[:case]
-    extension_period = params[:case][:extension_period].to_i
-    extension_deadline = DateTime.now + extension_period.days
+    extention_reason = params[:case][:reason_for_extending]
+    extension_date   = DateTime.now + params[:case][:extension_period].to_i.days
 
     service = CaseExtendDeadlineForSARService.new(
                 current_user,
                 @case,
-                extension_deadline,
-                extention_params[:reason_for_extending]
+                extension_date,
+                extention_reason
               )
 
     result = service.call
 
     if result == :ok
-      flash[:notice] = 'Case extended for SAR'
+      flash[:notice] = t('.extension_succeeded')
       redirect_to case_path(@case.id)
     elsif result == :validation_error
       @case = CaseExtendDeadlineForSARDecorator.decorate @case
-      @case.extension_deadline_yyyy = extention_params[:extension_deadline_yyyy]
-      @case.extension_deadline_mm = extention_params[:extension_deadline_mm]
-      @case.extension_deadline_dd = extention_params[:extension_deadline_dd]
-      @case.reason_for_extending = extention_params[:reason_for_extending]
+      @case.reason_for_extending = extention_reason
       render :extend_deadline_for_sar
     else
-      flash[:alert] = "Unable to perform SAR extension on case #{@case.number}"
+      flash[:alert] = t('.extension_not_processed', case_number: @case.number)
       redirect_to case_path(@case.id)
     end
   end
