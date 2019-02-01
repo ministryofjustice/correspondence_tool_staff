@@ -94,6 +94,10 @@ class Case::SARPolicy < Case::BasePolicy
     true
   end
 
+  def remove_extended_deadline_for_sar?
+    true
+  end
+
   check :responding_team_is_linked_to_case do
     self.case.linked_cases.detect do |kase|
       kase.responding_team.in? user.responding_teams

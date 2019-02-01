@@ -24,6 +24,7 @@ class CasesController < ApplicationController
                   :update_closure,
                   :extend_deadline_for_sar,
                   :execute_extend_deadline_for_sar,
+                  :remove_extended_deadline_for_sar,
                 ]
   before_action :set_url, only: [:search, :open_cases]
 
@@ -680,6 +681,21 @@ class CasesController < ApplicationController
       render :extend_deadline_for_sar
     else
       flash[:alert] = t('.extension_not_processed', case_number: @case.number)
+      redirect_to case_path(@case.id)
+    end
+  end
+
+  def remove_extended_deadline_for_sar
+    authorize @case, :remove_extended_deadline_for_sar?
+
+    service = CaseRemoveSARDeadlineExtensionService.new(current_user, @case)
+    result = service.call
+
+    if result == :ok
+      flash[:notice] = 'Deadline extension removed'
+      redirect_to case_path(@case.id)
+    else
+      flash[:alert] = 'Unable to remove SAR deadline extension'
       redirect_to case_path(@case.id)
     end
   end

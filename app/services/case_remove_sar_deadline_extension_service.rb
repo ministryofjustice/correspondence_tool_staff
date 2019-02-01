@@ -26,10 +26,12 @@ class CaseRemoveSARDeadlineExtensionService
 
   private
 
+  # TODO (Mohammed Seedat): Set original deadline date from transitions
   def find_original_final_deadline
-    first_sar_extension = @case.transitions.where(event: 'extend_deadline_for_sar')
-                                .order(:id)
-                                .first
-    first_sar_extension.original_final_deadline
+    DateTime.now
+    # first_sar_extension = @case.transitions.where(event: 'extend_deadline_for_sar')
+    #                             .order(:id)
+    #                             .first
+    # first_sar_extension.original_final_deadline
   end
 end
