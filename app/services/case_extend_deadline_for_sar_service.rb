@@ -20,7 +20,9 @@ class CaseExtendDeadlineForSARService
           original_final_deadline: @case.external_deadline,
           message: @reason
         )
-        @case.reload.update!(external_deadline: @extension_deadline)
+
+        @case.reload
+        @case.update!(external_deadline: @extension_deadline, deadline_extended: true)
         @result = :ok
       end
     end
