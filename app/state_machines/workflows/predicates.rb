@@ -117,6 +117,15 @@ class Workflows::Predicates
     @kase.extended_for_pit?
   end
 
+  # Only Case::SAR has deadline_extended property
+  def has_sar_deadline_extension?
+    @kase.try(:deadline_extended?)
+  end
+
+  def approver_can_remove_sar_deadline?
+    has_sar_deadline_extension? && user_is_assigned_disclosure_specialist?
+  end
+
   def assigned_team_member_and_case_outside_escalation_period?
     responder_is_member_of_assigned_team? && @kase.outside_escalation_deadline?
   end
