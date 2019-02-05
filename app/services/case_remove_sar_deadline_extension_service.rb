@@ -9,10 +9,17 @@ class CaseRemoveSARDeadlineExtensionService
 
   def call
     ActiveRecord::Base.transaction do
-      # @case.state_machine.remove_pit_extension!(acting_user: @user,
-      #                                           acting_team: BusinessUnit.dacu_bmt)
-      @case.update(external_deadline: find_original_final_deadline)
+      @case.state_machine.remove_extended_deadline_for_sar!(
+        acting_user: @user,
+        acting_team: BusinessUnit.dacu_bmt
+      )
+
       @case.reload
+      @case.update!(
+        external_deadline: find_original_final_deadline,
+        deadline_extended: false
+      )
+
       @result = :ok
     end
     @result

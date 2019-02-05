@@ -67,7 +67,8 @@ class CaseExtendDeadlineForSARService
     if @extension_days.blank? || @extension_deadline.blank?
       @case.errors.add(
         :extension_period,
-        "can't be blank")
+        "can't be blank"
+      )
     elsif @extension_deadline > extension_limit
       @case.errors.add(
         :extension_period,
@@ -76,7 +77,8 @@ class CaseExtendDeadlineForSARService
     elsif @extension_deadline < @case.external_deadline
       @case.errors.add(
         :extension_period,
-        "can't be before the final deadline")
+        "can't be before the final deadline"
+      )
     else
       valid = true
     end
