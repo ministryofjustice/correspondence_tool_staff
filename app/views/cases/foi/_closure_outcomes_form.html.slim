@@ -19,7 +19,7 @@
     = f.radio_button_fieldset :outcome_abbreviation, choices: CaseClosure::Outcome.active, text_method: :name, value_method: :abbreviation
 
   .js-other-reasons.form-group
-    = f.radio_button_fieldset :refusal_reason_abbreviation, choices: CaseClosure::RefusalReason.active, text_method: :name, value_method: :abbreviation
+    = f.radio_button_fieldset :refusal_reason_abbreviation, choices: CaseClosure::RefusalReason.active.foi, text_method: :name, value_method: :abbreviation
 
   .js-refusal-exemptions
     #refusal-exemptions.form-group
