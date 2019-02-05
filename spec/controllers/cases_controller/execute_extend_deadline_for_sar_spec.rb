@@ -4,15 +4,13 @@ describe CasesController, type: :controller do
   describe 'PATCH execute_extend_deadline_for_sar' do
     let(:sar_case)      { create :sar_case }
     let(:manager)       { find_or_create :disclosure_bmt_user }
-    let(:service) { double(CaseExtendDeadlineForSARService, call: :ok) }
+    let(:service)       { double(CaseExtendDeadlineForSARService, call: :ok) }
     let(:patch_params)  {
                           {
                             id: sar_case.id,
                             case: {
-                              extension_deadline_yyyy: '2017',
-                              extension_deadline_mm:   '02',
-                              extension_deadline_dd:   '10',
-                              reason_for_extending:   'need more time',
+                              extension_period:      '11',
+                              reason_for_extending:  'need more time',
                             }
                           }
                         }
@@ -33,7 +31,7 @@ describe CasesController, type: :controller do
 
       expect(CaseExtendDeadlineForSARService).to(
         have_received(:new)
-        .with(manager, sar_case, Date.new(2017, 2, 10), 'need more time')
+        .with(manager, sar_case, '11', 'need more time')
       )
 
       expect(service).to have_received(:call)
