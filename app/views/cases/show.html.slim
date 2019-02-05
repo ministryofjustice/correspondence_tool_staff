@@ -42,8 +42,8 @@ div id="case-#{@correspondence_type_key}" class="case"
 
         - action_button_for(:progress_for_clearance)
 
-        - if policy(@case).remove_extended_deadline_for_sar?
-          = action_button_for(:remove_extended_deadline_for_sar)
+        / - if policy(@case).remove_extended_deadline_for_sar?
+        /   = action_button_for(:remove_extended_deadline_for_sar)
 
   section.case-info
     = render partial: 'cases/case_status', locals: {case_details: @case}

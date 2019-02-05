@@ -101,11 +101,11 @@ module CasesHelper
               extend_deadline_for_sar_case_path(@case),
               id: 'action--extend-deadline-for-sar',
               class: 'button'
-    when :remove_extended_deadline_for_sar
-      link_to I18n.t('common.case.remove_extended_deadline_for_sar'),
-              remove_extended_deadline_for_sar_case_path(@case),
-              id: 'action--remove-extended-deadline-for-sar',
-              class: 'button', method: :patch
+    # when :remove_extended_deadline_for_sar
+    #   link_to I18n.t('common.case.remove_extended_deadline_for_sar'),
+    #           remove_extended_deadline_for_sar_case_path(@case),
+    #           id: 'action--remove-extended-deadline-for-sar',
+    #           class: 'button', method: :patch
     end
   end
   #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
