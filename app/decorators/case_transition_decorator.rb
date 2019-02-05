@@ -40,7 +40,8 @@ class CaseTransitionDecorator < Draper::Decorator
          'request_amends',
          'upload_response_and_return_for_redraft',
          'upload_response_and_approve',
-         'upload_response_approve_and_bypass'
+         'upload_response_approve_and_bypass',
+         'extend_deadline_for_sar'
         object.message
     when 'reassign_user'
       target_user = User.find(object.target_user_id)
