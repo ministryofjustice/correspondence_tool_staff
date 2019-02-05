@@ -11,7 +11,7 @@ class CaseRemoveSARDeadlineExtensionService
     ActiveRecord::Base.transaction do
       # @case.state_machine.remove_pit_extension!(acting_user: @user,
       #                                           acting_team: BusinessUnit.dacu_bmt)
-      @case.update external_deadline: (find_original_final_deadline)
+      @case.update(external_deadline: find_original_final_deadline)
       @case.reload
       @result = :ok
     end
@@ -26,12 +26,12 @@ class CaseRemoveSARDeadlineExtensionService
 
   private
 
-  # TODO (Mohammed Seedat): Set original deadline date from transitions
   def find_original_final_deadline
-    DateTime.now
-    # first_sar_extension = @case.transitions.where(event: 'extend_deadline_for_sar')
-    #                             .order(:id)
-    #                             .first
-    # first_sar_extension.original_final_deadline
+    first_sar_extension = @case.transitions
+                            .where(event: 'extend_deadline_for_sar')
+                            .order(:id)
+                            .first
+
+    first_sar_extension.original_final_deadline
   end
 end
