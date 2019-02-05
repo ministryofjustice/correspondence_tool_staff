@@ -1,10 +1,11 @@
 class CaseExtendDeadlineForSARService
   attr_reader :result, :error
 
-  def initialize(user, kase, extension_deadline, reason)
+  def initialize(user, kase, extension_days, reason)
     @user = user
     @case = kase
-    @extension_deadline = extension_deadline
+    @extension_days = extension_days
+    @extension_deadline = DateTime.now + @extension_days.to_i.days
     @reason = reason
     @result = :incomplete
   end
@@ -18,11 +19,14 @@ class CaseExtendDeadlineForSARService
           acting_team: BusinessUnit.dacu_bmt,
           final_deadline: @extension_deadline,
           original_final_deadline: @case.external_deadline,
-          message: @reason
+          message: message
         )
 
         @case.reload
-        @case.update!(external_deadline: @extension_deadline, deadline_extended: true)
+        @case.update!(
+          external_deadline: @extension_deadline,
+          deadline_extended: true
+        )
         @result = :ok
       end
     end
@@ -35,6 +39,10 @@ class CaseExtendDeadlineForSARService
   end
 
   private
+
+  def message
+    "#{@reason}.\nDeadline extended by #{@extension_days} days"
+  end
 
   def validate_params
     unless @reason.present?
