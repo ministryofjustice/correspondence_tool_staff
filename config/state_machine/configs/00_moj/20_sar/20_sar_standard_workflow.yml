@@ -46,6 +46,7 @@
                 destroy_case:
                 edit_case:
                   if: Workflows::Predicates#overturned_editing_enabled?
+                extend_deadline_for_sar:
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -55,7 +56,6 @@
                   switch_workflow: trigger
                 unassign_from_user:
                   transition_to: awaiting_responder
-                extend_deadline_for_sar:
 
               closed:
                 add_message_to_case:
@@ -123,5 +123,7 @@
                   switch_workflow: trigger
 
               drafting:
+                extend_deadline_for_sar:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 flag_for_clearance:
                   switch_workflow: trigger
