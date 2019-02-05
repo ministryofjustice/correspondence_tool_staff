@@ -35,7 +35,7 @@ describe 'cases/case_status.html.slim', type: :view do
 
   it 'does not display "Who its with" for closed cases' do
     closed_case = double Case::BaseDecorator,
-                             status: "Case closed",
+                             status: "Closed",
                              ico?: false,
                              internal_deadline: DateTime.now.strftime(Settings.default_date_format) ,
                              external_deadline: (DateTime.now + 10.days).strftime(Settings.default_date_format),

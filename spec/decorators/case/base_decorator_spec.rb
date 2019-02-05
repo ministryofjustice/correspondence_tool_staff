@@ -308,7 +308,7 @@ describe Case::BaseDecorator, type: :model do
 
   describe '#status' do
     it 'returns a closed status' do
-      expect(closed_case.status).to eq 'Case closed'
+      expect(closed_case.status).to eq 'Closed'
     end
 
     it 'returns a unassigned status' do

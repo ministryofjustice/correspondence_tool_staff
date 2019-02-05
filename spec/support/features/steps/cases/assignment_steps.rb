@@ -14,7 +14,7 @@ def assign_case_step(business_unit:,
   expect(cases_show_page.case_status.details.copy.text).to eq expected_status
 
   expected_to_be_with_text = expected_to_be_with % { business_unit_name: business_unit.name }
-  unless cases_show_page.case_status.details.copy.text == 'Case closed'
+  unless cases_show_page.case_status.details.copy.text == 'Closed'
     expect(cases_show_page.case_status.details.who_its_with.text)
       .to eq expected_to_be_with_text
   end

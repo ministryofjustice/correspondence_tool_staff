@@ -43,8 +43,6 @@ describe 'users/show.html.slim', type: :view do
     expect(row.type).to have_text 'FOI'
     expect(row.request_detail).to have_text kase_2.subject
     expect(row.external_deadline).to have_text I18n.l(kase_2.external_deadline)
-    expect(row.status).to have_text 'Case closed'
+    expect(row.status).to have_text 'Closed'
   end
 end
-
-

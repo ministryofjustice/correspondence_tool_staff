@@ -9,7 +9,7 @@ RSpec::Matchers.define :match_the_case do |kase|
       'awaiting_responder_email' => 'Waiting to be accepted',
       'drafting' => 'Draft in progress',
       'responded' => 'Ready to close',
-      'closed' => 'Case closed'
+      'closed' => 'Closed'
     }
   end
 
