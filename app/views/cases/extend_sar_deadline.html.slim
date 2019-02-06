@@ -1,5 +1,5 @@
 - content_for :page_title do
-  = t('page_title.extend_deadline_for_sar', case_number: @case.number)
+  = t('page_title.extend_sar_deadline', case_number: @case.number)
 
 
 = GovukElementsErrorsHelper.error_summary @case.object,
@@ -7,7 +7,7 @@
     ""
 
 - content_for :heading
-  = t('common.case.extend_deadline_for_sar')
+  = t('common.case.extend_sar_deadline')
 
 - content_for :sub_heading
   span.visually-hidden
@@ -24,7 +24,7 @@ div.action-copy
       = @case.subject
 br
 
-= form_for @case, as: :case, url: execute_extend_deadline_for_sar_case_path(@case) do |f|
+= form_for @case, as: :case, url: execute_extend_sar_deadline_case_path(@case) do |f|
   - if @case.allow_extension_period_selection?
     fieldset.form-group
       legend

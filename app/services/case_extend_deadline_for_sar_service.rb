@@ -13,7 +13,7 @@ class CaseExtendDeadlineForSARService
   def call
     ActiveRecord::Base.transaction do
       if validate_params
-        @case.state_machine.extend_deadline_for_sar!(
+        @case.state_machine.extend_sar_deadline!(
           acting_user: @user,
           acting_team: @user.team_for_case(@case),
           final_deadline: @extension_deadline,

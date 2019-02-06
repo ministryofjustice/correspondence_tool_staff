@@ -89,10 +89,9 @@ class Case::SARPolicy < Case::BasePolicy
     !self.case.flagged?
   end
 
-  # TODO (Mohammed Seedat): Replace with rules for authorization
-  def extend_deadline_for_sar?
+  def extend_sar_deadline?
     clear_failed_checks
-    check_can_trigger_event(:extend_deadline_for_sar)
+    check_can_trigger_event(:extend_sar_deadline)
   end
 
   def remove_sar_deadline_extension?

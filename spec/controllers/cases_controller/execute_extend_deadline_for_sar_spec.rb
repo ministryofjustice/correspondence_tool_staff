@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe CasesController, type: :controller do
-  describe 'PATCH execute_extend_deadline_for_sar' do
+  describe 'PATCH execute_extend_sar_deadline' do
     let(:sar_case)      { create :sar_case }
     let(:manager)       { find_or_create :disclosure_bmt_user }
     let(:service)       { double(CaseExtendDeadlineForSARService, call: :ok) }
@@ -23,12 +23,12 @@ describe CasesController, type: :controller do
 
     it 'authorizes' do
       expect {
-        patch :execute_extend_deadline_for_sar, params: patch_params
-      }.to require_permission(:extend_deadline_for_sar?).with_args(manager, sar_case)
+        patch :execute_extend_sar_deadline, params: patch_params
+      }.to require_permission(:extend_sar_deadline?).with_args(manager, sar_case)
     end
 
     it 'calls the CaseExtendDeadlineForSARService' do
-      patch :execute_extend_deadline_for_sar, params: patch_params
+      patch :execute_extend_sar_deadline, params: patch_params
 
       expect(CaseExtendDeadlineForSARService).to(
         have_received(:new)
@@ -39,7 +39,7 @@ describe CasesController, type: :controller do
     end
 
     it 'notifies the user of the success' do
-      patch :execute_extend_deadline_for_sar, params: patch_params
+      patch :execute_extend_sar_deadline, params: patch_params
 
       expect(flash[:notice]).to eq 'Case extended for SAR'
     end
@@ -47,9 +47,9 @@ describe CasesController, type: :controller do
     context 'validation error' do
       let(:service) { double(CaseExtendDeadlineForSARService, call: :validation_error) }
 
-      it 'renders the extend_deadline_for_sar page' do
-        patch :execute_extend_deadline_for_sar, params: patch_params
-        expect(:result).to have_rendered(:extend_deadline_for_sar)
+      it 'renders the extend_sar_deadline page' do
+        patch :execute_extend_sar_deadline, params: patch_params
+        expect(:result).to have_rendered(:extend_sar_deadline)
       end
     end
 
@@ -57,7 +57,7 @@ describe CasesController, type: :controller do
       let(:service) { double(CaseExtendDeadlineForSARService, call: :error) }
 
       it 'notifies the user of the failure' do
-        patch :execute_extend_deadline_for_sar, params: patch_params
+        patch :execute_extend_sar_deadline, params: patch_params
         expected_message = "Unable to perform SAR extension on case #{sar_case.number}"
 
         expect(flash[:alert]).to eq expected_message

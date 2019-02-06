@@ -8,10 +8,10 @@ describe CasesController, type: :controller do
     sign_in manager
   end
 
-  describe 'GET extend_deadline_for_sar' do
+  describe 'GET extend_sar_deadline' do
     it 'authorizes' do
-      expect { get :extend_deadline_for_sar, params: { id: sar_case.id } }
-        .to require_permission(:extend_deadline_for_sar?)
+      expect { get :extend_sar_deadline, params: { id: sar_case.id } }
+        .to require_permission(:extend_sar_deadline?)
               .with_args(manager, sar_case)
     end
   end

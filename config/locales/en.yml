@@ -158,7 +158,7 @@ en:
               before_start_date: "can't be after Date to"
 
   page_title:
-    extend_deadline_for_sar: Extend deadline for SAR - %{case_number}
+    extend_sar_deadline: Extend deadline for SAR - %{case_number}
     marking_response_as_sent: Mark response as sent
 
   pundit:
@@ -476,7 +476,7 @@ en:
       email: "Requester’s email"
       exemptions_heading: Exemptions
       extend_for_pit: Extend for Public Interest Test
-      extend_deadline_for_sar: Extend deadline
+      extend_sar_deadline: Extend deadline
       external_deadline: Final deadline
       internal_deadline: Draft deadline
       ico_case_number: ICO case reference number
@@ -640,12 +640,12 @@ en:
       extend_for_pit: Extend for Public Interest Test (PIT)
       extension_date: Date of extension deadline
       extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
-    extend_deadline_for_sar:
+    extend_sar_deadline:
       extension_date: Date of extension deadline
       extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
       extension_period: How long would you like to extend by?
       extend_further_30_days: The deadline for this case will be extended by a further %{num_days} days.
-    execute_extend_deadline_for_sar:
+    execute_extend_sar_deadline:
       extension_succeeded: Case extended for SAR
       extension_not_processed: Unable to perform SAR extension on case %{case_number}
     ico:

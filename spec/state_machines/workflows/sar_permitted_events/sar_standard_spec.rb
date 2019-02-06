@@ -43,7 +43,7 @@ describe ConfigurableStateMachine::Machine do
                                                                       :assign_to_new_team,
                                                                       :destroy_case,
                                                                       :edit_case,
-                                                                      :extend_deadline_for_sar,
+                                                                      :extend_sar_deadline,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case,

@@ -13,10 +13,10 @@ class CasesController < ApplicationController
                   :closure_outcomes,
                   :edit,
                   :edit_closure,
-                  :extend_deadline_for_sar,
                   :extend_for_pit,
-                  :execute_extend_deadline_for_sar,
+                  :extend_sar_deadline,
                   :execute_extend_for_pit,
+                  :execute_extend_sar_deadline,
                   :execute_new_case_link,
                   :new_case_link,
                   :destroy_case_link,
@@ -651,14 +651,14 @@ class CasesController < ApplicationController
     end
   end
 
-  def extend_deadline_for_sar
+  def extend_sar_deadline
     authorize @case
 
     @case = CaseExtendDeadlineForSARDecorator.decorate @case
   end
 
-  def execute_extend_deadline_for_sar
-    authorize @case, :extend_deadline_for_sar?
+  def execute_extend_sar_deadline
+    authorize @case, :extend_sar_deadline?
 
     extention_reason = params[:case][:reason_for_extending]
 
@@ -677,7 +677,7 @@ class CasesController < ApplicationController
     elsif result == :validation_error
       @case = CaseExtendDeadlineForSARDecorator.decorate @case
       @case.reason_for_extending = extention_reason
-      render :extend_deadline_for_sar
+      render :extend_sar_deadline
     else
       flash[:alert] = t('.extension_not_processed', case_number: @case.number)
       redirect_to case_path(@case.id)

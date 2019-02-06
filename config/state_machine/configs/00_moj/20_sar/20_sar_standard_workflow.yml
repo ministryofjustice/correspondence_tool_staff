@@ -46,7 +46,7 @@
                 destroy_case:
                 edit_case:
                   if: Workflows::Predicates#overturned_editing_enabled?
-                extend_deadline_for_sar:
+                extend_sar_deadline:
                   if: Workflows::Predicates#can_extend_sar_deadline?
                 flag_for_clearance:
                   switch_workflow: trigger
@@ -126,7 +126,7 @@
                   switch_workflow: trigger
 
               drafting:
-                extend_deadline_for_sar:
+                extend_sar_deadline:
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 flag_for_clearance:
                   switch_workflow: trigger
