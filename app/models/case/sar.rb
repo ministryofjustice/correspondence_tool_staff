@@ -116,7 +116,6 @@ class Case::SAR < Case::Base
     true
   end
 
-
   def extendable?
     max_allowed_extension_date > external_deadline
   end
@@ -153,10 +152,9 @@ class Case::SAR < Case::Base
     )
   end
 
+  # SARs extensions are based on calendar days not working days
   def max_allowed_extension_date
-    Settings.sar_extension_limit
-      .business_days
-      .after(initial_deadline)
+    initial_deadline + Settings.sar_extension_limit.to_i.days
   end
 
   private
