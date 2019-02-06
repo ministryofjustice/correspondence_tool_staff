@@ -2,7 +2,6 @@
   = t('page_title.extend_deadline_for_sar', case_number: @case.number)
 
 
-
 = GovukElementsErrorsHelper.error_summary @case.object,
     "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
     ""
@@ -26,22 +25,23 @@ div.action-copy
 br
 
 = form_for @case, as: :case, url: execute_extend_deadline_for_sar_case_path(@case) do |f|
-  fieldset.form-group
-    legend
-      span.form-label-bold
-        = t('cases.extend_deadline_for_sar.extension_period')
-    - if @case.allow_extension_period_selection?
-      .multiple-choice
-        input type="radio" value="30" checked="checked" name="case[extension_period]" id="case_extension_period_30"
-        label for="case_extension_period_30"
-          | 30 days
-      .multiple-choice
-        input type="radio" value="60" name="case[extension_period]" id="case_extension_period_60"
-        label for="case_extension_period_60"
-          | 60 days
-    - else
-      input type="hidden" value="30" name="case[extension_period]"
-      = t('cases.extend_deadline_for_sar.extend_further_30_days', num_days: 30)
+  - if @case.allow_extension_period_selection?
+    fieldset.form-group
+      legend
+        span.form-label-bold
+          = t('.extension_period')
+        .multiple-choice
+          input type="radio" value="30" checked="checked" name="case[extension_period]" id="case_extension_period_30"
+          label for="case_extension_period_30"
+            | 30 days
+        .multiple-choice
+          input type="radio" value="60" name="case[extension_period]" id="case_extension_period_60"
+          label for="case_extension_period_60"
+            | 60 days
+  - else
+    input type="hidden" value="30" name="case[extension_period]"
+    p
+      = t('.extend_further_30_days', num_days: 30)
 
   .form-group
     = f.text_area :reason_for_extending
