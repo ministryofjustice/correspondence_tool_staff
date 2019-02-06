@@ -80,6 +80,19 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
+    context 'assign_to_new_team' do
+      it 'returns team name to which it has been assigned' do
+        ct = create(:case_transition_assign_to_new_team,
+                   acting_user: dacu_user,
+                   acting_team: dacu,
+                   target_team: laa).decorate
+
+        event = 'Assign to new team'
+        details = 'Assigned to Legal Aid Agency'
+        expect(ct.event_and_detail).to eq response(event, details)
+      end
+    end
+
     context 'extend_for_pit' do
       it 'returns the reason for extending' do
         ct = create(:case_transition_extend_for_pit,
@@ -147,7 +160,6 @@ RSpec.describe CaseTransitionDecorator, type: :model do
 
     context 'reassign_user' do
       it 'returns name of event' do
-        
         ct = create(:case_transition_reassign_user).decorate
         action_user = User.find(ct.acting_user_id)
         target_user = User.find(ct.target_user_id)
@@ -155,7 +167,6 @@ RSpec.describe CaseTransitionDecorator, type: :model do
         details = "#{action_user.full_name} re-assigned this case to <strong>#{target_user.full_name}</strong>"
         expect(ct.event_and_detail).to eq response(event, details)
       end
-
     end
 
     context 'progress_for_clearance' do

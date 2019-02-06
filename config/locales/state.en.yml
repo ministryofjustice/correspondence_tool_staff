@@ -10,7 +10,7 @@ en:
     pending_private_office_clearance: Pending clearance
     responded: Ready to close
     closed: Closed
-    # closed_status: Case closed
     case/ico:
       awaiting_dispatch: Ready to send to ICO
       responded: Closed - awaiting ICO decision
+      closed: "Closed - %{ico_decision} by ICO"

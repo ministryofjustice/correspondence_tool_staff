@@ -1,8 +1,6 @@
 .grid-row
   div class="column-full #{case_details_for_link_type(link_type)}"
     h2.request--heading
-      / i18n-tasks-use t('common.case.case-details')
-      / i18n-tasks-use t('common.case.original-case-details')
       = translate_for_case(case_details, 'common', case_details_for_link_type(link_type))
 
     table
