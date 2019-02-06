@@ -108,10 +108,13 @@ class User < ApplicationRecord
   end
 
   def team_for_case(kase)
-    teams_for_case(kase).sort do |a, b|
+    self.teams_for_case(kase).first
+  end
+
+  def self.sort_teams_by_roles(teams)
+    teams.sort do |a, b|
       ROLE_WEIGHTINGS[a.role] <=> ROLE_WEIGHTINGS[b.role]
     end
-    .first
   end
 
   def roles_for_case(kase)
