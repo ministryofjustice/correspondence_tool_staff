@@ -662,7 +662,7 @@ class CasesController < ApplicationController
 
     extention_reason = params[:case][:reason_for_extending]
 
-    service = CaseExtendDeadlineForSARService.new(
+    service = CaseExtendSARDeadlineService.new(
                 current_user,
                 @case,
                 params[:case][:extension_period],

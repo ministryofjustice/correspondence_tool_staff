@@ -1,4 +1,4 @@
-class CaseExtendDeadlineForSARService
+class CaseExtendSARDeadlineService
   attr_reader :result, :error
 
   def initialize(user, kase, extension_days, reason)
