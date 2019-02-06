@@ -9,7 +9,7 @@ class CaseRemoveSARDeadlineExtensionService
 
   def call
     ActiveRecord::Base.transaction do
-      @case.state_machine.remove_extended_deadline_for_sar!(
+      @case.state_machine.remove_sar_deadline_extension!(
         acting_user: @user,
         acting_team: @user.team_for_case(@case)
       )

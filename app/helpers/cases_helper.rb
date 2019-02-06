@@ -101,9 +101,9 @@ module CasesHelper
               extend_deadline_for_sar_case_path(@case),
               id: 'action--extend-deadline-for-sar',
               class: 'button-secondary'
-    when :remove_extended_deadline_for_sar
-      link_to I18n.t('common.case.remove_extended_deadline_for_sar'),
-              remove_extended_deadline_for_sar_case_path(@case),
+    when :remove_sar_deadline_extension
+      link_to I18n.t('common.case.remove_sar_deadline_extension'),
+              remove_sar_deadline_extension_case_path(@case),
               id: 'action--remove-extended-deadline-for-sar',
               class: 'button-secondary', method: :patch
     end

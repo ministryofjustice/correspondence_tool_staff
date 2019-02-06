@@ -51,9 +51,9 @@
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
-                remove_extended_deadline_for_sar:
-                  if: Workflows::Predicates#has_sar_deadline_extension?
                 remove_linked_case:
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#has_sar_deadline_extension?
                 request_further_clearance:
                   if: Case::SARPolicy#can_request_further_clearance?
                   switch_workflow: trigger
@@ -130,5 +130,5 @@
                   if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
                 flag_for_clearance:
                   switch_workflow: trigger
-                remove_extended_deadline_for_sar:
+                remove_sar_deadline_extension:
                   if: Workflows::Predicates#approver_can_remove_sar_deadline?

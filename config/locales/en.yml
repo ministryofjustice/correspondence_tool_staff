@@ -491,7 +491,7 @@ en:
       received_date: Date request received at MOJ
       reason_for_refusal: Outcome
       reassign_case: "Change team member"
-      remove_extended_deadline_for_sar: Remove deadline extension
+      remove_sar_deadline_extension: Remove deadline extension
       remove_link_html: |
         Remove <span class="visuallyhidden">file %{filename}</span>
       remove_linked_case_html: |

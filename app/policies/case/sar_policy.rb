@@ -95,9 +95,9 @@ class Case::SARPolicy < Case::BasePolicy
     check_can_trigger_event(:extend_deadline_for_sar)
   end
 
-  def remove_extended_deadline_for_sar?
+  def remove_sar_deadline_extension?
     clear_failed_checks
-    check_can_trigger_event(:remove_extended_deadline_for_sar)
+    check_can_trigger_event(:remove_sar_deadline_extension)
   end
 
   check :responding_team_is_linked_to_case do

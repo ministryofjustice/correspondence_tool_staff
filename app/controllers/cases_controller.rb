@@ -21,9 +21,9 @@ class CasesController < ApplicationController
                   :new_case_link,
                   :destroy_case_link,
                   :process_date_responded,
-                  :remove_extended_deadline_for_sar,
-                  :remove_pit_extension,
                   :record_late_team,
+                  :remove_pit_extension,
+                  :remove_sar_deadline_extension,
                   :update_closure
                 ]
   before_action :set_url, only: [:search, :open_cases]
@@ -684,8 +684,8 @@ class CasesController < ApplicationController
     end
   end
 
-  def remove_extended_deadline_for_sar
-    authorize @case, :remove_extended_deadline_for_sar?
+  def remove_sar_deadline_extension
+    authorize @case, :remove_sar_deadline_extension?
 
     service = CaseRemoveSARDeadlineExtensionService.new(current_user, @case)
     result = service.call

@@ -20,11 +20,11 @@ en:
     progress_for_clearance: Progress for clearance
     reassign_user: Reassign user
     reject_responder_assignment: Rejected by Business unit
-    remove_extended_deadline_for_sar: Deadline extension removed
     remove_last_response: File removed
     remove_linked_case: Linked case removed
     remove_pit_extension: Public Interest Test extensions removed
     remove_response: File removed
+    remove_sar_deadline_extension: Deadline extension removed
     request_amends: Request amends
     request_further_clearance: Request further clearance
     respond: Response sent to requester

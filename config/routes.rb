@@ -251,7 +251,7 @@ Rails.application.routes.draw do
     get 'new_overturned_ico' => 'cases#new_overturned_ico', on: :member
     get :extend_deadline_for_sar, on: :member
     patch :execute_extend_deadline_for_sar, on: :member
-    patch :remove_extended_deadline_for_sar, on: :member
+    patch :remove_sar_deadline_extension, on: :member
 
 
     resources :assignments, except: :create  do

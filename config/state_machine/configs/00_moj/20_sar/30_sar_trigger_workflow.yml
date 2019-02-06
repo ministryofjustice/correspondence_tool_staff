@@ -42,9 +42,9 @@
                 extend_deadline_for_sar:
                 flag_for_clearance:
                 link_a_case:
-                remove_extended_deadline_for_sar:
-                  if: Workflows::Predicates#has_sar_deadline_extension?
                 remove_linked_case:
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#has_sar_deadline_extension?
                 unassign_from_user:
                   transition_to: awaiting_responder
 
@@ -60,10 +60,10 @@
                 extend_deadline_for_sar:
                 link_a_case:
                 remove_linked_case:
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#has_sar_deadline_extension?
                 unassign_from_user:
                   transition_to: awaiting_responder
-                remove_extended_deadline_for_sar:
-                  if: Workflows::Predicates#has_sar_deadline_extension?
 
               awaiting_dispatch:
                 add_message_to_case:
@@ -73,9 +73,9 @@
                   if: Workflows::Predicates#overturned_editing_enabled?
                 extend_deadline_for_sar:
                 link_a_case:
-                remove_extended_deadline_for_sar:
-                  if: Workflows::Predicates#has_sar_deadline_extension?
                 remove_linked_case:
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#has_sar_deadline_extension?
                 unassign_from_user:
                   transition_to: awaiting_responder
 
@@ -192,7 +192,7 @@
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                   after_transition: Workflows::Hooks#reassign_user_email
-                remove_extended_deadline_for_sar:
+                remove_sar_deadline_extension:
                   if: Workflows::Predicates#approver_can_remove_sar_deadline?
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
@@ -215,7 +215,7 @@
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                   after_transition: Workflows::Hooks#reassign_user_email
-                remove_extended_deadline_for_sar:
+                remove_sar_deadline_extension:
                   if: Workflows::Predicates#approver_can_remove_sar_deadline?
                 request_amends:
                   if: Workflows::Predicates#user_is_approver_on_case?
@@ -237,7 +237,7 @@
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                   after_transition: Workflows::Hooks#reassign_user_email
-                remove_extended_deadline_for_sar:
+                remove_sar_deadline_extension:
                   if: Workflows::Predicates#approver_can_remove_sar_deadline?
 
               closed:
