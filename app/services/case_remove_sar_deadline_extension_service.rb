@@ -14,12 +14,7 @@ class CaseRemoveSARDeadlineExtensionService
         acting_team: BusinessUnit.dacu_bmt
       )
 
-      @case.reload
-      @case.update!(
-        external_deadline: find_original_final_deadline,
-        deadline_extended: false
-      )
-
+      @case.reset_deadline!
       @result = :ok
     end
     @result
@@ -29,16 +24,5 @@ class CaseRemoveSARDeadlineExtensionService
     @error = err
     @result = :error
     raise err
-  end
-
-  private
-
-  def find_original_final_deadline
-    first_sar_extension = @case.transitions
-                            .where(event: 'extend_deadline_for_sar')
-                            .order(:id)
-                            .first
-
-    first_sar_extension.original_final_deadline
   end
 end

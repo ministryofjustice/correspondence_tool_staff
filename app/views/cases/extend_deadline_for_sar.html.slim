@@ -30,14 +30,18 @@ br
     legend
       span.form-label-bold
         = t('cases.extend_deadline_for_sar.extension_period')
-    .multiple-choice
-      input type="radio" value="30" checked="checked" name="case[extension_period]" id="case_extension_period_30"
-      label for="case_extension_period_30"
-        | 30 days
-    .multiple-choice
-      input type="radio" value="60" name="case[extension_period]" id="case_extension_period_60"
-      label for="case_extension_period_60"
-        | 60 days
+    - if @case.allow_extension_period_selection?
+      .multiple-choice
+        input type="radio" value="30" checked="checked" name="case[extension_period]" id="case_extension_period_30"
+        label for="case_extension_period_30"
+          | 30 days
+      .multiple-choice
+        input type="radio" value="60" name="case[extension_period]" id="case_extension_period_60"
+        label for="case_extension_period_60"
+          | 60 days
+    - else
+      input type="hidden" value="30" name="case[extension_period]"
+      = t('cases.extend_deadline_for_sar.extend_further_30_days', num_days: 30)
 
   .form-group
     = f.text_area :reason_for_extending
@@ -45,5 +49,5 @@ br
   .button-holder
     = submit_tag 'Submit', class: 'button'
     = link_to('Cancel',
-              case_path(@case),
-              class: 'acts-like-button button-left-spacing')
+        case_path(@case),
+        class: 'acts-like-button button-left-spacing')

@@ -47,6 +47,7 @@
                 edit_case:
                   if: Workflows::Predicates#overturned_editing_enabled?
                 extend_deadline_for_sar:
+                  if: Workflows::Predicates#can_extend_sar_deadline?
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:

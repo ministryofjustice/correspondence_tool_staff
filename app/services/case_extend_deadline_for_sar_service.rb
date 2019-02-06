@@ -5,7 +5,7 @@ class CaseExtendDeadlineForSARService
     @user = user
     @case = kase
     @extension_days = extension_days
-    @extension_deadline = DateTime.now + @extension_days.to_i.days
+    @extension_deadline = new_extension_deadline(@extension_days.to_i)
     @reason = reason
     @result = :incomplete
   end
@@ -13,7 +13,6 @@ class CaseExtendDeadlineForSARService
   def call
     ActiveRecord::Base.transaction do
       if validate_params
-        # TODO (Mohammed Seedat): State Machine rules for SAR Extensions
         @case.state_machine.extend_deadline_for_sar!(
           acting_user: @user,
           acting_team: BusinessUnit.dacu_bmt,
@@ -22,11 +21,7 @@ class CaseExtendDeadlineForSARService
           message: message
         )
 
-        @case.reload
-        @case.update!(
-          external_deadline: @extension_deadline,
-          deadline_extended: true
-        )
+        @case.extend_deadline!(@extension_deadline)
         @result = :ok
       end
     end
@@ -40,8 +35,16 @@ class CaseExtendDeadlineForSARService
 
   private
 
+  def new_extension_deadline(extend_by)
+    current_deadline =  @case.deadline_extended? ?
+                          @case.external_deadline :
+                          @case.initial_deadline
+
+    extend_by.business_days.after(current_deadline)
+  end
+
   def message
-    "#{@reason}.\nDeadline extended by #{@extension_days} days"
+    "#{@reason}\nDeadline extended by #{@extension_days} days"
   end
 
   def validate_params
@@ -58,9 +61,9 @@ class CaseExtendDeadlineForSARService
   end
 
   def extension_date_valid?
-    extension_limit = Settings.sar_extension_limit
-                        .business_days
-                        .after(@case.external_deadline)
+    # TODO (Mohammed Seedat): Check if this rule is correct because a SAR
+    # extension can be extended up to max 60 days
+    extension_limit = @case.max_allowed_extension_date
 
     valid = false
 

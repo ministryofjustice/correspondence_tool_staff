@@ -5,15 +5,16 @@ describe CasesController, type: :controller do
     let(:sar_case)      { create :sar_case }
     let(:manager)       { find_or_create :disclosure_bmt_user }
     let(:service)       { double(CaseExtendDeadlineForSARService, call: :ok) }
+
     let(:patch_params)  {
-                          {
-                            id: sar_case.id,
-                            case: {
-                              extension_period:      '11',
-                              reason_for_extending:  'need more time',
-                            }
-                          }
-                        }
+      {
+        id: sar_case.id,
+        case: {
+          extension_period:      '11',
+          reason_for_extending:  'need more time',
+        }
+      }
+    }
 
     before do
       allow(CaseExtendDeadlineForSARService).to receive(:new).and_return(service)

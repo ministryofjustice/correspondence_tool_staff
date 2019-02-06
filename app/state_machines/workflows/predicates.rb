@@ -117,9 +117,12 @@ class Workflows::Predicates
     @kase.extended_for_pit?
   end
 
-  # Only Case::SAR has deadline_extended property
   def has_sar_deadline_extension?
     @kase.try(:deadline_extended?)
+  end
+
+  def can_extend_sar_deadline?
+    @kase.try(:extendable?)
   end
 
   def approver_can_remove_sar_deadline?
