@@ -61,6 +61,12 @@ class User < ApplicationRecord
   }
   scope :active_users, -> { where(deleted_at: nil) }
 
+  ROLE_WEIGHTINGS = {
+    'manager'   => 100,
+    'approver'  => 200,
+    'responder' => 300
+  }.freeze
+
   def admin?
     team_roles.admin.any?
   end
@@ -99,6 +105,13 @@ class User < ApplicationRecord
 
   def teams_for_case(kase)
     kase.teams & teams
+  end
+
+  def team_for_case(kase)
+    teams_for_case(kase).sort do |a, b|
+      ROLE_WEIGHTINGS[a.role] <=> ROLE_WEIGHTINGS[b.role]
+    end
+    .first
   end
 
   def roles_for_case(kase)

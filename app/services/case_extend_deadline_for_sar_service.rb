@@ -15,7 +15,7 @@ class CaseExtendDeadlineForSARService
       if validate_params
         @case.state_machine.extend_deadline_for_sar!(
           acting_user: @user,
-          acting_team: BusinessUnit.dacu_bmt,
+          acting_team: @user.team_for_case(@case),
           final_deadline: @extension_deadline,
           original_final_deadline: @case.external_deadline,
           message: message
