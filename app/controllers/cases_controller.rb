@@ -13,18 +13,18 @@ class CasesController < ApplicationController
                   :closure_outcomes,
                   :edit,
                   :edit_closure,
+                  :extend_deadline_for_sar,
                   :extend_for_pit,
+                  :execute_extend_deadline_for_sar,
                   :execute_extend_for_pit,
                   :execute_new_case_link,
                   :new_case_link,
                   :destroy_case_link,
                   :process_date_responded,
+                  :remove_extended_deadline_for_sar,
                   :remove_pit_extension,
                   :record_late_team,
-                  :update_closure,
-                  :extend_deadline_for_sar,
-                  :execute_extend_deadline_for_sar,
-                  :remove_extended_deadline_for_sar,
+                  :update_closure
                 ]
   before_action :set_url, only: [:search, :open_cases]
 
