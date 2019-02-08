@@ -211,6 +211,16 @@ FactoryBot.define do
     end
   end
 
+  factory :extended_deadline_sar, parent: :accepted_sar do
+    after(:create) do |kase, evaluator|
+      kase.extend_deadline!(kase.external_deadline + 30.days)
+      create :case_transition_extend_sar_deadline,
+             case: kase,
+             acting_team: evaluator.approving_team,
+             acting_user: evaluator.approver
+    end
+  end
+
   trait :clarification_required do
     refusal_reason              { find_or_create :refusal_reason, :tmm }
     missing_info                { true }

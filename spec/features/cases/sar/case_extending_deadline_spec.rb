@@ -1,6 +1,6 @@
 require "rails_helper"
 
-feature 'extending a SAR case deadline' do
+feature 'when extending a SAR case deadline' do
   include Features::Interactions
 
   given(:manager)   { find_or_create :disclosure_bmt_user }
