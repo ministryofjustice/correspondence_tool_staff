@@ -19,6 +19,9 @@
 module CaseClosure
   class RefusalReason < Metadatum
 
+    scope :sar, -> { where(abbreviation: 'sartmm')}
+    scope :foi, -> { where.not(abbreviation: 'sartmm')}
+
     def self.exempt
       abbrev('exempt')
     end
