@@ -47,5 +47,30 @@ feature 'extending a SAR case deadline' do
       expect(cases_show_page).to be_displayed
       case_deadline_text_to_be(original_final_deadline.strftime('%-d %b %Y'))
     end
+
+    scenario 'extending a SAR case by 60 days' do
+      # Expected dates for display
+      original_final_deadline = kase.external_deadline
+      expected_final_extension_date = (original_final_deadline + 60.days).strftime('%-d %b %Y')
+
+      login_as manager
+
+      # 1. Extend by 60 days
+      extend_sar_deadline_for(kase, 60) do |page|
+        page.extension_period_60_days.click
+      end
+
+      case_deadline_text_to_be(expected_final_extension_date)
+
+      # 2. No longer able to extend
+      cases_show_page.load(id: kase.id)
+      expect(cases_show_page.actions).not_to have_extend_sar_deadline
+      expect(cases_show_page.actions).to have_remove_sar_deadline_extension
+
+      # 3. Trying to extend again displays an error message
+      visit extend_sar_deadline_case_path(id: kase.id)
+      expect(cases_show_page).to be_displayed
+      expect(cases_show_page.alert.text).to eq('SAR deadline cannot be extended')
+    end
   end
 end
