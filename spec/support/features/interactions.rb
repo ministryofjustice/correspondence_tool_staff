@@ -271,5 +271,9 @@ module Features
       expect(cases_show_page.notice.text).to eq 'Case extended for SAR'
       expect(cases_show_page.case_history.rows.first.details.text).to eq(expected_case_history.join)
     end
+
+    def case_deadline_text_to_be(expected_value)
+      expect(cases_show_page.case_status.deadlines.final.text).to eq(expected_value)
+    end
   end
 end
