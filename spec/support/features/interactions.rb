@@ -249,5 +249,27 @@ module Features
       allow(uploader).to receive(:remove_leftover_upload_files)
       rus.upload!
     end
+
+    def extend_sar_deadline_for(kase, num_days, reason: 'The reason for extending')
+      cases_show_page.load(id: kase.id)
+      cases_show_page.actions.extend_sar_deadline.click
+
+      expect(cases_extend_sar_deadline_page).to be_displayed
+
+      yield(cases_extend_sar_deadline_page) if block_given?
+
+      cases_extend_sar_deadline_page.set_reason_for_extending(reason)
+      cases_extend_sar_deadline_page.submit_button.click
+
+      expected_case_history = [
+        'Extended SAR deadline',
+        "#{reason}",
+        " Deadline extended by #{num_days} days" # line-break character translates into a space
+      ]
+
+      expect(cases_show_page).to be_displayed
+      expect(cases_show_page.notice.text).to eq 'Case extended for SAR'
+      expect(cases_show_page.case_history.rows.first.details.text).to eq(expected_case_history.join)
+    end
   end
 end
