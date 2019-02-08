@@ -645,7 +645,7 @@ en:
       extension_date: Date of extension deadline
       extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
       extension_period: How long would you like to extend by?
-      extend_further_30_days: The deadline for this case will be extended by a further %{num_days} days.
+      extend_further: The deadline for this case will be extended by a further %{num_days} days.
     execute_extend_sar_deadline:
       extension_succeeded: Case extended for SAR
       extension_not_processed: Unable to perform SAR extension on case %{case_number}
