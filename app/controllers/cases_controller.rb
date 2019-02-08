@@ -654,7 +654,7 @@ class CasesController < ApplicationController
   def extend_sar_deadline
     authorize @case
 
-    @case = CaseExtendDeadlineForSARDecorator.decorate @case
+    @case = CaseExtendSARDeadlineDecorator.decorate @case
   end
 
   def execute_extend_sar_deadline
@@ -675,7 +675,7 @@ class CasesController < ApplicationController
       flash[:notice] = t('.extension_succeeded')
       redirect_to case_path(@case.id)
     elsif result == :validation_error
-      @case = CaseExtendDeadlineForSARDecorator.decorate @case
+      @case = CaseExtendSARDeadlineDecorator.decorate @case
       @case.reason_for_extending = extention_reason
       render :extend_sar_deadline
     else

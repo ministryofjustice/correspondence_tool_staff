@@ -20,7 +20,7 @@ describe CasesController, type: :controller do
       .to require_permission(:extend_sar_deadline?)
             .with_args(manager, sar_case)
 
-      expect(assigns(:case)).to be_a CaseExtendDeadlineForSARDecorator
+      expect(assigns(:case)).to be_a CaseExtendSARDeadlineDecorator
     end
   end
 
@@ -39,7 +39,7 @@ describe CasesController, type: :controller do
       .to require_permission(:extend_sar_deadline?)
             .with_args(manager, sar_case)
 
-      expect(assigns(:case)).to be_a CaseExtendDeadlineForSARDecorator
+      expect(assigns(:case)).to be_a CaseExtendSARDeadlineDecorator
     end
   end
 
