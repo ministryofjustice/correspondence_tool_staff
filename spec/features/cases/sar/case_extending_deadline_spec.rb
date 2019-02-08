@@ -73,4 +73,20 @@ feature 'extending a SAR case deadline' do
       expect(cases_show_page.alert.text).to eq('SAR deadline cannot be extended')
     end
   end
+
+  context 'a responder' do
+    scenario 'cannot extend a SAR deadline' do
+      login_as responder
+
+      # 1. No button to extend deadline
+      cases_show_page.load(id: kase.id)
+      expect(cases_show_page).to be_displayed
+      expect(cases_show_page.actions).not_to have_extend_sar_deadline
+
+      # 2. Unauthorized to extend deadline
+      visit extend_sar_deadline_case_path(id: kase.id)
+      expect(cases_show_page).to be_displayed
+      expect(cases_show_page.alert.text).to eq('SAR deadline cannot be extended')
+    end
+  end
 end
