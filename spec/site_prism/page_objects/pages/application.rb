@@ -46,6 +46,7 @@ module PageObjects
         closed_cases:                   'Cases::ClosedCasesPage',
         confirm_destroy:                'Cases::ConfirmDestroyPage',
         cases_extend_for_pit:           'Cases::ExtendForPITPage',
+        cases_extend_sar_deadline:      'Cases::ExtendSARDeadlinePage',
         global_nav_partial:             'Partials::GlobalNavPartial',
         header_partial:                 'Partials::HeaderPartial',
         incoming_cases:                 'Cases::IncomingCasesPage',
@@ -69,12 +70,10 @@ module PageObjects
         users_destroy:                  'Users::DestroyPage',
       }.each do |page_name, page_class|
         full_page_class = "PageObjects::Pages::#{page_class}"
+
         define_method "#{page_name}_page" do
           app_pages[page_name] ||= full_page_class.constantize.__send__ :new
-
-
         end
-
       end
 
       {
