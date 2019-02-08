@@ -1,5 +1,5 @@
 class CaseExtendSARDeadlineDecorator < Draper::Decorator
-  decorates Case::Base
+  decorates Case::SAR
   delegate_all
 
   attr_accessor :extension_period
