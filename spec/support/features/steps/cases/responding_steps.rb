@@ -55,7 +55,7 @@ def close_case_step(responded_date: Date.today)
 
   expect(cases_show_page).to have_content("You've closed this case")
 
-  expect(cases_show_page.case_status.details.copy.text).to eq "Case closed"
+  expect(cases_show_page.case_status.details.copy.text).to eq "Closed"
 end
 
 def close_sar_case_step(timeliness: 'in time', tmm: false, editable: true)

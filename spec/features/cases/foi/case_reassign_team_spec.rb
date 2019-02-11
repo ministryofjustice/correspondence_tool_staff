@@ -18,7 +18,7 @@ feature 'Assigning an FOI case to a new team' do
 
     assign_case_step business_unit: responding_team,
                      assigning_page: assign_to_new_team_page,
-                     expected_status: 'Case closed',
+                     expected_status: 'Closed',
                      expected_flash_msg: "Case has been assigned to #{responding_team.name}"
   end
 end

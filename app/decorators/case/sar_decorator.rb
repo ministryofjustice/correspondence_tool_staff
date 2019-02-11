@@ -10,7 +10,7 @@ class Case::SARDecorator < Case::BaseDecorator
   end
 
   def subject_type_display
-    object.subject_type.capitalize
+    object.subject_type.humanize
   end
 
   def third_party_display
