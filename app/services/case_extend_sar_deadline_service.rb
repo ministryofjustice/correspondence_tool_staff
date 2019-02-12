@@ -74,7 +74,7 @@ class CaseExtendSARDeadlineService
     elsif @extension_deadline > extension_limit
       @case.errors.add(
         :extension_period,
-        "can't be more than #{Settings.sar_extension_limit} beyond the final deadline"
+        "can't be more than #{Settings.sar_extension_limit} days beyond the initial deadline"
       )
     elsif @extension_deadline < @case.external_deadline
       @case.errors.add(
