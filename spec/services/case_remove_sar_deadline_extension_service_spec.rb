@@ -37,6 +37,21 @@ describe CaseRemoveSARDeadlineExtensionService do
       end
     end
 
+    context 'after initial deadline' do
+      it 'allows retrospective removal' do
+        expect(sar_case.external_deadline).to be > sar_case.initial_deadline
+        expect(sar_case.deadline_extended?).to be true
+
+        Timecop.travel(sar_case.external_deadline + 100.days) do
+          result = new_service(manager, sar_case).call
+
+          expect(result).to eq :ok
+          expect(sar_case.external_deadline).to eq initial_deadline
+          expect(sar_case.deadline_extended?).to be false
+        end
+      end
+    end
+
     context 'exception' do
       let!(:service) { new_service(manager, sar_case) }
 
