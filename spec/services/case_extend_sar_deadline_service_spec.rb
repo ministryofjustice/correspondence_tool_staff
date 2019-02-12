@@ -5,6 +5,7 @@ describe CaseExtendSARDeadlineService do
   let(:manager)             { find_or_create :disclosure_bmt_user }
   let!(:sar_case)           { create(:approved_sar) }
   let!(:original_deadline)  { sar_case.initial_deadline }
+  let!(:max_extension)      { Settings.sar_extension_limit.to_i }
 
   before do
     allow(sar_case.state_machine).to receive(:extend_sar_deadline!)
@@ -52,7 +53,7 @@ describe CaseExtendSARDeadlineService do
         end
 
         context 'is past statutory SAR extension limit' do
-          let!(:extension_period) { Settings.sar_extension_limit.to_i + 5 }
+          let!(:extension_period) { max_extension + 5 }
           subject! {
             new_service(
               manager,
@@ -79,9 +80,8 @@ describe CaseExtendSARDeadlineService do
         end
 
         context 'is within limit' do
-          let!(:extension_period) { Settings.sar_extension_limit.to_i }
+          subject! { new_service(manager, sar_case, max_extension).call }
 
-          subject! { new_service(manager, sar_case, extension_period).call }
           it { is_expected.to eq :ok }
         end
       end
