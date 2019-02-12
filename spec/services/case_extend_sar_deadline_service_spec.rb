@@ -4,7 +4,7 @@ describe CaseExtendSARDeadlineService do
   let(:team_dacu)           { find_or_create :team_disclosure_bmt }
   let(:manager)             { find_or_create :disclosure_bmt_user }
   let!(:sar_case)           { create(:approved_sar) }
-  let!(:original_deadline)  { sar_case.initial_deadline }
+  let!(:initial_deadline)   { sar_case.initial_deadline }
   let!(:max_extension)      { Settings.sar_extension_limit.to_i }
 
   before do
@@ -29,14 +29,14 @@ describe CaseExtendSARDeadlineService do
           .with(
             acting_user: manager,
             acting_team: team_dacu,
-            final_deadline: original_deadline + 3.days,
-            original_final_deadline: original_deadline,
+            final_deadline: initial_deadline + 3.days,
+            original_final_deadline: initial_deadline,
             message: "test\nDeadline extended by 3 days"
           )
       end
 
       it 'sets new SAR deadline date' do
-        expect(sar_case.external_deadline).to eq original_deadline + 3.days
+        expect(sar_case.external_deadline).to eq initial_deadline + 3.days
       end
     end
 
@@ -128,7 +128,7 @@ describe CaseExtendSARDeadlineService do
         service = new_service(manager, sar_case, 3)
 
         expect(service.send(:new_extension_deadline, 3))
-          .to eq(original_deadline + 3.days)
+          .to eq(initial_deadline + 3.days)
 
         service.call # required to create new deadline
         expect(service.result).to eq :ok
@@ -140,7 +140,7 @@ describe CaseExtendSARDeadlineService do
         new_deadline = service.send(:new_extension_deadline, 10)
 
         expect(new_deadline).to eq(sar_case.external_deadline + 10.days)
-        expect(new_deadline).not_to eq original_deadline
+        expect(new_deadline).not_to eq initial_deadline
       end
     end
   end
