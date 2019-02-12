@@ -213,11 +213,11 @@ FactoryBot.define do
 
   factory :extended_deadline_sar, parent: :accepted_sar do
     after(:create) do |kase, evaluator|
-      kase.extend_deadline!(kase.external_deadline + 30.days)
-      create :case_transition_extend_sar_deadline,
+      create :case_transition_extend_sar_deadline_by_30_days,
              case: kase,
              acting_team: evaluator.approving_team,
              acting_user: evaluator.approver
+      kase.extend_deadline!(kase.external_deadline + 30.days)
     end
   end
 
