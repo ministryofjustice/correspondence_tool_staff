@@ -40,6 +40,20 @@ describe CaseExtendSARDeadlineService do
       end
     end
 
+    context 'after initial deadline' do
+      it 'allows retrospective extension' do
+        deadline = sar_case.initial_deadline
+
+        Timecop.travel(deadline + 100.days) do
+          result = new_service(manager, sar_case, max_extension).call
+
+          expect(result).to eq :ok
+          expect(sar_case.external_deadline).to eq deadline + max_extension.days
+          expect(sar_case.external_deadline).to be < DateTime.now
+        end
+      end
+    end
+
     context 'validate' do
       context 'extension period' do
         context 'is missing' do
