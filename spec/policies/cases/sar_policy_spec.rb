@@ -92,4 +92,40 @@ describe Case::SARPolicy do
     it { should     permit(manager,             ot_sar_case)          }
     it { should_not permit(manager,             trigger_ot_sar_case)  }
   end
+
+  context 'SAR deadline extension' do
+    let(:approved_sar) {
+      create :approved_sar,
+        managing_team: managing_team,
+        responding_team: responding_team
+    }
+
+    let(:extended_sar_case) {
+      create :extended_deadline_sar,
+        :flagged_accepted,
+        :dacu_disclosure,
+        managing_team: managing_team,
+        responding_team: responding_team
+    }
+
+    permissions :extend_sar_deadline? do
+      it { should_not permit(responder,             approved_sar) }
+      it { should     permit(manager,               approved_sar) }
+      it { should     permit(disclosure_approver,   approved_sar) }
+
+      it { should_not permit(responder,             non_trigger_sar_case) }
+      it { should_not permit(manager,               non_trigger_sar_case) }
+      it { should_not permit(disclosure_approver,   non_trigger_sar_case) }
+    end
+
+    permissions :remove_sar_deadline_extension? do
+      it { should_not permit(responder,             approved_sar) }
+      it { should_not permit(manager,               approved_sar) }
+      it { should_not permit(disclosure_approver,   approved_sar) }
+
+      it { should_not permit(responder,             extended_sar_case) }
+      it { should     permit(manager,               extended_sar_case) }
+      it { should     permit(disclosure_approver,   extended_sar_case) }
+    end
+  end
 end
