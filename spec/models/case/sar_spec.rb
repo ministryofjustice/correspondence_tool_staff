@@ -254,11 +254,58 @@ describe Case::SAR do
     end
   end
 
-  describe '#deadline_extended' do
-    let(:kase) { create :sar_case }
+  describe 'deadline' do
+    subject             { create :sar_case }
+    let(:max_extension) { Settings.sar_extension_limit.to_i }
 
-    it 'is false by default' do
-      expect(kase.deadline_extended?).to be false
+    describe '#deadline_extended' do
+      it 'is false by default' do
+        expect(subject.deadline_extended?).to be false
+      end
+    end
+
+    describe '#extendable?' do
+      it 'is true if external_deadline is less than max possible deadline' do
+        max_statutory_deadline = subject.initial_deadline + max_extension.days
+
+        expect(subject.extendable?).to eq true
+        expect(subject.external_deadline).to be < max_statutory_deadline
+      end
+
+      it 'is false when already extended equal or beyond satutory limit' do
+        sar = create :approved_sar
+        initial_deadline = DateTime.new(2019, 01, 01)
+        sar.external_deadline = initial_deadline + max_extension.days
+        allow(sar).to receive(:initial_deadline) { initial_deadline }
+
+        expect(sar.extendable?).to eq false
+      end
+    end
+
+    describe '#initial_deadline' do
+      it 'uses current external_deadline if not yet extended' do
+        expect(subject.initial_deadline).to eq subject.external_deadline
+      end
+
+      it 'checks transitions for initial deadline' do
+        extended_sar = create :extended_deadline_sar
+        original_deadline = extended_sar
+          .transitions
+          .where(event: 'extend_sar_deadline')
+          .order(:id)
+          .first
+          .original_final_deadline
+
+        expect(extended_sar.initial_deadline).to eq original_deadline
+      end
+    end
+
+    describe '#max_allowed_deadline_date' do
+      it 'is 60 days after the initial_deadline' do
+        max_statutory_deadline = subject.initial_deadline + 60.days
+
+        expect(subject.max_allowed_deadline_date).to eq max_statutory_deadline
+      end
     end
   end
 end
