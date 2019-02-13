@@ -301,10 +301,50 @@ describe Case::SAR do
     end
 
     describe '#max_allowed_deadline_date' do
-      it 'is 60 days after the initial_deadline' do
+      it 'is 60 calendar days after the initial_deadline' do
         max_statutory_deadline = subject.initial_deadline + 60.days
 
         expect(subject.max_allowed_deadline_date).to eq max_statutory_deadline
+      end
+    end
+
+    describe '#extend_deadline!' do
+      subject!                { create :approved_sar }
+      let!(:initial_deadline) { subject.initial_deadline }
+      let!(:new_deadline)     { DateTime.new(2019, 01, 01) }
+
+      it 'sets #deadline_extended to true' do
+        expect { subject.extend_deadline!(new_deadline) }.to \
+          change(subject, :deadline_extended)
+          .from(false)
+          .to(true)
+      end
+
+      it 'sets new external_deadline' do
+        expect { subject.extend_deadline!(new_deadline) }.to \
+          change(subject, :external_deadline)
+          .from(initial_deadline)
+          .to(new_deadline)
+      end
+    end
+
+    describe '#reset_deadline!' do
+      subject!                  { create :extended_deadline_sar }
+      let!(:initial_deadline)   { subject.initial_deadline }
+      let!(:extended_deadline)  { subject.external_deadline }
+
+      it 'sets #deadline_extended to false' do
+        expect { subject.reset_deadline! }.to \
+          change(subject, :deadline_extended)
+          .from(true)
+          .to(false)
+      end
+
+      it 'resets external_deadline' do
+        expect { subject.reset_deadline! }.to \
+          change(subject, :external_deadline)
+          .from(extended_deadline)
+          .to(initial_deadline)
       end
     end
   end
