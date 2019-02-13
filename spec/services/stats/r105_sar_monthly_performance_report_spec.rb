@@ -20,8 +20,8 @@ module Stats
       describe '#case_scope' do
 
         before(:each) do
-          @period_start = Date.new(2018, 12, 20)
-          @period_end = Date.new(2019, 1, 1)
+          @period_start = 0.business_days.after(Date.new(2018, 12, 20))
+          @period_end = 0.business_days.after(Date.new(2018, 12, 31))
 
           @sar_1 = create :accepted_sar, identifier: 'sar-1', creation_time: @period_start - 5.hours
           @foi_1 = create :accepted_case, identifier: 'foi-1', creation_time: @period_start - 5.hours
