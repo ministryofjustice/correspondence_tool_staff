@@ -14,6 +14,8 @@
 require 'rails_helper'
 
 RSpec.describe Report, type: :model do
+  let!(:r003_report_type) { find_or_create(:report_type, :r003) }
+
   describe 'report_type_id' do
     it { should belong_to(:report_type) }
   end
@@ -33,13 +35,17 @@ RSpec.describe Report, type: :model do
   end
 
   describe '#period_start' do
-    let(:tomorrow) { build(:report, period_start: Date.tomorrow.to_s) }
+    let(:tomorrow) { build(:report, period_start: Date.tomorrow.to_s,
+                                    report_type: r003_report_type) }
     let(:today)    { build(:report, period_start: Date.today.to_s,
-                                    period_end: Date.today.to_s) }
+                                    period_end: Date.today.to_s,
+                                    report_type: r003_report_type) }
     let(:yesterday) { build(:report, period_start: Date.yesterday.to_s,
-                                     period_end: Date.today.to_s) }
+                                     period_end: Date.today.to_s,
+                                     report_type: r003_report_type) }
     let(:after_period_end) { build(:report, period_start: Date.today.to_s,
-                                            period_end: Date.yesterday.to_s)}
+                                            period_end: Date.yesterday.to_s,
+                                            report_type: r003_report_type)}
 
     it 'cannot be in the future' do
       expect(tomorrow).to_not be_valid

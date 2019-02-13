@@ -1,33 +1,33 @@
 require 'rails_helper'
 
 describe 'stats/index.html.slim', type: :view do
-  Timecop.freeze(Time.local(2019, 2, 8)) do
-    let(:report_1)      { build_stubbed :report_type, :r004 }
-    let(:report_2)      { build_stubbed :report_type, :r005 }
+  let(:report_1)      { build_stubbed :report_type, :r004 }
+  let(:report_2)      { build_stubbed :report_type, :r005 }
 
-    let(:report_3)      { build_stubbed :r105_report_type}
-    let(:report_4)      { instance_double ReportType,
-                                          id: 2,
-                                          full_name: "Report 4" }
-    let(:foi_reports)   { [ report_1, report_2 ]  }
-    let(:sar_reports)   { [ report_3 ]  }
-    let(:end_date)      { Date.today.strftime(Settings.default_date_format) }
-    let(:start_date)    { Date.new(2019, 1, 1).strftime(Settings.default_date_format) }
+  let(:report_3)      { build_stubbed :r105_report_type}
+  let(:report_4)      { instance_double ReportType,
+                                        id: 2,
+                                        full_name: "Report 4" }
+  let(:foi_reports)   { [ report_1, report_2 ]  }
+  let(:sar_reports)   { [ report_3 ]  }
+  let(:end_date)      { Date.today.strftime(Settings.default_date_format) }
+  let(:start_date)    { Date.new(2019, 1, 1).strftime(Settings.default_date_format) }
 
-    it 'has a heading' do
-      assign(:foi_reports, foi_reports)
-      assign(:sar_reports, sar_reports)
-      render
-      stats_index_page.load(rendered)
+  it 'has a heading' do
+    assign(:foi_reports, foi_reports)
+    assign(:sar_reports, sar_reports)
+    render
+    stats_index_page.load(rendered)
 
-      page = stats_index_page
-      expect(page.page_heading.heading.text).to eq "Performance reports"
-      expect(page.page_heading).to have_no_sub_heading
-    end
+    page = stats_index_page
+    expect(page.page_heading.heading.text).to eq "Performance reports"
+    expect(page.page_heading).to have_no_sub_heading
+  end
 
 
-    context 'displaying list of reports per type' do
-      context 'FOI' do
+  context 'displaying list of reports per type' do
+    context 'FOI' do
+      Timecop.freeze(Time.local(2019, 1, 6)) do
         it 'has a list of FOI reports' do
           assign(:foi_reports, foi_reports)
           assign(:sar_reports, sar_reports)
@@ -53,8 +53,10 @@ describe 'stats/index.html.slim', type: :view do
           end
         end
       end
+    end
 
-      context 'SAR' do
+    context 'SAR' do
+      Timecop.freeze(Time.local(2019, 1, 6)) do
         it 'has a list of SAR reports' do
           assign(:foi_reports, foi_reports)
           assign(:sar_reports, sar_reports)
