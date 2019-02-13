@@ -62,7 +62,7 @@ class CaseExtendSARDeadlineService
   def extension_date_valid?
     # TODO (Mohammed Seedat): Check if this rule is correct because a SAR
     # extension can be extended up to max 60 days
-    extension_limit = @case.max_allowed_extension_date
+    extension_limit = @case.max_allowed_deadline_date
 
     valid = false
 

@@ -117,7 +117,7 @@ class Case::SAR < Case::Base
   end
 
   def extendable?
-    max_allowed_extension_date > external_deadline
+    max_allowed_deadline_date > external_deadline
   end
 
   # Original deadlines are not stored due to the way Polymorphic
@@ -153,7 +153,7 @@ class Case::SAR < Case::Base
   end
 
   # SARs extensions are based on calendar days not working days
-  def max_allowed_extension_date
+  def max_allowed_deadline_date
     initial_deadline + Settings.sar_extension_limit.to_i.days
   end
 
