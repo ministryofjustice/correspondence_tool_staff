@@ -6,7 +6,7 @@ FactoryBot.define do
     transient do
       creation_time  { 4.business_days.ago }
       identifier     { "new ICO SAR case based from a closed SAR case" }
-      managing_team  { original_case.managing_team }
+      managing_team  { find_or_create(:team_disclosure_bmt) }
 
       flag_for_disclosure { :pending }
       approving_team { find_or_create(:team_disclosure) }
