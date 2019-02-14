@@ -9,8 +9,8 @@ describe CaseExtendSARDeadlineDecorator, type: :model do
   end
 
   context '#allow_extension_period_selection?' do
-    let (:new_sar_case)       { create(:sar_being_drafted) }
-    let (:extended_sar_case)  { create(:extended_deadline_sar) }
+    let(:new_sar_case)       { create(:sar_being_drafted) }
+    let(:extended_sar_case)  { create(:extended_deadline_sar) }
 
     it 'should be true for a new SAR' do
       decorated_case = CaseExtendSARDeadlineDecorator.decorate new_sar_case
