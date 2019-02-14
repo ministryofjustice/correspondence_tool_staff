@@ -39,7 +39,7 @@ feature 'cases requiring clearance by press office' do
       page: incoming_cases_page,
       kase: case_available_for_taking_on,
       expected_history: [
-        'Primrose Offord Press Office Clearance level added'
+        "Primrose Offord Press Office\nClearance level added"
       ]
     )
 
@@ -98,7 +98,7 @@ feature 'cases requiring clearance by press office' do
       find_details_page: false,
       expected_team: dacu_disclosure,
       expected_history: [
-        "#{press_officer.full_name}#{press_office.name}Request amends"
+        "#{press_officer.full_name}#{press_office.name}\nRequest amends"
       ]
     )
   end

@@ -45,7 +45,7 @@ feature 'cases requiring clearance by disclosure specialist' do
       kase: kase,
       expected_team: responding_team,
       expected_history: [
-        "#{disclosure_specialist.full_name} #{team_dacu_disclosure.name} Response cleared"
+        "#{disclosure_specialist.full_name} #{team_dacu_disclosure.name}\nResponse cleared"
       ]
     )
   end
@@ -69,7 +69,7 @@ feature 'cases requiring clearance by disclosure specialist' do
       find_details_page: false,
       expected_team: responding_team,
       expected_history: [
-        "#{disclosure_specialist.full_name}#{team_dacu_disclosure.name}Request amends"
+        "#{disclosure_specialist.full_name}#{team_dacu_disclosure.name}\nRequest amends"
       ]
     )
   end

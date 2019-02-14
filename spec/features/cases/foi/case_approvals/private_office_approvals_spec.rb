@@ -38,7 +38,7 @@ feature 'cases requiring clearance by press office' do
     expect(cases_show_page).to be_displayed(id: case_available_for_taking_on.id)
 
     expect(cases_show_page.case_history.entries.first)
-      .to have_text('Preston Offman Private Office Clearance level added')
+      .to have_text("Preston Offman Private Office\nClearance level added")
 
     _case_not_for_private_office_open_cases = create :case_being_drafted,
                                                      :flagged,
@@ -97,7 +97,7 @@ feature 'cases requiring clearance by press office' do
       kase:              pending_private_clearance_case,
       find_details_page: false,
       expected_team:     dacu_disclosure,
-      expected_history:  ["#{assigned_private_officer.full_name}#{private_office.name}Request amends"]
+      expected_history:  ["#{assigned_private_officer.full_name}#{private_office.name}\nRequest amends"]
     )
   end
 end
