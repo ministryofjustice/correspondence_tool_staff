@@ -6,6 +6,7 @@ describe 'cases/show.html.slim', type: :view do
     allow(view).to receive(:current_user).and_return(user)
   end
 
+  #rubocop:disable Metrics/MethodLength
   def setup_policies(policies)
     policy_names = [
       :assignments_execute_reassign_user?,
@@ -43,6 +44,7 @@ describe 'cases/show.html.slim', type: :view do
       allow(policy).to receive(policy_name).and_return policies[policy_name]
     end
   end
+  #rubocop:enable Metrics/MethodLength
 
   let(:case_pending_dacu_clearance)       { create(:pending_dacu_clearance_case).decorate }
   let(:case_being_drafted)                { create(:case_being_drafted, :extended_for_pit).decorate }
