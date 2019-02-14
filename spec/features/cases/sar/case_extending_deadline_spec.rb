@@ -3,17 +3,16 @@ require "rails_helper"
 feature 'when extending a SAR case deadline' do
   include Features::Interactions
 
-  given(:manager)   { find_or_create :disclosure_bmt_user }
-  given(:approver)  { create :disclosure_specialist }
-  given(:responder) { kase.responder }
-  given!(:kase)     { create :accepted_sar }
+  given(:manager)             { find_or_create :disclosure_bmt_user }
+  given!(:original_deadline)  { kase.external_deadline }
 
   context 'a manager' do
+    given!(:kase)     { create :accepted_sar }
+
     scenario 'extending a SAR case by 30 days twice then removing extension deadline' do
       # Expected dates for display
-      original_final_deadline = kase.external_deadline
-      expected_initial_extension_date = (original_final_deadline + 30.days).strftime('%-d %b %Y')
-      expected_final_extension_date = (original_final_deadline + 60.days).strftime('%-d %b %Y')
+      expected_initial_extension_date = (original_deadline + 30.days).strftime('%-d %b %Y')
+      expected_final_extension_date = (original_deadline + 60.days).strftime('%-d %b %Y')
 
       login_as manager
 
@@ -45,13 +44,13 @@ feature 'when extending a SAR case deadline' do
       # 5. Remove extension should display initial deadline
       cases_show_page.actions.remove_sar_deadline_extension.click
       expect(cases_show_page).to be_displayed
-      case_deadline_text_to_be(original_final_deadline.strftime('%-d %b %Y'))
+      case_deadline_text_to_be(original_deadline.strftime('%-d %b %Y'))
     end
 
     scenario 'extending a SAR case by 60 days' do
       # Expected dates for display
-      original_final_deadline = kase.external_deadline
-      expected_final_extension_date = (original_final_deadline + 60.days).strftime('%-d %b %Y')
+      original_deadline = kase.external_deadline
+      expected_final_extension_date = (original_deadline + 60.days).strftime('%-d %b %Y')
 
       login_as manager
 
@@ -74,7 +73,28 @@ feature 'when extending a SAR case deadline' do
     end
   end
 
+  # TODO (M Seedat): Approver is allowed to extend a SAR deadline
+  xcontext 'an approver' do
+    given!(:approver) { find_or_create :disclosure_specialist }
+    given!(:kase)     { create :accepted_sar, approver: approver }
+
+    scenario 'can extend a SAR deadline' do
+      login_as approver
+      cases_show_page.load(id: kase.id)
+
+      # 1. Extend by 30 days for the first time
+      extend_sar_deadline_for(kase, 30) do |page|
+        page.extension_period_30_days.click
+      end
+
+      case_deadline_text_to_be((original_deadline + 30.days).strftime('%-d %b %Y'))
+    end
+  end
+
   context 'a responder' do
+    given(:responder) { kase.responder }
+    given!(:kase)     { create :accepted_sar }
+
     scenario 'cannot extend a SAR deadline' do
       login_as responder
 
