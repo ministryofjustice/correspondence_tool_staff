@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe CasesController, type: :controller do
   describe 'PATCH execute_extend_sar_deadline' do
-    let(:sar_case)      { create :sar_case }
+    let(:sar_case)      { create :approved_sar }
     let(:manager)       { find_or_create :disclosure_bmt_user }
     let(:service)       { double(CaseExtendSARDeadlineService, call: :ok) }
 
