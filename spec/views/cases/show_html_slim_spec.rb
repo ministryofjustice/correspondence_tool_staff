@@ -18,9 +18,11 @@ describe 'cases/show.html.slim', type: :view do
       :destroy_case?,
       :destroy_case_link?,
       :execute_response_approval?,
+      :extend_sar_deadline?,
       :extend_for_pit?,
       :remove_clearance?,
       :remove_pit_extension?,
+      :remove_sar_deadline_extension?,
       :request_further_clearance?,
       :new_case_link?,
       :upload_responses?,
@@ -49,12 +51,12 @@ describe 'cases/show.html.slim', type: :view do
   let(:upheld_closed_sar_ico_appeal)      { create(:closed_ico_sar_case).decorate }
   let(:overturned_closed_sar_ico_appeal)  { create(:closed_ico_sar_case, :overturned_by_ico).decorate }
 
-
   let(:policy) do
     instance_double('Pundit::Policy').tap do |p|
       allow(view).to receive(:policy).and_return(p)
     end
   end
+
   let(:manager)   { create :manager }
   let(:responder) { find_or_create :foi_responder }
   let(:approver)  { create :approver }
@@ -273,7 +275,6 @@ describe 'cases/show.html.slim', type: :view do
     end
   end
 
-
   describe 'link to create new overturned ico case' do
 
     before(:each) do
@@ -307,6 +308,64 @@ describe 'cases/show.html.slim', type: :view do
         render
         cases_show_page.load(rendered)
         expect(cases_show_page.actions).not_to have_create_overturned
+      end
+    end
+  end
+
+  describe 'SAR case' do
+    context 'before it is extended' do
+      let(:sar) { create(:approved_sar).decorate }
+
+      before do
+        assign(:case, sar)
+        assign(:permitted_events, [:extend_sar_deadline])
+        assign(:filtered_permitted_events, [:extend_sar_deadline])
+
+        setup_policies(
+          extend_sar_deadline?: true,
+          remove_sar_deadline_extension?: false
+        )
+      end
+
+      context 'as a manager' do
+        it 'shows extend action' do
+          login_as manager
+          render
+          cases_show_page.load(rendered)
+
+          expect(cases_show_page.actions).to have_extend_sar_deadline
+          expect(cases_show_page.actions).not_to have_remove_sar_deadline_extension
+        end
+      end
+    end
+
+    context 'after it is extended' do
+      let(:sar) {
+        extended_sar = create(:extended_deadline_sar)
+        extended_sar.external_deadline += 60.days
+        extended_sar.decorate
+      }
+
+      before do
+        assign(:case, sar)
+        assign(:permitted_events, [:remove_sar_deadline_extension])
+        assign(:filtered_permitted_events, [:remove_sar_deadline_extension])
+
+        setup_policies(
+          extend_sar_deadline?: false,
+          remove_sar_deadline_extension?: true
+        )
+      end
+
+      context 'as a manager' do
+        it 'shows remove action' do
+          login_as manager
+          render
+          cases_show_page.load(rendered)
+
+          expect(cases_show_page.actions).not_to have_extend_sar_deadline
+          expect(cases_show_page.actions).to have_remove_sar_deadline_extension
+        end
       end
     end
   end
