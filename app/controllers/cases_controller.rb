@@ -565,7 +565,7 @@ class CasesController < ApplicationController
     service = CaseApprovalService.new(user: current_user, kase: @case, bypass_params: bypass_params_manager)
     service.call
     if service.result == :ok
-      current_team =CurrentTeamAndUserService.new(@case).team
+      current_team = CurrentTeamAndUserService.new(@case).team
       if @case.ico?
         flash[:notice] = t('notices.case/ico.case_cleared')
       else

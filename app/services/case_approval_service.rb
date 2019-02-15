@@ -71,7 +71,7 @@ class CaseApprovalService
                        .first
 
       ActionNotificationsMailer
-          .ready_for_press_or_private_review( assignment )
+          .ready_for_press_or_private_review(assignment)
           .deliver_later
     end
   end
