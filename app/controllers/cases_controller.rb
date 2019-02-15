@@ -660,13 +660,13 @@ class CasesController < ApplicationController
   def execute_extend_sar_deadline
     authorize @case, :extend_sar_deadline?
 
-    extention_reason = params[:case][:reason_for_extending]
+    extension_reason = params[:case][:reason_for_extending]
 
     service = CaseExtendSARDeadlineService.new(
                 current_user,
                 @case,
                 params[:case][:extension_period],
-                extention_reason
+                extension_reason
               )
 
     result = service.call
@@ -676,7 +676,7 @@ class CasesController < ApplicationController
       redirect_to case_path(@case.id)
     elsif result == :validation_error
       @case = CaseExtendSARDeadlineDecorator.decorate @case
-      @case.reason_for_extending = extention_reason
+      @case.reason_for_extending = extension_reason
       render :extend_sar_deadline
     else
       flash[:alert] = t('.extension_not_processed', case_number: @case.number)
