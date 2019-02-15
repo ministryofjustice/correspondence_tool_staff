@@ -12,7 +12,7 @@ describe CaseRemoveSARDeadlineExtensionService do
   end
 
   describe '#initialize' do
-    subject { new_service(manager, sar_case) }
+    subject { remove_sar_extension_service(manager, sar_case) }
 
     it { expect(sar_case.external_deadline).not_to eq initial_deadline }
     it { expect(subject.result).to eq :incomplete }
@@ -20,7 +20,7 @@ describe CaseRemoveSARDeadlineExtensionService do
 
   describe '#call' do
     context 'with expected params' do
-      subject! { new_service(manager, sar_case).call }
+      subject! { remove_sar_extension_service(manager, sar_case).call }
 
       it { is_expected.to eq :ok }
       it 'creates new SAR extension removal transition' do
@@ -43,7 +43,7 @@ describe CaseRemoveSARDeadlineExtensionService do
         expect(sar_case.deadline_extended?).to be true
 
         Timecop.travel(sar_case.external_deadline + 100.days) do
-          result = new_service(manager, sar_case).call
+          result = remove_sar_extension_service(manager, sar_case).call
 
           expect(result).to eq :ok
           expect(sar_case.external_deadline).to eq initial_deadline
@@ -53,7 +53,7 @@ describe CaseRemoveSARDeadlineExtensionService do
     end
 
     context 'exception' do
-      let!(:service) { new_service(manager, sar_case) }
+      let!(:service) { remove_sar_extension_service(manager, sar_case) }
 
       it 'rolls-back changes' do
         allow(sar_case).to receive(:reset_deadline!).and_throw(ArgumentError)
@@ -72,7 +72,7 @@ describe CaseRemoveSARDeadlineExtensionService do
 
   private
 
-  def new_service(user, kase)
+  def remove_sar_extension_service(user, kase)
     CaseRemoveSARDeadlineExtensionService.new(
       user,
       kase

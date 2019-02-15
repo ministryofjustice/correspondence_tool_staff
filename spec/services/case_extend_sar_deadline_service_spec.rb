@@ -14,7 +14,7 @@ describe CaseExtendSARDeadlineService do
   describe '#call' do
     context 'with expected params' do
       subject! {
-        new_service(
+        sar_extension_service(
           manager,
           sar_case,
           3,
@@ -45,7 +45,7 @@ describe CaseExtendSARDeadlineService do
         deadline = sar_case.initial_deadline
 
         Timecop.travel(deadline + 100.days) do
-          result = new_service(manager, sar_case, max_extension).call
+          result = sar_extension_service(manager, sar_case, max_extension).call
 
           expect(result).to eq :ok
           expect(sar_case.external_deadline).to eq deadline + max_extension.days
@@ -57,7 +57,7 @@ describe CaseExtendSARDeadlineService do
     context 'validate' do
       context 'extension period' do
         context 'is missing' do
-          subject! { new_service(manager, sar_case, nil).call }
+          subject! { sar_extension_service(manager, sar_case, nil).call }
 
           it { is_expected.to eq :validation_error }
           it {
@@ -69,7 +69,7 @@ describe CaseExtendSARDeadlineService do
         context 'is past statutory SAR extension limit' do
           let!(:extension_period) { max_extension + 5 }
           subject! {
-            new_service(
+            sar_extension_service(
               manager,
               sar_case,
               extension_period
@@ -84,7 +84,7 @@ describe CaseExtendSARDeadlineService do
         end
 
         context 'is before the final deadline' do
-          subject! { new_service(manager, sar_case, -1).call }
+          subject! { sar_extension_service(manager, sar_case, -1).call }
 
           it { is_expected.to eq :validation_error }
           it {
@@ -94,14 +94,14 @@ describe CaseExtendSARDeadlineService do
         end
 
         context 'is within limit' do
-          subject! { new_service(manager, sar_case, max_extension).call }
+          subject! { sar_extension_service(manager, sar_case, max_extension).call }
 
           it { is_expected.to eq :ok }
         end
       end
 
       context 'reason' do
-        subject! { new_service(manager, sar_case, 1, reason: '').call }
+        subject! { sar_extension_service(manager, sar_case, 1, reason: '').call }
 
         it { is_expected.to eq :validation_error }
         it {
@@ -111,7 +111,7 @@ describe CaseExtendSARDeadlineService do
       end
 
       context 'exception' do
-        let(:service) { new_service(manager, sar_case, 3) }
+        let(:service) { sar_extension_service(manager, sar_case, 3) }
 
         it 'rolls-back changes' do
           allow(sar_case).to receive(:update!).and_throw(RuntimeError)
@@ -139,7 +139,7 @@ describe CaseExtendSARDeadlineService do
   context '#new_extension_deadline' do
     context 'calculates extended date with calendar days' do
       it 'uses the original date before first extension' do
-        service = new_service(manager, sar_case, 3)
+        service = sar_extension_service(manager, sar_case, 3)
 
         expect(service.send(:new_extension_deadline, 3))
           .to eq(initial_deadline + 3.days)
@@ -149,7 +149,7 @@ describe CaseExtendSARDeadlineService do
       end
 
       it 'uses the new extended date after first extension' do
-        service = new_service(manager, sar_case, 10)
+        service = sar_extension_service(manager, sar_case, 10)
         service.call
         new_deadline = service.send(:new_extension_deadline, 10)
 
@@ -161,7 +161,7 @@ describe CaseExtendSARDeadlineService do
 
   private
 
-  def new_service(user, kase, extension_period, reason: 'Testing')
+  def sar_extension_service(user, kase, extension_period, reason: 'Testing')
     CaseExtendSARDeadlineService.new(
       user,
       kase,
