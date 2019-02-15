@@ -66,7 +66,10 @@ class Case::Base < ApplicationRecord
 
   attr_accessor :message_text
 
-  acts_as_gov_uk_date :received_date, :date_draft_compliant, :date_responded, :external_deadline,
+  acts_as_gov_uk_date :date_responded,
+                      :date_draft_compliant,
+                      :external_deadline,
+                      :received_date,
                       validate_if: :received_in_acceptable_range?
 
   scope :by_deadline, -> {

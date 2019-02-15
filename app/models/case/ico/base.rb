@@ -50,6 +50,7 @@ class Case::ICO::Base < Case::Base
 
   acts_as_gov_uk_date :date_ico_decision_received,
                       :date_responded,
+                      :date_draft_compliant,
                       :external_deadline,
                       :internal_deadline,
                       :received_date
