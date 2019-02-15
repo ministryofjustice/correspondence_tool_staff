@@ -36,10 +36,11 @@ class CaseExtendSARDeadlineService
   private
 
   def new_extension_deadline(extend_by)
-    current_deadline =  @case.deadline_extended? ?
-                          @case.external_deadline :
-                          @case.initial_deadline
-    current_deadline + extend_by.days
+    if @case.deadline_extended?
+      @case.external_deadline + extend_by.days
+    else
+      @case.initial_deadline + extend_by.days
+    end
   end
 
   def message
