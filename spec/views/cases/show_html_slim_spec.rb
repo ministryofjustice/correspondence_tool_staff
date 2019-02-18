@@ -266,7 +266,6 @@ describe 'cases/show.html.slim', type: :view do
 
       context 'upload_responses policy is permitted' do
         before do
-          # TODO: Change to 'upload_response'
           assign(:filtered_permitted_events, [:add_responses])
           setup_policies upload_responses?: true
         end
@@ -281,7 +280,6 @@ describe 'cases/show.html.slim', type: :view do
 
       context 'upload_responses policy is NOT permitted' do
         before do
-          # TODO: Change to 'upload_response'
           assign(:filtered_permitted_events, [:some_other_action])
           setup_policies upload_responses?: false
         end
@@ -298,7 +296,6 @@ describe 'cases/show.html.slim', type: :view do
 
       context 'upload_response_and_approve policy is permitted' do
         before do
-          # TODO: Change to 'upload_response'
           assign(:filtered_permitted_events, [:upload_response_and_approve])
           setup_policies upload_response_and_approve?: true
         end
@@ -313,7 +310,6 @@ describe 'cases/show.html.slim', type: :view do
 
       context 'upload_response_and_approve policy is NOT permitted' do
         before do
-          # TODO: Change to 'upload_response'
           assign(:filtered_permitted_events, [:some_other_action])
           setup_policies upload_response_and_approve?: false
         end
@@ -330,7 +326,6 @@ describe 'cases/show.html.slim', type: :view do
 
       context 'upload_response_and_return_for_redraft policy is permitted' do
         before do
-          # TODO: Change to 'upload_response'
           assign(:filtered_permitted_events, [:upload_response_and_return_for_redraft?])
           setup_policies upload_response_and_return_for_redraft?: true
         end
@@ -345,7 +340,6 @@ describe 'cases/show.html.slim', type: :view do
 
       context 'upload_response_and_return_for_redraft policy is NOT permitted' do
         before do
-          # TODO: Change to 'upload_response'
           assign(:filtered_permitted_events, [:some_other_action])
           setup_policies upload_response_and_return_for_redraft?: false
         end

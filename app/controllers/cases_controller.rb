@@ -443,36 +443,6 @@ class CasesController < ApplicationController
     render 'response_upload_for_redraft'
   end
 
-  # def upload_responses_old
-  #   authorize_upload_response_for_action @case, params[:mode]
-
-  #   bypass_params_manager = BypassParamsManager.new(params)
-  #   rus = ResponseUploaderService.new(
-  #     kase: @case,
-  #     current_user: current_user,
-  #     approval_requested: bypass_params_manager.check_approval_requested?,
-  #     mode: flash[:mode],
-  #     uploaded_files: params[:uploaded_files],
-  #     upload_comment: params[:upload_comment],
-  #     bypass_message: params[:bypass_approval][:bypass_message],
-  #     draft_compliant: params[:case]&.fetch(:draft_compliant) == 'yes'
-  #   )
-  #   rus.upload!
-  #   @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
-  #   case rus.result
-  #   when :blank
-  #     flash.now[:alert] = t('alerts.upload_responses_blank?')
-  #     render :upload_responses
-  #   when :error
-  #     flash.now[:alert] = t('alerts.upload_responses_error')
-  #     render :upload_responses
-  #   when :ok
-  #     flash[:notice] = t('notices.uploaded_responses')
-  #     set_permitted_events
-  #     redirect_to case_path @case
-  #   end
-  # end
-
   def update
     set_correspondence_type(params.fetch(:correspondence_type))
     @case = Case::Base.find(params[:id])
@@ -1155,14 +1125,6 @@ class CasesController < ApplicationController
       end
     end
   end
-
-  # def authorize_upload_response_for_action(kase, action)
-  #   case action
-  #   when nil, 'upload', 'upload-flagged'  then authorize kase, 'upload_responses?'
-  #   when 'upload-approve'                 then authorize kase, 'upload_responses_for_approve?'
-  #   when 'upload-redraft'                 then authorize kase, 'upload_responses_for_redraft?'
-  #   end
-  # end
 
   def s3_uploader_for(kase, upload_type)
     S3Uploader.s3_direct_post_for_case(kase, upload_type)

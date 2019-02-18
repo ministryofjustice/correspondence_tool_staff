@@ -268,12 +268,6 @@ FactoryBot.define do
     flagged_accepted
 
     after(:create) do |kase, evaluator|
-      # TODO: This should update the approver assignment to set 'approved' to
-      #       false.
-      # team_dacu_disclosure = find_or_create :team_dacu_disclosure
-      # disclosure_assignment = kase.assignments.approving.where(team_id: team_dacu_disclosure.id).first
-      # disclosure_assignment.update(approved: true)
-
       transition = create :case_transition_upload_response_and_return_for_redraft,
                           case: kase,
                           acting_team: evaluator.approving_team,

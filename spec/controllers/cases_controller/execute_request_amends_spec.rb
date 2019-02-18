@@ -5,9 +5,6 @@ RSpec.describe CasesController, type: :controller do
   let(:private_officer)                { find_or_create :private_officer }
   let(:service)                        { instance_double(CaseRequestAmendsService,
                                                          call: true) }
-    let(:something)                        { instance_double(SetDraftTimelinessService,
-                                                           call: true) }
-
 
   describe 'PATCH execute_request_amends' do
     context 'Full approval FOI' do

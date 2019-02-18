@@ -13,7 +13,6 @@ end
 def upload_ico_decision_and_close_step(file: UPLOAD_RESPONSE_DOCX_FIXTURE)
   stub_s3_uploader_for_all_files!
   cases_close_page.ico.drop_in_dropzone(file)
-  # cases_new_response_upload_page.upload_response_button.click
   cases_upload_responses_page.upload_response_button.click
   expect(cases_show_page).to be_displayed
   expect(cases_show_page.notice)

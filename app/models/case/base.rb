@@ -724,7 +724,6 @@ class Case::Base < ApplicationRecord
   end
 
   def received_in_acceptable_range?
-    # binding.pry
     if self.new_record? || received_date_changed?
       validate_received_date
     end
