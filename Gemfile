@@ -66,7 +66,7 @@ group :test do
   gem 'i18n-tasks', '~> 0.9.28'
   gem 'rails-controller-testing', require: false
   gem 'selenium-webdriver'
-  gem 'shoulda-matchers', '~> 3.1'
+  gem 'shoulda-matchers', '~> 4.0'
   gem 'site_prism'
 end
 
