@@ -306,6 +306,7 @@ class CasesController < ApplicationController
     )
     case_approval_service.call
     if case_approval_service.result == :ok
+      current_team = CurrentTeamAndUserService.new(@case).team
       if @case.ico?
         flash[:notice] = t('notices.case/ico.case_cleared')
       else
