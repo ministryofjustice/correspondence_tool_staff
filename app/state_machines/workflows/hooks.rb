@@ -45,6 +45,6 @@ class Workflows::Hooks
                      .for_team(current_info.team)
                      .first
 
-    ActionNotificationsMailer.ready_for_approver_review(assignment)
+    ActionNotificationsMailer.ready_for_press_or_private_review(assignment)
   end
 end

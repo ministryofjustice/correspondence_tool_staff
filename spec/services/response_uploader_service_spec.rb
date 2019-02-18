@@ -54,7 +54,7 @@ describe ResponseUploaderService do
     ActiveJob::Base.queue_adapter = :test
     allow(S3Uploader).to receive(:new).and_return(uploader)
 
-    allow(ActionNotificationsMailer).to receive_message_chain(:ready_for_approver_review,
+    allow(ActionNotificationsMailer).to receive_message_chain(:ready_for_press_or_private_review,
                                                        :deliver_later)
   end
 
@@ -272,7 +272,7 @@ describe ResponseUploaderService do
                          .for_team(current_info.team)
                          .first
 
-          expect(ActionNotificationsMailer).to have_received(:ready_for_approver_review).with assignment
+          expect(ActionNotificationsMailer).to have_received(:ready_for_press_or_private_review).with assignment
         end
       end
 
@@ -282,7 +282,7 @@ describe ResponseUploaderService do
         it 'does not send an email' do
           rus.upload!
           expect(rus.result).to eq :ok
-          expect(ActionNotificationsMailer).not_to have_received(:ready_for_approver_review)
+          expect(ActionNotificationsMailer).not_to have_received(:ready_for_press_or_private_review)
         end
       end
     end
@@ -293,7 +293,7 @@ describe ResponseUploaderService do
       it 'does not send an email' do
         rus.upload!
         expect(rus.result).to eq :ok
-        expect(ActionNotificationsMailer).not_to have_received(:ready_for_approver_review)
+        expect(ActionNotificationsMailer).not_to have_received(:ready_for_press_or_private_review)
       end
     end
   end

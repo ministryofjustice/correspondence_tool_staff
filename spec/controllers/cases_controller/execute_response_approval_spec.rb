@@ -32,7 +32,7 @@ RSpec.describe CasesController, type: :controller do
     it 'flashes a notification' do
       patch :execute_response_approval, params: { id: responded_trigger_case }
       expect(flash[:notice])
-        .to eq "The Information Officer has been notified that the response is ready to send."
+        .to eq 'Disclosure has been notified that the response is pending clearance.'
     end
 
     it 'redirects to case detail page' do

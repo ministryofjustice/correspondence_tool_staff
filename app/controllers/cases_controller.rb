@@ -558,11 +558,6 @@ class CasesController < ApplicationController
     authorize @case, :can_approve_or_escalate_case?
   end
 
-  def request_amends
-    authorize @case, :execute_request_amends?
-    @next_step_info = NextStepInfo.new(@case, 'request-amends', current_user)
-  end
-
   def execute_response_approval
     authorize @case
 
@@ -570,12 +565,23 @@ class CasesController < ApplicationController
     service = CaseApprovalService.new(user: current_user, kase: @case, bypass_params: bypass_params_manager)
     service.call
     if service.result == :ok
-      flash[:notice] = translate_for_case(@case, 'notices', 'case_cleared')
+      current_team = CurrentTeamAndUserService.new(@case).team
+      if @case.ico?
+        flash[:notice] = t('notices.case/ico.case_cleared')
+      else
+        flash[:notice] = t('notices.case_cleared', team: current_team.name,
+                                                   status: I18n.t("state.#{@case.current_state}").downcase)
+      end
       redirect_to case_path(@case)
     else
       flash[:alert] = service.error_message
       render :approve_response_interstitial
     end
+  end
+
+  def request_amends
+    authorize @case, :execute_request_amends?
+    @next_step_info = NextStepInfo.new(@case, 'request-amends', current_user)
   end
 
   def execute_request_amends

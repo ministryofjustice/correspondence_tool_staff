@@ -79,12 +79,14 @@ feature 'FOI case that requires clearance' do
     clear_response kase: kase,
                    user: disclosure_specialist,
                    expected_team: press_office,
-                   expected_status: 'Pending clearance'
+                   expected_status: 'Pending clearance',
+                   expected_notice: 'Press Office has been notified that the response is pending clearance.'
 
     clear_response kase: kase,
                    user: press_officer,
                    expected_team: private_office,
-                   expected_status: 'Pending clearance'
+                   expected_status: 'Pending clearance',
+                   expected_notice: 'Private Office has been notified that the response is pending clearance.'
 
     clear_response kase: kase,
                    user: private_officer,

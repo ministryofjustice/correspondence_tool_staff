@@ -93,13 +93,13 @@ describe Workflows::Hooks do
 
   describe '#notify_approver_ready_for_review' do
     before do
-      allow(ActionNotificationsMailer).to receive_message_chain(:ready_for_approver_review,
+      allow(ActionNotificationsMailer).to receive_message_chain(:ready_for_press_or_private_review,
                                                                 :deliver_later)
     end
     it 'sends the notification' do
       workflow.notify_approver_ready_for_review
       expect(ActionNotificationsMailer)
-        .to have_received(:ready_for_approver_review)
+        .to have_received(:ready_for_press_or_private_review)
     end
   end
 end

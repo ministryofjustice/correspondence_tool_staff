@@ -101,7 +101,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
     end
   end
 
-  describe 'ready_for_approver_review' do
+  describe 'ready_for_press_or_private_review' do
 
     let(:pending_case)   { create :pending_press_clearance_case,
                                    name: 'Fyodor Ognievich Ilichion',
@@ -110,7 +110,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
     let(:assignment)      { pending_case.approver_assignments.for_team(BusinessUnit.press_office).singular}
     let(:approving_team)  { assignment.team }
     let(:approver)        { assignment.user }
-    let(:mail)            { described_class.ready_for_approver_review(assignment) }
+    let(:mail)            { described_class.ready_for_press_or_private_review(assignment) }
 
     it 'sets the template' do
       expect(mail.govuk_notify_template)

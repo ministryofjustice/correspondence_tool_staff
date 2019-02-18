@@ -1,7 +1,7 @@
 def approve_case_step(kase:,
                       expected_team:,
                       expected_status:,
-                      expected_notice: "The Information Officer has been notified that the response is ready to send.")
+                      expected_notice: "#{expected_team.name} has been notified that the response is ready to send.")
   cases_show_page.actions.clear_case.click
   expect(approve_response_interstitial_page).to be_displayed
 

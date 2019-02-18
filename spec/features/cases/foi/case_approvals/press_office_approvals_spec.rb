@@ -57,7 +57,8 @@ feature 'cases requiring clearance by press office' do
 
     approve_case_step kase: pending_dacu_clearance_case,
                       expected_team: press_office,
-                      expected_status: 'Pending clearance'
+                      expected_status: 'Pending clearance',
+                      expected_notice: 'Press Office has been notified that the response is pending clearance.'
 
     go_to_case_details_step kase: pending_dacu_clearance_case,
                             expected_team: press_office
@@ -71,7 +72,9 @@ feature 'cases requiring clearance by press office' do
       .to eq 'Press Office'
     approve_case_step kase: pending_press_clearance_case,
                       expected_team: private_office,
-                      expected_status: 'Pending clearance'
+                      expected_status: 'Pending clearance',
+                      expected_notice: 'Private Office has been notified that the response is pending clearance.'
+
     go_to_case_details_step(
       kase: pending_press_clearance_case,
       expected_team: private_office

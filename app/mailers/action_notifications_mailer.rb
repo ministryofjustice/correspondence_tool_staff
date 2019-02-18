@@ -20,20 +20,20 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     mail(to: recipient)
   end
 
-  def ready_for_approver_review(assignment)
+  def ready_for_press_or_private_review(assignment)
     RavenContextProvider.set_context
 
     kase = assignment.case
     recipient = assignment.user
 
-    set_template(Settings.ready_for_approver_review_notify_template)
+    set_template(Settings.ready_for_press_or_private_review_notify_template)
 
     set_personalisation(
         email_subject:          format_subject(kase),
         approver_full_name:     recipient.full_name,
         case_number:            kase.number,
-        case_subject:           kase.subject,
         case_type:              kase.decorate.pretty_type,
+        case_subject:           kase.subject,
         case_received_date:     kase.received_date.strftime(Settings.default_date_format),
         case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format),
         case_link:              case_url(kase.id)

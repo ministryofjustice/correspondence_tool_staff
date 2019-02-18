@@ -105,7 +105,7 @@ module Features
                         user:,
                         expected_team:,
                         expected_status:,
-                        expected_notice:  "The Information Officer has been notified that the response is ready to send.")
+                        expected_notice: "#{expected_team.name} has been notified that the response is ready to send.")
       login_step user: user
       go_to_case_details_step kase: kase
       approve_case_step kase: kase,
