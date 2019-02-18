@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 describe 'stats/index.html.slim', type: :view do
+  before(:all)  { Timecop.freeze(Time.local(2018, 10, 3)) }
+  after(:all)   { Timecop.return }
   let(:report_1)      { build_stubbed :report_type, :r004 }
   let(:report_2)      { build_stubbed :report_type, :r005 }
 
@@ -11,7 +13,7 @@ describe 'stats/index.html.slim', type: :view do
   let(:foi_reports)   { [ report_1, report_2 ]  }
   let(:sar_reports)   { [ report_3 ]  }
   let(:end_date)      { Date.today.strftime(Settings.default_date_format) }
-  let(:start_date)    { Date.new(2019, 1, 1).strftime(Settings.default_date_format) }
+  let(:start_date)    { Date.new(2018, 1, 1).strftime(Settings.default_date_format) }
 
   it 'has a heading' do
     assign(:foi_reports, foi_reports)
@@ -27,54 +29,50 @@ describe 'stats/index.html.slim', type: :view do
 
   context 'displaying list of reports per type' do
     context 'FOI' do
-      Timecop.freeze(Time.local(2019, 1, 6)) do
-        it 'has a list of FOI reports' do
-          assign(:foi_reports, foi_reports)
-          assign(:sar_reports, sar_reports)
-          render
-          stats_index_page.load(rendered)
+      it 'has a list of FOI reports' do
+        assign(:foi_reports, foi_reports)
+        assign(:sar_reports, sar_reports)
+        render
+        stats_index_page.load(rendered)
 
-          page = stats_index_page
+        page = stats_index_page
 
-          expect(page.foi.type_name.text).to eq 'Standard FOI reports'
+        expect(page.foi.type_name.text).to eq 'Standard FOI reports'
 
-          page.foi.reports.each_with_index  do | report, index |
-            expect(report.name.text).to eq foi_reports[index].full_name
-            if index == 0
-              expect(report.description.text)
-                  .to eq "Includes performance data about how we are meeting statutory deadlines and how we are using exemptions."
-            else
-              expect(report.description.text)
-                  .to eq 'Includes performance data about FOI requests we received and responded to from the beginning of the year by month.'
-            end
-
-            expect(report.report_period.text).to eq "Reporting period: #{start_date} to #{end_date}"
-            expect(report.download).to have_link("Download report - #{foi_reports[index].full_name}",  href: stats_download_path(id: foi_reports[index].id))
+        page.foi.reports.each_with_index  do | report, index |
+          expect(report.name.text).to eq foi_reports[index].full_name
+          if index == 0
+            expect(report.description.text)
+                .to eq "Includes performance data about how we are meeting statutory deadlines and how we are using exemptions."
+          else
+            expect(report.description.text)
+                .to eq 'Includes performance data about FOI requests we received and responded to from the beginning of the year by month.'
           end
+
+          expect(report.report_period.text).to eq "Reporting period: #{start_date} to #{end_date}"
+          expect(report.download).to have_link("Download report - #{foi_reports[index].full_name}",  href: stats_download_path(id: foi_reports[index].id))
         end
       end
     end
 
     context 'SAR' do
-      Timecop.freeze(Time.local(2019, 1, 6)) do
-        it 'has a list of SAR reports' do
-          assign(:foi_reports, foi_reports)
-          assign(:sar_reports, sar_reports)
-          render
-          stats_index_page.load(rendered)
+      it 'has a list of SAR reports' do
+        assign(:foi_reports, foi_reports)
+        assign(:sar_reports, sar_reports)
+        render
+        stats_index_page.load(rendered)
 
-          page = stats_index_page
+        page = stats_index_page
 
-          expect(page.sar.type_name.text).to eq 'Standard SAR reports'
+        expect(page.sar.type_name.text).to eq 'Standard SAR reports'
 
-          page.sar.reports.each_with_index  do | report, index |
-            expect(report.name.text).to eq sar_reports[index].full_name
-            expect(report.description.text)
-                .to eq "Includes performance data about SAR requests we received and responded to from the beginning of the year by month."
+        page.sar.reports.each_with_index  do | report, index |
+          expect(report.name.text).to eq sar_reports[index].full_name
+          expect(report.description.text)
+              .to eq "Includes performance data about SAR requests we received and responded to from the beginning of the year by month."
 
-            expect(report.report_period.text).to eq "Reporting period: #{start_date} to #{end_date}"
-            expect(report.download).to have_link("Download report - #{sar_reports[index].full_name}",  href: stats_download_path(id: sar_reports[index].id))
-          end
+          expect(report.report_period.text).to eq "Reporting period: #{start_date} to #{end_date}"
+          expect(report.download).to have_link("Download report - #{sar_reports[index].full_name}",  href: stats_download_path(id: sar_reports[index].id))
         end
       end
     end
