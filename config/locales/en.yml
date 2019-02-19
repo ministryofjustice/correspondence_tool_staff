@@ -645,8 +645,8 @@ en:
       extension_period: How long would you like to extend by?
       extend_further: The deadline for this case will be extended by a further %{num_days} days.
     execute_extend_sar_deadline:
-      extension_succeeded: Case extended for SAR
-      extension_not_processed: Unable to perform SAR extension on case %{case_number}
+      success: Case extended for SAR
+      error: Unable to perform SAR extension on case %{case_number}
     ico:
       close_form:
         date_ico_decision_received_date: Date decision was received at MoJ
@@ -711,6 +711,9 @@ en:
       uploaded_request_files_hint: |
         You can upload different file types such as Word, Excel,
         PDF and JPEG up to 20MB per file.
+    remove_sar_deadline_extension:
+      success: Deadline extension removed
+        error: Unable to remove SAR deadline extension
     respond:
       date_example: For example, 30 1 2017
       case/ico:

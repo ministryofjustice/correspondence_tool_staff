@@ -672,14 +672,14 @@ class CasesController < ApplicationController
     result = service.call
 
     if result == :ok
-      flash[:notice] = t('.extension_succeeded')
+      flash[:notice] = t('.success')
       redirect_to case_path(@case.id)
     elsif result == :validation_error
       @case = CaseExtendSARDeadlineDecorator.decorate @case
       @case.reason_for_extending = extension_reason
       render :extend_sar_deadline
     else
-      flash[:alert] = t('.extension_not_processed', case_number: @case.number)
+      flash[:alert] = t('.error', case_number: @case.number)
       redirect_to case_path(@case.id)
     end
   end
@@ -691,10 +691,10 @@ class CasesController < ApplicationController
     result = service.call
 
     if result == :ok
-      flash[:notice] = 'Deadline extension removed'
+      flash[:notice] = t('.success')
       redirect_to case_path(@case.id)
     else
-      flash[:alert] = 'Unable to remove SAR deadline extension'
+      flash[:alert] = t('.error')
       redirect_to case_path(@case.id)
     end
   end
