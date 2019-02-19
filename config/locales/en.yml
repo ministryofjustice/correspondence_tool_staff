@@ -157,10 +157,6 @@ en:
               <<: *report_dates
               before_start_date: "can't be after Date to"
 
-  page_title:
-    extend_sar_deadline: Extend deadline for SAR - %{case_number}
-    marking_response_as_sent: Mark response as sent
-
   pundit:
     assignment_policy:
       can_assign_to_new_team?: You are not authorised to assign this case to another team
