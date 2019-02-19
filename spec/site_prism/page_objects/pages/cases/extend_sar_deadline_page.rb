@@ -14,7 +14,6 @@ module PageObjects
 
         element :copy, '.action-copy'
 
-        # Form
         element :extension_period_30_days,  '#case_extension_period_30'
         element :extension_period_60_days,  '#case_extension_period_60'
         element :reason_for_extending,      '#case_reason_for_extending'
