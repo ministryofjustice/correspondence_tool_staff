@@ -441,7 +441,7 @@ module CTS::Cases
       if kase.overturned?
         uploader = S3Uploader.new(kase, CTS::dacu_manager)
         uploader.add_file_to_case('spec/fixtures/ico_decision.png', :ico_decision)
-        kase.ico_decision_comment = options.fetch(:ico_decision_comment, Faker::DrWho.quote)
+        kase.ico_decision_comment = options.fetch(:ico_decision_comment, Faker::TvShows::DrWho.quote)
       end
       kase.save!
       kase.close(CTS::dacu_manager)
