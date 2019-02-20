@@ -11,7 +11,7 @@ class CaseRemovePITExtensionService
     ActiveRecord::Base.transaction do
       @case.state_machine.remove_pit_extension!(
         acting_user: @user,
-        acting_team: BusinessUnit.dacu_bmt
+        acting_team: @user.team_for_case(@case)
       )
 
       @case.remove_pit_deadline!(find_original_final_deadline)
