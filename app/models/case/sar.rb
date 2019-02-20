@@ -116,14 +116,10 @@ class Case::SAR < Case::Base
     true
   end
 
-  def extendable?
+  def deadline_extendable?
     max_allowed_deadline_date > external_deadline
   end
 
-  # Original deadlines are not stored due to the way Polymorphic
-  # Cases are created. Therefore retrieving from the earliest
-  # case transition history is necessary otherwise assume current
-  # external_date is the final deadline.
   def initial_deadline
     sar_extensions = self.transitions
                             .where(event: 'extend_sar_deadline')
@@ -137,7 +133,6 @@ class Case::SAR < Case::Base
   end
 
   def extend_deadline!(new_deadline)
-    self.reload
     self.update!(
       external_deadline: new_deadline,
       deadline_extended: true
@@ -145,7 +140,6 @@ class Case::SAR < Case::Base
   end
 
   def reset_deadline!
-    self.reload
     self.update!(
       external_deadline: initial_deadline,
       deadline_extended: false

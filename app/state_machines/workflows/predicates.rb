@@ -122,7 +122,7 @@ class Workflows::Predicates
   end
 
   def can_extend_sar_deadline?
-    @kase.try(:extendable?)
+    @kase.try(:deadline_extendable?)
   end
 
   def approver_can_remove_sar_deadline?

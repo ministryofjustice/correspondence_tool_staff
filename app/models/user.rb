@@ -111,9 +111,9 @@ class User < ApplicationRecord
     self.teams_for_case(kase).first
   end
 
-  def self.sort_teams_by_roles(teams)
+  def self.sort_teams_by_roles(teams, role_weightings = ROLE_WEIGHTINGS)
     teams.sort do |a, b|
-      ROLE_WEIGHTINGS[a.role] <=> ROLE_WEIGHTINGS[b.role]
+      role_weightings[a.role] <=> role_weightings[b.role]
     end
   end
 

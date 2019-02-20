@@ -6,6 +6,6 @@ class CaseExtendSARDeadlineDecorator < Draper::Decorator
   attr_accessor :reason_for_extending
 
   def allow_extension_period_selection?
-    !object.deadline_extended? && object.extendable?
+    !object.deadline_extended? && object.deadline_extendable?
   end
 end

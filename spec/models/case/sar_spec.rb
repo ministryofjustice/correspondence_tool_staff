@@ -264,11 +264,11 @@ describe Case::SAR do
       end
     end
 
-    describe '#extendable?' do
+    describe '#deadline_extendable?' do
       it 'is true if external_deadline is less than max possible deadline' do
         max_statutory_deadline = subject.initial_deadline + max_extension.days
 
-        expect(subject.extendable?).to eq true
+        expect(subject.deadline_extendable?).to eq true
         expect(subject.external_deadline).to be < max_statutory_deadline
       end
 
@@ -278,7 +278,7 @@ describe Case::SAR do
         sar.external_deadline = initial_deadline + max_extension.days
         allow(sar).to receive(:initial_deadline) { initial_deadline }
 
-        expect(sar.extendable?).to eq false
+        expect(sar.deadline_extendable?).to eq false
       end
     end
 
