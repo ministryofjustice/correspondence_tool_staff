@@ -9,10 +9,12 @@ class CaseRemovePITExtensionService
 
   def call
     ActiveRecord::Base.transaction do
-      @case.state_machine.remove_pit_extension!(acting_user: @user,
-                                                acting_team: BusinessUnit.dacu_bmt)
-      @case.update external_deadline: (find_original_final_deadline)
-      @case.reload
+      @case.state_machine.remove_pit_extension!(
+        acting_user: @user,
+        acting_team: BusinessUnit.dacu_bmt
+      )
+
+      @case.remove_pit_deadline!(find_original_final_deadline)
       @result = :ok
     end
     @result
@@ -27,9 +29,11 @@ class CaseRemovePITExtensionService
   private
 
   def find_original_final_deadline
-    first_pit_extension = @case.transitions.where(event: 'extend_for_pit')
-                                .order(:id)
-                                .first
+    first_pit_extension = @case.transitions
+      .where(event: 'extend_for_pit')
+      .order(:id)
+      .first
+
     first_pit_extension.original_final_deadline
   end
 end
