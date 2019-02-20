@@ -73,10 +73,13 @@ feature 'when extending a SAR case deadline' do
     end
   end
 
-  # TODO (M Seedat): Approver is allowed to extend a SAR deadline
-  xcontext 'an approver' do
+  context 'an approver' do
     given!(:approver) { find_or_create :disclosure_specialist }
-    given!(:kase)     { create :accepted_sar, approver: approver }
+    given!(:kase) {
+      create :accepted_sar,
+      :flagged_accepted,
+      approver: approver
+    }
 
     scenario 'can extend a SAR deadline' do
       login_as approver
