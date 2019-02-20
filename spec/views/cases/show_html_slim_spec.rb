@@ -314,7 +314,7 @@ describe 'cases/show.html.slim', type: :view do
     end
   end
 
-  describe 'SAR case' do
+  describe 'extending a SAR case' do
     context 'before it is extended' do
       let(:sar) { create(:approved_sar).decorate }
 

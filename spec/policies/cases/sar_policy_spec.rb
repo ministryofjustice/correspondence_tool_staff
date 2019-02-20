@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe Case::SARPolicy do
-
   subject { described_class }
 
   # Teams
@@ -26,25 +25,34 @@ describe Case::SARPolicy do
   let(:disclosure_approver)   { dacu_disclosure.approvers.first }
 
   # Cases
-  let(:non_trigger_sar_case)  { create :sar_case,
-                                       managing_team: managing_team,
-                                       responding_team: responding_team }
+  let(:non_trigger_sar_case)   { create :sar_case,
+                                        managing_team: managing_team,
+                                        responding_team: responding_team }
 
   let(:trigger_sar_case)       { create :sar_case,
-                                      :flagged,
-                                      managing_team: managing_team,
-                                      responding_team: responding_team }
+                                        :flagged,
+                                        managing_team: managing_team,
+                                        responding_team: responding_team }
 
   let(:ot_sar_case)            { create :overturned_ico_sar,
                                         managing_team: managing_team,
                                         responding_team: responding_team }
 
   let(:trigger_ot_sar_case)    { create :overturned_ico_sar,
-                                         :flagged_accepted,
-                                         :dacu_disclosure,
-                                         managing_team: managing_team,
-                                         responding_team: responding_team }
+                                        :flagged_accepted,
+                                        :dacu_disclosure,
+                                        managing_team: managing_team,
+                                        responding_team: responding_team }
 
+  let(:approved_sar)           { create :approved_sar,
+                                        managing_team: managing_team,
+                                        responding_team: responding_team }
+
+  let(:extended_sar_case)      { create :extended_deadline_sar,
+                                        :flagged_accepted,
+                                        :dacu_disclosure,
+                                        managing_team: managing_team,
+                                        responding_team: responding_team }
 
   after(:each) do |example|
     if example.exception
@@ -94,20 +102,6 @@ describe Case::SARPolicy do
   end
 
   context 'SAR deadline extension' do
-    let(:approved_sar) {
-      create :approved_sar,
-        managing_team: managing_team,
-        responding_team: responding_team
-    }
-
-    let(:extended_sar_case) {
-      create :extended_deadline_sar,
-        :flagged_accepted,
-        :dacu_disclosure,
-        managing_team: managing_team,
-        responding_team: responding_team
-    }
-
     permissions :extend_sar_deadline? do
       it { should_not permit(responder,             approved_sar) }
       it { should     permit(manager,               approved_sar) }

@@ -2,7 +2,9 @@ require 'rails_helper'
 
 describe CaseExtendSARDeadlineDecorator, type: :model do
   context 'initialize' do
-    subject { CaseExtendSARDeadlineDecorator.decorate create(:sar_case) }
+    subject(:sar_extension_decorator) {
+      CaseExtendSARDeadlineDecorator.decorate(create(:sar_case))
+    }
 
     it { should have_attributes extension_period: nil }
     it { should have_attributes reason_for_extending: nil }

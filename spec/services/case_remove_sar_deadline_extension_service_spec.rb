@@ -12,7 +12,9 @@ describe CaseRemoveSARDeadlineExtensionService do
   end
 
   describe '#initialize' do
-    subject { remove_sar_extension_service(manager, sar_case) }
+    subject(:sar_extension_remove_service) {
+      remove_sar_extension_service(manager, sar_case)
+    }
 
     it { expect(sar_case.external_deadline).not_to eq initial_deadline }
     it { expect(subject.result).to eq :incomplete }
@@ -20,7 +22,9 @@ describe CaseRemoveSARDeadlineExtensionService do
 
   describe '#call' do
     context 'with expected params' do
-      subject! { remove_sar_extension_service(manager, sar_case).call }
+      subject!(:sar_extension_remove_service) {
+        remove_sar_extension_service(manager, sar_case).call
+      }
 
       it { is_expected.to eq :ok }
       it 'creates new SAR extension removal transition' do
@@ -52,10 +56,16 @@ describe CaseRemoveSARDeadlineExtensionService do
       end
     end
 
-    context 'exception' do
-      let!(:service) { remove_sar_extension_service(manager, sar_case) }
+    # Force #call transaction block to fail, can be any kind of StandardError
+    context 'on any transaction exception' do
+      let!(:service) {
+        remove_sar_extension_service(
+          manager,
+          sar_case
+        )
+      }
 
-      it 'rolls-back changes' do
+      it 'does not transition SAR state' do
         allow(sar_case).to receive(:reset_deadline!).and_throw(ArgumentError)
 
         expect { service.call }.to raise_error(ArgumentError)

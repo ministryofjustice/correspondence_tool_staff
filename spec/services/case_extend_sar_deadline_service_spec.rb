@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe CaseExtendSARDeadlineService do
-  let(:team_dacu)           { find_or_create :team_disclosure_bmt }
+  let(:team_disclosure_bmt) { find_or_create :team_disclosure_bmt }
   let(:manager)             { find_or_create :disclosure_bmt_user }
   let!(:sar_case)           { create(:approved_sar) }
   let!(:initial_deadline)   { sar_case.initial_deadline }
@@ -13,7 +13,7 @@ describe CaseExtendSARDeadlineService do
 
   describe '#call' do
     context 'with expected params' do
-      subject! {
+      subject!(:extension_service) {
         sar_extension_service(
           manager,
           sar_case,
@@ -28,7 +28,7 @@ describe CaseExtendSARDeadlineService do
           .to have_received(:extend_sar_deadline!)
           .with(
             acting_user: manager,
-            acting_team: team_dacu,
+            acting_team: team_disclosure_bmt,
             final_deadline: initial_deadline + 3.days,
             original_final_deadline: initial_deadline,
             message: "test\nDeadline extended by 3 days"
@@ -45,7 +45,11 @@ describe CaseExtendSARDeadlineService do
         deadline = sar_case.initial_deadline
 
         Timecop.travel(deadline + 100.days) do
-          result = sar_extension_service(manager, sar_case, extension_period: max_extension).call
+          result = sar_extension_service(
+            manager,
+            sar_case,
+            extension_period: max_extension
+          ).call
 
           expect(result).to eq :ok
           expect(sar_case.external_deadline).to eq deadline + max_extension.days
@@ -57,7 +61,13 @@ describe CaseExtendSARDeadlineService do
     context 'validate' do
       context 'extension period' do
         context 'is missing' do
-          subject! { sar_extension_service(manager, sar_case, extension_period: nil).call }
+          subject!(:extension_service) {
+            sar_extension_service(
+              manager,
+              sar_case,
+              extension_period: nil
+            ).call
+          }
 
           it { is_expected.to eq :validation_error }
           it {
@@ -68,7 +78,7 @@ describe CaseExtendSARDeadlineService do
 
         context 'is past statutory SAR extension limit' do
           let!(:extension_period) { max_extension + 5 }
-          subject! {
+          subject!(:extension_service) {
             sar_extension_service(
               manager,
               sar_case,
@@ -84,7 +94,13 @@ describe CaseExtendSARDeadlineService do
         end
 
         context 'is before the final deadline' do
-          subject! { sar_extension_service(manager, sar_case, extension_period: -1).call }
+          subject!(:extension_service) {
+            sar_extension_service(
+              manager,
+              sar_case,
+              extension_period: -1
+            ).call
+          }
 
           it { is_expected.to eq :validation_error }
           it {
@@ -94,14 +110,27 @@ describe CaseExtendSARDeadlineService do
         end
 
         context 'is within limit' do
-          subject! { sar_extension_service(manager, sar_case, extension_period: max_extension).call }
+          subject!(:extension_service) {
+            sar_extension_service(
+              manager,
+              sar_case,
+              extension_period: max_extension
+            ).call
+          }
 
           it { is_expected.to eq :ok }
         end
       end
 
       context 'reason' do
-        subject! { sar_extension_service(manager, sar_case, extension_period: 1, reason: '').call }
+        subject!(:extension_service) {
+          sar_extension_service(
+            manager,
+            sar_case,
+            extension_period: 1,
+            reason: ''
+          ).call
+        }
 
         it { is_expected.to eq :validation_error }
         it {
@@ -110,11 +139,18 @@ describe CaseExtendSARDeadlineService do
         }
       end
 
-      context 'exception' do
-        let(:service) { sar_extension_service(manager, sar_case, extension_period: 3) }
+      # Force #call transaction block to fail, can be any kind of StandardError
+      context 'on any transaction exception' do
+        let(:service) {
+          sar_extension_service(
+            manager,
+            sar_case,
+            extension_period: 3
+          )
+        }
 
-        it 'rolls-back changes' do
-          allow(sar_case).to receive(:update!).and_throw(RuntimeError)
+        it 'does not transition SAR state' do
+          allow(sar_case).to receive(:update!).and_throw(StandardError)
 
           service.call
           transitions = sar_case.transitions.where(
